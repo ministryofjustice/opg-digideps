@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Security;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use DateTime;
 use App\Entity\User;
 use App\Exception\UnauthorisedException;
 use App\Exception\UserWrongCredentialsException;
@@ -26,7 +29,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 
-class LoginRequestAuthenticatorTest extends TestCase
+final class LoginRequestAuthenticatorTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -59,17 +62,14 @@ class LoginRequestAuthenticatorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider requestProvider
-     */
-    public function supports(Request $request, bool $expectedIsSupported)
+    #[DataProvider('requestProvider')]
+    #[Test]
+    public function supports(Request $request, bool $expectedIsSupported): void
     {
         self::assertEquals($expectedIsSupported, $this->sut->supports($request));
     }
 
-    public function requestProvider()
+    public static function requestProvider(): array
     {
         return [
             'Valid request' => [
@@ -166,8 +166,8 @@ class LoginRequestAuthenticatorTest extends TestCase
         ];
     }
 
-    /** @test */
-    public function authenticate()
+    #[Test]
+    public function authenticate(): void
     {
         $request = Request::create(
             '/auth/login',
@@ -196,8 +196,8 @@ class LoginRequestAuthenticatorTest extends TestCase
         self::assertEquals($expectedPassport, $this->sut->authenticate($request));
     }
 
-    /** @test */
-    public function authenticateRequiresAValidSecret()
+    #[Test]
+    public function authenticateRequiresAValidSecret(): void
     {
         self::expectExceptionObject(new UnauthorisedException('client secret not accepted.'));
 
@@ -216,12 +216,9 @@ class LoginRequestAuthenticatorTest extends TestCase
         $this->sut->authenticate($request);
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider loginDetailsProvider
-     */
-    public function authenticateRequiresLoginDetails(array $loginDetails)
+    #[DataProvider('loginDetailsProvider')]
+    #[Test]
+    public function authenticateRequiresLoginDetails(array $loginDetails): void
     {
         self::expectExceptionObject(new UserNotFoundException('User not found'));
 
@@ -240,7 +237,7 @@ class LoginRequestAuthenticatorTest extends TestCase
         $this->sut->authenticate($request);
     }
 
-    public function loginDetailsProvider()
+    public static function loginDetailsProvider(): array
     {
         return [
             'Valid keys, empty password' => [['email' => 'a@b.com', 'password' => '']],
@@ -252,11 +249,11 @@ class LoginRequestAuthenticatorTest extends TestCase
         ];
     }
 
-    /** @test */
-    public function authenticateDoesNotAuthenticateIfUserIsFrozenOut()
+    #[Test]
+    public function authenticateDoesNotAuthenticateIfUserIsFrozenOut(): void
     {
-        $now = new \DateTime();
-        $nowPlusOneHour = (new \DateTime($now->format('Y-m-d')))->modify('+1 hour');
+        $now = new DateTime();
+        $nowPlusOneHour = (new DateTime($now->format('Y-m-d')))->modify('+1 hour');
 
         $nowTime = intval($now->format('U'));
         $nowPlusOneHourTime = intval($nowPlusOneHour->format('U'));
@@ -299,8 +296,8 @@ class LoginRequestAuthenticatorTest extends TestCase
         }
     }
 
-    /** @test */
-    public function authenticateDoesNotAuthenticateIfUserCannotBeFound()
+    #[Test]
+    public function authenticateDoesNotAuthenticateIfUserCannotBeFound(): void
     {
         self::expectExceptionObject(new UserNotFoundException('User not found'));
 
@@ -326,8 +323,8 @@ class LoginRequestAuthenticatorTest extends TestCase
         $this->sut->authenticate($request);
     }
 
-    /** @test */
-    public function authenticateDoesNotAuthenticateIfSecretIsNotValidForUserRole()
+    #[Test]
+    public function authenticateDoesNotAuthenticateIfSecretIsNotValidForUserRole(): void
     {
         self::expectExceptionObject(new UnauthorisedException('ROLE_USER user role not allowed from this client.'));
 
@@ -358,8 +355,8 @@ class LoginRequestAuthenticatorTest extends TestCase
         $this->sut->authenticate($request);
     }
 
-    /** @test */
-    public function onAuthenticationSuccess()
+    #[Test]
+    public function onAuthenticationSuccess(): void
     {
         $token = new UsernamePasswordToken(new User(), 'private-firewall');
 
@@ -380,8 +377,8 @@ class LoginRequestAuthenticatorTest extends TestCase
         self::assertNull($this->sut->onAuthenticationSuccess($request, $token, 'private-firewall'));
     }
 
-    /** @test */
-    public function onAuthenticationFailure()
+    #[Test]
+    public function onAuthenticationFailure(): void
     {
         self::expectExceptionObject(new UserWrongCredentialsException('It broke', 444));
 
@@ -401,8 +398,8 @@ class LoginRequestAuthenticatorTest extends TestCase
         self::assertNull($this->sut->onAuthenticationFailure($request, $authException));
     }
 
-    /** @test */
-    public function onAuthenticationFailureThrowsUserWrongCredentialsManyAttemptsExceptionOnTooManyAttempts()
+    #[Test]
+    public function onAuthenticationFailureThrowsUserWrongCredentialsManyAttemptsExceptionOnTooManyAttempts(): void
     {
         $authException = new AuthenticationException('It broke', 444);
 

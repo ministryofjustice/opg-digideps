@@ -44,7 +44,7 @@ services:
       $projectDir: "%kernel.project_dir%"
       $sessionPrefix: "%session_prefix%"
       $workspace: "%workspace%"
-      $fixturesEnabled: "%fixtures_enabled%"
+      $fixturesEnabled: "%env(bool:FIXTURES_ENABLED)%"
 
   predis:
     class: Predis\Client
@@ -212,9 +212,6 @@ services:
     arguments:
       - '@Aws\CloudWatchLogs\CloudWatchLogsClient'
       - "%env(AUDIT_LOG_GROUP_NAME)%"
-
-  App\Service\Audit\LocalAuditLogHandler:
-    class: App\Service\Audit\LocalAuditLogHandler
 
   App\Twig\AssetsExtension:
     public: false

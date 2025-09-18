@@ -10,10 +10,13 @@ use App\Security\UserVoter;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use App\Service\UserService;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Exception;
+use RuntimeException;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
@@ -51,7 +54,9 @@ class UserController extends RestController
             'lastname' => 'mustExist',
         ]);
 
-        $newUser = $this->populateUser(new User(), $data);
+        $newUser = new User();
+        $newUser->populate($data);
+
         /** @var User $loggedInUser */
         $loggedInUser = $this->getUser();
 
@@ -62,81 +67,6 @@ class UserController extends RestController
         $this->formatter->setJmsSerialiserGroups($groups);
 
         return $newUser;
-    }
-
-    /**
-     * call setters on User when $data contains values.
-     * //TODO move to service.
-     */
-    private function populateUser(User $user, array $data): User
-    {
-        // Cannot easily(*) use JSM deserialising with already constructed objects.                                                                                                                                                             +
-        // Also. It'd be possible to differentiate when a NULL value is intentional or not
-        // (*) see options here https://github.com/schmittjoh/serializer/issues/79
-        // http://jmsyst.com/libs/serializer/master/event_system
-
-        $this->hydrateEntityWithArrayData($user, $data, [
-            'firstname' => 'setFirstname',
-            'lastname' => 'setLastname',
-            'email' => 'setEmail',
-            'address1' => 'setAddress1',
-            'address2' => 'setAddress2',
-            'address3' => 'setAddress3',
-            'address_postcode' => 'setAddressPostcode',
-            'address_country' => 'setAddressCountry',
-            'phone_alternative' => 'setPhoneAlternative',
-            'phone_main' => 'setPhoneMain',
-            'ndr_enabled' => 'setNdrEnabled',
-            'ad_managed' => 'setAdManaged',
-            'role_name' => 'setRoleName',
-            'job_title' => 'setJobTitle',
-            'co_deputy_client_confirmed' => 'setCoDeputyClientConfirmed',
-        ]);
-
-        if (array_key_exists('deputy_no', $data) && !empty($data['deputy_no'])) {
-            $user->setDeputyNo($data['deputy_no']);
-        }
-
-        if (array_key_exists('deputy_uid', $data) && !empty($data['deputy_uid'])) {
-            $user->setDeputyUid($data['deputy_uid']);
-        }
-
-        if (array_key_exists('last_logged_in', $data)) {
-            $user->setLastLoggedIn(new \DateTime($data['last_logged_in']));
-        }
-
-        if (!empty($data['registration_token'])) {
-            $user->setRegistrationToken($data['registration_token']);
-        }
-
-        if (!empty($data['token_date'])) { // important, keep this after "setRegistrationToken" otherwise date will be reset
-            $user->setTokenDate(new \DateTime($data['token_date']));
-        }
-
-        if (!empty($data['role_name'])) {
-            $roleToSet = $data['role_name'];
-            $user->setRoleName($roleToSet);
-        }
-
-        if (!empty($data['active'])) {
-            $user->setActive($data['active']);
-        }
-
-        if (!empty($data['registration_date'])) {
-            $registrationDate = new \DateTime($data['registration_date']);
-            $user->setRegistrationDate($registrationDate);
-        }
-
-        if (!empty($data['pre_register_validated_date'])) {
-            $preRegisterValidateDate = new \DateTime($data['pre_register_validated_date']);
-            $user->setPreRegisterValidatedDate($preRegisterValidateDate);
-        }
-
-        if (array_key_exists('is_primary', $data)) {
-            $user->setIsPrimary($data['is_primary']);
-        }
-
-        return $user;
     }
 
     #[Route(path: '/{id}', methods: ['PUT'])]
@@ -161,7 +91,7 @@ class UserController extends RestController
         $originalUser = clone $requestedUser;
 
         $data = $this->formatter->deserializeBodyContent($request);
-        $this->populateUser($requestedUser, $data);
+        $requestedUser->populate($data);
 
         // check if rolename in data - if so add audit log
         $this->userService->editUser($originalUser, $requestedUser);
@@ -273,29 +203,30 @@ class UserController extends RestController
     public function getOneByFilter(Request $request, string $what, $filter): ?User
     {
         if ('email' == $what) {
-            /** @var User|null $user */
+            /** @var ?User $user */
             $user = $this->userRepository->findOneBy(['email' => strtolower($filter)]);
             if (!$user) {
-                throw new \RuntimeException('User not found', 404);
+                throw new RuntimeException('User not found', 404);
             }
         } elseif ('case_number' == $what) {
-            /** @var Client|null $client */
+            /** @var ?Client $client */
             $client = $this->clientRepository->findOneBy(['caseNumber' => $filter]);
             if (!$client) {
-                throw new \RuntimeException('Client not found', 404);
+                throw new RuntimeException('Client not found', 404);
             }
             if (empty($client->getUsers())) {
-                throw new \RuntimeException('Client has not users', 404);
+                throw new RuntimeException('Client has not users', 404);
             }
+            /** @var User $user */
             $user = $client->getUsers()[0];
         } elseif ('user_id' == $what) {
-            /** @var User|null $user */
+            /** @var ?User $user */
             $user = $this->userRepository->find($filter);
             if (!$user) {
-                throw new \RuntimeException('User not found', 419);
+                throw new RuntimeException('User not found', 419);
             }
         } else {
-            throw new \RuntimeException('wrong query', 500);
+            throw new RuntimeException('wrong query', 500);
         }
 
         /** @var User $loggedInUser */
@@ -342,6 +273,7 @@ class UserController extends RestController
     #[IsGranted(attribute: new Expression("is_granted('ROLE_ORG_NAMED') or is_granted('ROLE_ORG_ADMIN')"))]
     public function getUserTeamNames(string $email): ?User
     {
+        /** @var ?User $user */
         $user = $this->userRepository->findOneBy(['email' => $email]);
 
         $this->formatter->setJmsSerialiserGroups(['user-id', 'team-names']);
@@ -363,18 +295,33 @@ class UserController extends RestController
     #[IsGranted(attribute: 'ROLE_ADMIN_MANAGER')]
     public function delete(int $id): array
     {
+        /** @var ?User $deletee */
         $deletee = $this->userRepository->find($id);
+
         $token = $this->securityHelper->getToken();
+
+        if (is_null($token)) {
+            throw $this->createAccessDeniedException('Cannot delete, as no token could be retrieved');
+        }
 
         $canDelete = $this->userVoter->vote($token, $deletee, [UserVoter::DELETE_USER]);
 
         if (UserVoter::ACCESS_DENIED === $canDelete) {
-            $errMessage = sprintf('A %s cannot delete a %s', $token->getUser()->getRoleName(), $deletee->getRoleName());
+            /** @var ?User $user */
+            $user = $token->getUser();
+
+            if (is_null($user)) {
+                throw $this->createAccessDeniedException('Cannot delete user, as token has no associated user to do the deletion');
+            }
+
+            $errMessage = sprintf('A %s cannot delete a %s', $user->getRoleName(), $deletee?->getRoleName() ?? 'UNKNOWN');
             throw $this->createAccessDeniedException($errMessage);
         }
 
-        $this->em->remove($deletee);
-        $this->em->flush();
+        if (!is_null($deletee)) {
+            $this->em->remove($deletee);
+            $this->em->flush();
+        }
 
         return [];
     }
@@ -395,7 +342,7 @@ class UserController extends RestController
     public function recreateToken(Request $request, string $email): User
     {
         if (!$this->authService->isSecretValid($request)) {
-            throw new \RuntimeException('client secret not accepted.', 403);
+            throw new RuntimeException('client secret not accepted.', 403);
         }
 
         /** @var User $user */
@@ -403,7 +350,7 @@ class UserController extends RestController
         $hasAdminSecret = $this->authService->isSecretValidForRole(User::ROLE_ADMIN, $request);
 
         if (!$hasAdminSecret && User::ROLE_ADMIN == $user->getRoleName()) {
-            throw new \RuntimeException('Admin emails not accepted.', 403);
+            throw new RuntimeException('Admin emails not accepted.', 403);
         }
 
         $user->recreateRegistrationToken();
@@ -419,14 +366,14 @@ class UserController extends RestController
     public function getByToken(Request $request, string $token): User
     {
         if (!$this->authService->isSecretValid($request)) {
-            throw new \RuntimeException('client secret not accepted.', 403);
+            throw new RuntimeException('client secret not accepted.', 403);
         }
 
         /* @var $user User */
         $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
 
         if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
-            throw new \RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
+            throw new RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
         }
 
         // `user-login` contains number of clients and reports, needed to properly redirect the user to the right page after activation
@@ -439,14 +386,14 @@ class UserController extends RestController
     public function agreeTermsUse(Request $request, string $token): int
     {
         if (!$this->authService->isSecretValid($request)) {
-            throw new \RuntimeException('client secret not accepted.', 403);
+            throw new RuntimeException('client secret not accepted.', 403);
         }
 
         /* @var $user User */
         $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
 
         if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
-            throw new \RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
+            throw new RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
         }
 
         $user->setAgreeTermsUse(true);
@@ -461,14 +408,14 @@ class UserController extends RestController
     public function clearRegistrationToken(Request $request, string $token): int
     {
         if (!$this->authService->isSecretValid($request)) {
-            throw new \RuntimeException('client secret not accepted.', 403);
+            throw new RuntimeException('client secret not accepted.', 403);
         }
 
         /* @var $user User */
         $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
 
         if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
-            throw new \RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
+            throw new RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
         }
 
         $user->setRegistrationToken(null);
@@ -490,7 +437,7 @@ class UserController extends RestController
         $requestedUser = $this->userRepository->find($id);
 
         if (!$requestedUser) {
-            throw new \RuntimeException('User not found', 419);
+            throw new RuntimeException('User not found', 419);
         }
 
         /** @var ArrayCollection $requestedUserTeams */
@@ -513,7 +460,7 @@ class UserController extends RestController
     /**
      * Endpoint for getting a reg token for user.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     #[Route(path: '/get-reg-token', methods: ['GET'])]
     public function getRegToken(): string
@@ -526,7 +473,7 @@ class UserController extends RestController
         $this->em->persist($user);
         $this->em->flush();
 
-        return $user->getRegistrationToken();
+        return $user->getRegistrationToken() ?? '';
     }
 
     /**
@@ -547,7 +494,7 @@ class UserController extends RestController
             }
         }
 
-        $requestedUser->setRegistrationDate(new \DateTime());
+        $requestedUser->setRegistrationDate(new DateTime());
 
         $this->em->flush();
 
@@ -583,7 +530,7 @@ class UserController extends RestController
      * Endpoint for getting the primary user account for user.
      * Returns null if the user has no or multiple primary account(s).
      *
-     * @throws \Exception
+     * @throws Exception
      */
     #[Route(path: '/get-primary-email/{deputyUid}', methods: ['GET'])]
     public function getPrimaryEmail(int $deputyUid): ?string
@@ -601,7 +548,7 @@ class UserController extends RestController
     /**
      * Endpoint for getting the primary user account associated with a deputy uid.
      *
-     * @throws \Exception
+     * @throws Exception
      */
     #[Route(path: '/get-primary-user-account/{deputyUid}', methods: ['GET'])]
     public function getPrimaryUserAccount(int $deputyUid): ?User

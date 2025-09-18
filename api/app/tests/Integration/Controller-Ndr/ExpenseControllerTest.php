@@ -25,9 +25,16 @@ class ExpenseControllerTest extends AbstractTestController
     private static $tokenAdmin;
     private static $tokenDeputy;
 
+    public static function setUpBeforeClass(): void
+    {
+        // This is here to prevent the default setup until tests that fail with it are altered
+    }
+
     public function setUp(): void
     {
         parent::setUp();
+
+        self::setupFixtures();
 
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
@@ -61,7 +68,7 @@ class ExpenseControllerTest extends AbstractTestController
 
     public function testgetOneByIdAuth()
     {
-        $url = '/ndr/'.self::$ndr1->getId().'/expense/'.self::$expense1->getId();
+        $url = '/ndr/' . self::$ndr1->getId() . '/expense/' . self::$expense1->getId();
 
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
@@ -69,13 +76,13 @@ class ExpenseControllerTest extends AbstractTestController
 
     public function testgetOneByIdAcl()
     {
-        $url2 = '/ndr/'.self::$ndr1->getId().'/expense/'.self::$expense2->getId();
+        $url2 = '/ndr/' . self::$ndr1->getId() . '/expense/' . self::$expense2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
     public function testgetOneById()
     {
-        $url = '/ndr/'.self::$ndr1->getId().'/expense/'.self::$expense1->getId();
+        $url = '/ndr/' . self::$ndr1->getId() . '/expense/' . self::$expense1->getId();
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
@@ -90,31 +97,31 @@ class ExpenseControllerTest extends AbstractTestController
 
     public function testPostPutAuth()
     {
-        $url = '/ndr/'.self::$ndr1->getId().'/expense';
+        $url = '/ndr/' . self::$ndr1->getId() . '/expense';
         $this->assertEndpointNeedsAuth('POST', $url);
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
 
-        $url = '/ndr/'.self::$ndr1->getId().'/expense/'.self::$expense1->getId();
+        $url = '/ndr/' . self::$ndr1->getId() . '/expense/' . self::$expense1->getId();
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
     }
 
     public function testPostPutAcl()
     {
-        $url2 = '/ndr/'.self::$ndr2->getId().'/expense';
+        $url2 = '/ndr/' . self::$ndr2->getId() . '/expense';
         $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy);
 
-        $url2 = '/ndr/'.self::$ndr2->getId().'/expense/'.self::$expense1->getId();
+        $url2 = '/ndr/' . self::$ndr2->getId() . '/expense/' . self::$expense1->getId();
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
 
-        $url3 = '/ndr/'.self::$ndr2->getId().'/expense/'.self::$expense2->getId();
+        $url3 = '/ndr/' . self::$ndr2->getId() . '/expense/' . self::$expense2->getId();
         $this->assertEndpointNotAllowedFor('PUT', $url3, self::$tokenDeputy);
     }
 
     public function testPostPutGetAll()
     {
         // POST
-        $url = '/ndr/'.self::$ndr1->getId().'/expense';
+        $url = '/ndr/' . self::$ndr1->getId() . '/expense';
         $return = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
@@ -134,7 +141,7 @@ class ExpenseControllerTest extends AbstractTestController
         $this->assertEquals('e3', $expense->getExplanation());
 
         // UPDATE
-        $url = '/ndr/'.self::$ndr1->getId().'/expense/'.$expenseId;
+        $url = '/ndr/' . self::$ndr1->getId() . '/expense/' . $expenseId;
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
@@ -151,10 +158,10 @@ class ExpenseControllerTest extends AbstractTestController
         $this->assertEquals('e3.1', $expense->getExplanation());
 
         // GET ALL
-        $url = '/ndr/'.self::$ndr1->getId();
+        $url = '/ndr/' . self::$ndr1->getId();
         $q = http_build_query(['groups' => ['ndr-expenses']]);
         // assert both groups (quick)
-        $data = $this->assertJsonRequest('GET', $url.'?'.$q, [
+        $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ])['data'];
@@ -170,7 +177,7 @@ class ExpenseControllerTest extends AbstractTestController
 
     public function testDeleteAuth()
     {
-        $url = '/ndr/'.self::$ndr1->getId().'/expense/'.self::$expense1->getId();
+        $url = '/ndr/' . self::$ndr1->getId() . '/expense/' . self::$expense1->getId();
 
         $this->assertEndpointNeedsAuth('DELETE', $url);
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
@@ -178,8 +185,8 @@ class ExpenseControllerTest extends AbstractTestController
 
     public function testDeleteAcl()
     {
-        $url2 = '/ndr/'.self::$ndr1->getId().'/expense/'.self::$expense2->getId();
-        $url3 = '/ndr/'.self::$ndr2->getId().'/expense/'.self::$expense2->getId();
+        $url2 = '/ndr/' . self::$ndr1->getId() . '/expense/' . self::$expense2->getId();
+        $url3 = '/ndr/' . self::$ndr2->getId() . '/expense/' . self::$expense2->getId();
 
         $this->assertEndpointNotAllowedFor('DELETE', $url2, self::$tokenDeputy);
         $this->assertEndpointNotAllowedFor('DELETE', $url3, self::$tokenDeputy);
@@ -190,7 +197,7 @@ class ExpenseControllerTest extends AbstractTestController
      */
     public function testDelete()
     {
-        $url = '/ndr/'.self::$ndr1->getId().'/expense/'.self::$expense1->getId();
+        $url = '/ndr/' . self::$ndr1->getId() . '/expense/' . self::$expense1->getId();
         $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
@@ -201,13 +208,13 @@ class ExpenseControllerTest extends AbstractTestController
 
     public function testPaidAnything()
     {
-        $url = '/ndr/'.self::$ndr1->getId().'/expense/'.self::$expense1->getId();
+        $url = '/ndr/' . self::$ndr1->getId() . '/expense/' . self::$expense1->getId();
         $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $url = '/ndr/'.self::$ndr1->getId().'/expense';
+        $url = '/ndr/' . self::$ndr1->getId() . '/expense';
         $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
@@ -223,7 +230,7 @@ class ExpenseControllerTest extends AbstractTestController
         $this->assertCount(1, $ndr->getExpenses());
         $this->assertEquals('yes', $ndr->getPaidForAnything());
 
-        $url = '/ndr/'.self::$ndr1->getId();
+        $url = '/ndr/' . self::$ndr1->getId();
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,

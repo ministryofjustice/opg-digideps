@@ -1,23 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\v2\Registration\Assembler;
 
+use PHPUnit\Framework\Attributes\Test;
+use Exception;
 use App\v2\Registration\Assembler\LayDeputyshipDtoAssemblerInterface;
 use App\v2\Registration\Assembler\LayDeputyshipDtoCollectionAssembler;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
+final class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
 {
-    /** @var LayDeputyshipDtoCollectionAssembler */
-    private $sut;
-
-    /** @var LayDeputyshipDtoAssemblerInterface|\PHPUnit_Framework_MockObject_MockObject */
-    private $layDeputyshipDtoAssembler;
-
-    /** @var LayDeputyshipDtoCollection */
-    private $result;
+    private LayDeputyshipDtoCollectionAssembler $sut;
+    private LayDeputyshipDtoAssemblerInterface&MockObject $layDeputyshipDtoAssembler;
+    private LayDeputyshipDtoCollection|array $result;
 
     protected function setUp(): void
     {
@@ -29,7 +29,7 @@ class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
         $this->sut = new LayDeputyshipDtoCollectionAssembler($this->layDeputyshipDtoAssembler);
     }
 
-    /** @test */
+    #[Test]
     public function assembleFromArrayAssemblesACollectionAndReturnsIt(): void
     {
         $input = [
@@ -48,8 +48,13 @@ class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
             ->layDeputyshipDtoAssembler
             ->expects($this->exactly(count($input)))
             ->method('assembleFromArray')
-            ->withConsecutive([['alpha' => 'alpha-data']], [['beta' => 'beta-data']])
-            ->willReturn(new LayDeputyshipDto());
+            ->willReturnCallback(
+                fn ($param): LayDeputyshipDto =>
+                match ($param) {
+                    ['alpha' => 'alpha-data'], ['beta' => 'beta-data'] => new LayDeputyshipDto(),
+                    default => throw new Exception('Did not expect input ' . print_r($param, true)),
+                }
+            );
     }
 
     private function assertCollectionIsReturnedAndContainsEachAssembledItem(): void
@@ -58,7 +63,7 @@ class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
         $this->assertEquals(2, $this->result['collection']->count());
     }
 
-    /** @test */
+    #[Test]
     public function assembleFromDoesNotAddInvalidNodesToItsCollection(): void
     {
         $input = [
@@ -70,8 +75,14 @@ class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
             ->layDeputyshipDtoAssembler
             ->expects($this->exactly(count($input)))
             ->method('assembleFromArray')
-            ->withConsecutive([['alpha' => 'not-valid-enough-to-create-a-DTO']], [['beta' => 'beta-data']])
-            ->willReturnOnConsecutiveCalls(null, new LayDeputyshipDto());
+            ->willReturnCallback(
+                fn ($param): ?LayDeputyshipDto =>
+                    match ($param) {
+                        ['alpha' => 'not-valid-enough-to-create-a-DTO'] => null,
+                        ['beta' => 'beta-data'] => new LayDeputyshipDto(),
+                        default => throw new Exception('Did not expect input ' . print_r($param, true)),
+                }
+            );
 
         $this->result = $this->sut->assembleFromArray($input);
         $this->assertEquals(1, $this->result['collection']->count());

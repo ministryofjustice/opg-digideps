@@ -39,6 +39,7 @@ Feature: Court order page
         Then I should be on the court order page
         When I visit the court order page of the 'second' court order that 'I am' associated with
         Then I should be on the court order page
+        Then the report status should be "not started"
 
     @lay-pfa-no-court-orders-message @lay-pfa-high-not-started-multi-client-deputy
     Scenario: A lay deputy logs in but has no court orders associated with them yet
@@ -65,7 +66,7 @@ Feature: Court order page
         And I should see that the co-deputy is awaiting registration
 
     @lay-pfa-low-not-started @lay-pfa-court-order-co-deputy @lay-pfa-court-order-co-deputy-registered
-    Scenario: Court order with invited co-deputy who is awaiting registration
+    Scenario: Court order with invited co-deputy who has registered
         Given a Lay Deputy has not started a Pfa Low Assets report
         And I am associated with a 'pfa' court order
         And a registered co-deputy is associated with the court order

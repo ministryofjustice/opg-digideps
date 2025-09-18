@@ -55,7 +55,7 @@ class AccountControllerTest extends AbstractTestController
 
     public function testaddAccount()
     {
-        $url = '/ndr/'.self::$ndr1->getId().'/account';
+        $url = '/ndr/' . self::$ndr1->getId() . '/account';
         $this->assertEndpointNeedsAuth('POST', $url);
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
 
@@ -82,7 +82,7 @@ class AccountControllerTest extends AbstractTestController
         $this->assertEquals('500.45', $account->getBalanceOnCourtOrderDate());
 
         // assert cannot create account for a ndr not belonging to logged user
-        $url2 = '/ndr/'.self::$ndr2->getId().'/account';
+        $url2 = '/ndr/' . self::$ndr2->getId() . '/account';
         $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy);
 
         return $account->getId();
@@ -90,7 +90,7 @@ class AccountControllerTest extends AbstractTestController
 
     public function testgetOneById()
     {
-        $url = '/ndr/account/'.self::$account1->getId();
+        $url = '/ndr/account/' . self::$account1->getId();
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
 
@@ -105,7 +105,7 @@ class AccountControllerTest extends AbstractTestController
         $this->assertEquals(self::$ndr1->getId(), $data['ndr']['id']);
 
         // assert  user2 cannot read the account
-        $url2 = '/ndr/account/'.self::$account2->getId();
+        $url2 = '/ndr/account/' . self::$account2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
@@ -114,7 +114,7 @@ class AccountControllerTest extends AbstractTestController
      */
     public function testEdit()
     {
-        $url = '/ndr/account/'.self::$account1->getId();
+        $url = '/ndr/account/' . self::$account1->getId();
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
 
@@ -135,7 +135,7 @@ class AccountControllerTest extends AbstractTestController
         $this->assertEquals('yes', $account->getIsJointAccount());
 
         // assert user cannot modify another users' account
-        $url2 = '/ndr/account/'.self::$account2->getId();
+        $url2 = '/ndr/account/' . self::$account2->getId();
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
     }
 
@@ -145,8 +145,8 @@ class AccountControllerTest extends AbstractTestController
     public function testaccountDelete()
     {
         $account1Id = self::$account1->getId();
-        $url = '/ndr/account/'.$account1Id;
-        $url2 = '/ndr/account/'.self::$account2->getId();
+        $url = '/ndr/account/' . $account1Id;
+        $url2 = '/ndr/account/' . self::$account2->getId();
 
         $this->assertEndpointNeedsAuth('DELETE', $url);
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);

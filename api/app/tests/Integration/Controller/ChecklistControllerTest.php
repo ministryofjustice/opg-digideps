@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Controller;
 
+use DateTime;
 use App\Entity\Report\Checklist;
 
 class ChecklistControllerTest extends AbstractTestController
@@ -13,15 +14,22 @@ class ChecklistControllerTest extends AbstractTestController
     private static $report;
     private static $checklist;
 
-    public function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
+        parent::setUpBeforeClass();
 
         self::$deputy = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client = self::fixtures()->createClient(self::$deputy, ['setFirstname' => 'CL']);
         self::$report = self::fixtures()->createReport(self::$client);
         self::$checklist = self::fixtures()->createChecklist(self::$report);
         self::fixtures()->flush();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        self::fixtures()->clear();
     }
 
     /**
@@ -54,7 +62,7 @@ class ChecklistControllerTest extends AbstractTestController
 
         self::assertEquals(self::$checklist->getId(), $response['data']['id']);
         self::assertEquals(Checklist::SYNC_STATUS_SUCCESS, $response['data']['synchronisation_status']);
-        self::assertEqualsWithDelta((new \DateTime())->getTimestamp(), (new \DateTime($response['data']['synchronisation_time']))->getTimestamp(), 5);
+        self::assertEqualsWithDelta((new DateTime())->getTimestamp(), (new DateTime($response['data']['synchronisation_time']))->getTimestamp(), 5);
     }
 
     /**
@@ -88,12 +96,5 @@ class ChecklistControllerTest extends AbstractTestController
 
         self::assertEquals(self::$checklist->getId(), $response['data']['id']);
         self::assertEquals('1234-456789-0123', $response['data']['uuid']);
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        self::fixtures()->clear();
     }
 }

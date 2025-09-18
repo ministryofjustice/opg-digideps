@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Service\RestHandler;
 
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\DataProvider;
 use App\Entity\Organisation;
 use App\Factory\OrganisationFactory;
 use App\Repository\OrganisationRepository;
@@ -18,44 +22,17 @@ use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class OrganisationRestHandlerTest extends TestCase
+final class OrganisationRestHandlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var ObjectProphecy|EntityManager
-     */
-    private $em;
-
-    /**
-     * @var ObjectProphecy|ValidatorInterface
-     */
-    private $validator;
-
-    /**
-     * @var ObjectProphecy|OrganisationRepository
-     */
-    private $orgRepository;
-
-    /**
-     * @var ObjectProphecy|OrganisationFactory
-     */
-    private $orgFactory;
-
-    /**
-     * @var ObjectProphecy|UserRepository
-     */
-    private $userRepository;
-
-    /**
-     * @var array
-     */
-    private $sharedDomains;
-
-    /**
-     * @var OrganisationRestHandler
-     */
-    private $sut;
+    private ObjectProphecy|EntityManager $em;
+    private ObjectProphecy|ValidatorInterface $validator;
+    private ObjectProphecy|OrganisationRepository $orgRepository;
+    private ObjectProphecy|OrganisationFactory $orgFactory;
+    private ObjectProphecy|UserRepository $userRepository;
+    private array $sharedDomains;
+    private OrganisationRestHandler $sut;
 
     public function setUp(): void
     {
@@ -75,10 +52,8 @@ class OrganisationRestHandlerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function createValidOrgDetails()
+    #[Test]
+    public function createValidOrgDetails(): void
     {
         $this->orgRepository->findOneBy(Argument::any())->willReturn(null);
         $this->validator->validate(Argument::any())->willReturn(new ConstraintViolationList());
@@ -93,19 +68,16 @@ class OrganisationRestHandlerTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider missingData
-     */
-    public function createRequiredDataMissing(array $data)
+    #[DataProvider('missingData')]
+    #[Test]
+    public function createRequiredDataMissing(array $data): void
     {
         self::expectException(OrganisationCreationException::class);
 
         $this->sut->create($data);
     }
 
-    public function missingData()
+    public static function missingData(): array
     {
         return [
             'Null name' => [['name' => null, 'email_identifier' => 'abc.com', 'is_activated' => true]],
@@ -119,10 +91,8 @@ class OrganisationRestHandlerTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
-    public function createOrgAlreadyExists()
+    #[Test]
+    public function createOrgAlreadyExists(): void
     {
         $this->orgRepository->findOneBy(Argument::any())->willReturn(new Organisation());
 
@@ -131,10 +101,8 @@ class OrganisationRestHandlerTest extends TestCase
         $this->sut->create(['name' => 'ABC', 'email_identifier' => 'gmail.com', 'is_activated' => true]);
     }
 
-    /**
-     * @test
-     */
-    public function createEmailIdentifierInSharedDomains()
+    #[Test]
+    public function createEmailIdentifierInSharedDomains(): void
     {
         $this->orgRepository->findOneBy(Argument::any())->willReturn(null);
 
@@ -143,10 +111,8 @@ class OrganisationRestHandlerTest extends TestCase
         $this->sut->create(['name' => 'ABC', 'email_identifier' => 'gmail.com', 'is_activated' => true]);
     }
 
-    /**
-     * @test
-     */
-    public function createOrgValidationFails()
+    #[Test]
+    public function createOrgValidationFails(): void
     {
         $this->orgRepository->findOneBy(Argument::any())->willReturn(null);
         $this->validator->validate(Argument::any())->willReturn(new ConstraintViolationList([
@@ -159,10 +125,8 @@ class OrganisationRestHandlerTest extends TestCase
         $this->sut->create(['name' => 'ABC', 'email_identifier' => 'abccom', 'is_activated' => true]);
     }
 
-    /**
-     * @test
-     */
-    public function updateValidOrgDetails()
+    #[Test]
+    public function updateValidOrgDetails(): void
     {
         $originalOrg = new Organisation();
         $originalOrg->setEmailIdentifier('cba@.com');
@@ -182,22 +146,17 @@ class OrganisationRestHandlerTest extends TestCase
         self::assertTrue($updatedOrg->isActivated());
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider missingData
-     */
-    public function updateMissingData($data)
+    #[DataProvider('missingData')]
+    #[Test]
+    public function updateMissingData(array $data): void
     {
         self::expectException(OrganisationUpdateException::class);
 
         $this->sut->update($data, 1);
     }
 
-    /**
-     * @test
-     */
-    public function updateOrgDoesNotExist()
+    #[Test]
+    public function updateOrgDoesNotExist(): void
     {
         $this->orgRepository->find(Argument::any())->willReturn(null);
 
@@ -206,10 +165,8 @@ class OrganisationRestHandlerTest extends TestCase
         self::assertNull($updatedOrg);
     }
 
-    /**
-     * @test
-     */
-    public function updateOrgEmailIdentifierInUse()
+    #[Test]
+    public function updateOrgEmailIdentifierInUse(): void
     {
         $originalOrg = new Organisation();
         $originalOrg->setEmailIdentifier('cba@.com');
@@ -223,10 +180,8 @@ class OrganisationRestHandlerTest extends TestCase
         $this->sut->update(['name' => 'ABC', 'email_identifier' => 'abc.com', 'is_activated' => true], 1);
     }
 
-    /**
-     * @test
-     */
-    public function updateOrgValidationFails()
+    #[Test]
+    public function updateOrgValidationFails(): void
     {
         $originalOrg = new Organisation();
         $originalOrg->setEmailIdentifier('cba@.com');

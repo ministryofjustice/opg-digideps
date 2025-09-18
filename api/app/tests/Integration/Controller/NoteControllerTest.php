@@ -28,17 +28,9 @@ class NoteControllerTest extends AbstractTestController
     private static $pa3;
     private static $pa3Client1;
 
-    public function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
-
-        if (null === self::$tokenAdmin) {
-            self::$tokenDeputy = $this->loginAsDeputy();
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenPa = $this->loginAsPa();
-            self::$tokenPa2 = $this->loginAsPaAdmin();
-            self::$tokenPa3 = $this->loginAsPaTeamMember();
-        }
+        parent::setUpBeforeClass();
 
         // deputy1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
@@ -56,13 +48,26 @@ class NoteControllerTest extends AbstractTestController
         self::$pa3 = self::fixtures()->getRepo('User')->findOneByEmail('pa_team_member@example.org');
         self::$pa3Client1 = self::fixtures()->createClient(self::$pa3, ['setFirstname' => 'pa2Client1']);
 
-        $org = self::fixtures()->createOrganisation('Example', rand(1, 999999).'example.org', true);
+        $org = self::fixtures()->createOrganisation('Example', rand(1, 999999) . 'example.org', true);
         self::fixtures()->flush();
         self::fixtures()->addClientToOrganisation(self::$pa1Client1->getId(), $org->getId());
         self::fixtures()->addUserToOrganisation(self::$pa1->getId(), $org->getId());
         self::fixtures()->addUserToOrganisation(self::$pa2->getId(), $org->getId());
 
         self::fixtures()->flush()->clear();
+    }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        if (null === self::$tokenAdmin) {
+            self::$tokenDeputy = $this->loginAsDeputy();
+            self::$tokenAdmin = $this->loginAsAdmin();
+            self::$tokenPa = $this->loginAsPa();
+            self::$tokenPa2 = $this->loginAsPaAdmin();
+            self::$tokenPa3 = $this->loginAsPaTeamMember();
+        }
     }
 
     /**
@@ -83,7 +88,7 @@ class NoteControllerTest extends AbstractTestController
     public function testgetOneById()
     {
         $noteId = self::$pa1Client1Note1->getId();
-        $url = '/note/'.$noteId;
+        $url = '/note/' . $noteId;
 
         // assert Auth and ACL
         $this->assertEndpointNeedsAuth('GET', $url);
@@ -108,7 +113,7 @@ class NoteControllerTest extends AbstractTestController
     public function testupdateNote()
     {
         $noteId = self::$pa1Client1Note1->getId();
-        $url = '/note/'.$noteId;
+        $url = '/note/' . $noteId;
 
         // assert Auth
         $this->assertEndpointNeedsAuth('PUT', $url);
@@ -154,7 +159,7 @@ class NoteControllerTest extends AbstractTestController
     public function testDeleteCreator()
     {
         $paUser = self::fixtures()->getRepo(User::class)->findOneBy(['email' => 'pa@example.org']);
-        $newUserEmail = rand(1, 99999).'user-to-be-deleted@example.org';
+        $newUserEmail = rand(1, 99999) . 'user-to-be-deleted@example.org';
 
         $newUser = (new User())
             ->setEmail($newUserEmail)
@@ -177,7 +182,7 @@ class NoteControllerTest extends AbstractTestController
         self::fixtures()->persist($newUser);
         self::fixtures()->flush();
 
-        $url = '/note/'.$note->getId();
+        $url = '/note/' . $note->getId();
         $data = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenPa,

@@ -1,4 +1,5 @@
 include Makefile.checks.mk
+include Makefile.devsetup.mk
 #COLORS
 GREEN  := $(shell tput -Txterm setaf 2)
 WHITE  := $(shell tput -Txterm setaf 7)
@@ -187,6 +188,10 @@ zap-front: up-app reset-database reset-fixtures ##@zap Run ZAP against local fro
 smoke-tests: ##@smoke-tests Run smoke tests (requires app to be up)
 	docker compose build orchestration
 	docker compose run --remove-orphans orchestration sh tests/run-smoke-tests.sh
+
+smoke-tests-local: up-app reset-database reset-fixtures ##@smoke-tests Run smoke tests (requires app to be up)
+	docker compose build orchestration
+	docker compose run -e ENVIRONMENT=local --remove-orphans orchestration sh tests/run-smoke-tests.sh
 
 resilience-tests: ##@resilience-tests Run resilience tests (requires app to be up)
 	docker compose build orchestration

@@ -2,7 +2,7 @@
 
 namespace App\Tests\Integration\Controller\Ndr;
 
-use App\Entity\Ndr\Ndr;
+use DateTime;
 use App\Entity\Report\ReportSubmission;
 use App\Tests\Integration\Controller\AbstractTestController;
 
@@ -33,7 +33,7 @@ class NdrControllerTest extends AbstractTestController
             self::$deputy1,
             [
                 'setFirstname' => 'c1',
-                'setCourtDate' => new \DateTime('2018-11-01'),
+                'setCourtDate' => new DateTime('2018-11-01'),
             ]
         );
         self::$ndr1 = self::fixtures()->createNdr(self::$client1);
@@ -59,7 +59,7 @@ class NdrControllerTest extends AbstractTestController
         $this->assertEquals(false, self::$ndr1->getSubmitted());
 
         $ndrId = self::$ndr1->getId();
-        $url = '/ndr/'.$ndrId.'/submit?documentId='.self::$document1->getId();
+        $url = '/ndr/' . $ndrId . '/submit?documentId=' . self::$document1->getId();
 
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -84,7 +84,7 @@ class NdrControllerTest extends AbstractTestController
         $this->assertEquals(false, self::$ndr1->getSubmitted());
 
         $ndrId = self::$ndr1->getId();
-        $url = '/ndr/'.$ndrId.'/submit?documentId='.self::$document1->getId();
+        $url = '/ndr/' . $ndrId . '/submit?documentId=' . self::$document1->getId();
 
         $ret = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,

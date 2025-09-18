@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Security;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use App\Entity\User;
 use App\Exception\InvalidRegistrationTokenException;
 use App\Exception\UnauthorisedException;
@@ -24,7 +26,7 @@ use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 
-class RegistrationTokenAuthenticatorTest extends TestCase
+final class RegistrationTokenAuthenticatorTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -52,17 +54,14 @@ class RegistrationTokenAuthenticatorTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider loginRouteRequestProvider
-     */
-    public function supportsLoginRoute(Request $request, bool $expectedIsSupported)
+    #[DataProvider('loginRouteRequestProvider')]
+    #[Test]
+    public function supportsLoginRoute(Request $request, bool $expectedIsSupported): void
     {
         self::assertEquals($expectedIsSupported, $this->sut->supports($request));
     }
 
-    public function loginRouteRequestProvider(): array
+    public static function loginRouteRequestProvider(): array
     {
         return [
             'Valid request - login route' => [
@@ -91,10 +90,8 @@ class RegistrationTokenAuthenticatorTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
-    public function supportsFirstPasswordRoute()
+    #[Test]
+    public function supportsFirstPasswordRoute(): void
     {
         $request = Request::create(
             'user/1/set-password',
@@ -110,12 +107,9 @@ class RegistrationTokenAuthenticatorTest extends TestCase
         self::assertEquals(true, $this->sut->supports($request));
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider setFirstPasswordRouteRequestProvider
-     */
-    public function supportsFirstPasswordRouteFailures(Request $request)
+    #[DataProvider('setFirstPasswordRouteRequestProvider')]
+    #[Test]
+    public function supportsFirstPasswordRouteFailures(Request $request): void
     {
         $this->userRepo->findOneBy(['registrationToken' => 'a-token'])
             ->willReturn((new User())->setId(1));
@@ -123,7 +117,7 @@ class RegistrationTokenAuthenticatorTest extends TestCase
         self::assertEquals(false, $this->sut->supports($request));
     }
 
-    public function setFirstPasswordRouteRequestProvider(): array
+    public static function setFirstPasswordRouteRequestProvider(): array
     {
         return [
             'Valid uri, valid method, missing token from body' => [
@@ -156,10 +150,8 @@ class RegistrationTokenAuthenticatorTest extends TestCase
         ];
     }
 
-    /**
-     * @test
-     */
-    public function supportsFirstPasswordRouteUserWithTokenDoesNotExist()
+    #[Test]
+    public function supportsFirstPasswordRouteUserWithTokenDoesNotExist(): void
     {
         $this->userRepo->findOneBy(['registrationToken' => 'a-token'])
             ->willReturn(null);
@@ -174,8 +166,8 @@ class RegistrationTokenAuthenticatorTest extends TestCase
         self::assertEquals(false, $this->sut->supports($request));
     }
 
-    /** @test */
-    public function authenticate()
+    #[Test]
+    public function authenticate(): void
     {
         $request = Request::create(
             '/auth/login',
@@ -220,8 +212,8 @@ class RegistrationTokenAuthenticatorTest extends TestCase
         self::assertEquals($expectedPassport, $actualPassport);
     }
 
-    /** @test */
-    public function authenticateClientSecretNotValid()
+    #[Test]
+    public function authenticateClientSecretNotValid(): void
     {
         self::expectExceptionObject(new UnauthorisedException('client secret not accepted.'));
 
@@ -239,8 +231,8 @@ class RegistrationTokenAuthenticatorTest extends TestCase
         $this->sut->authenticate($request);
     }
 
-    /** @test */
-    public function authenticateAccountIsFrozen()
+    #[Test]
+    public function authenticateAccountIsFrozen(): void
     {
         self::expectException(UnauthorisedException::class);
 
@@ -270,8 +262,8 @@ class RegistrationTokenAuthenticatorTest extends TestCase
         $this->sut->authenticate($request);
     }
 
-    /** @test */
-    public function authenticateUserWithTokenDoesNotExist()
+    #[Test]
+    public function authenticateUserWithTokenDoesNotExist(): void
     {
         self::expectExceptionObject(new UserNotFoundException('User not found'));
 
@@ -300,8 +292,8 @@ class RegistrationTokenAuthenticatorTest extends TestCase
         $this->sut->authenticate($request);
     }
 
-    /** @test */
-    public function authenticateUserHasInvalidRole()
+    #[Test]
+    public function authenticateUserHasInvalidRole(): void
     {
         self::expectExceptionObject(new UnauthorisedException('FAKE_ROLE user role not allowed from this client.'));
 
@@ -339,8 +331,8 @@ class RegistrationTokenAuthenticatorTest extends TestCase
         $this->sut->authenticate($request);
     }
 
-    /** @test */
-    public function onAuthenticationSuccess()
+    #[Test]
+    public function onAuthenticationSuccess(): void
     {
         $this->sut->setBruteForceKey('_abc');
         $expectedToken = new NullToken();
@@ -355,8 +347,8 @@ class RegistrationTokenAuthenticatorTest extends TestCase
         $this->sut->onAuthenticationSuccess(new Request(), $expectedToken, 'a-firewall');
     }
 
-    /** @test */
-    public function onAuthenticationFailure()
+    #[Test]
+    public function onAuthenticationFailure(): void
     {
         self::expectExceptionObject(
             new InvalidRegistrationTokenException('Failure message', 123)
@@ -372,8 +364,8 @@ class RegistrationTokenAuthenticatorTest extends TestCase
         $this->sut->onAuthenticationFailure(new Request(), $authException);
     }
 
-    /** @test */
-    public function onAuthenticationFailureMaxLoginAttemptsReached()
+    #[Test]
+    public function onAuthenticationFailureMaxLoginAttemptsReached(): void
     {
         self::expectExceptionObject(
             new UserWrongCredentialsManyAttempts()

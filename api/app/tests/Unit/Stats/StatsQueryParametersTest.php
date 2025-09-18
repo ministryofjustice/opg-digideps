@@ -1,16 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Service\Stats;
 
+use PHPUnit\Framework\Attributes\Test;
+use DateTime;
+use InvalidArgumentException;
+use DateInterval;
 use App\Service\Stats\StatsQueryParameters;
 use PHPUnit\Framework\TestCase;
 
-class StatsQueryParametersTest extends TestCase
+final class StatsQueryParametersTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function populatesProperties()
+    #[Test]
+    public function populatesProperties(): void
     {
         $params = new StatsQueryParameters([
             'metric' => 'satisfaction',
@@ -23,16 +27,14 @@ class StatsQueryParametersTest extends TestCase
         $this->assertIsArray($params->getDimensions());
         $this->assertContains('dimension1', $params->getDimensions());
         $this->assertContains('dimension2', $params->getDimensions());
-        $this->assertInstanceOf(\DateTime::class, $params->getStartDate());
+        $this->assertInstanceOf(DateTime::class, $params->getStartDate());
         $this->assertEquals('04-04-2015', $params->getStartDate()->format('d-m-Y'));
-        $this->assertInstanceOf(\DateTime::class, $params->getEndDate());
+        $this->assertInstanceOf(DateTime::class, $params->getEndDate());
         $this->assertEquals('10-06-2015', $params->getEndDate()->format('d-m-Y'));
     }
 
-    /**
-     * @test
-     */
-    public function ignoresDatePropertiesIfMetricNotConstrainedByDates()
+    #[Test]
+    public function ignoresDatePropertiesIfMetricNotConstrainedByDates(): void
     {
         $params = new StatsQueryParameters([
             'metric' => 'not-constrained',
@@ -45,12 +47,10 @@ class StatsQueryParametersTest extends TestCase
         $this->assertNull($params->getEndDate());
     }
 
-    /**
-     * @test
-     */
-    public function requiresMetric()
+    #[Test]
+    public function requiresMetric(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new StatsQueryParameters([
             'dimension' => ['dimension1'],
             'startDate' => '2019-05-04',
@@ -58,12 +58,10 @@ class StatsQueryParametersTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
-    public function requiresDimensionIsNotString()
+    #[Test]
+    public function requiresDimensionIsNotString(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         new StatsQueryParameters([
             'metric' => 'metric',
             'dimension' => 'dimension',
@@ -72,27 +70,23 @@ class StatsQueryParametersTest extends TestCase
         ]);
     }
 
-    /**
-     * @test
-     */
-    public function defaultsMissingDatesToLast30Days()
+    #[Test]
+    public function defaultsMissingDatesToLast30Days(): void
     {
         $params = new StatsQueryParameters([
             'metric' => 'satisfaction',
             'dimension' => ['dimension'],
         ]);
 
-        $expectedStartDate = (new \DateTime())->sub(new \DateInterval('P30D'));
-        $expectedEndDate = new \DateTime();
+        $expectedStartDate = (new DateTime())->sub(new DateInterval('P30D'));
+        $expectedEndDate = new DateTime();
 
         $this->assertEquals($expectedStartDate->format('d-m-Y'), $params->getStartDate()->format('d-m-Y'));
         $this->assertEquals($expectedEndDate->format('d-m-Y'), $params->getEndDate()->format('d-m-Y'));
     }
 
-    /**
-     * @test
-     */
-    public function defaultsMissingEndDateTo30DaysLater()
+    #[Test]
+    public function defaultsMissingEndDateTo30DaysLater(): void
     {
         $params = new StatsQueryParameters([
             'metric' => 'satisfaction',
@@ -103,10 +97,8 @@ class StatsQueryParametersTest extends TestCase
         $this->assertEquals('03-09-2016', $params->getEndDate()->format('d-m-Y'));
     }
 
-    /**
-     * @test
-     */
-    public function defaultsMissingStartDateTo30DaysEarlier()
+    #[Test]
+    public function defaultsMissingStartDateTo30DaysEarlier(): void
     {
         $params = new StatsQueryParameters([
             'metric' => 'satisfaction',

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use Exception;
+use DateTime;
 use App\Entity\Client;
 use App\Service\File\Storage\S3Storage;
 use App\Service\ParameterStoreService;
@@ -42,6 +44,7 @@ class BaseFeatureContext extends MinkContext
     use PageUrlsTrait;
     use ReportTrait;
     use UserExistsTrait;
+    use WaitOnItTrait;
 
     public const REPORT_SECTION_ENDPOINT = '/%s/%s/%s';
 
@@ -146,7 +149,7 @@ class BaseFeatureContext extends MinkContext
         $this->appEnvironment = $this->symfonyKernel->getEnvironment();
 
         if ('prod' === $this->appEnvironment) {
-            throw new \Exception('Unable to run behat tests in prod mode. Change the apps mode to dev or test and try again');
+            throw new Exception('Unable to run behat tests in prod mode. Change the apps mode to dev or test and try again');
         }
     }
 
@@ -165,6 +168,126 @@ class BaseFeatureContext extends MinkContext
         $this->loggedInUserDetails = null;
         $this->interactingWithUserDetails = null;
         $this->submittedAnswersByFormSections = ['totals' => ['grandTotal' => 0]];
+    }
+
+    //    Overrides of common functions using spin trait
+    /**
+     * Retry until the expected text is found in the page.
+     */
+    public function assertPageContainsText($text)
+    {
+        $this->waitOnIt(function () use ($text) {
+            parent::assertPageContainsText($text);
+            return true;
+        }, __FUNCTION__, 15);
+    }
+
+    /**
+     * Retry until the expected text is NOT found in the page.
+     */
+    public function assertPageNotContainsText($text)
+    {
+        $this->waitOnIt(function () use ($text) {
+            parent::assertPageNotContainsText($text);
+            return true;
+        }, __FUNCTION__, 15);
+    }
+
+
+    /**
+     * Retry until the current page path matches.
+     */
+    public function assertElementContainsText($element, $text)
+    {
+        $this->waitOnIt(function () use ($element, $text) {
+            parent::assertElementContainsText($element, $text);
+            return true;
+        }, __FUNCTION__, 15);
+    }
+
+    /**
+     * Retry until a given field is present and filled with the expected value.
+     */
+    public function assertFieldContains($field, $value)
+    {
+        $this->waitOnIt(function () use ($field, $value) {
+            parent::assertFieldContains($field, $value);
+            return true;
+        }, __FUNCTION__, 15);
+    }
+
+    /**
+     * Retry until a given field is present and does NOT contain the value.
+     */
+    public function assertFieldNotContains($field, $value)
+    {
+        $this->waitOnIt(function () use ($field, $value) {
+            parent::assertFieldNotContains($field, $value);
+            return true;
+        }, __FUNCTION__, 15);
+    }
+
+    /**
+     * Retry until a link can be clicked.
+     */
+    public function clickLink($link)
+    {
+        $this->waitOnIt(function () use ($link) {
+            parent::clickLink($link);
+            return true;
+        }, __FUNCTION__, 15);
+    }
+
+    /**
+     * Retry until a button can be pressed.
+     */
+    public function pressButton($button)
+    {
+        $this->waitOnIt(function () use ($button) {
+            parent::pressButton($button);
+            return true;
+        }, __FUNCTION__, 15);
+    }
+
+    /**
+     * Retry until a field is filled.
+     */
+    public function fillField($field, $value)
+    {
+        $this->waitOnIt(function () use ($field, $value) {
+            parent::fillField($field, $value);
+            return true;
+        }, __FUNCTION__, 15);
+    }
+
+    public function findWithRetry(string $selector, string $locator, int $wait = 10)
+    {
+        return $this->waitOnIt(function () use ($selector, $locator) {
+            return $this->getSession()->getPage()->find($selector, $locator);
+        }, __FUNCTION__, $wait);
+    }
+
+    public function visitPath($path, $sessionName = null, int $retries = 3, int $delay = 2): void
+    {
+        $url = $this->locatePath($path);
+
+        for ($i = 0; $i < $retries; $i++) {
+            $this->getSession($sessionName)->visit($url);
+
+            try {
+                $statusCode = $this->getSession($sessionName)->getStatusCode();
+            } catch (\Exception $e) {
+                $statusCode = 500; // treat errors as failure
+            }
+
+            if ($statusCode < 500) {
+                return; // success
+            }
+
+            sleep($delay);
+        }
+
+        throw new \RuntimeException("visitPath failed for $url after {$retries} retries (last status: $statusCode)");
     }
 
     /**
@@ -571,13 +694,13 @@ class BaseFeatureContext extends MinkContext
     public function visitFrontendPath(string $path)
     {
         $siteUrl = $this->getSiteUrl();
-        $this->visitPath($siteUrl.$path);
+        $this->visitPath($siteUrl . $path);
     }
 
     public function visitAdminPath(string $path)
     {
         $adminUrl = $this->getAdminUrl();
-        $this->visitPath($adminUrl.$path);
+        $this->visitPath($adminUrl . $path);
     }
 
     public function getPageContent(): string
@@ -598,7 +721,7 @@ class BaseFeatureContext extends MinkContext
     {
         $rndKey = mt_rand(0, 99999);
 
-        return $this->fixtureHelper->createDataForAnalytics('a_'.$rndKey.$runNumber, $timeAgo, $satisfactionScore);
+        return $this->fixtureHelper->createDataForAnalytics('a_' . $rndKey . $runNumber, $timeAgo, $satisfactionScore);
     }
 
     public function createAdditionalDataForUserSearchTests()
@@ -628,11 +751,11 @@ class BaseFeatureContext extends MinkContext
         $nonPrimaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId, null, $deputyUid));
 
         $nonPrimaryUserWithNoDeputyUidDetails = new UserDetails(
-            $this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId.'-b', null, -1)
+            $this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId . '-b', null, -1)
         );
 
         $deputyUid = 123452222001 + rand(1, 999);
-        $primaryUserNoCourtOrders = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId.'999', null, $deputyUid));
+        $primaryUserNoCourtOrders = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId . '999', null, $deputyUid));
 
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetails;
@@ -670,7 +793,7 @@ class BaseFeatureContext extends MinkContext
         // Discharge client linked to primary account
         $primaryDischargedClientId = $primaryUserDetails->getClientId();
         $client = $this->em->getRepository(Client::class)->find($primaryDischargedClientId);
-        $client->setDeletedAt(new \DateTime('now'));
+        $client->setDeletedAt(new DateTime('now'));
         $this->em->persist($client);
         $this->em->flush();
 
@@ -691,7 +814,7 @@ class BaseFeatureContext extends MinkContext
         // Discharge client linked to secondary account
         $nonPrimaryDischargedClientId = $nonPrimaryUserDetails->getClientId();
         $client = $this->em->getRepository(Client::class)->find($nonPrimaryDischargedClientId);
-        $client->setDeletedAt(new \DateTime('now'));
+        $client->setDeletedAt(new DateTime('now'));
         $this->em->persist($client);
         $this->em->flush();
 

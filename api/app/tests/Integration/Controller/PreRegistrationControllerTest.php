@@ -2,6 +2,8 @@
 
 namespace App\Tests\Integration\Controller;
 
+use DateTime;
+use RuntimeException;
 use App\Entity\PreRegistration;
 use App\Entity\User;
 use App\Tests\Integration\Fixtures;
@@ -14,19 +16,16 @@ class PreRegistrationControllerTest extends AbstractTestController
     private static string $tokenPa;
     private ?PreRegistration $c1;
 
-    /**
-     * clear fixtures.
-     */
-    public static function tearDownAfterClass(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::tearDownAfterClass();
-
-        self::fixtures()->clear();
+        // This is here to override to prevent the default setup until tests that fail with it are altered
     }
 
     public function setUp(): void
     {
         parent::setUp();
+
+        self::setupFixtures();
 
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
@@ -49,6 +48,13 @@ class PreRegistrationControllerTest extends AbstractTestController
         ];
 
         $this->c1 = new PreRegistration($data);
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        self::fixtures()->clear();
     }
 
     public function testDeleteHasRoleProtections()
@@ -219,7 +225,7 @@ class PreRegistrationControllerTest extends AbstractTestController
 
         $this->assertEquals('700571111000', $loggedInUser->getDeputyNo());
         $this->assertEquals('700571111000', $loggedInUser->getDeputyUid());
-        self::assertTrue($loggedInUser->getPreRegisterValidatedDate() instanceof \DateTime);
+        self::assertTrue($loggedInUser->getPreRegisterValidatedDate() instanceof DateTime);
         self::assertTrue($loggedInUser->getIsPrimary());
     }
 
@@ -255,7 +261,7 @@ class PreRegistrationControllerTest extends AbstractTestController
         try {
             $this->assertNull($loggedInUser->getDeputyNo());
             $this->assertEquals(0, $loggedInUser->getDeputyUid());
-        } catch (\RuntimeException $e) {
+        } catch (RuntimeException $e) {
             $expectedErrorMessage = 'A unique deputy record for case number 39393939 could not be identified';
             $this->assertEquals($expectedErrorMessage, $e->getMessage());
             $this->assertEquals(462, $e->getCode());

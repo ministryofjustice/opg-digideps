@@ -156,27 +156,7 @@ parameters:
 			path: src/Controller/CoDeputyController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\CoDeputyController\\:\\:countMld\\(\\) should return int but returns bool\\|float\\|int\\|string\\|null\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\CoDeputyController\\:\\:update\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Offset 'email' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Offset 'firstname' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Offset 'lastname' does not exist on array\\|null\\.$#"
 			count: 1
 			path: src/Controller/CoDeputyController.php
 
@@ -184,16 +164,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, array\\|string given\\.$#"
 			count: 1
 			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Parameter \\#2 \\$currentUser of method App\\\\Service\\\\DeputyService\\:\\:addDeputy\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
-			count: 1
-			path: src/Controller/DeputyController.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\DeputyController\\:\\:populateDeputy\\(\\) expects array, array\\|null given\\.$#"
-			count: 1
-			path: src/Controller/DeputyController.php
 
 		-
 			message: "#^Property App\\\\Controller\\\\JWTController\\:\\:\\$authService is never read, only written\\.$#"
@@ -216,33 +186,13 @@ parameters:
 			path: src/Controller/Ndr/AccountController.php
 
 		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Ndr\\\\AccountController\\:\\:fillAccountData\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
-			path: src/Controller/Ndr/AccountController.php
-
-		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 1
 			path: src/Controller/Ndr/AssetController.php
 
 		-
-			message: "#^Offset 'type' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:updateEntityWithData\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
-			path: src/Controller/Ndr/AssetController.php
-
-		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 1
-			path: src/Controller/Ndr/ExpenseController.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Ndr\\\\ExpenseController\\:\\:updateEntityWithData\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
 			path: src/Controller/Ndr/ExpenseController.php
 
 		-
@@ -301,11 +251,6 @@ parameters:
 			path: src/Controller/Ndr/NdrController.php
 
 		-
-			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
-			count: 17
-			path: src/Controller/Ndr/NdrController.php
-
-		-
 			message: "#^Parameter \\#4 \\$ndrDocumentId of method App\\\\Service\\\\ReportService\\:\\:submit\\(\\) expects string\\|null, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Ndr/NdrController.php
@@ -326,16 +271,6 @@ parameters:
 			path: src/Controller/Ndr/VisitsCareController.php
 
 		-
-			message: "#^Offset 'ndr_id' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Ndr\\\\VisitsCareController\\:\\:updateEntity\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
 			message: "#^Parameter \\#1 \\$ndr of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfNdrDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\Ndr\\\\Ndr, mixed given\\.$#"
 			count: 3
 			path: src/Controller/Ndr/VisitsCareController.php
@@ -343,21 +278,6 @@ parameters:
 		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 2
-			path: src/Controller/NoteController.php
-
-		-
-			message: "#^Offset 'category' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/NoteController.php
-
-		-
-			message: "#^Offset 'content' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/NoteController.php
-
-		-
-			message: "#^Offset 'title' does not exist on array\\|null\\.$#"
-			count: 1
 			path: src/Controller/NoteController.php
 
 		-
@@ -371,23 +291,8 @@ parameters:
 			path: src/Controller/NoteController.php
 
 		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\RestController\\:\\:hydrateEntityWithArrayData\\(\\) expects array, array\\|null given\\.$#"
-			count: 1
-			path: src/Controller/NoteController.php
-
-		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Client\\>\\:\\:findByCaseNumber\\(\\)\\.$#"
 			count: 1
-			path: src/Controller/PreRegistrationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\PreRegistrationController\\:\\:userCount\\(\\) should return int but returns bool\\|float\\|int\\|string\\|null\\.$#"
-			count: 1
-			path: src/Controller/PreRegistrationController.php
-
-		-
-			message: "#^Offset 'case_number' does not exist on array\\|null\\.$#"
-			count: 3
 			path: src/Controller/PreRegistrationController.php
 
 		-
@@ -421,29 +326,9 @@ parameters:
 			path: src/Controller/Report/AccountController.php
 
 		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Report\\\\AccountController\\:\\:fillAccountData\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
-			path: src/Controller/Report/AccountController.php
-
-		-
 			message: "#^Negated boolean expression is always false\\.$#"
 			count: 1
 			path: src/Controller/Report/ActionController.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Report\\\\ActionController\\:\\:updateEntity\\(\\) expects array, array\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Report/ActionController.php
-
-		-
-			message: "#^Offset 'type' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Report\\\\AssetController\\:\\:updateEntityWithData\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
-			path: src/Controller/Report/AssetController.php
 
 		-
 			message: "#^Parameter \\#1 \\$formData of method App\\\\Factory\\\\ClientBenefitsCheckFactory\\:\\:createFromFormData\\(\\) expects array, mixed given\\.$#"
@@ -461,74 +346,9 @@ parameters:
 			path: src/Controller/Report/ContactController.php
 
 		-
-			message: "#^Offset 'address' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Offset 'address2' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Offset 'contact_name' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Offset 'country' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Offset 'county' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Offset 'explanation' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Offset 'id' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Offset 'postcode' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Offset 'relationship' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Offset 'report_id' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
 			message: "#^Parameter \\#1 \\$reasonForNoContacts of method App\\\\Entity\\\\Report\\\\Report\\:\\:setReasonForNoContacts\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Offset 'id' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/DecisionController.php
-
-		-
-			message: "#^Offset 'report_id' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/DecisionController.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\RestController\\:\\:hydrateEntityWithArrayData\\(\\) expects array, array\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Report/DecisionController.php
 
 		-
 			message: "#^Call to an undefined method App\\\\Entity\\\\Ndr\\\\Ndr\\|App\\\\Entity\\\\Report\\\\Report\\:\\:setWishToProvideDocumentation\\(\\)\\.$#"
@@ -606,26 +426,6 @@ parameters:
 			path: src/Controller/Report/DocumentController.php
 
 		-
-			message: "#^Offset 'file_name' does not exist on array\\|null\\.$#"
-			count: 2
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Offset 'is_report_pdf' does not exist on array\\|null\\.$#"
-			count: 2
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Offset 'row_limit' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Offset 'storage_reference' does not exist on array\\|null\\.$#"
-			count: 2
-			path: src/Controller/Report/DocumentController.php
-
-		-
 			message: "#^Parameter \\#1 \\$createdBy of method App\\\\Entity\\\\Report\\\\Document\\:\\:setCreatedBy\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
 			count: 2
 			path: src/Controller/Report/DocumentController.php
@@ -646,23 +446,8 @@ parameters:
 			path: src/Controller/Report/DocumentController.php
 
 		-
-			message: "#^Parameter \\#3 \\$data of method App\\\\Controller\\\\Report\\\\ExpenseController\\:\\:updateEntityWithData\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
-			path: src/Controller/Report/ExpenseController.php
-
-		-
-			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
 			message: "#^Parameter \\#2 \\$criteriaOrId of method App\\\\Controller\\\\RestController\\:\\:findEntityBy\\(\\) expects array\\|int, float\\|int\\|string given\\.$#"
 			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Parameter \\#3 \\$data of method App\\\\Controller\\\\Report\\\\GiftController\\:\\:updateEntityWithData\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
 			path: src/Controller/Report/GiftController.php
 
 		-
@@ -671,22 +456,7 @@ parameters:
 			path: src/Controller/Report/LifestyleController.php
 
 		-
-			message: "#^Offset 'report_id' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/LifestyleController.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Report\\\\LifestyleController\\:\\:updateInfo\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
-			path: src/Controller/Report/LifestyleController.php
-
-		-
 			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Controller/Report/MentalCapacityController.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Report\\\\MentalCapacityController\\:\\:updateEntity\\(\\) expects array, array\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Report/MentalCapacityController.php
 
@@ -698,21 +468,6 @@ parameters:
 		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Offset 'amount' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Offset 'category' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionController.php
-
-		-
-			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
-			count: 3
 			path: src/Controller/Report/MoneyTransactionController.php
 
 		-
@@ -727,11 +482,6 @@ parameters:
 
 		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: "#^Offset 'type' does not exist on array\\|null\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyTransactionShortController.php
 
@@ -741,34 +491,14 @@ parameters:
 			path: src/Controller/Report/MoneyTransactionShortController.php
 
 		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:fillData\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
-			path: src/Controller/Report/MoneyTransactionShortController.php
-
-		-
 			message: "#^Property App\\\\Controller\\\\Report\\\\MoneyTransactionShortController\\:\\:\\$sectionIds has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyTransactionShortController.php
 
 		-
-			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
-			count: 2
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:fillEntity\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
 			message: "#^Property App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:\\$sectionIds has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Report\\\\ProfDeputyPrevCostController\\:\\:updateEntity\\(\\) expects array, array\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyPrevCostController.php
 
 		-
 			message: "#^Parameter \\#1 \\$profDeputyCostsHasPrevious of method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyCostsHasPrevious\\(\\) expects string, null given\\.$#"
@@ -781,18 +511,8 @@ parameters:
 			path: src/Controller/Report/ProfDeputyPrevCostController.php
 
 		-
-			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyPrevCostController.php
-
-		-
 			message: "#^Parameter \\#1 \\$amountReceived of method App\\\\Entity\\\\Report\\\\ProfServiceFee\\:\\:setAmountReceived\\(\\) expects App\\\\Entity\\\\Report\\\\decimal, null given\\.$#"
 			count: 1
-			path: src/Controller/Report/ProfServiceFeeController.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Report\\\\ProfServiceFeeController\\:\\:updateEntity\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
 			path: src/Controller/Report/ProfServiceFeeController.php
 
 		-
@@ -871,51 +591,6 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Offset 'answers' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Offset 'button_clicked' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Offset 'decision' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Offset 'due_date' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Offset 'end_date' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Offset 'is_submitted' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Offset 'start_date' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Offset 'un_submit_date' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Offset 'unsubmitted…' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
 			message: "#^Parameter \\#1 \\$amount of method App\\\\Entity\\\\Report\\\\Debt\\:\\:setAmount\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
@@ -968,11 +643,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, mixed given\\.$#"
 			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, array\\|null given\\.$#"
-			count: 31
 			path: src/Controller/Report/ReportController.php
 
 		-
@@ -1071,16 +741,6 @@ parameters:
 			path: src/Controller/Report/VisitsCareController.php
 
 		-
-			message: "#^Offset 'report_id' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of method App\\\\Controller\\\\Report\\\\VisitsCareController\\:\\:updateInfo\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
 			message: "#^Parameter \\#1 \\$whenWasCarePlanLastReviewed of method App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:setWhenWasCarePlanLastReviewed\\(\\) expects DateTime, null given\\.$#"
 			count: 1
 			path: src/Controller/Report/VisitsCareController.php
@@ -1121,27 +781,12 @@ parameters:
 			path: src/Controller/RestController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\RestController\\:\\:hydrateEntityWithArrayData\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/RestController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\RestController\\:\\:hydrateEntityWithArrayData\\(\\) has parameter \\$object with no type specified\\.$#"
 			count: 1
 			path: src/Controller/RestController.php
 
 		-
-			message: "#^PHPDoc tag @param for parameter \\$client with type App\\\\Controller\\\\Client is not subtype of native type App\\\\Entity\\\\Client\\.$#"
-			count: 1
-			path: src/Controller/RestController.php
-
-		-
 			message: "#^PHPDoc tag @param for parameter \\$date with type array is incompatible with native type string\\.$#"
-			count: 1
-			path: src/Controller/RestController.php
-
-		-
-			message: "#^Parameter \\$client of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfClientDoesNotBelongToUser\\(\\) has invalid type App\\\\Controller\\\\Client\\.$#"
 			count: 1
 			path: src/Controller/RestController.php
 
@@ -1152,21 +797,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method getRoleName\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null\\.$#"
-			count: 1
-			path: src/Controller/SatisfactionController.php
-
-		-
-			message: "#^Offset 'comments' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/SatisfactionController.php
-
-		-
-			message: "#^Offset 'reportType' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/SatisfactionController.php
-
-		-
-			message: "#^Offset 'score' does not exist on array\\|null\\.$#"
 			count: 1
 			path: src/Controller/SatisfactionController.php
 
@@ -1246,38 +876,13 @@ parameters:
 			path: src/Controller/SelfRegisterController.php
 
 		-
-			message: "#^Offset 'coDeputyUid' does not exist on array\\|null\\.$#"
-			count: 2
-			path: src/Controller/SelfRegisterController.php
-
-		-
-			message: "#^Offset 'existingDeputyAccou…' does not exist on array\\|null\\.$#"
-			count: 1
-			path: src/Controller/SelfRegisterController.php
-
-		-
 			message: "#^Parameter \\#1 \\$object of method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:persist\\(\\) expects object, App\\\\Entity\\\\User\\|null given\\.$#"
 			count: 1
 			path: src/Controller/SelfRegisterController.php
 
 		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\RestController\\:\\:hydrateEntityWithArrayData\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
-			path: src/Controller/SelfRegisterController.php
-
-		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 1
-			path: src/Controller/SettingController.php
-
-		-
-			message: "#^Offset 'content' does not exist on array\\|null\\.$#"
-			count: 2
-			path: src/Controller/SettingController.php
-
-		-
-			message: "#^Offset 'enabled' does not exist on array\\|null\\.$#"
-			count: 2
 			path: src/Controller/SettingController.php
 
 		-
@@ -1316,26 +921,6 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
-			message: "#^Cannot call method getId\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Cannot call method getRoleName\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Cannot call method getRoleName\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Cannot call method getUser\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\TokenInterface\\|null\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
 			message: "#^Expression in empty\\(\\) is not falsy\\.$#"
 			count: 1
 			path: src/Controller/UserController.php
@@ -1351,33 +936,13 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:getOneByFilter\\(\\) should return App\\\\Entity\\\\User\\|null but returns mixed\\.$#"
-			count: 2
-			path: src/Controller/UserController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\UserController\\:\\:getTeamByUserId\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserController\\:\\:getUserTeamNames\\(\\) should return App\\\\Entity\\\\User\\|null but returns object\\|null\\.$#"
 			count: 1
 			path: src/Controller/UserController.php
 
 		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 3
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Offset 'password' does not exist on array\\|null\\.$#"
-			count: 2
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Offset 'updated_email' does not exist on array\\|null\\.$#"
-			count: 1
 			path: src/Controller/UserController.php
 
 		-
@@ -1391,11 +956,6 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
-			message: "#^Parameter \\#1 \\$coDeputy of method App\\\\Entity\\\\User\\:\\:isCoDeputyWith\\(\\) expects App\\\\Entity\\\\User, mixed given\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
 			message: "#^Parameter \\#1 \\$deputyUid of method App\\\\Repository\\\\UserRepository\\:\\:findPrimaryUserByDeputyUid\\(\\) expects string, int given\\.$#"
 			count: 1
 			path: src/Controller/UserController.php
@@ -1403,26 +963,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$hashedPassword of method Symfony\\\\Component\\\\PasswordHasher\\\\PasswordHasherInterface\\:\\:verify\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Parameter \\#1 \\$object of method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:remove\\(\\) expects object, object\\|null given\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Parameter \\#1 \\$registrationToken of method App\\\\Entity\\\\User\\:\\:setRegistrationToken\\(\\) expects string, null given\\.$#"
-			count: 2
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Parameter \\#1 \\$token of method Symfony\\\\Component\\\\Security\\\\Core\\\\Authorization\\\\Voter\\\\Voter\\<string,App\\\\Entity\\\\User\\>\\:\\:vote\\(\\) expects Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\TokenInterface, Symfony\\\\Component\\\\Security\\\\Core\\\\Authentication\\\\Token\\\\TokenInterface\\|null given\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\Controller\\\\UserController\\:\\:populateUser\\(\\) expects array, array\\|null given\\.$#"
-			count: 2
 			path: src/Controller/UserController.php
 
 		-
@@ -1477,11 +1017,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\DataFixtures\\\\AbstractDataFixture\\:\\:doLoad\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/DataFixtures/AbstractDataFixture.php
-
-		-
-			message: "#^Property App\\\\DataFixtures\\\\AbstractDataFixture\\:\\:\\$container \\(Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\) does not accept Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
 			count: 1
 			path: src/DataFixtures/AbstractDataFixture.php
 
@@ -2506,11 +2041,6 @@ parameters:
 			path: src/Entity/Ndr/Ndr.php
 
 		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\AssetInterface\\:\\:getValueTotal\\(\\)\\.$#"
-			count: 1
-			path: src/Entity/Ndr/Ndr.php
-
-		-
 			message: "#^Cannot call method add\\(\\) on array\\<App\\\\Entity\\\\Ndr\\\\Debt\\>\\.$#"
 			count: 1
 			path: src/Entity/Ndr/Ndr.php
@@ -2571,7 +2101,7 @@ parameters:
 			path: src/Entity/Ndr/Ndr.php
 
 		-
-			message: "#^Cannot call method removeElement\\(\\) on array\\<App\\\\Entity\\\\AssetInterface\\>\\.$#"
+			message: "#^Cannot call method removeElement\\(\\) on array\\|\\(Doctrine\\\\Common\\\\Collections\\\\Collection\\<int, App\\\\Entity\\\\Ndr\\\\Asset\\>&iterable\\<App\\\\Entity\\\\Ndr\\\\Asset\\>\\)\\.$#"
 			count: 1
 			path: src/Entity/Ndr/Ndr.php
 
@@ -2602,6 +2132,11 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:getBalanceOnCourtOrderDateTotal\\(\\) has invalid return type App\\\\Entity\\\\Ndr\\\\decimal\\.$#"
+			count: 1
+			path: src/Entity/Ndr/Ndr.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:getBalanceOnCourtOrderDateTotal\\(\\) should return App\\\\Entity\\\\Ndr\\\\decimal but returns \\(float\\|int\\)\\.$#"
 			count: 1
 			path: src/Entity/Ndr/Ndr.php
 
@@ -2711,21 +2246,6 @@ parameters:
 			path: src/Entity/Ndr/Ndr.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:setSubmitDate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Ndr/Ndr.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:setSubmittedBy\\(\\) has invalid return type App\\\\Entity\\\\Ndr\\\\Report\\.$#"
-			count: 1
-			path: src/Entity/Ndr/Ndr.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:setSubmittedBy\\(\\) should return App\\\\Entity\\\\Ndr\\\\Report but returns \\$this\\(App\\\\Entity\\\\Ndr\\\\Ndr\\)\\.$#"
-			count: 1
-			path: src/Entity/Ndr/Ndr.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:setVisitsCare\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Ndr/Ndr.php
@@ -2742,16 +2262,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\$stateBenefits of method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:addStateBenefits\\(\\) has invalid type App\\\\Entity\\\\Ndr\\\\Traits\\\\IncomeBenefit\\.$#"
-			count: 1
-			path: src/Entity/Ndr/Ndr.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:\\$assets \\(array\\<App\\\\Entity\\\\AssetInterface\\>\\) does not accept Doctrine\\\\Common\\\\Collections\\\\ArrayCollection\\<\\*NEVER\\*, \\*NEVER\\*\\>\\.$#"
-			count: 1
-			path: src/Entity/Ndr/Ndr.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:\\$assets \\(array\\<App\\\\Entity\\\\AssetInterface\\>\\) does not accept array\\<App\\\\Entity\\\\AssetInterface\\|App\\\\Entity\\\\Ndr\\\\Asset\\>\\.$#"
 			count: 1
 			path: src/Entity/Ndr/Ndr.php
 
@@ -2797,21 +2307,6 @@ parameters:
 
 		-
 			message: "#^Property App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:\\$stateBenefits \\(array\\<App\\\\Entity\\\\Ndr\\\\StateBenefit\\>\\) does not accept Doctrine\\\\Common\\\\Collections\\\\ArrayCollection\\<\\*NEVER\\*, \\*NEVER\\*\\>\\.$#"
-			count: 1
-			path: src/Entity/Ndr/Ndr.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:\\$submitDate \\(DateTime\\) does not accept DateTime\\|null\\.$#"
-			count: 1
-			path: src/Entity/Ndr/Ndr.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:\\$submittedBy \\(App\\\\Entity\\\\Ndr\\\\User\\) does not accept mixed\\.$#"
-			count: 1
-			path: src/Entity/Ndr/Ndr.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:\\$submittedBy has unknown class App\\\\Entity\\\\Ndr\\\\User as its type\\.$#"
 			count: 1
 			path: src/Entity/Ndr/Ndr.php
 
@@ -3067,11 +2562,6 @@ parameters:
 
 		-
 			message: "#^Property App\\\\Entity\\\\PreRegistration\\:\\:\\$isCoDeputy \\(bool\\|null\\) does not accept mixed\\.$#"
-			count: 1
-			path: src/Entity/PreRegistration.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\PreRegistration\\:\\:\\$orderType \\(string\\|null\\) does not accept mixed\\.$#"
 			count: 1
 			path: src/Entity/PreRegistration.php
 
@@ -3951,11 +3441,6 @@ parameters:
 			path: src/Entity/Report/MentalCapacity.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\MoneyShortCategory\\:\\:getCategories\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/MoneyShortCategory.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\MoneyShortCategory\\:\\:getPresent\\(\\) should return string but returns bool\\.$#"
 			count: 1
 			path: src/Entity/Report/MoneyShortCategory.php
@@ -4296,11 +3781,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\AssetInterface\\:\\:getValueTotal\\(\\)\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Call to an undefined method Traversable\\<\\(int\\|string\\), mixed\\>\\:\\:uasort\\(\\)\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -4381,11 +3861,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: "#^Cannot call method filter\\(\\) on array\\<App\\\\Entity\\\\Report\\\\BankAccount\\>\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Cannot call method filter\\(\\) on array\\<App\\\\Entity\\\\Report\\\\Debt\\>\\.$#"
 			count: 2
 			path: src/Entity/Report/Report.php
@@ -4426,6 +3901,11 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
+			message: "#^Cannot call method filter\\(\\) on array\\|\\(Doctrine\\\\Common\\\\Collections\\\\Collection\\<int, App\\\\Entity\\\\BankAccountInterface\\>&iterable\\<App\\\\Entity\\\\BankAccountInterface\\>\\)\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
 			message: "#^Cannot call method filter\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -4442,11 +3922,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method getFinancialSummary\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Cannot call method getId\\(\\) on int\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -4487,6 +3962,11 @@ parameters:
 
 		-
 			message: "#^Cannot call method removeElement\\(\\) on array\\<App\\\\Entity\\\\Report\\\\Decision\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Cannot call method removeElement\\(\\) on array\\|\\(Doctrine\\\\Common\\\\Collections\\\\Collection\\<int, App\\\\Entity\\\\BankAccountInterface\\>&iterable\\<App\\\\Entity\\\\BankAccountInterface\\>\\)\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -4567,11 +4047,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getCalculatedBalance\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getClient\\(\\) should return App\\\\Entity\\\\Client but returns int\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -5026,11 +4501,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setSubmittedBy\\(\\) has parameter \\$submittedBy with no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setType\\(\\) has parameter \\$type with no type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -5076,22 +4546,7 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$bankAccounts has no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$checklist \\(App\\\\Entity\\\\Report\\\\Checklist\\) does not accept null\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$client \\(int\\) does not accept App\\\\Entity\\\\Client\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$client \\(int\\) does not accept App\\\\Entity\\\\Client\\|null\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -5281,11 +4736,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$submitDate \\(DateTime\\) does not accept DateTime\\|null\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$unSubmitDate \\(DateTime\\) does not accept DateTime\\|null\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -5307,11 +4757,6 @@ parameters:
 
 		-
 			message: "#^Strict comparison using \\=\\=\\= between null and float will always evaluate to false\\.$#"
-			count: 2
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between null and string will always evaluate to false\\.$#"
 			count: 2
 			path: src/Entity/Report/Report.php
 
@@ -5446,31 +4891,6 @@ parameters:
 			path: src/Entity/ReportInterface.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\ReportInterface\\:\\:getSubmitted\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/ReportInterface.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ReportInterface\\:\\:setSubmitDate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/ReportInterface.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ReportInterface\\:\\:setSubmitted\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/ReportInterface.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ReportInterface\\:\\:setSubmittedBy\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/ReportInterface.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ReportInterface\\:\\:setSubmittedBy\\(\\) has parameter \\$user with no type specified\\.$#"
-			count: 1
-			path: src/Entity/ReportInterface.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\ReportInterface\\:\\:updateSectionsStatusCache\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/ReportInterface.php
@@ -5479,11 +4899,6 @@ parameters:
 			message: "#^Property App\\\\Entity\\\\Satisfaction\\:\\:\\$comments \\(string\\) does not accept string\\|null\\.$#"
 			count: 1
 			path: src/Entity/Satisfaction.php
-
-		-
-			message: "#^Call to function is_null\\(\\) with DateTime will always evaluate to false\\.$#"
-			count: 1
-			path: src/Entity/User.php
 
 		-
 			message: "#^Cannot call method first\\(\\) on array\\<App\\\\Entity\\\\Client\\>\\.$#"
@@ -5596,7 +5011,7 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: "#^Parameter \\#2 \\$callback of function array_filter expects \\(callable\\(mixed\\)\\: bool\\)\\|null, Closure\\(App\\\\Entity\\\\Report\\\\Report\\)\\: true given\\.$#"
+			message: "#^Parameter \\#2 \\$callback of function array_filter expects \\(callable\\(mixed\\)\\: bool\\)\\|null, Closure\\(App\\\\Entity\\\\Report\\\\Report\\)\\: bool given\\.$#"
 			count: 1
 			path: src/Entity/User.php
 
@@ -5627,11 +5042,6 @@ parameters:
 
 		-
 			message: "#^Property App\\\\Entity\\\\User\\:\\:\\$depTypeIdToRealm has no type specified\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\User\\:\\:\\$deputyUid \\(int\\) does not accept int\\|null\\.$#"
 			count: 1
 			path: src/Entity/User.php
 
@@ -6006,21 +5416,6 @@ parameters:
 			path: src/Logger/OpgLineFormatter.php
 
 		-
-			message: "#^Cannot call method get\\(\\) on Symfony\\\\Component\\\\DependencyInjection\\\\ContainerInterface\\|null\\.$#"
-			count: 1
-			path: src/Migrations/Version225.php
-
-		-
-			message: "#^Cannot call method setName\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: src/Migrations/Version225.php
-
-		-
-			message: "#^Parameter \\#1 \\$entity of method Doctrine\\\\ORM\\\\EntityManager\\:\\:persist\\(\\) expects object, object\\|null given\\.$#"
-			count: 1
-			path: src/Migrations/Version225.php
-
-		-
 			message: "#^Class App\\\\Repository\\\\AssetRepository extends generic class Doctrine\\\\Bundle\\\\DoctrineBundle\\\\Repository\\\\ServiceEntityRepository but does not specify its types\\: T$#"
 			count: 1
 			path: src/Repository/AssetRepository.php
@@ -6317,11 +5712,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Repository\\\\PreRegistrationRepository\\:\\:deleteAll\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/PreRegistrationRepository.php
-
-		-
-			message: "#^Method App\\\\Repository\\\\PreRegistrationRepository\\:\\:findByCaseNumber\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/PreRegistrationRepository.php
 
@@ -7041,16 +6431,6 @@ parameters:
 			path: src/Service/DataImporter/CsvToArray.php
 
 		-
-			message: "#^Method App\\\\Service\\\\DeputyService\\:\\:addDeputy\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/DeputyService.php
-
-		-
-			message: "#^Property App\\\\Service\\\\DeputyService\\:\\:\\$deputyRepository \\(App\\\\Repository\\\\DeputyRepository\\) does not accept Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Deputy\\>\\.$#"
-			count: 1
-			path: src/Service/DeputyService.php
-
-		-
 			message: "#^Binary operation \"\\.\" between 'Invalid Reference…' and 0\\|0\\.0\\|''\\|'0'\\|array\\{\\}\\|false\\|null results in an error\\.$#"
 			count: 1
 			path: src/Service/File/Storage/S3Storage.php
@@ -7312,11 +6692,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$reportType of static method App\\\\Entity\\\\PreRegistration\\:\\:getReportTypeByOrderType\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
-			message: "#^Parameter \\#2 \\$orderType of static method App\\\\Entity\\\\PreRegistration\\:\\:getReportTypeByOrderType\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Service/ReportService.php
 
@@ -7696,21 +7071,6 @@ parameters:
 			path: src/Service/UserService.php
 
 		-
-			message: "#^Method App\\\\Service\\\\UserService\\:\\:addUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/UserService.php
-
-		-
-			message: "#^Method App\\\\Service\\\\UserService\\:\\:addUserToUsersClients\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/UserService.php
-
-		-
-			message: "#^Method App\\\\Service\\\\UserService\\:\\:addUserToUsersClients\\(\\) has parameter \\$userToAdd with no type specified\\.$#"
-			count: 1
-			path: src/Service/UserService.php
-
-		-
 			message: "#^Method App\\\\Service\\\\UserService\\:\\:editUser\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/UserService.php
@@ -7731,39 +7091,9 @@ parameters:
 			path: src/Service/UserService.php
 
 		-
-			message: "#^Parameter \\#2 \\$clientId of method App\\\\Repository\\\\ClientRepository\\:\\:saveUserToClient\\(\\) expects int, int\\|null given\\.$#"
-			count: 1
-			path: src/Service/UserService.php
-
-		-
 			message: "#^Method App\\\\Service\\\\Validator\\\\RestArrayValidator\\:\\:validateArray\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/Validator/RestArrayValidator.php
-
-		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\<App\\\\Entity\\\\Client\\>\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ClientTestHelper.php
-
-		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\<App\\\\Entity\\\\Client\\>\\:\\:getReports\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ClientTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ClientTestHelper\\:\\:createClientMock\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/ClientTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ClientTestHelper\\:\\:createValidCaseNumber\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/ClientTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ClientTestHelper\\:\\:generateClient\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/ClientTestHelper.php
 
 		-
 			message: "#^Ternary operator condition is always true\\.$#"
@@ -7779,6 +7109,11 @@ parameters:
 			message: "#^Method App\\\\TestHelpers\\\\OrganisationTestHelper\\:\\:createOrganisation\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/TestHelpers/OrganisationTestHelper.php
+
+		-
+			message: "#^Cannot call method modify\\(\\) on DateTimeInterface\\|null\\.$#"
+			count: 1
+			path: src/TestHelpers/ReportSubmissionHelper.php
 
 		-
 			message: "#^Method App\\\\TestHelpers\\\\ReportSubmissionHelper\\:\\:generateAndPersistSubmittedReportSubmission\\(\\) has no return type specified\\.$#"
@@ -7947,7 +7282,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setWishToProvideDocumentation\\(\\)\\.$#"
-			count: 1
+			count: 2
 			path: src/TestHelpers/ReportTestHelper.php
 
 		-
@@ -8046,6 +7381,11 @@ parameters:
 			path: src/TestHelpers/ReportTestHelper.php
 
 		-
+			message: "#^Parameter \\#1 \\$submittedBy of method App\\\\Entity\\\\ReportInterface\\:\\:setSubmittedBy\\(\\) expects App\\\\Entity\\\\User\\|null, mixed given\\.$#"
+			count: 1
+			path: src/TestHelpers/ReportTestHelper.php
+
+		-
 			message: "#^Parameter \\#2 \\$createdBy of class App\\\\Entity\\\\Report\\\\ReportSubmission constructor expects App\\\\Entity\\\\User, mixed given\\.$#"
 			count: 1
 			path: src/TestHelpers/ReportTestHelper.php
@@ -8059,31 +7399,6 @@ parameters:
 			message: "#^Parameter \\#4 \\$amount of class App\\\\Entity\\\\Report\\\\Debt constructor expects string\\|null, float given\\.$#"
 			count: 1
 			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\<App\\\\Entity\\\\User\\>\\:\\:getClients\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
-
-		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\<App\\\\Entity\\\\User\\>\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
-
-		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\<App\\\\Entity\\\\User\\>\\:\\:getRoleName\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
-
-		-
-			message: "#^Call to an undefined method Prophecy\\\\Prophecy\\\\ObjectProphecy\\<App\\\\Entity\\\\User\\>\\:\\:hasReports\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\UserTestHelper\\:\\:createUserMock\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
 
 		-
 			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, string\\|null given\\.$#"
@@ -8264,6 +7579,11 @@ parameters:
 			message: "#^Method App\\\\v2\\\\Assembler\\\\UserAssembler\\:\\:setPropertiesFromData\\(\\) has parameter \\$dto with no type specified\\.$#"
 			count: 1
 			path: src/v2/Assembler/UserAssembler.php
+
+		-
+			message: "#^Attribute class Sensio\\\\Bundle\\\\FrameworkExtraBundle\\\\Configuration\\\\Security does not exist\\.$#"
+			count: 1
+			path: src/v2/Controller/CourtOrderController.php
 
 		-
 			message: "#^Cannot call method getOrganisations\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null\\.$#"
@@ -9046,11 +8366,6 @@ parameters:
 			path: src/v2/Registration/Uploader/LayDeputyshipProcessor.php
 
 		-
-			message: "#^Parameter \\#2 \\$orderType of static method App\\\\Entity\\\\PreRegistration\\:\\:getReportTypeByOrderType\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/v2/Registration/Uploader/LayDeputyshipProcessor.php
-
-		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\PreRegistration\\>\\:\\:getNewClientsForExistingDeputiesArray\\(\\)\\.$#"
 			count: 1
 			path: src/v2/Registration/Uploader/LayDeputyshipUploader.php
@@ -9087,11 +8402,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$string of function strtolower expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/v2/Registration/Uploader/LayDeputyshipUploader.php
-
-		-
-			message: "#^Parameter \\#2 \\$orderType of static method App\\\\Entity\\\\PreRegistration\\:\\:getReportTypeByOrderType\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/v2/Registration/Uploader/LayDeputyshipUploader.php
 

@@ -1,7 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Entity\Report;
 
+use DateTime;
+use PHPUnit\Framework\Attributes\DataProvider;
+use RuntimeException;
+use InvalidArgumentException;
+use PHPUnit\Framework\Attributes\Test;
+use DateTimeImmutable;
 use App\Entity\Client;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\AssetOther;
@@ -25,7 +33,7 @@ use Mockery\MockInterface;
 use MockeryStub as m;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-class ReportTest extends KernelTestCase
+final class ReportTest extends KernelTestCase
 {
     private MockInterface&Client $client;
     private array $validReportCtorArgs;
@@ -39,7 +47,7 @@ class ReportTest extends KernelTestCase
     public function setUp(): void
     {
         $this->client = m::mock(Client::class, ['getUnsubmittedReports' => new ArrayCollection(), 'getSubmittedReports' => new ArrayCollection()]);
-        $this->validReportCtorArgs = [$this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
+        $this->validReportCtorArgs = [$this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime('2017-06-23'), new DateTime('2018-06-22')];
         $this->report = m::mock(Report::class.'[has106Flag]', $this->validReportCtorArgs);
 
         $this->gift1 = m::mock(Gift::class, ['getAmount' => 1]);
@@ -51,16 +59,16 @@ class ReportTest extends KernelTestCase
         $this->em = $kernel->getContainer()->get('doctrine')->getManager();
     }
 
-    public function testDueDate()
+    public function testDueDate(): void
     {
-        $startDate = new \DateTime('2017-01-01');
-        $endDate = new \DateTime('2018-12-31');
+        $startDate = new DateTime('2017-01-01');
+        $endDate = new DateTime('2018-12-31');
 
         $report = new Report($this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, $startDate, $endDate, false);
         $this->assertEquals('2019-01-21', $report->getDueDate()->format('Y-m-d'));
     }
 
-    public static function constructorProvider()
+    public static function constructorProvider(): array
     {
         return [
             // start date, end date, submitted (true/false)
@@ -70,23 +78,21 @@ class ReportTest extends KernelTestCase
         ];
     }
 
-    /**
-     * @dataProvider constructorProvider
-     * */
-    public function testConstructorExceptions($startDate, $endDate, array $clientReports, $expectedTextInException)
+    #[DataProvider('constructorProvider')]
+    public function testConstructorExceptions(string $startDate, string $endDate, array $clientReports, string $expectedTextInException): void
     {
         $client = new Client();
         foreach ($clientReports as $rep) {
-            $report = (new Report($this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime($rep[0]), new \DateTime($rep[1])))->setSubmitted($rep[2]);
+            $report = (new Report($this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime($rep[0]), new DateTime($rep[1])))->setSubmitted($rep[2]);
             $client->addReport($report);
         }
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
-        new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime($startDate), new \DateTime($endDate));
+        new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime($startDate), new DateTime($endDate));
     }
 
-    public function testGetMoneyTotal()
+    public function testGetMoneyTotal(): void
     {
         // 102
         $this->assertEquals(0, $this->report->getMoneyInTotal());
@@ -114,7 +120,7 @@ class ReportTest extends KernelTestCase
         $this->assertEquals(30 + 40, $this->report->getMoneyOutTotal());
     }
 
-    public function testGetAccountsOpeningBalanceTotal()
+    public function testGetAccountsOpeningBalanceTotal(): void
     {
         $this->assertEquals(0, $this->report->getAccountsOpeningBalanceTotal());
 
@@ -125,7 +131,7 @@ class ReportTest extends KernelTestCase
         $this->assertEquals(4, $this->report->getAccountsOpeningBalanceTotal());
     }
 
-    public function testGetAccountsClosingBalanceTotal()
+    public function testGetAccountsClosingBalanceTotal(): void
     {
         $this->assertEquals(0, $this->report->getAccountsClosingBalanceTotal());
 
@@ -139,9 +145,9 @@ class ReportTest extends KernelTestCase
         $this->assertEquals(4, $this->report->getAccountsClosingBalanceTotal());
     }
 
-    public function testGetCalculatedBalance()
+    public function testGetCalculatedBalance(): void
     {
-        $this->validReportCtorArgs = [$this->client, Report::PROF_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
+        $this->validReportCtorArgs = [$this->client, Report::PROF_PFA_HIGH_ASSETS_TYPE, new DateTime('2017-06-23'), new DateTime('2018-06-22')];
         $this->report = m::mock(Report::class.'[has106Flag]', $this->validReportCtorArgs);
 
         $this->report->shouldReceive('has106Flag')->andReturn(false);
@@ -164,9 +170,9 @@ class ReportTest extends KernelTestCase
         $this->assertEquals($calculatedBalance, $this->report->getCalculatedBalance());
     }
 
-    public function testGetCalculatedBalanceProfDeputy()
+    public function testGetCalculatedBalanceProfDeputy(): void
     {
-        $this->validReportCtorArgs = [$this->client, Report::PROF_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
+        $this->validReportCtorArgs = [$this->client, Report::PROF_PFA_HIGH_ASSETS_TYPE, new DateTime('2017-06-23'), new DateTime('2018-06-22')];
         $this->report = m::mock(Report::class.'[has106Flag]', $this->validReportCtorArgs);
 
         $this->report->shouldReceive('has106Flag')->andReturn(false);
@@ -191,8 +197,8 @@ class ReportTest extends KernelTestCase
         // change interim yes->no
         $this->report->setProfDeputyCostsHasInterim('yes');
         $this->report->setProfDeputyInterimCosts(new ArrayCollection([
-            new ProfDeputyInterimCost($this->report, new \DateTime('now'), 11),
-            new ProfDeputyInterimCost($this->report, new \DateTime('now'), 11),
+            new ProfDeputyInterimCost($this->report, new DateTime('now'), 11),
+            new ProfDeputyInterimCost($this->report, new DateTime('now'), 11),
         ]));
         $this->assertEquals(-1 - 1 - 11 - 11 - 10 - 10, $this->report->getCalculatedBalance());
     }
@@ -201,7 +207,7 @@ class ReportTest extends KernelTestCase
      * //TODO consider rewriting, unit testing methods composing the total
      * (see testgetExpensesTotal as an example) and using mocks here.
      */
-    public function testGetTotalsOffsetAndMatch()
+    public function testGetTotalsOffsetAndMatch(): void
     {
         $this->report->shouldReceive('has106Flag')->andReturn(false);
 
@@ -226,7 +232,7 @@ class ReportTest extends KernelTestCase
         $this->assertEquals(true, $this->report->getTotalsMatch());
     }
 
-    public function testgetFeesTotal()
+    public function testgetFeesTotal(): void
     {
         $fee1 = m::mock(Fee::class, ['getAmount' => 2]);
         $reportWith = function ($fees) {
@@ -239,7 +245,7 @@ class ReportTest extends KernelTestCase
         $this->assertEquals(2 + 2, $reportWith([$fee1, $fee1])->getFeesTotal());
     }
 
-    public function testgetExpensesTotal()
+    public function testgetExpensesTotal(): void
     {
         $exp1 = m::mock(Expense::class, ['getAmount' => 1]);
 
@@ -253,7 +259,7 @@ class ReportTest extends KernelTestCase
         $this->assertEquals(1 + 1, $reportWith([$exp1, $exp1])->getExpensesTotal());
     }
 
-    public function testgetAssetsTotalValue()
+    public function testgetAssetsTotalValue(): void
     {
         $this->assertEquals(0, $this->report->getAssetsTotalValue());
 
@@ -263,7 +269,7 @@ class ReportTest extends KernelTestCase
         $this->assertEquals(2, $this->report->getAssetsTotalValue());
     }
 
-    public static function sectionsSettingsProvider()
+    public static function sectionsSettingsProvider(): array
     {
         return [
             [Report::LAY_PFA_HIGH_ASSETS_TYPE, ['bankAccounts', 'moneyIn', 'balance', 'clientBenefitsCheck'], ['moneyInShort', 'lifestyle']],
@@ -274,13 +280,12 @@ class ReportTest extends KernelTestCase
 
     /**
      * Some checks that the config array doesn't get messed up.
-     *
-     * @dataProvider sectionsSettingsProvider
      */
-    public function testAvailableSectionsAndHasSection($type, array $expectedSections, array $unExpectedSections)
+    #[DataProvider('sectionsSettingsProvider')]
+    public function testAvailableSectionsAndHasSection(string $type, array $expectedSections, array $unExpectedSections): void
     {
-        $this->report = (new Report($this->client, $type, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')))
-            ->setBenefitsSectionReleaseDate(new \DateTime('2016-01-01'));
+        $this->report = (new Report($this->client, $type, new DateTime('2017-06-23'), new DateTime('2018-06-22')))
+            ->setBenefitsSectionReleaseDate(new DateTime('2016-01-01'));
 
         foreach ($expectedSections as $section) {
             $this->assertContains($section, $this->report->getAvailableSections());
@@ -292,7 +297,7 @@ class ReportTest extends KernelTestCase
         }
     }
 
-    public function testGetPreviousReportData()
+    public function testGetPreviousReportData(): void
     {
         $mockClient = m::mock(Client::class);
         $mockClient->shouldReceive('getUnsubmittedReports')->andReturn(new ArrayCollection());
@@ -390,7 +395,7 @@ class ReportTest extends KernelTestCase
         );
     }
 
-    public function reportTypeTranslationKeyProvider()
+    public static function reportTypeTranslationKeyProvider(): array
     {
         return [
             // Lay deputies
@@ -416,23 +421,21 @@ class ReportTest extends KernelTestCase
         ];
     }
 
-    /**
-     * @dataProvider reportTypeTranslationKeyProvider
-     */
-    public function testGetReportTitle($reportType, $expected)
+    #[DataProvider('reportTypeTranslationKeyProvider')]
+    public function testGetReportTitle(string $reportType, string $expected): void
     {
         $this->report->setType($reportType);
 
         $this->assertEquals($expected, $this->report->getReportTitle());
     }
 
-    public function testInvalidAgreedBehalfOption()
+    public function testInvalidAgreedBehalfOption(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->report->setAgreedBehalfDeputy('BAD_VALUE');
     }
 
-    public function testValidAgreedBehalfOptions()
+    public function testValidAgreedBehalfOptions(): void
     {
         $values = ['not_deputy', 'only_deputy', 'more_deputies_behalf', 'more_deputies_not_behalf'];
         foreach ($values as $value) {
@@ -442,7 +445,7 @@ class ReportTest extends KernelTestCase
         }
     }
 
-    public function reportTypesWithEndDateProvider()
+    public static function reportTypesWithEndDateProvider(): array
     {
         return [
             // lay post (21 days)
@@ -452,7 +455,7 @@ class ReportTest extends KernelTestCase
         ];
     }
 
-    public function layReportTypesProvider()
+    public static function layReportTypesProvider(): array
     {
         return [
             // Lay deputies
@@ -476,13 +479,11 @@ class ReportTest extends KernelTestCase
         ];
     }
 
-    /**
-     * @dataProvider layReportTypesProvider
-     */
-    public function testIsLayReport($type, $expectedResult)
+    #[DataProvider('layReportTypesProvider')]
+    public function testIsLayReport(string $type, bool $expectedResult): void
     {
         $client = new Client();
-        $endDate = new \DateTime();
+        $endDate = new DateTime();
         $startDate = clone $endDate;
         $startDate = $startDate->modify('-1 year');
 
@@ -490,13 +491,11 @@ class ReportTest extends KernelTestCase
         $this->assertEquals($expectedResult, $report->isLayReport());
     }
 
-    /**
-     * @dataProvider reportTypesWithEndDateProvider
-     * */
-    public function testUpdateDuetDateBasedOnEndDate($type, $endDate, $expectedDueDate)
+    #[DataProvider('reportTypesWithEndDateProvider')]
+    public function testUpdateDuetDateBasedOnEndDate(string $type, string $endDate, string $expectedDueDate): void
     {
         $client = new Client();
-        $endDate = new \DateTime($endDate);
+        $endDate = new DateTime($endDate);
         $startDate = clone $endDate;
         $startDate = $startDate->modify('-1 year');
 
@@ -509,19 +508,17 @@ class ReportTest extends KernelTestCase
         $this->assertEquals($startDate, $report->getStartDate());
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider benefitsCheckSectionRequiredProvider
-     */
+    
+    #[DataProvider('benefitsCheckSectionRequiredProvider')]
+    #[Test]
     public function requiresBenefitsCheckSection(
-        \DateTime $featureFlagDate,
-        \DateTime $dueDate,
+        DateTime $featureFlagDate,
+        DateTime $dueDate,
         ?ClientBenefitsCheck $clientBenefitSection,
-        ?\DateTime $unsubmitDate,
+        ?DateTime $unsubmitDate,
         bool $expectedResult
-    ) {
-        $reportTestHelper = new ReportTestHelper();
+    ): void {
+        $reportTestHelper = ReportTestHelper::create();
 
         $report = $reportTestHelper->generateReport($this->em)
             ->setDueDate($dueDate)
@@ -535,50 +532,50 @@ class ReportTest extends KernelTestCase
         );
     }
 
-    public function benefitsCheckSectionRequiredProvider(): array
+    public static function benefitsCheckSectionRequiredProvider(): array
     {
-        $featureFlagDate = new \DateTimeImmutable('01/01/2021');
-        $unsubmitDate = new \DateTime();
+        $featureFlagDate = new DateTimeImmutable('01/01/2021');
+        $unsubmitDate = new DateTime();
 
         return [
             'Due date 61 days after feature launch date' => [
-                \DateTime::createFromImmutable($featureFlagDate),
-                \DateTime::createFromImmutable($featureFlagDate->modify('+61 days')),
+                DateTime::createFromImmutable($featureFlagDate),
+                DateTime::createFromImmutable($featureFlagDate->modify('+61 days')),
                 null,
                 null,
                 true,
             ],
             'Due date 60 days after feature launch date' => [
-                \DateTime::createFromImmutable($featureFlagDate),
-                \DateTime::createFromImmutable($featureFlagDate->modify('+60 days')),
+                DateTime::createFromImmutable($featureFlagDate),
+                DateTime::createFromImmutable($featureFlagDate->modify('+60 days')),
                 null,
                 null,
                 false,
             ],
             'Due date 1 day before feature launch date' => [
-                \DateTime::createFromImmutable($featureFlagDate),
-                \DateTime::createFromImmutable($featureFlagDate->modify('-1 day')),
+                DateTime::createFromImmutable($featureFlagDate),
+                DateTime::createFromImmutable($featureFlagDate->modify('-1 day')),
                 null,
                 null,
                 false,
             ],
             'Due date 61 days after feature launch date, report unsubmitted but section not previously completed' => [
-                \DateTime::createFromImmutable($featureFlagDate),
-                \DateTime::createFromImmutable($featureFlagDate->modify('+61 days')),
+                DateTime::createFromImmutable($featureFlagDate),
+                DateTime::createFromImmutable($featureFlagDate->modify('+61 days')),
                 null,
                 $unsubmitDate,
                 false,
             ],
             'Due date 61 days after feature launch date, report unsubmitted but section previously completed' => [
-                \DateTime::createFromImmutable($featureFlagDate),
-                \DateTime::createFromImmutable($featureFlagDate->modify('+61 days')),
+                DateTime::createFromImmutable($featureFlagDate),
+                DateTime::createFromImmutable($featureFlagDate->modify('+61 days')),
                 new ClientBenefitsCheck(),
                 $unsubmitDate,
                 true,
             ],
             'Due date 1 day before feature launch date, report unsubmitted but section previously completed' => [
-                \DateTime::createFromImmutable($featureFlagDate),
-                \DateTime::createFromImmutable($featureFlagDate->modify('-1 days')),
+                DateTime::createFromImmutable($featureFlagDate),
+                DateTime::createFromImmutable($featureFlagDate->modify('-1 days')),
                 new ClientBenefitsCheck(),
                 $unsubmitDate,
                 true,

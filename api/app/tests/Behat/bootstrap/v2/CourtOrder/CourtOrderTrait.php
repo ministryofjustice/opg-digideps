@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\CourtOrder;
 
+use DateTime;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\CourtOrderDeputy;
@@ -24,6 +25,7 @@ trait CourtOrderTrait
     public array $courtOrders;
     public ClientApi $clientApi;
     private Deputy $coDeputy;
+    private array $invitedDeputy = [];
 
     private function getDeputyForLoggedInUser(): ?Deputy
     {
@@ -135,7 +137,7 @@ trait CourtOrderTrait
         if ('I am' === $arg1) {
             $this->visitFrontendPath(sprintf('/courtorder/%s', $this->courtOrder->getCourtOrderUid()));
         } else {
-            $clientTestHelper = new ClientTestHelper();
+            $clientTestHelper = ClientTestHelper::create();
             $deputyTestHelper = new DeputyTestHelper();
 
             $client = $clientTestHelper->generateClient($this->em);
@@ -262,7 +264,7 @@ trait CourtOrderTrait
     {
         // create deputy with a last_logged_in datetime, so they show as "registered",
         // and associate with the court order (mimicking what will happen when we eventually do this via ingest)
-        $this->coDeputy = $this->fixtureHelper->createDeputyOnOrder($this->courtOrder, new \DateTime());
+        $this->coDeputy = $this->fixtureHelper->createDeputyOnOrder($this->courtOrder, new DateTime());
     }
 
     /**
@@ -298,6 +300,16 @@ trait CourtOrderTrait
     }
 
     /**
+     * @Given /^I should see that the invited co-deputy is awaiting registration$/
+     */
+    public function iShouldSeeInvitedCoDeputyAwaitingRegistrationOnCourtOrder()
+    {
+        $coDeputyNameElts = $this->findAllCssElements('td[data-role="co-deputy-awaiting-registration"]');
+        assertCount(1, $coDeputyNameElts);
+        assertStringContainsString($this->invitedDeputy['email'], $coDeputyNameElts[0]->getText());
+    }
+
+    /**
      * @Given /^I should see that the co-deputy is registered$/
      */
     public function iShouldSeeCoDeputyRegisteredOnCourtOrder()
@@ -316,5 +328,42 @@ trait CourtOrderTrait
         }
 
         assert($foundDeputy);
+    }
+
+    /**
+     * @Given /^I invite a co-deputy to the court order$/
+     */
+    public function iInviteACoDeputyToTheCourtOrder(): void
+    {
+        // add user to be invited to the pre-reg table, associated with the case number of the court order
+        $preregUser = $this->fixtureHelper->createPreRegistration(caseNumber: $this->courtOrder->getClient()->getCaseNumber());
+
+        $this->invitedDeputy = [
+            'email' => strtolower($preregUser->getDeputyFirstname()).'.'.strtolower($preregUser->getDeputySurname()).'@opg.gov.uk',
+            'firstname' => $preregUser->getDeputyFirstname(),
+            'lastname' => $preregUser->getDeputySurname(),
+        ];
+
+        // fill in invitee details and submit
+        $this->fillInField('co_deputy_invite_firstname', $this->invitedDeputy['firstname']);
+        $this->fillInField('co_deputy_invite_lastname', $this->invitedDeputy['lastname']);
+        $this->fillInField('co_deputy_invite_email', $this->invitedDeputy['email']);
+        $this->pressButton('co_deputy_invite_submit');
+    }
+
+    /**
+     * @Given /^I should be on the page for the court order$/
+     */
+    public function iShouldBeOnCourtOrderPage(): void
+    {
+        $this->iAmOnPage('|/courtorder/'.$this->courtOrder->getCourtOrderUid().'$|');
+    }
+
+    /**
+     * @Given /^I visit the court order invite page$/
+     */
+    public function iVisitTheCourtOrderInvitePage(): void
+    {
+        $this->visit('/courtorder/'.$this->courtOrder->getCourtOrderUid().'/invite');
     }
 }

@@ -8,7 +8,9 @@ use App\Entity\User;
 use App\Repository\PreRegistrationRepository;
 use App\Service\Formatter\RestFormatter;
 use App\Service\PreRegistrationVerificationService;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -52,13 +54,13 @@ class PreRegistrationController extends RestController
         // ward off non-fee-paying codeps trying to self-register
         if ($isMultiDeputyCase && ($existingClient instanceof Client) && $existingClient->hasDeputies()) {
             // if client exists with case number, the first codep already registered.
-            throw new \RuntimeException(json_encode('Co-deputy cannot self register.'), 403);
+            throw new RuntimeException(json_encode('Co-deputy cannot self register.'), 403);
         }
 
         // Check the client is unique and has no deputies attached
         if ($existingClient instanceof Client) {
             if ($existingClient->hasDeputies() || $existingClient->getOrganisation() instanceof Organisation) {
-                throw new \RuntimeException(json_encode(sprintf('User registration: Case number %s already used', $existingClient->getCaseNumber())), 425);
+                throw new RuntimeException(json_encode(sprintf('User registration: Case number %s already used', $existingClient->getCaseNumber())), 425);
             } else {
                 // soft delete client
                 $this->em->remove($existingClient);
@@ -78,12 +80,12 @@ class PreRegistrationController extends RestController
 
         if (1 !== count($preregMatches)) {
             // a deputy could not be uniquely identified due to matching first name, last name and postcode across more than one deputy record
-            throw new \RuntimeException(json_encode(sprintf('A unique deputy record for case number %s could not be identified', $clientData['case_number'])), 462);
+            throw new RuntimeException(json_encode(sprintf('A unique deputy record for case number %s could not be identified', $clientData['case_number'])), 462);
         }
 
         $user->setDeputyNo($preregMatches[0]->getDeputyUid());
         $user->setDeputyUid(intval($preregMatches[0]->getDeputyUid()));
-        $user->setPreRegisterValidatedDate(new \DateTime());
+        $user->setPreRegisterValidatedDate(new DateTime());
         $user->setIsPrimary(true);
         $this->em->persist($user);
         $this->em->flush();
@@ -99,7 +101,10 @@ class PreRegistrationController extends RestController
         $qb->select('count(p.id)');
         $qb->from('App\Entity\PreRegistration', 'p');
 
-        return $qb->getQuery()->getSingleScalarResult();
+        /** @var int $result */
+        $result = $qb->getQuery()->getSingleScalarResult();
+
+        return $result;
     }
 
     #[Route(path: '/clientHasCoDeputies/{caseNumber}', methods: ['GET'])]

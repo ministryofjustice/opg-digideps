@@ -1,7 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Service\Stats;
 
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use InvalidArgumentException;
 use App\Service\Stats\Query\Query;
 use App\Service\Stats\QueryFactory;
 use App\Service\Stats\StatsQueryParameters;
@@ -9,12 +14,9 @@ use Doctrine\ORM\EntityManager;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
-class QueryFactoryTest extends TestCase
+final class QueryFactoryTest extends TestCase
 {
-    /**
-     * @var QueryFactory
-     */
-    public $factory;
+    public QueryFactory $factory;
 
     public function setUp(): void
     {
@@ -22,21 +24,15 @@ class QueryFactoryTest extends TestCase
         $this->factory = new QueryFactory($em);
     }
 
-    /**
-     * Provider of metric names.
-     */
-    public function metricNameProvider()
+    public static function metricNameProvider(): array
     {
         return [['satisfaction'], ['reportsSubmitted'], ['clients'], ['registeredDeputies']];
     }
 
-    /**
-     * @test
-     *
-     * @dataProvider metricNameProvider
-     * Initialises real metric queries
-     */
-    public function initialiseMetricQueries($metric)
+    /** Initialises real metric queries */
+    #[DataProvider('metricNameProvider')]
+    #[Test]
+    public function initialiseMetricQueries(string $metric): void
     {
         $sq = new StatsQueryParameters([
             'metric' => $metric,
@@ -46,17 +42,15 @@ class QueryFactoryTest extends TestCase
         $this->assertInstanceOf(Query::class, $query);
     }
 
-    /**
-     * @test
-     * Throws if the metric query doesn't exist
-     */
-    public function throwIfQueryDoesntExist()
+    /** Throws if the metric query doesn't exist */
+    #[Test]
+    public function throwIfQueryDoesntExist(): void
     {
         $sq = new StatsQueryParameters([
             'metric' => 'aMetricWeDoNotSupport',
         ]);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $query = $this->factory->create($sq);
     }
 }

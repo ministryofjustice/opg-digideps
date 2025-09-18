@@ -4,11 +4,24 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Controller;
 
+use Exception;
 use Doctrine\DBAL\Connection;
 use ReflectionObject;
 
 class HealthControllerTest extends AbstractTestController
 {
+    public static function setUpBeforeClass(): void
+    {
+        // This is here to override to prevent the default setup until tests that fail with it are altered
+    }
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        self::setupFixtures();
+    }
+
     public function testContainerHealthOk()
     {
         $ret = $this->assertJsonRequest('GET', '/health-check', [
@@ -51,7 +64,7 @@ class HealthControllerTest extends AbstractTestController
         $connection = self::getContainer()->get('doctrine.dbal.default_connection');
         $mockConnection = $this->createMock(Connection::class);
         $mockConnection->method('connect')
-            ->willThrowException(new \Exception('Database connection failed'));
+            ->willThrowException(new Exception('Database connection failed'));
 
         $ref = new ReflectionObject($connection);
         $prop = $ref->getProperty('_conn');

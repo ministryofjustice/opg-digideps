@@ -2,6 +2,8 @@
 
 namespace App\Tests\Behat\Common;
 
+use RuntimeException;
+use Throwable;
 use Behat\Gherkin\Node\TableNode;
 
 /**
@@ -22,7 +24,7 @@ trait RegionTrait
         $linksElementsFound = $this->getSession()->getPage()->findAll('css', $regionCss);
         $count = count($linksElementsFound);
         if ($count > 0) {
-            throw new \RuntimeException("$count  $regionCss element(s) found. None expected");
+            throw new RuntimeException("$count  $regionCss element(s) found. None expected");
         }
     }
 
@@ -36,7 +38,7 @@ trait RegionTrait
         $regionCss = self::behatElementToCssSelector($element, $type);
         $found = count($this->getSession()->getPage()->findAll('css', $regionCss));
         if (1 !== $found) {
-            throw new \RuntimeException("One $regionCss class expected, $found found");
+            throw new RuntimeException("One $regionCss class expected, $found found");
         }
     }
 
@@ -50,7 +52,7 @@ trait RegionTrait
         $regionCss = self::behatElementToCssSelector($element, $type);
         $linksElementsFound = $this->getSession()->getPage()->findAll('css', $regionCss);
         if (($c = count($linksElementsFound)) != $n) {
-            throw new \RuntimeException("Found $c instances of $regionCss, $n expected");
+            throw new RuntimeException("Found $c instances of $regionCss, $n expected");
         }
     }
 
@@ -63,7 +65,7 @@ trait RegionTrait
         $regionCss = self::behatElementToCssSelector($region, 'region');
         $found = count($this->getSession()->getPage()->findAll('css', $regionCss));
         if (1 !== $found) {
-            throw new \RuntimeException("Can't assert text existing in region $region, $found found");
+            throw new RuntimeException("Can't assert text existing in region $region, $found found");
         }
 
         $this->assertSession()->elementTextContains('css', $regionCss, $text);
@@ -78,14 +80,14 @@ trait RegionTrait
         $parentRegion = $this->getSession()->getPage()->find('css', $parentRegionCss);
 
         if (null === $parentRegion) {
-            throw new \RuntimeException("Can't find region $parentRegionId");
+            throw new RuntimeException("Can't find region $parentRegionId");
         }
 
         $regionCss = self::behatElementToCssSelector($regionId, 'region');
         $region = $parentRegion->find('css', $regionCss);
 
         if (null === $region) {
-            throw new \RuntimeException("Can't find region $regionId in $parentRegionId");
+            throw new RuntimeException("Can't find region $regionId in $parentRegionId");
         }
     }
 
@@ -98,13 +100,13 @@ trait RegionTrait
         foreach ($fields->getRowsHash() as $text => $region) {
             try {
                 $this->iShouldSeeInTheRegion($text, $region);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $errorMessages[] = $e->getMessage();
             }
         }
 
         if ($errorMessages) {
-            throw new \RuntimeException(implode("\n", $errorMessages));
+            throw new RuntimeException(implode("\n", $errorMessages));
         }
     }
 

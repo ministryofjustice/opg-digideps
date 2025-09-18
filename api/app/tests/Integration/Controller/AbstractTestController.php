@@ -2,6 +2,8 @@
 
 namespace App\Tests\Integration\Controller;
 
+use ReflectionObject;
+use Exception;
 use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use App\Service\BruteForce\AttemptsInTimeChecker;
 use App\Service\JWT\JWTService;
@@ -20,37 +22,32 @@ abstract class AbstractTestController extends WebTestCase
     protected static KernelBrowser $frameworkBundleClient;
     protected static string|false $deputySecret;
     protected static string|false $adminSecret;
-    protected ?JWTService $jwtService;
+    protected static ?JWTService $jwtService;
     protected ?int $loggedInUserId = null;
     private ?ValidatorInterface $openapiValidator = null;
 
-    /**
-     * Create static client and fixtures.
-     */
-    public function setUp(): void
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        self::setupFixtures();
+    }
+
+    public static function setupFixtures(): void
     {
         // each test restores the db before launching the entire suite,
         // help to cleanup records created from previously-executed tests
-        // TODO consider moving into setUpBeforeClass of each method. might not be needed for some tests
         Fixtures::deleteReportsData();
 
         self::$frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false]);
 
-        /** @var EntityManager $em */
-        $em = static::getContainer()->get('em');
-        self::$em = $em;
-        self::$fixtures = new Fixtures($em);
+        self::$em = static::getContainer()->get('em');
+        self::$fixtures = new Fixtures(self::$em);
+        self::$em->clear();
 
-        /** @var JWTService $jwtService */
-        $jwtService = static::getContainer()->get('App\Service\JWT\JWTService');
-        $this->jwtService = $jwtService;
-
-        $em->clear();
-
+        self::$jwtService = static::getContainer()->get(JWTService::class);
         self::$deputySecret = getenv('SECRETS_FRONT_KEY');
         self::$adminSecret = getenv('SECRETS_ADMIN_KEY');
-
-        unset($em);
     }
 
     public static function fixtures(): Fixtures
@@ -72,7 +69,7 @@ abstract class AbstractTestController extends WebTestCase
         }
 
         if ($withValidJwt) {
-            $headers['HTTP_JWT'] = $this->jwtService->createNewJWT();
+            $headers['HTTP_JWT'] = self::$jwtService->createNewJWT();
         }
 
         $rawData = null;
@@ -92,26 +89,26 @@ abstract class AbstractTestController extends WebTestCase
         );
 
         $response = self::$frameworkBundleClient->getResponse();
-        $this->assertTrue($response->headers->contains('Content-Type', 'application/json'), 'wrong content type. Headers: '.$headers['CONTENT_TYPE']);
+        $this->assertTrue($response->headers->contains('Content-Type', 'application/json'), 'wrong content type. Headers: ' . $headers['CONTENT_TYPE']);
 
         /** @var string $content */
         $content = $response->getContent();
         $return = json_decode($content, true);
         $this->assertNotEmpty($return, 'Response not json');
         if (!empty($options['mustSucceed'])) {
-            $this->assertTrue($return['success'], "Endpoint didn't succeed as expected. Response: ".print_r($return, true));
+            $this->assertTrue($return['success'], "Endpoint didn't succeed as expected. Response: " . print_r($return, true));
             if (!empty($options['assertId'])) {
                 $this->assertTrue($return['data']['id'] > 0);
             }
         }
         if (!empty($options['mustFail'])) {
-            $this->assertFalse($return['success'], "Endpoint didn't fail as expected. Response: ".print_r($return, true));
+            $this->assertFalse($return['success'], "Endpoint didn't fail as expected. Response: " . print_r($return, true));
         }
         if (!empty($options['assertCode'])) {
-            $this->assertEquals($options['assertResponseCode'], $return['code'], 'Response: '.print_r($return, true));
+            $this->assertEquals($options['assertResponseCode'], $return['code'], 'Response: ' . print_r($return, true));
         }
         if (!empty($options['assertResponseCode'])) {
-            $this->assertEquals($options['assertResponseCode'], $response->getStatusCode(), 'Response: '.$response->getStatusCode().print_r($return, true));
+            $this->assertEquals($options['assertResponseCode'], $response->getStatusCode(), 'Response: ' . $response->getStatusCode() . print_r($return, true));
         }
 
         return $return;
@@ -122,14 +119,14 @@ abstract class AbstractTestController extends WebTestCase
      *
      * @return mixed token
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function login(string $email, string $password, $clientSecret)
     {
         self::$frameworkBundleClient->request('GET', '/'); // warm up to get container
 
         // reset brute-force counters
-        $key = 'email'.$email;
+        $key = 'email' . $email;
 
         /** @var Container $container */
         $container = self::$frameworkBundleClient->getContainer();
@@ -291,7 +288,7 @@ abstract class AbstractTestController extends WebTestCase
         parent::tearDown();
 
         // clean up vars
-        $reflectionObject = new \ReflectionObject($this);
+        $reflectionObject = new ReflectionObject($this);
         foreach ($reflectionObject->getProperties() as $property) {
             if (!$property->isStatic() && !str_starts_with($property->getDeclaringClass()->getName(), 'PHPUnit_')) {
                 $property->setValue($this, null);
@@ -302,7 +299,7 @@ abstract class AbstractTestController extends WebTestCase
     private function getOpenApiSpecification()
     {
         if (null === $this->openapiValidator) {
-            $this->openapiValidator = ValidatorBuilder::fromYamlFile(__DIR__.'/../../../openapi/specification.yaml')->getValidator();
+            $this->openapiValidator = ValidatorBuilder::fromYamlFile(__DIR__ . '/../../../openapi/specification.yaml')->getValidator();
         }
 
         return $this->openapiValidator;

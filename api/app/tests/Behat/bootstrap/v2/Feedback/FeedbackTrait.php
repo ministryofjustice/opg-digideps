@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Feedback;
 
+use Throwable;
 use App\Tests\Behat\BehatException;
 
 trait FeedbackTrait
@@ -15,7 +16,7 @@ trait FeedbackTrait
     {
         try {
             $this->iAmOnReportSubmittedPage();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $loggedInUserPreviousReportId = $this->loggedInUserDetails->getPreviousReportId();
             $reportSubmittedUrl = $this->getReportSubmittedUrl($loggedInUserPreviousReportId);
             $this->visitFrontendPath($reportSubmittedUrl);
@@ -38,7 +39,7 @@ trait FeedbackTrait
     {
         try {
             $this->iAmOnPostSubmissionUserResearchPage();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $submittedReportId = $this->loggedInUserDetails->getPreviousReportId();
             $postSubmissionURUrl = $this->getPostSubmissionUserResearchUrl($submittedReportId);
             $this->visitFrontendPath($postSubmissionURUrl);

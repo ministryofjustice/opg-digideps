@@ -38,7 +38,7 @@ class SettingControllerTest extends AbstractTestController
         Fixtures::deleteReportsData(['setting']);
 
         $id = 'service-notification';
-        $url = '/setting/'.$id;
+        $url = '/setting/' . $id;
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
@@ -52,7 +52,7 @@ class SettingControllerTest extends AbstractTestController
     public function testgetOneByIdPresent()
     {
         $id = 'service-notification';
-        $url = '/setting/'.$id;
+        $url = '/setting/' . $id;
         Fixtures::deleteReportsData(['setting']);
 
         $setting = new Setting($id, 'snc', true);
@@ -71,8 +71,8 @@ class SettingControllerTest extends AbstractTestController
     public function testupdate()
     {
         $id = 'service-notification';
-        $url = '/setting/'.$id;
-        $settingContent = 'snc1'.implode(' ', range(1, 1000));
+        $url = '/setting/' . $id;
+        $settingContent = 'snc1' . implode(' ', range(1, 1000));
         Fixtures::deleteReportsData(['setting']);
 
         // assert Auth

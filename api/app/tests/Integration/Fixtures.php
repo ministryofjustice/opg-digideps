@@ -2,11 +2,15 @@
 
 namespace App\Tests\Integration;
 
+use DateTime;
+use InvalidArgumentException;
+use RuntimeException;
 use App\Entity as EntityDir;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
+use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
 use App\Entity\User;
@@ -52,20 +56,37 @@ class Fixtures
         return "export PGHOST={$pgHost}; export PGPASSWORD={$pgPass}; export PGDATABASE=digideps_unit_test; export PGUSER={$pgUser};";
     }
 
-    /**
-     * @return User
-     */
-    public function createUser(array $settersMap = [])
-    {
-        // add clent, cot, report, needed for assets
+    public function createUser(
+        ?string $email = null,
+        ?string $roleName = null,
+        ?DateTime $registrationDate = null,
+        ?string $phoneMain = null,
+        ?int $deputyUid = null,
+        ?bool $isPrimary = null,
+    ): User {
         $user = new User();
-        $user->setEmail('temp'.microtime(true).rand(100, 99999).'@temp.com');
+        $user->setEmail('temp' . microtime(true) . rand(100, 99999) . '@temp.com');
         $user->setPassword('temp@temp.com');
-        $user->setFirstname('name'.time());
-        $user->setLastname('surname'.time());
+        $user->setFirstname('name' . time());
+        $user->setLastname('surname' . time());
 
-        foreach ($settersMap as $k => $v) {
-            $user->$k($v);
+        if ($email) {
+            $user->setEmail($email);
+        }
+        if ($roleName) {
+            $user->setRoleName($roleName);
+        }
+        if ($registrationDate) {
+            $user->setRegistrationDate($registrationDate);
+        }
+        if ($phoneMain) {
+            $user->setPhoneMain($phoneMain);
+        }
+        if ($deputyUid) {
+            $user->setDeputyUid($deputyUid);
+        }
+        if ($isPrimary) {
+            $user->setIsPrimary($isPrimary);
         }
 
         $this->em->persist($user);
@@ -96,10 +117,10 @@ class Fixtures
     public function createDeputy(array $settersMap = [])
     {
         $deputy = new Deputy();
-        $deputy->setDeputyUid('UID'.rand(1, 999999));
-        $deputy->setEmail1('temp'.microtime(true).rand(100, 99999).'@temp.com');
-        $deputy->setFirstname('name'.time());
-        $deputy->setLastname('surname'.time());
+        $deputy->setDeputyUid('UID' . rand(1, 999999));
+        $deputy->setEmail1('temp' . microtime(true) . rand(100, 99999) . '@temp.com');
+        $deputy->setFirstname('name' . time());
+        $deputy->setLastname('surname' . time());
 
         foreach ($settersMap as $k => $v) {
             $deputy->$k($v);
@@ -179,7 +200,11 @@ class Fixtures
     public function createReportSubmission(?Report $report = null, ?User $user = null)
     {
         if (is_null($user)) {
-            $user = $this->createUser(['setRoleName' => User::ROLE_LAY_DEPUTY, 'setRegistrationDate' => new \DateTime(), 'setPhoneMain' => '01211234567']);
+            $user = $this->createUser(
+                roleName: User::ROLE_LAY_DEPUTY,
+                registrationDate: new DateTime(),
+                phoneMain: '01211234567'
+            );
         }
 
         if (is_null($report)) {
@@ -208,7 +233,7 @@ class Fixtures
         }
 
         $submission = new ReportSubmission($report, $user);
-        $report->setSubmitDate(new \DateTime('-2 days'));
+        $report->setSubmitDate(new DateTime('-2 days'));
 
         $this->em->persist($submission);
         $this->em->persist($report);
@@ -224,8 +249,8 @@ class Fixtures
         $report = new Report(
             $client,
             empty($settersMap['setType']) ? Report::LAY_PFA_HIGH_ASSETS_TYPE : $settersMap['setType'],
-            empty($settersMap['setStartDate']) ? new \DateTime('now') : $settersMap['setStartDate'],
-            empty($settersMap['setEndDate']) ? new \DateTime('+12 months -1 day') : $settersMap['setEndDate']
+            empty($settersMap['setStartDate']) ? new DateTime('now') : $settersMap['setStartDate'],
+            empty($settersMap['setEndDate']) ? new DateTime('+12 months -1 day') : $settersMap['setEndDate']
         );
 
         foreach ($settersMap as $k => $v) {
@@ -284,7 +309,7 @@ class Fixtures
     {
         $contact = new EntityDir\Report\Contact();
         $contact->setReport($report);
-        $contact->setAddress('address'.time());
+        $contact->setAddress('address' . time());
 
         foreach ($settersMap as $k => $v) {
             $contact->$k($v);
@@ -396,7 +421,7 @@ class Fixtures
         $decision = new EntityDir\Report\Decision();
         $decision->setReport($report);
         $decision->setClientInvolvedBoolean(true);
-        $decision->setDescription('description'.time());
+        $decision->setDescription('description' . time());
 
         foreach ($settersMap as $k => $v) {
             $decision->$k($v);
@@ -426,7 +451,7 @@ class Fixtures
     {
         $orgs = [];
         for ($i = 1; $i <= $amount; ++$i) {
-            $orgs[] = $this->createOrganisation(sprintf('Org %d', $i), sprintf(rand(1, 99999).'org_email_%d', $i), true);
+            $orgs[] = $this->createOrganisation(sprintf('Org %d', $i), sprintf(rand(1, 99999) . 'org_email_%d', $i), true);
         }
 
         return $orgs;
@@ -483,7 +508,7 @@ class Fixtures
         /** @var Organisation $org */
         $org = $this->em->getRepository(Organisation::class)->find($orgId);
 
-        $org->setDeletedAt(new \DateTime('now'));
+        $org->setDeletedAt(new DateTime('now'));
     }
 
     public function flush()
@@ -514,7 +539,7 @@ class Fixtures
     {
         $args = func_get_args();
         if (empty($args)) {
-            throw new \InvalidArgumentException('You must pass at least one object to persist');
+            throw new InvalidArgumentException('You must pass at least one object to persist');
         }
         foreach (func_get_args() as $e) {
             $this->em->persist($e);
@@ -576,7 +601,7 @@ class Fixtures
 
     private static function pgCommand($cmd)
     {
-        exec(self::getPGExportCommand().$cmd);
+        exec(self::getPGExportCommand() . $cmd);
     }
 
     public static function initDb()
@@ -585,21 +610,21 @@ class Fixtures
 
     public static function backupDb()
     {
-        self::pgCommand('pg_dump --clean > '.self::PG_DUMP_PATH);
+        self::pgCommand('pg_dump --clean > ' . self::PG_DUMP_PATH);
     }
 
     public static function restoreDb()
     {
         if (!file_exists(self::PG_DUMP_PATH)) {
-            throw new \RuntimeException(self::PG_DUMP_PATH.' not found');
+            throw new RuntimeException(self::PG_DUMP_PATH . ' not found');
         }
-        self::pgCommand('psql < '.self::PG_DUMP_PATH);
+        self::pgCommand('psql < ' . self::PG_DUMP_PATH);
     }
 
     public static function deleteReportsData($additionalTables = [])
     {
         $tables = array_merge(['document', 'pre_registration', 'deputy_case', 'report_submission', 'report', 'odr', 'satisfaction'], $additionalTables);
-        self::pgCommand('PGOPTIONS=\'--client-min-messages=warning\' psql -c "truncate table '.implode(',', $tables).'  RESTART IDENTITY cascade";');
+        self::pgCommand('PGOPTIONS=\'--client-min-messages=warning\' psql -c "truncate table ' . implode(',', $tables) . '  RESTART IDENTITY cascade";');
     }
 
     public function refresh($entity)
@@ -617,7 +642,7 @@ class Fixtures
             $researchType = new EntityDir\UserResearch\ResearchType(['surveys']);
 
             $userResearchResponse = (new EntityDir\UserResearch\UserResearchResponse())
-                ->setCreated(new \DateTime())
+                ->setCreated(new DateTime())
                 ->setDeputyshipLength('oneToFive')
                 ->setUser($rs->getCreatedBy())
                 ->setHasAccessToVideoCallDevice(true)
@@ -626,7 +651,7 @@ class Fixtures
             $satisfaction = (new EntityDir\Satisfaction())
                 ->setReport($rs->getReport())
                 ->setDeputyrole(User::ROLE_LAY_DEPUTY)
-                ->setCreated(new \DateTime())
+                ->setCreated(new DateTime())
                 ->setComments(' Some comments')
                 ->setScore(rand(1, 5))
                 ->setReporttype(Report::LAY_COMBINED_LOW_ASSETS_TYPE)
@@ -648,7 +673,7 @@ class Fixtures
         $this->em->clear();
     }
 
-    public function createCourtOrder(string $uid, string $type, string $status, \DateTime $madeDate = new \DateTime()): CourtOrder
+    public function createCourtOrder(string $uid, string $type, string $status, DateTime $madeDate = new DateTime()): CourtOrder
     {
         $courtOrder = new CourtOrder();
         $courtOrder->setCourtOrderUid($uid);
@@ -657,5 +682,32 @@ class Fixtures
         $courtOrder->setOrderMadeDate($madeDate);
 
         return $courtOrder;
+    }
+
+    public function deleteUser(int $id): void
+    {
+        $this->em->remove($this->getRepo(User::class)->find($id));
+    }
+
+    public function createPreRegistration(string $caseNumber, string $reportType, string $orderType, ?string $deputyUid = null, ?\DateTime $madeDate = null): PreRegistration
+    {
+        if (is_null($madeDate)) {
+            $madeDate = new \DateTime();
+        }
+
+        $now = $madeDate->format('Y-m-d');
+
+        $data = [
+            'Case' => $caseNumber,
+            'ReportType' => $reportType,
+            'MadeDate' => $now,
+            'OrderType' => $orderType,
+        ];
+
+        if (!is_null($deputyUid)) {
+            $data['DeputyUid'] = $deputyUid;
+        }
+
+        return new PreRegistration($data);
     }
 }

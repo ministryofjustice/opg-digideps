@@ -4,11 +4,19 @@ declare(strict_types=1);
 
 namespace App\v2\Controller;
 
+use App\Entity\User;
+use App\Service\Formatter\RestFormatter;
+use App\v2\DTO\InviteeDto;
+use App\v2\Service\CourtOrderInviteService;
 use App\v2\Service\CourtOrderService;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -22,7 +30,10 @@ class CourtOrderController extends AbstractController
 
     public function __construct(
         private readonly CourtOrderService $courtOrderService,
+        private readonly CourtOrderInviteService $courtOrderInviteService,
         private readonly SerializerInterface $serializer,
+        private readonly RestFormatter $formatter,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -32,7 +43,7 @@ class CourtOrderController extends AbstractController
      * Note that reports are not returned in a guaranteed order, so the "submitted" property, or possibly null
      * submit_date and un_submit_date, should be used to determine whether the report has been submitted.
      *
-     * path on API = /v2/courtorder/<UID>.
+     * path on API = /v2/courtorder/<UID>
      */
     #[Route('/{uid}', requirements: ['uid' => '\w+'], methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
@@ -51,7 +62,7 @@ class CourtOrderController extends AbstractController
 
         $ctx = SerializationContext::create()
             ->setGroups([
-                'court-order-full', 'client', 'deputy', 'deputy-user', 'user', 'report', 'ndr', 'report-submission',
+                'court-order-full', 'client', 'deputy', 'deputy-user', 'user', 'report', 'ndr', 'report-submission', 'status',
             ])
             ->setSerializeNull(true);
 
@@ -62,5 +73,47 @@ class CourtOrderController extends AbstractController
         ], 'json', $ctx);
 
         return new JsonResponse(data: $data, json: true);
+    }
+
+    /**
+     * Invite a lay co-deputy to a court order.
+     *
+     * path on API = /v2/courtorder/<UID>/lay-deputy-invite
+     */
+    #[Route('/{uid}/lay-deputy-invite', requirements: ['uid' => '\w+'], methods: ['POST'])]
+    #[Security('is_granted("ROLE_DEPUTY")')]
+    public function layDeputyInviteAction(Request $request, string $uid): JsonResponse
+    {
+        try {
+            $data = $this->formatter->deserializeBodyContent($request, [
+                'email' => 'notEmpty',
+                'firstname' => 'notEmpty',
+                'lastname' => 'notEmpty',
+            ]);
+        } catch (\InvalidArgumentException $e) {
+            return $this->buildErrorResponse("invalid invitee details: {$e->getMessage()}", status: Response::HTTP_NOT_ACCEPTABLE);
+        }
+
+        /** @var ?User $user */
+        $user = $this->getUser();
+
+        if (is_null($user)) {
+            return $this->buildErrorResponse('invalid inviting user', Response::HTTP_FORBIDDEN);
+        }
+
+        $inviteeDTO = new InviteeDto(
+            $data['email'],
+            $data['firstname'],
+            $data['lastname'],
+            User::ROLE_LAY_DEPUTY,
+        );
+
+        $result = $this->courtOrderInviteService->inviteLayDeputy($uid, $user, $inviteeDTO);
+
+        if (!$result->success && !is_null($result->message)) {
+            $this->logger->error($result->message);
+        }
+
+        return new JsonResponse(data: json_encode($result), status: Response::HTTP_OK, json: true);
     }
 }

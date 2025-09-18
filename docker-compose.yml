@@ -54,10 +54,11 @@ services:
     build:
       context: .
       dockerfile: ./client/docker/app/Dockerfile
+      target: devtools
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug.
         XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}
-        ENVIRONMENT: local
+        LOCAL_RESOURCES: true
     depends_on:
       - api-webserver
       - redis-frontend
@@ -98,10 +99,11 @@ services:
     build:
       context: .
       dockerfile: ./client/docker/app/Dockerfile
+      target: devtools
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug
         XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}
-        ENVIRONMENT: local
+        LOCAL_RESOURCES: true
     depends_on:
       - api-webserver
       - redis-frontend
@@ -301,9 +303,10 @@ services:
     build:
       dockerfile: client/docker/app/Dockerfile
       context: .
+      target: devtools
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug
-        ENVIRONMENT: local
+        LOCAL_RESOURCES: true
     depends_on:
       pact-mock:
         condition: service_healthy
@@ -326,6 +329,7 @@ services:
     build:
       context: .
       dockerfile: api/docker/app/Dockerfile
+      target: devtools
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
         XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
@@ -342,6 +346,8 @@ services:
     volumes:
       - ./api/app/tests/coverage:/var/www/tests/coverage
       - ./build/coverage-api:/var/www/build/coverage-api
+      - ./build/.phpunit.api-integration.cache:/var/www/build/.phpunit.api-integration.cache
+      - ./build/.phpunit.api-unit.cache:/var/www/build/.phpunit.api-unit.cache
     command: sleep infinity
 
   api-integration-tests:
@@ -350,6 +356,7 @@ services:
     build:
       context: .
       dockerfile: api/docker/app/Dockerfile
+      target: devtools
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_API} # set REQUIRE_XDEBUG_API=1 in .env to install Xdebug
         XDEBUG_IDEKEY_API: ${XDEBUG_IDEKEY_API}
@@ -373,11 +380,14 @@ services:
     volumes:
       - ./api/app/tests/coverage:/var/www/tests/coverage
       - ./build/coverage-api:/var/www/build/coverage-api
+      - ./build/.phpunit.api-integration.cache:/var/www/build/.phpunit.api-integration.cache
+      - ./build/.phpunit.api-unit.cache:/var/www/build/.phpunit.api-unit.cache
 
   end-to-end-tests:
     build:
       dockerfile: api/docker/app/Dockerfile
       context: .
+      target: devtools
       args:
         LOCAL_RESOURCES: true
     depends_on:
@@ -385,6 +395,12 @@ services:
         condition: service_healthy
       mock-sirius-integration:
         condition: service_started
+    environment:
+      AWS_ACCESS_KEY_ID: aFakeSecretAccessKeyId
+      AWS_SECRET_ACCESS_KEY: aFakeSecretAccessKey
+      AWS_SESSION_TOKEN: fakeValue
+      APP_ENV: ${APP_ENV:-local}
+      APP_DEBUG: ${APP_DEBUG:-0}
     volumes:
       - ./api/app/tests/Behat/snapshots:/tmp/html
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Controller;
 
+use DateTime;
 use App\Entity\User;
 
 class UserControllerTest extends AbstractTestController
@@ -93,15 +94,15 @@ class UserControllerTest extends AbstractTestController
 
     public function testUpdateAuth()
     {
-        $url = '/user/'.self::$deputy1->getId();
+        $url = '/user/' . self::$deputy1->getId();
 
         $this->assertEndpointNeedsAuth('PUT', $url);
     }
 
     public function testUpdateAcl()
     {
-        $url = '/user/'.self::$deputy1->getId();
-        $url2 = '/user/'.self::$deputy2->getId();
+        $url = '/user/' . self::$deputy1->getId();
+        $url2 = '/user/' . self::$deputy2->getId();
 
         // deputy can only change their data
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
@@ -114,24 +115,24 @@ class UserControllerTest extends AbstractTestController
     public function testUpdate()
     {
         $deputyId = self::$deputy1->getId();
-        $url = '/user/'.$deputyId;
+        $url = '/user/' . $deputyId;
 
         // assert get
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
             'data' => [
-                'lastname' => self::$deputy1->getLastname().'-modified',
-                'email' => self::$deputy1->getEmail().'-modified',
-                'address1' => self::$deputy1->getAddress1().'-modified',
+                'lastname' => self::$deputy1->getLastname() . '-modified',
+                'email' => self::$deputy1->getEmail() . '-modified',
+                'address1' => self::$deputy1->getAddress1() . '-modified',
             ],
         ]);
 
         $user = self::fixtures()->clear()->getRepo('User')->find($deputyId); /* @var $user \App\Entity\User */
 
-        $this->assertEquals(self::$deputy1->getLastname().'-modified', $user->getLastname());
-        $this->assertEquals(self::$deputy1->getEmail().'-modified', $user->getEmail());
-        $this->assertEquals(self::$deputy1->getAddress1().'-modified', $user->getAddress1());
+        $this->assertEquals(self::$deputy1->getLastname() . '-modified', $user->getLastname());
+        $this->assertEquals(self::$deputy1->getEmail() . '-modified', $user->getEmail());
+        $this->assertEquals(self::$deputy1->getAddress1() . '-modified', $user->getAddress1());
 
         // restore previous data
         $user->setLastname(str_replace('-modified', '', $user->getLastname()));
@@ -144,7 +145,7 @@ class UserControllerTest extends AbstractTestController
     public function testUpdateNotPermittedToChangeType()
     {
         $deputyId = self::$deputy1->getId();
-        $url = '/user/'.$deputyId;
+        $url = '/user/' . $deputyId;
 
         $output = $this->assertJsonRequest('PUT', $url, [
             'mustFail' => true,
@@ -162,41 +163,41 @@ class UserControllerTest extends AbstractTestController
 
     public function testIsPasswordCorrectAuth()
     {
-        $url = '/user/'.self::$deputy2->getId().'/is-password-correct';
+        $url = '/user/' . self::$deputy2->getId() . '/is-password-correct';
 
         $this->assertEndpointNeedsAuth('POST', $url);
     }
 
     public function testIsPasswordCorrectAcl()
     {
-        $url = '/user/'.self::$deputy2->getId().'/is-password-correct';
+        $url = '/user/' . self::$deputy2->getId() . '/is-password-correct';
 
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy);
     }
 
     public function testIsPasswordCorrect()
     {
-        $url = '/user/'.self::$deputy1->getId().'/is-password-correct';
+        $url = '/user/' . self::$deputy1->getId() . '/is-password-correct';
         $this->assertEndpointNeedsAuth('POST', $url);
     }
 
     public function testChangePasswordAuth()
     {
-        $url = '/user/'.self::$deputy1->getId().'/set-password';
+        $url = '/user/' . self::$deputy1->getId() . '/set-password';
 
         $this->assertEndpointNeedsAuth('PUT', $url, ['password' => 'adfikhdbfsk']);
     }
 
     public function testChangePasswordAcl()
     {
-        $url = '/user/'.self::$deputy2->getId().'/set-password';
+        $url = '/user/' . self::$deputy2->getId() . '/set-password';
 
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenDeputy, ['password' => 'ashjbasdfjhb']);
     }
 
     public function testChangePasswordMissingParams()
     {
-        $url = '/user/'.self::$deputy1->getId().'/set-password';
+        $url = '/user/' . self::$deputy1->getId() . '/set-password';
 
         // empty params
         $errorMessage = $this->assertJsonRequest('PUT', $url, [
@@ -209,7 +210,7 @@ class UserControllerTest extends AbstractTestController
 
     public function testChangePasswordNoEmail()
     {
-        $url = '/user/'.self::$deputy1->getId().'/set-password';
+        $url = '/user/' . self::$deputy1->getId() . '/set-password';
 
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -227,7 +228,7 @@ class UserControllerTest extends AbstractTestController
      */
     public function testChangePasswordEmailActivate()
     {
-        $url = '/user/'.self::$deputy1->getId().'/set-password';
+        $url = '/user/' . self::$deputy1->getId() . '/set-password';
 
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -246,7 +247,7 @@ class UserControllerTest extends AbstractTestController
      */
     public function testChangePasswordEmailReset()
     {
-        $url = '/user/'.self::$deputy1->getId().'/set-password';
+        $url = '/user/' . self::$deputy1->getId() . '/set-password';
 
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -260,30 +261,30 @@ class UserControllerTest extends AbstractTestController
 
     public function testChangeEmailAuth()
     {
-        $url = '/user/'.self::$deputy1->getId().'/update-email';
+        $url = '/user/' . self::$deputy1->getId() . '/update-email';
 
         $this->assertEndpointNeedsAuth('PUT', $url);
     }
 
     public function testChangeEmailAcl()
     {
-        $url = '/user/'.self::$deputy2->getId().'/update-email';
+        $url = '/user/' . self::$deputy2->getId() . '/update-email';
 
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenDeputy);
     }
 
     public function testGetOneByIdAuth()
     {
-        $url = '/user/'.self::$deputy1->getId();
+        $url = '/user/' . self::$deputy1->getId();
 
         $this->assertEndpointNeedsAuth('GET', $url);
     }
 
     public function testGetOneByIdAcl()
     {
-        $url1 = '/user/'.self::$deputy1->getId();
-        $url2 = '/user/'.self::$deputy2->getId();
-        $url3 = '/user/'.self::$admin1->getId();
+        $url1 = '/user/' . self::$deputy1->getId();
+        $url2 = '/user/' . self::$deputy2->getId();
+        $url3 = '/user/' . self::$admin1->getId();
 
         // deputy can only see his data
         $this->assertEndpointAllowedFor('GET', $url1, self::$tokenDeputy);
@@ -298,7 +299,7 @@ class UserControllerTest extends AbstractTestController
 
     public function testGetOneById()
     {
-        $url = '/user/'.self::$deputy1->getId();
+        $url = '/user/' . self::$deputy1->getId();
 
         $this->assertEndpointNeedsAuth('GET', $url);
 
@@ -312,14 +313,14 @@ class UserControllerTest extends AbstractTestController
 
     public function testDeleteAuth()
     {
-        $url = '/user/'.self::$deputy1->getId();
+        $url = '/user/' . self::$deputy1->getId();
 
         $this->assertEndpointNeedsAuth('DELETE', $url);
     }
 
     public function testDeleteAcl()
     {
-        $url = '/user/'.self::$deputy1->getId();
+        $url = '/user/' . self::$deputy1->getId();
 
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenDeputy);
     }
@@ -336,7 +337,7 @@ class UserControllerTest extends AbstractTestController
 
         $userToDeleteId = $deputy3->getId();
 
-        $url = '/user/'.$userToDeleteId;
+        $url = '/user/' . $userToDeleteId;
 
         $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,
@@ -355,7 +356,7 @@ class UserControllerTest extends AbstractTestController
         self::fixtures()->flush();
         $userToDeleteId = $deputy3->getId();
 
-        $url = '/user/'.$userToDeleteId;
+        $url = '/user/' . $userToDeleteId;
 
         $this->assertJsonRequest('DELETE', $url, [
             'mustFail' => true,
@@ -485,10 +486,10 @@ class UserControllerTest extends AbstractTestController
     {
         $deputy = self::fixtures()->clear()->getRepo('User')->findOneByEmail($email);
         $deputy->setRegistrationToken(null);
-        $deputy->setTokenDate(new \DateTime('2014-12-30'));
+        $deputy->setTokenDate(new DateTime('2014-12-30'));
         self::fixtures()->flush($deputy);
 
-        $url = '/user/recreate-token/'.$email;
+        $url = '/user/recreate-token/' . $email;
 
         if ($passOrFail) {
             $this->assertJsonRequest('PUT', $url, [
@@ -509,7 +510,7 @@ class UserControllerTest extends AbstractTestController
 
         $deputy = self::fixtures()->clear()->getRepo('User')->findOneByEmail('deputy@example.org');
         $deputy->setRegistrationToken(null);
-        $deputy->setTokenDate(new \DateTime('2014-12-30'));
+        $deputy->setTokenDate(new DateTime('2014-12-30'));
         self::fixtures()->flush($deputy);
 
         $this->assertJsonRequest('PUT', $url, [
@@ -520,7 +521,7 @@ class UserControllerTest extends AbstractTestController
         // refresh deputy from db and chack token has been reset
         $deputyRefreshed = self::fixtures()->clear()->getRepo('User')->findOneByEmail('deputy@example.org');
         $this->assertTrue(strlen($deputyRefreshed->getRegistrationToken()) > 5);
-        $this->assertEquals(0, $deputyRefreshed->getTokenDate()->diff(new \DateTime())->format('%a'));
+        $this->assertEquals(0, $deputyRefreshed->getTokenDate()->diff(new DateTime())->format('%a'));
     }
 
     public function testGetByToken()
@@ -540,7 +541,7 @@ class UserControllerTest extends AbstractTestController
         $deputy->recreateRegistrationToken();
         self::fixtures()->flush($deputy);
 
-        $url = '/user/get-by-token/'.$deputy->getRegistrationToken();
+        $url = '/user/get-by-token/' . $deputy->getRegistrationToken();
 
         $data = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
@@ -555,7 +556,7 @@ class UserControllerTest extends AbstractTestController
         $deputy = self::fixtures()->clear()->getRepo('User')->findOneByEmail('deputy@example.org');
         $deputy->recreateRegistrationToken();
         self::fixtures()->flush($deputy);
-        $url = '/user/agree-terms-use/'.$deputy->getRegistrationToken();
+        $url = '/user/agree-terms-use/' . $deputy->getRegistrationToken();
 
         $this->assertJsonRequest('PUT', $url, [
             'mustFail' => true,
@@ -609,17 +610,17 @@ class UserControllerTest extends AbstractTestController
     {
         $deputyUid = 8364689421;
 
-        self::fixtures()->createUser([
-            'setDeputyUid' => $deputyUid,
-            'setEmail' => 'mrfake1@fakeland.fake',
-            'setIsPrimary' => true,
-        ]);
+        self::fixtures()->createUser(
+            email: 'mrfake1@fakeland.fake',
+            deputyUid: $deputyUid,
+            isPrimary: true
+        );
 
-        self::fixtures()->createUser([
-            'setDeputyUid' => $deputyUid,
-            'setEmail' => 'mrfake2@fakeland.fake',
-            'setIsPrimary' => true,
-        ]);
+        self::fixtures()->createUser(
+            email: 'mrfake2@fakeland.fake',
+            deputyUid: $deputyUid,
+            isPrimary: true
+        );
 
         self::fixtures()->flush()->clear();
 
@@ -639,11 +640,11 @@ class UserControllerTest extends AbstractTestController
         $deputyUid = 9975467801;
         $expectedEmail = 'fakenotrealperson@fake.fake';
 
-        self::fixtures()->createUser([
-            'setDeputyUid' => $deputyUid,
-            'setEmail' => $expectedEmail,
-            'setIsPrimary' => true,
-        ]);
+        self::fixtures()->createUser(
+            email: $expectedEmail,
+            deputyUid: $deputyUid,
+            isPrimary: true
+        );
 
         self::fixtures()->flush()->clear();
 

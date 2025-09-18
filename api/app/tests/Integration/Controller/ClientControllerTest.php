@@ -2,7 +2,7 @@
 
 namespace App\Tests\Integration\Controller;
 
-use App\Entity\Client;
+use DateTime;
 use App\Entity\Ndr\Ndr;
 use Ramsey\Uuid\Uuid;
 
@@ -10,14 +10,11 @@ class ClientControllerTest extends AbstractTestController
 {
     private static $deputy1;
     private static $client1;
-    private static $report1;
     private static $deputy2;
     private static $client2;
-    private static $report2;
     private static $deputy3;
     private static $deputy4;
     private static $coDeputy;
-    private static $coDeputyClient;
     private static $primaryUserAccount;
     private static $nonPrimaryUserAccount;
     private static $primaryAccountClient;
@@ -25,7 +22,6 @@ class ClientControllerTest extends AbstractTestController
     private static $primaryAccountDischargedClient;
     private static $tokenAdmin;
     private static $tokenDeputy;
-    private static $tokenMainDeputy;
     private static $tokenCoDeputy;
     private static $tokenMultiClientPrimaryDeputy;
     private static $tokenMultiClientNonPrimaryDeputy;
@@ -34,7 +30,6 @@ class ClientControllerTest extends AbstractTestController
 
     // pa
     private static $pa1;
-    private static $prof1;
     private static $pa1Client1;
     private static $pa1Client1Report1;
 
@@ -68,9 +63,16 @@ class ClientControllerTest extends AbstractTestController
         'date_of_birth' => '1947-1-31',
     ];
 
+    public static function setUpBeforeClass(): void
+    {
+        // This is here to prevent the default setup until tests that fail with it are altered
+    }
+
     public function setUp(): void
     {
         parent::setUp();
+
+        self::setupFixtures();
 
         self::$fixtures::deleteReportsData(['client']);
 
@@ -79,7 +81,6 @@ class ClientControllerTest extends AbstractTestController
             self::$tokenDeputy = $this->loginAsDeputy();
             self::$tokenMultiClientPrimaryDeputy = $this->loginAsMultiClientPrimaryDeputy();
             self::$tokenMultiClientNonPrimaryDeputy = $this->loginAsMultiClientNonPrimaryDeputy();
-            self::$tokenMainDeputy = $this->loginAsMainDeputy();
             self::$tokenCoDeputy = $this->loginAsCoDeputy();
             self::$tokenPa = $this->loginAsPa();
             self::$tokenProf = $this->loginAsProf();
@@ -88,12 +89,11 @@ class ClientControllerTest extends AbstractTestController
         // deputy 1
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'deputy1Client1']);
-        self::$report1 = self::fixtures()->createReport(self::$client1);
+        self::fixtures()->createReport(self::$client1);
 
         // deputy 2
         self::$deputy2 = self::fixtures()->createUser();
         self::$client2 = self::fixtures()->createClient(self::$deputy2, ['setFirstname' => 'deputy2Client1']);
-        self::$report2 = self::fixtures()->createReport(self::$client2);
 
         // deputy 3
         self::$deputy3 = self::fixtures()->createDeputy();
@@ -101,12 +101,12 @@ class ClientControllerTest extends AbstractTestController
         // deputy 4 w/ Co-deputy (Deputy 5)
         self::$deputy4 = self::fixtures()->getRepo('User')->findOneByEmail('main-deputy@example.org');
         self::$coDeputy = self::fixtures()->getRepo('User')->findOneByEmail('co-deputy@example.org');
-        self::$coDeputyClient = self::fixtures()->createCoDeputyClient([self::$deputy4, self::$coDeputy], ['setFirstname' => 'coDeputyClient1']);
+        self::fixtures()->createCoDeputyClient([self::$deputy4, self::$coDeputy], ['setFirstname' => 'coDeputyClient1']);
 
         // multi-client deputy
         self::$primaryUserAccount = self::fixtures()->getRepo('User')->findOneByEmail('multi-client-primary-deputy@example.org');
         self::$primaryAccountClient = self::fixtures()->createClient(self::$primaryUserAccount, ['setFirstname' => 'Multi-Client1', 'setCaseNumber' => '34566543']);
-        self::$primaryAccountDischargedClient = self::fixtures()->createClient(self::$primaryUserAccount, ['setFirstname' => 'clientName', 'setCaseNumber' => '34566544', 'setDeletedAt' => new \DateTime()]);
+        self::$primaryAccountDischargedClient = self::fixtures()->createClient(self::$primaryUserAccount, ['setFirstname' => 'clientName', 'setCaseNumber' => '34566544', 'setDeletedAt' => new DateTime()]);
 
         self::$nonPrimaryUserAccount = self::fixtures()->getRepo('User')->findOneByEmail('multi-client-non-primary-deputy@example.org');
         self::$nonPrimaryAccountClient = self::fixtures()->createClient(self::$nonPrimaryUserAccount, ['setFirstname' => 'Multi-Client2', 'setCaseNumber' => '78900987']);
@@ -116,10 +116,7 @@ class ClientControllerTest extends AbstractTestController
         self::$pa1Client1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client1', 'setCaseNumber' => 'pa000001']);
         self::$pa1Client1Report1 = self::fixtures()->createReport(self::$pa1Client1);
 
-        // prof
-        self::$prof1 = self::fixtures()->getRepo('User')->findOneByEmail('prof@example.org');
-
-        $org = self::fixtures()->createOrganisation('Example', ''.Uuid::uuid4().'example.org', true);
+        $org = self::fixtures()->createOrganisation('Example', '' . Uuid::uuid4() . 'example.org', true);
         self::fixtures()->flush();
         self::fixtures()->addClientToOrganisation(self::$pa1Client1->getId(), $org->getId());
         self::fixtures()->addUserToOrganisation(self::$pa1->getId(), $org->getId());
@@ -239,13 +236,13 @@ class ClientControllerTest extends AbstractTestController
 
     public function testfindByIdAuth()
     {
-        $url = '/client/'.self::$client1->getId();
+        $url = '/client/' . self::$client1->getId();
         $this->assertEndpointNeedsAuth('GET', $url);
     }
 
     public function testfindByIdAclNotAllowed()
     {
-        $url = '/client/'.self::$primaryAccountClient->getId();
+        $url = '/client/' . self::$primaryAccountClient->getId();
 
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenCoDeputy);
@@ -255,16 +252,16 @@ class ClientControllerTest extends AbstractTestController
 
     public function testfindByIdDischargedClientNotFound()
     {
-        $url = '/client/'.self::$primaryAccountDischargedClient->getId();
+        $url = '/client/' . self::$primaryAccountDischargedClient->getId();
 
         $this->assertEndpointNotFoundFor('GET', $url, self::$tokenMultiClientPrimaryDeputy);
     }
 
     public function testfindByIdAclAllowed()
     {
-        $url = '/client/'.self::$primaryAccountClient->getId();
-        $url2 = '/client/'.self::$nonPrimaryAccountClient->getId();
-        $url3 = '/client/'.self::$pa1Client1->getId();
+        $url = '/client/' . self::$primaryAccountClient->getId();
+        $url2 = '/client/' . self::$nonPrimaryAccountClient->getId();
+        $url3 = '/client/' . self::$pa1Client1->getId();
 
         $this->assertEndpointAllowedFor('GET', $url, self::$tokenMultiClientPrimaryDeputy);
         $this->assertEndpointAllowedFor('GET', $url2, self::$tokenMultiClientPrimaryDeputy);
@@ -278,7 +275,7 @@ class ClientControllerTest extends AbstractTestController
     public function testfindById()
     {
         // Lay
-        $url = '/client/'.self::$client1->getId();
+        $url = '/client/' . self::$client1->getId();
         $data = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
@@ -287,7 +284,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals('deputy1Client1', $data['firstname']);
 
         // PA
-        $url = '/client/'.self::$pa1Client1->getId().'?'.http_build_query(['groups' => ['client', 'report-id', 'current-report']]);
+        $url = '/client/' . self::$pa1Client1->getId() . '?' . http_build_query(['groups' => ['client', 'report-id', 'current-report']]);
         $data = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenPa,
@@ -299,7 +296,7 @@ class ClientControllerTest extends AbstractTestController
 
     public function testArchiveClientAuth()
     {
-        $url = '/client/'.self::$pa1Client1->getId().'/archive';
+        $url = '/client/' . self::$pa1Client1->getId() . '/archive';
 
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenDeputy);
@@ -308,7 +305,7 @@ class ClientControllerTest extends AbstractTestController
 
     public function testArchiveClient()
     {
-        $url = '/client/'.self::$pa1Client1->getId().'/archive';
+        $url = '/client/' . self::$pa1Client1->getId() . '/archive';
         $this->assertEquals(1, count(self::$pa1Client1->getUsers()));
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -319,12 +316,12 @@ class ClientControllerTest extends AbstractTestController
 
         $this->assertInstanceOf('App\Entity\Client', $client);
         $this->assertEquals(1, count($client->getUsers()));
-        $this->assertInstanceOf(\DateTime::class, $client->getArchivedAt());
+        $this->assertInstanceOf(DateTime::class, $client->getArchivedAt());
     }
 
     public function testDetailsAction()
     {
-        $url = '/client/'.self::$client1->getId().'/details';
+        $url = '/client/' . self::$client1->getId() . '/details';
 
         $this->assertJsonRequest('GET', $url, [
             'mustFail' => true,
@@ -370,7 +367,7 @@ class ClientControllerTest extends AbstractTestController
 
     public function testUpdateDeputy()
     {
-        $url = '/client/'.self::$client2->getId().'/update-deputy/'.self::$deputy3->getId();
+        $url = '/client/' . self::$client2->getId() . '/update-deputy/' . self::$deputy3->getId();
 
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,

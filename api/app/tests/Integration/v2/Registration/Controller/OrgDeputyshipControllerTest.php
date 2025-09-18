@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Integration\v2\Registration\Controller;
 
 use App\Tests\Integration\Controller\AbstractTestController;
-use App\Tests\Integration\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
+use App\Tests\Integration\TestHelpers\OrgDeputyshipDTOTestHelper;
 use Symfony\Component\HttpFoundation\Response;
 
 class OrgDeputyshipControllerTest extends AbstractTestController
@@ -79,7 +79,7 @@ class OrgDeputyshipControllerTest extends AbstractTestController
         self::assertCount($expectedErrors, $actualUploadResults['errors']['messages'], 'errors count was unexpected');
     }
 
-    public function uploadProvider()
+    public static function uploadProvider(): array
     {
         return [
             '3 valid Org Deputyships' => [
@@ -103,7 +103,7 @@ class OrgDeputyshipControllerTest extends AbstractTestController
         $this->assertEquals(Response::HTTP_INTERNAL_SERVER_ERROR, self::$frameworkBundleClient->getResponse()->getStatusCode());
     }
 
-    public function invalidPayloadProvider()
+    public static function invalidPayloadProvider(): array
     {
         return [
             'Too many records' => [OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipCompressedJson(10001, 0)],

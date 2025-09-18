@@ -72,6 +72,8 @@ trait StatusTrait
      * and also the report.reportStatusCached using the cache.
      *
      * using the `ReportService::getSectionStateNotCached`
+     *
+     * @param string[] $sectionIds
      */
     public function updateSectionsStatusCache(array $sectionIds)
     {

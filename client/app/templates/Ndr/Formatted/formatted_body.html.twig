@@ -1,6 +1,7 @@
 {% set client = ndr.client %}
 {% set isEmailAttachment = true %}
 {% set transOptions = {'%client%': ndr.client.firstname | striptags } %}
+{% set submittedBy = ndr.submittedBy | default(app.user) %}
 
 <div id="wrapper">
     <div class="formatted-report content">

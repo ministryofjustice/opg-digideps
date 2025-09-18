@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\v2\Transformer;
 
+use PHPUnit\Framework\Attributes\Test;
 use App\v2\DTO\OrganisationDto;
 use App\v2\DTO\UserDto;
 use App\v2\Transformer\ClientTransformer;
@@ -9,12 +12,10 @@ use App\v2\Transformer\OrganisationTransformer;
 use App\v2\Transformer\UserTransformer;
 use PHPUnit\Framework\TestCase;
 
-class OrganisationTransformerTest extends TestCase
+final class OrganisationTransformerTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function transformsAnOrganisationDto()
+    #[Test]
+    public function transformsAnOrganisationDto(): void
     {
         $dto = (new OrganisationDto())
             ->setId(4)
@@ -39,10 +40,8 @@ class OrganisationTransformerTest extends TestCase
         $this->assertArrayNotHasKey('users', $transformed);
     }
 
-    /**
-     * @test
-     */
-    public function transformsAnOrganisationDtoWithUsersIfNotExcluded()
+    #[Test]
+    public function transformsAnOrganisationDtoWithUsersIfNotExcluded(): void
     {
         $dto = (new OrganisationDto())
             ->setId(4)
@@ -60,10 +59,7 @@ class OrganisationTransformerTest extends TestCase
         $userTransformer
             ->expects($this->exactly(2))
             ->method('transform')
-            ->withConsecutive(
-                [$this->isInstanceOf(UserDto::class), ['clients']],
-                [$this->isInstanceOf(UserDto::class), ['clients']]
-            )
+            ->with($this->isInstanceOf(UserDto::class), ['clients'])
             ->willReturnOnConsecutiveCalls(
                 ['user_one' => 'transformed'],
                 ['user_two' => 'transformed']

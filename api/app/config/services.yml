@@ -75,15 +75,6 @@ services:
         resource: "../src/v2/Registration/Controller"
         tags: [controller.service_arguments]
 
-    Doctrine\Migrations\Version\DbalMigrationFactory: ~
-    App\Migrations\Factory\MigrationFactoryDecorator:
-        decorates: Doctrine\Migrations\Version\DbalMigrationFactory
-        arguments:
-            [
-                '@App\Migrations\Factory\MigrationFactoryDecorator.inner',
-                "@service_container",
-            ]
-
     monolog.processor.add_request_id:
         class: App\Service\RequestIdLoggerProcessor
         arguments: ["@service_container"]
@@ -169,6 +160,7 @@ services:
     App\Factory\OrganisationFactory:
         class: App\Factory\OrganisationFactory
         arguments: ["%shared_email_domains%"]
+        public: true
 
     App\Service\RestHandler\OrganisationRestHandler:
         class: App\Service\RestHandler\OrganisationRestHandler
@@ -456,4 +448,19 @@ services:
         public: true
 
     App\v2\Service\DeputyshipCandidatesConverter:
+        public: true
+
+    App\Service\DeputyCaseService:
+        public: true
+
+    App\v2\Assembler\ClientAssembler:
+        public: true
+
+    App\v2\Assembler\DeputyAssembler:
+        public: true
+
+    App\v2\Service\CourtOrderService:
+        public: true
+
+    App\Service\LayRegistrationService:
         public: true

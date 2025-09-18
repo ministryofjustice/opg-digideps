@@ -8,26 +8,12 @@ use App\Entity\Client;
 use App\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Faker\Factory;
-use PHPUnit\Framework\TestCase;
-use Prophecy\Prophecy\ObjectProphecy;
-use Prophecy\Prophet;
 
-class UserTestHelper extends TestCase
+class UserTestHelper
 {
-    public static function createUserMock(string $roleName, bool $hasReports, bool $hasClients, int $id)
+    public static function create(): self
     {
-        $clientTestHelper = new ClientTestHelper();
-
-        $clients = $hasClients ? [$clientTestHelper->createClientMock(1, $hasReports)] : null;
-
-        /** @var ObjectProphecy<User> $user */
-        $user = (new Prophet())->prophesize(User::class);
-        $user->getRoleName()->willReturn($roleName);
-        $user->getClients()->willReturn($clients);
-        $user->hasReports()->willReturn($hasReports);
-        $user->getId()->willReturn($id);
-
-        return $user->reveal();
+        return new UserTestHelper();
     }
 
     public static function createAndPersistUser(

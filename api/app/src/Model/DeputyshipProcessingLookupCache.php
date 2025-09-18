@@ -64,6 +64,7 @@ class DeputyshipProcessingLookupCache
         $this->deputyUidToId = $this->deputyRepository->getUidToIdMapping();
 
         // CLIENTS
+        // note that case numbers are lowercased in this mapping
         $this->clientCasenumberToId = $this->clientRepository->getActiveCasenumberToIdMapping();
 
         $this->isInitialised = true;
@@ -99,10 +100,14 @@ class DeputyshipProcessingLookupCache
         return $this->deputyUidToId[$uid] ?? null;
     }
 
-    public function getClientIdForCasenumber(?string $casenumber): ?int
+    public function getClientIdForCaseNumber(?string $caseNumber): ?int
     {
         $this->throwIfNotInitialised();
 
-        return $this->clientCasenumberToId[$casenumber] ?? null;
+        if (is_null($caseNumber)) {
+            return null;
+        }
+
+        return $this->clientCasenumberToId[strtolower($caseNumber)] ?? null;
     }
 }

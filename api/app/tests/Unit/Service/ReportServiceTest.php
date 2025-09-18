@@ -1,16 +1,27 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Service;
 
-use App\Entity as EntityDir;
+use App\Entity\Report\ReportSubmission;
+use DateTime;
+use RuntimeException;
+use Mockery;
+use App\Entity\Ndr\Ndr;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
+use PHPUnit\Framework\Attributes\DataProvider;
 use App\Entity\Client;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Asset;
 use App\Entity\Report\AssetProperty;
+use App\Entity\Ndr\AssetProperty as NdrAssetProperty;
 use App\Entity\Report\BankAccount;
+use App\Entity\Ndr\BankAccount as NdrBankAccount;
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use App\Entity\User;
+use App\Factory\ReportFactory;
 use App\Repository\DocumentRepository;
 use App\Repository\PreRegistrationRepository;
 use App\Service\ReportService;
@@ -25,7 +36,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
-class ReportServiceTest extends TestCase
+final class ReportServiceTest extends TestCase
 {
     use ProphecyTrait;
 
@@ -34,13 +45,15 @@ class ReportServiceTest extends TestCase
     private AssetProperty $asset1;
     private Report $report;
     private Document $document1;
-    private EntityDir\Ndr\Ndr $ndr;
+    private Ndr $ndr;
     private EntityRepository|MockInterface $casrecRepo;
     private MockInterface $assetRepo;
     private MockInterface $bankAccount;
     private MockInterface|EntityManager $em;
     private Document $mockNdrDocument;
     private LoggerInterface&MockObject $mockLogger;
+    private ReportFactory&MockObject $mockReportFactory;
+    private PreRegistrationRepository|MockInterface $mockPreRegistrationRepository;
     private ReportService $sut;
 
     public function setUp(): void
@@ -49,13 +62,13 @@ class ReportServiceTest extends TestCase
         $client = new Client();
         $client->addUser($this->user);
         $client->setCaseNumber('12345678');
-        $client->setCourtDate(new \DateTime('2014-06-06'));
+        $client->setCourtDate(new DateTime('2014-06-06'));
 
         $this->bank1 = (new BankAccount())->setAccountNumber('1234');
         $this->asset1 = (new AssetProperty())
             ->setAddress('SW1')
             ->setOwned(AssetProperty::OWNED_FULLY);
-        $this->report = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2015-01-01'), new \DateTime('2015-12-31'));
+        $this->report = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime('2015-01-01'), new DateTime('2015-12-31'));
         $this->report
             ->setNoAssetToAdd(false)
             ->addAsset($this->asset1)
@@ -64,7 +77,7 @@ class ReportServiceTest extends TestCase
 
         $this->document1 = (new Document($this->report))->setFileName('file1.pdf');
         $this->report->addDocument($this->document1);
-        $this->ndr = new EntityDir\Ndr\Ndr($client);
+        $this->ndr = new Ndr($client);
 
         // mock em
         $this->casrecRepo = m::mock(EntityRepository::class);
@@ -74,13 +87,12 @@ class ReportServiceTest extends TestCase
         $this->em = m::mock(EntityManager::class);
         $this->mockNdrDocument = (new Document($this->ndr))->setFileName('NdrRep-file2.pdf')->setId(999);
 
-        $this->em->shouldReceive('getRepository')->andReturnUsing(function ($arg) use ($client) {
+        $this->em->shouldReceive('getRepository')->andReturnUsing(function ($arg) {
             switch ($arg) {
                 case PreRegistration::class:
-                    return m::mock(PreRegistrationRepository::class)->shouldReceive('findOneBy')
-                        ->with(['caseNumber' => $client->getCaseNumber()])
-                        ->andReturn(null)
-                        ->getMock();
+                    $this->mockPreRegistrationRepository = self::createMock(PreRegistrationRepository::class);
+
+                    return $this->mockPreRegistrationRepository;
                 case Document::class:
                     return m::mock(DocumentRepository::class)
                         ->shouldReceive('find')
@@ -91,42 +103,49 @@ class ReportServiceTest extends TestCase
             }
         });
 
+        $this->mockReportFactory = $this->createMock(ReportFactory::class);
+
         $this->mockLogger = $this->createMock(LoggerInterface::class);
 
-        $this->sut = new ReportService($this->em, $this->mockLogger);
+        $this->sut = new ReportService($this->em, $this->mockReportFactory, $this->mockLogger);
     }
 
-    public function testSubmitInvalid()
+    public function tearDown(): void
+    {
+        m::close();
+    }
+
+    public function testSubmitInvalid(): void
     {
         $this->report->setAgreedBehalfDeputy(false);
-        $this->expectException(\RuntimeException::class);
-        $this->sut->submit($this->report, $this->user, new \DateTime('2016-01-15'));
+        $this->expectException(RuntimeException::class);
+        $this->sut->submit($this->report, $this->user, new DateTime('2016-01-15'));
     }
 
-    public function testSubmitValid()
+    public function testSubmitValid(): void
     {
         $report = $this->report;
 
-        // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->mockLogger])->makePartial();
+        /** @var ReportService|MockInterface $reportService */
+        $reportService = Mockery::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
 
         // mocks
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('flush');
         // assert persists on report and submission record
-        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($report) {
+        $this->em->shouldReceive('persist')->with(Mockery::on(function ($report): bool {
             return $report instanceof Report;
         }));
         // assert persists on report and submission record
-        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($report) {
-            return $report instanceof EntityDir\Report\ReportSubmission;
+        $this->em->shouldReceive('persist')->with(Mockery::on(function ($report): bool {
+            return $report instanceof ReportSubmission;
         }));
 
         // clonePersistentResources should be called
-        $reportService->shouldReceive('clonePersistentResources')->with(\Mockery::type(Report::class), $report);
+        $reportService->shouldReceive('clonePersistentResources')->with(Mockery::type(Report::class), $report);
 
         $report->setAgreedBehalfDeputy(true);
-        $newYearReport = $reportService->submit($report, $this->user, new \DateTime('2016-01-15'));
+        $newYearReport = $reportService->submit($report, $this->user, new DateTime('2016-01-15'));
 
         // assert current report
         $this->assertTrue($report->getSubmitted());
@@ -142,24 +161,24 @@ class ReportServiceTest extends TestCase
         $this->assertEquals('2016-12-31', $newYearReport->getEndDate()->format('Y-m-d'));
     }
 
-    public function testResubmit()
+    public function testResubmit(): void
     {
         $report = $this->report;
-        $report->setUnSubmitDate(new \DateTime('2018-02-14'));
+        $report->setUnSubmitDate(new DateTime('2018-02-14'));
 
         // A report for the next report period should already exist
         $client = $this->report->getClient();
-        $nextReport = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2016-01-01'), new \DateTime('2016-12-31'));
+        $nextReport = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime('2016-01-01'), new DateTime('2016-12-31'));
         $client->addReport($nextReport);
 
-        // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->mockLogger])->makePartial();
+        /** @var ReportService|MockInterface $reportService */
+        $reportService = Mockery::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
 
         // mocks
         $this->em->shouldReceive('detach');
         // assert persists on report and submission record
-        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($report) {
-            return $report instanceof EntityDir\Report\ReportSubmission;
+        $this->em->shouldReceive('persist')->with(Mockery::on(function ($report): bool {
+            return $report instanceof ReportSubmission;
         }));
         $this->em->shouldReceive('flush')->with()->once(); // last in createNextYearReport
 
@@ -167,7 +186,7 @@ class ReportServiceTest extends TestCase
         $reportService->shouldReceive('clonePersistentResources')->with($nextReport, $report);
 
         $report->setAgreedBehalfDeputy(true);
-        $newYearReport = $reportService->submit($report, $this->user, new \DateTime());
+        $newYearReport = $reportService->submit($report, $this->user, new DateTime());
 
         // assert current report
         $this->assertTrue($report->getSubmitted());
@@ -183,40 +202,41 @@ class ReportServiceTest extends TestCase
         $this->assertEquals($newYearReport, $nextReport);
     }
 
-    public function testSubmitNotAgreedNdrThrowsException()
+    public function testSubmitNotAgreedNdrThrowsException(): void
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $this->ndr->setAgreedBehalfDeputy(null);
-        $submitDate = new \DateTime('2018-04-05');
+        $submitDate = new DateTime('2018-04-05');
 
-        $ndrDoccumentId = 999;
+        $ndrDoccumentId = '999';
 
         $this->sut->submit($this->ndr, $this->user, $submitDate, $ndrDoccumentId);
     }
 
-    public function testSubmitValidNdr()
+    public function testSubmitValidNdr(): void
     {
         $ndr = $this->getFilledInNdr();
 
-        $submitDate = new \DateTime('2018-04-05');
+        $submitDate = new DateTime('2018-04-05');
 
         // assert persists on report and submission record
-        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($ndr) {
-            return $ndr instanceof EntityDir\Report\ReportSubmission;
+        $this->em->shouldReceive('persist')->with(Mockery::on(function ($ndr): bool {
+            return $ndr instanceof ReportSubmission;
         }));
-        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($report) {
+        $this->em->shouldReceive('persist')->with(Mockery::on(function ($report): bool {
             return $report instanceof Report;
         }));
         $this->em->shouldReceive('flush')->with()->once(); // last in createNextYearReport
 
-        // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->mockLogger])->makePartial();
+        /** @var ReportService|MockInterface $reportService */
+        $reportService = Mockery::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
+
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');
         $this->em->shouldReceive('flush');
 
-        $newYearReport = $reportService->submit($ndr, $this->user, $submitDate, 999);
+        $newYearReport = $reportService->submit($ndr, $this->user, $submitDate, '999');
 
         // assert current report
         $this->assertTrue($ndr->getSubmitted());
@@ -236,20 +256,20 @@ class ReportServiceTest extends TestCase
         $this->assertEquals('4321', $newAccount->getAccountNumber());
     }
 
-    private function getFilledInNdr()
+    private function getFilledInNdr(): Ndr
     {
         $client = new Client();
         $client->addUser($this->user);
         $client->setCaseNumber('12345678');
-        $client->setCourtDate(new \DateTime('2014-06-06'));
+        $client->setCourtDate(new DateTime('2014-06-06'));
 
-        $ndr = new EntityDir\Ndr\Ndr($client);
+        $ndr = new Ndr($client);
 
-        $ndrBank = new EntityDir\Ndr\BankAccount();
+        $ndrBank = new NdrBankAccount();
         $ndrBank->setAccountNumber('4321')
             ->setNdr($ndr);
 
-        $ndrAsset = new EntityDir\Ndr\AssetProperty();
+        $ndrAsset = new NdrAssetProperty();
         $ndrAsset->setAddress('SW1')
             ->setOwned(AssetProperty::OWNED_FULLY)
             ->setNdr($ndr);
@@ -263,32 +283,33 @@ class ReportServiceTest extends TestCase
         return $ndr;
     }
 
-    public function testSubmitNdrWithExistingReport()
+    public function testSubmitNdrWithExistingReport(): void
     {
         $ndr = $this->getFilledInNdr();
 
-        $report = new Report($ndr->getClient(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2018-06-06'), new \DateTime('2019-06-05'));
+        $report = new Report($ndr->getClient(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime('2018-06-06'), new DateTime('2019-06-05'));
         $ndr->getClient()->addReport($report);
 
-        $submitDate = new \DateTime('2018-04-05');
+        $submitDate = new DateTime('2018-04-05');
 
         // assert persists on report and submission record
-        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($ndr) {
-            return $ndr instanceof EntityDir\Report\ReportSubmission;
+        $this->em->shouldReceive('persist')->with(Mockery::on(function ($ndr): bool {
+            return $ndr instanceof ReportSubmission;
         }));
-        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($report) {
+        $this->em->shouldReceive('persist')->with(Mockery::on(function ($report): bool {
             return $report instanceof Report;
         }));
         $this->em->shouldReceive('flush')->with()->once(); // last in createNextYearReport
 
-        // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->mockLogger])->makePartial();
+        /** @var ReportService|MockInterface $reportService */
+        $reportService = Mockery::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
+
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');
         $this->em->shouldReceive('flush');
 
         /** @var Report $newYearReport */
-        $newYearReport = $reportService->submit($ndr, $this->user, $submitDate, 999);
+        $newYearReport = $reportService->submit($ndr, $this->user, $submitDate, '999');
 
         // assert existing report carries over
         $this->assertEquals($report->getId(), $newYearReport->getId());
@@ -304,17 +325,16 @@ class ReportServiceTest extends TestCase
         $this->assertEquals('4321', $newAccount->getAccountNumber());
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
-    public function testResubmitPersistenceRequiresReport()
+    #[DoesNotPerformAssertions]
+    public function testResubmitPersistenceRequiresReport(): void
     {
         $report = $this->report;
-        $report->setUnSubmitDate(new \DateTime('2018-02-14'));
+        $report->setUnSubmitDate(new DateTime('2018-02-14'));
         $report->setAgreedBehalfDeputy(true);
 
-        // Create partial mock of ReportService
-        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->mockLogger])->makePartial();
+        /** @var ReportService|MockInterface $reportService */
+        $reportService = Mockery::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
+
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');
         $this->em->shouldReceive('flush');
@@ -323,36 +343,34 @@ class ReportServiceTest extends TestCase
         $reportService->shouldNotReceive('clonePersistentResources');
 
         // Submit a report without one set up for next year
-        $reportService->submit($report, $this->user, new \DateTime());
+        $reportService->submit($report, $this->user, new DateTime());
 
         // Submit a report where next year's dates don't match
         $client = $this->report->getClient();
-        $nextReport = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2016-01-17'), new \DateTime('2017-01-16'));
+        $nextReport = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime('2016-01-17'), new DateTime('2017-01-16'));
         $client->addReport($nextReport);
 
-        $report->setUnSubmitDate(new \DateTime('2018-02-14'));
+        $report->setUnSubmitDate(new DateTime('2018-02-14'));
         $report->setAgreedBehalfDeputy(true);
 
-        $reportService->submit($report, $this->user, new \DateTime());
+        $reportService->submit($report, $this->user, new DateTime());
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
-    public function testPersistentResourcesCloned()
+    #[DoesNotPerformAssertions]
+    public function testPersistentResourcesCloned(): void
     {
         $client = $this->report->getClient();
-        $newReport = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2016-01-01'), new \DateTime('2016-12-31'));
+        $newReport = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime('2016-01-01'), new DateTime('2016-12-31'));
 
         // Assert asset is cloned
         $this->em->shouldReceive('detach')->once();
-        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($asset) {
+        $this->em->shouldReceive('persist')->with(Mockery::on(function ($asset): bool {
             return $asset instanceof AssetProperty
                 && 'SW1' === $asset->getAddress();
         }))->once();
 
         // Assert bank account is cloned, with opening/closing balance modified
-        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($bankAccount) {
+        $this->em->shouldReceive('persist')->with(Mockery::on(function ($bankAccount): bool {
             return $bankAccount instanceof BankAccount
                 && '1234' === $bankAccount->getAccountNumber()
                 && $bankAccount->getOpeningBalance() === $this->report->getBankAccounts()[0]->getClosingBalance()
@@ -364,13 +382,11 @@ class ReportServiceTest extends TestCase
         $this->sut->clonePersistentResources($newReport, $this->report);
     }
 
-    /**
-     * @doesNotPerformAssertions
-     */
-    public function testDuplicateResourcesNotPersisted()
+    #[DoesNotPerformAssertions]
+    public function testDuplicateResourcesNotPersisted(): void
     {
         $client = $this->report->getClient();
-        $newReport = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2016-01-01'), new \DateTime('2016-12-31'));
+        $newReport = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime('2016-01-01'), new DateTime('2016-12-31'));
 
         $newAsset = clone $this->report->getAssets()[0];
         $newReport->addAsset($newAsset);
@@ -386,15 +402,15 @@ class ReportServiceTest extends TestCase
         $this->sut->clonePersistentResources($newReport, $this->report);
     }
 
-    public function testSubmitAdditionalDocuments()
+    public function testSubmitAdditionalDocuments(): void
     {
-        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($report) {
-            return $report instanceof EntityDir\Report\ReportSubmission;
+        $this->em->shouldReceive('persist')->with(Mockery::on(function ($report): bool {
+            return $report instanceof ReportSubmission;
         }));
         $this->em->shouldReceive('flush')->with()->once();
 
         $this->assertEmpty($this->report->getReportSubmissions());
-        $currentReport = $this->sut->submitAdditionalDocuments($this->report, $this->user, new \DateTime('2016-01-15'));
+        $currentReport = $this->sut->submitAdditionalDocuments($this->report, $this->user, new DateTime('2016-01-15'));
         $submission = $currentReport->getReportSubmissions()->first();
 
         $this->assertContains($submission, $this->report->getReportSubmissions());
@@ -402,11 +418,11 @@ class ReportServiceTest extends TestCase
         $this->assertEquals($this->report->getSubmittedBy(), $submission->getCreatedBy());
     }
 
-    public function testIsDue()
+    public function testIsDue(): void
     {
         $this->assertEquals(false, ReportService::isDue(null));
 
-        $todayMidnight = new \DateTime('today midnight');
+        $todayMidnight = new DateTime('today midnight');
 
         $oneMinuteBeforeLastMidnight = clone $todayMidnight;
         $oneMinuteBeforeLastMidnight->modify('-1 minute');
@@ -415,19 +431,17 @@ class ReportServiceTest extends TestCase
         $oneMinuteAfterLastMidnight->modify('+1 minute');
 
         // end date is past (before midnight) => due
-        $this->assertEquals(true, ReportService::isDue(new \DateTime('last week')));
+        $this->assertEquals(true, ReportService::isDue(new DateTime('last week')));
         $this->assertEquals(true, ReportService::isDue($oneMinuteBeforeLastMidnight));
 
         // otherwise not due
         $this->assertEquals(false, ReportService::isDue($oneMinuteAfterLastMidnight));
-        $this->assertEquals(false, ReportService::isDue(new \DateTime('next week')));
+        $this->assertEquals(false, ReportService::isDue(new DateTime('next week')));
         $this->assertEquals(false, ReportService::isDue($todayMidnight));
     }
 
-    /**
-     * @dataProvider getReportTypeBasedOnSiriusProvider
-     */
-    public function testGetReportTypeBasedOnSirius(Client $client, bool $isAString)
+    #[DataProvider('getReportTypeBasedOnSiriusProvider')]
+    public function testGetReportTypeBasedOnSirius(Client $client, bool $isAString): void
     {
         $preRegistration = new PreRegistration(['ReportType' => 'OPG103', 'OrderType' => 'pfa']);
 
@@ -438,12 +452,12 @@ class ReportServiceTest extends TestCase
         $em = self::prophesize(EntityManagerInterface::class);
         $em->getRepository(PreRegistration::class)->willReturn($preRegistrationRepo->reveal());
 
-        $sut = new ReportService($em->reveal(), $this->mockLogger);
+        $sut = new ReportService($em->reveal(), $this->mockReportFactory, $this->mockLogger);
 
         self::assertEquals($isAString, is_string($sut->getReportTypeBasedOnSirius($client)));
     }
 
-    public function getReportTypeBasedOnSiriusProvider()
+    public static function getReportTypeBasedOnSiriusProvider(): array
     {
         $lay = (new User())->setRoleName(User::ROLE_LAY_DEPUTY);
         $prof = (new User())->setRoleName(User::ROLE_PROF_ADMIN);
@@ -452,21 +466,21 @@ class ReportServiceTest extends TestCase
         $layClient = (new Client())
             ->addUser($lay)
             ->setCaseNumber('12345678')
-            ->setCourtDate(new \DateTime('2014-06-06'));
+            ->setCourtDate(new DateTime('2014-06-06'));
 
         $profClient = (new Client())
             ->addUser($prof)
             ->setCaseNumber('12345678')
-            ->setCourtDate(new \DateTime('2014-06-06'));
+            ->setCourtDate(new DateTime('2014-06-06'));
 
         $paClient = (new Client())
             ->addUser($pa)
             ->setCaseNumber('12345678')
-            ->setCourtDate(new \DateTime('2014-06-06'));
+            ->setCourtDate(new DateTime('2014-06-06'));
 
         $noUserClient = (new Client())
             ->setCaseNumber('12345678')
-            ->setCourtDate(new \DateTime('2014-06-06'));
+            ->setCourtDate(new DateTime('2014-06-06'));
 
         return [
             'layUserAttachedToClient' => [$layClient, true],
@@ -476,11 +490,12 @@ class ReportServiceTest extends TestCase
         ];
     }
 
-    public function testUserStatusIsSetToActiveOnceReportIsSubmitted()
+    public function testUserStatusIsSetToActiveOnceReportIsSubmitted(): void
     {
         $user = $this->user->setActive(null);
 
-        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->mockLogger])->makePartial();
+        /** @var ReportService|MockInterface $reportService */
+        $reportService = Mockery::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
 
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');
@@ -488,13 +503,99 @@ class ReportServiceTest extends TestCase
 
         $this->report->setAgreedBehalfDeputy(true);
 
-        $reportService->submit($this->report, $user, new \DateTime());
+        $reportService->submit($this->report, $user, new DateTime());
 
         $this->assertTrue($user->getActive());
     }
 
-    public function tearDown(): void
+    // pre-reg entries for cases which will result in required reports being created
+    private static function preRegEntriesForRequiredReports(): array
     {
-        m::close();
+        $now = (new DateTime())->format('Y-m-d');
+
+        $pfa = new PreRegistration(['ReportType' => 'OPG103', 'OrderType' => 'pfa', 'MadeDate' => $now]);
+        $hw = new PreRegistration(['ReportType' => 'OPG104', 'OrderType' => 'hw', 'MadeDate' => $now]);
+        $hybrid = new PreRegistration(['ReportType' => 'OPG102', 'OrderType' => 'hw', 'MadeDate' => $now]);
+
+        return [
+            // pfa report only
+            [
+                'preRegRows' => [$pfa], 'reportsCreated' => 1, 'expectedReportTypes' => ['103'],
+            ],
+
+            // hw report only
+            [
+                'preRegRows' => [$hw], 'reportsCreated' => 1, 'expectedReportTypes' => ['104'],
+            ],
+
+            // hybrid report only
+            [
+                'preRegRows' => [$hybrid], 'reportsCreated' => 1, 'expectedReportTypes' => ['102-4'],
+            ],
+
+            // pfa+hw reports
+            [
+                'preRegRows' => [$pfa, $hw], 'reportsCreated' => 2, 'expectedReportTypes' => ['103', '104'],
+            ],
+
+            // multiple rows (check we only get one pfa and one hw report)
+            [
+                'preRegRows' => [$pfa, $hw, $pfa, $hw], 'reportsCreated' => 4, 'expectedReportTypes' => ['103', '104'],
+            ],
+
+            // multiple rows (check we only get one hybrid report)
+            [
+                'preRegRows' => [$pfa, $hw, $hybrid, $pfa, $hw], 'reportsCreated' => 3, 'expectedReportTypes' => ['102-4'],
+            ],
+        ];
+    }
+
+    /**
+     * @param PreRegistration[] $preRegRows
+     * @param string[]          $expectedReportTypes
+     *
+     * @dataProvider preRegEntriesForRequiredReports
+     */
+    public function testCreateRequiredReports(array $preRegRows, int $reportsCreated, array $expectedReportTypes): void
+    {
+        $mockClient = self::createMock(Client::class);
+        $mockClient->expects(self::once())
+            ->method('getCaseNumber')
+            ->willReturn('92345678');
+
+        $this->mockPreRegistrationRepository->expects(self::once())
+            ->method('findByCaseNumber')
+            ->willReturn($preRegRows);
+
+        $this->mockReportFactory->expects(self::exactly($reportsCreated))
+            ->method('create')
+            ->with($mockClient, $this->isType('string'), $this->isType('string'), $this->isInstanceOf(DateTime::class))
+            ->willReturnCallback(function (Client $client, string $typeOfReport, string $orderType) {
+                $stub = self::createStub(Report::class);
+
+                $reportType = str_replace('OPG', '', $typeOfReport);
+
+                if ('OPG102' === $typeOfReport || 'OPG103' === $typeOfReport) {
+                    if ('hw' === $orderType) {
+                        $stub->method('isHybrid')->willReturn(true);
+                        $stub->method('isPfa')->willReturn(false);
+                        $reportType .= '-4';
+                    } else {
+                        $stub->method('isHybrid')->willReturn(false);
+                        $stub->method('isPfa')->willReturn(true);
+                    }
+                } elseif ('OPG104' === $typeOfReport) {
+                    $stub->method('isHw')->willReturn(true);
+                }
+
+                $stub->method('getType')->willReturn($reportType);
+
+                return $stub;
+            });
+
+        $reports = $this->sut->createRequiredReports($mockClient);
+
+        self::assertCount(count($expectedReportTypes), $reports);
+        self::assertEquals($expectedReportTypes, array_map(function (Report $report) { return $report->getType(); }, $reports));
     }
 }

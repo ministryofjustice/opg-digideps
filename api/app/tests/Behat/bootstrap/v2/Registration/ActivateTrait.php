@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Registration;
 
-use App\Entity\Organisation;
+use DateTime;
+use RuntimeException;
 use App\Entity\PreRegistration;
-use App\Entity\User;
 use App\Tests\Behat\BehatException;
 
 trait ActivateTrait
@@ -168,7 +168,7 @@ trait ActivateTrait
                 $matchingString = $assertionByExpectation ? 'Yes' : 'No';
                 break;
             case 'Registration date':
-                $matchingString = $assertionByExpectation ? (new \DateTime())->format('j/m/Y') : 'n.a.';
+                $matchingString = $assertionByExpectation ? (new DateTime())->format('j/m/Y') : 'n.a.';
                 break;
             default:
                 $supportedProperties = ['Registration date', 'Active flag'];
@@ -293,7 +293,7 @@ trait ActivateTrait
         $value = $this->fixStepArgument($value);
 
         if ('.' != substr($field, 0, 1) && '#' != substr($field, 0, 1)) {
-            $field = '#'.$field;
+            $field = '#' . $field;
         }
 
         if ('Behat\Mink\Driver\Selenium2Driver' == get_class($driver)) {
@@ -347,7 +347,7 @@ EOT;
             $elementsFound = $this->getSession()->getPage()->findAll('css', $field);
 
             if (empty($elementsFound)) {
-                throw new \RuntimeException("Element $field not found");
+                throw new RuntimeException("Element $field not found");
             }
 
             $elementsFound[0]->setValue($value);

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Helpers;
 
+use DateTime;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
@@ -44,13 +45,13 @@ class FixtureHelper
         private EntityManagerInterface $em,
         private array $fixtureParams,
         private UserPasswordHasherInterface $hasher,
-        private string $symfonyEnvironment,
         private PreRegistrationFactory $preRegistrationFactory,
         private S3ClientInterface $s3Client,
+        private readonly bool $fixturesEnabled,
     ) {
-        $this->userTestHelper = new UserTestHelper();
-        $this->reportTestHelper = new ReportTestHelper();
-        $this->clientTestHelper = new ClientTestHelper();
+        $this->userTestHelper = UserTestHelper::create();
+        $this->reportTestHelper = ReportTestHelper::create();
+        $this->clientTestHelper = ClientTestHelper::create();
         $this->organisationTestHelper = new OrganisationTestHelper();
         $this->deputyTestHelper = new DeputyTestHelper();
         $this->courtOrderTestHelper = new CourtOrderTestHelper();
@@ -218,7 +219,7 @@ class FixtureHelper
     public function createAndPersistUser(
         string $roleName, ?string $email = null, ?int $deputyUid = null, ?string $firstName = null, ?string $lastName = null,
     ) {
-        if ('prod' === $this->symfonyEnvironment) {
+        if (!$this->fixturesEnabled) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
         }
 
@@ -241,7 +242,7 @@ class FixtureHelper
         bool $completed = false,
         bool $submitted = false,
         ?string $type = null,
-        ?\DateTime $startDate = null,
+        ?DateTime $startDate = null,
         ?int $satisfactionScore = null,
         ?string $caseNumber = null,
     ) {
@@ -251,9 +252,12 @@ class FixtureHelper
         $deputyObject = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $deputy->getDeputyUid()]);
 
         if (is_null($deputyObject)) {
-            $populateDeputyTable = $this->deputyTestHelper->generateDeputy($deputy->getEmail(), strval($deputy->getDeputyUid()));
-            $this->em->persist($populateDeputyTable);
+            $deputyObject = $this->deputyTestHelper->generateDeputy($deputy->getEmail(), strval($deputy->getDeputyUid()));
+            $this->em->persist($deputyObject);
         }
+
+        $deputyObject->setUser($deputy);
+        $this->em->persist($deputyObject);
 
         $client->addReport($report);
         $report->setClient($client);
@@ -277,6 +281,8 @@ class FixtureHelper
             $satisfaction = $this->setSatisfaction($report, $deputy, $satisfactionScore);
             $this->em->persist($satisfaction);
         }
+
+        $this->em->flush();
     }
 
     private function addReportsToClient(
@@ -285,7 +291,7 @@ class FixtureHelper
         bool $completed = false,
         bool $submitted = false,
         ?string $type = null,
-        ?\DateTime $startDate = null,
+        ?DateTime $startDate = null,
         ?int $satisfactionScore = null,
     ) {
         $report = $this->reportTestHelper->generateReport($this->em, $client, $type, $startDate);
@@ -369,7 +375,7 @@ class FixtureHelper
         bool $completed = false,
         bool $submitted = false,
         string $reportType = Report::PROF_PFA_HIGH_ASSETS_TYPE,
-        ?\DateTime $startDate = null,
+        ?DateTime $startDate = null,
         ?int $satisfactionScore = null,
         ?string $deputyEmail = null,
         ?string $caseNumber = null,
@@ -1168,7 +1174,7 @@ class FixtureHelper
 
     public function createDataForAnalytics(string $testRunId, $timeAgo, $satisfactionScore)
     {
-        $startDate = new \DateTime($timeAgo);
+        $startDate = new DateTime($timeAgo);
         $deputies = [];
 
         $deputies[] = $this->createOrgUserClientDeputyAndReport(
@@ -1216,7 +1222,7 @@ class FixtureHelper
 
     private function createOrganisation(string $testRunId, string $emailIdentifier)
     {
-        if ('prod' === $this->symfonyEnvironment) {
+        if (!$this->fixturesEnabled) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
         }
 
@@ -1273,14 +1279,14 @@ class FixtureHelper
         $completed,
         $submitted,
         bool $ndr = false,
-        ?\DateTime $startDate = null,
+        ?DateTime $startDate = null,
         ?int $satisfactionScore = null,
         ?string $caseNumber = null,
         bool $legacyPasswordHash = false,
         bool $isPrimary = true,
         ?int $deputyUid = null,
     ) {
-        if ('prod' === $this->symfonyEnvironment) {
+        if (!$this->fixturesEnabled) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
         }
 
@@ -1302,7 +1308,7 @@ class FixtureHelper
 
     private function createAdminUser(string $testRunId, $userRole, $emailPrefix)
     {
-        if ('prod' === $this->symfonyEnvironment) {
+        if (!$this->fixturesEnabled) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
         }
         $this->testRunId = $testRunId;
@@ -1325,10 +1331,10 @@ class FixtureHelper
         ?string $deputyEmail = null,
         ?string $caseNumber = null,
         ?string $deputyUid = null,
-        ?\DateTime $startDate = null,
+        ?DateTime $startDate = null,
         ?int $satisfactionScore = null,
     ) {
-        if ('prod' === $this->symfonyEnvironment) {
+        if (!$this->fixturesEnabled) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
         }
 
@@ -1373,9 +1379,22 @@ class FixtureHelper
         $this->em->flush();
     }
 
-    public function createPreRegistration(string $reportType = 'OPG102', string $orderType = 'PFA', string $clientLastname = 'Smith'): PreRegistration
-    {
-        $data = ['reportType' => $reportType, 'orderType' => $orderType, 'clientLastName' => $clientLastname];
+    public function createPreRegistration(
+        string $reportType = 'OPG102',
+        string $orderType = 'PFA',
+        string $clientLastname = 'Smith',
+        ?string $caseNumber = null,
+    ): PreRegistration {
+        if (is_null($caseNumber)) {
+            $caseNumber = ''.random_int(10000000, 99999999);
+        }
+
+        $data = [
+            'reportType' => $reportType,
+            'orderType' => $orderType,
+            'clientLastName' => $clientLastname,
+            'caseNumber' => $caseNumber,
+        ];
 
         $preRegistration = $this->preRegistrationFactory->create($data);
         $this->em->persist($preRegistration);
@@ -1397,7 +1416,7 @@ class FixtureHelper
         return $this->courtOrderTestHelper::generateCourtOrder($this->em, $client, $courtOrderUid, 'ACTIVE', $orderType, $report, $ndr, $deputy);
     }
 
-    public function createDeputyOnOrder(CourtOrder $courtOrder, ?\DateTime $lastLoggedIn = null): Deputy
+    public function createDeputyOnOrder(CourtOrder $courtOrder, ?DateTime $lastLoggedIn = null): Deputy
     {
         $user = $this->userTestHelper::createUser();
 

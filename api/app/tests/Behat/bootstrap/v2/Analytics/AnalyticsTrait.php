@@ -96,7 +96,7 @@ trait AnalyticsTrait
             $actualValue = str_replace('%', '', trim(strval($this->getSession()->getPage()->find('xpath', $xpath)->getHtml())));
             $realActualValue = '-' == $actualValue ? 0 : intval($actualValue);
             $expectedValue = $this->expectedMetrics[$metric];
-            $this->assertIntEqualsInt($expectedValue, $realActualValue, 'Analytics Values - '.$metric);
+            $this->assertIntEqualsInt($expectedValue, $realActualValue, 'Analytics Values - ' . $metric);
         }
     }
 
@@ -208,7 +208,7 @@ trait AnalyticsTrait
         $this->currentLinkText = 'Download satisfaction report';
 
         $xpath = sprintf('//a[contains(.,"%s")]', $this->currentLinkText);
-        $downloadLink = $this->getSession()->getPage()->find('xpath', $xpath);
+        $downloadLink = $this->findWithRetry('xpath', $xpath);
         if (is_null($downloadLink)) {
             throw new BehatException(sprintf('Missing the following text: %s', $this->currentLinkText));
         }

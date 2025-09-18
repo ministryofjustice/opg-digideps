@@ -15,9 +15,9 @@ trait OrganisationManagementTrait
      */
     public function iAddAnActiveOrganisation()
     {
-        $orgName = 'My Organisation '.$this->testRunId;
+        $orgName = 'My Organisation ' . $this->testRunId;
 
-        $domain = $this->testRunId.'.com';
+        $domain = $this->testRunId . '.com';
 
         $this->organisations[] = ['Name' => $orgName, 'Email' => $domain, 'Active' => true];
 
@@ -48,8 +48,8 @@ trait OrganisationManagementTrait
             if (!in_array(strtolower($org['Name']), $formattedDataElements)) {
                 throw new BehatException(sprintf('Could not find Organisation Name. Expected name is %s', $org['Name']));
             }
-            if (!in_array(strtolower('*@'.$org['Email']), $formattedDataElements)) {
-                throw new BehatException(sprintf('Could not find Organisation Email Domain. Expected Email Domain name is %s', '*@'.$org['Email']));
+            if (!in_array(strtolower('*@' . $org['Email']), $formattedDataElements)) {
+                throw new BehatException(sprintf('Could not find Organisation Email Domain. Expected Email Domain name is %s', '*@' . $org['Email']));
             }
         }
     }
@@ -186,7 +186,7 @@ trait OrganisationManagementTrait
 
         $email = end($this->organisations)['Email'];
 
-        if (in_array(strtolower('*@'.$email), $formattedDataElements)) {
+        if (in_array(strtolower('*@' . $email), $formattedDataElements)) {
             throw new BehatException(sprintf('Found Organisation Email Domain: %s. Expected organisation to be deleted.', $email));
         }
     }
@@ -246,7 +246,7 @@ trait OrganisationManagementTrait
 
         $organisation = array_pop($this->organisations);
 
-        $organisation['Name'] = $organisation['Name'].' Edit';
+        $organisation['Name'] = $organisation['Name'] . ' Edit';
 
         $this->organisations[] = $organisation;
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use InvalidArgumentException;
+use RuntimeException;
 use App\Tests\Behat\BehatException;
 use Behat\Mink\Element\NodeElement;
 
@@ -58,7 +60,7 @@ trait ElementSelectionTrait
         );
 
         if (null === $element) {
-            throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
+            throw new InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
         }
 
         $element->click();
@@ -116,7 +118,7 @@ trait ElementSelectionTrait
         );
 
         if (null === $element) {
-            throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
+            throw new InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
         }
 
         $element->click();
@@ -150,7 +152,7 @@ trait ElementSelectionTrait
         );
 
         if (null === $element) {
-            throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
+            throw new InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
         }
 
         $values = $element->findAll('css', 'option');
@@ -177,7 +179,7 @@ trait ElementSelectionTrait
         );
 
         if (null === $values) {
-            throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
+            throw new InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
         }
 
         foreach ($values as $value) {
@@ -201,7 +203,7 @@ trait ElementSelectionTrait
         );
 
         if (null === $values) {
-            throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
+            throw new InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
         }
 
         $select = trim($values[$choiceNumber]->getAttribute('name'));
@@ -218,7 +220,7 @@ trait ElementSelectionTrait
         $value = str_replace('\\"', '"', $value);
 
         if ('.' != substr($field, 0, 1) && '#' != substr($field, 0, 1)) {
-            $field = '#'.$field;
+            $field = '#' . $field;
         }
 
         if ('Behat\Mink\Driver\Selenium2Driver' == get_class($driver)) {
@@ -271,7 +273,7 @@ EOT;
             $elementsFound = $this->getSession()->getPage()->findAll('css', $field);
 
             if (empty($elementsFound)) {
-                throw new \RuntimeException("Element $field not found");
+                throw new RuntimeException("Element $field not found");
             }
 
             $elementsFound[0]->setValue($value);
@@ -282,23 +284,23 @@ EOT;
     public function scrollToElement($element)
     {
         if ('.' != substr($element, 0, 1) && '#' != substr($element, 0, 1)) {
-            $element = '#'.$element;
+            $element = '#' . $element;
         }
 
         $driver = $this->getSession()->getDriver();
         if ('Behat\Mink\Driver\Selenium2Driver' == get_class($driver)) {
             $javascript =
                 "var el = $('$element');"
-                .'var elOffset = el.offset().top;'
-                .'var elHeight = el.height();'
-                .'var windowHeight = $(window).height();'
-                .'var offset;'
-                .'if (elHeight < windowHeight) {'
-                .'  offset = elOffset - ((windowHeight / 2) - (elHeight / 2));'
-                .'} else {'
-                .'  offset = elOffset;'
-                .'}'
-                .'window.scrollTo(0, offset);';
+                . 'var elOffset = el.offset().top;'
+                . 'var elHeight = el.height();'
+                . 'var windowHeight = $(window).height();'
+                . 'var offset;'
+                . 'if (elHeight < windowHeight) {'
+                . '  offset = elOffset - ((windowHeight / 2) - (elHeight / 2));'
+                . '} else {'
+                . '  offset = elOffset;'
+                . '}'
+                . 'window.scrollTo(0, offset);';
 
             $this->getSession()->executeScript($javascript);
         }

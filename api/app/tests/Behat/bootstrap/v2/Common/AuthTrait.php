@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use DateTime;
 use App\Entity\Client;
 use App\Entity\User;
 use App\Tests\Behat\BehatException;
@@ -188,7 +189,7 @@ trait AuthTrait
             throw new BehatException(sprintf('User with email %s not found', $email));
 
         if ('expired' === $token) {
-            $user->setTokenDate(new \DateTime('-2hours'));
+            $user->setTokenDate(new DateTime('-2hours'));
             $this->em->persist($user);
             $this->em->flush($user);
         }
@@ -390,8 +391,10 @@ trait AuthTrait
     public function aFlashMessageShouldBeDisplayedToTheUserWithTheirPrimaryEmailAddress()
     {
         $alertMessage =
-            sprintf('This account has been closed. You can now access all of your reports in the same place from your account under %s',
-                $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getUserEmail());
+            sprintf(
+                'This account has been closed. You can now access all of your reports in the same place from your account under %s',
+                $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getUserEmail()
+            );
 
         $xpath = '//div[contains(@class, "govuk-notification-banner__content")]';
         $alertText = $this->getSession()->getPage()->find('xpath', $xpath)->getText();
@@ -412,8 +415,8 @@ trait AuthTrait
      */
     public function aFlashMessageShouldBeDisplayedUserShouldUsePrimaryAccount(): void
     {
-        $alertMessage = 'This account has been closed. '.
-            'You can now access all of your reports in the same place from your primary account. '.
+        $alertMessage = 'This account has been closed. ' .
+            'You can now access all of your reports in the same place from your primary account. ' .
             'If you need assistance, contact your case manager';
 
         $xpath = '//div[contains(@class, "govuk-notification-banner__content")]';

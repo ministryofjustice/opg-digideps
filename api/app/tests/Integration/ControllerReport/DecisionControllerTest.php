@@ -60,7 +60,7 @@ class DecisionControllerTest extends AbstractTestController
 
     public function testgetOneByIdAuth()
     {
-        $url = '/report/decision/'.self::$decision1->getId();
+        $url = '/report/decision/' . self::$decision1->getId();
 
         $this->assertEndpointNeedsAuth('GET', $url);
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
@@ -68,13 +68,13 @@ class DecisionControllerTest extends AbstractTestController
 
     public function testgetOneByIdAcl()
     {
-        $url2 = '/report/decision/'.self::$decision2->getId();
+        $url2 = '/report/decision/' . self::$decision2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
     public function testgetOneById()
     {
-        $url = '/report/decision/'.self::$decision1->getId();
+        $url = '/report/decision/' . self::$decision1->getId();
 
         // assert get
         $data = $this->assertJsonRequest('GET', $url, [
@@ -183,7 +183,7 @@ class DecisionControllerTest extends AbstractTestController
 
     public function testDeleteDecisionAuth()
     {
-        $url = '/report/decision/'.self::$decision1->getId();
+        $url = '/report/decision/' . self::$decision1->getId();
 
         $this->assertEndpointNeedsAuth('DELETE', $url);
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
@@ -191,7 +191,7 @@ class DecisionControllerTest extends AbstractTestController
 
     public function testDeleteDecisionAcl()
     {
-        $url2 = '/report/decision/'.self::$decision2->getId();
+        $url2 = '/report/decision/' . self::$decision2->getId();
 
         $this->assertEndpointNotAllowedFor('DELETE', $url2, self::$tokenDeputy);
     }
@@ -203,7 +203,7 @@ class DecisionControllerTest extends AbstractTestController
      */
     public function testDeleteDecision()
     {
-        $url = '/report/decision/'.self::$decision1->getId();
+        $url = '/report/decision/' . self::$decision1->getId();
         $this->assertJsonRequest('DELETE', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,

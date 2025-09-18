@@ -3,9 +3,16 @@
 namespace App\Controller\Report;
 
 use App\Controller\RestController;
-use App\Entity as EntityDir;
 use App\Entity\Client;
+use App\Entity\PreRegistration;
+use App\Entity\Report\Checklist;
+use App\Entity\Report\ChecklistInformation;
+use App\Entity\Report\Debt;
+use App\Entity\Report\Fee;
+use App\Entity\Report\MoneyShortCategory;
+use App\Entity\Report\ProfDeputyOtherCost;
 use App\Entity\Report\Report;
+use App\Entity\Report\ReviewChecklist;
 use App\Entity\User;
 use App\Exception\UnauthorisedException;
 use App\Repository\PreRegistrationRepository;
@@ -13,9 +20,14 @@ use App\Repository\ReportRepository;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use App\Service\ReportService;
+use DateInterval;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
+use Exception;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
+use InvalidArgumentException;
+use RuntimeException;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -69,30 +81,32 @@ class ReportController extends RestController
         $reportData = $this->formatter->deserializeBodyContent($request);
 
         if (empty($reportData['client']['id'])) {
-            throw new \InvalidArgumentException('Missing client.id');
+            throw new InvalidArgumentException('Missing client.id');
         }
         /** @var Client $client */
         $client = $this->findEntityBy(Client::class, $reportData['client']['id']);
         $this->denyAccessIfClientDoesNotBelongToUser($client);
 
-        /** @var EntityDir\PreRegistration[] $preRegistrationRecord */
+        /** @var PreRegistration[] $preRegistrationRecord */
         $preRegistrationRecord = $this->preRegRepository->findByCaseNumber($client->getCaseNumber());
         $orderStartDate = $preRegistrationRecord[0]->getOrderDate();
 
         if (is_null($orderStartDate)) {
-            throw new UnprocessableEntityHttpException(
-                sprintf(
-                    'OrderDate (made_date) is missing for Preregistration record: %s',
-                    $preRegistrationRecord[0]->getId()
-                )
-            );
+            throw new UnprocessableEntityHttpException(sprintf('OrderDate (made_date) is missing for Preregistration record: %s', $preRegistrationRecord[0]->getId()));
         }
 
-        $endDate = clone $orderStartDate;
+        $today = new DateTime();
+        // Day and month from order made date combined with current year
+        $amendedOrderStartDate = new DateTime(date('d M ', $orderStartDate->getTimestamp()).date('Y'));
+        if ($today < $amendedOrderStartDate) {
+            $amendedOrderStartDate->modify('-1 year');
+        }
+
+        $endDate = clone $amendedOrderStartDate;
 
         // report type is taken from Sirius. In case that's not available (shouldn't happen unless pre registration table is dropped), use a 102
         $reportType = $this->reportService->getReportTypeBasedOnSirius($client) ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
-        $report = new Report($client, $reportType, $orderStartDate, $endDate->add(new \DateInterval('P12M1D')));
+        $report = new Report($client, $reportType, $amendedOrderStartDate, $endDate->add(new DateInterval('P12M'))->sub(new DateInterval('P1D')));
         $report->setReportSeen(true);
 
         $report->updateSectionsStatusCache($report->getAvailableSections());
@@ -137,17 +151,17 @@ class ReportController extends RestController
         $data = $this->formatter->deserializeBodyContent($request);
 
         if (empty($data['submit_date'])) {
-            throw new \InvalidArgumentException('Missing submit_date');
+            throw new InvalidArgumentException('Missing submit_date');
         }
 
         if (empty($data['agreed_behalf_deputy'])) {
-            throw new \InvalidArgumentException('Missing agreed_behalf_deputy');
+            throw new InvalidArgumentException('Missing agreed_behalf_deputy');
         }
 
         /** @var User $user */
         $user = $this->getUser();
         if ('not_deputy' === $data['agreed_behalf_deputy'] && $user->isLayDeputy()) {
-            throw new \InvalidArgumentException('\'not_deputy\' is invalid option of agreed_behalf_deputy for lay deputies');
+            throw new InvalidArgumentException('\'not_deputy\' is invalid option of agreed_behalf_deputy for lay deputies');
         }
 
         $currentReport->setAgreedBehalfDeputy($data['agreed_behalf_deputy']);
@@ -159,7 +173,7 @@ class ReportController extends RestController
         $user = $this->getUser();
 
         /** @var Report|null $nextYearReport */
-        $nextYearReport = $this->reportService->submit($currentReport, $user, new \DateTime($data['submit_date']));
+        $nextYearReport = $this->reportService->submit($currentReport, $user, new DateTime($data['submit_date']));
 
         return $nextYearReport?->getId();
     }
@@ -195,7 +209,7 @@ class ReportController extends RestController
             if ('yes' == $data['has_debts']) {
                 foreach ($data['debts'] as $row) {
                     $debt = $report->getDebtByTypeId($row['debt_type_id']);
-                    if (!$debt instanceof EntityDir\Report\Debt) {
+                    if (!$debt instanceof Debt) {
                         continue; // not clear when that might happen. kept similar to transaction below
                     }
                     $debt->setAmountAndDetails($row['amount'], $row['more_details']);
@@ -224,10 +238,10 @@ class ReportController extends RestController
                     );
 
                     // update if exists, or instantiate a new entitys
-                    if ($profDeputyOtherCost instanceof EntityDir\Report\ProfDeputyOtherCost) {
+                    if ($profDeputyOtherCost instanceof ProfDeputyOtherCost) {
                         $profDeputyOtherCost->setAmount($postedProfDeputyOtherCostType['amount']);
                     } else {
-                        $profDeputyOtherCost = new EntityDir\Report\ProfDeputyOtherCost(
+                        $profDeputyOtherCost = new ProfDeputyOtherCost(
                             $report,
                             $postedProfDeputyOtherCostType['prof_deputy_other_cost_type_id'],
                             $postedProfDeputyOtherCostType['has_more_details'],
@@ -258,7 +272,7 @@ class ReportController extends RestController
         if (array_key_exists('fees', $data)) {
             foreach ($data['fees'] as $row) {
                 $fee = $report->getFeeByTypeId($row['fee_type_id']);
-                if (!$fee instanceof EntityDir\Report\Fee) {
+                if (!$fee instanceof Fee) {
                     continue; // not clear when that might happen. kept similar to transaction below
                 }
                 $fee->setAmountAndDetails($row['amount'], $row['more_details']);
@@ -313,15 +327,15 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('due_date', $data)) {
-            $report->setDueDate(new \DateTime($data['due_date']));
+            $report->setDueDate(new DateTime($data['due_date']));
         }
 
         if (array_key_exists('start_date', $data)) {
-            $report->setStartDate(new \DateTime($data['start_date']));
+            $report->setStartDate(new DateTime($data['start_date']));
         }
 
         if (array_key_exists('end_date', $data)) {
-            $report->setEndDate(new \DateTime($data['end_date']));
+            $report->setEndDate(new DateTime($data['end_date']));
             // end date could be updated automatically with a listener, but better not to overload
             // the default behaviour until the logic is 100% clear
             $report->updateDueDateBasedOnEndDate();
@@ -428,7 +442,7 @@ class ReportController extends RestController
         if (array_key_exists('money_short_categories_in', $data)) {
             foreach ($data['money_short_categories_in'] as $row) {
                 $e = $report->getMoneyShortCategoryByTypeId($row['type_id']);
-                if ($e instanceof EntityDir\Report\MoneyShortCategory) {
+                if ($e instanceof MoneyShortCategory) {
                     $e
                         ->setPresent($row['present']);
                     $this->em->flush($e);
@@ -444,7 +458,7 @@ class ReportController extends RestController
         if (array_key_exists('money_short_categories_out', $data)) {
             foreach ($data['money_short_categories_out'] as $row) {
                 $e = $report->getMoneyShortCategoryByTypeId($row['type_id']);
-                if ($e instanceof EntityDir\Report\MoneyShortCategory) {
+                if ($e instanceof MoneyShortCategory) {
                     $e
                         ->setPresent($row['present']);
                     $this->em->flush($e);
@@ -548,7 +562,7 @@ class ReportController extends RestController
         /** @var Report $report */
         $report = $this->findEntityBy(Report::class, $id, 'Report not found');
         if (!$report->getSubmitted()) {
-            throw new \RuntimeException('Cannot unsubmit an active report');
+            throw new RuntimeException('Cannot unsubmit an active report');
         }
 
         $data = $this->formatter->deserializeBodyContent($request, [
@@ -561,10 +575,10 @@ class ReportController extends RestController
 
         $this->reportService->unSubmit(
             $report,
-            new \DateTime($data['un_submit_date']),
-            new \DateTime($data['due_date']),
-            new \DateTime($data['start_date']),
-            new \DateTime($data['end_date']),
+            new DateTime($data['un_submit_date']),
+            new DateTime($data['due_date']),
+            new DateTime($data['start_date']),
+            new DateTime($data['end_date']),
             $data['unsubmitted_sections_list']
         );
 
@@ -641,7 +655,7 @@ class ReportController extends RestController
             $reports[] = [
                 'id' => $reportDatum['id'],
                 'type' => $reportDatum['type'],
-                'un_submit_date' => $reportDatum['unSubmitDate'] instanceof \DateTime ?
+                'un_submit_date' => $reportDatum['unSubmitDate'] instanceof DateTime ?
                     $reportDatum['unSubmitDate']->format('Y-m-d') : null,
                 'status' => [
                     // adjust report status cached using end date
@@ -664,7 +678,7 @@ class ReportController extends RestController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function getReportCountsByStatus(Request $request, int|array $orgIdsOrUserId, int $determinant): array
     {
@@ -690,7 +704,7 @@ class ReportController extends RestController
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     #[Route(path: '/get-all-by-orgs', methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_ORG')]
@@ -718,7 +732,7 @@ class ReportController extends RestController
         /** @var User $user */
         $user = $this->getUser();
 
-        $this->reportService->submitAdditionalDocuments($currentReport, $user, new \DateTime());
+        $this->reportService->submitAdditionalDocuments($currentReport, $user, new DateTime());
 
         return ['reportId' => $currentReport->getId()];
     }
@@ -737,18 +751,18 @@ class ReportController extends RestController
 
         $checklistData = $this->formatter->deserializeBodyContent($request);
 
-        $checklist = new EntityDir\Report\Checklist($report);
+        $checklist = new Checklist($report);
         $checklist = $this->populateChecklistEntity($checklist, $checklistData);
 
         if (!empty($checklistData['further_information_received'])) {
-            $info = new EntityDir\Report\ChecklistInformation($checklist, $checklistData['further_information_received']);
+            $info = new ChecklistInformation($checklist, $checklistData['further_information_received']);
             $info->setCreatedBy($user);
             $this->em->persist($info);
         }
 
         if ('submitAndContinue' == $checklistData['button_clicked']) {
             $checklist->setSubmittedBy($user);
-            $checklist->setSubmittedOn(new \DateTime());
+            $checklist->setSubmittedOn(new DateTime());
         }
         $checklist->setLastModifiedBy($user);
 
@@ -809,20 +823,20 @@ class ReportController extends RestController
 
         $checklistData = $this->formatter->deserializeBodyContent($request);
 
-        /** @var EntityDir\Report\Checklist $checklist */
+        /** @var Checklist $checklist */
         $checklist = $report->getChecklist();
 
         $checklist = $this->populateChecklistEntity($checklist, $checklistData);
 
         if (!empty($checklistData['further_information_received'])) {
-            $info = new EntityDir\Report\ChecklistInformation($checklist, $checklistData['further_information_received']);
+            $info = new ChecklistInformation($checklist, $checklistData['further_information_received']);
             $info->setCreatedBy($user);
             $this->em->persist($info);
         }
 
         if (isset($checklistData['button_clicked']) && 'submitAndContinue' == $checklistData['button_clicked']) {
             $checklist->setSubmittedBy($user);
-            $checklist->setSubmittedOn(new \DateTime());
+            $checklist->setSubmittedOn(new DateTime());
         }
 
         $checklist->setLastModifiedBy($user);
@@ -843,7 +857,7 @@ class ReportController extends RestController
         $this->formatter->setJmsSerialiserGroups(['checklist', 'last-modified', 'user']);
 
         return $this->em
-            ->getRepository(EntityDir\Report\ReviewChecklist::class)
+            ->getRepository(ReviewChecklist::class)
             ->findOneBy(['report' => $report_id]);
     }
 
@@ -862,13 +876,13 @@ class ReportController extends RestController
 
         $checklistData = $this->formatter->deserializeBodyContent($request);
 
-        /** @var EntityDir\Report\ReviewChecklist|null $checklist */
+        /** @var ReviewChecklist|null $checklist */
         $checklist = $this->em
-            ->getRepository(EntityDir\Report\ReviewChecklist::class)
+            ->getRepository(ReviewChecklist::class)
             ->findOneBy(['report' => $report->getId()]);
 
         if (is_null($checklist)) {
-            $checklist = new EntityDir\Report\ReviewChecklist($report);
+            $checklist = new ReviewChecklist($report);
         }
 
         $checklist
@@ -877,7 +891,7 @@ class ReportController extends RestController
 
         if ($checklistData['is_submitted']) {
             $checklist->setSubmittedBy($user);
-            $checklist->setSubmittedOn(new \DateTime());
+            $checklist->setSubmittedOn(new DateTime());
         }
 
         $checklist->setLastModifiedBy($user);
@@ -927,7 +941,7 @@ class ReportController extends RestController
         $data = $this->formatter->deserializeBodyContent($request);
 
         if (!isset($data['sectionIds']) || empty($data['sectionIds'])) {
-            throw new \InvalidArgumentException('SectionIds are required to refresh the Report cache');
+            throw new InvalidArgumentException('SectionIds are required to refresh the Report cache');
         }
 
         /** @var ReportRepository $reportRepo */

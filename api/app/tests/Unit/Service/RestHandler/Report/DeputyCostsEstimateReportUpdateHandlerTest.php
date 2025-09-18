@@ -1,32 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Service\RestHandler\Report;
 
+use DateTime;
+use DateTimeZone;
+use PHPUnit\Framework\Attributes\DataProvider;
+use InvalidArgumentException;
 use App\Entity\Client;
 use App\Entity\Report\ProfDeputyEstimateCost;
 use App\Entity\Report\Report;
 use App\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
+final class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
 {
-    /** @var DeputyCostsEstimateReportUpdateHandler */
-    private $sut;
-
-    /** @var EntityManager|\PHPUnit_Framework_MockObject_MockObject */
-    private $em;
-
-    /** @var Report|\PHPUnit_Framework_MockObject_MockObject */
-    private $report;
+    private DeputyCostsEstimateReportUpdateHandler $sut;
+    private EntityManager&MockObject $em;
+    private Report&MockObject $report;
 
     public function setUp(): void
     {
-        $date = new \DateTime('now', new \DateTimeZone('Europe/London'));
+        $date = new DateTime('now', new DateTimeZone('Europe/London'));
         $this->report = $this->getMockBuilder(Report::class)
             ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, $date, $date])
-            ->setMethods(['updateSectionsStatusCache'])
+            ->onlyMethods(['updateSectionsStatusCache'])
             ->getMock();
 
         $this->em = $this->getMockBuilder(EntityManager::class)
@@ -36,16 +38,15 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
         $this->sut = new DeputyCostsEstimateReportUpdateHandler($this->em);
     }
 
-    /** @dataProvider costEstimateDataProvider
-     */
-    public function testUpdatesSingularFields($field, $data, $expected)
+    #[DataProvider('costEstimateDataProvider')]
+    public function testUpdatesSingularFields(string $field, array $data, string|float $expected): void
     {
         $this->ensureSectionStatusCacheWillBeUpdated();
         $this->invokeHandler($data);
         $this->assertReportFieldValueIsEqualTo($field, $expected);
     }
 
-    public function costEstimateDataProvider()
+    public static function costEstimateDataProvider(): array
     {
         return [
             ['profDeputyCostsEstimateHowCharged', ['prof_deputy_costs_estimate_how_charged' => 'new-value'], 'new-value'],
@@ -53,7 +54,7 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
         ];
     }
 
-    public function testResetsAssessedAnswersWhenFixedCostIsSet()
+    public function testResetsAssessedAnswersWhenFixedCostIsSet(): void
     {
         $data['prof_deputy_costs_estimate_how_charged'] = 'fixed';
 
@@ -72,7 +73,7 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
         $this->assertTrue($this->report->getProfDeputyEstimateCosts()->isEmpty());
     }
 
-    public function testPreservesAssessedAnswersWhenAssessedCostIsSet()
+    public function testPreservesAssessedAnswersWhenAssessedCostIsSet(): void
     {
         $data['prof_deputy_costs_estimate_how_charged'] = 'assessed';
 
@@ -91,19 +92,14 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
         $this->assertFalse($this->report->getProfDeputyEstimateCosts()->isEmpty());
     }
 
-    /**
-     * @dataProvider getInvalidCostEstimateInputs
-     */
-    public function testThrowsExceptionUpdatingCostEstimatesWithInsufficientData($data)
+    #[DataProvider('getInvalidCostEstimateInputs')]
+    public function testThrowsExceptionUpdatingCostEstimatesWithInsufficientData(array $data): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->invokeHandler($data);
     }
 
-    /**
-     * @return array
-     */
-    public function getInvalidCostEstimateInputs()
+    public static function getInvalidCostEstimateInputs(): array
     {
         return [
             [['prof_deputy_estimate_costs' => [['amount' => '21', 'has_more_details' => false, 'more_details' => null]]]],
@@ -113,7 +109,7 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
         ];
     }
 
-    public function testUpdatesExistingOrCreatesNewProfDeputyEstimateCost()
+    public function testUpdatesExistingOrCreatesNewProfDeputyEstimateCost(): void
     {
         $existing = new ProfDeputyEstimateCost();
         $existing
@@ -138,7 +134,7 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
         $this->assertNewProfDeputyEstimateCostIsCreated();
     }
 
-    public function testUpdatesMoreInformation()
+    public function testUpdatesMoreInformation(): void
     {
         $data['prof_deputy_costs_estimate_has_more_info'] = 'yes';
         $data['prof_deputy_costs_estimate_more_info_details'] = 'more info';
@@ -149,7 +145,7 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
         $this->assertReportFieldValueIsEqualTo('profDeputyCostsEstimateMoreInfoDetails', 'more info');
     }
 
-    public function testRemovesMoreInfoDetailsWhenNoLongerHasMoreInfo()
+    public function testRemovesMoreInfoDetailsWhenNoLongerHasMoreInfo(): void
     {
         $data['prof_deputy_costs_estimate_has_more_info'] = 'no';
 
@@ -163,7 +159,7 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
         $this->assertReportFieldValueIsEqualTo('profDeputyCostsEstimateMoreInfoDetails', null);
     }
 
-    public function testPreservesMoreInfoDetailsWhenHasMoreInfo()
+    public function testPreservesMoreInfoDetailsWhenHasMoreInfo(): void
     {
         $data['prof_deputy_costs_estimate_has_more_info'] = 'yes';
         $data['prof_deputy_costs_estimate_more_info_details'] = 'more info updated';
@@ -178,7 +174,7 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
         $this->assertReportFieldValueIsEqualTo('profDeputyCostsEstimateMoreInfoDetails', 'more info updated');
     }
 
-    private function ensureSectionStatusCacheWillBeUpdated()
+    private function ensureSectionStatusCacheWillBeUpdated(): void
     {
         $this
             ->report
@@ -187,7 +183,7 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
             ->with([Report::SECTION_PROF_DEPUTY_COSTS_ESTIMATE]);
     }
 
-    private function ensureEachProfDeputyEstimateCostWillBePersisted($count)
+    private function ensureEachProfDeputyEstimateCostWillBePersisted(int $count): void
     {
         $this
             ->em
@@ -195,18 +191,18 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
             ->method('persist');
     }
 
-    private function invokeHandler(array $data)
+    private function invokeHandler(array $data): void
     {
         $this->sut->handle($this->report, $data);
     }
 
-    private function assertReportFieldValueIsEqualTo($field, $expected)
+    private function assertReportFieldValueIsEqualTo(string $field, string|float|null $expected): void
     {
         $getter = sprintf('get%s', ucfirst($field));
         $this->assertEquals($expected, $this->report->$getter());
     }
 
-    private function assertExistingProfDeputyEstimateCostIsUpdated()
+    private function assertExistingProfDeputyEstimateCostIsUpdated(): void
     {
         $profDeputyEstimateCost = $this->report->getProfDeputyEstimateCostByTypeId('forms-documents');
 
@@ -216,7 +212,7 @@ class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
         $this->assertEquals('updated-details', $profDeputyEstimateCost->getMoreDetails());
     }
 
-    private function assertNewProfDeputyEstimateCostIsCreated()
+    private function assertNewProfDeputyEstimateCostIsCreated(): void
     {
         $profDeputyEstimateCost = $this->report->getProfDeputyEstimateCostByTypeId('contact-client');
         $this->assertSame($this->report, $profDeputyEstimateCost->getReport());

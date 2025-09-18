@@ -100,7 +100,7 @@ case "$INTEGRATION_SELECTION" in
     fi
 
     printf "\nRunning Solo Test: %s %s \n\n" $SUITE $TEST_CASE
-    php vendor/bin/phpunit -c tests/Integration $TEST_FILTER "tests/Integration/$SUITE"
+    php vendor/bin/phpunit -c tests/Integration $TEST_FILTER "tests/Integration/$SUITE" --coverage-php tests/coverage/integration-solo.cov
 
     # generate HTML coverage report
     php -d memory_limit=256M vendor/phpunit/phpcov/phpcov merge --html "./build/coverage-api" "./tests/coverage"
@@ -111,4 +111,4 @@ case "$INTEGRATION_SELECTION" in
     ;;
 esac
 
-php vendor/phpunit/phpcov/phpcov merge --clover "./tests/coverage/api-integration-tests-$1.xml" "./tests/coverage"
+php -d memory_limit=256M vendor/phpunit/phpcov/phpcov merge --clover "./tests/coverage/api-integration-tests-$1.xml" "./tests/coverage"

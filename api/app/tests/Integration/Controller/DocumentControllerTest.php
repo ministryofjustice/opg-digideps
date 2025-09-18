@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Controller;
 
+use DateTime;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
@@ -38,24 +39,17 @@ class DocumentControllerTest extends AbstractTestController
     private static $reportSubmission1;
     private static $reportSubmission2;
 
+
     public static function setUpBeforeClass(): void
     {
-        parent::setUpBeforeClass();
-    }
-
-    /**
-     * clear fixtures.
-     */
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        self::fixtures()->clear();
+        // This is here to prevent the default setup until tests that fail with it are altered
     }
 
     public function setUp(): void
     {
         parent::setUp();
+
+        self::setupFixtures();
 
         self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
@@ -80,6 +74,13 @@ class DocumentControllerTest extends AbstractTestController
 
         $this->repo = self::fixtures()->getRepo('Report\Document');
         self::$tokenDeputy = $this->loginAsDeputy();
+    }
+
+    public static function tearDownAfterClass(): void
+    {
+        parent::tearDownAfterClass();
+
+        self::fixtures()->clear();
     }
 
     /** @test */
@@ -108,7 +109,7 @@ class DocumentControllerTest extends AbstractTestController
 
         $this->assertEquals($data['id'], $document->getId());
         $this->assertEquals(self::$deputy1->getId(), $document->getCreatedBy()->getId());
-        $this->assertInstanceof(\DateTime::class, $document->getCreatedOn());
+        $this->assertInstanceof(DateTime::class, $document->getCreatedOn());
         $this->assertEquals('s3StorageKey', $document->getStorageReference());
         $this->assertEquals('testfile.pdf', $document->getFilename());
         $this->assertEquals(true, $document->isReportPdf());
@@ -139,7 +140,7 @@ class DocumentControllerTest extends AbstractTestController
 
         $this->assertEquals($data['id'], $document->getId());
         $this->assertEquals(self::$deputy1->getId(), $document->getCreatedBy()->getId());
-        $this->assertInstanceof(\DateTime::class, $document->getCreatedOn());
+        $this->assertInstanceof(DateTime::class, $document->getCreatedOn());
         $this->assertEquals('s3NdrStorageKey', $document->getStorageReference());
         $this->assertEquals('ndr.pdf', $document->getFilename());
         $this->assertEquals(true, $document->isReportPdf());
@@ -193,7 +194,7 @@ class DocumentControllerTest extends AbstractTestController
     {
         $url = sprintf('/document/%s', self::$document1->getId());
 
-        $syncTime = new \DateTime();
+        $syncTime = new DateTime();
 
         $response = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -203,7 +204,7 @@ class DocumentControllerTest extends AbstractTestController
 
         self::assertEquals(self::$document1->getId(), $response['data']['id']);
         self::assertEquals(Document::SYNC_STATUS_SUCCESS, $response['data']['synchronisation_status']);
-        self::assertEqualsWithDelta($syncTime->getTimeStamp(), (new \DateTime($response['data']['synchronisation_time']))->getTimestamp(), 5);
+        self::assertEqualsWithDelta($syncTime->getTimeStamp(), (new DateTime($response['data']['synchronisation_time']))->getTimestamp(), 5);
     }
 
     /**
@@ -226,7 +227,7 @@ class DocumentControllerTest extends AbstractTestController
         self::assertEquals($error, $response['data']['synchronisation_error']);
     }
 
-    public function statusProvider()
+    public static function statusProvider(): array
     {
         return [
             'Permanent error' => [Document::SYNC_STATUS_PERMANENT_ERROR, Document::SYNC_STATUS_PERMANENT_ERROR, 'Permanent error occurred'],

@@ -2,34 +2,32 @@
 
 namespace App\Tests\Integration\Controller;
 
+use DateTime;
 use App\Entity\User;
 use App\TestHelpers\CourtOrderTestHelper;
 use App\TestHelpers\DeputyTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\Tests\Behat\v2\Helpers\FixtureHelper;
-use App\Tests\Integration\Fixtures;
 
 class DeputyControllerTest extends AbstractTestController
 {
     private static JsonHttpTestClient $client;
     private static FixtureHelper $fixtureHelper;
 
+    public static function setUpBeforeClass(): void
+    {
+        parent::setUpBeforeClass();
+
+        self::$client = new JsonHttpTestClient(self::$frameworkBundleClient, self::$jwtService);
+        self::$fixtureHelper = static::getContainer()->get(FixtureHelper::class);
+        ;
+    }
+
     public function setUp(): void
     {
         parent::setup();
-
-        $container = static::getContainer();
-
-        self::$client = new JsonHttpTestClient(self::$frameworkBundleClient, $this->jwtService);
-
-        /** @var FixtureHelper $fixtureHelper */
-        $fixtureHelper = $container->get(FixtureHelper::class);
-        self::$fixtureHelper = $fixtureHelper;
     }
 
-    /**
-     * clear fixtures.
-     */
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
@@ -106,11 +104,11 @@ class DeputyControllerTest extends AbstractTestController
     public function testGetDeputyReportsNotFound()
     {
         $email = 'n.s1@example.org';
-        $user = self::$fixtures->createUser([
-            'setEmail' => $email,
-            'setRoleName' => User::ROLE_LAY_DEPUTY,
-            'setDeputyUid' => '7099999990',
-        ]);
+        $user = self::$fixtures->createUser(
+            email: $email,
+            roleName: User::ROLE_LAY_DEPUTY,
+            deputyUid: 7099999990
+        );
         self::$fixtureHelper->setPassword($user);
         // login to get token
         $token = self::$client->login($email, 'DigidepsPass1234', self::$deputySecret);
@@ -127,12 +125,12 @@ class DeputyControllerTest extends AbstractTestController
     {
         // setup required user for auth
         $email = 'n.s2@example.org';
-        $deputyUid = '7099999991';
-        $user = self::$fixtures->createUser([
-            'setEmail' => $email,
-            'setRoleName' => User::ROLE_LAY_DEPUTY,
-            'setDeputyUid' => $deputyUid,
-        ]);
+        $deputyUid = 7099999991;
+        $user = self::$fixtures->createUser(
+            email: $email,
+            roleName: User::ROLE_LAY_DEPUTY,
+            deputyUid: $deputyUid
+        );
         self::$fixtureHelper->setPassword($user);
 
         // login to get token
@@ -151,14 +149,14 @@ class DeputyControllerTest extends AbstractTestController
     public function testGetDeputyReportsReturnsResults()
     {
         $email = 'n.s3@example.org';
-        $deputyUid = '7044444440';
+        $deputyUid = 7044444440;
 
         // create user
-        $user = self::$fixtures->createUser([
-            'setEmail' => $email,
-            'setRoleName' => User::ROLE_LAY_DEPUTY,
-            'setDeputyUid' => $deputyUid,
-        ]);
+        $user = self::$fixtures->createUser(
+            email: $email,
+            roleName: User::ROLE_LAY_DEPUTY,
+            deputyUid: $deputyUid
+        );
         self::$fixtureHelper->setPassword($user);
 
         // generate deputy and set user
@@ -180,7 +178,7 @@ class DeputyControllerTest extends AbstractTestController
         self::$fixtures->flush();
 
         // generate and add a report to the court order
-        $startDate = new \DateTime();
+        $startDate = new DateTime();
         $report = ReportTestHelper::generateReport(self::$em, $client, startDate: $startDate);
         $courtOrder->addReport($report);
         self::$fixtures->persist($courtOrder);

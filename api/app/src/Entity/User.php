@@ -6,10 +6,12 @@ use App\Entity\Report\Report;
 use App\Entity\Traits\AddressTrait;
 use App\Entity\Traits\CreateUpdateTimestamps;
 use App\Entity\UserResearch\UserResearchResponse;
+use App\Model\Hydrator;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Random\RandomException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -199,13 +201,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $registrationDate;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="registration_token", type="string", length=100, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['user'])]
-    private $registrationToken;
+    private ?string $registrationToken;
 
     /**
      * @var \DateTime
@@ -264,22 +264,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $lastLoggedIn;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="deputy_no", type="string", length=100, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['user'])]
-    private $deputyNo;
+    private ?string $deputyNo = null;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="deputy_uid", type="bigint", nullable=true)
      */
     #[JMS\Type('integer')]
     #[JMS\Groups(['user'])]
-    private $deputyUid;
+    private ?int $deputyUid = null;
 
     /**
      * @var bool
@@ -553,11 +549,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Set registrationToken.
      *
-     * @return User
-     *
-     * @throws \Exception
+     * @throws RandomException
      */
-    public function recreateRegistrationToken()
+    public function recreateRegistrationToken(): static
     {
         $userIdWithLeadingZeros = sprintf('%08d', $this->getId());
         $token = bin2hex(random_bytes(16)).$userIdWithLeadingZeros;
@@ -570,12 +564,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Set registrationToken.
-     *
-     * @param string $registrationToken
-     *
-     * @return User
      */
-    public function setRegistrationToken($registrationToken)
+    public function setRegistrationToken(?string $registrationToken): static
     {
         $this->registrationToken = $registrationToken;
 
@@ -584,10 +574,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * Get registrationToken.
-     *
-     * @return string
      */
-    public function getRegistrationToken()
+    public function getRegistrationToken(): ?string
     {
         return $this->registrationToken;
     }
@@ -808,14 +796,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return string
-     */
-    public function getDeputyNo()
-    {
-        return $this->deputyNo;
-    }
-
-    /**
      * convert 7 into 00000007.
      *
      * @return string
@@ -825,10 +805,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return str_pad($deputyNo, 8, '0', STR_PAD_LEFT);
     }
 
-    /**
-     * @param string $deputyNo
-     */
-    public function setDeputyNo($deputyNo)
+    public function getDeputyNo(): ?string
+    {
+        return $this->deputyNo;
+    }
+
+    public function setDeputyNo(?string $deputyNo)
     {
         $this->deputyNo = $deputyNo;
 
@@ -869,14 +851,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $client = $this->getFirstClient() ? $this->getFirstClient() : null;
         if (!$client) {
-            return;
+            return null;
         }
 
         if (1 === $client->getUnsubmittedReports()->count()) {
             return $client->getUnsubmittedReports()->first()->getId();
         }
 
-        return;
+        return null;
     }
 
     #[JMS\VirtualProperty]
@@ -1378,5 +1360,82 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getIsPrimary(): bool
     {
         return $this->isPrimary;
+    }
+
+    /**
+     * Populate user fields from an array of data.
+     *
+     * If $data is null, the object is returned unchanged.
+     */
+    public function populate(?array $data): static
+    {
+        if (is_null($data)) {
+            return $this;
+        }
+
+        $keySetters = [
+            'firstname' => 'setFirstname',
+            'lastname' => 'setLastname',
+            'email' => 'setEmail',
+            'address1' => 'setAddress1',
+            'address2' => 'setAddress2',
+            'address3' => 'setAddress3',
+            'address_postcode' => 'setAddressPostcode',
+            'address_country' => 'setAddressCountry',
+            'phone_alternative' => 'setPhoneAlternative',
+            'phone_main' => 'setPhoneMain',
+            'ndr_enabled' => 'setNdrEnabled',
+            'ad_managed' => 'setAdManaged',
+            'role_name' => 'setRoleName',
+            'job_title' => 'setJobTitle',
+            'co_deputy_client_confirmed' => 'setCoDeputyClientConfirmed',
+        ];
+
+        Hydrator::hydrateEntityWithArrayData($this, $data, $keySetters);
+
+        if (array_key_exists('deputy_no', $data) && !empty($data['deputy_no'])) {
+            $this->setDeputyNo($data['deputy_no']);
+        }
+
+        if (array_key_exists('deputy_uid', $data) && !empty($data['deputy_uid'])) {
+            $this->setDeputyUid($data['deputy_uid']);
+        }
+
+        if (array_key_exists('last_logged_in', $data)) {
+            $this->setLastLoggedIn(new \DateTime($data['last_logged_in']));
+        }
+
+        if (!empty($data['registration_token'])) {
+            $this->setRegistrationToken($data['registration_token']);
+        }
+
+        if (!empty($data['token_date'])) { // important, keep this after "setRegistrationToken" otherwise date will be reset
+            $this->setTokenDate(new \DateTime($data['token_date']));
+        }
+
+        if (!empty($data['role_name'])) {
+            $roleToSet = $data['role_name'];
+            $this->setRoleName($roleToSet);
+        }
+
+        if (!empty($data['active'])) {
+            $this->setActive($data['active']);
+        }
+
+        if (!empty($data['registration_date'])) {
+            $registrationDate = new \DateTime($data['registration_date']);
+            $this->setRegistrationDate($registrationDate);
+        }
+
+        if (!empty($data['pre_register_validated_date'])) {
+            $preRegisterValidateDate = new \DateTime($data['pre_register_validated_date']);
+            $this->setPreRegisterValidatedDate($preRegisterValidateDate);
+        }
+
+        if (array_key_exists('is_primary', $data)) {
+            $this->setIsPrimary($data['is_primary']);
+        }
+
+        return $this;
     }
 }

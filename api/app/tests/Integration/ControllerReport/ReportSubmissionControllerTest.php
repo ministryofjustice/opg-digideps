@@ -2,6 +2,8 @@
 
 namespace App\Tests\Integration\ControllerReport;
 
+use DateTime;
+use Exception;
 use App\Entity\Report\Document;
 use App\Entity\Report\ReportSubmission;
 use App\TestHelpers\ReportSubmissionHelper;
@@ -31,11 +33,11 @@ class ReportSubmissionControllerTest extends AbstractTestController
                 ['setFirstname' => "c{$i}", 'setLastname' => "l{$i}", 'setCaseNumber' => "100000{$i}"]
             );
             $report = self::fixtures()->createReport($client, [
-                'setStartDate' => new \DateTime('2014-01-01'),
-                'setEndDate' => new \DateTime('2014-12-31'),
+                'setStartDate' => new DateTime('2014-01-01'),
+                'setEndDate' => new DateTime('2014-12-31'),
                 'setSubmitted' => true,
                 'setSubmittedBy' => self::$pa1, // irrelevant for assertions
-                'setSubmitDate' => new \DateTime('2015-01-01'),
+                'setSubmitDate' => new DateTime('2015-01-01'),
             ]);
             // create submission
             $submission = new ReportSubmission($report, ($i < 3) ? self::$pa2 : self::$deputy1);
@@ -69,7 +71,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
     public function testGetAllWithFiltersGetOneArchive()
     {
         $reportsGetAllRequest = function (array $params = []) {
-            $url = '/report-submission?'.http_build_query($params);
+            $url = '/report-submission?' . http_build_query($params);
 
             return $this->assertJsonRequest('GET', $url, [
                 'mustSucceed' => true,
@@ -100,7 +102,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         $this->assertArrayHasKey('archived_by', $submission4);
 
         // test getOne endpoint
-        $data = $this->assertJsonRequest('GET', '/report-submission/'.$submission4['id'], [
+        $data = $this->assertJsonRequest('GET', '/report-submission/' . $submission4['id'], [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenAdmin,
         ])['data'];
@@ -108,7 +110,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         $this->assertEquals('storageref1', $data['documents'][0]['storage_reference']);
 
         // archive 1st submission
-        $data = $this->assertJsonRequest('PUT', '/report-submission/'.$submission4['id'], [
+        $data = $this->assertJsonRequest('PUT', '/report-submission/' . $submission4['id'], [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenAdmin,
             'data' => ['archive' => true],
@@ -194,10 +196,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         }
     }
 
-    /**
-     * @return array
-     */
-    public function getDateRangeThresholds()
+    public static function getDateRangeThresholds(): array
     {
         return [
             [
@@ -250,7 +249,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
      */
     public function updatePersistsUuidWhenProvided()
     {
-        $reportSubmission = (new ReportSubmissionHelper())->generateAndPersistReportSubmission(self::fixtures()->getEntityManager());
+        $reportSubmission = (new ReportSubmissionHelper(self::fixtures()->getEntityManager()))->generateAndPersistReportSubmission();
 
         $uuid = '5a8b1a26-8296-4373-ae61-f8d0b250e773';
 
@@ -262,19 +261,19 @@ class ReportSubmissionControllerTest extends AbstractTestController
             'data' => ['uuid' => $uuid],
         ]);
 
-        $updatedSubmission = $this->makeRequestAndReturnResults('/report-submission/'.$reportSubmission->getId(), []);
+        $updatedSubmission = $this->makeRequestAndReturnResults('/report-submission/' . $reportSubmission->getId(), []);
 
         self::assertEquals($response['data'], $reportSubmission->getId());
         self::assertEquals($uuid, $updatedSubmission['uuid']);
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     private function updateReportSubmissionByIdWithNewDateTime(int $id, string $date)
     {
         $entity = self::fixtures()->getRepo('Report\ReportSubmission')->findOneById($id);
-        $entity->setCreatedOn(new \DateTime($date));
+        $entity->setCreatedOn(new DateTime($date));
 
         self::fixtures()->persist($entity);
     }
@@ -344,7 +343,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         self::fixtures()->flush();
         self::fixtures()->clear();
 
-        $this->assertJsonRequest('PUT', '/report-submission/'.$reportSubmission->getId().'/queue-documents', [
+        $this->assertJsonRequest('PUT', '/report-submission/' . $reportSubmission->getId() . '/queue-documents', [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenSuperAdmin,
             'data' => [],
@@ -374,7 +373,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
         self::fixtures()->flush();
 
-        $this->assertJsonRequest('PUT', '/report-submission/'.$reportSubmission->getId().'/queue-documents', [
+        $this->assertJsonRequest('PUT', '/report-submission/' . $reportSubmission->getId() . '/queue-documents', [
             'mustFail' => true,
             'assertResponseCode' => Response::HTTP_BAD_REQUEST,
             'AuthToken' => self::$tokenSuperAdmin,

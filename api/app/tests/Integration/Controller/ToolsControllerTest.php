@@ -28,9 +28,16 @@ class ToolsControllerTest extends AbstractTestController
     private ?array $headersSuperAdmin = [];
     private ?array $headersDeputy = [];
 
+    public static function setUpBeforeClass(): void
+    {
+        // This is here to prevent the default setup until tests that fail with it are altered
+    }
+
     public function setUp(): void
     {
         parent::setUp();
+
+        self::setupFixtures();
 
         if (null === self::$tokenAdmin) {
             self::$tokenAdmin = $this->loginAsAdmin();
@@ -107,7 +114,9 @@ class ToolsControllerTest extends AbstractTestController
         $previousReports = $previousClient->getReports();
 
         $this->assertEquals(2, sizeof($previousReports));
-        $reportIds = array_map(function ($r) { return $r->getId(); }, $previousReports->toArray());
+        $reportIds = array_map(function ($r) {
+            return $r->getId();
+        }, $previousReports->toArray());
         $this->assertContains(self::$previousReport1->getId(), $reportIds);
         $this->assertContains(self::$previousReport2->getId(), $reportIds);
 
@@ -148,7 +157,9 @@ class ToolsControllerTest extends AbstractTestController
         $reassignedReports = $newClient->getReports();
 
         $this->assertEquals(2, sizeof($reassignedReports));
-        $reportIds = array_map(function ($r) { return $r->getId(); }, $reassignedReports->toArray());
+        $reportIds = array_map(function ($r) {
+            return $r->getId();
+        }, $reassignedReports->toArray());
         $this->assertContains(self::$previousReport1->getId(), $reportIds);
         $this->assertContains(self::$previousReport2->getId(), $reportIds);
     }
@@ -177,10 +188,8 @@ class ToolsControllerTest extends AbstractTestController
 
     /**
      * Provides the content of the POST request, the expected status code and the expected response message.
-     *
-     * @return array
      */
-    public function invalidPostDataProvider()
+    public static function invalidPostDataProvider(): array
     {
         return [
             [

@@ -1,9 +1,6 @@
 doctrine_migrations:
     organize_migrations: false # Version >=1.2 Possible values are: "BY_YEAR", "BY_YEAR_AND_MONTH", false
 
-    services:
-        'Doctrine\Migrations\Version\MigrationFactory': 'App\Migrations\Factory\MigrationFactoryDecorator'
-
     migrations_paths:
         "DoctrineMigrations": "%kernel.project_dir%/src/Migrations"
 

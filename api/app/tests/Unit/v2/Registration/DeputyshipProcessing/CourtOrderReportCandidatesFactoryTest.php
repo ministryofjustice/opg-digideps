@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\v2\Registration\DeputyshipProcessing;
 
+use ArrayIterator;
 use App\Entity\StagingSelectedCandidate;
 use App\Factory\StagingSelectedCandidateFactory;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
@@ -12,7 +13,7 @@ use Doctrine\DBAL\Result;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
 
-class CourtOrderReportCandidatesFactoryTest extends TestCase
+final class CourtOrderReportCandidatesFactoryTest extends TestCase
 {
     private EntityManagerInterface $entityManager;
     private StagingSelectedCandidateFactory $candidateFactory;
@@ -35,7 +36,7 @@ class CourtOrderReportCandidatesFactoryTest extends TestCase
 
     public function testCreateCompatibleReportCandidates(): void
     {
-        $rows = new \ArrayIterator([
+        $rows = new ArrayIterator([
             ['court_order_uid' => '123', 'report_id' => '456'],
             ['court_order_uid' => '789', 'report_id' => '012'],
         ]);
@@ -60,7 +61,7 @@ class CourtOrderReportCandidatesFactoryTest extends TestCase
 
     public function testCreateCompatibleNdrCandidates(): void
     {
-        $rows = new \ArrayIterator([
+        $rows = new ArrayIterator([
             ['court_order_uid' => '123', 'ndr_id' => '456'],
             ['court_order_uid' => '789', 'ndr_id' => '012'],
         ]);

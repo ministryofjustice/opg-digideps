@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Service;
+namespace App\Tests\Unit\v2\Service;
 
 use App\Model\DeputyshipProcessingRawDbAccess;
 use App\Model\DeputyshipProcessingRawDbAccessResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesGroup;
 use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
+use App\v2\Service\DeputyshipCandidatesConverter;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-class DeputyshipCandidateConverterTest extends TestCase
+final class DeputyshipCandidateConverterTest extends TestCase
 {
     private DeputyshipProcessingRawDbAccess&MockObject $mockDbAccess;
     private DeputyshipCandidatesConverter $sut;
