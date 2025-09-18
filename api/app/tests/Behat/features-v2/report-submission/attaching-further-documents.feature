@@ -1,7 +1,7 @@
 @v2 @v2_sequential_3 @report-submissions @attaching-further-documents
 Feature: Attaching Further Documents
 
-    @lay-pfa-high-submitted @super-admin @this-one
+    @lay-pfa-high-submitted @super-admin
     Scenario: A user attempts to send further documents
         Given a Lay Deputy has submitted a report
         When I attach a supporting document "test-image.png" to the submitted report
