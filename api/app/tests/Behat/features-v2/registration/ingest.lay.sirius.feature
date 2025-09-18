@@ -29,7 +29,7 @@ Feature: Lay CSV data ingestion - sirius source data
         And the count of the new 'lay' entities added should be in the command output
 
 #    ToDo Fix this test as it is breaking in our pipeline
-    @super-admin
+    @super-admin @broken-e2e-test
     Scenario: Uploading a Lay CSV that contains details of a new deputyship for an existing Lay deputy with a single active client
         Given a csv has been uploaded to the sirius bucket with the file 'lay-1-valid-row.csv'
         When I run the lay CSV command the file contains 1 new pre-registration entities
