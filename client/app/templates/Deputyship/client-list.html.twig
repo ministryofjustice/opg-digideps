@@ -23,7 +23,9 @@
                 <th scope="col" class="govuk-!-font-weight-bold">{{ (page ~ 'clients.header.client') | trans }}</th>
                 <th scope="col" class="govuk-!-font-weight-bold">{{ (page ~ 'clients.header.caseNumber') | trans }}</th>
                 <th scope="col" class="govuk-!-font-weight-bold">{{ (page ~ 'clients.header.address') | trans }}</th>
-                <th scope="col" class="govuk-!-font-weight-bold"></th>
+                <th scope="col" class="govuk-!-font-weight-bold">
+                    <span class="govuk-visually-hidden">{{ 'actions' | trans({}, 'common') }}</span>
+                </th>
             </tr>
         </thead>
 
