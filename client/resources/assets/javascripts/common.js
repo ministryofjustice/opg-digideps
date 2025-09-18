@@ -5,7 +5,7 @@ import TextAreaAutoSize from './modules_new/TextAreaAutoSize'
 import PreventDoubleClickButton from './modules_new/PreventDoubleClickButton'
 import PreventDoubleClickLink from './modules_new/PreventDoubleClickLink'
 import DetailsExpander from './modules_new/DetailsExpander'
-import uploadFile from './modules_new/UploadFile'
+import UploadFile from './modules_new/UploadFile'
 import FormatCurrency from './modules_new/FormatCurrency'
 import MoneyTransfer from './modules_new/MoneyTransfer'
 import TableMultiSelect from './modules_new/TableMultiSelect'
@@ -46,8 +46,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
   DetailsExpander.init(document)
 
-  uploadFile.init(document)
-
   MoneyTransfer.init(document)
 
   TableMultiSelect.init(document)
@@ -69,6 +67,8 @@ window.addEventListener('DOMContentLoaded', () => {
   FormSingleSubmit.init(document)
 
   Multitoggle.init(document)
+
+  UploadFile.init(document)
 
   // Error summaries
   const errorSummaries = document.querySelector('#error-summary')
