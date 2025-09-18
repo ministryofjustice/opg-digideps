@@ -19,7 +19,8 @@ class DeputyControllerTest extends AbstractTestController
         parent::setUpBeforeClass();
 
         self::$client = new JsonHttpTestClient(self::$frameworkBundleClient, self::$jwtService);
-        self::$fixtureHelper = static::getContainer()->get(FixtureHelper::class);;
+        self::$fixtureHelper = static::getContainer()->get(FixtureHelper::class);
+        ;
     }
 
     public function setUp(): void

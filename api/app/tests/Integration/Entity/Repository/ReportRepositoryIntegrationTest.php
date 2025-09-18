@@ -2,6 +2,7 @@
 
 namespace App\Tests\Integration\Repository;
 
+use App\Tests\Integration\ApiIntegrationTestCase;
 use DateTime;
 use DateTimeZone;
 use DateInterval;
@@ -13,38 +14,36 @@ use App\Entity\Report\ReportSubmission;
 use App\Entity\SynchronisableInterface;
 use App\Entity\User;
 use App\Repository\ReportRepository;
-use App\Tests\Integration\ApiBaseTestCase;
 use App\Tests\Integration\Fixtures;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
-class ReportRepositoryTest extends ApiBaseTestCase
+class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
 {
     private array $queryResult;
     private Checklist|array $queuedChecklists = [];
     public const QUERY_LIMIT = 2;
-    private ReportRepository $sut;
-    private Fixtures $fixtures;
+    private static Fixtures $fixtures;
+    private static ReportRepository $sut;
 
-    public function setUp(): void
+    public static function setUpBeforeClass(): void
     {
-        parent::setUp();
-        $this->purgeDatabase();
+        parent::setUpBeforeClass();
 
-        $this->fixtures = new Fixtures($this->entityManager);
+        self::$fixtures = new Fixtures(self::$entityManager);
 
         /** @var ReportRepository $repo */
-        $repo = $this->entityManager->getRepository(Report::class);
+        $repo = self::$entityManager->getRepository(Report::class);
 
-        $this->sut = $repo;
+        self::$sut = $repo;
     }
 
     /**
      * @throws Exception
      */
-    private function ensureChecklistsExistInDatabase(): ReportRepositoryTest
+    private function ensureChecklistsExistInDatabase(): ReportRepositoryIntegrationTest
     {
         $client = (new Client())->setCaseNumber('49329657');
-        $this->entityManager->persist($client);
+        self::$entityManager->persist($client);
 
         $this->queuedChecklists[] = $this->buildChecklistWithStatus($client, SynchronisableInterface::SYNC_STATUS_QUEUED);
         $this->queuedChecklists[] = $this->buildChecklistWithStatus($client, SynchronisableInterface::SYNC_STATUS_QUEUED);
@@ -52,22 +51,19 @@ class ReportRepositoryTest extends ApiBaseTestCase
         $this->buildChecklistWithStatus($client, SynchronisableInterface::SYNC_STATUS_SUCCESS);
         $this->buildChecklistWithStatus($client, null);
 
-        $this->entityManager->flush();
+        self::$entityManager->flush();
 
         return $this;
     }
 
-    private function fetchChecklists(): ReportRepositoryTest
+    private function fetchChecklists(): ReportRepositoryIntegrationTest
     {
-        $this->queryResult = $this->sut->getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(self::QUERY_LIMIT);
-
-        // Add 0.5 second buffer time to all doctrine updates and stop test from intermittently failing
-        usleep(500000);
+        $this->queryResult = self::$sut->getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(self::QUERY_LIMIT);
 
         return $this;
     }
 
-    private function assertOnlyAlimitedNumberOfQueuedChecklistsAreReturned(): ReportRepositoryTest
+    private function assertOnlyAlimitedNumberOfQueuedChecklistsAreReturned(): ReportRepositoryIntegrationTest
     {
         $this->assertCount(self::QUERY_LIMIT, $this->queryResult);
 
@@ -76,7 +72,7 @@ class ReportRepositoryTest extends ApiBaseTestCase
 
     private function assertQueuedChecklistsAreUpdatedToInProgress(): void
     {
-        $repository = $this->entityManager->getRepository(Checklist::class);
+        $repository = self::$entityManager->getRepository(Checklist::class);
         $result = $repository->findBy(['synchronisationStatus' => SynchronisableInterface::SYNC_STATUS_IN_PROGRESS]);
         $this->assertCount(2, $result);
         $this->assertEquals($this->queuedChecklists[0]->getId(), $result[0]->getId());
@@ -95,7 +91,7 @@ class ReportRepositoryTest extends ApiBaseTestCase
             $checklist->setSynchronisationStatus($status);
         }
 
-        $this->entityManager->persist($checklist);
+        self::$entityManager->persist($checklist);
 
         return $checklist;
     }
@@ -121,10 +117,10 @@ class ReportRepositoryTest extends ApiBaseTestCase
         $reportSubmission = new ReportSubmission($report, $user);
         $report->addReportSubmission($reportSubmission);
 
-        $this->entityManager->persist($report);
-        $this->entityManager->persist($reportSubmission);
-        $this->entityManager->persist($user);
-        $this->entityManager->persist($client);
+        self::$entityManager->persist($report);
+        self::$entityManager->persist($reportSubmission);
+        self::$entityManager->persist($user);
+        self::$entityManager->persist($client);
 
         return $report;
     }
@@ -132,31 +128,31 @@ class ReportRepositoryTest extends ApiBaseTestCase
     public function testReportsAreSortedByDueDate(): void
     {
         // create organisation
-        $org = $this->fixtures->createOrganisations(1);
+        $org = self::$fixtures->createOrganisations(1);
 
         // create clients and add to org
-        $user = $this->fixtures->createUser(roleName: User::ROLE_PROF);
+        $user = self::$fixtures->createUser(roleName: User::ROLE_PROF);
 
-        $client1 = $this->fixtures->createClient($user);
-        $client2 = $this->fixtures->createClient($user);
-        $clientDual = $this->fixtures->createClient($user);
+        $client1 = self::$fixtures->createClient($user);
+        $client2 = self::$fixtures->createClient($user);
+        $clientDual = self::$fixtures->createClient($user);
 
-        $this->entityManager->flush();
+        self::$entityManager->flush();
 
-        $this->fixtures->addClientToOrganisation($client1->getId(), $org[0]->getId());
-        $this->fixtures->addClientToOrganisation($client2->getId(), $org[0]->getId());
-        $this->fixtures->addClientToOrganisation($clientDual->getId(), $org[0]->getId());
+        self::$fixtures->addClientToOrganisation($client1->getId(), $org[0]->getId());
+        self::$fixtures->addClientToOrganisation($client2->getId(), $org[0]->getId());
+        self::$fixtures->addClientToOrganisation($clientDual->getId(), $org[0]->getId());
 
         // create reports for clients
-        $report1 = $this->fixtures->createReport($client1)->setDueDate(new DateTime('2025-08-01'))->setEndDate(new DateTime('2025-07-10'));
-        $report2 = $this->fixtures->createReport($client2)->setDueDate(new DateTime('2025-03-01'))->setEndDate(new DateTime('2025-02-10'));
+        $report1 = self::$fixtures->createReport($client1)->setDueDate(new DateTime('2025-08-01'))->setEndDate(new DateTime('2025-07-10'));
+        $report2 = self::$fixtures->createReport($client2)->setDueDate(new DateTime('2025-03-01'))->setEndDate(new DateTime('2025-02-10'));
 
-        $dualReport1 = $this->fixtures->createReport($clientDual)->setDueDate(new DateTime('2025-02-01'))->setEndDate(new DateTime('2025-01-10'));
-        $dualReport2 = $this->fixtures->createReport($clientDual)->setDueDate(new DateTime('2025-06-01'))->setEndDate(new DateTime('2025-05-10'));
+        $dualReport1 = self::$fixtures->createReport($clientDual)->setDueDate(new DateTime('2025-02-01'))->setEndDate(new DateTime('2025-01-10'));
+        $dualReport2 = self::$fixtures->createReport($clientDual)->setDueDate(new DateTime('2025-06-01'))->setEndDate(new DateTime('2025-05-10'));
 
-        $this->entityManager->flush();
+        self::$entityManager->flush();
 
-        $reports = $this->sut->getAllByDeterminant([$org[0]->getId()], 2, new ParameterBag(), 'reports', 'notStarted');
+        $reports = self::$sut->getAllByDeterminant([$org[0]->getId()], 2, new ParameterBag(), 'reports', 'notStarted');
 
         self::assertCount(4, $reports);
         self::assertEquals($reports[0]['id'], $dualReport1->getId());
@@ -177,16 +173,16 @@ class ReportRepositoryTest extends ApiBaseTestCase
     public function testFindAllActiveReportsByCaseNumbersAndRoleIsCaseInsensitive(): void
     {
         $client = (new Client())->setCaseNumber('4932965t');
-        $this->entityManager->persist($client);
+        self::$entityManager->persist($client);
 
         $existingReport = $this->buildReport($client);
 
-        $this->entityManager->flush();
-        $this->entityManager->refresh($existingReport);
-        $this->entityManager->refresh($client);
-        $this->entityManager->refresh($client->getUsers()[0]);
+        self::$entityManager->flush();
+        self::$entityManager->refresh($existingReport);
+        self::$entityManager->refresh($client);
+        self::$entityManager->refresh($client->getUsers()[0]);
 
-        $result = $this->sut->findAllActiveReportsByCaseNumbersAndRole(['4932965T'], $client->getUsers()[0]->getRoleName());
+        $result = self::$sut->findAllActiveReportsByCaseNumbersAndRole(['4932965T'], $client->getUsers()[0]->getRoleName());
         self::assertEquals($existingReport, $result[0]);
     }
 }

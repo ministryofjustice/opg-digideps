@@ -34,9 +34,9 @@ class CourtOrderControllerTest extends AbstractTestController
     {
         $deputy = new Deputy();
         $deputy->setEmail1($user->getEmail());
-        $deputy->setDeputyUid('748723'.rand(1, 99999));
-        $deputy->setFirstname('name'.time());
-        $deputy->setLastname('surname'.time());
+        $deputy->setDeputyUid('748723' . rand(1, 99999));
+        $deputy->setFirstname('name' . time());
+        $deputy->setLastname('surname' . time());
 
         $deputy->setUser($user);
 
@@ -50,7 +50,7 @@ class CourtOrderControllerTest extends AbstractTestController
     private function addUserAndCourtOrderAndDeputy($emailAddress): array
     {
         // add a court order, and make the user a deputy on it
-        $courtOrder = self::$fixtures->createCourtOrder(substr(''.hexdec(uniqid()), -8), 'pfa', 'ACTIVE');
+        $courtOrder = self::$fixtures->createCourtOrder(substr('' . hexdec(uniqid()), -8), 'pfa', 'ACTIVE');
 
         $user = self::$fixtures->createUser($emailAddress, User::ROLE_LAY_DEPUTY);
         self::$fixtureHelper->setPassword($user);
