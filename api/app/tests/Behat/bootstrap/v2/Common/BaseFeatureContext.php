@@ -44,7 +44,6 @@ class BaseFeatureContext extends MinkContext
     use PageUrlsTrait;
     use ReportTrait;
     use UserExistsTrait;
-    use WaitOnItTrait;
 
     public const REPORT_SECTION_ENDPOINT = '/%s/%s/%s';
 
@@ -168,103 +167,6 @@ class BaseFeatureContext extends MinkContext
         $this->loggedInUserDetails = null;
         $this->interactingWithUserDetails = null;
         $this->submittedAnswersByFormSections = ['totals' => ['grandTotal' => 0]];
-    }
-
-    //    Overrides of common functions using spin trait
-    /**
-     * Retry until the expected text is found in the page.
-     */
-    public function assertPageContainsText($text)
-    {
-        $this->waitOnIt(function () use ($text) {
-            parent::assertPageContainsText($text);
-            return true;
-        }, __FUNCTION__, 15);
-    }
-
-    /**
-     * Retry until the expected text is NOT found in the page.
-     */
-    public function assertPageNotContainsText($text)
-    {
-        $this->waitOnIt(function () use ($text) {
-            parent::assertPageNotContainsText($text);
-            return true;
-        }, __FUNCTION__, 15);
-    }
-
-
-    /**
-     * Retry until the current page path matches.
-     */
-    public function assertElementContainsText($element, $text)
-    {
-        $this->waitOnIt(function () use ($element, $text) {
-            parent::assertElementContainsText($element, $text);
-            return true;
-        }, __FUNCTION__, 15);
-    }
-
-    /**
-     * Retry until a given field is present and filled with the expected value.
-     */
-    public function assertFieldContains($field, $value)
-    {
-        $this->waitOnIt(function () use ($field, $value) {
-            parent::assertFieldContains($field, $value);
-            return true;
-        }, __FUNCTION__, 15);
-    }
-
-    /**
-     * Retry until a given field is present and does NOT contain the value.
-     */
-    public function assertFieldNotContains($field, $value)
-    {
-        $this->waitOnIt(function () use ($field, $value) {
-            parent::assertFieldNotContains($field, $value);
-            return true;
-        }, __FUNCTION__, 15);
-    }
-
-    /**
-     * Retry until a link can be clicked.
-     */
-    public function clickLink($link)
-    {
-        $this->waitOnIt(function () use ($link) {
-            parent::clickLink($link);
-            return true;
-        }, __FUNCTION__, 15);
-    }
-
-    /**
-     * Retry until a button can be pressed.
-     */
-    public function pressButton($button)
-    {
-        $this->waitOnIt(function () use ($button) {
-            parent::pressButton($button);
-            return true;
-        }, __FUNCTION__, 15);
-    }
-
-    /**
-     * Retry until a field is filled.
-     */
-    public function fillField($field, $value)
-    {
-        $this->waitOnIt(function () use ($field, $value) {
-            parent::fillField($field, $value);
-            return true;
-        }, __FUNCTION__, 15);
-    }
-
-    public function findWithRetry(string $selector, string $locator, int $wait = 10)
-    {
-        return $this->waitOnIt(function () use ($selector, $locator) {
-            return $this->getSession()->getPage()->find($selector, $locator);
-        }, __FUNCTION__, $wait);
     }
 
     public function visitPath($path, $sessionName = null, int $retries = 3, int $delay = 2): void

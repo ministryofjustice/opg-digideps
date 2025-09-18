@@ -423,15 +423,19 @@ services:
                 timeout: 20
                 allow_redirects: false
 
-    app.response_comparer:
+    app.response_comparer_cli:
         class: App\Service\ResponseComparison\ClientsResponseComparer
+
+    app.response_comparer_co:
+        class: App\Service\ResponseComparison\CourtOrderResponseComparer
 
     App\Command\ApiComparison:
         arguments:
             $httpClient: "@app.guzzlehttp_clientinterface"
             $redis: "@snc_redis.default"
             $comparers:
-                - "@app.response_comparer"
+                - "@app.response_comparer_cli"
+                - "@app.response_comparer_co"
 
     App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader:
         public: true
