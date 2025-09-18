@@ -110,7 +110,6 @@ trait ReportSubmissionTrait
     {
         $this->iVisitTheDocumentsStep2Page();
         $this->attachDocument($imageName);
-        $this->clickLink('Send documents');
     }
 
     /**
