@@ -531,9 +531,9 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-admin-health-welfare-submitted
      */
-    public function createProfAdminSubmitted(?BeforeScenarioScope $scenario = null, ?string $deputyEmail = null, ?string $caseNumber = null, ?string $deputyUid = null)
+    public function createProfAdminSubmitted()
     {
-        $userDetails = $this->fixtureHelper->createProfAdminSubmitted($this->testRunId, $deputyEmail, $caseNumber, $deputyUid);
+        $userDetails = $this->fixtureHelper->createProfAdminSubmitted($this->testRunId);
         $this->fixtureUsers[] = $this->profAdminDeputyHealthWelfareSubmittedDetails = new UserDetails($userDetails);
     }
 
