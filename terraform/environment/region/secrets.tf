@@ -6,6 +6,10 @@ data "aws_secretsmanager_secret" "database_password" {
   name = join("/", compact([var.secrets_prefix, "database-password"]))
 }
 
+data "aws_secretsmanager_secret" "application_db_password" {
+  name = join("/", compact([var.secrets_prefix, "application-db-password"]))
+}
+
 data "aws_secretsmanager_secret_version" "database_password" {
   secret_id = data.aws_secretsmanager_secret.database_password.id
 }
