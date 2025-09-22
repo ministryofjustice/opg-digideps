@@ -208,7 +208,7 @@ trait AnalyticsTrait
         $this->currentLinkText = 'Download satisfaction report';
 
         $xpath = sprintf('//a[contains(.,"%s")]', $this->currentLinkText);
-        $downloadLink = $this->findWithRetry('xpath', $xpath);
+        $downloadLink = $this->getSession()->getPage()->find('xpath', $xpath);
         if (is_null($downloadLink)) {
             throw new BehatException(sprintf('Missing the following text: %s', $this->currentLinkText));
         }

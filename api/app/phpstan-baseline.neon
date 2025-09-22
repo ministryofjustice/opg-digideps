@@ -7656,11 +7656,6 @@ parameters:
 			path: src/v2/DTO/UserDto.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:addClient\\(\\)\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:addUser\\(\\)\\.$#"
 			count: 2
 			path: src/v2/Fixture/Controller/FixtureController.php
@@ -7672,7 +7667,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method object\\:\\:getEmail\\(\\)\\.$#"
-			count: 3
+			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
@@ -7681,22 +7676,7 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:getId\\(\\)\\.$#"
-			count: 2
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:getLastname\\(\\)\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setIsPrimary\\(\\)\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:setNdrEnabled\\(\\)\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
@@ -7717,17 +7697,17 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'activated' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
 			message: "#^Cannot access offset 'address' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
 			message: "#^Cannot access offset 'address2' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
@@ -7737,42 +7717,17 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'caseNumber' on mixed\\.$#"
-			count: 2
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Cannot access offset 'coDeputyEnabled' on mixed\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
 			message: "#^Cannot access offset 'county' on mixed\\.$#"
-			count: 2
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Cannot access offset 'courtDate' on mixed\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Cannot access offset 'createCoDeputy' on mixed\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
 			message: "#^Cannot access offset 'deputyEmail' on mixed\\.$#"
-			count: 6
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Cannot access offset 'deputyType' on mixed\\.$#"
 			count: 2
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Cannot access offset 'deputyUid' on mixed\\.$#"
-			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
@@ -7782,71 +7737,31 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'firstName' on mixed\\.$#"
-			count: 4
+			count: 2
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
 			message: "#^Cannot access offset 'lastName' on mixed\\.$#"
-			count: 4
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Cannot access offset 'multiClientEnabled' on mixed\\.$#"
-			count: 3
+			count: 2
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
 			message: "#^Cannot access offset 'ndr' on mixed\\.$#"
-			count: 2
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Cannot access offset 'orgEmailIdentifier' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
 			message: "#^Cannot access offset 'phone' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
 			message: "#^Cannot access offset 'postCode' on mixed\\.$#"
-			count: 3
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Cannot access offset 'reportType' on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
 			message: "#^Cannot call method first\\(\\) on array\\<App\\\\Entity\\\\Organisation\\>\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createClient\\(\\) has parameter \\$fromRequest with no type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createDeputy\\(\\) has parameter \\$fromRequest with no type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createDeputyByExistingUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createMultiClientDeputy\\(\\) has parameter \\$client with no type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createMultiClientDeputy\\(\\) has parameter \\$fromRequest with no type specified\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
@@ -7856,32 +7771,12 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createReport\\(\\) has parameter \\$fromRequest with no type specified\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Parameter \\#1 \\$data of method App\\\\FixtureFactory\\\\PreRegistrationFactory\\:\\:create\\(\\) expects array, mixed given\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: "#^Parameter \\#1 \\$data of method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:buildSuccessResponse\\(\\) expects array, mixed given\\.$#"
-			count: 5
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Parameter \\#1 \\$deputy of method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createCoDeputy\\(\\) expects App\\\\Entity\\\\User, object given\\.$#"
-			count: 1
+			count: 3
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
 			message: "#^Parameter \\#1 \\$deputyUid of method App\\\\Entity\\\\Deputy\\:\\:setDeputyUid\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Parameter \\#1 \\$fromRequest of method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createNdr\\(\\) expects array, mixed given\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
@@ -7911,31 +7806,6 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function strtolower expects string, mixed given\\.$#"
-			count: 2
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Parameter \\#1 \\$userEmail of method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createDeputyByExistingUser\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Parameter \\#2 \\$data of method App\\\\FixtureFactory\\\\PreRegistrationFactory\\:\\:createCoDeputy\\(\\) expects array, mixed given\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Parameter \\#2 \\$deputy of method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createOrgAndAttachParticipants\\(\\) expects App\\\\Entity\\\\User, object given\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Parameter \\#2 \\$fromRequest of method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createCoDeputy\\(\\) expects array, mixed given\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: "#^Parameter \\#2 \\$organisation of method App\\\\FixtureFactory\\\\ClientFactory\\:\\:createGenericOrgClient\\(\\) expects App\\\\Entity\\\\Organisation, object given\\.$#"
 			count: 2
 			path: src/v2/Fixture/Controller/FixtureController.php
@@ -7947,7 +7817,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\.\\.\\.\\$values of function sprintf expects bool\\|float\\|int\\|string\\|null, mixed given\\.$#"
-			count: 2
+			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
