@@ -73,6 +73,10 @@ trait IngestTrait
         $filePath = sprintf('%s/fixtures/sirius-csvs/%s', dirname(__DIR__, 3), $this->csvFileName);
         $fileBody = file_get_contents($filePath);
 
+        if (!$fileBody) {
+            throw new BehatException("CSV file $fileName was not readable");
+        }
+
         $this->s3->store($this->csvFileName, $fileBody);
     }
 
@@ -227,7 +231,7 @@ trait IngestTrait
     private function extractUidsFromCsv($csvFilePath)
     {
         if ($this->getMinkParameter('files_path')) {
-            $fullPath = rtrim(realpath($this->getMinkParameter('files_path')), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.$csvFilePath;
+            $fullPath = rtrim(realpath($this->getMinkParameter('files_path')), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $csvFilePath;
             if (is_file($fullPath)) {
                 $csvFilePath = $fullPath;
             }
@@ -296,12 +300,12 @@ trait IngestTrait
 
     private function uploadCsvAndCountCreatedEntities(string $fileName)
     {
-        $filePath = sprintf('sirius-csvs/%s', $this->csvFileName);
+        $filePath = sprintf('sirius-csvs/%s', $fileName);
         $this->extractUidsFromCsv($filePath);
 
-        $type = (str_starts_with($this->csvFileName, 'lay-')) ? 'lay' : 'org';
+        $type = (str_starts_with($fileName, 'lay-')) ? 'lay' : 'org';
 
-        $this->runCSVCommand($type, $this->csvFileName);
+        $this->runCSVCommand($type, $fileName);
         $this->countCreatedEntities();
     }
 
