@@ -418,12 +418,13 @@ jobs:
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
-      - end_to_end_tests_sequential_1
-      - end_to_end_tests_sequential_2
-      - end_to_end_tests_sequential_3
-      - end_to_end_tests_admin
-      - end_to_end_tests_1
-      - end_to_end_tests_2
+      - reset_database
+    #      - end_to_end_tests_sequential_1
+    #      - end_to_end_tests_sequential_2
+    #      - end_to_end_tests_sequential_3
+    #      - end_to_end_tests_admin
+    #      - end_to_end_tests_1
+    #      - end_to_end_tests_2
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
@@ -440,13 +441,13 @@ jobs:
     uses: ./.github/workflows/_scale-services.yml
     needs:
       - workflow_variables
-      - end_to_end_tests_sequential_1
-      - end_to_end_tests_sequential_2
-      - end_to_end_tests_sequential_3
+      #      - end_to_end_tests_sequential_1
+      #      - end_to_end_tests_sequential_2
+      #      - end_to_end_tests_sequential_3
       - end_to_end_tests_sequential_4
-      - end_to_end_tests_admin
-      - end_to_end_tests_1
-      - end_to_end_tests_2
+    #      - end_to_end_tests_admin
+    #      - end_to_end_tests_1
+    #      - end_to_end_tests_2
     with:
       replicas: 1
       acu: 4
