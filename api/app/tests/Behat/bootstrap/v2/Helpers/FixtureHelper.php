@@ -1443,7 +1443,7 @@ class FixtureHelper
         return $this->em->createQueryBuilder()
             ->select('u')
             ->from(User::class, 'u')
-            ->where('email = :email')
+            ->where('u.email = :email')
             ->setParameter('email', $email)
             ->getQuery()
             ->getArrayResult();

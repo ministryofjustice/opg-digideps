@@ -193,7 +193,7 @@ trait SelfRegistrationTrait
             'B1',
             'Sarah',
             'OName',
-            '61616161',
+            '58961712',
         );
 
         error_log("+++++++++++++++++++ 3. SELF REGISTRATION FIELDS FILLED IN AND SUBMITTED");
