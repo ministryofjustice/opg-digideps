@@ -1459,4 +1459,11 @@ class FixtureHelper
             ->getQuery()
             ->getArrayResult();
     }
+
+    public function removeClient(string $caseNumber)
+    {
+        $this->em->createQueryBuilder()
+            ->delete(Client::class, 'c')
+            ->where('c.caseNumber = :caseNumber');
+    }
 }

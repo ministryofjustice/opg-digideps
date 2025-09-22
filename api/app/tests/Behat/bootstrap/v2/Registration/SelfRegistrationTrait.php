@@ -246,6 +246,9 @@ trait SelfRegistrationTrait
         string $clientLastname,
         string $caseNumber,
     ) {
+        error_log("+++++++++++++++++++ REGISTERING USER FOR CLIENT $caseNumber");
+        $this->fixtureHelper->removeClient($caseNumber);
+
         $this->fillInField('self_registration_firstname', $firstname);
         $this->fillInField('self_registration_lastname', $lastname);
         $this->fillInField('self_registration_email_first', $email);
