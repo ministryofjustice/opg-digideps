@@ -183,17 +183,24 @@ trait SelfRegistrationTrait
         $this->deputyUid = '700762222001';
 
         $this->visitFrontendPath('/register');
+
+        error_log("+++++++++++++++++++ 1. ON REGISTRATION PAGE");
+
         $this->fillInSelfRegistrationFieldsAndSubmit(
             'Jeanne',
-            "d'Arc",
+            'dArc',
             $userEmail,
             'B1',
             'Sarah',
-            "O'Name",
+            'OName',
             '61616161',
         );
 
+        error_log("+++++++++++++++++++ 3. SELF REGISTRATION FIELDS FILLED IN AND SUBMITTED");
+
         $this->completeUserRegistration($userEmail);
+
+        error_log("+++++++++++++++++++ 8. USER REGISTRATION COMPLETE");
     }
 
     /**
@@ -248,6 +255,10 @@ trait SelfRegistrationTrait
         $this->fillInField('self_registration_clientLastname', $clientLastname);
         $this->fillInField('self_registration_caseNumber', $caseNumber);
         $this->pressButton('self_registration_save');
+
+        error_log("+++++++++++++++++++ 2. SELF REGISTRATION DETAILS SUBMITTED");
+
+        $this->assertPageContainsText('Please check your email');
     }
 
     /**
@@ -920,13 +931,21 @@ trait SelfRegistrationTrait
         $this->setPasswordAndTickTAndCs();
         $this->pressButton('set_password_save');
 
+        error_log("+++++++++++++++++++ 4. PASSWORD SET UP FOR USER");
+
         $this->assertPageContainsText('Sign in to your new account');
         $this->fillInField('login_email', $userEmail);
         $this->fillInField('login_password', 'DigidepsPass1234');
         $this->pressButton('login_login');
 
+        error_log("+++++++++++++++++++ 5. USER SIGNED IN");
+
         $this->fillUserDetailsAndSubmit();
 
+        error_log("+++++++++++++++++++ 6. USER DETAILS FILLED IN");
+
         $this->fillClientDetailsAndSubmit();
+
+        error_log("+++++++++++++++++++ 7. CLIENT DETAILS FILLED IN");
     }
 }
