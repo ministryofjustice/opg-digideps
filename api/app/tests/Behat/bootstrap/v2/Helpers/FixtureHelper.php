@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Helpers;
 
+use App\Repository\UserRepository;
 use DateTime;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
@@ -1435,5 +1436,16 @@ class FixtureHelper
         $this->em->flush();
 
         return $deputy;
+    }
+
+    public function getUserDetails(string $email)
+    {
+        return $this->em->createQueryBuilder()
+            ->select('u')
+            ->from(User::class, 'u')
+            ->where('email = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getArrayResult();
     }
 }

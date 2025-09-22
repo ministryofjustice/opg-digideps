@@ -260,6 +260,9 @@ trait SelfRegistrationTrait
 
         $this->printLastResponse();
 
+        // check user has been registered in the database
+        error_log("==================================\n" . print_r($this->fixtureHelper->getUserDetails($email), true));
+
         $this->assertPageContainsText('Please check your email');
     }
 
