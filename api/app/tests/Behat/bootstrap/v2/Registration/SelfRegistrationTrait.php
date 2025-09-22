@@ -258,6 +258,8 @@ trait SelfRegistrationTrait
 
         error_log("+++++++++++++++++++ 2. SELF REGISTRATION DETAILS SUBMITTED");
 
+        $this->printLastResponse();
+
         $this->assertPageContainsText('Please check your email');
     }
 
