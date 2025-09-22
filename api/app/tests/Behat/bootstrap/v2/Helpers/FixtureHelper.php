@@ -1448,4 +1448,15 @@ class FixtureHelper
             ->getQuery()
             ->getArrayResult();
     }
+
+    public function getClientDetails(string $caseNumber)
+    {
+        return $this->em->createQueryBuilder()
+            ->select('c')
+            ->from(Client::class, 'c')
+            ->where('c.caseNumber = :caseNumber')
+            ->setParameter('caseNumber', $caseNumber)
+            ->getQuery()
+            ->getArrayResult();
+    }
 }
