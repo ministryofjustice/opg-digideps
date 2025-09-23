@@ -207,7 +207,11 @@ class FixtureHelper
     }
 
     public function createUser(
-        string $roleName, ?string $email = null, ?int $deputyUid = null, ?string $firstName = null, ?string $lastName = null,
+        string $roleName,
+        ?string $email = null,
+        ?int $deputyUid = null,
+        ?string $firstName = null,
+        ?string $lastName = null,
     ) {
         if (is_null($email)) {
             $email = sprintf('%s-%s@t.uk', substr($roleName, 5), $this->testRunId);
@@ -217,7 +221,11 @@ class FixtureHelper
     }
 
     public function createAndPersistUser(
-        string $roleName, ?string $email = null, ?int $deputyUid = null, ?string $firstName = null, ?string $lastName = null,
+        string $roleName,
+        ?string $email = null,
+        ?int $deputyUid = null,
+        ?string $firstName = null,
+        ?string $lastName = null,
     ) {
         if (!$this->fixturesEnabled) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
@@ -430,11 +438,11 @@ class FixtureHelper
         $client->setCaseNumber(ClientTestHelper::createValidCaseNumber());
 
         if (!$sameFirstName) {
-            $client->setFirstName($client->getFirstName().'ABC');
+            $client->setFirstName($client->getFirstName() . 'ABC');
         }
 
         if (!$sameLastName) {
-            $client->setLastname($client->getLastName().'ABC');
+            $client->setLastname($client->getLastName() . 'ABC');
         }
 
         $this->em->persist($client);
@@ -1041,9 +1049,6 @@ class FixtureHelper
 
     public function createProfAdminSubmitted(
         string $testRunId,
-        ?string $deputyEmail = null,
-        ?string $caseNumber = null,
-        ?string $deputyNumber = null,
     ): array {
         $user = $this->createOrgUserClientDeputyAndReport(
             $testRunId,
@@ -1178,7 +1183,7 @@ class FixtureHelper
         $deputies = [];
 
         $deputies[] = $this->createOrgUserClientDeputyAndReport(
-            $testRunId.'_1',
+            $testRunId . '_1',
             User::ROLE_PROF_NAMED,
             'analytics-prof-submitted',
             Report::PROF_HW_TYPE,
@@ -1192,7 +1197,7 @@ class FixtureHelper
         );
 
         $deputies[] = $this->createOrgUserClientDeputyAndReport(
-            $testRunId.'_2',
+            $testRunId . '_2',
             User::ROLE_PA_NAMED,
             'analytics-pa-submitted',
             Report::PA_HW_TYPE,
@@ -1206,7 +1211,7 @@ class FixtureHelper
         );
 
         $deputies[] = $this->createDeputyClientAndReport(
-            $testRunId.'_3',
+            $testRunId . '_3',
             User::ROLE_LAY_DEPUTY,
             'analytics-lay-submitted',
             Report::LAY_HW_TYPE,
@@ -1256,14 +1261,14 @@ class FixtureHelper
 
         foreach ($userRoles as $userRole) {
             $user = $this->userTestHelper
-                ->createUser(null, $userRole['role'], sprintf('%s-%s@t.uk', $testPurpose.'-test-'.$userRole['typeSuffix'], $this->testRunId));
+                ->createUser(null, $userRole['role'], sprintf('%s-%s@t.uk', $testPurpose . '-test-' . $userRole['typeSuffix'], $this->testRunId));
             $this->setPassword($user);
         }
 
         $this->createDeputyClientAndReport(
             $this->testRunId,
             User::ROLE_LAY_DEPUTY,
-            $testPurpose.'-test-ndr',
+            $testPurpose . '-test-ndr',
             Report::LAY_HW_TYPE,
             false,
             false,
@@ -1346,8 +1351,7 @@ class FixtureHelper
 
         $userEmail = sprintf('%s-%s@%s', $emailPrefix, $this->testRunId, $domain);
 
-        $user = $this->userTestHelper
-            ->createUser(null, $userRole, $userEmail);
+        $user = $this->userTestHelper->createUser(null, $userRole, $userEmail);
 
         $this->addOrgClientsDeputyAndReportsToOrgDeputy(
             $user,
@@ -1386,7 +1390,7 @@ class FixtureHelper
         ?string $caseNumber = null,
     ): PreRegistration {
         if (is_null($caseNumber)) {
-            $caseNumber = ''.random_int(10000000, 99999999);
+            $caseNumber = '' . random_int(10000000, 99999999);
         }
 
         $data = [
@@ -1411,7 +1415,7 @@ class FixtureHelper
     public function createAndPersistCourtOrder(string $orderType, Client $client, Deputy $deputy, ?Report $report = null, ?Ndr $ndr = null)
     {
         $faker = Factory::create('en_GB');
-        $courtOrderUid = '700000'.$faker->randomNumber(4);
+        $courtOrderUid = '700000' . $faker->randomNumber(4);
 
         return $this->courtOrderTestHelper::generateCourtOrder($this->em, $client, $courtOrderUid, 'ACTIVE', $orderType, $report, $ndr, $deputy);
     }
