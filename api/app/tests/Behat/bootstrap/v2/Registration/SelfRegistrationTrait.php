@@ -180,16 +180,16 @@ trait SelfRegistrationTrait
     {
         $userEmail = 'julie2' . rand(0, 9999999) . '@duck.co.uk';
         $this->interactingWithUserDetails = new UserDetails(['userEmail' => $userEmail]);
-        $this->deputyUid = '700762222001';
+        $this->deputyUid = '700863322001';
 
         $this->visitFrontendPath('/register');
         $this->fillInSelfRegistrationFieldsAndSubmit(
             'Jeanne',
-            "d'Arc",
+            'dArc',
             $userEmail,
             'B1',
             'Sarah',
-            "O'Name",
+            'OName',
             '61616161',
         );
 
