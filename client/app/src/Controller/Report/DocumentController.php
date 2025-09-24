@@ -7,7 +7,9 @@ use App\Entity as EntityDir;
 use App\Entity\Report\Document;
 use App\Entity\User;
 use App\Exception\MimeTypeAndFileExtensionDoNotMatchException;
-use App\Form as FormDir;
+use App\Form\ConfirmDeleteType;
+use App\Form\Report\DocumentType;
+use App\Form\Report\UploadType;
 use App\Security\DocumentVoter;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
@@ -102,7 +104,7 @@ class DocumentController extends AbstractController
             ->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId]);
 
-        $form = $this->createForm(FormDir\Report\DocumentType::class, $report);
+        $form = $this->createForm(DocumentType::class, $report);
         $form->handleRequest($request);
 
         /** @var SubmitButton $submitBtn */
@@ -155,7 +157,7 @@ class DocumentController extends AbstractController
         $report = $this->reportApi->refreshReportStatusCache($reportId, ['documents'], self::$jmsGroups);
 
         $formAction = $this->generateUrl('report_documents', ['reportId' => $reportId]);
-        $form = $this->createForm(FormDir\Report\UploadType::class, null, [
+        $form = $this->createForm(UploadType::class, null, [
             'action' => $formAction, 'report_submitted' => $report->isSubmitted(),
         ]);
 
@@ -258,7 +260,7 @@ class DocumentController extends AbstractController
         $backLink = $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
 
         $formAction = $this->generateUrl('report_documents_reupload', ['reportId' => $reportId]);
-        $form = $this->createForm(FormDir\Report\UploadType::class, null, ['action' => $formAction, 'report_submitted' => $report->isSubmitted()]);
+        $form = $this->createForm(UploadType::class, null, ['action' => $formAction, 'report_submitted' => $report->isSubmitted()]);
 
         if ('tooBig' == $request->get('error')) {
             $message = $this->translator->trans('document.file.errors.maxSizeMessage', [], 'validators');
@@ -422,7 +424,7 @@ class DocumentController extends AbstractController
 
         $this->denyAccessUnlessGranted(DocumentVoter::DELETE_DOCUMENT, $document, 'Access denied');
 
-        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form = $this->createForm(ConfirmDeleteType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
