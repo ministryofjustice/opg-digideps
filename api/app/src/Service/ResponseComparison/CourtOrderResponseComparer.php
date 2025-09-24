@@ -11,14 +11,18 @@ class CourtOrderResponseComparer extends ResponseComparer
 
     public function getSqlStatement(string $userIds): string
     {
-        return '
-            SELECT d.id as user_id, d.deputy_uid as id1
-            FROM dd_user d
-            WHERE d.deputy_uid is not null
-            AND d.deputy_uid != 0
-            AND odr_enabled != true
-            AND id in (' . $userIds . ')
-        ';
+        $inClause = $userIds !== 'all' ? " AND id IN ($userIds)" : '';
+
+        return "
+        SELECT d.id as user_id, d.deputy_uid as id1
+        FROM dd_user d
+        WHERE d.deputy_uid IS NOT NULL
+          AND d.deputy_uid != 0
+          AND odr_enabled != true
+          AND role_name = 'ROLE_LAY_DEPUTY'
+          AND is_primary = true
+          $inClause
+    ";
     }
 
     public function getRoute(): string
@@ -223,10 +227,18 @@ class CourtOrderResponseComparer extends ResponseComparer
         $legacyNormalizedSorted = $this->sortByIdRecursive($this->normalizeArrayForComparison($legacyNormalized));
         $newNormalizedSorted = $this->sortByIdRecursive($this->normalizeArrayForComparison($newNormalized));
 
+        $pretty = getenv('WORKSPACE') === 'local';
+
         return [
             'matching' => $legacyNormalizedSorted === $newNormalizedSorted,
-            'legacy'   => json_encode($legacyNormalizedSorted, JSON_PRETTY_PRINT),
-            'new'      => json_encode($newNormalizedSorted, JSON_PRETTY_PRINT),
+            'legacy'   => json_encode(
+                $legacyNormalizedSorted,
+                $pretty ? JSON_PRETTY_PRINT : 0
+            ),
+            'new'      => json_encode(
+                $newNormalizedSorted,
+                $pretty ? JSON_PRETTY_PRINT : 0
+            ),
         ];
     }
 }

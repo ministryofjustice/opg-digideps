@@ -242,6 +242,7 @@ class ApiComparison extends Command
                 } else {
                     ++$counts['success'];
                     $output->writeln('<info>No differences found for user_id: </info>' . $user_id);
+                    $output->writeln('<comment>Comparison: </comment>' . $compareResult['legacy'] . ' <--OLD #### NEW --> ' . $compareResult['new']);
                 }
             } catch (\Exception $e) {
                 $output->writeln('<error>' . $e->getMessage() . '</error>');
