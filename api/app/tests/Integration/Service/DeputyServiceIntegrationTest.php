@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Entity\Repository;
+namespace App\Tests\Integration\Service;
 
-use App\Entity\Deputy;
-use App\Repository\DeputyRepository;
+use App\Service\DeputyService;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\CourtOrderTestHelper;
 use App\TestHelpers\DeputyTestHelper;
@@ -14,10 +13,10 @@ use App\TestHelpers\UserTestHelper;
 use App\Tests\Integration\ApiIntegrationTestCase;
 use App\Tests\Integration\Fixtures;
 
-class DeputyRepositoryIntegrationTest extends ApiIntegrationTestCase
+class DeputyServiceIntegrationTest extends ApiIntegrationTestCase
 {
     private static Fixtures $fixtures;
-    private static DeputyRepository $sut;
+    private static DeputyService $sut;
 
     public static function setUpBeforeClass(): void
     {
@@ -25,20 +24,30 @@ class DeputyRepositoryIntegrationTest extends ApiIntegrationTestCase
 
         self::$fixtures = new Fixtures(self::$entityManager);
 
-        /** @var DeputyRepository $sut */
-        $sut = self::$entityManager->getRepository(Deputy::class);
+        /** @var DeputyService $sut */
+        $sut = self::$container->get(DeputyService::class);
         self::$sut = $sut;
     }
 
-    public function testFindReportsInfoByUid()
+    public static function tearDownAfterClass(): void
+    {
+    }
+
+    public function testFindReportsInfoByUidSuccess()
     {
         $deputyUid = 7000000021;
         $courtOrderUid = '7100000080';
 
-        $deputy = DeputyTestHelper::generateDeputy(deputyUid: "$deputyUid");
         $client = ClientTestHelper::generateClient(em: self::$entityManager);
         $user = UserTestHelper::createAndPersistUser(em: self::$entityManager, client: $client, deputyUid: $deputyUid);
         $report = ReportTestHelper::generateReport(em: self::$entityManager, client: $client);
+        $deputy = DeputyTestHelper::generateDeputy(deputyUid: "$deputyUid", user: $user);
+
+        $client->setDeputy(deputy: $deputy);
+
+        self::$fixtures->persist($deputy, $client);
+        self::$fixtures->flush();
+
         $courtOrder = CourtOrderTestHelper::generateCourtOrder(
             em: self::$entityManager,
             client: $client,
@@ -47,13 +56,7 @@ class DeputyRepositoryIntegrationTest extends ApiIntegrationTestCase
             deputy: $deputy,
         );
 
-        $deputy->setUser(user: $user);
-        $client->setDeputy(deputy: $deputy);
-
-        self::$fixtures->persist($deputy, $client);
-        self::$fixtures->flush();
-
-        $results = self::$sut->findReportsInfoByUid(uid: $deputyUid);
+        $results = self::$sut->findReportsInfoByUid(uid: "$deputyUid");
 
         self::assertCount(1, $results);
         self::assertArrayHasKey('client', $results[0]);
@@ -76,42 +79,40 @@ class DeputyRepositoryIntegrationTest extends ApiIntegrationTestCase
         self::assertEquals($report->getType(), $results[0]['report']['type']);
     }
 
-    public function testFindReportsInfoByUidWithClosedCourtOrder()
+    public function testFindReportsInfoByUidDeputyNotActiveOnOrder()
     {
         $deputyUid = 7000000022;
         $courtOrderUid = '7100000081';
 
-        $deputy = DeputyTestHelper::generateDeputy(deputyUid: "$deputyUid");
         $client = ClientTestHelper::generateClient(em: self::$entityManager);
         $user = UserTestHelper::createAndPersistUser(em: self::$entityManager, client: $client, deputyUid: $deputyUid);
         $report = ReportTestHelper::generateReport(em: self::$entityManager, client: $client);
+        $deputy = DeputyTestHelper::generateDeputy(deputyUid: "$deputyUid", user: $user);
 
-        // closed court order saved to database
-        $courtOrder = CourtOrderTestHelper::generateCourtOrder(
+        $client->setDeputy(deputy: $deputy);
+
+        self::$fixtures->persist($deputy, $client);
+        self::$fixtures->flush();
+
+        // active court order saved to database, but deputy is not active on the order
+        CourtOrderTestHelper::generateCourtOrder(
             em: self::$entityManager,
             client: $client,
             courtOrderUid: $courtOrderUid,
-            status: 'CLOSED',
             report: $report,
             deputy: $deputy,
+            isActive: false,
         );
 
-        $deputy->setUser(user: $user);
-        $client->setDeputy(deputy: $deputy);
+        $results = self::$sut->findReportsInfoByUid(uid: "$deputyUid");
 
-        self::$fixtures->persist($deputy, $client, $courtOrder);
-        self::$fixtures->flush();
-
-        $results = self::$sut->findReportsInfoByUid(uid: $deputyUid);
-
-        self::assertEquals(null, $results);
+        self::assertEquals([], $results);
     }
 
-    public function testFindReportsInfoByUidIsNull()
+    public function testFindReportsInfoByUidForNonExistentDeputyIsNull()
     {
-        $deputyUid = 70000022;
-        $results = self::$sut->findReportsInfoByUid(uid: $deputyUid);
+        $results = self::$sut->findReportsInfoByUid(uid: '70000022');
 
-        self::assertNull($results);
+        self::assertEquals(null, $results);
     }
 }

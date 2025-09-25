@@ -2,11 +2,14 @@
 
 namespace App\Service;
 
+use App\Entity\CourtOrder;
 use App\Entity\Deputy;
 use App\Entity\PreRegistration;
+use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Model\Hydrator;
 use App\Repository\DeputyRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 
 class DeputyService
@@ -85,5 +88,74 @@ class DeputyService
         ]);
 
         return $this->populateDeputy($data);
+    }
+
+    /**
+     * @return array<int, array<string, array<string, mixed>>>|null
+     *
+     * @throws Exception
+     */
+    public function findReportsInfoByUid(string $uid, bool $includeInactive = false): ?array
+    {
+        /** @var ?Deputy $deputy */
+        $deputy = $this->deputyRepository->findOneBy(['deputyUid' => $uid]);
+
+        if (is_null($deputy)) {
+            return null;
+        }
+
+        // get all court orders for deputy
+        $courtOrdersWithStatus = $deputy->getCourtOrdersWithStatus();
+
+        // get the latest report for each court order, storing court order UIDs and deduplicating as we go
+        $reportAggregate = [];
+
+        foreach ($courtOrdersWithStatus as $courtOrderWithStatus) {
+            /** @var CourtOrder $courtOrder */
+            $courtOrder = $courtOrderWithStatus['courtOrder'];
+
+            // whether a court order should be shown depends both on the court order status and the deputy
+            // status on the order
+            $show = $includeInactive || ($courtOrderWithStatus['isActive'] && $courtOrder->getStatus() === 'ACTIVE');
+
+            if (!$show) {
+                continue;
+            }
+
+            /** @var ?Report $reports */
+            $report = $courtOrder->getLatestReport();
+            if (is_null($report)) {
+                continue;
+            }
+
+            $courtOrderUid = $courtOrder->getCourtOrderUid();
+            $reportId = $report->getId();
+
+            if (!array_key_exists($reportId, $reportAggregate)) {
+                $client = $report->getClient();
+
+                $reportAggregate[$reportId] = [
+                    'report' => [
+                        'type' => $report->getType()
+                    ],
+                    'client' => [
+                        'firstName' => $client->getFirstName(),
+                        'lastName' => $client->getLastName(),
+                        'caseNumber' => $client->getCaseNumber(),
+                    ],
+                    'courtOrderUids' => [$courtOrderUid],
+
+                    // TODO get rid of this; leaving in for now for compatibility
+                    'courtOrder' => [
+                        'courtOrderUid' => $courtOrderUid,
+                        'courtOrderLink' => $courtOrderUid,
+                    ],
+                ];
+            } elseif (!in_array($courtOrderUid, $reportAggregate[$reportId]['courtOrderUids'])) {
+                $reportAggregate[$reportId]['courtOrderUids'][] = $courtOrderUid;
+            }
+        }
+
+        return array_values($reportAggregate);
     }
 }
