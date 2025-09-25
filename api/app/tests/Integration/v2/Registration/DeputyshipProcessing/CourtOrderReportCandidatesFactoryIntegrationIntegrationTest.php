@@ -268,4 +268,62 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
         // check that the existing order <-> report relationship is not one of the candidates
         self::assertCount(0, $candidates);
     }
+
+    // if a deputyship is hybrid now, but wasn't in the past, older non-hybrid reports are still associated
+    // with the court order
+    public function testCreateCompatibleReportsIncludesOlderNonHybrids(): void
+    {
+        $deputyUid = '9384576384';
+        $caseNumber = '928475631';
+        $orderUid = '99944477';
+        $madeDate = new DateTime();
+
+        // add staging deputyship which currently has hybrid reporting
+        $deputyship = new StagingDeputyship();
+        $deputyship->orderUid = $orderUid;
+        $deputyship->deputyUid = $deputyUid;
+        $deputyship->deputyType = 'LAY';
+        $deputyship->orderType = 'pfa';
+        $deputyship->isHybrid = '1';
+        $deputyship->caseNumber = $caseNumber;
+        $deputyship->orderMadeDate = $madeDate->format('Y-m-d');
+
+        self::$entityManager->persist($deputyship);
+        self::$entityManager->flush();
+
+        // add client
+        $client = new Client();
+        $client->setCaseNumber($caseNumber);
+
+        self::$entityManager->persist($client);
+        self::$entityManager->flush();
+
+        // add compatible hybrid report
+        $hybridReport = new Report(
+            client: $client,
+            type: '102-4',
+            startDate: $madeDate,
+            endDate: $madeDate,
+            dateChecks: false
+        );
+
+        self::$entityManager->persist($hybridReport);
+
+        // add older non-hybrid report
+        $nonHybridReport = new Report(
+            client: $client,
+            type: '102',
+            startDate: $madeDate,
+            endDate: $madeDate,
+            dateChecks: false
+        );
+        self::$entityManager->persist($nonHybridReport);
+
+        self::$entityManager->flush();
+
+        $candidates = iterator_to_array(self::$sut->createCompatibleReportCandidates());
+
+        // both reports should be candidates
+        self::assertCount(2, $candidates);
+    }
 }

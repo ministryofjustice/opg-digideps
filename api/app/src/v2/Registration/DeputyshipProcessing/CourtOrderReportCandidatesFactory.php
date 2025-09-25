@@ -33,19 +33,16 @@ class CourtOrderReportCandidatesFactory
                     (
                         (
                             d.order_type = 'pfa'
-                            AND d.is_hybrid IS NULL
                             AND r.type IN ('102', '102-5', '102-6', '103', '103-5', '103-6')
                         )
                         OR
                         (
                             d.order_type = 'hw'
-                            AND d.is_hybrid IS NULL
                             AND r.type IN ('104', '104-5', '104-6')
                         )
                         OR
                         (
                             d.order_type IN ('hw', 'pfa')
-                            AND d.is_hybrid = '1'
                             AND r.type IN ('102-4', '102-4-5', '102-4-6', '103-4', '103-4-5', '103-4-6')
                         )
                     ) AS report_type_is_compatible
@@ -108,11 +105,11 @@ class CourtOrderReportCandidatesFactory
      *
      * A deputyship and existing report are compatible if:
      *
-     * deputyship order type == 'pfa' and existing report type == '102' or '103'
+     * deputyship order type == 'pfa' and existing report type is '102' or '103' or the PA/PRO equivalents
      * OR
-     * deputyship order type == 'hw' and existing report type == '104'
+     * deputyship order type == 'hw' and existing report type is '104' or the PA/PRO equivalents
      * OR
-     * deputyship order type == 'pfa' or 'hw' and deputyship is hybrid and existing report type == '102-4' or '103-4'
+     * deputyship order type == 'pfa' or 'hw' and existing report type ends with == '-4'
      *
      * @return \Traversable<StagingSelectedCandidate> Iterator over candidate court_order_report inserts
      *
@@ -124,8 +121,8 @@ class CourtOrderReportCandidatesFactory
 
         foreach ($result as $row) {
             yield $this->candidateFactory->createInsertOrderReportCandidate(
-                ''.$row['court_order_uid'],
-                intval(''.$row['report_id'])
+                '' . $row['court_order_uid'],
+                intval('' . $row['report_id'])
             );
         }
     }
@@ -143,8 +140,8 @@ class CourtOrderReportCandidatesFactory
 
         foreach ($result as $row) {
             yield $this->candidateFactory->createInsertOrderNdrCandidate(
-                ''.$row['court_order_uid'],
-                intval(''.$row['ndr_id'])
+                '' . $row['court_order_uid'],
+                intval('' . $row['ndr_id'])
             );
         }
     }
