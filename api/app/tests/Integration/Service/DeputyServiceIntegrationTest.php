@@ -29,10 +29,6 @@ class DeputyServiceIntegrationTest extends ApiIntegrationTestCase
         self::$sut = $sut;
     }
 
-    public static function tearDownAfterClass(): void
-    {
-    }
-
     public function testFindReportsInfoByUidSuccess()
     {
         $deputyUid = 7000000021;
@@ -116,5 +112,48 @@ class DeputyServiceIntegrationTest extends ApiIntegrationTestCase
         $results = self::$sut->findReportsInfoByUid(uid: '70000022');
 
         self::assertEquals(null, $results);
+    }
+
+    public function testFindReportsInfoByUidUsesLatestReportType(): void
+    {
+        $deputyUid = 7000000022;
+        $courtOrderUid = '7100000081';
+
+        $client = ClientTestHelper::generateClient(em: self::$entityManager);
+        $user = UserTestHelper::createAndPersistUser(em: self::$entityManager, client: $client, deputyUid: $deputyUid);
+        $deputy = DeputyTestHelper::generateDeputy(deputyUid: "$deputyUid", user: $user);
+
+        $client->setDeputy(deputy: $deputy);
+
+        self::$fixtures->persist($deputy, $client);
+        self::$fixtures->flush();
+
+        // active court order saved to database
+        $courtOrder = CourtOrderTestHelper::generateCourtOrder(
+            em: self::$entityManager,
+            client: $client,
+            courtOrderUid: $courtOrderUid,
+            deputy: $deputy,
+        );
+
+        // two reports, one the current report and the other historical;
+        // check that the most recent report's type is used as the type for the court order
+        // (as displayed on the choose a court order page)
+        $currentStart = new \DateTime();
+        $currentReport = ReportTestHelper::generateReport(em: self::$entityManager, client: $client, type: '102', startDate: $currentStart);
+
+        $oldStart = $currentStart->sub(new \DateInterval('P2Y'));
+        $oldReport = ReportTestHelper::generateReport(em: self::$entityManager, client: $client, type: '103', startDate: $oldStart);
+
+        $courtOrder->addReport($currentReport);
+        $courtOrder->addReport($oldReport);
+
+        self::$fixtures->persist($currentReport, $oldReport, $courtOrder);
+        self::$fixtures->flush();
+
+        $results = self::$sut->findReportsInfoByUid(uid: "$deputyUid");
+
+        self::assertCount(1, $results);
+        self::assertEquals('102', $results[0]['report']['type']);
     }
 }
