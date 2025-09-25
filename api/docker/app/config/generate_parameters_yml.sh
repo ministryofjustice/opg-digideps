@@ -9,6 +9,8 @@ parameters:
   database_name: "%env(DATABASE_NAME)%"
   database_user: "%env(DATABASE_USERNAME)%"
   database_password: "%env(DATABASE_PASSWORD)%"
+  database_application_user: "%env(APP_DB_USERNAME)%"
+  database_application_password: "%env(APP_DB_PASSWORD)%"
   database_ssl_mode: "%env(DATABASE_SSL)%"
   locale: en
   secret: "%env(SECRET)%"
