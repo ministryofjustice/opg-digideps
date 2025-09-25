@@ -239,7 +239,7 @@ class CourtOrder
     }
 
     /**
-     * Get the report with the latest due date for this CourtOrder
+     * Get the most recent report for this CourtOrder
      */
     public function getLatestReport(): ?Report
     {
