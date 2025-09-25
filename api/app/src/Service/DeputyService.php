@@ -92,8 +92,6 @@ class DeputyService
 
     /**
      * @return array<int, array<string, array<string, mixed>>>|null
-     *
-     * @throws Exception
      */
     public function findReportsInfoByUid(string $uid, bool $includeInactive = false): ?array
     {
