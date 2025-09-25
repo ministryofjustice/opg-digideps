@@ -144,12 +144,7 @@ class DeputyService
                         'caseNumber' => $client->getCaseNumber(),
                     ],
                     'courtOrderUids' => [$courtOrderUid],
-
-                    // TODO get rid of this; leaving in for now for compatibility
-                    'courtOrder' => [
-                        'courtOrderUid' => $courtOrderUid,
-                        'courtOrderLink' => $courtOrderUid,
-                    ],
+                    'courtOrderLink' => $courtOrderUid,
                 ];
             } elseif (!in_array($courtOrderUid, $reportAggregate[$reportId]['courtOrderUids'])) {
                 $reportAggregate[$reportId]['courtOrderUids'][] = $courtOrderUid;

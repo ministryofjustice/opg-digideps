@@ -70,9 +70,11 @@ class DeputyServiceIntegrationTest extends ApiIntegrationTestCase
         self::assertArrayHasKey('caseNumber', $results[0]['client']);
         self::assertEquals($client->getCaseNumber(), $results[0]['client']['caseNumber']);
 
-        self::assertArrayHasKey('courtOrder', $results[0]);
-        self::assertArrayHasKey('courtOrderUid', $results[0]['courtOrder']);
-        self::assertEquals($courtOrder->getCourtOrderUid(), $results[0]['courtOrder']['courtOrderUid']);
+        self::assertArrayHasKey('courtOrderUids', $results[0]);
+        self::assertEquals([$courtOrder->getCourtOrderUid()], $results[0]['courtOrderUids']);
+
+        self::assertArrayHasKey('courtOrderLink', $results[0]);
+        self::assertEquals($courtOrder->getCourtOrderUid(), $results[0]['courtOrderLink']);
 
         self::assertArrayHasKey('report', $results[0]);
         self::assertArrayHasKey('type', $results[0]['report']);
