@@ -87,6 +87,9 @@ COPY --chown=www-data:www-data client/docker/app/config/meta.json.tmpl public/me
 COPY --chown=www-data:www-data client/docker/app/config/generate_parameters_yml.sh generate_parameters_yml.sh
 COPY --chown=www-data:www-data client/docker/app/config/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
+#Check processes script
+COPY --chown=www-data:www-data scripts/process_checks/check_processes.sh /check_processes.sh
+
 ##############################
 # Stage 3a: Runtime (production-only, non-root)
 ##############################
@@ -118,7 +121,7 @@ COPY scripts/hardening/harden.sh /harden.sh
 RUN /harden.sh www-data && rm /harden.sh
 
 USER www-data
-CMD sh -c "/var/www/scripts/check_processes.sh & exec php-fpm"
+CMD sh -c "./check_processes.sh & exec php-fpm"
 
 ##############################
 # Stage 3b: Devtools Base (with dev dependencies)
@@ -159,11 +162,11 @@ RUN chown -R www-data:www-data /var/www/var && chmod -R ug+rwX /var/www/var
 COPY scripts/hardening/harden.sh /harden.sh
 RUN /harden.sh www-data && rm /harden.sh
 USER www-data
-CMD sh -c "/var/www/scripts/check_processes.sh & exec php-fpm"
+CMD sh -c "./check_processes.sh & exec php-fpm"
 
 ##############################
 # Stage 3b2: Devtools Admin (root)
 ##############################
 FROM devtools-base AS devtools-admin
 USER root
-CMD sh -c "/var/www/scripts/check_processes.sh & exec php-fpm"
+CMD sh -c "./check_processes.sh & exec php-fpm"
