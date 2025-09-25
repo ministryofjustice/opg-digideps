@@ -237,4 +237,21 @@ class CourtOrder
     {
         return $this->reports;
     }
+
+    /**
+     * Get the report with the latest due date for this CourtOrder
+     */
+    public function getLatestReport(): ?Report
+    {
+        /** @var Report $latest */
+        $latest = null;
+
+        foreach ($this->reports as $report) {
+            if (is_null($latest) || $report->getDate() > $latest->getDueDate()) {
+                $latest = $report;
+            }
+        }
+
+        return $latest;
+    }
 }
