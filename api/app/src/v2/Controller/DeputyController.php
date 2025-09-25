@@ -53,7 +53,7 @@ class DeputyController extends AbstractController
 
         $inactive = $request->query->has('inactive');
         try {
-            $results = $this->deputyService->findReportsInfoByUid($uid, $inactive);
+            $results = $this->deputyService->findReportsInfoByUid("$uid", $inactive);
         } catch (\Exception $e) {
             $this->logger->error(sprintf('Error occurred during report retrieval:%s', $e->getMessage()));
 

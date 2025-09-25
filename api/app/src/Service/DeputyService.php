@@ -90,9 +90,6 @@ class DeputyService
         return $this->populateDeputy($data);
     }
 
-    /**
-     * @return array<int, array<string, array<string, mixed>>>|null
-     */
     public function findReportsInfoByUid(string $uid, bool $includeInactive = false): ?array
     {
         /** @var ?Deputy $deputy */
@@ -120,7 +117,7 @@ class DeputyService
                 continue;
             }
 
-            /** @var ?Report $reports */
+            /** @var ?Report $report */
             $report = $courtOrder->getLatestReport();
             if (is_null($report)) {
                 continue;

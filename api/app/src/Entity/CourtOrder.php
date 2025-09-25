@@ -243,7 +243,7 @@ class CourtOrder
      */
     public function getLatestReport(): ?Report
     {
-        /** @var Report $latest */
+        /** @var ?Report $latest */
         $latest = null;
 
         foreach ($this->reports as $report) {
