@@ -78,6 +78,8 @@ COPY --chown=www-data:www-data api/app/scripts/wait-for-db.sh wait-for-db.sh
 COPY --chown=www-data:www-data api/docker/app/config/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY --chown=www-data:www-data api/docker/app/config/generate_parameters_yml.sh generate_parameters_yml.sh
 COPY --chown=www-data:www-data api/docker/app/config/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+#Check processes script
+COPY --chown=www-data:www-data scripts/process_checks/check_processes.sh /var/www/check_processes.sh
 
 RUN mkdir certs && chmod 755 certs \
  && wget -O certs/eu-west-1-bundle.pem https://truststore.pki.rds.amazonaws.com/eu-west-1/eu-west-1-bundle.pem
@@ -109,12 +111,12 @@ RUN /harden.sh www-data && rm /harden.sh
 
 USER www-data
 
-CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
+CMD ["sh", "-c", "/var/www/check_processes.sh & \
+    /var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
     && echo 'Image Target: runtime' \
-    && php-fpm"]
-
+    && exec php-fpm"]
 
 ##############################
 # Stage 3b: devtools image (image with test dependencies)
@@ -149,11 +151,12 @@ COPY scripts/hardening/harden.sh /harden.sh
 RUN /harden.sh www-data && rm /harden.sh
 USER www-data
 
-CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
+CMD ["sh", "-c", "/var/www/check_processes.sh & \
+    /var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
     && echo 'Image Target: devtools' \
-    && php-fpm"]
+    && exec php-fpm"]
 
 ##############################
 # Stage 3b2: devtools admin image (image with test dependencies - admin)
@@ -162,8 +165,9 @@ FROM devtools-base AS devtools-admin
 
 USER root
 
-CMD ["sh", "-c", "/var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
+CMD ["sh", "-c", "/var/www/check_processes.sh & \
+    /var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
     && echo 'Image Target: devtools-admin' \
-    && php-fpm"]
+    && exec php-fpm"]

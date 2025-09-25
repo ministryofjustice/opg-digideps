@@ -1,4 +1,4 @@
-FROM python:3.12-alpine3.20
+FROM python:3.12-alpine3.22
 WORKDIR /
 ENV PYTHONUNBUFFERED 1
 
@@ -26,6 +26,9 @@ COPY --chown=htmltopdf:htmltopdf htmltopdf/clean-tmp /etc/periodic/hourly/clean-
 
 COPY client/resources/public/assets/*/stylesheets/formatted-report.css ./tmp/
 COPY client/resources/public/assets/*/stylesheets/fonts.css ./tmp/
+
+#Check processes script
+COPY --chown=clamav:clamav scripts/process_checks/check_processes.sh /check_processes.sh
 
 EXPOSE 80
 
