@@ -1,7 +1,10 @@
 #!/bin/sh
 
-# Space-separated allow list
-allow_list="php-fpm ps sh check_processes"
+# Space-separated allow list (broken over lines for clarity)
+allow_list="php-fpm ps sh check_processes docker-entrypoi \
+gunicorn nginx freshclam clamd file-scanner health-check.sh \
+curl runc:[2:INIT] wait-for-db.sh nc php cat \
+entrypoint.sh"
 
 while true; do
     # Get list of running processes (just the command names)
@@ -17,7 +20,7 @@ while true; do
         done
 
         if [ $found -eq 0 ]; then
-            echo "Warning: Unexpected_Process_Detected -> $proc"
+            echo "[WARNING] Unexpected_Process_Detected -> $proc"
         fi
     done
 
