@@ -21,8 +21,8 @@
                 </h2>
                 <ul class="govuk-summary-card__actions">
                     <li class="govuk-summary-card__action">
-                        <a href="{{ path('courtorder_by_uid', {'uid': reports.courtOrder.courtOrderLink}) }}">
-                            {{ 'chooseAnOrder.courtOrderLink'| trans }}
+                        <a href="{{ path('courtorder_by_uid', {'uid': reports.courtOrderLink}) }}">
+                            {{ 'chooseAnOrder.courtOrderLink' | trans }}
                         </a>
                     </li>
                 </ul>
@@ -34,7 +34,7 @@
                             {{ 'chooseAnOrder.courtOrderNumber'| trans }}
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ reports.courtOrder.courtOrderUid }}
+                            {{ reports.courtOrderUids | join(', ') }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
