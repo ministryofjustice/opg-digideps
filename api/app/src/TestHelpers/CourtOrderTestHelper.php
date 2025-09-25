@@ -19,7 +19,7 @@ class CourtOrderTestHelper
         Client $client,
         string $courtOrderUid,
         string $status = 'ACTIVE',
-        string $type = 'SINGLE',
+        string $type = 'pfa',
         ?Report $report = null,
         ?Ndr $ndr = null,
         ?Deputy $deputy = null,

@@ -38,7 +38,6 @@ class DeputyServiceIntegrationTest extends ApiIntegrationTestCase
         $user = UserTestHelper::createAndPersistUser(em: self::$entityManager, client: $client, deputyUid: $deputyUid);
         $report = ReportTestHelper::generateReport(em: self::$entityManager, client: $client);
         $deputy = DeputyTestHelper::generateDeputy(deputyUid: "$deputyUid", user: $user);
-
         $client->setDeputy(deputy: $deputy);
 
         self::$fixtures->persist($deputy, $client);
@@ -86,7 +85,6 @@ class DeputyServiceIntegrationTest extends ApiIntegrationTestCase
         $user = UserTestHelper::createAndPersistUser(em: self::$entityManager, client: $client, deputyUid: $deputyUid);
         $report = ReportTestHelper::generateReport(em: self::$entityManager, client: $client);
         $deputy = DeputyTestHelper::generateDeputy(deputyUid: "$deputyUid", user: $user);
-
         $client->setDeputy(deputy: $deputy);
 
         self::$fixtures->persist($deputy, $client);
@@ -116,13 +114,12 @@ class DeputyServiceIntegrationTest extends ApiIntegrationTestCase
 
     public function testFindReportsInfoByUidUsesLatestReportType(): void
     {
-        $deputyUid = 7000000022;
-        $courtOrderUid = '7100000081';
+        $deputyUid = 7000000023;
+        $courtOrderUid = '7100000082';
 
         $client = ClientTestHelper::generateClient(em: self::$entityManager);
         $user = UserTestHelper::createAndPersistUser(em: self::$entityManager, client: $client, deputyUid: $deputyUid);
         $deputy = DeputyTestHelper::generateDeputy(deputyUid: "$deputyUid", user: $user);
-
         $client->setDeputy(deputy: $deputy);
 
         self::$fixtures->persist($deputy, $client);
@@ -155,5 +152,51 @@ class DeputyServiceIntegrationTest extends ApiIntegrationTestCase
 
         self::assertCount(1, $results);
         self::assertEquals('102', $results[0]['report']['type']);
+    }
+
+    // if there are two court orders for the same report, they display as a single item
+    public function testFindReportsInfoByUidCombinesCourtOrders(): void
+    {
+        $deputyUid = 7000000024;
+        $courtOrderUid1 = '7100000083';
+        $courtOrderUid2 = '7100000084';
+
+        $client = ClientTestHelper::generateClient(em: self::$entityManager);
+        $user = UserTestHelper::createAndPersistUser(em: self::$entityManager, client: $client, deputyUid: $deputyUid);
+        $deputy = DeputyTestHelper::generateDeputy(deputyUid: "$deputyUid", user: $user);
+        $client->setDeputy(deputy: $deputy);
+
+        self::$fixtures->persist($deputy, $client);
+        self::$fixtures->flush();
+
+        // two active court orders
+        $courtOrder1 = CourtOrderTestHelper::generateCourtOrder(
+            em: self::$entityManager,
+            client: $client,
+            courtOrderUid: $courtOrderUid1,
+            deputy: $deputy,
+        );
+
+        $courtOrder2 = CourtOrderTestHelper::generateCourtOrder(
+            em: self::$entityManager,
+            client: $client,
+            courtOrderUid: $courtOrderUid2,
+            type: 'hw',
+            deputy: $deputy,
+        );
+
+        // one hybrid report associated with both court orders
+        $report = ReportTestHelper::generateReport(em: self::$entityManager, client: $client, type: '102-4');
+        $courtOrder1->addReport($report);
+        $courtOrder2->addReport($report);
+
+        self::$fixtures->persist($report, $courtOrder1, $courtOrder2);
+        self::$fixtures->flush();
+
+        $results = self::$sut->findReportsInfoByUid(uid: "$deputyUid");
+
+        self::assertCount(1, $results);
+        self::assertEquals([$courtOrderUid1, $courtOrderUid2], $results[0]['courtOrderUids']);
+        self::assertEquals('102-4', $results[0]['report']['type']);
     }
 }
