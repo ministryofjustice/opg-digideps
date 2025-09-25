@@ -29,7 +29,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_court_order_processing" {
       "containerOverrides" : [
         {
           "name" : "api_app",
-          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:ingest-deputyships-csv", "--env=prod", "--no-debug", local.deputyships_report_csv_file, "--dry-run=true"]
+          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:ingest-deputyships-csv", "--env=prod", "--no-debug", local.deputyships_report_csv_file, "--dry-run=false"]
         }
       ]
     }
@@ -67,7 +67,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_lay_processing" {
       "containerOverrides" : [
         {
           "name" : "api_app",
-          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:process-lay-csv", "--env=prod", "--no-debug", local.lay_report_csv_file]
+          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:api-comparison", "client/get-all-clients-by-deputy-uid/{deputy_uid}", "v2/deputy/{deputy_id}/courtorders", "28479"]
         }
       ]
     }
