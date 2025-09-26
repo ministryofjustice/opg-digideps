@@ -32,8 +32,14 @@
                 }) }}
 
                 {% if debt.moreDetails is defined %}
+                    {% set inputClass = 'opg-indented-block flush--bottom js-details-expandable' %}
+
+                    {% if not debt.vars.value.amount %}
+                        {% set inputClass = inputClass ~ ' js-hidden' %}
+                    {% endif %}
+
                     <div class="govuk-form-group flush--bottom">
-                        <div class="opg-indented-block flush--bottom js-hidden js-details-expandable">
+                        <div class="{{ inputClass }}">
                             {{ form_input(debt.moreDetails, 'moreDetails', {
                                 'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,
                                 'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInfoHint') | trans(transOptions)
