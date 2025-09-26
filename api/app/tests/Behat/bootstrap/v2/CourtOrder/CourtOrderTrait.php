@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\CourtOrder;
 
+use App\Entity\Report\Report;
 use DateTime;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
@@ -127,6 +128,14 @@ trait CourtOrderTrait
             $client->getCurrentReport(),
             $client->getNdr(),
         );
+
+        // associate all of the client's reports with the court order
+        foreach ($client->getReports() as $report) {
+            $this->courtOrder->addReport($report);
+        }
+
+        $this->em->persist($this->courtOrder);
+        $this->em->flush();
     }
 
     /**
@@ -339,7 +348,7 @@ trait CourtOrderTrait
         $preregUser = $this->fixtureHelper->createPreRegistration(caseNumber: $this->courtOrder->getClient()->getCaseNumber());
 
         $this->invitedDeputy = [
-            'email' => strtolower($preregUser->getDeputyFirstname()).'.'.strtolower($preregUser->getDeputySurname()).'@opg.gov.uk',
+            'email' => strtolower($preregUser->getDeputyFirstname()) . '.' . strtolower($preregUser->getDeputySurname()) . '@opg.gov.uk',
             'firstname' => $preregUser->getDeputyFirstname(),
             'lastname' => $preregUser->getDeputySurname(),
         ];
@@ -356,7 +365,7 @@ trait CourtOrderTrait
      */
     public function iShouldBeOnCourtOrderPage(): void
     {
-        $this->iAmOnPage('|/courtorder/'.$this->courtOrder->getCourtOrderUid().'$|');
+        $this->iAmOnPage('|/courtorder/' . $this->courtOrder->getCourtOrderUid() . '$|');
     }
 
     /**
@@ -364,6 +373,14 @@ trait CourtOrderTrait
      */
     public function iVisitTheCourtOrderInvitePage(): void
     {
-        $this->visit('/courtorder/'.$this->courtOrder->getCourtOrderUid().'/invite');
+        $this->visit('/courtorder/' . $this->courtOrder->getCourtOrderUid() . '/invite');
+    }
+
+    /**
+     * @Given /^the latest unsubmitted report for the court order is a Pfa High Assets report$/
+     */
+    public function latestUnsubmittedCourtOrderReportIsPfaHigh(): void
+    {
+        $this->fixtureHelper->setCourtOrderLatestReportType($this->courtOrder, Report::LAY_PFA_LOW_ASSETS_TYPE);
     }
 }

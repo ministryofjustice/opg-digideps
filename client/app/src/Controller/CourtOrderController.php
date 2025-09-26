@@ -68,14 +68,15 @@ class CourtOrderController extends AbstractController
     #[Route(path: '/choose-a-court-order', name: 'courtorders_for_deputy', methods: ['GET'])]
     #[Template('@App/Index/choose-a-court-order.html.twig')]
     public function getAllDeputyCourtOrders(): array|Response
-    {   // Structure of returned data can be found in api/app/src/Repository/DeputyRepository.php
+    {
+   // Structure of returned data can be found in api/app/src/Repository/DeputyRepository.php
         $results = $this->deputyApi->findAllDeputyCourtOrdersForCurrentDeputy();
 
         if (is_null($results) || 0 === count($results)) {
             return $this->render('@App/Index/account-setup-in-progress.html.twig');
         }
 
-        return ['courtOrders' => $results];
+        return ['deputyships' => $results];
     }
 
     /**

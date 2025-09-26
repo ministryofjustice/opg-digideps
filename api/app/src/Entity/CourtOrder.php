@@ -237,4 +237,21 @@ class CourtOrder
     {
         return $this->reports;
     }
+
+    /**
+     * Get the most recent report for this CourtOrder
+     */
+    public function getLatestReport(): ?Report
+    {
+        /** @var ?Report $latest */
+        $latest = null;
+
+        foreach ($this->reports as $report) {
+            if (is_null($latest) || $report->getStartDate() > $latest->getStartDate()) {
+                $latest = $report;
+            }
+        }
+
+        return $latest;
+    }
 }

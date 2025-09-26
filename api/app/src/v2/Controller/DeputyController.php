@@ -3,8 +3,8 @@
 namespace App\v2\Controller;
 
 use App\Entity\User;
-use App\Repository\DeputyRepository;
 use App\Repository\UserRepository;
+use App\Service\DeputyService;
 use App\v2\Assembler\UserAssembler;
 use App\v2\Transformer\UserTransformer;
 use Psr\Log\LoggerInterface;
@@ -19,7 +19,7 @@ class DeputyController extends AbstractController
     use ControllerTrait;
 
     public function __construct(
-        private readonly DeputyRepository $deputyRepository,
+        private readonly DeputyService $deputyService,
         private readonly LoggerInterface $logger,
         private readonly UserRepository $repository,
         private readonly UserAssembler $assembler,
@@ -53,7 +53,7 @@ class DeputyController extends AbstractController
 
         $inactive = $request->query->has('inactive');
         try {
-            $results = $this->deputyRepository->findReportsInfoByUid($uid, $inactive);
+            $results = $this->deputyService->findReportsInfoByUid("$uid", $inactive);
         } catch (\Exception $e) {
             $this->logger->error(sprintf('Error occurred during report retrieval:%s', $e->getMessage()));
 

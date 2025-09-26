@@ -173,7 +173,7 @@ class DeputyControllerTest extends AbstractTestController
         // generate courtOrder and set client and deputy
         $courtOrder = self::$fixtures->createCourtOrder('7055555550', 'pfa', 'ACTIVE');
         $courtOrder->setClient($client);
-        CourtOrderTestHelper::associateDeputyToCourtOrder(self::$em, $courtOrder, $deputy);
+        $deputy->associateWithCourtOrder($courtOrder);
         self::$fixtures->persist($courtOrder);
         self::$fixtures->flush();
 
