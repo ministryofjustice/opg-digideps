@@ -113,10 +113,8 @@ form:
   property:
     address:
       label: Address line 1
-      context: ""
     address2:
       label: Address line 2
-      context: ""
       hint: ""
     county:
       label: County

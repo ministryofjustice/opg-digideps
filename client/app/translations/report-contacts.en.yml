@@ -77,10 +77,8 @@ form:
     hint: ""
   address:
     label: Address line 1 (optional)
-    context: line 1 of 2
   address2:
     label: Address line 2 (optional)
-    context: Address line 2 of 2 (optional)
     hint: ""
   county:
     label: County (optional)
