@@ -468,6 +468,11 @@ class Deputy
         return $this;
     }
 
+    /**
+     * Return the deputy's court orders, along with a marker of whether they are active on the court order.
+     *
+     * @return array
+     */
     public function getCourtOrdersWithStatus(): array
     {
         $result = [];
