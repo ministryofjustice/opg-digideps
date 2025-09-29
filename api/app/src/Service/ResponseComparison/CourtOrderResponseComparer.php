@@ -14,13 +14,16 @@ class CourtOrderResponseComparer extends ResponseComparer
         $inClause = $userIds !== 'all' ? " AND id IN ($userIds)" : '';
 
         return "
-        SELECT d.id as user_id, d.deputy_uid as id1
+        SELECT DISTINCT d.id as user_id, d.deputy_uid as id1
         FROM dd_user d
+        INNER JOIN deputy_case dc ON dc.user_id = d.id
+        INNER JOIN court_order co ON co.client_id = dc.client_id
         WHERE d.deputy_uid IS NOT NULL
           AND d.deputy_uid != 0
-          AND odr_enabled != true
-          AND role_name = 'ROLE_LAY_DEPUTY'
-          AND is_primary = true
+          AND d.odr_enabled != true
+          AND d.role_name = 'ROLE_LAY_DEPUTY'
+          AND d.is_primary = true
+          AND d.active = true
           $inClause
     ";
     }
@@ -182,10 +185,14 @@ class CourtOrderResponseComparer extends ResponseComparer
         $legacyNextUrlTpl = rtrim($baseUrl, '/') . '/' . ltrim($legacyNextUriTpl, '/');
         $newNextUrlTpl = rtrim($baseUrl, '/') . '/' . ltrim($newNextUriTpl, '/');
 
-        $extraResults = [];
         foreach ($legacyNormalized as $idx => $legacyRow) {
             $legacyId = $legacyNormalized[$idx]['idForNextApiCalls'] ?? null;
             $newUid   = $newNormalized[$idx]['idForNextApiCalls'] ?? null;
+
+            $extraResults = [
+                'legacy' => [],
+                'new'    => [],
+            ];
 
             if ($legacyId && $newUid) {
                 $legacyUrl = sprintf($legacyNextUrlTpl, $legacyId);
