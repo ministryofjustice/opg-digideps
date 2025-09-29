@@ -1436,4 +1436,12 @@ class FixtureHelper
 
         return $deputy;
     }
+
+    public function setCourtOrderLatestReportType(CourtOrder $courtOrder, string $reportType): void
+    {
+        $report = $courtOrder->getLatestReport();
+        $report->setType($reportType);
+        $this->em->persist($report);
+        $this->em->flush();
+    }
 }
