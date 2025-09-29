@@ -76,10 +76,10 @@ form:
     label: Why did you ask this person to help you?
     hint: ""
   address:
-    label: Address (optional)
+    label: Address line 1 (optional)
     context: line 1 of 2
   address2:
-    label: " "
+    label: Address line 2 (optional)
     context: Address line 2 of 2 (optional)
     hint: ""
   county:

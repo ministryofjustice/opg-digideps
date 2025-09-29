@@ -35,3 +35,13 @@ Feature: Report debts (NDR)
         When I view and start the debts report section
         When I add a debt with invalid amount
         Then I should see the validation message
+
+    @ndr-not-started
+    Scenario: A user enters an 'Other' debt and submits without specifying details for that debt
+        Given a Lay Deputy has not started an NDR report
+        When I view and start the debts report section
+        And I have a debt to add
+        And I add an 'Other' debt but don't complete the more details field
+
+        # does not say how debts are managed, so 'Give us more...' error message should be shown (DDLS-937)
+        Then I should see 'Give us more information' error
