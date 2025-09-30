@@ -21,44 +21,59 @@
     </details>
 
     <form action="{{ path('org_dashboard') }}" method="GET">
-        <div class="govuk-form-group govuk-!-margin-bottom-2">
-            <label for="search" class="govuk-label">{{ 'searchBy' | trans }}</label>
+        <div class="govuk-form-group">
+            <h2 class="govuk-label-wrapper">
+                <label for="search" class="govuk-label govuk-label--s">{{ 'searchBy' | trans }}</label>
+            </h2>
             <input type="text" id="search" name="q" value="{{ filters.q }}" class="govuk-input">
         </div>
 
         <div class="govuk-form-group">
-            <input id="search_submit" class="govuk-button govuk-!-margin-bottom-0 behat-link-search" type="submit" value="Search">
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend govuk-fieldset__legend--s">
+                    <h2 class="govuk-fieldset__heading">
+                        {{ 'filterBy' | trans }}
+                    </h2>
+                </legend>
+                <div class="govuk-radios govuk-radios--small" data-module="govuk-radios">
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="status-1" name="status" type="radio" value=""{{ filters.status == '' ? ' checked="checked"' : '' }}>
+                        <label class="govuk-label govuk-radios__label" for="status-1">
+                            {{ 'tabClients' | trans }} ({{ counts.total }})
+                        </label>
+                    </div>
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="status-2" name="status" type="radio" value="notStarted"{{ filters.status == 'notStarted' ? ' checked="checked"' : '' }}>
+                        <label class="govuk-label govuk-radios__label" for="status-2">
+                            {{ 'notStarted' | trans({}, 'common') }} ({{ counts.notStarted }})
+                        </label>
+                    </div>
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="status-3" name="status" type="radio" value="notFinished"{{ filters.status == 'notFinished' ? ' checked="checked"' : '' }}>
+                        <label class="govuk-label govuk-radios__label" for="status-3">
+                            {{ 'inProgress' | trans({}, 'common') }} ({{ counts.notFinished }})
+                        </label>
+                    </div>
+                    <div class="govuk-radios__item">
+                        <input class="govuk-radios__input" id="status-4" name="status" type="radio" value="readyToSubmit"{{ filters.status == 'readyToSubmit' ? ' checked="checked"' : '' }}>
+                        <label class="govuk-label govuk-radios__label" for="status-4">
+                            {{ 'readyToSubmit' | trans({}, 'common') }} ({{ counts.readyToSubmit }})
+                        </label>
+                    </div>
+                </div>
+            </fieldset>
         </div>
 
-        {% if filters.q %}
-            <a href="{{ path('org_dashboard', {'status': filters.status}) }}" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" role="button" data-module="govuk-button">
-                {{ 'clearSearch' | trans({}, 'common') }}
-            </a>
-        {% endif %}
-    </form>
+        <div class="govuk-form-group">
+            <input id="search_submit" class="govuk-button govuk-!-margin-bottom-0 behat-link-search" type="submit" value="Search">
 
-    <ul class="govuk-list">
-        <li class="govuk-list--bullet">
-            <a href="{{ path('org_dashboard', {'status': '', 'q': filters.q}) }}">
-                {{ 'tabClients' | trans }} ({{ counts.total }})
-            </a>
-        </li>
-        <li class="govuk-list--bullet">
-            <a class="behat-link-tab-unstarted" href="{{ path('org_dashboard', {'status': 'notStarted', 'q': filters.q}) }}">
-                {{ 'notStarted' | trans({}, 'common') }} ({{ counts.notStarted }})
-            </a>
-        </li>
-        <li class="govuk-list--bullet">
-            <a class="behat-link-tab-in-progress" href="{{ path('org_dashboard', {'status': 'notFinished', 'q': filters.q}) }}">
-                {{ 'inProgress' | trans({}, 'common') }} ({{ counts.notFinished }})
-            </a>
-        </li>
-        <li class="govuk-list--bullet">
-            <a class="behat-link-tab-ready" href="{{ path('org_dashboard', {'status': 'readyToSubmit', 'q': filters.q}) }}">
-                {{ 'readyToSubmit' | trans({}, 'common') }} ({{ counts.readyToSubmit }})
-            </a>
-        </li>
-    </ul>
+            {% if filters.q %}
+                <a href="{{ path('org_dashboard', {'status': filters.status}) }}" class="govuk-button govuk-button--secondary govuk-!-margin-bottom-0" role="button" data-module="govuk-button">
+                    {{ 'clearSearch' | trans({}, 'common') }}
+                </a>
+            {% endif %}
+        </div>
+    </form>
 
     <table class="push--bottom">
         <thead>
