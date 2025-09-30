@@ -45,6 +45,9 @@ COPY --from=build /go/src/clamav-rest/file-scanner /usr/bin/
 COPY file-scanner/entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
 
+#Check processes script
+COPY --chown=clamav:clamav scripts/process_checks/check_processes.sh /app/check_processes.sh
+
 # Harden security
 COPY scripts/hardening/harden.sh /app/harden.sh
 RUN /app/harden.sh clamav && rm /app/harden.sh

@@ -27,6 +27,9 @@ COPY --chown=htmltopdf:htmltopdf htmltopdf/clean-tmp /etc/periodic/hourly/clean-
 COPY client/resources/public/assets/*/stylesheets/formatted-report.css ./tmp/
 COPY client/resources/public/assets/*/stylesheets/fonts.css ./tmp/
 
+#Check processes script
+COPY --chown=clamav:clamav scripts/process_checks/check_processes.sh /check_processes.sh
+
 EXPOSE 80
 
 # Make commands executable
