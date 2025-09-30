@@ -18,12 +18,16 @@ class CourtOrderResponseComparer extends ResponseComparer
         FROM dd_user d
         INNER JOIN deputy_case dc ON dc.user_id = d.id
         INNER JOIN court_order co ON co.client_id = dc.client_id
+        INNER JOIN deputy de on de.user_id = d.id
+        INNER JOIN court_order_deputy cod ON cod.deputy_id = de.id AND cod.court_order_id = co.id
         WHERE d.deputy_uid IS NOT NULL
           AND d.deputy_uid != 0
           AND d.odr_enabled != true
           AND d.role_name = 'ROLE_LAY_DEPUTY'
           AND d.is_primary = true
           AND d.active = true
+          AND co.status != 'CLOSED'
+          AND cod.is_active = true
           $inClause
     ";
     }
