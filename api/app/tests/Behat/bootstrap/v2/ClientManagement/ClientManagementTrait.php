@@ -534,4 +534,17 @@ MESSAGE;
 
         $this->assertStringEqualsString("discharged clients $this->dischargedClient", $rows[3], 'Asserting discharged client count found on page');
     }
+
+    /**
+     * @Given there are :numReports reports which are :status
+     * @Given there is :numReports report which is :status
+     */
+    public function thereAreNumReportsWithStatus(int $numReports, string $status): void
+    {
+        for ($i = 0; $i < $numReports; $i++) {
+            if ("not started" === $status) {
+                $this->fixtureHelper->createLayCombinedHighAssetsNotStarted("$this->testRunId-$i");
+            }
+        }
+    }
 }
