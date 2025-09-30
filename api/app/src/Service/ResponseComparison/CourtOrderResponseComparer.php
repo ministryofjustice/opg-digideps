@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 class CourtOrderResponseComparer extends ResponseComparer
 {
     private const LEGACY_SECONDARY_URL = "/v2/client/%s?groups%%5B0%%5D=client&groups%%5B1%%5D=client-users&groups%%5B2%%5D=user&groups%%5B3%%5D=client-reports&groups%%5B4%%5D=client-ndr&groups%%5B5%%5D=ndr&groups%%5B6%%5D=report&groups%%5B7%%5D=status&groups%%5B8%%5D=client-deputy&groups%%5B9%%5D=deputy&groups%%5B10%%5D=client-organisations&groups%%5B11%%5D=organisation";
-    private const NEW_SECONDARY_URL = "/v2/courtorder/%s";
+    private const NEW_SECONDARY_URL = "/v2/courtorder/%s?inactive=true";
 
     public function getSqlStatement(string $userIds): string
     {
@@ -18,12 +18,17 @@ class CourtOrderResponseComparer extends ResponseComparer
         FROM dd_user d
         INNER JOIN deputy_case dc ON dc.user_id = d.id
         INNER JOIN court_order co ON co.client_id = dc.client_id
+        INNER JOIN deputy de on de.user_id = d.id
+        INNER JOIN court_order_deputy cod ON cod.deputy_id = de.id AND cod.court_order_id = co.id
+        INNER JOIN court_order_report cor on cor.court_order_id = co.id
         WHERE d.deputy_uid IS NOT NULL
           AND d.deputy_uid != 0
           AND d.odr_enabled != true
           AND d.role_name = 'ROLE_LAY_DEPUTY'
           AND d.is_primary = true
           AND d.active = true
+          AND co.status = 'ACTIVE'
+          AND cod.is_active = true
           $inClause
     ";
     }
