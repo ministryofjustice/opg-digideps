@@ -41,27 +41,23 @@
         <ul class="govuk-tabs__list" role="tablist">
             <li class="govuk-tabs__list-item {{ not filters.status ? 'govuk-tabs__list-item--selected' : '' }}">
                 <a class="govuk-tabs__tab" href="{{ path('org_dashboard', {'status': '', 'q': filters.q}) }}" role="tab" tabindex="0">
-                    {{ 'tabClients' | trans }}
+                    {{ 'tabClients' | trans }} ({{ counts.total }})
                 </a>
-                <span class="govuk-tag govuk-tag--blue">{{ counts.total }}</span>
             </li>
-            <li class="govuk-tabs__list-item {{ filters.status =='notStarted' ? 'govuk-tabs__list-item--selected' : '' }}">
+            <li class="govuk-tabs__list-item {{ filters.status == 'notStarted' ? 'govuk-tabs__list-item--selected' : '' }}">
                 <a class="govuk-tabs__tab behat-link-tab-unstarted" href="{{ path('org_dashboard', {'status': 'notStarted', 'q': filters.q}) }}" role="tab" tabindex="0">
-                    {{ 'notStarted' | trans({}, 'common') }}
+                    {{ 'notStarted' | trans({}, 'common') }} ({{ counts.notStarted }})
                 </a>
-                <span class="govuk-tag govuk-tag--grey">{{ counts.notStarted }}</span>
             </li>
-            <li class="govuk-tabs__list-item {{ filters.status =='notFinished' ? 'govuk-tabs__list-item--selected' : '' }}">
+            <li class="govuk-tabs__list-item {{ filters.status == 'notFinished' ? 'govuk-tabs__list-item--selected' : '' }}">
                 <a class="govuk-tabs__tab behat-link-tab-in-progress" href="{{ path('org_dashboard', {'status': 'notFinished', 'q': filters.q}) }}" role="tab" tabindex="0">
-                    {{ 'inProgress' | trans({}, 'common') }}
+                    {{ 'inProgress' | trans({}, 'common') }} ({{ counts.notFinished }})
                 </a>
-                <span class="govuk-tag govuk-tag--yellow">{{ counts.notFinished }}</span>
             </li>
-            <li class="govuk-tabs__list-item {{ filters.status =='readyToSubmit' ? 'govuk-tabs__list-item--selected' : '' }}">
+            <li class="govuk-tabs__list-item {{ filters.status == 'readyToSubmit' ? 'govuk-tabs__list-item--selected' : '' }}">
                 <a class="govuk-tabs__tab behat-link-tab-ready" href="{{ path('org_dashboard', {'status': 'readyToSubmit', 'q': filters.q}) }}" role="tab" tabindex="0">
-                    {{ 'readyToSubmit' | trans({}, 'common') }}
+                    {{ 'readyToSubmit' | trans({}, 'common') }} ({{ counts.readyToSubmit }})
                 </a>
-                <span class="govuk-tag govuk-tag--green">{{ counts.readyToSubmit }}</span>
             </li>
         </ul>
     </div>
