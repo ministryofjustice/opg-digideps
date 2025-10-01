@@ -47,17 +47,14 @@ class CourtOrderController extends AbstractController
             'reportType' => $courtOrder->getActiveReportType(),
             'client' => $client,
             'inviteUrl' => $this->generateUrl('courtorder_invite', ['uid' => $courtOrder->getCourtOrderUid()]),
+            'ndrEnabled' => true,
         ];
 
-        if (!empty($courtOrder->getNdr())) {
-            return array_merge($templateValues, [
-                'ndrEnabled' => true,
-            ]);
+        if (is_null($courtOrder->getNdr())) {
+            $templateValues['ndrEnabled'] = false;
         }
 
-        return array_merge($templateValues, [
-            'ndrEnabled' => false,
-        ]);
+        return $templateValues;
     }
 
     /**
@@ -76,7 +73,11 @@ class CourtOrderController extends AbstractController
             return $this->render('@App/Index/account-setup-in-progress.html.twig');
         }
 
-        return ['deputyships' => $results];
+        if (count($results) > 1) {
+            return $this->render('@App/Index/choose-a-court-order.html.twig', ['deputyships' => $results]);
+        }
+
+        return $this->redirectToRoute('courtorder_by_uid', ['uid' => $results[0]['courtOrderLink']]);
     }
 
     /**
