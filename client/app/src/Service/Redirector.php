@@ -26,7 +26,7 @@ class Redirector
         protected RouterInterface $router,
         protected RequestStack $requestStack,
         protected string $env,
-        private ClientApi $clientApi,
+        private readonly ClientApi $clientApi,
         private readonly LoggerInterface $logger,
     ) {
     }
