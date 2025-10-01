@@ -48,8 +48,9 @@ class Redirector
             return $this->router->generate('login');
         }
 
-        // checks if user has missing details or is NDR
-        if ($route = $this->getCorrectRouteIfDifferent($user, 'courtorders_for_deputy')) {
+        // checks if user has missing details
+        $route = $this->getCorrectRouteIfDifferent($user, 'courtorders_for_deputy');
+        if (is_string($route)) {
             return $this->router->generate($route);
         }
 
@@ -136,7 +137,7 @@ class Redirector
 
             // already verified - shouldn't be on verification page
             if ('codep_verification' === $currentRoute && $coDeputyClientConfirmed) {
-                $route = 'lay_home';
+                $route = 'courtorders_for_deputy';
             }
 
             // unverified codeputy invitation
