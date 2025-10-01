@@ -47,11 +47,14 @@ class CourtOrderController extends AbstractController
             'reportType' => $courtOrder->getActiveReportType(),
             'client' => $client,
             'inviteUrl' => $this->generateUrl('courtorder_invite', ['uid' => $courtOrder->getCourtOrderUid()]),
+            'ndrEnabled' => true,
         ];
 
-        return array_merge($templateValues, [
-            'ndrEnabled' => false,
-        ]);
+        if (is_null($courtOrder->getNdr())) {
+            $templateValues['ndrEnabled'] = false;
+        }
+
+        return $templateValues;
     }
 
     /**
@@ -63,14 +66,18 @@ class CourtOrderController extends AbstractController
     #[Template('@App/Index/choose-a-court-order.html.twig')]
     public function getAllDeputyCourtOrders(): array|Response
     {
-   // Structure of returned data can be found in api/app/src/Repository/DeputyRepository.php
+        // structure of returned data can be found in api/app/src/Service/DeputyService.php, findReportsInfoByUid()
         $results = $this->deputyApi->findAllDeputyCourtOrdersForCurrentDeputy();
 
         if (is_null($results) || 0 === count($results)) {
             return $this->render('@App/Index/account-setup-in-progress.html.twig');
         }
 
-        return ['deputyships' => $results];
+        if (count($results) > 1) {
+            return $this->render('@App/Index/choose-a-court-order.html.twig', ['deputyships' => $results]);
+        }
+
+        return $this->redirectToRoute('courtorder_by_uid', ['uid' => $results[0]['courtOrderLink']]);
     }
 
     /**
