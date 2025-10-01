@@ -13,17 +13,6 @@ start=$(date +%s)
 
 echo "==== Starting test run ===="
 ./vendor/bin/behat --config=./tests/Behat/behat.yml --rerun --profile v2-tests-browserkit $@
-if [ $? -ne 0 ]; then
-    echo "==== Rerunning failed tests once ===="
-    ./vendor/bin/behat --config=./tests/Behat/behat.yml --rerun --profile v2-tests-browserkit $@
-    if [ $? -ne 0 ]; then
-        echo "==== Reruns failed. Exiting with failure ===="
-        exit 1
-    else
-        echo "==== Reruns successful. Exiting with success ===="
-        exit 0
-    fi
-fi
 
 end=$(date +%s)
 

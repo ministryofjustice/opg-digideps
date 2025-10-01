@@ -526,11 +526,6 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Cannot call method getAvailableSections\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
 			message: "#^Cannot call method updateSectionsStatusCache\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
@@ -4522,11 +4517,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:updateSectionsStatusCache\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Service\\\\ReportStatusService\\:\\:getStatusIgnoringDueDate\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
 

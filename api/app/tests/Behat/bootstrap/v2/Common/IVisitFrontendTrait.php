@@ -139,6 +139,7 @@ trait IVisitFrontendTrait
 
     /**
      * @When I visit the org dashboard page
+     * @When they visit the org dashboard page
      */
     public function iVisitOrgDashboard()
     {
