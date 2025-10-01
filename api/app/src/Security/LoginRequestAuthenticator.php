@@ -18,6 +18,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
@@ -62,7 +63,7 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
         $password = $data['password'];
 
         // brute force checks
-        $this->bruteForceKey = 'email'.$data['email'];
+        $this->bruteForceKey = 'email' . $data['email'];
 
         $this->attemptsInTimechecker->registerAttempt($this->bruteForceKey); // e.g emailName@example.org
         $this->incrementalWaitingTimechecker->registerAttempt($this->bruteForceKey);
@@ -81,6 +82,7 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
         }
 
         $user = $this->userRepository->findOneBy(['email' => $email]);
+        $request->attributes->set('user_id', $user?->getId());
 
         if (!$user) {
             $this->logger->warning(sprintf('User with email "%s" not found in LoginRequestAuthenticator', $email));
@@ -90,7 +92,7 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
         if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
             $this->logger->warning(sprintf('Secret not valid for email "%s" with role "%s" in LoginRequestAuthenticator', $email, $user->getRoleName()));
 
-            throw new UnauthorisedException($user->getRoleName().' user role not allowed from this client.');
+            throw new UnauthorisedException($user->getRoleName() . ' user role not allowed from this client.');
         }
 
         return new Passport(
@@ -110,6 +112,13 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
+        $userId = $request->attributes->get('user_id');
+
+        $this->logger->warning('Failed login', [
+            'user_id'   => $userId,
+            'reason'    => $exception->getMessage(),
+        ]);
+
         if ($this->attemptsInTimechecker->maxAttemptsReached($this->bruteForceKey)) {
             throw $exception;
         }
