@@ -82,9 +82,11 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
         }
 
         $user = $this->userRepository->findOneBy(['email' => $email]);
-        $request->attributes->set('user_id', $user?->getId());
 
-        if (!$user) {
+        if ($user instanceof \App\Entity\User) {
+            $request->attributes->set('user_id', $user->getId());
+        } else {
+            $request->attributes->set('user_id', null);
             $this->verboseLogger->warning(sprintf('User with email "%s" not found in LoginRequestAuthenticator', $email));
             throw new UserNotFoundException('User not found');
         }

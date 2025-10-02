@@ -132,9 +132,11 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
             return false;
         }
 
-        $userId = $this->userRepository->findOneBy(['registrationToken' => $token])?->getId();
+        $user = $this->userRepository->findOneBy(['registrationToken' => $token]);
 
-        if (!$userId) {
+        if ($user instanceof User) {
+            $userId = $user->getId();
+        } else {
             return false;
         }
 
