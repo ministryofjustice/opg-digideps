@@ -468,3 +468,6 @@ services:
 
     App\Service\LayRegistrationService:
         public: true
+
+    App\Service\DeputyService:
+        public: true

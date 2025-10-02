@@ -19,7 +19,7 @@ class CourtOrderTestHelper
         Client $client,
         string $courtOrderUid,
         string $status = 'ACTIVE',
-        string $type = 'SINGLE',
+        string $type = 'pfa',
         ?Report $report = null,
         ?Ndr $ndr = null,
         ?Deputy $deputy = null,
@@ -38,35 +38,17 @@ class CourtOrderTestHelper
             $courtOrder->addReport($report);
         }
 
-        if(!is_null($ndr)) {
+        if (!is_null($ndr)) {
             $courtOrder->setNdr($ndr);
+        }
+
+        if (!is_null($deputy)) {
+            $deputy->associateWithCourtOrder($courtOrder, $isActive);
         }
 
         $em->persist($courtOrder);
         $em->flush();
 
-        if (!is_null($deputy)) {
-            self::associateDeputyToCourtOrder($em, $courtOrder, $deputy, $isActive);
-        }
-
         return $courtOrder;
-    }
-
-    public static function associateDeputyToCourtOrder(
-        EntityManager $em,
-        CourtOrder $courtOrder,
-        Deputy $deputy,
-        bool $isActive = true,
-    ): CourtOrderDeputy {
-        /** @var CourtOrderDeputy $courtOrderDeputy */
-        $courtOrderDeputy = (new CourtOrderDeputy())
-            ->setDeputy($deputy)
-            ->setCourtOrder($courtOrder)
-            ->setIsActive($isActive);
-
-        $em->persist($courtOrderDeputy);
-        $em->flush();
-
-        return $courtOrderDeputy;
     }
 }
