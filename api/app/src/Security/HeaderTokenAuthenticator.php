@@ -30,7 +30,7 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
     public function __construct(
         private readonly Client $redis,
         private readonly UserRepository $userRepository,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $verboseLogger
     ) {
     }
 
@@ -45,7 +45,7 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
 
         $redisToken = $this->redis->get($authTokenKey);
         if (!$redisToken) {
-            $this->logger->warning(sprintf('Auth token not found in Redis with key %s', $authTokenKey));
+            $this->verboseLogger->warning(sprintf('Auth token not found in Redis with key %s', $authTokenKey));
             throw new UserNotFoundException('User not found');
         }
 
@@ -53,7 +53,7 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
         $postAuthToken = unserialize($redisToken);
 
         if (!$postAuthToken) {
-            $this->logger->warning(sprintf('Could not deserialize token with key %s', $authTokenKey));
+            $this->verboseLogger->warning(sprintf('Could not deserialize token with key %s', $authTokenKey));
             throw new UserNotFoundException('User not found');
         }
 
@@ -77,7 +77,7 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        $this->logger->warning('Failed login', [
+        $this->verboseLogger->notice('Failed login', [
             'reason'    => $exception->getMessage(),
         ]);
 

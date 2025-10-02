@@ -35,7 +35,7 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
         private readonly AuthService $authService,
         private readonly AttemptsInTimeChecker $attemptsInTimeChecker,
         private readonly AttemptsIncrementalWaitingChecker $incrementalWaitingTimeChecker,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $verboseLogger
     ) {
     }
 
@@ -98,7 +98,7 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
     {
         $userId = $request->attributes->get('user_id');
 
-        $this->logger->warning('Failed login', [
+        $this->verboseLogger->notice('Failed login', [
             'user_id'   => $userId,
             'reason'    => $exception->getMessage(),
         ]);
