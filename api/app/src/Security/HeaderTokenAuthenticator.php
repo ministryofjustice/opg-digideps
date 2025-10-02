@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
@@ -29,7 +30,7 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
     public function __construct(
         private readonly Client $redis,
         private readonly UserRepository $userRepository,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $verboseLogger
     ) {
     }
 
@@ -44,7 +45,7 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
 
         $redisToken = $this->redis->get($authTokenKey);
         if (!$redisToken) {
-            $this->logger->warning(sprintf('Auth token not found in Redis with key %s', $authTokenKey));
+            $this->verboseLogger->warning(sprintf('Auth token not found in Redis with key %s', $authTokenKey));
             throw new UserNotFoundException('User not found');
         }
 
@@ -52,7 +53,7 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
         $postAuthToken = unserialize($redisToken);
 
         if (!$postAuthToken) {
-            $this->logger->warning(sprintf('Could not deserialize token with key %s', $authTokenKey));
+            $this->verboseLogger->warning(sprintf('Could not deserialize token with key %s', $authTokenKey));
             throw new UserNotFoundException('User not found');
         }
 
@@ -76,6 +77,10 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
+        $this->verboseLogger->notice('Failed login', [
+            'reason'    => $exception->getMessage(),
+        ]);
+
         throw new UserWrongCredentialsException($exception->getMessage(), 419);
     }
 }
