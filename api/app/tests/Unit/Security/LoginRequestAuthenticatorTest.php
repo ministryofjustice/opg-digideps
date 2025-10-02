@@ -48,7 +48,7 @@ final class LoginRequestAuthenticatorTest extends TestCase
         $this->incrementalWaitingTimechecker = self::prophesize(AttemptsIncrementalWaitingChecker::class);
         $this->authService = self::prophesize(AuthService::class);
         $this->tokenStorage = self::prophesize(TokenStorageInterface::class);
-        $logger = self::prophesize(LoggerInterface::class);
+        $verboseLogger = self::prophesize(LoggerInterface::class);
         $this->dateTimeProvider = self::prophesize(DateTimeProvider::class);
 
         $this->sut = new LoginRequestAuthenticator(
@@ -57,7 +57,7 @@ final class LoginRequestAuthenticatorTest extends TestCase
             $this->incrementalWaitingTimechecker->reveal(),
             $this->authService->reveal(),
             $this->tokenStorage->reveal(),
-            $logger->reveal(),
+            $verboseLogger->reveal(),
             $this->dateTimeProvider->reveal()
         );
     }

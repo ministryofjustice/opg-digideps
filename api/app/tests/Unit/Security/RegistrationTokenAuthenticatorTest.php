@@ -18,6 +18,7 @@ use App\Service\BruteForce\AttemptsInTimeChecker;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\NullToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -44,13 +45,15 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
         $this->authService = self::prophesize(AuthService::class);
         $this->attemptsInTimeChecker = self::prophesize(AttemptsInTimeChecker::class);
         $this->incrementalWaitingTimeChecker = self::prophesize(AttemptsIncrementalWaitingChecker::class);
+        $verboseLogger = self::prophesize(LoggerInterface::class);
 
         $this->sut = new RegistrationTokenAuthenticator(
             $this->userRepo->reveal(),
             $this->tokenStorage->reveal(),
             $this->authService->reveal(),
             $this->attemptsInTimeChecker->reveal(),
-            $this->incrementalWaitingTimeChecker->reveal()
+            $this->incrementalWaitingTimeChecker->reveal(),
+            $verboseLogger->reveal(),
         );
     }
 
@@ -68,7 +71,10 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
                 Request::create(
                     '/auth/login',
                     'POST',
-                    [], [], [], [],
+                    [],
+                    [],
+                    [],
+                    [],
                     json_encode(['token' => 'a-token'])
                 ),
                 true,
@@ -77,7 +83,10 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
                 Request::create(
                     '/auth/login',
                     'POST',
-                    [], [], [], [],
+                    [],
+                    [],
+                    [],
+                    [],
                     json_encode(['not-a' => 'token'])
                 ),
                 false,
@@ -96,7 +105,10 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
         $request = Request::create(
             'user/1/set-password',
             'PUT',
-            [], [], [], [],
+            [],
+            [],
+            [],
+            [],
             json_encode(['token' => 'a-token', 'password' => 'abc'])
         );
 
@@ -124,7 +136,10 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
                 Request::create(
                     'user/1/set-password',
                     'PUT',
-                    [], [], [], [],
+                    [],
+                    [],
+                    [],
+                    [],
                     json_encode(['password' => 'abc'])
                 ),
             ],
@@ -132,7 +147,10 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
                 Request::create(
                     'user/1/set-password',
                     'PUT',
-                    [], [], [], [],
+                    [],
+                    [],
+                    [],
+                    [],
                     json_encode(['token' => 'a-token'])
                 ),
             ],
@@ -143,7 +161,10 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
                 Request::create(
                     'user/1/set-password',
                     'POST',
-                    [], [], [], [],
+                    [],
+                    [],
+                    [],
+                    [],
                     json_encode(['token' => 'a-token', 'password' => 'abc'])
                 ),
             ],
@@ -159,7 +180,10 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
         $request = Request::create(
             'user/1/set-password',
             'PUT',
-            [], [], [], [],
+            [],
+            [],
+            [],
+            [],
             json_encode(['token' => 'a-token', 'password' => 'abc'])
         );
 
@@ -172,7 +196,10 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
         $request = Request::create(
             '/auth/login',
             'POST',
-            [], [], [], [],
+            [],
+            [],
+            [],
+            [],
             json_encode(['token' => '_abc'])
         );
 
@@ -220,7 +247,10 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
         $request = Request::create(
             '/auth/login',
             'POST',
-            [], [], [], [],
+            [],
+            [],
+            [],
+            [],
             json_encode(['token' => '_abc'])
         );
 
@@ -239,7 +269,10 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
         $request = Request::create(
             '/auth/login',
             'POST',
-            [], [], [], [],
+            [],
+            [],
+            [],
+            [],
             json_encode(['token' => '_abc'])
         );
 
@@ -270,7 +303,10 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
         $request = Request::create(
             '/auth/login',
             'POST',
-            [], [], [], [],
+            [],
+            [],
+            [],
+            [],
             json_encode(['token' => '_abc'])
         );
 
@@ -300,7 +336,10 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
         $request = Request::create(
             '/auth/login',
             'POST',
-            [], [], [], [],
+            [],
+            [],
+            [],
+            [],
             json_encode(['token' => '_abc'])
         );
 

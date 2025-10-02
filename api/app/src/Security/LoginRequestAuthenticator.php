@@ -34,7 +34,7 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
         private readonly AttemptsIncrementalWaitingChecker $incrementalWaitingTimechecker,
         private readonly AuthService $authService,
         private readonly TokenStorageInterface $tokenStorage,
-        private readonly LoggerInterface $logger,
+        private readonly LoggerInterface $verboseLogger,
         private readonly DateTimeProvider $dateTimeProvider
     ) {
     }
@@ -49,12 +49,12 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
     public function authenticate(Request $request): Passport
     {
         if (!$this->authService->isSecretValid($request)) {
-            $this->logger->warning('Client secret not accepted in LoginRequestAuthenticator');
+            $this->verboseLogger->warning('Client secret not accepted in LoginRequestAuthenticator');
             throw new UnauthorisedException('client secret not accepted.');
         }
 
         if (!$this->hasRequiredLoginDetails($request)) {
-            $this->logger->warning('Insufficient login details provided - requires email and password but one, or both, was missing');
+            $this->verboseLogger->warning('Insufficient login details provided - requires email and password but one, or both, was missing');
             throw new UserNotFoundException('User not found');
         }
 
@@ -76,7 +76,7 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
             $exception = new UnauthorisedException("Attack detected. Please try again in $nextAttemptIn minutes", 423);
             $exception->setData($nextAttemptIn);
 
-            $this->logger->warning(sprintf('Brute force limit reached in LoginRequestAuthenticator for email "%s"', $email));
+            $this->verboseLogger->warning(sprintf('Brute force limit reached in LoginRequestAuthenticator for email "%s"', $email));
 
             throw $exception;
         }
@@ -85,12 +85,12 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
         $request->attributes->set('user_id', $user?->getId());
 
         if (!$user) {
-            $this->logger->warning(sprintf('User with email "%s" not found in LoginRequestAuthenticator', $email));
+            $this->verboseLogger->warning(sprintf('User with email "%s" not found in LoginRequestAuthenticator', $email));
             throw new UserNotFoundException('User not found');
         }
 
         if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
-            $this->logger->warning(sprintf('Secret not valid for email "%s" with role "%s" in LoginRequestAuthenticator', $email, $user->getRoleName()));
+            $this->verboseLogger->warning(sprintf('Secret not valid for email "%s" with role "%s" in LoginRequestAuthenticator', $email, $user->getRoleName()));
 
             throw new UnauthorisedException($user->getRoleName() . ' user role not allowed from this client.');
         }
@@ -103,6 +103,12 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        $userId = $request->attributes->get('user_id');
+
+        $this->verboseLogger->notice('Successful login', [
+            'user_id'   => $userId,
+        ]);
+
         $this->tokenStorage->setToken($token);
         $this->attemptsInTimechecker->resetAttempts($this->bruteForceKey);
         $this->incrementalWaitingTimechecker->resetAttempts($this->bruteForceKey);
@@ -114,7 +120,7 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
     {
         $userId = $request->attributes->get('user_id');
 
-        $this->logger->warning('Failed login', [
+        $this->verboseLogger->notice('Failed login', [
             'user_id'   => $userId,
             'reason'    => $exception->getMessage(),
         ]);
