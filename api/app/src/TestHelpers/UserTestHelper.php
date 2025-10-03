@@ -23,7 +23,7 @@ class UserTestHelper
         ?string $roleName = User::ROLE_LAY_DEPUTY,
         ?string $email = null,
         ?int $deputyUid = null,
-        ?bool $isPrimary = true,
+        bool $isPrimary = true,
     ): User {
         $user = self::createUser(client: $client, roleName: $roleName, email: $email, isPrimary: $isPrimary, deputyUid: $deputyUid);
 
@@ -84,14 +84,6 @@ class UserTestHelper
             $user->setDeputyUid(null);
         } elseif (str_contains($roleName, 'LAY')) {
             $user->setDeputyUid($deputyUid);
-
-            $deputy = new Deputy();
-            $deputy->setFirstname($firstName);
-            $deputy->setLastname($lastName);
-            $deputy->setDeputyUid("$deputyUid");
-            $deputy->setEmail1($email);
-
-            $user->setDeputy($deputy);
         }
 
         if (!is_null($client)) {
