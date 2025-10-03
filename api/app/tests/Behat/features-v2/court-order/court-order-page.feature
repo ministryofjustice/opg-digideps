@@ -27,6 +27,7 @@ Feature: Court order page
         When I visit the page of a court order that 'I am' associated with
         Then I should be on the court order page
         When I am discharged from the court order
+        And I visit the page of a court order that 'I am' associated with
         Then I should be redirected and denied access to view the court order
 
     @lay-pfa-high-not-started-multi-client-deputy @court-order-view-all
@@ -39,7 +40,7 @@ Feature: Court order page
         Then I should be on the court order page
         When I visit the court order page of the 'second' court order that 'I am' associated with
         Then I should be on the court order page
-        Then the report status should be 'not started'
+        And the report status should be 'not started'
 
     @lay-pfa-high-not-started-multi-client-deputy @court-order-no-message
     Scenario: A lay deputy logs in but has no court orders associated with them yet
