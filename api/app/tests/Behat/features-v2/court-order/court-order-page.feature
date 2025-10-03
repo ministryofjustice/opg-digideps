@@ -75,9 +75,10 @@ Feature: Court order page
         And I should see that the co-deputy is registered
 
     @lay-pfa-high-submitted @lay-pfa-court-order-report-type-changed
-    Scenario: A court order with two different report types displays as a single row with the latest report's type (DDLS-1003)
+    Scenario: A court order with two different report types is shown as a single court order with the latest report's type (DDLS-1003)
         Given a Lay Deputy has submitted a Pfa High Assets report
         And I am associated with a 'pfa' court order
         And the latest unsubmitted report for the court order is a Pfa High Assets report
         When I visit the multiple court order page
-        Then I should see '1' court orders on the page
+        # should be redirected to the court order, which is treated as a single court order despite having two different report types
+        Then I should be on the court order page
