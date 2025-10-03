@@ -47,48 +47,52 @@ trait CourtOrderTrait
      * @Given /^I am associated with \'([^\']*)\' \'([^\']*)\' court order\(s\)$/
      *
      * Associate the logged in user with the specified number of court orders.
+     * This will create new clients and court orders if necessary, otherwise reuses existing ones.
+     * If the existing client has an NDR, then the court order will be linked with that NDR.
      */
     public function iAmAssociatedWithCourtOrder(int $numOfCourtOrders, string $orderType): void
     {
-        $clientId = $this->loggedInUserDetails->getClientId();
-
         $user = $this->getLoggedInUser();
 
-        if ($numOfCourtOrders > 1) {
-            $clientIds = [];
+        // if user has no deputy, create one now: we need this to associate them with court orders
+        $deputy = $user->getDeputy();
+        if (is_null($deputy)) {
+            error_log("CREATIN A NEW DEP MAMM");
+            $deputy = new Deputy();
+            $deputy->setDeputyUid("{$user->getDeputyUid()}");
+            $deputy->setFirstname($user->getFirstname());
+            $deputy->setLastname($user->getLastname());
+            $deputy->setEmail1($user->getEmail());
 
-            foreach ($this->fixtureUsers as $user) {
-                $clientIds[] = $user->getClientId();
-            }
+            $deputy->setUser($user);
+            $user->setDeputy($deputy);
 
-            $clients = [];
-
-            foreach ($clientIds as $clientId) {
-                $clients[] = $this->em
-                ->getRepository(Client::class)
-                ->find(['id' => $clientId]);
-            }
-
-            foreach ($clients as $client) {
-                $this->courtOrders[] = $this->fixtureHelper->createAndPersistCourtOrder(
-                    $orderType,
-                    $client,
-                    $user->getDeputy(),
-                    $client->getCurrentReport(),
-                );
-            }
+            $this->em->persist($deputy);
+            $this->em->persist($user);
+            $this->em->flush();
+        } else {
+            error_log("I GOT ME A DEP ALREADY BAB");
         }
 
-        $client = $this->em
-            ->getRepository(Client::class)
-            ->find(['id' => $clientId]);
+        for ($i = 0; $i < $numOfCourtOrders; $i++) {
+            if (0 === $i) {
+                // use the user's existing client
+                $client = $this->em->getRepository(Client::class)->find(['id' => $this->loggedInUserDetails->getClientId()]);
+            } else {
+                // create a new client
+                $client = $this->fixtureHelper->generateClient($user);
+            }
 
-        $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(
-            $orderType,
-            $client,
-            $user->getDeputy(),
-            $client->getCurrentReport(),
-        );
+            $this->courtOrders[] = $this->fixtureHelper->createAndPersistCourtOrder(
+                $orderType,
+                $client,
+                $user->getDeputy(),
+                $client->getCurrentReport(),
+                $client->getNdr()
+            );
+        }
+
+        $this->courtOrder = $this->courtOrders[0];
     }
 
     /**
@@ -184,7 +188,7 @@ trait CourtOrderTrait
      */
     public function iShouldSeeCourtOrdersOnThePage(int $arg1)
     {
-        $this->iAmOnPage('{\/courtorder\/choose-a-court-order$}');
+        $this->iAmOnPage('{/courtorder/choose-a-court-order$}');
 
         $orders = $this->findAllXpathElements("//div[contains(concat(' ', normalize-space(@class), ' '), ' opg-overview-courtorder ')]");
 
@@ -198,17 +202,18 @@ trait CourtOrderTrait
      */
     public function iShouldSeeAnNDROnTheCourtOrderPageWithAStandardReportStatusOf($arg1, $arg2)
     {
-        $this->iAmOnPage(sprintf('{\/courtorder\/deputy\/%s$}', $this->courtOrder->getCourtOrderUid()));
+        /** @var array<NodeElement> $ndrHeading */
+        $ndrHeading = $this->findAllCssElements('main h2');
 
-        /** @var array<NodeElement> $paragraph */
-        $paragraph = $this->findAllXpathElements('//*[@id="main-content"]/div[2]/div[1]/p');
         /** @var array<NodeElement> $ndrStatus */
-        $ndrStatus = $this->findAllXpathElements('//*[@id="main-content"]/div[2]/span');
-        /** @var array<NodeElement> $reportStatus */
-        $reportStatus = $this->findAllXpathElements('//*[@id="main-content"]/div[2]/span');
+        $ndrStatus = $this->findAllXpathElements('//div[contains(@class, "behat-region-ndr-card")]/span[contains(@class, "opg-card__tag")]');
 
-        $text = 'Your new deputy report';
-        if (!str_contains($paragraph[0]->getText(), $text)) {
+        /** @var array<NodeElement> $reportStatus */
+        $reportStatus = $this->findAllXpathElements('//div[contains(@class, "behat-region-report-card")]/span[contains(@class, "opg-card__tag")]');
+
+        // second h2 inside main is the new deputy report; TODO make this not so brittle
+        $text = 'New deputy report';
+        if (!str_contains($ndrHeading[1]->getText(), $text)) {
             throw new BehatException(sprintf('Expected to find text \'%s\' on page, unable to find on page', $text));
         }
 
@@ -220,7 +225,7 @@ trait CourtOrderTrait
             throw new BehatException(sprintf('Expected to find a New Deputy Report with a status of \'%s\', found a status of \'%s\' instead', $arg2, $reportStatus[0]->getText()));
         }
 
-        $this->clickLink('Start Now');
+        $this->clickLink('Start now');
     }
 
     /**
