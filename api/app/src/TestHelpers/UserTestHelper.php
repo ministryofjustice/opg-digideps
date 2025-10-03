@@ -84,14 +84,6 @@ class UserTestHelper
             $user->setDeputyUid(null);
         } elseif (str_contains($roleName, 'LAY')) {
             $user->setDeputyUid($deputyUid);
-
-            $deputy = new Deputy();
-            $deputy->setFirstname($firstName);
-            $deputy->setLastname($lastName);
-            $deputy->setDeputyUid("$deputyUid");
-            $deputy->setEmail1($email);
-
-            $user->setDeputy($deputy);
         }
 
         if (!is_null($client)) {
