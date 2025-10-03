@@ -1297,18 +1297,17 @@ class FixtureHelper
 
         $this->testRunId = $testRunId;
 
-        $deputy = $this->userTestHelper
-            ->createUser(null, $userRole, sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId), $isPrimary, $deputyUid);
+        $user = $this->userTestHelper->createAndPersistUser($this->em, null, $userRole, sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId), $deputyUid, $isPrimary);
 
         if ($ndr) {
-            $this->addClientsAndReportsToNdrLayDeputy($deputy, $completed, $submitted);
+            $this->addClientsAndReportsToNdrLayDeputy($user, $completed, $submitted);
         } else {
-            $this->addClientsAndReportsToLayDeputy($deputy, $completed, $submitted, $reportType, $startDate, $satisfactionScore, $caseNumber);
+            $this->addClientsAndReportsToLayDeputy($user, $completed, $submitted, $reportType, $startDate, $satisfactionScore, $caseNumber);
         }
 
-        $this->setPassword($deputy, $legacyPasswordHash);
+        $this->setPassword($user, $legacyPasswordHash);
 
-        return $deputy;
+        return $user;
     }
 
     private function createAdminUser(string $testRunId, $userRole, $emailPrefix)
