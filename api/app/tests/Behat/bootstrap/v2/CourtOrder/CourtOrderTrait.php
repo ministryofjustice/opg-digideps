@@ -28,20 +28,11 @@ trait CourtOrderTrait
     private Deputy $coDeputy;
     private array $invitedDeputy = [];
 
-    private function getDeputyForLoggedInUser(): ?Deputy
+    private function getLoggedInUser(): ?User
     {
-        // get the deputy for the logged-in user
-        $user = $this->em
+        return $this->em
             ->getRepository(User::class)
             ->findOneBy(['email' => $this->loggedInUserDetails->getUserEmail()]);
-
-        $deputyUid = $user->getDeputyUid();
-
-        $deputy = $this->em
-            ->getRepository(Deputy::class)
-            ->findOneBy(['deputyUid' => $deputyUid]);
-
-        return $deputy;
     }
 
     /**
@@ -54,12 +45,14 @@ trait CourtOrderTrait
 
     /**
      * @Given /^I am associated with \'([^\']*)\' \'([^\']*)\' court order\(s\)$/
+     *
+     * Associate the logged in user with the specified number of court orders.
      */
-    public function iAmAssociatedWithCourtOrder($numOfCourtOrders, $orderType)
+    public function iAmAssociatedWithCourtOrder(int $numOfCourtOrders, string $orderType): void
     {
         $clientId = $this->loggedInUserDetails->getClientId();
 
-        $deputy = $this->getDeputyForLoggedInUser();
+        $user = $this->getLoggedInUser();
 
         if ($numOfCourtOrders > 1) {
             $clientIds = [];
@@ -80,7 +73,7 @@ trait CourtOrderTrait
                 $this->courtOrders[] = $this->fixtureHelper->createAndPersistCourtOrder(
                     $orderType,
                     $client,
-                    $deputy,
+                    $user->getDeputy(),
                     $client->getCurrentReport(),
                 );
             }
@@ -93,7 +86,7 @@ trait CourtOrderTrait
         $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(
             $orderType,
             $client,
-            $deputy,
+            $user->getDeputy(),
             $client->getCurrentReport(),
         );
     }
@@ -104,25 +97,17 @@ trait CourtOrderTrait
     public function iAmAssociatedWithCourtOrderOfType($orderType)
     {
         $clientId = $this->loggedInUserDetails->getClientId();
-        $userEmail = $this->loggedInUserDetails->getUserEmail();
-
-        $user = $this->em
-            ->getRepository(User::class)
-            ->findOneBy(['email' => $userEmail]);
-
-        $deputy = $this->getDeputyForLoggedInUser();
-
-        $deputy->setUser($user);
-        $this->em->persist($deputy);
 
         $client = $this->em
             ->getRepository(Client::class)
             ->find(['id' => $clientId]);
 
+        $user = $this->getLoggedInUser();
+
         $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(
             $orderType,
             $client,
-            $deputy,
+            $user->getDeputy(),
             $client->getCurrentReport(),
         );
 
@@ -271,7 +256,7 @@ trait CourtOrderTrait
     public function iShouldSeeIAmARegisteredDeputy()
     {
         $coDeputyNameElts = $this->findAllCssElements('td[data-role="co-deputy-registered"]');
-        $deputy = $this->getDeputyForLoggedInUser();
+        $deputy = $this->getLoggedInUser()->getDeputy();
 
         $foundDeputy = false;
         foreach ($coDeputyNameElts as $coDeputyNameElt) {
