@@ -307,6 +307,13 @@ services:
       $restClient: "@rest_client"
     tags: ["kernel.event_subscriber"]
 
+  App\EventSubscriber\LoginSubscriber:
+    arguments:
+      $userApi: App\Service\Client\Internal\UserApi
+      $urlGenerator: Symfony\Component\Routing\Generator\UrlGeneratorInterface
+      $tokenStorage: "@security.token_storage"
+    tags: ["kernel.event_subscriber"]
+
   App\EventListener\ResponseNoCacheListener:
     tags:
       - {
