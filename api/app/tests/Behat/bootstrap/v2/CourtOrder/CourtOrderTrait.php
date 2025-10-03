@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\CourtOrder;
 
 use App\Entity\Report\Report;
-use DateTime;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\CourtOrderDeputy;
@@ -54,41 +53,55 @@ trait CourtOrderTrait
     {
         $user = $this->getLoggedInUser();
 
-        // if user has no deputy, create one now: we need this to associate them with court orders
-        $deputy = $user->getDeputy();
+        // if user's deputy doesn't exist, create it: we need this to associate them with court orders
+        $deputy = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $user->getDeputyUid()]);
         if (is_null($deputy)) {
-            error_log("CREATIN A NEW DEP MAMM");
             $deputy = new Deputy();
             $deputy->setDeputyUid("{$user->getDeputyUid()}");
             $deputy->setFirstname($user->getFirstname());
             $deputy->setLastname($user->getLastname());
             $deputy->setEmail1($user->getEmail());
-
-            $deputy->setUser($user);
-            $user->setDeputy($deputy);
-
-            $this->em->persist($deputy);
-            $this->em->persist($user);
-            $this->em->flush();
-        } else {
-            error_log("I GOT ME A DEP ALREADY BAB");
         }
+
+        $deputy->setUser($user);
+        $user->setDeputy($deputy);
+
+        $this->em->persist($deputy);
+        $this->em->persist($user);
+        $this->em->flush();
 
         for ($i = 0; $i < $numOfCourtOrders; $i++) {
             if (0 === $i) {
                 // use the user's existing client
                 $client = $this->em->getRepository(Client::class)->find(['id' => $this->loggedInUserDetails->getClientId()]);
+                $report = $client->getCurrentReport();
+                $ndr = $client->getNdr();
             } else {
                 // create a new client
                 $client = $this->fixtureHelper->generateClient($user);
+                $this->em->persist($client);
+
+                // create a new report
+                $type = Report::TYPE_HEALTH_WELFARE;
+                if ('pfa' === $orderType) {
+                    $type = Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS;
+                }
+
+                $now = new \DateTime();
+
+                $report = new Report($client, $type, $now, $now, false);
+                $this->em->persist($report);
+
+                // no ndr for second and subsequent clients
+                $ndr = null;
             }
 
             $this->courtOrders[] = $this->fixtureHelper->createAndPersistCourtOrder(
                 $orderType,
                 $client,
-                $user->getDeputy(),
-                $client->getCurrentReport(),
-                $client->getNdr()
+                $deputy,
+                $report,
+                $ndr
             );
         }
 
@@ -261,7 +274,7 @@ trait CourtOrderTrait
     {
         // create deputy with a last_logged_in datetime, so they show as "registered",
         // and associate with the court order (mimicking what will happen when we eventually do this via ingest)
-        $this->coDeputy = $this->fixtureHelper->createDeputyOnOrder($this->courtOrder, new DateTime());
+        $this->coDeputy = $this->fixtureHelper->createDeputyOnOrder($this->courtOrder, new \DateTime());
     }
 
     /**
