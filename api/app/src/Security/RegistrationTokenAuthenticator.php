@@ -18,10 +18,12 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use Psr\Log\LoggerInterface;
 
 class RegistrationTokenAuthenticator extends AbstractAuthenticator
 {
@@ -33,6 +35,7 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
         private readonly AuthService $authService,
         private readonly AttemptsInTimeChecker $attemptsInTimeChecker,
         private readonly AttemptsIncrementalWaitingChecker $incrementalWaitingTimeChecker,
+        private readonly LoggerInterface $verboseLogger
     ) {
     }
 
@@ -51,7 +54,7 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
         $token = $data['token'];
 
         // brute force checks
-        $this->setBruteForceKey('token'.$token);
+        $this->setBruteForceKey('token' . $token);
 
         $this->attemptsInTimeChecker->registerAttempt($this->bruteForceKey);
         $this->incrementalWaitingTimeChecker->registerAttempt($this->bruteForceKey);
@@ -67,13 +70,14 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
         }
 
         $user = $this->userRepository->findOneBy(['registrationToken' => $token]);
+        $request->attributes->set('user_id', $user?->getId());
 
         if (!$user instanceof User) {
             throw new UserNotFoundException('User not found');
         }
 
         if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
-            throw new UnauthorisedException($user->getRoleName().' user role not allowed from this client.');
+            throw new UnauthorisedException($user->getRoleName() . ' user role not allowed from this client.');
         }
 
         return new SelfValidatingPassport(
@@ -92,6 +96,13 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
+        $userId = $request->attributes->get('user_id');
+
+        $this->verboseLogger->notice('Failed login', [
+            'user_id'   => $userId,
+            'reason'    => $exception->getMessage(),
+        ]);
+
         if ($this->attemptsInTimeChecker->maxAttemptsReached($this->bruteForceKey)) {
             throw new UserWrongCredentialsManyAttempts();
         }
@@ -121,9 +132,11 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
             return false;
         }
 
-        $userId = $this->userRepository->findOneBy(['registrationToken' => $token])?->getId();
+        $user = $this->userRepository->findOneBy(['registrationToken' => $token]);
 
-        if (!$userId) {
+        if ($user instanceof User) {
+            $userId = $user->getId();
+        } else {
             return false;
         }
 
