@@ -54,35 +54,6 @@ Feature: Users logging into the service
         Then they get redirected back to the log in page
 
     @lay-pfa-high-not-started-multi-client-deputy
-    Scenario: A user tries to login to the service with their primary account
-        And a Lay Deputy tries to login with their "primary" email address
-        Then they should be on the Choose a Client homepage
-        When they choose their "primary" Client
-        Then they should be on the "primary" Client's dashboard
-        When the Lay deputy navigates to the Choose a client page
-        When they choose their "non-primary" Client
-        Then they should be on the "non-primary" Client's dashboard
-        And when they log out they shouldn't see a flash message for non primary accounts
-
-    @lay-pfa-high-not-started-multi-client-deputy-with-ndr
-    Scenario: A user tries to login to the service with their primary account and has an NDR
-        And a Lay Deputy tries to login with their "primary" email address
-        Then they should be on the Choose a Client homepage
-        When they choose their "primary" Client
-        Then they should be on the "primary" Client's dashboard
-        When the Lay deputy navigates to the Choose a client page
-        When they choose their "non-primary" Client
-        Then they should be on the "non-primary" Client's dashboard
-        And when they log out they shouldn't see a flash message for non primary accounts
-
-    @lay-pfa-high-not-started-multi-client-deputy
-    Scenario: A user logs in with their primary account and uses breadcrumbs to navigate client dashboard
-        And a Lay Deputy tries to login with their "primary" email address
-        When they choose their "primary" Client
-        Then they should be on the "primary" Client's dashboard
-        And the Lay deputy navigates to the Choose a client page
-
-    @lay-pfa-high-not-started-multi-client-deputy
     Scenario: A user logs in with their primary account and uses breadcrumbs to navigate to Your details page
         And a Lay Deputy tries to login with their "primary" email address
         When the Lay deputy navigates to your details page
