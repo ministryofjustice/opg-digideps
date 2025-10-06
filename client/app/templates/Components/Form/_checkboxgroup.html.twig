@@ -1,5 +1,5 @@
 {% if useFormGroup %}
-    <div id="form-group-{{ element.vars.id }}" class="govuk-form-group {% if not element.vars.valid %}govuk-form-group--error{% endif %} {% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
+    <div id="{{ element.vars.id }}" class="govuk-form-group {% if not element.vars.valid %}govuk-form-group--error{% endif %} {% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
 {% endif %}
 
     <fieldset class="govuk-fieldset {{ fieldSetClass }}" {% if hintText %}aria-describedby="{{ element.vars.id }}-hint"{% endif %}>
@@ -55,10 +55,7 @@
                     {% set attr = attr | merge({'data-aria-controls': choiceElement.vars.id ~ '-conditional'}) %}
                 {% endif %}
 
-                <div id="{{ element.vars.id }}">
                     {{ form_widget(choiceElement, {'attr': attr}) }}
-                </div>
-
 
                 <label class="govuk-label govuk-radios__label {{ labelClass }}" for="{{ choiceElement.vars.id }}">
                     {{ choiceElement.vars.label | trans({}, element.vars.choice_translation_domain ?: translationDomain)}}
