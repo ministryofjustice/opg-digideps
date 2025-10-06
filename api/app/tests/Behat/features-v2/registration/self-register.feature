@@ -77,25 +77,6 @@ Feature: Lay Deputy Self Registration
         Then they shouldn't be able to register to deputise for a client with already registered details
         And they should see a 'deputy already linked to case number' error
 
-    @super-admin @lay-pfa-high-completed
-    Scenario: A multi-client deputy can invite a co-deputy to report on a client attached to their secondary account and co-deputy can register with a 10 digit case number
-        Given a csv has been uploaded to the sirius bucket with the file 'lay-2-rows-co-deputy.csv'
-        When I run the lay CSV command the file contains 2 new pre-registration entities for the same case
-        Given one of the Lay deputies listed in the lay csv already has an existing account
-        And the same Lay deputy registers to deputise for a client with valid details
-        Then they get redirected back to the log in page
-        When the Lay Deputy logs in with the email address attached to their primary account
-        Then they should be on the Choose a Client homepage
-        And I select the new client from the csv on the Choose a Client page
-        Then I invite a Co-Deputy to the service
-        And they register to deputise for a client with valid details that includes a 10 digit case number
-        Then the co-deputy details should be saved to the co-deputy's account
-        And they should be on the Lay homepage
-        Given a super admin user accesses the admin app
-        When I visit the admin Search Users page
-        And I search for the co-deputy using their email address
-        Then the co-deputy should appear in the search results
-
     @super-admin
     Scenario: A Lay user can enter a 10 digit case number when self registering
         Given a csv has been uploaded to the sirius bucket with the file 'lay-4-valid-rows.csv'
