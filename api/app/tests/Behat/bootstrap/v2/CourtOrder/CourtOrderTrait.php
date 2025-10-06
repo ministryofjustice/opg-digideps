@@ -49,7 +49,7 @@ trait CourtOrderTrait
      * This will create new clients and court orders if necessary, otherwise reuses existing ones.
      * If the existing client has an NDR, then the court order will be linked with that NDR.
      */
-    public function iAmAssociatedWithCourtOrder(int $numOfCourtOrders, string $orderType): void
+    public function iAmAssociatedWithCourtOrder(int $numOfCourtOrders, string $orderType, bool $associateNdr = true): void
     {
         $user = $this->getLoggedInUser();
 
@@ -71,11 +71,15 @@ trait CourtOrderTrait
         $this->em->flush();
 
         for ($i = 0; $i < $numOfCourtOrders; $i++) {
+            $ndr = null;
+
             if (0 === $i) {
                 // use the user's existing client
                 $client = $this->em->getRepository(Client::class)->find(['id' => $this->loggedInUserDetails->getClientId()]);
                 $report = $client->getCurrentReport();
-                $ndr = $client->getNdr();
+                if ($associateNdr) {
+                    $ndr = $client->getNdr();
+                }
             } else {
                 // create a new client
                 $client = $this->fixtureHelper->generateClient($user);
@@ -91,9 +95,6 @@ trait CourtOrderTrait
 
                 $report = new Report($client, $type, $now, $now, false);
                 $this->em->persist($report);
-
-                // no ndr for second and subsequent clients
-                $ndr = null;
             }
 
             $this->courtOrders[] = $this->fixtureHelper->createAndPersistCourtOrder(
@@ -107,6 +108,15 @@ trait CourtOrderTrait
 
         $this->courtOrder = $this->courtOrders[0];
     }
+
+    /**
+     * @Given /^I am associated with \'([^\']*)\' \'([^\']*)\' court order\(s\) but not their NDRs$/
+     */
+    public function iAmAssociatedWithCourtOrderButNotNdr(int $numOfCourtOrders, string $orderType): void
+    {
+        $this->iAmAssociatedWithCourtOrder($numOfCourtOrders, $orderType, false);
+    }
+
 
     /**
      * @Given /^I am associated with a \'([^\']*)\' court order$/

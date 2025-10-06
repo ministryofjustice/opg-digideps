@@ -141,14 +141,12 @@ Feature: Users logging into the service
         Then they should be on the "non-primary" Client's dashboard
         And I 'should' see the NDR report on the reports page
 
-    @super-admin @lay-pfa-high-not-started-multi-client-deputy-with-ndr
-    Scenario: A deputy should not see an NDR if it has been disabled by an admin
-        Given a super admin user accesses the admin app
-        When a Multi-client Lay Deputy exists and I select the primary user with NDR
-        And I disable the NDR for this user
-        Then a Lay Deputy tries to login with their "primary" email address
-        When they choose their "primary" Client
-        Then they should be on the "primary" Client's dashboard
+    @lay-pfa-high-not-started-multi-client-deputy-with-ndr @login-ndr-not-shown
+    Scenario: A deputy should not see an NDR if is not active for the court order
+        Given a Lay Deputy tries to login with their "primary" email address
+        And I am associated with '1' 'hw' court order(s) but not their NDRs
+        And I visit the page of a court order that 'I am' associated with
+        Then I should be on the court order page
         And I 'should not' see the NDR report on the reports page
 
     @lay-pfa-high-not-started-multi-client-deputy-secondary-client-discharged-one-active-client @login-secondary
