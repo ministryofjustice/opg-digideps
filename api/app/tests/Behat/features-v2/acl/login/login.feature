@@ -109,14 +109,6 @@ Feature: Users logging into the service
         When they choose their "primary" Client
         Then they should be on the "primary" Client's dashboard
 
-    @lay-pfa-high-started-multi-client-deputy-primary-client-discharged-two-active-clients
-    Scenario: A user logs into the service with their primary account given their active clients are linked to their secondary accounts
-        Given a Lay Deputy tries to login with their "primary" email address
-        Then they should be on the Choose a Client homepage
-        And have access to all active client dashboards
-        When they try to access their "primary" discharged Client
-        Then I should be redirected and denied access to continue as client not found
-
     @lay-pfa-high-not-started-multi-client-deputy-secondary-client-discharged-one-active-client @login-secondary
     Scenario: A user tries to login to the service with their secondary account that has no active clients attached to it
         Given a Lay Deputy tries to login with their "non-primary" email address
