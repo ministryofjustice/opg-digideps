@@ -19,6 +19,8 @@ sed -i 's/^#PCRERecMatchLimit .*$/PCRERecMatchLimit '"$PCRE_RECMATCHLIMIT"'/g' /
 freshclam --daemon --checks=$SIGNATURE_CHECKS &
 clamd &
 /usr/bin/file-scanner &
+# Start process checker in the background
+/app/check_processes.sh &
 
 pids=`jobs -p`
 
