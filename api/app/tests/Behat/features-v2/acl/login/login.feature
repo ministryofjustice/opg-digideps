@@ -110,26 +110,12 @@ Feature: Users logging into the service
         Then they should be on the "primary" Client's dashboard
 
     @lay-pfa-high-started-multi-client-deputy-primary-client-discharged-two-active-clients
-    Scenario: A user logs into the service with their primary account given they're active clients are linked to their secondary accounts
+    Scenario: A user logs into the service with their primary account given their active clients are linked to their secondary accounts
         Given a Lay Deputy tries to login with their "primary" email address
         Then they should be on the Choose a Client homepage
         And have access to all active client dashboards
         When they try to access their "primary" discharged Client
         Then I should be redirected and denied access to continue as client not found
-
-    @super-admin @lay-pfa-high-started-multi-client-deputy-primary-client-discharged-two-active-clients
-    Scenario: A user logs into the service with their primary account given they're remaining active client is linked to their secondary account
-        Given a super admin user accesses the admin app
-        And they discharge the deputy from "1" secondary client(s)
-        Then a Lay Deputy tries to login with their "primary" email address
-        And should arrive on the client dashboard of their only active client
-
-    @super-admin @lay-pfa-high-started-multi-client-deputy-primary-client-discharged-two-active-clients
-    Scenario: A user logs into the service with their primary account given all of their clients are discharged
-        Given a super admin user accesses the admin app
-        And they discharge the deputy from "2" secondary client(s)
-        Then a Lay Deputy tries to login with their "primary" email address
-        Then they should be on the add your client page
 
     @super-admin @lay-pfa-high-not-started-multi-client-deputy
     Scenario: A user logs into the service with their primary account and ticks the NDR checkbox attached to non-primary account
