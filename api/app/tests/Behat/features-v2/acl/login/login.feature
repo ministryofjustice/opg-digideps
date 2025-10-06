@@ -99,14 +99,12 @@ Feature: Users logging into the service
         When the Lay deputy navigates to your details page
         And the Lay deputy navigates to the Choose a client page
 
-    @lay-pfa-high-not-started-multi-client-deputy
+    @lay-pfa-high-not-started-multi-client-deputy @login-breadcrumbs-client-details
     Scenario: A user logs in with their primary account and uses breadcrumbs to navigate to Client details page
-        And a Lay Deputy tries to login with their "primary" email address
-        When they choose their "primary" Client
-        Then they should be on the "primary" Client's dashboard
+        Given a Lay Deputy tries to login with their "primary" email address
+        And I am associated with '1' 'pfa' court order(s)
         When the Lay deputy navigates to client details page
-        And the Lay deputy navigates to the Choose a client page
-        When they choose their "primary" Client
+        And they choose their "primary" Client
         Then they should be on the "primary" Client's dashboard
 
     @lay-pfa-high-not-started-multi-client-deputy-secondary-client-discharged-one-active-client @login-secondary
