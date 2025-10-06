@@ -142,7 +142,7 @@ Feature: Users logging into the service
         And I 'should' see the NDR report on the reports page
 
     @super-admin @lay-pfa-high-not-started-multi-client-deputy-with-ndr
-    Scenario: A user logs into the service with their primary account and unticks the NDR checkbox attached to primary account
+    Scenario: A deputy should not see an NDR if it has been disabled by an admin
         Given a super admin user accesses the admin app
         When a Multi-client Lay Deputy exists and I select the primary user with NDR
         And I disable the NDR for this user
