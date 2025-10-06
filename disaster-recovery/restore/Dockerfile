@@ -1,4 +1,4 @@
-FROM python:3.12-alpine3.20
+FROM python:3.12-alpine3.22
 
 COPY requirements.txt /requirements.txt
 RUN apk update && apk upgrade && pip install --no-cache-dir --upgrade pip \
