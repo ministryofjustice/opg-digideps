@@ -1,4 +1,6 @@
 #!/bin/sh
 crond -l 2
 
-usr/local/bin/gunicorn $@
+# Start process checker in the background
+/check_processes.sh &
+/usr/local/bin/gunicorn $@
