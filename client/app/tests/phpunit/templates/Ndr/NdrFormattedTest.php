@@ -81,7 +81,7 @@ class NdrFormattedTest extends WebTestCase
 
         $this->html = $this->twig->render('@App/Ndr/Formatted/formatted_body.html.twig', [
             'ndr' => $this->ndr,
-            'app' => ['user'=>$this->user] //mock twig app.user from the view
+            'app' => ['user' => $this->user] //mock twig app.user from the view
         ]);
 
         $this->crawler = new Crawler($this->html);

@@ -26,7 +26,8 @@ class DeputyChangedOrgSubscriberTest extends TestCase
             [
                 DeputyChangedOrgEvent::NAME => 'auditLog',
             ],
-            DeputyChangedOrgSubscriber::getSubscribedEvents());
+            DeputyChangedOrgSubscriber::getSubscribedEvents()
+        );
     }
 
     /** @test */
