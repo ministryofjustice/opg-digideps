@@ -51,11 +51,11 @@ class StatsApi
         return (string) $response;
     }
 
-    public function getBenefitsReportMetrics(string $append = null)
+    public function getBenefitsReportMetrics(?string $append = null)
     {
         $link = self::GET_BENEFITS_REPORT_METRICS;
         if (null !== $append) {
-            $link = self::GET_BENEFITS_REPORT_METRICS.$append;
+            $link = self::GET_BENEFITS_REPORT_METRICS . $append;
         }
 
         return $this->restClient->get(
@@ -65,11 +65,11 @@ class StatsApi
         );
     }
 
-    public function getInactiveAdminUsers(string $append = null): array
+    public function getInactiveAdminUsers(?string $append = null): array
     {
         $link = self::GET_INACTIVE_ADMIN_USER_REPORT_DATA;
         if (!empty($append)) {
-            $link = self::GET_INACTIVE_ADMIN_USER_REPORT_DATA.$append;
+            $link = self::GET_INACTIVE_ADMIN_USER_REPORT_DATA . $append;
         }
 
         return $this->restClient->get(
@@ -79,11 +79,11 @@ class StatsApi
         );
     }
 
-    public function getReportsImbalanceMetrics(string $append = null): array
+    public function getReportsImbalanceMetrics(?string $append = null): array
     {
         $link = self::GET_DEPUTY_IMBALANCE_REPORT_DATA;
         if (!empty($append)) {
-            $link = self::GET_DEPUTY_IMBALANCE_REPORT_DATA.$append;
+            $link = self::GET_DEPUTY_IMBALANCE_REPORT_DATA . $append;
         }
 
         return $this->restClient->get(
