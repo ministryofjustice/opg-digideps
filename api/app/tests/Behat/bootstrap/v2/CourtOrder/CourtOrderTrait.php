@@ -46,8 +46,8 @@ trait CourtOrderTrait
      * @Given /^I am associated with \'([^\']*)\' \'([^\']*)\' court order\(s\)$/
      *
      * Associate the logged in user with the specified number of court orders.
-     * This will create new clients and court orders if necessary, otherwise reuses existing ones.
-     * If the existing client has an NDR, then the court order will be linked with that NDR.
+     * This will create new clients and court orders if necessary, otherwise reuses existing one.
+     * If the existing client has an NDR, then the court order may be linked with that NDR.
      */
     public function iAmAssociatedWithCourtOrder(int $numOfCourtOrders, string $orderType, bool $associateNdr = true): void
     {
@@ -117,6 +117,33 @@ trait CourtOrderTrait
         $this->iAmAssociatedWithCourtOrder($numOfCourtOrders, $orderType, false);
     }
 
+    /**
+     * @Given all the reports for the first client are associated with a :orderType court order
+     */
+    public function allTheReportsForFirstClientOnCourtOrder(string $orderType): void
+    {
+        // get the client
+        $client = $this->em->getRepository(Client::class)->find(['id' => $this->loggedInUserDetails->getClientId()]);
+
+        // get the deputy
+        $user = $this->getLoggedInUser();
+        $deputy = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $user->getDeputyUid()]);
+
+        // create a court order
+        $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(
+            $orderType,
+            $client,
+            $deputy,
+        );
+
+        // associate all the reports with that court order
+        foreach ($client->getReports() as $report) {
+            $this->courtOrder->addReport($report);
+        }
+
+        $this->em->persist($this->courtOrder);
+        $this->em->flush();
+    }
 
     /**
      * @Given /^I am associated with a \'([^\']*)\' court order$/
