@@ -32,7 +32,8 @@ class LoginSubscriber implements EventSubscriberInterface
         /** @var User $user */
         $user = $this->tokenStorage->getToken()?->getUser();
 
-        if (!is_null($user) && !$user->getIsPrimary()) {
+        // only redirect non-primary users after they have registered
+        if (!is_null($user) && ($user->getRoleName() === User::ROLE_LAY_DEPUTY) && !$user->getIsPrimary()) {
             $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
 
             $flashBag = $event->getRequest()->getSession()->getFlashBag();
