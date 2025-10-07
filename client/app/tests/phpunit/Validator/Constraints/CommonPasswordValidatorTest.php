@@ -40,7 +40,7 @@ class CommonPasswordValidatorTest extends TestCase
 
         // initialize the validator with the mocked context
         $validator = new CommonPasswordValidator(
-            __DIR__.'/../../TestData/commonpasswords.txt',
+            __DIR__ . '/../../TestData/commonpasswords.txt',
             '',
             false
         );
