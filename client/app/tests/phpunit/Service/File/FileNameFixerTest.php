@@ -94,7 +94,7 @@ class FileNameFixerTest extends KernelTestCase
      */
     public function lowerCaseFileExtension($filePath, $uploadedFileNameAndExtension, $expectedFileNameAndExtension)
     {
-        $uploadedFile = new UploadedFile(sprintf('%s'.$filePath, $this->projectDir), $uploadedFileNameAndExtension);
+        $uploadedFile = new UploadedFile(sprintf('%s' . $filePath, $this->projectDir), $uploadedFileNameAndExtension);
         $uploadedFileExtensionCheck = $this->sut->lowerCaseFileExtension($uploadedFile);
 
         self::assertEquals($expectedFileNameAndExtension, $uploadedFileExtensionCheck->getClientOriginalName());

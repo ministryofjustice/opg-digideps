@@ -89,7 +89,7 @@ class DocumentServiceTest extends TestCase
             ->willReturn([]);
 
         $this->restClient
-            ->delete('document/'.$docId)
+            ->delete('document/' . $docId)
             ->shouldBeCalled()
             ->willReturn(['id' => 1]);
 
@@ -298,7 +298,7 @@ class DocumentServiceTest extends TestCase
         $missingDocuments = [$missingDoc1, $missingDoc2, $missingDoc3];
         $missingDocumentCaseNumbers = ['CaseNumber1', 'CaseNumber2', 'CaseNumber1'];
 
-        $loader = new FilesystemLoader([__DIR__.'/../../../templates/FlashMessages']);
+        $loader = new FilesystemLoader([__DIR__ . '/../../../templates/FlashMessages']);
 
         $sut = new Environment($loader);
 

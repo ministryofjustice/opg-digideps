@@ -23,13 +23,13 @@ class S3StorageTest extends TestCase
 
     public function setUp(): void
     {
-        $this->fileContent = 'FILE-CONTENT-'.microtime(1);
+        $this->fileContent = 'FILE-CONTENT-' . microtime(1);
     }
 
     public function testUploadDownloadDeleteTextContent()
     {
         // create timestamped file and key to undo effects of potential previous executions
-        $key = 'storagetest-upload-download-delete'.microtime(1);
+        $key = 'storagetest-upload-download-delete' . microtime(1);
 
         /** @var S3ClientInterface */
         $awsClient = m::mock(S3ClientInterface::class);
@@ -117,7 +117,7 @@ class S3StorageTest extends TestCase
         $awsClient->shouldReceive('putObject')->andReturn($this->generateAwsResult(200));
         $awsClient->shouldReceive('getObject')->with(
             m::type('array')
-        )->andReturn($this->generateAwsResult(200, [], $this->createMockStream(file_get_contents(__DIR__.'/cat.jpg'))));
+        )->andReturn($this->generateAwsResult(200, [], $this->createMockStream(file_get_contents(__DIR__ . '/cat.jpg'))));
 
         $awsClient->shouldReceive('waitUntil')->andReturn($awsClient);
         $awsClient->shouldReceive('doesObjectExistV2')->andReturn(true);
@@ -128,8 +128,8 @@ class S3StorageTest extends TestCase
         $object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
 
         // create timestamped file and key to undo effects of potential previous executions
-        $key = 'storagetest-upload-download-delete'.microtime(1).'.png';
-        $fileContent = file_get_contents(__DIR__.'/cat.jpg');
+        $key = 'storagetest-upload-download-delete' . microtime(1) . '.png';
+        $fileContent = file_get_contents(__DIR__ . '/cat.jpg');
 
         $object->store($key, $fileContent);
         $this->assertEquals($fileContent, $object->retrieve($key));
@@ -146,14 +146,14 @@ class S3StorageTest extends TestCase
         $awsClient->shouldReceive('doesObjectExistV2')->andReturn(false);
 
         // create timestamped file and key to undo effects of potential previous executions
-        $key = 'storagetest-upload-download-delete'.microtime(1).'.png';
-        $fileContent = file_get_contents(__DIR__.'/cat.jpg');
+        $key = 'storagetest-upload-download-delete' . microtime(1) . '.png';
+        $fileContent = file_get_contents(__DIR__ . '/cat.jpg');
 
         /** @var LoggerInterface */
         $mockLogger = m::mock(LoggerInterface::class);
         $mockLogger->shouldReceive('log')->withAnyArgs([
             'error',
-            'Failed to upload file to S3. Filename: '.$key,
+            'Failed to upload file to S3. Filename: ' . $key,
         ]);
 
         $object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
@@ -164,7 +164,7 @@ class S3StorageTest extends TestCase
 
     public function testRemoveFromS3NoErrors()
     {
-        $key = 'storagetest-upload-download-delete'.microtime(1).'.png';
+        $key = 'storagetest-upload-download-delete' . microtime(1) . '.png';
 
         $awsClient = m::mock(S3ClientInterface::class);
 
@@ -220,7 +220,7 @@ class S3StorageTest extends TestCase
 
     public function testRemoveFromS3WithErrors()
     {
-        $key = 'storagetest-upload-download-delete'.microtime(1).'.png';
+        $key = 'storagetest-upload-download-delete' . microtime(1) . '.png';
 
         $awsClient = m::mock(S3ClientInterface::class);
 
@@ -289,7 +289,7 @@ class S3StorageTest extends TestCase
 
     public function testRemoveFromS3WithKeyNotFound()
     {
-        $key = 'storagetest-upload-download-delete'.microtime(1).'.png';
+        $key = 'storagetest-upload-download-delete' . microtime(1) . '.png';
 
         /** @var S3ClientInterface */
         $awsClient = m::mock(S3ClientInterface::class);
@@ -343,7 +343,7 @@ class S3StorageTest extends TestCase
 
     public function testRemoveFromS3WhenS3NotWorking()
     {
-        $key = 'storagetest-upload-download-delete'.microtime(1).'.png';
+        $key = 'storagetest-upload-download-delete' . microtime(1) . '.png';
 
         $awsClient = m::mock(S3ClientInterface::class);
 
