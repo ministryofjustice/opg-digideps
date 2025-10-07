@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 use App\Service\SiriusApiErrorTranslator;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -34,12 +35,12 @@ class SiriusApiErrorTranslatorTest extends KernelTestCase
      /**
       * @test
       */
-     public function translateApiError()
-     {
+    public function translateApiError()
+    {
 
-         $sut = new SiriusApiErrorTranslator($this->serializer);
+        $sut = new SiriusApiErrorTranslator($this->serializer);
 
-         $errorJson = '{
+        $errorJson = '{
                "error":{
                   "code":"OPGDATA-API-INVALIDREQUEST",
                   "detail":"400 Bad Request: {\'validation_errors\': {\'file -> source\': {\'isEmpty\': \"Value is required and can\'t be empty\"}}, \'type\': \'http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html\', \'title\': \'Bad Request\', \'status\': 400, \'detail\': \'Payload failed validation\'}",
@@ -51,9 +52,9 @@ class SiriusApiErrorTranslatorTest extends KernelTestCase
                "isBase64Encoded":false,
                "statusCode":400
             }';
-         $translation = $sut->translateApiError($errorJson);
-         $expectedError = "OPGDATA-API-INVALIDREQUEST: 400 Bad Request: {'validation_errors': {'file -> source': {'isEmpty': \"Value is required and can't be empty\"}}, 'type': 'http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html', 'title': 'Bad Request', 'status': 400, 'detail': 'Payload failed validation'}";
+        $translation = $sut->translateApiError($errorJson);
+        $expectedError = "OPGDATA-API-INVALIDREQUEST: 400 Bad Request: {'validation_errors': {'file -> source': {'isEmpty': \"Value is required and can't be empty\"}}, 'type': 'http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html', 'title': 'Bad Request', 'status': 400, 'detail': 'Payload failed validation'}";
 
-         self::assertEquals($expectedError, $translation);
-     }
+        self::assertEquals($expectedError, $translation);
+    }
 }
