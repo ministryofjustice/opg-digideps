@@ -1,5 +1,6 @@
-<?php declare(strict_types=1);
+<?php
 
+declare(strict_types=1);
 
 namespace App\Service\Csv;
 
@@ -126,7 +127,7 @@ class TransactionCsvGeneratorTest extends MockeryTestCase
     private function generateMockTransactions($class, $qty)
     {
         $mocks = [];
-        for ($i=0; $i < $qty; $i++) {
+        for ($i = 0; $i < $qty; $i++) {
             array_push($mocks, $this->generateMockTransactionEntity($class, $i));
         }
         return $mocks;
@@ -153,7 +154,7 @@ class TransactionCsvGeneratorTest extends MockeryTestCase
                 break;
             case MoneyTransaction::class:
                 // Assign Category based on counter
-                $mock->setCategory(MoneyTransaction::$categories[min($counter, count(MoneyTransaction::$categories)-1)][0]);
+                $mock->setCategory(MoneyTransaction::$categories[min($counter, count(MoneyTransaction::$categories) - 1)][0]);
                 $mock->setDescription('description for transaction ' . $counter);
 
                 break;
@@ -161,7 +162,7 @@ class TransactionCsvGeneratorTest extends MockeryTestCase
 
 
         // set all even numbers to have a bank account
-        $bankAccount = ($counter%3 == 0) ? $this->generateBankAccount($counter) : null;
+        $bankAccount = ($counter % 3 == 0) ? $this->generateBankAccount($counter) : null;
         $mock->setBankAccount($bankAccount);
 
         return $mock;

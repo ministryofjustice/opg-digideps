@@ -17,7 +17,7 @@ class ReportSectionLinksServiceTest extends TestCase
     {
         $router = m::mock(RouterInterface::class);
         $router->shouldReceive('generate')->withAnyArgs()->andReturnUsing(function ($a, $b) {
-            return $a.http_build_query($b);
+            return $a . http_build_query($b);
         });
         $this->report = m::mock(ReportInterface::class);
 

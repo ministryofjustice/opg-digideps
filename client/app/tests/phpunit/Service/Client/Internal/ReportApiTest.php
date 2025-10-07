@@ -64,7 +64,7 @@ class ReportApiTest extends TestCase
         $submittedReport = ReportHelpers::createSubmittedReport();
 
         $this->restClient
-            ->put('report/'.$submittedReport->getId().'/unsubmit', $submittedReport, ['submitted', 'unsubmit_date', 'report_unsubmitted_sections_list', 'startEndDates', 'report_due_date'])
+            ->put('report/' . $submittedReport->getId() . '/unsubmit', $submittedReport, ['submitted', 'unsubmit_date', 'report_unsubmitted_sections_list', 'startEndDates', 'report_due_date'])
             ->shouldBeCalled();
 
         $reportUnsubmittedEvent = new ReportUnsubmittedEvent(

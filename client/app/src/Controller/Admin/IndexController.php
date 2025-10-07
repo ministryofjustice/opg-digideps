@@ -90,6 +90,8 @@ class IndexController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $filters = $form->getData() + $filters;
+
+            $filters['role_name'] = $filters['role_name'] === 'ALL' ? '' : $filters['role_name'];
         }
 
         $users = $this->restClient->get('user/get-all?'.http_build_query($filters), 'User[]');

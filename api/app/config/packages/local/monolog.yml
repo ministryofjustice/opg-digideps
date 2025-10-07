@@ -1,5 +1,4 @@
 monolog:
-    channels: ["verbose"]
     handlers:
         main:
             type: stream

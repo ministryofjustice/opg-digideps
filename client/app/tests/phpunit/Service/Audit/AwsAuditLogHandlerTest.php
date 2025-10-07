@@ -377,7 +377,7 @@ class AwsAuditLogHandlerTest extends TestCase
             'logStreamName' => self::STREAM_NAME,
             'logEvents' => [
                 [
-                    'message' => json_encode($message, JSON_UNESCAPED_SLASHES)."\n",
+                    'message' => json_encode($message, JSON_UNESCAPED_SLASHES) . "\n",
                     'timestamp' => $this->getLogMessageInput()['datetime']->format('U.u') * 1000,
                 ],
             ],

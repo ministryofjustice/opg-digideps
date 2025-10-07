@@ -28,7 +28,7 @@ class OpgJsonFormatterTest extends TestCase
             "msg": "This is a test message",
             "service_name": "client",
             "request": { "method": "GET", "path": "/test" },
-            "location": { "file": "'.__FILE__.'", "line": '.(__LINE__ + 3).'}
+            "location": { "file": "' . __FILE__ . '", "line": ' . (__LINE__ + 3) . '}
         }';
         // Careful of spacing here as __LINE__ + 3 above needs to be the below line!
         $formattedOutput = $formatter->format($record);
