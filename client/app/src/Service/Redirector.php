@@ -49,7 +49,8 @@ class Redirector
         }
 
         // checks if user has missing details
-        if ($route = $this->getCorrectRouteIfDifferent($user, 'courtorders_for_deputy')) {
+        $route = $this->getCorrectRouteIfDifferent($user, 'courtorders_for_deputy');
+        if (is_string($route)) {
             return $this->router->generate($route);
         }
 

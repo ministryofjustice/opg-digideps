@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Service\Client\Internal\UserApi;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -34,7 +35,7 @@ class LoginSubscriber implements EventSubscriberInterface
             return false;
         }
 
-        /** @var User $user */
+        /** @var ?User $user */
         $user = $this->tokenStorage->getToken()?->getUser();
 
         // only redirect non-primary users after they have registered
@@ -44,7 +45,10 @@ class LoginSubscriber implements EventSubscriberInterface
 
         $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
 
-        $flashBag = $event->getRequest()->getSession()->getFlashBag();
+        /** @var Session $session */
+        $session = $event->getRequest()->getSession();
+
+        $flashBag = $session->getFlashBag();
 
         if (is_null($primaryEmail)) {
             $flashBag->add(

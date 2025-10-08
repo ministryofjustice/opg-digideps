@@ -23,7 +23,7 @@ class UserTestHelper
         ?string $roleName = User::ROLE_LAY_DEPUTY,
         ?string $email = null,
         ?int $deputyUid = null,
-        ?bool $isPrimary = true,
+        bool $isPrimary = true,
     ): User {
         $user = self::createUser(client: $client, roleName: $roleName, email: $email, isPrimary: $isPrimary, deputyUid: $deputyUid);
 
