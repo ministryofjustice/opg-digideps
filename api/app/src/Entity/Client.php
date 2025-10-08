@@ -79,7 +79,7 @@ class Client implements ClientInterface
      **/
     #[JMS\Groups(['basic', 'client-ndr', 'ndr_id'])]
     #[JMS\Type('App\Entity\Ndr\Ndr')]
-    private ?Ndr $ndr;
+    private ?Ndr $ndr = null;
 
     /**
      * @var string
