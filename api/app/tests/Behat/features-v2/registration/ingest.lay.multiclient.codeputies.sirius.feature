@@ -10,10 +10,9 @@ Feature: Lay CSV data ingestion - sirius source data for multiclient deputies
         When "guuts.brineg@nowhere.1111.com" logs in
         Then I should see "Virta Plool"
 
-        Given a lay deputy "Ulu Frine" @ "ingest.lay.multiclient.codeputies.sirius.json" is invited to be a co-deputy for case "61513119"
+        Given a lay deputy "Ulu Frine" @ "ingest.lay.multiclient.codeputies.sirius.json" is invited to be a co-deputy for the court order with UID 495823874
         And I am on "/logout"
-        And a lay deputy "Ulu Frine" @ "ingest.lay.multiclient.codeputies.sirius.json" completes their registration as a co-deputy for case "61513119"
-        And the client with case number 61513119 is associated with pfa court order 495823874
+        And a lay deputy "Ulu Frine" @ "ingest.lay.multiclient.codeputies.sirius.json" completes their registration as a co-deputy for case 61513119
         When "ulu.frine@nowhere.1111.com" logs in
         Then I should see "Virta Plool"
         And I am on "/logout"

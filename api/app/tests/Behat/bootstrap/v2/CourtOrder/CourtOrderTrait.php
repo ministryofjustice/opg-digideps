@@ -468,9 +468,10 @@ trait CourtOrderTrait
         $courtOrder = $this->em->getRepository(CourtOrder::class)->findOneBy(['courtOrderUid' => $courtOrderUid]);
         if (is_null($courtOrder)) {
             $courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(
-                $orderType,
-                $client,
-                $users[0]->getDeputy(),
+                orderType: $orderType,
+                client: $client,
+                deputy: $users[0]->getDeputy(),
+                courtOrderUid: $courtOrderUid
             );
         }
 
