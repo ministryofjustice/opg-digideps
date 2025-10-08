@@ -245,6 +245,22 @@ class FixtureHelper
         return $this->clientTestHelper->generateClient($this->em, $user, $org, $caseNumber);
     }
 
+    // also associates Deputy with the provided User
+    private function getOrAddDeputy(User $user): Deputy
+    {
+        $deputyObject = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $user->getDeputyUid()]);
+
+        if (is_null($deputyObject)) {
+            $deputyObject = $this->deputyTestHelper->generateDeputy($user->getEmail(), strval($user->getDeputyUid()));
+        }
+
+        $deputyObject->setUser($user);
+        $this->em->persist($deputyObject);
+        $this->em->flush();
+
+        return $deputyObject;
+    }
+
     private function addClientsAndReportsToLayDeputy(
         User $user,
         bool $completed = false,
@@ -257,15 +273,7 @@ class FixtureHelper
         $client = $this->clientTestHelper->generateClient($this->em, $user, null, $caseNumber);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $type, $startDate);
 
-        $deputyObject = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $user->getDeputyUid()]);
-
-        if (is_null($deputyObject)) {
-            $deputyObject = $this->deputyTestHelper->generateDeputy($user->getEmail(), strval($user->getDeputyUid()));
-            $this->em->persist($deputyObject);
-        }
-
-        $deputyObject->setUser($user);
-        $this->em->persist($deputyObject);
+        $this->getOrAddDeputy($user);
 
         $client->addReport($report);
         $report->setClient($client);
@@ -360,14 +368,16 @@ class FixtureHelper
         return $satisfaction;
     }
 
-    private function addClientsAndReportsToNdrLayDeputy(User $deputy, bool $completed = false)
+    private function addClientsAndReportsToNdrLayDeputy(User $user, bool $completed = false)
     {
-        $client = $this->clientTestHelper->generateClient($this->em, $deputy);
-        $ndr = $this->reportTestHelper->generateNdr($this->em, $deputy, $client);
+        $client = $this->clientTestHelper->generateClient($this->em, $user);
+        $ndr = $this->reportTestHelper->generateNdr($this->em, $user, $client);
 
         if ($completed) {
             $this->reportTestHelper->completeNdrLayReport($ndr, $this->em);
         }
+
+        $this->getOrAddDeputy($user);
 
         $this->em->persist($ndr);
         $this->em->persist($client);
