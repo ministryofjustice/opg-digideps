@@ -392,7 +392,7 @@ trait ReportSubmissionTrait
      */
     public function iShouldSeeLayHighAssetsReportForTheNextReportingPeriod()
     {
-        $this->clickLink('Create report');
+        $this->clickLink('Continue');
         $this->assertStringContainsString(
             'Money transfers',
             $this->getSession()->getPage()->getContent(),
