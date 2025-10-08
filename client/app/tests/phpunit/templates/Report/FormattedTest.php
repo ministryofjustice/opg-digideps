@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Templates\Report;
 
 use App\Entity\Client;
@@ -330,21 +331,21 @@ class FormattedTest extends WebTestCase
 
     public function testSummaryinfo()
     {
-        $this->reportStatus->shouldReceive('getBalanceState')->andReturn(['state'=>'done']);
+        $this->reportStatus->shouldReceive('getBalanceState')->andReturn(['state' => 'done']);
 
         // assert not displaying without "showSummary"
         $crawler = $this->renderTemplateAndGetCrawler();
         $this->assertCount(0, $crawler->filter('#report-summary'));
 
         // assert displaying for a 102
-        $crawler = $this->renderTemplateAndGetCrawler(['showSummary'=>true]);
+        $crawler = $this->renderTemplateAndGetCrawler(['showSummary' => true]);
         $this->assertCount(1, $crawler->filter('#report-summary'));
 
         // assert NOT displaying when balacne section is not added
         $as = $this->report->getAvailableSections();
         unset($as[array_search('balance', $as)]);
         $this->report->setAvailableSections($as);
-        $crawler = $this->renderTemplateAndGetCrawler(['showSummary'=>true]);
+        $crawler = $this->renderTemplateAndGetCrawler(['showSummary' => true]);
         $this->assertCount(0, $crawler->filter('#report-summary'));
     }
 

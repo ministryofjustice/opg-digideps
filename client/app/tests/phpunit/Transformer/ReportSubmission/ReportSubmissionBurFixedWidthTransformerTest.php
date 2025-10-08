@@ -133,6 +133,6 @@ class ReportSubmissionBurFixedWidthTransformerTest extends TestCase
 
     private function assertResultContainsFooterLine()
     {
-        $this->assertEquals('99999999', $this->formattedResult[count($this->formattedResult) -1]);
+        $this->assertEquals('99999999', $this->formattedResult[count($this->formattedResult) - 1]);
     }
 }

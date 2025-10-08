@@ -170,6 +170,6 @@ class ClamFileScannerTest extends TestCase
     private function invokeTest($filename): void
     {
         $scanner = new ClamFileScanner($this->client, $this->logger, $this->badPdfKeywords);
-        $scanner->scanFile(new UploadedFile(__DIR__."/$filename", $filename));
+        $scanner->scanFile(new UploadedFile(__DIR__ . "/$filename", $filename));
     }
 }
