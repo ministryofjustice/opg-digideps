@@ -1,9 +1,10 @@
-@v2 @v2_reporting_1 @report-submissions
+@v2 @v2_reporting_1 @report-submissions-ndr
 Feature: Submitting a report - NDR
 
     @ndr-completed
     Scenario: Submitting a completed report
         Given a Lay Deputy has a completed NDR report
+        And all the reports for the first client are associated with a hw court order
         And I visit the report overview page
         When I preview and check the report
         And I continue to declaration and submission
