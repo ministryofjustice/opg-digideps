@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\CourtOrder;
 
+use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
@@ -15,6 +16,7 @@ use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\DeputyTestHelper;
 use App\Tests\Behat\BehatException;
 use Behat\Mink\Element\NodeElement;
+use Doctrine\Common\Collections\ArrayCollection;
 
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertStringContainsString;
@@ -39,6 +41,18 @@ trait CourtOrderTrait
      */
     public function iVisitTheCourtOrderPage()
     {
+        // create a court order if we don't already have one, associated with a random user
+        // (not the logged in user)
+        if (is_null($this->courtOrder)) {
+            $data = $this->fixtureHelper->createLayNdrNotStarted($this->testRunId);
+
+            $client = $this->em->getRepository(Client::class)->find($data['clientId']);
+            $user = $this->em->getRepository(User::class)->find($data['userId']);
+            $deputy = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $user->getDeputyUid()]);
+
+            $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder('pfa', $client, $deputy);
+        }
+
         $this->visitFrontendPath('/courtorder/' . $this->courtOrder->getCourtOrderUid());
     }
 
@@ -78,7 +92,7 @@ trait CourtOrderTrait
                 $client = $this->em->getRepository(Client::class)->find(['id' => $this->loggedInUserDetails->getClientId()]);
                 $report = $client->getCurrentReport();
                 if ($associateNdr) {
-                    $ndr = $client->getNdr();
+                    $ndr = $this->em->getRepository(Ndr::class)->findOneBy(['client' => $client]);
                 }
             } else {
                 // create a new client
@@ -147,7 +161,7 @@ trait CourtOrderTrait
         }
 
         // also associate the ndr
-        $ndr = $client->getNdr();
+        $ndr = $this->em->getRepository(Ndr::class)->findOneBy(['client' => $client]);
         if (!is_null($ndr)) {
             $this->courtOrder->setNdr($ndr);
         }
@@ -176,7 +190,7 @@ trait CourtOrderTrait
             $client,
             $user->getDeputy(),
             $client->getCurrentReport(),
-            $client->getNdr(),
+            $this->em->getRepository(Ndr::class)->findOneBy(['client' => $client]),
         );
 
         // associate all of the client's reports with the court order
@@ -433,5 +447,50 @@ trait CourtOrderTrait
     public function latestUnsubmittedCourtOrderReportIsPfaHigh(): void
     {
         $this->fixtureHelper->setCourtOrderLatestReportType($this->courtOrder, Report::LAY_PFA_LOW_ASSETS_TYPE);
+    }
+
+    /**
+     * @Given the client with case number :caseNumber is associated with :orderType court order :courtOrderUid
+     */
+    public function clientAssociatedWithCourtOrder(string $caseNumber, string $orderType, string $courtOrderUid): void
+    {
+        // get the client
+        /** @var ?Client $client */
+        $client = $this->em->getRepository(Client::class)->findOneBy(['caseNumber' => $caseNumber]);
+
+        // this prevents doctrine from incorrectly caching this object with stale state, ensuring that all users are fetched
+        $this->em->refresh($client);
+
+        // get the users so we can get the deputies
+        $users = $client->getUsers()->toArray();
+
+        // get or create the court order
+        $courtOrder = $this->em->getRepository(CourtOrder::class)->findOneBy(['courtOrderUid' => $courtOrderUid]);
+        if (is_null($courtOrder)) {
+            $courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(
+                $orderType,
+                $client,
+                $users[0]->getDeputy(),
+            );
+        }
+
+        // associate the court order with the client's reports, ndr, and deputies
+        $reports = $this->em->getRepository(Report::class)->findBy(['client' => $client]);
+        foreach ($reports as $report) {
+            $courtOrder->addReport($report);
+        }
+
+        $ndr = $this->em->getRepository(Ndr::class)->findOneBy(['client' => $client]);
+        if (!is_null($ndr)) {
+            $courtOrder->setNdr($ndr);
+        }
+
+        // associate the client's deputies with the court order
+        foreach (array_slice($users, 1) as $user) {
+            $user->getDeputy()->associateWithCourtOrder($courtOrder);
+        }
+
+        $this->em->persist($courtOrder);
+        $this->em->flush();
     }
 }
