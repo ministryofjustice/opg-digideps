@@ -308,10 +308,7 @@ services:
     tags: ["kernel.event_subscriber"]
 
   App\EventSubscriber\LoginSubscriber:
-    arguments:
-      $userApi: App\Service\Client\Internal\UserApi
-      $urlGenerator: Symfony\Component\Routing\Generator\UrlGeneratorInterface
-      $tokenStorage: "@security.token_storage"
+    class: App\EventSubscriber\LoginSubscriber
     tags: ["kernel.event_subscriber"]
 
   App\EventListener\ResponseNoCacheListener:
