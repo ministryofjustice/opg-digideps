@@ -17,33 +17,32 @@
 {% endblock %}
 
 {% block pageContent %}
-
     {{ form_start(form, {attr: {novalidate: 'novalidate' }}) }}
 
-    <h2 class="govuk-heading-m">{{ (page ~ '.step1Heading') | trans }}</h2>
+    <fieldset class="govuk-fieldset govuk-fieldset__legend--m" aria-describedby="report-client-supporting-document-hint">
+        <legend class="govuk-fieldset__legend">
+            <h2 class="govuk-heading-m">{{ (page ~ '.step1Heading') | trans }}</h2>
+        </legend>
 
-    <div class="govuk-inset-text">
-        <div class="govuk-grid-row">
-            <div class="govuk-grid-column-two-thirds">
-                {{ (page ~ '.selectHint1') | trans }}
-                <br>
-                {{ (page ~ '.selectHint2') | trans }}
+        <div class="govuk-inset-text">
+            <div class="govuk-grid-row">
+                <div class="govuk-grid-column-two-thirds" id="report-client-supporting-document-hint">
+                    {{ (page ~ '.selectHint1') | trans }}
+                    <br>
+                    {{ (page ~ '.selectHint2') | trans }}
+                </div>
             </div>
         </div>
-    </div>
 
-    {% if step == 1 %}
         <div class="push--bottom">
             <div class="govuk-form-group flush--bottom {% if not form.wishToProvideDocumentation.vars.valid %}govuk-form-group--error{% endif %}">
                 {{ form_checkbox_group(form.wishToProvideDocumentation, 'form.wishToProvideDocumentation', {
                     'useFormGroup': false,
                     'fieldSetClass' : 'inline',
-                    'legendClass' : 'govuk-fieldset__legend--m'
                 }) }}
             </div>
         </div>
-
-    {% endif %}
+    </fieldset>
 
     {{ macros.saveAndContinueButton(form.save) }}
 
