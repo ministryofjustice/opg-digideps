@@ -246,7 +246,7 @@ class FixtureHelper
     }
 
     private function addClientsAndReportsToLayDeputy(
-        User $deputy,
+        User $user,
         bool $completed = false,
         bool $submitted = false,
         ?string $type = null,
@@ -254,23 +254,23 @@ class FixtureHelper
         ?int $satisfactionScore = null,
         ?string $caseNumber = null,
     ) {
-        $client = $this->clientTestHelper->generateClient($this->em, $deputy, null, $caseNumber);
+        $client = $this->clientTestHelper->generateClient($this->em, $user, null, $caseNumber);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $type, $startDate);
 
-        $deputyObject = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $deputy->getDeputyUid()]);
+        $deputyObject = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $user->getDeputyUid()]);
 
         if (is_null($deputyObject)) {
-            $deputyObject = $this->deputyTestHelper->generateDeputy($deputy->getEmail(), strval($deputy->getDeputyUid()));
+            $deputyObject = $this->deputyTestHelper->generateDeputy($user->getEmail(), strval($user->getDeputyUid()));
             $this->em->persist($deputyObject);
         }
 
-        $deputyObject->setUser($deputy);
+        $deputyObject->setUser($user);
         $this->em->persist($deputyObject);
 
         $client->addReport($report);
         $report->setClient($client);
-        $deputy->addClient($client);
-        $deputy->setRegistrationDate($startDate);
+        $user->addClient($client);
+        $user->setRegistrationDate($startDate);
 
         if ($completed) {
             $this->reportTestHelper->completeLayReport($report, $this->em);
@@ -286,7 +286,7 @@ class FixtureHelper
         $this->em->persist($report);
 
         if ($submitted and isset($satisfactionScore)) {
-            $satisfaction = $this->setSatisfaction($report, $deputy, $satisfactionScore);
+            $satisfaction = $this->setSatisfaction($report, $user, $satisfactionScore);
             $this->em->persist($satisfaction);
         }
 
