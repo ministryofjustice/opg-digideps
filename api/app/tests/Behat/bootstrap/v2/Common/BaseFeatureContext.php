@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
+use Behat\Hook\BeforeScenario;
 use Exception;
 use DateTime;
 use App\Entity\Client;
@@ -154,11 +155,6 @@ class BaseFeatureContext extends MinkContext
     {
         $this->faker = Factory::create('en_GB');
         $this->testRunId = (string) (time() + rand());
-        $this->resetCommonProperties();
-    }
-
-    private function resetCommonProperties()
-    {
         $this->loggedInUserDetails = null;
         $this->interactingWithUserDetails = null;
         $this->submittedAnswersByFormSections = ['totals' => ['grandTotal' => 0]];
