@@ -360,7 +360,7 @@ class FixtureHelper
         return $satisfaction;
     }
 
-    private function addClientsAndReportsToNdrLayDeputy(User $deputy, bool $completed = false, bool $submitted = false)
+    private function addClientsAndReportsToNdrLayDeputy(User $deputy, bool $completed = false)
     {
         $client = $this->clientTestHelper->generateClient($this->em, $deputy);
         $ndr = $this->reportTestHelper->generateNdr($this->em, $deputy, $client);
@@ -368,10 +368,6 @@ class FixtureHelper
         if ($completed) {
             $this->reportTestHelper->completeNdrLayReport($ndr, $this->em);
         }
-
-        //        if ($submitted) {
-        //            placeholder for when submitted version needed...
-        //        }
 
         $this->em->persist($ndr);
         $this->em->persist($client);
@@ -990,21 +986,6 @@ class FixtureHelper
         return self::buildUserDetails($user);
     }
 
-    public function createLayNdrSubmitted(string $testRunId): array
-    {
-        $user = $this->createDeputyClientAndReport(
-            $testRunId,
-            User::ROLE_LAY_DEPUTY,
-            'lay-ndr-submitted',
-            Report::LAY_HW_TYPE,
-            true,
-            false,
-            true
-        );
-
-        return self::buildUserDetails($user);
-    }
-
     public function createProfAdminNotStarted(
         string $testRunId,
         ?string $deputyEmail = null,
@@ -1300,7 +1281,7 @@ class FixtureHelper
         $user = $this->userTestHelper->createAndPersistUser($this->em, null, $userRole, sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId), $deputyUid, $isPrimary);
 
         if ($ndr) {
-            $this->addClientsAndReportsToNdrLayDeputy($user, $completed, $submitted);
+            $this->addClientsAndReportsToNdrLayDeputy($user, $completed);
         } else {
             $this->addClientsAndReportsToLayDeputy($user, $completed, $submitted, $reportType, $startDate, $satisfactionScore, $caseNumber);
         }
