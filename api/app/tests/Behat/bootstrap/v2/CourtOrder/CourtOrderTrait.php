@@ -116,7 +116,6 @@ trait CourtOrderTrait
                 $client,
                 $deputy,
                 $report,
-                $ndr
             );
         }
 
@@ -158,12 +157,6 @@ trait CourtOrderTrait
         $reports = $this->em->getRepository(Report::class)->findBy(['client' => $client]);
         foreach ($reports as $report) {
             $this->courtOrder->addReport($report);
-        }
-
-        // also associate the ndr
-        $ndr = $this->em->getRepository(Ndr::class)->findOneBy(['client' => $client]);
-        if (!is_null($ndr)) {
-            $this->courtOrder->setNdr($ndr);
         }
 
         $this->courtOrders = [$this->courtOrder];
@@ -459,9 +452,10 @@ trait CourtOrderTrait
         $courtOrder = $this->em->getRepository(CourtOrder::class)->findOneBy(['courtOrderUid' => $courtOrderUid]);
         if (is_null($courtOrder)) {
             $courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(
-                $orderType,
-                $client,
-                $users[0]->getDeputy(),
+                orderType: $orderType,
+                client: $client,
+                deputy: $users[0]->getDeputy(),
+                courtOrderUid: $courtOrderUid
             );
         }
 
