@@ -987,7 +987,7 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-ndr-completed',
-            Report::LAY_HW_TYPE,
+            Report::LAY_PFA_HIGH_ASSETS_TYPE,
             true,
             false,
             true

@@ -21,8 +21,8 @@ use function PHPUnit\Framework\assertStringContainsString;
 
 trait CourtOrderTrait
 {
-    public CourtOrder $courtOrder;
-    public array $courtOrders;
+    public ?CourtOrder $courtOrder = null;
+    public array $courtOrders = [];
     public ClientApi $clientApi;
     private Deputy $coDeputy;
     private array $invitedDeputy = [];
@@ -39,7 +39,7 @@ trait CourtOrderTrait
      */
     public function iVisitTheCourtOrderPage()
     {
-        $this->visitFrontendPath('/courtorder/700000000001');
+        $this->visitFrontendPath('/courtorder/' . $this->courtOrder->getCourtOrderUid());
     }
 
     /**
@@ -123,23 +123,36 @@ trait CourtOrderTrait
     public function allTheReportsForFirstClientOnCourtOrder(string $orderType): void
     {
         // get the client
-        $client = $this->em->getRepository(Client::class)->find(['id' => $this->loggedInUserDetails->getClientId()]);
+        $clientId = $this->loggedInUserDetails->getClientId();
+        $client = $this->em->getRepository(Client::class)->find(['id' => $clientId]);
 
         // get the deputy
         $user = $this->getLoggedInUser();
         $deputy = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $user->getDeputyUid()]);
 
-        // create a court order
-        $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(
-            $orderType,
-            $client,
-            $deputy,
-        );
+        // create a court order if necessary
+        if (is_null($this->courtOrder)) {
+            $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(
+                $orderType,
+                $client,
+                $deputy,
+            );
+        }
 
-        // associate all the reports with that court order
-        foreach ($client->getReports() as $report) {
+        // associate all the client's reports with that court order; client->getReports() doesn't do what
+        // is expected so just do a query from the reports table
+        $reports = $this->em->getRepository(Report::class)->findBy(['client' => $client]);
+        foreach ($reports as $report) {
             $this->courtOrder->addReport($report);
         }
+
+        // also associate the ndr
+        $ndr = $client->getNdr();
+        if (!is_null($ndr)) {
+            $this->courtOrder->setNdr($ndr);
+        }
+
+        $this->courtOrders = [$this->courtOrder];
 
         $this->em->persist($this->courtOrder);
         $this->em->flush();
