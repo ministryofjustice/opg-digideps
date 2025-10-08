@@ -2,9 +2,9 @@
 Feature: Submitting a report - NDR
 
     @ndr-completed
-    Scenario: Submitting a completed report
+    Scenario: When an NDR is submitted, I should see a lay high assets report for the next reporting period
         Given a Lay Deputy has a completed NDR report
-        And all the reports for the first client are associated with a hw court order
+        And all the reports for the first client are associated with a pfa court order
         And I visit the report overview page
         When I preview and check the report
         And I continue to declaration and submission
@@ -12,5 +12,6 @@ Feature: Submitting a report - NDR
         And I confirm I am the sole deputy
         And I submit my report
         Then my report should be submitted
-        When I visit the lay start page
+        When all the reports for the first client are associated with a pfa court order
+        When I visit the court order page
         Then I should see Lay High Assets report for the next reporting period
