@@ -16,7 +16,9 @@ use App\Model\Sirius\SiriusDocumentUpload;
 use App\Service\Client\RestClient;
 use App\Service\Client\Sirius\SiriusApiGatewayClient;
 use GuzzleHttp\Exception\GuzzleException;
+
 use function GuzzleHttp\Psr7\mimetype_from_filename;
+
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
 
@@ -143,7 +145,7 @@ class ChecklistSyncService
             substr($e->getMessage(), 0, 254);
     }
 
-    private function updateChecklist(int $id, string $status, string $message = null, string $uuid = null): void
+    private function updateChecklist(int $id, string $status, ?string $message = null, ?string $uuid = null): void
     {
         $data = ['syncStatus' => $status];
 

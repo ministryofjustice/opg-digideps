@@ -29,7 +29,7 @@ RUN composer dump-autoload --optimize
 ##############################
 # Stage 2: Base PHP + Shared Files
 ##############################
-FROM php:8.3.24-fpm-alpine3.22 AS base
+FROM php:8.4-fpm-alpine3.22@sha256:c4e122105b22e71ca28d5db60223a331d77473f52ec6a1d7d69c6d612ef9b2c2 AS base
 
 ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
 
