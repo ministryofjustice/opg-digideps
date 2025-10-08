@@ -101,11 +101,6 @@ parameters:
 			path: src/Controller/ClientController.php
 
 		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
 			message: "#^Parameter \\#1 \\$query of method App\\\\Repository\\\\ClientRepository\\:\\:searchClients\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/ClientController.php
@@ -132,11 +127,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#5 \\$offset of method App\\\\Repository\\\\ClientRepository\\:\\:searchClients\\(\\) expects int, mixed given\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: "#^Result of && is always false\\.$#"
 			count: 1
 			path: src/Controller/ClientController.php
 
@@ -1547,11 +1537,6 @@ parameters:
 
 		-
 			message: "#^Property App\\\\Entity\\\\Client\\:\\:\\$id is never written, only read\\.$#"
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Client\\:\\:\\$ndr has no type specified\\.$#"
 			count: 1
 			path: src/Entity/Client.php
 
