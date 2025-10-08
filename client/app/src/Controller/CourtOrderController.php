@@ -28,9 +28,17 @@ class CourtOrderController extends AbstractController
     }
 
     /**
+     * Show the waiting message.
+     */
+    #[Route(path: '/waiting', name: 'courtorders_waiting', methods: ['GET'])]
+    #[Template('@App/Index/account-setup-in-progress.html.twig')]
+    public function wait(): array
+    {
+        return [];
+    }
+
+    /**
      * Get a court order by its UID.
-     *
-     * @return array Court order and associated data
      */
     #[Route(path: '/{uid}', name: 'courtorder_by_uid', requirements: ['uid' => '\d+'], methods: ['GET'])]
     #[Template('@App/CourtOrder/index.html.twig')]
@@ -58,26 +66,25 @@ class CourtOrderController extends AbstractController
     }
 
     /**
-     * Show all court orders and reports for the currently-logged in deputy.
-     *
-     * @return array|Response List of court orders or message if there are none available yet
+     * Show court orders and reports for the currently-logged in deputy.
+     * Redirects if no court orders or a single court order.
      */
     #[Route(path: '/choose-a-court-order', name: 'courtorders_for_deputy', methods: ['GET'])]
     #[Template('@App/Index/choose-a-court-order.html.twig')]
-    public function getAllDeputyCourtOrders(): array|Response
+    public function getAllDeputyCourtOrders(): Response|array
     {
         // structure of returned data can be found in api/app/src/Service/DeputyService.php, findReportsInfoByUid()
         $results = $this->deputyApi->findAllDeputyCourtOrdersForCurrentDeputy();
 
         if (is_null($results) || 0 === count($results)) {
-            return $this->render('@App/Index/account-setup-in-progress.html.twig');
+            return $this->redirectToRoute('courtorders_waiting');
         }
 
-        if (count($results) > 1) {
-            return $this->render('@App/Index/choose-a-court-order.html.twig', ['deputyships' => $results]);
+        if (1 === count($results)) {
+            return $this->redirectToRoute('courtorder_by_uid', ['uid' => $results[0]['courtOrderLink']]);
         }
 
-        return $this->redirectToRoute('courtorder_by_uid', ['uid' => $results[0]['courtOrderLink']]);
+        return ['deputyships' => $results];
     }
 
     /**
