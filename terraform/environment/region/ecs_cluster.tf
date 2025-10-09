@@ -22,7 +22,6 @@ resource "aws_cloudwatch_log_group" "container_insights" {
 }
 
 # Shared variables for tasks and services in cluster
-
 locals {
   api_service_app_variables = [
     {
@@ -42,6 +41,10 @@ locals {
     {
       name  = "DATABASE_HOSTNAME",
       value = local.db.endpoint
+    },
+    {
+      name  = "API_URL",
+      value = "http://api.${aws_service_discovery_http_namespace.cloudmap_namespace.name}.local"
     },
     {
       name  = "DATABASE_NAME",

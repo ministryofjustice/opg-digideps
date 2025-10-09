@@ -6,7 +6,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class ClientsResponseComparer extends ResponseComparer
 {
-    public function getSqlStatement(): string
+    public function getSqlStatement(string $userIds): string
     {
         return '
             SELECT d.id as user_id, c.id as id1

@@ -13,7 +13,7 @@ abstract class ResponseComparer
         callable $getApiResponse
     ): array;
 
-    abstract public function getSqlStatement(): string;
+    abstract public function getSqlStatement(string $userIds): string;
 
     abstract public function getRoute(): string;
 }
