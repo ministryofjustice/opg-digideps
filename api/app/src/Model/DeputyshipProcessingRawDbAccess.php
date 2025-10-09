@@ -202,8 +202,9 @@ class DeputyshipProcessingRawDbAccess
         try {
             $result = $this->ingestWriterEm->getConnection()->createQueryBuilder()
                 ->update('court_order')
-                ->set('status', $courtOrderStatus)
+                ->set('status', ':courtOrderStatus')
                 ->where('id = :id')
+                ->setParameter('courtOrderStatus', $courtOrderStatus)
                 ->setParameter('id', $courtOrderId)
                 ->executeQuery();
 
