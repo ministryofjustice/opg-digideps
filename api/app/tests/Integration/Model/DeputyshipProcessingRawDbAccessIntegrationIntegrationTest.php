@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace app\tests\Integration\Model;
 
 use App\Entity\CourtOrder;
+use App\Entity\Deputy;
 use App\Model\DeputyshipProcessingRawDbAccess;
 use App\Tests\Integration\ApiIntegrationTestCase;
 use App\Tests\Integration\Fixtures;
@@ -158,11 +159,10 @@ class DeputyshipProcessingRawDbAccessIntegrationIntegrationTest extends ApiInteg
         self::$fixtures->persist($courtOrder)->flush();
 
         // use SUT to update order status
-        /** @var int $courtOrderId */
-        $courtOrderId = self::$sut->findOrderId($courtOrderUid)->data;
+        self::$entityManager->refresh($courtOrder);
 
         self::$sut->beginTransaction();
-        $result = self::$sut->updateOrderStatus($courtOrderId, ['status' => 'CLOSED']);
+        $result = self::$sut->updateOrderStatus($courtOrder->getId(), ['status' => 'CLOSED']);
         self::$sut->endTransaction();
 
         self::assertTrue($result->success);
@@ -172,5 +172,47 @@ class DeputyshipProcessingRawDbAccessIntegrationIntegrationTest extends ApiInteg
 
         self::assertNotFalse($courtOrder, 'court order was not found');
         self::assertEquals('CLOSED', $courtOrder->getStatus());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testUpdateDeputyStatus(): void
+    {
+        $courtOrderUid = uniqid();
+        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid, 'pfa', 'ACTIVE');
+        $deputy = self::$fixtures->createDeputy();
+        $deputy->associateWithCourtOrder($courtOrder, isActive: false);
+        self::$fixtures->persist($courtOrder, $deputy)->flush();
+
+        self::$entityManager->refresh($courtOrder);
+        self::$entityManager->refresh($deputy);
+
+        $ordersWithStatus = $deputy->getCourtOrdersWithStatus();
+        self::assertFalse($ordersWithStatus[0]['isActive']);
+
+        // use SUT to update deputy status
+        self::$sut->beginTransaction();
+        $result = self::$sut->updateDeputyStatus($courtOrder->getId(), ['deputyStatusOnOrder' => true, 'deputyId' => $deputy->getId()]);
+        self::$sut->endTransaction();
+
+        self::assertTrue($result->success);
+
+        // check deputy status is correctly updated
+        $association = $this->getQueryBuilder()
+            ->select('*')
+            ->from('court_order_deputy')
+            ->where('deputy_id = ?')
+            ->andWhere('court_order_id = ?')
+            ->setParameter(0, $courtOrder->getId())
+            ->setParameter(1, $deputy->getId())
+            ->fetchAssociative();
+
+        self::assertNotFalse($association, 'court order deputy association was not found');
+        self::assertTrue($association['is_active']);
+    }
+
+    public static function tearDownAfterClass(): void
+    {
     }
 }
