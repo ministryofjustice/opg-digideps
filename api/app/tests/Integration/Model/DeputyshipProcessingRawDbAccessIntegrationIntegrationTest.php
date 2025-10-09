@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace app\tests\Integration\Model;
 
+use App\Entity\CourtOrder;
 use App\Model\DeputyshipProcessingRawDbAccess;
 use App\Tests\Integration\ApiIntegrationTestCase;
 use App\Tests\Integration\Fixtures;
@@ -110,6 +111,9 @@ class DeputyshipProcessingRawDbAccessIntegrationIntegrationTest extends ApiInteg
         self::assertTrue($result['is_active']);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testInsertOrderReport(): void
     {
         // insert report and court order (client is needed by the report)
@@ -132,7 +136,7 @@ class DeputyshipProcessingRawDbAccessIntegrationIntegrationTest extends ApiInteg
         self::assertTrue($result->success);
 
         // check association exists
-        $result = $this->getQueryBuilder()
+        $association = $this->getQueryBuilder()
             ->select('*')
             ->from('court_order_report')
             ->where('report_id = ?')
@@ -141,6 +145,32 @@ class DeputyshipProcessingRawDbAccessIntegrationIntegrationTest extends ApiInteg
             ->setParameter(1, $courtOrderId)
             ->fetchAssociative();
 
-        self::assertNotFalse($result, 'court order report association was not found');
+        self::assertNotFalse($association, 'court order report association was not found');
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testUpdateOrderStatus(): void
+    {
+        $courtOrderUid = uniqid();
+        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid, 'pfa', 'ACTIVE');
+        self::$fixtures->persist($courtOrder)->flush();
+
+        // use SUT to update order status
+        /** @var int $courtOrderId */
+        $courtOrderId = self::$sut->findOrderId($courtOrderUid)->data;
+
+        self::$sut->beginTransaction();
+        $result = self::$sut->updateOrderStatus($courtOrderId, ['status' => 'CLOSED']);
+        self::$sut->endTransaction();
+
+        self::assertTrue($result->success);
+
+        // check order status is correctly updated
+        self::$entityManager->refresh($courtOrder);
+
+        self::assertNotFalse($courtOrder, 'court order was not found');
+        self::assertEquals('CLOSED', $courtOrder->getStatus());
     }
 }
