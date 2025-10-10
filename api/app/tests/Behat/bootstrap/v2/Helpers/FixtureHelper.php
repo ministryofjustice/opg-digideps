@@ -680,6 +680,21 @@ class FixtureHelper
         return self::buildUserDetails($user);
     }
 
+    public function createLayCombinedHighAssetsInProgress(string $testRunId): array
+    {
+        $user = $this->createDeputyClientAndReport(
+            $testRunId,
+            User::ROLE_LAY_DEPUTY,
+            'lay-combined-high-completed',
+            Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
+            true,
+            false,
+            readyToSubmit: true
+        );
+
+        return self::buildUserDetails($user);
+    }
+
     public function createLayCombinedHighAssetsSubmitted(string $testRunId): array
     {
         $user = $this->createDeputyClientAndReport(
@@ -1281,6 +1296,7 @@ class FixtureHelper
         bool $legacyPasswordHash = false,
         bool $isPrimary = true,
         ?int $deputyUid = null,
+        bool $readyToSubmit = false,
     ) {
         if (!$this->fixturesEnabled) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
@@ -1293,7 +1309,7 @@ class FixtureHelper
         if ($ndr) {
             $this->addClientsAndReportsToNdrLayDeputy($user, $completed);
         } else {
-            $this->addClientsAndReportsToLayDeputy($user, $completed, $submitted, $reportType, $startDate, $satisfactionScore, $caseNumber);
+            $this->addClientsAndReportsToLayDeputy($user, $completed, $submitted, $reportType, $startDate, $satisfactionScore, $caseNumber, $readyToSubmit);
         }
 
         $this->setPassword($user, $legacyPasswordHash);
@@ -1435,5 +1451,17 @@ class FixtureHelper
         $report->setType($reportType);
         $this->em->persist($report);
         $this->em->flush();
+    }
+
+    public function createAndPersistOrganisation(string $name, string $emailIdentifier, bool $isActivated = true): Organisation
+    {
+        $organisation = new Organisation();
+        $organisation->setName($name);
+        $organisation->setEmailIdentifier($emailIdentifier);
+        $organisation->setIsActivated($isActivated);
+        $this->em->persist($organisation);
+        $this->em->flush();
+
+        return $organisation;
     }
 }
