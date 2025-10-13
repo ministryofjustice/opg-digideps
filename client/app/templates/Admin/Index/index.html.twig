@@ -124,7 +124,7 @@
                         {% endif %}
 
                     </td>
-                    <td class="numeric">{{ user.registrationDate ? user.registrationDate | date("d/m/Y") : 'Not registered' }}</td>
+                    <td class="numeric">{{ user.registrationDate ? user.registrationDate | date("d/m/Y") : 'not registered' | trans({}, 'common') }}</td>
                 </tr>
             {% endfor %}
             </tbody>
