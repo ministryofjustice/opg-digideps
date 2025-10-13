@@ -97,7 +97,7 @@ class ReportController extends RestController
 
         $today = new DateTime();
         // Day and month from order made date combined with current year
-        $amendedOrderStartDate = new DateTime(date('d M ', $orderStartDate->getTimestamp()).date('Y'));
+        $amendedOrderStartDate = new DateTime(date('d M ', $orderStartDate->getTimestamp()) . date('Y'));
         if ($today < $amendedOrderStartDate) {
             $amendedOrderStartDate->modify('-1 year');
         }
@@ -620,7 +620,6 @@ class ReportController extends RestController
 
     /**
      * Update users's reports cached status when not set
-     * Flushes every 5 records to allow resuming in case of timeouts.
      */
     private function updateReportStatusCache(int $userId): void
     {
@@ -639,9 +638,9 @@ class ReportController extends RestController
                 ->getQuery()
                 ->getResult()) && count($reports)
         ) {
+            /* @var $report Report */
             foreach ($reports as $report) {
-                /* @var $report Report */
-                $report->updateSectionsStatusCache($report->getAvailableSections());
+                $report->updateSectionsStatusCache();
             }
 
             $this->em->flush();
