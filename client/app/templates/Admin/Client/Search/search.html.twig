@@ -83,7 +83,7 @@
                                 {% endif %}
                             </td>
                             <td class="behat-region-{{ discharged }}client-{{ client.caseNumber }}-discharged-on">
-                                {{ client.deletedAt ? client.deletedAt | date('j M Y') : 'Active' }}
+                                {{ client.deletedAt ? client.deletedAt | date('j M Y') : 'active' | trans({}, 'common') }}
                             </td>
                         </tr>
                     {% endfor %}

@@ -109,7 +109,7 @@
                     </td>
                     <td>{{ user.adManaged ? '-' : user.email }}</td>
                     <td class="behat-region-{{ user.email | behat_namify }}-ndr-enabled">
-                        {{ user.ndrEnabled ? 'Yes' : 'No' }}
+                        {{ user.ndrEnabled ? 'yes' | trans({}, 'common') : 'no' | trans({}, 'common') }}
                     </td>
                     <td>
                         {% if user.active %}
