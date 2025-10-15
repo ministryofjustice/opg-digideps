@@ -59,6 +59,13 @@
 
                 <label class="govuk-label govuk-radios__label {{ labelClass }}" for="{{ choiceElement.vars.id }}">
                     {{ choiceElement.vars.label | trans({}, element.vars.choice_translation_domain ?: translationDomain)}}
+
+                    {% if conditional or labelDataTarget or multitoggle %}
+                        <span class="govuk-visually-hidden">
+                            Selecting this will reveal an additional input
+                        </span>
+                    {% endif %}
+
                 </label>
 
                 {% if description is not null %}
