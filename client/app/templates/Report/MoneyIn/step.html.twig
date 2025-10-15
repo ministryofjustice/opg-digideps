@@ -12,19 +12,21 @@
 }) %}
 
 {% block htmlTitle %}{{ 'stepPage.moneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
-{% block pageTitle %}
+
+{% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans(clientTransOptions) %}
+{% set categoryString2ndStep = ('form.category.entries.' ~ transaction.category ~ '.label2ndStep') | trans(clientTransOptions) %}
+
+{% block pageHeader %}
     {% if step == 2 %}
-        {% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans(clientTransOptions) %}
-        {% set categoryString2ndStep = ('form.category.entries.' ~ transaction.category ~ '.label2ndStep') | trans(clientTransOptions) %}
-        {{ 'stepPage.moneyIn.pageTitle' | trans(transOptions) }}: {{ '.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep }}
-    {% else %}
-        {{ 'stepPage.moneyIn.pageTitle' | trans(transOptions) }}
+        {{ parent() }}
+        {% block pageTitle %}{% endblock %}
+        {% set pageTitle = 'stepPage.moneyIn.pageTitle' | trans(transOptions)  ~ ': ' ~ ('.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep) %}
     {% endif %}
 {% endblock %}
 
 
 {% block supportTitleTop %}
-    <span class="heading-secondary">{{ 'stepPage.moneyIn.supportTitle' | trans }}</span>
+    {{ 'stepPage.moneyIn.supportTitle' | trans }}
 {% endblock %}
 
 {% block linkBack %}
@@ -62,7 +64,6 @@
                 {% endfor %}
             {% endfor %}
             </fieldset>
-        {% endfor %}
         </div>
     {% endif %}
 
