@@ -22,6 +22,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\CsrfTokenBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\CustomCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
+use Symfony\Component\Uid\Uuid;
 
 class LoginFormAuthenticator extends AbstractAuthenticator
 {
@@ -78,7 +79,19 @@ class LoginFormAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        $redirectUrl = $this->redirector->getFirstPageAfterLogin($request->getSession());
+        $session = $request->getSession();
+
+        // Generate a new, random, non-auth trace ID
+        $sessionSafeId = Uuid::v4()->toRfc4122();
+
+        // Store in Redis under a dedicated key, e.g. "trace:{session_id}"
+        $redisKey = sprintf('trace:%s', $session->getId());
+        $this->tokenStorage->set($redisKey, $sessionSafeId);
+
+        // Also add it to the session for easy access in logs
+        $session->set('session_safe_id', $sessionSafeId);
+
+        $redirectUrl = $this->redirector->getFirstPageAfterLogin($session);
 
         if ($request->query->has('lastPage')) {
             $decodedURL = urldecode($request->query->get('lastPage'));
@@ -87,7 +100,7 @@ class LoginFormAuthenticator extends AbstractAuthenticator
             }
         }
 
-        $this->redirector->removeLastAccessedUrl(); // avoid this URL to be used a the next login
+        $this->redirector->removeLastAccessedUrl(); // avoid this URL to be used at the next login
 
         return new RedirectResponse($redirectUrl, Response::HTTP_FOUND);
     }

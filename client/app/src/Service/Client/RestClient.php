@@ -374,10 +374,15 @@ class RestClient implements RestClientInterface
             unset($options[$ao]);
         }
 
-        // forward X-Request-Id to the API calls
+        // forward X-Aws-Request-Id to the API calls
         $reqId = RequestIdLoggerProcessor::getRequestIdFromContainer($this->container);
         if ($reqId) {
-            $options['headers']['X-Request-ID'] = $reqId;
+            $options['headers']['X-Aws-Request-ID'] = $reqId;
+        }
+
+        $sessionSafeId = RequestIdLoggerProcessor::getSessionSafeIdFromContainer($this->container);
+        if ($reqId) {
+            $options['headers']['X-Session-Safe-Id'] = $sessionSafeId;
         }
 
         if ($this->timeout) {

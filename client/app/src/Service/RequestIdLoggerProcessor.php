@@ -7,7 +7,7 @@ use Psr\Container\ContainerInterface;
 /**
  * RequestIdLoggerProcessor.
  *
- * Log processor to add and extra key 'request_id' to the log entry with the 'x-request-id' value found in the request header
+ * Log processor to add and extra key 'aws_request_id' to the log entry with the 'x-request-id' value found in the request header
  *
  * Usage in services.yml
  * monolog.processor.add_request_id:
@@ -32,7 +32,7 @@ class RequestIdLoggerProcessor
     }
 
     /**
-     * Add request header 'x-request-id' into ['extra']['request_id']
+     * Add request header 'x-aws-request-id' into ['extra']['aws_request_id']
      * Does not change the record if the scope is not active, or the request is not found or doesn't contain the header.
      *
      * @return array same record with extra info
@@ -40,9 +40,14 @@ class RequestIdLoggerProcessor
     public function processRecord(array $record)
     {
         $reqId = self::getRequestIdFromContainer($this->container);
+        $sessId = self::getSessionSafeIdFromContainer($this->container);
 
         if ($reqId) {
-            $record['extra']['request_id'] = $reqId;
+            $record['extra']['aws_request_id'] = $reqId;
+        }
+
+        if ($sessId) {
+            $record['extra']['session_safe_id'] = $sessId;
         }
 
         return $record;
@@ -53,9 +58,21 @@ class RequestIdLoggerProcessor
         if (
             ($rq = $container->get('request_stack'))
             && ($request = $rq->getCurrentRequest())
-            && ($request->headers->has('x-request-id'))
+            && ($request->headers->has('x-aws-request-id'))
         ) {
-            return $request->headers->get('x-request-id');
+            return $request->headers->get('x-aws-request-id');
+        }
+
+        return null;
+    }
+
+    public static function getSessionSafeIdFromContainer(ContainerInterface $container)
+    {
+        if (
+            ($rq = $container->get('request_stack'))
+            && ($request = $rq->getCurrentRequest())
+        ) {
+            return $request->getSession()->get('session_safe_id');
         }
 
         return null;
