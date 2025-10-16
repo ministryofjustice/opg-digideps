@@ -73,7 +73,7 @@
                 </td>
                 {% if report.canLinkToBankAccounts %}
                     <td class="govuk-table__cell">
-                        {{ (gift.bankAccount) ? gift.bankAccount.nameOneLine : '-' }}
+                        {{ (gift.bankAccount) ? gift.bankAccount.nameOneLine : 'not entered' | trans({}, 'common') }}
                     </td>
                 {% endif %}
                 <td class="govuk-table__cell govuk-table__cell--numeric">

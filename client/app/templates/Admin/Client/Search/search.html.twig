@@ -83,9 +83,7 @@
                                 {% endif %}
                             </td>
                             <td class="behat-region-{{ discharged }}client-{{ client.caseNumber }}-discharged-on">
-                                {% if client.deletedAt is not null %}
-                                    {{ client.deletedAt | date('j M Y') }}
-                                {% endif %}
+                                {{ client.deletedAt ? client.deletedAt | date('j M Y') : 'active' | trans({}, 'common') }}
                             </td>
                         </tr>
                     {% endfor %}
