@@ -88,7 +88,7 @@ class LoginFormAuthenticator extends AbstractAuthenticator
         $redisKey = sprintf('trace:%s', $session->getId());
         $this->tokenStorage->set($redisKey, $sessionSafeId);
 
-        // Also add it to the session for easy access in logs
+        // Also add it to the session as we will use this for adding to logs
         $session->set('session_safe_id', $sessionSafeId);
 
         $redirectUrl = $this->redirector->getFirstPageAfterLogin($session);

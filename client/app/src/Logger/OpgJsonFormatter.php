@@ -20,7 +20,8 @@ class OpgJsonFormatter extends MonologJsonFormatter
             'request' => [
                 'method' => $_SERVER['REQUEST_METHOD'] ?? 'UNKNOWN',
                 'path' => $_SERVER['REQUEST_URI'] ?? 'UNKNOWN',
-                'aws_request_id' => $_SERVER['HTTP_X_AWS_REQUEST_ID'] ?? 'UNKNOWN'
+                'aws_request_id' => $_SERVER['HTTP_X_AWS_REQUEST_ID'] ?? 'UNKNOWN',
+                'session_safe_id' => $_SERVER['HTTP_X_SESSION_SAFE_ID'] ?? 'UNKNOWN'
             ],
             'location' => [
                 'file' => $file,

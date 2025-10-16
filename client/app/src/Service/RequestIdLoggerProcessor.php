@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * RequestIdLoggerProcessor.
@@ -53,24 +54,30 @@ class RequestIdLoggerProcessor
         return $record;
     }
 
-    public static function getRequestIdFromContainer(ContainerInterface $container)
+    public static function getRequestIdFromContainer(ContainerInterface $container): ?string
     {
-        if (
-            ($rq = $container->get('request_stack'))
-            && ($request = $rq->getCurrentRequest())
-            && ($request->headers->has('x-aws-request-id'))
-        ) {
+        if (!$container->has('request_stack')) {
+            return null;
+        }
+
+        /** @var RequestStack $rq */
+        $rq = $container->get('request_stack');
+        $request = $rq->getCurrentRequest();
+
+        if ($request && $request->headers->has('x-aws-request-id')) {
             return $request->headers->get('x-aws-request-id');
         }
 
         return null;
     }
 
-    public static function getSessionSafeIdFromContainer(ContainerInterface $container)
+    public static function getSessionSafeIdFromContainer(ContainerInterface $container): ?string
     {
         if (
             ($rq = $container->get('request_stack'))
             && ($request = $rq->getCurrentRequest())
+            && $request->hasSession()
+            && $request->getSession()->has('session_safe_id')
         ) {
             return $request->getSession()->get('session_safe_id');
         }
