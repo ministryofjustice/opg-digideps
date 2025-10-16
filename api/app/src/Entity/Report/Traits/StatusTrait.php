@@ -73,10 +73,14 @@ trait StatusTrait
      *
      * using the `ReportService::getSectionStateNotCached`
      *
-     * @param string[] $sectionIds
+     * @param ?string[] $sectionIds
      */
-    public function updateSectionsStatusCache(array $sectionIds)
+    public function updateSectionsStatusCache(?array $sectionIds = null)
     {
+        if (is_null($sectionIds)) {
+            $sectionIds = $this->getAvailableSections();
+        }
+
         $currentSectionStatus = $this->getSectionStatusesCached();
 
         foreach ($currentSectionStatus as $statusKey => $statusValues) {
@@ -102,7 +106,7 @@ trait StatusTrait
         // Note: the isDue is skipped
         $this->reportStatusCached = $currentReportStatus
             ->setUseStatusCache(true)
-            ->getStatusIgnoringDueDate(true);
+            ->getStatusIgnoringDueDate();
     }
 
     /**

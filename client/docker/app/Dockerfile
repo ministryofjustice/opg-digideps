@@ -1,7 +1,8 @@
 ##############################
 # Stage 1: Base Composer Setup
 ##############################
-FROM composer:2.8.9 AS composer
+FROM composer:2.8.12@sha256:3ca62a8176c743eebef305ac2b93094a733dd5a34b5c1e3d3cf6cbbbd0792649 AS composer
+
 WORKDIR /app
 
 COPY client/app/composer.json .
@@ -29,7 +30,7 @@ RUN composer dump-autoload --optimize
 ##############################
 # Stage 2: Base PHP + Shared Files
 ##############################
-FROM php:8.3.24-fpm-alpine3.22 AS base
+FROM php:8.4-fpm-alpine3.22@sha256:c4e122105b22e71ca28d5db60223a331d77473f52ec6a1d7d69c6d612ef9b2c2 AS base
 
 ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
 
@@ -87,6 +88,9 @@ COPY --chown=www-data:www-data client/docker/app/config/meta.json.tmpl public/me
 COPY --chown=www-data:www-data client/docker/app/config/generate_parameters_yml.sh generate_parameters_yml.sh
 COPY --chown=www-data:www-data client/docker/app/config/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
+#Check processes script
+COPY --chown=www-data:www-data scripts/process_checks/check_processes.sh /check_processes.sh
+
 ##############################
 # Stage 3a: Runtime (production-only, non-root)
 ##############################
@@ -118,7 +122,7 @@ COPY scripts/hardening/harden.sh /harden.sh
 RUN /harden.sh www-data && rm /harden.sh
 
 USER www-data
-CMD ["sh", "-c", "php-fpm"]
+CMD sh -c "./check_processes.sh & exec php-fpm"
 
 ##############################
 # Stage 3b: Devtools Base (with dev dependencies)
@@ -159,11 +163,11 @@ RUN chown -R www-data:www-data /var/www/var && chmod -R ug+rwX /var/www/var
 COPY scripts/hardening/harden.sh /harden.sh
 RUN /harden.sh www-data && rm /harden.sh
 USER www-data
-CMD ["sh", "-c", "php-fpm"]
+CMD sh -c "./check_processes.sh & exec php-fpm"
 
 ##############################
 # Stage 3b2: Devtools Admin (root)
 ##############################
 FROM devtools-base AS devtools-admin
 USER root
-CMD ["sh", "-c", "php-fpm"]
+CMD sh -c "./check_processes.sh & exec php-fpm"

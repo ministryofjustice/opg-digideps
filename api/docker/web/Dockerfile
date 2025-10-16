@@ -29,7 +29,10 @@ RUN chown nginx:nginx /opt/scripts/health-check.sh && chmod 550 /opt/scripts/hea
 COPY scripts/hardening/harden-nginx.sh /opt/scripts/harden-nginx.sh
 RUN /opt/scripts/harden-nginx.sh && rm /opt/scripts/harden-nginx.sh
 
+#Check processes script
+COPY --chown=nginx scripts/process_checks/check_processes.sh /www/data/check_processes.sh
+
 USER nginx
 
 # Start services
-CMD ["sh", "-c", "nginx -g 'daemon off;'"]
+CMD sh -c "/www/data/check_processes.sh & exec nginx -g 'daemon off;'"

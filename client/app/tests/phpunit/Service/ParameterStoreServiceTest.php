@@ -48,8 +48,11 @@ class ParameterStoreServiceTest extends TestCase
         $parameterPrefix = '/param-prefix/';
         $ssmClient
             ->putParameter(
-                ['Name' => $parameterPrefix.$parameterName,
-                    'Value' => $parameterValue, 'Overwrite' => true, ])
+                ['Name' => $parameterPrefix . $parameterName,
+                'Value' => $parameterValue,
+                'Overwrite' => true,
+                ]
+            )
             ->shouldBeCalled()
             ->willReturn([
                 'Tier' => 'Standard',
@@ -71,8 +74,11 @@ class ParameterStoreServiceTest extends TestCase
         $flagPrefix = '/flag-prefix/';
         $ssmClient
             ->putParameter(
-                ['Name' => $flagPrefix.$flagName,
-                    'Value' => $flagValue, 'Overwrite' => true, ])
+                ['Name' => $flagPrefix . $flagName,
+                'Value' => $flagValue,
+                'Overwrite' => true,
+                ]
+            )
             ->shouldBeCalled()
             ->willReturn([
                 'Tier' => 'Standard',

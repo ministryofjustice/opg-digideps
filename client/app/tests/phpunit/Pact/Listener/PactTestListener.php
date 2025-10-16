@@ -87,10 +87,13 @@ class PactTestListener implements TestListener
                 $httpService->verifyInteractions();
                 $json = $httpService->getPactJson();
                 //requires these to exist
-                if (($pactBrokerUri = \getenv('PACT_BROKER_BASE_URL')) &&
-                    ($consumerVersion = \getenv('PACT_CONSUMER_VERSION'))) {
+                if (
+                    ($pactBrokerUri = \getenv('PACT_BROKER_BASE_URL')) &&
+                    ($consumerVersion = \getenv('PACT_CONSUMER_VERSION'))
+                ) {
                     $clientConfig = [];
-                    if (($user = \getenv('PACT_BROKER_HTTP_AUTH_USER')) &&
+                    if (
+                        ($user = \getenv('PACT_BROKER_HTTP_AUTH_USER')) &&
                         ($pass = \getenv('PACT_BROKER_HTTP_AUTH_PASSWORD'))
                     ) {
                         $clientConfig = [
