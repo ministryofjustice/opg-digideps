@@ -29,8 +29,8 @@ class RequestIdLoggerProcessorTest extends TestCase
 
     public function testProcessRecordNoReqStack()
     {
+        $this->container->shouldReceive('has')->with('request_stack')->andReturn(false);
         $this->container->shouldReceive('get')->with('request_stack')->andReturn(null);
-
         $this->assertEquals($this->record, $this->object->processRecord($this->record));
     }
 
@@ -38,6 +38,7 @@ class RequestIdLoggerProcessorTest extends TestCase
     {
         $this->reqStack->shouldReceive('getCurrentRequest')->andReturn(null);
         $this->container->shouldReceive('get')->with('request_stack')->andReturn($this->reqStack);
+        $this->container->shouldReceive('has')->with('request_stack')->andReturn(false);
 
         $this->assertEquals($this->record, $this->object->processRecord($this->record));
     }
@@ -48,6 +49,7 @@ class RequestIdLoggerProcessorTest extends TestCase
         // No headers set here
         $this->reqStack->shouldReceive('getCurrentRequest')->andReturn($request);
         $this->container->shouldReceive('get')->with('request_stack')->andReturn($this->reqStack);
+        $this->container->shouldReceive('has')->with('request_stack')->andReturn(false);
 
         $result = $this->object->processRecord($this->record);
 
@@ -64,6 +66,7 @@ class RequestIdLoggerProcessorTest extends TestCase
         $this->reqStack->shouldReceive('has')->with('x-aws-request-id')->andReturn(true);
         $this->reqStack->shouldReceive('get')->with('x-aws-request-id')->andReturn('THIS_IS_THE_REQUEST_ID');
         $this->container->shouldReceive('get')->with('request_stack')->andReturn($this->reqStack);
+        $this->container->shouldReceive('has')->with('request_stack')->andReturn(true);
 
         $this->assertEquals($this->record + ['extra' => ['aws_request_id' => 'THIS_IS_THE_REQUEST_ID']], $this->object->processRecord($this->record));
     }
@@ -83,6 +86,7 @@ class RequestIdLoggerProcessorTest extends TestCase
         // Mock the request stack and container
         $this->reqStack->shouldReceive('getCurrentRequest')->andReturn($request);
         $this->container->shouldReceive('get')->with('request_stack')->andReturn($this->reqStack);
+        $this->container->shouldReceive('has')->with('request_stack')->andReturn(true);
 
         // Run
         $result = $this->object->processRecord($this->record);
