@@ -15,7 +15,7 @@ class OpgLineFormatter extends LineFormatter
 
         if (4 === count($matches)) {
             // Format date (light blue)
-            $date = "\033[0;94m".$matches[1]."\033[0m";
+            $date = "\033[0;94m" . $matches[1] . "\033[0m";
 
             // Format log level
             $level = $matches[2];
@@ -34,7 +34,8 @@ class OpgLineFormatter extends LineFormatter
                     $level = "\033[0;31m$level\033[0m"; // Red
                     break;
             }
-
+            // Instead of this: $request_id = $_SERVER['HTTP_X_AWS_REQUEST_ID'] ?? 'UNKNOWN';
+            // request_id added as part of processRecord
             // Concatenate the formatted components
             $output = "[$date] $level: $matches[3]";
         }
