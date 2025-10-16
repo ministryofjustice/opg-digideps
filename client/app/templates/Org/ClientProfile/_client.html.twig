@@ -33,14 +33,14 @@
                         <strong class="govuk-!-font-weight-bold">{{ (page ~ '.dateOfBirth') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom">
-                        {{ (client.dateOfBirth) ? client.dateOfBirth | date(" j F Y") ~ ' (aged ' ~ client.getAge() ~ ')' : '-' }}
+                        {{ (client.dateOfBirth) ? client.dateOfBirth | date(" j F Y") ~ ' (aged ' ~ client.getAge() ~ ')' : 'not entered' | trans({}, 'common') }}
                     </dd>
 
                     <dt>
                         <strong class="govuk-!-font-weight-bold">{{ (page ~ '.phone') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom">
-                        {{ (client.phone) ? client.phone : '-' }}
+                        {{ (client.phone) ? client.phone : 'not entered' | trans({}, 'common') }}
                     </dd>
 
                 </dl>
@@ -52,7 +52,7 @@
                         <strong class="govuk-!-font-weight-bold">{{ (page ~ '.email') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom dont-break-out">
-                        {{ (client.email) ? client.email : '-' }}
+                        {{ (client.email) ? client.email : 'not entered' | trans({}, 'common') }}
                     </dd>
 
                     <dt>
