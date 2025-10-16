@@ -27,22 +27,22 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
     {% for profDeputyOtherCost in form.profDeputyOtherCosts %}
-        <div class="{{ profDeputyOtherCost.moreDetails is defined ? ' js-details-expander ' : '' }}">
+        {% set jsEnabled = profDeputyOtherCost.moreDetails is defined ? ' js-details-expander'  : '' %}
+        <div class="{{ jsEnabled }}">
             {{ form_row(profDeputyOtherCost.profDeputyOtherCostTypeId) }}
             {{ form_input(profDeputyOtherCost.amount, 'amount', {
                 'inputPrefix' : '£',
                 'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
-                'labelText': (page ~ '.form.entries.' ~ profDeputyOtherCost.profDeputyOtherCostTypeId.vars.value ~ '.label') | trans
+                'labelText': (page ~ '.form.entries.' ~ profDeputyOtherCost.profDeputyOtherCostTypeId.vars.value ~ '.label') | trans,
+                'jsEnabled': jsEnabled
             }) }}
 
             {# this is testing the form field is defined. Not the entity property #}
             {% if profDeputyOtherCost.moreDetails is defined %}
-                <div class="">
                     {{ form_input(profDeputyOtherCost.moreDetails, 'moreDetails', {
                         'labelText': (page ~ '.form.entries.' ~ profDeputyOtherCost.profDeputyOtherCostTypeId.vars.value ~ '.moreInformation') | trans,
-                        'formGroupClass': 'opg-indented-block'
+                        'formGroupClass': 'opg-indented-block hard--top js-hidden js-details-expandable'
                     }) }}
-                </div>
             {% endif %}
         </div>
     {% endfor %}
