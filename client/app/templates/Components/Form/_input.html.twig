@@ -23,6 +23,12 @@
     {% else %}
         <label for="{{ element.vars.id }}" class="govuk-label {{ labelClass | default('') }}">
            {{ label.text }}
+            {% if element.vars.id == 'debt_debts_3_amount' or element.vars.id == 'fee_fees_5_amount'
+                or element.vars.id == 'fee_fees_6_amount' or element.vars.id == 'deputy_other_costs_profDeputyOtherCosts_6_amount'%}
+                <span class="govuk-visually-hidden">
+                    Typing an amount in this field will reveal an additional input
+                </span>
+            {% endif %}
         </label>
     {% endif %}
 
