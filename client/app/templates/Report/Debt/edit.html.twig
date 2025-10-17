@@ -21,13 +21,15 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
     {% for debt in form.debts %}
-        <div class="{{ debt.moreDetails is defined ? ' js-details-expander ' : '' }}">
+        {% set jsEnabled = debt.moreDetails is defined ? ' js-details-expander ' : '' %}
+        <div class="{{ jsEnabled }}">
             {{ form_row(debt.debtTypeId) }}
             {{ form_input(debt.amount, 'amount', {
                 'inputPrefix' : '£',
                 'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
                 'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.label') | trans,
                 'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.hint') | trans(transOptions),
+                'jsEnabled': jsEnabled
             }) }}
 
             {% if debt.moreDetails is defined %}

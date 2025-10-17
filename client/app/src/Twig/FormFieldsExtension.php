@@ -73,29 +73,29 @@ class FormFieldsExtension extends AbstractExtension
     public function renderCheckboxGroup(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null): void
     {
         // lets get the translation for hintText, labelClass and labelText
-        $translationKey = (!is_null($transIndex)) ? $transIndex.'.'.$elementName : $elementName;
+        $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
         $domain = $element->parent->vars['translation_domain'];
 
         // sort hint text translation
         if (isset($vars['hintText'])) {
             $hintText = $vars['hintText'];
         } else {
-            $hintTextTrans = $this->translator->trans($translationKey.'.hint', [], $domain);
-            $hintText = ($hintTextTrans != $translationKey.'.hint') ? $hintTextTrans : null;
+            $hintTextTrans = $this->translator->trans($translationKey . '.hint', [], $domain);
+            $hintText = ($hintTextTrans != $translationKey . '.hint') ? $hintTextTrans : null;
         }
 
         if (isset($vars['legendText'])) {
             $legendText = $vars['legendText'];
         } else {
             // get legendText translation. Look for a .legend value, if there isn't one then try the top level
-            $legendTextTrans = $this->translator->trans($translationKey.'.legend', [], $domain);
+            $legendTextTrans = $this->translator->trans($translationKey . '.legend', [], $domain);
 
-            if ($legendTextTrans != $translationKey.'.legend') {
+            if ($legendTextTrans != $translationKey . '.legend') {
                 $legendText = $legendTextTrans;
             } else {
                 $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
-                $legendTextTrans = $this->translator->trans($translationKey.'.label', $labelParams, $domain);
-                if ($legendTextTrans != $translationKey.'.label') {
+                $legendTextTrans = $this->translator->trans($translationKey . '.label', $labelParams, $domain);
+                if ($legendTextTrans != $translationKey . '.label') {
                     $legendText = $legendTextTrans;
                 } else {
                     $legendText = null;
@@ -133,29 +133,29 @@ class FormFieldsExtension extends AbstractExtension
     public function renderCheckboxGroupNew(FormView $element, string $elementName, array $vars = [], $transIndex = null): void
     {
         // lets get the translation for hintText, labelClass and labelText
-        $translationKey = (!is_null($transIndex)) ? $transIndex.'.'.$elementName : $elementName;
+        $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
         $domain = $element->parent->vars['translation_domain'];
 
         // sort hint text translation
         if (isset($vars['hintText'])) {
             $hintText = $vars['hintText'];
         } else {
-            $hintTextTrans = $this->translator->trans($translationKey.'.hint', [], $domain);
-            $hintText = ($hintTextTrans != $translationKey.'.hint') ? $hintTextTrans : null;
+            $hintTextTrans = $this->translator->trans($translationKey . '.hint', [], $domain);
+            $hintText = ($hintTextTrans != $translationKey . '.hint') ? $hintTextTrans : null;
         }
 
         if (isset($vars['legendText'])) {
             $legendText = $vars['legendText'];
         } else {
             // get legendText translation. Look for a .legend value, if there isn't one then try the top level
-            $legendTextTrans = $this->translator->trans($translationKey.'.legend', [], $domain);
+            $legendTextTrans = $this->translator->trans($translationKey . '.legend', [], $domain);
 
-            if ($legendTextTrans != $translationKey.'.legend') {
+            if ($legendTextTrans != $translationKey . '.legend') {
                 $legendText = $legendTextTrans;
             } else {
                 $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
-                $legendTextTrans = $this->translator->trans($translationKey.'.label', $labelParams, $domain);
-                if ($legendTextTrans != $translationKey.'.label') {
+                $legendTextTrans = $this->translator->trans($translationKey . '.label', $labelParams, $domain);
+                if ($legendTextTrans != $translationKey . '.label') {
                     $legendText = $legendTextTrans;
                 } else {
                     $legendText = null;
@@ -193,7 +193,7 @@ class FormFieldsExtension extends AbstractExtension
         // read domain from Form ption 'translation_domain'
         $domain = $element->parent->vars['translation_domain'];
 
-        $translationKey = (!is_null($transIndex)) ? $transIndex.'.'.$elementName : $elementName;
+        $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
 
         if (isset($vars['showDay'])) {
             $showDay = $vars['showDay'];
@@ -202,10 +202,10 @@ class FormFieldsExtension extends AbstractExtension
         }
 
         // sort hint text translation
-        $hintTextTrans = $this->translator->trans($translationKey.'.hint', [], $domain);
+        $hintTextTrans = $this->translator->trans($translationKey . '.hint', [], $domain);
         if (isset($vars['hintText']) && !empty($vars['hintText'])) {
             $hintText = $vars['hintText'];
-        } elseif ($hintTextTrans !== $translationKey.'.hint') {
+        } elseif ($hintTextTrans !== $translationKey . '.hint') {
             $hintText = $hintTextTrans;
         } else {
             $hintText = $this->translator->trans('defaultDateHintText', [], 'common');
@@ -214,14 +214,14 @@ class FormFieldsExtension extends AbstractExtension
         // get legendText translation
         $legendParams = isset($vars['legendParameters']) ? $vars['legendParameters'] : [];
 
-        $legendTextTrans = $this->translator->trans($translationKey.'.legend', $legendParams, $domain);
+        $legendTextTrans = $this->translator->trans($translationKey . '.legend', $legendParams, $domain);
 
-        if ($legendTextTrans != $translationKey.'.legend') {
+        if ($legendTextTrans != $translationKey . '.legend') {
             $legendText = $legendTextTrans;
         } else {
             // the
-            $legendTextTrans = $this->translator->trans($translationKey.'.label', $legendParams, $domain);
-            if ($legendTextTrans != $translationKey.'.label') {
+            $legendTextTrans = $this->translator->trans($translationKey . '.label', $legendParams, $domain);
+            if ($legendTextTrans != $translationKey . '.label') {
                 $legendText = $legendTextTrans;
             } else {
                 $legendText = null;
@@ -245,18 +245,18 @@ class FormFieldsExtension extends AbstractExtension
     public function renderFormSortCode(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null): void
     {
         // lets get the translation for class and labelText
-        $translationKey = (!is_null($transIndex)) ? $transIndex.'.'.$elementName : $elementName;
+        $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
         // read domain from Form ption 'translation_domain'
         $domain = $element->parent->vars['translation_domain'];
 
         // sort hint text translation
-        $hintTextTrans = $this->translator->trans($translationKey.'.hint', [], $domain);
-        $hintText = ($hintTextTrans != $translationKey.'.hint') ? $hintTextTrans : null;
+        $hintTextTrans = $this->translator->trans($translationKey . '.hint', [], $domain);
+        $hintText = ($hintTextTrans != $translationKey . '.hint') ? $hintTextTrans : null;
 
         // get legendText translation
-        $legendTextTrans = $this->translator->trans($translationKey.'.legend', [], $domain);
+        $legendTextTrans = $this->translator->trans($translationKey . '.legend', [], $domain);
 
-        $legendText = ($legendTextTrans != $translationKey.'.legend') ? $legendTextTrans : null;
+        $legendText = ($legendTextTrans != $translationKey . '.legend') ? $legendTextTrans : null;
 
         $html = $this->environment->render('@App/Components/Form/_sort-code.html.twig', [
             'legend' => array_merge([
@@ -281,7 +281,7 @@ class FormFieldsExtension extends AbstractExtension
     ): void {
         $options = [
             // label comes from labelText (if defined, but throws warning) ,or elementname.label from the form translation domain
-            'label' => $elementName.'.label',
+            'label' => $elementName . '.label',
             'element' => $element,
             'translationDomain' => isset($vars['labelTranslationDomain']) ? $vars['labelTranslationDomain'] : null,
             'buttonClass' => isset($vars['buttonClass']) ? $vars['buttonClass'] : null,
@@ -400,21 +400,21 @@ class FormFieldsExtension extends AbstractExtension
     private function getFormComponentTwigVariables(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null): array
     {
         // lets get the translation for hintText, labelClass and labelText
-        $translationKey = (!is_null($transIndex)) ? $transIndex.'.'.$elementName : $elementName;
+        $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
         $domain = $element->parent->vars['translation_domain'];
 
         if (isset($vars['hintText'])) {
             $hintText = $vars['hintText'];
         } else {
-            $hintTextTrans = $this->translator->trans($translationKey.'.hint', [], $domain);
-            $hintText = ($hintTextTrans != $translationKey.'.hint') ? $hintTextTrans : null;
+            $hintTextTrans = $this->translator->trans($translationKey . '.hint', [], $domain);
+            $hintText = ($hintTextTrans != $translationKey . '.hint') ? $hintTextTrans : null;
         }
 
         // sort hintList text translation
         $hintListArray = null;
         if (!empty($vars['hasHintList'])) {
             $hintListParams = isset($vars['hintListParameters']) ? $vars['hintListParameters'] : [];
-            $hintListTextTrans = $this->translator->trans($translationKey.'.hintList', $hintListParams, $domain);
+            $hintListTextTrans = $this->translator->trans($translationKey . '.hintList', $hintListParams, $domain);
             $hintListArray = array_filter(explode("\n", $hintListTextTrans));
         }
 
@@ -425,7 +425,7 @@ class FormFieldsExtension extends AbstractExtension
             $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
             // label is translated directly here
             if ('' != $translationKey) {
-                $labelText = $this->translator->trans($translationKey.'.label', $labelParams, $domain);
+                $labelText = $this->translator->trans($translationKey . '.label', $labelParams, $domain);
             } else {
                 $labelText = '';
             }
@@ -441,7 +441,7 @@ class FormFieldsExtension extends AbstractExtension
         // Text to insert to the left of an input, e.g. * * * * for account
         $preInputText = null;
         if (!empty($vars['hasPreInput'])) {
-            $preInputTextTrans = $this->translator->trans($translationKey.'.preInput', [], $domain);
+            $preInputTextTrans = $this->translator->trans($translationKey . '.preInput', [], $domain);
             $preInputText = $preInputTextTrans;
         }
 
@@ -460,6 +460,7 @@ class FormFieldsExtension extends AbstractExtension
             'labelRaw' => !empty($vars['labelRaw']),
             'labelLink' => !empty($vars['labelLink']),
             'preInputText' => $preInputText,
+            'jsEnabled' => $vars['jsEnabled'] ?? '',
             'label' => array_merge([
                 'text' => $labelText,
                 'isPageHeading' => false,

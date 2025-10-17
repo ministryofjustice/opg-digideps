@@ -23,6 +23,11 @@
     {% else %}
         <label for="{{ element.vars.id }}" class="govuk-label {{ labelClass | default('') }}">
            {{ label.text }}
+            {% if jsEnabled != '' %}
+                <span class="govuk-visually-hidden">
+                    Please note typing an amount in this field will reveal an additional input
+                </span>
+            {% endif %}
         </label>
     {% endif %}
 
