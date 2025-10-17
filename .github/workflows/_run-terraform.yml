@@ -52,7 +52,7 @@ jobs:
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@4f345be3f706950d1fdc05bc86383967a149bd99 # v4.3.4
+        uses: ministryofjustice/opg-github-actions/actions/terraform-version@4f345be3f706950d1fdc05bc86383967a149bd99 # v4.3.4
         with:
           terraform_directory: terraform/${{ inputs.terraform_path }}
 
@@ -69,7 +69,7 @@ jobs:
       - id: terraform_workspace_manager
         if: inputs.apply && inputs.terraform_path == 'environment' && inputs.pull_request_path
         name: register workspace
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-workspace-manager@4f345be3f706950d1fdc05bc86383967a149bd99 # v4.3.4
+        uses: ministryofjustice/opg-github-actions/actions/terraform-workspace-manager@4f345be3f706950d1fdc05bc86383967a149bd99 # v4.3.4
         with:
           aws_account_id: 248804316466
           aws_iam_role: digideps-ci
