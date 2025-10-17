@@ -117,6 +117,8 @@ class FormFieldsExtension extends AbstractExtension
             'legendClass' => isset($vars['legendClass']) ? $vars['legendClass'] : null,
             'useFormGroup' => isset($vars['useFormGroup']) ? $vars['useFormGroup'] : true,
             'hintText' => $hintText,
+            'hintLink' => isset($vars['hintLink']) ? $vars['hintLink'] : null,
+            'hintList' => empty($vars['hintList']) ? [] : $vars['hintList'],
             'element' => $element,
             'vertical' => isset($vars['vertical']) ? $vars['vertical'] : false,
             'items' => empty($vars['items']) ? [] : $vars['items'],

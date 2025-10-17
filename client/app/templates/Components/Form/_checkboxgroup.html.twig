@@ -15,7 +15,18 @@
         </legend>
 
         {% if hintText is not null %}
-            <div class="govuk-hint" id="{{ element.vars.id }}-hint">{{ hintText }}</div>
+            <div class="govuk-hint" id="{{ element.vars.id }}-hint">{{ hintText }}
+            {% if hintLink is not null %}
+                <a href="{{ hintLink.url }}" class="govuk-link">{{ hintLink.text }}</a>.
+            {% endif %}
+            {% if hintList | length > 1 %}
+                <ul class="govuk-list govuk-list--bullet">
+                    {% for listText in hintList %}
+                        <li>{{ listText }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            </div>
         {% endif %}
 
         {{  form_errors(element) }}
