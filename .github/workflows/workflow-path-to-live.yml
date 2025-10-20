@@ -31,9 +31,9 @@ jobs:
     name: output workflow variables
     outputs:
       build_identifier: "main"
-      version_tag: ${{ steps.semver_tag.outputs.created_tag }}
+      version_tag: ${{ steps.semver_tag.outputs.tag }}
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           fetch-depth: 0
 
@@ -53,7 +53,7 @@ jobs:
 
       - name: generate semver tag and release
         id: semver_tag
-        uses: ministryofjustice/opg-github-actions/.github/actions/semver-tag@ea1e81f43e7593acd74cc114085930f5f54914a2 # v3.1.7
+        uses: ministryofjustice/opg-github-actions/actions/semver@4f345be3f706950d1fdc05bc86383967a149bd99 # v4.3.4
         with:
           prerelease: false
           default_bump: ${{ steps.semver_bump.outputs.default_bump }}
@@ -61,7 +61,7 @@ jobs:
       - name: show build identifier and tag
         id: show
         env:
-          TAG: ${{ steps.semver_tag.outputs.created_tag }}
+          TAG: ${{ steps.semver_tag.outputs.tag }}
         run: |
           echo "Build Identifier: main"
           echo "Container Tag: ${TAG}"
