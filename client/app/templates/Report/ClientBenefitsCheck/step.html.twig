@@ -12,12 +12,16 @@
 {% block htmlTitle %}
     {{ 'common.htmlTitle'|trans(transOptions, translationDomain) }}
 {% endblock %}
-{% block supportTitleTop %}
-    {{ 'stepPage.supportTitle'|trans(transOptions, translationDomain) }}
+
+{% block pageHeader %}
+    {% if step == 3 %}
+        {{ parent() }}
+        {% block pageTitle %}
+            {{ ('stepPage.pageTitle.' ~ step ~ '.mainTitle')|trans(transOptions, translationDomain) }}
+        {% endblock %}
+    {% endif %}
 {% endblock %}
-{% block pageTitle %}
-    {{ ('stepPage.pageTitle.' ~ step ~ '.mainTitle')|trans(transOptions, translationDomain) }}
-{% endblock %}
+
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back'|trans({}, 'common')) }}
@@ -40,13 +44,6 @@
     }}
 
     {% if step == 1 %}
-        <p class="govuk-body">
-            {{ 'stepPage.pageDescription.1.benefitsCalculatorSignpost' | trans(
-                {
-                    '%client%': report.client.firstname|e
-                }
-            ) }} <a href="https://www.gov.uk/benefits-calculators" class="govuk-link">independent benefits calculators</a>.
-        </p>
         {% set conditionalDateChecked %}
             {{
                 form_known_date(
@@ -86,6 +83,16 @@
                         isPageHeading: true,
                         caption: 'stepPage.supportTitle'|trans
                     },
+                    legend: {
+                        isPageHeading: true,
+                        caption: 'stepPage.supportTitle'|trans
+                    },
+                    legendText: ('stepPage.pageTitle.' ~ step ~ '.mainTitle')|trans(transOptions, translationDomain),
+                    hintText: 'stepPage.pageDescription.1.benefitsCalculatorSignpost' | trans({ '%client%': report.client.firstname|e }),
+                    hintLink: {
+                        url: 'https://www.gov.uk/benefits-calculators',
+                        text: 'independent benefits calculators'
+                    },
                     items: [
                         {
                             conditional: conditionalDateChecked
@@ -103,15 +110,6 @@
     {% endif %}
 
     {% if step == 2 %}
-        <p class="govuk-body">
-            {{ ('stepPage.pageDescription.' ~ step ~ '.bulletsParagraph') | trans(transOptions, translationDomain)}}
-        </p>
-
-        <ul class="govuk-list govuk-list--bullet">
-            <li>{{ ('stepPage.pageDescription.' ~ step ~ '.bullets.1') | trans }}</li>
-            <li>{{ ('stepPage.pageDescription.' ~ step ~ '.bullets.2') | trans }}</li>
-        </ul>
-
         {% set conditionalMoneyDontKnowChecked %}
             {{
                 form_input(
@@ -136,6 +134,16 @@
                         isPageHeading: true,
                         caption: 'stepPage.supportTitle'|trans
                     },
+                    legend: {
+                        isPageHeading: true,
+                        caption: 'stepPage.supportTitle' | trans
+                    },
+                    legendText: ('stepPage.pageTitle.' ~ step ~ '.mainTitle')|trans(transOptions, translationDomain),
+                    hintText: ('stepPage.pageDescription.' ~ step ~ '.bulletsParagraph') | trans(transOptions, translationDomain),
+                    hintList: [
+                        ('stepPage.pageDescription.' ~ step ~ '.bullets.1') | trans,
+                        ('stepPage.pageDescription.' ~ step ~ '.bullets.2') | trans,
+                    ],
                     items: [
                         {},
                         {},
