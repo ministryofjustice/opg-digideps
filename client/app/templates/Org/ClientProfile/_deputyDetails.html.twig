@@ -41,28 +41,28 @@
                         <strong class="govuk-!-font-weight-bold">{{ (page ~ '.mainPhone') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom">
-                        {{ (deputy.phoneMain) ? deputy.phoneMain : '-' }}
+                        {{ (deputy.phoneMain) ? deputy.phoneMain : 'not entered' | trans({}, 'common') }}
                     </dd>
 
                     <dt>
                         <strong class="govuk-!-font-weight-bold">{{ (page ~ '.altPhone') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom">
-                        {{ (deputy.phoneAlternative) ? deputy.phoneAlternative : '-' }}
+                        {{ (deputy.phoneAlternative) ? deputy.phoneAlternative : 'not entered' | trans({}, 'common') }}
                     </dd>
 
                     <dt>
                         <strong class="govuk-!-font-weight-bold">{{ (page ~ '.mainEmail') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom">
-                        {{ (deputy.email1) ? deputy.email1 : '-' }}
+                        {{ (deputy.email1) ? deputy.email1 : 'not entered' | trans({}, 'common') }}
                     </dd>
 
                     <dt>
                         <strong class="govuk-!-font-weight-bold">{{ (page ~ '.altEmail') | trans }}</strong>
                     </dt>
                     <dd class="push--bottom">
-                        {{ (deputy.email2) ? deputy.email2 : '-' }}
+                        {{ (deputy.email2) ? deputy.email2 : 'not entered' | trans({}, 'common') }}
                     </dd>
                 </dl>
             </div>

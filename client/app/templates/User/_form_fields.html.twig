@@ -57,19 +57,23 @@
 {% endif %}
 
 {% if form.address1 is defined %}
-    {{ form_input( form.address1, 'form.editYourDetails.controls.address1') }}<span class="govuk-visually-hidden">{{ 'form.editYourDetails.controls.address1.context' | trans({}, translationDomain) }}</span>
+    <fieldset class="govuk-fieldset">
+        <legend class="govuk-visually-hidden">{{ 'address' | trans({}, 'common' ) }}</legend>
 
-    {{ form_input( form.address2, 'form.editYourDetails.controls.address2') }}<span class="govuk-visually-hidden">{{ 'form.editYourDetails.controls.address2.context' | trans({}, translationDomain) }}</span>
+        {{ form_input( form.address1, 'form.editYourDetails.controls.address1') }}
 
-    {{ form_input( form.address3, 'form.editYourDetails.controls.address3') }}<span class="govuk-visually-hidden">{{ 'form.editYourDetails.controls.address3.context' | trans({}, translationDomain) }}</span>
+        {{ form_input( form.address2, 'form.editYourDetails.controls.address2') }}
 
-    {% if form.addressPostcode is defined %}
-        {% if user.addressPostcode is empty or not client_validated %}
-            {{ form_input(form.addressPostcode, 'form.editYourDetails.controls.addressPostcode', { 'inputClass': 'govuk-!-width-one-quarter' }) }}
+        {{ form_input( form.address3, 'form.editYourDetails.controls.address3') }}
+
+        {% if form.addressPostcode is defined %}
+            {% if user.addressPostcode is empty or not client_validated %}
+                {{ form_input(form.addressPostcode, 'form.editYourDetails.controls.addressPostcode', { 'inputClass': 'govuk-!-width-one-quarter' }) }}
+            {% endif %}
         {% endif %}
-    {% endif %}
 
-    {{ form_select( form.addressCountry, 'form.editYourDetails.controls.addressCountry') }}
+        {{ form_select( form.addressCountry, 'form.editYourDetails.controls.addressCountry') }}
+    </fieldset>
 {% endif %}
 
 {% if form.phoneMain is defined %}

@@ -526,11 +526,6 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Cannot call method getAvailableSections\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
 			message: "#^Cannot call method updateSectionsStatusCache\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
@@ -4526,11 +4521,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: "#^Method App\\\\Service\\\\ReportStatusService\\:\\:getStatusIgnoringDueDate\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Parameter \\$transactions of method App\\\\Entity\\\\Report\\\\Report\\:\\:groupByCategory\\(\\) has invalid type App\\\\Entity\\\\Report\\\\Traits\\\\Transaction\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -5989,11 +5979,6 @@ parameters:
 			message: "#^Negated boolean expression is always false\\.$#"
 			count: 1
 			path: src/Security/HeaderTokenAuthenticator.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getRoleName\\(\\)\\.$#"
-			count: 3
-			path: src/Security/LoginRequestAuthenticator.php
 
 		-
 			message: "#^Cannot access offset 'email' on mixed\\.$#"

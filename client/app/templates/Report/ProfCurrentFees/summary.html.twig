@@ -109,7 +109,7 @@
                             £{{ fixedServiceFee.amountReceived | money_format }}
                         </dd>
                         <dd class="govuk-summary-list__value width-fifth numeric-small no-wrap">
-                            {{ fixedServiceFee.paymentReceivedDate ? fixedServiceFee.paymentReceivedDate | date("j F Y")  : '-' }}
+                            {{ fixedServiceFee.paymentReceivedDate ? fixedServiceFee.paymentReceivedDate | date("j F Y")  : 'not entered' | trans({}, 'common') }}
                         </dd>
                         <dd class="govuk-summary-list__actions">
                             <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'feeId': fixedServiceFee.id, 'step': '1', 'from': 'summary'}) }}"
@@ -171,7 +171,7 @@
                             £{{ assessedServiceFee.amountReceived | money_format }}
                         </dd>
                         <dd class="govuk-summary-list__value numeric-small width-fifth">
-                            {{ assessedServiceFee.paymentReceivedDate ? assessedServiceFee.paymentReceivedDate | date("j F Y")  : '-' }}
+                            {{ assessedServiceFee.paymentReceivedDate ? assessedServiceFee.paymentReceivedDate | date("j F Y")  : 'not entered' | trans({}, 'common') }}
                         </dd>
                         <dd class="govuk-summary-list__actions change-answer width-seventh">
                             <a href="{{ path('current_service_fee_step', { 'reportId': report.id, 'feeId': assessedServiceFee.id, 'step': '1', 'from': 'summary'}) }}"
