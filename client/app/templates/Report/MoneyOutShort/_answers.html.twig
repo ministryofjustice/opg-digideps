@@ -162,7 +162,7 @@
                         {{ tr.description }}<br/>
                     </td>
                     <td class="govuk-table__cell">
-                        {{ tr.date ? tr.date | date("j F Y")  : '-' }}
+                        {{ tr.date ? tr.date | date("j F Y")  : 'not entered' | trans({}, 'common') }}
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric">
                         £{{ tr.amount | money_format }}

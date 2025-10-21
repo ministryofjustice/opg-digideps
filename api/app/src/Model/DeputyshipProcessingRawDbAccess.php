@@ -202,8 +202,9 @@ class DeputyshipProcessingRawDbAccess
         try {
             $result = $this->ingestWriterEm->getConnection()->createQueryBuilder()
                 ->update('court_order')
-                ->set('status', $courtOrderStatus)
+                ->set('status', ':courtOrderStatus')
                 ->where('id = :id')
+                ->setParameter('courtOrderStatus', $courtOrderStatus)
                 ->setParameter('id', $courtOrderId)
                 ->executeQuery();
 
@@ -228,9 +229,10 @@ class DeputyshipProcessingRawDbAccess
         try {
             $result = $this->ingestWriterEm->getConnection()->createQueryBuilder()
                 ->update('court_order_deputy')
-                ->set('is_active', $isActive ? 'true' : 'false')
+                ->set('is_active', ':isActive')
                 ->where('court_order_id = :courtOrderId')
                 ->andWhere('deputy_id = :deputyId')
+                ->setParameter('isActive', $isActive)
                 ->setParameter('courtOrderId', $courtOrderId)
                 ->setParameter('deputyId', $deputyId)
                 ->executeQuery();
