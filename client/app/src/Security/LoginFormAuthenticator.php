@@ -84,11 +84,7 @@ class LoginFormAuthenticator extends AbstractAuthenticator
         // Generate a new, random, non-auth trace ID
         $sessionSafeId = Uuid::v4()->toRfc4122();
 
-        // Store in Redis under a dedicated key, e.g. "trace:{session_id}"
-        $redisKey = sprintf('trace:%s', $session->getId());
-        $this->tokenStorage->set($redisKey, $sessionSafeId);
-
-        // Also add it to the session as we will use this for adding to logs
+        // Add it to the session as we will use this for adding to logs (no real need to add to redis)
         $session->set('session_safe_id', $sessionSafeId);
 
         $redirectUrl = $this->redirector->getFirstPageAfterLogin($session);
