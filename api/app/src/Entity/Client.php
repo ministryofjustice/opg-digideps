@@ -79,7 +79,7 @@ class Client implements ClientInterface
      **/
     #[JMS\Groups(['basic', 'client-ndr', 'ndr_id'])]
     #[JMS\Type('App\Entity\Ndr\Ndr')]
-    private $ndr;
+    private ?Ndr $ndr = null;
 
     /**
      * @var string
@@ -622,10 +622,7 @@ class Client implements ClientInterface
         return $reportIds;
     }
 
-    /**
-     * @return Ndr
-     */
-    public function getNdr()
+    public function getNdr(): ?Ndr
     {
         return $this->ndr;
     }
@@ -640,7 +637,7 @@ class Client implements ClientInterface
      */
     public function getFullName($space = '&nbsp;')
     {
-        return $this->getFirstname().$space.$this->getLastname();
+        return $this->getFirstname() . $space . $this->getLastname();
     }
 
     public function setAddress2(?string $address2)
