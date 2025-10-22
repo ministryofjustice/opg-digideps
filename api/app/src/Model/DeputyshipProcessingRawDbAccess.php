@@ -230,9 +230,7 @@ class DeputyshipProcessingRawDbAccess
         $deputyId = $candidate['deputyId'];
 
         try {
-            $qb = $this->ingestWriterEm->getConnection()->createQueryBuilder();
-
-            $result = $qb
+            $result = $this->ingestWriterEm->getConnection()->createQueryBuilder()
                 ->update('court_order_deputy')
                 ->set('is_active', ':isActive')
                 ->where('court_order_id = :courtOrderId')
