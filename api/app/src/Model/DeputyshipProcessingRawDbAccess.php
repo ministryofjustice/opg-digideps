@@ -111,7 +111,7 @@ class DeputyshipProcessingRawDbAccess
     public function insertOrderDeputy(int $courtOrderId, array $candidate): DeputyshipProcessingRawDbAccessResult
     {
         $deputyId = $candidate['deputyId'];
-        $deputyActive = true === $candidate['deputyStatusOnOrder'];
+        $deputyActive = (true === $candidate['deputyStatusOnOrder'] ? 'true' : 'false');
 
         try {
             $result = $this->ingestWriterEm->getConnection()->createQueryBuilder()
@@ -120,10 +120,9 @@ class DeputyshipProcessingRawDbAccess
                     [
                         'court_order_id' => $courtOrderId,
                         'deputy_id' => $deputyId,
-                        'is_active' => ':deputyActive',
+                        'is_active' => $deputyActive,
                     ]
                 )
-                ->setParameter('deputyActive', $deputyActive ? 'true' : 'false')
                 ->executeQuery();
 
             return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::InsertOrderDeputy, true, $result);

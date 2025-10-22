@@ -93,7 +93,7 @@ class DeputyshipProcessingRawDbAccessIntegrationIntegrationTest extends ApiInteg
         $courtOrderId = self::$sut->findOrderId($courtOrderUid)->data;
 
         self::$sut->beginTransaction();
-        $result = self::$sut->insertOrderDeputy($courtOrderId, ['deputyStatusOnOrder' => true, 'deputyId' => $deputy->getId()]);
+        $result = self::$sut->insertOrderDeputy($courtOrderId, ['deputyStatusOnOrder' => false, 'deputyId' => $deputy->getId()]);
         self::$sut->endTransaction();
 
         self::assertTrue($result->success);
@@ -109,7 +109,7 @@ class DeputyshipProcessingRawDbAccessIntegrationIntegrationTest extends ApiInteg
             ->fetchAssociative();
 
         self::assertNotFalse($result, 'court order deputy association was not found');
-        self::assertTrue($result['is_active']);
+        self::assertFalse($result['is_active']);
     }
 
     /**
