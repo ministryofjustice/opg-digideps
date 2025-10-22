@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-use App\Entity\CourtOrderDeputy;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
