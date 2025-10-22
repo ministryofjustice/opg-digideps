@@ -59,6 +59,8 @@ case "$INTEGRATION_SELECTION" in
     php vendor/bin/phpunit -c tests/Integration tests/Integration/Stats/ --coverage-php tests/coverage/Stats.cov
     printf '\n Running v2 Suite \n\n'
     php vendor/bin/phpunit -c tests/Integration tests/Integration/v2/ --coverage-php tests/coverage/v2.cov
+    printf '\n Running Model Suite \n\n'
+    php vendor/bin/phpunit -c tests/Integration tests/Integration/Model/ --coverage-php tests/coverage/Model.cov
     ;;
   selection-all)
     # selection-1
@@ -84,6 +86,8 @@ case "$INTEGRATION_SELECTION" in
     php vendor/bin/phpunit -c tests/Integration tests/Integration/Stats/ --coverage-php tests/coverage/Stats.cov
     printf '\n Running v2 Suite \n\n'
     php vendor/bin/phpunit -c tests/Integration tests/Integration/v2 --coverage-php tests/coverage/v2.cov
+    printf '\n Running Model Suite \n\n'
+    php vendor/bin/phpunit -c tests/Integration tests/Integration/Model/ --coverage-php tests/coverage/Model.cov
 
     # generate HTML coverage report
     php -d memory_limit=256M vendor/phpunit/phpcov/phpcov merge --html "./build/coverage-api" "./tests/coverage"
