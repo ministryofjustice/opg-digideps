@@ -118,16 +118,24 @@ class AssetTypeProperty extends AbstractType
         return function (FormInterface $form) {
             /** @var $asset \App\Entity\Report\AssetProperty */
             $asset = $form->getData();
+            $val = ['property-owned','property-mortgage'];
+
+            if ('partly' == $asset->getOwned()) {
+                $val[] = 'property-owned-partly';
+            }
+
+            if ('yes' == $asset->getHasMortgage()) {
+                $val[] = 'property-mortgage-outstanding-amount';
+            }
 
             return [
                 1 => ['property-address'],
                 2 => ['property-occupants'],
-                3 => ('partly' == $asset->getOwned()) ? ['property-owned', 'property-owned-partly'] : ['property-owned'],
-                4 => ('yes' == $asset->getHasMortgage()) ? ['property-mortgage', 'property-mortgage-outstanding-amount'] : ['property-mortgage'],
-                5 => ['property-value'],
-                6 => ['property-subject-equity-release'],
-                7 => ['property-has-charges'],
-                8 => ('yes' == $asset->getIsRentedOut())
+                3 => $val,
+                4 => ['property-value'],
+                5 => ['property-subject-equity-release'],
+                6 => ['property-has-charges'],
+                7 => ('yes' == $asset->getIsRentedOut())
                     ? ['property-rented-out', 'property-rent-agree-date', 'property-rent-income-month']
                     : ['property-rented-out'],
             ][$this->step];
