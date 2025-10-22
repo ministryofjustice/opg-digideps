@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+use App\Entity\CourtOrderDeputy;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
@@ -223,11 +224,16 @@ class DeputyshipProcessingRawDbAccess
 
     public function updateDeputyStatus(int $courtOrderId, array $candidate): DeputyshipProcessingRawDbAccessResult
     {
-        $isActive = true === $candidate['deputyStatusOnOrder'];
+        // this is necessary because doctrine treats 0 and false differently when passed as update parameters,
+        // while true and 1 result in the same outcome when used as a parameter
+        $isActive = (true === $candidate['deputyStatusOnOrder'] ? 1 : 0);
+
         $deputyId = $candidate['deputyId'];
 
         try {
-            $result = $this->ingestWriterEm->getConnection()->createQueryBuilder()
+            $qb = $this->ingestWriterEm->getConnection()->createQueryBuilder();
+
+            $result = $qb
                 ->update('court_order_deputy')
                 ->set('is_active', ':isActive')
                 ->where('court_order_id = :courtOrderId')
