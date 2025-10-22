@@ -42,6 +42,9 @@ class DeputyshipCandidatesConverter
                 return new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::InsertOrderFailed, $errors);
             }
 
+            // ensure inserted order has an ID assigned
+            $this->dbAccess->flush();
+
             $buildResult->addCandidateResult($result);
         }
 

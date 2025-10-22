@@ -8,7 +8,8 @@
          backupGlobals="false"
          colors="true"
          bootstrap="./bootstrap.php"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd">
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
+         displayDetailsOnPhpunitDeprecations="true">
   <php>
     <server name="KERNEL_DIR" value="../../src"/>
     <server name="APP_ENV" value="test"/>

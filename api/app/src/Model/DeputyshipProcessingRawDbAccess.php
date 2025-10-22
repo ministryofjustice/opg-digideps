@@ -39,6 +39,11 @@ class DeputyshipProcessingRawDbAccess
         $this->ingestWriterEm->clear();
     }
 
+    public function flush(): void
+    {
+        $this->ingestWriterEm->flush();
+    }
+
     /**
      * @return DeputyshipProcessingRawDbAccessResult $result is the ID int value, or null if not found
      */
