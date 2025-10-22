@@ -211,8 +211,4 @@ class DeputyshipProcessingRawDbAccessIntegrationIntegrationTest extends ApiInteg
         self::assertNotFalse($association, 'court order deputy association was not found');
         self::assertFalse($association['is_active']);
     }
-
-    public static function tearDownAfterClass(): void
-    {
-    }
 }
