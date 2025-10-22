@@ -28,6 +28,24 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
         self::$sut = $sut;
     }
 
+    private function hasCourtOrderDeputyAssociationBeenAdded(Deputy $deputy, string $orderUid): bool
+    {
+        // check that the court order <-> deputy association has been added
+        // (note this will not exist unless the court order exists as court_order_id is a foreign key)
+        /** @var int $result */
+        $result = self::$entityManager->createQueryBuilder()
+            ->select('COUNT(1)')
+            ->from(CourtOrderDeputy::class, 'cod')
+            ->innerJoin(CourtOrder::class, 'co', Join::WITH, 'co = cod.courtOrder')
+            ->where('cod.deputy = :deputy')
+            ->andWhere('co.courtOrderUid = :courtOrderUid')
+            ->setParameters(['deputy' => $deputy, 'courtOrderUid' => $orderUid])
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $result === 1;
+    }
+
     public static function dryRunTestCases(): array
     {
         return [
@@ -158,19 +176,52 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
 
         self::assertEquals(2, $result->getNumCandidatesApplied(), 'two candidates should be applied');
         self::assertCount(0, $result->getErrors(), 'candidate group should have no errors');
+        self::assertTrue($this->hasCourtOrderDeputyAssociationBeenAdded($deputy, $orderUid));
+    }
 
-        // check that the court order <-> deputy association has been added
-        // (note this will not exist unless the court order exists as court_order_id is a foreign key)
-        $result = self::$entityManager->createQueryBuilder()
-            ->select('COUNT(1)')
-            ->from(CourtOrderDeputy::class, 'cod')
-            ->innerJoin(CourtOrder::class, 'co', Join::WITH, 'co = cod.courtOrder')
-            ->where('cod.deputy = :deputy')
-            ->andWhere('co.courtOrderUid = :courtOrderUid')
-            ->setParameters(['deputy' => $deputy, 'courtOrderUid' => $orderUid])
-            ->getQuery()
-            ->getSingleScalarResult();
+    // test the situation where a court order already exists and we are associating a deputy with it
+    public function testConvertInsertOrderDeputyWhenCourtOrderExists(): void
+    {
+        $orderUid = '14255666';
+        $caseNumber = '51223467';
 
-        self::assertEquals(1, $result);
+        $client = new Client();
+        $client->setCaseNumber($caseNumber);
+        self::$entityManager->persist($client);
+
+        $courtOrder = new CourtOrder();
+        $courtOrder->setCourtOrderUid($orderUid);
+        $courtOrder->setStatus('ACTIVE');
+        $courtOrder->setClient($client);
+        $courtOrder->setOrderType('pfa');
+        $courtOrder->setOrderMadeDate(new \DateTime());
+        self::$entityManager->persist($courtOrder);
+
+        $deputy = new Deputy();
+        $deputy->setFirstname('Vev');
+        $deputy->setLastname('Alfome');
+        $deputy->setEmail1('vev@notarealemail.com');
+        $deputy->setDeputyUid('14235678');
+        self::$entityManager->persist($deputy);
+
+        self::$entityManager->flush();
+
+        $candidatesGroup = new DeputyshipCandidatesGroup();
+        $candidatesGroup->orderUid = $orderUid;
+        $candidatesGroup->insertOrder = null;
+        $candidatesGroup->insertOthers = [
+            [
+                'action' => DeputyshipCandidateAction::InsertOrderDeputy,
+                'orderUid' => $orderUid,
+                'deputyId' => $deputy->getId(),
+                'deputyStatusOnOrder' => false,
+            ],
+        ];
+
+        $result = self::$sut->convert($candidatesGroup, dryRun: false);
+
+        self::assertEquals(1, $result->getNumCandidatesApplied(), 'one candidate should be applied');
+        self::assertCount(0, $result->getErrors(), 'candidate group should have no errors');
+        self::assertTrue($this->hasCourtOrderDeputyAssociationBeenAdded($deputy, $orderUid));
     }
 }
