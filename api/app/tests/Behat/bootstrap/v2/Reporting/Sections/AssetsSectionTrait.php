@@ -72,7 +72,7 @@ trait AssetsSectionTrait
                 continue;
             }
 
-            $formSectionName = 'assetType'.$assetType;
+            $formSectionName = 'assetType' . $assetType;
 
             if (in_array($assetType, $this->combinedAssetTypes)) {
                 $formSectionName = 'assetTypeArtworkAntiquesJewellery';
@@ -110,11 +110,11 @@ trait AssetsSectionTrait
     private function iFillAssetDescriptionAndValue(string $assetType)
     {
         if ('ndr' == $this->reportUrlPrefix) {
-            $this->fillInFieldTrackTotal('ndr_asset[value]', mt_rand(5, 2000), 'asset-'.$assetType);
-            $this->fillInField('ndr_asset[description]', $this->faker->sentence(5, 25), 'asset-'.$assetType);
+            $this->fillInFieldTrackTotal('ndr_asset[value]', mt_rand(5, 2000), 'asset-' . $assetType);
+            $this->fillInField('ndr_asset[description]', $this->faker->sentence(5, 25), 'asset-' . $assetType);
         } else {
-            $this->fillInFieldTrackTotal('asset[value]', mt_rand(5, 2000), 'asset-'.$assetType);
-            $this->fillInField('asset[description]', $this->faker->sentence(5, 25), 'asset-'.$assetType);
+            $this->fillInFieldTrackTotal('asset[value]', mt_rand(5, 2000), 'asset-' . $assetType);
+            $this->fillInField('asset[description]', $this->faker->sentence(5, 25), 'asset-' . $assetType);
         }
 
         $this->pressButton('Save and continue');
@@ -138,9 +138,9 @@ trait AssetsSectionTrait
             $assetType = $this->assetDictionary[7];
 
             if ('ndr' == $this->reportUrlPrefix) {
-                $this->chooseOption('ndr_asset_title[title]', $assetType, 'assetType'.$assetType, $assetType.' '.$propertyNumber);
+                $this->chooseOption('ndr_asset_title[title]', $assetType, 'assetType' . $assetType, $assetType . ' ' . $propertyNumber);
             } else {
-                $this->chooseOption('asset_title[title]', $assetType, 'assetType'.$assetType, $assetType.' '.$propertyNumber);
+                $this->chooseOption('asset_title[title]', $assetType, 'assetType' . $assetType, $assetType . ' ' . $propertyNumber);
             }
 
             $this->pressButton('Save and continue');
@@ -180,11 +180,13 @@ trait AssetsSectionTrait
         if ('ndr' == $this->reportUrlPrefix) {
             $this->chooseOption('ndr_asset[owned]', 'partly', 'assetDetailsPropertyPercentage', 'Partly owned');
             $percentage = mt_rand(1, 99);
-            $this->fillInField('ndr_asset[ownedPercentage]', $percentage, 'assetDetailsPropertyPercentage', $percentage.'%');
+            $this->fillInField('ndr_asset[ownedPercentage]', $percentage, 'assetDetailsPropertyPercentage', $percentage . '%');
         } else {
             $this->chooseOption('asset[owned]', 'partly', 'assetDetailsPropertyPercentage', 'Partly owned');
             $percentage = mt_rand(1, 99);
-            $this->fillInField('asset[ownedPercentage]', $percentage, 'assetDetailsPropertyPercentage', $percentage.'%');
+            $this->fillInField('asset[ownedPercentage]', $percentage, 'assetDetailsPropertyPercentage', $percentage . '%');
+            $this->chooseOption('asset[hasMortgage]', 'yes', 'assetDetailsPropertyMortgage');
+            $this->fillInField('asset[mortgageOutstandingAmount]', mt_rand(10000, 100000));
         }
 
         $this->pressButton('Save and continue');
@@ -192,11 +194,8 @@ trait AssetsSectionTrait
         if ('ndr' == $this->reportUrlPrefix) {
             $this->ChooseOption('ndr_asset[hasMortgage]', 'yes', 'assetDetailsPropertyMortgage');
             $this->fillInField('ndr_asset[mortgageOutstandingAmount]', mt_rand(10000, 100000));
-        } else {
-            $this->ChooseOption('asset[hasMortgage]', 'yes', 'assetDetailsPropertyMortgage');
-            $this->fillInField('asset[mortgageOutstandingAmount]', mt_rand(10000, 100000));
+            $this->pressButton('Save and continue');
         }
-        $this->pressButton('Save and continue');
 
         if ('ndr' == $this->reportUrlPrefix) {
             $this->fillInFieldTrackTotal('ndr_asset[value]', mt_rand(100000, 200000), 'assetDetailsPropertyValue');

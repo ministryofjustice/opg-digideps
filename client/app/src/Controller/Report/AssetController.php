@@ -68,7 +68,7 @@ class AssetController extends AbstractController
                 case 0: // yes
                     return $this->redirectToRoute('assets_type', ['reportId' => $reportId]);
                 case 1: // no
-                    $this->restClient->put('report/'.$reportId, $report, ['noAssetsToAdd']);
+                    $this->restClient->put('report/' . $reportId, $report, ['noAssetsToAdd']);
 
                     return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
             }
@@ -215,7 +215,7 @@ class AssetController extends AbstractController
      */
     public function propertyStepAction(Request $request, int $reportId, int $step, ?int $assetId = null)
     {
-        $totalSteps = 8;
+        $totalSteps = 7;
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
         }
@@ -289,19 +289,17 @@ class AssetController extends AbstractController
             if (3 == $step) {
                 $stepUrlData['owned'] = $asset->getOwned();
                 $stepUrlData['owned_p'] = $asset->getOwnedPercentage();
-            }
-
-            if (4 == $step) {
                 $stepUrlData['has_mg'] = $asset->getHasMortgage();
                 $stepUrlData['mg_oa'] = $asset->getMortgageOutstandingAmount();
             }
-            if (5 == $step) {
+
+            if (4 == $step) {
                 $stepUrlData['value'] = $asset->getValue();
             }
-            if (6 == $step) {
+            if (5 == $step) {
                 $stepUrlData['ser'] = $asset->getIsSubjectToEquityRelease();
             }
-            if (7 == $step) {
+            if (6 == $step) {
                 $stepUrlData['hc'] = $asset->getHasCharges();
             }
 
