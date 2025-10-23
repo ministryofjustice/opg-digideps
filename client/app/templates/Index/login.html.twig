@@ -70,10 +70,11 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
-    {{ form_input(form.email,'signInForm.email') }}
-    {{ form_input(form.password,'signInForm.password', {'dataModule': 'moj-password-reveal' }) }}
+    {{ form_input(form.email, 'signInForm.email') }}
 
-    {{ form_submit(form.login,'signInForm.signin', {'buttonClass': 'behat-link-login', 'attr': {'data-prevent-double-click':'true'}}) }}
+    {{ form_password(form.password) }}
+
+    {{ form_submit(form.login, 'signInForm.signin', {'buttonClass': 'behat-link-login', 'attr': {'data-prevent-double-click': 'true'}}) }}
 
     {{ form_end(form) }}
 
