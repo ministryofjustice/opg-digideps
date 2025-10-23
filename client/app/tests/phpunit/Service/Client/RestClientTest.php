@@ -21,8 +21,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class RestClientTest extends TestCase
 {
@@ -491,7 +493,14 @@ class RestClientTest extends TestCase
 
         $this->container->shouldReceive('get')->with('jms_serializer')->andReturn($this->serialiser);
         $this->container->shouldReceive('get')->with('logger')->andReturn($this->logger);
-        $this->container->shouldReceive('get')->with('request_stack')->andReturn(null);
+
+        $requestStackMock = m::mock(\Symfony\Component\HttpFoundation\RequestStack::class);
+        $requestStackMock->shouldReceive('getCurrentRequest')->andReturn(null);
+        $this->container
+            ->shouldReceive('has')->with('request_stack')->andReturn(true);
+        $this->container
+            ->shouldReceive('get')->with('request_stack')->andReturn($requestStackMock);
+
         $this->parameterBag->shouldReceive('get')->with('kernel.debug')->andReturn(true);
 
         $object = new RestClient(
@@ -572,7 +581,17 @@ class RestClientTest extends TestCase
         $parameterBag = self::prophesize(ParameterBagInterface::class);
 
         $openInternetClient = new MockHttpClient($mockResponse);
+        $container = $this->prophesize(ContainerInterface::class);
 
+        $request = new Request();
+        $request->headers->set('x-aws-request-id', 'THIS_IS_THE_REQUEST_ID');
+
+        // Create a mock for RequestStack
+        $requestStackMock = $this->prophesize(RequestStack::class);
+        $requestStackMock->getCurrentRequest()->willReturn($request);
+
+        $container->has('request_stack')->willReturn(true);
+        $container->get('request_stack')->willReturn($requestStackMock);
         $sut = new RestClient(
             $container->reveal(),
             $client->reveal(),
@@ -593,10 +612,15 @@ class RestClientTest extends TestCase
 
         $loginResponse = new GuzzleResponse(200, ['AuthToken' => $sessionToken, 'JWT' => [0 => $encodedJWT]], $userJson);
 
-        $client->post('/auth/login', [
-            'body' => $credentialsJson,
-            'headers' => ['ClientSecret' => $clientSecret],
-        ])->willReturn($loginResponse);
+        $client->post(
+            '/auth/login',
+            Argument::that(function (array $options) use ($credentialsJson, $clientSecret) {
+                // assert critical values
+                return isset($options['body'], $options['headers']['ClientSecret'])
+                    && $options['body'] === $credentialsJson
+                    && $options['headers']['ClientSecret'] === $clientSecret;
+            })
+        )->willReturn($loginResponse);
 
         $redisStorage->set('urn:opg:digideps:users:1-jwt', $encodedJWT)->shouldBeCalled();
 
