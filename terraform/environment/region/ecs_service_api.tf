@@ -31,6 +31,10 @@ resource "aws_ecs_service" "api" {
     assign_public_ip = false
   }
 
+  service_registries {
+    registry_arn = aws_service_discovery_service.api_dns.arn
+  }
+
   service_connect_configuration {
     enabled   = true
     namespace = aws_service_discovery_http_namespace.cloudmap_namespace.arn
@@ -178,4 +182,30 @@ module "api_task_override" {
   os                    = "LINUX"
   override              = []
   service_name          = "api_app"
+}
+
+# Private DNS namespace
+resource "aws_service_discovery_private_dns_namespace" "cloudmap_dns_namespace" {
+  name        = "digideps-preproduction.local"
+  vpc         = data.aws_vpc.vpc.id
+  description = "Private DNS namespace for ECS service discovery"
+}
+
+# Register API service into both namespaces
+resource "aws_service_discovery_service" "api_dns" {
+  name         = "api"
+  namespace_id = aws_service_discovery_private_dns_namespace.cloudmap_dns_namespace.id
+
+  dns_config {
+    namespace_id = aws_service_discovery_private_dns_namespace.cloudmap_dns_namespace.id
+    dns_records {
+      ttl  = 10
+      type = "A"
+    }
+    routing_policy = "MULTIVALUE"
+  }
+
+  health_check_custom_config {
+    failure_threshold = 1
+  }
 }
