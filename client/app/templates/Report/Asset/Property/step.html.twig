@@ -53,9 +53,6 @@
                 </div>
             </div>
         </div>
-    {% endif %}
-
-    {% if step == 4 %}
         <div class="push--bottom">
             <div class="govuk-form-group flush--bottom {% if not form.hasMortgage.vars.valid %}govuk-form-group--error{% endif %}">
                 {{ form_checkbox_group(form.hasMortgage, 'form.property.hasMortgage', {
@@ -77,28 +74,28 @@
         </div>
     {% endif %}
 
-    {% if step == 5 %}
+    {% if step == 4 %}
         {{ form_input(form.value, 'form.property.value', {
             'inputPrefix' : '£',
             'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
         } ) }}
     {% endif %}
 
-    {% if step == 6 %}
+    {% if step == 5 %}
         {{ form_checkbox_group(form.isSubjectToEquityRelease, 'form.property.isSubjectToEquityRelease', {
             'fieldSetClass' : 'inline',
             'legendClass': 'govuk-fieldset__legend--s'
         }) }}
     {% endif %}
 
-    {% if step == 7 %}
+    {% if step == 6 %}
         {{ form_checkbox_group(form.hasCharges, 'form.property.hasCharges', {
             'fieldSetClass' : 'inline',
             'legendClass': 'govuk-fieldset__legend--s'
         }) }}
     {% endif %}
 
-    {% if step == 8 %}
+    {% if step == 7 %}
         <div class="push--bottom">
             <div class="govuk-form-group flush--bottom {% if not form.isRentedOut.vars.valid %}govuk-form-group--error{% endif %}">
                 {{ form_checkbox_group(form.isRentedOut, 'form.property.isRentedOut', {
