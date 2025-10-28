@@ -62,8 +62,7 @@ class UserService
     {
         $this
             ->throwExceptionIfUpdatedEmailExists($originalUser, $updatedUser)
-            ->throwExceptionIfUserChangesRoleType($originalUser, $updatedUser)
-            ->handleNdrStatusUpdate($updatedUser);
+            ->throwExceptionIfUserChangesRoleType($originalUser, $updatedUser);
 
         $this->em->flush();
     }
@@ -100,37 +99,6 @@ class UserService
         if ($this->userRepository->findOneBy(['email' => $email])) {
             throw new \RuntimeException("User with email {$email} already exists.", 422);
         }
-    }
-
-    private function handleNdrStatusUpdate(User $updatedUser)
-    {
-        $client = $updatedUser->getFirstClient();
-        if (!$updatedUser->isLayDeputy() || !$client instanceof Client) {
-            return;
-        }
-
-        if ($updatedUser->getNdrEnabled() && !$this->clientHasExistingNdr($client)) {
-            $this->createNdrForClient($client);
-        }
-    }
-
-    /**
-     * @return bool
-     */
-    private function clientHasExistingNdr(Client $client)
-    {
-        return null !== $client->getNdr();
-    }
-
-    /**
-     * @return Ndr
-     */
-    private function createNdrForClient(Client $client)
-    {
-        $ndr = new Ndr($client);
-        $this->em->persist($ndr);
-
-        return $ndr;
     }
 
     /**
