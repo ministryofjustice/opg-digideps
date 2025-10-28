@@ -30,7 +30,7 @@
     {{ form_input(form.addressPostcode,'addUserForm.addressPostcode', {inputClass: 'govuk-!-width-one-third'}) }}
 
     {% if 'ROLE_LAY_DEPUTY' == user.roleName %}
-        {{ form_checkbox(form.ndrEnabled, 'addUserForm.ndrEnabled') }}
+        {{ form_hidden(form.ndrEnabled) }}
     {% endif %}
 
     {% if 'ROLE_LAY_DEPUTY' == user.roleName and reportsCount > 0 %}

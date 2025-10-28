@@ -31,7 +31,7 @@ class EditUserType extends AbstractType
             $form = $event->getForm();
 
             if ($user->isLayDeputy()) {
-                $form->add('ndrEnabled', FormTypes\CheckboxType::class);
+                $form->add('ndrEnabled', FormTypes\HiddenType::class, ['empty_data' => '0']);
             }
 
             $adminManagerCanEdit = $operatingUser->isAdminManager() && $user->isLayDeputy();
