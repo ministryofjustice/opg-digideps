@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileNameFixer extends FileUtility
 {
-    public function removeWhiteSpaceBeforeFileExtension(string $fileName): array|string|null
+    public static function removeWhiteSpaceBeforeFileExtension(string $fileName): array|string|null
     {
         $pattern = "/\s+(\.[^.]+)$/";
         $replacement = '$1';
@@ -30,7 +30,7 @@ class FileNameFixer extends FileUtility
         return $uploadedFile->getClientOriginalName();
     }
 
-    public function removeUnusualCharacters(string $fileName): array|string|null
+    public static function removeUnusualCharacters(string $fileName): array|string|null
     {
         $fileNameSpacesToUnderscores = str_replace(' ', '_', $fileName);
         $specialCharsRemoved = preg_replace('/[^A-Za-z0-9_.]/', '', $fileNameSpacesToUnderscores);
@@ -38,7 +38,7 @@ class FileNameFixer extends FileUtility
         return preg_replace('/[.](?=.*[.])/', '_', $specialCharsRemoved);
     }
 
-    public function lowerCaseFileExtension(UploadedFile $uploadedFile): UploadedFile
+    public static function lowerCaseFileExtension(UploadedFile $uploadedFile): UploadedFile
     {
         // lowercase file extension
         $originalFileExtension = $uploadedFile->getClientOriginalExtension();
