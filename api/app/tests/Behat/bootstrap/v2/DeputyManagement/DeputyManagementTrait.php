@@ -60,7 +60,7 @@ trait DeputyManagementTrait
      */
     public function userShouldBeDeleted($userEmail)
     {
-        $this->visitAdminPath('/admin/fixtures/getUserIDByEmail/'.strtolower($userEmail));
+        $this->visitAdminPath('/admin/fixtures/getUserIDByEmail/' . strtolower($userEmail));
 
         /** @var Session $session */
         $session = $this->getSession();
@@ -189,31 +189,5 @@ trait DeputyManagementTrait
     public function iShouldNotBeAbleToAccessClientDetailsLink()
     {
         $this->assertElementNotOnPage('govuk-link behat-link-client-show');
-    }
-
-    /**
-     * @Then /^I enable the NDR for this user$/
-     */
-    public function iShouldBeAbleToToggleNdrEnabled()
-    {
-        $this->iVisitAdminEditUserPageForInteractingWithUser();
-
-        $this->checkOption('admin_ndrEnabled');
-
-        $this->pressButton('Update user');
-        $this->em->clear();
-    }
-
-    /**
-     * @Then /^I disable the NDR for this user$/
-     */
-    public function iShouldBeDisableNdrEnabled()
-    {
-        $this->iVisitAdminEditUserPageForInteractingWithUser();
-
-        $this->uncheckOption('admin_ndrEnabled');
-
-        $this->pressButton('Update user');
-        $this->em->clear();
     }
 }

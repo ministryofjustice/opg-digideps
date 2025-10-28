@@ -56,10 +56,6 @@ trait ActivateTrait
         $this->selectOption('admin[roleType]', 'deputy');
         $this->selectOption('admin[roleNameDeputy]', $roleName);
 
-        if ('ndr' === $typeOfUser) {
-            $this->checkOption('admin_ndrEnabled');
-        }
-
         $this->pressButton('Save user');
         $this->clickLink('Sign out');
     }
