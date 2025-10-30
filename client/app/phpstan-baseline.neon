@@ -12796,11 +12796,6 @@ parameters:
 			path: src/Service/ReportSubmissionService.php
 
 		-
-			message: "#^Cannot call method getCurrentRequest\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Service/RequestIdLoggerProcessor.php
-
-		-
 			message: "#^Method App\\\\Service\\\\SecretManagerService\\:\\:getSecret\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/SecretManagerService.php

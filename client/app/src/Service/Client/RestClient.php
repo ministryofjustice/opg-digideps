@@ -20,6 +20,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
@@ -374,15 +375,21 @@ class RestClient implements RestClientInterface
             unset($options[$ao]);
         }
 
-        // forward X-Aws-Request-Id to the API calls
-        $reqId = RequestIdLoggerProcessor::getRequestIdFromContainer($this->container);
-        if ($reqId) {
-            $options['headers']['X-Aws-Request-ID'] = $reqId;
-        }
+        if ($this->container->has('request_stack')) {
+            /** @var RequestStack $rq */
+            $rq = $this->container->get('request_stack');
+            $request = $rq->getCurrentRequest();
+            if (!empty($request)) {
+                $reqId = RequestIdLoggerProcessor::getRequestIdFromContainer($request);
+                if (!empty($reqId)) {
+                    $options['headers']['X-Aws-Request-ID'] = $reqId;
+                }
 
-        $sessionSafeId = RequestIdLoggerProcessor::getSessionSafeIdFromContainer($this->container);
-        if ($reqId) {
-            $options['headers']['X-Session-Safe-Id'] = $sessionSafeId;
+                $sessionSafeId = RequestIdLoggerProcessor::getSessionSafeIdFromContainer($request);
+                if (!empty($sessionSafeId)) {
+                    $options['headers']['X-Session-Safe-Id'] = $sessionSafeId;
+                }
+            }
         }
 
         if ($this->timeout) {

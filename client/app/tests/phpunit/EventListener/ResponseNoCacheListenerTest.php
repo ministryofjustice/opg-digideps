@@ -20,9 +20,6 @@ class ResponseNoCacheListenerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @test
-     */
     public function testOnKernelResponseSetsNoCacheHeadersAndSessionSafeId()
     {
         /** @var ObjectProphecy|ResponseHeaderBag $headers */
@@ -60,9 +57,6 @@ class ResponseNoCacheListenerTest extends TestCase
         $object->onKernelResponse($event);
     }
 
-    /**
-     * @test
-     */
     public function testOnKernelResponseWithoutSessionSafeIdDoesNotSetHeader()
     {
         /** @var ObjectProphecy|ResponseHeaderBag $headers */

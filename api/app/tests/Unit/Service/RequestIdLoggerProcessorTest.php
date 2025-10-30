@@ -81,12 +81,26 @@ final class RequestIdLoggerProcessorTest extends TestCase
 
         $this->reqStack->shouldReceive('getCurrentRequest')->andReturn($request);
         $this->reqStack->shouldReceive('has')->with('x-session-safe-id')->andReturn(true);
-        $this->reqStack->shouldReceive('get')->with('x-session-safe-id')->andReturn('THIS_IS_THE_REQUEST_ID');
-        $this->reqStack->shouldReceive('get')->with('x-session-safe-id')->andReturn('THIS_IS_THE_REQUEST_ID');
+        $this->reqStack->shouldReceive('get')->with('x-session-safe-id')->andReturn('THIS_IS_THE_SAFE_ID');
+        $this->reqStack->shouldReceive('get')->with('x-session-safe-id')->andReturn('THIS_IS_THE_SAFE_ID');
         $this->container->shouldReceive('has')->with('request_stack')->andReturn(true);
         $this->container->shouldReceive('get')->with('request_stack')->andReturn($this->reqStack);
 
         $this->assertEquals($this->record + ['extra' => ['session_safe_id' => 'THIS_IS_THE_SAFE_ID']], $this->object->processRecord($this->record));
+    }
+
+    public function testProcessRecordHasNullSafeId(): void
+    {
+        $request = new Request();
+
+        $this->reqStack->shouldReceive('getCurrentRequest')->andReturn($request);
+        $this->reqStack->shouldReceive('has')->with('x-session-safe-id')->andReturn(true);
+        $this->reqStack->shouldReceive('get')->with('x-session-safe-id')->andReturn(null);
+        $this->reqStack->shouldReceive('get')->with('x-session-safe-id')->andReturn(null);
+        $this->container->shouldReceive('has')->with('request_stack')->andReturn(true);
+        $this->container->shouldReceive('get')->with('request_stack')->andReturn($this->reqStack);
+
+        $this->assertEquals($this->record, $this->object->processRecord($this->record));
     }
 
     public function tearDown(): void

@@ -32,7 +32,7 @@ final class OpgJsonFormatterTest extends TestCase
             "level": "INFO",
             "msg": "This is a test message",
             "service_name": "api",
-            "request": { "method": "GET", "path": "/test", "aws_request_id":"12345","session_safe_id":"98765" },
+            "request": { "method": "GET", "path": "/test", "aws_request_id": "12345", "session_safe_id": "98765" },
             "location": { "file": "' . __FILE__ . '", "line": ' . (__LINE__ + 3) . '}
         }';
         // Careful of spacing here as __LINE__ + 3 above needs to be the below line!

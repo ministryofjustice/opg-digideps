@@ -4,6 +4,7 @@ namespace App\Service;
 
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * RequestIdLoggerProcessor.
@@ -40,8 +41,18 @@ class RequestIdLoggerProcessor
      */
     public function processRecord(array $record)
     {
-        $reqId = self::getRequestIdFromContainer($this->container);
-        $sessId = self::getSessionSafeIdFromContainer($this->container);
+        if (!$this->container->has('request_stack')) {
+            return $record;
+        }
+
+        /** @var RequestStack $rq */
+        $rq = $this->container->get('request_stack');
+        $request = $rq->getCurrentRequest();
+        if (empty($request)) {
+            return $record;
+        }
+        $reqId = self::getRequestIdFromContainer($request);
+        $sessId = self::getSessionSafeIdFromContainer($request);
 
         if (!empty($reqId)) {
             $record['extra']['aws_request_id'] = $reqId;
@@ -54,34 +65,29 @@ class RequestIdLoggerProcessor
         return $record;
     }
 
-    public static function getRequestIdFromContainer(ContainerInterface $container): ?string
+    public static function getRequestIdFromContainer(Request $request): ?string
     {
-        if (!$container->has('request_stack')) {
-            return null;
-        }
-
-        /** @var RequestStack $rq */
-        $rq = $container->get('request_stack');
-        $request = $rq->getCurrentRequest();
-
-        if ($request && $request->headers->has('x-aws-request-id')) {
+        if ($request->headers->has('x-aws-request-id')) {
             return $request->headers->get('x-aws-request-id');
         }
 
         return null;
     }
 
-    public static function getSessionSafeIdFromContainer(ContainerInterface $container): ?string
+    public static function getSessionSafeIdFromContainer(Request $request): ?string
     {
-        if (
-            ($rq = $container->get('request_stack'))
-            && ($request = $rq->getCurrentRequest())
-            && $request->hasSession()
-            && $request->getSession()->has('session_safe_id')
-        ) {
-            return $request->getSession()->get('session_safe_id');
+        if (!$request->hasSession()) {
+            return null;
         }
 
-        return null;
+        $session = $request->getSession();
+
+        if (!$session->has('session_safe_id')) {
+            return null;
+        }
+
+        $value = $session->get('session_safe_id');
+
+        return is_scalar($value) ? (string) $value : null;
     }
 }
