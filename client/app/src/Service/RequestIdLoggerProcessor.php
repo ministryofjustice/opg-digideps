@@ -43,11 +43,11 @@ class RequestIdLoggerProcessor
         $reqId = self::getRequestIdFromContainer($this->container);
         $sessId = self::getSessionSafeIdFromContainer($this->container);
 
-        if ($reqId) {
+        if (!empty($reqId)) {
             $record['extra']['aws_request_id'] = $reqId;
         }
 
-        if ($sessId) {
+        if (!empty($sessId)) {
             $record['extra']['session_safe_id'] = $sessId;
         }
 
