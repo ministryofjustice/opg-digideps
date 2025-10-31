@@ -20,7 +20,7 @@
 
     {% set deputyRole %}
         {{ form_select(form.roleNameDeputy,'addUserForm.roleNameDeputy') }}
-        {{ form_checkbox(form.ndrEnabled, 'addUserForm.ndrEnabled') }}
+        {{ form_hidden(form.ndrEnabled) }}
     {% endset %}
 
     {% set adminRole %}

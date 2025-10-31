@@ -109,45 +109,6 @@ trait UserTrait
     }
 
     /**
-     * it's assumed you are logged as an admin and you are on the admin homepage (with add user form).
-     *
-     * @When I create a new :ndrType :role user :firstname :lastname with email :email and postcode :postcode
-     */
-    public function iCreateTheUserWithEmailAndPostcode($ndrType, $role, $firstname, $lastname, $email, $postcode = '')
-    {
-        $this->clickLink('Add new user');
-        $this->fillField('admin_email', $email);
-        $this->fillField('admin_firstname', $firstname);
-        $this->fillField('admin_lastname', $lastname);
-        if (!empty($postcode)) {
-            $this->fillField('admin_addressPostcode', $postcode);
-        }
-        $roleName = self::$roleStringToRoleName[strtolower($role)];
-
-        if ('ROLE_LAY_DEPUTY' === $roleName || 'ROLE_PA_NAMED' === $roleName || 'ROLE_PROF_NAMED' === $roleName) {
-            $this->fillField('admin_roleType_0', 'deputy');
-            $this->fillField('admin_roleNameDeputy', $roleName);
-            switch ($ndrType) {
-                case 'NDR-enabled':
-                    $this->checkOption('admin_ndrEnabled');
-                    break;
-                case 'NDR-disabled':
-                    $this->uncheckOption('admin_ndrEnabled');
-                    break;
-                default:
-                    throw new RuntimeException("$ndrType not a valid NDR type");
-            }
-        } else {
-            $this->fillField('admin_roleType_1', 'staff');
-            $this->fillField('admin_roleNameStaff', $roleName);
-        }
-
-        $this->clickOnBehatLink('save');
-        $this->theFormShouldBeValid();
-        $this->assertResponseStatus(200);
-    }
-
-    /**
      * @Given I change the user :userId token to :token dated last week
      */
     public function iChangeTheUserToken($userId, $token)
@@ -384,7 +345,7 @@ trait UserTrait
      */
     public function iCreateAndActivateUser($depType, $ndrStatus, $email, $password)
     {
-        $ndrStatus = 'NDR-'.$ndrStatus;
+        $ndrStatus = 'NDR-' . $ndrStatus;
         $this->iCreateTheUserWithEmailAndPostcode($ndrStatus, $depType, 'Lay', 'Dep', $email, 'SW11AA');
         $this->iActivateTheUserAndSetThePasswordTo($email, $password);
         $this->iLogInWithNewPassword($email, $password);
@@ -409,23 +370,6 @@ trait UserTrait
 
         $this->iSetTheReportStartDateToAndEndDateTo('1/11/2018');
         $this->iSetTheReportEndDateToAndEndDateTo('1/10/2019');
-    }
-
-    /**
-     * @Given I :action NDR for user :email
-     */
-    public function iEnableNdrForUser($action, $email)
-    {
-        $this->clickOnBehatLink('user-'.$email);
-        $this->clickLink('Edit user');
-
-        'enable' === strtolower($action) ?
-            $this->checkOption('admin_ndrEnabled') :
-            $this->uncheckOption('admin_ndrEnabled');
-
-        $this->clickOnBehatLink('save');
-        $this->theFormShouldBeValid();
-        $this->assertResponseStatus(200);
     }
 
     private function iLogInWithNewPassword($email, $password): void

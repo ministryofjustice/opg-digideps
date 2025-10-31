@@ -59,7 +59,7 @@ class AddUserType extends AbstractType
             ->add('roleNameDeputy', FormTypes\ChoiceType::class, [
                 'choices' => $deputyRoles,
                 'choice_label' => function ($choice) {
-                    return 'addUserForm.roleName.options.'.$choice;
+                    return 'addUserForm.roleName.options.' . $choice;
                 },
                 'placeholder' => 'addUserForm.roleName.defaultOption',
                 'mapped' => false,
@@ -67,12 +67,12 @@ class AddUserType extends AbstractType
             ->add('roleNameStaff', FormTypes\ChoiceType::class, [
                 'choices' => $staffRoles,
                 'choice_label' => function ($choice) {
-                    return 'addUserForm.roleName.options.'.$choice;
+                    return 'addUserForm.roleName.options.' . $choice;
                 },
                 'placeholder' => 'addUserForm.roleName.defaultOption',
                 'mapped' => false,
             ])
-            ->add('ndrEnabled', FormTypes\CheckboxType::class)
+            ->add('ndrEnabled', FormTypes\HiddenType::class, ['empty_data' => '0'])
             ->add('save', FormTypes\SubmitType::class);
 
         $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) use ($staffRoles) {
@@ -92,7 +92,7 @@ class AddUserType extends AbstractType
             $data = $event->getData();
 
             if (isset($data['roleType'])) {
-                $field = 'roleName'.ucfirst($data['roleType']);
+                $field = 'roleName' . ucfirst($data['roleType']);
                 $data['roleName'] = $data[$field];
             }
 

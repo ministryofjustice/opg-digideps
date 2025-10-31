@@ -7071,11 +7071,6 @@ parameters:
 			path: src/Service/UserService.php
 
 		-
-			message: "#^Method App\\\\Service\\\\UserService\\:\\:handleNdrStatusUpdate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/UserService.php
-
-		-
 			message: "#^Method App\\\\Service\\\\Validator\\\\RestArrayValidator\\:\\:validateArray\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/Validator/RestArrayValidator.php

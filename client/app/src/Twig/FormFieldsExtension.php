@@ -24,6 +24,7 @@ class FormFieldsExtension extends AbstractExtension
         return [
             new TwigFunction('form_input', [$this, 'renderFormInput']),
             new TwigFunction('form_password', [$this, 'renderPasswordInput']),
+            new TwigFunction('form_hidden', [$this, 'renderHiddenInput']),
             new TwigFunction('form_submit', [$this, 'renderFormSubmit']),
             new TwigFunction('form_submit_ga', [$this, 'renderGATrackedFormSubmit']),
             new TwigFunction('form_errors', [$this, 'renderFormErrors']),
@@ -58,6 +59,13 @@ class FormFieldsExtension extends AbstractExtension
         $vars['label'] = $this->translator->trans('signInForm.password.label', [], $domain);
         $vars['element'] = $element;
         echo $this->environment->render('@App/Components/Form/_password.html.twig', $vars);
+    }
+
+    public function renderHiddenInput(FormView $element, array $vars = []): void
+    {
+        $vars['element'] = $element;
+        $vars['value'] = $element->vars['value'];
+        echo $this->environment->render('@App/Components/Form/_hidden.html.twig', $vars);
     }
 
     /**
