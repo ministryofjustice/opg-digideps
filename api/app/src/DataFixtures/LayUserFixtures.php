@@ -305,7 +305,6 @@ class LayUserFixtures extends AbstractDataFixture
             $manager->persist($duplicateUser);
         }
 
-        $ndr = null;
         $report = null;
         $multiClientSecondReport = null;
 
@@ -358,7 +357,7 @@ class LayUserFixtures extends AbstractDataFixture
 
         // handle hybrid, multi client and co-deputies
         if (str_contains($data['id'], '-4') || $data['multi-client'] || $data['coDeputy']) {
-            $this->handleHybridCoDeputyAndMultiClients($data, $manager, $iteration, $offset, $courtOrder, $user2, $client, $client2, $report, $multiClientSecondReport, $ndr);
+            $this->handleHybridCoDeputyAndMultiClients($data, $manager, $iteration, $offset, $courtOrder, $user2, $client, $client2, $report, $multiClientSecondReport);
         }
     }
 
@@ -406,7 +405,6 @@ class LayUserFixtures extends AbstractDataFixture
         Client $client2,
         ?Report $report,
         ?Report $multiClientSecondReport,
-        ?Ndr $ndr
     ) {
         if (str_ends_with($data['id'], '-4') || str_ends_with($data['id'], '-4-NDR') || str_ends_with($data['id'], '-4-Co')) {
             // Populate court order table and link tables
