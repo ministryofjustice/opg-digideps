@@ -846,7 +846,7 @@ trait UserManagementTrait
     /**
      * @Then /^the user should be updated$/
      */
-    public function theUserShouldBeUpdated()
+    public function theUserShouldBeUpdatedUserManagement()
     {
         $this->iAmOnOrgUserAccountsPage();
 
