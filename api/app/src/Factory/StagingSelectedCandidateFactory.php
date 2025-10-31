@@ -71,13 +71,4 @@ class StagingSelectedCandidateFactory
 
         return $changes;
     }
-
-    public function createInsertOrderNdrCandidate(string $orderUid, int $ndrId): StagingSelectedCandidate
-    {
-        $changes = new StagingSelectedCandidate(DeputyshipCandidateAction::InsertOrderNdr, $orderUid);
-
-        $changes->ndrId = $ndrId;
-
-        return $changes;
-    }
 }

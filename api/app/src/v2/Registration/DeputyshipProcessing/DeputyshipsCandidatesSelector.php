@@ -74,12 +74,6 @@ class DeputyshipsCandidatesSelector
                 ++$numCandidates;
                 $this->saveCandidates([$candidate], $numDeputyships, $numCandidates);
             }
-
-            $candidates = $this->courtOrderReportsCandidateFactory->createCompatibleNdrCandidates();
-            foreach ($candidates as $candidate) {
-                ++$numCandidates;
-                $this->saveCandidates([$candidate], $numDeputyships, $numCandidates);
-            }
         } catch (Exception $e) {
             $this->logger->error("ERROR while selecting candidates from deputyships: {$e->getMessage()}");
 
@@ -87,7 +81,7 @@ class DeputyshipsCandidatesSelector
         }
 
         $this->logger->info(
-            "Deputyship ingest progress - CANDIDATE SELECTION COMPLETE: \n".
+            "Deputyship ingest progress - CANDIDATE SELECTION COMPLETE: \n" .
             "deputyships = $numDeputyships; candidates = $numCandidates"
         );
 

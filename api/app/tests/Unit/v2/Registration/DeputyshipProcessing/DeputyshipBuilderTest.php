@@ -45,7 +45,6 @@ final class DeputyshipBuilderTest extends TestCase
 
         $orderUid2 = '22223333';
         $candidateOrder2_1 = ['action' => DeputyshipCandidateAction::InsertOrder, 'orderUid' => $orderUid2];
-        $candidateOrder2_2 = ['action' => DeputyshipCandidateAction::InsertOrderNdr, 'orderUid' => $orderUid2];
 
         // candidates are pre-sorted by court order UID
         $candidates = new ArrayIterator([
@@ -53,7 +52,6 @@ final class DeputyshipBuilderTest extends TestCase
             $candidateOrder1_2,
             $candidateOrder1_3,
             $candidateOrder2_1,
-            $candidateOrder2_2,
         ]);
 
         $caller = new stdClass();

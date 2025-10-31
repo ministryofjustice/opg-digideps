@@ -173,32 +173,6 @@ class DeputyshipProcessingRawDbAccess
         }
     }
 
-    public function insertOrderNdr(int $courtOrderId, array $candidate): DeputyshipProcessingRawDbAccessResult
-    {
-        $ndrId = $candidate['ndrId'];
-
-        try {
-            $result = $this->ingestWriterEm->getConnection()->createQueryBuilder()
-                ->update('court_order')
-                ->set('ndr_id', $ndrId)
-                ->where('id = :id')
-                ->setParameter('id', $courtOrderId)
-                ->executeQuery();
-
-            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::InsertOrderNdr, true, $result);
-        } catch (\Exception $e) {
-            $message = sprintf(
-                'insert order ndr not applied for court order UID %s (order ID %d, NDR ID %d); exception was %s',
-                $candidate['orderUid'],
-                $courtOrderId,
-                $ndrId,
-                $e->getMessage()
-            );
-
-            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::InsertOrderNdr, false, null, $message);
-        }
-    }
-
     public function updateOrderStatus(int $courtOrderId, array $candidate): DeputyshipProcessingRawDbAccessResult
     {
         $courtOrderStatus = $candidate['status'];

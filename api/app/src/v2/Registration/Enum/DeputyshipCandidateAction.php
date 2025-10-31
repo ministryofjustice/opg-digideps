@@ -10,5 +10,4 @@ enum DeputyshipCandidateAction: string
     case InsertOrderDeputy = 'I_OD';
     case InsertOrder = 'I_O';
     case InsertOrderReport = 'I_OR';
-    case InsertOrderNdr = 'I_ON';
 }

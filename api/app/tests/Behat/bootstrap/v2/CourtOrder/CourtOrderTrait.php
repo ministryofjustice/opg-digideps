@@ -82,7 +82,6 @@ trait CourtOrderTrait
                     $client,
                     $deputy,
                     $client->getCurrentReport(),
-                    $client->getNdr()
                 );
             }
         }
@@ -96,7 +95,6 @@ trait CourtOrderTrait
             $client,
             $deputy,
             $client->getCurrentReport(),
-            $client->getNdr()
         );
     }
 
@@ -126,7 +124,6 @@ trait CourtOrderTrait
             $client,
             $deputy,
             $client->getCurrentReport(),
-            $client->getNdr(),
         );
 
         // associate all of the client's reports with the court order
@@ -239,14 +236,6 @@ trait CourtOrderTrait
         }
 
         $this->clickLink('Start Now');
-    }
-
-    /**
-     * @Then /^I can procced to fill out the NDR$/
-     */
-    public function iCanProccedToFillOutTheNDR()
-    {
-        $this->iAmOnPage(sprintf('{\/ndr\/%s\/overview$}', $this->courtOrder->getNdr()->getId()));
     }
 
     /**

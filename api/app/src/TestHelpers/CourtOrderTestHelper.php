@@ -21,7 +21,6 @@ class CourtOrderTestHelper
         string $status = 'ACTIVE',
         string $type = 'pfa',
         ?Report $report = null,
-        ?Ndr $ndr = null,
         ?Deputy $deputy = null,
         bool $isActive = true,
         \DateTime $orderDate = (new \DateTime()),
@@ -36,10 +35,6 @@ class CourtOrderTestHelper
 
         if (!is_null($report)) {
             $courtOrder->addReport($report);
-        }
-
-        if (!is_null($ndr)) {
-            $courtOrder->setNdr($ndr);
         }
 
         if (!is_null($deputy)) {

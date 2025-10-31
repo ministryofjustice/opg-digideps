@@ -58,29 +58,4 @@ final class CourtOrderReportCandidatesFactoryTest extends TestCase
 
         $this->assertEquals($expectedCandidates, iterator_to_array($candidates));
     }
-
-    public function testCreateCompatibleNdrCandidates(): void
-    {
-        $rows = new ArrayIterator([
-            ['court_order_uid' => '123', 'ndr_id' => '456'],
-            ['court_order_uid' => '789', 'ndr_id' => '012'],
-        ]);
-
-        $expectedCandidates = [
-            $this->createMock(StagingSelectedCandidate::class),
-            $this->createMock(StagingSelectedCandidate::class),
-        ];
-
-        $result = $this->createMock(Result::class);
-        $result->method('iterateAssociative')->willReturn($rows);
-        $this->connection->method('executeQuery')->willReturn($result);
-
-        $this->candidateFactory->expects($this->exactly(2))
-            ->method('createInsertOrderNdrCandidate')
-            ->willReturnOnConsecutiveCalls($expectedCandidates[0], $expectedCandidates[1]);
-
-        $candidates = $this->sut->createCompatibleNdrCandidates();
-
-        $this->assertEquals($expectedCandidates, iterator_to_array($candidates));
-    }
 }
