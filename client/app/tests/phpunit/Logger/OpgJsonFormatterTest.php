@@ -14,6 +14,8 @@ class OpgJsonFormatterTest extends TestCase
         // Mock $_SERVER variables
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $_SERVER['REQUEST_URI'] = '/test';
+        $_SERVER['HTTP_X_AWS_REQUEST_ID'] = '12345';
+        $_SERVER['HTTP_X_SESSION_SAFE_ID'] = '98765';
 
         // Create a sample log record
         $record = [
@@ -27,7 +29,7 @@ class OpgJsonFormatterTest extends TestCase
             "level": "INFO",
             "msg": "This is a test message",
             "service_name": "client",
-            "request": { "method": "GET", "path": "/test" },
+            "request": { "method": "GET", "path": "/test", "aws_request_id": "12345", "session_safe_id": "98765" },
             "location": { "file": "' . __FILE__ . '", "line": ' . (__LINE__ + 3) . '}
         }';
         // Careful of spacing here as __LINE__ + 3 above needs to be the below line!

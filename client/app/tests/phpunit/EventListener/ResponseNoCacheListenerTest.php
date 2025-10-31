@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Act on session on each request.
@@ -19,10 +20,7 @@ class ResponseNoCacheListenerTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @test
-     */
-    public function onKernelResponse()
+    public function testOnKernelResponseSetsNoCacheHeadersAndSessionSafeId()
     {
         /** @var ObjectProphecy|ResponseHeaderBag $headers */
         $headers = self::prophesize(ResponseHeaderBag::class);
@@ -30,15 +28,67 @@ class ResponseNoCacheListenerTest extends TestCase
         $headers->set('Cache-Control', 'no-cache, no-store, must-revalidate')->shouldBeCalled();
         $headers->set('Pragma', 'no-cache')->shouldBeCalled();
         $headers->set('Expires', '0')->shouldBeCalled();
+        $headers->set('X-Session-Safe-Id', 'abc123')->shouldBeCalled();
 
         /** @var ObjectProphecy|Response $response */
         $response = self::prophesize(Response::class);
         $response->headers = $headers->reveal();
 
-        $kernel = self::prophesize(KernelInterface::class);
-        $request = self::prophesize(Request::class);
+        /** @var ObjectProphecy|SessionInterface $session */
+        $session = self::prophesize(SessionInterface::class);
+        $session->has('session_safe_id')->willReturn(true);
+        $session->get('session_safe_id')->willReturn('abc123');
 
-        $event = new ResponseEvent($kernel->reveal(), $request->reveal(), HttpKernelInterface::MAIN_REQUEST, $response->reveal());
+        /** @var ObjectProphecy|Request $request */
+        $request = self::prophesize(Request::class);
+        $request->getSession()->willReturn($session->reveal());
+
+        /** @var ObjectProphecy|KernelInterface $kernel */
+        $kernel = self::prophesize(KernelInterface::class);
+
+        $event = new ResponseEvent(
+            $kernel->reveal(),
+            $request->reveal(),
+            HttpKernelInterface::MAIN_REQUEST,
+            $response->reveal()
+        );
+
+        $object = new ResponseNoCacheListener();
+        $object->onKernelResponse($event);
+    }
+
+    public function testOnKernelResponseWithoutSessionSafeIdDoesNotSetHeader()
+    {
+        /** @var ObjectProphecy|ResponseHeaderBag $headers */
+        $headers = self::prophesize(ResponseHeaderBag::class);
+
+        $headers->set('Cache-Control', 'no-cache, no-store, must-revalidate')->shouldBeCalled();
+        $headers->set('Pragma', 'no-cache')->shouldBeCalled();
+        $headers->set('Expires', '0')->shouldBeCalled();
+        // session_safe_id header should NOT be set
+        $headers->set('X-Session-Safe-Id', 'abc123')->shouldNotBeCalled();
+
+        /** @var ObjectProphecy|Response $response */
+        $response = self::prophesize(Response::class);
+        $response->headers = $headers->reveal();
+
+        /** @var ObjectProphecy|SessionInterface $session */
+        $session = self::prophesize(SessionInterface::class);
+        $session->has('session_safe_id')->willReturn(false);
+
+        /** @var ObjectProphecy|Request $request */
+        $request = self::prophesize(Request::class);
+        $request->getSession()->willReturn($session->reveal());
+
+        /** @var ObjectProphecy|KernelInterface $kernel */
+        $kernel = self::prophesize(KernelInterface::class);
+
+        $event = new ResponseEvent(
+            $kernel->reveal(),
+            $request->reveal(),
+            HttpKernelInterface::MAIN_REQUEST,
+            $response->reveal()
+        );
 
         $object = new ResponseNoCacheListener();
         $object->onKernelResponse($event);

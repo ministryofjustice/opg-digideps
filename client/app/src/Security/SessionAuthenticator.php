@@ -44,7 +44,7 @@ class SessionAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        return null;
+        return null; // continue request
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
