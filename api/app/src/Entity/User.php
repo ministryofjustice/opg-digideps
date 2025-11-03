@@ -19,8 +19,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * Users.
  *
  * @ORM\Table(name="dd_user", indexes={
- *
- *     @ORM\Index(name="deputy_no_idx", columns={"deputy_no"}),
  *     @ORM\Index(name="created_by_idx", columns={"created_by_id"})
  * })
  *
@@ -262,13 +260,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
     #[JMS\Groups(['user'])]
     private $lastLoggedIn;
-
-    /**
-     * @ORM\Column(name="deputy_no", type="string", length=100, nullable=true)
-     */
-    #[JMS\Type('string')]
-    #[JMS\Groups(['user'])]
-    private ?string $deputyNo = null;
 
     /**
      * @ORM\Column(name="deputy_uid", type="bigint", nullable=true)
