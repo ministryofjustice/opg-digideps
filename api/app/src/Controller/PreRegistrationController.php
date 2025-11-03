@@ -83,7 +83,6 @@ class PreRegistrationController extends RestController
             throw new RuntimeException(json_encode(sprintf('A unique deputy record for case number %s could not be identified', $clientData['case_number'])), 462);
         }
 
-        $user->setDeputyNo($preregMatches[0]->getDeputyUid());
         $user->setDeputyUid(intval($preregMatches[0]->getDeputyUid()));
         $user->setPreRegisterValidatedDate(new DateTime());
         $user->setIsPrimary(true);

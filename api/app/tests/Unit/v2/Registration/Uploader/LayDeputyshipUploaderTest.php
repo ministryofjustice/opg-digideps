@@ -104,8 +104,8 @@ final class LayDeputyshipUploaderTest extends KernelTestCase
         string $preRegistrationNewReportType,
         string $expectedNewReportType,
         bool $isDualCase,
-        ?string $deputyUid): void
-    {
+        ?string $deputyUid
+    ): void {
         $collection = new LayDeputyshipDtoCollection();
         $collection->append($this->buildLayDeputyshipDto(1));
 
@@ -135,8 +135,8 @@ final class LayDeputyshipUploaderTest extends KernelTestCase
             $deputy = $this->createMock(User::class);
             $deputy
                 ->expects($this->once())
-                ->method('getDeputyNo')
-                ->willReturn('12345678');
+                ->method('getDeputyUid')
+                ->willReturn(12345678);
 
             $existingClient
                 ->expects($this->once())
@@ -196,8 +196,8 @@ final class LayDeputyshipUploaderTest extends KernelTestCase
     private function buildLayDeputyshipDto(int $count): LayDeputyshipDto
     {
         return (new LayDeputyshipDto())
-            ->setCaseNumber('case-'.$count)
-            ->setDeputyUid('depnum-'.$count);
+            ->setCaseNumber('case-' . $count)
+            ->setDeputyUid('depnum-' . $count);
     }
 
     private function assertReportTypesWillNotBeUpdated(): void

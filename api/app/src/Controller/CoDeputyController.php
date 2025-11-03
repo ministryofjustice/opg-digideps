@@ -123,7 +123,7 @@ class CoDeputyController extends RestController
         $conn = $this->em->getConnection();
         $affected = 0;
         foreach (array_chunk($deputyNumbers, 500) as $chunk) {
-            $sql = "UPDATE dd_user SET codeputy_client_confirmed = TRUE WHERE deputy_no IN ('".implode("','", $chunk)."')";
+            $sql = "UPDATE dd_user SET codeputy_client_confirmed = TRUE WHERE deputy_uid IN ('" . implode(',', $chunk) . "')";
             $affected += $conn->executeStatement($sql);
         }
 

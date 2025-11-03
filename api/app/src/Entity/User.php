@@ -554,7 +554,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function recreateRegistrationToken(): static
     {
         $userIdWithLeadingZeros = sprintf('%08d', $this->getId());
-        $token = bin2hex(random_bytes(16)).$userIdWithLeadingZeros;
+        $token = bin2hex(random_bytes(16)) . $userIdWithLeadingZeros;
 
         $this->setRegistrationToken($token);
         $this->setTokenDate(new \DateTime());
@@ -741,7 +741,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getFullName()
     {
-        return $this->firstname.' '.$this->lastname;
+        return $this->firstname . ' ' . $this->lastname;
     }
 
     /**
@@ -803,18 +803,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public static function padDeputyNumber($deputyNo)
     {
         return str_pad($deputyNo, 8, '0', STR_PAD_LEFT);
-    }
-
-    public function getDeputyNo(): ?string
-    {
-        return $this->deputyNo;
-    }
-
-    public function setDeputyNo(?string $deputyNo)
-    {
-        $this->deputyNo = $deputyNo;
-
-        return $this;
     }
 
     public function getDeputyUid(): ?int
@@ -1392,10 +1380,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         ];
 
         Hydrator::hydrateEntityWithArrayData($this, $data, $keySetters);
-
-        if (array_key_exists('deputy_no', $data) && !empty($data['deputy_no'])) {
-            $this->setDeputyNo($data['deputy_no']);
-        }
 
         if (array_key_exists('deputy_uid', $data) && !empty($data['deputy_uid'])) {
             $this->setDeputyUid($data['deputy_uid']);
