@@ -61,9 +61,8 @@ trait CourtOrderTrait
      *
      * Associate the logged in user with the specified number of court orders.
      * This will create new clients and court orders if necessary, otherwise reuses existing one.
-     * If the existing client has an NDR, then the court order may be linked with that NDR.
      */
-    public function iAmAssociatedWithCourtOrder(int $numOfCourtOrders, string $orderType, bool $associateNdr = true): void
+    public function iAmAssociatedWithCourtOrder(int $numOfCourtOrders, string $orderType): void
     {
         $user = $this->getLoggedInUser();
 
@@ -77,40 +76,43 @@ trait CourtOrderTrait
             $deputy->setEmail1($user->getEmail());
         }
 
-        if ($numOfCourtOrders > 1) {
-            $clientIds = [];
+        $deputy->setUser($user);
 
-            foreach ($this->fixtureUsers as $user) {
-                $clientIds[] = $user->getClientId();
+        $this->em->persist($user);
+        $this->em->flush();
+
+        for ($i = 0; $i < $numOfCourtOrders; $i++) {
+            if (0 === $i) {
+                // use the user's existing client
+                $client = $this->em->getRepository(Client::class)->find(['id' => $this->loggedInUserDetails->getClientId()]);
+                $report = $client->getCurrentReport();
+            } else {
+                // create a new client
+                $client = $this->fixtureHelper->generateClient($user);
+                $this->em->persist($client);
+
+                // create a new report
+                $type = Report::TYPE_HEALTH_WELFARE;
+                if ('pfa' === $orderType) {
+                    $type = Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS;
+                }
+
+                $now = new \DateTime();
+                $report = new Report($client, $type, $now, $now, false);
+                $report->setClient($client);
+
+                $this->em->persist($report);
             }
 
-            $clients = [];
-
-            foreach ($clientIds as $clientId) {
-                $clients[] = $this->em
-                ->getRepository(Client::class)
-                ->find(['id' => $clientId]);
-            }
-
-            foreach ($clients as $client) {
-                $this->courtOrders[] = $this->fixtureHelper->createAndPersistCourtOrder(
-                    $orderType,
-                    $client,
-                    $deputy,
-                    $client->getCurrentReport(),
-                );
-            }
+            $this->courtOrders[] = $this->fixtureHelper->createAndPersistCourtOrder(
+                $orderType,
+                $client,
+                $deputy,
+                $report,
+            );
         }
 
-        $deputy->setUser($user);
-        $user->setDeputy($deputy);
-
-        $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(
-            $orderType,
-            $client,
-            $deputy,
-            $client->getCurrentReport(),
-        );
+        $this->courtOrder = $this->courtOrders[0];
     }
 
     /**
