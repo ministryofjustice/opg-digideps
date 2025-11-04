@@ -16,6 +16,7 @@ use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\DeputyTestHelper;
 use App\Tests\Behat\BehatException;
 use Behat\Mink\Element\NodeElement;
+use Doctrine\ORM\EntityManager;
 
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertStringContainsString;
@@ -54,48 +55,48 @@ trait CourtOrderTrait
 
     /**
      * @Given /^I am associated with \'([^\']*)\' \'([^\']*)\' court order\(s\)$/
+     *
+     * Associate the logged in user with the specified number of court orders.
+     * This will create new clients and court orders if necessary, otherwise reuses existing one.
      */
-    public function iAmAssociatedWithCourtOrder($numOfCourtOrders, $orderType)
+    public function iAmAssociatedWithCourtOrder(int $numOfCourtOrders, string $orderType): void
     {
-        $clientId = $this->loggedInUserDetails->getClientId();
-
         $deputy = $this->getDeputyForLoggedInUser();
 
-        if ($numOfCourtOrders > 1) {
-            $clientIds = [];
+        for ($i = 0; $i < $numOfCourtOrders; $i++) {
+            if (0 === $i) {
+                // use the user's existing client
+                $client = $this->em->getRepository(Client::class)->find(['id' => $this->loggedInUserDetails->getClientId()]);
+                $report = $client->getCurrentReport();
+            } else {
+                // create new clients for subsequent court orders
+                $client = $this->fixtureHelper->generateClient($deputy->getUser());
+                $this->em->persist($client);
 
-            foreach ($this->fixtureUsers as $user) {
-                $clientIds[] = $user->getClientId();
+                // create a new report
+                $type = Report::TYPE_HEALTH_WELFARE;
+                if ('pfa' === $orderType) {
+                    $type = Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS;
+                }
+
+                $now = new \DateTime();
+                $report = new Report($client, $type, $now, $now, false);
+                $report->setClient($client);
+
+                $this->em->persist($report);
             }
 
-            $clients = [];
-
-            foreach ($clientIds as $clientId) {
-                $clients[] = $this->em
-                ->getRepository(Client::class)
-                ->find(['id' => $clientId]);
-            }
-
-            foreach ($clients as $client) {
-                $this->courtOrders[] = $this->fixtureHelper->createAndPersistCourtOrder(
-                    $orderType,
-                    $client,
-                    $deputy,
-                    $client->getCurrentReport(),
-                );
-            }
+            $this->courtOrders[] = $this->fixtureHelper->createAndPersistCourtOrder(
+                $orderType,
+                $client,
+                $deputy,
+                $report,
+            );
         }
 
-        $client = $this->em
-            ->getRepository(Client::class)
-            ->find(['id' => $clientId]);
+        $this->em->flush();
 
-        $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(
-            $orderType,
-            $client,
-            $deputy,
-            $client->getCurrentReport(),
-        );
+        $this->courtOrder = $this->courtOrders[0];
     }
 
     /**
@@ -199,7 +200,7 @@ trait CourtOrderTrait
      */
     public function iShouldSeeCourtOrdersOnThePage(int $arg1)
     {
-        $this->iAmOnPage('{\/courtorder\/choose-a-court-order$}');
+        $this->iAmOnPage('{/courtorder/choose-a-court-order$}');
 
         $orders = $this->findAllXpathElements("//div[contains(concat(' ', normalize-space(@class), ' '), ' opg-overview-courtorder ')]");
 
