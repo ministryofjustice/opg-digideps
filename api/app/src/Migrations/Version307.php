@@ -7,14 +7,11 @@ namespace DoctrineMigrations;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\Migrations\AbstractMigration;
 
-/**
- * Auto-generated Migration: Please modify to your needs!
- */
-final class Version306 extends AbstractMigration
+final class Version307 extends AbstractMigration
 {
     public function getDescription(): string
     {
-        return '';
+        return 'Remove association between court orders and NDRs';
     }
 
     public function up(Schema $schema): void
