@@ -58,11 +58,9 @@ class CourtOrderController extends AbstractController
             'ndrEnabled' => true,
         ];
 
-        if (is_null($courtOrder->getNdr())) {
-            $templateValues['ndrEnabled'] = false;
-        }
-
-        return $templateValues;
+        return array_merge($templateValues, [
+            'ndrEnabled' => false,
+        ]);
     }
 
     /**

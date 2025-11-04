@@ -77,99 +77,40 @@ trait CourtOrderTrait
             $deputy->setEmail1($user->getEmail());
         }
 
+        if ($numOfCourtOrders > 1) {
+            $clientIds = [];
+
+            foreach ($this->fixtureUsers as $user) {
+                $clientIds[] = $user->getClientId();
+            }
+
+            $clients = [];
+
+            foreach ($clientIds as $clientId) {
+                $clients[] = $this->em
+                ->getRepository(Client::class)
+                ->find(['id' => $clientId]);
+            }
+
+            foreach ($clients as $client) {
+                $this->courtOrders[] = $this->fixtureHelper->createAndPersistCourtOrder(
+                    $orderType,
+                    $client,
+                    $deputy,
+                    $client->getCurrentReport(),
+                );
+            }
+        }
+
         $deputy->setUser($user);
         $user->setDeputy($deputy);
 
-        $this->em->persist($deputy);
-        $this->em->persist($user);
-        $this->em->flush();
-
-        for ($i = 0; $i < $numOfCourtOrders; $i++) {
-            $ndr = null;
-
-            if (0 === $i) {
-                // use the user's existing client
-                $client = $this->em->getRepository(Client::class)->find(['id' => $this->loggedInUserDetails->getClientId()]);
-                $report = $client->getCurrentReport();
-                if ($associateNdr) {
-                    $ndr = $this->em->getRepository(Ndr::class)->findOneBy(['client' => $client]);
-                }
-            } else {
-                // create a new client
-                $client = $this->fixtureHelper->generateClient($user);
-                $this->em->persist($client);
-
-                // create a new report
-                $type = Report::TYPE_HEALTH_WELFARE;
-                if ('pfa' === $orderType) {
-                    $type = Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS;
-                }
-
-                $now = new \DateTime();
-
-                $report = new Report($client, $type, $now, $now, false);
-                $this->em->persist($report);
-            }
-
-            $this->courtOrders[] = $this->fixtureHelper->createAndPersistCourtOrder(
-                $orderType,
-                $client,
-                $deputy,
-                $report,
-                $ndr
-            );
-        }
-
-        $this->courtOrder = $this->courtOrders[0];
-    }
-
-    /**
-     * @Given /^I am associated with \'([^\']*)\' \'([^\']*)\' court order\(s\) but not their NDRs$/
-     */
-    public function iAmAssociatedWithCourtOrderButNotNdr(int $numOfCourtOrders, string $orderType): void
-    {
-        $this->iAmAssociatedWithCourtOrder($numOfCourtOrders, $orderType, false);
-    }
-
-    /**
-     * @Given all the reports for the first client are associated with a :orderType court order
-     */
-    public function allTheReportsForFirstClientOnCourtOrder(string $orderType): void
-    {
-        // get the client
-        $clientId = $this->loggedInUserDetails->getClientId();
-        $client = $this->em->getRepository(Client::class)->find(['id' => $clientId]);
-
-        // get the deputy
-        $user = $this->getLoggedInUser();
-        $deputy = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $user->getDeputyUid()]);
-
-        // create a court order if necessary
-        if (is_null($this->courtOrder)) {
-            $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(
-                $orderType,
-                $client,
-                $deputy,
-            );
-        }
-
-        // associate all the client's reports with that court order; client->getReports() doesn't do what
-        // is expected so just do a query from the reports table
-        $reports = $this->em->getRepository(Report::class)->findBy(['client' => $client]);
-        foreach ($reports as $report) {
-            $this->courtOrder->addReport($report);
-        }
-
-        // also associate the ndr
-        $ndr = $this->em->getRepository(Ndr::class)->findOneBy(['client' => $client]);
-        if (!is_null($ndr)) {
-            $this->courtOrder->setNdr($ndr);
-        }
-
-        $this->courtOrders = [$this->courtOrder];
-
-        $this->em->persist($this->courtOrder);
-        $this->em->flush();
+        $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(
+            $orderType,
+            $client,
+            $deputy,
+            $client->getCurrentReport(),
+        );
     }
 
     /**
@@ -190,7 +131,6 @@ trait CourtOrderTrait
             $client,
             $user->getDeputy(),
             $client->getCurrentReport(),
-            $this->em->getRepository(Ndr::class)->findOneBy(['client' => $client]),
         );
 
         // associate all of the client's reports with the court order
@@ -304,14 +244,6 @@ trait CourtOrderTrait
         }
 
         $this->clickLink('Start now');
-    }
-
-    /**
-     * @Then /^I can procced to fill out the NDR$/
-     */
-    public function iCanProccedToFillOutTheNDR()
-    {
-        $this->iAmOnPage(sprintf('{\/ndr\/%s\/overview$}', $this->courtOrder->getNdr()->getId()));
     }
 
     /**

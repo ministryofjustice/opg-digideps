@@ -1418,14 +1418,14 @@ class FixtureHelper
         return $this->fixtureParams['legacy_password_hash'];
     }
 
-    public function createAndPersistCourtOrder(string $orderType, Client $client, Deputy $deputy, ?Report $report = null, ?Ndr $ndr = null, ?string $courtOrderUid = null)
+    public function createAndPersistCourtOrder(string $orderType, Client $client, Deputy $deputy, ?Report $report = null, ?string $courtOrderUid = null)
     {
         $faker = Factory::create('en_GB');
         if (is_null($courtOrderUid)) {
             $courtOrderUid = '700000' . $faker->randomNumber(4);
         }
 
-        return $this->courtOrderTestHelper::generateCourtOrder($this->em, $client, $courtOrderUid, 'ACTIVE', $orderType, $report, $ndr, $deputy);
+        return $this->courtOrderTestHelper::generateCourtOrder($this->em, $client, $courtOrderUid, 'ACTIVE', $orderType, $report, $deputy);
     }
 
     public function createDeputyOnOrder(CourtOrder $courtOrder, ?DateTime $lastLoggedIn = null): Deputy
