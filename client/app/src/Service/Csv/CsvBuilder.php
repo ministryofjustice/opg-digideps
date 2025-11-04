@@ -36,15 +36,17 @@ class CsvBuilder
 
     private function addHeaders(array $headers): void
     {
-        if (!empty($headers)) {
+        if (!empty($headers) && $this->filePointer) {
             fputcsv(stream: $this->filePointer, fields: $headers, escape: '\\');
         }
     }
 
     private function addRows(array $rows): void
     {
-        foreach ($rows as $row) {
-            fputcsv(stream: $this->filePointer, fields: $row, escape: '\\');
+        if ($this->filePointer) {
+            foreach ($rows as $row) {
+                fputcsv(stream: $this->filePointer, fields: $row, escape: '\\');
+            }
         }
     }
 }

@@ -8,12 +8,9 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileNameFixer extends FileUtility
 {
-    public static function removeWhiteSpaceBeforeFileExtension(string $fileName): array|string|null
+    public static function removeWhiteSpaceBeforeFileExtension(string $fileName): string
     {
-        $pattern = "/\s+(\.[^.]+)$/";
-        $replacement = '$1';
-
-        return preg_replace($pattern, $replacement, $fileName);
+        return preg_replace('/\s+(\.[^.]+)$/', '$1', $fileName) ?? '';
     }
 
     public function addMissingFileExtension(UploadedFile $uploadedFile): string
@@ -30,17 +27,17 @@ class FileNameFixer extends FileUtility
         return $uploadedFile->getClientOriginalName();
     }
 
-    public static function removeUnusualCharacters(string $fileName): array|string|null
+    public static function removeUnusualCharacters(?string $fileName): string
     {
-        $fileNameSpacesToUnderscores = preg_replace('[[[:blank:]]]', '_', $fileName);
-        $specialCharsRemoved = preg_replace('/[^\w_.-]/', '', $fileNameSpacesToUnderscores);
+        $fileNameSpacesToUnderscores = preg_replace('[[[:blank:]]]', '_', $fileName ?? '');
+        $specialCharsRemoved = preg_replace('/[^\w_.-]/', '', $fileNameSpacesToUnderscores ?? '');
 
         // Confirm if we have a file ext
-        $regexPattern = preg_match('/\.\w+$/', $specialCharsRemoved)?
+        $regexPattern = preg_match('/\.\w+$/', $fileNameSpacesToUnderscores ?? '')?
             '/([.-])(?=.*\.)/' :
             '/([.-])/';
 
-        return preg_replace($regexPattern, '_', $specialCharsRemoved);
+        return preg_replace($regexPattern, '_', $specialCharsRemoved) ?? '';
     }
 
     public static function lowerCaseFileExtension(UploadedFile $uploadedFile): UploadedFile

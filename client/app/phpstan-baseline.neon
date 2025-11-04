@@ -11761,11 +11761,6 @@ parameters:
 			path: src/Service/Csv/CsvBuilder.php
 
 		-
-			message: "#^Parameter \\#1 \\$stream of function fputcsv expects resource, resource\\|false given\\.$#"
-			count: 2
-			path: src/Service/Csv/CsvBuilder.php
-
-		-
 			message: "#^Parameter \\#1 \\$stream of function rewind expects resource, resource\\|false given\\.$#"
 			count: 1
 			path: src/Service/Csv/CsvBuilder.php
@@ -12066,16 +12061,6 @@ parameters:
 			path: src/Service/DocumentSyncService.php
 
 		-
-			message: "#^Parameter \\#1 \\$filename of static method GuzzleHttp\\\\Psr7\\\\MimeType\\:\\:fromFilename\\(\\) expects string, array\\|string\\|null given\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
-			message: "#^Parameter \\#1 \\$name of method App\\\\Model\\\\Sirius\\\\SiriusDocumentFile\\:\\:setName\\(\\) expects string, array\\|string\\|null given\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
 			message: "#^Parameter \\#1 \\$reportingPeriodFrom of method App\\\\Model\\\\Sirius\\\\SiriusReportPdfDocumentMetadata\\:\\:setReportingPeriodFrom\\(\\) expects DateTime, DateTime\\|null given\\.$#"
 			count: 1
 			path: src/Service/DocumentSyncService.php
@@ -12156,11 +12141,6 @@ parameters:
 			path: src/Service/File/S3FileUploader.php
 
 		-
-			message: "#^Method App\\\\Service\\\\File\\\\S3FileUploader\\:\\:getSanitisedFileName\\(\\) should return string but returns array\\|string\\|null\\.$#"
-			count: 1
-			path: src/Service/File/S3FileUploader.php
-
-		-
 			message: "#^Method App\\\\Service\\\\File\\\\S3FileUploader\\:\\:persistDocument\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/File/S3FileUploader.php
@@ -12172,11 +12152,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Service\\\\File\\\\S3FileUploader\\:\\:removeFileFromS3\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/File/S3FileUploader.php
-
-		-
-			message: "#^Parameter \\#1 \\$fileName of method App\\\\Service\\\\File\\\\FileNameFixer\\:\\:removeUnusualCharacters\\(\\) expects string, array\\|string\\|null given\\.$#"
 			count: 1
 			path: src/Service/File/S3FileUploader.php
 

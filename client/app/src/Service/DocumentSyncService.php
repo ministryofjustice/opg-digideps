@@ -38,11 +38,10 @@ class DocumentSyncService
     private $docsNotSyncedCount;
 
     public function __construct(
-        private S3Storage $storage,
-        private SiriusApiGatewayClient $siriusApiGatewayClient,
-        private RestClient $restClient,
-        private SiriusApiErrorTranslator $errorTranslator,
-        private FileNameFixer $fileNameFixer
+        private readonly S3Storage $storage,
+        private readonly SiriusApiGatewayClient $siriusApiGatewayClient,
+        private readonly RestClient $restClient,
+        private readonly SiriusApiErrorTranslator $errorTranslator,
     ) {
         $this->syncErrorSubmissionIds = [];
         $this->docsNotSyncedCount = 0;
