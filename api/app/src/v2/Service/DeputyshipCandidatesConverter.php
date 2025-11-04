@@ -42,6 +42,9 @@ class DeputyshipCandidatesConverter
                 return new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::InsertOrderFailed, $errors);
             }
 
+            // ensure inserted order has an ID assigned
+            $this->dbAccess->flush();
+
             $buildResult->addCandidateResult($result);
         }
 
@@ -71,8 +74,6 @@ class DeputyshipCandidatesConverter
                 $result = $this->dbAccess->insertOrderDeputy($courtOrderId, $candidate);
             } elseif (DeputyshipCandidateAction::InsertOrderReport === $action) {
                 $result = $this->dbAccess->insertOrderReport($courtOrderId, $candidate);
-            } elseif (DeputyshipCandidateAction::InsertOrderNdr === $action) {
-                $result = $this->dbAccess->insertOrderNdr($courtOrderId, $candidate);
             } elseif (DeputyshipCandidateAction::UpdateOrderStatus === $action) {
                 $result = $this->dbAccess->updateOrderStatus($courtOrderId, $candidate);
             } elseif (DeputyshipCandidateAction::UpdateDeputyStatus === $action) {

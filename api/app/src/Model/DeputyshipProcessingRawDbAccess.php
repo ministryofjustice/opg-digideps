@@ -39,6 +39,11 @@ class DeputyshipProcessingRawDbAccess
         $this->ingestWriterEm->clear();
     }
 
+    public function flush(): void
+    {
+        $this->ingestWriterEm->flush();
+    }
+
     /**
      * @return DeputyshipProcessingRawDbAccessResult $result is the ID int value, or null if not found
      */
@@ -111,7 +116,7 @@ class DeputyshipProcessingRawDbAccess
     public function insertOrderDeputy(int $courtOrderId, array $candidate): DeputyshipProcessingRawDbAccessResult
     {
         $deputyId = $candidate['deputyId'];
-        $deputyActive = true === $candidate['deputyStatusOnOrder'];
+        $deputyActive = (true === $candidate['deputyStatusOnOrder'] ? 'true' : 'false');
 
         try {
             $result = $this->ingestWriterEm->getConnection()->createQueryBuilder()
@@ -120,10 +125,9 @@ class DeputyshipProcessingRawDbAccess
                     [
                         'court_order_id' => $courtOrderId,
                         'deputy_id' => $deputyId,
-                        'is_active' => ':deputyActive',
+                        'is_active' => $deputyActive,
                     ]
                 )
-                ->setParameter('deputyActive', $deputyActive ? 'true' : 'false')
                 ->executeQuery();
 
             return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::InsertOrderDeputy, true, $result);
@@ -169,32 +173,6 @@ class DeputyshipProcessingRawDbAccess
         }
     }
 
-    public function insertOrderNdr(int $courtOrderId, array $candidate): DeputyshipProcessingRawDbAccessResult
-    {
-        $ndrId = $candidate['ndrId'];
-
-        try {
-            $result = $this->ingestWriterEm->getConnection()->createQueryBuilder()
-                ->update('court_order')
-                ->set('ndr_id', $ndrId)
-                ->where('id = :id')
-                ->setParameter('id', $courtOrderId)
-                ->executeQuery();
-
-            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::InsertOrderNdr, true, $result);
-        } catch (\Exception $e) {
-            $message = sprintf(
-                'insert order ndr not applied for court order UID %s (order ID %d, NDR ID %d); exception was %s',
-                $candidate['orderUid'],
-                $courtOrderId,
-                $ndrId,
-                $e->getMessage()
-            );
-
-            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::InsertOrderNdr, false, null, $message);
-        }
-    }
-
     public function updateOrderStatus(int $courtOrderId, array $candidate): DeputyshipProcessingRawDbAccessResult
     {
         $courtOrderStatus = $candidate['status'];
@@ -223,7 +201,10 @@ class DeputyshipProcessingRawDbAccess
 
     public function updateDeputyStatus(int $courtOrderId, array $candidate): DeputyshipProcessingRawDbAccessResult
     {
-        $isActive = true === $candidate['deputyStatusOnOrder'];
+        // this is necessary because doctrine treats 0 and false differently when passed as update parameters,
+        // while true and 1 result in the same outcome when used as a parameter
+        $isActive = (true === $candidate['deputyStatusOnOrder'] ? 1 : 0);
+
         $deputyId = $candidate['deputyId'];
 
         try {

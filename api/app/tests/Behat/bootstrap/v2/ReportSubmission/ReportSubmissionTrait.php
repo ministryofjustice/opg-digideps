@@ -109,6 +109,7 @@ trait ReportSubmissionTrait
     public function attachSupportingDocumentToSubmittedReport(string $imageName)
     {
         $this->iVisitTheDocumentsStep2Page();
+        $this->assertPageNotContainsText('Send documents');
         $this->attachDocument($imageName);
     }
 

@@ -49,12 +49,6 @@ class CourtOrderController extends AbstractController
             'inviteUrl' => $this->generateUrl('courtorder_invite', ['uid' => $courtOrder->getCourtOrderUid()]),
         ];
 
-        if (!empty($courtOrder->getNdr())) {
-            return array_merge($templateValues, [
-                'ndrEnabled' => true,
-            ]);
-        }
-
         return array_merge($templateValues, [
             'ndrEnabled' => false,
         ]);

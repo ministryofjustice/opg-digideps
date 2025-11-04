@@ -164,26 +164,23 @@ final class DeputyshipCandidateConverterTest extends TestCase
 
         $insertOrderDeputy = ['action' => DeputyshipCandidateAction::InsertOrderDeputy];
         $insertOrderReport = ['action' => DeputyshipCandidateAction::InsertOrderReport];
-        $insertOrderNdr = ['action' => DeputyshipCandidateAction::InsertOrderNdr];
         $updateOrderStatus = ['action' => DeputyshipCandidateAction::UpdateOrderStatus];
         $updateDeputyStatus = ['action' => DeputyshipCandidateAction::UpdateDeputyStatus];
 
         $findOrderResult = $this->createMockResult(DeputyshipCandidateAction::FindOrder, data: $orderId);
         $insertOrderDeputyResult = $this->createMockResult(DeputyshipCandidateAction::InsertOrderDeputy);
         $insertOrderReportResult = $this->createMockResult(DeputyshipCandidateAction::InsertOrderReport);
-        $insertOrderNdrResult = $this->createMockResult(DeputyshipCandidateAction::InsertOrderNdr);
         $updateOrderStatusResult = $this->createMockResult(DeputyshipCandidateAction::UpdateOrderStatus);
         $updateDeputyStatusResult = $this->createMockResult(DeputyshipCandidateAction::UpdateDeputyStatus);
 
         $candidateGroup = new DeputyshipCandidatesGroup();
         $candidateGroup->orderUid = $orderUid;
-        $candidateGroup->insertOthers = [$insertOrderDeputy, $insertOrderReport, $insertOrderNdr];
+        $candidateGroup->insertOthers = [$insertOrderDeputy, $insertOrderReport];
         $candidateGroup->updates = [$updateOrderStatus, $updateDeputyStatus];
 
         $this->mockDbAccess->expects($this->once())->method('findOrderId')->with($orderUid)->willReturn($findOrderResult);
         $this->mockDbAccess->expects($this->once())->method('insertOrderDeputy')->with($orderId, $insertOrderDeputy)->willReturn($insertOrderDeputyResult);
         $this->mockDbAccess->expects($this->once())->method('insertOrderReport')->with($orderId, $insertOrderReport)->willReturn($insertOrderReportResult);
-        $this->mockDbAccess->expects($this->once())->method('insertOrderNdr')->with($orderId, $insertOrderNdr)->willReturn($insertOrderNdrResult);
         $this->mockDbAccess->expects($this->once())->method('updateOrderStatus')->with($orderId, $updateOrderStatus)->willReturn($updateOrderStatusResult);
         $this->mockDbAccess->expects($this->once())->method('updateDeputyStatus')->with($orderId, $updateDeputyStatus)->willReturn($updateDeputyStatusResult);
         $this->mockDbAccess->expects($this->once())->method('endTransaction');
@@ -194,7 +191,7 @@ final class DeputyshipCandidateConverterTest extends TestCase
         // assert
         self::assertEquals(DeputyshipBuilderResultOutcome::CandidatesApplied, $builderResult->getOutcome());
 
-        self::assertEquals(5, $builderResult->getNumCandidatesApplied());
+        self::assertEquals(4, $builderResult->getNumCandidatesApplied());
     }
 
     private function createMockResult(
