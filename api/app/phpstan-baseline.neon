@@ -841,11 +841,6 @@ parameters:
 			path: src/Controller/SelfRegisterController.php
 
 		-
-			message: "#^Cannot call method setDeputyNo\\(\\) on App\\\\Entity\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Controller/SelfRegisterController.php
-
-		-
 			message: "#^Cannot call method setDeputyUid\\(\\) on App\\\\Entity\\\\User\\|null\\.$#"
 			count: 1
 			path: src/Controller/SelfRegisterController.php
@@ -4971,11 +4966,6 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:setDeputyNo\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\User\\:\\:setLastLoggedIn\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/User.php
@@ -6786,21 +6776,6 @@ parameters:
 			path: src/Service/ReportUtils.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:getCurrentRequest\\(\\)\\.$#"
-			count: 1
-			path: src/Service/RequestIdLoggerProcessor.php
-
-		-
-			message: "#^Left side of && is always true\\.$#"
-			count: 1
-			path: src/Service/RequestIdLoggerProcessor.php
-
-		-
-			message: "#^Method App\\\\Service\\\\RequestIdLoggerProcessor\\:\\:getRequestIdFromContainer\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/RequestIdLoggerProcessor.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:getEmailIdentifier\\(\\)\\.$#"
 			count: 1
 			path: src/Service/RestHandler/OrganisationRestHandler.php
@@ -8227,11 +8202,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method getCaseNumber\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/v2/Registration/Uploader/LayDeputyshipUploader.php
-
-		-
-			message: "#^Cannot call method getDeputyNo\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/v2/Registration/Uploader/LayDeputyshipUploader.php
 

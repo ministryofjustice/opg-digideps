@@ -8801,11 +8801,6 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:getDeputyNo\\(\\) should return string but returns string\\|null\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\User\\:\\:getIsCoDeputy\\(\\) should return bool but returns bool\\|null\\.$#"
 			count: 1
 			path: src/Entity/User.php
@@ -8967,11 +8962,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Entity\\\\User\\:\\:setClients\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:setDeputyNo\\(\\) has parameter \\$deputyNo with no type specified\\.$#"
 			count: 1
 			path: src/Entity/User.php
 
@@ -9201,7 +9191,7 @@ parameters:
 			path: src/EventListener/NotFoundExceptionListener.php
 
 		-
-			message: "#^Method App\\\\EventListener\\\\ResponseNoCacheListener\\:\\:onKernelResponse\\(\\) has no return type specified\\.$#"
+			message: "#^Parameter \\#2 \\$values of method Symfony\\\\Component\\\\HttpFoundation\\\\ResponseHeaderBag\\:\\:set\\(\\) expects array\\<string\\>\\|string\\|null, mixed given\\.$#"
 			count: 1
 			path: src/EventListener/ResponseNoCacheListener.php
 
@@ -12794,16 +12784,6 @@ parameters:
 			message: "#^Strict comparison using \\=\\=\\= between false and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Service/ReportSubmissionService.php
-
-		-
-			message: "#^Cannot call method getCurrentRequest\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Service/RequestIdLoggerProcessor.php
-
-		-
-			message: "#^Method App\\\\Service\\\\RequestIdLoggerProcessor\\:\\:getRequestIdFromContainer\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/RequestIdLoggerProcessor.php
 
 		-
 			message: "#^Method App\\\\Service\\\\SecretManagerService\\:\\:getSecret\\(\\) has no return type specified\\.$#"

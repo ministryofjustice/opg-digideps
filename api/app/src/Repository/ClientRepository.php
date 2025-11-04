@@ -6,6 +6,7 @@ use App\Entity\Client;
 use App\Entity\User;
 use App\Service\Search\ClientSearchFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 use Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter;
 
@@ -43,7 +44,7 @@ class ClientRepository extends ServiceEntityRepository
         $limit = ($limit <= 100) ? $limit : 100;
         $qb->setMaxResults($limit);
         $qb->setFirstResult((int) $offset);
-        $qb->orderBy($alias.'.'.$orderBy, $sortOrder);
+        $qb->orderBy($alias . '.' . $orderBy, $sortOrder);
 
         $this->_em->getFilters()->enable('softdeleteable');
 
@@ -154,7 +155,7 @@ class ClientRepository extends ServiceEntityRepository
                 'lower(c.lastname) LIKE :qLike',
             ]));
 
-            $qb->setParameter('qLike', '%'.strtolower($q).'%');
+            $qb->setParameter('qLike', '%' . strtolower($q) . '%');
             $qb->setParameter('q', strtolower($q));
         }
 
@@ -186,18 +187,19 @@ class ClientRepository extends ServiceEntityRepository
      * If $excludeEmail is supplied, only those which do NOT match $excludeEmail are included.
      *
      * @return mixed|null
+     * @throws Exception
      */
-    public function findExistingDeputyCases(string $caseNumber, string $deputyNumber, ?string $excludeEmail = null)
+    public function findExistingDeputyCases(string $caseNumber, string $deputyUid, ?string $excludeEmail = null)
     {
         $deputyCaseQuery = '
                 SELECT dc.client_id, dc.user_id
                 FROM deputy_case dc
                 INNER JOIN client c ON dc.client_id = c.id
                 INNER JOIN dd_user du ON dc.user_id = du.id
-                WHERE LOWER(c.case_number) = LOWER(:case_number) AND LOWER(du.deputy_no) = LOWER(:deputy_no)
+                WHERE LOWER(c.case_number) = LOWER(:case_number) AND LOWER(du.deputy_uid::varchar(20)) = LOWER(:deputy_uid)
         ';
 
-        $params = ['case_number' => $caseNumber, 'deputy_no' => $deputyNumber];
+        $params = ['case_number' => $caseNumber, 'deputy_uid' => $deputyUid];
 
         if (!is_null($excludeEmail)) {
             $deputyCaseQuery .= ' AND du.email != :email';

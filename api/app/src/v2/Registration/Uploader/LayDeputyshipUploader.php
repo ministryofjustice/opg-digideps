@@ -176,11 +176,7 @@ class LayDeputyshipUploader
 
                 // For Dual Cases, deputy uid needs to match for the report type to be updated
                 if (PreRegistration::DUAL_TYPE == $preRegistration->getHybrid()) {
-                    $existingDeputyUid = $currentActiveReport->getClient()->getUsers()[0]->getDeputyNo();
-
-                    if (empty($existingDeputyUid)) {
-                        $existingDeputyUid = $currentActiveReport->getClient()->getUsers()[0]->getDeputyUid();
-                    }
+                    $existingDeputyUid = $currentActiveReport->getClient()->getUsers()[0]->getDeputyUid();
 
                     if ($existingDeputyUid == $preRegistration->getDeputyUid()) {
                         if ($currentActiveReport->getType() != $determinedReportType) {
