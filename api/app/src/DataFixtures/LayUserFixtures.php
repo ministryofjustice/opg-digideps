@@ -179,14 +179,14 @@ class LayUserFixtures extends AbstractDataFixture
     {
         $offset = strlen((string) abs($iteration));
 
+        /** @var string $deputyUid */
         $deputyUid = substr_replace($data['deputyUid'], $iteration, -$offset);
 
         // Create user
         $user = (new User())
             ->setFirstname($data['id'])
             ->setLastname('User ' . $iteration)
-            ->setDeputyNo($deputyUid)
-            ->setDeputyUid($deputyUid)
+            ->setDeputyUid(intval($deputyUid))
             ->setEmail(strtolower($data['id']) . '-user-' . $iteration . '@publicguardian.gov.uk')
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
@@ -338,10 +338,9 @@ class LayUserFixtures extends AbstractDataFixture
 
         if ($data['coDeputy']) {
             $user2 = clone $user;
-            $newDeputyUid = substr_replace($user2->getDeputyNo(), $iteration, $offset, $offset);
+            $newDeputyUid = substr_replace("{$user2->getDeputyUid()}", $iteration, $offset, $offset);
 
-            $user2->setDeputyNo($newDeputyUid);
-            $user2->setDeputyUid($newDeputyUid);
+            $user2->setDeputyUid(intval($newDeputyUid));
             $user2->setLastname($user->getLastname() . '-codeputy');
             $user2->setEmail(substr_replace($user->getEmail(), '-codeputy@publicguardian.gov.uk', -22));
             $user2->addClient($client);

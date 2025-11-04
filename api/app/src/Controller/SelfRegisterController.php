@@ -57,7 +57,7 @@ class SelfRegisterController extends RestController
         $errors = $this->validator->validate($selfRegisterData, null, 'self_registration');
 
         if (count($errors) > 0) {
-            throw new RuntimeException('Invalid registration data: '.$errors);
+            throw new RuntimeException('Invalid registration data: ' . $errors);
         }
 
         try {
@@ -95,7 +95,7 @@ class SelfRegisterController extends RestController
         $errors = $this->validator->validate($selfRegisterData, null, ['verify_codeputy']);
 
         if (count($errors) > 0) {
-            throw new RuntimeException('Invalid registration data: '.$errors);
+            throw new RuntimeException('Invalid registration data: ' . $errors);
         }
 
         try {
@@ -146,7 +146,6 @@ class SelfRegisterController extends RestController
 
         $user->setCoDeputyClientConfirmed(true);
 
-        $user->setDeputyNo($coDeputyVerificationData['coDeputyUid']);
         $user->setDeputyUid($coDeputyVerificationData['coDeputyUid']);
 
         $user->setActive(true);

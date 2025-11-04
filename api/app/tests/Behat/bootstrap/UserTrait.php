@@ -52,7 +52,7 @@ trait UserTrait
             }
 
             if (count($missingKeys) > 0) {
-                $missingKeysString = implode($missingKeys, ', ');
+                $missingKeysString = implode(', ', $missingKeys);
                 throw new Exception("Missing required parameter headings: $missingKeysString");
             }
         }
@@ -347,76 +347,11 @@ trait UserTrait
     }
 
     /**
-     * @Given I add the following users to CASREC:
-     */
-    public function iAddTheFollowingUsersToCASREC(TableNode $table)
-    {
-        foreach ($table->getHash() as $row) {
-            $row = array_map([$this, 'casRecNormaliseValue'], $row);
-            $this->dbQueryRaw('casrec', [
-                'client_case_number' => $row['Case'],
-                'client_lastname' => $row['Surname'],
-                'deputy_no' => $row['Deputy No'],
-                'deputy_lastname' => $row['Dep Surname'],
-                'deputy_postcode' => $row['Dep Postcode'],
-                'type_of_report' => $row['Typeofrep'],
-                'other_columns' => str_replace('"', '\\"', serialize($row)),
-                'order_date' => (new DateTime($row['OrderDate']))->format('Y-m-d H:i:s'),
-                'corref' => $row['Corref'],
-            ]);
-        }
-    }
-
-    public static function casRecNormaliseValue($value)
-    {
-        $value = trim($value);
-        $value = strtolower($value);
-        // remove MBE suffix
-        $value = preg_replace('/ (mbe|m b e)$/i', '', $value);
-        // remove characters that are not a-z or 0-9 or spaces
-        $value = preg_replace('/([^a-z0-9])/i', '', $value);
-
-        return $value;
-    }
-
-    /**
-     * @Given there is an activated :depType user with NDR :ndrStatus and email :email and password :password
-     */
-    public function iCreateAndActivateUser($depType, $ndrStatus, $email, $password)
-    {
-        $ndrStatus = 'NDR-'.$ndrStatus;
-        $this->iCreateTheUserWithEmailAndPostcode($ndrStatus, $depType, 'Lay', 'Dep', $email, 'SW11AA');
-        $this->iActivateTheUserAndSetThePasswordTo($email, $password);
-        $this->iLogInWithNewPassword($email, $password);
-
-        $this->iAddTheFollowingUsersToCASREC(new TableNode([
-            ['Case', 'Surname', 'Deputy No', 'Dep Surname', 'Dep Postcode', 'Typeofrep', 'OrderDate', 'Corref'],
-            ['12355555', 'Jones', '00213', 'Dep', 'SW11AA', 'OPG102', '2011-04-30', 'l2'],
-        ]));
-
-        $this->iSetTheUserDetailsTo(new TableNode([
-            ['address', '16 Deputy Road', 'Beeston', 'Notts', 'PREFILLED', 'GB'],
-            ['phone', '07987123123', '', '', '', ''],
-        ]));
-
-        $this->iSetTheClientDetailsTo(new TableNode([
-            ['name', 'Client', 'Jones', '', '', ''],
-            ['caseNumber', '12355555', '', '', '', ''],
-            ['address', '16 Client Road', 'Beeston', 'Notts', 'NG12LK', 'GB'],
-            ['courtDate', 1, 11, 2018, '', ''],
-            ['phone', '07987123122', '', '', '', ''],
-        ]));
-
-        $this->iSetTheReportStartDateToAndEndDateTo('1/11/2018');
-        $this->iSetTheReportEndDateToAndEndDateTo('1/10/2019');
-    }
-
-    /**
      * @Given I :action NDR for user :email
      */
     public function iEnableNdrForUser($action, $email)
     {
-        $this->clickOnBehatLink('user-'.$email);
+        $this->clickOnBehatLink('user-' . $email);
         $this->clickLink('Edit user');
 
         'enable' === strtolower($action) ?

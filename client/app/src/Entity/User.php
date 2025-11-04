@@ -343,13 +343,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     private $lastLoggedIn;
 
     /**
-     * @var string|null
-     *
-     * @JMS\Type("string")
-     */
-    private $deputyNo;
-
-    /**
      * @var int
      *
      * @JMS\Type("integer")
@@ -795,7 +788,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      */
     public function getFullName()
     {
-        return $this->firstname.' '.$this->lastname;
+        return $this->firstname . ' ' . $this->lastname;
     }
 
     /**
@@ -932,24 +925,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     public function setLastLoggedIn(?\DateTime $lastLoggedIn = null)
     {
         $this->lastLoggedIn = $lastLoggedIn;
-    }
-
-    /**
-     * @return string
-     */
-    public function getDeputyNo()
-    {
-        return $this->deputyNo;
-    }
-
-    /**
-     * @return $this
-     */
-    public function setDeputyNo($deputyNo)
-    {
-        $this->deputyNo = $deputyNo;
-
-        return $this;
     }
 
     public function getDeputyUid(): ?int
