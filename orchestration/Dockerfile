@@ -1,4 +1,4 @@
-FROM golang:1.24.6-alpine3.22 AS builder
+FROM golang:1.25.3-alpine3.22 AS builder
 
 COPY sleep_mode /app/sleep_mode
 WORKDIR /app/sleep_mode

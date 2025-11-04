@@ -163,7 +163,6 @@ public,dd_user,codeputy_client_confirmed,boolean,,,NA
 public,dd_user,created_at,timestamp without time zone,,,NA
 public,dd_user,created_by_id,integer,,FOREIGN KEY,NA
 public,dd_user,deletion_protection,boolean,,,NA
-public,dd_user,deputy_no,character varying,100,,NA
 public,dd_user,deputy_uid,bigint,,,NA
 public,dd_user,email,character varying,60,,Email
 public,dd_user,firstname,character varying,100,,FirstName

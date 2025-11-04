@@ -8801,11 +8801,6 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:getDeputyNo\\(\\) should return string but returns string\\|null\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\User\\:\\:getIsCoDeputy\\(\\) should return bool but returns bool\\|null\\.$#"
 			count: 1
 			path: src/Entity/User.php
@@ -8967,11 +8962,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Entity\\\\User\\:\\:setClients\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:setDeputyNo\\(\\) has parameter \\$deputyNo with no type specified\\.$#"
 			count: 1
 			path: src/Entity/User.php
 

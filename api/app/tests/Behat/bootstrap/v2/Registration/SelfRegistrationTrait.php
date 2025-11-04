@@ -403,7 +403,6 @@ trait SelfRegistrationTrait
             ['email' => strtolower($this->interactingWithUserDetails->getUserEmail())]
         );
 
-        $this->assertStringEqualsString($this->deputyUid, $deputy->getDeputyNo(), 'Asserting DeputyUid is the same');
         /* Assertion on the new Deputy UID value which is an exact match of the Deputy No value */
         $this->assertIntEqualsInt(intval($this->deputyUid), $deputy->getDeputyUid(), 'Asserting DeputyUid is the same');
         $this->assertStringEqualsString(
@@ -785,11 +784,6 @@ trait SelfRegistrationTrait
             ['email' => strtolower($this->coDeputyEmail)]
         );
 
-        $this->assertStringEqualsString(
-            $this->coDeputyUid,
-            $coDeputy->getDeputyNo(),
-            'Asserting CoDeputyUid is the same'
-        );
         /* Assertion on the new Deputy UID value which is an exact match of the Deputy No value */
         $this->assertIntEqualsInt(
             (int)$this->coDeputyUid,
