@@ -801,7 +801,6 @@ class SelfRegisterControllerTest extends AbstractTestController
         $response = $responseArray['data'];
 
         $this->assertTrue($response['co_deputy_client_confirmed']);
-        $this->assertEquals('700000019951', $response['deputy_no']);
         $this->assertEquals('700000019951', $response['deputy_uid']);
         $this->assertNotEmpty($response['registration_date']);
         $this->assertNotEmpty($response['pre_register_validated_date']);

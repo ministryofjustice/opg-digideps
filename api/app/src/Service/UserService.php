@@ -181,7 +181,6 @@ class UserService
         $invitedUser->setLastname($invitedDeputyData->lastname);
         $invitedUser->setRoleName($invitedDeputyData->roleName);
         $invitedUser->setDeputyUid($deputyUid);
-        $invitedUser->setDeputyNo("$deputyUid");
         $invitedUser->setActive(true);
         $invitedUser->setRegistrationRoute(User::CO_DEPUTY_INVITE);
 
