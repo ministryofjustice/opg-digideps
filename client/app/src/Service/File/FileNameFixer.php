@@ -32,10 +32,15 @@ class FileNameFixer extends FileUtility
 
     public static function removeUnusualCharacters(string $fileName): array|string|null
     {
-        $fileNameSpacesToUnderscores = str_replace(' ', '_', $fileName);
-        $specialCharsRemoved = preg_replace('/[^A-Za-z0-9_.]/', '', $fileNameSpacesToUnderscores);
+        $fileNameSpacesToUnderscores = preg_replace('[[[:blank:]]]', '_', $fileName);
+        $specialCharsRemoved = preg_replace('/[^\w_.-]/', '', $fileNameSpacesToUnderscores);
 
-        return preg_replace('/[.](?=.*[.])/', '_', $specialCharsRemoved);
+        // Confirm if we have a file ext
+        $regexPattern = preg_match('/\.\w+$/', $specialCharsRemoved)?
+            '/([.-])(?=.*\.)/' :
+            '/([.-])/';
+
+        return preg_replace($regexPattern, '_', $specialCharsRemoved);
     }
 
     public static function lowerCaseFileExtension(UploadedFile $uploadedFile): UploadedFile

@@ -105,7 +105,7 @@ trait DocumentsSectionTrait
 
         $descriptionLists = $this->findAllCssElements('dl');
 
-        $this->findFileNamesInDls($descriptionLists, ['goodheic.jpeg', 'goodjfif.jpeg']);
+        $this->findFileNamesInDls($descriptionLists, ['good_heic.jpeg', 'good_jfif.jpeg']);
     }
 
     private function findFileNamesInDls(array $descriptionLists, array $convertedFileNames = [])
@@ -317,13 +317,11 @@ trait DocumentsSectionTrait
 
         $docs = $this->em->getRepository(Document::class)->findBy(['report' => $reportId]);
 
-        $storageReference = '';
-
-        foreach ($docs as $doc) {
-            $storageReference = $doc->getStorageReference();
+        if (count($docs) >= 1) {
+            foreach ($docs as $doc) {
+                $this->expireDocumentFromUnSubmittedDeputyReport($doc->getStorageReference());
+            }
         }
-
-        $this->expireDocumentFromUnSubmittedDeputyReport($storageReference);
     }
 
     /**
@@ -348,8 +346,15 @@ trait DocumentsSectionTrait
      */
     public function iDeleteTheMissingDocumentAndReUploadToTheReport(string $document)
     {
-        // remove expired document
-        $formattedDocName = preg_replace('#[^A-Za-z0-9/.]#', '', $document);
+        $fileNameSpacesToUnderscores = preg_replace('[[[:blank:]]]', '_', $document);
+        $specialCharsRemoved = preg_replace('/[^\w_.-]/', '', $fileNameSpacesToUnderscores);
+
+        // Confirm if we have a file ext
+        $regexPattern = preg_match('/\.\w+$/', $specialCharsRemoved)?
+            '/([.-])(?=.*\.)/' :
+            '/([.-])/';
+        $formattedDocName = preg_replace($regexPattern, '_', $specialCharsRemoved);
+
         $parentOfDtWithTextSelector = sprintf('//dt[contains(text(),"%s")]/..', $formattedDocName);
         $documentRowDiv = $this->getSession()->getPage()->find('xpath', $parentOfDtWithTextSelector);
 

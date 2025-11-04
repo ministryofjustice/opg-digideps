@@ -35,7 +35,7 @@ class S3FileUploader
             $fileBody = file_get_contents($uploadedFile->getRealPath());
 
             // check for uppercase extensions and lower if required
-            $uploadedFile = $this->fileNameFixer->lowerCaseFileExtension($uploadedFile);
+            $uploadedFile = FileNameFixer::lowerCaseFileExtension($uploadedFile);
 
             $extensionAndMimeTypeMatch = $this->mimeTypeAndExtensionChecker->check($uploadedFile, $fileBody);
 
@@ -54,9 +54,9 @@ class S3FileUploader
     private function getSanitisedFileName(UploadedFile $file): string
     {
         $sanitisedFileNameAndPath = $this->fileNameFixer->addMissingFileExtension($file);
-        $sanitisedFileNameAndPath = $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension($sanitisedFileNameAndPath);
+        $sanitisedFileNameAndPath = FileNameFixer::removeWhiteSpaceBeforeFileExtension($sanitisedFileNameAndPath);
 
-        return $this->fileNameFixer->removeUnusualCharacters($sanitisedFileNameAndPath);
+        return FileNameFixer::removeUnusualCharacters($sanitisedFileNameAndPath);
     }
 
     /**
