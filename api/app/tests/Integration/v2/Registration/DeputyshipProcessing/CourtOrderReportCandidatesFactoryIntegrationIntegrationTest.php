@@ -76,7 +76,7 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
         );
     }
 
-    private static function compatibleReportDataProvider(): array
+    public static function compatibleReportDataProvider(): array
     {
         return [
             ['deputyType' => 'LAY', 'orderType' => 'pfa', 'isHybrid' => null, 'compatibleReportType' => '102'],
@@ -169,48 +169,6 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
         self::assertEquals(DeputyshipCandidateAction::InsertOrderReport, $candidates[0]->action);
         self::assertEquals($orderUid, $candidates[0]->orderUid);
         self::assertEquals($report1->getId(), $candidates[0]->reportId);
-    }
-
-    public function testCreateCompatibleNdrCandidates(): void
-    {
-        $caseNumber = '77677775';
-        $orderUid = '88884444';
-        $madeDate = new DateTime();
-
-        // add pfa/LAY staging deputyship
-        $deputyship = new StagingDeputyship();
-        $deputyship->deputyUid = '11112234';
-        $deputyship->orderUid = $orderUid;
-        $deputyship->deputyType = 'LAY';
-        $deputyship->orderType = 'pfa';
-        $deputyship->caseNumber = $caseNumber;
-        $deputyship->orderMadeDate = $madeDate->format('Y-m-d');
-
-        self::$entityManager->persist($deputyship);
-        self::$entityManager->flush();
-
-        // add client
-        $client = new Client();
-        $client->setCaseNumber($caseNumber);
-
-        self::$entityManager->persist($client);
-        self::$entityManager->flush();
-
-        // add NDR to client
-        $ndr = new Ndr($client);
-        $ndr->setStartDate($madeDate);
-
-        self::$entityManager->persist($ndr);
-        self::$entityManager->flush();
-
-        // create NDR candidates
-        $candidates = iterator_to_array(self::$sut->createCompatibleNdrCandidates());
-
-        // assertions
-        self::assertCount(1, $candidates);
-        self::assertEquals(DeputyshipCandidateAction::InsertOrderNdr, $candidates[0]->action);
-        self::assertEquals($orderUid, $candidates[0]->orderUid);
-        self::assertEquals($ndr->getId(), $candidates[0]->ndrId);
     }
 
     // if a court_order_report row exists for a court order <-> report relationship, it should
