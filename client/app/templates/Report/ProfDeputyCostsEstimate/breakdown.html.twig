@@ -38,12 +38,14 @@
     </p>
 
     {% for profDeputyEstimateCost in form.profDeputyEstimateCosts %}
-        <div class="{{ profDeputyEstimateCost.moreDetails is defined ? ' js-details-expander ' : '' }}">
+        {% set jsEnabled = profDeputyEstimateCost.moreDetails is defined ? ' js-details-expander'  : '' %}
+        <div class="{{ jsEnabled }}">
             {{ form_row(profDeputyEstimateCost.profDeputyEstimateCostTypeId) }}
             {{ form_input(profDeputyEstimateCost.amount, 'amount', {
                 'inputPrefix' : '£',
                 'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
-                'labelText': (page ~ '.form.entries.' ~ profDeputyEstimateCost.profDeputyEstimateCostTypeId.vars.value ~ '.label') | trans
+                'labelText': (page ~ '.form.entries.' ~ profDeputyEstimateCost.profDeputyEstimateCostTypeId.vars.value ~ '.label') | trans,
+                'jsEnabled': jsEnabled
             }) }}
 
             {# this is testing the form field is defined. Not the entity property #}
@@ -51,7 +53,7 @@
                 <div class="">
                     {{ form_input(profDeputyEstimateCost.moreDetails, 'moreDetails', {
                         'labelText': (page ~ '.form.entries.' ~ profDeputyEstimateCost.profDeputyEstimateCostTypeId.vars.value ~ '.moreInformation') | trans,
-                        'formGroupClass': 'opg-indented-block'
+                        'formGroupClass': 'opg-indented-block hard--top js-hidden js-details-expandable'
                     }) }}
                 </div>
             {% endif %}
