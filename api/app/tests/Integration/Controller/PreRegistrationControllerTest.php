@@ -206,7 +206,6 @@ class PreRegistrationControllerTest extends AbstractTestController
         /** @var User $loggedInUser */
         $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
 
-        $loggedInUser->setDeputyNo(null);
         $loggedInUser->setDeputyUid(0);
         $this->fixtures()->persist($loggedInUser);
         $this->fixtures()->flush();
@@ -221,10 +220,10 @@ class PreRegistrationControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
+        /** @var User $loggedInUser */
+        $loggedInUser = $this->fixtures()->clear()->getRepo(User::class)->find($this->loggedInUserId);
 
-        $this->assertEquals('700571111000', $loggedInUser->getDeputyNo());
-        $this->assertEquals('700571111000', $loggedInUser->getDeputyUid());
+        $this->assertEquals(700571111000, $loggedInUser->getDeputyUid());
         self::assertTrue($loggedInUser->getPreRegisterValidatedDate() instanceof DateTime);
         self::assertTrue($loggedInUser->getIsPrimary());
     }
@@ -241,7 +240,6 @@ class PreRegistrationControllerTest extends AbstractTestController
         /** @var User $loggedInUser */
         $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
 
-        $loggedInUser->setDeputyNo(null);
         $loggedInUser->setDeputyUid(0);
         $this->fixtures()->persist($loggedInUser);
         $this->fixtures()->flush();
@@ -259,7 +257,6 @@ class PreRegistrationControllerTest extends AbstractTestController
         $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
 
         try {
-            $this->assertNull($loggedInUser->getDeputyNo());
             $this->assertEquals(0, $loggedInUser->getDeputyUid());
         } catch (RuntimeException $e) {
             $expectedErrorMessage = 'A unique deputy record for case number 39393939 could not be identified';

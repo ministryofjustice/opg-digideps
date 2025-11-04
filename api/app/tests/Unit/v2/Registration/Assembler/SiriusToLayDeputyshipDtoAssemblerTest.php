@@ -78,7 +78,7 @@ final class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
         $this->assertEquals('client_address3', $result->getClientAddress3());
         $this->assertEquals('client_address4', $result->getClientAddress4());
         $this->assertEquals('client_address5', $result->getClientAddress5());
-        $this->assertEquals('deputy_no', $result->getDeputyUid());
+        $this->assertEquals('11223344', $result->getDeputyUid());
         $this->assertEquals('deputyfirstname', $result->getDeputyFirstname());
         $this->assertEquals('deputysurname', $result->getDeputySurname());
         $this->assertEquals('deputy_postcode', $result->getDeputyPostcode());
@@ -114,7 +114,7 @@ final class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
             'ClientAddress4' => 'client_address4',
             'ClientAddress5' => 'client_address5',
             'ClientPostcode' => 'client_postcode',
-            'DeputyUid' => 'deputy_no',
+            'DeputyUid' => '11223344',
             'DeputyFirstname' => 'deputyfirstname',
             'DeputySurname' => 'deputysurname',
             'DeputyAddress1' => 'depaddress1',
