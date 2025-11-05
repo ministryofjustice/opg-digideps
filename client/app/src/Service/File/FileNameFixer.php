@@ -27,9 +27,9 @@ class FileNameFixer extends FileUtility
         return $uploadedFile->getClientOriginalName();
     }
 
-    public static function removeUnusualCharacters(?string $fileName): string
+    public static function removeUnusualCharacters(string $fileName): string
     {
-        $fileNameSpacesToUnderscores = preg_replace('[[[:blank:]]]', '_', $fileName ?? '');
+        $fileNameSpacesToUnderscores = preg_replace('[[[:blank:]]]', '_', $fileName);
         $specialCharsRemoved = preg_replace('/[^\w_.-]/', '', $fileNameSpacesToUnderscores ?? '');
 
         // Confirm if we have a file ext
