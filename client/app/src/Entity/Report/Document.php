@@ -26,13 +26,7 @@ class Document implements DocumentInterface, SynchronisableInterface
 
     public function isValidForReport(ExecutionContextInterface $context): void
     {
-        $file = $this->getFile();
-
-        if (is_null($file)) {
-            return;
-        }
-
-        $fileOriginalName = $file->getClientOriginalName();
+        $fileOriginalName = $this->getFile()->getClientOriginalName();
 
         if (strlen($fileOriginalName) > self::FILE_NAME_MAX_LENGTH) {
             $context->buildViolation('document.file.errors.maxMessage')->atPath('file')->addViolation();
