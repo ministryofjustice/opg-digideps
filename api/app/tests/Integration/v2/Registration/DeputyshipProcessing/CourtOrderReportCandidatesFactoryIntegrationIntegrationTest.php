@@ -214,6 +214,8 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
             dateChecks: false
         );
 
+        $report->setDueDate($orderMadeDate->modify('+1 day'));
+
         self::$entityManager->persist($report);
 
         // create order and associate with report; this report is a potential candidate,
@@ -298,5 +300,66 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
 
         // both reports should be candidates
         self::assertCount(2, $candidates);
+    }
+
+    // court order <-> report candidates should not be generated for inactive clients, as court orders will not be
+    // added for those clients (DDLS-1055)
+    public function testCreateCompatibleReportCandidatesExcludesInactiveClients(): void
+    {
+        $deputyUid = '9384576384';
+        $caseNumber = '928475631';
+        $orderUid = '99944477';
+        $madeDate = new DateTime();
+
+        // add staging deputyship which currently has hybrid reporting
+        $deputyship = new StagingDeputyship();
+        $deputyship->orderUid = $orderUid;
+        $deputyship->deputyUid = $deputyUid;
+        $deputyship->deputyType = 'LAY';
+        $deputyship->orderType = 'pfa';
+        $deputyship->isHybrid = '0';
+        $deputyship->caseNumber = $caseNumber;
+        $deputyship->orderMadeDate = $madeDate->format('Y-m-d');
+
+        self::$entityManager->persist($deputyship);
+        self::$entityManager->flush();
+
+        // add archived client
+        $client = new Client();
+        $client->setCaseNumber($caseNumber);
+        $client->setDeletedAt();
+        $client->setArchivedAt(new \DateTime());
+
+        self::$entityManager->persist($client);
+        self::$entityManager->flush();
+
+        // add compatible report to inactive client
+        $report = new Report(
+            client: $client,
+            type: '102',
+            startDate: $madeDate->modify('+1 day'),
+            endDate: $madeDate->modify('+1 year'),
+            dateChecks: false
+        );
+
+        $report->setDueDate($madeDate->modify('+1 day'));
+
+        self::$entityManager->persist($report);
+        self::$entityManager->flush();
+
+        // check we get no candidates for the archived client
+        $candidates = iterator_to_array(self::$sut->createCompatibleReportCandidates());
+        self::assertEmpty($candidates);
+
+        // make client deleted rather than archived
+        $client->setArchivedAt();
+        $client->setDeletedAt(new \DateTime());
+
+        self::$entityManager->persist($report);
+        self::$entityManager->flush();
+
+        // check again that we get no candidates for the deleted client
+        $candidates = iterator_to_array(self::$sut->createCompatibleReportCandidates());
+        self::assertEmpty($candidates);
     }
 }
