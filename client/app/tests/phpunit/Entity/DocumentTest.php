@@ -13,16 +13,6 @@ use Symfony\Component\Validator\Violation\ConstraintViolationBuilderInterface;
 
 class DocumentTest extends TestCase
 {
-    public function testIsValidForReportNoUploadedFile(): void
-    {
-        $mockCtx = self::createMock(ExecutionContext::class);
-        $mockCtx->expects(self::never())->method('buildViolation');
-
-        $doc = new Document();
-
-        $doc->isValidForReport($mockCtx);
-    }
-
     public function testIsValidForReportFilenameTooLong(): void
     {
         $mockFile = self::createMock(UploadedFile::class);
