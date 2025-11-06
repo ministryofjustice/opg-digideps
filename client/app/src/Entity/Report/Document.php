@@ -29,23 +29,17 @@ class Document implements DocumentInterface, SynchronisableInterface
             return;
         }
 
-        $fileNames = [];
-        foreach ($this->getReport()->getDocuments() as $document) {
-            $fileNames[] = $document->getFileName();
-        }
-
         $fileOriginalName = $this->getFile()->getClientOriginalName();
-
-        if (is_null($fileOriginalName)) {
-            $context->buildViolation('document.file.errors.invalidName')->atPath('file')->addViolation();
-
-            return;
-        }
 
         if (strlen($fileOriginalName) > self::FILE_NAME_MAX_LENGTH) {
             $context->buildViolation('document.file.errors.maxMessage')->atPath('file')->addViolation();
 
             return;
+        }
+
+        $fileNames = [];
+        foreach ($this->getReport()->getDocuments() as $document) {
+            $fileNames[] = $document->getFileName();
         }
 
         if (in_array($fileOriginalName, $fileNames)) {
@@ -57,7 +51,7 @@ class Document implements DocumentInterface, SynchronisableInterface
      * @JMS\Type("integer")
      * @JMS\Groups({"document"})
      */
-    private int $id;
+    private ?int $id = null;
 
     /**
      * @Assert\NotBlank(message="Please choose a file", groups={"document"})
@@ -69,25 +63,25 @@ class Document implements DocumentInterface, SynchronisableInterface
      *     groups={"document"}
      * )
      */
-    private UploadedFile $file;
+    private ?UploadedFile $file = null;
 
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"document"})
      */
-    private string $fileName;
+    private ?string $fileName = null;
 
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"document"})
      */
-    private string $storageReference;
+    private ?string $storageReference = null;
 
     /**
      * @JMS\Type("boolean")
      * @JMS\Groups({"document"})
      */
-    private bool $isReportPdf;
+    private bool $isReportPdf = false;
 
     /**
      * @JMS\Type("App\Entity\Report\ReportSubmission")
@@ -95,48 +89,48 @@ class Document implements DocumentInterface, SynchronisableInterface
      */
     private ReportSubmission $reportSubmission;
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(int $id): self
+    public function setId(?int $id): self
     {
         $this->id = $id;
 
         return $this;
     }
 
-    public function getFileName(): string
+    public function getFileName(): ?string
     {
         return $this->fileName;
     }
 
-    public function setFileName(string $fileName): self
+    public function setFileName(?string $fileName): self
     {
         $this->fileName = $fileName;
 
         return $this;
     }
 
-    public function getStorageReference(): string
+    public function getStorageReference(): ?string
     {
         return $this->storageReference;
     }
 
-    public function setStorageReference(string $storageReference): self
+    public function setStorageReference(?string $storageReference): self
     {
         $this->storageReference = $storageReference;
 
         return $this;
     }
 
-    public function getFile(): UploadedFile
+    public function getFile(): ?UploadedFile
     {
         return $this->file;
     }
 
-    public function setFile(UploadedFile $file): self
+    public function setFile(?UploadedFile $file): self
     {
         $this->file = $file;
 
