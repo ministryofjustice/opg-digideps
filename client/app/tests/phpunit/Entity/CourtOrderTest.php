@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace Tests\App\Entity;
 
+use App\Entity\CourtOrder;
+use App\Entity\Deputy;
 use App\Entity\Report\Report;
 use PHPUnit\Framework\TestCase;
 
