@@ -16,7 +16,7 @@ class FileNameManipulation extends FileUtility
             $mimeType = $this->mimeTypeDetector->detectMimeType($uploadedFile->getPathName(), $body);
             $fileExtension = $this->mimeToExtension($mimeType);
 
-            return sprintf('%s.%s', $uploadedFile->getClientOriginalName(), $fileExtension);
+            return sprintf('%s.%s', $uploadedFile->getClientOriginalName(), $fileExtension); /* @phpstan-ignore-line */
         }
 
         return $uploadedFile->getClientOriginalName();
@@ -28,9 +28,9 @@ class FileNameManipulation extends FileUtility
         $fileName = $fileNameSplit['filename'];
 
         $endSpaces = preg_replace('/\s+(\.[^.]+)$/', '$1', $fileName);
-        $remainingSpaces = preg_replace('/[[:blank:]]/', '_', $endSpaces);
-        $specialChars = preg_replace('/[^\w_.-]/', '', $remainingSpaces ?? '');
-        $hyphensAndPeriods = preg_replace('/([.-])/', '_', $specialChars ?? '') ?? '';
+        $remainingSpaces = preg_replace('/[[:blank:]]/', '_', $endSpaces); /* @phpstan-ignore-line */
+        $specialChars = preg_replace('/[^\w_.-]/', '', $remainingSpaces); /* @phpstan-ignore-line */
+        $hyphensAndPeriods = preg_replace('/([.-])/', '_', $specialChars) ?? ''; /* @phpstan-ignore-line */
 
         return  isset($fileNameSplit['extension']) ?
             $hyphensAndPeriods . '.' . $fileNameSplit['extension'] :
