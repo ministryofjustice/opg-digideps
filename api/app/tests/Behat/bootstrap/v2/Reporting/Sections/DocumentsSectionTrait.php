@@ -327,10 +327,8 @@ trait DocumentsSectionTrait
 
         $docs = $this->em->getRepository(Document::class)->findBy(['report' => $reportId]);
 
-        if (count($docs) >= 1) {
-            foreach ($docs as $doc) {
-                $this->expireDocumentFromUnSubmittedDeputyReport($doc->getStorageReference());
-            }
+        foreach ($docs as $doc) {
+            $this->expireDocumentFromUnSubmittedDeputyReport($doc->getStorageReference());
         }
     }
 
