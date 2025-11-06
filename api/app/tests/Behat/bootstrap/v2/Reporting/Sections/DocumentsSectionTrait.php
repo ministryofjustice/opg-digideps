@@ -11,7 +11,7 @@ use App\Tests\Behat\BehatException;
 trait DocumentsSectionTrait
 {
     // Valid files
-    private string $validJpegFilename = 'good.jpg';
+    private string $validJpegFilename = 'good_image.jpg';
     private string $validPngFilename = 'good.png';
     private string $validPdfFilename = 'good.pdf';
     private string $validHeicFilename = 'good-heic.heic';
@@ -25,9 +25,10 @@ trait DocumentsSectionTrait
     // Expected validation errors
     private string $invalidFileTypeErrorMessage = 'Please upload a valid file type';
     private string $fileTooBigErrorMessage = 'The file you selected to upload is too big';
-    private string $answerNotUpdatedErrorMessage = "Your answer could not be updated to 'No' because you have attached documents";
+    private string $answerNotUpdatedErrorMessage = 'Your answer could not be updated to \'No\' because you have attached documents';
     private string $mimeTypeAndFileExtensionDoNotMatchErrorMessage = 'Your file type and file extension do not match';
     private string $orgCostCertificateMessage = 'Send your final cost certificate for the previous reporting period';
+    private string $fileDuplicationMessage = 'You have already uploaded a file with this name. Please rename your file before uploading again.';
 
     private array $uploadedDocumentFilenames = [];
 
@@ -142,6 +143,7 @@ trait DocumentsSectionTrait
 
     /**
      * @When I upload one valid document
+     * @When I attempt to upload one valid document
      */
     public function iUploadOneValidDocument()
     {
@@ -309,6 +311,14 @@ trait DocumentsSectionTrait
     }
 
     /**
+     * @Then I should see a 'duplicate file name' error
+     */
+    public function IShouldSeeADuplicateFileNameError()
+    {
+        $this->assertOnErrorMessage($this->fileDuplicationMessage);
+    }
+
+    /**
      * @Given /^the supporting document has expired and is no longer stored in the S3 bucket$/
      */
     public function theSupportingDocumentHasExpiredAndIsNoLongerStoredInTheS3bucket()
@@ -346,14 +356,17 @@ trait DocumentsSectionTrait
      */
     public function iDeleteTheMissingDocumentAndReUploadToTheReport(string $document)
     {
-        $fileNameSpacesToUnderscores = preg_replace('[[[:blank:]]]', '_', $document);
-        $specialCharsRemoved = preg_replace('/[^\w_.-]/', '', $fileNameSpacesToUnderscores);
+        $fileNameSplit = pathinfo($document);
+        $fileName = $fileNameSplit['filename'];
 
-        // Confirm if we have a file ext
-        $regexPattern = preg_match('/\.\w+$/', $specialCharsRemoved)?
-            '/([.-])(?=.*\.)/' :
-            '/([.-])/';
-        $formattedDocName = preg_replace($regexPattern, '_', $specialCharsRemoved);
+        $endSpaces = preg_replace('/\s+(\.[^.]+)$/', '$1', $fileName);
+        $remainingSpaces = preg_replace('[[[:blank:]]]', '_', $endSpaces);
+        $specialChars = preg_replace('/[^\w_.-]/', '', $remainingSpaces ?? '');
+        $underScoresAndPeriods = preg_replace('/([.-])/', '_', $specialChars ?? '') ?? '';
+
+        $formattedDocName = isset($fileNameSplit['extension']) ?
+            $underScoresAndPeriods . '.' . $fileNameSplit['extension'] :
+            $underScoresAndPeriods;
 
         $parentOfDtWithTextSelector = sprintf('//dt[contains(text(),"%s")]/..', $formattedDocName);
         $documentRowDiv = $this->getSession()->getPage()->find('xpath', $parentOfDtWithTextSelector);

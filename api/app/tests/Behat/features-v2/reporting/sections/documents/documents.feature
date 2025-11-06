@@ -109,3 +109,13 @@ Feature: Documents - All User Roles
         And I have documents to upload
         And I upload a file where the mimetype and file extension do not match
         Then I should see a 'mimetype and file type do not match' error
+
+    @lay-pfa-high-not-started
+    Scenario: A user uploads one supporting document that has a valid file type then tries to upload the same file again
+        Given a Lay Deputy has not started a report
+        When I view and start the documents report section
+        And I have documents to upload
+        And I upload one valid document
+        Then the documents uploads page should contain the documents I uploaded
+        When I attempt to upload one valid document
+        Then I should see a 'duplicate file name' error

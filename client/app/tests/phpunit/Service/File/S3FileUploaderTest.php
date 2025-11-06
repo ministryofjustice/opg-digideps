@@ -35,7 +35,7 @@ class S3FileUploaderTest extends KernelTestCase
 
         $this->storage = self::prophesize(S3Storage::class);
         $this->restClient = self::prophesize(RestClient::class);
-        $this->fileNameFixer = self::prophesize(FileNameFixer::class);
+        $this->fileNameFixer = self::prophesize(FileNameManipulation::class);
         $this->dateTimeProvider = self::prophesize(DateTimeProvider::class);
         $this->mimeTypeAndExtensionChecker = self::prophesize(MimeTypeAndExtensionChecker::class);
         $this->imageConvertor = self::prophesize(ImageConvertor::class);

@@ -13,7 +13,7 @@ use App\Model\Sirius\SiriusReportPdfDocumentMetadata;
 use App\Model\Sirius\SiriusSupportingDocumentMetadata;
 use App\Service\Client\RestClient;
 use App\Service\Client\Sirius\SiriusApiGatewayClient;
-use App\Service\File\FileNameFixer;
+use App\Service\File\FileNameManipulation;
 use App\Service\File\Storage\S3Storage;
 use Exception;
 use GuzzleHttp\Psr7\MimeType;
@@ -131,7 +131,7 @@ class DocumentSyncService
 
     private function buildUpload(QueuedDocumentData $documentData)
     {
-        $fileName = FileNameFixer::removeWhiteSpaceBeforeFileExtension($documentData->getFileName());
+        $fileName = FileNameManipulation::fileNameSanitation($documentData->getFileName());
         $mimeType = MimeType::fromFilename($fileName);
 
         if (is_null($mimeType)) {

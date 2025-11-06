@@ -8,36 +8,15 @@ use League\MimeTypeDetection\FinfoMimeTypeDetector;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class FileNameFixerTest extends KernelTestCase
+class FileNameManipulationTest extends KernelTestCase
 {
     private string $projectDir;
-    private FileNameFixer $sut;
+    private FileNameManipulation $sut;
 
     public function setUp(): void
     {
         $this->projectDir = self::bootKernel()->getProjectDir();
-        $this->sut = new FileNameFixer(new FinfoMimeTypeDetector());
-    }
-
-    /**
-     * @test
-     *
-     * @dataProvider fileNameProvider
-     */
-    public function removeWhiteSpaceBeforeFileExtension(string $originalFileName, string $expectedFileName)
-    {
-        $fixedFilename = $this->sut->removeWhiteSpaceBeforeFileExtension($originalFileName);
-        self::assertEquals($expectedFileName, $fixedFilename);
-    }
-
-    public function fileNameProvider()
-    {
-        return [
-            'valid filename' => ['dd_fileuploadertest.pdf', 'dd_fileuploadertest.pdf'],
-            'single whitespace character is removed' => ['dd_fileuploadertest .pdf', 'dd_fileuploadertest.pdf'],
-            'multiple whitespace characters are removed' => ['dd_fileuploadertest     .pdf', 'dd_fileuploadertest.pdf'],
-            'file with full stops' => ['dd_fileuploadertest 1.2.3     .pdf', 'dd_fileuploadertest 1.2.3.pdf'],
-        ];
+        $this->sut = new FileNameManipulation(new FinfoMimeTypeDetector());
     }
 
     /**
@@ -71,7 +50,7 @@ class FileNameFixerTest extends KernelTestCase
      */
     public function removeUnusualCharacters($fileName, $expectedFileName)
     {
-        $actualFileName = $this->sut->removeUnusualCharacters($fileName);
+        $actualFileName = $this->sut->fileNameSanitation($fileName);
 
         self::assertEquals($expectedFileName, $actualFileName);
     }
@@ -83,8 +62,8 @@ class FileNameFixerTest extends KernelTestCase
             'all special characters are removed' => ['$%/[]My {}{}|{}File_+()=<>1.pdf', 'My_File_1.pdf'],
             'file extension dot remains, any others transformed to underscores' => ['My_File.png.pdf', 'My_File_png.pdf'],
             'hyphens are changed to underscores' => ['MY-File-*.pdf', 'MY_File_.pdf'],
-            'HTML constructs are not allowed' => ['<a href="myhostilefile.exe">Report</a>.pdf', 'a_hrefmyhostilefile_exeReporta.pdf'],
-            'Directory constructs are not allowed' => ['../../', '____'],
+            'HTML constructs are not allowed' => ['<a href="myhostilefile.exe">Report</a>.pdf', 'a.pdf'],
+            'Directory constructs are not allowed' => ['../../', '_.'],
         ];
     }
 

@@ -6,13 +6,8 @@ namespace App\Service\File;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class FileNameFixer extends FileUtility
+class FileNameManipulation extends FileUtility
 {
-    public static function removeWhiteSpaceBeforeFileExtension(string $fileName): string
-    {
-        return preg_replace('/\s+(\.[^.]+)$/', '$1', $fileName) ?? '';
-    }
-
     public function addMissingFileExtension(UploadedFile $uploadedFile): string
     {
         if (empty($uploadedFile->getClientOriginalExtension())) {
@@ -27,17 +22,19 @@ class FileNameFixer extends FileUtility
         return $uploadedFile->getClientOriginalName();
     }
 
-    public static function removeUnusualCharacters(string $fileName): string
+    public static function fileNameSanitation(string $fileName): string
     {
-        $fileNameSpacesToUnderscores = preg_replace('[[[:blank:]]]', '_', $fileName);
-        $specialCharsRemoved = preg_replace('/[^\w_.-]/', '', $fileNameSpacesToUnderscores ?? '');
+        $fileNameSplit = pathinfo($fileName);
+        $fileName = $fileNameSplit['filename'];
 
-        // Confirm if we have a file ext
-        $regexPattern = preg_match('/\.\w+$/', $fileNameSpacesToUnderscores ?? '')?
-            '/([.-])(?=.*\.)/' :
-            '/([.-])/';
+        $endSpaces = preg_replace('/\s+(\.[^.]+)$/', '$1', $fileName);
+        $remainingSpaces = preg_replace('/[[:blank:]]/', '_', $endSpaces);
+        $specialChars = preg_replace('/[^\w_.-]/', '', $remainingSpaces ?? '');
+        $hyphensAndPeriods = preg_replace('/([.-])/', '_', $specialChars ?? '') ?? '';
 
-        return preg_replace($regexPattern, '_', $specialCharsRemoved) ?? '';
+        return  isset($fileNameSplit['extension']) ?
+            $hyphensAndPeriods . '.' . $fileNameSplit['extension'] :
+            $hyphensAndPeriods;
     }
 
     public static function lowerCaseFileExtension(UploadedFile $uploadedFile): UploadedFile
