@@ -25,7 +25,7 @@ class ConstraintVerifier implements VerifierInterface
         if (count($errors) > 0) {
             $message = sprintf(
                 '%s: %s',
-                $document->getFile()->getClientOriginalName(),
+                $document->getFile()?->getClientOriginalName() ?? 'file name was not set',
                 $errors->offsetGet(0)->getMessage()
             );
 

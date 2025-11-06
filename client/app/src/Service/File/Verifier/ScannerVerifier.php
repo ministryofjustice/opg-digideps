@@ -31,14 +31,20 @@ class ScannerVerifier implements VerifierInterface
      */
     public function verify(Document $document, VerificationStatus $status): VerificationStatus
     {
+        $file = $document->getFile();
+        if (is_null($file)) {
+            $status->addError('no file found');
+            return $status;
+        }
+
         try {
-            $this->scanner->scanFile($document->getFile());
+            $this->scanner->scanFile($file);
         } catch (\Throwable $e) {
             $this->logger->error($e->getMessage());
 
             $message = sprintf(
                 '%s: %s',
-                $document->getFile()->getClientOriginalName(),
+                $file->getClientOriginalName(),
                 $this->buildErrorMessage($e)
             );
 
