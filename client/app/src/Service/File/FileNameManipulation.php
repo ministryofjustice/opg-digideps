@@ -56,7 +56,7 @@ class FileNameManipulation extends FileUtility
         $tempFileLocation = $uploadedFile->getRealPath();
 
         $originalName = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-        $updatedFileName = $originalName.'.'.$lowerCaseFileExtension;
+        $updatedFileName = $originalName . '.' . $lowerCaseFileExtension;
 
         // copy file to temporary location with corrected file extension, this is the same path as the original file
         copy($uploadedFile->getPathname(), $tempFileLocation);
