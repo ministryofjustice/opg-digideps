@@ -54,17 +54,12 @@ class Document implements DocumentInterface, SynchronisableInterface
     }
 
     /**
-     * @var int
-     *
      * @JMS\Type("integer")
      * @JMS\Groups({"document"})
      */
-    private $id;
+    private int $id;
 
     /**
-     * // add more validators here if needed
-     * http://symfony.com/doc/current/reference/constraints/File.html.
-     *
      * @Assert\NotBlank(message="Please choose a file", groups={"document"})
      * @Assert\File(
      *     maxSize = "15M",
@@ -73,155 +68,99 @@ class Document implements DocumentInterface, SynchronisableInterface
      *     mimeTypesMessage = "document.file.errors.mimeTypesMessage",
      *     groups={"document"}
      * )
-     *
-     * @var UploadedFile
      */
-    private $file;
+    private UploadedFile $file;
 
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"document"})
-     *
-     * @var string
      */
-    private $fileName;
+    private string $fileName;
 
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"document"})
-     *
-     * @var string
      */
-    private $storageReference;
+    private string $storageReference;
 
     /**
-     * @var bool
-     *
      * @JMS\Type("boolean")
      * @JMS\Groups({"document"})
      */
-    private $isReportPdf;
+    private bool $isReportPdf;
 
     /**
-     * @var ReportSubmission
-     *
      * @JMS\Type("App\Entity\Report\ReportSubmission")
      * @JMS\Groups({"document-report-subnmission"})
      */
-    private $reportSubmission;
+    private ReportSubmission $reportSubmission;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return Document
-     */
-    public function setId($id)
+    public function setId(int $id): self
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getFileName()
+    public function getFileName(): string
     {
         return $this->fileName;
     }
 
-    /**
-     * @param string $fileName
-     *
-     * @return Document
-     */
-    public function setFileName($fileName)
+    public function setFileName(string $fileName): self
     {
         $this->fileName = $fileName;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getStorageReference()
+    public function getStorageReference(): string
     {
         return $this->storageReference;
     }
 
-    /**
-     * @param string $storageReference
-     *
-     * @return Document
-     */
-    public function setStorageReference($storageReference)
+    public function setStorageReference(string $storageReference): self
     {
         $this->storageReference = $storageReference;
 
         return $this;
     }
 
-    /**
-     * @return UploadedFile
-     */
-    public function getFile()
+    public function getFile(): UploadedFile
     {
         return $this->file;
     }
 
-    /**
-     * @param UploadedFile $file
-     *
-     * @return Document
-     */
-    public function setFile($file)
+    public function setFile(UploadedFile $file): self
     {
         $this->file = $file;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isReportPdf()
+    public function isReportPdf(): bool
     {
         return $this->isReportPdf;
     }
 
-    /**
-     * @param bool $isReportPdf
-     *
-     * @return $this
-     */
-    public function setIsReportPdf($isReportPdf)
+    public function setIsReportPdf(bool $isReportPdf): self
     {
         $this->isReportPdf = $isReportPdf;
 
         return $this;
     }
 
-    /**
-     * @return ReportSubmission
-     */
-    public function getReportSubmission()
+    public function getReportSubmission(): ReportSubmission
     {
         return $this->reportSubmission;
     }
 
-    /**
-     * @return Document
-     */
-    public function setReportSubmission(ReportSubmission $repostSubmission)
+    public function setReportSubmission(ReportSubmission $repostSubmission): self
     {
         $this->reportSubmission = $repostSubmission;
 
@@ -229,22 +168,18 @@ class Document implements DocumentInterface, SynchronisableInterface
     }
 
     /**
-     * Is document for OPG admin eyes only.
-     *
-     * @return bool
+     * Is document for OPG admin eyes only?
      */
-    public function isAdminDocument()
+    public function isAdminDocument(): bool
     {
         return $this->isReportPdf() || $this->isTransactionDocument();
     }
 
     /**
-     * Is document a list of transaction document (admin only).
-     *
-     * @return bool|int
+     * Is document a list of transaction document (admin only)?
      */
-    private function isTransactionDocument()
+    private function isTransactionDocument(): bool
     {
-        return false !== strpos($this->getFileName(), 'DigiRepTransactions');
+        return str_contains($this->getFileName(), 'DigiRepTransactions');
     }
 }
