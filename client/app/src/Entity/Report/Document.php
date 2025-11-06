@@ -25,27 +25,23 @@ class Document implements DocumentInterface, SynchronisableInterface
 
     public function isValidForReport(ExecutionContextInterface $context): void
     {
-        if (!($this->getFile() instanceof UploadedFile)) {
+        $file = $this->getFile();
+
+        if (is_null($file)) {
+            return;
+        }
+
+        $fileOriginalName = $file->getClientOriginalName();
+
+        if (strlen($fileOriginalName) > self::FILE_NAME_MAX_LENGTH) {
+            $context->buildViolation('document.file.errors.maxMessage')->atPath('file')->addViolation();
+
             return;
         }
 
         $fileNames = [];
         foreach ($this->getReport()->getDocuments() as $document) {
             $fileNames[] = $document->getFileName();
-        }
-
-        $fileOriginalName = $this->getFile()->getClientOriginalName();
-
-        if (is_null($fileOriginalName)) {
-            $context->buildViolation('document.file.errors.invalidName')->atPath('file')->addViolation();
-
-            return;
-        }
-
-        if (strlen($fileOriginalName) > self::FILE_NAME_MAX_LENGTH) {
-            $context->buildViolation('document.file.errors.maxMessage')->atPath('file')->addViolation();
-
-            return;
         }
 
         if (in_array($fileOriginalName, $fileNames)) {
