@@ -49,7 +49,7 @@ class CourtOrderReportCandidatesFactory
                 FROM staging.deputyship d
                 INNER JOIN client c ON LOWER(d.case_number) = LOWER(c.case_number)
                 INNER JOIN report r ON c.id = r.client_id
-                WHERE r.end_date >= TO_DATE(d.order_made_date, 'YYYY-MM-DD')
+                WHERE r.due_date >= TO_DATE(d.order_made_date, 'YYYY-MM-DD')
             ) compat
             WHERE report_type_is_compatible = true
             GROUP BY court_order_uid, report_id

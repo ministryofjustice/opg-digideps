@@ -46,13 +46,17 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
             $incompatibleReportType = '102';
         }
 
-        return new Report(
+        $report = new Report(
             client: $client,
             type: $incompatibleReportType,
             startDate: new DateTime(),
             endDate: new DateTime(),
             dateChecks: false
         );
+
+        $report->setDueDate(new DateTime());
+
+        return $report;
     }
 
     // create a report which is not compatible with a deputyship due to starting too early
@@ -67,13 +71,17 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
         // report starts a year before the made date of the court order, so is not compatible for that reason
         $oneYearAgo = $madeDate->modify('-1 year');
 
-        return new Report(
+        $report = new Report(
             client: $client,
             type: $compatibleReportType,
             startDate: $oneYearAgo,
             endDate: $oneYearAgo,
             dateChecks: false
         );
+
+        $report->setDueDate($oneYearAgo);
+
+        return $report;
     }
 
     public static function compatibleReportDataProvider(): array
@@ -139,7 +147,7 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
         self::$entityManager->persist($client);
         self::$entityManager->flush();
 
-        // add compatible report
+        // add compatible report (due date has to be >= made date)
         $report1 = new Report(
             client: $client,
             type: $compatibleReportType,
@@ -147,6 +155,8 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
             endDate: $madeDate,
             dateChecks: false
         );
+
+        $report1->setDueDate($madeDate);
 
         self::$entityManager->persist($report1);
         self::$entityManager->flush();
@@ -265,6 +275,8 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
             dateChecks: false
         );
 
+        $hybridReport->setDueDate($madeDate);
+
         self::$entityManager->persist($hybridReport);
 
         // add older non-hybrid report
@@ -275,6 +287,9 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
             endDate: $madeDate,
             dateChecks: false
         );
+
+        $nonHybridReport->setDueDate($madeDate);
+
         self::$entityManager->persist($nonHybridReport);
 
         self::$entityManager->flush();
