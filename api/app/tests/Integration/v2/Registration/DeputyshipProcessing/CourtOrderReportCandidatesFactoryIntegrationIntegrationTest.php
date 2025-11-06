@@ -183,7 +183,7 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
 
     // if a court_order_report row exists for a court order <-> report relationship, it should
     // not be selected as a candidate (see DDLS-797)
-    public function testCreateCompatibleReportsDoesNotSuggestAlreadyRelated(): void
+    public function testCreateCompatibleReportCandidatesDoesNotSuggestAlreadyRelated(): void
     {
         $orderMadeDate = new DateTime();
 
@@ -239,7 +239,7 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
 
     // if a deputyship is hybrid now, but wasn't in the past, older non-hybrid reports are still associated
     // with the court order
-    public function testCreateCompatibleReportsIncludesOlderNonHybrids(): void
+    public function testCreateCompatibleReportCandidatesIncludesOlderNonHybrids(): void
     {
         $deputyUid = '9384576384';
         $caseNumber = '928475631';
