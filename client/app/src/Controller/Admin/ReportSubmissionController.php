@@ -56,8 +56,8 @@ class ReportSubmissionController extends AbstractController
         }
 
         $currentFilters = self::getFiltersFromRequest($request);
-        $ret = $this->restClient->get('/report-submission?'.http_build_query($currentFilters), 'array');
-        $records = $this->restClient->arrayToEntities(EntityDir\Report\ReportSubmission::class.'[]', $ret['records']);
+        $ret = $this->restClient->get('/report-submission?' . http_build_query($currentFilters), 'array');
+        $records = $this->restClient->arrayToEntities(EntityDir\Report\ReportSubmission::class . '[]', $ret['records']);
 
         $nOfdownloadableSubmissions = count(array_filter($records, function ($s) {
             return $s->isDownloadable();
@@ -110,7 +110,7 @@ class ReportSubmissionController extends AbstractController
                 [$retrievedDocuments, $missingDocuments] = $this->documentDownloader->retrieveDocumentsFromS3ByReportSubmissionIds($request, $reportSubmissionIds);
                 $downloadLocation = $this->documentDownloader->zipDownloadedDocuments($retrievedDocuments);
             } catch (\Throwable $e) {
-                $this->addFlash('error', 'There was an error downloading the requested documents: '.$e->getMessage());
+                $this->addFlash('error', 'There was an error downloading the requested documents: ' . $e->getMessage());
 
                 return $this->redirectToRoute('admin_documents_download_ready');
             }
@@ -146,15 +146,15 @@ class ReportSubmissionController extends AbstractController
         $document = $documents[0];
 
         try {
-            $contents = $this->s3Storage->retrieve($document->getStorageReference());
-        } catch (\Throwable $e) {
-            $filename = $document->getFileName();
+            $contents = $this->s3Storage->retrieve($document->getStorageReference() ?? '');
+        } catch (\Throwable) {
+            $filename = $document->getFileName() ?? 'file name not set';
             throw $this->createNotFoundException("Document '$filename' could not be retrieved");
         }
 
         $response = new Response($contents);
         $response->headers->set('Content-Type', 'application/octet-stream');
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$document->getFileName().'"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $document->getFileName() . '"');
         $response->sendHeaders();
 
         return $response;
@@ -226,7 +226,7 @@ class ReportSubmissionController extends AbstractController
 
                         return $this->documentDownloader->generateDownloadResponse($fileName);
                     } catch (\Throwable $e) {
-                        $this->addFlash('error', 'There was an error downloading the requested documents: '.$e->getMessage());
+                        $this->addFlash('error', 'There was an error downloading the requested documents: ' . $e->getMessage());
 
                         return $this->redirectToRoute('admin_documents');
                     }

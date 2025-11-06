@@ -176,6 +176,6 @@ class Document implements DocumentInterface, SynchronisableInterface
      */
     private function isTransactionDocument(): bool
     {
-        return str_contains($this->getFileName(), 'DigiRepTransactions');
+        return str_contains($this->getFileName() ?? '', 'DigiRepTransactions');
     }
 }
