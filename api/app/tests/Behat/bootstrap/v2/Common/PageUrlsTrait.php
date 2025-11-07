@@ -94,7 +94,6 @@ trait PageUrlsTrait
 
     // Admin Tools
     private string $adminToolsUrl = '/admin/tools';
-    private string $reportReassignmentUrl = '/admin/tools/report-reassignment';
 
     public function getReportSubmittedUrl(int $reportId): string
     {
