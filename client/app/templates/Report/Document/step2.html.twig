@@ -43,7 +43,8 @@
         {{ form_input(form.files, 'form.files', {
             'labelText': '' | trans,
             'labelClass': 'visually-hidden',
-            'inputClass': 'no-border behat-link-choose-file' })
+            'inputClass': 'no-border behat-link-choose-file',
+            'hintText': maxFileUploadsHint })
         }}
 
         <div class="js-hidden">
