@@ -33,6 +33,22 @@ trait DocumentsSectionTrait
     private array $uploadedDocumentFilenames = [];
 
     /**
+     * @Then I should see an :errorType error
+     */
+    public function iShouldSeeDocumentUploadError(string $errorType)
+    {
+        $errorMessage = match ($errorType) {
+            'invalid file type' => $this->invalidFileTypeErrorMessage,
+            'file too large' => $this->fileTooBigErrorMessage,
+            'answer could not be updated' => $this->answerNotUpdatedErrorMessage,
+            'mimetype and file type do not match' => $this->mimeTypeAndFileExtensionDoNotMatchErrorMessage,
+            'duplicate file name' => $this->fileDuplicationMessage,
+        };
+
+        $this->assertOnErrorMessage($errorMessage);
+    }
+
+    /**
      * @Given I view and start the documents report section
      */
     public function iViewAndStartDocumentsSection()
@@ -244,30 +260,6 @@ trait DocumentsSectionTrait
     }
 
     /**
-     * @Then I should see an 'invalid file type' error
-     */
-    public function iShouldSeeInvalidFileTypeError()
-    {
-        $this->assertOnErrorMessage($this->invalidFileTypeErrorMessage);
-    }
-
-    /**
-     * @Then I should see a 'file too large' error
-     */
-    public function iShouldSeeFileTooLargeError()
-    {
-        $this->assertOnErrorMessage($this->fileTooBigErrorMessage);
-    }
-
-    /**
-     * @Then I should see an 'answer could not be updated' error
-     */
-    public function iShouldSeeAnswerCouldNotBeUpdatedError()
-    {
-        $this->assertOnErrorMessage($this->answerNotUpdatedErrorMessage);
-    }
-
-    /**
      * @When I change my mind and confirm I have no documents to upload
      */
     public function changeMindNoDocumentsToUpload()
@@ -300,22 +292,6 @@ trait DocumentsSectionTrait
     public function filesMimetypeAndExtensionDoesNotMatch()
     {
         $this->uploadFiles([$this->pngFilenameWithJpegFileExtension]);
-    }
-
-    /**
-     * @Then I should see a 'mimetype and file type do not match' error
-     */
-    public function iShouldSeeAMimetypeAndFileDoNotMatchError()
-    {
-        $this->assertOnErrorMessage($this->mimeTypeAndFileExtensionDoNotMatchErrorMessage);
-    }
-
-    /**
-     * @Then I should see a 'duplicate file name' error
-     */
-    public function IShouldSeeADuplicateFileNameError()
-    {
-        $this->assertOnErrorMessage($this->fileDuplicationMessage);
     }
 
     /**
