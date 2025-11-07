@@ -5,11 +5,8 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
-use App\Exception\RestClientException;
-use App\Service\Client\RestClient;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -17,9 +14,8 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ToolsController extends AbstractController
 {
-    public function __construct(
-        private RestClient $restClient
-    ) {
+    public function __construct()
+    {
     }
 
     /**
