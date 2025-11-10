@@ -10,7 +10,7 @@ use App\Entity\Report\ReportSubmission;
 use App\Model\Sirius\QueuedDocumentData;
 use App\Service\Client\RestClient;
 use App\Service\Client\Sirius\SiriusApiGatewayClient;
-use App\Service\File\FileNameFixer;
+use App\Service\File\FileNameManipulation;
 use App\Service\File\Storage\S3Storage;
 use DateTime;
 use DigidepsTests\Helpers\SiriusHelpers;
@@ -43,7 +43,7 @@ class DocumentSyncServiceTest extends KernelTestCase
     /** @var Serializer */
     private $serializer;
 
-    /** @var FileNameFixer&ObjectProphecy */
+    /** @var FileNameManipulation&ObjectProphecy */
     private $fileNameFixer;
 
     /** @var DateTime */
@@ -80,10 +80,6 @@ class DocumentSyncServiceTest extends KernelTestCase
 
         /* @var SiriusApiErrorTranslator|ObjectProphecy $errorTranslator */
         $this->errorTranslator = self::prophesize(SiriusApiErrorTranslator::class);
-
-        /* @var SiriusApiErrorTranslator|ObjectProphecy $fileNameFixer */
-        $this->fileNameFixer = self::prophesize(FileNameFixer::class);
-        $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension(Argument::any())->willReturn($this->fileName);
 
         /* @var Serializer serializer */
         $this->serializer = (self::bootKernel(['debug' => false]))->getContainer()->get('jms_serializer');
@@ -161,7 +157,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
             $this->errorTranslator->reveal(),
-            $this->fileNameFixer->reveal()
         );
 
         $sut->syncDocument($queuedDocumentData);
@@ -249,7 +244,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
             $this->errorTranslator->reveal(),
-            $this->fileNameFixer->reveal()
         );
 
         $sut->syncDocument($queuedDocumentData);
@@ -322,7 +316,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
             $this->errorTranslator->reveal(),
-            $this->fileNameFixer->reveal()
         );
 
         $sut->syncDocument($queuedDocumentData);
@@ -387,7 +380,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
             $this->errorTranslator->reveal(),
-            $this->fileNameFixer->reveal()
         );
 
         $sut->syncDocument($queuedDocumentData);
@@ -427,7 +419,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
             $this->errorTranslator->reveal(),
-            $this->fileNameFixer->reveal()
         );
 
         $sut->syncDocument($queuedDocumentData);
@@ -484,7 +475,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
             $this->errorTranslator->reveal(),
-            $this->fileNameFixer->reveal()
         );
 
         $sut->syncDocument($queuedDocumentData);
@@ -563,7 +553,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
             $this->errorTranslator->reveal(),
-            $this->fileNameFixer->reveal()
         );
 
         $sut->syncDocument($queuedDocumentData);
@@ -608,7 +597,7 @@ class DocumentSyncServiceTest extends KernelTestCase
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusSupportingDocumentUpload(
             $expectedSubmissionIdUsedForSync,
-            'test.pdf',
+            'test_.pdf',
             null,
             $this->s3Reference
         );
@@ -635,7 +624,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
             $this->errorTranslator->reveal(),
-            $this->fileNameFixer->reveal()
         );
 
         $sut->syncDocument($queuedDocumentData);
@@ -646,11 +634,6 @@ class DocumentSyncServiceTest extends KernelTestCase
      */
     public function sendDocumentMissingFileExtensionThrowsError()
     {
-        $fileNameFixer = self::prophesize(FileNameFixer::class);
-        $fileNameFixer
-            ->removeWhiteSpaceBeforeFileExtension('filename-with-no-extension')
-            ->willReturn('filename-with-no-extension');
-
         $document = (new Document())->setId(6789);
 
         $expectedUuidUsedToSyncDoc = 'report-pdf-submission-uuid';
@@ -696,7 +679,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->siriusApiGatewayClient->reveal(),
             $this->restClient->reveal(),
             $this->errorTranslator->reveal(),
-            $fileNameFixer->reveal()
         );
 
         $sut->syncDocument($queuedDocumentData);

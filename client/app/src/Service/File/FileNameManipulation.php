@@ -6,16 +6,8 @@ namespace App\Service\File;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
-class FileNameFixer extends FileUtility
+class FileNameManipulation extends FileUtility
 {
-    public function removeWhiteSpaceBeforeFileExtension(string $fileName): array|string|null
-    {
-        $pattern = "/\s+(\.[^.]+)$/";
-        $replacement = '$1';
-
-        return preg_replace($pattern, $replacement, $fileName);
-    }
-
     public function addMissingFileExtension(UploadedFile $uploadedFile): string
     {
         if (empty($uploadedFile->getClientOriginalExtension())) {
@@ -24,21 +16,28 @@ class FileNameFixer extends FileUtility
             $mimeType = $this->mimeTypeDetector->detectMimeType($uploadedFile->getPathName(), $body);
             $fileExtension = $this->mimeToExtension($mimeType);
 
-            return sprintf('%s.%s', $uploadedFile->getClientOriginalName(), $fileExtension);
+            return sprintf('%s.%s', $uploadedFile->getClientOriginalName(), $fileExtension); /* @phpstan-ignore-line */
         }
 
         return $uploadedFile->getClientOriginalName();
     }
 
-    public function removeUnusualCharacters(string $fileName): array|string|null
+    public static function fileNameSanitation(string $fileName): string
     {
-        $fileNameSpacesToUnderscores = str_replace(' ', '_', $fileName);
-        $specialCharsRemoved = preg_replace('/[^A-Za-z0-9_.]/', '', $fileNameSpacesToUnderscores);
+        $fileNameSplit = pathinfo($fileName);
+        $fileName = $fileNameSplit['filename'];
 
-        return preg_replace('/[.](?=.*[.])/', '_', $specialCharsRemoved);
+        $endSpaces = preg_replace('/\s+(\.[^.]+)$/', '$1', $fileName);
+        $remainingSpaces = preg_replace('/[[:blank:]]/', '_', $endSpaces); /* @phpstan-ignore-line */
+        $specialChars = preg_replace('/[^\w_.-]/', '', $remainingSpaces); /* @phpstan-ignore-line */
+        $hyphensAndPeriods = preg_replace('/([.-])/', '_', $specialChars) ?? ''; /* @phpstan-ignore-line */
+
+        return  isset($fileNameSplit['extension']) ?
+            $hyphensAndPeriods . '.' . $fileNameSplit['extension'] :
+            $hyphensAndPeriods;
     }
 
-    public function lowerCaseFileExtension(UploadedFile $uploadedFile): UploadedFile
+    public static function lowerCaseFileExtension(UploadedFile $uploadedFile): UploadedFile
     {
         // lowercase file extension
         $originalFileExtension = $uploadedFile->getClientOriginalExtension();
@@ -57,7 +56,7 @@ class FileNameFixer extends FileUtility
         $tempFileLocation = $uploadedFile->getRealPath();
 
         $originalName = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-        $updatedFileName = $originalName.'.'.$lowerCaseFileExtension;
+        $updatedFileName = $originalName . '.' . $lowerCaseFileExtension;
 
         // copy file to temporary location with corrected file extension, this is the same path as the original file
         copy($uploadedFile->getPathname(), $tempFileLocation);
