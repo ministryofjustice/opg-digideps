@@ -57,7 +57,8 @@ class ApiComparison extends Command
     {
         $this
             ->addArgument('legacyRoute', InputArgument::REQUIRED, 'Legacy URI')
-            ->addArgument('newRoute', InputArgument::REQUIRED, 'New URI');
+            ->addArgument('newRoute', InputArgument::REQUIRED, 'New URI')
+            ->addArgument('userIds', InputArgument::REQUIRED, 'User IDs');
     }
 
     protected function getIdsToUse(string $sqlStatement): array
@@ -202,9 +203,14 @@ class ApiComparison extends Command
             throw new \InvalidArgumentException('Expected newRoute argument to be a string.');
         }
 
+        $userIds = $input->getArgument('userIds');
+        if (!is_string($userIds)) {
+            throw new \InvalidArgumentException('Expected userIds argument to be a string.');
+        }
+
         $comparer = $this->comparerMap[$legacyRoute] ?? throw new \InvalidArgumentException("No comparer defined for route: $legacyRoute");
 
-        $rows = $this->getIdsToUse($comparer->getSqlStatement());
+        $rows = $this->getIdsToUse($comparer->getSqlStatement($userIds));
 
         $counts = [
             'success' => 0,
@@ -231,8 +237,7 @@ class ApiComparison extends Command
                 if (!$compareResult['matching']) {
                     ++$counts['failure'];
                     $output->writeln('<comment>Differences detected for user_id: </comment>' . $user_id);
-                    $output->writeln('<comment>Legacy: </comment>' . $compareResult['legacy']);
-                    $output->writeln('<comment>New: </comment>' . $compareResult['new']);
+                    $output->writeln('<comment>Comparison: </comment>' . $compareResult['legacy'] . ' <--OLD #### NEW --> ' . $compareResult['new']);
                 } else {
                     ++$counts['success'];
                     $output->writeln('<info>No differences found for user_id: </info>' . $user_id);
