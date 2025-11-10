@@ -7,6 +7,7 @@ use App\Entity\Report\Traits\HasReportTrait;
 use App\Entity\SynchronisableInterface;
 use App\Entity\SynchronisableTrait;
 use App\Entity\Traits\CreationAudit;
+use App\Service\File\FileNameManipulation;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -34,7 +35,7 @@ class Document implements DocumentInterface, SynchronisableInterface
             $fileNames[] = $document->getFileName();
         }
 
-        $fileOriginalName = $this->getFile()->getClientOriginalName();
+        $fileOriginalName = FileNameManipulation::fileNameSanitation($this->getFile()->getClientOriginalName());
 
         if (is_null($fileOriginalName)) {
             $context->buildViolation('document.file.errors.invalidName')->atPath('file')->addViolation();
