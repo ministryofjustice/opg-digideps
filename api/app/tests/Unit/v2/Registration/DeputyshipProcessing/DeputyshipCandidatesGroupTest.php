@@ -12,8 +12,6 @@ final class DeputyshipCandidatesGroupTest extends TestCase
     public function testDeputyshipCandidatesGroup(): void
     {
         $expectedInsertOthers = [
-            ['action' => DeputyshipCandidateAction::InsertOrderNdr, 'orderUid' => '555445566'],
-            ['action' => DeputyshipCandidateAction::InsertOrderNdr, 'orderUid' => '555445566'],
             ['action' => DeputyshipCandidateAction::InsertOrderDeputy, 'orderUid' => '555445566'],
             ['action' => DeputyshipCandidateAction::InsertOrderDeputy, 'orderUid' => '555445566'],
         ];
@@ -45,7 +43,7 @@ final class DeputyshipCandidatesGroupTest extends TestCase
 
         $candidateGroup = DeputyshipCandidatesGroup::create('555445566', $candidates);
 
-        self::assertEquals(9, $candidateGroup->totalCandidates());
+        self::assertEquals(7, $candidateGroup->totalCandidates());
         self::assertEquals('555445566', $candidateGroup->orderUid);
         self::assertEquals('CLOSED', $candidateGroup->insertOrder['orderStatus']);
         self::assertEquals($expectedInsertOthers, $candidateGroup->insertOthers);

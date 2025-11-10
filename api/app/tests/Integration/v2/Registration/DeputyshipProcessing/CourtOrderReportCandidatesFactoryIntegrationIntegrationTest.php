@@ -46,13 +46,17 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
             $incompatibleReportType = '102';
         }
 
-        return new Report(
+        $report = new Report(
             client: $client,
             type: $incompatibleReportType,
             startDate: new DateTime(),
             endDate: new DateTime(),
             dateChecks: false
         );
+
+        $report->setDueDate(new DateTime());
+
+        return $report;
     }
 
     // create a report which is not compatible with a deputyship due to starting too early
@@ -67,16 +71,20 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
         // report starts a year before the made date of the court order, so is not compatible for that reason
         $oneYearAgo = $madeDate->modify('-1 year');
 
-        return new Report(
+        $report = new Report(
             client: $client,
             type: $compatibleReportType,
             startDate: $oneYearAgo,
             endDate: $oneYearAgo,
             dateChecks: false
         );
+
+        $report->setDueDate($oneYearAgo);
+
+        return $report;
     }
 
-    private static function compatibleReportDataProvider(): array
+    public static function compatibleReportDataProvider(): array
     {
         return [
             ['deputyType' => 'LAY', 'orderType' => 'pfa', 'isHybrid' => null, 'compatibleReportType' => '102'],
@@ -139,7 +147,7 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
         self::$entityManager->persist($client);
         self::$entityManager->flush();
 
-        // add compatible report
+        // add compatible report (due date has to be >= made date)
         $report1 = new Report(
             client: $client,
             type: $compatibleReportType,
@@ -147,6 +155,8 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
             endDate: $madeDate,
             dateChecks: false
         );
+
+        $report1->setDueDate($madeDate);
 
         self::$entityManager->persist($report1);
         self::$entityManager->flush();
@@ -171,51 +181,9 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
         self::assertEquals($report1->getId(), $candidates[0]->reportId);
     }
 
-    public function testCreateCompatibleNdrCandidates(): void
-    {
-        $caseNumber = '77677775';
-        $orderUid = '88884444';
-        $madeDate = new DateTime();
-
-        // add pfa/LAY staging deputyship
-        $deputyship = new StagingDeputyship();
-        $deputyship->deputyUid = '11112234';
-        $deputyship->orderUid = $orderUid;
-        $deputyship->deputyType = 'LAY';
-        $deputyship->orderType = 'pfa';
-        $deputyship->caseNumber = $caseNumber;
-        $deputyship->orderMadeDate = $madeDate->format('Y-m-d');
-
-        self::$entityManager->persist($deputyship);
-        self::$entityManager->flush();
-
-        // add client
-        $client = new Client();
-        $client->setCaseNumber($caseNumber);
-
-        self::$entityManager->persist($client);
-        self::$entityManager->flush();
-
-        // add NDR to client
-        $ndr = new Ndr($client);
-        $ndr->setStartDate($madeDate);
-
-        self::$entityManager->persist($ndr);
-        self::$entityManager->flush();
-
-        // create NDR candidates
-        $candidates = iterator_to_array(self::$sut->createCompatibleNdrCandidates());
-
-        // assertions
-        self::assertCount(1, $candidates);
-        self::assertEquals(DeputyshipCandidateAction::InsertOrderNdr, $candidates[0]->action);
-        self::assertEquals($orderUid, $candidates[0]->orderUid);
-        self::assertEquals($ndr->getId(), $candidates[0]->ndrId);
-    }
-
     // if a court_order_report row exists for a court order <-> report relationship, it should
     // not be selected as a candidate (see DDLS-797)
-    public function testCreateCompatibleReportsDoesNotSuggestAlreadyRelated(): void
+    public function testCreateCompatibleReportCandidatesDoesNotSuggestAlreadyRelated(): void
     {
         $orderMadeDate = new DateTime();
 
@@ -246,6 +214,8 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
             dateChecks: false
         );
 
+        $report->setDueDate($orderMadeDate->modify('+1 day'));
+
         self::$entityManager->persist($report);
 
         // create order and associate with report; this report is a potential candidate,
@@ -271,7 +241,7 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
 
     // if a deputyship is hybrid now, but wasn't in the past, older non-hybrid reports are still associated
     // with the court order
-    public function testCreateCompatibleReportsIncludesOlderNonHybrids(): void
+    public function testCreateCompatibleReportCandidatesIncludesOlderNonHybrids(): void
     {
         $deputyUid = '9384576384';
         $caseNumber = '928475631';
@@ -307,6 +277,8 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
             dateChecks: false
         );
 
+        $hybridReport->setDueDate($madeDate);
+
         self::$entityManager->persist($hybridReport);
 
         // add older non-hybrid report
@@ -317,6 +289,9 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
             endDate: $madeDate,
             dateChecks: false
         );
+
+        $nonHybridReport->setDueDate($madeDate);
+
         self::$entityManager->persist($nonHybridReport);
 
         self::$entityManager->flush();
@@ -325,5 +300,66 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
 
         // both reports should be candidates
         self::assertCount(2, $candidates);
+    }
+
+    // court order <-> report candidates should not be generated for inactive clients, as court orders will not be
+    // added for those clients (DDLS-1055)
+    public function testCreateCompatibleReportCandidatesExcludesInactiveClients(): void
+    {
+        $deputyUid = '9384576384';
+        $caseNumber = '928475631';
+        $orderUid = '99944477';
+        $madeDate = new DateTime();
+
+        // add staging deputyship which currently has hybrid reporting
+        $deputyship = new StagingDeputyship();
+        $deputyship->orderUid = $orderUid;
+        $deputyship->deputyUid = $deputyUid;
+        $deputyship->deputyType = 'LAY';
+        $deputyship->orderType = 'pfa';
+        $deputyship->isHybrid = '0';
+        $deputyship->caseNumber = $caseNumber;
+        $deputyship->orderMadeDate = $madeDate->format('Y-m-d');
+
+        self::$entityManager->persist($deputyship);
+        self::$entityManager->flush();
+
+        // add archived client
+        $client = new Client();
+        $client->setCaseNumber($caseNumber);
+        $client->setDeletedAt();
+        $client->setArchivedAt(new \DateTime());
+
+        self::$entityManager->persist($client);
+        self::$entityManager->flush();
+
+        // add compatible report to inactive client
+        $report = new Report(
+            client: $client,
+            type: '102',
+            startDate: $madeDate->modify('+1 day'),
+            endDate: $madeDate->modify('+1 year'),
+            dateChecks: false
+        );
+
+        $report->setDueDate($madeDate->modify('+1 day'));
+
+        self::$entityManager->persist($report);
+        self::$entityManager->flush();
+
+        // check we get no candidates for the archived client
+        $candidates = iterator_to_array(self::$sut->createCompatibleReportCandidates());
+        self::assertEmpty($candidates);
+
+        // make client deleted rather than archived
+        $client->setArchivedAt();
+        $client->setDeletedAt(new \DateTime());
+
+        self::$entityManager->persist($report);
+        self::$entityManager->flush();
+
+        // check again that we get no candidates for the deleted client
+        $candidates = iterator_to_array(self::$sut->createCompatibleReportCandidates());
+        self::assertEmpty($candidates);
     }
 }

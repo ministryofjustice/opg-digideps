@@ -305,7 +305,6 @@ class LayUserFixtures extends AbstractDataFixture
             $manager->persist($duplicateUser);
         }
 
-        $ndr = null;
         $report = null;
         $multiClientSecondReport = null;
 
@@ -352,12 +351,12 @@ class LayUserFixtures extends AbstractDataFixture
         // create court order and populate linked tables for non-hybrid reports (excluding duplicate clients)
         $courtOrder = null;
         if (!str_contains($data['id'], '-4') || 'Lay-Duplicate-Client' != $data['id']) {
-            $courtOrder = $this->populateCourtOrderTable($data, $manager, $iteration, $offset, $client, $report, $ndr);
+            $courtOrder = $this->populateCourtOrderTable($data, $manager, $iteration, $offset, $client, $report);
         }
 
         // handle hybrid, multi client and co-deputies
         if (str_contains($data['id'], '-4') || $data['multi-client'] || $data['coDeputy']) {
-            $this->handleHybridCoDeputyAndMultiClients($data, $manager, $iteration, $offset, $courtOrder, $user2, $client, $client2, $report, $multiClientSecondReport, $ndr);
+            $this->handleHybridCoDeputyAndMultiClients($data, $manager, $iteration, $offset, $courtOrder, $user2, $client, $client2, $report, $multiClientSecondReport);
         }
     }
 
@@ -368,7 +367,6 @@ class LayUserFixtures extends AbstractDataFixture
         int $offset,
         Client $client,
         ?Report $report,
-        ?Ndr $ndr
     ) {
         $courtOrder = new CourtOrder();
         $courtOrderUid = substr_replace($data['courtOrderUid'], (string) $iteration, -$offset);
@@ -387,12 +385,6 @@ class LayUserFixtures extends AbstractDataFixture
         // Associate court order with reports if it's not an NDR
         if (!str_ends_with($data['id'], '-NDR') && !is_null($report)) {
             $courtOrder->addReport($report);
-
-            $manager->persist($courtOrder);
-        } elseif (!is_null($ndr)) {
-            $courtOrder->setNdr($ndr);
-
-            $manager->persist($courtOrder);
         }
 
         $manager->persist($courtOrder);
@@ -412,7 +404,6 @@ class LayUserFixtures extends AbstractDataFixture
         Client $client2,
         ?Report $report,
         ?Report $multiClientSecondReport,
-        ?Ndr $ndr
     ) {
         if (str_ends_with($data['id'], '-4') || str_ends_with($data['id'], '-4-NDR') || str_ends_with($data['id'], '-4-Co')) {
             // Populate court order table and link tables
@@ -443,11 +434,9 @@ class LayUserFixtures extends AbstractDataFixture
             $this->deputy->associateWithCourtOrder($courtOrderHW);
 
             // Associate court order with reports, excluding NDRs
-            if (!$data['ndr'] && !is_null($report)) {
+            if (!is_null($report)) {
                 $courtOrderPfa->addReport($report);
                 $courtOrderHW->addReport($report);
-            } elseif (!empty($ndr)) {
-                $courtOrderPfa->setNdr($ndr);
             }
 
             $manager->persist($this->deputy);

@@ -15,7 +15,7 @@ Feature: Synchronising Documents with Sirius
         And I search for submissions using the court order number of the client I am interacting with and check the 'Pending' column
         Then I should see the case number of the user I'm interacting with
         And the report PDF document should be queued
-        And the document "testimage.png" should be queued
+        And the document "test_image.png" should be queued
 
     @super-admin @ndr-completed
     Scenario: Submitting an NDR sets the synchronisation status of the report PDF to queued

@@ -49,7 +49,9 @@ class CourtOrderReportCandidatesFactory
                 FROM staging.deputyship d
                 INNER JOIN client c ON LOWER(d.case_number) = LOWER(c.case_number)
                 INNER JOIN report r ON c.id = r.client_id
-                WHERE r.end_date >= TO_DATE(d.order_made_date, 'YYYY-MM-DD')
+                WHERE r.due_date >= TO_DATE(d.order_made_date, 'YYYY-MM-DD')
+                AND c.archived_at IS NULL
+                AND c.deleted_at IS NULL
             ) compat
             WHERE report_type_is_compatible = true
             GROUP BY court_order_uid, report_id
@@ -63,40 +65,10 @@ class CourtOrderReportCandidatesFactory
         );
     SQL;
 
-    // NDRs are only assigned for pfa court orders, and only to Lay deputies, hence the WHERE clause
-    /** @var string */
-    private const COMPATIBLE_NDRS_QUERY = <<<SQL
-        SELECT
-            d.order_uid AS court_order_uid,
-            odr.id AS ndr_id
-        FROM staging.deputyship d
-        INNER JOIN client c ON LOWER(d.case_number) = LOWER(c.case_number)
-        INNER JOIN odr ON c.id = odr.client_id
-        WHERE d.order_type = 'pfa'
-        AND d.deputy_type = 'LAY'
-        AND odr.start_date >= TO_DATE(d.order_made_date, 'YYYY-MM-DD')
-        GROUP BY d.order_uid, odr.id
-        ORDER BY d.order_uid, odr.id;
-    SQL;
-
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly StagingSelectedCandidateFactory $candidateFactory,
     ) {
-    }
-
-    /**
-     * @param string $query SQL query to execute on the db connection
-     *
-     * @return \Traversable<int, array<string, mixed>>
-     *
-     * @throws Exception
-     */
-    private function runQuery(string $query): \Traversable
-    {
-        $conn = $this->entityManager->getConnection();
-
-        return $conn->executeQuery($query)->iterateAssociative();
     }
 
     /**
@@ -117,31 +89,13 @@ class CourtOrderReportCandidatesFactory
      */
     public function createCompatibleReportCandidates(): \Traversable
     {
-        $result = $this->runQuery(self::COMPATIBLE_REPORTS_QUERY);
+        $conn = $this->entityManager->getConnection();
+        $result = $conn->executeQuery(self::COMPATIBLE_REPORTS_QUERY)->iterateAssociative();
 
         foreach ($result as $row) {
             yield $this->candidateFactory->createInsertOrderReportCandidate(
                 '' . $row['court_order_uid'],
                 intval('' . $row['report_id'])
-            );
-        }
-    }
-
-    /**
-     * Find NDRs which can be associated with a court order.
-     *
-     * @return \Traversable<StagingSelectedCandidate> Iterator over candidate court_order_ndr inserts
-     *
-     * @throws Exception
-     */
-    public function createCompatibleNdrCandidates(): \Traversable
-    {
-        $result = $this->runQuery(self::COMPATIBLE_NDRS_QUERY);
-
-        foreach ($result as $row) {
-            yield $this->candidateFactory->createInsertOrderNdrCandidate(
-                '' . $row['court_order_uid'],
-                intval('' . $row['ndr_id'])
             );
         }
     }

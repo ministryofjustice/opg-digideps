@@ -264,7 +264,7 @@ services:
       - --dynamic
 
   composer:
-    image: composer:2.5.7
+    image: composer:2.8.12
     command: ["install"]
 
   custom-sql-query:
