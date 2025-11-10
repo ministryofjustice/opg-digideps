@@ -43,10 +43,6 @@ locals {
       value = local.db.endpoint
     },
     {
-      name  = "API_URL",
-      value = "http://api.${aws_service_discovery_http_namespace.cloudmap_namespace.name}.local"
-    },
-    {
       name  = "DATABASE_NAME",
       value = local.db.name
     },

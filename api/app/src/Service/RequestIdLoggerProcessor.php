@@ -3,6 +3,8 @@
 namespace App\Service;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * RequestIdLoggerProcessor.
@@ -32,30 +34,50 @@ class RequestIdLoggerProcessor
     }
 
     /**
-     * Add request header 'x-request-id' into ['extra']['request_id']
+     * Add request header 'x-aws-request-id' into ['extra']['aws_request_id']
      * Does not change the record if the scope is not active, or the request is not found or doesn't contain the header.
      *
      * @return array same record with extra info
      */
     public function processRecord(array $record)
     {
-        $reqId = self::getRequestIdFromContainer($this->container);
+        if (!$this->container->has('request_stack')) {
+            return $record;
+        }
 
-        if ($reqId) {
-            $record['extra']['request_id'] = $reqId;
+        /** @var RequestStack $rq */
+        $rq = $this->container->get('request_stack');
+        $request = $rq->getCurrentRequest();
+        if (empty($request)) {
+            return $record;
+        }
+        $reqId = self::getRequestIdFromContainer($request);
+        $sessId = self::getSessionSafeIdFromContainer($request);
+
+        if (!empty($reqId)) {
+            $record['extra']['aws_request_id'] = $reqId;
+        }
+
+        if (!empty($sessId)) {
+            $record['extra']['session_safe_id'] = $sessId;
         }
 
         return $record;
     }
 
-    public static function getRequestIdFromContainer(ContainerInterface $container)
+    public static function getRequestIdFromContainer(Request $request): ?string
     {
-        if (
-            ($rq = $container->get('request_stack'))
-            && ($request = $rq->getCurrentRequest())
-            && ($request->headers->has('x-request-id'))
-        ) {
-            return $request->headers->get('x-request-id');
+        if ($request->headers->has('x-aws-request-id')) {
+            return $request->headers->get('x-aws-request-id');
+        }
+
+        return null;
+    }
+
+    public static function getSessionSafeIdFromContainer(Request $request): ?string
+    {
+        if ($request->headers->has('x-session-safe-id')) {
+            return $request->headers->get('x-session-safe-id');
         }
 
         return null;

@@ -20,6 +20,8 @@ class OpgJsonFormatter extends MonologJsonFormatter
             'request' => [
                 'method' => $_SERVER['REQUEST_METHOD'] ?? 'UNKNOWN',
                 'path' => $_SERVER['REQUEST_URI'] ?? 'UNKNOWN',
+                'aws_request_id' => $_SERVER['HTTP_X_AWS_REQUEST_ID'] ?? 'UNKNOWN',
+                'session_safe_id' => $_SERVER['HTTP_X_SESSION_SAFE_ID'] ?? 'UNKNOWN'
             ],
             'location' => [
                 'file' => $file,
@@ -27,7 +29,7 @@ class OpgJsonFormatter extends MonologJsonFormatter
             ],
         ];
 
-        return $this->toJson($formattedRecord, true).($this->appendNewline ? "\n" : '');
+        return $this->toJson($formattedRecord, true) . ($this->appendNewline ? "\n" : '');
     }
 
     private function getCallerInfo(): array

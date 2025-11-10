@@ -54,7 +54,6 @@ class DeputyshipCandidatesGroup implements \IteratorAggregate
                 case DeputyshipCandidateAction::InsertOrder:
                     $group->insertOrder = $candidate;
                     break;
-                case DeputyshipCandidateAction::InsertOrderNdr:
                 case DeputyshipCandidateAction::InsertOrderReport:
                 case DeputyshipCandidateAction::InsertOrderDeputy:
                     $group->insertOthers[] = $candidate;

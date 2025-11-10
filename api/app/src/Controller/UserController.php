@@ -60,7 +60,7 @@ class UserController extends RestController
         /** @var User $loggedInUser */
         $loggedInUser = $this->getUser();
 
-        $this->userService->addUser($loggedInUser, $newUser, null);
+        $this->userService->addUser($loggedInUser, $newUser);
 
         $groups = $request->query->has('groups') ?
             $request->query->all('groups') : ['user', 'user-teams', 'team'];
@@ -373,7 +373,7 @@ class UserController extends RestController
         $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
 
         if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
-            throw new RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
+            throw new RuntimeException($user->getRoleName() . ' user role not allowed from this client.', 403);
         }
 
         // `user-login` contains number of clients and reports, needed to properly redirect the user to the right page after activation
@@ -393,7 +393,7 @@ class UserController extends RestController
         $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
 
         if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
-            throw new RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
+            throw new RuntimeException($user->getRoleName() . ' user role not allowed from this client.', 403);
         }
 
         $user->setAgreeTermsUse(true);
@@ -415,7 +415,7 @@ class UserController extends RestController
         $user = $this->findEntityBy(User::class, ['registrationToken' => $token], 'User not found');
 
         if (!$this->authService->isSecretValidForRole($user->getRoleName(), $request)) {
-            throw new RuntimeException($user->getRoleName().' user role not allowed from this client.', 403);
+            throw new RuntimeException($user->getRoleName() . ' user role not allowed from this client.', 403);
         }
 
         $user->setRegistrationToken(null);
