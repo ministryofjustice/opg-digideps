@@ -22,11 +22,21 @@ class Document implements DocumentInterface, SynchronisableInterface
     use HasReportTrait;
     use SynchronisableTrait;
 
-    public const FILE_NAME_MAX_LENGTH = 255;
+    public const int FILE_NAME_MAX_LENGTH = 255;
 
     public function isValidForReport(ExecutionContextInterface $context): void
     {
-        $fileOriginalName = $this->getFile()->getClientOriginalName();
+        if (!($this->getFile() instanceof UploadedFile)) {
+            return;
+        }
+
+        $fileOriginalName = FileNameManipulation::fileNameSanitation($this->getFile()->getClientOriginalName());
+
+        if (empty($fileOriginalName)) {
+            $context->buildViolation('document.file.errors.invalidName')->atPath('file')->addViolation();
+
+            return;
+        }
 
         if (strlen($fileOriginalName) > self::FILE_NAME_MAX_LENGTH) {
             $context->buildViolation('document.file.errors.maxMessage')->atPath('file')->addViolation();

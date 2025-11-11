@@ -24,15 +24,14 @@ class FileNameManipulation extends FileUtility
 
     public static function fileNameSanitation(string $fileName): string
     {
-        $fileNameSplit = pathinfo($fileName);
-        $fileName = $fileNameSplit['filename'];
+        $fileName = pathinfo($fileName, flags: PATHINFO_FILENAME);
 
         $endSpaces = preg_replace('/\s+(\.[^.]+)$/', '$1', $fileName);
         $remainingSpaces = preg_replace('/[[:blank:]]/', '_', $endSpaces); /* @phpstan-ignore-line */
         $specialChars = preg_replace('/[^\w_.-]/', '', $remainingSpaces); /* @phpstan-ignore-line */
         $hyphensAndPeriods = preg_replace('/([.-])/', '_', $specialChars) ?? ''; /* @phpstan-ignore-line */
 
-        return  isset($fileNameSplit['extension']) ?
+        return isset($fileNameSplit['extension']) ?
             $hyphensAndPeriods . '.' . $fileNameSplit['extension'] :
             $hyphensAndPeriods;
     }
