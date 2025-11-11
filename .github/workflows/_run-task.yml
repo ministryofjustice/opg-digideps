@@ -39,10 +39,12 @@ on:
       hide_logs:
         description: "Hide log output"
         required: false
-        default: "false"
-        type: string
+        default: false
+        type: boolean
+
 env:
   HELPER_VERSION: "0.10.4"
+
 jobs:
   run-task:
     runs-on: ubuntu-latest
@@ -99,7 +101,7 @@ jobs:
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
         run: |
-          echo $TF_WORKSPACE
+          echo "$TF_WORKSPACE"
           terraform output -json > terraform.output.json
         working-directory: terraform/environment
 
@@ -118,20 +120,21 @@ jobs:
           TIMEOUT: ${{ inputs.timeout }}
           HIDE_LOGS: ${{ inputs.hide_logs }}
         run: |
-          echo ${TASK_NAME}
-          echo ${TIMEOUT}
-          echo ${OVERRIDE}
-          if [ "${OVERRIDE}" == "" ]
-          then
-            ../../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT} -assumeRoleFromTFOut false -hideLogs ${HIDE_LOGS}
+          echo "${TASK_NAME}"
+          echo "${TIMEOUT}"
+          echo "${OVERRIDE}"
+          if [ -z "${OVERRIDE}" ]; then
+            ../../ecs-helper/ecs-runner -task "${TASK_NAME}" -timeout "${TIMEOUT}" -assumeRoleFromTFOut false -hideLogs "${HIDE_LOGS}"
           else
-            ../../ecs-helper/ecs-runner -task ${TASK_NAME} -timeout ${TIMEOUT} -override ${OVERRIDE} -assumeRoleFromTFOut false -hideLogs ${HIDE_LOGS}
+            ../../ecs-helper/ecs-runner -task "${TASK_NAME}" -timeout "${TIMEOUT}" -override "${OVERRIDE}" -assumeRoleFromTFOut false -hideLogs "${HIDE_LOGS}"
           fi
         working-directory: terraform/environment
 
       - name: Unset AWS variables
         if: always()
         run: |
-          echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
-          echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
-          echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV
+          {
+            echo "AWS_SECRET_ACCESS_KEY="
+            echo "AWS_ACCESS_KEY_ID="
+            echo "AWS_SESSION_TOKEN="
+          } >> "$GITHUB_ENV"

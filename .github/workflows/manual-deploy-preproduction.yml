@@ -53,4 +53,4 @@ jobs:
       task_name: "api_task_override"
       timeout: "1800"
       override: ${{ github.event.inputs.task_name }}
-      hide_logs: "true"
+      hide_logs: true

@@ -39,17 +39,20 @@ jobs:
 
       - name: Generate build output using Markdown
         run: |
-          echo "### Build Variables" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- Branch: main" >> $GITHUB_STEP_SUMMARY
-          echo "- Build Identifier: main" >> $GITHUB_STEP_SUMMARY
+          {
+            echo "### Build Variables"
+            echo ""
+            echo "- Branch: main"
+            echo "- Build Identifier: main"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: get default bump
         id: semver_bump
         run: |
-          export bump=$(./scripts/default_bump/bump.sh)
+          bump="$(./scripts/default_bump/bump.sh)"
+          export bump
           echo "Default Bump: ${bump}"
-          echo "default_bump=$(echo ${bump})" >> $GITHUB_OUTPUT
+          echo "default_bump=${bump}" >> "$GITHUB_OUTPUT"
 
       - name: generate semver tag and release
         id: semver_tag
