@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   init: function () {
     // if 'from' account is already selected when loading page, remove that account from the 'to'
     // (for example when only 'from' account is selected when posting form - which returns an error)
