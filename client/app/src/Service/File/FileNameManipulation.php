@@ -24,7 +24,8 @@ class FileNameManipulation extends FileUtility
 
     public static function fileNameSanitation(string $fileName): string
     {
-        $fileName = pathinfo($fileName, flags: PATHINFO_FILENAME);
+        $fileNameSplit = pathinfo($fileName);
+        $fileName = $fileNameSplit['filename'];
 
         $endSpaces = preg_replace('/\s+(\.[^.]+)$/', '$1', $fileName);
         $remainingSpaces = preg_replace('/[[:blank:]]/', '_', $endSpaces); /* @phpstan-ignore-line */
