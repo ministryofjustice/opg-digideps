@@ -1,5 +1,5 @@
 /* globals ga */
-module.exports = {
+export default {
   // TODO this can probably be moved into the main GA Events class
   init: function (document, timeout) {
     document.addEventListener('click', (event) => {

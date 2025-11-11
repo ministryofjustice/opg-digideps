@@ -2,6 +2,7 @@
   "name": "govuk_digideps",
   "version": "0.0.1",
   "private": true,
+  "type": "module",
   "scripts": {
     "build": "webpack",
     "lint": "standard assets/javascripts",
@@ -19,6 +20,7 @@
     "copy-webpack-plugin": "^11.0.0",
     "css-loader": "^6.5.1",
     "del": "^6.0.0",
+    "esbuild": "^0.27.0",
     "govuk-elements-sass": "^3.1.0",
     "jest": "^29.3.1",
     "jest-environment-jsdom": "^29.4.1",
