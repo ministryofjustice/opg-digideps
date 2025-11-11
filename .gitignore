@@ -19,6 +19,7 @@
 ecs-helper
 opg-ecs-helper_*.tar.gz
 /composer.lock
+client/resources/public
 
 # Common vendor folders
 bin/
