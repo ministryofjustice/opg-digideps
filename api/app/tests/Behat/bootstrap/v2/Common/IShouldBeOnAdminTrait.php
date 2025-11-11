@@ -211,14 +211,4 @@ trait IShouldBeOnAdminTrait
     {
         return $this->iAmOnPage('/admin\/client\/.*\/archived.*$/');
     }
-
-    public function iAmOnAdminToolsPage()
-    {
-        return $this->iAmOnPage('/admin\/tools/');
-    }
-
-    public function iAmOnReportReassignmentPage()
-    {
-        return $this->iAmOnPage('/admin\/tools\/report-reassignment/');
-    }
 }
