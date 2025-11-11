@@ -52,7 +52,7 @@ resource "aws_backup_plan" "rds_backup_plan" {
     enable_continuous_backup = true
 
     lifecycle {
-      delete_after = 1
+      delete_after = 14
     }
   }
 }
