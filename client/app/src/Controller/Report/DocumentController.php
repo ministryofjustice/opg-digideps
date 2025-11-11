@@ -206,7 +206,11 @@ class DocumentController extends AbstractController
         $maxFileUploadsHint = null;
         $maxFileUploads = intval(ini_get('max_file_uploads'));
         if ($maxFileUploads > 0) {
-            $maxFileUploadsHint = 'You can upload up to ' . $maxFileUploads . ' files at a time';
+            $maxFileUploadsHint = $this->translator->trans(
+                'form.files.hint',
+                ['maxFileUploads' => $maxFileUploads],
+                'report-documents'
+            );
         }
 
         return [
