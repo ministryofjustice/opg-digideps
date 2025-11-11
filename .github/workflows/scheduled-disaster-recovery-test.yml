@@ -47,19 +47,21 @@ jobs:
       - name: restore to a point in time
         id: restore
         run: |
-          export TEN_MINS_AGO=$(TZ=UTC date -d '-5 minutes' +'%Y-%m-%d %H:%M:%S')
+          TEN_MINS_AGO="$(TZ=UTC date -d '-5 minutes' +'%Y-%m-%d %H:%M:%S')"
           python3 database_restore.py \
-          --environment preproduction \
-          --cluster_from api-integration \
-          --pitr "${TEN_MINS_AGO}"
+            --environment preproduction \
+            --cluster_from api-integration \
+            --pitr "${TEN_MINS_AGO}"
         working-directory: disaster-recovery/restore
 
       - name: Unset AWS variables
         if: always()
         run: |
-          echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
-          echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
-          echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV
+          {
+            echo "AWS_SECRET_ACCESS_KEY="
+            echo "AWS_ACCESS_KEY_ID="
+            echo "AWS_SESSION_TOKEN="
+          } >> "$GITHUB_ENV"
 
   restore_from_remote_backup:
     runs-on: ubuntu-latest
@@ -91,8 +93,8 @@ jobs:
       - name: get latest integration snapshot id
         id: snapshot
         run: |
-          export SNAPSHOT_ID=$(python get_cross_acct_snapshot.py)
-          echo "snapshot_id=${SNAPSHOT_ID}" >> $GITHUB_OUTPUT
+          SNAPSHOT_ID="$(python get_cross_acct_snapshot.py)"
+          echo "snapshot_id=${SNAPSHOT_ID}" >> "$GITHUB_OUTPUT"
         working-directory: disaster-recovery/restore
 
       - name: restore from remote backup
@@ -101,18 +103,20 @@ jobs:
           SNAPSHOT_ID: ${{ steps.snapshot.outputs.snapshot_id }}
         run: |
           python database_restore.py \
-          --environment preproduction \
-          --cluster_from api-integration \
-          --restore_from_remote True \
-          --snapshot_id ${SNAPSHOT_ID}
+            --environment preproduction \
+            --cluster_from api-integration \
+            --restore_from_remote True \
+            --snapshot_id "${SNAPSHOT_ID}"
         working-directory: disaster-recovery/restore
 
       - name: Unset AWS variables
         if: always()
         run: |
-          echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
-          echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
-          echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV
+          {
+            echo "AWS_SECRET_ACCESS_KEY="
+            echo "AWS_ACCESS_KEY_ID="
+            echo "AWS_SESSION_TOKEN="
+          } >> "$GITHUB_ENV"
 
   slack_notify_success:
     name: notify of result
