@@ -43,27 +43,31 @@ jobs:
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          export BRANCH=$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF##*/}} | awk -F'_' '{print $1}' | tr -cd '[:alnum:]' | tr '[:upper:]' '[:lower:]' | cut -c1-8)
-          echo "branch_formatted=$(echo ${BRANCH})" >> $GITHUB_OUTPUT
-          echo "build_identifier=$(echo ${BRANCH}${PR_NUMBER})" >> $GITHUB_OUTPUT
-          echo ${build_identifier}
+          branch_ref="${GITHUB_HEAD_REF:-${GITHUB_REF##*/}}"
+          BRANCH="$(echo "$branch_ref" | awk -F'_' '{print $1}' | tr -cd '[:alnum:]' | tr '[:upper:]' '[:lower:]' | cut -c1-8)"
+          export BRANCH
+          echo "branch_formatted=${BRANCH}" >> "$GITHUB_OUTPUT"
+          echo "build_identifier=${BRANCH}${PR_NUMBER}" >> "$GITHUB_OUTPUT"
+          echo "${BRANCH}${PR_NUMBER}"
 
       - name: Generate build output using Markdown
         env:
           PARSED_BRANCH: ${{ steps.variables.outputs.branch_formatted }}
           BUILD_IDENTIFIER: ${{ steps.variables.outputs.build_identifier }}
         run: |
-          echo "### Build Variables" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- Branch: ${PARSED_BRANCH}" >> $GITHUB_STEP_SUMMARY
-          echo "- Build Identifier: ${BUILD_IDENTIFIER}" >> $GITHUB_STEP_SUMMARY
+          {
+            echo "### Build Variables"
+            echo ""
+            echo "- Branch: ${PARSED_BRANCH}"
+            echo "- Build Identifier: ${BUILD_IDENTIFIER}"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: get default bump
         id: semver_bump
         run: |
-          export bump=$(./scripts/default_bump/bump.sh)
+          bump="$(./scripts/default_bump/bump.sh)"
           echo "Default Bump: ${bump}"
-          echo "default_bump=$(echo ${bump})" >> $GITHUB_OUTPUT
+          echo "default_bump=${bump}" >> "$GITHUB_OUTPUT"
 
       - name: generate semver tag and release
         id: semver_tag
@@ -467,9 +471,12 @@ jobs:
     steps:
       - name: output workflow variables
         run: |
-          export PUBLIC_FRONTEND_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.complete-deputy-report.service.gov.uk"
-          export SERVICE_FRONTEND_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.digideps.opg.service.justice.gov.uk"
-          export SERVICE_ADMIN_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.admin.digideps.opg.service.justice.gov.uk"
+          PUBLIC_FRONTEND_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.complete-deputy-report.service.gov.uk"
+          export PUBLIC_FRONTEND_URL
+          SERVICE_FRONTEND_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.digideps.opg.service.justice.gov.uk"
+          export SERVICE_FRONTEND_URL
+          SERVICE_ADMIN_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.admin.digideps.opg.service.justice.gov.uk"
+          export SERVICE_ADMIN_URL
 
           echo "${{ needs.workflow_variables.outputs.build_identifier }} PR environment tested, built and deployed"
           echo "Public Frontend URL: ${PUBLIC_FRONTEND_URL}"
@@ -477,12 +484,14 @@ jobs:
           echo "Service Admin URL: ${SERVICE_ADMIN_URL}"
           echo "Tag Used: ${{ needs.workflow_variables.outputs.version_tag }}"
 
-          echo "### Environment Details" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "- Public Frontend URL: ${PUBLIC_FRONTEND_URL}" >> $GITHUB_STEP_SUMMARY
-          echo "- Service Frontend URL: ${SERVICE_FRONTEND_URL}" >> $GITHUB_STEP_SUMMARY
-          echo "- Service Admin URL: ${SERVICE_ADMIN_URL}" >> $GITHUB_STEP_SUMMARY
-          echo "- Tag Used: ${{ needs.workflow_variables.outputs.version_tag }}" >> $GITHUB_STEP_SUMMARY
+          {
+            echo "### Environment Details"
+            echo ""
+            echo "- Public Frontend URL: ${PUBLIC_FRONTEND_URL}"
+            echo "- Service Frontend URL: ${SERVICE_FRONTEND_URL}"
+            echo "- Service Admin URL: ${SERVICE_ADMIN_URL}"
+            echo "- Tag Used: ${{ needs.workflow_variables.outputs.version_tag }}"
+          } >> "$GITHUB_STEP_SUMMARY"
 
   slack_notify_success:
     name: notify of success
