@@ -46,9 +46,10 @@ resource "aws_backup_plan" "rds_backup_plan" {
   name = "backup-plan-${var.account.name}"
 
   rule {
-    rule_name         = "daily-rds-snapshots"
-    target_vault_name = aws_backup_vault.immutable_vault.name
-    schedule          = "cron(0 05 * * ? *)"
+    rule_name                = "daily-rds-snapshots"
+    target_vault_name        = aws_backup_vault.immutable_vault.name
+    schedule                 = "cron(0 05 * * ? *)"
+    enable_continuous_backup = true
 
     lifecycle {
       delete_after = 1
