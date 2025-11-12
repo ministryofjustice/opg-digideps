@@ -73,14 +73,13 @@ Promise
         console.error("Error encountered while compiling JS: ", item.errors)
       }
 
-      console.log("Finished compiling JS")
-
       if (hasErrors) {
         console.error("Error occurred while compiling JS")
         process.exit(1)
       }
     })
   })
+  .finally(() => console.log("Finished compiling JS"))
 
 // ------- COPY IMAGES
 const imagesToCopy = [
@@ -146,10 +145,9 @@ Promise
       }
     })
 
-    console.log("Finished compiling CSS")
-
     if (hasErrors) {
       console.error("Error occurred while compiling CSS")
       process.exit(1)
     }
   })
+  .finally(() => console.log("Finished compiling CSS"))
