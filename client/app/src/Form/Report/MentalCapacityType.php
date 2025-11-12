@@ -4,6 +4,7 @@ namespace App\Form\Report;
 
 use App\Entity\Report\Action;
 use App\Entity\Report\MentalCapacity;
+use App\Form\Subscriber\SanitizeSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -12,7 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MentalCapacityType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add('hasCapacityChanged', FormTypes\ChoiceType::class, [
                     // keep in sync with API model constants
@@ -24,10 +25,10 @@ class MentalCapacityType extends AbstractType
                 ])
                 ->add('hasCapacityChangedDetails', FormTypes\TextareaType::class)
                 ->add('save', FormTypes\SubmitType::class)
-        ;
+                ->get('hasCapacityChangedDetails')->addEventSubscriber(new SanitizeSubscriber());
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-decisions',
@@ -44,7 +45,7 @@ class MentalCapacityType extends AbstractType
         ]);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'mental_capacity';
     }

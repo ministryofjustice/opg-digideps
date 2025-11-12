@@ -3,6 +3,7 @@
 namespace App\Form\Report;
 
 use App\Entity\Report\Report;
+use App\Form\Subscriber\SanitizeSubscriber;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -30,7 +31,8 @@ class DecisionExistType extends AbstractType
                 ],
             ])
             ->add('reasonForNoDecisions', FormTypes\TextareaType::class)
-            ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
+            ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label'])
+            ->get('reasonForNoDecisions')->addEventSubscriber(new SanitizeSubscriber());
     }
 
     public function configureOptions(OptionsResolver $resolver)
