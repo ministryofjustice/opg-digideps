@@ -2,7 +2,7 @@ FROM node:18.16.1-alpine AS node-base
 WORKDIR /app
 COPY client/resources/package.json .
 COPY client/resources/package-lock.json .
-COPY client/resources/webpack.config.js .
+COPY client/resources/deps-builder.js .
 COPY client/resources/assets assets
 
 # Install NPM dependencies

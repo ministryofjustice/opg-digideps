@@ -4,55 +4,27 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "webpack",
+    "build": "node deps-builder.js",
     "lint": "standard assets/javascripts",
     "fix": "standard --fix assets/javascripts",
     "test": "jest assets/javascripts/__tests__ --verbose --env=jsdom"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.5",
-    "@babel/eslint-parser": "^7.17.0",
-    "@babel/plugin-proposal-class-properties": "^7.16.7",
-    "@babel/preset-env": "^7.16.11",
     "@jest/globals": "^29.3.1",
-    "babel-jest": "^29.3.1",
-    "babel-loader": "^9.0.0",
-    "copy-webpack-plugin": "^11.0.0",
-    "css-loader": "^6.5.1",
-    "del": "^6.0.0",
     "esbuild": "^0.27.0",
     "govuk-elements-sass": "^3.1.0",
     "jest": "^29.3.1",
     "jest-environment-jsdom": "^29.4.1",
     "jest-fetch-mock": "^3.0.3",
     "jquery": "^3.6.0",
-    "mini-css-extract-plugin": "^2.5.3",
-    "sass": "^1.49.8",
-    "sass-loader": "^13.0.0",
-    "standard": "^16.0.4",
-    "url-loader": "^4.0.0",
-    "webpack": "5.96.1",
-    "webpack-cli": "^5.0.0"
+    "sass-embedded": "^1.93.3",
+    "standard": "^16.0.4"
   },
   "dependencies": {
     "@ministryofjustice/frontend": "^6.0.0",
     "@testing-library/dom": "^9.2.0",
     "@testing-library/user-event": "^14.4.3",
     "govuk-frontend": "^5.13.0"
-  },
-  "babel": {
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "targets": "defaults"
-        }
-      ]
-    ],
-    "plugins": [
-      "@babel/plugin-proposal-class-properties",
-      "@babel/plugin-transform-classes"
-    ]
   },
   "jest": {
     "clearMocks": true,
