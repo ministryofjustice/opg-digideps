@@ -9,7 +9,12 @@ import fsPromises from "node:fs/promises"
 const tag = (new Date()).getTime()
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+// this directory is just used to timestamp the assets and won't contain anything
 const outputDirWithTimestamp = path.resolve(dirname, "public/assets/" + tag)
+
+// assets will actually be loaded from this directory
+const outputDir = path.resolve(dirname, "public/assets/fallback")
 
 // remove existing build outputs
 fs.globSync("./public/*").forEach(generatedDir => {
@@ -18,12 +23,16 @@ fs.globSync("./public/*").forEach(generatedDir => {
 
 // set up output directories
 fs.mkdirSync(outputDirWithTimestamp, { recursive: true })
+fs.mkdirSync(outputDir, { recursive: true })
 
-const cssOutputDir = path.resolve(outputDirWithTimestamp, "stylesheets")
+const cssOutputDir = path.resolve(outputDir, "stylesheets")
 fs.mkdirSync(cssOutputDir, { recursive: true })
 
 const fontDir = path.resolve(cssOutputDir, "fonts")
 fs.mkdirSync(fontDir, { recursive: true })
+
+const javascriptsDir = path.resolve(outputDir, "javascripts")
+fs.mkdirSync(javascriptsDir, { recursive: true })
 
 // TODO don't make sourcemaps for prod build
 const generateSourceMaps = true
@@ -39,16 +48,16 @@ const bundleJS = async function (entryPoints, outFile) {
     minify: minifyCode,
     sourcemap: generateSourceMaps,
     target: ["es2015"],
-    outfile: path.resolve(outputDirWithTimestamp, outFile)
+    outfile: path.resolve(javascriptsDir, outFile)
   })
 }
 
 // JS COMPILATION
 Promise
   .all([
-    bundleJS(["./assets/javascripts/common.js"], "javascripts/common.js"),
-    bundleJS(["./assets/javascripts/pages/clientBenefitsCheckForm.js"], "javascripts/clientBenefitsCheckForm.js"),
-    bundleJS(["./node_modules/jquery/dist/jquery.min.js"], "javascripts/jquery.min.js")
+    bundleJS(["./assets/javascripts/common.js"], "common.js"),
+    bundleJS(["./assets/javascripts/pages/clientBenefitsCheckForm.js"], "clientBenefitsCheckForm.js"),
+    bundleJS(["./node_modules/jquery/dist/jquery.min.js"], "jquery.min.js")
   ])
   .then(r => {
     r.forEach(item => {

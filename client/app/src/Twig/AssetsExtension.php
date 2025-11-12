@@ -28,8 +28,9 @@ class AssetsExtension extends AbstractExtension
 
             $timestampedDirectories = scandir($assetRoot, SCANDIR_SORT_ASCENDING);
 
-            // remove the '.' and '..' paths from the list of found directories
-            $assetContents = array_values(array_diff($timestampedDirectories, ['..', '.']));
+            // remove the '.', '..', and 'fallback' paths from the list of found directories
+            // (we only want the timestamped directories)
+            $assetContents = array_values(array_diff($timestampedDirectories, ['..', '.', 'fallback']));
 
             // use the last directory in the list, as this will be the one most-recently built
             sort($assetContents);
