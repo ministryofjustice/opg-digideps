@@ -12936,22 +12936,7 @@ parameters:
 			path: src/Transformer/ReportSubmission/ReportSubmissionBurFixedWidthTransformer.php
 
 		-
-			message: "#^Method App\\\\Twig\\\\AssetsExtension\\:\\:assetSourceFilter\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Twig/AssetsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\AssetsExtension\\:\\:assetSourceFilter\\(\\) has parameter \\$originalUrl with no type specified\\.$#"
-			count: 1
-			path: src/Twig/AssetsExtension.php
-
-		-
 			message: "#^Method App\\\\Twig\\\\AssetsExtension\\:\\:assetUrlFilter\\(\\) has parameter \\$originalUrl with no type specified\\.$#"
-			count: 1
-			path: src/Twig/AssetsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\AssetsExtension\\:\\:getName\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Twig/AssetsExtension.php
 
