@@ -37,8 +37,8 @@ jobs:
 
       - name: install workspace manager
         run: |
-          wget https://github.com/ministryofjustice/opg-terraform-workspace-manager/releases/download/v0.3.3/opg-terraform-workspace-manager_Linux_x86_64.tar.gz -O $HOME/terraform-workspace-manager.tar.gz
-          sudo tar -xvf $HOME/terraform-workspace-manager.tar.gz -C /usr/local/bin
+          wget "https://github.com/ministryofjustice/opg-terraform-workspace-manager/releases/download/v0.3.3/opg-terraform-workspace-manager_Linux_x86_64.tar.gz" -O "$HOME/terraform-workspace-manager.tar.gz"
+          sudo tar -xvf "$HOME/terraform-workspace-manager.tar.gz" -C /usr/local/bin
           sudo chmod +x /usr/local/bin/terraform-workspace-manager
 
       - name: configure AWS credentials for workspace manager
@@ -52,12 +52,12 @@ jobs:
       - name: Get ephemeral workspaces to clean up
         id: get_workspaces
         run: |
-          WORKSPACES=$(terraform-workspace-manager \
+          WORKSPACES="$(terraform-workspace-manager \
             -protected-workspaces=true \
             -aws-account-id=248804316466 \
             -aws-iam-role=digideps-ci \
-            -assume-role=false)
-          echo "workspaces=$WORKSPACES" >> $GITHUB_OUTPUT
+            -assume-role=false)"
+          echo "workspaces=${WORKSPACES}" >> "$GITHUB_OUTPUT"
         working-directory: terraform/environment
 
       - name: install python
@@ -87,7 +87,7 @@ jobs:
           WC_WORKSPACES: ${{ steps.get_workspaces.outputs.workspaces }}
         run: |
           unset TF_WORKSPACE
-          ./scripts/workspace_cleanup.sh ${WC_WORKSPACES}
+          ./scripts/workspace_cleanup.sh "${WC_WORKSPACES}"
         working-directory: terraform/environment
 
       - name: clean up old task definitions
@@ -101,9 +101,11 @@ jobs:
       - name: Unset AWS variables
         if: always()
         run: |
-          echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
-          echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
-          echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV
+          {
+            echo "AWS_SECRET_ACCESS_KEY="
+            echo "AWS_ACCESS_KEY_ID="
+            echo "AWS_SESSION_TOKEN="
+          } >> "$GITHUB_ENV"
 
   slack_notify_failure:
     name: notify of failure
