@@ -37,8 +37,9 @@ jobs:
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
-          export BRANCH=$(echo ${GITHUB_HEAD_REF:-${GITHUB_REF##*/}} | awk -F'_' '{print $1}' | tr -cd '[:alnum:]' | tr '[:upper:]' '[:lower:]' | cut -c1-8)
-          echo "build_identifier=$(echo ${BRANCH}${PR_NUMBER})" >> $GITHUB_OUTPUT
+          branch_ref="${GITHUB_HEAD_REF:-${GITHUB_REF##*/}}"
+          BRANCH="$(echo "$branch_ref" | awk -F'_' '{print $1}' | tr -cd '[:alnum:]' | tr '[:upper:]' '[:lower:]' | cut -c1-8)"
+          echo "build_identifier=${BRANCH}${PR_NUMBER}" >> "$GITHUB_OUTPUT"
 
   cleanup_workspace:
     if: github.event.pull_request.merged == true
@@ -79,11 +80,13 @@ jobs:
           TF_VAR_OPG_DOCKER_TAG: foo
         run: |
           echo "Running script against ${WORKSPACE}"
-          ./scripts/destroy_workspace.sh ${WORKSPACE}
+          ./scripts/destroy_workspace.sh "${WORKSPACE}"
 
       - name: Unset AWS variables
         if: always()
         run: |
-          echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
-          echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
-          echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV
+          {
+            echo "AWS_SECRET_ACCESS_KEY="
+            echo "AWS_ACCESS_KEY_ID="
+            echo "AWS_SESSION_TOKEN="
+          } >> "$GITHUB_ENV"
