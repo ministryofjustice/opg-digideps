@@ -120,7 +120,7 @@ class DocumentController extends AbstractController
 
                     $this->addFlash('error', $translatedMessage);
                 } else {
-                    $this->restClient->put('report/'.$reportId, $data, ['report', 'wish-to-provide-documentation']);
+                    $this->restClient->put('report/' . $reportId, $data, ['report', 'wish-to-provide-documentation']);
                 }
             }
 
@@ -190,7 +190,7 @@ class DocumentController extends AbstractController
 
                         $form->get('files')->addError(new FormError($errorMessage));
                     } catch (\Throwable $e) {
-                        $logger->warning('Error uploading file: '.$e->getMessage());
+                        $logger->warning('Error uploading file: ' . $e->getMessage());
 
                         $form->get('files')->addError(new FormError('Cannot upload file, please try again later'));
                     }
@@ -203,6 +203,16 @@ class DocumentController extends AbstractController
 
         list($nextLink, $backLink) = $this->buildNavigationLinks($report, $successfullyUploaded);
 
+        $maxFileUploadsHint = null;
+        $maxFileUploads = intval(ini_get('max_file_uploads'));
+        if ($maxFileUploads > 0) {
+            $maxFileUploadsHint = $this->translator->trans(
+                'form.files.hint',
+                ['maxFileUploads' => $maxFileUploads],
+                'report-documents'
+            );
+        }
+
         return [
             'report' => $report,
             'step' => $request->get('step'), // if step is set, this is used to show the save and continue button
@@ -210,6 +220,7 @@ class DocumentController extends AbstractController
             'nextLink' => $nextLink,
             'successUploaded' => $successfullyUploaded,
             'form' => $form->createView(),
+            'maxFileUploadsHint' => $maxFileUploadsHint,
         ];
     }
 
@@ -226,7 +237,7 @@ class DocumentController extends AbstractController
         $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
 
         // submit the report to generate the submission entry only
-        $this->restClient->put('report/'.$reportId.'/submit-documents', $report, ['submit']);
+        $this->restClient->put('report/' . $reportId . '/submit-documents', $report, ['submit']);
 
         if ('true' === $request->get('successUploaded')) {
             $this->addFlash('fileUploadSuccess', 'Your uploaded files are now attached to this report.');
@@ -299,7 +310,7 @@ class DocumentController extends AbstractController
 
                         $form->get('files')->addError(new FormError($errorMessage));
                     } catch (\Throwable $e) {
-                        $logger->warning('Error uploading file: '.$e->getMessage());
+                        $logger->warning('Error uploading file: ' . $e->getMessage());
 
                         $form->get('files')->addError(new FormError('Cannot upload file, please try again later'));
                     }
@@ -462,7 +473,7 @@ class DocumentController extends AbstractController
     private function getDocument(string $documentId)
     {
         return $this->restClient->get(
-            'document/'.$documentId,
+            'document/' . $documentId,
             'Report\Document',
             ['documents', 'status', 'document-storage-reference', 'document-report-submission', 'document-report', 'report', 'report-client', 'client', 'client-users', 'user-id', 'client-organisations']
         );
@@ -500,7 +511,7 @@ class DocumentController extends AbstractController
 
                 $this->addFlash(
                     'error',
-                    'Document could not be removed. Details: '.$e->getMessage()
+                    'Document could not be removed. Details: ' . $e->getMessage()
                 );
             }
         }
@@ -527,7 +538,7 @@ class DocumentController extends AbstractController
 
     private function deleteMissingS3DocFromDocumentTable(string $documentId): void
     {
-        $this->restClient->delete('/document/'.$documentId);
+        $this->restClient->delete('/document/' . $documentId);
         $this->addFlash('notice', 'Document has been removed');
     }
 
