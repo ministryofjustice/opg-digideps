@@ -12,7 +12,9 @@ const dirname = path.dirname(filename)
 const outputDirWithTimestamp = path.resolve(dirname, "public/assets/" + tag)
 
 // remove existing build outputs
-fs.rmSync("./public/*", { recursive: true, force: true })
+fs.globSync("./public/*").forEach(generatedDir => {
+  fs.rmSync(generatedDir, { recursive: true, force: true })
+})
 
 // set up output directories
 fs.mkdirSync(outputDirWithTimestamp, { recursive: true })
@@ -50,12 +52,22 @@ Promise
   ])
   .then(r => {
     r.forEach(item => {
+      let hasErrors = false
+
       if (item.errors.length > 0) {
-        console.error("Error encountered while compiling JS", item.errors)
+        hasErrors = true
+        console.error("Error encountered while compiling JS: ", item.errors)
+      }
+
+      console.log("Finished compiling JS")
+
+      if (hasErrors) {
+        console.error("Error occurred while compiling JS")
+
+        process.exit(1)
       }
     })
   })
-  .finally(() => console.log("Finished compiling JS"))
 
 // COPY IMAGES
 const imagesToCopy = [
@@ -116,10 +128,19 @@ Promise
     bundleCSS("./assets/scss/formatted-report.scss", "formatted-report.css")
   ])
   .then(r => {
+    let hasErrors = false
+
     r.forEach(item => {
       if (item !== undefined) {
-        console.error("Error encountered while compiling CSS", item.errors)
+        hasErrors = true
+        console.error("Error encountered while compiling CSS: ", item)
       }
     })
+
+    console.log("Finished compiling CSS")
+
+    if (hasErrors) {
+      console.error("Error occurred while compiling CSS")
+      process.exit(1)
+    }
   })
-  .finally(() => console.log("Finished compiling CSS"))
