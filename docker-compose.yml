@@ -5,6 +5,9 @@ services:
     build:
       context: .
       dockerfile: ./client/docker/resources/Dockerfile
+    environment:
+      NODE_ENV: production
+    entrypoint: sh -c "npm run build"
 
   load-balancer:
     container_name: opg-digideps-loadbalancer
@@ -98,6 +101,7 @@ services:
       - htmltopdf
       - localstack
       - mock-notify-api
+      - resources
     environment:
       APP_ENV: ${APP_ENV:-local}
       APP_DEBUG: ${APP_DEBUG:-0}
@@ -147,6 +151,8 @@ services:
     build:
       context: .
       dockerfile: ./htmltopdf/Dockerfile
+    depends_on:
+      - resources
     ports:
       - 8090:8080
     restart: always
