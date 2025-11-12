@@ -81,10 +81,6 @@ Promise
 // COPY IMAGES
 const imagesToCopy = [
   { from: "node_modules/govuk-frontend/dist/govuk/assets/fonts/", to: fontDir },
-
-  // these file copies are just to put the necessary images into the build output;
-  // not sure why we copy generic-images twice, though
-  { from: "assets/images/generic-images/", to: "public/" },
   { from: "assets/images/generic-images/", to: "public/images/" },
   { from: "assets/images/", to: "public/images/" },
   { from: "node_modules/govuk-frontend/dist/govuk/assets/images/", to: "public/images/" },
