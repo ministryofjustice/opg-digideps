@@ -5,8 +5,6 @@ namespace App\Twig;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
-// todo remove assetic from config and use it's
-
 /**
  * Class AssetsExtension.
  */
@@ -14,54 +12,44 @@ class AssetsExtension extends AbstractExtension
 {
     private ?string $tag = null;
 
-    public function __construct(private string $projectDir)
-    {
-    }
-
-    /** Get the version name for assets add it to the url to give a versioned url
-     * Like assetic except The minification and versioning is done with Webpack.
-     *
-     * @return string
-     */
-    public function assetUrlFilter($originalUrl)
-    {
-        return '/assets/'.$this->getTag().'/'.$originalUrl;
-    }
-
-    public function assetSourceFilter($originalUrl)
-    {
-        $tag = $this->getTag();
-        $source = file_get_contents($this->projectDir.'/public/assets/'.$tag.'/'.$originalUrl);
-
-        return $source;
+    public function __construct(
+        private readonly string $projectDir
+    ) {
     }
 
     /**
-     * @return string
+     * Get the version name for assets add it to the url to give a versioned url
      */
-    public function getTag()
+    public function assetUrlFilter($originalUrl): string
     {
         if (!$this->tag) {
-            // List the files in the web/assets folder
-            $assetRoot = $this->projectDir.'/public/assets';
-            $assetContents = array_diff(scandir($assetRoot, SCANDIR_SORT_ASCENDING), ['..', '.']);
+            // list the directories under web/assets
+            $assetRoot = $this->projectDir . '/public/assets';
 
-            // set the value to the folder we find.
-            $this->tag = array_values($assetContents)[0];
+            $timestampedDirectories = scandir($assetRoot, SCANDIR_SORT_ASCENDING);
+
+            // remove the '.' and '..' paths from the list of found directories
+            $assetContents = array_values(array_diff($timestampedDirectories, ['..', '.']));
+
+            // use the last directory in the list, as this will be the one most-recently built
+            sort($assetContents);
+            $this->tag = array_reverse($assetContents)[0];
         }
 
-        return $this->tag;
+        return '/assets/' . $this->tag . '/' . $originalUrl;
     }
 
-    public function getFilters()
+    /**
+     * @return TwigFilter[]
+     */
+    public function getFilters(): array
     {
         return [
-            new TwigFilter('assetUrl', [$this, 'assetUrlFilter']),
-            new TwigFilter('assetSource', [$this, 'assetSourceFilter']),
+            new TwigFilter('assetUrl', [$this, 'assetUrlFilter'])
         ];
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'assets_extension';
     }
