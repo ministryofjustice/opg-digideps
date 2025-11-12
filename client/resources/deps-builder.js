@@ -3,17 +3,25 @@ import * as esbuild from "esbuild"
 import path from "path"
 import { fileURLToPath } from "url"
 import fs from "fs"
-import * as sass from "sass"
+import * as sass from "sass-embedded"
+import fsPromises from "node:fs/promises"
 
 const tag = (new Date()).getTime()
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 const outputDirWithTimestamp = path.resolve(dirname, "public/assets/" + tag)
 
-// TODO remove existing build outputs
-// rm -Rf public/assets/*
+// remove existing build outputs
+fs.rmSync("./public/*", { recursive: true, force: true })
 
+// set up output directories
 fs.mkdirSync(outputDirWithTimestamp, { recursive: true })
+
+const cssOutputDir = path.resolve(outputDirWithTimestamp, "stylesheets")
+fs.mkdirSync(cssOutputDir, { recursive: true })
+
+const fontDir = path.resolve(cssOutputDir, "fonts")
+fs.mkdirSync(fontDir, { recursive: true })
 
 // TODO don't make sourcemaps for prod build
 const generateSourceMaps = true
@@ -22,7 +30,7 @@ const generateSourceMaps = true
 const minifyCode = false
 
 // use es2015 as the JS target, for parity with govuk frontend
-const bundleJs = async function (entryPoints, outFile) {
+const bundleJS = async function (entryPoints, outFile) {
   return esbuild.build({
     entryPoints: entryPoints,
     bundle: true,
@@ -36,9 +44,9 @@ const bundleJs = async function (entryPoints, outFile) {
 // JS COMPILATION
 Promise
   .all([
-    bundleJs(["./assets/javascripts/common.js"], "javascripts/common.js"),
-    bundleJs(["./assets/javascripts/pages/clientBenefitsCheckForm.js"], "javascripts/clientBenefitsCheckForm.js"),
-    bundleJs(["./node_modules/jquery/dist/jquery.min.js"], "javascripts/jquery.min.js")
+    bundleJS(["./assets/javascripts/common.js"], "javascripts/common.js"),
+    bundleJS(["./assets/javascripts/pages/clientBenefitsCheckForm.js"], "javascripts/clientBenefitsCheckForm.js"),
+    bundleJS(["./node_modules/jquery/dist/jquery.min.js"], "javascripts/jquery.min.js")
   ])
   .then(r => {
     r.forEach(item => {
@@ -51,7 +59,7 @@ Promise
 
 // COPY IMAGES
 const imagesToCopy = [
-  { from: "node_modules/govuk-frontend/dist/govuk/assets/fonts/", to: outputDirWithTimestamp },
+  { from: "node_modules/govuk-frontend/dist/govuk/assets/fonts/", to: fontDir },
 
   // these file copies are just to put the necessary images into the build output;
   // not sure why we copy generic-images twice, though
@@ -84,19 +92,34 @@ const options = {
     "assets/scss"
   ]
 }
-const cssResult = sass.compile('./assets/scss/application.scss', options)
-let css = cssResult.css
 
-if (minifyCode) {
-  const minifyResult = await esbuild.transform(
-    css,
-    {
-      loader: 'css',
-      minify: true,
-    }
-  )
-
-  css = minifyResult.code
+const bundleCSS = async function (entryPath, outFile) {
+  return sass.compileAsync(entryPath, options)
+    .then(cssResult => {
+      return esbuild.transform(
+        cssResult.css,
+        {
+          loader: "css",
+          minify: minifyCode,
+        }
+      )
+    })
+    .then(async function (cssResult) {
+      return await fsPromises.writeFile(path.resolve(cssOutputDir, outFile), cssResult.code)
+    })
 }
 
-fs.writeFileSync(path.resolve(outputDirWithTimestamp, "stylesheets/application.css"), css)
+Promise
+  .all([
+    bundleCSS("./assets/scss/application.scss", "application.css"),
+    bundleCSS("./assets/scss/fonts.scss", "fonts.css"),
+    bundleCSS("./assets/scss/formatted-report.scss", "formatted-report.css")
+  ])
+  .then(r => {
+    r.forEach(item => {
+      if (item !== undefined) {
+        console.error("Error encountered while compiling CSS", item.errors)
+      }
+    })
+  })
+  .finally(() => console.log("Finished compiling CSS"))
