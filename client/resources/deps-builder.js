@@ -20,13 +20,7 @@ const stylesheetsDir = path.resolve(outputDir, "stylesheets")
 const fontsDir = path.resolve(stylesheetsDir, "fonts")
 const javascriptsDir = path.resolve(outputDir, "javascripts")
 
-// ------- Remove existing build outputs
-fs.globSync("./public/*").forEach(generatedDir => {
-  fs.rmSync(generatedDir, { recursive: true, force: true })
-})
-
-// ------- Set up output directories
-const dirsToMake = [
+const buildDirs = [
   outputDirWithTimestamp,
   outputDir,
   stylesheetsDir,
@@ -34,7 +28,11 @@ const dirsToMake = [
   javascriptsDir
 ]
 
-dirsToMake.forEach(path => fs.mkdirSync(path, { recursive: true }))
+// ------- Remove existing build outputs
+buildDirs.forEach(buildDir => fs.rmSync(buildDir, { recursive: true, force: true }))
+
+// ------- Set up clean output directories
+buildDirs.forEach(path => fs.mkdirSync(path, { recursive: true }))
 
 // ------- Configure options
 const isProduction = (process.env['NODE_ENV'] === 'production')
