@@ -91,6 +91,13 @@ jobs:
             target: ""
             runs_on: "ubuntu-24.04-arm"
 
+          - svc_name: "test"
+            sub_folder: "."
+            docker_file: "proxy/Dockerfile"
+            platform: "arm64"
+            target: ""
+            runs_on: "ubuntu-24.04-arm"
+
           - svc_name: "dr-backup"
             sub_folder: "disaster-recovery/backup"
             docker_file: "Dockerfile"
