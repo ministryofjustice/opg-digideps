@@ -8,7 +8,7 @@ use Symfony\Component\Form\FormEvents;
 
 class SanitizeSubscriber implements EventSubscriberInterface
 {
-    public function preSubmit(FormEvent $event)
+    public function preSubmit(FormEvent $event): void
     {
         $data = $event->getData();
 
