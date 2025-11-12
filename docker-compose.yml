@@ -20,6 +20,17 @@ services:
     ports:
       - 443:443
 
+  proxy:
+    container_name: opg-digideps-proxy
+    build:
+      context: .
+      dockerfile: ./proxy/Dockerfile
+    ports:
+      - 3128:3128
+    depends_on:
+      - frontend-app
+    restart: always
+
   frontend-webserver:
     container_name: opg-digideps-frontend-webserver
     build:
@@ -90,7 +101,7 @@ services:
     build:
       context: .
       dockerfile: ./client/docker/app/Dockerfile
-      target: devtools
+      target: devtools-admin
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug
         XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}
