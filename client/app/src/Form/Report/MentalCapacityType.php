@@ -4,7 +4,7 @@ namespace App\Form\Report;
 
 use App\Entity\Report\Action;
 use App\Entity\Report\MentalCapacity;
-use App\Form\Subscriber\SanitizeSubscriber;
+use App\Form\Type\SanitizedTextAreaType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -23,9 +23,8 @@ class MentalCapacityType extends AbstractType
                     ],
                     'expanded' => true,
                 ])
-                ->add('hasCapacityChangedDetails', FormTypes\TextareaType::class)
-                ->add('save', FormTypes\SubmitType::class)
-                ->get('hasCapacityChangedDetails')->addEventSubscriber(new SanitizeSubscriber());
+                ->add('hasCapacityChangedDetails', SanitizedTextAreaType::class)
+                ->add('save', FormTypes\SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
