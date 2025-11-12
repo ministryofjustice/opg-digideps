@@ -5,10 +5,6 @@ services:
     build:
       context: .
       dockerfile: ./client/docker/resources/Dockerfile
-    environment:
-      NODE_ENV: production
-    entrypoint: >
-      sh -c "npm run build"
 
   load-balancer:
     container_name: opg-digideps-loadbalancer
@@ -51,6 +47,7 @@ services:
         XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}
         LOCAL_RESOURCES: true
     depends_on:
+      - resources
       - api-webserver
       - redis-frontend
       - htmltopdf
