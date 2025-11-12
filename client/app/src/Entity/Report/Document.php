@@ -21,8 +21,8 @@ class Document implements DocumentInterface, SynchronisableInterface
     use CreationAudit;
     use HasReportTrait;
     use SynchronisableTrait;
-    public const FILE_NAME_MAX_LENGTH = 255;
-    public const MAX_UPLOAD_PER_REPORT = 100;
+
+    public const int FILE_NAME_MAX_LENGTH = 255;
 
     public function isValidForReport(ExecutionContextInterface $context): void
     {
@@ -30,14 +30,9 @@ class Document implements DocumentInterface, SynchronisableInterface
             return;
         }
 
-        $fileNames = [];
-        foreach ($this->getReport()->getDocuments() as $document) {
-            $fileNames[] = $document->getFileName();
-        }
-
         $fileOriginalName = FileNameManipulation::fileNameSanitation($this->getFile()->getClientOriginalName());
 
-        if (is_null($fileOriginalName)) {
+        if (empty($fileOriginalName)) {
             $context->buildViolation('document.file.errors.invalidName')->atPath('file')->addViolation();
 
             return;
@@ -49,16 +44,13 @@ class Document implements DocumentInterface, SynchronisableInterface
             return;
         }
 
-        if (in_array($fileOriginalName, $fileNames)) {
-            $context->buildViolation('document.file.errors.alreadyPresent')->atPath('file')->addViolation();
-
-            return;
+        $fileNames = [];
+        foreach ($this->getReport()->getDocuments() as $document) {
+            $fileNames[] = $document->getFileName();
         }
 
-        if (count($this->getReport()->getDocuments()) >= self::MAX_UPLOAD_PER_REPORT) {
-            $context->buildViolation('document.file.errors.maxDocumentsPerReport')->atPath('file')->addViolation();
-
-            return;
+        if (in_array($fileOriginalName, $fileNames)) {
+            $context->buildViolation('document.file.errors.alreadyPresent')->atPath('file')->addViolation();
         }
     }
 

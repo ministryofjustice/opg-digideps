@@ -193,7 +193,6 @@ document:
       mimeTypesMessage: "Please upload a valid file type. Supported file types include PDF, JPG and PNG"
       maxSizeMessage: "The file you selected to upload is too big. Please check your file size is less than 15mb."
       alreadyPresent: "You have already uploaded a file with this name. Please rename your file before uploading again."
-      maxDocumentsPerReport: "You have reached the maximum number of attachments for this report"
       invalidName: "Your file has an invalid name"
       maxMessage: "The file name cannot be longer than 255 characters"
       fileSize: "Your uploaded file exceeded the maximum size of 15M"

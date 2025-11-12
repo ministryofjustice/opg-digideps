@@ -203,6 +203,16 @@ class DocumentController extends AbstractController
 
         list($nextLink, $backLink) = $this->buildNavigationLinks($report, $successfullyUploaded);
 
+        $maxFileUploadsHint = null;
+        $maxFileUploads = intval(ini_get('max_file_uploads'));
+        if ($maxFileUploads > 0) {
+            $maxFileUploadsHint = $this->translator->trans(
+                'form.files.hint',
+                ['maxFileUploads' => $maxFileUploads],
+                'report-documents'
+            );
+        }
+
         return [
             'report' => $report,
             'step' => $request->get('step'), // if step is set, this is used to show the save and continue button
@@ -210,6 +220,7 @@ class DocumentController extends AbstractController
             'nextLink' => $nextLink,
             'successUploaded' => $successfullyUploaded,
             'form' => $form->createView(),
+            'maxFileUploadsHint' => $maxFileUploadsHint,
         ];
     }
 

@@ -916,31 +916,6 @@ parameters:
 			path: src/Controller/Admin/StatsController.php
 
 		-
-			message: "#^Cannot access offset 'firstClientId' on mixed\\.$#"
-			count: 1
-			path: src/Controller/Admin/ToolsController.php
-
-		-
-			message: "#^Cannot access offset 'secondClientId' on mixed\\.$#"
-			count: 1
-			path: src/Controller/Admin/ToolsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\ToolsController\\:\\:reportAssignmentAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/ToolsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\ToolsController\\:\\:tools\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/ToolsController.php
-
-		-
-			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:post\\(\\) expects array\\|object\\|string, string\\|false given\\.$#"
-			count: 1
-			path: src/Controller/Admin/ToolsController.php
-
-		-
 			message: "#^Cannot access offset 'client_lastname' on mixed\\.$#"
 			count: 1
 			path: src/Controller/ClientController.php
@@ -6984,11 +6959,6 @@ parameters:
 			message: "#^Property App\\\\Entity\\\\Report\\\\Decision\\:\\:\\$report has no type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/Decision.php
-
-		-
-			message: "#^Call to function is_null\\(\\) with string will always evaluate to false\\.$#"
-			count: 1
-			path: src/Entity/Report/Document.php
 
 		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Document\\:\\:isTransactionDocument\\(\\) never returns int so it can be removed from the return type\\.$#"
