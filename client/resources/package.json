@@ -10,6 +10,7 @@
     "test": "jest assets/javascripts/__tests__ --verbose --env=jsdom"
   },
   "devDependencies": {
+    "@babel/eslint-parser": "^7.28.5",
     "@jest/globals": "^29.3.1",
     "esbuild": "^0.27.0",
     "govuk-elements-sass": "^3.1.0",
