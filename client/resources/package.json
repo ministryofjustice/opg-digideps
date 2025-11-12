@@ -10,7 +10,6 @@
     "test": "jest assets/javascripts/__tests__ --verbose --env=jsdom"
   },
   "devDependencies": {
-    "@babel/eslint-parser": "^7.28.5",
     "@jest/globals": "^29.3.1",
     "esbuild": "^0.27.0",
     "govuk-elements-sass": "^3.1.0",
@@ -56,21 +55,6 @@
     ],
     "env": [
       "jest"
-    ],
-    "parser": "@babel/eslint-parser"
-  },
-  "babel": {
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "targets": "defaults"
-        }
-      ]
-    ],
-    "plugins": [
-      "@babel/plugin-proposal-class-properties",
-      "@babel/plugin-transform-classes"
     ]
   }
 }
