@@ -15,5 +15,5 @@ RUN npm ci --include=dev
 
 FROM node-base AS build
 
-#Build assets
+# Build assets
 RUN NODE_ENV=production npm run build
