@@ -58,5 +58,19 @@
       "jest"
     ],
     "parser": "@babel/eslint-parser"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": "defaults"
+        }
+      ]
+    ],
+    "plugins": [
+      "@babel/plugin-proposal-class-properties",
+      "@babel/plugin-transform-classes"
+    ]
   }
 }
