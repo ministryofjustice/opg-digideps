@@ -16,43 +16,50 @@ const outputDirWithTimestamp = path.resolve(dirname, "public/assets/" + tag)
 // assets will actually be loaded from this directory
 const outputDir = path.resolve(dirname, "public/assets/fallback")
 
-// remove existing build outputs
+const stylesheetsDir = path.resolve(outputDir, "stylesheets")
+const fontsDir = path.resolve(stylesheetsDir, "fonts")
+const javascriptsDir = path.resolve(outputDir, "javascripts")
+
+// ------- Remove existing build outputs
 fs.globSync("./public/*").forEach(generatedDir => {
   fs.rmSync(generatedDir, { recursive: true, force: true })
 })
 
-// set up output directories
-fs.mkdirSync(outputDirWithTimestamp, { recursive: true })
-fs.mkdirSync(outputDir, { recursive: true })
+// ------- Set up output directories
+const dirsToMake = [
+  outputDirWithTimestamp,
+  outputDir,
+  stylesheetsDir,
+  fontsDir,
+  javascriptsDir
+]
 
-const cssOutputDir = path.resolve(outputDir, "stylesheets")
-fs.mkdirSync(cssOutputDir, { recursive: true })
+dirsToMake.forEach(path => fs.mkdirSync(path, { recursive: true }))
 
-const fontDir = path.resolve(cssOutputDir, "fonts")
-fs.mkdirSync(fontDir, { recursive: true })
+// ------- Configure options
+const isProduction = (process.env['NODE_ENV'] === 'production')
 
-const javascriptsDir = path.resolve(outputDir, "javascripts")
-fs.mkdirSync(javascriptsDir, { recursive: true })
+// don't make sourcemaps for prod build
+const generateSourceMaps = !isProduction
 
-// TODO don't make sourcemaps for prod build
-const generateSourceMaps = true
-
-// TODO don't minify code during dev build
-const minifyCode = false
+// don't minify code during dev build
+const minifyCode = isProduction
 
 // use es2015 as the JS target, for parity with govuk frontend
+const jsTargets = ["es2015"]
+
+// ------- COMPILE JS
 const bundleJS = async function (entryPoints, outFile) {
   return esbuild.build({
     entryPoints: entryPoints,
     bundle: true,
     minify: minifyCode,
     sourcemap: generateSourceMaps,
-    target: ["es2015"],
+    target: jsTargets,
     outfile: path.resolve(javascriptsDir, outFile)
   })
 }
 
-// JS COMPILATION
 Promise
   .all([
     bundleJS(["./assets/javascripts/common.js"], "common.js"),
@@ -72,15 +79,14 @@ Promise
 
       if (hasErrors) {
         console.error("Error occurred while compiling JS")
-
         process.exit(1)
       }
     })
   })
 
-// COPY IMAGES
+// ------- COPY IMAGES
 const imagesToCopy = [
-  { from: "node_modules/govuk-frontend/dist/govuk/assets/fonts/", to: fontDir },
+  { from: "node_modules/govuk-frontend/dist/govuk/assets/fonts/", to: fontsDir },
   { from: "assets/images/generic-images/", to: "public/images/" },
   { from: "assets/images/", to: "public/images/" },
   { from: "node_modules/govuk-frontend/dist/govuk/assets/images/", to: "public/images/" },
@@ -99,7 +105,7 @@ imagesToCopy.forEach(copySpec => {
 
 console.log("Finished copying image files")
 
-// COMPILE CSS
+// ------- COMPILE CSS
 const options = {
   loadPaths: [
     dirname,
@@ -122,7 +128,7 @@ const bundleCSS = async function (entryPath, outFile) {
       )
     })
     .then(async function (cssResult) {
-      return await fsPromises.writeFile(path.resolve(cssOutputDir, outFile), cssResult.code)
+      return await fsPromises.writeFile(path.resolve(stylesheetsDir, outFile), cssResult.code)
     })
 }
 
