@@ -22,17 +22,17 @@ const fontsDir = path.resolve(stylesheetsDir, "fonts")
 const javascriptsDir = path.resolve(outputDir, "javascripts")
 
 const buildDirs = [
-  outputDirWithTimestamp,
-  outputDir,
   stylesheetsDir,
   fontsDir,
-  javascriptsDir
+  javascriptsDir,
+  outputDir
 ]
 
 // ------- Remove existing build outputs
 buildDirs.forEach(buildDir => fs.rmSync(buildDir, { recursive: true, force: true }))
 
 // ------- Set up clean output directories
+buildDirs.push(outputDirWithTimestamp)
 buildDirs.forEach(path => fs.mkdirSync(path, { recursive: true }))
 
 // ------- Configure options
