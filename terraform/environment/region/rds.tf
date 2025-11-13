@@ -64,8 +64,8 @@ data "aws_caller_identity" "current" {}
 
 # Allow the Operator Role to Connect via another Role
 
-data "aws_iam_role" "operator" {
-  name = "operator"
+data "aws_iam_role" "data_access" {
+  name = "data-access"
 }
 
 data "aws_iam_policy_document" "database_readonly_assume" {
@@ -76,7 +76,7 @@ data "aws_iam_policy_document" "database_readonly_assume" {
 
     principals {
       type        = "AWS"
-      identifiers = [data.aws_iam_role.operator.arn]
+      identifiers = [data.aws_iam_role.data_access.arn]
     }
   }
 }
