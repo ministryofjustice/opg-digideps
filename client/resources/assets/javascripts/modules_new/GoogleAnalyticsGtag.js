@@ -1,5 +1,5 @@
 /* globals dataLayer */
-module.exports = {
+export default {
   init: function (document) {
     const gaCustomElement = document.getElementById('gaCustomElements')
     const gaDefault = gaCustomElement ? gaCustomElement.getAttribute('data-ga-default') : undefined

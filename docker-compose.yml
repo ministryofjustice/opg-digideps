@@ -7,8 +7,7 @@ services:
       dockerfile: ./client/docker/resources/Dockerfile
     environment:
       NODE_ENV: production
-    entrypoint: >
-      sh -c "npm run build"
+    entrypoint: sh -c "npm run build"
 
   load-balancer:
     container_name: opg-digideps-loadbalancer
@@ -51,6 +50,7 @@ services:
         XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}
         LOCAL_RESOURCES: true
     depends_on:
+      - resources
       - api-webserver
       - redis-frontend
       - htmltopdf
@@ -101,6 +101,7 @@ services:
       - htmltopdf
       - localstack
       - mock-notify-api
+      - resources
     environment:
       APP_ENV: ${APP_ENV:-local}
       APP_DEBUG: ${APP_DEBUG:-0}
@@ -150,6 +151,8 @@ services:
     build:
       context: .
       dockerfile: ./htmltopdf/Dockerfile
+    depends_on:
+      - resources
     ports:
       - 8090:8080
     restart: always

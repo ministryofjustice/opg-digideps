@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   init: function (document, eventName) {
     eventName = eventName || 'focusout'
     const module = this // event needs to reference the outer object and this is rebound to event context
