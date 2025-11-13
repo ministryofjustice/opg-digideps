@@ -3,7 +3,7 @@ module "ssm_ec2_instance_operator" {
 
   instance_type = "t3.micro"
   subnet_id     = aws_subnet.private[0].id
-  name          = "operator"
+  name          = "data-access"
   tags          = var.default_tags
   //kms_key_id    = module.logs_kms.eu_west_1_target_key_arn
   instance_profile = data.aws_iam_instance_profile.operator.name
@@ -12,11 +12,11 @@ module "ssm_ec2_instance_operator" {
 }
 
 data "aws_iam_instance_profile" "operator" {
-  name = "operator"
+  name = "data-access"
 }
 
 data "aws_iam_role" "operator" {
-  name = "operator"
+  name = "data-access"
 }
 
 # SSM Core Statements
