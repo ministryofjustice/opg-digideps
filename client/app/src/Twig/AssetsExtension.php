@@ -28,7 +28,7 @@ class AssetsExtension extends AbstractExtension
             $assetDirs = scandir($this->projectDir . '/public/assets', SCANDIR_SORT_ASCENDING);
 
             // just direct the request to the fallback directory if directory cannot be scanned
-            if (!$assetDirs) {
+            if (empty($assetDirs)) {
                 return "/assets/fallback/$assetPath";
             }
 
@@ -36,8 +36,11 @@ class AssetsExtension extends AbstractExtension
             // (we only want the timestamp directories)
             $timestampDirs = array_diff($assetDirs, ['..', '.', 'fallback']);
 
-            // use the last directory in the list, as this will be the one most-recently built
-            $this->tag = end($timestampDirs);
+            // use the last directory in the list, as this will be the one most-recently built;
+            // we shouldn't get false back from the end() function (as we checked for an empty array above),
+            // but resort to "fallback" if we do
+            $last = end($timestampDirs);
+            $this->tag = ($last === false ? 'fallback' : $last);
         }
 
         return '/assets/' . $this->tag . '/' . $assetPath;
