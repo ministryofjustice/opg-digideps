@@ -417,55 +417,6 @@ class DocumentController extends AbstractController
     }
 
     /**
-     * Confirm delete document form.
-     *
-     * @Route("/documents/{documentId}/delete", name="delete_document")
-     *
-     * @Template("@App/Common/confirmDelete.html.twig")
-     *
-     * @return array|RedirectResponse|Response
-     */
-    public function deleteConfirmAction(Request $request, string $documentId)
-    {
-        $document = $this->getDocument($documentId);
-
-        if ($document->getReportSubmission() instanceof EntityDir\Report\ReportSubmission) {
-            return $this->renderError('Document already submitted and cannot be removed.', Response::HTTP_FORBIDDEN);
-        }
-
-        $this->denyAccessUnlessGranted(DocumentVoter::DELETE_DOCUMENT, $document, 'Access denied');
-
-        $form = $this->createForm(ConfirmDeleteType::class);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            return $this->deleteDocument($request, $documentId);
-        }
-
-        $report = $document->getReport();
-        $fromPage = $request->get('from');
-
-        if ('reUploadPage' == $fromPage) {
-            $backLink = $this->generateUrl('report_documents_reupload', ['reportId' => $document->getReportId()]);
-        } elseif ('summaryPage' == $fromPage) {
-            $backLink = $this->generateUrl('report_documents_summary', ['reportId' => $report->getId()]);
-        } else {
-            $backLink = $this->generateUrl('report_documents', ['reportId' => $report->getId()]);
-        }
-
-        return [
-            'translationDomain' => 'report-documents',
-            'report' => $report,
-            'form' => $form->createView(),
-            'summary' => [
-                ['label' => 'deletePage.summary.fileName', 'value' => $document->getFileName()],
-                ['label' => 'deletePage.summary.createdOn', 'value' => $document->getCreatedOn(), 'format' => 'date'],
-            ],
-            'backLink' => $backLink,
-        ];
-    }
-
-    /**
      * Retrieves the document object with required associated entities to populate the table and back links.
      *
      * @return Document
@@ -481,6 +432,8 @@ class DocumentController extends AbstractController
 
     /**
      * Removes a document, adds a flash message and redirects to page.
+     *
+     * @Route("/documents/{documentId}/delete", name="delete_document")
      *
      * @return RedirectResponse
      */
@@ -500,11 +453,8 @@ class DocumentController extends AbstractController
             try {
                 $result = $this->documentService->removeDocumentFromS3($document); // rethrows any exception
 
-                if ($result && !$report->isSubmitted()) {
-                    $this->addFlash('notice', 'Document has been removed');
-                } elseif ($result && $report->isSubmitted()) {
-                    $documentName = $document->getFileName();
-                    $this->addFlash('fileRemovalSuccess', sprintf('File named %s has been removed', $documentName));
+                if ($result) {
+                    $this->addFlash('fileRemovalSuccess', sprintf('File named %s has been removed', $document->getFileName()));
                 }
             } catch (\Throwable $e) {
                 $this->logger->error($e->getMessage());
