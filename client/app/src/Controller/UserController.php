@@ -7,7 +7,7 @@ use App\Event\RegistrationFailedEvent;
 use App\Event\RegistrationSucceededEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Exception\RestClientException;
-use App\Form as FormDir;
+use App\Form;
 use App\Model\SelfRegisterData;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\UserApi;
@@ -15,25 +15,26 @@ use App\Service\Client\RestClient;
 use App\Service\DeputyProvider;
 use App\Service\Redirector;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UserController extends AbstractController
 {
     public function __construct(
-        private RestClient $restClient,
-        private UserApi $userApi,
-        private ClientApi $clientApi,
-        private TranslatorInterface $translator,
-        private LoggerInterface $logger,
-        private ObservableEventDispatcher $eventDispatcher,
+        private readonly RestClient $restClient,
+        private readonly UserApi $userApi,
+        private readonly ClientApi $clientApi,
+        private readonly TranslatorInterface $translator,
+        private readonly LoggerInterface $logger,
+        private readonly ObservableEventDispatcher $eventDispatcher,
     ) {
     }
 
@@ -41,11 +42,8 @@ class UserController extends AbstractController
      * Landing page to let the user access the app and selecting a password.
      *
      * Used for both user activation (Step1) or password reset. The controller logic is very similar
-     *
-     * @Route("/user/{action}/{token}", defaults={"action"="activate"}, requirements={
-     *   "action" = "(activate|password-reset)"
-     * }, name="user_activate")
      */
+    #[Route(path: '/user/{action}/{token}', name: 'user_activate', requirements: ['action' => '(activate|password-reset)'], defaults: ['action' => 'activate'])]
     public function activateUserAction(
         Request $request,
         DeputyProvider $deputyProvider,
@@ -71,8 +69,8 @@ class UserController extends AbstractController
         try {
             /* @var $user EntityDir\User */
             $user = $this->restClient->loadUserByToken($token);
-        } catch (\Throwable $e) {
-            return $this->renderError('This link is not working or has already been used.', $e->getCode(), 'There is a problem');
+        } catch (\Throwable $throwable) {
+            return $this->renderError('This link is not working or has already been used.', $throwable->getCode(), 'There is a problem');
         }
 
         // token expired
@@ -96,14 +94,14 @@ class UserController extends AbstractController
         if ($isActivatePage) {
             $passwordMismatchMessage = $this->translator->trans('password.validation.passwordMismatch', [], 'user-activate');
             $form = $this->createForm(
-                FormDir\SetPasswordType::class,
+                Form\SetPasswordType::class,
                 $user,
                 ['passwordMismatchMessage' => $passwordMismatchMessage, 'showTermsAndConditions' => $user->isDeputy()]
             );
             $template = '@App/User/activate.html.twig';
         } else { // 'password-reset'
             $passwordMismatchMessage = $this->translator->trans('form.password.validation.passwordMismatch', [], 'password-reset');
-            $form = $this->createForm(FormDir\ResetPasswordType::class, $user, ['passwordMismatchMessage' => $passwordMismatchMessage]);
+            $form = $this->createForm(Form\ResetPasswordType::class, $user, ['passwordMismatchMessage' => $passwordMismatchMessage]);
             $template = '@App/User/passwordReset.html.twig';
         }
 
@@ -112,7 +110,7 @@ class UserController extends AbstractController
             // login user into API
             try {
                 $deputyProvider->login(['token' => $token]);
-            } catch (UserNotFoundException $e) {
+            } catch (UserNotFoundException) {
                 return $this->renderError('This activation link is not working or has already been used', 'There is a problem');
             }
 
@@ -123,11 +121,11 @@ class UserController extends AbstractController
             ]);
 
             // set password for user
-            $this->restClient->apiCall('PUT', 'user/'.$user->getId().'/set-password', $data, 'array', [], false);
+            $this->restClient->apiCall('PUT', 'user/' . $user->getId() . '/set-password', $data, 'array', [], false);
 
             if ($user->hasAdminRole()) {
-                $this->restClient->apiCall('PUT', 'user/'.$user->getId().'/set-registration-date', null, 'array', [], false);
-                $this->restClient->apiCall('PUT', 'user/'.$user->getId().'/set-active', null, 'array', [], false);
+                $this->restClient->apiCall('PUT', 'user/' . $user->getId() . '/set-registration-date', null, 'array', [], false);
+                $this->restClient->apiCall('PUT', 'user/' . $user->getId() . '/set-active', null, 'array', [], false);
 
                 $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::ADMIN);
             }
@@ -154,11 +152,8 @@ class UserController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/user/activate/password/send/{token}", name="activation_link_send")
-     *
-     * @Template("@App/User/activateLinkSend.html.twig")
-     */
+    #[Route(path: '/user/activate/password/send/{token}', name: 'activation_link_send')]
+    #[Template('@App/User/activateLinkSend.html.twig')]
     public function activateLinkSendAction(string $token): Response
     {
         $user = $this->restClient->loadUserByToken($token);
@@ -167,13 +162,8 @@ class UserController extends AbstractController
         return $this->redirect($this->generateUrl('activation_link_sent', ['token' => $token]));
     }
 
-    /**
-     * @return array<mixed>
-     *
-     * @Route("/user/activate/password/sent/{token}", name="activation_link_sent")
-     *
-     * @Template("@App/User/activateLinkSent.html.twig")
-     */
+    #[Route(path: '/user/activate/password/sent/{token}', name: 'activation_link_sent')]
+    #[Template('@App/User/activateLinkSent.html.twig')]
     public function activateLinkSentAction(string $token): array
     {
         return [
@@ -184,31 +174,27 @@ class UserController extends AbstractController
 
     /**
      * Page to edit user details.
-     * For :
+     * For:
      * - admin
      * - AD
      * - Lay
      * - PA.
-     *
-     * @return array<mixed>|Response
-     *
-     * @Route("/user/details", name="user_details")
-     *
-     * @Template("@App/User/details.html.twig")
      */
-    public function detailsAction(Request $request, Redirector $redirector)
+    #[Route(path: '/user/details', name: 'user_details')]
+    #[Template('@App/User/details.html.twig')]
+    public function detailsAction(Request $request, Redirector $redirector): RedirectResponse|array
     {
         $user = $this->userApi->getUserWithData();
 
         $client_validated = $this->clientApi->getFirstClient() instanceof EntityDir\Client
             && !$user->isDeputyOrg();
 
-        list($formType, $jmsPutGroups) = $this->getFormAndJmsGroupBasedOnUserRole($user);
+        [$formType, $jmsPutGroups] = $this->getFormAndJmsGroupBasedOnUserRole($user);
         $form = $this->createForm($formType, $user);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->put('user/'.$user->getId(), $form->getData(), $jmsPutGroups);
+            $this->restClient->put('user/' . $user->getId(), $form->getData(), $jmsPutGroups);
 
             // lay deputies are redirected to adding a client (Step.3)
             if ($user->isLayDeputy()) {
@@ -220,6 +206,7 @@ class UserController extends AbstractController
                 $user->setPreRegisterValidatedDate(new \DateTime());
                 $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::DEPUTY);
             }
+
             $request->getSession()->remove('login-context');
 
             // all other users go to their homepage (dashboard for PROF/PA), or /admin for Admins
@@ -233,24 +220,19 @@ class UserController extends AbstractController
         ];
     }
 
-    /**
-     * @return array<mixed>|Response
-     *
-     * @Route("/password-managing/forgotten", name="password_forgotten")
-     *
-     * @Template("@App/User/passwordForgotten.html.twig")
-     **/
-    public function passwordForgottenAction(Request $request)
+    #[Route(path: '/password-managing/forgotten', name: 'password_forgotten')]
+    #[Template('@App/User/passwordForgotten.html.twig')]
+    public function passwordForgottenAction(Request $request): RedirectResponse|array
     {
         $user = new EntityDir\User();
-        $form = $this->createForm(FormDir\PasswordForgottenType::class, $user);
+        $form = $this->createForm(Form\PasswordForgottenType::class, $user);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->userApi->resetPassword($user->getEmail());
-            } catch (RestClientException $e) {
-                $this->logger->warning('Email '.$user->getEmail().' not found');
+            } catch (RestClientException) {
+                $this->logger->warning('Email ' . $user->getEmail() . ' not found');
             }
 
             // after details are added, admin users to go their homepage, deputies go to next step
@@ -262,29 +244,19 @@ class UserController extends AbstractController
         ];
     }
 
-    /**
-     * @return array<mixed>
-     *
-     * @Route("/password-managing/sent", name="password_sent")
-     *
-     * @Template("@App/User/passwordSent.html.twig")
-     */
+    #[Route(path: '/password-managing/sent', name: 'password_sent')]
+    #[Template('@App/User/passwordSent.html.twig')]
     public function passwordSentAction(): array
     {
         return [];
     }
 
-    /**
-     * @return array<mixed>|Response
-     *
-     * @Route("/register", name="register")
-     *
-     * @Template("@App/User/register.html.twig")
-     */
-    public function registerAction(Request $request)
+    #[Route(path: '/register', name: 'register')]
+    #[Template('@App/User/register.html.twig')]
+    public function registerAction(Request $request): Response|array
     {
         $selfRegisterData = new SelfRegisterData();
-        $form = $this->createForm(FormDir\SelfRegisterDataType::class, $selfRegisterData);
+        $form = $this->createForm(Form\SelfRegisterDataType::class, $selfRegisterData);
 
         $vars = [];
 
@@ -301,7 +273,7 @@ class UserController extends AbstractController
                 $bodyText = str_replace('{{ email }}', $email, $bodyText);
 
                 $signInText = $this->translator->trans('signin', [], 'register');
-                $signIn = '<a href="'.$this->generateUrl('login').'">'.$signInText.'</a>';
+                $signIn = '<a href="' . $this->generateUrl('login') . '">' . $signInText . '</a>';
                 $bodyText = str_replace('{{ sign_in }}', $signIn, $bodyText);
 
                 return $this->render('@App/User/registration-thankyou.html.twig', [
@@ -337,18 +309,21 @@ class UserController extends AbstractController
                         break;
 
                     case 461:
-                        $decodedError = json_decode($e->getData()['message'], true);
+                        $decodedError = json_decode((string) $e->getData()['message'], true);
 
-                        if (true == $decodedError['matching_errors']['client_lastname']) {
+                        if ($decodedError['matching_errors']['client_lastname']) {
                             $form->get('clientLastname')->addError(new FormError($this->translator->trans('matchingErrors.clientLastname', [], 'register')));
                         }
-                        if (true == $decodedError['matching_errors']['deputy_lastname']) {
+
+                        if ($decodedError['matching_errors']['deputy_lastname']) {
                             $form->get('lastname')->addError(new FormError($this->translator->trans('matchingErrors.deputyLastname', [], 'register')));
                         }
-                        if (true == $decodedError['matching_errors']['deputy_firstname']) {
+
+                        if ($decodedError['matching_errors']['deputy_firstname']) {
                             $form->get('firstname')->addError(new FormError($this->translator->trans('matchingErrors.deputyFirstname', [], 'register')));
                         }
-                        if (true == $decodedError['matching_errors']['deputy_postcode']) {
+
+                        if ($decodedError['matching_errors']['deputy_postcode']) {
                             $form->get('postcode')->addError(new FormError($this->translator->trans('matchingErrors.deputyPostcode', [], 'register')));
                         }
 
@@ -362,10 +337,10 @@ class UserController extends AbstractController
                         $form->addError(new FormError($this->translator->trans('formErrors.generic', [], 'register')));
                 }
 
-                $failureData = json_decode($e->getData()['message'], true);
+                $failureData = json_decode((string) $e->getData()['message'], true);
 
                 // If response from API is not valid json just log the message
-                $failureData = !is_array($failureData) ? ['failure_message' => $failureData] : $failureData;
+                $failureData = is_array($failureData) ? $failureData : ['failure_message' => $failureData];
 
                 $event = new RegistrationFailedEvent($failureData, $e->getMessage());
                 $this->eventDispatcher->dispatch($event, RegistrationFailedEvent::NAME);
@@ -373,7 +348,7 @@ class UserController extends AbstractController
         }
 
         // send different URL to google analytics
-        if (count($form->getErrors())) {
+        if (count($form->getErrors()) > 0) {
             $vars['gaCustomUrl'] = '/register/form-errors';
         }
 
@@ -382,16 +357,13 @@ class UserController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/user/update-terms-use/{token}", name="user_updated_terms_use")
-     *
-     * @Security("is_granted('ROLE_ORG')")
-     */
+    #[Route(path: '/user/update-terms-use/{token}', name: 'user_updated_terms_use')]
+    #[IsGranted(attribute: 'ROLE_ORG')]
     public function updatedTermsUseAction(Request $request, string $token): Response
     {
         $user = $this->restClient->loadUserByToken($token);
 
-        $form = $this->createForm(FormDir\User\UpdateTermsType::class, $user);
+        $form = $this->createForm(Form\User\UpdateTermsType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->userApi->agreeTermsUse($token);
@@ -407,28 +379,20 @@ class UserController extends AbstractController
     }
 
     /**
-     * @return array<mixed> [string FormType, array of JMS groups]
+     * @return array [string FormType, array of JMS groups]
      */
     private function getFormAndJmsGroupBasedOnUserRole(EntityDir\User $user): array
     {
         // define form, route, JMS groups
-        switch ($user->getRoleName()) {
-            case EntityDir\User::ROLE_LAY_DEPUTY:
-                return [FormDir\User\UserDetailsFullType::class, ['user_details_full']];
-
-            case EntityDir\User::ROLE_PA_NAMED:
-            case EntityDir\User::ROLE_PA_ADMIN:
-            case EntityDir\User::ROLE_PA_TEAM_MEMBER:
-            case EntityDir\User::ROLE_PROF_NAMED:
-            case EntityDir\User::ROLE_PROF_ADMIN:
-            case EntityDir\User::ROLE_PROF_TEAM_MEMBER:
-                return [FormDir\User\UserDetailsPaType::class, ['user_details_org']];
-
-            case EntityDir\User::ROLE_ADMIN:
-            case EntityDir\User::ROLE_AD:
-            case EntityDir\User::ROLE_SUPER_ADMIN:
-            default:
-                return [FormDir\User\UserDetailsBasicType::class, ['user_details_basic']];
-        }
+        return match ($user->getRoleName()) {
+            EntityDir\User::ROLE_LAY_DEPUTY => [Form\User\UserDetailsFullType::class, ['user_details_full']],
+            EntityDir\User::ROLE_PA_NAMED,
+                EntityDir\User::ROLE_PA_ADMIN,
+                EntityDir\User::ROLE_PA_TEAM_MEMBER,
+                EntityDir\User::ROLE_PROF_NAMED,
+                EntityDir\User::ROLE_PROF_ADMIN,
+                EntityDir\User::ROLE_PROF_TEAM_MEMBER => [Form\User\UserDetailsPaType::class, ['user_details_org']],
+            default => [Form\User\UserDetailsBasicType::class, ['user_details_basic']],
+        };
     }
 }
