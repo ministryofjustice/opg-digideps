@@ -1,10 +1,11 @@
 // Build CSS and JS dependencies
-import * as esbuild from "esbuild"
-import path from "path"
-import { fileURLToPath } from "url"
-import fs from "fs"
-import * as sass from "sass-embedded"
-import fsPromises from "node:fs/promises"
+import path from "path";
+import fs from "fs";
+import fsPromises from "node:fs/promises";
+import { fileURLToPath } from "url";
+
+import * as esbuild from "esbuild";
+import * as sass from "sass-embedded";
 
 const tag = (new Date()).getTime()
 const filename = fileURLToPath(import.meta.url)
