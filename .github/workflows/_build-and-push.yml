@@ -118,8 +118,8 @@ jobs:
       - name: export dates
         id: cache-dates
         run: |
-          echo "cache_date_today=$(date +'%Y%m%d')" >> $GITHUB_OUTPUT
-          echo "cache_date_yesterday=$(date -d 'yesterday' +'%Y%m%d')" >> $GITHUB_OUTPUT
+          echo "cache_date_today=$(date +'%Y%m%d')" >> "$GITHUB_OUTPUT"
+          echo "cache_date_yesterday=$(date -d 'yesterday' +'%Y%m%d')" >> "$GITHUB_OUTPUT"
 
       - name: cache docker layers
         id: cache-docker
@@ -155,25 +155,25 @@ jobs:
         run: |
           if [ "${BRANCH_NAME}" == "main" ]; then
             docker buildx build \
-            -f ${DOCKERFILE} \
+            -f "${DOCKERFILE}" \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-            --platform linux/${PLATFORM} ${TARGET_STAGE} \
+            --platform "linux/${PLATFORM}" "${TARGET_STAGE}" \
             --load \
-            --build-arg PLATFORM=${PLATFORM} \
-            --build-arg TAG=${TAG} \
-            --tag ${IMAGE_NAME}:latest \
+            --build-arg "PLATFORM=${PLATFORM}" \
+            --build-arg "TAG=${TAG}" \
+            --tag "${IMAGE_NAME}:latest" \
             --output type=docker \
             .
           else
             docker buildx build \
-            -f ${DOCKERFILE} \
+            -f "${DOCKERFILE}" \
             --cache-from=type=local,src=/tmp/.buildx-cache \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-            --platform linux/${PLATFORM} ${TARGET_STAGE} \
-            --tag ${IMAGE_NAME}:latest \
+            --platform "linux/${PLATFORM}" "${TARGET_STAGE}" \
+            --tag "${IMAGE_NAME}:latest" \
             --load \
-            --build-arg PLATFORM=${PLATFORM} \
-            --build-arg TAG=${TAG} \
+            --build-arg "PLATFORM=${PLATFORM}" \
+            --build-arg "TAG=${TAG}" \
             --output type=docker \
             .
           fi
@@ -222,7 +222,7 @@ jobs:
         if: inputs.branch_name == 'main'
         run: |
           mkdir -p sboms
-          trivy image --format spdx --output sboms/sbom-${{ matrix.svc_name }}.spdx.json ${{ matrix.svc_name }}:latest
+          trivy image --format spdx --output "sboms/sbom-${{ matrix.svc_name }}.spdx.json" "${{ matrix.svc_name }}:latest"
 
       - name: upload SBOM
         if: inputs.branch_name == 'main'
@@ -245,7 +245,7 @@ jobs:
           IMAGE_NAME: ${{ matrix.svc_name }}
         run: |
           export IMAGE_TAG_DEV="development-${IMAGE_TAG}"
-          docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG_DEV
+          docker tag "${IMAGE_NAME}:latest" "${ECR_REGISTRY}/${ECR_REGISTRY_ALIAS}/${IMAGE_NAME}:${IMAGE_TAG_DEV}"
 
       - name: tag and push container
         env:
@@ -255,16 +255,18 @@ jobs:
           IMAGE_NAME: ${{ matrix.svc_name }}
           BRANCH_NAME: ${{ inputs.branch_name }}
         run: |
-          docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:$IMAGE_TAG
+          docker tag "${IMAGE_NAME}:latest" "${ECR_REGISTRY}/${ECR_REGISTRY_ALIAS}/${IMAGE_NAME}:${IMAGE_TAG}"
           if [[ "${BRANCH_NAME}" == "main" ]]; then
-            docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:latest
-            docker tag $IMAGE_NAME:latest $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME:main-$IMAGE_TAG
+            docker tag "${IMAGE_NAME}:latest" "${ECR_REGISTRY}/${ECR_REGISTRY_ALIAS}/${IMAGE_NAME}:latest"
+            docker tag "${IMAGE_NAME}:latest" "${ECR_REGISTRY}/${ECR_REGISTRY_ALIAS}/${IMAGE_NAME}:main-${IMAGE_TAG}"
           fi
-          docker push --all-tags $ECR_REGISTRY/$ECR_REGISTRY_ALIAS/$IMAGE_NAME
+          docker push --all-tags "${ECR_REGISTRY}/${ECR_REGISTRY_ALIAS}/${IMAGE_NAME}"
 
       - name: Unset AWS variables
         if: always()
         run: |
-          echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
-          echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
-          echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV
+          {
+            echo "AWS_SECRET_ACCESS_KEY="
+            echo "AWS_ACCESS_KEY_ID="
+            echo "AWS_SESSION_TOKEN="
+          } >> "$GITHUB_ENV"

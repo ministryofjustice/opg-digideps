@@ -20,6 +20,7 @@ on:
       image_tag:
         description: "The latest version image tag"
         value: ${{ jobs.export_image_tag.outputs.image_tag }}
+
 jobs:
   export_image_tag:
     runs-on: ubuntu-latest
@@ -62,13 +63,15 @@ jobs:
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
         run: |
-          export IMAGE_TAG=$(terraform show -json | head -n 2 | tail -n 1 | jq -r '.values.root_module.child_modules[].resources[] | select(.address == "module.eu_west_1[0].aws_ecs_task_definition.front") | .values.container_definitions | fromjson[].image | split(":")[1]' | tail -n 1 2>/dev/null)
-          echo "image_tag=$(echo ${IMAGE_TAG})" >> $GITHUB_OUTPUT
+          IMAGE_TAG=$(terraform show -json | head -n 2 | tail -n 1 | jq -r '.values.root_module.child_modules[].resources[] | select(.address == "module.eu_west_1[0].aws_ecs_task_definition.front") | .values.container_definitions | fromjson[].image | split(":")[1]' | tail -n 1 2>/dev/null)
+          echo "image_tag=${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
         working-directory: terraform/${{ inputs.terraform_path }}
 
       - name: Unset AWS variables
         if: always()
         run: |
-          echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
-          echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
-          echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV
+          {
+            echo "AWS_SECRET_ACCESS_KEY="
+            echo "AWS_ACCESS_KEY_ID="
+            echo "AWS_SESSION_TOKEN="
+          } >> "$GITHUB_ENV"
