@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
+use App\Utils\Rector\RenameImportsRector;
 use Rector\CodingStyle\Rector\Stmt\RemoveUselessAliasInUseStatementRector;
 use Rector\Config\RectorConfig;
 use Rector\Php80\Rector\Class_\AnnotationToAttributeRector;
 use Rector\Php80\ValueObject\AnnotationToAttribute;
-use Rector\Renaming\Rector\String_\RenameStringRector;
 use Rector\Symfony\Symfony62\Rector\Class_\SecurityAttributeToIsGrantedAttributeRector;
 
 // Rector doesn't guarantee the order in which refactorings are applied: if one refactor depends on the output
@@ -19,14 +19,13 @@ use Rector\Symfony\Symfony62\Rector\Class_\SecurityAttributeToIsGrantedAttribute
 // then run again with the next step, e.g. STEP=2, and so on.
 $configBuilder = RectorConfig::configure()
     ->withPaths([
-        __DIR__ . '/src/Controller/UserController.php',
+        __DIR__ . '/src/Controller/SettingsController.php',
     ])
+    ->withPhpSets()
     ->withPreparedSets(
         deadCode: true,
-        codeQuality: true,
         typeDeclarations: true,
-    )
-    ->withPhpSets();
+    );
 
 $step = intval(getenv('STEP'));
 if ($step === 0) {
@@ -52,22 +51,18 @@ switch ($step) {
 
     case 3:
         $configBuilder
-            ->withConfiguredRule(RenameStringRector::class, [
-                'Sensio' => 'Symfony',
-            ]);
+            ->withImportNames(importShortClasses: false, removeUnusedImports: true);
         break;
 
     case 4:
-        $configBuilder
-            ->withImportNames(removeUnusedImports: true)
-            ->withPreparedSets(
-                codingStyle: true,
-            );
+        $configBuilder->withRules([
+            RemoveUselessAliasInUseStatementRector::class,
+        ]);
         break;
 
     case 5:
-        $configBuilder->withRules([
-            RemoveUselessAliasInUseStatementRector::class,
+        $configBuilder->withConfiguredRule(RenameImportsRector::class, [
+            'Sensio\Bundle\FrameworkExtraBundle\Configuration\Template' => 'Symfony\Bridge\Twig\Attribute\Template'
         ]);
         break;
 }
