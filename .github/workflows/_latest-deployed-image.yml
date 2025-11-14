@@ -64,7 +64,10 @@ jobs:
           TF_WORKSPACE: ${{ inputs.workspace }}
         run: |
           IMAGE_TAG=$(terraform show -json | head -n 2 | tail -n 1 | jq -r '.values.root_module.child_modules[].resources[] | select(.address == "module.eu_west_1[0].aws_ecs_task_definition.front") | .values.container_definitions | fromjson[].image | split(":")[1]' | tail -n 1 2>/dev/null)
-          echo "image_tag=${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
+
+          if [ -n "${IMAGE_TAG}" ]; then
+            echo "image_tag=${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
+          fi
         working-directory: terraform/${{ inputs.terraform_path }}
 
       - name: Unset AWS variables
