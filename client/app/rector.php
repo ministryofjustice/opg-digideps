@@ -19,9 +19,12 @@ use Rector\Symfony\Symfony62\Rector\Class_\SecurityAttributeToIsGrantedAttribute
 // then run again with the next step, e.g. STEP=2, and so on.
 $configBuilder = RectorConfig::configure()
     ->withPaths([
-        __DIR__ . '/src/Controller/SettingsController.php',
+        __DIR__ . '/src/Controller/ClientController.php',
+        __DIR__ . '/src/Controller/CoDeputyController.php',
+        __DIR__ . '/src/Controller/CourtOrderController.php',
+        __DIR__ . '/src/Controller/DeputyshipController.php',
     ])
-    ->withPhpSets()
+    ->withPhpSets(php83: true)
     ->withPreparedSets(
         deadCode: true,
         typeDeclarations: true,
@@ -69,9 +72,7 @@ switch ($step) {
 
 return $configBuilder;
 
-// after this, manual steps (could probably automate with Rector if I wanted):
-// - fix imports of built-ins (e.g. Throwable, DateTime to \Throwable, \DateTime)
-// - remove screwy aliases on imports (e.g. FormDir)
+// after this, manual steps (could possibly be automated with Rector):
+// - remove screwy aliases on imports (e.g. FormDir, EntityDir)
 // - optimise imports
 // - sort parameters on attributes
-// - replace Sensio\Bundle\FrameworkExtraBundle\Configuration\Template with Symfony\Bridge\Twig\Attribute\Template
