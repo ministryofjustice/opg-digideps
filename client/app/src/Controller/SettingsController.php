@@ -2,15 +2,15 @@
 
 namespace App\Controller;
 
-use App\Entity as EntityDir;
-use App\Form as FormDir;
+use App\Entity;
+use App\Form;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Redirector;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;
-use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -24,13 +24,10 @@ class SettingsController extends AbstractController
     ) {
     }
 
-    /**
-     * @Route("/deputyship-details", name="account_settings")
-     * @Route("/org/settings", name="org_settings")
-     *
-     * @Template("@App/Settings/index.html.twig")
-     **/
-    public function indexAction(Redirector $redirector)
+    #[Route(path: '/deputyship-details', name: 'account_settings')]
+    #[Route(path: '/org/settings', name: 'org_settings')]
+    #[Template('@App/Settings/index.html.twig')]
+    public function indexAction(Redirector $redirector): array|RedirectResponse
     {
         if ($this->getUser()->isDeputyOrg()) {
             $user = $this->userApi->getUserWithData(['user-organisations', 'organisation']);
@@ -49,17 +46,14 @@ class SettingsController extends AbstractController
         return [];
     }
 
-    /**
-     * @Route("/deputyship-details/your-details/change-password", name="user_password_edit")
-     * @Route("/org/settings/your-details/change-password", name="org_profile_password_edit")
-     *
-     * @Template("@App/Settings/passwordEdit.html.twig")
-     */
-    public function passwordEditAction(Request $request)
+    #[Route(path: '/deputyship-details/your-details/change-password', name: 'user_password_edit')]
+    #[Route(path: '/org/settings/your-details/change-password', name: 'org_profile_password_edit')]
+    #[Template('@App/Settings/passwordEdit.html.twig')]
+    public function passwordEditAction(Request $request): RedirectResponse|array
     {
         $user = $this->userApi->getUserWithData();
 
-        $form = $this->createForm(FormDir\ChangePasswordType::class, $user, [
+        $form = $this->createForm(Form\ChangePasswordType::class, $user, [
             'mapped' => true,
             'error_bubbling' => true,
         ]);
@@ -67,7 +61,7 @@ class SettingsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $request->request->all('change_password')['password']['first'];
-            $this->restClient->put('user/'.$user->getId().'/set-password', json_encode([
+            $this->restClient->put('user/' . $user->getId() . '/set-password', json_encode([
                 'password' => $plainPassword,
             ]));
             $request->getSession()->set('login-context', 'password-update');
@@ -82,16 +76,13 @@ class SettingsController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/org/settings/your-details/change-email", name="org_profile_email_edit")
-     *
-     * @Template("@App/Settings/emailEdit.html.twig")
-     */
-    public function emailEditAction(Request $request)
+    #[Route(path: '/org/settings/your-details/change-email', name: 'org_profile_email_edit')]
+    #[Template('@App/Settings/emailEdit.html.twig')]
+    public function emailEditAction(Request $request): RedirectResponse|array
     {
         $user = $this->userApi->getUserWithData();
 
-        $form = $this->createForm(FormDir\ChangeEmailType::class, $user, [
+        $form = $this->createForm(Form\ChangeEmailType::class, $user, [
             'mapped' => false,
             'error_bubbling' => true,
         ]);
@@ -100,7 +91,7 @@ class SettingsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $updatedEmail = $request->request->get('change_email')['new_email']['first'];
 
-            $this->restClient->put('user/'.$user->getId().'/update-email', json_encode([
+            $this->restClient->put('user/' . $user->getId() . '/update-email', json_encode([
                 'updated_email' => $updatedEmail,
             ]));
 
@@ -117,14 +108,12 @@ class SettingsController extends AbstractController
     }
 
     /**
-     * - display the Your details page.
-     *
-     * @Route("/deputyship-details/your-details", name="user_show")
-     * @Route("/org/settings/your-details", name="org_profile_show")
-     *
-     * @Template("@App/Settings/profile.html.twig")
+     * Display the Your details page.
      **/
-    public function profileAction()
+    #[Route(path: '/deputyship-details/your-details', name: 'user_show')]
+    #[Route(path: '/org/settings/your-details', name: 'org_profile_show')]
+    #[Template('@App/Settings/profile.html.twig')]
+    public function profileAction(): array
     {
         return [
             'user' => $this->getUser(),
@@ -132,27 +121,25 @@ class SettingsController extends AbstractController
     }
 
     /**
-     * Change your own detials.
-     *
-     * @Route("/deputyship-details/your-details/edit", name="user_edit")
-     * @Route("/org/settings/your-details/edit", name="org_profile_edit")
-     *
-     * @Template("@App/Settings/profileEdit.html.twig")
+     * Change your own details.
      *
      * @throw AccessDeniedException
      **/
-    public function profileEditAction(Request $request)
+    #[Route(path: '/deputyship-details/your-details/edit', name: 'user_edit')]
+    #[Route(path: '/org/settings/your-details/edit', name: 'org_profile_edit')]
+    #[Template('@App/Settings/profileEdit.html.twig')]
+    public function profileEditAction(Request $request): RedirectResponse|array
     {
         $preUpdateDeputy = $this->userApi->getUserWithData(['user-clients', 'client']);
 
-        if ($this->isGranted(EntityDir\User::ROLE_ADMIN) || $this->isGranted(EntityDir\User::ROLE_AD)) {
-            $form = $this->createForm(FormDir\User\UserDetailsBasicType::class, clone $preUpdateDeputy, []);
+        if ($this->isGranted(Entity\User::ROLE_ADMIN) || $this->isGranted(Entity\User::ROLE_AD)) {
+            $form = $this->createForm(Form\User\UserDetailsBasicType::class, clone $preUpdateDeputy, []);
             $jmsPutGroups = ['user_details_basic'];
-        } elseif ($this->isGranted(EntityDir\User::ROLE_LAY_DEPUTY)) {
-            $form = $this->createForm(FormDir\Settings\ProfileType::class, clone $preUpdateDeputy, ['validation_groups' => ['user_details_full']]);
+        } elseif ($this->isGranted(Entity\User::ROLE_LAY_DEPUTY)) {
+            $form = $this->createForm(Form\Settings\ProfileType::class, clone $preUpdateDeputy, ['validation_groups' => ['user_details_full']]);
             $jmsPutGroups = ['user_details_full'];
-        } elseif ($this->isGranted(EntityDir\User::ROLE_ORG)) {
-            $form = $this->createForm(FormDir\Settings\ProfileType::class, clone $preUpdateDeputy, ['validation_groups' => ['user_details_org', 'profile_org']]);
+        } elseif ($this->isGranted(Entity\User::ROLE_ORG)) {
+            $form = $this->createForm(Form\Settings\ProfileType::class, clone $preUpdateDeputy, ['validation_groups' => ['user_details_org', 'profile_org']]);
             $jmsPutGroups = ['user_details_org', 'profile_org'];
         } else {
             throw $this->createAccessDeniedException('User role not recognised');
@@ -187,7 +174,7 @@ class SettingsController extends AbstractController
 
                 return $this->redirect($redirectRoute);
             } catch (\Throwable $e) {
-                if (422 == $e->getCode() && $form->get('email')) {
+                if (422 === $e->getCode() && $form->get('email')) {
                     $form->get('email')->addError(new FormError($this->translator->trans('user.email.alreadyUsed', [], 'validators')));
                 }
             }
@@ -203,19 +190,15 @@ class SettingsController extends AbstractController
     /**
      * If remove admin permission, return the new role for the user. Specifically added to prevent named PA deputies
      * becoming Professional team members.
-     *
-     * @return string
-     *
-     * @throws AccessDeniedException
      */
-    private function determineNoAdminRole()
+    private function determineNoAdminRole(): string
     {
-        if ($this->isGranted(EntityDir\User::ROLE_PA_ADMIN)) {
-            return EntityDir\User::ROLE_PA_TEAM_MEMBER;
-        } elseif ($this->isGranted(EntityDir\User::ROLE_PROF_ADMIN)) {
-            return EntityDir\User::ROLE_PROF_TEAM_MEMBER;
+        if ($this->isGranted(Entity\User::ROLE_PA_ADMIN)) {
+            return Entity\User::ROLE_PA_TEAM_MEMBER;
+        } elseif ($this->isGranted(Entity\User::ROLE_PROF_ADMIN)) {
+            return Entity\User::ROLE_PROF_TEAM_MEMBER;
         }
 
-        return $this->createAccessDeniedException('User role not recognised');
+        throw $this->createAccessDeniedException('User role not recognised');
     }
 }
