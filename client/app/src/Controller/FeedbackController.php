@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Form\FeedbackType;
 use App\Service\Client\Internal\SatisfactionApi;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,37 +16,17 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FeedbackController extends AbstractController
 {
-    /** @var SatisfactionApi */
-    private $satisfactionApi;
-
-    /** @var RouterInterface */
-    private $router;
-
-    /** @var TranslatorInterface */
-    private $translator;
-
-    /** @var FormFactoryInterface */
-    private $form;
-
     public function __construct(
-        SatisfactionApi $satisfactionApi,
-        RouterInterface $router,
-        TranslatorInterface $translator,
-        FormFactoryInterface $form
+        private readonly SatisfactionApi $satisfactionApi,
+        private readonly RouterInterface $router,
+        private readonly TranslatorInterface $translator,
+        private readonly FormFactoryInterface $form
     ) {
-        $this->satisfactionApi = $satisfactionApi;
-        $this->router = $router;
-        $this->translator = $translator;
-        $this->form = $form;
     }
 
-    /**
-     * @Route("/feedback", name="feedback")
-     * @Template("@App/Feedback/index.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function create(Request $request)
+    #[Route(path: '/feedback', name: 'feedback')]
+    #[Template('@App/Feedback/index.html.twig')]
+    public function create(Request $request): RedirectResponse|array
     {
         $form = $this->form->create(FeedbackType::class);
 
