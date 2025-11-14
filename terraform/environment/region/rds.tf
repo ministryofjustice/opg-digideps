@@ -17,7 +17,7 @@ module "api_aurora" {
   skip_final_snapshot                 = var.account.deletion_protection ? false : true
   vpc_security_group_ids              = [module.api_rds_security_group.id]
   deletion_protection                 = var.account.deletion_protection ? true : false
-  tags                                = var.account.name == "development" ? var.default_tags : merge(var.default_tags, { backup_to_vault = "true" }, )
+  tags                                = var.account.name == "development" ? var.default_tags : merge(var.default_tags, { backup_to_vault = "false" }, )
   log_group                           = aws_cloudwatch_log_group.api_cluster.name
   iam_database_authentication_enabled = true
 }
