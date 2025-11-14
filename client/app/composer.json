@@ -95,6 +95,7 @@
         "phpstan/phpstan-phpunit": "^2.0.8",
         "phpunit/phpcov": "8.2.1",
         "phpunit/phpunit": "^9.6.29",
+        "rector/rector": "^2.2",
         "symfony/maker-bundle": "^1.64.0",
         "symfony/phpunit-bridge": "^6.4.26",
         "symfony/var-dumper": "^6.4.26"
