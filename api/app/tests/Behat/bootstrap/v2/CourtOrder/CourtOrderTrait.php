@@ -72,6 +72,7 @@ trait CourtOrderTrait
                 // create new clients for subsequent court orders
                 $client = $this->fixtureHelper->generateClient($deputy->getUser());
                 $this->em->persist($client);
+                $this->em->flush();
 
                 // create a new report
                 $type = Report::TYPE_HEALTH_WELFARE;
@@ -84,6 +85,7 @@ trait CourtOrderTrait
                 $report->setClient($client);
 
                 $this->em->persist($report);
+                $this->em->flush();
             }
 
             $this->courtOrders[] = $this->fixtureHelper->createAndPersistCourtOrder(
@@ -93,8 +95,6 @@ trait CourtOrderTrait
                 $report,
             );
         }
-
-        $this->em->flush();
 
         $this->courtOrder = $this->courtOrders[0];
     }
