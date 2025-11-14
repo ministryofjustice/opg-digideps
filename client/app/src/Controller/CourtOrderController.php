@@ -10,7 +10,7 @@ use App\Form\CoDeputyInviteType;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\DeputyApi;
 use App\Service\CourtOrderService;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
