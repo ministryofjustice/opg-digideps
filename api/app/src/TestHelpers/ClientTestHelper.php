@@ -7,6 +7,7 @@ namespace App\TestHelpers;
 use App\Entity\Client;
 use App\Entity\Organisation;
 use App\Entity\User;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 
@@ -36,6 +37,7 @@ class ClientTestHelper
             ->setPostcode($faker->postcode());
 
         if (!is_null($user) && User::ROLE_LAY_DEPUTY === $user->getRoleName()) {
+            /** @var EntityManager $em */
             return $client->addUser($user ?: (UserTestHelper::create())->createAndPersistUser($em));
         }
 
