@@ -251,7 +251,7 @@ class FixtureHelper
         $deputyObject = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $user->getDeputyUid()]);
 
         if (is_null($deputyObject)) {
-            $deputyObject = $this->deputyTestHelper->generateDeputy($user->getEmail(), strval($user->getDeputyUid()));
+            $deputyObject = $this->deputyTestHelper->generateDeputy($user->getEmail(), strval($user->getDeputyUid()), $user);
         }
 
         $deputyObject->setUser($user);
