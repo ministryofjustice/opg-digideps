@@ -25,7 +25,7 @@ class UserTestHelper
         ?int $deputyUid = null,
         bool $isPrimary = true,
     ): User {
-        $user = self::createUser(client: $client, roleName: $roleName, email: $email, isPrimary: $isPrimary, deputyUid: $deputyUid);
+        $user = self::createUser($client, $roleName, $email, $isPrimary, $deputyUid);
 
         if (!is_null($client)) {
             $em->persist($client);

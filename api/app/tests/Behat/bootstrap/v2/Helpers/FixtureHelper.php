@@ -1302,7 +1302,14 @@ class FixtureHelper
 
         $this->testRunId = $testRunId;
 
-        $user = $this->userTestHelper->createAndPersistUser($this->em, null, $userRole, sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId), $deputyUid, $isPrimary);
+        $user = $this->userTestHelper->createAndPersistUser(
+            $this->em,
+            null,
+            $userRole,
+            sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId),
+            $deputyUid,
+            $isPrimary
+        );
 
         if ($ndr) {
             $this->addClientsAndReportsToNdrLayDeputy($user, $completed);
