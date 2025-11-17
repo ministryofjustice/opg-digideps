@@ -34,7 +34,7 @@
   },
   "dependencies": {
     "@ministryofjustice/frontend": "^6.0.0",
-    "@testing-library/dom": "^9.2.0",
+    "@testing-library/dom": "^10.0.0",
     "@testing-library/user-event": "^14.4.3",
     "govuk-frontend": "^5.13.0"
   },
