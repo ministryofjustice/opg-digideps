@@ -452,5 +452,17 @@ trait CourtOrderTrait
                 $deputy,
             );
         }
+
+        // associate all the client's reports with that court order; client->getReports() doesn't do what
+        // is expected so just do a query from the reports table
+        $reports = $this->em->getRepository(Report::class)->findBy(['client' => $client]);
+        foreach ($reports as $report) {
+            $this->courtOrder->addReport($report);
+        }
+
+        $this->courtOrders = [$this->courtOrder];
+
+        $this->em->persist($this->courtOrder);
+        $this->em->flush();
     }
 }
