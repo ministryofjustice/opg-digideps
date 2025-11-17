@@ -5321,11 +5321,6 @@ parameters:
 			path: src/FixtureFactory/LoadTestFactory.php
 
 		-
-			message: "#^Parameter \\#1 \\$em of method App\\\\TestHelpers\\\\ClientTestHelper\\:\\:generateClient\\(\\) expects Doctrine\\\\ORM\\\\EntityManager, Doctrine\\\\ORM\\\\EntityManagerInterface given\\.$#"
-			count: 1
-			path: src/FixtureFactory/LoadTestFactory.php
-
-		-
 			message: "#^Parameter \\#1 \\$em of method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:generateReport\\(\\) expects Doctrine\\\\ORM\\\\EntityManager, Doctrine\\\\ORM\\\\EntityManagerInterface given\\.$#"
 			count: 1
 			path: src/FixtureFactory/LoadTestFactory.php
