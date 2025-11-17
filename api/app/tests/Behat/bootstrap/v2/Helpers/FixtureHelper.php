@@ -689,7 +689,6 @@ class FixtureHelper
             Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
             true,
             false,
-            readyToSubmit: true
         );
 
         return self::buildUserDetails($user);
@@ -1142,7 +1141,7 @@ class FixtureHelper
             null,
             null,
             $caseNumber,
-            true,
+            false,
             false,
             $deputyUid
         );
@@ -1296,7 +1295,6 @@ class FixtureHelper
         bool $legacyPasswordHash = false,
         bool $isPrimary = true,
         ?int $deputyUid = null,
-        bool $readyToSubmit = false,
     ) {
         if (!$this->fixturesEnabled) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
