@@ -8,6 +8,7 @@ use App\Entity\Client;
 use App\Entity\Organisation;
 use App\Entity\User;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 
 class ClientTestHelper
@@ -18,7 +19,7 @@ class ClientTestHelper
     }
 
     public static function generateClient(
-        EntityManager $em,
+        EntityManagerInterface $em,
         ?User $user = null,
         ?Organisation $organisation = null,
         ?string $caseNumber = null
@@ -29,13 +30,14 @@ class ClientTestHelper
             ->setFirstname($faker->firstName())
             ->setLastname($faker->lastName())
             ->setCaseNumber($caseNumber ?: self::createValidCaseNumber())
-            ->setEmail($faker->safeEmail().mt_rand(1, 100))
+            ->setEmail($faker->safeEmail() . mt_rand(1, 100))
             ->setCourtDate(new \DateTime('09-Aug-2018'))
             ->setAddress($faker->streetAddress())
             ->setAddress2($faker->streetAddress())
             ->setPostcode($faker->postcode());
 
         if (!is_null($user) && User::ROLE_LAY_DEPUTY === $user->getRoleName()) {
+            /** @var EntityManager $em */
             return $client->addUser($user ?: (UserTestHelper::create())->createAndPersistUser($em));
         }
 
@@ -67,6 +69,6 @@ class ClientTestHelper
             $checkbit = 'T';
         }
 
-        return $ref.$checkbit;
+        return $ref . $checkbit;
     }
 }
