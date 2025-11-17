@@ -431,4 +431,26 @@ trait CourtOrderTrait
         $this->em->persist($courtOrder);
         $this->em->flush();
     }
+
+    /**
+     * @Given all the reports for the first client are associated with a :orderType court order
+     */
+    public function allTheReportsForFirstClientOnCourtOrder(string $orderType): void
+    {
+        // get the client
+        $clientId = $this->loggedInUserDetails->getClientId();
+        $client = $this->em->getRepository(Client::class)->find(['id' => $clientId]);
+
+        // get the deputy
+        $deputy = $this->getDeputyForLoggedInUser();
+
+        // create a court order if necessary
+        if (is_null($this->courtOrder)) {
+            $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(
+                $orderType,
+                $client,
+                $deputy,
+            );
+        }
+    }
 }
