@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
+use Behat\Mink\Exception\ElementNotFoundException;
 use Throwable;
 use App\Entity\Report\Document;
 use App\Tests\Behat\BehatException;
@@ -11,7 +12,7 @@ use App\Tests\Behat\BehatException;
 trait DocumentsSectionTrait
 {
     // Valid files
-    private string $validJpegFilename = 'good_image.jpg';
+    private string $validJpegFilename = 'good-image.jpg';
     private string $validPngFilename = 'good.png';
     private string $validPdfFilename = 'good.pdf';
     private string $validHeicFilename = 'good-heic.heic';
@@ -148,6 +149,50 @@ trait DocumentsSectionTrait
     public function iUploadOneValidDocument()
     {
         $this->uploadFiles([$this->validJpegFilename]);
+    }
+
+    /**
+     * @Given I upload one valid document with the filename :filename
+     */
+    public function iUploadOneValidDocumentWithTheFilename(string $filename)
+    {
+        $this->uploadFiles([$filename]);
+    }
+
+    /**
+     * @Given the document uploads page should contain a document with the filename :filename
+     */
+    public function theDocumentUploadsPageShouldContainADocumentWithFilename(string $filename)
+    {
+        $descriptionLists = $this->findAllCssElements('dl');
+        $this->findFileNamesInDls($descriptionLists, [$filename]);
+    }
+
+    /**
+     * @Given the document uploads page should not contain a document with the filename :filename
+     */
+    public function theDocumentUploadsPageShouldNotContainADocumentWithFilename(string $filename)
+    {
+        $this->assertPageNotContainsText($filename);
+    }
+
+    /**
+     * @Given I remove the document with the filename :filename
+     * @throws ElementNotFoundException
+     */
+    public function iRemoveOneDocumentWithTheFilename(string $filename)
+    {
+        $parentOfDtWithTextSelector = "//dt[contains(text(), \"$filename\")]/..";
+        $documentRowDiv = $this->getSession()->getPage()->find('xpath', $parentOfDtWithTextSelector);
+
+        if (is_null($documentRowDiv)) {
+            throw new BehatException("Row for the file $filename was not found");
+        }
+
+        $documentRowDiv->clickLink('Remove');
+
+        $this->pressButton('confirm_delete_confirm');
+        ;
     }
 
     private function uploadFiles(array $filenames)
