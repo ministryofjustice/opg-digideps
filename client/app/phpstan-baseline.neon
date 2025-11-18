@@ -241,28 +241,8 @@ parameters:
 			path: src/Controller/Admin/AjaxController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\Client\\\\ClientController\\:\\:detailsAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/Client/ClientController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\Client\\\\ClientController\\:\\:dischargeAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/Client/ClientController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\Client\\\\ClientController\\:\\:dischargeConfirmAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/Client/ClientController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\Client\\\\ClientController\\:\\:unarchiveAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/Client/ClientController.php
-
-		-
 			message: "#^Parameter \\#1 \\$clientId of method App\\\\Service\\\\Client\\\\Internal\\\\ClientApi\\:\\:getWithUsersV2\\(\\) expects int, string given\\.$#"
-			count: 3
+			count: 1
 			path: src/Controller/Admin/Client/ClientController.php
 
 		-
@@ -292,7 +272,7 @@ parameters:
 
 		-
 			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
-			count: 13
+			count: 10
 			path: src/Controller/Admin/Client/ReportController.php
 
 		-
@@ -316,17 +296,7 @@ parameters:
 			path: src/Controller/Admin/Client/ReportController.php
 
 		-
-			message: "#^Instanceof between App\\\\Entity\\\\Report\\\\Report and App\\\\Entity\\\\Ndr\\\\Ndr will always evaluate to false\\.$#"
-			count: 1
-			path: src/Controller/Admin/Client/ReportController.php
-
-		-
 			message: "#^Match expression does not handle remaining value\\: non\\-falsy\\-string$#"
-			count: 1
-			path: src/Controller/Admin/Client/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\Client\\\\ReportController\\:\\:manageCloseReportConfirmAction\\(\\) has parameter \\$id with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Admin/Client/ReportController.php
 
@@ -356,24 +326,9 @@ parameters:
 			path: src/Controller/Admin/Client/ReportController.php
 
 		-
-			message: "#^Parameter \\#2 \\$subject of function preg_match expects string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Admin/Client/ReportController.php
-
-		-
-			message: "#^Part \\$form\\['dueDateChoice'\\]\\-\\>getData\\(\\) \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
-			count: 1
-			path: src/Controller/Admin/Client/ReportController.php
-
-		-
 			message: "#^Variable \\$checklist in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 2
 			path: src/Controller/Admin/Client/ReportController.php
-
-		-
-			message: "#^PHPDoc tag @return with type array\\|string is not subtype of native type array\\.$#"
-			count: 1
-			path: src/Controller/Admin/Client/SearchController.php
 
 		-
 			message: "#^Parameter \\#2 \\$clients of method App\\\\Controller\\\\Admin\\\\Client\\\\SearchController\\:\\:buildViewParams\\(\\) expects array, mixed given\\.$#"
