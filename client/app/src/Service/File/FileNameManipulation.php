@@ -32,7 +32,7 @@ class FileNameManipulation extends FileUtility
         $specialChars = preg_replace('/[^\w_.-]/', '', $remainingSpaces); /* @phpstan-ignore-line */
         $hyphensAndPeriods = preg_replace('/([.-])/', '_', $specialChars) ?? ''; /* @phpstan-ignore-line */
 
-        return  isset($fileNameSplit['extension']) ?
+        return isset($fileNameSplit['extension']) ?
             $hyphensAndPeriods . '.' . $fileNameSplit['extension'] :
             $hyphensAndPeriods;
     }
