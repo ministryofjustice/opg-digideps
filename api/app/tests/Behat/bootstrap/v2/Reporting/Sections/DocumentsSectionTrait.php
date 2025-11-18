@@ -280,10 +280,9 @@ trait DocumentsSectionTrait
             throw new BehatException('A link with the text remove was not found in the document row');
         }
 
-        $removeLink->click();
 
         if (!$fileName) {
-            $this->pressButton('confirm_delete_confirm');
+            $removeLink->click();
             $this->uploadedDocumentFilenames = $filenames;
         }
     }
@@ -426,7 +425,6 @@ trait DocumentsSectionTrait
         }
 
         $removeLink->click();
-        $this->pressButton('confirm_delete_confirm');
         $this->iAmOnReUploadPage();
 
         // re-upload document
