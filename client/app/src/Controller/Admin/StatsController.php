@@ -25,16 +25,16 @@ use App\Service\Csv\ReportImbalanceCsvGenerator;
 use App\Service\Csv\SatisfactionCsvGenerator;
 use App\Service\Csv\UserResearchResponseCsvGenerator;
 use App\Transformer\ReportSubmission\ReportSubmissionBurFixedWidthTransformer;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\ExpressionLanguage\Expression;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-/**
- * @Route("/admin/stats")
- */
+#[Route(path: '/admin/stats')]
 class StatsController extends AbstractController
 {
     public function __construct(
@@ -50,13 +50,9 @@ class StatsController extends AbstractController
     ) {
     }
 
-    /**
-     * @Route("", name="admin_stats")
-     *
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
-     * @Template("@App/Admin/Stats/stats.html.twig")
-     */
+    #[Route(path: '', name: 'admin_stats')]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[Template('@App/Admin/Stats/stats.html.twig')]
     public function stats(
         Request $request,
         ReportSubmissionSummaryMapper $mapper,
@@ -80,13 +76,9 @@ class StatsController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/satisfaction", name="admin_satisfaction")
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
-     * @Template("@App/Admin/Stats/satisfaction.html.twig")
-     */
+    #[Route(path: '/satisfaction', name: 'admin_satisfaction')]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    #[Template('@App/Admin/Stats/satisfaction.html.twig')]
     public function satisfaction(Request $request, ReportSatisfactionSummaryMapper $mapper): array|Response
     {
         $form = $this->createFilterTypeForm($request, SatisfactionFilterType::class);
@@ -99,7 +91,7 @@ class StatsController extends AbstractController
                 $csv = $this->satisfactionCsvGenerator->generateSatisfactionResponsesCsv($reportSatisfactionSummaries);
 
                 return $this->csvResponseGeneration($fileName, $csv);
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 throw new DisplayableException($e);
             }
         }
@@ -109,13 +101,9 @@ class StatsController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/user-research", name="admin_user_research")
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
-     * @Template("@App/Admin/Stats/urResponses.html.twig")
-     */
+    #[Route(path: '/user-research', name: 'admin_user_research')]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    #[Template('@App/Admin/Stats/urResponses.html.twig')]
     public function userResearchResponses(Request $request, UserResearchResponseSummaryMapper $mapper): array|Response
     {
         $form = $this->createFilterTypeForm($request, UserResearchResponseFilterType::class);
@@ -125,11 +113,11 @@ class StatsController extends AbstractController
                 $fileName = 'user-research-responses.csv';
 
                 $userResearchResponses = $mapper->getBy($form->getData());
-                $reportData = json_decode($userResearchResponses, true)['data'];
+                $reportData = json_decode((string) $userResearchResponses, true)['data'];
                 $csv = $this->userResearchResponseCsvGenerator->generateUserResearchResponsesCsv($reportData);
 
                 return $this->csvResponseGeneration($fileName, $csv);
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 throw new DisplayableException($e);
             }
         }
@@ -145,20 +133,16 @@ class StatsController extends AbstractController
         $response->headers->set('Content-Type', 'application/octet-stream');
 
         $attachmentName = sprintf('cwsdigidepsopg00001%s.dat', date('YmdHi'));
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$attachmentName.'"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
 
         $response->sendHeaders();
 
         return $response;
     }
 
-    /**
-     * @Route("/metrics", name="admin_metrics")
-     *
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
-     * @Template("@App/Admin/Stats/metrics.html.twig")
-     */
+    #[Route(path: '/metrics', name: 'admin_metrics')]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[Template('@App/Admin/Stats/metrics.html.twig')]
     public function metricsAction(Request $request): array|Response
     {
         $form = $this->createFilterTypeForm($request, StatPeriodType::class, false);
@@ -174,10 +158,10 @@ class StatsController extends AbstractController
         $metrics = ['satisfaction', 'reportsSubmitted', 'clients', 'registeredDeputies', 'respondents'];
 
         foreach ($metrics as $metric) {
-            $all = $this->restClient->get('stats?metric='.$metric.$append, 'array');
+            $all = $this->restClient->get('stats?metric=' . $metric . $append, 'array');
 
             if ('respondents' != $metric) {
-                $byRole = $this->restClient->get('stats?metric='.$metric.'&dimension[]=deputyType'.$append, 'array');
+                $byRole = $this->restClient->get('stats?metric=' . $metric . '&dimension[]=deputyType' . $append, 'array');
                 $stats[$metric] = array_merge(
                     ['all' => $all[0]['amount']],
                     $this->mapToDeputyType($byRole)
@@ -194,7 +178,7 @@ class StatsController extends AbstractController
     }
 
     /**
-     * Map an array of metric responses to be addressible by deputyType.
+     * Map an array of metric responses to be addressable by deputyType.
      */
     private function mapToDeputyType(array $result): array
     {
@@ -207,36 +191,24 @@ class StatsController extends AbstractController
         return $resultByDeputyType;
     }
 
-    /**
-     * @Route("/reports", name="admin_reports")
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
-     * @Template("@App/Admin/Stats/reports.html.twig")
-     */
+    #[Route(path: '/reports', name: 'admin_reports')]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    #[Template('@App/Admin/Stats/reports.html.twig')]
     public function reports(): void
     {
     }
 
-    /**
-     * @Route("/reports/user_accounts", name="admin_user_account_reports")
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
-     * @Template("@App/Admin/Stats/userAccountReports.html.twig")
-     */
+    #[Route(path: '/reports/user_accounts', name: 'admin_user_account_reports')]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    #[Template('@App/Admin/Stats/userAccountReports.html.twig')]
     public function userAccountReports(): array|Response
     {
         return $this->statsApi->getAdminUserAccountReportData();
     }
 
-    /**
-     * @Route("/reports/benefits-report-metrics", name="benefits_report_metrics")
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
-     * @Template("@App/Admin/Stats/benefitsReportMetrics.html.twig")
-     */
+    #[Route(path: '/reports/benefits-report-metrics', name: 'benefits_report_metrics')]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    #[Template('@App/Admin/Stats/benefitsReportMetrics.html.twig')]
     public function benefitsReportMetrics(Request $request): array|Response
     {
         $form = $this->createFilterTypeForm($request, BenefitsMetricsFilterType::class);
@@ -244,7 +216,7 @@ class StatsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $deputyType = $form->get('deputyType')->getData();
-                $append = "?deputyType={$deputyType}";
+                $append = "?deputyType=$deputyType";
 
                 $startDate = $form->get('startDate')->getData();
                 $endDate = $form->get('endDate')->getData();
@@ -257,7 +229,7 @@ class StatsController extends AbstractController
                 $csv = $this->clientBenefitMetricsCsvGenerator->generateClientBenefitsMetricCsv($reportData);
 
                 return $this->csvResponseGeneration($fileName, $csv);
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 throw new DisplayableException($e);
             }
         }
@@ -267,11 +239,8 @@ class StatsController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/downloadActiveLaysCsv", name="admin_active_lays_csv")
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     */
+    #[Route(path: '/downloadActiveLaysCsv', name: 'admin_active_lays_csv')]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
     public function downloadActiveLayCsv(): Response
     {
         $fileName = 'activeLays.csv';
@@ -281,11 +250,8 @@ class StatsController extends AbstractController
         return $this->csvResponseGeneration($fileName, $csv);
     }
 
-    /**
-     * @Route("/downloadAssetsTotalValues", name="admin_total_assets_values")
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     */
+    #[Route(path: '/downloadAssetsTotalValues', name: 'admin_total_assets_values')]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
     public function downloadAssetsTotalValues(): Response
     {
         $fileName = 'totalAssets.csv';
@@ -295,13 +261,9 @@ class StatsController extends AbstractController
         return $this->csvResponseGeneration($fileName, $csv);
     }
 
-    /**
-     * @Route("/reports/inactive-admin-users-report", name="inactive_admin_users_report")
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
-     * @Template("@App/Admin/Stats/inactiveAdminUsersReport.html.twig")
-     */
+    #[Route(path: '/reports/inactive-admin-users-report', name: 'inactive_admin_users_report')]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    #[Template('@App/Admin/Stats/inactiveAdminUsersReport.html.twig')]
     public function inactiveAdminUsersReport(Request $request): array|Response
     {
         $form = $this->createForm(InactiveAdminReportFilterType::class);
@@ -312,7 +274,7 @@ class StatsController extends AbstractController
             try {
                 $inactivityPeriod = $form->get('inactivityPeriod')->getData();
 
-                $append = '?inactivityPeriod='.$inactivityPeriod;
+                $append = '?inactivityPeriod=' . $inactivityPeriod;
 
                 $fileName = 'inactiveAdminUsers.csv';
                 $reportData = $this->statsApi->getInactiveAdminUsers($append);
@@ -329,13 +291,9 @@ class StatsController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/reports/imbalanceMetrics", name="report_imbalance_metrics")
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
-     * @Template("@App/Admin/Stats/imbalanceReportMetrics.html.twig")
-     */
+    #[Route(path: '/reports/imbalanceMetrics', name: 'report_imbalance_metrics')]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    #[Template('@App/Admin/Stats/imbalanceReportMetrics.html.twig')]
     public function reportImbalanceCsv(Request $request): array|Response
     {
         $form = $this->createFilterTypeForm($request, ImbalanceMetricsFilterType::class);
@@ -356,7 +314,7 @@ class StatsController extends AbstractController
                 $csv = $this->reportImbalanceCsvGenerator->generateReportImbalanceCsv($reportData);
 
                 return $this->csvResponseGeneration($fileName, $csv);
-            } catch (Throwable $e) {
+            } catch (\Throwable $e) {
                 throw new DisplayableException($e);
             }
         }
@@ -381,7 +339,7 @@ class StatsController extends AbstractController
         return $response;
     }
 
-    private function createFilterTypeForm(Request $request, string $fqcn, bool $dateRangeQuery = true)
+    private function createFilterTypeForm(Request $request, string $fqcn, bool $dateRangeQuery = true): FormInterface
     {
         $form = $dateRangeQuery ?
             $this->createForm($fqcn, new DateRangeQuery()) :

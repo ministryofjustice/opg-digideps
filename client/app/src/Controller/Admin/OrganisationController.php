@@ -9,42 +9,41 @@ use App\Entity\User;
 use App\Event\OrgCreatedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Exception\RestClientException;
-use App\Form as FormDir;
+use App\Form\Admin\OrganisationAddUserType;
+use App\Form\Admin\OrganisationEditType;
+use App\Form\Admin\OrganisationType;
+use App\Form\ConfirmDeleteType;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\OrganisationApi;
 use App\Service\Client\RestClient;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\SubmitButton;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Route("/admin/organisations")
- */
+#[Route(path: '/admin/organisations')]
 class OrganisationController extends AbstractController
 {
     public function __construct(
-        private RestClient $restClient,
-        private LoggerInterface $logger,
-        private OrganisationApi $organisationApi,
-        private ObservableEventDispatcher $eventDispatcher,
-        private TokenStorageInterface $tokenStorage,
+        private readonly RestClient $restClient,
+        private readonly LoggerInterface $logger,
+        private readonly OrganisationApi $organisationApi,
+        private readonly ObservableEventDispatcher $eventDispatcher,
+        private readonly TokenStorageInterface $tokenStorage,
     ) {
     }
 
-    /**
-     * @Route("/", name="admin_organisation_homepage")
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     *
-     * @Template("@App/Admin/Organisation/index.html.twig")
-     */
-    public function indexAction()
+    #[Route(path: '/', name: 'admin_organisation_homepage')]
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    #[Template('@App/Admin/Organisation/index.html.twig')]
+    public function indexAction(): array
     {
         $organisations = $this->restClient->get('v2/organisation/list', 'Organisation[]');
 
@@ -53,26 +52,20 @@ class OrganisationController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/{id}", requirements={"id":"\d+"}, methods={"GET"}, name="admin_organisation_view")
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     *
-     * @Template("@App/Admin/Organisation/view.html.twig")
-     *
-     * @return array<mixed>|Response
-     */
-    public function viewAction(Request $request, int $id)
+    #[Route(path: '/{id}', name: 'admin_organisation_view', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    #[Template('@App/Admin/Organisation/view.html.twig')]
+    public function viewAction(Request $request, int $id): array|Response
     {
         /** @var $organisation Organisation */
-        $organisation = $this->restClient->get('v2/organisation/'.$id, 'Organisation');
+        $organisation = $this->restClient->get('v2/organisation/' . $id, 'Organisation');
         assert($organisation instanceof Organisation);
 
         $tab = $request->get('tab', 'users');
         $currentFilters = self::getFiltersFromRequest($request);
 
         /** @var array $count */
-        $count = $this->restClient->get('/v2/organisation/'.$id.'/clients', 'array');
+        $count = $this->restClient->get('/v2/organisation/' . $id . '/clients', 'array');
         $clientCount = $count['count'];
 
         $dischargedClients = null;
@@ -82,12 +75,12 @@ class OrganisationController extends AbstractController
         }
 
         /** @var array $result */
-        $result = $this->restClient->get('/v2/organisation/'.$id.'/'.$tab.'?'.http_build_query($currentFilters), 'array');
+        $result = $this->restClient->get('/v2/organisation/' . $id . '/' . $tab . '?' . http_build_query($currentFilters), 'array');
 
         if ('clients' == $tab) {
-            $tabData = $this->restClient->arrayToEntities(Client::class.'[]', $result['records']);
+            $tabData = $this->restClient->arrayToEntities(Client::class . '[]', $result['records']);
         } else {
-            $tabData = $this->restClient->arrayToEntities(User::class.'[]', $result['records']);
+            $tabData = $this->restClient->arrayToEntities(User::class . '[]', $result['records']);
         }
 
         return [
@@ -101,21 +94,14 @@ class OrganisationController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/add", name="admin_organisation_add")
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     *
-     * @Template("@App/Admin/Organisation/form.html.twig")
-     */
-    public function addAction(Request $request)
+    #[Route(path: '/add', name: 'admin_organisation_add')]
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    #[Template('@App/Admin/Organisation/form.html.twig')]
+    public function addAction(Request $request): RedirectResponse|array
     {
         $organisation = new Organisation();
 
-        $form = $this->createForm(
-            FormDir\Admin\OrganisationType::class,
-            $organisation
-        );
+        $form = $this->createForm(OrganisationType::class, $organisation);
 
         $form->handleRequest($request);
 
@@ -141,19 +127,15 @@ class OrganisationController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/{id}/edit", requirements={"id":"\d+"}, name="admin_organisation_edit")
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     *
-     * @Template("@App/Admin/Organisation/form.html.twig")
-     */
-    public function editAction(Request $request, $id = null)
+    #[Route(path: '/{id}/edit', requirements: ['id' => '\d+'], name: 'admin_organisation_edit')]
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    #[Template('@App/Admin/Organisation/form.html.twig')]
+    public function editAction(Request $request, $id = null): RedirectResponse|array
     {
-        $organisation = $this->restClient->get('v2/organisation/'.$id, 'Organisation');
+        $organisation = $this->restClient->get('v2/organisation/' . $id, 'Organisation');
 
         $form = $this->createForm(
-            FormDir\Admin\OrganisationEditType::class,
+            OrganisationEditType::class,
             $organisation
         );
 
@@ -163,7 +145,7 @@ class OrganisationController extends AbstractController
             $organisation = $form->getData();
 
             try {
-                $this->restClient->put('v2/organisation/'.$organisation->getId(), $organisation);
+                $this->restClient->put('v2/organisation/' . $organisation->getId(), $organisation);
                 $request->getSession()->getFlashBag()->add('notice', 'The organisation has been updated');
 
                 return $this->redirectToRoute('admin_organisation_homepage');
@@ -180,23 +162,19 @@ class OrganisationController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/{id}/delete", requirements={"id":"\d+"}, name="admin_organisation_delete")
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
-     * @Template("@App/Common/confirmDelete.html.twig")
-     */
-    public function deleteAction(Request $request, $id)
+    #[Route(path: '/{id}/delete', requirements: ['id' => '\d+'], name: 'admin_organisation_delete')]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    #[Template('@App/Common/confirmDelete.html.twig')]
+    public function deleteAction(Request $request, string $id): RedirectResponse|array
     {
-        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form = $this->createForm(ConfirmDeleteType::class);
         $form->handleRequest($request);
 
-        $organisation = $this->restClient->get('v2/organisation/'.$id, 'Organisation');
+        $organisation = $this->restClient->get('v2/organisation/' . $id, 'Organisation');
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->restClient->delete('v2/organisation/'.$organisation->getId());
+                $this->restClient->delete('v2/organisation/' . $organisation->getId());
                 $request->getSession()->getFlashBag()->add('notice', 'The organisation has been removed');
             } catch (\Throwable $e) {
                 $this->logger->error($e->getMessage());
@@ -214,7 +192,7 @@ class OrganisationController extends AbstractController
                 ['label' => 'deletePage.summary.emailIdentifier', 'value' => $organisation->getEmailIdentifierDisplay()],
                 [
                     'label' => 'deletePage.summary.active.label',
-                    'value' => 'deletePage.summary.active.'.($organisation->isActivated() ? 'yes' : 'no'),
+                    'value' => 'deletePage.summary.active.' . ($organisation->isActivated() ? 'yes' : 'no'),
                     'format' => 'translate',
                 ],
             ],
@@ -222,26 +200,22 @@ class OrganisationController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/{id}/add-user", requirements={"id":"\d+"}, name="admin_organisation_member_add")
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     *
-     * @Template("@App/Admin/Organisation/add-user.html.twig")
-     */
-    public function addUserAction(Request $request, $id, TranslatorInterface $translator)
+    #[Route(path: '/{id}/add-user', name: 'admin_organisation_member_add', requirements: ['id' => '\d+'])]
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    #[Template('@App/Admin/Organisation/add-user.html.twig')]
+    public function addUserAction(Request $request, string $id, TranslatorInterface $translator): RedirectResponse|array
     {
-        $form = $this->createForm(FormDir\Admin\OrganisationAddUserType::class);
+        $form = $this->createForm(OrganisationAddUserType::class);
         $form->handleRequest($request);
 
-        $organisation = $this->restClient->get('v2/organisation/'.$id, 'Organisation');
+        $organisation = $this->restClient->get('v2/organisation/' . $id, 'Organisation');
         $userToAdd = [];
 
         if ($form->get('email')->getData()) {
             try {
                 $errors = [];
                 $email = $form->get('email')->getData();
-                $userToAdd = $this->restClient->get('user/get-one-by/email/'.$email, 'User');
+                $userToAdd = $this->restClient->get('user/get-one-by/email/' . $email, 'User');
 
                 if (!$userToAdd->isDeputyOrg()) {
                     $errors[] = 'form.email.notOrgUserError';
@@ -250,7 +224,7 @@ class OrganisationController extends AbstractController
                 if ($organisation->hasUser($userToAdd)) {
                     $errors[] = 'form.email.alreadyInOrgError';
                 }
-            } catch (RestClientException $e) {
+            } catch (RestClientException) {
                 $errors[] = 'form.email.notFoundError';
             }
         }
@@ -263,12 +237,15 @@ class OrganisationController extends AbstractController
             $userToAdd = new User();
         }
 
-        if ($form->get('confirm')->isClicked()) {
+        /** @var SubmitButton $confirmButton */
+        $confirmButton = $form->get('confirm');
+        if ($confirmButton->isClicked()) {
             try {
+                /** @var User $currentUser */
                 $currentUser = $this->getUser();
                 $this->organisationApi->addUserToOrganisation($organisation, $userToAdd, $currentUser, AuditEvents::TRIGGER_ADMIN_USER_MANAGE_ORG_MEMBER);
 
-                $request->getSession()->getFlashBag()->add('notice', $userToAdd->getFullName().' has been added to '.$organisation->getName());
+                $request->getSession()->getFlashBag()->add('notice', $userToAdd->getFullName() . ' has been added to ' . $organisation->getName());
 
                 return $this->redirectToRoute('admin_organisation_view', ['id' => $organisation->getId()]);
             } catch (RestClientException $e) {
@@ -281,35 +258,32 @@ class OrganisationController extends AbstractController
         return [
             'form' => $form->createView(),
             'organisation' => $organisation,
-            'user' => isset($userToAdd) ? $userToAdd : new User(),
+            'user' => $userToAdd ?? new User(),
             'backLink' => $this->generateUrl('admin_organisation_view', ['id' => $organisation->getId()]),
         ];
     }
 
-    /**
-     * @Route("/{id}/delete-user/{userId}", requirements={"id":"\d+"}, name="admin_organisation_member_delete")
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     *
-     * @Template("@App/Common/confirmDelete.html.twig")
-     */
-    public function deleteUserAction(Request $request, $id, $userId)
+    #[Route(path: '/{id}/delete-user/{userId}', name: 'admin_organisation_member_delete', requirements: ['id' => '\d+'])]
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    #[Template('@App/Common/confirmDelete.html.twig')]
+    public function deleteUserAction(Request $request, string $id, string $userId): RedirectResponse|array
     {
-        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form = $this->createForm(ConfirmDeleteType::class);
         $form->handleRequest($request);
 
-        $organisation = $this->restClient->get('v2/organisation/'.$id, 'Organisation');
-        $userToRemove = $this->restClient->get('user/'.$userId, 'User');
+        $organisation = $this->restClient->get('v2/organisation/' . $id, 'Organisation');
+        $userToRemove = $this->restClient->get('user/' . $userId, 'User');
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
+                /** @var User $currentUser */
                 $currentUser = $this->getUser();
                 $this->organisationApi->removeUserFromOrganisation($organisation, $userToRemove, $currentUser, AuditEvents::TRIGGER_ADMIN_USER_MANAGE_ORG_MEMBER);
 
-                $request->getSession()->getFlashBag()->add('notice', 'User has been removed from '.$organisation->getName());
+                $request->getSession()->getFlashBag()->add('notice', 'User has been removed from ' . $organisation->getName());
             } catch (\Throwable $e) {
                 $this->logger->error($e->getMessage());
-                $request->getSession()->getFlashBag()->add('error', 'User could not be removed form '.$organisation->getName());
+                $request->getSession()->getFlashBag()->add('error', 'User could not be removed form ' . $organisation->getName());
             }
 
             return $this->redirectToRoute('admin_organisation_view', ['id' => $organisation->getId()]);
@@ -327,7 +301,7 @@ class OrganisationController extends AbstractController
         ];
     }
 
-    private function dispatchOrgCreatedEvent(Organisation $organisation)
+    private function dispatchOrgCreatedEvent(Organisation $organisation): void
     {
         $trigger = AuditEvents::TRIGGER_ADMIN_MANUAL_ORG_CREATION;
 
@@ -350,10 +324,7 @@ class OrganisationController extends AbstractController
         $this->eventDispatcher->dispatch($orgCreatedEvent, OrgCreatedEvent::NAME);
     }
 
-    /**
-     * @return array<mixed>
-     */
-    private static function getFiltersFromRequest(Request $request)
+    private static function getFiltersFromRequest(Request $request): array
     {
         return [
             'q' => $request->get('q'),
