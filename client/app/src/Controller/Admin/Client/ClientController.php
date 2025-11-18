@@ -7,33 +7,25 @@ use App\Entity\User;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\UserApi;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-/**
- * @Route("/admin/client")
- */
+#[Route(path: '/admin/client')]
 class ClientController extends AbstractController
 {
     public function __construct(
-        private ClientApi $clientApi,
-        private UserApi $userApi,
+        private readonly ClientApi $clientApi,
+        private readonly UserApi $userApi,
     ) {
     }
 
-    /**
-     * @Route("/{id}/details", requirements={"id":"\d+"}, name="admin_client_details")
-     * //TODO define Security group (AD to remove?)
-     *
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
-     * @param string $id
-     *
-     * @Template("@App/Admin/Client/Client/details.html.twig")
-     */
-    public function detailsAction($id)
+    #[Route(path: '/{id}/details', name: 'admin_client_details', requirements: ['id' => '\d+'])] // //TODO define Security group (AD to remove?)
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[Template('@App/Admin/Client/Client/details.html.twig')]
+    public function detailsAction(int $id): RedirectResponse|array
     {
         $client = $this->clientApi->getWithUsersV2($id);
         if (null !== $client->getArchivedAt()) {
@@ -43,7 +35,7 @@ class ClientController extends AbstractController
         $deputy = $client->getDeputy();
 
         if ($deputy instanceof User) {
-            if (false == $deputy->getIsPrimary()) {
+            if (!$deputy->getIsPrimary()) {
                 $deputy = $this->userApi->getPrimaryUserAccount($deputy->getDeputyUid());
             }
         }
@@ -54,30 +46,19 @@ class ClientController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/case-number/{caseNumber}/details", name="admin_client_by_case_number_details")
-     *
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
-     * @return RedirectResponse
-     */
-    public function detailsByCaseNumberAction(string $caseNumber)
+    #[Route(path: '/case-number/{caseNumber}/details', name: 'admin_client_by_case_number_details')]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    public function detailsByCaseNumberAction(string $caseNumber): RedirectResponse
     {
         $client = $this->clientApi->getByCaseNumber($caseNumber);
 
         return $this->redirectToRoute('admin_client_details', ['id' => $client->getId()]);
     }
 
-    /**
-     * @Route("/{id}/discharge", requirements={"id":"\d+"}, name="admin_client_discharge")
-     *
-     * @Security("is_granted('ROLE_ADMIN_MANAGER')")
-     *
-     * @Template("@App/Admin/Client/Client/discharge.html.twig")
-     *
-     * @return array
-     */
-    public function dischargeAction($id)
+    #[Route(path: '/{id}/discharge', name: 'admin_client_discharge', requirements: ['id' => '\d+'])]
+    #[IsGranted(attribute: 'ROLE_ADMIN_MANAGER')]
+    #[Template('@App/Admin/Client/Client/discharge.html.twig')]
+    public function dischargeAction(int $id): array
     {
         $client = $this->clientApi->getWithUsersV2($id);
 
@@ -88,29 +69,21 @@ class ClientController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/discharge-confirm", requirements={"id":"\d+"}, name="admin_client_discharge_confirm")
-     *
-     * @Security("is_granted('ROLE_ADMIN_MANAGER')")
-     *
-     * @return RedirectResponse
-     *
      * @throws \Exception
      */
-    public function dischargeConfirmAction($id)
+    #[Route(path: '/{id}/discharge-confirm', name: 'admin_client_discharge_confirm', requirements: ['id' => '\d+'])]
+    #[IsGranted(attribute: 'ROLE_ADMIN_MANAGER')]
+    public function dischargeConfirmAction(int $id): RedirectResponse
     {
         $this->clientApi->delete($id, AuditEvents::TRIGGER_ADMIN_BUTTON);
 
         return $this->redirectToRoute('admin_client_search');
     }
 
-    /**
-     * @Route("/{id}/archived", requirements={"id":"\d+"}, name="admin_client_archived")
-     *
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
-     * @Template("@App/Admin/Client/Client/archived.html.twig")
-     */
-    public function archivedAction(string $id): RedirectResponse|array
+    #[Route(path: '/{id}/archived', name: 'admin_client_archived', requirements: ['id' => '\d+'])]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[Template('@App/Admin/Client/Client/archived.html.twig')]
+    public function archivedAction(int $id): RedirectResponse|array
     {
         $client = $this->clientApi->getWithUsersV2($id);
         if (null === $client->getArchivedAt()) {
@@ -123,14 +96,10 @@ class ClientController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/{id}/unarchived", requirements={"id":"\d+"}, name="admin_client_unarchived")
-     *
-     * @Security ("is_granted('ROLE_ADMIN_MANAGER')")
-     *
-     * @Template("@App/Admin/Client/Client/unarchived.html.twig")
-     */
-    public function unarchiveAction(string $id)
+    #[Route(path: '/{id}/unarchived', name: 'admin_client_unarchived', requirements: ['id' => '\d+'])]
+    #[IsGranted(attribute: 'ROLE_ADMIN_MANAGER')]
+    #[Template('@App/Admin/Client/Client/unarchived.html.twig')]
+    public function unarchiveAction(string $id): ?RedirectResponse
     {
         $client = $this->clientApi->getWithUsersV2($id);
         if (null === $client->getArchivedAt()) {
@@ -138,5 +107,7 @@ class ClientController extends AbstractController
         }
 
         $this->clientApi->unarchiveClient($id);
+
+        return null;
     }
 }
