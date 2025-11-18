@@ -33,6 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Component\Validator\Constraints\Date;
 
 #[Route(path: '/admin/stats')]
 class StatsController extends AbstractController
@@ -62,7 +63,9 @@ class StatsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $reportSubmissionSummaries = $mapper->getBy($form->getData());
+                /** @var DateRangeQuery $query */
+                $query = $form->getData();
+                $reportSubmissionSummaries = $mapper->getBy($query);
                 $downloadableData = $transformer->transform($reportSubmissionSummaries);
 
                 return $this->buildResponse($downloadableData);
@@ -87,7 +90,9 @@ class StatsController extends AbstractController
             try {
                 $fileName = 'satisfaction.csv';
 
-                $reportSatisfactionSummaries = $mapper->getBy($form->getData());
+                /** @var DateRangeQuery $query */
+                $query = $form->getData();
+                $reportSatisfactionSummaries = $mapper->getBy($query);
                 $csv = $this->satisfactionCsvGenerator->generateSatisfactionResponsesCsv($reportSatisfactionSummaries);
 
                 return $this->csvResponseGeneration($fileName, $csv);
@@ -112,8 +117,13 @@ class StatsController extends AbstractController
             try {
                 $fileName = 'user-research-responses.csv';
 
-                $userResearchResponses = $mapper->getBy($form->getData());
-                $reportData = json_decode((string) $userResearchResponses, true)['data'];
+                /** @var DateRangeQuery $query */
+                $query = $form->getData();
+
+                /** @var string $userResearchResponses */
+                $userResearchResponses = $mapper->getBy($query);
+
+                $reportData = json_decode($userResearchResponses, true)['data'];
                 $csv = $this->userResearchResponseCsvGenerator->generateUserResearchResponsesCsv($reportData);
 
                 return $this->csvResponseGeneration($fileName, $csv);
@@ -150,8 +160,12 @@ class StatsController extends AbstractController
         $append = '';
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var \DateTime $startDate */
             $startDate = $form->get('startDate')->getData();
+
+            /** @var \DateTime $endDate */
             $endDate = $form->get('endDate')->getData();
+
             $append = "&startDate={$startDate->format('Y-m-d')}&endDate={$endDate->format('Y-m-d')}";
         }
 
@@ -215,11 +229,16 @@ class StatsController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
+                /** @var string $deputyType */
                 $deputyType = $form->get('deputyType')->getData();
                 $append = "?deputyType=$deputyType";
 
+                /** @var ?\DateTime $startDate */
                 $startDate = $form->get('startDate')->getData();
+
+                /** @var ?\DateTime $endDate */
                 $endDate = $form->get('endDate')->getData();
+
                 if (null !== $startDate && null !== $endDate) {
                     $append .= "&startDate={$startDate->format('Y-m-d')}&endDate={$endDate->format('Y-m-d')}";
                 }
@@ -302,8 +321,12 @@ class StatsController extends AbstractController
             try {
                 $append = '';
 
+                /** @var ?\DateTime $startDate */
                 $startDate = $form->get('startDate')->getData();
+
+                /** @var ?\DateTime $endDate */
                 $endDate = $form->get('endDate')->getData();
+
                 if (null !== $startDate && null !== $endDate) {
                     $append .= "?startDate={$startDate->format('Y-m-d')}&endDate={$endDate->format('Y-m-d')}";
                 }

@@ -174,8 +174,18 @@ class FixtureController extends AbstractController
     private function retrieveFormData(FormInterface $form, Request $request): array
     {
         $submitted = $form->getData();
-        $courtDate = $request->get('court-date') ? new \DateTime($request->get('court-date')) : new \DateTime();
-        $deputyEmail = $request->query->get('deputy-email', sprintf('original-%s-deputy-%s@fixture.com', is_null($submitted['deputyType']) ? null : strtolower((string) $submitted['deputyType']), mt_rand(1000, 9999)));
+
+        /** @var ?string $courtDate */
+        $courtDate = $request->get('court-date');
+        $courtDate = is_null($courtDate) ? new \DateTime() : new \DateTime($courtDate);
+
+        /** @var ?string $deputyType */
+        $deputyType = $submitted['deputyType'];
+        if (!is_null($deputyType)) {
+            $deputyType = strtolower($deputyType);
+        };
+
+        $deputyEmail = $request->query->get('deputy-email', sprintf('original-%s-deputy-%s@fixture.com', $deputyType, mt_rand(1000, 9999)));
         $caseNumber = $request->get('case-number', ClientHelpers::createValidCaseNumber());
         $deputyUid = intval('7' . str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT));
 
@@ -404,6 +414,7 @@ class FixtureController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var array $submitted */
             $submitted = $form->getData();
 
             $response = $this->restClient->post('v2/fixture/create-pre-registration', json_encode([

@@ -56,8 +56,14 @@ class CoDeputyController extends AbstractController
         if ($form->isSubmitted()) {
             // get client validation errors, if any, and add to the form
             $client = new Client();
-            $client->setLastName($form['clientLastname']->getData());
-            $client->setCaseNumber($form['clientCaseNumber']->getData());
+
+            /** @var string $lastName */
+            $lastName = $form['clientLastname']->getData();
+            $client->setLastName($lastName);
+
+            /** @var string $caseNumber */
+            $caseNumber = $form['clientCaseNumber']->getData();
+            $client->setCaseNumber($caseNumber);
 
             $errors = $validator->validate($client, null, ['verify-codeputy']);
 
@@ -75,10 +81,12 @@ class CoDeputyController extends AbstractController
                 $selfRegisterData->setClientLastname($form['clientLastname']->getData());
 
                 // truncate case number if length is 10 digits long before setting
-                if (10 == strlen((string) $form['clientCaseNumber']->getData())) {
-                    $selfRegisterData->setCaseNumber(substr((string) $form['clientCaseNumber']->getData(), 0, -2));
+                /** @var string $caseNumber */
+                $caseNumber = $form['clientCaseNumber']->getData();
+                if (10 == strlen($caseNumber)) {
+                    $selfRegisterData->setCaseNumber(substr($caseNumber, 0, -2));
                 } else {
-                    $selfRegisterData->setCaseNumber($form['clientCaseNumber']->getData());
+                    $selfRegisterData->setCaseNumber($caseNumber);
                 }
 
                 $clientId = $this->restClient->get('v2/client/case-number/' . $selfRegisterData->getCaseNumber(), 'Client')->getId();
