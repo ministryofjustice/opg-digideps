@@ -3076,11 +3076,6 @@ parameters:
 			path: src/Controller/Report/DocumentController.php
 
 		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\Form\\\\FormInterface\\:\\:getClickedButton\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/GiftController.php
