@@ -17,12 +17,15 @@ use Rector\Symfony\Symfony62\Rector\Class_\SecurityAttributeToIsGrantedAttribute
 // Run this with:
 //   STEP=1 ./vendor/bin/rector process
 // then run again with the next step, e.g. STEP=2, and so on.
+//
+// To run all 5 steps in order:
+// STEP=1 ./vendor/bin/rector process ; STEP=2 ./vendor/bin/rector process ; STEP=3 ./vendor/bin/rector process ;
+// STEP=4 ./vendor/bin/rector process ; STEP=5 ./vendor/bin/rector process
 $configBuilder = RectorConfig::configure()
     ->withPaths([
-        __DIR__ . '/src/Controller/ClientController.php',
-        __DIR__ . '/src/Controller/CoDeputyController.php',
-        __DIR__ . '/src/Controller/CourtOrderController.php',
-        __DIR__ . '/src/Controller/DeputyshipController.php',
+        __DIR__ . '/src/Controller/Admin/Client/ClientController.php',
+        __DIR__ . '/src/Controller/Admin/Client/ReportController.php',
+        __DIR__ . '/src/Controller/Admin/Client/SearchController.php',
     ])
     ->withPhpSets(php83: true)
     ->withPreparedSets(
