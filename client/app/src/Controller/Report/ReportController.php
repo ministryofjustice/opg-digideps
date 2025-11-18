@@ -136,35 +136,6 @@ class ReportController extends AbstractController
     ) {
     }
 
-    private function redirectNonPrimaryAccount(User $user): ?RedirectResponse
-    {
-        if (!$user->getIsPrimary()) {
-            $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
-
-            if (is_null($primaryEmail)) {
-                $this->addFlash('nonPrimaryRedirectUnknownEmail',
-                    [
-                        'sentenceOne' => 'This account has been closed.',
-                        'sentenceTwo' => 'You can now access all of your reports in the same place from your primary account.',
-                        'sentenceThree' => 'If you need assistance, contact your case manager on 0300 456 0300.',
-                    ]
-                );
-            } else {
-                $this->addFlash('nonPrimaryRedirect',
-                    [
-                        'sentenceOne' => 'This account has been closed.',
-                        'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
-                        'primaryEmail' => $primaryEmail,
-                    ]
-                );
-            }
-
-            return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
-        }
-
-        return null;
-    }
-
     /**
      * List of reports.
      *
@@ -193,12 +164,6 @@ class ReportController extends AbstractController
             $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
         }
 
-        // redirect back to log out page if signing in with non-primary account with primary email
-        $redirect = $this->redirectNonPrimaryAccount($user);
-        if (!is_null($redirect)) {
-            return $redirect;
-        }
-
         // redirect if user has missing details or is on wrong page
         $route = $redirector->getCorrectRouteIfDifferent($user, 'lay_home');
         if (is_string($route)) {
@@ -219,21 +184,23 @@ class ReportController extends AbstractController
         if ($ndrEnabledOnDeputy && $client->getNdr()) {
             $ndr = $this->reportApi->getNdr($client->getNdr()->getId(), self::$ndrGroupsForValidation);
 
-            return array_merge([
+            return array_merge(
+                [
                 'ndrEnabled' => true,
                 'client' => $client,
                 'ndr' => $client->getNdr(),
                 'reportsSubmitted' => $client->getSubmittedReports(),
                 'reportActive' => $client->getActiveReport(),
                 'ndrStatus' => new NdrStatusService($ndr),
-            ],
+                ],
                 $resultsArray
             );
         } else {
-            return array_merge([
+            return array_merge(
+                [
                 'ndrEnabled' => false,
                 'client' => $client,
-            ],
+                ],
                 $resultsArray
             );
         }
@@ -253,13 +220,6 @@ class ReportController extends AbstractController
     public function chooseAClientAction(Redirector $redirector)
     {
         $user = $this->userApi->getUserWithData(['user-clients', 'client']);
-
-        // ACTION: Move logic to service class
-        // redirect back to log out page if signing in with non-primary account with primary email
-        $redirect = $this->redirectNonPrimaryAccount($user);
-        if (!is_null($redirect)) {
-            return $redirect;
-        }
 
         // redirect if user has missing details or is on wrong page
         $route = $redirector->getCorrectRouteIfDifferent($user, 'choose_a_client');
@@ -310,7 +270,7 @@ class ReportController extends AbstractController
 
         $editReportDatesForm->handleRequest($request);
         if ($editReportDatesForm->isSubmitted() && $editReportDatesForm->isValid()) {
-            $this->restClient->put('report/'.$reportId, $report, ['startEndDates']);
+            $this->restClient->put('report/' . $reportId, $report, ['startEndDates']);
 
             return $this->redirect($returnLink);
         }
@@ -339,7 +299,7 @@ class ReportController extends AbstractController
      */
     public function createAction(Request $request, $clientId, $action = false)
     {
-        $client = $this->restClient->get('client/'.$clientId, 'Client', ['client', 'client-id', 'client-reports', 'report-id']);
+        $client = $this->restClient->get('client/' . $clientId, 'Client', ['client', 'client-id', 'client-reports', 'report-id']);
 
         $existingReports = $this->reportApi->getReportsIndexedById($client);
 
@@ -450,14 +410,14 @@ class ReportController extends AbstractController
         $jms = $this->determineJmsGroups($user);
 
         /* Get client with all other JMS groups required */
-        $client = $this->restClient->get('client/'.$clientId, 'Client', $jms);
+        $client = $this->restClient->get('client/' . $clientId, 'Client', $jms);
 
         if ($user->isDeputyOrg()) {
             /*
             Separate call to get client Users as query taking too long for some profs with many deputies attached.
             We only need the user id for the add client contact permission check
              */
-            $clientWithUsers = $this->restClient->get('client/'.$clientId, 'Client', ['user-id', 'client-users']);
+            $clientWithUsers = $this->restClient->get('client/' . $clientId, 'Client', ['user-id', 'client-users']);
             $client->setUsers($clientWithUsers->getUsers());
         }
 
@@ -718,7 +678,7 @@ class ReportController extends AbstractController
             $report->getClient()->getCaseNumber()
         );
 
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$attachmentName.'"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
 
         // Send headers before outputting anything
         $response->sendHeaders();
@@ -759,7 +719,7 @@ class ReportController extends AbstractController
             $report->getClient()->getCaseNumber()
         );
 
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$attachmentName.'"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
 
         // Send headers before outputting anything
         $response->sendHeaders();
@@ -789,7 +749,7 @@ class ReportController extends AbstractController
         $currentUser = $this->getUser();
 
         return [
-            'name' => $client->getFullName().' (client)',
+            'name' => $client->getFullName() . ' (client)',
             'address' => $client->getAddressNotEmptyParts(),
             'phone' => ['main' => $client->getPhone()],
             'email' => $client->getEmail(),
@@ -815,7 +775,7 @@ class ReportController extends AbstractController
         }
 
         return [
-            'name' => $deputy->getFullName().' (deputy)',
+            'name' => $deputy->getFullName() . ' (deputy)',
             'address' => $deputy->getAddressNotEmptyParts(),
             'phone' => [
                 'main' => $deputy->getPhoneMain(),
