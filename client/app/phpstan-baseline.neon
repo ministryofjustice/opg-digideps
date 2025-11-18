@@ -386,22 +386,7 @@ parameters:
 			path: src/Controller/Admin/FixtureController.php
 
 		-
-			message: "#^Cannot access offset 'createCoDeputy' on mixed\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
 			message: "#^Cannot access offset 'deputyType' on mixed\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Cannot access offset 'multiClientEnabled' on mixed\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Cannot access offset 'reportType' on mixed\\.$#"
 			count: 1
 			path: src/Controller/Admin/FixtureController.php
 
@@ -422,71 +407,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:completeReportSectionsAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:createAdmin\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:createClientAndAttachToDeputy\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:createClientAndAttachToOrg\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:createUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:deleteUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:fixtures\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:getUserIDByEmail\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:getUserRegistrationToken\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:layCourtOrdersAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:orgCourtOrdersAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:removeNullValues\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:retrieveFormData\\(\\) has parameter \\$form with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:retrieveFormData\\(\\) has parameter \\$request with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Admin/FixtureController.php
 
@@ -531,16 +451,6 @@ parameters:
 			path: src/Controller/Admin/FixtureController.php
 
 		-
-			message: "#^Property App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:\\$deputyProvider is never read, only written\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:\\$twig is never read, only written\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
 			message: "#^Call to an undefined method Symfony\\\\Contracts\\\\EventDispatcher\\\\EventDispatcherInterface\\:\\:addListener\\(\\)\\.$#"
 			count: 2
 			path: src/Controller/Admin/IndexController.php
@@ -571,16 +481,6 @@ parameters:
 			path: src/Controller/Admin/IndexController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\IndexController\\:\\:dispatchAdminManagerDeletedEvent\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/IndexController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\IndexController\\:\\:dispatchCSVUploadEvent\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/IndexController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Admin\\\\IndexController\\:\\:getPopulatedUser\\(\\) has parameter \\$id with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Admin/IndexController.php
@@ -591,32 +491,7 @@ parameters:
 			path: src/Controller/Admin/IndexController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\IndexController\\:\\:handleLayUploadForm\\(\\) has parameter \\$fileName with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/IndexController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\IndexController\\:\\:handleLayUploadForm\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Controller/Admin/IndexController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\IndexController\\:\\:handleOrgUploadForm\\(\\) has parameter \\$fileName with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/IndexController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\IndexController\\:\\:handleOrgUploadForm\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Controller/Admin/IndexController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Admin\\\\IndexController\\:\\:viewAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/IndexController.php
-
-		-
-			message: "#^Method App\\\\Service\\\\Client\\\\Internal\\\\UserApi\\:\\:activate\\(\\) invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: src/Controller/Admin/IndexController.php
 
@@ -629,11 +504,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
 			count: 2
 			path: src/Controller/Admin/IndexController.php
-
-		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\Form\\\\FormInterface\\:\\:isClicked\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
 
 		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
@@ -686,62 +556,7 @@ parameters:
 			path: src/Controller/Admin/OrganisationController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:addAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:addUserAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:addUserAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:deleteAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:deleteAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:deleteUserAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:deleteUserAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:deleteUserAction\\(\\) has parameter \\$userId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:dispatchOrgCreatedEvent\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:editAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:editAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:indexAction\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/Admin/OrganisationController.php
 
@@ -782,16 +597,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$userToRemove of method App\\\\Service\\\\Client\\\\Internal\\\\OrganisationApi\\:\\:removeUserFromOrganisation\\(\\) expects App\\\\Entity\\\\User, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Parameter \\#3 \\$currentUser of method App\\\\Service\\\\Client\\\\Internal\\\\OrganisationApi\\:\\:addUserToOrganisation\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Parameter \\#3 \\$currentUser of method App\\\\Service\\\\Client\\\\Internal\\\\OrganisationApi\\:\\:removeUserFromOrganisation\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Admin/OrganisationController.php
 
@@ -846,11 +651,6 @@ parameters:
 			path: src/Controller/Admin/SettingController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\SettingController\\:\\:serviceNotificationAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/SettingController.php
-
-		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Admin/SettingController.php
@@ -871,27 +671,12 @@ parameters:
 			path: src/Controller/Admin/StatsController.php
 
 		-
-			message: "#^Caught class App\\\\Controller\\\\Admin\\\\Throwable not found\\.$#"
-			count: 4
-			path: src/Controller/Admin/StatsController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Admin\\\\StatsController\\:\\:buildResponse\\(\\) has parameter \\$csvContent with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Admin/StatsController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\StatsController\\:\\:createFilterTypeForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/StatsController.php
-
-		-
 			message: "#^Parameter \\#1 \\$assetsTotals of method App\\\\Service\\\\Csv\\\\AssetsTotalsCSVGenerator\\:\\:generateAssetsTotalValuesCSV\\(\\) expects array, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Admin/StatsController.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Admin/StatsController.php
 
@@ -977,7 +762,7 @@ parameters:
 
 		-
 			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
-			count: 10
+			count: 8
 			path: src/Controller/CoDeputyController.php
 
 		-
@@ -1011,27 +796,7 @@ parameters:
 			path: src/Controller/CoDeputyController.php
 
 		-
-			message: "#^Left side of && is always true\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\CoDeputyController\\:\\:addAction\\(\\) has parameter \\$clientId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
 			message: "#^Parameter \\#1 \\$array of function reset is passed by reference, so it expects variables only\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Parameter \\#1 \\$caseNumber of method App\\\\Entity\\\\Client\\:\\:setCaseNumber\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Parameter \\#1 \\$caseNumber of method App\\\\Model\\\\SelfRegisterData\\:\\:setCaseNumber\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/CoDeputyController.php
 
@@ -1051,11 +816,6 @@ parameters:
 			path: src/Controller/CoDeputyController.php
 
 		-
-			message: "#^Parameter \\#1 \\$lastname of method App\\\\Entity\\\\Client\\:\\:setLastname\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
 			message: "#^Parameter \\#1 \\$lastname of method App\\\\Model\\\\SelfRegisterData\\:\\:setLastname\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/CoDeputyController.php
@@ -1068,16 +828,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$route of method Symfony\\\\Bundle\\\\FrameworkBundle\\\\Controller\\\\AbstractController\\:\\:redirectToRoute\\(\\) expects string, string\\|true given\\.$#"
 			count: 2
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function strlen expects string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function substr expects string, mixed given\\.$#"
-			count: 1
 			path: src/Controller/CoDeputyController.php
 
 		-
@@ -1099,16 +849,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$formResponse of method App\\\\Service\\\\Client\\\\Internal\\\\SatisfactionApi\\:\\:createGeneralFeedback\\(\\) expects array, mixed given\\.$#"
 			count: 1
 			path: src/Controller/FeedbackController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\HealthController\\:\\:containerHealthAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/HealthController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\HealthController\\:\\:servicesHealth\\(\\) has parameter \\$services with no type specified\\.$#"
-			count: 1
-			path: src/Controller/HealthController.php
 
 		-
 			message: "#^Cannot access property \\$usage on mixed\\.$#"
@@ -4496,31 +4236,6 @@ parameters:
 			path: src/Controller/SettingsController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\SettingsController\\:\\:emailEditAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\SettingsController\\:\\:indexAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\SettingsController\\:\\:passwordEditAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\SettingsController\\:\\:profileAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\SettingsController\\:\\:profileEditAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
 			message: "#^Parameter \\#1 \\$route of method Symfony\\\\Bundle\\\\FrameworkBundle\\\\Controller\\\\AbstractController\\:\\:redirectToRoute\\(\\) expects string, string\\|true given\\.$#"
 			count: 1
 			path: src/Controller/SettingsController.php
@@ -4581,11 +4296,6 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
-			message: "#^Parameter \\#1 \\$type of method Symfony\\\\Bundle\\\\FrameworkBundle\\\\Controller\\\\AbstractController\\:\\:createForm\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/UserController.php
@@ -4596,22 +4306,12 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
-			message: "#^Parameter \\#3 \\$jmsGroups of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array, mixed given\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
 			message: "#^Cannot access offset 'satisfaction' on mixed\\.$#"
 			count: 1
 			path: src/Controller/UserResearchController.php
 
 		-
 			message: "#^Cannot call method isLayDeputy\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null\\.$#"
-			count: 1
-			path: src/Controller/UserResearchController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserResearchController\\:\\:postSubmissionUserResearch\\(\\) should return array but returns Symfony\\\\Component\\\\HttpFoundation\\\\RedirectResponse\\.$#"
 			count: 1
 			path: src/Controller/UserResearchController.php
 
