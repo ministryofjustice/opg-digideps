@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   init: function (document) {
     const checkboxes = document.querySelectorAll('[data-js="multiselect-checkbox"]')
     const disabledButtons = document.querySelectorAll('[data-js="multiselect-disabled-button"]')
