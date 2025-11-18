@@ -4,7 +4,7 @@ resource "aws_ecs_task_definition" "admin" {
   network_mode             = "awsvpc"
   cpu                      = 512
   memory                   = 1024
-  container_definitions    = "[${local.admin_web}, ${local.admin_container}]"
+  container_definitions    = "[${local.admin_web}, ${local.admin_container}, ${local.admin_proxy}]"
   task_role_arn            = aws_iam_role.admin.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
   runtime_platform {
@@ -131,6 +131,7 @@ locals {
           awslogs-stream-prefix = "${aws_iam_role.admin.name}.app"
         }
       },
+      dependsOn = [{ containerName = "proxy", condition = "START" }],
       secrets = [
         { name = "API_CLIENT_SECRET", valueFrom = data.aws_secretsmanager_secret.admin_api_client_secret.arn },
         { name = "NOTIFY_API_KEY", valueFrom = data.aws_secretsmanager_secret.front_notify_api_key.arn },
@@ -142,7 +143,35 @@ locals {
           { name = "NGINX_APP_NAME", value = "admin" },
           { name = "ROLE", value = "admin" },
           { name = "SESSION_PREFIX", value = "dd_admin" },
+          { name = "HTTP_PROXY", value = "http://localhost:3128" },
+          { name = "HTTPS_PROXY", value = "http://localhost:3128" },
+          { name = "http_proxy", value = "http://localhost:3128" },
+          { name = "https_proxy", value = "http://localhost:3128" },
+          { name = "NO_PROXY", value = "169.254.169.254,localhost,127.0.0.1" }
       ])
+    }
+  )
+  admin_proxy = jsonencode(
+    {
+      cpu         = 0,
+      essential   = true,
+      image       = local.images.test,
+      mountPoints = [],
+      name        = "proxy",
+      portMappings = [{
+        containerPort = 3128,
+        hostPort      = 3128,
+        protocol      = "tcp"
+      }],
+      volumesFrom = [],
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = "${aws_iam_role.admin.name}.proxy"
+        }
+      }
     }
   )
 }
