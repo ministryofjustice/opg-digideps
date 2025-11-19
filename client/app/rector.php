@@ -8,9 +8,7 @@ use Rector\Php80\Rector\Class_\AnnotationToAttributeRector;
 use Rector\Php80\ValueObject\AnnotationToAttribute;
 use Rector\Symfony\Symfony62\Rector\Class_\SecurityAttributeToIsGrantedAttributeRector;
 use Rector\TypeDeclaration\Rector\StmtsAwareInterface\DeclareStrictTypesRector;
-
-// kludge to load our custom rule; eventually this will be in a proper importable namespace
-$renameImportsRectorName = require './RenameImportsRector.php';
+use Utils\RenameImportsRector;
 
 /*
 Rector doesn't guarantee the order in which refactorings are applied: if one refactor depends on the output
@@ -81,7 +79,7 @@ switch ($step) {
         break;
 
     case 5:
-        $configBuilder->withConfiguredRule($renameImportsRectorName, [
+        $configBuilder->withConfiguredRule(RenameImportsRector::class, [
             'Sensio\Bundle\FrameworkExtraBundle\Configuration\Template' => 'Symfony\Bridge\Twig\Attribute\Template'
         ]);
         break;
