@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-use App\Utils\Rector\RenameImportsRector;
 use Rector\CodingStyle\Rector\Stmt\RemoveUselessAliasInUseStatementRector;
 use Rector\Config\RectorConfig;
 use Rector\Php80\Rector\Class_\AnnotationToAttributeRector;
 use Rector\Php80\ValueObject\AnnotationToAttribute;
 use Rector\Symfony\Symfony62\Rector\Class_\SecurityAttributeToIsGrantedAttributeRector;
 use Rector\TypeDeclaration\Rector\StmtsAwareInterface\DeclareStrictTypesRector;
+use RectorRules\RenameImportsRector;
 
 /*
 Rector doesn't guarantee the order in which refactorings are applied: if one refactor depends on the output

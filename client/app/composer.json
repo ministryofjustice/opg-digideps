@@ -12,7 +12,8 @@
     "autoload": {
         "psr-4": {
             "App\\": "src/",
-            "DigidepsTests\\": "tests/phpunit"
+            "DigidepsTests\\": "tests/phpunit",
+            "RectorRules\\": "scripts/RectorRules"
         }
     },
     "require": {

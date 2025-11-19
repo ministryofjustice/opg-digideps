@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utils\Rector;
+namespace RectorRules;
 
 use PhpParser\Node;
 use PhpParser\Node\Name;
