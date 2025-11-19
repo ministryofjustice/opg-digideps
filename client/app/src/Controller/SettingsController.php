@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity;
-use App\Form;
+use App\Entity\User;
+use App\Form\ChangeEmailType;
+use App\Form\ChangePasswordType;
+use App\Form\Settings\ProfileType;
+use App\Form\User\UserDetailsBasicType;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
@@ -53,7 +56,7 @@ class SettingsController extends AbstractController
     {
         $user = $this->userApi->getUserWithData();
 
-        $form = $this->createForm(Form\ChangePasswordType::class, $user, [
+        $form = $this->createForm(ChangePasswordType::class, $user, [
             'mapped' => true,
             'error_bubbling' => true,
         ]);
@@ -82,7 +85,7 @@ class SettingsController extends AbstractController
     {
         $user = $this->userApi->getUserWithData();
 
-        $form = $this->createForm(Form\ChangeEmailType::class, $user, [
+        $form = $this->createForm(ChangeEmailType::class, $user, [
             'mapped' => false,
             'error_bubbling' => true,
         ]);
@@ -132,14 +135,14 @@ class SettingsController extends AbstractController
     {
         $preUpdateDeputy = $this->userApi->getUserWithData(['user-clients', 'client']);
 
-        if ($this->isGranted(Entity\User::ROLE_ADMIN) || $this->isGranted(Entity\User::ROLE_AD)) {
-            $form = $this->createForm(Form\User\UserDetailsBasicType::class, clone $preUpdateDeputy, []);
+        if ($this->isGranted(User::ROLE_ADMIN) || $this->isGranted(User::ROLE_AD)) {
+            $form = $this->createForm(UserDetailsBasicType::class, clone $preUpdateDeputy, []);
             $jmsPutGroups = ['user_details_basic'];
-        } elseif ($this->isGranted(Entity\User::ROLE_LAY_DEPUTY)) {
-            $form = $this->createForm(Form\Settings\ProfileType::class, clone $preUpdateDeputy, ['validation_groups' => ['user_details_full']]);
+        } elseif ($this->isGranted(User::ROLE_LAY_DEPUTY)) {
+            $form = $this->createForm(ProfileType::class, clone $preUpdateDeputy, ['validation_groups' => ['user_details_full']]);
             $jmsPutGroups = ['user_details_full'];
-        } elseif ($this->isGranted(Entity\User::ROLE_ORG)) {
-            $form = $this->createForm(Form\Settings\ProfileType::class, clone $preUpdateDeputy, ['validation_groups' => ['user_details_org', 'profile_org']]);
+        } elseif ($this->isGranted(User::ROLE_ORG)) {
+            $form = $this->createForm(ProfileType::class, clone $preUpdateDeputy, ['validation_groups' => ['user_details_org', 'profile_org']]);
             $jmsPutGroups = ['user_details_org', 'profile_org'];
         } else {
             throw $this->createAccessDeniedException('User role not recognised');
@@ -148,11 +151,15 @@ class SettingsController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var User $postUpdateDeputy */
             $postUpdateDeputy = $form->getData();
-            $newRole = $this->determineNoAdminRole();
 
             if ($form->has('removeAdmin') && !empty($form->get('removeAdmin')->getData())) {
-                $postUpdateDeputy->setRoleName($newRole);
+                $newRole = $this->determineNoAdminRole();
+
+                if (!is_null($newRole)) {
+                    $postUpdateDeputy->setRoleName($newRole);
+                }
 
                 $this->addFlash('notice', 'For security reasons you have been logged out because you have changed your admin rights. Please log in again below');
 
@@ -191,14 +198,14 @@ class SettingsController extends AbstractController
      * If remove admin permission, return the new role for the user. Specifically added to prevent named PA deputies
      * becoming Professional team members.
      */
-    private function determineNoAdminRole(): string
+    private function determineNoAdminRole(): ?string
     {
-        if ($this->isGranted(Entity\User::ROLE_PA_ADMIN)) {
-            return Entity\User::ROLE_PA_TEAM_MEMBER;
-        } elseif ($this->isGranted(Entity\User::ROLE_PROF_ADMIN)) {
-            return Entity\User::ROLE_PROF_TEAM_MEMBER;
+        if ($this->isGranted(User::ROLE_PA_ADMIN)) {
+            return User::ROLE_PA_TEAM_MEMBER;
+        } elseif ($this->isGranted(User::ROLE_PROF_ADMIN)) {
+            return User::ROLE_PROF_TEAM_MEMBER;
         }
 
-        throw $this->createAccessDeniedException('User role not recognised');
+        return null;
     }
 }

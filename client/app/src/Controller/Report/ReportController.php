@@ -360,9 +360,9 @@ class ReportController extends AbstractController
         ];
     }
 
-    #[Route(path: '/report/{reportId}/overview', name: 'report_overview')]
+    #[Route(path: '/report/{reportId}/overview', name: 'report_overview', requirements: ['reportId' => '\d+'])]
     #[Template('@App/Report/Report/overview.html.twig')]
-    public function overviewAction(Redirector $redirector, $reportId): RedirectResponse|Response
+    public function overviewAction(Redirector $redirector, int $reportId): RedirectResponse|Response
     {
         $reportJmsGroup = ['status', 'balance', 'user', 'client', 'client-reports', 'balance-state'];
         // redirect if user has missing details or is on wrong page

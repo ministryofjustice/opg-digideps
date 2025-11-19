@@ -59,7 +59,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
     {
         $from = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted(intval($reportId), ['prof-deputy-costs-estimate-how-charged']);
-        $currentHowChargedValue = $report->getProfDeputyCostsEstimateHowCharged();
+        $currentHowChargedValue = $report->getProfDeputyCostsEstimateHowCharged() ?? '';
 
         $form = $this->createForm(ProfDeputyCostsEstimateHowType::class, $report);
         $form->handleRequest($request);

@@ -90,8 +90,11 @@ class CoDeputyController extends AbstractController
                 }
 
                 $clientId = $this->restClient->get('v2/client/case-number/' . $selfRegisterData->getCaseNumber(), 'Client')->getId();
+
+                /** @var Client $mainClient */
                 $mainClient = $this->restClient->get('client/' . $clientId, 'Client', ['client', 'client-users', 'report-id', 'current-report', 'user']);
-                $mainDeputy = reset($mainClient->getUsers());
+                $deputies = $mainClient->getUsers();
+                $mainDeputy = reset($deputies);
 
                 // validate against pre-registration data
                 try {

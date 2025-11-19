@@ -41,8 +41,7 @@ class ClientBenefitsCheckController extends AbstractController
     ) {
     }
 
-
-    #[Route(path: '/{reportOrNdr}/{reportId}/client-benefits-check', requirements: ['reportOrNdr' => '(report|ndr)'], name: 'client_benefits_check')]
+    #[Route(path: '/{reportOrNdr}/{reportId}/client-benefits-check', name: 'client_benefits_check', requirements: ['reportOrNdr' => '(report|ndr)'])]
     #[Template('@App/Report/ClientBenefitsCheck/start.html.twig')]
     public function start(int $reportId, string $reportOrNdr): array|RedirectResponse
     {
@@ -65,8 +64,8 @@ class ClientBenefitsCheckController extends AbstractController
         ];
     }
 
-
-    #[Route(path: '/{reportOrNdr}/{reportId}/client-benefits-check/step/{step}', name: 'client_benefits_check_step')] // , requirements={
+    #[Route(path: '/{reportOrNdr}/{reportId}/client-benefits-check/step/{step}', name: 'client_benefits_check_step')]
+    #[Template('@App/Report/ClientBenefitsCheck/step.html.twig')]
     public function step(Request $request, int $reportId, int $step, string $reportOrNdr): array|RedirectResponse
     {
         $totalSteps = 3;
@@ -161,8 +160,7 @@ class ClientBenefitsCheckController extends AbstractController
             && in_array($form->get('doOthersReceiveMoneyOnClientsBehalf')->getData(), $notYesStatuses);
     }
 
-
-    #[Route(path: '/{reportOrNdr}/{reportId}/client-benefits-check/summary', requirements: ['reportOrNdr' => '(report|ndr)'], name: 'client_benefits_check_summary')]
+    #[Route(path: '/{reportOrNdr}/{reportId}/client-benefits-check/summary', name: 'client_benefits_check_summary', requirements: ['reportOrNdr' => '(report|ndr)'])]
     #[Template('@App/Report/ClientBenefitsCheck/summary.html.twig')]
     public function summary(int $reportId, string $reportOrNdr): array|RedirectResponse
     {
@@ -176,8 +174,7 @@ class ClientBenefitsCheckController extends AbstractController
         ];
     }
 
-
-    #[Route(path: '/{reportOrNdr}/{reportId}/client-benefits-check/remove/money-type/{moneyTypeId}', requirements: ['reportOrNdr' => '(report|ndr)'], name: 'client_benefits_check_remove_money_type')]
+    #[Route(path: '/{reportOrNdr}/{reportId}/client-benefits-check/remove/money-type/{moneyTypeId}', name: 'client_benefits_check_remove_money_type', requirements: ['reportOrNdr' => '(report|ndr)'])]
     #[Template('@App/Common/confirmDelete.html.twig')]
     public function removeIncomeType(Request $request, int $reportId, string $moneyTypeId, string $reportOrNdr): array|RedirectResponse
     {

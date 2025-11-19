@@ -159,11 +159,11 @@ class IndexController extends AbstractController
     #[Template('@App/Admin/Index/editUser.html.twig')]
     public function editUserAction(Request $request, TranslatorInterface $translator): array|Response
     {
-        /** @var int $filter */
-        $filter = $request->get('filter');
+        /** @var string $filter */
+        $filter = $request->get('filter', default: '');
 
         try {
-            $user = $this->getPopulatedUser($filter);
+            $user = $this->getPopulatedUser(intval($filter));
         } catch (\Throwable) {
             return $this->renderNotFound();
         }

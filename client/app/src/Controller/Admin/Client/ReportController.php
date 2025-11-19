@@ -387,10 +387,10 @@ class ReportController extends AbstractController
     {
         $newDueDate = $report->getDueDate();
 
-        /** @var string $dueDateChoice */
+        /** @var null|string|int $dueDateChoice */
         $dueDateChoice = $form['dueDateChoice']->getData();
 
-        if (preg_match('/^\d+$/', $dueDateChoice)) {
+        if (!empty($dueDateChoice) && preg_match('/^\d+$/', "$dueDateChoice")) {
             $newDueDate = new \DateTime();
             $newDueDate->modify("+$dueDateChoice weeks");
         } elseif ('custom' == $dueDateChoice) {
