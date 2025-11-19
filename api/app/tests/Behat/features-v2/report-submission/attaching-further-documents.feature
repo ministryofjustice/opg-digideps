@@ -28,7 +28,7 @@ Feature: Attaching Further Documents
         When I visit the documents step 2 page
         Then I should see "test_image.png" and "good.pdf" as previously submitted documents
 
-    @lay-pfa-high-submitted @super-admin
+    @lay-pfa-high-submitted @super-admin @attaching-further-documents-removing-file-after-selection
     Scenario: A user attempts to remove a file after it has been selected
         Given a Lay Deputy has submitted a report
         When I attach a supporting document "test-image.png" to the submitted report

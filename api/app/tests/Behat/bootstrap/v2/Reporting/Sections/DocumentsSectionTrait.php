@@ -257,7 +257,7 @@ trait DocumentsSectionTrait
      *
      * @Given /^I remove the "([^"]*)" document I uploaded$/
      */
-    public function iRemoveOneDocumentIUploaded($fileName = null)
+    public function iRemoveOneDocumentIUploaded(?string $fileName = null)
     {
         if ($fileName) {
             $documentToPop = $fileName;
@@ -267,23 +267,23 @@ trait DocumentsSectionTrait
             unset($filenames[0]);
         }
 
-        $parentOfDtWithTextSelector = sprintf('//dt[contains(text(),"%s")]/..', $documentToPop);
+        $parentOfDtWithTextSelector = sprintf('//dt[contains(text(), "%s")]/..', $documentToPop);
         $documentRowDiv = $this->getSession()->getPage()->find('xpath', $parentOfDtWithTextSelector);
 
         if (is_null($documentRowDiv)) {
             throw new BehatException(sprintf('An element containing a dt with the text %s was not found', $documentToPop));
         }
 
-        $removeLinkSelector = '//a[contains(text(),"Remove")]';
+        $removeLinkSelector = '//a[contains(text(), "Remove")]';
         $removeLink = $documentRowDiv->find('xpath', $removeLinkSelector);
 
         if (is_null($removeLink)) {
             throw new BehatException('A link with the text remove was not found in the document row');
         }
 
+        $removeLink->click();
 
         if (!$fileName) {
-            $removeLink->click();
             $this->uploadedDocumentFilenames = $filenames;
         }
     }
