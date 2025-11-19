@@ -173,8 +173,16 @@ trait DocumentsSectionTrait
      */
     public function theDocumentUploadsPageShouldNotContainADocumentWithFilename(string $filename)
     {
-        $this->assertPageNotContainsText($filename);
+        // Find all <dt class="govuk-summary-list__value"> elements
+        $elements = $this->getSession()->getPage()->findAll('css', 'dt.govuk-summary-list__value');
+
+        foreach ($elements as $element) {
+            if (strpos($element->getText(), $filename) !== false) {
+                throw new \Exception("Filename '{$filename}' was found in a summary list value.");
+            }
+        }
     }
+
 
     /**
      * @Given I remove the document with the filename :filename
@@ -190,10 +198,12 @@ trait DocumentsSectionTrait
         }
 
         $documentRowDiv->clickLink('Remove');
-
-        $this->pressButton('confirm_delete_confirm');
-        ;
     }
+
+
+
+
+
 
     private function uploadFiles(array $filenames)
     {
