@@ -8,6 +8,7 @@ use Rector\Config\RectorConfig;
 use Rector\Php80\Rector\Class_\AnnotationToAttributeRector;
 use Rector\Php80\ValueObject\AnnotationToAttribute;
 use Rector\Symfony\Symfony62\Rector\Class_\SecurityAttributeToIsGrantedAttributeRector;
+use Rector\TypeDeclaration\Rector\StmtsAwareInterface\DeclareStrictTypesRector;
 
 /*
 Rector doesn't guarantee the order in which refactorings are applied: if one refactor depends on the output
@@ -29,7 +30,7 @@ To run all 5 steps in order:
 */
 $configBuilder = RectorConfig::configure()
     ->withPaths([
-        __DIR__ . '/src/Controller/JWT/JWTController.php',
+        __DIR__ . '/src/Controller/Report',
     ])
     ->withPhpSets(php83: true)
     ->withPreparedSets(
@@ -67,6 +68,7 @@ switch ($step) {
     case 4:
         $configBuilder->withRules([
             RemoveUselessAliasInUseStatementRector::class,
+            DeclareStrictTypesRector::class,
         ]);
         break;
 
