@@ -2,13 +2,15 @@
 
 declare(strict_types=1);
 
-use App\Utils\Rector\RenameImportsRector;
 use Rector\CodingStyle\Rector\Stmt\RemoveUselessAliasInUseStatementRector;
 use Rector\Config\RectorConfig;
 use Rector\Php80\Rector\Class_\AnnotationToAttributeRector;
 use Rector\Php80\ValueObject\AnnotationToAttribute;
 use Rector\Symfony\Symfony62\Rector\Class_\SecurityAttributeToIsGrantedAttributeRector;
 use Rector\TypeDeclaration\Rector\StmtsAwareInterface\DeclareStrictTypesRector;
+
+// kludge to load our custom rule; eventually this will be in a proper importable namespace
+$renameImportsRectorName = require './RenameImportsRector.php';
 
 /*
 Rector doesn't guarantee the order in which refactorings are applied: if one refactor depends on the output
@@ -27,10 +29,16 @@ To run all 5 steps in order:
 
     STEP=1 ./vendor/bin/rector process ; STEP=2 ./vendor/bin/rector process ; STEP=3 ./vendor/bin/rector process ; \
     STEP=4 ./vendor/bin/rector process ; STEP=5 ./vendor/bin/rector process
+
+After this, do these manual steps:
+
+- remove unnecessary aliases on imports (e.g. FormDir, EntityDir)
+- optimise imports
+- sort parameters on attributes
 */
 $configBuilder = RectorConfig::configure()
     ->withPaths([
-        __DIR__ . '/src/Controller/Report',
+        __DIR__ . '/src/Controller/CourtOrderController.php',
     ])
     ->withPhpSets(php83: true)
     ->withPreparedSets(
@@ -73,15 +81,10 @@ switch ($step) {
         break;
 
     case 5:
-        $configBuilder->withConfiguredRule(RenameImportsRector::class, [
+        $configBuilder->withConfiguredRule($renameImportsRectorName, [
             'Sensio\Bundle\FrameworkExtraBundle\Configuration\Template' => 'Symfony\Bridge\Twig\Attribute\Template'
         ]);
         break;
 }
 
 return $configBuilder;
-
-// after this, manual steps (could possibly be automated with Rector):
-// - remove screwy aliases on imports (e.g. FormDir, EntityDir)
-// - optimise imports
-// - sort parameters on attributes
