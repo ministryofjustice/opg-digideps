@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Utils;
+namespace App\Utils\Rector;
 
 use PhpParser\Node;
 use PhpParser\Node\Name;
@@ -13,13 +13,6 @@ use Rector\Rector\AbstractRector;
 use Symplify\RuleDocGenerator\ValueObject\RuleDefinition;
 
 /**
- * This is not ideally located on the filesystem, but putting it into the src directory causes phpstan to
- * get upset as we're not installing rector via composer. And, at the moment, we can't add rector v2 to composer, as it
- * requires a different version of phpstan which is incompatible with what we're currently using.
- *
- * Once we upgrade to a later phpstan, we could include rector as a dev dependency and move this rule into a proper
- * package with the rest of the support files.
- *
  * How to use (in your rector.php):
  *
  * return RectorConfig::configure()->withConfiguredRule(RenameImportsRector::class, [
