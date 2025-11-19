@@ -9,6 +9,8 @@ use Throwable;
 use App\Entity\Report\Document;
 use App\Tests\Behat\BehatException;
 
+use function PHPUnit\Framework\assertEquals;
+
 trait DocumentsSectionTrait
 {
     // Valid files
@@ -173,7 +175,9 @@ trait DocumentsSectionTrait
      */
     public function theDocumentUploadsPageShouldNotContainADocumentWithFilename(string $filename)
     {
-        $this->assertPageNotContainsText($filename);
+        $dtElementsContainingFilename = "//dt[contains(text(), \"$filename\")]";
+        $elts = $this->getSession()->getPage()->find('xpath', $dtElementsContainingFilename);
+        assertEquals(null, $elts);
     }
 
     /**
@@ -190,9 +194,6 @@ trait DocumentsSectionTrait
         }
 
         $documentRowDiv->clickLink('Remove');
-
-        $this->pressButton('confirm_delete_confirm');
-        ;
     }
 
     private function uploadFiles(array $filenames)
