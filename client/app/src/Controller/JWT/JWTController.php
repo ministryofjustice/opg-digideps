@@ -9,14 +9,12 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class JWTController extends AbstractController
 {
-    public function __construct(private HttpClientInterface $phpApiClient)
+    public function __construct(private readonly HttpClientInterface $phpApiClient)
     {
     }
 
-    /**
-     * @Route("/v2/.well-known/jwks.json", name="jwks")
-     */
-    public function jwks()
+    #[Route(path: '/v2/.well-known/jwks.json', name: 'jwks')]
+    public function jwks(): JsonResponse
     {
         $jwkResponse = $this->phpApiClient->request('GET', 'jwk-public-key');
 
