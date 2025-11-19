@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Ndr;
 
 use App\Controller\AbstractController;
 use App\Entity\Ndr\Ndr;
-use App\Form as FormDir;
+use App\Form\Ndr\IncomeBenefitType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
 use App\Service\StepRedirector;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -17,7 +19,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class IncomeBenefitController extends AbstractController
 {
-    private static $jmsGroups = [
+    private static array $jmsGroups = [
         'state-benefits',
         'pension',
         'damages',
@@ -31,14 +33,9 @@ class IncomeBenefitController extends AbstractController
     ) {
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/income-benefits", name="ndr_income_benefits")
-     *
-     * @Template("@App/Ndr/IncomeBenefit/start.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function startAction($ndrId)
+    #[Route(path: '/ndr/{ndrId}/income-benefits', name: 'ndr_income_benefits')]
+    #[Template('@App/Ndr/IncomeBenefit/start.html.twig')]
+    public function startAction(int $ndrId): RedirectResponse|array
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getIncomeBenefitsState()['state']) {
@@ -50,12 +47,9 @@ class IncomeBenefitController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/income-benefits/step/{step}", name="ndr_income_benefits_step")
-     *
-     * @Template("@App/Ndr/IncomeBenefit/step.html.twig")
-     */
-    public function stepAction(Request $request, $ndrId, $step, TranslatorInterface $translator)
+    #[Route(path: '/ndr/{ndrId}/income-benefits/step/{step}', name: 'ndr_income_benefits_step')]
+    #[Template('@App/Ndr/IncomeBenefit/step.html.twig')]
+    public function stepAction(Request $request, int $ndrId, $step, TranslatorInterface $translator): RedirectResponse|array
     {
         $totalSteps = 5;
         if ($step < 1 || $step > $totalSteps) {
@@ -71,7 +65,7 @@ class IncomeBenefitController extends AbstractController
             ->setRouteBaseParams(['ndrId' => $ndrId]);
 
         $form = $this->createForm(
-            FormDir\Ndr\IncomeBenefitType::class,
+            IncomeBenefitType::class,
             $ndr,
             ['step' => $step, 'translator' => $translator, 'clientFirstName' => $ndr->getClient()->getFirstname()]
         );
@@ -79,8 +73,9 @@ class IncomeBenefitController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
             /* @var $data Ndr */
+            $data = $form->getData();
+
             $stepToJmsGroup = [
                 1 => ['ndr-state-benefits'],
                 2 => ['ndr-receive-state-pension'],
@@ -89,7 +84,7 @@ class IncomeBenefitController extends AbstractController
                 5 => ['ndr-one-off'],
             ];
 
-            $this->restClient->put('ndr/'.$ndrId, $data, $stepToJmsGroup[$step]);
+            $this->restClient->put('ndr/' . $ndrId, $data, $stepToJmsGroup[$step]);
 
             if ('summary' == $fromPage) {
                 $request->getSession()->getFlashBag()->add(
@@ -110,12 +105,9 @@ class IncomeBenefitController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/income-benefits/summary", name="ndr_income_benefits_summary")
-     *
-     * @Template("@App/Ndr/IncomeBenefit/summary.html.twig")
-     */
-    public function summaryAction(Request $request, $ndrId)
+    #[Route(path: '/ndr/{ndrId}/income-benefits/summary', name: 'ndr_income_benefits_summary')]
+    #[Template('@App/Ndr/IncomeBenefit/summary.html.twig')]
+    public function summaryAction(Request $request, int $ndrId): RedirectResponse|array
     {
         $fromPage = $request->get('from');
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);

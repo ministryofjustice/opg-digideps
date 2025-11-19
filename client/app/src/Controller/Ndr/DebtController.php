@@ -1,19 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Ndr;
 
 use App\Controller\AbstractController;
-use App\Form as FormDir;
+use App\Form;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DebtController extends AbstractController
 {
-    private static $jmsGroups = ['ndr-debt', 'ndr-debt-management'];
+    private static array $jmsGroups = ['ndr-debt', 'ndr-debt-management'];
 
     public function __construct(
         private readonly ReportApi $reportApi,
@@ -21,12 +24,9 @@ class DebtController extends AbstractController
     ) {
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/debts", name="ndr_debts")
-     *
-     * @Template("@App/Ndr/Debt/start.html.twig")
-     */
-    public function startAction(Request $request, $ndrId)
+    #[Route(path: '/ndr/{ndrId}/debts', name: 'ndr_debts')]
+    #[Template('@App/Ndr/Debt/start.html.twig')]
+    public function startAction(Request $request, int $ndrId): RedirectResponse|array
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getDebtsState()['state']) {
@@ -38,23 +38,20 @@ class DebtController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/debts/exist", name="ndr_debts_exist")
-     *
-     * @Template("@App/Ndr/Debt/exist.html.twig")
-     */
-    public function existAction(Request $request, $ndrId)
+    #[Route(path: '/ndr/{ndrId}/debts/exist', name: 'ndr_debts_exist')]
+    #[Template('@App/Ndr/Debt/exist.html.twig')]
+    public function existAction(Request $request, int $ndrId): RedirectResponse|array
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $form = $this->createForm(
-            FormDir\YesNoType::class,
+            Form\YesNoType::class,
             $ndr,
             ['field' => 'hasDebts', 'translation_domain' => 'ndr-debts']
         );
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->put('ndr/'.$ndrId, $ndr, ['debt']);
+            $this->restClient->put('ndr/' . $ndrId, $ndr, ['debt']);
 
             if ('yes' == $ndr->getHasDebts()) {
                 return $this->redirectToRoute('ndr_debts_edit', ['ndrId' => $ndrId]);
@@ -77,20 +74,18 @@ class DebtController extends AbstractController
 
     /**
      * List debts.
-     *
-     * @Route("/ndr/{ndrId}/debts/edit", name="ndr_debts_edit")
-     *
-     * @Template("@App/Ndr/Debt/edit.html.twig")
      */
-    public function editAction(Request $request, $ndrId)
+    #[Route(path: '/ndr/{ndrId}/debts/edit', name: 'ndr_debts_edit')]
+    #[Template('@App/Ndr/Debt/edit.html.twig')]
+    public function editAction(Request $request, int $ndrId): RedirectResponse|array
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        $form = $this->createForm(FormDir\Ndr\Debt\DebtsType::class, $ndr);
+        $form = $this->createForm(Form\Ndr\Debt\DebtsType::class, $ndr);
         $form->handleRequest($request);
         $fromPage = $request->get('from');
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->put('ndr/'.$ndr->getId(), $form->getData(), ['debt']);
+            $this->restClient->put('ndr/' . $ndr->getId(), $form->getData(), ['debt']);
 
             if ('summary' == $fromPage) {
                 $request->getSession()->getFlashBag()->add('notice', 'Debt edited');
@@ -115,22 +110,20 @@ class DebtController extends AbstractController
 
     /**
      * How debts are managed question.
-     *
-     * @Route("/ndr/{ndrId}/debts/management", name="ndr_debts_management")
-     *
-     * @Template("@App/Ndr/Debt/management.html.twig")
      */
-    public function managementAction(Request $request, $ndrId)
+    #[Route(path: '/ndr/{ndrId}/debts/management', name: 'ndr_debts_management')]
+    #[Template('@App/Ndr/Debt/management.html.twig')]
+    public function managementAction(Request $request, int $ndrId): RedirectResponse|array
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        $form = $this->createForm(FormDir\Ndr\Debt\DebtManagementType::class, $ndr);
+        $form = $this->createForm(Form\Ndr\Debt\DebtManagementType::class, $ndr);
 
         $form->handleRequest($request);
         $fromPage = $request->get('from');
         $fromSummaryPage = 'summary' == $request->get('from');
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->put('ndr/'.$ndr->getId(), $form->getData(), ['ndr-debt-management']);
+            $this->restClient->put('ndr/' . $ndr->getId(), $form->getData(), ['ndr-debt-management']);
 
             if ('summary' == $fromPage) {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
@@ -153,13 +146,11 @@ class DebtController extends AbstractController
     }
 
     /**
-     * List debts.
-     *
-     * @Route("/ndr/{ndrId}/debts/summary", name="ndr_debts_summary")
-     *
-     * @Template("@App/Ndr/Debt/summary.html.twig")
+     * List debt summary.
      */
-    public function summaryAction(Request $request, $ndrId)
+    #[Route(path: '/ndr/{ndrId}/debts/summary', name: 'ndr_debts_summary')]
+    #[Template('@App/Ndr/Debt/summary.html.twig')]
+    public function summaryAction(Request $request, int $ndrId): RedirectResponse|array
     {
         $fromPage = $request->get('from');
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
