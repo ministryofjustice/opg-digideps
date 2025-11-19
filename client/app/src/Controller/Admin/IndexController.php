@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
@@ -9,7 +11,11 @@ use App\Event\AdminManagerDeletedEvent;
 use App\Event\CSVUploadedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Exception\RestClientException;
-use App\Form;
+use App\Form\Admin\AddUserType;
+use App\Form\Admin\EditUserType;
+use App\Form\Admin\SearchType;
+use App\Form\NdrType;
+use App\Form\ProcessCSVType;
 use App\Security\UserVoter;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\Internal\PreRegistrationApi;
@@ -80,7 +86,7 @@ class IndexController extends AbstractController
             $this->restClient->apiCall('PUT', 'user/' . $user->getId() . '/set-active', null, 'array', [], false);
         }
 
-        $form = $this->createForm(Form\Admin\SearchType::class, null, ['method' => 'GET']);
+        $form = $this->createForm(SearchType::class, null, ['method' => 'GET']);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $filters = $form->getData() + $filters;
@@ -102,7 +108,7 @@ class IndexController extends AbstractController
     #[Template('@App/Admin/Index/addUser.html.twig')]
     public function addUserAction(Request $request): array|RedirectResponse
     {
-        $form = $this->createForm(Form\Admin\AddUserType::class, new User());
+        $form = $this->createForm(AddUserType::class, new User());
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -136,7 +142,7 @@ class IndexController extends AbstractController
     #[Route(path: '/user/{id}', name: 'admin_user_view', requirements: ['id' => '\d+'])]
     #[IsGranted(attribute: 'ROLE_ADMIN')]
     #[Template('@App/Admin/Index/viewUser.html.twig')]
-    public function viewAction($id): array|Response
+    public function viewAction(int $id): array|Response
     {
         try {
             return ['user' => $this->getPopulatedUser($id)];
@@ -153,6 +159,7 @@ class IndexController extends AbstractController
     #[Template('@App/Admin/Index/editUser.html.twig')]
     public function editUserAction(Request $request, TranslatorInterface $translator): array|Response
     {
+        /** @var int $filter */
         $filter = $request->get('filter');
 
         try {
@@ -171,7 +178,7 @@ class IndexController extends AbstractController
             ]);
         }
 
-        $form = $this->createForm(Form\Admin\EditUserType::class, $user, ['user' => $this->getUser()]);
+        $form = $this->createForm(EditUserType::class, $user, ['user' => $this->getUser()]);
 
         $form->handleRequest($request);
 
@@ -206,7 +213,7 @@ class IndexController extends AbstractController
         return $view;
     }
 
-    private function getPopulatedUser($id): User
+    private function getPopulatedUser(int $id): User
     {
         /* @var User $user */
         $user = $this->restClient->get("user/$id", 'User', ['user-rolename']);
@@ -229,7 +236,7 @@ class IndexController extends AbstractController
     public function editNdrAction(Request $request, string $id): RedirectResponse
     {
         $ndr = $this->restClient->get('ndr/' . $id, 'Ndr\Ndr', ['ndr', 'client', 'client-users', 'user']);
-        $ndrForm = $this->createForm(Form\NdrType::class, $ndr);
+        $ndrForm = $this->createForm(NdrType::class, $ndr);
         if ('POST' == $request->getMethod()) {
             $ndrForm->handleRequest($request);
 
@@ -325,7 +332,7 @@ class IndexController extends AbstractController
     #[Template('@App/Admin/Index/uploadUsers.html.twig')]
     public function uploadUsersAction(Request $request, ClientInterface $redisClient): array|RedirectResponse
     {
-        $processForm = $this->createForm(Form\ProcessCSVType::class, null, [
+        $processForm = $this->createForm(ProcessCSVType::class, null, [
             'method' => 'POST',
         ]);
         $processForm->handleRequest($request);
@@ -354,7 +361,7 @@ class IndexController extends AbstractController
             return $this->redirect($this->generateUrl('pre_registration_upload'));
         }
 
-        /** S3 bucket information */
+        // S3 bucket information
         $bucket = $this->params->get('s3_sirius_bucket');
         $layReportFile = $this->params->get('lay_report_csv_filename');
         $bucketFileInfo = [
@@ -400,7 +407,7 @@ class IndexController extends AbstractController
     #[Template('@App/Admin/Index/uploadOrgUsers.html.twig')]
     public function uploadOrgUsersAction(Request $request, ClientInterface $redisClient): array|RedirectResponse
     {
-        $processForm = $this->createForm(Form\ProcessCSVType::class, null, [
+        $processForm = $this->createForm(ProcessCSVType::class, null, [
             'method' => 'POST',
         ]);
         $processForm->handleRequest($request);

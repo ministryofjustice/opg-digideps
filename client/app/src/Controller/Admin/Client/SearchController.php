@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin\Client;
 
 use App\Controller\AbstractController;
@@ -15,8 +17,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route(path: '/admin/client')]
 class SearchController extends AbstractController
 {
-    public function __construct(private readonly RestClient $restClient)
-    {
+    public function __construct(
+        private readonly RestClient $restClient
+    ) {
     }
 
     #[Route(path: '/search', name: 'admin_client_search')]

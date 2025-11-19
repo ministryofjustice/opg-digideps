@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin\Client;
 
 use App\Controller\AbstractController;
@@ -101,7 +103,7 @@ class ClientController extends AbstractController
     #[Template('@App/Admin/Client/Client/unarchived.html.twig')]
     public function unarchiveAction(string $id): ?RedirectResponse
     {
-        $client = $this->clientApi->getWithUsersV2($id);
+        $client = $this->clientApi->getWithUsersV2(intval($id));
         if (null === $client->getArchivedAt()) {
             return $this->redirectToRoute('admin_client_details', ['id' => $client->getId()]);
         }

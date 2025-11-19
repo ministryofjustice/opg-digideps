@@ -6,8 +6,10 @@ namespace App\Controller\Ndr;
 
 use App\Controller\AbstractController;
 use App\Entity\Ndr\Expense;
-use App\Entity\Ndr\Ndr;
-use App\Form;
+use App\Form\AddAnotherRecordType;
+use App\Form\ConfirmDeleteType;
+use App\Form\Ndr\DeputyExpenseType;
+use App\Form\YesNoType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
@@ -52,7 +54,7 @@ class DeputyExpenseController extends AbstractController
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $form = $this->createForm(
-            Form\YesNoType::class,
+            YesNoType::class,
             $ndr,
             ['field' => 'paidForAnything', 'translation_domain' => 'ndr-deputy-expenses']
         );
@@ -91,7 +93,7 @@ class DeputyExpenseController extends AbstractController
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $expense = new Expense();
 
-        $form = $this->createForm(Form\Ndr\DeputyExpenseType::class, $expense);
+        $form = $this->createForm(DeputyExpenseType::class, $expense);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -127,7 +129,7 @@ class DeputyExpenseController extends AbstractController
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
 
-        $form = $this->createForm(Form\AddAnotherRecordType::class, $ndr, ['translation_domain' => 'ndr-deputy-expenses']);
+        $form = $this->createForm(AddAnotherRecordType::class, $ndr, ['translation_domain' => 'ndr-deputy-expenses']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -152,7 +154,7 @@ class DeputyExpenseController extends AbstractController
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $expense = $this->restClient->get('ndr/' . $ndr->getId() . '/expense/' . $expenseId, 'Ndr\Expense');
 
-        $form = $this->createForm(Form\Ndr\DeputyExpenseType::class, $expense);
+        $form = $this->createForm(DeputyExpenseType::class, $expense);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -189,7 +191,7 @@ class DeputyExpenseController extends AbstractController
     #[Template('@App/Common/confirmDelete.html.twig')]
     public function deleteAction(Request $request, int $ndrId, string $expenseId): RedirectResponse|array
     {
-        $form = $this->createForm(Form\ConfirmDeleteType::class);
+        $form = $this->createForm(ConfirmDeleteType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

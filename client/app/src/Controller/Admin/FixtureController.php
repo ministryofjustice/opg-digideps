@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
@@ -25,8 +27,13 @@ use Symfony\Component\Serializer\SerializerInterface;
 #[Route(path: '/admin/fixtures')]
 class FixtureController extends AbstractController
 {
-    public function __construct(private readonly SerializerInterface $serializer, private readonly RestClient $restClient, private readonly ReportApi $reportApi, private readonly UserApi $userApi, private readonly bool $fixturesEnabled)
-    {
+    public function __construct(
+        private readonly SerializerInterface $serializer,
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
+        private readonly UserApi $userApi,
+        private readonly bool $fixturesEnabled
+    ) {
     }
 
     #[Route(path: '/', name: 'admin_fixtures')]
@@ -219,7 +226,7 @@ class FixtureController extends AbstractController
 
     #[Route(path: '/complete-sections/{reportType}/{reportId}', name: 'fixtures_complete_report_sections', requirements: ['id' => '\d+'], methods: ['GET'])]
     #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
-    public function completeReportSectionsAction(Request $request, string $reportType, $reportId): JsonResponse
+    public function completeReportSectionsAction(Request $request, string $reportType, int $reportId): JsonResponse
     {
         if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();

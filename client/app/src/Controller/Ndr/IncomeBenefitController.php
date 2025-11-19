@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller\Ndr;
 
 use App\Controller\AbstractController;
-use App\Entity\Ndr\Ndr;
 use App\Form\Ndr\IncomeBenefitType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;

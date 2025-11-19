@@ -7,7 +7,12 @@ namespace App\Controller\Ndr;
 use App\Controller\AbstractController;
 use App\Entity\Ndr\AssetOther;
 use App\Entity\Ndr\AssetProperty;
-use App\Form;
+use App\Form\AddAnotherRecordType;
+use App\Form\ConfirmDeleteType;
+use App\Form\Ndr\Asset\AssetTypeOther;
+use App\Form\Ndr\Asset\AssetTypeProperty;
+use App\Form\Ndr\Asset\AssetTypeTitle;
+use App\Form\YesNoType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
@@ -50,7 +55,7 @@ class AssetController extends AbstractController
         if ('GET' == $request->getMethod() && $ndr->getAssets()) { // if assets are added, set form default to "Yes"
             $ndr->setNoAssetToAdd(0);
         }
-        $form = $this->createForm(Form\YesNoType::class, $ndr, [
+        $form = $this->createForm(YesNoType::class, $ndr, [
             'field' => 'noAssetToAdd',
             'translation_domain' => 'ndr-assets',
             'choices' => ['Yes' => 0, 'No' => 1],
@@ -86,7 +91,7 @@ class AssetController extends AbstractController
     public function typeAction(Request $request, int $ndrId): RedirectResponse|array
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        $form = $this->createForm(Form\Ndr\Asset\AssetTypeTitle::class, new AssetOther(), []);
+        $form = $this->createForm(AssetTypeTitle::class, new AssetOther(), []);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -114,7 +119,7 @@ class AssetController extends AbstractController
         $asset->setTitle($title);
         $asset->setndr($ndr);
 
-        $form = $this->createForm(Form\Ndr\Asset\AssetTypeOther::class, $asset);
+        $form = $this->createForm(AssetTypeOther::class, $asset);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -146,7 +151,7 @@ class AssetController extends AbstractController
             $asset->setndr($ndr);
         }
 
-        $form = $this->createForm(Form\Ndr\Asset\AssetTypeOther::class, $asset);
+        $form = $this->createForm(AssetTypeOther::class, $asset);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -171,7 +176,7 @@ class AssetController extends AbstractController
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
 
-        $form = $this->createForm(Form\AddAnotherRecordType::class, $ndr, ['translation_domain' => 'ndr-assets']);
+        $form = $this->createForm(AddAnotherRecordType::class, $ndr, ['translation_domain' => 'ndr-assets']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -237,7 +242,7 @@ class AssetController extends AbstractController
         ]);
 
         // create and handle form
-        $form = $this->createForm(Form\Ndr\Asset\AssetTypeProperty::class, $asset, ['step' => $step]);
+        $form = $this->createForm(AssetTypeProperty::class, $asset, ['step' => $step]);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
@@ -325,7 +330,7 @@ class AssetController extends AbstractController
     #[Template('@App/Common/confirmDelete.html.twig')]
     public function deleteAction(Request $request, int $ndrId, $assetId): RedirectResponse|array
     {
-        $form = $this->createForm(Form\ConfirmDeleteType::class);
+        $form = $this->createForm(ConfirmDeleteType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

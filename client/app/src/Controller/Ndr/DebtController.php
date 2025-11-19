@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller\Ndr;
 
+use App\Form\YesNoType;
+use App\Form\Ndr\Debt\DebtsType;
+use App\Form\Ndr\Debt\DebtManagementType;
 use App\Controller\AbstractController;
-use App\Form;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
@@ -44,7 +46,7 @@ class DebtController extends AbstractController
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         $form = $this->createForm(
-            Form\YesNoType::class,
+            YesNoType::class,
             $ndr,
             ['field' => 'hasDebts', 'translation_domain' => 'ndr-debts']
         );
@@ -80,7 +82,7 @@ class DebtController extends AbstractController
     public function editAction(Request $request, int $ndrId): RedirectResponse|array
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        $form = $this->createForm(Form\Ndr\Debt\DebtsType::class, $ndr);
+        $form = $this->createForm(DebtsType::class, $ndr);
         $form->handleRequest($request);
         $fromPage = $request->get('from');
 
@@ -116,7 +118,7 @@ class DebtController extends AbstractController
     public function managementAction(Request $request, int $ndrId): RedirectResponse|array
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        $form = $this->createForm(Form\Ndr\Debt\DebtManagementType::class, $ndr);
+        $form = $this->createForm(DebtManagementType::class, $ndr);
 
         $form->handleRequest($request);
         $fromPage = $request->get('from');

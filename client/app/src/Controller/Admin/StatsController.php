@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
@@ -33,7 +35,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Validator\Constraints\Date;
 
 #[Route(path: '/admin/stats')]
 class StatsController extends AbstractController
@@ -66,11 +67,13 @@ class StatsController extends AbstractController
                 /** @var DateRangeQuery $query */
                 $query = $form->getData();
                 $reportSubmissionSummaries = $mapper->getBy($query);
+
+                /** @var string $downloadableData */
                 $downloadableData = $transformer->transform($reportSubmissionSummaries);
 
                 return $this->buildResponse($downloadableData);
             } catch (\Throwable $e) {
-                throw new DisplayableException($e);
+                throw new DisplayableException($e->getMessage());
             }
         }
 
@@ -97,7 +100,7 @@ class StatsController extends AbstractController
 
                 return $this->csvResponseGeneration($fileName, $csv);
             } catch (\Throwable $e) {
-                throw new DisplayableException($e);
+                throw new DisplayableException($e->getMessage());
             }
         }
 
@@ -128,7 +131,7 @@ class StatsController extends AbstractController
 
                 return $this->csvResponseGeneration($fileName, $csv);
             } catch (\Throwable $e) {
-                throw new DisplayableException($e);
+                throw new DisplayableException($e->getMessage());
             }
         }
 
@@ -137,7 +140,7 @@ class StatsController extends AbstractController
         ];
     }
 
-    private function buildResponse($csvContent): Response
+    private function buildResponse(string $csvContent): Response
     {
         $response = new Response($csvContent);
         $response->headers->set('Content-Type', 'application/octet-stream');
@@ -249,7 +252,7 @@ class StatsController extends AbstractController
 
                 return $this->csvResponseGeneration($fileName, $csv);
             } catch (\Throwable $e) {
-                throw new DisplayableException($e);
+                throw new DisplayableException($e->getMessage());
             }
         }
 
@@ -301,7 +304,7 @@ class StatsController extends AbstractController
 
                 return $this->csvResponseGeneration($fileName, $csv);
             } catch (\Throwable $e) {
-                throw new DisplayableException($e);
+                throw new DisplayableException($e->getMessage());
             }
         }
 
@@ -338,7 +341,7 @@ class StatsController extends AbstractController
 
                 return $this->csvResponseGeneration($fileName, $csv);
             } catch (\Throwable $e) {
-                throw new DisplayableException($e);
+                throw new DisplayableException($e->getMessage());
             }
         }
 

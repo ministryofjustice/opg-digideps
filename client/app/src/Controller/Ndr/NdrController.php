@@ -10,8 +10,9 @@ use App\Entity\User;
 use App\Exception\ReportNotSubmittableException;
 use App\Exception\ReportNotSubmittedException;
 use App\Exception\ReportSubmittedException;
-use App\Form;
-use App\Model;
+use App\Form\FeedbackReportType;
+use App\Form\Ndr\ReportDeclarationType;
+use App\Model\FeedbackReport;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\NdrApi;
 use App\Service\Client\Internal\SatisfactionApi;
@@ -204,7 +205,7 @@ class NdrController extends AbstractController
             throw new ReportSubmittedException();
         }
 
-        $form = $this->createForm(Form\Ndr\ReportDeclarationType::class, $ndr);
+        $form = $this->createForm(ReportDeclarationType::class, $ndr);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $validForSubmission = $ndr->validForSubmission();
@@ -268,7 +269,7 @@ class NdrController extends AbstractController
 
         $ndrStatus = new NdrStatusService($ndr);
 
-        $form = $this->createForm(Form\FeedbackReportType::class, new Model\FeedbackReport());
+        $form = $this->createForm(FeedbackReportType::class, new FeedbackReport());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

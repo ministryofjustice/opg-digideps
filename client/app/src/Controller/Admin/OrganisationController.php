@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
@@ -127,7 +129,7 @@ class OrganisationController extends AbstractController
         ];
     }
 
-    #[Route(path: '/{id}/edit', requirements: ['id' => '\d+'], name: 'admin_organisation_edit')]
+    #[Route(path: '/{id}/edit', name: 'admin_organisation_edit', requirements: ['id' => '\d+'])]
     #[IsGranted(attribute: 'ROLE_ADMIN')]
     #[Template('@App/Admin/Organisation/form.html.twig')]
     public function editAction(Request $request, $id = null): RedirectResponse|array
@@ -162,7 +164,7 @@ class OrganisationController extends AbstractController
         ];
     }
 
-    #[Route(path: '/{id}/delete', requirements: ['id' => '\d+'], name: 'admin_organisation_delete')]
+    #[Route(path: '/{id}/delete', name: 'admin_organisation_delete', requirements: ['id' => '\d+'])]
     #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
     #[Template('@App/Common/confirmDelete.html.twig')]
     public function deleteAction(Request $request, string $id): RedirectResponse|array

@@ -6,7 +6,9 @@ namespace App\Controller\Ndr;
 
 use App\Controller\AbstractController;
 use App\Entity\Ndr\BankAccount;
-use App\Form;
+use App\Form\AddAnotherRecordType;
+use App\Form\ConfirmDeleteType;
+use App\Form\Ndr\BankAccountType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
@@ -43,7 +45,7 @@ class BankAccountController extends AbstractController
 
     #[Route(path: '/ndr/{ndrId}/bank-account/step{step}/{accountId}', name: 'ndr_bank_accounts_step', requirements: ['step' => '\d+'])]
     #[Template('@App/Ndr/BankAccount/step.html.twig')]
-    public function stepAction(Request $request, int $ndrId, $step, $accountId = null): RedirectResponse|array
+    public function stepAction(Request $request, int $ndrId, int $step, ?int $accountId = null): RedirectResponse|array
     {
         $totalSteps = 3;
         if ($step < 1 || $step > $totalSteps) {
@@ -64,7 +66,8 @@ class BankAccountController extends AbstractController
 
         // create (add mode) or load account (edit mode)
         if ($accountId) {
-            $account = $this->restClient->get('ndr/account/' . $accountId, 'Ndr\\BankAccount');
+            /** @var BankAccount $account */
+            $account = $this->restClient->get("ndr/account/$accountId", 'Ndr\\BankAccount');
         } else {
             $account = new BankAccount();
             $account->setNdr($ndr);
@@ -81,7 +84,7 @@ class BankAccountController extends AbstractController
         ]);
 
         // crete and handle form
-        $form = $this->createForm(Form\Ndr\BankAccountType::class, $account, ['step' => $step]);
+        $form = $this->createForm(BankAccountType::class, $account, ['step' => $step]);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
@@ -100,7 +103,7 @@ class BankAccountController extends AbstractController
             // last step: save
             if ($step == $totalSteps) {
                 if ($accountId) {
-                    $this->restClient->put('/ndr/account/' . $accountId, $account, ['bank-account']);
+                    $this->restClient->put("/ndr/account/$accountId", $account, ['bank-account']);
                     $request->getSession()->getFlashBag()->add(
                         'notice',
                         'Bank account edited'
@@ -108,7 +111,7 @@ class BankAccountController extends AbstractController
 
                     return $this->redirectToRoute('ndr_bank_accounts_summary', ['ndrId' => $ndrId]);
                 } else {
-                    $this->restClient->post('ndr/' . $ndrId . '/account', $account, ['bank-account']);
+                    $this->restClient->post("ndr/$ndrId/account", $account, ['bank-account']);
 
                     return $this->redirectToRoute('ndr_bank_accounts_add_another', ['ndrId' => $ndrId]);
                 }
@@ -138,7 +141,7 @@ class BankAccountController extends AbstractController
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
 
-        $form = $this->createForm(Form\AddAnotherRecordType::class, $ndr, ['translation_domain' => 'ndr-bank-accounts']);
+        $form = $this->createForm(AddAnotherRecordType::class, $ndr, ['translation_domain' => 'ndr-bank-accounts']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -174,7 +177,7 @@ class BankAccountController extends AbstractController
     #[Template('@App/Common/confirmDelete.html.twig')]
     public function deleteAction(Request $request, int $ndrId, string $accountId): RedirectResponse|array
     {
-        $form = $this->createForm(Form\ConfirmDeleteType::class);
+        $form = $this->createForm(ConfirmDeleteType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -185,14 +188,15 @@ class BankAccountController extends AbstractController
                 'Bank account deleted'
             );
 
-            if ($ndr->hasBankAccountWithId($accountId)) {
-                $this->restClient->delete("/ndr/account/{$accountId}");
+            if ($ndr->hasBankAccountWithId(intval($accountId))) {
+                $this->restClient->delete("/ndr/account/$accountId");
             }
 
             return $this->redirect($this->generateUrl('ndr_bank_accounts_summary', ['ndrId' => $ndrId]));
         }
 
-        $account = $this->restClient->get('ndr/account/' . $accountId, 'Ndr\\BankAccount');
+        /** @var BankAccount $account */
+        $account = $this->restClient->get("ndr/account/$accountId", 'Ndr\\BankAccount');
 
         return [
             'translationDomain' => 'ndr-bank-accounts',
