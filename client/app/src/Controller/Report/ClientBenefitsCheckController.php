@@ -18,7 +18,7 @@ use App\Service\Client\Internal\NdrApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\StepRedirector;
 use Doctrine\Common\Collections\ArrayCollection;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,11 +41,9 @@ class ClientBenefitsCheckController extends AbstractController
     ) {
     }
 
-    /**
-     * @Route("/{reportOrNdr}/{reportId}/client-benefits-check", requirements={"reportOrNdr"="(report|ndr)"}, name="client_benefits_check")
-     *
-     * @Template("@App/Report/ClientBenefitsCheck/start.html.twig")
-     */
+
+    #[Route(path: '/{reportOrNdr}/{reportId}/client-benefits-check', requirements: ['reportOrNdr' => '(report|ndr)'], name: 'client_benefits_check')]
+    #[Template('@App/Report/ClientBenefitsCheck/start.html.twig')]
     public function start(int $reportId, string $reportOrNdr): array|RedirectResponse
     {
         $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, array_merge(self::$jmsGroups, ['ndr-client', 'client-id'])) :
@@ -67,13 +65,8 @@ class ClientBenefitsCheckController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/{reportOrNdr}/{reportId}/client-benefits-check/step/{step}", name="client_benefits_check_step"), requirements={
-     *   "reportOrNdr" = "(report|ndr)"
-     * }))
-     *
-     * @Template("@App/Report/ClientBenefitsCheck/step.html.twig")
-     */
+
+    #[Route(path: '/{reportOrNdr}/{reportId}/client-benefits-check/step/{step}', name: 'client_benefits_check_step')] // , requirements={
     public function step(Request $request, int $reportId, int $step, string $reportOrNdr): array|RedirectResponse
     {
         $totalSteps = 3;
@@ -106,7 +99,7 @@ class ClientBenefitsCheckController extends AbstractController
         }
 
         if (3 === $step) {
-            if (empty($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf())) {
+            if (!$clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf() instanceof ArrayCollection) {
                 $clientBenefitsCheck->setTypesOfMoneyReceivedOnClientsBehalf(new ArrayCollection());
             }
 
@@ -132,7 +125,6 @@ class ClientBenefitsCheckController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var ClientBenefitsCheck|NdrClientBenefitsCheck $formData */
             $clientBenefitsCheck = $form->getData();
             'ndr' === $reportOrNdr ? $clientBenefitsCheck->setNdr($report) : $clientBenefitsCheck->setReport($report);
 
@@ -161,7 +153,7 @@ class ClientBenefitsCheckController extends AbstractController
         ];
     }
 
-    private function incomeNotReceivedByOthers(FormInterface $form)
+    private function incomeNotReceivedByOthers(FormInterface $form): bool
     {
         $notYesStatuses = [ClientBenefitsCheck::OTHER_MONEY_NO, ClientBenefitsCheck::OTHER_MONEY_DONT_KNOW];
 
@@ -169,15 +161,9 @@ class ClientBenefitsCheckController extends AbstractController
             && in_array($form->get('doOthersReceiveMoneyOnClientsBehalf')->getData(), $notYesStatuses);
     }
 
-    /**
-     * @Route(
-     *     "/{reportOrNdr}/{reportId}/client-benefits-check/summary",
-     *     requirements={"reportOrNdr"="(report|ndr)"},
-     *     name="client_benefits_check_summary"
-     * )
-     *
-     * @Template("@App/Report/ClientBenefitsCheck/summary.html.twig")
-     */
+
+    #[Route(path: '/{reportOrNdr}/{reportId}/client-benefits-check/summary', requirements: ['reportOrNdr' => '(report|ndr)'], name: 'client_benefits_check_summary')]
+    #[Template('@App/Report/ClientBenefitsCheck/summary.html.twig')]
     public function summary(int $reportId, string $reportOrNdr): array|RedirectResponse
     {
         $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, array_merge(self::$jmsGroups, ['ndr-client', 'client-id'])) :
@@ -190,15 +176,9 @@ class ClientBenefitsCheckController extends AbstractController
         ];
     }
 
-    /**
-     * @Route(
-     *     "/{reportOrNdr}/{reportId}/client-benefits-check/remove/money-type/{moneyTypeId}",
-     *     requirements={"reportOrNdr"="(report|ndr)"},
-     *     name="client_benefits_check_remove_money_type"
-     * )
-     *
-     * @Template("@App/Common/confirmDelete.html.twig")
-     */
+
+    #[Route(path: '/{reportOrNdr}/{reportId}/client-benefits-check/remove/money-type/{moneyTypeId}', requirements: ['reportOrNdr' => '(report|ndr)'], name: 'client_benefits_check_remove_money_type')]
+    #[Template('@App/Common/confirmDelete.html.twig')]
     public function removeIncomeType(Request $request, int $reportId, string $moneyTypeId, string $reportOrNdr): array|RedirectResponse
     {
         $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, self::$jmsGroups) :
@@ -228,14 +208,14 @@ class ClientBenefitsCheckController extends AbstractController
 
             return $this->redirect($this->generateUrl(
                 'client_benefits_check_summary',
-                ['reportId' => $reportId, 'reportOrNdr' => $reportOrNdr])
-            );
+                ['reportId' => $reportId, 'reportOrNdr' => $reportOrNdr]
+            ));
         }
 
         $summary = [
             ['label' => 'summaryPage.table.moneyOtherPeopleReceive.column1Title', 'value' => $moneyTypeToDelete->getMoneyType()],
             ['label' => 'summaryPage.table.moneyOtherPeopleReceive.column2Title', 'value' => $moneyTypeToDelete->getWhoReceivedMoney()],
-            ['label' => 'summaryPage.table.moneyOtherPeopleReceive.column3Title', 'value' => '£'.$moneyTypeToDelete->getAmount()],
+            ['label' => 'summaryPage.table.moneyOtherPeopleReceive.column3Title', 'value' => '£' . $moneyTypeToDelete->getAmount()],
         ];
 
         return [

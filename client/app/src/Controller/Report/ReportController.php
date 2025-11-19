@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity\Client;
-use App\Entity\Deputy;
 use App\Entity\DeputyInterface;
 use App\Entity\Report\Report;
 use App\Entity\User;
@@ -28,23 +29,21 @@ use App\Service\File\Storage\S3Storage;
 use App\Service\NdrStatusService;
 use App\Service\Redirector;
 use App\Service\ReportSubmissionService;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ReportController extends AbstractController
 {
     /**
      * JMS groups used for report preview and PDF.
-     *
-     * @var array
      */
-    private static $reportGroupsAll = [
+    private static array $reportGroupsAll = [
         'account',
         'action-more-info',
         'action',
@@ -97,7 +96,7 @@ class ReportController extends AbstractController
         'wish-to-provide-documentation',
     ];
 
-    private static $ndrGroupsForValidation = [
+    private static array $ndrGroupsForValidation = [
         'client',
         'client-ndr',
         'client-benefits-check',
@@ -123,16 +122,16 @@ class ReportController extends AbstractController
     ];
 
     public function __construct(
-        private RestClient $restClient,
-        private ReportApi $reportApi,
-        private UserApi $userApi,
-        private ClientApi $clientApi,
-        private SatisfactionApi $satisfactionApi,
-        private PreRegistrationApi $preRegistrationApi,
-        private FormFactoryInterface $formFactory,
-        private TranslatorInterface $translator,
-        private ObservableEventDispatcher $eventDispatcher,
-        private S3Storage $s3Storage,
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
+        private readonly UserApi $userApi,
+        private readonly ClientApi $clientApi,
+        private readonly SatisfactionApi $satisfactionApi,
+        private readonly PreRegistrationApi $preRegistrationApi,
+        private readonly FormFactoryInterface $formFactory,
+        private readonly TranslatorInterface $translator,
+        private readonly ObservableEventDispatcher $eventDispatcher,
+        private readonly S3Storage $s3Storage,
     ) {
     }
 
@@ -142,7 +141,8 @@ class ReportController extends AbstractController
             $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
 
             if (is_null($primaryEmail)) {
-                $this->addFlash('nonPrimaryRedirectUnknownEmail',
+                $this->addFlash(
+                    'nonPrimaryRedirectUnknownEmail',
                     [
                         'sentenceOne' => 'This account has been closed.',
                         'sentenceTwo' => 'You can now access all of your reports in the same place from your primary account.',
@@ -150,7 +150,8 @@ class ReportController extends AbstractController
                     ]
                 );
             } else {
-                $this->addFlash('nonPrimaryRedirect',
+                $this->addFlash(
+                    'nonPrimaryRedirect',
                     [
                         'sentenceOne' => 'This account has been closed.',
                         'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
@@ -167,17 +168,13 @@ class ReportController extends AbstractController
 
     /**
      * List of reports.
-     *
-     * @Route("/client/{clientId}", name="lay_home")
-     *
-     * @Template("@App/Report/Report/index.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function clientHomepageAction(Redirector $redirector, string $clientId)
+    #[Route(path: '/client/{clientId}', name: 'lay_home')]
+    #[Template('@App/Report/Report/index.html.twig')]
+    public function clientHomepageAction(Redirector $redirector, string $clientId): RedirectResponse|array
     {
         $ndrEnabledOnDeputy = false;
-        $users = $this->clientApi->getWithUsersV2($clientId)->getUsers();
+        $users = $this->clientApi->getWithUsersV2(intval($clientId))->getUsers();
 
         foreach ($users as $user) {
             if ($user->isNdrEnabled()) {
@@ -205,7 +202,7 @@ class ReportController extends AbstractController
             return $this->redirectToRoute($route);
         }
 
-        $clientWithCoDeputies = $this->clientApi->getWithUsersV2($clientId);
+        $clientWithCoDeputies = $this->clientApi->getWithUsersV2(intval($clientId));
         $coDeputies = $clientWithCoDeputies->getCoDeputies();
 
         $resultsArray = [
@@ -214,26 +211,28 @@ class ReportController extends AbstractController
             'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($clientWithCoDeputies->getCaseNumber()),
         ];
 
-        $client = $this->clientApi->getById($clientId);
+        $client = $this->clientApi->getById(intval($clientId));
 
         if ($ndrEnabledOnDeputy && $client->getNdr()) {
             $ndr = $this->reportApi->getNdr($client->getNdr()->getId(), self::$ndrGroupsForValidation);
 
-            return array_merge([
-                'ndrEnabled' => true,
-                'client' => $client,
-                'ndr' => $client->getNdr(),
-                'reportsSubmitted' => $client->getSubmittedReports(),
-                'reportActive' => $client->getActiveReport(),
-                'ndrStatus' => new NdrStatusService($ndr),
-            ],
+            return array_merge(
+                [
+                    'ndrEnabled' => true,
+                    'client' => $client,
+                    'ndr' => $client->getNdr(),
+                    'reportsSubmitted' => $client->getSubmittedReports(),
+                    'reportActive' => $client->getActiveReport(),
+                    'ndrStatus' => new NdrStatusService($ndr),
+                ],
                 $resultsArray
             );
         } else {
-            return array_merge([
-                'ndrEnabled' => false,
-                'client' => $client,
-            ],
+            return array_merge(
+                [
+                    'ndrEnabled' => false,
+                    'client' => $client,
+                ],
                 $resultsArray
             );
         }
@@ -241,16 +240,11 @@ class ReportController extends AbstractController
 
     /**
      * List of reports.
-     *
-     * @Route("/choose-a-client", name="choose_a_client")
-     *
-     * @Security("is_granted('ROLE_LAY_DEPUTY')")     *
-     *
-     * @Template("@App/Index/choose-a-client.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function chooseAClientAction(Redirector $redirector)
+    #[Route(path: '/choose-a-client', name: 'choose_a_client')]
+    #[IsGranted(attribute: 'ROLE_LAY_DEPUTY')] // *
+    #[Template('@App/Index/choose-a-client.html.twig')]
+    public function chooseAClientAction(Redirector $redirector): RedirectResponse|array
     {
         $user = $this->userApi->getUserWithData(['user-clients', 'client']);
 
@@ -287,20 +281,16 @@ class ReportController extends AbstractController
     /**
      * Edit single report.
      *
-     * @Route("/reports/edit/{reportId}", name="report_edit")
-     *
-     * @Template("@App/Report/Report/edit.html.twig")
-     *
-     * @return array|RedirectResponse
-     *
      * @throws \Exception
      */
-    public function editAction(Request $request, $reportId)
+    #[Route(path: '/reports/edit/{reportId}', name: 'report_edit')]
+    #[Template('@App/Report/Report/edit.html.twig')]
+    public function editAction(Request $request, int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId);
         $client = $report->getClient();
 
-        /** @var User */
+        /** @var User $user */
         $user = $this->getUser();
 
         $editReportDatesForm = $this->formFactory->createNamed('report_edit', ReportType::class, $report, ['translation_domain' => 'report']);
@@ -310,7 +300,7 @@ class ReportController extends AbstractController
 
         $editReportDatesForm->handleRequest($request);
         if ($editReportDatesForm->isSubmitted() && $editReportDatesForm->isValid()) {
-            $this->restClient->put('report/'.$reportId, $report, ['startEndDates']);
+            $this->restClient->put('report/' . $reportId, $report, ['startEndDates']);
 
             return $this->redirect($returnLink);
         }
@@ -327,19 +317,12 @@ class ReportController extends AbstractController
      * Create report
      * default action "create" will create only one report (used during registration steps to avoid duplicates when going back from the browser)
      * action "add" will instead add another report.
-     *
-     * @Route("/report/{action}/{clientId}", name="report_create",
-     *   defaults={"action"="create"},
-     *   requirements={"action"="(create|add)"}
-     * )
-     *
-     * @Template("@App/Report/Report/create.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function createAction(Request $request, $clientId, $action = false)
+    #[Route(path: '/report/{action}/{clientId}', name: 'report_create', requirements: ['action' => '(create|add)'], defaults: ['action' => 'create'])]
+    #[Template('@App/Report/Report/create.html.twig')]
+    public function createAction(Request $request, string $clientId): RedirectResponse|array
     {
-        $client = $this->restClient->get('client/'.$clientId, 'Client', ['client', 'client-id', 'client-reports', 'report-id']);
+        $client = $this->restClient->get("client/$clientId", 'Client', ['client', 'client-id', 'client-reports', 'report-id']);
 
         $existingReports = $this->reportApi->getReportsIndexedById($client);
 
@@ -377,14 +360,9 @@ class ReportController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/overview", name="report_overview")
-     *
-     * @Template("@App/Report/Report/overview.html.twig")
-     *
-     * @return RedirectResponse|Response|null
-     */
-    public function overviewAction(Redirector $redirector, $reportId)
+    #[Route(path: '/report/{reportId}/overview', name: 'report_overview')]
+    #[Template('@App/Report/Report/overview.html.twig')]
+    public function overviewAction(Redirector $redirector, $reportId): RedirectResponse|Response
     {
         $reportJmsGroup = ['status', 'balance', 'user', 'client', 'client-reports', 'balance-state'];
         // redirect if user has missing details or is on wrong page
@@ -398,10 +376,8 @@ class ReportController extends AbstractController
         // get all the groups (needed by EntityDir\Report\Status
         $clientId = $this->reportApi->getReportIfNotSubmitted($reportId, $reportJmsGroup)->getClient()->getId();
 
-        /** @var Client */
-        $client = $this->generateClient($user, $clientId);
+        $client = $this->generateClient($user, "$clientId");
 
-        /** @var Deputy */
         $deputy = $client->getDeputy();
 
         $activeReportId = null;
@@ -409,7 +385,7 @@ class ReportController extends AbstractController
             // PR and PROF: unsubmitted at the top (if exists), active below (
             $template = '@App/Org/ClientProfile/overview.html.twig';
 
-            // if there is an unsubmitted report, swap them, so linkswill both show the unsubmitted first
+            // if there is an unsubmitted report, swap them, so links will both show the unsubmitted first
             $unsubmittedReport = $client->getUnsubmittedReport();
             if ($unsubmittedReport instanceof Report) {
                 $reportId = $unsubmittedReport->getId();
@@ -419,7 +395,7 @@ class ReportController extends AbstractController
                     $activeReportId = $activeReport->getId();
                 }
             }
-        } else { // Lay. keep the report Id
+        } else { // Lay, so keep the report id
             $template = '@App/Report/Report/overview.html.twig';
         }
 
@@ -441,23 +417,21 @@ class ReportController extends AbstractController
 
     /**
      * Due to some profs having many dozens of deputies attached to clients, we need to be conservative about generating
-     * the list. Its needed for a permissions check on add client contact (logged in user has to be associated).
-     *
-     * @return Client
+     * the list. It's needed for a permissions check on add client contact (logged-in user has to be associated).
      */
-    private function generateClient(User $user, $clientId)
+    private function generateClient(User $user, string $clientId): Client
     {
         $jms = $this->determineJmsGroups($user);
 
         /* Get client with all other JMS groups required */
-        $client = $this->restClient->get('client/'.$clientId, 'Client', $jms);
+        $client = $this->restClient->get("client/$clientId", 'Client', $jms);
 
         if ($user->isDeputyOrg()) {
             /*
             Separate call to get client Users as query taking too long for some profs with many deputies attached.
             We only need the user id for the add client contact permission check
              */
-            $clientWithUsers = $this->restClient->get('client/'.$clientId, 'Client', ['user-id', 'client-users']);
+            $clientWithUsers = $this->restClient->get("client/$clientId", 'Client', ['user-id', 'client-users']);
             $client->setUsers($clientWithUsers->getUsers());
         }
 
@@ -466,10 +440,8 @@ class ReportController extends AbstractController
 
     /**
      * Method to return JMS groups required for overview page.
-     *
-     * @return array
      */
-    private function determineJmsGroups(User $user)
+    private function determineJmsGroups(User $user): array
     {
         $jms = [
             'client',
@@ -492,14 +464,9 @@ class ReportController extends AbstractController
         return $jms;
     }
 
-    /**
-     * @Route("/report/{reportId}/confirm-details", name="report_confirm_details")
-     *
-     * @Template("@App/Report/Report/confirm-details.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function confirmDetailsAction(int $reportId)
+    #[Route(path: '/report/{reportId}/confirm-details', name: 'report_confirm_details')]
+    #[Template('@App/Report/Report/confirm-details.html.twig')]
+    public function confirmDetailsAction(int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$reportGroupsAll);
 
@@ -522,14 +489,10 @@ class ReportController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/declaration", name="report_declaration")
-     *
-     * @Template("@App/Report/Report/declaration.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function declarationAction(Request $request, $reportId, ReportSubmissionService $reportSubmissionService)
+
+    #[Route(path: '/report/{reportId}/declaration', name: 'report_declaration')]
+    #[Template('@App/Report/Report/declaration.html.twig')]
+    public function declarationAction(Request $request, int $reportId, ReportSubmissionService $reportSubmissionService): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$reportGroupsAll);
 
@@ -563,14 +526,10 @@ class ReportController extends AbstractController
 
     /**
      * Page displaying the report has been submitted.
-     *
-     * @Route("/report/{reportId}/submitted", name="report_submit_confirmation")
-     *
-     * @Template("@App/Report/Report/submitConfirmation.html.twig")
-     *
-     * @return array|RedirectResponse
      */
-    public function submitConfirmationAction(Request $request, $reportId)
+    #[Route(path: '/report/{reportId}/submitted', name: 'report_submit_confirmation')]
+    #[Template('@App/Report/Report/submitConfirmation.html.twig')]
+    public function submitConfirmationAction(Request $request, int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReport($reportId, ['status']);
 
@@ -600,15 +559,11 @@ class ReportController extends AbstractController
     /**
      * Used for active and archived report.
      *
-     * @Route("/report/{reportId}/review", name="report_review")
-     *
-     * @Template("@App/Report/Report/review.html.twig")
-     *
-     * @return RedirectResponse|array
-     *
      * @throws \Exception
      */
-    public function reviewAction($reportId)
+    #[Route(path: '/report/{reportId}/review', name: 'report_review')]
+    #[Template('@App/Report/Report/review.html.twig')]
+    public function reviewAction(int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
 
@@ -642,7 +597,7 @@ class ReportController extends AbstractController
         ];
     }
 
-    private function checkIfDocumentsExistInS3($report)
+    private function checkIfDocumentsExistInS3(Report $report): array
     {
         // Retrieve document storage reference numbers and store in array
         $documentIds = [];
@@ -663,11 +618,9 @@ class ReportController extends AbstractController
         $documentsNotInS3 = [];
 
         // loop through references and check if they exist in S3, as soon as a file is not found in S3 redirect to re-uploads page
-        if (!empty($documentStorageReferences)) {
-            foreach ($documentStorageReferences as $docStorageReference) {
-                if (!$this->s3Storage->checkFileExistsInS3($docStorageReference)) {
-                    $documentsNotInS3[] = $docStorageReference;
-                }
+        foreach ($documentStorageReferences as $docStorageReference) {
+            if (!$this->s3Storage->checkFileExistsInS3($docStorageReference)) {
+                $documentsNotInS3[] = $docStorageReference;
             }
         }
 
@@ -676,15 +629,12 @@ class ReportController extends AbstractController
 
     /**
      * Used for active and archived report.
-     *
-     * @Route("/report/{reportId}/pdf-debug", name="report_pdf_debug")
-     *
-     * @return Response|null
      */
-    public function pdfDebugAction($reportId)
+    #[Route(path: '/report/{reportId}/pdf-debug', name: 'report_pdf_debug')]
+    public function pdfDebugAction(int $reportId): Response
     {
         if (!$this->getParameter('kernel.debug')) {
-            throw new DisplayableException('Route only visite in debug mode');
+            throw new DisplayableException('Route only visited in debug mode');
         }
         $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
 
@@ -694,12 +644,8 @@ class ReportController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/report/deputyreport-{reportId}.pdf", name="report_pdf")
-     *
-     * @return Response
-     */
-    public function pdfViewAction($reportId, ReportSubmissionService $reportSubmissionService)
+    #[Route(path: '/report/deputyreport-{reportId}.pdf', name: 'report_pdf')]
+    public function pdfViewAction(int $reportId, ReportSubmissionService $reportSubmissionService): Response
     {
         $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
         $pdfBinary = $reportSubmissionService->getPdfBinaryContent($report);
@@ -708,6 +654,7 @@ class ReportController extends AbstractController
         $response->headers->set('Content-Type', 'application/pdf');
 
         $submitDate = $report->getSubmitDate();
+
         /** @var \DateTime $endDate */
         $endDate = $report->getEndDate();
 
@@ -718,7 +665,7 @@ class ReportController extends AbstractController
             $report->getClient()->getCaseNumber()
         );
 
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$attachmentName.'"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
 
         // Send headers before outputting anything
         $response->sendHeaders();
@@ -728,12 +675,9 @@ class ReportController extends AbstractController
 
     /**
      * Generates Transactions CSV and returns as CSV file response.
-     *
-     * @Route("/report/transactions-{reportId}.csv", name="report_transactions_csv")
-     *
-     * @return Response
      */
-    public function transactionsCsvViewAction($reportId, TransactionsCsvGenerator $csvGenerator)
+    #[Route(path: '/report/transactions-{reportId}.csv', name: 'report_transactions_csv')]
+    public function transactionsCsvViewAction(int $reportId, TransactionsCsvGenerator $csvGenerator): Response
     {
         $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
 
@@ -749,6 +693,7 @@ class ReportController extends AbstractController
         $response->headers->set('Content-Type', 'text/csv');
 
         $submitDate = $report->getSubmitDate();
+
         /** @var \DateTime $endDate */
         $endDate = $report->getEndDate();
 
@@ -759,7 +704,7 @@ class ReportController extends AbstractController
             $report->getClient()->getCaseNumber()
         );
 
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$attachmentName.'"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
 
         // Send headers before outputting anything
         $response->sendHeaders();
@@ -767,10 +712,7 @@ class ReportController extends AbstractController
         return $response;
     }
 
-    /**
-     * @return array
-     */
-    private function getAssociatedContactDetails(DeputyInterface $deputy, Report $report)
+    private function getAssociatedContactDetails(DeputyInterface $deputy, Report $report): array
     {
         return [
             'client' => $this->getClientContactDetails($report),
@@ -778,10 +720,7 @@ class ReportController extends AbstractController
         ];
     }
 
-    /**
-     * @return array
-     */
-    private function getClientContactDetails(Report $report)
+    private function getClientContactDetails(Report $report): array
     {
         $client = $report->getClient();
 
@@ -789,7 +728,7 @@ class ReportController extends AbstractController
         $currentUser = $this->getUser();
 
         return [
-            'name' => $client->getFullName().' (client)',
+            'name' => $client->getFullName() . ' (client)',
             'address' => $client->getAddressNotEmptyParts(),
             'phone' => ['main' => $client->getPhone()],
             'email' => $client->getEmail(),
@@ -799,10 +738,7 @@ class ReportController extends AbstractController
         ];
     }
 
-    /**
-     * @return array
-     */
-    private function getDeputyContactDetails(DeputyInterface $deputy, Report $report)
+    private function getDeputyContactDetails(DeputyInterface $deputy, Report $report): array
     {
         if ($deputy instanceof User) {
             if ($deputy->isLayDeputy()) {
@@ -815,7 +751,7 @@ class ReportController extends AbstractController
         }
 
         return [
-            'name' => $deputy->getFullName().' (deputy)',
+            'name' => $deputy->getFullName() . ' (deputy)',
             'address' => $deputy->getAddressNotEmptyParts(),
             'phone' => [
                 'main' => $deputy->getPhoneMain(),
