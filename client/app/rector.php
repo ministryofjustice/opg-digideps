@@ -9,23 +9,27 @@ use Rector\Php80\Rector\Class_\AnnotationToAttributeRector;
 use Rector\Php80\ValueObject\AnnotationToAttribute;
 use Rector\Symfony\Symfony62\Rector\Class_\SecurityAttributeToIsGrantedAttributeRector;
 
-// Rector doesn't guarantee the order in which refactorings are applied: if one refactor depends on the output
-// from a previous one, it probably won't work. For that reason, this script has to run in steps, so that later
-// refactorings can be applied on top of previous ones (for example, convert annotations to attributes, then
-// convert the attribute; this is needed for Sensio Security annotations, which first have to be translated to
-// attributes, then converted from Sensio attributes to Symfony IsGranted aattributes).
-// Run this with:
-//   STEP=1 ./vendor/bin/rector process
-// then run again with the next step, e.g. STEP=2, and so on.
-//
-// To run all 5 steps in order:
-// STEP=1 ./vendor/bin/rector process ; STEP=2 ./vendor/bin/rector process ; STEP=3 ./vendor/bin/rector process ;
-// STEP=4 ./vendor/bin/rector process ; STEP=5 ./vendor/bin/rector process
+/*
+Rector doesn't guarantee the order in which refactorings are applied: if one refactor depends on the output
+from a previous one, it probably won't work. For that reason, this script has to run in steps, so that later
+refactorings can be applied on top of previous ones (for example, convert annotations to attributes, then
+convert the attribute; this is needed for Sensio Security annotations, which first have to be translated to
+attributes, then converted from Sensio attributes to Symfony IsGranted aattributes).
+
+Run this with:
+
+    STEP=1 ./vendor/bin/rector process
+
+then run again with the next step, e.g. STEP=2, and so on.
+
+To run all 5 steps in order:
+
+    STEP=1 ./vendor/bin/rector process ; STEP=2 ./vendor/bin/rector process ; STEP=3 ./vendor/bin/rector process ; \
+    STEP=4 ./vendor/bin/rector process ; STEP=5 ./vendor/bin/rector process
+*/
 $configBuilder = RectorConfig::configure()
     ->withPaths([
-        __DIR__ . '/src/Controller/Admin/Client/ClientController.php',
-        __DIR__ . '/src/Controller/Admin/Client/ReportController.php',
-        __DIR__ . '/src/Controller/Admin/Client/SearchController.php',
+        __DIR__ . '/src/Controller/JWT/JWTController.php',
     ])
     ->withPhpSets(php83: true)
     ->withPreparedSets(
