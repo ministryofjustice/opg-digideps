@@ -711,16 +711,6 @@ parameters:
 			path: src/Controller/CoDeputyController.php
 
 		-
-			message: "#^Cannot call method getUsers\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of function reset is passed by reference, so it expects variables only\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
 			message: "#^Parameter \\#1 \\$clientLastname of method App\\\\Model\\\\SelfRegisterData\\:\\:setClientLastname\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/CoDeputyController.php
@@ -2701,11 +2691,6 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:overviewAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
 			message: "#^Parameter \\#1 \\$client of method App\\\\Entity\\\\Report\\\\Report\\:\\:setClient\\(\\) expects App\\\\Entity\\\\Client, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
@@ -2766,21 +2751,6 @@ parameters:
 			path: src/Controller/SettingsController.php
 
 		-
-			message: "#^Cannot call method isDeputyPA\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
-			message: "#^Cannot call method isDeputyProf\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
-			message: "#^Cannot call method setRoleName\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
 			message: "#^Parameter \\#1 \\$route of method Symfony\\\\Bundle\\\\FrameworkBundle\\\\Controller\\\\AbstractController\\:\\:redirectToRoute\\(\\) expects string, string\\|true given\\.$#"
 			count: 1
 			path: src/Controller/SettingsController.php
@@ -2788,11 +2758,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, string\\|false given\\.$#"
 			count: 2
-			path: src/Controller/SettingsController.php
-
-		-
-			message: "#^Parameter \\#2 \\$postUpdateUser of method App\\\\Service\\\\Client\\\\Internal\\\\UserApi\\:\\:update\\(\\) expects App\\\\Entity\\\\User, mixed given\\.$#"
-			count: 1
 			path: src/Controller/SettingsController.php
 
 		-
@@ -5916,11 +5881,6 @@ parameters:
 			path: src/Entity/Report/ProfServiceFee.php
 
 		-
-			message: "#^Call to function is_null\\(\\) with string will always evaluate to false\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Call to method getId\\(\\) on an unknown class App\\\\Entity\\\\Report\\\\Traits\\\\Asset\\.$#"
 			count: 2
 			path: src/Entity/Report/Report.php
@@ -7042,11 +7002,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Entity\\\\User\\:\\:getRegistrationToken\\(\\) should return string but returns string\\|null\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:getRoleFullName\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/User.php
 
@@ -11284,21 +11239,6 @@ parameters:
 			message: "#^Parameter \\#3 \\$gaTrackingLabel of method App\\\\Twig\\\\FormFieldsExtension\\:\\:addGaAttrsToElementAttrs\\(\\) expects string, string\\|null given\\.$#"
 			count: 1
 			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: "#^Access to an undefined property PhpParser\\\\Node\\:\\:\\$stmts\\.$#"
-			count: 1
-			path: src/Utils/Rector/RenameImportsRector.php
-
-		-
-			message: "#^Instantiated class Symplify\\\\RuleDocGenerator\\\\ValueObject\\\\RuleDefinition not found\\.$#"
-			count: 1
-			path: src/Utils/Rector/RenameImportsRector.php
-
-		-
-			message: "#^Method App\\\\Utils\\\\Rector\\\\RenameImportsRector\\:\\:getRuleDefinition\\(\\) has invalid return type Symplify\\\\RuleDocGenerator\\\\ValueObject\\\\RuleDefinition\\.$#"
-			count: 1
-			path: src/Utils/Rector/RenameImportsRector.php
 
 		-
 			message: "#^Property App\\\\Validator\\\\Constraints\\\\Chain\\:\\:\\$constraints has no type specified\\.$#"
