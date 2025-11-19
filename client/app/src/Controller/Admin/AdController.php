@@ -2,14 +2,14 @@
 
 namespace App\Controller\Admin;
 
+use App\Entity\User;
+use App\Form\Ad\AddUserType;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use App\Controller\AbstractController;
-use App\Entity as EntityDir;
 use App\Exception\RestClientException;
-use App\Form as FormDir;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -17,25 +17,19 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/ad")
- */
+#[Route(path: '/ad')]
 class AdController extends AbstractController
 {
     public function __construct(
-        private RestClient $restClient,
-        private UserApi $userApi,
-        private ParameterBagInterface $params,
+        private readonly RestClient $restClient,
+        private readonly UserApi $userApi,
+        private readonly ParameterBagInterface $params,
     ) {
     }
 
-    /**
-     * @Route("/", name="ad_homepage")
-     *
-     * @Security("is_granted('ROLE_AD')")
-     *
-     * @Template("@App/Admin/Ad/index.html.twig")
-     */
+    #[Route(path: '/', name: 'ad_homepage')]
+    #[IsGranted(attribute: 'ROLE_AD')]
+    #[Template('@App/Admin/Ad/index.html.twig')]
     public function indexAction(Request $request): array|RedirectResponse
     {
         $filters = [
@@ -43,16 +37,16 @@ class AdController extends AbstractController
             'sort_order' => $request->get('sort_order', 'DESC'),
             'limit' => $request->get('limit', 500),
             'offset' => $request->get('offset', 0),
-            'role_name' => EntityDir\User::ROLE_LAY_DEPUTY,
+            'role_name' => User::ROLE_LAY_DEPUTY,
             'ad_managed' => true,
             'q' => $request->get('q'),
         ];
-        $users = $this->restClient->get('user/get-all?'.http_build_query($filters), 'User[]');
+        $users = $this->restClient->get('user/get-all?' . http_build_query($filters), 'User[]');
 
         // form add
-        $form = $this->createForm(FormDir\Ad\AddUserType::class, new EntityDir\User(), [
-            'roleChoices' => [EntityDir\User::ROLE_LAY_DEPUTY => 'Lay deputy'],
-            'roleNameSetTo' => EntityDir\User::ROLE_LAY_DEPUTY,
+        $form = $this->createForm(AddUserType::class, new User(), [
+            'roleChoices' => [User::ROLE_LAY_DEPUTY => 'Lay deputy'],
+            'roleNameSetTo' => User::ROLE_LAY_DEPUTY,
         ]);
 
         if ($request->isMethod('POST')) {
@@ -60,9 +54,9 @@ class AdController extends AbstractController
             if ($form->isSubmitted() && $form->isValid()) {
                 // add user
                 try {
-                    $userToAdd = $form->getData(); /* @var $userToAdd EntityDir\User */
+                    $userToAdd = $form->getData(); /* @var $userToAdd User */
                     // set email (needed to recreate token before login)
-                    $userToAdd->setEmail('ad'.$this->getUser()->getId().'-'.time().'@digital.justice.gov.uk');
+                    $userToAdd->setEmail('ad' . $this->getUser()->getId() . '-' . time() . '@digital.justice.gov.uk');
                     $userToAdd->setAdManaged(true);
                     $response = $this->restClient->post('user', $userToAdd, ['ad_add_user'], 'User');
                     $request->getSession()->getFlashBag()->add(
@@ -87,13 +81,9 @@ class AdController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/view-user", methods={"GET", "POST"}, name="ad_view_user")
-     *
-     * @Security("is_granted('ROLE_AD')")
-     *
-     * @Template("@App/Admin/Ad/viewUser.html.twig")
-     */
+    #[Route(path: '/view-user', name: 'ad_view_user', methods: ['GET', 'POST'])]
+    #[IsGranted(attribute: 'ROLE_AD')]
+    #[Template('@App/Admin/Ad/viewUser.html.twig')]
     public function viewUserAction(Request $request): array|Response|null
     {
         $what = $request->get('what');
@@ -108,7 +98,7 @@ class AdController extends AbstractController
             ]);
         }
 
-        if (EntityDir\User::ROLE_LAY_DEPUTY != $user->getRoleName()) {
+        if (User::ROLE_LAY_DEPUTY != $user->getRoleName()) {
             return $this->render('@App/Admin/Ad/error.html.twig', [
                 'error' => 'You can only view Lay deputies',
             ]);
@@ -121,33 +111,30 @@ class AdController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/login-as-deputy/{deputyId}", name="ad_deputy_login_redirect")
-     *
-     * @Security("is_granted('ROLE_AD')")
-     */
+    #[Route(path: '/login-as-deputy/{deputyId}', name: 'ad_deputy_login_redirect')]
+    #[IsGranted(attribute: 'ROLE_AD')]
     public function adLoginAsDeputyAction($deputyId): RedirectResponse|Response|null
     {
         $adUser = $this->getUser();
 
         // get user and check it's deputy and NDR
         try {
-            /* @var $deputy EntityDir\User */
+            /* @var $deputy User */
             $deputy = $this->restClient->get("user/get-one-by/user_id/{$deputyId}", 'User', ['user']);
-            if (EntityDir\User::ROLE_LAY_DEPUTY != $deputy->getRoleName()) {
+            if (User::ROLE_LAY_DEPUTY != $deputy->getRoleName()) {
                 throw new \RuntimeException('User not a Lay deputy');
             }
 
             // flag as managed in order to retrieve it later
             $deputy->setAdManaged(true);
-            $this->restClient->put('user/'.$deputy->getId(), $deputy, ['ad_managed']);
+            $this->restClient->put('user/' . $deputy->getId(), $deputy, ['ad_managed']);
 
             // recreate token needed for login
             $deputy = $this->userApi->recreateToken($deputy->getEmail());
 
             // redirect to deputy area
             $deputyBaseUrl = rtrim($this->params->get('non_admin_host'), '/');
-            $redirectUrl = $deputyBaseUrl.$this->generateUrl('ad_login', [
+            $redirectUrl = $deputyBaseUrl . $this->generateUrl('ad_login', [
                 'adId' => $adUser->getId(),
                 'userToken' => $deputy->getRegistrationToken(),
                 'adFirstname' => $adUser->getFirstname(),
