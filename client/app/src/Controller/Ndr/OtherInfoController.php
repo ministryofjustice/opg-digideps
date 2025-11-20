@@ -1,20 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Ndr;
 
 use App\Controller\AbstractController;
-use App\Form as FormDir;
+use App\Form\Ndr\OtherInfoType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
 use App\Service\StepRedirector;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class OtherInfoController extends AbstractController
 {
-    private static $jmsGroups = [
+    private static array $jmsGroups = [
         'ndr-action-more-info',
     ];
 
@@ -25,12 +28,9 @@ class OtherInfoController extends AbstractController
     ) {
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/any-other-info", name="ndr_other_info")
-     *
-     * @Template("@App/Ndr/OtherInfo/start.html.twig")
-     */
-    public function startAction(Request $request, $ndrId)
+    #[Route(path: '/ndr/{ndrId}/any-other-info', name: 'ndr_other_info')]
+    #[Template('@App/Ndr/OtherInfo/start.html.twig')]
+    public function startAction(int $ndrId): RedirectResponse|array
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getOtherInfoState()['state']) {
@@ -42,12 +42,9 @@ class OtherInfoController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/any-other-info/step/{step}", name="ndr_other_info_step")
-     *
-     * @Template("@App/Ndr/OtherInfo/step.html.twig")
-     */
-    public function stepAction(Request $request, $ndrId, $step)
+    #[Route(path: '/ndr/{ndrId}/any-other-info/step/{step}', name: 'ndr_other_info_step')]
+    #[Template('@App/Ndr/OtherInfo/step.html.twig')]
+    public function stepAction(Request $request, int $ndrId, $step): RedirectResponse|array
     {
         $totalSteps = 1; // only one step but convenient to reuse the "step" logic and keep things aligned/simple
         if ($step < 1 || $step > $totalSteps) {
@@ -62,12 +59,12 @@ class OtherInfoController extends AbstractController
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['ndrId' => $ndrId]);
 
-        $form = $this->createForm(FormDir\Ndr\OtherInfoType::class, $ndr);
+        $form = $this->createForm(OtherInfoType::class, $ndr);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $this->restClient->put('ndr/'.$ndrId, $data, ['more-info']);
+            $this->restClient->put('ndr/' . $ndrId, $data, ['more-info']);
 
             if ('summary' == $fromPage) {
                 $request->getSession()->getFlashBag()->add(
@@ -87,12 +84,9 @@ class OtherInfoController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/any-other-info/summary", name="ndr_other_info_summary")
-     *
-     * @Template("@App/Ndr/OtherInfo/summary.html.twig")
-     */
-    public function summaryAction(Request $request, $ndrId)
+    #[Route(path: '/ndr/{ndrId}/any-other-info/summary', name: 'ndr_other_info_summary')]
+    #[Template('@App/Ndr/OtherInfo/summary.html.twig')]
+    public function summaryAction(Request $request, int $ndrId): RedirectResponse|array
     {
         $fromPage = $request->get('from');
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);

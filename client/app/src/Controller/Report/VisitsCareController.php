@@ -1,14 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
-use App\Entity as EntityDir;
-use App\Form as FormDir;
+use App\Entity\Report\Status;
+use App\Entity\Report\VisitsCare;
+use App\Form\Report\VisitsCareType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,29 +19,24 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class VisitsCareController extends AbstractController
 {
-    private static $jmsGroups = [
+    private static array $jmsGroups = [
         'visits-care',
         'visits-care-state',
     ];
 
     public function __construct(
-        private RestClient $restClient,
-        private ReportApi $reportApi,
-        private StepRedirector $stepRedirector,
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
+        private readonly StepRedirector $stepRedirector,
     ) {
     }
 
-    /**
-     * @Route("/report/{reportId}/visits-care", name="visits_care")
-     *
-     * @Template("@App/Report/VisitsCare/start.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function startAction(Request $request, $reportId)
+    #[Route(path: '/report/{reportId}/visits-care', name: 'visits_care')]
+    #[Template('@App/Report/VisitsCare/start.html.twig')]
+    public function startAction(Request $request, int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getVisitsCareState()['state']) {
+        if (Status::STATE_NOT_STARTED != $report->getStatus()->getVisitsCareState()['state']) {
             return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId]);
         }
 
@@ -47,21 +45,16 @@ class VisitsCareController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/visits-care/step/{step}", name="visits_care_step")
-     *
-     * @Template("@App/Report/VisitsCare/step.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function stepAction(Request $request, $reportId, $step, TranslatorInterface $translator)
+    #[Route(path: '/report/{reportId}/visits-care/step/{step}', name: 'visits_care_step')]
+    #[Template('@App/Report/VisitsCare/step.html.twig')]
+    public function stepAction(Request $request, int $reportId, $step, TranslatorInterface $translator): RedirectResponse|array
     {
         $totalSteps = 4;
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId]);
         }
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $visitsCare = $report->getVisitsCare() ?: new EntityDir\Report\VisitsCare();
+        $visitsCare = $report->getVisitsCare() ?: new VisitsCare();
         $fromPage = $request->get('from');
 
         $stepRedirector = $this->stepRedirector
@@ -71,7 +64,7 @@ class VisitsCareController extends AbstractController
             ->setRouteBaseParams(['reportId' => $reportId]);
 
         $form = $this->createForm(
-            FormDir\Report\VisitsCareType::class,
+            VisitsCareType::class,
             $visitsCare,
             [
                 'step' => $step,
@@ -83,8 +76,9 @@ class VisitsCareController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
+            /** @var VisitsCare $data */
             $data = $form->getData();
-            /* @var $data EntityDir\Report\VisitsCare */
+
             $data
                 ->setReport($report)
                 ->keepOnlyRelevantVisitsCareData();
@@ -92,7 +86,7 @@ class VisitsCareController extends AbstractController
             if (null == $visitsCare->getId()) {
                 $this->restClient->post('report/visits-care', $data, ['visits-care', 'report-id']);
             } else {
-                $this->restClient->put('report/visits-care/'.$visitsCare->getId(), $data, self::$jmsGroups);
+                $this->restClient->put('report/visits-care/' . $visitsCare->getId(), $data, self::$jmsGroups);
             }
 
             if ('summary' == $fromPage) {
@@ -115,23 +109,18 @@ class VisitsCareController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/visits-care/summary", name="visits_care_summary")
-     *
-     * @Template("@App/Report/VisitsCare/summary.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function summaryAction(Request $request, $reportId)
+    #[Route(path: '/report/{reportId}/visits-care/summary', name: 'visits_care_summary')]
+    #[Template('@App/Report/VisitsCare/summary.html.twig')]
+    public function summaryAction(Request $request, int $reportId): RedirectResponse|array
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getVisitsCareState()['state'] && 'skip-step' != $fromPage) {
+        if (Status::STATE_NOT_STARTED == $report->getStatus()->getVisitsCareState()['state'] && 'skip-step' != $fromPage) {
             return $this->redirectToRoute('visits_care', ['reportId' => $reportId]);
         }
 
         if (!$report->getVisitsCare()) { // allow validation with answers all skipped
-            $report->setVisitsCare(new EntityDir\Report\VisitsCare());
+            $report->setVisitsCare(new VisitsCare());
         }
 
         return [
@@ -141,10 +130,7 @@ class VisitsCareController extends AbstractController
         ];
     }
 
-    /**
-     * @return string
-     */
-    protected function getSectionId()
+    protected function getSectionId(): string
     {
         return 'visitsCare';
     }

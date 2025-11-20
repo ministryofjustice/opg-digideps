@@ -7531,11 +7531,6 @@ parameters:
 			path: src/v2/Assembler/UserAssembler.php
 
 		-
-			message: "#^Attribute class Sensio\\\\Bundle\\\\FrameworkExtraBundle\\\\Configuration\\\\Security does not exist\\.$#"
-			count: 1
-			path: src/v2/Controller/CourtOrderController.php
-
-		-
 			message: "#^Cannot call method getOrganisations\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null\\.$#"
 			count: 2
 			path: src/v2/Controller/OrganisationController.php

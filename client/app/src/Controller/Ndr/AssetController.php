@@ -1,22 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Ndr;
 
 use App\Controller\AbstractController;
-use App\Entity as EntityDir;
-use App\Form as FormDir;
+use App\Entity\Ndr\AssetOther;
+use App\Entity\Ndr\AssetProperty;
+use App\Form\AddAnotherRecordType;
+use App\Form\ConfirmDeleteType;
+use App\Form\Ndr\Asset\AssetTypeOther;
+use App\Form\Ndr\Asset\AssetTypeProperty;
+use App\Form\Ndr\Asset\AssetTypeTitle;
+use App\Form\YesNoType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\NdrStatusService;
 use App\Service\StepRedirector;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AssetController extends AbstractController
 {
-    private static $jmsGroups = ['ndr-asset'];
+    private static array $jmsGroups = ['ndr-asset'];
 
     public function __construct(
         private readonly ReportApi $reportApi,
@@ -25,14 +33,9 @@ class AssetController extends AbstractController
     ) {
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/assets", name="ndr_assets")
-     *
-     * @Template("@App/Ndr/Asset/start.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function startAction($ndrId)
+    #[Route(path: '/ndr/{ndrId}/assets', name: 'ndr_assets')]
+    #[Template('@App/Ndr/Asset/start.html.twig')]
+    public function startAction(int $ndrId): RedirectResponse|array
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED != $ndr->getStatusService()->getAssetsState()['state']) {
@@ -44,18 +47,15 @@ class AssetController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/assets/exist", name="ndr_assets_exist")
-     *
-     * @Template("@App/Ndr/Asset/exist.html.twig")
-     */
-    public function existAction(Request $request, $ndrId)
+    #[Route(path: '/ndr/{ndrId}/assets/exist', name: 'ndr_assets_exist')]
+    #[Template('@App/Ndr/Asset/exist.html.twig')]
+    public function existAction(Request $request, int $ndrId): RedirectResponse|array
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if ('GET' == $request->getMethod() && $ndr->getAssets()) { // if assets are added, set form default to "Yes"
             $ndr->setNoAssetToAdd(0);
         }
-        $form = $this->createForm(FormDir\YesNoType::class, $ndr, [
+        $form = $this->createForm(YesNoType::class, $ndr, [
             'field' => 'noAssetToAdd',
             'translation_domain' => 'ndr-assets',
             'choices' => ['Yes' => 0, 'No' => 1],
@@ -68,7 +68,7 @@ class AssetController extends AbstractController
                 case 0: // yes
                     return $this->redirectToRoute('ndr_assets_type', ['ndrId' => $ndrId]);
                 case 1: // no
-                    $this->restClient->put('ndr/'.$ndrId, $ndr, ['noAssetsToAdd']);
+                    $this->restClient->put('ndr/' . $ndrId, $ndr, ['noAssetsToAdd']);
 
                     return $this->redirectToRoute('ndr_assets_summary', ['ndrId' => $ndrId]);
             }
@@ -86,25 +86,20 @@ class AssetController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/assets/step-type", name="ndr_assets_type")
-     *
-     * @Template("@App/Ndr/Asset/type.html.twig")
-     */
-    public function typeAction(Request $request, $ndrId)
+    #[Route(path: '/ndr/{ndrId}/assets/step-type', name: 'ndr_assets_type')]
+    #[Template('@App/Ndr/Asset/type.html.twig')]
+    public function typeAction(Request $request, int $ndrId): RedirectResponse|array
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        $form = $this->createForm(FormDir\Ndr\Asset\AssetTypeTitle::class, new EntityDir\Ndr\AssetOther(), []);
+        $form = $this->createForm(AssetTypeTitle::class, new AssetOther(), []);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $title = $form->getData()->getTitle();
-            switch ($title) {
-                case 'Property':
-                    return $this->redirect($this->generateUrl('ndr_assets_property_step', ['ndrId' => $ndrId, 'step' => 1]));
-                default:
-                    return $this->redirect($this->generateUrl('ndr_asset_other_add', ['ndrId' => $ndrId, 'title' => $title]));
-            }
+            return match ($title) {
+                'Property' => $this->redirect($this->generateUrl('ndr_assets_property_step', ['ndrId' => $ndrId, 'step' => 1])),
+                default => $this->redirect($this->generateUrl('ndr_asset_other_add', ['ndrId' => $ndrId, 'title' => $title])),
+            };
         }
 
         return [
@@ -115,19 +110,16 @@ class AssetController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/assets/other/{title}/add", name="ndr_asset_other_add")
-     *
-     * @Template("@App/Ndr/Asset/Other/add.html.twig")
-     */
-    public function otherAddAction(Request $request, $ndrId, $title)
+    #[Route(path: '/ndr/{ndrId}/assets/other/{title}/add', name: 'ndr_asset_other_add')]
+    #[Template('@App/Ndr/Asset/Other/add.html.twig')]
+    public function otherAddAction(Request $request, int $ndrId, $title): RedirectResponse|array
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
-        $asset = new EntityDir\Ndr\AssetOther();
+        $asset = new AssetOther();
         $asset->setTitle($title);
         $asset->setndr($ndr);
 
-        $form = $this->createForm(FormDir\Ndr\Asset\AssetTypeOther::class, $asset);
+        $form = $this->createForm(AssetTypeOther::class, $asset);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -147,22 +139,19 @@ class AssetController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/assets/other/edit/{assetId}", name="ndr_asset_other_edit")
-     *
-     * @Template("@App/Ndr/Asset/Other/edit.html.twig")
-     */
-    public function otherEditAction(Request $request, $ndrId, $assetId = null)
+    #[Route(path: '/ndr/{ndrId}/assets/other/edit/{assetId}', name: 'ndr_asset_other_edit')]
+    #[Template('@App/Ndr/Asset/Other/edit.html.twig')]
+    public function otherEditAction(Request $request, int $ndrId, $assetId = null): RedirectResponse|array
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if ($assetId) {
             $asset = $this->restClient->get("ndr/{$ndrId}/asset/{$assetId}", 'Ndr\\Asset');
         } else {
-            $asset = new EntityDir\Ndr\AssetOther();
+            $asset = new AssetOther();
             $asset->setndr($ndr);
         }
 
-        $form = $this->createForm(FormDir\Ndr\Asset\AssetTypeOther::class, $asset);
+        $form = $this->createForm(AssetTypeOther::class, $asset);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -181,16 +170,13 @@ class AssetController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/assets/add_another", name="ndr_assets_add_another")
-     *
-     * @Template("@App/Ndr/Asset/addAnother.html.twig")
-     */
-    public function addAnotherAction(Request $request, $ndrId)
+    #[Route(path: '/ndr/{ndrId}/assets/add_another', name: 'ndr_assets_add_another')]
+    #[Template('@App/Ndr/Asset/addAnother.html.twig')]
+    public function addAnotherAction(Request $request, int $ndrId): RedirectResponse|array
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
 
-        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $ndr, ['translation_domain' => 'ndr-assets']);
+        $form = $this->createForm(AddAnotherRecordType::class, $ndr, ['translation_domain' => 'ndr-assets']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -208,12 +194,9 @@ class AssetController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/assets/property/step{step}/{assetId}", name="ndr_assets_property_step", requirements={"step":"\d+"})
-     *
-     * @Template("@App/Ndr/Asset/Property/step.html.twig")
-     */
-    public function propertyStepAction(Request $request, $ndrId, $step, $assetId = null)
+    #[Route(path: '/ndr/{ndrId}/assets/property/step{step}/{assetId}', name: 'ndr_assets_property_step', requirements: ['step' => '\d+'])]
+    #[Template('@App/Ndr/Asset/Property/step.html.twig')]
+    public function propertyStepAction(Request $request, int $ndrId, $step, $assetId = null): RedirectResponse|array
     {
         $totalSteps = 8;
         if ($step < 1 || $step > $totalSteps) {
@@ -233,13 +216,11 @@ class AssetController extends AbstractController
             ->setRouteBaseParams(['ndrId' => $ndrId, 'assetId' => $assetId]);
 
         if ($assetId) { // edit asset
-            $assets = array_filter($ndr->getAssets(), function ($t) use ($assetId) {
-                return $t->getId() == $assetId;
-            });
+            $assets = array_filter($ndr->getAssets(), fn($t): bool => $t->getId() == $assetId);
             $asset = array_shift($assets);
             $stepRedirector->setFromPage('summary');
         } else { // add new asset
-            $asset = new EntityDir\Ndr\AssetProperty();
+            $asset = new AssetProperty();
         }
 
         // add URL-data into model
@@ -255,17 +236,18 @@ class AssetController extends AbstractController
         isset($dataFromUrl['value']) && $asset->setValue($dataFromUrl['value']);
         isset($dataFromUrl['ser']) && $asset->setIsSubjectToEquityRelease($dataFromUrl['ser']);
         isset($dataFromUrl['hc']) && $asset->setHasCharges($dataFromUrl['hc']);
+
         $stepRedirector->setStepUrlAdditionalParams([
             'data' => $dataFromUrl,
         ]);
 
         // create and handle form
-        $form = $this->createForm(FormDir\Ndr\Asset\AssetTypeProperty::class, $asset, ['step' => $step]);
+        $form = $this->createForm(AssetTypeProperty::class, $asset, ['step' => $step]);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
+            /* @var $asset AssetProperty */
             $asset = $form->getData();
-            /* @var $asset EntityDir\Ndr\AssetProperty */
 
             // edit mode: save immediately and go back to summary page
             if ($assetId) {
@@ -330,14 +312,9 @@ class AssetController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/assets/summary", name="ndr_assets_summary")
-     *
-     * @Template("@App/Ndr/Asset/summary.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function summaryAction($ndrId)
+    #[Route(path: '/ndr/{ndrId}/assets/summary', name: 'ndr_assets_summary')]
+    #[Template('@App/Ndr/Asset/summary.html.twig')]
+    public function summaryAction(int $ndrId): RedirectResponse|array
     {
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
         if (NdrStatusService::STATE_NOT_STARTED == $ndr->getStatusService()->getAssetsState()['state']) {
@@ -349,16 +326,11 @@ class AssetController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/assets/{assetId}/delete", name="ndr_asset_delete")
-     *
-     * @Template("@App/Common/confirmDelete.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function deleteAction(Request $request, $ndrId, $assetId)
+    #[Route(path: '/ndr/{ndrId}/assets/{assetId}/delete', name: 'ndr_asset_delete')]
+    #[Template('@App/Common/confirmDelete.html.twig')]
+    public function deleteAction(Request $request, int $ndrId, $assetId): RedirectResponse|array
     {
-        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form = $this->createForm(ConfirmDeleteType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -374,7 +346,7 @@ class AssetController extends AbstractController
 
         $asset = $this->restClient->get("ndr/{$ndrId}/asset/{$assetId}", 'Ndr\\Asset');
 
-        if ($asset instanceof EntityDir\Ndr\AssetProperty) {
+        if ($asset instanceof AssetProperty) {
             $summary = [
                 ['label' => 'deletePage.summary.type', 'value' => 'deletePage.summary.property', 'format' => 'translate'],
                 ['label' => 'deletePage.summary.address', 'value' => implode(', ', $asset->getAddressValidLines())],

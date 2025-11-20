@@ -1,16 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
 use App\Entity\Report\BankAccount;
 use App\Entity\Report\MoneyTransaction;
 use App\Entity\Report\Status;
-use App\Form as FormDir;
+use App\Form\AddAnotherRecordType;
+use App\Form\ConfirmDeleteType;
+use App\Form\Report\DoesMoneyInExistType;
+use App\Form\Report\MoneyTransactionType;
+use App\Form\Report\NoMoneyInType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,27 +26,22 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MoneyInController extends AbstractController
 {
-    private static $jmsGroups = [
+    private static array $jmsGroups = [
         'transactionsIn',
         'money-in-state',
         'account',
     ];
 
     public function __construct(
-        private RestClient $restClient,
-        private ReportApi $reportApi,
-        private StepRedirector $stepRedirector,
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
+        private readonly StepRedirector $stepRedirector,
     ) {
     }
 
-    /**
-     * @Route("/report/{reportId}/money-in", name="money_in")
-     *
-     * @Template("@App/Report/MoneyIn/start.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function startAction($reportId)
+    #[Route(path: '/report/{reportId}/money-in', name: 'money_in')]
+    #[Template('@App/Report/MoneyIn/start.html.twig')]
+    public function startAction(int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (Status::STATE_NOT_STARTED != $report->getStatus()->getMoneyInState()['state']) {
@@ -52,17 +53,12 @@ class MoneyInController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/money-in/exist", name="does_money_in_exist")
-     *
-     * @Template("@App/Report/MoneyIn/exist.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function existAction(Request $request, $reportId)
+    #[Route(path: '/report/{reportId}/money-in/exist', name: 'does_money_in_exist')]
+    #[Template('@App/Report/MoneyIn/exist.html.twig')]
+    public function existAction(Request $request, int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(FormDir\Report\DoesMoneyInExistType::class, $report);
+        $form = $this->createForm(DoesMoneyInExistType::class, $report);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -71,10 +67,10 @@ class MoneyInController extends AbstractController
             $fromPage = $request->get('from');
 
             $report->setMoneyInExists($answer);
-            $this->restClient->put('report/'.$reportId, $report, ['doesMoneyInExist']);
+            $this->restClient->put('report/' . $reportId, $report, ['doesMoneyInExist']);
 
             // retrieve soft deleted transaction ids if present and handle money in ids only
-            $softDeletedTransactionIds = $this->restClient->get('/report/'.$reportId.'/money-transaction/get-soft-delete', 'Report\MoneyTransaction[]');
+            $softDeletedTransactionIds = $this->restClient->get("/report/$reportId/money-transaction/get-soft-delete", 'Report\MoneyTransaction[]');
 
             $softDeletedMoneyInTransactionIds = [];
             foreach ($softDeletedTransactionIds as $softDeletedTransactionId) {
@@ -85,12 +81,12 @@ class MoneyInController extends AbstractController
 
             if ('Yes' === $answer && 'summary' != $fromPage) {
                 $report->setReasonForNoMoneyIn(null);
-                $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyIn']);
+                $this->restClient->put('report/' . $reportId, $report, ['reasonForNoMoneyIn']);
 
                 return $this->redirectToRoute('money_in_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_in_exist']);
             } elseif ('Yes' === $answer && 'summary' === $fromPage) {
                 $report->setReasonForNoMoneyIn(null);
-                $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyIn']);
+                $this->restClient->put('report/' . $reportId, $report, ['reasonForNoMoneyIn']);
 
                 $this->handleSoftDeletionOfMoneyTransactionItems($answer, $softDeletedMoneyInTransactionIds, $report);
 
@@ -117,39 +113,32 @@ class MoneyInController extends AbstractController
         ];
     }
 
-    private function handleSoftDeletionOfMoneyTransactionItems($answer, $softDeletedTransactionIds, $report): void
+    private function handleSoftDeletionOfMoneyTransactionItems(string $answer, array $softDeletedTransactionIds, $report): void
     {
         $reportId = $report->getId();
 
         if ('Yes' === $answer) {
             // undelete soft deleted items if present
-            if (!empty($softDeletedTransactionIds)) {
-                foreach ($softDeletedTransactionIds as $transactionId) {
-                    $this->restClient->put('/report/'.$reportId.'/money-transaction/soft-delete/'.$transactionId, ['transactionSoftDelete']);
-                }
+            foreach ($softDeletedTransactionIds as $transactionId) {
+                $this->restClient->put('/report/' . $reportId . '/money-transaction/soft-delete/' . $transactionId, ['transactionSoftDelete']);
             }
         } else {
             // soft delete items
             $transactions = $report->getMoneyTransactionsIn();
             if (!empty($transactions)) {
                 foreach ($transactions as $t) {
-                    $this->restClient->put('/report/'.$reportId.'/money-transaction/soft-delete/'.$t->getId(), ['transactionSoftDelete']);
+                    $this->restClient->put('/report/' . $reportId . '/money-transaction/soft-delete/' . $t->getId(), ['transactionSoftDelete']);
                 }
             }
         }
     }
 
-    /**
-     * @Route("/report/{reportId}/money-in/no-money-in-exists", name="no_money_in_exists")
-     *
-     * @Template("@App/Report/MoneyIn/noMoneyInToReport.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function noMoneyInToReport(Request $request, $reportId)
+    #[Route(path: '/report/{reportId}/money-in/no-money-in-exists', name: 'no_money_in_exists')]
+    #[Template('@App/Report/MoneyIn/noMoneyInToReport.html.twig')]
+    public function noMoneyInToReport(Request $request, int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(FormDir\Report\NoMoneyInType::class, $report);
+        $form = $this->createForm(NoMoneyInType::class, $report);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -158,7 +147,7 @@ class MoneyInController extends AbstractController
 
             $report->setReasonForNoMoneyIn($answer);
             $report->getStatus()->setMoneyInState(Status::STATE_DONE);
-            $this->restClient->put('report/'.$reportId, $report, ['reasonForNoMoneyIn']);
+            $this->restClient->put('report/' . $reportId, $report, ['reasonForNoMoneyIn']);
 
             return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
         }
@@ -172,17 +161,15 @@ class MoneyInController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/money-in/step{step}/{transactionId}", requirements={"step":"\d+"}, name="money_in_step")
-     *
-     * @Template("@App/Report/MoneyIn/step.html.twig")
-     *
-     * @param null $transactionId
-     *
-     * @return array|RedirectResponse
-     */
-    public function stepAction(Request $request, $reportId, $step, AuthorizationCheckerInterface $authorizationChecker, $transactionId = null)
-    {
+    #[Route(path: '/report/{reportId}/money-in/step{step}/{transactionId}', name: 'money_in_step', requirements: ['step' => '\d+'])]
+    #[Template('@App/Report/MoneyIn/step.html.twig')]
+    public function stepAction(
+        Request $request,
+        int $reportId,
+        int $step,
+        AuthorizationCheckerInterface $authorizationChecker,
+        ?int $transactionId = null
+    ): RedirectResponse|array {
         $totalSteps = 2;
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
@@ -202,7 +189,7 @@ class MoneyInController extends AbstractController
 
         // create (add mode) or load transaction (edit mode)
         if ($transactionId) {
-            $transaction = array_filter($report->getMoneyTransactionsIn(), function ($t) use ($transactionId) {
+            $transaction = array_filter($report->getMoneyTransactionsIn(), function ($t) use ($transactionId): bool {
                 if ($t->getBankAccount() instanceof BankAccount) {
                     $t->setBankAccountId($t->getBankAccount()->getId());
                 }
@@ -226,7 +213,7 @@ class MoneyInController extends AbstractController
 
         // crete and handle form
         $form = $this->createForm(
-            FormDir\Report\MoneyTransactionType::class,
+            MoneyTransactionType::class,
             $transaction,
             [
                 'step' => $step,
@@ -253,11 +240,11 @@ class MoneyInController extends AbstractController
                         'notice',
                         'Entry edited'
                     );
-                    $this->restClient->put('/report/'.$reportId.'/money-transaction/'.$transactionId, $transaction, ['transaction', 'account']);
+                    $this->restClient->put("/report/$reportId/money-transaction/$transactionId", $transaction, ['transaction', 'account']);
 
                     return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
                 } else { // add
-                    $this->restClient->post('/report/'.$reportId.'/money-transaction', $transaction, ['transaction', 'account']);
+                    $this->restClient->post("/report/$reportId/money-transaction", $transaction, ['transaction', 'account']);
 
                     return $this->redirectToRoute('money_in_add_another', ['reportId' => $reportId]);
                 }
@@ -282,18 +269,13 @@ class MoneyInController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/money-in/add_another", name="money_in_add_another")
-     *
-     * @Template("@App/Report/MoneyIn/addAnother.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function addAnotherAction(Request $request, $reportId)
+    #[Route(path: '/report/{reportId}/money-in/add_another', name: 'money_in_add_another')]
+    #[Template('@App/Report/MoneyIn/addAnother.html.twig')]
+    public function addAnotherAction(Request $request, int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId);
 
-        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-money-transaction']);
+        $form = $this->createForm(AddAnotherRecordType::class, $report, ['translation_domain' => 'report-money-transaction']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -311,14 +293,9 @@ class MoneyInController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/money-in/summary", name="money_in_summary")
-     *
-     * @Template("@App/Report/MoneyIn/summary.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function summaryAction(Request $request, $reportId)
+    #[Route(path: '/report/{reportId}/money-in/summary', name: 'money_in_summary')]
+    #[Template('@App/Report/MoneyIn/summary.html.twig')]
+    public function summaryAction(Request $request, int $reportId): RedirectResponse|array
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -333,14 +310,9 @@ class MoneyInController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/money-in/{transactionId}/delete", name="money_in_delete")
-     *
-     * @Template("@App/Common/confirmDelete.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function deleteAction(Request $request, $reportId, $transactionId, TranslatorInterface $translator)
+    #[Route(path: '/report/{reportId}/money-in/{transactionId}/delete', name: 'money_in_delete')]
+    #[Template('@App/Common/confirmDelete.html.twig')]
+    public function deleteAction(Request $request, int $reportId, string $transactionId, TranslatorInterface $translator): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -355,11 +327,11 @@ class MoneyInController extends AbstractController
             throw $this->createNotFoundException('Transaction not found');
         }
 
-        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form = $this->createForm(ConfirmDeleteType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->delete('/report/'.$reportId.'/money-transaction/'.$transactionId);
+            $this->restClient->delete('/report/' . $reportId . '/money-transaction/' . $transactionId);
 
             $this->addFlash(
                 'notice',
@@ -369,7 +341,7 @@ class MoneyInController extends AbstractController
             return $this->redirect($this->generateUrl('money_in_summary', ['reportId' => $reportId]));
         }
 
-        $categoryKey = 'form.category.entries.'.$transaction->getCategory().'.label';
+        $categoryKey = 'form.category.entries.' . $transaction->getCategory() . '.label';
         $summary = [
             ['label' => 'deletePage.summary.category', 'value' => $translator->trans($categoryKey, [], 'report-money-transaction')],
             ['label' => 'deletePage.summary.description', 'value' => $transaction->getDescription()],
@@ -389,10 +361,7 @@ class MoneyInController extends AbstractController
         ];
     }
 
-    /**
-     * @return string
-     */
-    protected function getSectionId()
+    protected function getSectionId(): string
     {
         return 'moneyIn';
     }

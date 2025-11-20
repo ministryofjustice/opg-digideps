@@ -16,7 +16,7 @@
     },
     {
       "package": "symfony/expression-language",
-      "usage-description": "for @Security component in sensio security"
+      "usage-description": "for @IsGranted component"
     }
   ]
 }

@@ -5,28 +5,29 @@ declare(strict_types=1);
 namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
-use App\Entity as EntityDir;
+use App\Entity\Report\Document;
+use App\Entity\Report\ReportSubmission;
+use App\Entity\User;
 use App\Service\Client\RestClient;
 use App\Service\DocumentDownloader;
 use App\Service\File\Storage\S3Storage;
 use App\Service\ParameterStoreService;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-/**
- * @Route("/admin")
- */
+#[Route(path: '/admin')]
 class ReportSubmissionController extends AbstractController
 {
-    public const ACTION_DOWNLOAD = 'download';
-    public const ACTION_ARCHIVE = 'archive';
-    public const ACTION_SYNCHRONISE = 'synchronise';
+    public const string ACTION_DOWNLOAD = 'download';
+    public const string ACTION_ARCHIVE = 'archive';
+    public const string ACTION_SYNCHRONISE = 'synchronise';
 
     public function __construct(
         private readonly DocumentDownloader $documentDownloader,
@@ -36,16 +37,10 @@ class ReportSubmissionController extends AbstractController
     ) {
     }
 
-    /**
-     * @Route("/documents/list", methods={"GET", "POST"}, name="admin_documents")
-     *
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
-     * @Template("@App/Admin/ReportSubmission/index.html.twig")
-     *
-     * @return array<mixed>|Response
-     */
-    public function indexAction(Request $request, ParameterStoreService $parameterStoreService)
+    #[Route(path: '/documents/list', name: 'admin_documents', methods: ['GET', 'POST'])]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[Template('@App/Admin/ReportSubmission/index.html.twig')]
+    public function indexAction(Request $request, ParameterStoreService $parameterStoreService): Response|array
     {
         if ($request->isMethod('POST')) {
             $ret = $this->processPost($request);
@@ -56,12 +51,10 @@ class ReportSubmissionController extends AbstractController
         }
 
         $currentFilters = self::getFiltersFromRequest($request);
-        $ret = $this->restClient->get('/report-submission?'.http_build_query($currentFilters), 'array');
-        $records = $this->restClient->arrayToEntities(EntityDir\Report\ReportSubmission::class.'[]', $ret['records']);
+        $ret = $this->restClient->get('/report-submission?' . http_build_query($currentFilters), 'array');
+        $records = $this->restClient->arrayToEntities(ReportSubmission::class . '[]', $ret['records']);
 
-        $nOfdownloadableSubmissions = count(array_filter($records, function ($s) {
-            return $s->isDownloadable();
-        }));
+        $nOfdownloadableSubmissions = count(array_filter($records, fn($s) => $s->isDownloadable()));
 
         if ('archived' === $currentFilters['status']) {
             $postActions = [self::ACTION_DOWNLOAD];
@@ -69,12 +62,12 @@ class ReportSubmissionController extends AbstractController
             $postActions = [self::ACTION_DOWNLOAD, self::ACTION_ARCHIVE];
         }
 
-        /** @var EntityDir\User $user */
+        /** @var User $user */
         $user = $this->getUser();
 
         $isDocumentSyncEnabled = $parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC);
 
-        if ('1' === $isDocumentSyncEnabled && EntityDir\User::ROLE_SUPER_ADMIN === $user->getRoleName()) {
+        if ('1' === $isDocumentSyncEnabled && User::ROLE_SUPER_ADMIN === $user->getRoleName()) {
             $postActions[] = self::ACTION_SYNCHRONISE;
         }
 
@@ -93,11 +86,8 @@ class ReportSubmissionController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/documents/list/download", methods={"GET"}, name="admin_documents_download")
-     *
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     */
+    #[Route(path: '/documents/list/download', name: 'admin_documents_download', methods: ['GET'])]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
     public function downloadDocuments(Request $request): Response
     {
         $reportSubmissionIds =
@@ -110,7 +100,7 @@ class ReportSubmissionController extends AbstractController
                 [$retrievedDocuments, $missingDocuments] = $this->documentDownloader->retrieveDocumentsFromS3ByReportSubmissionIds($request, $reportSubmissionIds);
                 $downloadLocation = $this->documentDownloader->zipDownloadedDocuments($retrievedDocuments);
             } catch (\Throwable $e) {
-                $this->addFlash('error', 'There was an error downloading the requested documents: '.$e->getMessage());
+                $this->addFlash('error', 'There was an error downloading the requested documents: ' . $e->getMessage());
 
                 return $this->redirectToRoute('admin_documents_download_ready');
             }
@@ -122,54 +112,43 @@ class ReportSubmissionController extends AbstractController
         return $response;
     }
 
-    /**
-     * @Route("/documents/{submissionId}/{documentId}/download", methods={"GET"}, name="admin_document_download")
-     *
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     */
+    #[Route(path: '/documents/{submissionId}/{documentId}/download', name: 'admin_document_download', methods: ['GET'])]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
     public function downloadIndividualDocument(int $submissionId, int $documentId): Response
     {
         $client = $this->restClient;
 
-        /** @var EntityDir\Report\ReportSubmission $submission */
-        $submission = $client->get("report-submission/{$submissionId}", 'Report\\ReportSubmission');
+        /** @var ReportSubmission $submission */
+        $submission = $client->get("report-submission/$submissionId", 'Report\\ReportSubmission');
 
-        $documents = array_values(array_filter($submission->getDocuments(), function ($document) use ($documentId) {
-            return $document->getId() === $documentId;
-        }));
+        $documents = array_values(array_filter($submission->getDocuments(), fn($document): bool => $document->getId() === $documentId));
 
         if (1 !== count($documents)) {
             throw $this->createNotFoundException('Document not found');
         }
 
-        /** @var EntityDir\Report\Document $document */
+        /** @var Document $document */
         $document = $documents[0];
 
         try {
             $contents = $this->s3Storage->retrieve($document->getStorageReference());
-        } catch (\Throwable $e) {
+        } catch (\Throwable) {
             $filename = $document->getFileName();
             throw $this->createNotFoundException("Document '$filename' could not be retrieved");
         }
 
         $response = new Response($contents);
         $response->headers->set('Content-Type', 'application/octet-stream');
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$document->getFileName().'"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $document->getFileName() . '"');
         $response->sendHeaders();
 
         return $response;
     }
 
-    /**
-     * @Route("/documents/list/download_ready", methods={"GET"}, name="admin_documents_download_ready")
-     *
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
-     * @Template("@App/Admin/ReportSubmission/download-ready.html.twig")
-     *
-     * @return array<mixed>
-     */
-    public function downloadReady(Request $request)
+    #[Route(path: '/documents/list/download_ready', name: 'admin_documents_download_ready', methods: ['GET'])]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[Template('@App/Admin/ReportSubmission/download-ready.html.twig')]
+    public function downloadReady(Request $request): array
     {
         return ['reportSubmissionIds' => $request->query->get('reportSubmissionIds')];
     }
@@ -226,14 +205,14 @@ class ReportSubmissionController extends AbstractController
 
                         return $this->documentDownloader->generateDownloadResponse($fileName);
                     } catch (\Throwable $e) {
-                        $this->addFlash('error', 'There was an error downloading the requested documents: '.$e->getMessage());
+                        $this->addFlash('error', 'There was an error downloading the requested documents: ' . $e->getMessage());
 
                         return $this->redirectToRoute('admin_documents');
                     }
 
                 case self::ACTION_SYNCHRONISE:
                     foreach ($checkedBoxes as $reportSubmissionId) {
-                        $this->restClient->put("report-submission/{$reportSubmissionId}/queue-documents", []);
+                        $this->restClient->put("report-submission/$reportSubmissionId/queue-documents", []);
                     }
             }
         }
@@ -244,17 +223,14 @@ class ReportSubmissionController extends AbstractController
      *
      * @param array<int, int|string> $checkedBoxes ids selected by the user
      */
-    private function processArchive($checkedBoxes): void
+    private function processArchive(array $checkedBoxes): void
     {
         foreach ($checkedBoxes as $reportSubmissionId) {
-            $this->restClient->put("report-submission/{$reportSubmissionId}", ['archive' => true]);
+            $this->restClient->put("report-submission/$reportSubmissionId", ['archive' => true]);
         }
     }
 
-    /**
-     * @return array<mixed>
-     */
-    private static function getFiltersFromRequest(Request $request)
+    private static function getFiltersFromRequest(Request $request): array
     {
         $order = 'new' === $request->get('status', 'new') ? 'DESC' : 'ASC';
 

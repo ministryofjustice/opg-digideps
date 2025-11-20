@@ -1,13 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
-use App\Entity as EntityDir;
-use App\Form as FormDir;
+use App\Entity\Report\Contact;
+use App\Entity\Report\Status;
+use App\Form\AddAnotherRecordType;
+use App\Form\ConfirmDeleteType;
+use App\Form\Report\ContactExistType;
+use App\Form\Report\ContactType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,7 +21,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class ContactController extends AbstractController
 {
-    private static $jmsGroups = [
+    private static array $jmsGroups = [
         'contact',
         'contact-status',
     ];
@@ -26,16 +32,13 @@ class ContactController extends AbstractController
     ) {
     }
 
-    /**
-     * @Route("/report/{reportId}/contacts", name="contacts")
-     *
-     * @Template("@App/Report/Contact/start.html.twig")
-     */
+    #[Route(path: '/report/{reportId}/contacts', name: 'contacts')]
+    #[Template('@App/Report/Contact/start.html.twig')]
     public function startAction(int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getContactsState()['state']) {
+        if (Status::STATE_NOT_STARTED != $report->getStatus()->getContactsState()['state']) {
             return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
         }
 
@@ -44,15 +47,12 @@ class ContactController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/contacts/exist", name="contacts_exist")
-     *
-     * @Template("@App/Report/Contact/exist.html.twig")
-     */
+    #[Route(path: '/report/{reportId}/contacts/exist', name: 'contacts_exist')]
+    #[Template('@App/Report/Contact/exist.html.twig')]
     public function existAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(FormDir\Report\ContactExistType::class, $report);
+        $form = $this->createForm(ContactExistType::class, $report);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -60,9 +60,9 @@ class ContactController extends AbstractController
                 case 'yes':
                     return $this->redirectToRoute('contacts_add', ['reportId' => $reportId, 'from' => 'exist']);
                 case 'no':
-                    $this->restClient->put('report/'.$reportId, $report, ['reasonForNoContacts', 'contacts']);
+                    $this->restClient->put('report/' . $reportId, $report, ['reasonForNoContacts', 'contacts']);
                     foreach ($report->getContacts() as $contact) {
-                        $this->restClient->delete('/report/contact/'.$contact->getId());
+                        $this->restClient->delete('/report/contact/' . $contact->getId());
                     }
 
                     return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
@@ -81,17 +81,14 @@ class ContactController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/contacts/add", name="contacts_add")
-     *
-     * @Template("@App/Report/Contact/add.html.twig")
-     */
+    #[Route(path: '/report/{reportId}/contacts/add', name: 'contacts_add')]
+    #[Template('@App/Report/Contact/add.html.twig')]
     public function addAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $contact = new EntityDir\Report\Contact();
+        $contact = new Contact();
 
-        $form = $this->createForm(FormDir\Report\ContactType::class, $contact);
+        $form = $this->createForm(ContactType::class, $contact);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -105,7 +102,7 @@ class ContactController extends AbstractController
         }
 
         try {
-            $backLinkRoute = 'contacts_'.$request->get('from');
+            $backLinkRoute = 'contacts_' . $request->get('from');
             $backLink = $this->generateUrl($backLinkRoute, ['reportId' => $reportId]);
 
             return [
@@ -113,7 +110,7 @@ class ContactController extends AbstractController
                 'form' => $form->createView(),
                 'report' => $report,
             ];
-        } catch (RouteNotFoundException $e) {
+        } catch (RouteNotFoundException) {
             return [
                 'backLink' => null,
                 'form' => $form->createView(),
@@ -122,16 +119,13 @@ class ContactController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/report/{reportId}/contacts/add_another", name="contacts_add_another")
-     *
-     * @Template("@App/Report/Contact/addAnother.html.twig")
-     */
+    #[Route(path: '/report/{reportId}/contacts/add_another', name: 'contacts_add_another')]
+    #[Template('@App/Report/Contact/addAnother.html.twig')]
     public function addAnotherAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-contacts']);
+        $form = $this->createForm(AddAnotherRecordType::class, $report, ['translation_domain' => 'report-contacts']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -149,18 +143,15 @@ class ContactController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/contacts/edit/{contactId}", name="contacts_edit")
-     *
-     * @Template("@App/Report/Contact/edit.html.twig")
-     */
+    #[Route(path: '/report/{reportId}/contacts/edit/{contactId}', name: 'contacts_edit')]
+    #[Template('@App/Report/Contact/edit.html.twig')]
     public function editAction(Request $request, int $reportId, int $contactId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $contact = $this->restClient->get('report/contact/'.$contactId, 'Report\\Contact');
+        $contact = $this->restClient->get("report/contact/$contactId", 'Report\\Contact');
         $contact->setReport($report);
 
-        $form = $this->createForm(FormDir\Report\ContactType::class, $contact);
+        $form = $this->createForm(ContactType::class, $contact);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -181,16 +172,13 @@ class ContactController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/contacts/summary", name="contacts_summary")
-     *
-     * @Template("@App/Report/Contact/summary.html.twig")
-     */
+    #[Route(path: '/report/{reportId}/contacts/summary', name: 'contacts_summary')]
+    #[Template('@App/Report/Contact/summary.html.twig')]
     public function summaryAction(int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getContactsState()['state']) {
+        if (Status::STATE_NOT_STARTED == $report->getStatus()->getContactsState()['state']) {
             return $this->redirectToRoute('contacts', ['reportId' => $reportId]);
         }
 
@@ -199,18 +187,15 @@ class ContactController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/contacts/{contactId}/delete", name="contacts_delete")
-     *
-     * @Template("@App/Common/confirmDelete.html.twig")
-     */
+    #[Route(path: '/report/{reportId}/contacts/{contactId}/delete', name: 'contacts_delete')]
+    #[Template('@App/Common/confirmDelete.html.twig')]
     public function deleteAction(Request $request, int $reportId, int $contactId): array|RedirectResponse
     {
-        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form = $this->createForm(ConfirmDeleteType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->delete("/report/contact/{$contactId}");
+            $this->restClient->delete("/report/contact/$contactId");
 
             $request->getSession()->getFlashBag()->add(
                 'notice',
@@ -221,7 +206,7 @@ class ContactController extends AbstractController
         }
 
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $contact = $this->restClient->get('report/contact/'.$contactId, 'Report\\Contact');
+        $contact = $this->restClient->get("report/contact/$contactId", 'Report\\Contact');
 
         return [
             'translationDomain' => 'report-contacts',

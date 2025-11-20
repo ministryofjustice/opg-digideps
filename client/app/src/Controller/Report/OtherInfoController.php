@@ -1,43 +1,40 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
-use App\Entity as EntityDir;
-use App\Form as FormDir;
+use App\Entity\Report\Status;
+use App\Form\Report\OtherInfoType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class OtherInfoController extends AbstractController
 {
-    private static $jmsGroups = [
+    private static array $jmsGroups = [
         'action-more-info',
         'more-info-state',
     ];
 
     public function __construct(
-        private RestClient $restClient,
-        private ReportApi $reportApi,
-        private StepRedirector $stepRedirector,
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
+        private readonly StepRedirector $stepRedirector,
     ) {
     }
 
-    /**
-     * @Route("/report/{reportId}/any-other-info", name="other_info")
-     *
-     * @Template("@App/Report/OtherInfo/start.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function startAction(Request $request, $reportId)
+    #[Route(path: '/report/{reportId}/any-other-info', name: 'other_info')]
+    #[Template('@App/Report/OtherInfo/start.html.twig')]
+    public function startAction(int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getOtherInfoState()['state']) {
+        if (Status::STATE_NOT_STARTED != $report->getStatus()->getOtherInfoState()['state']) {
             return $this->redirectToRoute('other_info_summary', ['reportId' => $reportId]);
         }
 
@@ -46,14 +43,9 @@ class OtherInfoController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/any-other-info/step/{step}", name="other_info_step")
-     *
-     * @Template("@App/Report/OtherInfo/step.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function stepAction(Request $request, $reportId, $step)
+    #[Route(path: '/report/{reportId}/any-other-info/step/{step}', name: 'other_info_step')]
+    #[Template('@App/Report/OtherInfo/step.html.twig')]
+    public function stepAction(Request $request, int $reportId, int $step): RedirectResponse|array
     {
         $totalSteps = 1; // only one step but convenient to reuse the "step" logic and keep things aligned/simple
         if ($step < 1 || $step > $totalSteps) {
@@ -68,12 +60,12 @@ class OtherInfoController extends AbstractController
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId]);
 
-        $form = $this->createForm(FormDir\Report\OtherInfoType::class, $report);
+        $form = $this->createForm(OtherInfoType::class, $report);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
-            $this->restClient->put('report/'.$reportId, $data, ['more-info']);
+            $this->restClient->put('report/' . $reportId, $data, ['more-info']);
 
             if ('summary' == $fromPage) {
                 $request->getSession()->getFlashBag()->add(
@@ -93,18 +85,13 @@ class OtherInfoController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/any-other-info/summary", name="other_info_summary")
-     *
-     * @Template("@App/Report/OtherInfo/summary.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function summaryAction(Request $request, $reportId)
+    #[Route(path: '/report/{reportId}/any-other-info/summary', name: 'other_info_summary')]
+    #[Template('@App/Report/OtherInfo/summary.html.twig')]
+    public function summaryAction(Request $request, int $reportId): RedirectResponse|array
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getOtherInfoState()['state'] && 'skip-step' != $fromPage) {
+        if (Status::STATE_NOT_STARTED == $report->getStatus()->getOtherInfoState()['state'] && 'skip-step' != $fromPage) {
             return $this->redirectToRoute('other_info', ['reportId' => $reportId]);
         }
 
@@ -114,10 +101,7 @@ class OtherInfoController extends AbstractController
         ];
     }
 
-    /**
-     * @return string
-     */
-    protected function getSectionId()
+    protected function getSectionId(): string
     {
         return 'otherInfo';
     }
