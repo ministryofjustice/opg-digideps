@@ -7,7 +7,7 @@ terraform {
     assume_role = {
       role_arn = "arn:aws:iam::311462405659:role/digideps-state-write"
     }
-    dynamodb_table = "remote_lock"
+    use_lockfile = true
   }
 }
 

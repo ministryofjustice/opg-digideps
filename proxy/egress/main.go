@@ -11,10 +11,10 @@ import (
 )
 
 var allowList = []string{
-	".example.com",
-	".github.com",
-	".amazonaws.com",
-	"api-webserver",
+	"example.com",
+	"github.com",
+	"amazonaws.com",
+	"api",
 }
 
 // allowed returns true if the host ends with any allowed suffix
