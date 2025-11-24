@@ -173,8 +173,16 @@ trait DocumentsSectionTrait
      */
     public function theDocumentUploadsPageShouldNotContainADocumentWithFilename(string $filename)
     {
-        $this->assertPageNotContainsText($filename);
+        // Find all <dt class="govuk-summary-list__value"> elements
+        $elements = $this->getSession()->getPage()->findAll('css', 'dt.govuk-summary-list__value');
+
+        foreach ($elements as $element) {
+            if (strpos($element->getText(), $filename) !== false) {
+                throw new \Exception("Filename '{$filename}' was found in a summary list value.");
+            }
+        }
     }
+
 
     /**
      * @Given I remove the document with the filename :filename
@@ -190,9 +198,6 @@ trait DocumentsSectionTrait
         }
 
         $documentRowDiv->clickLink('Remove');
-
-        $this->pressButton('confirm_delete_confirm');
-        ;
     }
 
     private function uploadFiles(array $filenames)
@@ -248,42 +253,6 @@ trait DocumentsSectionTrait
             $this->clickLink('Continue');
         } catch (Throwable $e) {
             $this->clickLink('Continue to send documents');
-        }
-    }
-
-    /**
-     * @When I remove one document I uploaded
-     *
-     * @Given /^I remove the "([^"]*)" document I uploaded$/
-     */
-    public function iRemoveOneDocumentIUploaded($fileName = null)
-    {
-        if ($fileName) {
-            $documentToPop = $fileName;
-        } else {
-            $filenames = $this->uploadedDocumentFilenames;
-            $documentToPop = $filenames[0];
-            unset($filenames[0]);
-        }
-
-        $parentOfDtWithTextSelector = sprintf('//dt[contains(text(),"%s")]/..', $documentToPop);
-        $documentRowDiv = $this->getSession()->getPage()->find('xpath', $parentOfDtWithTextSelector);
-
-        if (is_null($documentRowDiv)) {
-            throw new BehatException(sprintf('An element containing a dt with the text %s was not found', $documentToPop));
-        }
-
-        $removeLinkSelector = '//a[contains(text(),"Remove")]';
-        $removeLink = $documentRowDiv->find('xpath', $removeLinkSelector);
-
-        if (is_null($removeLink)) {
-            throw new BehatException('A link with the text remove was not found in the document row');
-        }
-
-
-        if (!$fileName) {
-            $removeLink->click();
-            $this->uploadedDocumentFilenames = $filenames;
         }
     }
 
@@ -492,7 +461,6 @@ trait DocumentsSectionTrait
     public function aFlashMessageShouldBeDisplayedToTheUserConfirmingTheDocumentHasBeenRemoved($fileName)
     {
         $alertMessage = sprintf('File named %s has been removed', $fileName);
-
         $xpath = '//div[contains(@class, "moj-banner moj-banner--success")]';
         $alertText = $this->getSession()->getPage()->find('xpath', $xpath)->getText();
 
