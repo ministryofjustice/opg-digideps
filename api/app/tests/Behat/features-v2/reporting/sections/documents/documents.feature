@@ -78,6 +78,7 @@ Feature: Documents - All User Roles
         And the document uploads page should contain a document with the filename "good.pdf"
 
         When I remove the document with the filename "good_image.jpg"
+        Then I should be on the documents summary page
         Then the document uploads page should contain a document with the filename "good.png"
         And the document uploads page should contain a document with the filename "good.pdf"
         And the document uploads page should not contain a document with the filename "good_image.jpg"
