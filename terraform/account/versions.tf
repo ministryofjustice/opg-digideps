@@ -1,5 +1,5 @@
 terraform {
-  required_version = "1.10.3"
+  required_version = "1.12.2"
   required_providers {
     archive = {
       source = "hashicorp/archive"

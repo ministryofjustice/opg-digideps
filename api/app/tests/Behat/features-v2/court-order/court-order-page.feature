@@ -27,11 +27,12 @@ Feature: Court order page
         When I visit the page of a court order that 'I am' associated with
         Then I should be on the court order page
         When I am discharged from the court order
+        And I visit the page of a court order that 'I am' associated with
         Then I should be redirected and denied access to view the court order
 
     @lay-pfa-high-not-started-multi-client-deputy
     Scenario: A multi client deputy can view all of their court orders
-        When a Lay Deputy tries to login with their "primary" email address
+        When a lay deputy with no court orders logs in
         And I am associated with '3' 'pfa' court order(s)
         When I visit the multiple court order page
         Then I should see '3' court orders on the page

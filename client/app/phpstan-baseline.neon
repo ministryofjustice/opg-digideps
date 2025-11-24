@@ -3076,11 +3076,6 @@ parameters:
 			path: src/Controller/Report/DocumentController.php
 
 		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\Form\\\\FormInterface\\:\\:getClickedButton\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/GiftController.php
@@ -6964,11 +6959,6 @@ parameters:
 			message: "#^Property App\\\\Entity\\\\Report\\\\Decision\\:\\:\\$report has no type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/Decision.php
-
-		-
-			message: "#^Call to function is_null\\(\\) with string will always evaluate to false\\.$#"
-			count: 1
-			path: src/Entity/Report/Document.php
 
 		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Document\\:\\:isTransactionDocument\\(\\) never returns int so it can be removed from the return type\\.$#"
