@@ -26,7 +26,7 @@ class DecisionType extends AbstractType
                 'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
                 'mapped' => false,
-                'constraints' => [new NotBlank(['message' => "Please select either 'Yes' or 'No'",'groups' => ['decision-add-another']])],
+                'constraints' => [new NotBlank(['message' => 'decision.addAnother.notBlank','groups' => ['decision-add-another']])],
             ])
             ->add('save', FormTypes\SubmitType::class);
 
@@ -49,7 +49,6 @@ class DecisionType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-decisions',
-            'compound' => true,
             'validation_groups' => ['decision-description', 'decision-client-involved', 'decision-client-involved-details', 'decision-add-another'],
         ]);
     }
