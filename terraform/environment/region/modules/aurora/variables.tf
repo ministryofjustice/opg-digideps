@@ -50,6 +50,11 @@ variable "db_subnet_group_name" {
   type        = string
 }
 
+variable "preferred_backup_window" {
+  description = "Backup window in format 00:00-01:00."
+  type        = string
+}
+
 variable "database_name" {
   description = "The name of the initial database to be created when the cluster is created."
   type        = string
