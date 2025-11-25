@@ -68,7 +68,7 @@ class DecisionController extends AbstractController
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->restClient->put('report/'.$reportId.'/mental-capacity', $data, ['mental-capacity']);
+            $this->restClient->put('report/' . $reportId . '/mental-capacity', $data, ['mental-capacity']);
             if ($fromSummaryPage) {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
             }
@@ -106,7 +106,7 @@ class DecisionController extends AbstractController
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->restClient->put('report/'.$reportId.'/mental-capacity', $data, ['mental-assessment-date']);
+            $this->restClient->put('report/' . $reportId . '/mental-capacity', $data, ['mental-assessment-date']);
             if ($fromSummaryPage) {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
             }
@@ -145,7 +145,7 @@ class DecisionController extends AbstractController
                 return $this->redirectToRoute('decisions_add', ['reportId' => $reportId, 'from' => 'decisions_exist']);
             } else {
                 foreach ($report->getDecisions() as $decision) {
-                    $this->restClient->delete('/report/decision/'.$decision->getId());
+                    $this->restClient->delete('/report/decision/' . $decision->getId());
                 }
 
                 // this must proceed the deletion above if deputy switches from 'yes' to 'no' as it will not persist the 'reason for decision' answer
@@ -169,7 +169,7 @@ class DecisionController extends AbstractController
 
     private function updateReport($report, $reportId, $fields)
     {
-        $this->restClient->put('report/'.$reportId, $report, $fields);
+        $this->restClient->put('report/' . $reportId, $report, $fields);
     }
 
     /**
@@ -192,7 +192,12 @@ class DecisionController extends AbstractController
 
             $this->restClient->post('report/decision', $data, ['decision', 'report-id']);
 
-            return $this->redirect($this->generateUrl('decisions_add_another', ['reportId' => $reportId]));
+            switch ($form['addAnother']->getData()) {
+                case 'yes':
+                    return $this->redirectToRoute('decisions_add', ['reportId' => $reportId,'from' => $from]);
+                case 'no':
+                    return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
+            }
         }
 
         // TODO use $backLinkRoute logic and align to other controllers
@@ -214,33 +219,6 @@ class DecisionController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/decisions/add_another", name="decisions_add_another")
-     *
-     * @Template("@App/Report/Decision/addAnother.html.twig")
-     */
-    public function addAnotherAction(Request $request, int $reportId): array|RedirectResponse
-    {
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-
-        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-decisions']);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            switch ($form['addAnother']->getData()) {
-                case 'yes':
-                    return $this->redirectToRoute('decisions_add', ['reportId' => $reportId, 'from' => 'decisions_add_another']);
-                case 'no':
-                    return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
-            }
-        }
-
-        return [
-            'form' => $form->createView(),
-            'report' => $report,
-        ];
-    }
-
-    /**
      * @Route("/report/{reportId}/decisions/edit/{decisionId}", name="decisions_edit")
      *
      * @Template("@App/Report/Decision/edit.html.twig")
@@ -248,7 +226,7 @@ class DecisionController extends AbstractController
     public function editAction(Request $request, int $reportId, int $decisionId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $decision = $this->restClient->get('report/decision/'.$decisionId, 'Report\\Decision');
+        $decision = $this->restClient->get('report/decision/' . $decisionId, 'Report\\Decision');
         $decision->setReport($report);
 
         $form = $this->createForm(FormDir\Report\DecisionType::class, $decision);
@@ -318,7 +296,7 @@ class DecisionController extends AbstractController
         }
 
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $decision = $this->restClient->get('report/decision/'.$decisionId, 'Report\\Decision');
+        $decision = $this->restClient->get('report/decision/' . $decisionId, 'Report\\Decision');
 
         return [
             'translationDomain' => 'report-decisions',
