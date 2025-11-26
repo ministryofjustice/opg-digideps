@@ -98,7 +98,7 @@ class DeputyService
         /** @var ?Deputy $deputy */
         $deputy = $this->deputyRepository->findOneBy(['deputyUid' => $uid]);
         $timet = microtime(true) - $timer;
-        $this->logger->info(sprintf('TimeTaken %s; Finding reports info by UID: %s', $timet, $uid));
+        $this->logger->error(sprintf('TimeTaken %s; Finding reports info by UID: %s', $timet, $uid));
 
         if (is_null($deputy)) {
             return null;
@@ -107,7 +107,7 @@ class DeputyService
         // get all court orders for deputy
         $courtOrdersWithStatus = $deputy->getCourtOrdersWithStatus();
         $timet = microtime(true) - $timer;
-        $this->logger->info(sprintf('TimeTaken %s; Finding CourtOrders, mem used %s', $timet, memory_get_usage()));
+        $this->logger->error(sprintf('TimeTaken %s; Finding CourtOrders, mem used %s', $timet, memory_get_usage()));
 
         // get the latest report for each court order, storing court order UIDs and deduplicating as we go
         $reportAggregate = [];
@@ -116,7 +116,7 @@ class DeputyService
         foreach ($courtOrdersWithStatus as $courtOrderWithStatus) {
             ++$loop;
             $timet = microtime(true) - $timer;
-            $this->logger->info(sprintf('TimeTaken %s; Looping courtOrders, mem used %s', $timet, memory_get_usage()));
+            $this->logger->error(sprintf('TimeTaken %s; Looping courtOrders, mem used %s', $timet, memory_get_usage()));
 
             /** @var CourtOrder $courtOrder */
             $courtOrder = $courtOrderWithStatus['courtOrder'];
@@ -132,10 +132,10 @@ class DeputyService
             /** @var ?Report $report */
             $report = $courtOrder->getLatestReport();
             $timet = microtime(true) - $timer;
-            $this->logger->info(sprintf('TimeTaken %s; Looping reports for latest, latest ID:%s, mem used %s', $timet, $report->getId(), memory_get_usage()));
             if (is_null($report)) {
                 continue;
             }
+            $this->logger->error(sprintf('TimeTaken %s; Looping reports for latest, latest ID:%s, mem used %s', $timet, $report->getId(), memory_get_usage()));
 
             $courtOrderUid = $courtOrder->getCourtOrderUid();
             $reportId = $report->getId();
