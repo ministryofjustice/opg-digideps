@@ -2902,7 +2902,7 @@ parameters:
 
 		-
 			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
-			count: 2
+			count: 3
 			path: src/Controller/Report/DecisionController.php
 
 		-
@@ -2942,11 +2942,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\DecisionController\\:\\:updateReport\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DecisionController.php
-
-		-
-			message: "#^Parameter \\#1 \\$route of method Symfony\\\\Bundle\\\\FrameworkBundle\\\\Controller\\\\AbstractController\\:\\:generateUrl\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Report/DecisionController.php
 
