@@ -94,9 +94,10 @@ class DeputyService
 
     public function findReportsInfoByUid(string $uid, bool $includeInactive = false): ?array
     {
-        $timet = microtime(true);
+        $timer = microtime(true);
         /** @var ?Deputy $deputy */
         $deputy = $this->deputyRepository->findOneBy(['deputyUid' => $uid]);
+        $timet = microtime(true) - $timer;
         $this->logger->info(sprintf('TimeTaken %s; Finding reports info by UID: %s', $timet, $uid));
 
         if (is_null($deputy)) {
@@ -105,6 +106,7 @@ class DeputyService
 
         // get all court orders for deputy
         $courtOrdersWithStatus = $deputy->getCourtOrdersWithStatus();
+        $timet = microtime(true) - $timer;
         $this->logger->info(sprintf('TimeTaken %s; Finding CourtOrders, mem used %s', $timet, memory_get_usage()));
 
         // get the latest report for each court order, storing court order UIDs and deduplicating as we go
@@ -113,6 +115,7 @@ class DeputyService
         $loop = 0;
         foreach ($courtOrdersWithStatus as $courtOrderWithStatus) {
             ++$loop;
+            $timet = microtime(true) - $timer;
             $this->logger->info(sprintf('TimeTaken %s; Looping courtOrders, mem used %s', $timet, memory_get_usage()));
 
             /** @var CourtOrder $courtOrder */
@@ -128,6 +131,7 @@ class DeputyService
 
             /** @var ?Report $report */
             $report = $courtOrder->getLatestReport();
+            $timet = microtime(true) - $timer;
             $this->logger->info(sprintf('TimeTaken %s; Looping reports for latest, latest ID:%s, mem used %s', $timet, $report->getId(), memory_get_usage()));
             if (is_null($report)) {
                 continue;
