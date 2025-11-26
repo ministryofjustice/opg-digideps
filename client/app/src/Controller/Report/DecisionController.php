@@ -202,7 +202,7 @@ class DecisionController extends AbstractController
 
         // TODO use $backLinkRoute logic and align to other controllers
         try {
-            $backLink = $this->generateUrl($from, ['reportId' => $reportId]);
+            $backLink = $this->generateUrl('decisions_summary', ['reportId' => $reportId]);
 
             return [
                 'backLink' => $backLink,
@@ -228,6 +228,7 @@ class DecisionController extends AbstractController
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $decision = $this->restClient->get('report/decision/' . $decisionId, 'Report\\Decision');
         $decision->setReport($report);
+        $from = $request->get('from');
 
         $form = $this->createForm(FormDir\Report\DecisionType::class, $decision);
         $form->handleRequest($request);
@@ -240,7 +241,12 @@ class DecisionController extends AbstractController
 
             $request->getSession()->getFlashBag()->add('notice', 'Decision edited');
 
-            return $this->redirect($this->generateUrl('decisions', ['reportId' => $reportId]));
+            switch ($form['addAnother']->getData()) {
+                case 'yes':
+                    return $this->redirectToRoute('decisions_add', ['reportId' => $reportId,'from' => $from]);
+                case 'no':
+                    return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
+            }
         }
 
         return [
