@@ -112,12 +112,8 @@ trait DecisionSectionTrait
         $this->fillInField('decision[description]', 'Decision entered', 'description');
         $this->chooseOption('decision[clientInvolvedBoolean]', '0', 'clientInvolvedDetails');
         $this->fillInField('decision[clientInvolvedDetails]', 'Decision entered', 'description');
-
+        $this->chooseOption('decision[addAnother]', 'no', 'addAnother');
         $this->pressButton('Save and continue');
-        $this->iAmOnDecisionsPage5();
-
-        $this->chooseOption('add_another[addAnother]', 'no', 'addAnother');
-        $this->pressButton('Continue');
     }
 
     /**
