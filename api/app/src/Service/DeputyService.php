@@ -11,12 +11,14 @@ use App\Model\Hydrator;
 use App\Repository\DeputyRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class DeputyService
 {
     public function __construct(
         private readonly DeputyRepository $deputyRepository,
         private readonly EntityManagerInterface $em,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -92,8 +94,10 @@ class DeputyService
 
     public function findReportsInfoByUid(string $uid, bool $includeInactive = false): ?array
     {
+        $timet = microtime(true);
         /** @var ?Deputy $deputy */
         $deputy = $this->deputyRepository->findOneBy(['deputyUid' => $uid]);
+        $this->logger->info(sprintf('TimeTaken %s; Finding reports info by UID: %s', $timet, $uid));
 
         if (is_null($deputy)) {
             return null;
@@ -101,11 +105,16 @@ class DeputyService
 
         // get all court orders for deputy
         $courtOrdersWithStatus = $deputy->getCourtOrdersWithStatus();
+        $this->logger->info(sprintf('TimeTaken %s; Finding CourtOrders, mem used %s', $timet, memory_get_usage()));
 
         // get the latest report for each court order, storing court order UIDs and deduplicating as we go
         $reportAggregate = [];
 
+        $loop = 0;
         foreach ($courtOrdersWithStatus as $courtOrderWithStatus) {
+            ++$loop;
+            $this->logger->info(sprintf('TimeTaken %s; Looping courtOrders, mem used %s', $timet, memory_get_usage()));
+
             /** @var CourtOrder $courtOrder */
             $courtOrder = $courtOrderWithStatus['courtOrder'];
 
@@ -119,6 +128,7 @@ class DeputyService
 
             /** @var ?Report $report */
             $report = $courtOrder->getLatestReport();
+            $this->logger->info(sprintf('TimeTaken %s; Looping reports for latest, latest ID:%s, mem used %s', $timet, $report->getId(), memory_get_usage()));
             if (is_null($report)) {
                 continue;
             }
