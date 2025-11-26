@@ -122,7 +122,7 @@ COPY scripts/hardening/harden.sh /harden.sh
 #RUN /harden.sh www-data && rm /harden.sh
 
 USER www-data
-CMD sh -c "/check_processes.sh & /var/www/scripts/check_url.sh && exec php-fpm"
+CMD sh -c "/var/www/scripts/check_url.sh && exec php-fpm"
 
 ##############################
 # Stage 3b: Devtools Base (with dev dependencies)
@@ -163,11 +163,11 @@ RUN chown -R www-data:www-data /var/www/var && chmod -R ug+rwX /var/www/var
 COPY scripts/hardening/harden.sh /harden.sh
 #RUN /harden.sh www-data && rm /harden.sh
 USER www-data
-CMD sh -c "/check_processes.sh & /var/www/scripts/check_url.sh && exec php-fpm"
+CMD sh -c "/var/www/scripts/check_url.sh && exec php-fpm"
 
 ##############################
 # Stage 3b2: Devtools Admin (root)
 ##############################
 FROM devtools-base AS devtools-admin
 USER root
-CMD sh -c "/check_processes.sh & /var/www/scripts/check_url.sh && exec php-fpm"
+CMD sh -c "/var/www/scripts/check_url.sh && exec php-fpm"
