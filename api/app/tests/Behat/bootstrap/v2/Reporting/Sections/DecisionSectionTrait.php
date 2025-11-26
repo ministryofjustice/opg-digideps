@@ -95,7 +95,7 @@ trait DecisionSectionTrait
     /**
      * @Given /^I edit my response to the significant decisions question to \'([^\']*)\'$/
      */
-    public function iEditMyResponseToTheSignificantDecisionsQuestionTo(string $response)
+    public function iEditMyResponseToTheSignificantDecisionsQuestionTo(string $response): void
     {
         $this->clickLink('significantDecisionsEdit');
         $this->chooseOption('decision_exist[significantDecisionsMade]', $response, 'significantDecisionsMade');
@@ -107,19 +107,36 @@ trait DecisionSectionTrait
     /**
      * @Given /^I add the details of the decision as requested$/
      */
-    public function iAddTheDetailsOfTheDecisionAsRequested()
+    public function iAddTheDetailsOfTheDecisionAsRequested(): void
     {
         $this->fillInField('decision[description]', 'Decision entered', 'description');
         $this->chooseOption('decision[clientInvolvedBoolean]', '0', 'clientInvolvedDetails');
         $this->fillInField('decision[clientInvolvedDetails]', 'Decision entered', 'description');
-        $this->chooseOption('decision[addAnother]', 'no', 'addAnother');
+    }
+
+    /**
+     * @Given /^I add the details of the additional decision as requested$/
+     */
+    public function iAddTheDetailsOfTheAdditionalDecisionAsRequested(): void
+    {
+        $this->fillInField('decision[description]', 'Additional Decision entered', 'description');
+        $this->chooseOption('decision[clientInvolvedBoolean]', '1', 'clientInvolvedDetails');
+        $this->fillInField('decision[clientInvolvedDetails]', 'Additional Decision entered', 'description');
+    }
+
+    /**
+     * @Given I confirm that :response additional significant decisions have been made for the client
+     */
+    public function iConfirmIfAdditionalSignificantDecisionsHaveBeenMadeForTheClient(string $response): void
+    {
+        $this->chooseOption('decision[addAnother]', $response, 'addAnother');
         $this->pressButton('Save and continue');
     }
 
     /**
      * @Then /^the decisions summary page should reflect the updated details I entered$/
      */
-    public function theDecisionsSummaryPageShouldReflectTheUpdatedDetailsIEntered()
+    public function theDecisionsSummaryPageShouldReflectTheUpdatedDetailsIEntered(): void
     {
         $this->iAmOnDecisionsSummaryPage();
 
