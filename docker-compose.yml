@@ -101,13 +101,11 @@ services:
     build:
       context: .
       dockerfile: ./client/docker/app/Dockerfile
-      target: devtools-admin
+      target: devtools
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug
         XDEBUG_IDEKEY_CLIENT: ${XDEBUG_IDEKEY_CLIENT}
         LOCAL_RESOURCES: true
-    cap_add:
-      - NET_ADMIN
     depends_on:
       - api-webserver
       - redis-frontend
