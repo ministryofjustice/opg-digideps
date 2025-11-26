@@ -4,7 +4,7 @@ resource "aws_ecs_task_definition" "front" {
   network_mode             = "awsvpc"
   cpu                      = var.account.cpu_low
   memory                   = var.account.memory_low
-  container_definitions    = "[${local.front_web}, ${local.front_container}]"
+  container_definitions    = "[${local.front_web}, ${local.front_container}, ${local.front_proxy}]"
   task_role_arn            = aws_iam_role.front.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
   runtime_platform {
@@ -80,12 +80,14 @@ locals {
       image       = local.images.client-webserver,
       mountPoints = [],
       name        = "front_web",
-      portMappings = [{
-        name          = "front-port",
-        containerPort = 80,
-        hostPort      = 80,
-        protocol      = "tcp"
-      }],
+      portMappings = [
+        {
+          name          = "front-port",
+          containerPort = 80,
+          hostPort      = 80,
+          protocol      = "tcp"
+        }
+      ],
       healthCheck = {
         command : [
           "CMD-SHELL",
@@ -117,11 +119,13 @@ locals {
       image       = local.images.client,
       mountPoints = [],
       name        = "front_app",
-      portMappings = [{
-        containerPort = 9000,
-        hostPort      = 9000,
-        protocol      = "tcp"
-      }],
+      portMappings = [
+        {
+          containerPort = 9000,
+          hostPort      = 9000,
+          protocol      = "tcp"
+        }
+      ],
       volumesFrom = [],
       logConfiguration = {
         logDriver = "awslogs",
@@ -131,6 +135,7 @@ locals {
           awslogs-stream-prefix = aws_iam_role.front.name
         }
       },
+      dependsOn = [{ containerName = "proxy", condition = "START" }],
       secrets = [
         { name = "API_CLIENT_SECRET", valueFrom = data.aws_secretsmanager_secret.front_api_client_secret.arn },
         { name = "NOTIFY_API_KEY", valueFrom = data.aws_secretsmanager_secret.front_notify_api_key.arn },
@@ -142,7 +147,33 @@ locals {
           { name = "NGINX_APP_NAME", value = "frontend" },
           { name = "ROLE", value = "front" },
           { name = "SESSION_PREFIX", value = "dd_front" },
+          { name = "HTTP_PROXY", value = "http://localhost:3128" },
+          { name = "HTTPS_PROXY", value = "http://localhost:3128" },
+          { name = "NO_PROXY", value = "169.254.169.254,localhost,127.0.0.1" }
       ])
+    }
+  )
+  front_proxy = jsonencode(
+    {
+      cpu         = 0,
+      essential   = true,
+      image       = local.images.test,
+      mountPoints = [],
+      name        = "proxy",
+      portMappings = [{
+        containerPort = 3128,
+        hostPort      = 3128,
+        protocol      = "tcp"
+      }],
+      volumesFrom = [],
+      logConfiguration = {
+        logDriver = "awslogs",
+        options = {
+          awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
+          awslogs-region        = "eu-west-1",
+          awslogs-stream-prefix = "${aws_iam_role.admin.name}.proxy"
+        }
+      }
     }
   )
 }

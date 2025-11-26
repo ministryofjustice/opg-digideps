@@ -145,8 +145,6 @@ locals {
           { name = "SESSION_PREFIX", value = "dd_admin" },
           { name = "HTTP_PROXY", value = "http://localhost:3128" },
           { name = "HTTPS_PROXY", value = "http://localhost:3128" },
-          { name = "http_proxy", value = "http://localhost:3128" },
-          { name = "https_proxy", value = "http://localhost:3128" },
           { name = "NO_PROXY", value = "169.254.169.254,localhost,127.0.0.1" }
       ])
     }

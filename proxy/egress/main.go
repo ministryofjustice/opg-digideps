@@ -11,11 +11,15 @@ import (
 	"time"
 )
 
-var allowList = []string{
+var httpAllowList = []string{
+	"api",
+}
+
+var httpsAllowList = []string{
 	"example.com",
 	"github.com",
 	"amazonaws.com",
-	"api",
+	"api.notifications.service.gov.uk",
 }
 
 func main() {
@@ -42,16 +46,14 @@ func main() {
 func proxyHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodConnect:
-		log.Printf("[CONNECT] Host: %s | Remote: %s", r.Host, r.RemoteAddr)
 		handleHTTPS(w, r)
 	default:
-		log.Printf("[HTTP] %s %s | Host: %s | Remote: %s", r.Method, r.URL.String(), r.Host, r.RemoteAddr)
 		handleHTTP(w, r)
 	}
 }
 
 // allowed returns true if the host ends with any allowed suffix
-func allowed(host string) bool {
+func allowed(host string, allowList []string) bool {
 	for _, d := range allowList {
 		if strings.HasSuffix(host, d) {
 			return true
@@ -62,6 +64,18 @@ func allowed(host string) bool {
 
 // handleHTTPS handles tunneling for CONNECT requests (HTTPS).
 func handleHTTPS(w http.ResponseWriter, r *http.Request) {
+	url := r.URL.String()
+
+	targetAddr := r.Host
+
+	host := strings.Split(targetAddr, ":")[0]
+
+	if !allowed(host, httpsAllowList) {
+		http.Error(w, "Blocked by domain policy", http.StatusForbidden)
+		log.Printf("[HTTPS] [BLOCKED]: %s (%s)", url, host)
+		return
+	}
+
 	// Hijack the connection to get the raw net.Conn
 	hj, ok := w.(http.Hijacker)
 	if !ok {
@@ -70,31 +84,18 @@ func handleHTTPS(w http.ResponseWriter, r *http.Request) {
 	}
 	clientConn, clientRw, err := hj.Hijack()
 	if err != nil {
-		log.Printf("hijack error: %v", err)
+		log.Printf("[HTTPS] [HIJACK ERROR]: %v", err)
 		return
 	}
 	defer func() {
 		_ = clientConn.Close()
 	}()
 
-	targetAddr := r.Host
-
-	host := strings.Split(targetAddr, ":")[0]
-	log.Printf("[HTTPS] CONNECT %s", host)
-
-	if !allowed(host) {
-		http.Error(w, "Blocked by domain policy", http.StatusForbidden)
-		log.Printf("[HTTPS] Blocked: %s", host)
-		return
-	}
-
 	// Dial the target host (typically host:443)
 	if _, _, err := net.SplitHostPort(targetAddr); err != nil {
 		// If no port provided, default to 443 for HTTPS
 		targetAddr = net.JoinHostPort(targetAddr, "443")
 	}
-
-	log.Printf("[ALLOWED HTTPS] %s", host)
 
 	dialer := &net.Dialer{Timeout: 10 * time.Second}
 	targetConn, err := dialer.DialContext(r.Context(), "tcp", targetAddr)
@@ -132,39 +133,38 @@ func handleHTTPS(w http.ResponseWriter, r *http.Request) {
 	err1 := <-errCh
 	err2 := <-errCh
 	if err1 != nil {
-		log.Printf("[CONNECT] upstream copy closed: %v", err1)
+		log.Printf("[HTTPS] [UPSTREAM COPY CLOSED]: %s, %v", url, err1)
 	}
 	if err2 != nil {
-		log.Printf("[CONNECT] downstream copy closed: %v", err2)
+		log.Printf("[HTTPS] [DOWNSTREAM COPY CLOSED]: %s, %v", url, err2)
 	}
-	log.Printf("[CONNECT] Tunnel closed: %s", r.Host)
+	// Made it to the end. Yay!
+	log.Printf("[HTTPS] [ALLOWED]: %s", url)
 }
 
 // handleHTTP proxies plain HTTP requests (GET/POST/etc.) without tunneling.
 func handleHTTP(w http.ResponseWriter, r *http.Request) {
+
+	host := r.URL.Hostname()
+	if host == "" {
+		host = r.Host
+	}
 	// Make sure the URL is absolute for proxying
 	if !r.URL.IsAbs() {
 		// For proxies, clients should send absolute URLs; if not, reconstruct
 		// using Host header + scheme guess (default http)
 		u := &url.URL{
 			Scheme: "http",
-			Host:   r.Host,
+			Host:   host,
 			Path:   r.URL.Path,
 		}
 		u.RawQuery = r.URL.RawQuery
 		r.URL = u
 	}
 
-	host := r.URL.Hostname()
-	if host == "" {
-		host = r.Host
-	}
-
-	log.Printf("[HTTP] URL: %s | Host: %s", r.URL, host)
-
-	if !allowed(host) {
+	if !allowed(host, httpAllowList) {
 		http.Error(w, "Blocked by domain policy", http.StatusForbidden)
-		log.Printf("[HTTP] Blocked: %s", host)
+		log.Printf("[HTTP] [BLOCKED]: %s (%s)", r.URL.String(), host)
 		return
 	}
 
@@ -185,7 +185,7 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 
 	resp, err := transport.RoundTrip(outReq)
 	if err != nil {
-		log.Printf("[HTTP] roundtrip error for %s: %v", outReq.URL.String(), err)
+		log.Printf("[HTTP] [ROUNDTRIP ERROR] %s: %v", outReq.URL.String(), err)
 		http.Error(w, "Bad Gateway", http.StatusBadGateway)
 		return
 	}
@@ -195,10 +195,10 @@ func handleHTTP(w http.ResponseWriter, r *http.Request) {
 	copyHeaders(w.Header(), resp.Header)
 	w.WriteHeader(resp.StatusCode)
 	n, copyErr := io.Copy(w, resp.Body)
-	log.Printf("[HTTP] %s -> %d (%d bytes)", outReq.URL.String(), resp.StatusCode, n)
 	if copyErr != nil {
-		log.Printf("[HTTP] client write error: %v", copyErr)
+		log.Printf("[HTTP] [CLIENT WRITE ERROR]: %v", copyErr)
 	}
+	log.Printf("[HTTP] [ALLOWED]: %s -> STATUS: %d (%d bytes)", outReq.URL.String(), resp.StatusCode, n)
 }
 
 func removeHopByHopHeaders(h http.Header) {

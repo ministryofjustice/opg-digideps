@@ -6,7 +6,6 @@ urls="
 https://example.com
 https://google.com
 https://nonexistentsecure.example
-http://nonexistent.example
 http://example.com
 "
 
