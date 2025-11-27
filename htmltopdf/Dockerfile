@@ -34,15 +34,17 @@ COPY --chown=htmltopdf:htmltopdf htmltopdf/app.py /app.py
 COPY --chown=htmltopdf:htmltopdf htmltopdf/clean-tmp /etc/periodic/hourly/clean-tmp
 
 # Static assets
+# NOTE: the resources container has to be built first for these CSS files to exist
 COPY client/resources/public/assets/*/stylesheets/formatted-report.css ./tmp/
 COPY client/resources/public/assets/*/stylesheets/fonts.css ./tmp/
 
-#Check processes script
+# Check processes script
 COPY --chown=clamav:clamav scripts/process_checks/check_processes.sh /check_processes.sh
 
 EXPOSE 80
 
 COPY scripts/hardening/harden.sh /harden.sh
+
 # Permissions and hardening
 RUN chmod +x /etc/periodic/hourly/clean-tmp /docker-entrypoint.sh \
     && /harden.sh htmltopdf && rm /harden.sh

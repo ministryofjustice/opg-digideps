@@ -34,6 +34,6 @@ Feature: Attaching Further Documents
     Scenario: A user attempts to remove a file after it has been selected
         Given a Lay Deputy has submitted a report
         When I attach a supporting document "test-image.png" to the submitted report
-        And I remove the "test_image.png" document I uploaded
+        And I remove the document with the filename "test_image.png"
         Then a flash message should be displayed to the user confirming the removal of "test_image.png"
         And the document upload page should not contain any documents
