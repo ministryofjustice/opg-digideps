@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   init: function (document) {
     // return HTML and inject in place of link
     const that = this

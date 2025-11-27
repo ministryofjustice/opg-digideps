@@ -1,5 +1,5 @@
 /* globals ga */
-module.exports = {
+export default {
   init: function (document) {
     (function (i, s, o, g, r, a, m) {
       i.GoogleAnalyticsObject = r
