@@ -1,4 +1,4 @@
-@v2 @v2_reporting_1 @decisions @iqpal
+@v2 @v2_reporting_1 @decisions
 Feature: Decisions
 
     @lay-pfa-high-not-started
