@@ -20,6 +20,7 @@ var httpsAllowList = []string{
 	"github.com",
 	"amazonaws.com",
 	"api.notifications.service.gov.uk",
+	"digideps.opg.service.justice.gov.uk",
 }
 
 func main() {
