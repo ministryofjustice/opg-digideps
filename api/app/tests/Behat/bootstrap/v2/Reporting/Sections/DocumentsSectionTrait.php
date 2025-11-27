@@ -9,8 +9,6 @@ use Throwable;
 use App\Entity\Report\Document;
 use App\Tests\Behat\BehatException;
 
-use function PHPUnit\Framework\assertEquals;
-
 trait DocumentsSectionTrait
 {
     // Valid files
@@ -175,9 +173,14 @@ trait DocumentsSectionTrait
      */
     public function theDocumentUploadsPageShouldNotContainADocumentWithFilename(string $filename)
     {
-        $dtElementsContainingFilename = "//dt[contains(text(), \"$filename\")]";
-        $elts = $this->getSession()->getPage()->find('xpath', $dtElementsContainingFilename);
-        assertEquals(null, $elts);
+        // Find all <dt class="govuk-summary-list__value"> elements
+        $elements = $this->getSession()->getPage()->findAll('css', 'dt.govuk-summary-list__value');
+
+        foreach ($elements as $element) {
+            if (strpos($element->getText(), $filename) !== false) {
+                throw new \Exception("Filename '{$filename}' was found in a summary list value.");
+            }
+        }
     }
 
     /**
@@ -493,7 +496,6 @@ trait DocumentsSectionTrait
     public function aFlashMessageShouldBeDisplayedToTheUserConfirmingTheDocumentHasBeenRemoved($fileName)
     {
         $alertMessage = sprintf('File named %s has been removed', $fileName);
-
         $xpath = '//div[contains(@class, "moj-banner moj-banner--success")]';
         $alertText = $this->getSession()->getPage()->find('xpath', $xpath)->getText();
 

@@ -14,7 +14,7 @@ resource "aws_rds_cluster" "cluster" {
   kms_key_id                          = var.kms_key_id
   master_username                     = var.master_username
   master_password                     = var.master_password
-  preferred_backup_window             = "23:00-23:30"
+  preferred_backup_window             = var.preferred_backup_window
   preferred_maintenance_window        = "mon:00:00-mon:01:00"
   replication_source_identifier       = var.replication_source_identifier
   skip_final_snapshot                 = var.skip_final_snapshot
@@ -75,7 +75,7 @@ resource "aws_rds_cluster" "cluster_serverless" {
   kms_key_id                          = var.kms_key_id
   master_username                     = var.master_username
   master_password                     = var.master_password
-  preferred_backup_window             = "23:00-23:30"
+  preferred_backup_window             = var.preferred_backup_window
   preferred_maintenance_window        = "mon:00:00-mon:01:00"
   storage_encrypted                   = var.storage_encrypted
   skip_final_snapshot                 = var.skip_final_snapshot
