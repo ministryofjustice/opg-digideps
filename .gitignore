@@ -19,6 +19,8 @@
 ecs-helper
 opg-ecs-helper_*.tar.gz
 /composer.lock
+client/resources/public/**
+!client/resources/public/KEEP_ME.txt
 
 # Common vendor folders
 bin/

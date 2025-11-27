@@ -5,63 +5,58 @@ namespace App\Twig;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
-// todo remove assetic from config and use it's
-
 /**
- * Class AssetsExtension.
+ * Twig extensions for asset URLs
  */
 class AssetsExtension extends AbstractExtension
 {
+    // the timestamp of the build, used to version assets and bust HTTP caching after a release
     private ?string $tag = null;
 
-    public function __construct(private string $projectDir)
-    {
-    }
-
-    /** Get the version name for assets add it to the url to give a versioned url
-     * Like assetic except The minification and versioning is done with Webpack.
-     *
-     * @return string
-     */
-    public function assetUrlFilter($originalUrl)
-    {
-        return '/assets/'.$this->getTag().'/'.$originalUrl;
-    }
-
-    public function assetSourceFilter($originalUrl)
-    {
-        $tag = $this->getTag();
-        $source = file_get_contents($this->projectDir.'/public/assets/'.$tag.'/'.$originalUrl);
-
-        return $source;
+    public function __construct(
+        private readonly string $projectDir
+    ) {
     }
 
     /**
-     * @return string
+     * Add the version tag to an asset path
      */
-    public function getTag()
+    public function assetUrlFilter(string $assetPath): string
     {
-        if (!$this->tag) {
-            // List the files in the web/assets folder
-            $assetRoot = $this->projectDir.'/public/assets';
-            $assetContents = array_diff(scandir($assetRoot, SCANDIR_SORT_ASCENDING), ['..', '.']);
+        if (is_null($this->tag)) {
+            // list the directories under web/assets
+            $assetDirs = scandir($this->projectDir . '/public/assets', SCANDIR_SORT_ASCENDING);
 
-            // set the value to the folder we find.
-            $this->tag = array_values($assetContents)[0];
+            // just direct the request to the fallback directory if directory cannot be scanned
+            if (empty($assetDirs)) {
+                return "/assets/fallback/$assetPath";
+            }
+
+            // remove the '.', '..', and 'fallback' paths from the list of found directories
+            // (we only want the timestamp directories)
+            $timestampDirs = array_diff($assetDirs, ['..', '.', 'fallback']);
+
+            // use the last directory in the list, as this will be the one most-recently built;
+            // we shouldn't get false back from the end() function (as we checked for an empty array above),
+            // but resort to "fallback" if we do
+            $last = end($timestampDirs);
+            $this->tag = ($last === false ? 'fallback' : $last);
         }
 
-        return $this->tag;
+        return '/assets/' . $this->tag . '/' . $assetPath;
     }
 
-    public function getFilters()
+    /**
+     * @return TwigFilter[]
+     */
+    public function getFilters(): array
     {
         return [
-            new TwigFilter('assetUrl', [$this, 'assetUrlFilter']),
-            new TwigFilter('assetSource', [$this, 'assetSourceFilter']),
+            new TwigFilter('assetUrl', [$this, 'assetUrlFilter'])
         ];
     }
 
-    public function getName()
+    public function getName(): string
     {
         return 'assets_extension';
     }
