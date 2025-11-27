@@ -155,6 +155,16 @@ trait DecisionSectionTrait
         $this->assertReasonForNoDecisionsIsNotVisible(true);
     }
 
+    /**
+     * @When I edit an existing decision
+     */
+    public function iEditAnExistingDecision()
+    {
+        $this->iAmOnDecisionsSummaryPage();
+
+        $this->getSession()->getPage()->find('css', '.behat-region-decisions')->clickLink('Edit');
+    }
+
     private function assertReasonForNoDecisionsIsNotVisible(bool $shouldNotBeVisible)
     {
         $reasonForNoDecisionPath = './/label[text()[contains(.,"Reason for no decisions")]]/..';

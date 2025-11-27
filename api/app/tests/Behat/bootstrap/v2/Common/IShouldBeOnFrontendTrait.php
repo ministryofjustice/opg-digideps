@@ -781,6 +781,14 @@ trait IShouldBeOnFrontendTrait
     }
 
     /**
+     * @Then I should be on the clients edit decision page
+     */
+    public function iAmOnDecisionsPage5(): bool
+    {
+        return $this->iAmOnPage(sprintf('/%s\/.*\/decisions\/edit.*$/', $this->reportUrlPrefix));
+    }
+
+    /**
      * @Then I should be on the client decisions summary page
      */
     public function iAmOnDecisionsSummaryPage(): bool
