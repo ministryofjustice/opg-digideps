@@ -67,6 +67,10 @@ data "aws_kms_alias" "custom_sns" {
   name = "alias/custom_cloudwatch_alarms_sns"
 }
 
+data "aws_kms_alias" "secrets" {
+  name = "alias/digideps_secret_encryption_key"
+}
+
 data "aws_iam_policy_document" "lambda_monitor_notify" {
   statement {
     sid    = "allowLogging"
@@ -128,7 +132,7 @@ data "aws_iam_policy_document" "lambda_monitor_notify" {
       "kms:Decrypt"
     ]
     resources = [
-      module.sns_kms.eu_west_1_target_key_arn
+      data.aws_kms_alias.secrets.target_key_arn
     ]
   }
 
