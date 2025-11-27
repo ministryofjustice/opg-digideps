@@ -181,7 +181,6 @@ class DecisionController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $decision = new EntityDir\Report\Decision();
-        $from = $request->get('from');
 
         $form = $this->createForm(FormDir\Report\DecisionType::class, $decision);
         $form->handleRequest($request);
@@ -194,7 +193,7 @@ class DecisionController extends AbstractController
 
             switch ($form['addAnother']->getData()) {
                 case 'yes':
-                    return $this->redirectToRoute('decisions_add', ['reportId' => $reportId,'from' => $from]);
+                    return $this->redirectToRoute('decisions_add', ['reportId' => $reportId]);
                 case 'no':
                     return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
             }
@@ -228,7 +227,6 @@ class DecisionController extends AbstractController
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $decision = $this->restClient->get('report/decision/' . $decisionId, 'Report\\Decision');
         $decision->setReport($report);
-        $from = $request->get('from');
 
         $form = $this->createForm(FormDir\Report\DecisionType::class, $decision);
         $form->handleRequest($request);
@@ -243,7 +241,7 @@ class DecisionController extends AbstractController
 
             switch ($form['addAnother']->getData()) {
                 case 'yes':
-                    return $this->redirectToRoute('decisions_add', ['reportId' => $reportId,'from' => $from]);
+                    return $this->redirectToRoute('decisions_add', ['reportId' => $reportId]);
                 case 'no':
                     return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
             }
