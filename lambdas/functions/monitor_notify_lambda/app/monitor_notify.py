@@ -17,7 +17,12 @@ def valid_alarm_name(topic, subject):
     alarm_filters = {
         "custom_cloudwatch_alarms": [
             {
-                "must_include": ["ALARM:", "breakglass console login check"],
+                "must_include": [
+                    "ALARM:",
+                    "breakglass console login check",
+                    "ALARM:",
+                    "data-access console login check",
+                ],
             },
         ],
         "alerts": [
