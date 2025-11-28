@@ -161,12 +161,12 @@ class CoDeputyController extends AbstractController
         $invitedUser = new User();
         $form = $this->createForm(CoDeputyInviteType::class, $invitedUser);
 
-        $backLink = $this->generateUrl('lay_home', ['clientId' => $loggedInUser->getFirstClient()->getId()]);
+        $backLink = $this->generateUrl('courtorders_for_deputy');
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->userApi->createCoDeputy($invitedUser, $loggedInUser, intval($clientId));
+                $this->userApi->createCoDeputy($invitedUser, $loggedInUser, $clientId);
 
                 $this->userApi->update(
                     $loggedInUser,
@@ -211,7 +211,7 @@ class CoDeputyController extends AbstractController
 
         $form = $this->createForm(CoDeputyInviteType::class, $existingCoDeputy);
 
-        $backLink = $this->generateUrl('lay_home', ['clientId' => $loggedInUser->getFirstClient()->getId()]);
+        $backLink = $this->generateUrl('courtorders_for_deputy');
 
         $form->handleRequest($request);
 
