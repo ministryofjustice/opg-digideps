@@ -813,9 +813,9 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         return $this->roleName;
     }
 
-    public function getRoleFullName()
+    public function getRoleFullName(): string
     {
-        return self::$allowedRoles[$this->roleName];
+        return self::$allowedRoles[$this->roleName] ?? '';
     }
 
     public function setRoleName($roleName)

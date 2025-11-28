@@ -206,11 +206,6 @@ parameters:
 			path: src/Controller/Admin/AdController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\AdController\\:\\:adLoginAsDeputyAction\\(\\) has parameter \\$deputyId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/AdController.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function rtrim expects string, array\\|bool\\|float\\|int\\|string\\|UnitEnum\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Admin/AdController.php
@@ -234,36 +229,6 @@ parameters:
 			message: "#^Part \\$what \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
 			count: 1
 			path: src/Controller/Admin/AdController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Admin\\\\AjaxController\\:\\:\\$restClient is never read, only written\\.$#"
-			count: 1
-			path: src/Controller/Admin/AjaxController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\Client\\\\ClientController\\:\\:detailsAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/Client/ClientController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\Client\\\\ClientController\\:\\:dischargeAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/Client/ClientController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\Client\\\\ClientController\\:\\:dischargeConfirmAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/Client/ClientController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\Client\\\\ClientController\\:\\:unarchiveAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/Client/ClientController.php
-
-		-
-			message: "#^Parameter \\#1 \\$clientId of method App\\\\Service\\\\Client\\\\Internal\\\\ClientApi\\:\\:getWithUsersV2\\(\\) expects int, string given\\.$#"
-			count: 3
-			path: src/Controller/Admin/Client/ClientController.php
 
 		-
 			message: "#^Parameter \\#1 \\$deputyUid of method App\\\\Service\\\\Client\\\\Internal\\\\UserApi\\:\\:getPrimaryUserAccount\\(\\) expects int, int\\|null given\\.$#"
@@ -292,7 +257,7 @@ parameters:
 
 		-
 			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
-			count: 13
+			count: 10
 			path: src/Controller/Admin/Client/ReportController.php
 
 		-
@@ -316,17 +281,7 @@ parameters:
 			path: src/Controller/Admin/Client/ReportController.php
 
 		-
-			message: "#^Instanceof between App\\\\Entity\\\\Report\\\\Report and App\\\\Entity\\\\Ndr\\\\Ndr will always evaluate to false\\.$#"
-			count: 1
-			path: src/Controller/Admin/Client/ReportController.php
-
-		-
 			message: "#^Match expression does not handle remaining value\\: non\\-falsy\\-string$#"
-			count: 1
-			path: src/Controller/Admin/Client/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\Client\\\\ReportController\\:\\:manageCloseReportConfirmAction\\(\\) has parameter \\$id with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Admin/Client/ReportController.php
 
@@ -356,24 +311,9 @@ parameters:
 			path: src/Controller/Admin/Client/ReportController.php
 
 		-
-			message: "#^Parameter \\#2 \\$subject of function preg_match expects string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Admin/Client/ReportController.php
-
-		-
-			message: "#^Part \\$form\\['dueDateChoice'\\]\\-\\>getData\\(\\) \\(mixed\\) of encapsed string cannot be cast to string\\.$#"
-			count: 1
-			path: src/Controller/Admin/Client/ReportController.php
-
-		-
 			message: "#^Variable \\$checklist in empty\\(\\) always exists and is not falsy\\.$#"
 			count: 2
 			path: src/Controller/Admin/Client/ReportController.php
-
-		-
-			message: "#^PHPDoc tag @return with type array\\|string is not subtype of native type array\\.$#"
-			count: 1
-			path: src/Controller/Admin/Client/SearchController.php
 
 		-
 			message: "#^Parameter \\#2 \\$clients of method App\\\\Controller\\\\Admin\\\\Client\\\\SearchController\\:\\:buildViewParams\\(\\) expects array, mixed given\\.$#"
@@ -386,22 +326,7 @@ parameters:
 			path: src/Controller/Admin/FixtureController.php
 
 		-
-			message: "#^Cannot access offset 'createCoDeputy' on mixed\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
 			message: "#^Cannot access offset 'deputyType' on mixed\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Cannot access offset 'multiClientEnabled' on mixed\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Cannot access offset 'reportType' on mixed\\.$#"
 			count: 1
 			path: src/Controller/Admin/FixtureController.php
 
@@ -417,76 +342,6 @@ parameters:
 
 		-
 			message: "#^Comparison operation \"\\>\" between 1 and 1 is always false\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:completeReportSectionsAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:createAdmin\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:createClientAndAttachToDeputy\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:createClientAndAttachToOrg\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:createUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:deleteUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:fixtures\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:getUserIDByEmail\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:getUserRegistrationToken\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:layCourtOrdersAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:orgCourtOrdersAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:removeNullValues\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:retrieveFormData\\(\\) has parameter \\$form with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:retrieveFormData\\(\\) has parameter \\$request with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Admin/FixtureController.php
 
@@ -531,16 +386,6 @@ parameters:
 			path: src/Controller/Admin/FixtureController.php
 
 		-
-			message: "#^Property App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:\\$deputyProvider is never read, only written\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Admin\\\\FixtureController\\:\\:\\$twig is never read, only written\\.$#"
-			count: 1
-			path: src/Controller/Admin/FixtureController.php
-
-		-
 			message: "#^Call to an undefined method Symfony\\\\Contracts\\\\EventDispatcher\\\\EventDispatcherInterface\\:\\:addListener\\(\\)\\.$#"
 			count: 2
 			path: src/Controller/Admin/IndexController.php
@@ -571,52 +416,7 @@ parameters:
 			path: src/Controller/Admin/IndexController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\IndexController\\:\\:dispatchAdminManagerDeletedEvent\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/IndexController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\IndexController\\:\\:dispatchCSVUploadEvent\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/IndexController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\IndexController\\:\\:getPopulatedUser\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/IndexController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Admin\\\\IndexController\\:\\:getPopulatedUser\\(\\) should return App\\\\Entity\\\\User but returns mixed\\.$#"
-			count: 1
-			path: src/Controller/Admin/IndexController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\IndexController\\:\\:handleLayUploadForm\\(\\) has parameter \\$fileName with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/IndexController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\IndexController\\:\\:handleLayUploadForm\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Controller/Admin/IndexController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\IndexController\\:\\:handleOrgUploadForm\\(\\) has parameter \\$fileName with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/IndexController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\IndexController\\:\\:handleOrgUploadForm\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Controller/Admin/IndexController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\IndexController\\:\\:viewAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/IndexController.php
-
-		-
-			message: "#^Method App\\\\Service\\\\Client\\\\Internal\\\\UserApi\\:\\:activate\\(\\) invoked with 2 parameters, 1 required\\.$#"
 			count: 1
 			path: src/Controller/Admin/IndexController.php
 
@@ -629,11 +429,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
 			count: 2
 			path: src/Controller/Admin/IndexController.php
-
-		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\Form\\\\FormInterface\\:\\:isClicked\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
 
 		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
@@ -686,62 +481,7 @@ parameters:
 			path: src/Controller/Admin/OrganisationController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:addAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:addUserAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:addUserAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:deleteAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:deleteAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:deleteUserAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:deleteUserAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:deleteUserAction\\(\\) has parameter \\$userId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:dispatchOrgCreatedEvent\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:editAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:editAction\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\OrganisationController\\:\\:indexAction\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/Admin/OrganisationController.php
 
@@ -782,16 +522,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$userToRemove of method App\\\\Service\\\\Client\\\\Internal\\\\OrganisationApi\\:\\:removeUserFromOrganisation\\(\\) expects App\\\\Entity\\\\User, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Parameter \\#3 \\$currentUser of method App\\\\Service\\\\Client\\\\Internal\\\\OrganisationApi\\:\\:addUserToOrganisation\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: "#^Parameter \\#3 \\$currentUser of method App\\\\Service\\\\Client\\\\Internal\\\\OrganisationApi\\:\\:removeUserFromOrganisation\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
 			count: 1
 			path: src/Controller/Admin/OrganisationController.php
 
@@ -846,11 +576,6 @@ parameters:
 			path: src/Controller/Admin/SettingController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\SettingController\\:\\:serviceNotificationAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/SettingController.php
-
-		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Admin/SettingController.php
@@ -871,27 +596,7 @@ parameters:
 			path: src/Controller/Admin/StatsController.php
 
 		-
-			message: "#^Caught class App\\\\Controller\\\\Admin\\\\Throwable not found\\.$#"
-			count: 4
-			path: src/Controller/Admin/StatsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\StatsController\\:\\:buildResponse\\(\\) has parameter \\$csvContent with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/StatsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Admin\\\\StatsController\\:\\:createFilterTypeForm\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Admin/StatsController.php
-
-		-
 			message: "#^Parameter \\#1 \\$assetsTotals of method App\\\\Service\\\\Csv\\\\AssetsTotalsCSVGenerator\\:\\:generateAssetsTotalValuesCSV\\(\\) expects array, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Admin/StatsController.php
-
-		-
-			message: "#^Parameter \\#1 \\$json of function json_decode expects string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Admin/StatsController.php
 
@@ -977,7 +682,7 @@ parameters:
 
 		-
 			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
-			count: 10
+			count: 8
 			path: src/Controller/CoDeputyController.php
 
 		-
@@ -1006,36 +711,6 @@ parameters:
 			path: src/Controller/CoDeputyController.php
 
 		-
-			message: "#^Cannot call method getUsers\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Left side of && is always true\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\CoDeputyController\\:\\:addAction\\(\\) has parameter \\$clientId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of function reset is passed by reference, so it expects variables only\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Parameter \\#1 \\$caseNumber of method App\\\\Entity\\\\Client\\:\\:setCaseNumber\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Parameter \\#1 \\$caseNumber of method App\\\\Model\\\\SelfRegisterData\\:\\:setCaseNumber\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
 			message: "#^Parameter \\#1 \\$clientLastname of method App\\\\Model\\\\SelfRegisterData\\:\\:setClientLastname\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/CoDeputyController.php
@@ -1047,11 +722,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$firstname of method App\\\\Model\\\\SelfRegisterData\\:\\:setFirstname\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Parameter \\#1 \\$lastname of method App\\\\Entity\\\\Client\\:\\:setLastname\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/CoDeputyController.php
 
@@ -1068,16 +738,6 @@ parameters:
 		-
 			message: "#^Parameter \\#1 \\$route of method Symfony\\\\Bundle\\\\FrameworkBundle\\\\Controller\\\\AbstractController\\:\\:redirectToRoute\\(\\) expects string, string\\|true given\\.$#"
 			count: 2
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function strlen expects string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/CoDeputyController.php
-
-		-
-			message: "#^Parameter \\#1 \\$string of function substr expects string, mixed given\\.$#"
-			count: 1
 			path: src/Controller/CoDeputyController.php
 
 		-
@@ -1099,16 +759,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$formResponse of method App\\\\Service\\\\Client\\\\Internal\\\\SatisfactionApi\\:\\:createGeneralFeedback\\(\\) expects array, mixed given\\.$#"
 			count: 1
 			path: src/Controller/FeedbackController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\HealthController\\:\\:containerHealthAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/HealthController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\HealthController\\:\\:servicesHealth\\(\\) has parameter \\$services with no type specified\\.$#"
-			count: 1
-			path: src/Controller/HealthController.php
 
 		-
 			message: "#^Cannot access property \\$usage on mixed\\.$#"
@@ -1136,11 +786,6 @@ parameters:
 			path: src/Controller/IndexController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\JWT\\\\JWTController\\:\\:jwks\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/JWT/JWTController.php
-
-		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\Form\\\\FormInterface\\:\\:isClicked\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Ndr/ActionController.php
@@ -1151,42 +796,12 @@ parameters:
 			path: src/Controller/Ndr/ActionController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\ActionController\\:\\:startAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ActionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\ActionController\\:\\:stepAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ActionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\ActionController\\:\\:stepAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ActionController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Ndr\\\\ActionController\\:\\:stepAction\\(\\) has parameter \\$step with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/ActionController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\ActionController\\:\\:summaryAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ActionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\ActionController\\:\\:summaryAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ActionController.php
-
-		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ActionController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Ndr\\\\ActionController\\:\\:\\$jmsGroups has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/ActionController.php
 
@@ -1401,42 +1016,7 @@ parameters:
 			path: src/Controller/Ndr/AssetController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:addAnotherAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:addAnotherAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:deleteAction\\(\\) has parameter \\$assetId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:deleteAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:existAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:existAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:otherAddAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:otherAddAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/AssetController.php
 
@@ -1446,22 +1026,7 @@ parameters:
 			path: src/Controller/Ndr/AssetController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:otherEditAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:otherEditAction\\(\\) has parameter \\$assetId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:otherEditAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:propertyStepAction\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/AssetController.php
 
@@ -1471,32 +1036,7 @@ parameters:
 			path: src/Controller/Ndr/AssetController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:propertyStepAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:propertyStepAction\\(\\) has parameter \\$step with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:startAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:summaryAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:typeAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:typeAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/AssetController.php
 
@@ -1518,11 +1058,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
 			count: 2
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Ndr\\\\AssetController\\:\\:\\$jmsGroups has no type specified\\.$#"
-			count: 1
 			path: src/Controller/Ndr/AssetController.php
 
 		-
@@ -1561,67 +1096,7 @@ parameters:
 			path: src/Controller/Ndr/BankAccountController.php
 
 		-
-			message: "#^Cannot call method getAccountNumber\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
-			message: "#^Cannot call method getAccountTypeText\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
-			message: "#^Cannot call method getBalanceOnCourtOrderDate\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
 			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
-			count: 1
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
-			message: "#^If condition is always false\\.$#"
-			count: 2
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\BankAccountController\\:\\:addAnotherAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\BankAccountController\\:\\:addAnotherAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\BankAccountController\\:\\:deleteAction\\(\\) has parameter \\$accountId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\BankAccountController\\:\\:deleteAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\BankAccountController\\:\\:startAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\BankAccountController\\:\\:stepAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\BankAccountController\\:\\:stepAction\\(\\) has parameter \\$step with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\BankAccountController\\:\\:summaryAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/BankAccountController.php
 
@@ -1651,63 +1126,8 @@ parameters:
 			path: src/Controller/Ndr/BankAccountController.php
 
 		-
-			message: "#^Property App\\\\Controller\\\\Ndr\\\\BankAccountController\\:\\:\\$jmsGroups has no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/BankAccountController.php
-
-		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
 			count: 2
-			path: src/Controller/Ndr/DebtController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DebtController\\:\\:editAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DebtController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DebtController\\:\\:editAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DebtController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DebtController\\:\\:existAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DebtController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DebtController\\:\\:existAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DebtController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DebtController\\:\\:managementAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DebtController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DebtController\\:\\:managementAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DebtController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DebtController\\:\\:startAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DebtController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DebtController\\:\\:startAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DebtController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DebtController\\:\\:summaryAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DebtController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DebtController\\:\\:summaryAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
 			path: src/Controller/Ndr/DebtController.php
 
 		-
@@ -1718,11 +1138,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
 			count: 2
-			path: src/Controller/Ndr/DebtController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Ndr\\\\DebtController\\:\\:\\$jmsGroups has no type specified\\.$#"
-			count: 1
 			path: src/Controller/Ndr/DebtController.php
 
 		-
@@ -1761,66 +1176,6 @@ parameters:
 			path: src/Controller/Ndr/DeputyExpenseController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:addAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:addAnotherAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:addAnotherAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:deleteAction\\(\\) has parameter \\$expenseId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:deleteAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:editAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:editAction\\(\\) has parameter \\$expenseId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:editAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:existAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:existAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:startAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:summaryAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
 			message: "#^Offset 'state' does not exist on string\\.$#"
 			count: 2
 			path: src/Controller/Ndr/DeputyExpenseController.php
@@ -1836,32 +1191,12 @@ parameters:
 			path: src/Controller/Ndr/DeputyExpenseController.php
 
 		-
-			message: "#^Property App\\\\Controller\\\\Ndr\\\\DeputyExpenseController\\:\\:\\$jmsGroups has no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/DeputyExpenseController.php
-
-		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\Form\\\\FormInterface\\:\\:isClicked\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Ndr/IncomeBenefitController.php
 
 		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/IncomeBenefitController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\IncomeBenefitController\\:\\:startAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/IncomeBenefitController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\IncomeBenefitController\\:\\:stepAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/IncomeBenefitController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\IncomeBenefitController\\:\\:stepAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/IncomeBenefitController.php
 
@@ -1871,16 +1206,6 @@ parameters:
 			path: src/Controller/Ndr/IncomeBenefitController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\IncomeBenefitController\\:\\:summaryAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/IncomeBenefitController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\IncomeBenefitController\\:\\:summaryAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/IncomeBenefitController.php
-
-		-
 			message: "#^Offset 'state' does not exist on string\\.$#"
 			count: 2
 			path: src/Controller/Ndr/IncomeBenefitController.php
@@ -1891,47 +1216,12 @@ parameters:
 			path: src/Controller/Ndr/IncomeBenefitController.php
 
 		-
-			message: "#^Property App\\\\Controller\\\\Ndr\\\\IncomeBenefitController\\:\\:\\$jmsGroups has no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/IncomeBenefitController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Ndr\\\\NdrController\\:\\:getPdfBinaryContent\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/NdrController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\NdrController\\:\\:getPdfBinaryContent\\(\\) has parameter \\$ndr with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\NdrController\\:\\:pdfViewAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\NdrController\\:\\:reviewAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\NdrController\\:\\:submitConfirmationAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\NdrController\\:\\:submitFeedbackAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
 			message: "#^Parameter \\#1 \\$formResponse of method App\\\\Service\\\\Client\\\\Internal\\\\SatisfactionApi\\:\\:createPostSubmissionFeedback\\(\\) expects App\\\\Model\\\\FeedbackReport, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Ndr\\\\NdrController\\:\\:\\$ndrGroupsForValidation has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/NdrController.php
 
@@ -1946,37 +1236,7 @@ parameters:
 			path: src/Controller/Ndr/OtherInfoController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\OtherInfoController\\:\\:startAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/OtherInfoController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\OtherInfoController\\:\\:startAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/OtherInfoController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\OtherInfoController\\:\\:stepAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/OtherInfoController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\OtherInfoController\\:\\:stepAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/OtherInfoController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Ndr\\\\OtherInfoController\\:\\:stepAction\\(\\) has parameter \\$step with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/OtherInfoController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\OtherInfoController\\:\\:summaryAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/OtherInfoController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\OtherInfoController\\:\\:summaryAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/OtherInfoController.php
 
@@ -1987,11 +1247,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/OtherInfoController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Ndr\\\\OtherInfoController\\:\\:\\$jmsGroups has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/OtherInfoController.php
 
@@ -2011,22 +1266,7 @@ parameters:
 			path: src/Controller/Ndr/VisitsCareController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\VisitsCareController\\:\\:startAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\VisitsCareController\\:\\:stepAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Ndr\\\\VisitsCareController\\:\\:stepAction\\(\\) has parameter \\$step with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\VisitsCareController\\:\\:summaryAction\\(\\) has parameter \\$ndrId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/VisitsCareController.php
 
@@ -2042,11 +1282,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Ndr\\\\VisitsCareController\\:\\:\\$jmsGroups has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Ndr/VisitsCareController.php
 
@@ -2096,52 +1331,12 @@ parameters:
 			path: src/Controller/Org/IndexController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Org\\\\IndexController\\:\\:clientArchiveAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/IndexController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Org\\\\IndexController\\:\\:clientArchiveAction\\(\\) has parameter \\$clientId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/IndexController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Org\\\\IndexController\\:\\:clientEditAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/IndexController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Org\\\\IndexController\\:\\:clientEditAction\\(\\) has parameter \\$clientId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/IndexController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Org\\\\IndexController\\:\\:dashboardAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/IndexController.php
-
-		-
-			message: "#^Method App\\\\Service\\\\Client\\\\Internal\\\\ClientApi\\:\\:update\\(\\) invoked with 4 parameters, 3 required\\.$#"
-			count: 1
-			path: src/Controller/Org/IndexController.php
-
-		-
 			message: "#^Parameter \\#2 \\$data of method App\\\\Service\\\\Client\\\\RestClient\\:\\:arrayToEntities\\(\\) expects array, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Org/IndexController.php
 
 		-
 			message: "#^Parameter \\#2 \\$postUpdateClient of method App\\\\Service\\\\Client\\\\Internal\\\\ClientApi\\:\\:update\\(\\) expects App\\\\Entity\\\\Client, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Org/IndexController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Org\\\\IndexController\\:\\:\\$dateTimeProvider is never read, only written\\.$#"
-			count: 1
-			path: src/Controller/Org/IndexController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Org\\\\IndexController\\:\\:\\$logger is never read, only written\\.$#"
 			count: 1
 			path: src/Controller/Org/IndexController.php
 
@@ -2156,62 +1351,12 @@ parameters:
 			path: src/Controller/Org/NoteController.php
 
 		-
-			message: "#^Cannot call method getCurrentReport\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Org/NoteController.php
-
-		-
-			message: "#^Cannot call method getId\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Org/NoteController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Org\\\\NoteController\\:\\:addAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/NoteController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Org\\\\NoteController\\:\\:deleteConfirmAction\\(\\) has parameter \\$noteId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/NoteController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Org\\\\NoteController\\:\\:editAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/NoteController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Org\\\\NoteController\\:\\:editAction\\(\\) has parameter \\$noteId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/NoteController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Org\\\\NoteController\\:\\:getNote\\(\\) has parameter \\$noteId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/NoteController.php
-
-		-
-			message: "#^PHPDoc tag @var has invalid value \\(\\$client EntityDir\\\\Client\\)\\: Unexpected token \"\\$client\", expected type at offset 9$#"
-			count: 1
-			path: src/Controller/Org/NoteController.php
-
-		-
-			message: "#^Parameter \\#1 \\$client of class App\\\\Entity\\\\Note constructor expects App\\\\Entity\\\\Client, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Org/NoteController.php
-
-		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:post\\(\\) expects array\\|object\\|string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Org/NoteController.php
 
 		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Org/NoteController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Org\\\\NoteController\\:\\:\\$jmsGroups has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Org/NoteController.php
 
@@ -2237,41 +1382,11 @@ parameters:
 
 		-
 			message: "#^Cannot call method getId\\(\\) on mixed\\.$#"
-			count: 7
+			count: 6
 			path: src/Controller/Org/OrganisationController.php
 
 		-
 			message: "#^Cannot call method getUserById\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Org/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Org\\\\OrganisationController\\:\\:addAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Org\\\\OrganisationController\\:\\:deleteConfirmAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Org\\\\OrganisationController\\:\\:editAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Org\\\\OrganisationController\\:\\:listAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/OrganisationController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Org\\\\OrganisationController\\:\\:viewAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Org/OrganisationController.php
-
-		-
-			message: "#^PHPDoc tag @var has invalid value \\(\\$organisation EntityDir\\\\Organisation\\)\\: Unexpected token \"\\$organisation\", expected type at offset 9$#"
 			count: 1
 			path: src/Controller/Org/OrganisationController.php
 
@@ -2296,21 +1411,6 @@ parameters:
 			path: src/Controller/Org/OrganisationController.php
 
 		-
-			message: "#^Parameter \\#3 \\$currentUser of method App\\\\Service\\\\Client\\\\Internal\\\\OrganisationApi\\:\\:addUserToOrganisation\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Org/OrganisationController.php
-
-		-
-			message: "#^Parameter \\#3 \\$currentUser of method App\\\\Service\\\\Client\\\\Internal\\\\OrganisationApi\\:\\:removeUserFromOrganisation\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Org/OrganisationController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Org\\\\OrganisationController\\:\\:\\$dateTimeProvider is never read, only written\\.$#"
-			count: 1
-			path: src/Controller/Org/OrganisationController.php
-
-		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\Form\\\\FormInterface\\:\\:isClicked\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/ActionController.php
@@ -2331,47 +1431,12 @@ parameters:
 			path: src/Controller/Report/ActionController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ActionController\\:\\:startAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ActionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ActionController\\:\\:startAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ActionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ActionController\\:\\:stepAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ActionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ActionController\\:\\:stepAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ActionController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\ActionController\\:\\:stepAction\\(\\) has parameter \\$step with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/ActionController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ActionController\\:\\:summaryAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ActionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ActionController\\:\\:summaryAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ActionController.php
-
-		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/ActionController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\ActionController\\:\\:\\$jmsGroups has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/ActionController.php
 
@@ -2596,16 +1661,6 @@ parameters:
 			path: src/Controller/Report/AssetController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AssetController\\:\\:otherAddAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\AssetController\\:\\:propertyStepAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
 			message: "#^Parameter \\#1 \\$noAssetToAdd of method App\\\\Entity\\\\Report\\\\Report\\:\\:setNoAssetToAdd\\(\\) expects bool, int given\\.$#"
 			count: 1
 			path: src/Controller/Report/AssetController.php
@@ -2621,17 +1676,7 @@ parameters:
 			path: src/Controller/Report/AssetController.php
 
 		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\AssetController\\:\\:\\$jmsGroups has no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/BalanceController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\BalanceController\\:\\:\\$jmsGroups has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/BalanceController.php
 
@@ -2731,11 +1776,6 @@ parameters:
 			path: src/Controller/Report/BankAccountController.php
 
 		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\BankAccountController\\:\\:\\$jmsGroups has no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/BankAccountController.php
-
-		-
 			message: "#^Argument of an invalid type Doctrine\\\\Common\\\\Collections\\\\ArrayCollection\\|null supplied for foreach, only iterables are supported\\.$#"
 			count: 1
 			path: src/Controller/Report/ClientBenefitsCheckController.php
@@ -2796,22 +1836,12 @@ parameters:
 			path: src/Controller/Report/ClientBenefitsCheckController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ClientBenefitsCheckController\\:\\:incomeNotReceivedByOthers\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ClientBenefitsCheckController.php
-
-		-
 			message: "#^Parameter \\#1 \\$clientBenefitsCheck of method App\\\\Service\\\\Client\\\\Internal\\\\ClientBenefitsCheckApi\\:\\:post\\(\\) expects App\\\\Entity\\\\ClientBenefitsCheckInterface, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Report/ClientBenefitsCheckController.php
 
 		-
 			message: "#^Parameter \\#1 \\$clientBenefitsCheck of method App\\\\Service\\\\Client\\\\Internal\\\\ClientBenefitsCheckApi\\:\\:put\\(\\) expects App\\\\Entity\\\\ClientBenefitsCheckInterface, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/ClientBenefitsCheckController.php
-
-		-
-			message: "#^Variable \\$formData in PHPDoc tag @var does not match assigned variable \\$clientBenefitsCheck\\.$#"
 			count: 1
 			path: src/Controller/Report/ClientBenefitsCheckController.php
 
@@ -2861,11 +1891,6 @@ parameters:
 			path: src/Controller/Report/ContactController.php
 
 		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\ContactController\\:\\:\\$jmsGroups has no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
 			count: 2
 			path: src/Controller/Report/DebtController.php
@@ -2878,11 +1903,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
 			count: 2
-			path: src/Controller/Report/DebtController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\DebtController\\:\\:\\$jmsGroups has no type specified\\.$#"
-			count: 1
 			path: src/Controller/Report/DebtController.php
 
 		-
@@ -2926,22 +1946,7 @@ parameters:
 			path: src/Controller/Report/DecisionController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DecisionController\\:\\:updateReport\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DecisionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DecisionController\\:\\:updateReport\\(\\) has parameter \\$fields with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DecisionController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\DecisionController\\:\\:updateReport\\(\\) has parameter \\$report with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DecisionController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DecisionController\\:\\:updateReport\\(\\) has parameter \\$reportId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/DecisionController.php
 
@@ -2958,11 +1963,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
 			count: 3
-			path: src/Controller/Report/DecisionController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\DecisionController\\:\\:\\$jmsGroups has no type specified\\.$#"
-			count: 1
 			path: src/Controller/Report/DecisionController.php
 
 		-
@@ -3026,11 +2026,6 @@ parameters:
 			path: src/Controller/Report/DeputyExpenseController.php
 
 		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\DeputyExpenseController\\:\\:\\$jmsGroups has no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DeputyExpenseController.php
-
-		-
 			message: "#^Cannot access offset 'files' on mixed\\.$#"
 			count: 2
 			path: src/Controller/Report/DocumentController.php
@@ -3056,22 +2051,7 @@ parameters:
 			path: src/Controller/Report/DocumentController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:startAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:step1Action\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\DocumentController\\:\\:\\$jmsGroups has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/DocumentController.php
 
@@ -3126,46 +2106,6 @@ parameters:
 			path: src/Controller/Report/GiftController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\GiftController\\:\\:addAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\GiftController\\:\\:deleteAction\\(\\) has parameter \\$giftId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\GiftController\\:\\:deleteAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\GiftController\\:\\:editAction\\(\\) has parameter \\$giftId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\GiftController\\:\\:editAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\GiftController\\:\\:existAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\GiftController\\:\\:startAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\GiftController\\:\\:summaryAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:post\\(\\) expects array\\|object\\|string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Report/GiftController.php
@@ -3173,11 +2113,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
 			count: 2
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\GiftController\\:\\:\\$jmsGroups has no type specified\\.$#"
-			count: 1
 			path: src/Controller/Report/GiftController.php
 
 		-
@@ -3196,22 +2131,7 @@ parameters:
 			path: src/Controller/Report/LifestyleController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\LifestyleController\\:\\:startAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/LifestyleController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\LifestyleController\\:\\:stepAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/LifestyleController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\LifestyleController\\:\\:stepAction\\(\\) has parameter \\$step with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/LifestyleController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\LifestyleController\\:\\:summaryAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/LifestyleController.php
 
@@ -3231,22 +2151,12 @@ parameters:
 			path: src/Controller/Report/LifestyleController.php
 
 		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\LifestyleController\\:\\:\\$jmsGroups has no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/LifestyleController.php
-
-		-
 			message: "#^Ternary operator condition is always true\\.$#"
 			count: 1
 			path: src/Controller/Report/LifestyleController.php
 
 		-
 			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Call to function is_null\\(\\) with App\\\\Entity\\\\Report\\\\MoneyTransaction will always evaluate to false\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyInController.php
 
@@ -3296,78 +2206,13 @@ parameters:
 			path: src/Controller/Report/MoneyInController.php
 
 		-
-			message: "#^If condition is always false\\.$#"
-			count: 2
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInController\\:\\:addAnotherAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInController\\:\\:deleteAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInController\\:\\:deleteAction\\(\\) has parameter \\$transactionId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInController\\:\\:existAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInController\\:\\:handleSoftDeletionOfMoneyTransactionItems\\(\\) has parameter \\$answer with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInController\\:\\:handleSoftDeletionOfMoneyTransactionItems\\(\\) has parameter \\$report with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInController\\:\\:handleSoftDeletionOfMoneyTransactionItems\\(\\) has parameter \\$softDeletedTransactionIds with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInController\\:\\:noMoneyInToReport\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInController\\:\\:startAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInController\\:\\:stepAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInController\\:\\:stepAction\\(\\) has parameter \\$step with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInController\\:\\:summaryAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyInController.php
 
 		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
 			count: 4
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\MoneyInController\\:\\:\\$jmsGroups has no type specified\\.$#"
-			count: 1
 			path: src/Controller/Report/MoneyInController.php
 
 		-
@@ -3451,67 +2296,7 @@ parameters:
 			path: src/Controller/Report/MoneyInShortController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInShortController\\:\\:addAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInShortController\\:\\:addAnotherAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInShortController\\:\\:categoryAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInShortController\\:\\:cleanDataIfAnswerIsChangedFromYesToNo\\(\\) has parameter \\$report with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInShortController\\:\\:deleteAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInShortController\\:\\:deleteAction\\(\\) has parameter \\$transactionId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInShortController\\:\\:editAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInShortController\\:\\:editAction\\(\\) has parameter \\$transactionId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInShortController\\:\\:existAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInShortController\\:\\:noMoneyInShortToReport\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInShortController\\:\\:oneOffPaymentsExistAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInShortController\\:\\:startAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInShortController\\:\\:summaryAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyInShortController.php
 
@@ -3526,17 +2311,7 @@ parameters:
 			path: src/Controller/Report/MoneyInShortController.php
 
 		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\MoneyInShortController\\:\\:\\$jmsGroups has no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
 			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutController.php
-
-		-
-			message: "#^Call to function is_null\\(\\) with App\\\\Entity\\\\Report\\\\MoneyTransaction will always evaluate to false\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyOutController.php
 
@@ -3586,78 +2361,13 @@ parameters:
 			path: src/Controller/Report/MoneyOutController.php
 
 		-
-			message: "#^If condition is always false\\.$#"
-			count: 2
-			path: src/Controller/Report/MoneyOutController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutController\\:\\:addAnotherAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutController\\:\\:deleteAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutController\\:\\:deleteAction\\(\\) has parameter \\$transactionId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutController\\:\\:existAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutController\\:\\:handleSoftDeletionOfMoneyTransactionItems\\(\\) has parameter \\$answer with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutController\\:\\:handleSoftDeletionOfMoneyTransactionItems\\(\\) has parameter \\$report with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutController\\:\\:handleSoftDeletionOfMoneyTransactionItems\\(\\) has parameter \\$softDeletedTransactionIds with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutController\\:\\:noMoneyOutToReport\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutController\\:\\:startAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutController\\:\\:stepAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutController\\:\\:stepAction\\(\\) has parameter \\$step with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutController\\:\\:summaryAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyOutController.php
 
 		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
 			count: 4
-			path: src/Controller/Report/MoneyOutController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\MoneyOutController\\:\\:\\$jmsGroups has no type specified\\.$#"
-			count: 1
 			path: src/Controller/Report/MoneyOutController.php
 
 		-
@@ -3741,67 +2451,7 @@ parameters:
 			path: src/Controller/Report/MoneyOutShortController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutShortController\\:\\:addAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutShortController\\:\\:addAnotherAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutShortController\\:\\:categoryAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutShortController\\:\\:cleanDataIfAnswerIsChangedFromYesToNo\\(\\) has parameter \\$report with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutShortController\\:\\:deleteAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutShortController\\:\\:deleteAction\\(\\) has parameter \\$transactionId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutShortController\\:\\:editAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutShortController\\:\\:editAction\\(\\) has parameter \\$transactionId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutShortController\\:\\:existAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutShortController\\:\\:noMoneyOutShortToReport\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutShortController\\:\\:oneOffPaymentsExistAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutShortController\\:\\:startAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutShortController\\:\\:summaryAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyOutShortController.php
 
@@ -3813,11 +2463,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
 			count: 7
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\MoneyOutShortController\\:\\:\\$jmsGroups has no type specified\\.$#"
-			count: 1
 			path: src/Controller/Report/MoneyOutShortController.php
 
 		-
@@ -3841,51 +2486,6 @@ parameters:
 			path: src/Controller/Report/MoneyTransferController.php
 
 		-
-			message: "#^If condition is always false\\.$#"
-			count: 2
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:addAnotherAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:deleteAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:existAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:startAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:stepAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:stepAction\\(\\) has parameter \\$step with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:summaryAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\MoneyTransferController\\:\\:\\$jmsGroups has no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\Form\\\\FormInterface\\:\\:isClicked\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/OtherInfoController.php
@@ -3901,32 +2501,7 @@ parameters:
 			path: src/Controller/Report/OtherInfoController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\OtherInfoController\\:\\:startAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/OtherInfoController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\OtherInfoController\\:\\:stepAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/OtherInfoController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\OtherInfoController\\:\\:stepAction\\(\\) has parameter \\$step with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/OtherInfoController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\OtherInfoController\\:\\:summaryAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/OtherInfoController.php
-
-		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/OtherInfoController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\OtherInfoController\\:\\:\\$jmsGroups has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/OtherInfoController.php
 
@@ -3966,61 +2541,6 @@ parameters:
 			path: src/Controller/Report/PaFeeExpenseController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\PaFeeExpenseController\\:\\:deleteAction\\(\\) has parameter \\$expenseId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/PaFeeExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\PaFeeExpenseController\\:\\:deleteAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/PaFeeExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\PaFeeExpenseController\\:\\:feeEditAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/PaFeeExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\PaFeeExpenseController\\:\\:feeExistAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/PaFeeExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\PaFeeExpenseController\\:\\:otherAddAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/PaFeeExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\PaFeeExpenseController\\:\\:otherAddAnotherAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/PaFeeExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\PaFeeExpenseController\\:\\:otherEditAction\\(\\) has parameter \\$expenseId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/PaFeeExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\PaFeeExpenseController\\:\\:otherEditAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/PaFeeExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\PaFeeExpenseController\\:\\:otherExistAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/PaFeeExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\PaFeeExpenseController\\:\\:startAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/PaFeeExpenseController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\PaFeeExpenseController\\:\\:summaryAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/PaFeeExpenseController.php
-
-		-
 			message: "#^Parameter \\#1 \\$reasonForNoFees of method App\\\\Entity\\\\Report\\\\Report\\:\\:setReasonForNoFees\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Controller/Report/PaFeeExpenseController.php
@@ -4033,11 +2553,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
 			count: 3
-			path: src/Controller/Report/PaFeeExpenseController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\PaFeeExpenseController\\:\\:\\$jmsGroups has no type specified\\.$#"
-			count: 1
 			path: src/Controller/Report/PaFeeExpenseController.php
 
 		-
@@ -4057,11 +2572,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfCurrentFeesController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\ProfCurrentFeesController\\:\\:\\$jmsGroups has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/ProfCurrentFeesController.php
 
@@ -4106,73 +2616,13 @@ parameters:
 			path: src/Controller/Report/ProfDeputyCostsController.php
 
 		-
-			message: "#^If condition is always false\\.$#"
-			count: 2
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyCostsController\\:\\:amountToSccoAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyCostsController\\:\\:breakdown\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyCostsController\\:\\:fixedCostAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyCostsController\\:\\:howChargedAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyCostsController\\:\\:interim\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyCostsController\\:\\:interimExists\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyCostsController\\:\\:previousCostDelete\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyCostsController\\:\\:previousReceived\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyCostsController\\:\\:previousReceivedExists\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyCostsController\\:\\:startAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyCostsController\\:\\:summaryAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
 			message: "#^Parameter \\#2 \\$amount of class App\\\\Entity\\\\Report\\\\ProfDeputyOtherCost constructor expects App\\\\Entity\\\\Report\\\\decimal, null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ProfDeputyCostsController.php
 
 		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 4
+			count: 3
 			path: src/Controller/Report/ProfDeputyCostsController.php
 
 		-
@@ -4181,17 +2631,7 @@ parameters:
 			path: src/Controller/Report/ProfDeputyCostsController.php
 
 		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\ProfDeputyCostsController\\:\\:\\$jmsGroups has no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: "#^Variable \\$previousReceivedId in empty\\(\\) always exists and is always falsy\\.$#"
 			count: 1
 			path: src/Controller/Report/ProfDeputyCostsController.php
 
@@ -4202,56 +2642,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method getProfDeputyCostsEstimateHowCharged\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsEstimateController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyCostsEstimateController\\:\\:answerHasChangedFromFixedToNonFixed\\(\\) has parameter \\$originalHowChargedValue with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsEstimateController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyCostsEstimateController\\:\\:answerHasChangedFromFixedToNonFixed\\(\\) has parameter \\$updatedHowCharged with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsEstimateController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyCostsEstimateController\\:\\:breakdownAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsEstimateController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyCostsEstimateController\\:\\:determineNextRouteFromHowCharged\\(\\) has parameter \\$originalHowChargedValue with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsEstimateController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyCostsEstimateController\\:\\:howChargedAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsEstimateController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyCostsEstimateController\\:\\:moreInfoAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsEstimateController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyCostsEstimateController\\:\\:persistUpdate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsEstimateController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyCostsEstimateController\\:\\:persistUpdate\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsEstimateController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyCostsEstimateController\\:\\:startAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsEstimateController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ProfDeputyCostsEstimateController\\:\\:summaryAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/ProfDeputyCostsEstimateController.php
 
@@ -4267,11 +2657,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#4 \\$moreDetails of class App\\\\Entity\\\\Report\\\\ProfDeputyEstimateCost constructor expects string, null given\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsEstimateController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\ProfDeputyCostsEstimateController\\:\\:\\$jmsGroups has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/ProfDeputyCostsEstimateController.php
 
@@ -4301,72 +2686,7 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:checkIfDocumentsExistInS3\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:checkIfDocumentsExistInS3\\(\\) has parameter \\$report with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:createAction\\(\\) has parameter \\$action with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:createAction\\(\\) has parameter \\$clientId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:declarationAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:editAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:generateClient\\(\\) has parameter \\$clientId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:generateClient\\(\\) should return App\\\\Entity\\\\Client but returns mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:overviewAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:pdfDebugAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:pdfViewAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:reviewAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:submitConfirmationAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\ReportController\\:\\:transactionsCsvViewAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
 
@@ -4381,27 +2701,12 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Parameter \\#1 \\$clientId of method App\\\\Service\\\\Client\\\\Internal\\\\ClientApi\\:\\:getById\\(\\) expects int, string given\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Parameter \\#1 \\$clientId of method App\\\\Service\\\\Client\\\\Internal\\\\ClientApi\\:\\:getWithUsersV2\\(\\) expects int, string given\\.$#"
-			count: 2
-			path: src/Controller/Report/ReportController.php
-
-		-
 			message: "#^Parameter \\#1 \\$formResponse of method App\\\\Service\\\\Client\\\\Internal\\\\SatisfactionApi\\:\\:createPostSubmissionFeedback\\(\\) expects App\\\\Model\\\\FeedbackReport, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
 
 		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:post\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\ReportController\\:\\:\\$ndrGroupsForValidation has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
 
@@ -4421,47 +2726,12 @@ parameters:
 			path: src/Controller/Report/VisitsCareController.php
 
 		-
-			message: "#^Cannot call method setReport\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\VisitsCareController\\:\\:startAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\VisitsCareController\\:\\:stepAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\VisitsCareController\\:\\:stepAction\\(\\) has parameter \\$step with no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/VisitsCareController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\VisitsCareController\\:\\:summaryAction\\(\\) has parameter \\$reportId with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
 			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
-			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:post\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
-			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
-			message: "#^Property App\\\\Controller\\\\Report\\\\VisitsCareController\\:\\:\\$jmsGroups has no type specified\\.$#"
 			count: 1
 			path: src/Controller/Report/VisitsCareController.php
 
@@ -4481,46 +2751,6 @@ parameters:
 			path: src/Controller/SettingsController.php
 
 		-
-			message: "#^Cannot call method isDeputyPA\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
-			message: "#^Cannot call method isDeputyProf\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
-			message: "#^Cannot call method setRoleName\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\SettingsController\\:\\:emailEditAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\SettingsController\\:\\:indexAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\SettingsController\\:\\:passwordEditAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\SettingsController\\:\\:profileAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\SettingsController\\:\\:profileEditAction\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
 			message: "#^Parameter \\#1 \\$route of method Symfony\\\\Bundle\\\\FrameworkBundle\\\\Controller\\\\AbstractController\\:\\:redirectToRoute\\(\\) expects string, string\\|true given\\.$#"
 			count: 1
 			path: src/Controller/SettingsController.php
@@ -4528,11 +2758,6 @@ parameters:
 		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, string\\|false given\\.$#"
 			count: 2
-			path: src/Controller/SettingsController.php
-
-		-
-			message: "#^Parameter \\#2 \\$postUpdateUser of method App\\\\Service\\\\Client\\\\Internal\\\\UserApi\\:\\:update\\(\\) expects App\\\\Entity\\\\User, mixed given\\.$#"
-			count: 1
 			path: src/Controller/SettingsController.php
 
 		-
@@ -4581,11 +2806,6 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
-			message: "#^Parameter \\#1 \\$type of method Symfony\\\\Bundle\\\\FrameworkBundle\\\\Controller\\\\AbstractController\\:\\:createForm\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/UserController.php
@@ -4596,22 +2816,12 @@ parameters:
 			path: src/Controller/UserController.php
 
 		-
-			message: "#^Parameter \\#3 \\$jmsGroups of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array, mixed given\\.$#"
-			count: 1
-			path: src/Controller/UserController.php
-
-		-
 			message: "#^Cannot access offset 'satisfaction' on mixed\\.$#"
 			count: 1
 			path: src/Controller/UserResearchController.php
 
 		-
 			message: "#^Cannot call method isLayDeputy\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null\\.$#"
-			count: 1
-			path: src/Controller/UserResearchController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\UserResearchController\\:\\:postSubmissionUserResearch\\(\\) should return array but returns Symfony\\\\Component\\\\HttpFoundation\\\\RedirectResponse\\.$#"
 			count: 1
 			path: src/Controller/UserResearchController.php
 
@@ -7671,11 +5881,6 @@ parameters:
 			path: src/Entity/Report/ProfServiceFee.php
 
 		-
-			message: "#^Call to function is_null\\(\\) with string will always evaluate to false\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Call to method getId\\(\\) on an unknown class App\\\\Entity\\\\Report\\\\Traits\\\\Asset\\.$#"
 			count: 2
 			path: src/Entity/Report/Report.php
@@ -8797,11 +7002,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Entity\\\\User\\:\\:getRegistrationToken\\(\\) should return string but returns string\\|null\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:getRoleFullName\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/User.php
 
@@ -12924,36 +11124,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$string of method App\\\\Transformer\\\\ReportSubmission\\\\ReportSubmissionBurFixedWidthTransformer\\:\\:fixLineLength\\(\\) expects null, string given\\.$#"
 			count: 4
 			path: src/Transformer/ReportSubmission/ReportSubmissionBurFixedWidthTransformer.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\AssetsExtension\\:\\:assetSourceFilter\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Twig/AssetsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\AssetsExtension\\:\\:assetSourceFilter\\(\\) has parameter \\$originalUrl with no type specified\\.$#"
-			count: 1
-			path: src/Twig/AssetsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\AssetsExtension\\:\\:assetUrlFilter\\(\\) has parameter \\$originalUrl with no type specified\\.$#"
-			count: 1
-			path: src/Twig/AssetsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\AssetsExtension\\:\\:getName\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Twig/AssetsExtension.php
-
-		-
-			message: "#^Parameter \\#1 \\$array of function array_diff expects array, array\\<int, string\\>\\|false given\\.$#"
-			count: 1
-			path: src/Twig/AssetsExtension.php
-
-		-
-			message: "#^Unable to resolve the template type T in call to function array_values$#"
-			count: 1
-			path: src/Twig/AssetsExtension.php
 
 		-
 			message: "#^Call to an undefined method Symfony\\\\Contracts\\\\Translation\\\\TranslatorInterface\\:\\:transChoice\\(\\)\\.$#"
