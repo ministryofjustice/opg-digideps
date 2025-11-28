@@ -177,7 +177,6 @@ decision:
   noDecisionChoice.notBlank: Please select either 'Yes' or 'No'
   reasonForNoDecisions.notBlank: |
     Please explain why you have not had to make any significant decisions for the client
-  addAnother.notBlank: Please specify if you want to add another decision
   description:
     notBlank: Enter some details about this decision
     length: This description must be at least {{ limit }} letters long
@@ -186,6 +185,8 @@ decision:
   clientInvolvedDetails:
     notBlank: Tell us how you involved the client or why you could not
     length: This description must be at least {{ limit }} letters long
+  addAnother:
+    notBlank: Please select either 'Yes' or 'No'
 
 document:
   file:

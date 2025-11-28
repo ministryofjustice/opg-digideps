@@ -176,7 +176,6 @@ class DecisionController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $decision = new Decision();
-        $from = $request->get('from');
 
         $form = $this->createForm(DecisionType::class, $decision);
         $form->handleRequest($request);
@@ -187,12 +186,17 @@ class DecisionController extends AbstractController
 
             $this->restClient->post('report/decision', $data, ['decision', 'report-id']);
 
-            return $this->redirect($this->generateUrl('decisions_add_another', ['reportId' => $reportId]));
+            switch ($form['addAnother']->getData()) {
+                case 'yes':
+                    return $this->redirectToRoute('decisions_add', ['reportId' => $reportId]);
+                case 'no':
+                    return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
+            }
         }
 
         // TODO use $backLinkRoute logic and align to other controllers
         try {
-            $backLink = $this->generateUrl($from, ['reportId' => $reportId]);
+            $backLink = $this->generateUrl('decisions_summary', ['reportId' => $reportId]);
 
             return [
                 'backLink' => $backLink,
@@ -206,30 +210,6 @@ class DecisionController extends AbstractController
                 'report' => $report,
             ];
         }
-    }
-
-    #[Route(path: '/report/{reportId}/decisions/add_another', name: 'decisions_add_another')]
-    #[Template('@App/Report/Decision/addAnother.html.twig')]
-    public function addAnotherAction(Request $request, int $reportId): array|RedirectResponse
-    {
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-
-        $form = $this->createForm(AddAnotherRecordType::class, $report, ['translation_domain' => 'report-decisions']);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            switch ($form['addAnother']->getData()) {
-                case 'yes':
-                    return $this->redirectToRoute('decisions_add', ['reportId' => $reportId, 'from' => 'decisions_add_another']);
-                case 'no':
-                    return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
-            }
-        }
-
-        return [
-            'form' => $form->createView(),
-            'report' => $report,
-        ];
     }
 
     #[Route(path: '/report/{reportId}/decisions/edit/{decisionId}', name: 'decisions_edit')]
@@ -251,7 +231,12 @@ class DecisionController extends AbstractController
 
             $request->getSession()->getFlashBag()->add('notice', 'Decision edited');
 
-            return $this->redirect($this->generateUrl('decisions', ['reportId' => $reportId]));
+            switch ($form['addAnother']->getData()) {
+                case 'yes':
+                    return $this->redirectToRoute('decisions_add', ['reportId' => $reportId]);
+                case 'no':
+                    return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
+            }
         }
 
         return [
