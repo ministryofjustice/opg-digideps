@@ -80,40 +80,12 @@ class CourtOrderService
     /**
      * Associate deputy entity with court order entity. Entities are persisted.
      *
-     * @param bool $logDuplicateError If set to true, if the relationship already exists, it is logged as an error;
-     *                                otherwise it's ignored and not logged. Ignoring this is to prevent expected
-     *                                log messages from triggering alarms.
-     *
-     * @return bool true if the association was made; false if the deputy or court order doesn't exist, or if they
-     *              do and they are already associated
+     * If there is already an association, this updates the status of the existing association.
      */
-    public function associateCourtOrderWithDeputy(
-        Deputy $deputy,
-        CourtOrder $courtOrder,
-        bool $isActive = true,
-        bool $logDuplicateError = true,
-    ): bool {
-        $deputyUid = $deputy->getDeputyUid();
-        $courtOrderUid = $courtOrder->getCourtOrderUid();
-
-        // check whether association already exists
-        foreach ($deputy->getCourtOrdersWithStatus() as $courtOrderWithStatus) {
-            /** @var CourtOrder $existingCourtOrder */
-            $existingCourtOrder = $courtOrderWithStatus['courtOrder'];
-            if ($existingCourtOrder->getCourtOrderUid() === $courtOrderUid) {
-                if ($logDuplicateError) {
-                    $this->logger->error("Deputy with UID $deputyUid is already associated with court order with UID $courtOrderUid");
-                }
-
-                return false;
-            }
-        }
-
+    public function associateCourtOrderWithDeputy(Deputy $deputy, CourtOrder $courtOrder, bool $isActive = true): void
+    {
         $deputy->associateWithCourtOrder($courtOrder, $isActive);
-
         $this->entityManager->persist($deputy);
         $this->entityManager->flush();
-
-        return true;
     }
 }

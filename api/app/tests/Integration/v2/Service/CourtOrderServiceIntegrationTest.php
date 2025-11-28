@@ -29,7 +29,7 @@ class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
         self::$sut = self::$container->get(CourtOrderService::class);
     }
 
-    public function testAssociateDeputyWithCourtOrderDuplicate(): void
+    public function testAssociateDeputyWithCourtOrderStatusUpdate(): void
     {
         $deputy = self::$fixtures->createDeputy(['setDeputyUid' => '123456']);
         $courtOrder = self::$fixtures->createCourtOrder('123567', 'pfa', 'ACTIVE');
@@ -37,8 +37,16 @@ class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
         self::$entityManager->persist($deputy);
         self::$entityManager->flush();
 
-        $success = self::$sut->associateCourtOrderWithDeputy($deputy, $courtOrder);
-        $this->assertFalse($success);
+        $rel = self::$courtOrderDeputyRepository->findOneBy(['courtOrder' => $courtOrder, 'deputy' => $deputy]);
+        $this->assertNotNull($rel);
+        $this->assertTrue($rel->isActive());
+
+        // make the relationship inactive
+        self::$sut->associateCourtOrderWithDeputy($deputy, $courtOrder, isActive: false);
+
+        $rel = self::$courtOrderDeputyRepository->findOneBy(['courtOrder' => $courtOrder, 'deputy' => $deputy]);
+        $this->assertNotNull($rel);
+        $this->assertFalse($rel->isActive());
     }
 
     public function testAssociateDeputyWithCourtOrderSuccess(): void
@@ -48,8 +56,7 @@ class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
         self::$entityManager->persist($courtOrder);
         self::$entityManager->flush();
 
-        $success = self::$sut->associateCourtOrderWithDeputy($deputy, $courtOrder);
-        $this->assertTrue($success);
+        self::$sut->associateCourtOrderWithDeputy($deputy, $courtOrder);
 
         $rel = self::$courtOrderDeputyRepository->findOneBy(['courtOrder' => $courtOrder, 'deputy' => $deputy]);
         $this->assertNotNull($rel);
