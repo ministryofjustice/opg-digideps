@@ -17,16 +17,15 @@ use Symfony\Component\Routing\Annotation\Route;
 class BehatController extends AbstractController
 {
     public function __construct(
-        private KernelInterface $kernel,
-        private bool $fixturesEnabled,
+        private readonly KernelInterface $kernel,
+        private readonly bool $fixturesEnabled,
     ) {
     }
 
     /**
-     * @Route("/admin/behat/run-document-sync-command", methods={"GET"}, name="behat_admin_run_document_sync_command")
-     *
      * @throws \Exception
      */
+    #[Route(path: '/admin/behat/run-document-sync-command', name: 'behat_admin_run_document_sync_command', methods: ['GET'])]
     public function runDocumentSyncCommand(): Response
     {
         if (!$this->fixturesEnabled) {
@@ -45,10 +44,9 @@ class BehatController extends AbstractController
     }
 
     /**
-     * @Route("/admin/behat/run-checklist-sync-command", methods={"GET"}, name="behat_admin_run_checklist_sync_command")
-     *
      * @throws \Exception
      */
+    #[Route(path: '/admin/behat/run-checklist-sync-command', name: 'behat_admin_run_checklist_sync_command', methods: ['GET'])]
     public function runChecklistSyncCommand(): Response
     {
         if (!$this->fixturesEnabled) {

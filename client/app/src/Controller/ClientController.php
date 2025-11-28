@@ -18,7 +18,7 @@ use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Redirector;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,30 +28,24 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ClientController extends AbstractController
 {
     public function __construct(
-        private UserApi $userApi,
-        private ClientApi $clientApi,
-        private DeputyApi $deputyApi,
-        private RestClient $restClient,
-        private PreRegistrationApi $preRegistrationApi,
-        private ObservableEventDispatcher $eventDispatcher,
+        private readonly UserApi $userApi,
+        private readonly ClientApi $clientApi,
+        private readonly DeputyApi $deputyApi,
+        private readonly RestClient $restClient,
+        private readonly PreRegistrationApi $preRegistrationApi,
+        private readonly ObservableEventDispatcher $eventDispatcher,
     ) {
     }
 
-    /**
-     * @Route("/deputyship-details/your-client", name="client_show_deprecated")
-     *
-     * @Template("@App/Client/show.html.twig")
-     */
-    public function showAction(Redirector $redirector): array|RedirectResponse
+    #[Route(path: '/deputyship-details/your-client', name: 'client_show_deprecated')]
+    #[Template('@App/Client/show.html.twig')]
+    public function showAction(): array|RedirectResponse
     {
         return $this->redirectToRoute('homepage');
     }
 
-    /**
-     * @Route("/deputyship-details/client/{clientId}", name="client_show")
-     *
-     * @Template("@App/Client/show.html.twig")
-     */
+    #[Route(path: '/deputyship-details/client/{clientId}', name: 'client_show')]
+    #[Template('@App/Client/show.html.twig')]
     public function showClientDetailsAction(Redirector $redirector, int $clientId): array|RedirectResponse
     {
         // redirect if user has missing details or is on wrong page
@@ -70,21 +64,15 @@ class ClientController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/deputyship-details/your-client/edit", name="client_edit_deprecated")
-     *
-     * @Template("@App/Client/edit.html.twig")
-     */
-    public function editAction(Request $request): RedirectResponse
+    #[Route(path: '/deputyship-details/your-client/edit', name: 'client_edit_deprecated')]
+    #[Template('@App/Client/edit.html.twig')]
+    public function editAction(): RedirectResponse
     {
         return $this->redirectToRoute('homepage');
     }
 
-    /**
-     * @Route("/deputyship-details/client/{clientId}/edit", name="client_edit")
-     *
-     * @Template("@App/Client/edit.html.twig")
-     */
+    #[Route(path: '/deputyship-details/client/{clientId}/edit', name: 'client_edit')]
+    #[Template('@App/Client/edit.html.twig')]
     public function editClientDetailsAction(Request $request, int $clientId): array|RedirectResponse
     {
         $from = $request->get('from');
@@ -112,7 +100,7 @@ class ClientController extends AbstractController
             $postUpdateClient->setId($preUpdateClient->getId());
             $this->clientApi->update($preUpdateClient, $postUpdateClient, AuditEvents::TRIGGER_DEPUTY_USER_EDIT_SELF);
 
-            $this->addFlash('clientEditSuccess', htmlentities($postUpdateClient->getFirstname())."'s details have been saved");
+            $this->addFlash('clientEditSuccess', htmlentities((string) $postUpdateClient->getFirstname()) . "'s details have been saved");
 
             $activeReport = $postUpdateClient->getActiveReport();
 
@@ -130,10 +118,10 @@ class ClientController extends AbstractController
     }
 
     /**
-     * @Route("/client/add", name="client_add")
-     *
-     * @Template("@App/Client/add.html.twig")
+     * @throws \Throwable
      */
+    #[Route(path: '/client/add', name: 'client_add')]
+    #[Template('@App/Client/add.html.twig')]
     public function addAction(
         Request $request,
         Redirector $redirector,
@@ -148,18 +136,18 @@ class ClientController extends AbstractController
         if (is_string($route)) {
             return $this->redirectToRoute($route);
         }
-        /** @var Client|null $client */
+        /** @var ?Client $client */
         $client = $this->clientApi->getFirstClient();
         $existingClientId = 0;
         if (!empty($client)) {
             // update existing client
             $existingClientId = $client->getId();
+
             /** @var Client $client */
-            $client = $this->restClient->get('client/'.$client->getId(), 'Client', ['client', 'report-id', 'current-report']);
+            $client = $this->restClient->get('client/' . $client->getId(), 'Client', ['client', 'report-id', 'current-report']);
             $client_validated = true;
         } else {
             // new client
-            /** @var Client $client */
             $client = new Client();
             $client_validated = false;
         }
@@ -187,7 +175,6 @@ class ClientController extends AbstractController
                     $this->restClient->post('report', $report);
                 }
 
-                /** @var User $currentUser */
                 $currentUser = $this->userApi->getUserWithData();
 
                 $deputyResponse = $this->deputyApi->createDeputyFromUser($currentUser);
@@ -202,7 +189,7 @@ class ClientController extends AbstractController
             } catch (\Throwable $e) {
                 if (!$e instanceof RestClientException) {
                     if (method_exists($e, 'getData')) {
-                        $failureData = json_decode($e->getData()['message'], true);
+                        $failureData = json_decode((string) $e->getData()['message'], true);
 
                         // If response from API is not valid json just log the message
                         $failureData = !is_array($failureData) ? ['failure_message' => $failureData] : $failureData;
@@ -232,7 +219,7 @@ class ClientController extends AbstractController
                         break;
 
                     case 461:
-                        $decodedError = json_decode($e->getData()['message'], true);
+                        $decodedError = json_decode((string) $e->getData()['message'], true);
 
                         if ($decodedError['matching_errors']['client_lastname']) {
                             $form->addError(new FormError($translator->trans('matchingErrors.clientLastname', [], 'register')));
@@ -246,7 +233,8 @@ class ClientController extends AbstractController
                         if ($decodedError['matching_errors']['deputy_postcode']) {
                             $form->addError(new FormError($translator->trans('matchingErrors.deputyPostcode', [], 'register')));
                         }
-                        if ($decodedError['matching_errors']['deputy_lastname']
+                        if (
+                            $decodedError['matching_errors']['deputy_lastname']
                             || $decodedError['matching_errors']['deputy_firstname']
                             || $decodedError['matching_errors']['deputy_postcode']
                         ) {
@@ -263,7 +251,7 @@ class ClientController extends AbstractController
                         $form->addError(new FormError($translator->trans('formErrors.generic', [], 'register')));
                 }
 
-                $logger->error(__METHOD__.': '.$e->getMessage().', code: '.$e->getCode());
+                $logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
             }
         }
 
