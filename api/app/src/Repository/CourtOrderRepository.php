@@ -22,7 +22,6 @@ class CourtOrderRepository extends ServiceEntityRepository
     {
         $sql = <<<SQL
         SELECT DISTINCT
-        r.id AS "reportId",
         r.type AS "type",
         c.firstname AS "firstName",
         c.lastname AS "lastName",

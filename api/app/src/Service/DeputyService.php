@@ -127,18 +127,24 @@ class DeputyService
                 $courtOrderLink = $courtOrderWithStatus['courtOrderUid'];
             }
 
-            $reportAggregate[$courtOrderWithStatus['reportId']] = [
-                'client' => [
-                    'firstName' => $courtOrderWithStatus['firstName'],
-                    'lastName' => $courtOrderWithStatus['lastName'],
-                    'caseNumber' => $courtOrderWithStatus['caseNumber'],
-                ],
-                'report' => [
-                    'type' => $courtOrderWithStatus['type'],
-                ],
-                'courtOrderUids' => $courtOrderUids,
-                'courtOrderLink' => $courtOrderLink,
-            ];
+            $caseNumber = $courtOrderWithStatus['caseNumber'];
+
+            $entry = $courtOrderLink . $caseNumber;
+
+            if (!array_key_exists($entry, $reportAggregate)) {
+                $reportAggregate[$entry] = [
+                    'client' => [
+                        'firstName' => $courtOrderWithStatus['firstName'],
+                        'lastName' => $courtOrderWithStatus['lastName'],
+                        'caseNumber' => $caseNumber,
+                    ],
+                    'report' => [
+                        'type' => $courtOrderWithStatus['type'],
+                    ],
+                    'courtOrderUids' => $courtOrderUids,
+                    'courtOrderLink' => $courtOrderLink,
+                ];
+            }
         }
 
         return array_values($reportAggregate);
