@@ -17,6 +17,9 @@ const outputDirWithTimestamp = path.resolve(dirname, "public/assets/" + tag)
 // assets will actually be loaded from this directory
 const outputDir = path.resolve(dirname, "public/assets/fallback")
 
+// ...except for favicons, which are loaded from this directory
+const iconsDir = path.resolve(dirname, "public/")
+
 const stylesheetsDir = path.resolve(outputDir, "stylesheets")
 const fontsDir = path.resolve(stylesheetsDir, "fonts")
 const javascriptsDir = path.resolve(outputDir, "javascripts")
@@ -30,6 +33,8 @@ const buildDirs = [
 
 // ------- Remove existing build outputs
 buildDirs.forEach(buildDir => fs.rmSync(buildDir, { recursive: true, force: true }))
+fs.rmSync(path.resolve(iconsDir, "favicon.ico"), { force: true })
+fs.rmSync(path.resolve(iconsDir, "favicon.svg"), { force: true })
 
 // ------- Set up clean output directories
 buildDirs.push(outputDirWithTimestamp)
@@ -92,13 +97,20 @@ const imagesToCopy = [
     from: "node_modules/@ministryofjustice/frontend/moj/assets/images/",
     to: "public/images/"
   },
-  { from: "node_modules/govuk_frontend_toolkit/images/", to: "public/images/" }
+  { from: "node_modules/govuk_frontend_toolkit/images/", to: "public/images/" },
+  { from: "assets/images/generic-images/favicon.ico", to: "public/favicon.ico" },
+  { from: "assets/images/favicon.svg", to: "public/favicon.svg"}
 ]
 
 imagesToCopy.forEach(copySpec => {
   const destPath = path.resolve(dirname, copySpec.to)
   fs.mkdirSync(path.dirname(destPath), { recursive: true })
-  fs.cpSync(copySpec.from, destPath, { recursive: true })
+
+  if (fs.lstatSync(copySpec.from).isDirectory()) {
+    fs.cpSync(copySpec.from, destPath, { recursive: true })
+  } else {
+    fs.copyFileSync(copySpec.from, copySpec.to)
+  }
 })
 
 console.log("Finished copying image files")
