@@ -252,7 +252,7 @@ class ReportController extends AbstractController
         $editReportDatesForm = $this->formFactory->createNamed('report_edit', ReportType::class, $report, ['translation_domain' => 'report']);
         $returnLink = $user->isDeputyOrg()
             ? $this->clientApi->generateClientProfileLink($report->getClient())
-            : $this->generateUrl('lay_home', ['clientId' => $client->getId()]);
+            : $this->generateUrl('courtorders_for_deputy');
 
         $editReportDatesForm->handleRequest($request);
         if ($editReportDatesForm->isSubmitted() && $editReportDatesForm->isValid()) {
@@ -508,7 +508,7 @@ class ReportController extends AbstractController
         return [
             'report' => $report,
             'form' => $form->createView(),
-            'homePageName' => $this->getUser()->isLayDeputy() ? 'lay_home' : 'org_dashboard',
+            'homePageName' => $this->getUser()->isLayDeputy() ? 'courtorders_for_deputy' : 'org_dashboard',
         ];
     }
 
@@ -532,7 +532,7 @@ class ReportController extends AbstractController
         if ($user->isDeputyOrg()) {
             $backLink = $this->clientApi->generateClientProfileLink($report->getClient());
         } else {
-            $backLink = $this->generateUrl('lay_home', ['clientId' => $report->getClient()->getId()]);
+            $backLink = $this->generateUrl('courtorders_for_deputy');
         }
 
         if (!$report->isSubmitted()) {
