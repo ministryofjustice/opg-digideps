@@ -166,6 +166,7 @@ class DecisionController extends AbstractController
 
     private function updateReport($report, int $reportId): void
     {
+        $fields = ['significantDecisionsMade', 'reasonForNoDecisions'];
         $this->restClient->put('report/' . $reportId, $report, $fields);
     }
 
@@ -174,7 +175,7 @@ class DecisionController extends AbstractController
     public function addAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $decision = new EntityDir\Report\Decision();
+        $decision = new Decision();
 
         $form = $this->createForm(DecisionType::class, $decision);
         $form->handleRequest($request);
