@@ -95,19 +95,18 @@ trait SelfRegistrationTrait
     }
 
     /**
-     * @Given a lay deputy :name @ :jsonFile is invited to be a co-deputy for case :caseNumber
+     * @Given a lay deputy :name @ :jsonFile is invited to be a co-deputy for the court order with UID :courtOrderUid
      *
      * See aLayDeputyWithRefRegistersToDeputise for an explanation of the reference and JSON format.
      *
      * NB a user on the case referenced must be logged in for this sequence to work.
      */
-    public function aLayDeputyIsInvitedToBeACodeputy(string $name, string $jsonFile, string $caseNumber)
+    public function aLayDeputyIsInvitedToBeACodeputy(string $name, string $jsonFile, string $courtOrderUid)
     {
         $fixture = $this->getFixtureJson($jsonFile);
         $codeputy = $fixture[$name]['codeputy'];
 
-        $clientId = $this->getClientIdByCaseNumber($caseNumber);
-        $this->visitPath(sprintf('/codeputy/%s/add', $clientId));
+        $this->visitPath(sprintf('/courtorder/%s/invite', $courtOrderUid));
 
         $this->fillInField('co_deputy_invite_firstname', $codeputy['firstName']);
         $this->fillInField('co_deputy_invite_lastname', $codeputy['lastName']);

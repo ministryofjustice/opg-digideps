@@ -196,16 +196,10 @@ trait ActivateTrait
     /**
      * @When /^the user completes the final registration step$/
      */
-    public function theUserCompletesTheFinalRegistrationStep()
+    public function theUserCompletesTheFinalRegistrationStep(): void
     {
-        $this->completeFinalRegistrationSection($this->getUserForTestRun()['type']);
-    }
-
-    private function completeFinalRegistrationSection($userType)
-    {
+        $userType = $this->getUserForTestRun()['type'];
         $this->loginToFrontendAs($this->getUserForTestRun()['email']);
-
-        sleep(1);
 
         switch ($userType) {
             case 'org':

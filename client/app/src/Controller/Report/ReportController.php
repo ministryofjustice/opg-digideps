@@ -135,37 +135,6 @@ class ReportController extends AbstractController
     ) {
     }
 
-    private function redirectNonPrimaryAccount(User $user): ?RedirectResponse
-    {
-        if (!$user->getIsPrimary()) {
-            $primaryEmail = $this->userApi->returnPrimaryEmail($user->getDeputyUid());
-
-            if (is_null($primaryEmail)) {
-                $this->addFlash(
-                    'nonPrimaryRedirectUnknownEmail',
-                    [
-                        'sentenceOne' => 'This account has been closed.',
-                        'sentenceTwo' => 'You can now access all of your reports in the same place from your primary account.',
-                        'sentenceThree' => 'If you need assistance, contact your case manager on 0300 456 0300.',
-                    ]
-                );
-            } else {
-                $this->addFlash(
-                    'nonPrimaryRedirect',
-                    [
-                        'sentenceOne' => 'This account has been closed.',
-                        'sentenceTwo' => 'You can now access all of your reports in the same place from your account under',
-                        'primaryEmail' => $primaryEmail,
-                    ]
-                );
-            }
-
-            return $this->redirectToRoute('app_logout', ['notPrimaryAccount' => true]);
-        }
-
-        return null;
-    }
-
     /**
      * List of reports.
      */
@@ -188,12 +157,6 @@ class ReportController extends AbstractController
             // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
             // due to the way
             $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
-        }
-
-        // redirect back to log out page if signing in with non-primary account with primary email
-        $redirect = $this->redirectNonPrimaryAccount($user);
-        if (!is_null($redirect)) {
-            return $redirect;
         }
 
         // redirect if user has missing details or is on wrong page
@@ -227,15 +190,15 @@ class ReportController extends AbstractController
                 ],
                 $resultsArray
             );
-        } else {
-            return array_merge(
-                [
-                    'ndrEnabled' => false,
-                    'client' => $client,
-                ],
-                $resultsArray
-            );
         }
+
+        return array_merge(
+            [
+                'ndrEnabled' => false,
+                'client' => $client,
+            ],
+            $resultsArray
+        );
     }
 
     /**
@@ -247,13 +210,6 @@ class ReportController extends AbstractController
     public function chooseAClientAction(Redirector $redirector): RedirectResponse|array
     {
         $user = $this->userApi->getUserWithData(['user-clients', 'client']);
-
-        // ACTION: Move logic to service class
-        // redirect back to log out page if signing in with non-primary account with primary email
-        $redirect = $this->redirectNonPrimaryAccount($user);
-        if (!is_null($redirect)) {
-            return $redirect;
-        }
 
         // redirect if user has missing details or is on wrong page
         $route = $redirector->getCorrectRouteIfDifferent($user, 'choose_a_client');
@@ -322,7 +278,7 @@ class ReportController extends AbstractController
     #[Template('@App/Report/Report/create.html.twig')]
     public function createAction(Request $request, string $clientId): RedirectResponse|array
     {
-        $client = $this->restClient->get("client/$clientId", 'Client', ['client', 'client-id', 'client-reports', 'report-id']);
+        $client = $this->restClient->get('client/' . $clientId, 'Client', ['client', 'client-id', 'client-reports', 'report-id']);
 
         $existingReports = $this->reportApi->getReportsIndexedById($client);
 
