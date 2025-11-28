@@ -212,11 +212,8 @@ class DecisionController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/report/{reportId}/decisions/edit/{decisionId}", name="decisions_edit")
-     *
-     * @Template("@App/Report/Decision/edit.html.twig")
-     */
+    #[Route(path: '/report/{reportId}/decisions/edit/{decisionId}', name: 'decisions_edit')]
+    #[Template('@App/Report/Decision/edit.html.twig')]
     public function editAction(Request $request, int $reportId, int $decisionId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
