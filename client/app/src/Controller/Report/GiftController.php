@@ -1,13 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
-use App\Entity as EntityDir;
-use App\Form as FormDir;
+use App\Entity\Report\BankAccount;
+use App\Entity\Report\Gift;
+use App\Entity\Report\Report;
+use App\Entity\Report\Status;
+use App\Form\ConfirmDeleteType;
+use App\Form\Report\GiftType;
+use App\Form\YesNoType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,30 +22,25 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class GiftController extends AbstractController
 {
-    private static $jmsGroups = [
+    private static array $jmsGroups = [
         'gifts',
         'gifts-state',
         'account',
     ];
 
     public function __construct(
-        private RestClient $restClient,
-        private ReportApi $reportApi,
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
     ) {
     }
 
-    /**
-     * @Route("/report/{reportId}/gifts", name="gifts")
-     *
-     * @Template("@App/Report/Gift/start.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function startAction($reportId)
+    #[Route(path: '/report/{reportId}/gifts', name: 'gifts')]
+    #[Template('@App/Report/Gift/start.html.twig')]
+    public function startAction(int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getGiftsState()['state']) {
+        if (Status::STATE_NOT_STARTED != $report->getStatus()->getGiftsState()['state']) {
             return $this->redirectToRoute('gifts_summary', ['reportId' => $reportId]);
         }
 
@@ -47,31 +49,27 @@ class GiftController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/gifts/exist", name="gifts_exist")
-     *
-     * @Template("@App/Report/Gift/exist.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function existAction(Request $request, $reportId)
+    #[Route(path: '/report/{reportId}/gifts/exist', name: 'gifts_exist')]
+    #[Template('@App/Report/Gift/exist.html.twig')]
+    public function existAction(Request $request, int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $form = $this->createForm(
-            FormDir\YesNoType::class,
+            YesNoType::class,
             $report,
             ['field' => 'giftsExist', 'translation_domain' => 'report-gifts']
         );
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /* @var Report $data */
             $data = $form->getData();
-            /* @var $data EntityDir\Report\Report */
+
             switch ($data->getGiftsExist()) {
                 case 'yes':
                     return $this->redirectToRoute('gifts_add', ['reportId' => $reportId, 'from' => 'exist']);
                 case 'no':
-                    $this->restClient->put('report/'.$reportId, $data, ['gifts-exist']);
+                    $this->restClient->put('report/' . $reportId, $data, ['gifts-exist']);
 
                     return $this->redirectToRoute('gifts_summary', ['reportId' => $reportId]);
             }
@@ -89,20 +87,15 @@ class GiftController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/gifts/add", name="gifts_add")
-     *
-     * @Template("@App/Report/Gift/add.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function addAction(Request $request, $reportId)
+    #[Route(path: '/report/{reportId}/gifts/add', name: 'gifts_add')]
+    #[Template('@App/Report/Gift/add.html.twig')]
+    public function addAction(Request $request, int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $gift = new EntityDir\Report\Gift();
+        $gift = new Gift();
 
         $form = $this->createForm(
-            FormDir\Report\GiftType::class,
+            GiftType::class,
             $gift,
             [
                 'user' => $this->getUser(),
@@ -115,7 +108,7 @@ class GiftController extends AbstractController
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->restClient->post('report/'.$report->getId().'/gift', $data, ['gift', 'account']);
+            $this->restClient->post('report/' . $report->getId() . '/gift', $data, ['gift', 'account']);
 
             if ('saveAndAddAnother' === $form->getClickedButton()->getName()) {
                 return $this->redirect($this->generateUrl('gifts_add', ['reportId' => $reportId, 'from' => $request->get('from')]));
@@ -125,7 +118,7 @@ class GiftController extends AbstractController
         }
 
         try {
-            $backLinkRoute = 'gifts_'.$request->get('from');
+            $backLinkRoute = 'gifts_' . $request->get('from');
             $backLink = $this->generateUrl($backLinkRoute, ['reportId' => $reportId]);
 
             return [
@@ -133,7 +126,7 @@ class GiftController extends AbstractController
                 'form' => $form->createView(),
                 'report' => $report,
             ];
-        } catch (RouteNotFoundException $e) {
+        } catch (RouteNotFoundException) {
             return [
                 'backLink' => null,
                 'form' => $form->createView(),
@@ -142,18 +135,13 @@ class GiftController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/report/{reportId}/gifts/edit/{giftId}", name="gifts_edit")
-     *
-     * @Template("@App/Report/Gift/edit.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function editAction(Request $request, $reportId, $giftId)
+    #[Route(path: '/report/{reportId}/gifts/edit/{giftId}', name: 'gifts_edit')]
+    #[Template('@App/Report/Gift/edit.html.twig')]
+    public function editAction(Request $request, int $reportId, string $giftId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $gift = $this->restClient->get(
-            'report/'.$report->getId().'/gift/'.$giftId,
+            'report/' . $report->getId() . '/gift/' . $giftId,
             'Report\Gift',
             [
                 'gifts',
@@ -161,12 +149,12 @@ class GiftController extends AbstractController
             ]
         );
 
-        if ($gift->getBankAccount() instanceof EntityDir\Report\BankAccount) {
+        if ($gift->getBankAccount() instanceof BankAccount) {
             $gift->setBankAccountId($gift->getBankAccount()->getId());
         }
 
         $form = $this->createForm(
-            FormDir\Report\GiftType::class,
+            GiftType::class,
             $gift,
             [
                 'user' => $this->getUser(),
@@ -180,7 +168,7 @@ class GiftController extends AbstractController
             $request->getSession()->getFlashBag()->add('notice', 'Gift edited');
 
             $this->restClient->put(
-                'report/'.$report->getId().'/gift/'.$gift->getId(),
+                'report/' . $report->getId() . '/gift/' . $gift->getId(),
                 $data,
                 ['gift', 'account']
             );
@@ -195,17 +183,12 @@ class GiftController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/gifts/summary", name="gifts_summary")
-     *
-     * @Template("@App/Report/Gift/summary.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function summaryAction($reportId)
+    #[Route(path: '/report/{reportId}/gifts/summary', name: 'gifts_summary')]
+    #[Template('@App/Report/Gift/summary.html.twig')]
+    public function summaryAction(int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getGiftsState()['state']) {
+        if (Status::STATE_NOT_STARTED == $report->getStatus()->getGiftsState()['state']) {
             return $this->redirect($this->generateUrl('gifts', ['reportId' => $reportId]));
         }
 
@@ -214,22 +197,17 @@ class GiftController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/gifts/{giftId}/delete", name="gifts_delete")
-     *
-     * @Template("@App/Common/confirmDelete.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function deleteAction(Request $request, $reportId, $giftId)
+    #[Route(path: '/report/{reportId}/gifts/{giftId}/delete', name: 'gifts_delete')]
+    #[Template('@App/Common/confirmDelete.html.twig')]
+    public function deleteAction(Request $request, int $reportId, string $giftId): RedirectResponse|array
     {
-        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form = $this->createForm(ConfirmDeleteType::class);
         $form->handleRequest($request);
 
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->delete('report/'.$report->getId().'/gift/'.$giftId);
+            $this->restClient->delete('report/' . $report->getId() . '/gift/' . $giftId);
 
             $request->getSession()->getFlashBag()->add(
                 'notice',
@@ -239,7 +217,7 @@ class GiftController extends AbstractController
             return $this->redirect($this->generateUrl('gifts', ['reportId' => $reportId]));
         }
 
-        $gift = $this->restClient->get('report/'.$reportId.'/gift/'.$giftId, 'Report\\Gift');
+        $gift = $this->restClient->get('report/' . $reportId . '/gift/' . $giftId, 'Report\\Gift');
 
         return [
             'translationDomain' => 'report-gifts',
@@ -253,10 +231,7 @@ class GiftController extends AbstractController
         ];
     }
 
-    /**
-     * @return string
-     */
-    protected function getSectionId()
+    protected function getSectionId(): string
     {
         return 'gifts';
     }

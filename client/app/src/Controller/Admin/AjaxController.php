@@ -1,39 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
 use App\Service\Client\Internal\LayDeputyshipApi;
 use App\Service\Client\Internal\PreRegistrationApi;
-use App\Service\Client\RestClient;
 use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Throwable;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-/**
- * @Route("/admin/ajax")
- */
+#[Route(path: '/admin/ajax')]
 class AjaxController extends AbstractController
 {
     public function __construct(
-        private RestClient $restClient,
-        private PreRegistrationApi $preRegistrationApi,
-        private LayDeputyshipApi $layDeputyshipApi,
-        private LoggerInterface $verboseLogger
+        private readonly PreRegistrationApi $preRegistrationApi,
+        private readonly LayDeputyshipApi $layDeputyshipApi,
+        private readonly LoggerInterface $verboseLogger
     ) {
     }
 
-    /**
-     * @Route("/pre-registration-delete", name="pre_registration_delete_ajax")
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
-     * @return JsonResponse
-     */
-    public function deletePreRegistrationAjaxAction()
+    #[Route(path: '/pre-registration-delete', name: 'pre_registration_delete_ajax')]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    public function deletePreRegistrationAjaxAction(): JsonResponse
     {
         try {
             $before = $this->preRegistrationApi->count();
@@ -41,20 +35,16 @@ class AjaxController extends AbstractController
             $after = $this->preRegistrationApi->count();
 
             return new JsonResponse(['before' => $before, 'after' => $after]);
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             return new JsonResponse($e->getMessage());
         }
     }
 
-    /**
-     * @Route("/pre-registration-add", name="pre_registration_add_ajax")
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     *
-     * @return JsonResponse
-     */
-    public function uploadUsersAjaxAction(Request $request, ClientInterface $redisClient)
+    #[Route(path: '/pre-registration-add', name: 'pre_registration_add_ajax')]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    public function uploadUsersAjaxAction(Request $request, ClientInterface $redisClient): JsonResponse
     {
-        $chunkId = 'chunk'.$request->get('chunk');
+        $chunkId = 'chunk' . $request->get('chunk');
         $this->verboseLogger->notice(sprintf('AJAX: Processing chunk with chunkId: %s', $chunkId));
 
         try {
@@ -69,7 +59,7 @@ class AjaxController extends AbstractController
             }
 
             return new JsonResponse($ret);
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             return new JsonResponse($e->getMessage());
         }
     }

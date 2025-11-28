@@ -10,15 +10,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait ReportProfDeputyCostsEstimateTrait
 {
     /**
-     * @var string
-     *
      * @Assert\NotBlank( message="profDeputyEstimateCost.profDeputyCostsEstimateHowCharged.notBlank", groups={"prof-deputy-costs-estimate-how-charged"} )
      *
      * @JMS\Type("string")
      *
      * @JMS\Groups({"deputyCostsEstimateHowCharged"})
      */
-    private $profDeputyCostsEstimateHowCharged;
+    private ?string $profDeputyCostsEstimateHowCharged = null;
 
     /**
      * @var ProfDeputyEstimateCost[]
@@ -92,10 +90,7 @@ trait ReportProfDeputyCostsEstimateTrait
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getProfDeputyCostsEstimateHowCharged()
+    public function getProfDeputyCostsEstimateHowCharged(): ?string
     {
         return $this->profDeputyCostsEstimateHowCharged;
     }
