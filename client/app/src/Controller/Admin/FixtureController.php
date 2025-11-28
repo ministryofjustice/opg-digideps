@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
@@ -11,68 +13,44 @@ use App\Form\Admin\Fixture\PreRegistrationFixtureType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
-use App\Service\DeputyProvider;
 use App\TestHelpers\ClientHelpers;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\ExpressionLanguage\Expression;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
-use Twig\Environment;
 
-/**
- * @Route("/admin/fixtures")
- */
+#[Route(path: '/admin/fixtures')]
 class FixtureController extends AbstractController
 {
-    private Environment $twig;
-    private SerializerInterface $serializer;
-    private RestClient $restClient;
-    private ReportApi $reportApi;
-    private UserApi $userApi;
-    private DeputyProvider $deputyProvider;
-    private bool $fixturesEnabled;
-
     public function __construct(
-        Environment $twig,
-        SerializerInterface $serializer,
-        RestClient $restClient,
-        ReportApi $reportApi,
-        UserApi $userApi,
-        DeputyProvider $deputyProvider,
-        bool $fixturesEnabled,
+        private readonly SerializerInterface $serializer,
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
+        private readonly UserApi $userApi,
+        private readonly bool $fixturesEnabled
     ) {
-        $this->twig = $twig;
-        $this->serializer = $serializer;
-        $this->restClient = $restClient;
-        $this->reportApi = $reportApi;
-        $this->userApi = $userApi;
-        $this->deputyProvider = $deputyProvider;
-        $this->fixturesEnabled = $fixturesEnabled;
     }
 
-    /**
-     * @Route("/", name="admin_fixtures")
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
-     * @Template("@App/Admin/Fixtures/index.html.twig")
-     */
-    public function fixtures()
+    #[Route(path: '/', name: 'admin_fixtures')]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    #[Template('@App/Admin/Fixtures/index.html.twig')]
+    public function fixtures(): array
     {
         return [];
     }
 
     /**
-     * @Route("/court-orders/lay", name="admin_lay_fixtures_court_orders")
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
-     * @Template("@App/Admin/Fixtures/layCourtOrders.html.twig")
+     * @throws \Exception
      */
-    public function layCourtOrdersAction(Request $request)
+    #[Route(path: '/court-orders/lay', name: 'admin_lay_fixtures_court_orders')]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    #[Template('@App/Admin/Fixtures/layCourtOrders.html.twig')]
+    public function layCourtOrdersAction(Request $request): array
     {
         if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
@@ -147,13 +125,12 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @Route("/court-orders/org", name="admin_org_fixtures_court_orders")
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
-     * @Template("@App/Admin/Fixtures/orgCourtOrders.html.twig")
+     * @throws \Exception
      */
-    public function orgCourtOrdersAction(Request $request)
+    #[Route(path: '/court-orders/org', name: 'admin_org_fixtures_court_orders')]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    #[Template('@App/Admin/Fixtures/orgCourtOrders.html.twig')]
+    public function orgCourtOrdersAction(Request $request): array
     {
         if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
@@ -198,13 +175,26 @@ class FixtureController extends AbstractController
         return ['form' => $form->createView()];
     }
 
-    private function retrieveFormData($form, $request): array
+    /**
+     * @throws \Exception
+     */
+    private function retrieveFormData(FormInterface $form, Request $request): array
     {
         $submitted = $form->getData();
-        $courtDate = $request->get('court-date') ? new \DateTime($request->get('court-date')) : new \DateTime();
-        $deputyEmail = $request->query->get('deputy-email', sprintf('original-%s-deputy-%s@fixture.com', is_null($submitted['deputyType']) ? null : strtolower($submitted['deputyType']), mt_rand(1000, 9999)));
+
+        /** @var ?string $courtDate */
+        $courtDate = $request->get('court-date');
+        $courtDate = is_null($courtDate) ? new \DateTime() : new \DateTime($courtDate);
+
+        /** @var ?string $deputyType */
+        $deputyType = $submitted['deputyType'];
+        if (!is_null($deputyType)) {
+            $deputyType = strtolower($deputyType);
+        };
+
+        $deputyEmail = $request->query->get('deputy-email', sprintf('original-%s-deputy-%s@fixture.com', $deputyType, mt_rand(1000, 9999)));
         $caseNumber = $request->get('case-number', ClientHelpers::createValidCaseNumber());
-        $deputyUid = intval('7'.str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT));
+        $deputyUid = intval('7' . str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT));
 
         return [
             'submitted' => $submitted,
@@ -219,7 +209,7 @@ class FixtureController extends AbstractController
      * @TODO replace with https://symfony.com/doc/4.4/components/serializer.html#skipping-null-values
      * when using Symfony 4+
      */
-    private function removeNullValues(array $deputiesDataArray)
+    private function removeNullValues(array $deputiesDataArray): array
     {
         foreach ($deputiesDataArray as $index => $properties) {
             foreach ($properties as $key => $property) {
@@ -234,12 +224,9 @@ class FixtureController extends AbstractController
         return $deputiesDataArray;
     }
 
-    /**
-     * @Route("/complete-sections/{reportType}/{reportId}", requirements={"id":"\d+"}, methods={"GET"}, name="fixtures_complete_report_sections")
-     *
-     * @Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     */
-    public function completeReportSectionsAction(Request $request, string $reportType, $reportId): JsonResponse
+    #[Route(path: '/complete-sections/{reportType}/{reportId}', name: 'fixtures_complete_report_sections', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    public function completeReportSectionsAction(Request $request, string $reportType, int $reportId): JsonResponse
     {
         if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
@@ -254,12 +241,9 @@ class FixtureController extends AbstractController
         return new JsonResponse(['Report updated']);
     }
 
-    /**
-     * @Route("/createAdmin", methods={"GET"}, name="fixtures_create_admin")
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     */
-    public function createAdmin(Request $request)
+    #[Route(path: '/createAdmin', name: 'fixtures_create_admin', methods: ['GET'])]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    public function createAdmin(Request $request): Response
     {
         if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
@@ -278,19 +262,16 @@ class FixtureController extends AbstractController
         return new Response();
     }
 
-    /**
-     * @Route("/getUserIDByEmail/{email}", methods={"GET"}, name="fixtures_get_user_id_by_email")
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')")
-     */
-    public function getUserIDByEmail(string $email)
+    #[Route(path: '/getUserIDByEmail/{email}', name: 'fixtures_get_user_id_by_email', methods: ['GET'])]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    public function getUserIDByEmail(string $email): Response
     {
         if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
         /** @var array $response */
-        $response = json_decode($this
+        $response = json_decode((string) $this
             ->restClient
             ->get("v2/fixture/getUserIDByEmail/$email", 'response')->getBody(), true);
 
@@ -301,12 +282,9 @@ class FixtureController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/createUser", methods={"GET"}, name="fixtures_create_user")
-     *
-     * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
-     */
-    public function createUser(Request $request)
+    #[Route(path: '/createUser', name: 'fixtures_create_user', methods: ['GET'])]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN', 'ROLE_AD')"))]
+    public function createUser(Request $request): Response
     {
         if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
@@ -327,12 +305,9 @@ class FixtureController extends AbstractController
         return new Response();
     }
 
-    /**
-     * @Route("/deleteUser", methods={"GET"}, name="fixtures_delete_user")
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     */
-    public function deleteUser(Request $request)
+    #[Route(path: '/deleteUser', name: 'fixtures_delete_user', methods: ['GET'])]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    public function deleteUser(Request $request): Response
     {
         if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
@@ -348,13 +323,11 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @Route("/createClientAttachDeputy", methods={"GET"}, name="fixtures_create_client_attach_deputy")
-     *
-     * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
-     *
      * @throws \Throwable
      */
-    public function createClientAndAttachToDeputy(Request $request)
+    #[Route(path: '/createClientAttachDeputy', name: 'fixtures_create_client_attach_deputy', methods: ['GET'])]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN', 'ROLE_AD')"))]
+    public function createClientAndAttachToDeputy(Request $request): Response
     {
         if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
@@ -383,13 +356,11 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @Route("/createClientAttachOrgs", methods={"GET"}, name="fixtures_create_client_attach_org")
-     *
-     * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
-     *
      * @throws \Throwable
      */
-    public function createClientAndAttachToOrg(Request $request)
+    #[Route(path: '/createClientAttachOrgs', name: 'fixtures_create_client_attach_org', methods: ['GET'])]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN', 'ROLE_AD')"))]
+    public function createClientAndAttachToOrg(Request $request): Response
     {
         if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
@@ -418,12 +389,9 @@ class FixtureController extends AbstractController
         return new Response();
     }
 
-    /**
-     * @Route("/user-registration-token", methods={"GET"}, name="fixtures_get_user_registration_token")
-     *
-     * @Security("is_granted('ROLE_ADMIN', 'ROLE_AD')")
-     */
-    public function getUserRegistrationToken(Request $request)
+    #[Route(path: '/user-registration-token', name: 'fixtures_get_user_registration_token', methods: ['GET'])]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN', 'ROLE_AD')"))]
+    public function getUserRegistrationToken(Request $request): Response
     {
         if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
@@ -435,16 +403,10 @@ class FixtureController extends AbstractController
         return new Response($user->getRegistrationToken());
     }
 
-    /**
-     * @Route("/create-pre-registration", methods={"GET", "POST"}, name="pre_registration_fixture")
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
-     * @Template("@App/Admin/Fixtures/preRegistration.html.twig")
-     *
-     * @return array
-     */
-    public function createPreRegistration(Request $request)
+    #[Route(path: '/create-pre-registration', name: 'pre_registration_fixture', methods: ['GET', 'POST'])]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    #[Template('@App/Admin/Fixtures/preRegistration.html.twig')]
+    public function createPreRegistration(Request $request): array
     {
         if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
@@ -459,6 +421,7 @@ class FixtureController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var array $submitted */
             $submitted = $form->getData();
 
             $response = $this->restClient->post('v2/fixture/create-pre-registration', json_encode([
@@ -475,15 +438,11 @@ class FixtureController extends AbstractController
     }
 
     /**
-     * @Route("/unsubmit-report/{reportId}", methods={"GET", "POST"}, name="unsubmit_report_fixture")
-     *
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     *
-     * @return void
-     *
      * @throws \Exception
      */
-    public function unsubmitReport(int $reportId)
+    #[Route(path: '/unsubmit-report/{reportId}', name: 'unsubmit_report_fixture', methods: ['GET', 'POST'])]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    public function unsubmitReport(int $reportId): void
     {
         if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
@@ -501,14 +460,9 @@ class FixtureController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/move-users-clients-to-users-org/{userEmail}", methods={"GET"}, name="move_users_clients_to_org")
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     *
-     * @return Response
-     */
-    public function moveUsersClientsToUsersOrg(string $userEmail)
+    #[Route(path: '/move-users-clients-to-users-org/{userEmail}', name: 'move_users_clients_to_org', methods: ['GET'])]
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function moveUsersClientsToUsersOrg(string $userEmail): Response
     {
         if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
@@ -530,14 +484,9 @@ class FixtureController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/activateOrg/{orgName}", methods={"GET"}, name="activate_org")
-     *
-     * @Security("is_granted('ROLE_ADMIN')")
-     *
-     * @return Response
-     */
-    public function activateOrg(string $orgName)
+    #[Route(path: '/activateOrg/{orgName}', name: 'activate_org', methods: ['GET'])]
+    #[IsGranted(attribute: 'ROLE_ADMIN')]
+    public function activateOrg(string $orgName): Response
     {
         if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();

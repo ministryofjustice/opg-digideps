@@ -7,7 +7,7 @@ namespace App\Controller;
 use App\Entity\Client;
 use App\Entity\User;
 use App\Service\Client\Internal\ClientApi;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -23,11 +23,9 @@ class DeputyshipController extends AbstractController
     /**
      * Show clients associated with the deputyship of the logged in user,
      * retrieved by deputy UID.
-     *
-     * @Route("/deputyship-details/clients", name="deputyship_details_clients")
-     *
-     * @Template("@App/Deputyship/client-list.html.twig")
      */
+    #[Route(path: '/deputyship-details/clients', name: 'deputyship_details_clients')]
+    #[Template('@App/Deputyship/client-list.html.twig')]
     public function clientListAction(): RedirectResponse|array
     {
         /** @var ?User $user */
@@ -57,9 +55,7 @@ class DeputyshipController extends AbstractController
         }
 
         if ($numClients > 1) {
-            usort($clients, function ($client1, $client2) {
-                return strnatcmp($client1->getFirstName(), $client2->getFirstName());
-            });
+            usort($clients, fn($client1, $client2): int => strnatcmp((string) $client1->getFirstName(), (string) $client2->getFirstName()));
         }
 
         return ['clients' => $clients];
