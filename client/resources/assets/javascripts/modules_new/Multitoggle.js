@@ -1,6 +1,6 @@
 // only works for yes/no radio buttons;
 // see client/app/templates/Report/Lifestyle/step.html.twig for an example
-module.exports = {
+export default {
   init: function (document) {
     function showElement (elt) {
       elt.setAttribute('aria-expanded', 'true')

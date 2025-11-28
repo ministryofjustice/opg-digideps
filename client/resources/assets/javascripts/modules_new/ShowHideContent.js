@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   init: function () {
     function toggleHidden (elem, toggleElement) {
       const expanded = elem.checked ? 'true' : 'false'
