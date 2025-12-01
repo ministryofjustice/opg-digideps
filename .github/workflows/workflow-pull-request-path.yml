@@ -33,6 +33,7 @@ jobs:
       parsed_branch: ${{ steps.variables.outputs.branch_formatted }}
       build_identifier: ${{ steps.variables.outputs.build_identifier }}
       version_tag: ${{ steps.semver_tag.outputs.tag }}
+      identity: ${{ steps.account.outputs.identity }}
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
@@ -49,6 +50,16 @@ jobs:
           echo "branch_formatted=${BRANCH}" >> "$GITHUB_OUTPUT"
           echo "build_identifier=${BRANCH}${PR_NUMBER}" >> "$GITHUB_OUTPUT"
           echo "${BRANCH}${PR_NUMBER}"
+
+      - name: extract account variables
+        id: account
+        env:
+          IDENTITY: ${{ secrets.IDENTITY_ACCOUNT }}
+          DEVELOPMENT: ${{ secrets.DEVELOPMENT_ACCOUNT }}
+        run: |
+          echo ${IDENTITY} | base64
+          echo ${{ secrets.IDENTITY_ACCOUNT }} | base64
+          echo "identity=${IDENTITY}" >> "$GITHUB_OUTPUT"
 
       - name: Generate build output using Markdown
         env:
@@ -91,6 +102,20 @@ jobs:
           configuration-path: .github/labeller.yml
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           sync-labels: true
+
+  testing:
+    runs-on: ubuntu-latest
+    name: check
+    needs:
+      - workflow_variables
+    steps:
+      - name: extract variables for workflow
+        id: variables
+        env:
+          IDENTITY: ${{ needs.workflow_variables.outputs.identity }}
+        run: |
+          echo "${IDENTITY}"
+          echo "${IDENTITY}" | base64
 
   trivy_secret_scanning:
     name: trivy secret scanning
@@ -231,6 +256,7 @@ jobs:
       - terraform_lint
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+      identity_account_id: ${{ secrets.IDENTITY_ACCOUNT }}
     with:
       workspace: development
       terraform_path: account
@@ -246,6 +272,7 @@ jobs:
       - workflow_variables
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+      identity_account_id: ${{ secrets.IDENTITY_ACCOUNT }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       terraform_path: environment
