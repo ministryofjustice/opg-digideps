@@ -150,10 +150,29 @@ trait IShouldBeOnFrontendTrait
 
     /**
      * @Then I/they should be on the Lay homepage
+     *
+     * @throws BehatException
      */
-    public function iAmOnLayMainPage(): bool
+    public function iAmOnLayMainPage(): void
     {
-        return $this->iAmOnPage('/client\/\d{1,12}$/');
+        $currentUrl = $this->getCurrentUrl();
+
+        // URL regexes matching the lay main page: a single court order, list of court orders, or waiting page
+        $urlRegexes = ['/courtorder\/\d{1,12}$/', '/courtorder\/choose-a-court-order$/', '/courtorder\/waiting$/'];
+
+        foreach ($urlRegexes as $urlRegex) {
+            $onExpectedPage = preg_match($urlRegex, $currentUrl);
+            if ($onExpectedPage) {
+                break;
+            }
+        }
+
+        if (!$onExpectedPage) {
+            throw new BehatException(
+                'Not on one of expected lay home pages. Current URL is: %s but expected URL regex is one of: ' .
+                implode(', ', $urlRegexes)
+            );
+        }
     }
 
     /**
