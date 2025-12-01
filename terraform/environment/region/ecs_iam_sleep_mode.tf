@@ -41,6 +41,15 @@ data "aws_iam_policy_document" "sleep_mode" {
       data.aws_lambda_function.monitor_notify_lambda.arn
     ]
   }
+
+  statement {
+    sid    = "DescribeVPCs"
+    effect = "Allow"
+    actions = [
+      "ec2:DescribeVpcs"
+    ]
+    resources = ["*"]
+  }
 }
 
 resource "aws_iam_role_policy" "sleep_mode" {
