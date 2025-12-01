@@ -696,11 +696,6 @@ parameters:
 			path: src/Controller/CoDeputyController.php
 
 		-
-			message: "#^Cannot call method getId\\(\\) on App\\\\Entity\\\\Client\\|null\\.$#"
-			count: 2
-			path: src/Controller/CoDeputyController.php
-
-		-
 			message: "#^Cannot call method getId\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Controller/CoDeputyController.php
