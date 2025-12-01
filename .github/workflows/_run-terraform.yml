@@ -31,7 +31,11 @@ on:
         required: true
         type: string
         description: "Account to get credentials for"
-
+      identity_account_id:
+        required: false
+        type: string
+        default: ""
+        description: "Identity account ID"
 jobs:
   terraform_workflow:
     runs-on: ubuntu-latest
@@ -85,7 +89,7 @@ jobs:
       - name: configure OIDC AWS credentials for terraform
         uses: aws-actions/configure-aws-credentials@00943011d9042930efac3dcd3a170e4273319bc8 # v5.1.0
         with:
-          role-to-assume: "arn:aws:iam::631181914621:role/oidc-digideps-${{ inputs.account_name }}"
+          role-to-assume: "arn:aws:iam::${{ inputs.identity_account_id }}:role/oidc-digideps-${{ inputs.account_name }}"
           role-session-name: github-actions-terraform
           role-duration-seconds: 7400
           aws-region: eu-west-1
