@@ -98,8 +98,7 @@ const imagesToCopy = [
     to: "public/images/"
   },
   { from: "node_modules/govuk_frontend_toolkit/images/", to: "public/images/" },
-  { from: "assets/images/generic-images/favicon.ico", to: "public/favicon.ico" },
-  { from: "assets/images/favicon.svg", to: "public/favicon.svg"}
+  { from: "assets/images/generic-images/", to: "public/" }
 ]
 
 imagesToCopy.forEach(copySpec => {
