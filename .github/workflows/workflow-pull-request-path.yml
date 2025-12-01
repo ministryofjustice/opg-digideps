@@ -33,6 +33,7 @@ jobs:
       parsed_branch: ${{ steps.variables.outputs.branch_formatted }}
       build_identifier: ${{ steps.variables.outputs.build_identifier }}
       version_tag: ${{ steps.semver_tag.outputs.tag }}
+      identity: ${{ steps.account.outputs.identity }}
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
@@ -49,6 +50,16 @@ jobs:
           echo "branch_formatted=${BRANCH}" >> "$GITHUB_OUTPUT"
           echo "build_identifier=${BRANCH}${PR_NUMBER}" >> "$GITHUB_OUTPUT"
           echo "${BRANCH}${PR_NUMBER}"
+
+      - name: extract account variables
+        id: account
+        env:
+          IDENTITY: ${{ secrets.IDENTITY_ACCOUNT }}
+          DEVELOPMENT: ${{ secrets.DEVELOPMENT_ACCOUNT }}
+        run: |
+          echo "ID IS: ${IDENTITY}"
+          echo "identity=${IDENTITY}" >> "$GITHUB_OUTPUT"
+          echo "development=${DEVELOPMENT}" >> "$GITHUB_OUTPUT"
 
       - name: Generate build output using Markdown
         env:
@@ -91,6 +102,20 @@ jobs:
           configuration-path: .github/labeller.yml
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           sync-labels: true
+
+  foo:
+    runs-on: ubuntu-latest
+    name: check
+    needs:
+      - workflow_variables
+    steps:
+      - name: extract variables for workflow
+        id: variables
+        env:
+          IDENTITY: ${{ needs.workflow_variables.outputs.identity }}
+        run: |
+          echo "${IDENTITY}"
+          echo "HELLO"
 
   trivy_secret_scanning:
     name: trivy secret scanning
@@ -236,6 +261,7 @@ jobs:
       terraform_path: account
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
       account_name: development
+      identity_account_id: ${{ needs.workflow_variables.outputs.identity }}
 
   terraform_apply_environment:
     name: environment apply terraform
@@ -252,6 +278,7 @@ jobs:
       apply: true
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
       account_name: development
+      identity_account_id: ${{ needs.workflow_variables.outputs.identity }}
       pull_request_path: true
 
   ecr_scan_results:
