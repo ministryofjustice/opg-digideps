@@ -2,11 +2,11 @@
 
 namespace App\Controller;
 
-use App\Form as FormDir;
+use App\Form;
 use App\Service\Client\RestClient;
 use App\Service\Redirector;
 use App\Service\StringUtils;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -25,17 +25,15 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class IndexController extends AbstractController
 {
     public function __construct(
-        private RestClient $restClient,
-        private TranslatorInterface $translator,
-        private RouterInterface $router,
-        private string $environment,
-        private ParameterBagInterface $params,
+        private readonly RestClient $restClient,
+        private readonly TranslatorInterface $translator,
+        private readonly RouterInterface $router,
+        private readonly string $environment,
+        private readonly ParameterBagInterface $params,
     ) {
     }
 
-    /**
-     * @Route("/", name="homepage")
-     */
+    #[Route(path: '/', name: 'homepage')]
     public function indexAction(Redirector $redirector): RedirectResponse|Response|null
     {
         if ($url = $redirector->getHomepageRedirect()) {
@@ -50,14 +48,12 @@ class IndexController extends AbstractController
 
     /**
      * Session logic for login is now in LoginFormAuthenticator as of Symfony 5.4.
-     *
-     * @Route("/login", name="login")
-     *
-     * @Template("@App/Index/login.html.twig")
      */
+    #[Route(path: '/login', name: 'login')]
+    #[Template('@App/Index/login.html.twig')]
     public function loginAction(Request $request, AuthenticationUtils $authenticationUtils): ?Response
     {
-        $form = $this->createForm(FormDir\LoginType::class);
+        $form = $this->createForm(Form\LoginType::class);
         $vars = [
             'isAdmin' => 'admin' === $this->environment,
         ];
@@ -90,7 +86,6 @@ class IndexController extends AbstractController
         }
 
         // different page version for timeout and manual logout
-        /** @var SessionInterface */
         $session = $request->getSession();
 
         if ('logoutPage' === $session->get('loggedOutFrom')) {
@@ -115,16 +110,12 @@ class IndexController extends AbstractController
         ] + $vars);
     }
 
-    /**
-     * @Route("/login_check", name="login_check")
-     */
+    #[Route(path: '/login_check', name: 'login_check')]
     public function loginCheckAction(): void
     {
     }
 
-    /**
-     * @Route("/error-503", name="error-503")
-     */
+    #[Route(path: '/error-503', name: 'error-503')]
     public function error503(Request $request): ?Response
     {
         $vars = [];
@@ -135,9 +126,8 @@ class IndexController extends AbstractController
 
     /**
      * keep session alive. Called from session timeout dialog.
-     *
-     * @Route("/session-keep-alive", methods={"GET"}, name="session-keep-alive")
      */
+    #[Route(path: '/session-keep-alive', methods: ['GET'], name: 'session-keep-alive')]
     public function sessionKeepAliveAction(Request $request): Response
     {
         /** @var SessionInterface */
@@ -147,9 +137,7 @@ class IndexController extends AbstractController
         return new Response('session refreshed successfully');
     }
 
-    /**
-     * @Route("/access-denied", name="access_denied")
-     */
+    #[Route(path: '/access-denied', name: 'access_denied')]
     public function accessDenied(): Response
     {
         return new Response(
@@ -158,9 +146,7 @@ class IndexController extends AbstractController
         );
     }
 
-    /**
-     * @Route("/terms", name="terms")
-     */
+    #[Route(path: '/terms', name: 'terms')]
     public function termsAction(Request $request): Response
     {
         return $this->render('@App/Index/terms.html.twig', [
@@ -168,9 +154,7 @@ class IndexController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/privacy", name="privacy")
-     */
+    #[Route(path: '/privacy', name: 'privacy')]
     public function privacyAction(Request $request): Response
     {
         return $this->render('@App/Index/privacy.html.twig', [
@@ -178,9 +162,7 @@ class IndexController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/accessibility", name="accessibility")
-     */
+    #[Route(path: '/accessibility', name: 'accessibility')]
     public function accessibilityAction(Request $request): Response
     {
         return $this->render('@App/Index/accessibility.html.twig', [
@@ -188,20 +170,16 @@ class IndexController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/logout", name="app_logout")
-     */
+    #[Route(path: '/logout', name: 'app_logout')]
     public function logoutAction(Request $request): void
     {
         // Handled as automatically as part of Symfony security component
     }
 
-    /**
-     * @Route("/cookies", name="cookies")
-     */
+    #[Route(path: '/cookies', name: 'cookies')]
     public function cookiesAction(Request $request): Response
     {
-        $form = $this->createForm(FormDir\CookiePermissionsType::class);
+        $form = $this->createForm(Form\CookiePermissionsType::class);
 
         if ($request->cookies->has('cookie_policy')) {
             $policy = json_decode($request->cookies->get('cookie_policy'));
@@ -220,10 +198,7 @@ class IndexController extends AbstractController
             setcookie(
                 'cookie_policy',
                 strval(json_encode($settings)),
-                time() + (60 * 60 * 24 * 365),
-                '',
-                '',
-                true
+                ['expires' => time() + (60 * 60 * 24 * 365), 'path' => '', 'domain' => '', 'secure' => true]
             );
         }
 
@@ -235,9 +210,8 @@ class IndexController extends AbstractController
     /**
      * There is an issue with a user's data which has to be manually corrected; for example, a missing deputy UID
      * or a client without the necessary address data.
-     *
-     * @Route("/invalid-data", name="invalid_data")
      */
+    #[Route(path: '/invalid-data', name: 'invalid_data')]
     public function invalidDataAction(): Response
     {
         $helplineNo = $this->translator->trans(id: 'helpline', domain: 'common');
@@ -250,7 +224,7 @@ class IndexController extends AbstractController
     /**
      * Get referer, only if matching an existing route.
      *
-     * @return string|null referer URL, null if not existing or inside the $excludedRoutes
+     * @return ?string referer URL, null if not existing or inside the $excludedRoutes
      */
     protected function getRefererUrlSafe(Request $request, array $excludedRoutes = []): ?string
     {
@@ -268,9 +242,10 @@ class IndexController extends AbstractController
 
         try {
             $routeParams = $this->router->match($refererUrlPath);
-        } catch (ResourceNotFoundException $e) {
+        } catch (ResourceNotFoundException) {
             return null;
         }
+
         $routeName = $routeParams['_route'];
         if (in_array($routeName, $excludedRoutes)) {
             return null;
