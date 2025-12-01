@@ -9,37 +9,30 @@ use App\Service\Availability\NotifyAvailability;
 use App\Service\Availability\RedisAvailability;
 use App\Service\Availability\SiriusApiAvailability;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/health-check")
- */
+#[Route(path: '/health-check')]
 class HealthController extends AbstractController
 {
     public function __construct(
-        private string $symfonyEnvironment,
-        private string $symfonyDebug,
-        private string $environment,
-        private LoggerInterface $logger,
-        private string $hostedEnv,
+        private readonly string $symfonyEnvironment,
+        private readonly string $symfonyDebug,
+        private readonly string $environment,
+        private readonly LoggerInterface $logger,
+        private readonly string $hostedEnv,
     ) {
     }
 
-    /**
-     * @Route("", methods={"GET"}, name="health_check")
-     *
-     * @Template("@App/Health/health-check.html.twig")
-     */
-    public function containerHealthAction()
+    #[Route(path: '', name: 'health_check', methods: ['GET'])]
+    #[Template('@App/Health/health-check.html.twig')]
+    public function containerHealthAction(): array
     {
         return ['status' => 'OK'];
     }
 
-    /**
-     * @Route("/service", methods={"GET"}, name="health_check_service")
-     */
+    #[Route(path: '/service', name: 'health_check_service', methods: ['GET'])]
     public function serviceHealthAction(
         ApiAvailability $apiAvailability,
         RedisAvailability $redisAvailability,
@@ -56,7 +49,7 @@ class HealthController extends AbstractController
             $services[] = $htmlAvailability;
         }
 
-        list($healthy, $services, $errors) = $this->servicesHealth($services);
+        [$healthy, $services, $errors] = $this->servicesHealth($services);
 
         $response = $this->render('@App/Health/availability.html.twig', [
             'services' => $services,
@@ -71,9 +64,7 @@ class HealthController extends AbstractController
         return $response;
     }
 
-    /**
-     * @Route("/dependencies", methods={"GET"}, name="health_check_dependency")
-     */
+    #[Route(path: '/dependencies', name: 'health_check_dependency', methods: ['GET'])]
     public function dependencyHealthAction(
         NotifyAvailability $notifyAvailability,
         SiriusApiAvailability $siriusAvailability,
@@ -86,7 +77,7 @@ class HealthController extends AbstractController
             $services[] = $siriusAvailability;
         }
 
-        list($healthy, $services, $errors) = $this->servicesHealth($services);
+        [$healthy, $services, $errors] = $this->servicesHealth($services);
 
         $response = $this->render('@App/Health/availability.html.twig', [
             'services' => $services,
@@ -101,9 +92,7 @@ class HealthController extends AbstractController
         return $response;
     }
 
-    /**
-     * @Route("/pingdom", methods={"GET"}, name="health_check_pingdom")
-     */
+    #[Route(path: '/pingdom', name: 'health_check_pingdom', methods: ['GET'])]
     public function healthCheckXmlAction(
         ApiAvailability $apiAvailability,
         NotifyAvailability $notifyAvailability,
@@ -114,7 +103,7 @@ class HealthController extends AbstractController
             $redisAvailability,
             $notifyAvailability,
         ];
-        list($healthy, $services, $errors, $time) = $this->servicesHealth($services);
+        [$healthy, $services, $errors, $time] = $this->servicesHealth($services);
 
         $response = $this->render('@App/Health/pingdom.xml.twig', [
             'status' => $healthy ? 'OK' : 'ERRORS: ',
@@ -129,7 +118,7 @@ class HealthController extends AbstractController
     /**
      * @return array [true if healthy, services array, string with errors, time in secs]
      */
-    private function servicesHealth($services)
+    private function servicesHealth(array $services): array
     {
         $start = microtime(true);
 
@@ -149,7 +138,7 @@ class HealthController extends AbstractController
                 $errors[] = $service->getErrors();
             }
             $serviceTimeTaken = (microtime(true) - $startServiceTime);
-            $logObject = $logObject.sprintf(
+            $logObject = $logObject . sprintf(
                 '["service": "%s", "time": "%s", error: "%s"],',
                 $service->getName(),
                 round($serviceTimeTaken, 3),
@@ -158,7 +147,7 @@ class HealthController extends AbstractController
         }
 
         if ($logResponses) {
-            $this->logger->warning(strval(rtrim($logObject, ',').']}'));
+            $this->logger->warning(rtrim($logObject, ',') . ']}');
         }
 
         return [$healthy, $services, $errors, microtime(true) - $start];

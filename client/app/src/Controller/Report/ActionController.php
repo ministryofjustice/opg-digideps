@@ -1,21 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
-use App\Entity as EntityDir;
-use App\Form as FormDir;
+use App\Entity\Report\Action;
+use App\Entity\Report\Status;
+use App\Form\Report\ActionType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ActionController extends AbstractController
 {
-    private static $jmsGroups = [
+    private static array $jmsGroups = [
         'action',
         'action-state',
     ];
@@ -27,15 +31,12 @@ class ActionController extends AbstractController
     ) {
     }
 
-    /**
-     * @Route("/report/{reportId}/actions", name="actions")
-     *
-     * @Template("@App/Report/Action/start.html.twig")
-     */
-    public function startAction(Request $request, $reportId)
+    #[Route(path: '/report/{reportId}/actions', name: 'actions')]
+    #[Template('@App/Report/Action/start.html.twig')]
+    public function startAction(int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getActionsState()['state']) {
+        if (Status::STATE_NOT_STARTED != $report->getStatus()->getActionsState()['state']) {
             return $this->redirectToRoute('actions_summary', ['reportId' => $reportId]);
         }
 
@@ -44,19 +45,16 @@ class ActionController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/actions/step/{step}", name="actions_step")
-     *
-     * @Template("@App/Report/Action/step.html.twig")
-     */
-    public function stepAction(Request $request, $reportId, $step, TranslatorInterface $translator)
+    #[Route(path: '/report/{reportId}/actions/step/{step}', name: 'actions_step')]
+    #[Template('@App/Report/Action/step.html.twig')]
+    public function stepAction(Request $request, int $reportId, $step, TranslatorInterface $translator): RedirectResponse|array
     {
         $totalSteps = 2;
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('actions_summary', ['reportId' => $reportId]);
         }
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $action = $report->getAction() ?: new EntityDir\Report\Action();
+        $action = $report->getAction() ?: new Action();
         $fromPage = $request->get('from');
 
         $stepRedirector = $this->stepRedirector
@@ -66,7 +64,7 @@ class ActionController extends AbstractController
             ->setRouteBaseParams(['reportId' => $reportId]);
 
         $form = $this->createForm(
-            FormDir\Report\ActionType::class,
+            ActionType::class,
             $action,
             [
                 'step' => $step,
@@ -78,11 +76,12 @@ class ActionController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
+            /* @var Action $data */
             $data = $form->getData();
-            /* @var $data EntityDir\Report\Action */
+
             $data->setReport($report);
 
-            $this->restClient->put('report/'.$reportId.'/action', $data);
+            $this->restClient->put('report/' . $reportId . '/action', $data);
 
             if ('summary' == $fromPage) {
                 $request->getSession()->getFlashBag()->add(
@@ -104,16 +103,13 @@ class ActionController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/actions/summary", name="actions_summary")
-     *
-     * @Template("@App/Report/Action/summary.html.twig")
-     */
-    public function summaryAction(Request $request, $reportId)
+    #[Route(path: '/report/{reportId}/actions/summary', name: 'actions_summary')]
+    #[Template('@App/Report/Action/summary.html.twig')]
+    public function summaryAction(Request $request, int $reportId): RedirectResponse|array
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getActionsState()['state'] && 'skip-step' != $fromPage) {
+        if (Status::STATE_NOT_STARTED == $report->getStatus()->getActionsState()['state'] && 'skip-step' != $fromPage) {
             return $this->redirectToRoute('actions', ['reportId' => $reportId]);
         }
 
@@ -124,10 +120,7 @@ class ActionController extends AbstractController
         ];
     }
 
-    /**
-     * @return string
-     */
-    protected function getSectionId()
+    protected function getSectionId(): string
     {
         return 'actions';
     }
