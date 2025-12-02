@@ -126,7 +126,7 @@ jobs:
     with:
       success: yes
       branch: integration
-      account: 248804316466
+      account: ${{ vars.DEVELOPMENT_ACCOUNT }}
 
   slack_notify_failure:
     name: notify of failure
@@ -137,4 +137,4 @@ jobs:
     with:
       success: no
       branch: integration
-      account: 248804316466
+      account: ${{ vars.DEVELOPMENT_ACCOUNT }}

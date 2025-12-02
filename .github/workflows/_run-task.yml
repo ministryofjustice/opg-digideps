@@ -14,7 +14,7 @@ on:
         description: "Account name for oidc"
       account_id:
         required: false
-        default: "248804316466"
+        default: "${{ vars.DEVELOPMENT_ACCOUNT }}"
         type: string
         description: "Account to get credentials for"
       task_name:
