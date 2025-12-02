@@ -71,11 +71,11 @@ jobs:
         name: register workspace
         uses: ministryofjustice/opg-github-actions/actions/terraform-workspace-manager@4f345be3f706950d1fdc05bc86383967a149bd99 # v4.3.4
         with:
-          aws_account_id: ${{ vars.DEVELOPMENT }}
+          aws_account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
           aws_iam_role: digideps-ci
           register_workspace: ${{ inputs.workspace }}
           time_to_protect: 3
-          oidc_role: arn:aws:iam::${{ vars.DEVELOPMENT }}:role/digideps-gh-actions-workspace-cleanup
+          oidc_role: arn:aws:iam::${{ vars.DEVELOPMENT_ACCOUNT }}:role/digideps-gh-actions-workspace-cleanup
           assume_role: false
 
       - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
