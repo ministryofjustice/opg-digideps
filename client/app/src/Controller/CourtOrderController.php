@@ -46,7 +46,7 @@ class CourtOrderController extends AbstractController
             'courtOrder' => $courtOrder,
             'reportType' => $courtOrder->getActiveReportType(),
             'client' => $client,
-            'inviteUrl' => $this->generateUrl('courtorder_invite', ['uid' => $courtOrder->getCourtOrderUid()]),
+            'inviteUrl' => $this->generateUrl('courtorder_invite', ['courtOrderUid' => $courtOrder->getCourtOrderUid()]),
         ];
 
         return array_merge($templateValues, [
@@ -88,9 +88,13 @@ class CourtOrderController extends AbstractController
         $form->handleRequest($request);
 
         if (!($form->isSubmitted() && $form->isValid())) {
+            // get the client for the court order so we can retrieve their firstname
+            $courtOrder = $this->courtOrderService->getByUid($courtOrderUid);
+            $client = $courtOrder->getClient();
+
             return [
                 'form' => $form->createView(),
-                'clientFirstName' => 'Bilbo',
+                'clientFirstName' => $client->getFirstName(),
                 'backLink' => $thisPageLink,
             ];
         }
