@@ -42,54 +42,6 @@ class Redirector
         return $token->getUser();
     }
 
-    private function getCorrectLayHomepage(?User $user = null): string
-    {
-        if (is_null($user)) {
-            return $this->router->generate('login');
-        }
-
-        // checks if user has missing details
-        $route = $this->getCorrectRouteIfDifferent($user, 'courtorders_for_deputy');
-        if (is_string($route)) {
-            return $this->router->generate($route);
-        }
-
-        return $this->router->generate('courtorders_for_deputy');
-    }
-
-    public function removeLastAccessedUrl()
-    {
-        $this->requestStack->getSession()->remove('_security.secured_area.target_path');
-    }
-
-    public function getHomepageRedirect(): string
-    {
-        if ('admin' === $this->env) {
-            // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
-            if ($this->authChecker->isGranted(User::ROLE_ADMIN)) {
-                return $this->router->generate('admin_homepage');
-            }
-
-            if ($this->authChecker->isGranted(User::ROLE_AD)) {
-                return $this->router->generate('ad_homepage');
-            }
-
-            return $this->router->generate('login');
-        }
-
-        // PROF and PA redirect to org homepage
-        if ($this->authChecker->isGranted(User::ROLE_ORG)) {
-            return $this->router->generate('org_dashboard');
-        }
-
-        // deputy: if logged, redirect to court order(s)
-        if ($this->authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
-            return $this->getCorrectLayHomepage($this->getLoggedUser());
-        }
-
-        return false;
-    }
-
     public function getFirstPageAfterLogin(SessionInterface $session): string
     {
         $user = $this->getLoggedUser();
@@ -176,5 +128,53 @@ class Redirector
         }
 
         return (!empty($route) && $route !== $currentRoute) ? $route : false;
+    }
+
+    public function removeLastAccessedUrl()
+    {
+        $this->requestStack->getSession()->remove('_security.secured_area.target_path');
+    }
+
+    public function getHomepageRedirect(): string
+    {
+        if ('admin' === $this->env) {
+            // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
+            if ($this->authChecker->isGranted(User::ROLE_ADMIN)) {
+                return $this->router->generate('admin_homepage');
+            }
+
+            if ($this->authChecker->isGranted(User::ROLE_AD)) {
+                return $this->router->generate('ad_homepage');
+            }
+
+            return $this->router->generate('login');
+        }
+
+        // PROF and PA redirect to org homepage
+        if ($this->authChecker->isGranted(User::ROLE_ORG)) {
+            return $this->router->generate('org_dashboard');
+        }
+
+        // deputy: if logged, redirect to court order(s)
+        if ($this->authChecker->isGranted('IS_AUTHENTICATED_FULLY')) {
+            return $this->getCorrectLayHomepage($this->getLoggedUser());
+        }
+
+        return false;
+    }
+
+    private function getCorrectLayHomepage(?User $user = null): string
+    {
+        if (is_null($user)) {
+            return $this->router->generate('login');
+        }
+
+        // checks if user has missing details
+        $route = $this->getCorrectRouteIfDifferent($user, 'courtorders_for_deputy');
+        if (is_string($route)) {
+            return $this->router->generate($route);
+        }
+
+        return $this->router->generate('courtorders_for_deputy');
     }
 }
