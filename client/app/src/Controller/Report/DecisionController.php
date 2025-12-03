@@ -8,7 +8,6 @@ use App\Controller\AbstractController;
 use App\Entity\Report\Decision;
 use App\Entity\Report\MentalCapacity;
 use App\Entity\Report\Status;
-use App\Form\AddAnotherRecordType;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\DecisionExistType;
 use App\Form\Report\DecisionType;
@@ -17,6 +16,7 @@ use App\Form\Report\MentalCapacityType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -132,7 +132,10 @@ class DecisionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $report = $form->getData();
-            $answer = $form['significantDecisionsMade']->getData();
+
+            /** @var Form $significantDecisionsMade */
+            $significantDecisionsMade = $form['significantDecisionsMade'];
+            $answer = $significantDecisionsMade->getData();
 
             if ('Yes' == $answer) {
                 $report->setReasonForNoDecisions(null);
@@ -186,7 +189,9 @@ class DecisionController extends AbstractController
 
             $this->restClient->post('report/decision', $data, ['decision', 'report-id']);
 
-            switch ($form['addAnother']->getData()) {
+            /** @var Form $addAnother */
+            $addAnother = $form['addAnother'];
+            switch ($addAnother->getData()) {
                 case 'yes':
                     return $this->redirectToRoute('decisions_add', ['reportId' => $reportId]);
                 case 'no':
@@ -231,7 +236,9 @@ class DecisionController extends AbstractController
 
             $request->getSession()->getFlashBag()->add('notice', 'Decision edited');
 
-            switch ($form['addAnother']->getData()) {
+            /** @var Form $addAnother */
+            $addAnother = $form['addAnother'];
+            switch ($addAnother->getData()) {
                 case 'yes':
                     return $this->redirectToRoute('decisions_add', ['reportId' => $reportId]);
                 case 'no':

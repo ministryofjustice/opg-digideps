@@ -1921,11 +1921,6 @@ parameters:
 			path: src/Controller/Report/DecisionController.php
 
 		-
-			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
-			count: 3
-			path: src/Controller/Report/DecisionController.php
-
-		-
 			message: "#^Cannot call method getDecisions\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Controller/Report/DecisionController.php
