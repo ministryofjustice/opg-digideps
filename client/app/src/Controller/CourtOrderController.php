@@ -46,7 +46,7 @@ class CourtOrderController extends AbstractController
             'courtOrder' => $courtOrder,
             'reportType' => $courtOrder->getActiveReportType(),
             'client' => $client,
-            'inviteUrl' => $this->generateUrl('courtorder_invite', ['uid' => $courtOrder->getCourtOrderUid()]),
+            'inviteUrl' => $this->generateUrl('courtorder_invite', ['courtOrderUid' => $courtOrder->getCourtOrderUid()]),
         ];
 
         return array_merge($templateValues, [
@@ -77,19 +77,24 @@ class CourtOrderController extends AbstractController
      * Invite or re-invite a co-deputy to collaborate on a court order. They must exist in the pre_registration table
      * for the invite to be sent successfully.
      */
-    #[Route(path: '/{uid}/invite', name: 'courtorder_invite', requirements: ['uid' => '\d+'], methods: ['GET', 'POST'])]
+    #[Route(path: '/{courtOrderUid}/invite', name: 'courtorder_invite', requirements: ['courtOrderUid' => '\d+'], methods: ['GET', 'POST'])]
     #[Template('@App/CourtOrder/invite.html.twig')]
-    public function inviteLayDeputy(Request $request, string $uid): array|RedirectResponse
+    public function inviteLayDeputy(Request $request, string $courtOrderUid): array|RedirectResponse
     {
-        $thisPageLink = $this->generateUrl('courtorder_by_uid', ['uid' => $uid]);
+        $thisPageLink = $this->generateUrl('courtorder_by_uid', ['uid' => $courtOrderUid]);
 
         $invitedUser = new User();
         $form = $this->createForm(CoDeputyInviteType::class, $invitedUser);
         $form->handleRequest($request);
 
         if (!($form->isSubmitted() && $form->isValid())) {
+            // get the client for the court order so we can retrieve their firstname
+            $courtOrder = $this->courtOrderService->getByUid($courtOrderUid);
+            $client = $courtOrder->getClient();
+
             return [
                 'form' => $form->createView(),
+                'clientFirstName' => $client->getFirstName(),
                 'backLink' => $thisPageLink,
             ];
         }
@@ -97,7 +102,7 @@ class CourtOrderController extends AbstractController
         /** @var User $invitingUser */
         $invitingUser = $this->getUser();
 
-        $result = $this->courtOrderService->inviteLayDeputy($uid, $invitedUser, $invitingUser);
+        $result = $this->courtOrderService->inviteLayDeputy($courtOrderUid, $invitedUser, $invitingUser);
 
         /** @var Session $session */
         $session = $request->getSession();

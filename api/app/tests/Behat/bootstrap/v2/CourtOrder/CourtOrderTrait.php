@@ -373,4 +373,13 @@ trait CourtOrderTrait
     {
         $this->fixtureHelper->setCourtOrderLatestReportType($this->courtOrder, Report::LAY_PFA_LOW_ASSETS_TYPE);
     }
+
+    /**
+     * @Given I should see the first name of the client on the court order as the invitee
+     */
+    public function courtOrderInvitePageShouldIncludeClientsFirstName(): void
+    {
+        $clientFirstname = $this->courtOrder->getClient()->getFirstname();
+        $this->assertPageContainsText($clientFirstname);
+    }
 }

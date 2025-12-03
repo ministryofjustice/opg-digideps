@@ -7,6 +7,7 @@ Feature: Court order - sending invitations to other deputies
         And I am associated with '1' 'pfa' court order(s)
         And I visit the page of a court order that 'I am' associated with
         And I click on "invite-codeputy-button"
+        Then I should see the first name of the client on the court order as the invitee
         When I invite a co-deputy to the court order
         Then I should be on the page for the court order
         And I should see that I am a registered deputy
