@@ -24,7 +24,7 @@ jobs:
     uses: ./.github/workflows/_run-task.yml
     with:
       workspace: production02
-      account_id: 515688267891
+      account_id: ${{ vars.PRODUCTION_ACCOUNT }}
       account_name: production
       task_name: "backup"
       timeout: "700"
@@ -38,7 +38,7 @@ jobs:
       - backup_production
     with:
       workspace: preproduction
-      account_id: 454262938596
+      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
       account_name: preproduction
       task_name: "restore_from_production"
       oidc_timeout: "7200"
@@ -55,5 +55,5 @@ jobs:
     with:
       success: no
       branch: main
-      account: 454262938596
+      account: ${{ vars.PREPRODUCTION_ACCOUNT }}
       scheduled_task: "Restore and Anonymise Preproduction"

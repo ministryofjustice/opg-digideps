@@ -48,7 +48,7 @@ jobs:
       - terraform_apply_development
     with:
       workspace: development
-      account_id: 248804316466
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
       account_name: development
       task_name: "reset_database"
       timeout: "500"
@@ -63,7 +63,7 @@ jobs:
     with:
       success: yes
       branch: main
-      account: 515688267891
+      account: ${{ vars.PRODUCTION_ACCOUNT }}
       scheduled_task: "Development Environment Spun Up"
 
   slack_notify_failure:
@@ -75,5 +75,5 @@ jobs:
     with:
       success: no
       branch: main
-      account: 515688267891
+      account: ${{ vars.PRODUCTION_ACCOUNT }}
       scheduled_task: "Development Environment Spun Up"

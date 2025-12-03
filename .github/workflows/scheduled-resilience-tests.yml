@@ -25,7 +25,7 @@ jobs:
     with:
       replicas: 3
       acu: 8
-      account_id: 454262938596
+      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
       workspace: integration
 
   resilience_tests_integration:
@@ -35,7 +35,7 @@ jobs:
       - scale_services_up
     with:
       workspace: integration
-      account_id: 454262938596
+      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
       account_name: preproduction
       task_name: "resilience_tests"
       timeout: "3600"
@@ -51,5 +51,5 @@ jobs:
     with:
       replicas: 1
       acu: 4
-      account_id: 454262938596
+      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
       workspace: integration
