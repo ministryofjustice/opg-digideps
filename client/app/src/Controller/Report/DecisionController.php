@@ -8,7 +8,6 @@ use App\Controller\AbstractController;
 use App\Entity\Report\Decision;
 use App\Entity\Report\MentalCapacity;
 use App\Entity\Report\Status;
-use App\Form\AddAnotherRecordType;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\DecisionExistType;
 use App\Form\Report\DecisionType;
@@ -17,6 +16,7 @@ use App\Form\Report\MentalCapacityType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -132,7 +132,10 @@ class DecisionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $report = $form->getData();
-            $answer = $form['significantDecisionsMade']->getData();
+
+            /** @var Form $significantDecisionsMade */
+            $significantDecisionsMade = $form['significantDecisionsMade'];
+            $answer = $significantDecisionsMade->getData();
 
             if ('Yes' == $answer) {
                 $report->setReasonForNoDecisions(null);
@@ -176,7 +179,6 @@ class DecisionController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $decision = new Decision();
-        $from = $request->get('from');
 
         $form = $this->createForm(DecisionType::class, $decision);
         $form->handleRequest($request);
@@ -187,12 +189,19 @@ class DecisionController extends AbstractController
 
             $this->restClient->post('report/decision', $data, ['decision', 'report-id']);
 
-            return $this->redirect($this->generateUrl('decisions_add_another', ['reportId' => $reportId]));
+            /** @var Form $addAnother */
+            $addAnother = $form['addAnother'];
+            switch ($addAnother->getData()) {
+                case 'yes':
+                    return $this->redirectToRoute('decisions_add', ['reportId' => $reportId]);
+                case 'no':
+                    return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
+            }
         }
 
         // TODO use $backLinkRoute logic and align to other controllers
         try {
-            $backLink = $this->generateUrl($from, ['reportId' => $reportId]);
+            $backLink = $this->generateUrl('decisions_summary', ['reportId' => $reportId]);
 
             return [
                 'backLink' => $backLink,
@@ -206,30 +215,6 @@ class DecisionController extends AbstractController
                 'report' => $report,
             ];
         }
-    }
-
-    #[Route(path: '/report/{reportId}/decisions/add_another', name: 'decisions_add_another')]
-    #[Template('@App/Report/Decision/addAnother.html.twig')]
-    public function addAnotherAction(Request $request, int $reportId): array|RedirectResponse
-    {
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-
-        $form = $this->createForm(AddAnotherRecordType::class, $report, ['translation_domain' => 'report-decisions']);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            switch ($form['addAnother']->getData()) {
-                case 'yes':
-                    return $this->redirectToRoute('decisions_add', ['reportId' => $reportId, 'from' => 'decisions_add_another']);
-                case 'no':
-                    return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
-            }
-        }
-
-        return [
-            'form' => $form->createView(),
-            'report' => $report,
-        ];
     }
 
     #[Route(path: '/report/{reportId}/decisions/edit/{decisionId}', name: 'decisions_edit')]
@@ -251,7 +236,14 @@ class DecisionController extends AbstractController
 
             $request->getSession()->getFlashBag()->add('notice', 'Decision edited');
 
-            return $this->redirect($this->generateUrl('decisions', ['reportId' => $reportId]));
+            /** @var Form $addAnother */
+            $addAnother = $form['addAnother'];
+            switch ($addAnother->getData()) {
+                case 'yes':
+                    return $this->redirectToRoute('decisions_add', ['reportId' => $reportId]);
+                case 'no':
+                    return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
+            }
         }
 
         return [

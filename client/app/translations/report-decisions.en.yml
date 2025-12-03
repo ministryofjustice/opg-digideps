@@ -136,5 +136,8 @@ form:
   clientInvolvedDetails:
     label: If yes, tell us how you involved %client% in the decision. If no, tell us why you could not.
     hint: ""
+  addAnother:
+    heading: Add another decision
+    label: Would you like to add another decision?
   save:
     label: Save and continue
