@@ -30,11 +30,6 @@ class LoginSubscriber implements EventSubscriberInterface
 
     public function onKernelRequest(RequestEvent $event): bool
     {
-        $uri = $event->getRequest()->getRequestUri();
-        if (!stristr($uri, '/courtorder')) {
-            return false;
-        }
-
         /** @var ?User $user */
         $user = $this->tokenStorage->getToken()?->getUser();
 
