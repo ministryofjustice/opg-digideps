@@ -67,17 +67,17 @@
     &--active {
       @include govuk-media-query($from: tablet) {
         &:not(:last-child) {
-          background: govuk-colour("light-blue")
-            url("/images/progress-chevron.png") right 50% no-repeat;
+          background: #2b8cc4 url("/images/progress-chevron.png") right 50%
+            no-repeat;
         }
       }
 
-      background-color: govuk-colour("light-blue");
+      background-color: #2b8cc4;
       color: govuk-colour("white");
 
       &::before {
         background-color: govuk-colour("white");
-        color: govuk-colour("light-blue");
+        color: #2b8cc4;
       }
     }
   }
