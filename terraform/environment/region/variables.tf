@@ -47,10 +47,6 @@ variable "admin_fully_qualified_domain_name" {
   type = string
 }
 
-variable "state_role" {
-  type = string
-}
-
 module "allow_list" {
   source = "git@github.com:ministryofjustice/opg-terraform-aws-moj-ip-allow-list.git?ref=v3.0.3"
 }
@@ -82,17 +78,4 @@ locals {
   # DNS switch variables
   certificate_arn                  = var.certificate_arn == "" ? data.aws_acm_certificate.service_justice.arn : var.certificate_arn
   alternative_certificates_enabled = var.certificate_arn == "" ? 0 : 1
-}
-
-data "terraform_remote_state" "shared" {
-  backend   = "s3"
-  workspace = var.account.state_source
-  config = {
-    bucket = "opg.terraform.state"
-    key    = "opg-digideps-account/terraform.tfstate"
-    region = "eu-west-1"
-    assume_role = {
-      role_arn = "arn:aws:iam::311462405659:role/${var.state_role}"
-    }
-  }
 }
