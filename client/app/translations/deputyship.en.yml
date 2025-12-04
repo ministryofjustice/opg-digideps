@@ -1,6 +1,6 @@
 clients:
   title: Your clients
-  action: Select which client you want to manage.
+  action: Select which report you want to manage.
   header:
     client: Client
     caseNumber: Case number

@@ -1,7 +1,7 @@
-@v2 @v2_admin @admin-management-add-users
+@v2 @v2_admin @admin-management
 Feature: Admin - An admin user adds an admin user
 
-  @super-admin @admin-management-add-other-admins
+  @super-admin
   Scenario: A super admin user adds other admin users
     Given a super admin user accesses the admin app
     When I navigate to the admin add user page

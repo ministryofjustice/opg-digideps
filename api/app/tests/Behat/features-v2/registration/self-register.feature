@@ -33,6 +33,7 @@ Feature: Lay Deputy Self Registration
         And a Lay Deputy registers with valid details using unicode characters
         Then my deputy details should be saved to my account
         And I should be on the Lay homepage
+        Then the report status should be "not started"
 
     @super-admin
     Scenario: A Lay user with an existing pre-registration record and a user account created by a case manager can register
@@ -61,6 +62,39 @@ Feature: Lay Deputy Self Registration
         When a Lay Deputy clicks the activation link in the registration email
         And I complete the case manager user registration flow with deputyship details that are not unique
         Then I should see a 'deputy not uniquely identified' error
+
+    @super-admin
+    Scenario: A Co-deputy cannot register for the service with details that already registered
+        Given a csv has been uploaded to the sirius bucket with the file 'lay-2-rows-co-deputy-change-details.csv'
+        Given a super admin user accesses the admin app
+        When I run the lay CSV command the file contains 2 new pre-registration entities for the same case
+        And I create a Lay Deputy user account for one of the deputies in the co-deputy CSV
+        When a Lay Deputy clicks the activation link in the registration email
+        And I complete the case manager user registration flow with other deputy valid deputyship details
+        Then my deputy details should be saved to my account
+        And I should be on the Lay homepage
+        When I invite a Co-Deputy to the service who is already registered
+        Then they shouldn't be able to register to deputise for a client with already registered details
+        And they should see a 'deputy already linked to case number' error
+
+    @super-admin @lay-pfa-high-completed
+    Scenario: A multi-client deputy can invite a co-deputy to report on a client attached to their secondary account and co-deputy can register with a 10 digit case number
+        Given a csv has been uploaded to the sirius bucket with the file 'lay-2-rows-co-deputy.csv'
+        When I run the lay CSV command the file contains 2 new pre-registration entities for the same case
+        Given one of the Lay deputies listed in the lay csv already has an existing account
+        And the same Lay deputy registers to deputise for a client with valid details
+        Then they get redirected back to the log in page
+        When the Lay Deputy logs in with the email address attached to their primary account
+        Then they should be on the Choose a Client homepage
+        And I select the new client from the csv on the Choose a Client page
+        Then I invite a Co-Deputy to the service
+        And they register to deputise for a client with valid details that includes a 10 digit case number
+        Then the co-deputy details should be saved to the co-deputy's account
+        And they should be on the Lay homepage
+        Given a super admin user accesses the admin app
+        When I visit the admin Search Users page
+        And I search for the co-deputy using their email address
+        Then the co-deputy should appear in the search results
 
     @super-admin
     Scenario: A Lay user can enter a 10 digit case number when self registering

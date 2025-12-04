@@ -23,3 +23,10 @@ Feature: View client details
         Given a Lay Deputy exists
         Given I view the lay deputy your details page
         Then I should not see the link for client details
+
+    @lay-pfa-high-not-started-multi-client-deputy
+    Scenario: A user has access to the client details page of the client they have selected and correct breadcrumbs
+        Given a Lay Deputy tries to login with their "primary" email address
+        Then they should be on the Choose a Client homepage
+        When I select the first client from the Choose a Client page
+        Then I should see "Client details"

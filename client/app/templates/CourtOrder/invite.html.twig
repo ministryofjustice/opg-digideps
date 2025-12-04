@@ -24,7 +24,7 @@
     {{ form_input(form.lastname, 'form.lastName') }}
     {{ form_input(form.email,'form.email') }}
 
-    {{ form_submit(form.submit, 'form.submit', {
+    {{ form_submit(form.submit,'form.submit', {
         'buttonClass': 'behat-link-send-invitation',
         'labelText': (page ~ '.submitButton') | trans
     }) }}

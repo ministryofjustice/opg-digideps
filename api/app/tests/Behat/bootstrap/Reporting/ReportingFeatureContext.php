@@ -13,9 +13,9 @@ use App\Tests\Behat\ReportManagement\ReportManagementTrait;
 
 class ReportingFeatureContext extends BaseFeatureContext
 {
-    use CourtOrderTrait;
+    use ReportTrait;
     use LinksTrait;
     use RegionTrait;
-    use ReportTrait;
+    use CourtOrderTrait;
     use ReportManagementTrait;
 }

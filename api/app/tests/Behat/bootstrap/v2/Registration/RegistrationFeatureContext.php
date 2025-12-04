@@ -7,7 +7,6 @@ use App\Tests\Behat\Common\SiteNavigationTrait;
 use App\Tests\Behat\CourtOrderManagement\CourtOrderManagementTrait;
 use App\Tests\Behat\v2\AdminManagement\AdminManagementTrait;
 use App\Tests\Behat\v2\Common\BaseFeatureContext;
-use App\Tests\Behat\v2\CourtOrder\CourtOrderTrait;
 use App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsTrait;
 
 class RegistrationFeatureContext extends BaseFeatureContext
@@ -16,7 +15,6 @@ class RegistrationFeatureContext extends BaseFeatureContext
     use AdminManagementTrait;
     use AuthenticationTrait;
     use CourtOrderManagementTrait;
-    use CourtOrderTrait;
     use IngestTrait;
     use ReportingSectionsTrait;
     use SelfRegistrationTrait;
