@@ -334,10 +334,10 @@ trait AuthTrait
     /**
      * @Given /^a Lay Deputy tries to login with their "(primary|non-primary)" email address$/
      */
-    public function aLayDeputyTriesToLoginWithTheirEmailAddress($isPrimary)
+    public function aLayDeputyTriesToLoginWithTheirEmailAddress(string $isPrimary)
     {
-        $this->loggedInUserDetails = 'primary' === $isPrimary ? $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser
-            : $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser;
+        $this->loggedInUserDetails = ('primary' === $isPrimary ? $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser
+            : $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser);
 
         $userEmail = $this->loggedInUserDetails->getUserEmail();
 

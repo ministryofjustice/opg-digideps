@@ -169,7 +169,7 @@ trait IShouldBeOnFrontendTrait
 
         if (!$onExpectedPage) {
             throw new BehatException(
-                'Not on one of expected lay home pages. Current URL is: %s but expected URL regex is one of: ' .
+                "Not on one of expected lay home pages. Current URL is: $currentUrl but expected URL regex is one of: " .
                 implode(', ', $urlRegexes)
             );
         }

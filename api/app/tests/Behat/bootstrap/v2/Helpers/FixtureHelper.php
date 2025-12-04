@@ -1135,15 +1135,11 @@ class FixtureHelper
             User::ROLE_LAY_DEPUTY,
             'lay-pfa-high-not-started-non-primary',
             Report::LAY_PFA_HIGH_ASSETS_TYPE,
-            false,
-            false,
-            false,
-            null,
-            null,
-            $caseNumber,
-            false,
-            false,
-            $deputyUid
+            completed: false,
+            submitted: false,
+            caseNumber: $caseNumber,
+            isPrimary: false,
+            deputyUid: $deputyUid
         );
 
         return self::buildUserDetails($user);
@@ -1308,7 +1304,7 @@ class FixtureHelper
             $userRole,
             sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId),
             $deputyUid,
-            $isPrimary
+            isPrimary: $isPrimary
         );
 
         if ($ndr) {

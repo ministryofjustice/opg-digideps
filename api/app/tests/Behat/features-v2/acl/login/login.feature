@@ -37,7 +37,7 @@ Feature: Users logging into the service
         And I press "change_password_save"
         Then the form should be valid
 
-    @lay-pfa-high-not-started-multi-client-deputy
+    @lay-pfa-high-not-started-multi-client-deputy @non-primary-login
     Scenario: A user tries to login to the service with their non primary account
         Given a Lay Deputy tries to login with their "non-primary" email address
         Then they get redirected back to the log in page
