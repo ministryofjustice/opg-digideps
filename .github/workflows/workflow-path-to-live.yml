@@ -202,7 +202,7 @@ jobs:
       - workflow_variables
       - terraform_apply_end_to_end
     with:
-      replicas: 6
+      replicas: 10
       acu: 16
       account_id: 454262938596
       workspace: integration
