@@ -307,10 +307,6 @@ services:
       $restClient: "@rest_client"
     tags: ["kernel.event_subscriber"]
 
-  App\EventSubscriber\LoginSubscriber:
-    class: App\EventSubscriber\LoginSubscriber
-    tags: ["kernel.event_subscriber"]
-
   App\EventListener\ResponseNoCacheListener:
     tags:
       - {

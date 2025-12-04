@@ -644,11 +644,10 @@ trait ReportTrait
             }
         }
 
-        $numLinks = count($reportLinks);
-        if ($numLinks != $expectedNumberOfReports) {
+        if (sizeof($reportLinks) != $expectedNumberOfReports) {
             $message = $this->getAssertMessage(
-                "$expectedNumberOfReports",
-                "$numLinks",
+                $expectedNumberOfReports,
+                sizeof($reportLinks),
                 'Found a different number of reports than expected'
             );
 

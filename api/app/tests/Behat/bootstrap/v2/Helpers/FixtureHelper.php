@@ -245,24 +245,8 @@ class FixtureHelper
         return $this->clientTestHelper->generateClient($this->em, $user, $org, $caseNumber);
     }
 
-    // also associates Deputy with the provided User
-    private function getOrAddDeputy(User $user): Deputy
-    {
-        $deputyObject = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $user->getDeputyUid()]);
-
-        if (is_null($deputyObject)) {
-            $deputyObject = $this->deputyTestHelper->generateDeputy($user->getEmail(), strval($user->getDeputyUid()), $user);
-        }
-
-        $deputyObject->setUser($user);
-        $this->em->persist($deputyObject);
-        $this->em->flush();
-
-        return $deputyObject;
-    }
-
     private function addClientsAndReportsToLayDeputy(
-        User $user,
+        User $deputy,
         bool $completed = false,
         bool $submitted = false,
         ?string $type = null,
@@ -270,15 +254,23 @@ class FixtureHelper
         ?int $satisfactionScore = null,
         ?string $caseNumber = null,
     ) {
-        $client = $this->clientTestHelper->generateClient($this->em, $user, null, $caseNumber);
+        $client = $this->clientTestHelper->generateClient($this->em, $deputy, null, $caseNumber);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $type, $startDate);
 
-        $this->getOrAddDeputy($user);
+        $deputyObject = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $deputy->getDeputyUid()]);
+
+        if (is_null($deputyObject)) {
+            $deputyObject = $this->deputyTestHelper->generateDeputy($deputy->getEmail(), strval($deputy->getDeputyUid()));
+            $this->em->persist($deputyObject);
+        }
+
+        $deputyObject->setUser($deputy);
+        $this->em->persist($deputyObject);
 
         $client->addReport($report);
         $report->setClient($client);
-        $user->addClient($client);
-        $user->setRegistrationDate($startDate);
+        $deputy->addClient($client);
+        $deputy->setRegistrationDate($startDate);
 
         if ($completed) {
             $this->reportTestHelper->completeLayReport($report, $this->em);
@@ -294,7 +286,7 @@ class FixtureHelper
         $this->em->persist($report);
 
         if ($submitted and isset($satisfactionScore)) {
-            $satisfaction = $this->setSatisfaction($report, $user, $satisfactionScore);
+            $satisfaction = $this->setSatisfaction($report, $deputy, $satisfactionScore);
             $this->em->persist($satisfaction);
         }
 
@@ -368,16 +360,14 @@ class FixtureHelper
         return $satisfaction;
     }
 
-    private function addClientsAndReportsToNdrLayDeputy(User $user, bool $completed = false)
+    private function addClientsAndReportsToNdrLayDeputy(User $deputy, bool $completed = false)
     {
-        $client = $this->clientTestHelper->generateClient($this->em, $user);
-        $ndr = $this->reportTestHelper->generateNdr($this->em, $user, $client);
+        $client = $this->clientTestHelper->generateClient($this->em, $deputy);
+        $ndr = $this->reportTestHelper->generateNdr($this->em, $deputy, $client);
 
         if ($completed) {
             $this->reportTestHelper->completeNdrLayReport($ndr, $this->em);
         }
-
-        $this->getOrAddDeputy($user);
 
         $this->em->persist($ndr);
         $this->em->persist($client);
@@ -689,6 +679,7 @@ class FixtureHelper
             Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
             true,
             false,
+            readyToSubmit: true
         );
 
         return self::buildUserDetails($user);
@@ -1001,7 +992,22 @@ class FixtureHelper
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-ndr-completed',
-            Report::LAY_PFA_HIGH_ASSETS_TYPE,
+            Report::LAY_HW_TYPE,
+            true,
+            false,
+            true
+        );
+
+        return self::buildUserDetails($user);
+    }
+
+    public function createLayNdrSubmitted(string $testRunId): array
+    {
+        $user = $this->createDeputyClientAndReport(
+            $testRunId,
+            User::ROLE_LAY_DEPUTY,
+            'lay-ndr-submitted',
+            Report::LAY_HW_TYPE,
             true,
             false,
             true
@@ -1141,7 +1147,7 @@ class FixtureHelper
             null,
             null,
             $caseNumber,
-            false,
+            true,
             false,
             $deputyUid
         );
@@ -1295,6 +1301,7 @@ class FixtureHelper
         bool $legacyPasswordHash = false,
         bool $isPrimary = true,
         ?int $deputyUid = null,
+        bool $readyToSubmit = false,
     ) {
         if (!$this->fixturesEnabled) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
@@ -1302,24 +1309,18 @@ class FixtureHelper
 
         $this->testRunId = $testRunId;
 
-        $user = $this->userTestHelper->createAndPersistUser(
-            $this->em,
-            null,
-            $userRole,
-            sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId),
-            $deputyUid,
-            $isPrimary
-        );
+        $deputy = $this->userTestHelper
+            ->createUser(null, $userRole, sprintf('%s-%s@t.uk', $emailPrefix, $this->testRunId), $isPrimary, $deputyUid);
 
         if ($ndr) {
-            $this->addClientsAndReportsToNdrLayDeputy($user, $completed);
+            $this->addClientsAndReportsToNdrLayDeputy($deputy, $completed);
         } else {
-            $this->addClientsAndReportsToLayDeputy($user, $completed, $submitted, $reportType, $startDate, $satisfactionScore, $caseNumber);
+            $this->addClientsAndReportsToLayDeputy($deputy, $completed, $submitted, $reportType, $startDate, $satisfactionScore, $caseNumber, $readyToSubmit);
         }
 
-        $this->setPassword($user, $legacyPasswordHash);
+        $this->setPassword($deputy, $legacyPasswordHash);
 
-        return $user;
+        return $deputy;
     }
 
     private function createAdminUser(string $testRunId, $userRole, $emailPrefix)
@@ -1423,12 +1424,10 @@ class FixtureHelper
         return $this->fixtureParams['legacy_password_hash'];
     }
 
-    public function createAndPersistCourtOrder(string $orderType, Client $client, Deputy $deputy, ?Report $report = null, ?string $courtOrderUid = null)
+    public function createAndPersistCourtOrder(string $orderType, Client $client, Deputy $deputy, ?Report $report = null)
     {
         $faker = Factory::create('en_GB');
-        if (is_null($courtOrderUid)) {
-            $courtOrderUid = '700000' . $faker->randomNumber(4);
-        }
+        $courtOrderUid = '700000' . $faker->randomNumber(4);
 
         return $this->courtOrderTestHelper::generateCourtOrder($this->em, $client, $courtOrderUid, 'ACTIVE', $orderType, $report, $deputy);
     }
