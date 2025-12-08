@@ -16,7 +16,7 @@ use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Redirector;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,7 +33,8 @@ class CoDeputyController extends AbstractController
         private readonly RestClient $restClient,
         private readonly TranslatorInterface $translator,
         private readonly LoggerInterface $logger,
-    ) {}
+    ) {
+    }
 
     /**
      * For co-deputies to verify their details and complete registration.
@@ -55,17 +56,23 @@ class CoDeputyController extends AbstractController
         if ($form->isSubmitted()) {
             // get client validation errors, if any, and add to the form
             $client = new Client();
-            $client->setLastName($form['clientLastname']->getData());
-            $client->setCaseNumber($form['clientCaseNumber']->getData());
+
+            /** @var string $lastName */
+            $lastName = $form['clientLastname']->getData();
+            $client->setLastName($lastName);
+
+            /** @var string $caseNumber */
+            $caseNumber = $form['clientCaseNumber']->getData();
+            $client->setCaseNumber($caseNumber);
 
             $errors = $validator->validate($client, null, ['verify-codeputy']);
 
             foreach ($errors as $error) {
                 $clientProperty = $error->getPropertyPath();
-                $form->get('client'.ucfirst($clientProperty))->addError(new FormError("{$error->getMessage()}"));
+                $form->get('client' . ucfirst($clientProperty))->addError(new FormError("{$error->getMessage()}"));
             }
 
-            if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->isValid()) {
                 $selfRegisterData = new SelfRegisterData();
                 $selfRegisterData->setFirstname($form['firstname']->getData());
                 $selfRegisterData->setLastname($form['lastname']->getData());
@@ -74,28 +81,33 @@ class CoDeputyController extends AbstractController
                 $selfRegisterData->setClientLastname($form['clientLastname']->getData());
 
                 // truncate case number if length is 10 digits long before setting
-                if (10 == strlen($form['clientCaseNumber']->getData())) {
-                    $selfRegisterData->setCaseNumber(substr($form['clientCaseNumber']->getData(), 0, -2));
+                /** @var string $caseNumber */
+                $caseNumber = $form['clientCaseNumber']->getData();
+                if (10 == strlen($caseNumber)) {
+                    $selfRegisterData->setCaseNumber(substr($caseNumber, 0, -2));
                 } else {
-                    $selfRegisterData->setCaseNumber($form['clientCaseNumber']->getData());
+                    $selfRegisterData->setCaseNumber($caseNumber);
                 }
 
-                $clientId = $this->restClient->get('v2/client/case-number/'.$selfRegisterData->getCaseNumber(), 'Client')->getId();
-                $mainClient = $this->restClient->get('client/'.$clientId, 'Client', ['client', 'client-users', 'report-id', 'current-report', 'user']);
-                $mainDeputy = reset($mainClient->getUsers());
+                $clientId = $this->restClient->get('v2/client/case-number/' . $selfRegisterData->getCaseNumber(), 'Client')->getId();
+
+                /** @var Client $mainClient */
+                $mainClient = $this->restClient->get('client/' . $clientId, 'Client', ['client', 'client-users', 'report-id', 'current-report', 'user']);
+                $deputies = $mainClient->getUsers();
+                $mainDeputy = reset($deputies);
 
                 // validate against pre-registration data
                 try {
                     $coDeputyVerificationData = $this->restClient->apiCall('post', 'selfregister/verifycodeputy', $selfRegisterData, 'array', [], false);
 
-                    if ($mainDeputy->isNdrEnabled()) {
+                    if ($mainDeputy !== false && $mainDeputy->isNdrEnabled()) {
                         $user->setNdrEnabled(true);
                     }
 
-                    $this->restClient->put('user/'.$user->getId(), $user);
+                    $this->restClient->put('user/' . $user->getId(), $user);
 
                     /** @var User $user */
-                    $user = $this->restClient->apiCall('put', 'selfregister/updatecodeputy/'.$user->getId(), $coDeputyVerificationData, 'User', [], false);
+                    $user = $this->restClient->apiCall('put', 'selfregister/updatecodeputy/' . $user->getId(), $coDeputyVerificationData, 'User', [], false);
 
                     $this->deputyApi->createDeputyFromUser($user);
 
@@ -103,41 +115,22 @@ class CoDeputyController extends AbstractController
                 } catch (\Throwable $e) {
                     $translator = $this->translator;
 
-                    switch ((int) $e->getCode()) {
-                        case 422:
-                            $form->addError(new FormError(
-                                $translator->trans('email.first.existingError', [
-                                    '%login%' => $this->generateUrl('login'),
-                                    '%passwordForgotten%' => $this->generateUrl('password_forgotten'),
-                                ], 'register')
-                            ));
-                            break;
+                    match ((int) $e->getCode()) {
+                        422 => $form->addError(new FormError(
+                            $translator->trans('email.first.existingError', [
+                                '%login%' => $this->generateUrl('login'),
+                                '%passwordForgotten%' => $this->generateUrl('password_forgotten'),
+                            ], 'register')
+                        )),
+                        421 => $form->addError(new FormError($translator->trans('formErrors.matching', [], 'register'))),
+                        424 => $form->get('addressPostcode')->addError(new FormError($translator->trans('postcode.matchingError', [], 'register'))),
+                        425 => $form->addError(new FormError($translator->trans('formErrors.caseNumberAlreadyUsed', [], 'register'))),
+                        462 => $form->addError(new FormError($translator->trans('formErrors.deputyNotUniquelyIdentified', [], 'register'))),
+                        463 => $form->addError(new FormError($translator->trans('formErrors.deputyAlreadyLinkedToCaseNumber', [], 'register'))),
+                        default => $form->addError(new FormError($translator->trans('formErrors.generic', [], 'register'))),
+                    };
 
-                        case 421:
-                            $form->addError(new FormError($translator->trans('formErrors.matching', [], 'register')));
-                            break;
-
-                        case 424:
-                            $form->get('addressPostcode')->addError(new FormError($translator->trans('postcode.matchingError', [], 'register')));
-                            break;
-
-                        case 425:
-                            $form->addError(new FormError($translator->trans('formErrors.caseNumberAlreadyUsed', [], 'register')));
-                            break;
-
-                        case 462:
-                            $form->addError(new FormError($translator->trans('formErrors.deputyNotUniquelyIdentified', [], 'register')));
-                            break;
-
-                        case 463:
-                            $form->addError(new FormError($translator->trans('formErrors.deputyAlreadyLinkedToCaseNumber', [], 'register')));
-                            break;
-
-                        default:
-                            $form->addError(new FormError($translator->trans('formErrors.generic', [], 'register')));
-                    }
-
-                    $this->logger->error(__METHOD__.': '.$e->getMessage().', code: '.$e->getCode());
+                    $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
                 }
             }
         }
@@ -156,7 +149,7 @@ class CoDeputyController extends AbstractController
      */
     #[Route(path: '/codeputy/{clientId}/add', name: 'add_co_deputy')]
     #[Template('@App/CoDeputy/add.html.twig')]
-    public function addAction(Request $request, Redirector $redirector, $clientId): array|RedirectResponse
+    public function addAction(Request $request, Redirector $redirector, int $clientId): array|RedirectResponse
     {
         $loggedInUser = $this->userApi->getUserWithData(['user-clients', 'client']);
 
@@ -168,12 +161,12 @@ class CoDeputyController extends AbstractController
         $invitedUser = new User();
         $form = $this->createForm(CoDeputyInviteType::class, $invitedUser);
 
-        $backLink = $this->generateUrl('lay_home', ['clientId' => $loggedInUser->getFirstClient()->getId()]);
+        $backLink = $this->generateUrl('courtorders_for_deputy');
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->userApi->createCoDeputy($invitedUser, $loggedInUser, intval($clientId));
+                $this->userApi->createCoDeputy($invitedUser, $loggedInUser, $clientId);
 
                 $this->userApi->update(
                     $loggedInUser,
@@ -190,10 +183,10 @@ class CoDeputyController extends AbstractController
                         $form->get('email')->addError(new FormError($this->translator->trans('form.email.existingError', [], 'co-deputy')));
                         break;
                     default:
-                        $this->logger->error(__METHOD__.': '.$e->getMessage().', code: '.$e->getCode());
+                        $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
                         throw $e;
                 }
-                $this->logger->error(__METHOD__.': '.$e->getMessage().', code: '.$e->getCode());
+                $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
             }
         }
 
@@ -218,7 +211,7 @@ class CoDeputyController extends AbstractController
 
         $form = $this->createForm(CoDeputyInviteType::class, $existingCoDeputy);
 
-        $backLink = $this->generateUrl('lay_home', ['clientId' => $loggedInUser->getFirstClient()->getId()]);
+        $backLink = $this->generateUrl('courtorders_for_deputy');
 
         $form->handleRequest($request);
 
@@ -233,7 +226,7 @@ class CoDeputyController extends AbstractController
 
                 // firstname, lastname or email were updated on the fly
                 if ($formEmail != $email || $formFirstName != $firstName || $formLastName != $lastName) {
-                    $this->restClient->put('codeputy/'.$existingCoDeputy->getId(), $form->getData(), []);
+                    $this->restClient->put('codeputy/' . $existingCoDeputy->getId(), $form->getData(), []);
                 }
 
                 $this->userApi->reInviteCoDeputy($formEmail, $loggedInUser);
@@ -247,10 +240,10 @@ class CoDeputyController extends AbstractController
                         $form->get('email')->addError(new FormError($this->translator->trans('form.email.existingError', [], 'co-deputy')));
                         break;
                     default:
-                        $this->logger->error(__METHOD__.': '.$e->getMessage().', code: '.$e->getCode());
+                        $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
                         throw $e;
                 }
-                $this->logger->error(__METHOD__.': '.$e->getMessage().', code: '.$e->getCode());
+                $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
             }
         }
 

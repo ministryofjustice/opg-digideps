@@ -4,6 +4,7 @@ resource "aws_cloudwatch_event_rule" "csv_automation_court_order_processing" {
   name                = "csv-automation-court-order-processing-${local.environment}"
   description         = "Process Sirus Court Orders CSV for all Users ${terraform.workspace}"
   schedule_expression = "cron(59 4 * * ? *)"
+  is_enabled          = var.account.is_production == 1 ? true : false
   tags                = var.default_tags
 }
 
@@ -29,7 +30,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_court_order_processing" {
       "containerOverrides" : [
         {
           "name" : "api_app",
-          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:ingest-deputyships-csv", "--env=prod", "--no-debug", local.deputyships_report_csv_file, "--dry-run=true"]
+          "command" : ["sh", "scripts/task_run_console_command.sh", "digideps:api:ingest-deputyships-csv", "--env=prod", "--no-debug", local.deputyships_report_csv_file]
         }
       ]
     }
@@ -42,6 +43,7 @@ resource "aws_cloudwatch_event_rule" "csv_automation_lay_processing" {
   name                = "csv-automation-lay-processing-${local.environment}"
   description         = "Process Sirus Lay CSV for Lay Users ${terraform.workspace}"
   schedule_expression = "cron(0 2 * * ? *)"
+  is_enabled          = var.account.is_production == 1 ? true : false
   tags                = var.default_tags
 }
 
@@ -80,6 +82,7 @@ resource "aws_cloudwatch_event_rule" "csv_automation_org_processing" {
   name                = "csv-automation-org-processing-${local.environment}"
   description         = "Process Sirus Org CSV for Org Users  ${terraform.workspace}"
   schedule_expression = "cron(30 2 * * ? *)"
+  is_enabled          = var.account.is_production == 1 ? true : false
   tags                = var.default_tags
 }
 

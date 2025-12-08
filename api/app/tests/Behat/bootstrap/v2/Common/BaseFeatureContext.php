@@ -58,7 +58,6 @@ class BaseFeatureContext extends MinkContext
 
     public UserDetails $layDeputyNotStartedPfaLowAssetsDetails;
     public UserDetails $layDeputyCompletedPfaLowAssetsDetails;
-    public UserDetails $layDeputySubmittedPfaLowAssetsDetails;
 
     public UserDetails $layDeputyNotStartedHealthWelfareDetails;
     public UserDetails $layDeputyCompletedHealthWelfareDetails;
@@ -79,16 +78,13 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $profNamedDeputySubmittedHealthWelfareDetails;
 
     public UserDetails $publicAuthorityNamedNotStartedPfaHighDetails;
-    public UserDetails $publicAuthorityNamedCompletedPfaHighDetails;
     public UserDetails $publicAuthorityNamedSubmittedPfaHighDetails;
 
     public UserDetails $profNamedDeputyNotStartedPfaHighDetails;
-    public UserDetails $profNamedDeputyCompletedPfaHighDetails;
     public UserDetails $profNamedDeputySubmittedPfaHighDetails;
 
     public UserDetails $profTeamDeputyNotStartedHealthWelfareDetails;
     public UserDetails $profTeamDeputyCompletedHealthWelfareDetails;
-    public UserDetails $profTeamDeputySubmittedHealthWelfareDetails;
 
     public UserDetails $profAdminDeputyHealthWelfareNotStartedDetails;
     public UserDetails $profAdminDeputyHealthWelfareCompletedDetails;
@@ -114,7 +110,6 @@ class BaseFeatureContext extends MinkContext
 
     public UserDetails $layNdrDeputyNotStartedDetails;
     public UserDetails $layNdrDeputyCompletedDetails;
-    public UserDetails $layNdrDeputySubmittedDetails;
 
     public ?UserDetails $loggedInUserDetails = null;
     public ?UserDetails $interactingWithUserDetails = null;
@@ -160,11 +155,6 @@ class BaseFeatureContext extends MinkContext
     {
         $this->faker = Factory::create('en_GB');
         $this->testRunId = (string) (time() + rand());
-        $this->resetCommonProperties();
-    }
-
-    private function resetCommonProperties()
-    {
         $this->loggedInUserDetails = null;
         $this->interactingWithUserDetails = null;
         $this->submittedAnswersByFormSections = ['totals' => ['grandTotal' => 0]];

@@ -1,42 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Admin;
 
 use App\Controller\AbstractController;
-use App\Form as FormDir;
+use App\Form\Admin\SettingType;
 use App\Service\Client\RestClient;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-/**
- * @Route("/admin/settings")
- */
+#[Route(path: '/admin/settings')]
 class SettingController extends AbstractController
 {
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-
-    public function __construct(
-        RestClient $restClient
-    ) {
-        $this->restClient = $restClient;
+    public function __construct(private readonly RestClient $restClient)
+    {
     }
 
-    /**
-     * @Route("/service-notification", name="admin_setting_service_notifications")
-     * @Security("is_granted('ROLE_SUPER_ADMIN')")
-     * @Template("@App/Admin/Setting/serviceNotification.html.twig")
-     */
-    public function serviceNotificationAction(Request $request)
+    #[Route(path: '/service-notification', name: 'admin_setting_service_notifications')]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    #[Template('@App/Admin/Setting/serviceNotification.html.twig')]
+    public function serviceNotificationAction(Request $request): RedirectResponse|array
     {
         $endpoint = 'setting/service-notification';
         $setting = $this->restClient->get($endpoint, 'Setting');
         $form = $this->createForm(
-            FormDir\Admin\SettingType::class,
+            SettingType::class,
             $setting
         );
 

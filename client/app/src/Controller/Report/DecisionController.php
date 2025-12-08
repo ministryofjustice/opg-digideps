@@ -1,13 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
-use App\Entity as EntityDir;
-use App\Form as FormDir;
+use App\Entity\Report\Decision;
+use App\Entity\Report\MentalCapacity;
+use App\Entity\Report\Status;
+use App\Form\ConfirmDeleteType;
+use App\Form\Report\DecisionExistType;
+use App\Form\Report\DecisionType;
+use App\Form\Report\MentalAssessment;
+use App\Form\Report\MentalCapacityType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -15,7 +24,7 @@ use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class DecisionController extends AbstractController
 {
-    private static $jmsGroups = [
+    private static array $jmsGroups = [
         'decision',
         'mental-capacity',
         'decision-status',
@@ -28,16 +37,13 @@ class DecisionController extends AbstractController
     ) {
     }
 
-    /**
-     * @Route("/report/{reportId}/decisions", name="decisions")
-     *
-     * @Template("@App/Report/Decision/start.html.twig")
-     */
+    #[Route(path: '/report/{reportId}/decisions', name: 'decisions')]
+    #[Template('@App/Report/Decision/start.html.twig')]
     public function startAction(int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (EntityDir\Report\Status::STATE_NOT_STARTED != $report->getStatus()->getDecisionsState()['state']) {
+        if (Status::STATE_NOT_STARTED != $report->getStatus()->getDecisionsState()['state']) {
             return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
         }
 
@@ -46,11 +52,8 @@ class DecisionController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/decisions/mental-capacity", name="decisions_mental_capacity")
-     *
-     * @Template("@App/Report/Decision/mentalCapacity.html.twig")
-     */
+    #[Route(path: '/report/{reportId}/decisions/mental-capacity', name: 'decisions_mental_capacity')]
+    #[Template('@App/Report/Decision/mentalCapacity.html.twig')]
     public function mentalCapacityAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -58,17 +61,17 @@ class DecisionController extends AbstractController
 
         $mc = $report->getMentalCapacity();
         if (null == $mc) {
-            $mc = new EntityDir\Report\MentalCapacity();
+            $mc = new MentalCapacity();
         }
 
-        $form = $this->createForm(FormDir\Report\MentalCapacityType::class, $mc);
+        $form = $this->createForm(MentalCapacityType::class, $mc);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->restClient->put('report/'.$reportId.'/mental-capacity', $data, ['mental-capacity']);
+            $this->restClient->put('report/' . $reportId . '/mental-capacity', $data, ['mental-capacity']);
             if ($fromSummaryPage) {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
             }
@@ -84,11 +87,8 @@ class DecisionController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/decisions/mental-assessment", name="decisions_mental_assessment")
-     *
-     * @Template("@App/Report/Decision/mentalAssessment.html.twig")
-     */
+    #[Route(path: '/report/{reportId}/decisions/mental-assessment', name: 'decisions_mental_assessment')]
+    #[Template('@App/Report/Decision/mentalAssessment.html.twig')]
     public function mentalAssessmentAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -96,17 +96,17 @@ class DecisionController extends AbstractController
 
         $mc = $report->getMentalCapacity();
         if (null == $mc) {
-            $mc = new EntityDir\Report\MentalCapacity();
+            $mc = new MentalCapacity();
         }
 
-        $form = $this->createForm(FormDir\Report\MentalAssessment::class, $mc);
+        $form = $this->createForm(MentalAssessment::class, $mc);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $data->setReport($report);
 
-            $this->restClient->put('report/'.$reportId.'/mental-capacity', $data, ['mental-assessment-date']);
+            $this->restClient->put('report/' . $reportId . '/mental-capacity', $data, ['mental-assessment-date']);
             if ($fromSummaryPage) {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
             }
@@ -122,34 +122,34 @@ class DecisionController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/decisions/exist", name="decisions_exist")
-     *
-     * @Template("@App/Report/Decision/exist.html.twig")
-     */
+    #[Route(path: '/report/{reportId}/decisions/exist', name: 'decisions_exist')]
+    #[Template('@App/Report/Decision/exist.html.twig')]
     public function existAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $form = $this->createForm(FormDir\Report\DecisionExistType::class, $report);
+        $form = $this->createForm(DecisionExistType::class, $report);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $report = $form->getData();
-            $answer = $form['significantDecisionsMade']->getData();
+
+            /** @var Form $significantDecisionsMade */
+            $significantDecisionsMade = $form['significantDecisionsMade'];
+            $answer = $significantDecisionsMade->getData();
 
             if ('Yes' == $answer) {
                 $report->setReasonForNoDecisions(null);
 
-                $this->updateReport($report, $reportId, ['significantDecisionsMade', 'reasonForNoDecisions']);
+                $this->updateReport($report, $reportId);
 
                 return $this->redirectToRoute('decisions_add', ['reportId' => $reportId, 'from' => 'decisions_exist']);
             } else {
                 foreach ($report->getDecisions() as $decision) {
-                    $this->restClient->delete('/report/decision/'.$decision->getId());
+                    $this->restClient->delete('/report/decision/' . $decision->getId());
                 }
 
                 // this must proceed the deletion above if deputy switches from 'yes' to 'no' as it will not persist the 'reason for decision' answer
-                $this->updateReport($report, $reportId, ['significantDecisionsMade', 'reasonForNoDecisions']);
+                $this->updateReport($report, $reportId);
 
                 return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
             }
@@ -167,23 +167,20 @@ class DecisionController extends AbstractController
         ];
     }
 
-    private function updateReport($report, $reportId, $fields)
+    private function updateReport($report, int $reportId): void
     {
-        $this->restClient->put('report/'.$reportId, $report, $fields);
+        $fields = ['significantDecisionsMade', 'reasonForNoDecisions'];
+        $this->restClient->put('report/' . $reportId, $report, $fields);
     }
 
-    /**
-     * @Route("/report/{reportId}/decisions/add", name="decisions_add")
-     *
-     * @Template("@App/Report/Decision/add.html.twig")
-     */
+    #[Route(path: '/report/{reportId}/decisions/add', name: 'decisions_add')]
+    #[Template('@App/Report/Decision/add.html.twig')]
     public function addAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $decision = new EntityDir\Report\Decision();
-        $from = $request->get('from');
+        $decision = new Decision();
 
-        $form = $this->createForm(FormDir\Report\DecisionType::class, $decision);
+        $form = $this->createForm(DecisionType::class, $decision);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -192,19 +189,26 @@ class DecisionController extends AbstractController
 
             $this->restClient->post('report/decision', $data, ['decision', 'report-id']);
 
-            return $this->redirect($this->generateUrl('decisions_add_another', ['reportId' => $reportId]));
+            /** @var Form $addAnother */
+            $addAnother = $form['addAnother'];
+            switch ($addAnother->getData()) {
+                case 'yes':
+                    return $this->redirectToRoute('decisions_add', ['reportId' => $reportId]);
+                case 'no':
+                    return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
+            }
         }
 
         // TODO use $backLinkRoute logic and align to other controllers
         try {
-            $backLink = $this->generateUrl($from, ['reportId' => $reportId]);
+            $backLink = $this->generateUrl('decisions_summary', ['reportId' => $reportId]);
 
             return [
                 'backLink' => $backLink,
                 'form' => $form->createView(),
                 'report' => $report,
             ];
-        } catch (RouteNotFoundException $e) {
+        } catch (RouteNotFoundException) {
             return [
                 'backLink' => null,
                 'form' => $form->createView(),
@@ -213,45 +217,15 @@ class DecisionController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/report/{reportId}/decisions/add_another", name="decisions_add_another")
-     *
-     * @Template("@App/Report/Decision/addAnother.html.twig")
-     */
-    public function addAnotherAction(Request $request, int $reportId): array|RedirectResponse
-    {
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-
-        $form = $this->createForm(FormDir\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-decisions']);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            switch ($form['addAnother']->getData()) {
-                case 'yes':
-                    return $this->redirectToRoute('decisions_add', ['reportId' => $reportId, 'from' => 'decisions_add_another']);
-                case 'no':
-                    return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
-            }
-        }
-
-        return [
-            'form' => $form->createView(),
-            'report' => $report,
-        ];
-    }
-
-    /**
-     * @Route("/report/{reportId}/decisions/edit/{decisionId}", name="decisions_edit")
-     *
-     * @Template("@App/Report/Decision/edit.html.twig")
-     */
+    #[Route(path: '/report/{reportId}/decisions/edit/{decisionId}', name: 'decisions_edit')]
+    #[Template('@App/Report/Decision/edit.html.twig')]
     public function editAction(Request $request, int $reportId, int $decisionId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $decision = $this->restClient->get('report/decision/'.$decisionId, 'Report\\Decision');
+        $decision = $this->restClient->get('report/decision/' . $decisionId, 'Report\\Decision');
         $decision->setReport($report);
 
-        $form = $this->createForm(FormDir\Report\DecisionType::class, $decision);
+        $form = $this->createForm(DecisionType::class, $decision);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -262,7 +236,14 @@ class DecisionController extends AbstractController
 
             $request->getSession()->getFlashBag()->add('notice', 'Decision edited');
 
-            return $this->redirect($this->generateUrl('decisions', ['reportId' => $reportId]));
+            /** @var Form $addAnother */
+            $addAnother = $form['addAnother'];
+            switch ($addAnother->getData()) {
+                case 'yes':
+                    return $this->redirectToRoute('decisions_add', ['reportId' => $reportId]);
+                case 'no':
+                    return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
+            }
         }
 
         return [
@@ -272,17 +253,14 @@ class DecisionController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/decisions/summary", name="decisions_summary")
-     *
-     * @Template("@App/Report/Decision/summary.html.twig")
-     */
+    #[Route(path: '/report/{reportId}/decisions/summary', name: 'decisions_summary')]
+    #[Template('@App/Report/Decision/summary.html.twig')]
     public function summaryAction(Request $request, int $reportId): array|RedirectResponse
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDecisionsState()['state'] && 'skip-step' != $fromPage) {
+        if (Status::STATE_NOT_STARTED == $report->getStatus()->getDecisionsState()['state'] && 'skip-step' != $fromPage) {
             return $this->redirectToRoute('decisions', ['reportId' => $reportId]);
         }
 
@@ -296,18 +274,15 @@ class DecisionController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/decisions/{decisionId}/delete", name="decisions_delete")
-     *
-     * @Template("@App/Common/confirmDelete.html.twig")
-     */
+    #[Route(path: '/report/{reportId}/decisions/{decisionId}/delete', name: 'decisions_delete')]
+    #[Template('@App/Common/confirmDelete.html.twig')]
     public function deleteAction(Request $request, int $reportId, int $decisionId): array|RedirectResponse
     {
-        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
+        $form = $this->createForm(ConfirmDeleteType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->delete("/report/decision/{$decisionId}");
+            $this->restClient->delete("/report/decision/$decisionId");
 
             $request->getSession()->getFlashBag()->add(
                 'notice',
@@ -318,7 +293,7 @@ class DecisionController extends AbstractController
         }
 
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $decision = $this->restClient->get('report/decision/'.$decisionId, 'Report\\Decision');
+        $decision = $this->restClient->get('report/decision/' . $decisionId, 'Report\\Decision');
 
         return [
             'translationDomain' => 'report-decisions',
