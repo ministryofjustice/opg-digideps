@@ -11,6 +11,8 @@ doctrine:
                 password: "%database_password%"
                 sslmode: "%database_ssl_mode%"
                 sslrootcert: "%kernel.project_dir%/certs/eu-west-1-bundle.pem"
+                profiling: true
+                logging: true
                 server_version: 14.18
                 wrapper_class: App\DBAL\ConnectionWrapper
                 charset: UTF8

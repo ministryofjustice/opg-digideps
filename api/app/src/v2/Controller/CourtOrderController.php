@@ -48,6 +48,7 @@ class CourtOrderController extends AbstractController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function getByUid(string $uid): JsonResponse
     {
+        file_put_contents('php://stderr', print_r("BLAHBLAH", true));
         $user = $this->getUser();
 
         $courtOrder = $this->courtOrderService->getByUidAsUser($uid, $user);
