@@ -129,7 +129,7 @@ class NdrController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        $backLink = $this->generateUrl('lay_home', ['clientId' => $clientId]);
+        $backLink = $this->generateUrl('courtorders_for_deputy');
 
         return [
             'ndr' => $ndr,

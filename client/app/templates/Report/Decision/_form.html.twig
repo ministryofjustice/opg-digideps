@@ -15,13 +15,23 @@
     </h3>
 
     {{ form_checkbox_group(form.clientInvolvedBoolean, 'form.clientInvolvedBoolean', {
-        'fieldSetClass' : 'inline',
-        'legendClass' : 'form-label',
+        'fieldSetClass': 'inline',
+        'legendClass': 'form-label',
         'labelParameters': transOptions
     }) }}
 
     {{ form_input(form.clientInvolvedDetails,'form.clientInvolvedDetails', {
         'labelClass': 'required',
+        'labelParameters': transOptions
+    }) }}
+
+    <h3 class="govuk-heading-m">
+        {{ 'form.addAnother.heading' | trans({}, translationDomain) }}
+    </h3>
+
+    {{ form_checkbox_group(form.addAnother, 'form.addAnother', {
+        'fieldSetClass': 'inline',
+        'legendClass': 'form-label',
         'labelParameters': transOptions
     }) }}
 

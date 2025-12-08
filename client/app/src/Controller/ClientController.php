@@ -183,7 +183,7 @@ class ClientController extends AbstractController
                 $event = new RegistrationSucceededEvent($currentUser);
                 $this->eventDispatcher->dispatch($event, RegistrationSucceededEvent::DEPUTY);
 
-                $url = $this->generateUrl('lay_home', ['clientId' => $response['id']]);
+                $url = $this->generateUrl('courtorders_for_deputy');
 
                 return $this->redirect($url);
             } catch (\Throwable $e) {

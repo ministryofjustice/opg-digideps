@@ -696,11 +696,6 @@ parameters:
 			path: src/Controller/CoDeputyController.php
 
 		-
-			message: "#^Cannot call method getId\\(\\) on App\\\\Entity\\\\Client\\|null\\.$#"
-			count: 2
-			path: src/Controller/CoDeputyController.php
-
-		-
 			message: "#^Cannot call method getId\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Controller/CoDeputyController.php
@@ -1921,11 +1916,6 @@ parameters:
 			path: src/Controller/Report/DecisionController.php
 
 		-
-			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
-			count: 2
-			path: src/Controller/Report/DecisionController.php
-
-		-
 			message: "#^Cannot call method getDecisions\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Controller/Report/DecisionController.php
@@ -1947,11 +1937,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\DecisionController\\:\\:updateReport\\(\\) has parameter \\$report with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/DecisionController.php
-
-		-
-			message: "#^Parameter \\#1 \\$route of method Symfony\\\\Bundle\\\\FrameworkBundle\\\\Controller\\\\AbstractController\\:\\:generateUrl\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Report/DecisionController.php
 
@@ -10821,17 +10806,7 @@ parameters:
 			path: src/Service/ParameterStoreService.php
 
 		-
-			message: "#^Method App\\\\Service\\\\Redirector\\:\\:getCorrectLayHomepage\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/Redirector.php
-
-		-
 			message: "#^Method App\\\\Service\\\\Redirector\\:\\:getHomepageRedirect\\(\\) should return string but returns false\\.$#"
-			count: 1
-			path: src/Service/Redirector.php
-
-		-
-			message: "#^Method App\\\\Service\\\\Redirector\\:\\:getLayDeputyHomepage\\(\\) has parameter \\$activeClientId with no type specified\\.$#"
 			count: 1
 			path: src/Service/Redirector.php
 
@@ -10843,11 +10818,6 @@ parameters:
 		-
 			message: "#^Method App\\\\Service\\\\Redirector\\:\\:removeLastAccessedUrl\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: src/Service/Redirector.php
-
-		-
-			message: "#^Parameter \\#1 \\$name of method Symfony\\\\Component\\\\Routing\\\\Generator\\\\UrlGeneratorInterface\\:\\:generate\\(\\) expects string, string\\|true given\\.$#"
-			count: 2
 			path: src/Service/Redirector.php
 
 		-
