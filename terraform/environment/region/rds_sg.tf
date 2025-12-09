@@ -7,13 +7,6 @@ locals {
       target_type = "security_group_id"
       target      = module.api_service_security_group.id
     }
-    cloud9 = {
-      port        = 5432
-      protocol    = "tcp"
-      type        = "ingress"
-      target_type = "security_group_id"
-      target      = data.aws_security_group.cloud9.id
-    }
     ssm_ec2_data_access = {
       port        = 5432
       protocol    = "tcp"
