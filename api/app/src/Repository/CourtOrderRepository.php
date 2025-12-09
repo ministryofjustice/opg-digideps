@@ -33,7 +33,9 @@ class CourtOrderRepository extends ServiceEntityRepository
             INNER JOIN court_order_report cr ON co.id = cr.court_order_id
             INNER JOIN deputy d ON cd.deputy_id = d.id
             INNER JOIN report re ON cr.report_id = re.id
-            WHERE d.deputy_uid = :deputyUid
+            WHERE co.status IN ('ACTIVE')
+            AND cd.is_active = TRUE
+            AND d.deputy_uid = :deputyUid
             AND r.id = re.id
         ) AS "courtOrderUid",
         cod.is_active AS "isActive",
@@ -44,7 +46,9 @@ class CourtOrderRepository extends ServiceEntityRepository
         INNER JOIN court_order_deputy cod ON co.id = cod.court_order_id
         INNER JOIN client c ON co.client_id = c.id
         INNER JOIN deputy d ON cod.deputy_id = d.id
-        WHERE d.deputy_uid = :deputyUid
+        WHERE co.status IN ('ACTIVE')
+        AND cod.is_active = TRUE
+        AND d.deputy_uid = :deputyUid
         AND cod.deputy_id = d.id
         SQL;
 
