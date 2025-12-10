@@ -59,6 +59,7 @@ class CourtOrderController extends AbstractController
         // rather than returning a 403 or similar, as the latter might reveal information about whether the court order
         // UID exists or not (a 403 would imply the resource exists but the user doesn't have permission to see it)
         if (is_null($courtOrderView)) {
+            file_put_contents('php://stderr', print_r('COULD NOT', true));
             return $this->buildNotFoundResponse('Could not find court order');
         }
 
@@ -74,7 +75,7 @@ class CourtOrderController extends AbstractController
             'code' => 200,
         ], 'json', $ctx);
 
-        // file_put_contents('php://stderr', print_r($data, true));
+//        file_put_contents('php://stderr', print_r($data, true));
 
         return new JsonResponse(data: $data, json: true);
     }

@@ -97,7 +97,7 @@ class DeputyServiceIntegrationTest extends ApiIntegrationTestCase
             courtOrderUid: $courtOrderUid,
             report: $report,
             deputy: $deputy,
-            isActive: false,
+            deputyIsActive: false,
         );
 
         $results = self::$sut->findReportsInfoByUid(uid: "$deputyUid");
