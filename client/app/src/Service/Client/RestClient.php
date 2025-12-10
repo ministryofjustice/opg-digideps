@@ -232,7 +232,8 @@ class RestClient implements RestClientInterface
     {
         /** @var array $resultArray */
         $resultArray = $this->get($endpoint, 'array');
-        file_put_contents('php://stderr', print_r($resultArray, true));
+//        file_put_contents('php://stderr', print_r($resultArray, true));
+//        file_put_contents('php://stderr', print_r('JIM', true));
         /** @var T $deserializedObject */
         $deserializedObject = $this->serializer->deserialize(json_encode($resultArray, JSON_THROW_ON_ERROR), $deserializationClass, 'json');
 

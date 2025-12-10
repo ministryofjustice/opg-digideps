@@ -23,12 +23,45 @@ class CourtOrderService
     ) {
     }
 
+
+    private function transformDate(mixed $dateValue, string $fieldName, string $format): ?string
+    {
+        if (empty($dateValue)) {
+            return null;
+        }
+
+        try {
+            $date = new \DateTimeImmutable($dateValue);
+            return $date->format($format);
+        } catch (\Exception $e) {
+            // Optional: log the error for debugging
+            file_put_contents('php://stderr', sprintf(
+                "Date transform failed for %s: %s (value: %s)\n",
+                $fieldName,
+                $e->getMessage(),
+                $dateValue
+            ));
+            return null;
+        }
+    }
+
+    public function transformReportDates(array $reportArray): ?array
+    {
+        $reportArray['due_date'] = $this->transformDate($reportArray['due_date'], 'dueDate', 'Y-m-d');
+        $reportArray['submit_date'] = $this->transformDate($reportArray['submit_date'], 'submitDate', 'Y-m-d\TH:i:sP');
+        $reportArray['un_submit_date'] = $this->transformDate($reportArray['un_submit_date'], 'unSubmitDate', 'Y-m-d');
+        $reportArray['start_date'] = $this->transformDate($reportArray['start_date'], 'startDate', 'Y-m-d');
+        $reportArray['end_date'] = $this->transformDate($reportArray['end_date'], 'endDate', 'Y-m-d');
+
+        return $reportArray;
+    }
+
     public function getCourtOrderView(string $uid, ?UserInterface $user): ?array
     {
         if (!$user) {
             return null;
         }
-
+        $valid = false;
         $userId = $user->getId();
         $courtOrder = $this->courtOrderRepository->findCourtOrderByUID($uid, $userId);
         $courtOrderView = $courtOrder[0];
@@ -39,29 +72,26 @@ class CourtOrderService
         $courtOrderView['client'] = $clientSqlResults[0];
 
         $courtOrderView['reports'] = [];
-
-        file_put_contents('php://stderr', print_r($reportsSqlResults, true));
         foreach ($reportsSqlResults as $report) {
             // Get user details for this deputy
             $report['status']['status'] = $report['report_status_cached'];
+            $report = $this->transformReportDates($report);
             $courtOrderView['reports'][] = $report;
         }
 
+
         foreach ($deputiesSqlResults as $deputy) {
-            // Get user details for this deputy
             $userSqlResults = $this->userRepository->findUserById($deputy['user_id']);
-
-            // Remove user_id from deputy array
+            if ($deputy['user_id'] == $userId) {
+                $valid = true;
+            }
             unset($deputy['user_id']);
-
-            // Add user details under 'user'
             $deputy['user'] = $userSqlResults[0];
-
-            // Append to active_deputies list
             $courtOrderView['active_deputies'][] = $deputy;
         }
-        // Debug output (optional)
-
+        if (!$valid) {
+            return null;
+        }
         return $courtOrderView;
     }
 

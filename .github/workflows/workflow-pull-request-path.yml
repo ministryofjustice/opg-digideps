@@ -129,7 +129,6 @@ jobs:
       - workflow_variables
       - build_web_resources
       - trivy_secret_scanning
-      - php_style
     with:
       tag: ${{ needs.workflow_variables.outputs.version_tag }}
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
