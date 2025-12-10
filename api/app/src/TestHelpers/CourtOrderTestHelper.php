@@ -22,7 +22,7 @@ class CourtOrderTestHelper
         string $type = 'pfa',
         ?Report $report = null,
         ?Deputy $deputy = null,
-        bool $isActive = true,
+        bool $deputyIsActive = true,
         \DateTime $orderDate = (new \DateTime()),
     ): CourtOrder {
         /** @var CourtOrder $courtOrder */
@@ -38,7 +38,7 @@ class CourtOrderTestHelper
         }
 
         if (!is_null($deputy)) {
-            $deputy->associateWithCourtOrder($courtOrder, $isActive);
+            $deputy->associateWithCourtOrder($courtOrder, $deputyIsActive);
         }
 
         $em->persist($courtOrder);
