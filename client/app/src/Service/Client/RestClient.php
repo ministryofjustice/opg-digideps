@@ -232,8 +232,7 @@ class RestClient implements RestClientInterface
     {
         /** @var array $resultArray */
         $resultArray = $this->get($endpoint, 'array');
-//        file_put_contents('php://stderr', print_r($resultArray, true));
-//        file_put_contents('php://stderr', print_r('JIM', true));
+
         /** @var T $deserializedObject */
         $deserializedObject = $this->serializer->deserialize(json_encode($resultArray, JSON_THROW_ON_ERROR), $deserializationClass, 'json');
 
@@ -422,11 +421,11 @@ class RestClient implements RestClientInterface
                 $this->logger->warning('RestClient |  ' . $url . ' | ' . $e->getMessage());
             }
 
-//            throw new AppException\RestClientException($e->getMessage(), $e->getCode(), $data);
+            throw new AppException\RestClientException($e->getMessage(), $e->getCode(), $data);
         } catch (TransferException $e) {
             $this->logger->warning('RestClient | ' . $url . ' | ' . $e->getMessage());
 
-//            throw new AppException\RestClientException($e->getMessage(), $e->getCode());
+            throw new AppException\RestClientException($e->getMessage(), $e->getCode());
         }
     }
 

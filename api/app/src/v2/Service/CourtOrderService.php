@@ -9,6 +9,9 @@ use App\Entity\Deputy;
 use App\Entity\User;
 use App\Repository\CourtOrderRepository;
 use App\Repository\UserRepository;
+use App\Repository\ReportRepository;
+use App\Repository\ClientRepository;
+use App\Repository\DeputyRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -18,6 +21,9 @@ class CourtOrderService
     public function __construct(
         private readonly CourtOrderRepository $courtOrderRepository,
         private readonly UserRepository $userRepository,
+        private readonly ReportRepository $reportRepository,
+        private readonly ClientRepository $clientRepository,
+        private readonly DeputyRepository $deputyRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly LoggerInterface $logger,
     ) {
@@ -65,9 +71,9 @@ class CourtOrderService
         $userId = $user->getId();
         $courtOrder = $this->courtOrderRepository->findCourtOrderByUID($uid, $userId);
         $courtOrderView = $courtOrder[0];
-        $deputiesSqlResults = $this->courtOrderRepository->findDeputiesByUID($uid);
-        $reportsSqlResults = $this->courtOrderRepository->findReportsByCourtOrderUID($uid);
-        $clientSqlResults = $this->courtOrderRepository->findClientByCourtOrderUID($uid);
+        $deputiesSqlResults = $this->deputyRepository->findDeputiesByUID($uid);
+        $reportsSqlResults = $this->reportRepository->findReportsByCourtOrderUID($uid);
+        $clientSqlResults = $this->clientRepository->findClientByCourtOrderUID($uid);
         $courtOrderView['active_deputies'] = [];
         $courtOrderView['client'] = $clientSqlResults[0];
 
