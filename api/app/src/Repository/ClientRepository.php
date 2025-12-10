@@ -108,6 +108,27 @@ class ClientRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    public function findClientByCourtOrderUID(string $uid): ?array
+    {
+        $sql = <<<SQL
+        SELECT c.*
+        FROM court_order co
+        INNER JOIN client c ON c.id = co.client_id
+        INNER JOIN court_order_deputy cod ON cod.court_order_id = co.id
+        WHERE co.court_order_uid = :courtOrderUid
+        AND cod.is_active = TRUE;
+        SQL;
+        $query = $this
+            ->getEntityManager()
+            ->getConnection()
+            ->prepare($sql)
+            ->executeQuery(['courtOrderUid' => $uid]);
+
+        $result = $query->fetchAllAssociative();
+
+        return 0 === count($result) ? null : $result;
+    }
+
     public function findByCaseNumberIncludingDischarged(string $caseNumber): mixed
     {
         $filter = $this->_em->getFilters()->getFilter('softdeleteable');

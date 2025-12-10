@@ -230,13 +230,13 @@ class RestClient implements RestClientInterface
      */
     public function getAndDeserialize(string $endpoint, string $deserializationClass): object
     {
+//        $resultArray = json_decode($jsonString, true, 512, JSON_THROW_ON_ERROR);
         /** @var array $resultArray */
         $resultArray = $this->get($endpoint, 'array');
-//        file_put_contents('php://stderr', print_r($resultArray, true));
-//        file_put_contents('php://stderr', print_r('JIM', true));
+
         /** @var T $deserializedObject */
         $deserializedObject = $this->serializer->deserialize(json_encode($resultArray, JSON_THROW_ON_ERROR), $deserializationClass, 'json');
-
+//        file_put_contents('php://stderr', print_r($deserializedObject, true));
         return $deserializedObject;
     }
 
@@ -316,6 +316,9 @@ class RestClient implements RestClientInterface
                 'addClientSecret' => !$authenticated,
                 'addAuthToken' => $authenticated,
             ]);
+
+//        error_log(print_r($response->getBody(), true));
+
         if ('raw' == $expectedResponseType) {
             return $response->getBody();
         }
@@ -422,11 +425,11 @@ class RestClient implements RestClientInterface
                 $this->logger->warning('RestClient |  ' . $url . ' | ' . $e->getMessage());
             }
 
-//            throw new AppException\RestClientException($e->getMessage(), $e->getCode(), $data);
+            throw new AppException\RestClientException($e->getMessage(), $e->getCode(), $data);
         } catch (TransferException $e) {
             $this->logger->warning('RestClient | ' . $url . ' | ' . $e->getMessage());
 
-//            throw new AppException\RestClientException($e->getMessage(), $e->getCode());
+            throw new AppException\RestClientException($e->getMessage(), $e->getCode());
         }
     }
 

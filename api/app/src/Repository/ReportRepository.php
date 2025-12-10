@@ -127,7 +127,7 @@ class ReportRepository extends ServiceEntityRepository
             $qb
                 ->select(('count' === $select) ? 'COUNT(DISTINCT r)' : 'r,c')
                 ->leftJoin('r.client', 'c')
-                ->leftJoin('c.users', 'u')->where('u.id = '.$orgIdsOrUserId);
+                ->leftJoin('c.users', 'u')->where('u.id = ' . $orgIdsOrUserId);
         } else {
             $qb
                 ->select(('count' === $select) ? 'COUNT(DISTINCT r)' : 'r,c,o')
@@ -391,5 +391,27 @@ END deputy_type";
         $query = $em->createNativeQuery($sql, $rsm)->setParameters(['fromDate' => $fromDate, 'toDate' => $toDate]);
 
         return $query->getResult();
+    }
+
+    public function findReportsByCourtOrderUID(string $uid): ?array
+    {
+        $sql = <<<SQL
+        SELECT r.*
+        FROM court_order co
+        INNER JOIN court_order_deputy cod ON cod.court_order_id = co.id
+        INNER JOIN court_order_report cor ON cor.court_order_id = co.id
+        INNER JOIN report r ON r.id = cor.report_id
+        WHERE co.court_order_uid = :courtOrderUid
+        AND cod.is_active = TRUE;
+        SQL;
+        $query = $this
+            ->getEntityManager()
+            ->getConnection()
+            ->prepare($sql)
+            ->executeQuery(['courtOrderUid' => $uid]);
+
+        $result = $query->fetchAllAssociative();
+
+        return 0 === count($result) ? null : $result;
     }
 }
