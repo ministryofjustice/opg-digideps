@@ -16,7 +16,6 @@ module "eu_west_1" {
   complete_deputy_report_cert_arn   = local.new_cert
   front_fully_qualified_domain_name = local.front_fqdn
   admin_fully_qualified_domain_name = local.admin_fqdn
-  state_role                        = var.STATE_ROLE
 
   providers = {
     aws            = aws.digideps_eu_west_1
@@ -40,7 +39,6 @@ module "eu_west_2" {
   complete_deputy_report_cert_arn   = local.new_cert
   front_fully_qualified_domain_name = local.front_fqdn
   admin_fully_qualified_domain_name = local.admin_fqdn
-  state_role                        = var.STATE_ROLE
 
   providers = {
     aws            = aws.digideps_eu_west_2

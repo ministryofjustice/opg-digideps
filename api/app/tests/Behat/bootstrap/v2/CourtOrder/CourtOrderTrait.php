@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\CourtOrder;
 
+use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
-use DateTime;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\CourtOrderDeputy;
@@ -16,15 +16,14 @@ use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\DeputyTestHelper;
 use App\Tests\Behat\BehatException;
 use Behat\Mink\Element\NodeElement;
-use Doctrine\ORM\EntityManager;
 
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertStringContainsString;
 
 trait CourtOrderTrait
 {
-    public CourtOrder $courtOrder;
-    public array $courtOrders;
+    public ?CourtOrder $courtOrder = null;
+    public array $courtOrders = [];
     public ClientApi $clientApi;
     private Deputy $coDeputy;
     private array $invitedDeputy = [];
@@ -50,7 +49,19 @@ trait CourtOrderTrait
      */
     public function iVisitTheCourtOrderPage()
     {
-        $this->visitFrontendPath('/courtorder/700000000001');
+        // create a court order if we don't already have one, associated with a random user
+        // (not the logged in user)
+        if (is_null($this->courtOrder)) {
+            $data = $this->fixtureHelper->createLayNdrNotStarted($this->testRunId);
+
+            $client = $this->em->getRepository(Client::class)->find($data['clientId']);
+            $user = $this->em->getRepository(User::class)->find($data['userId']);
+            $deputy = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $user->getDeputyUid()]);
+
+            $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder('pfa', $client, $deputy);
+        }
+
+        $this->visitFrontendPath('/courtorder/' . $this->courtOrder->getCourtOrderUid());
     }
 
     /**
@@ -214,17 +225,18 @@ trait CourtOrderTrait
      */
     public function iShouldSeeAnNDROnTheCourtOrderPageWithAStandardReportStatusOf($arg1, $arg2)
     {
-        $this->iAmOnPage(sprintf('{\/courtorder\/deputy\/%s$}', $this->courtOrder->getCourtOrderUid()));
+        /** @var array<NodeElement> $ndrHeading */
+        $ndrHeading = $this->findAllCssElements('main h2');
 
-        /** @var array<NodeElement> $paragraph */
-        $paragraph = $this->findAllXpathElements('//*[@id="main-content"]/div[2]/div[1]/p');
         /** @var array<NodeElement> $ndrStatus */
-        $ndrStatus = $this->findAllXpathElements('//*[@id="main-content"]/div[2]/span');
-        /** @var array<NodeElement> $reportStatus */
-        $reportStatus = $this->findAllXpathElements('//*[@id="main-content"]/div[2]/span');
+        $ndrStatus = $this->findAllXpathElements('//div[contains(@class, "behat-region-ndr-card")]/span[contains(@class, "opg-card__tag")]');
 
-        $text = 'Your new deputy report';
-        if (!str_contains($paragraph[0]->getText(), $text)) {
+        /** @var array<NodeElement> $reportStatus */
+        $reportStatus = $this->findAllXpathElements('//div[contains(@class, "behat-region-report-card")]/span[contains(@class, "opg-card__tag")]');
+
+        // second h2 inside main is the new deputy report; TODO make this not so brittle
+        $text = 'New deputy report';
+        if (!str_contains($ndrHeading[1]->getText(), $text)) {
             throw new BehatException(sprintf('Expected to find text \'%s\' on page, unable to find on page', $text));
         }
 
@@ -263,7 +275,7 @@ trait CourtOrderTrait
     {
         // create deputy with a last_logged_in datetime, so they show as "registered",
         // and associate with the court order (mimicking what will happen when we eventually do this via ingest)
-        $this->coDeputy = $this->fixtureHelper->createDeputyOnOrder($this->courtOrder, new DateTime());
+        $this->coDeputy = $this->fixtureHelper->createDeputyOnOrder($this->courtOrder, new \DateTime());
     }
 
     /**
@@ -381,5 +393,85 @@ trait CourtOrderTrait
     {
         $clientFirstname = $this->courtOrder->getClient()->getFirstname();
         $this->assertPageContainsText($clientFirstname);
+    }
+
+    /**
+     * @Given the client with case number :caseNumber is associated with :orderType court order :courtOrderUid
+     */
+    public function clientAssociatedWithCourtOrder(string $caseNumber, string $orderType, string $courtOrderUid): void
+    {
+        // get the client
+        /** @var ?Client $client */
+        $client = $this->em->getRepository(Client::class)->findOneBy(['caseNumber' => $caseNumber]);
+
+        // this prevents doctrine from incorrectly caching this object with stale state, ensuring that all users are fetched
+        $this->em->refresh($client);
+
+        // get the users so we can get the deputies
+        $users = $client->getUsers()->toArray();
+
+        // get or create the court order
+        $courtOrder = $this->em->getRepository(CourtOrder::class)->findOneBy(['courtOrderUid' => $courtOrderUid]);
+        if (is_null($courtOrder)) {
+            $courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(
+                orderType: $orderType,
+                client: $client,
+                deputy: $users[0]->getDeputy(),
+                courtOrderUid: $courtOrderUid
+            );
+        }
+
+        // associate the court order with the client's reports, ndr, and deputies
+        $reports = $this->em->getRepository(Report::class)->findBy(['client' => $client]);
+        foreach ($reports as $report) {
+            $courtOrder->addReport($report);
+        }
+
+        $ndr = $this->em->getRepository(Ndr::class)->findOneBy(['client' => $client]);
+        if (!is_null($ndr)) {
+            $courtOrder->setNdr($ndr);
+        }
+
+        // associate the client's deputies with the court order
+        foreach (array_slice($users, 1) as $user) {
+            $user->getDeputy()->associateWithCourtOrder($courtOrder);
+        }
+
+        $this->em->persist($courtOrder);
+        $this->em->flush();
+    }
+
+    /**
+     * @Given all the reports for the first client are associated with a :orderType court order
+     */
+    public function allTheReportsForFirstClientOnCourtOrder(string $orderType): void
+    {
+        // get the client
+        $clientId = $this->loggedInUserDetails->getClientId();
+        $client = $this->em->getRepository(Client::class)->find(['id' => $clientId]);
+
+        // get the deputy
+        $deputy = $this->getDeputyForLoggedInUser();
+
+        // create a court order if necessary
+        if (is_null($this->courtOrder)) {
+            $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(
+                $orderType,
+                $client,
+                $deputy,
+            );
+        }
+
+        // associate all the client's reports with that court order; client->getReports() doesn't do what
+        // is expected so just do a query from the reports table
+        $reports = $this->em->getRepository(Report::class)->findBy(['client' => $client]);
+        foreach ($reports as $report) {
+            $this->courtOrder->addReport($report);
+        }
+
+        $this->courtOrders = [$this->courtOrder];
+
+        $this->em->persist($this->courtOrder);
+        $this->em->flush();
     }
 }

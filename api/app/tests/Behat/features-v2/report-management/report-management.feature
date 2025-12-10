@@ -15,6 +15,7 @@ Feature: Report Management (applies to all admin roles)
     @admin-manager @lay-combined-high-submitted
     Scenario: An admin user un-submits a submitted report
         Given a Lay Deputy has submitted a Combined High Assets report
+        And all the reports for the first client are associated with a pfa court order
         And an admin manager user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
         And I manage the deputies 'submitted' report
@@ -30,6 +31,7 @@ Feature: Report Management (applies to all admin roles)
     @admin-manager @lay-combined-high-submitted
     Scenario: An admin user un-submits a submitted report and changes the due date at the same time
         Given a Lay Deputy has submitted a Combined High Assets report
+        And all the reports for the first client are associated with a pfa court order
         And an admin manager user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
         And I manage the deputies 'submitted' report
@@ -75,20 +77,21 @@ Feature: Report Management (applies to all admin roles)
     @admin @admin-manager @pa-admin-combined-high-submitted
     Scenario: An admin manager cannot download a submitted report PDF
         Given a Public Authority Deputy has submitted a Combined High Assets report
-        Given an admin manager user accesses the admin app
+        And an admin manager user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
         Then the link to download the submitted report should not be visible
 
     @admin @admin-manager @pa-admin-combined-high-submitted
     Scenario:An admin cannot download a submitted report PDF
         Given a Public Authority Deputy has submitted a Combined High Assets report
-        Given an admin manager user accesses the admin app
+        And an admin manager user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
         Then the link to download the submitted report should not be visible
 
     @admin-manager @lay-combined-high-submitted
     Scenario: An admin manager un-submits a report that did not have a completed client benefits check section
         Given a Lay Deputy has submitted a Combined High Assets report
+        And all the reports for the first client are associated with a pfa court order
         But they have not completed the client benefits section for their 'previous' report
         And the deputies 'previous' report ends and is due 'less' than 60 days after the client benefits check feature flag date
         And an admin manager user accesses the admin app
@@ -102,9 +105,10 @@ Feature: Report Management (applies to all admin roles)
         Then I should see the report sections the admin ticked as incomplete labelled as changes needed
         And I should be able to submit my 'previous' report without completing the client benefits check section
 
-    @admin-manager @lay-combined-high-submitted
+    @admin-manager @lay-combined-high-submitted @report-management-admin-unsubmit
     Scenario: An admin manager un-submits a report that had a completed client benefits check section
         Given a Lay Deputy has submitted a Combined High Assets report
+        And all the reports for the first client are associated with a pfa court order
         And the deputies 'previous' report ends and is due 'more' than 60 days after the client benefits check feature flag date
         And an admin manager user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
