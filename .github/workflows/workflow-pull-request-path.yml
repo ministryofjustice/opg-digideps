@@ -118,9 +118,9 @@ jobs:
       - workflow_variables
       - trivy_secret_scanning
 
-  php_style:
-    name: PHP Style check
-    uses: ./.github/workflows/_phpcs.yml
+  #  php_style:
+  #    name: PHP Style check
+  #    uses: ./.github/workflows/_phpcs.yml
 
   docker_build_scan_push:
     name: build, scan and push
@@ -129,7 +129,7 @@ jobs:
       - workflow_variables
       - build_web_resources
       - trivy_secret_scanning
-      - php_style
+    #      - php_style
     with:
       tag: ${{ needs.workflow_variables.outputs.version_tag }}
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}

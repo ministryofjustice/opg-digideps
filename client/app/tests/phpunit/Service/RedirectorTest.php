@@ -80,12 +80,12 @@ class RedirectorTest extends TestCase
             'ad homepage' => [User::ROLE_AD, false, false, false, null, true, null, 0, 0, false, 'ad_homepage', [], '/ad/'],
             'non-admin password create' => [null, true, false, false, null, true, ['login-context' => 'password-create'], 0, 0, false, 'user_details', [], '/user/details'],
             'non-admin org dashboard' => [null, true, false, false, null, true, null, 0, 0, false, 'org_dashboard', [], '/org/'],
-            'lay with multiple clients' => [User::ROLE_LAY_DEPUTY, false, false, false, null, true, null, 2, 1, false, 'courtorders_for_deputy', [], '/courtorder/choose-a-court-order'],
-            'lay with single client' => [User::ROLE_LAY_DEPUTY, false, false, false, null, true, null, 1, 1, false, 'courtorders_for_deputy', [], '/courtorder/choose-a-court-order'],
+            'lay with multiple clients' => [User::ROLE_LAY_DEPUTY, false, false, false, null, true, null, 2, 1, false, 'choose_a_client', [], '/choose-a-client'],
+            'lay with single client' => [User::ROLE_LAY_DEPUTY, false, false, false, null, true, null, 1, 1, false, 'lay_home', ['clientId' => 999], '/client/999'],
             'co-deputy lay with single client, not confirmed' => [User::ROLE_LAY_DEPUTY, false, true, false, null, true, null, 1, 0, false, 'codep_verification', [], '/codeputy/verification'],
-            'co-deputy lay with single client, confirmed, client has reports' => [User::ROLE_LAY_DEPUTY, false, true, true, null, true, null, 1, 1, false, 'courtorders_for_deputy', [], '/courtorder/choose-a-court-order'],
-            'co-deputy lay with single client, confirmed, client has no reports, ndr enabled' => [User::ROLE_LAY_DEPUTY, false, true, true, null, true, null, 1, 0, true, 'courtorders_for_deputy', [], '/courtorder/choose-a-court-order'],
-            'co-deputy lay with single client, confirmed, client has no reports, not ndr enabled' => [User::ROLE_LAY_DEPUTY, false, true, true, 1111, true, null, 1, 0, false, 'courtorders_for_deputy', [], '/report/create/1111'],
+            'co-deputy lay with single client, confirmed, client has reports' => [User::ROLE_LAY_DEPUTY, false, true, true, null, true, null, 1, 1, false, 'lay_home', ['clientId' => 999], '/client/999'],
+            'co-deputy lay with single client, confirmed, client has no reports, ndr enabled' => [User::ROLE_LAY_DEPUTY, false, true, true, null, true, null, 1, 0, true, 'lay_home', ['clientId' => 999], '/client/999'],
+            'co-deputy lay with single client, confirmed, client has no reports, not ndr enabled' => [User::ROLE_LAY_DEPUTY, false, true, true, 1111, true, null, 1, 0, false, 'lay_home', ['clientId' => 1111], '/report/create/1111'],
             'lay with no clients added and address details' => [User::ROLE_LAY_DEPUTY, false, false, false, null, true, null, 0, 0, false, 'client_add', [], '/client/add'],
             'lay with no clients added and no address details' => [User::ROLE_LAY_DEPUTY, false, false, false, null, false, null, 0, 0, false, 'user_details', [], '/user/details'],
             'access denied' => [null, false, false, false, null, false, null, 0, 0, false, 'access_denied', [], '/access-denied'],
@@ -228,7 +228,45 @@ class RedirectorTest extends TestCase
         $this->assertEquals('/login', $actual);
     }
 
-    public function testGetFirstPageAfterLoginMulticlient(): void
+    /*
+     * Where the deputy UID returns null clients for a lay deputy, we redirect the user to the appropriate lay homepage
+     */
+    public function testGetFirstPageAfterLoginNullClients(): void
+    {
+        $this->tokenStorage->expects($this->once())->method('getToken')->willReturn($this->token);
+        $this->token->expects($this->once())->method('getUser')->willReturn($this->user);
+
+        $this->authChecker->method('isGranted')
+            ->willReturnCallback(function ($role) {
+                return User::ROLE_LAY_DEPUTY === $role;
+            });
+
+        $this->user->method('getDeputyUid')->willReturn(3322);
+
+        // avoid triggering any conditions in getCorrectRouteIfDifferent()
+        $this->user->method('hasAdminRole')->willReturn(false);
+        $this->user->method('getIsCoDeputy')->willReturn(false);
+        $this->user->method('isDeputyOrg')->willReturn(false);
+        $this->user->method('hasAddressDetails')->willReturn(true);
+
+        $this->clientApi
+            ->method('getAllClientsByDeputyUid')
+            ->willReturn(null);
+
+        $this->router->expects($this->once())
+            ->method('generate')
+            ->with('invalid_data')
+            ->willReturn('/invalid-data');
+
+        $actual = $this->sut->getFirstPageAfterLogin($this->session);
+
+        self::assertEquals('/invalid-data', $actual);
+    }
+
+    /*
+     * Deputy has multiple clients but has an NDR to complete
+     */
+    public function testGetFirstPageAfterLoginMulticlientWithNdr(): void
     {
         $this->tokenStorage->expects($this->once())->method('getToken')->willReturn($this->token);
         $this->token->expects($this->once())->method('getUser')->willReturn($this->user);
@@ -270,7 +308,7 @@ class RedirectorTest extends TestCase
 
         $correctedRoute = $this->sut->getCorrectRouteIfDifferent($this->user, 'codep_verification');
 
-        static::assertEquals('courtorders_for_deputy', $correctedRoute);
+        static::assertEquals('lay_home', $correctedRoute);
     }
 
     public function homepageRedirectProvider(): array
@@ -338,8 +376,8 @@ class RedirectorTest extends TestCase
 
         $this->router->expects($this->once())
             ->method('generate')
-            ->with('courtorders_for_deputy')
-            ->willReturn('/courtorder/choose-a-court-order');
+            ->with('choose_a_client')
+            ->willReturn('/choose-a-client');
 
         $mockRequestStack = $this->createMock(RequestStack::class);
         $mockRequestStack->method('getSession')->willReturn($this->session);
@@ -349,7 +387,7 @@ class RedirectorTest extends TestCase
 
         // assertions
         $actual = $sut->getHomepageRedirect();
-        static::assertEquals('/courtorder/choose-a-court-order', $actual);
+        static::assertEquals($actual, '/choose-a-client');
     }
 
     public function testRemoveLastAccessedUrl(): void

@@ -467,7 +467,7 @@ trait AuthTrait
         $clientId = 'primary' == $isPrimary ? $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId()
             : $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientId();
 
-        $urlRegex = sprintf('/client\/%d\/edit#edit-client$/', $clientId);
+        $urlRegex = sprintf('/client\/%d$/', $clientId);
 
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
     }
@@ -501,13 +501,16 @@ trait AuthTrait
         if ('primary' == $isPrimary) {
             $clientId = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId();
             $clientFirstName = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientFirstName();
+            $clientLastName = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientLastName();
         } else {
             $clientId = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientId();
             $clientFirstName = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientFirstName();
+            $clientLastName = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientLastName();
         }
 
-        $this->iAmOnPage(sprintf('/client\/%d\/edit#edit-client$/', $clientId));
+        $this->iAmOnPage(sprintf('/client\/%d$/', $clientId));
         $this->assertPageContainsText($clientFirstName);
+        $this->assertPageContainsText($clientLastName);
     }
 
     /**
