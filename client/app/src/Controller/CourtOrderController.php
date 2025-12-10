@@ -40,11 +40,11 @@ class CourtOrderController extends AbstractController
     /**
      * Get a court order by its UID.
      */
-    #[Route(path: '/{uid}', name: 'courtorder_by_uid', requirements: ['uid' => '\d+'], methods: ['GET'])]
+    #[Route(path: '/{courtOrderUid}', name: 'courtorder_by_uid', requirements: ['courtOrderUid' => '\d+'], methods: ['GET'])]
     #[Template('@App/CourtOrder/index.html.twig')]
-    public function getOrderByUid(string $uid): array
+    public function getOrderByUid(string $courtOrderUid): array
     {
-        $courtOrder = $this->courtOrderService->getByUid($uid);
+        $courtOrder = $this->courtOrderService->getByUid($courtOrderUid);
 
         /** @var Client $client */
         $client = $this->clientApi->getById($courtOrder->getClient()->getId());
@@ -54,7 +54,7 @@ class CourtOrderController extends AbstractController
             'courtOrder' => $courtOrder,
             'reportType' => $courtOrder->getActiveReportType(),
             'client' => $client,
-            'inviteUrl' => $this->generateUrl('courtorder_invite', ['uid' => $courtOrder->getCourtOrderUid()]),
+            'inviteUrl' => $this->generateUrl('courtorder_invite', ['courtOrderUid' => $courtOrder->getCourtOrderUid()]),
             'ndrEnabled' => true,
         ];
 
@@ -81,7 +81,7 @@ class CourtOrderController extends AbstractController
         }
 
         if (1 === count($results)) {
-            return $this->redirectToRoute('courtorder_by_uid', ['uid' => $results[0]['courtOrderLink']]);
+            return $this->redirectToRoute('courtorder_by_uid', ['courtOrderUid' => $results[0]['courtOrderLink']]);
         }
 
         return ['deputyships' => $results];
@@ -91,19 +91,24 @@ class CourtOrderController extends AbstractController
      * Invite or re-invite a co-deputy to collaborate on a court order. They must exist in the pre_registration table
      * for the invite to be sent successfully.
      */
-    #[Route(path: '/{uid}/invite', name: 'courtorder_invite', requirements: ['uid' => '\d+'], methods: ['GET', 'POST'])]
+    #[Route(path: '/{courtOrderUid}/invite', name: 'courtorder_invite', requirements: ['courtOrderUid' => '\d+'], methods: ['GET', 'POST'])]
     #[Template('@App/CourtOrder/invite.html.twig')]
-    public function inviteLayDeputy(Request $request, string $uid): array|RedirectResponse
+    public function inviteLayDeputy(Request $request, string $courtOrderUid): array|RedirectResponse
     {
-        $thisPageLink = $this->generateUrl('courtorder_by_uid', ['uid' => $uid]);
+        $thisPageLink = $this->generateUrl('courtorder_by_uid', ['courtOrderUid' => $courtOrderUid]);
 
         $invitedUser = new User();
         $form = $this->createForm(CoDeputyInviteType::class, $invitedUser);
         $form->handleRequest($request);
 
         if (!($form->isSubmitted() && $form->isValid())) {
+            // get the client for the court order so we can retrieve their firstname
+            $courtOrder = $this->courtOrderService->getByUid($courtOrderUid);
+            $client = $courtOrder->getClient();
+
             return [
                 'form' => $form->createView(),
+                'clientFirstName' => $client->getFirstName(),
                 'backLink' => $thisPageLink,
             ];
         }
@@ -111,7 +116,7 @@ class CourtOrderController extends AbstractController
         /** @var User $invitingUser */
         $invitingUser = $this->getUser();
 
-        $result = $this->courtOrderService->inviteLayDeputy($uid, $invitedUser, $invitingUser);
+        $result = $this->courtOrderService->inviteLayDeputy($courtOrderUid, $invitedUser, $invitingUser);
 
         /** @var Session $session */
         $session = $request->getSession();
