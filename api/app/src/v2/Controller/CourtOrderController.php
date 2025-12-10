@@ -51,22 +51,14 @@ class CourtOrderController extends AbstractController
         $user = $this->getUser();
 
         $courtOrderView = $this->courtOrderService->getCourtOrderView($uid, $user);
-
-        // $courtOrder = $this->courtOrderService->getByUidAsUser($uid, $user);
-        // file_put_contents('php://stderr', get_object_vars($courtOrder), JSON_PRETTY_PRINT);
-
         // NB we are returning a 404 if the user does not have permission to see the court order,
         // rather than returning a 403 or similar, as the latter might reveal information about whether the court order
         // UID exists or not (a 403 would imply the resource exists but the user doesn't have permission to see it)
         if (is_null($courtOrderView)) {
-            file_put_contents('php://stderr', print_r('COULD NOT', true));
             return $this->buildNotFoundResponse('Could not find court order');
         }
 
         $ctx = SerializationContext::create()
-            ->setGroups([
-                'court-order-full', 'client', 'deputy', 'deputy-user', 'user', 'report', 'ndr', 'report-submission', 'status',
-            ])
             ->setSerializeNull(true);
 
         $data = $this->serializer->serialize([
@@ -75,7 +67,9 @@ class CourtOrderController extends AbstractController
             'code' => 200,
         ], 'json', $ctx);
 
-//        file_put_contents('php://stderr', print_r($data, true));
+        //        file_put_contents('php://stderr', print_r($data, true));
+        //        file_put_contents('php://stderr', print_r('========= < NEW , OLD > ===========', true));
+        //        file_put_contents('php://stderr', print_r($data2, true));
 
         return new JsonResponse(data: $data, json: true);
     }
