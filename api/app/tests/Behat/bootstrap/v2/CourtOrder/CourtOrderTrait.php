@@ -387,6 +387,15 @@ trait CourtOrderTrait
     }
 
     /**
+     * @Given I should see the first name of the client on the court order as the invitee
+     */
+    public function courtOrderInvitePageShouldIncludeClientsFirstName(): void
+    {
+        $clientFirstname = $this->courtOrder->getClient()->getFirstname();
+        $this->assertPageContainsText($clientFirstname);
+    }
+
+    /**
      * @Given the client with case number :caseNumber is associated with :orderType court order :courtOrderUid
      */
     public function clientAssociatedWithCourtOrder(string $caseNumber, string $orderType, string $courtOrderUid): void
