@@ -23,6 +23,48 @@ class CourtOrderService
     ) {
     }
 
+    public function getCourtOrderView(string $uid, ?UserInterface $user): ?array
+    {
+        if (!$user) {
+            return null;
+        }
+
+        $userId = $user->getId();
+        $courtOrder = $this->courtOrderRepository->findCourtOrderByUID($uid, $userId);
+        $courtOrderView = $courtOrder[0];
+        $deputiesSqlResults = $this->courtOrderRepository->findDeputiesByUID($uid);
+        $reportsSqlResults = $this->courtOrderRepository->findReportsByCourtOrderUID($uid);
+        $clientSqlResults = $this->courtOrderRepository->findClientByCourtOrderUID($uid);
+        $courtOrderView['active_deputies'] = [];
+        $courtOrderView['client'] = $clientSqlResults[0];
+
+        $courtOrderView['reports'] = [];
+
+        file_put_contents('php://stderr', print_r($reportsSqlResults, true));
+        foreach ($reportsSqlResults as $report) {
+            // Get user details for this deputy
+            $report['status']['status'] = $report['report_status_cached'];
+            $courtOrderView['reports'][] = $report;
+        }
+
+        foreach ($deputiesSqlResults as $deputy) {
+            // Get user details for this deputy
+            $userSqlResults = $this->userRepository->findUserById($deputy['user_id']);
+
+            // Remove user_id from deputy array
+            unset($deputy['user_id']);
+
+            // Add user details under 'user'
+            $deputy['user'] = $userSqlResults[0];
+
+            // Append to active_deputies list
+            $courtOrderView['active_deputies'][] = $deputy;
+        }
+        // Debug output (optional)
+
+        return $courtOrderView;
+    }
+
     /**
      * Get a court order by UID $uid, but only if $user is a deputy on it.
      */

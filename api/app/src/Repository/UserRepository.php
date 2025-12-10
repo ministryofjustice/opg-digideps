@@ -60,7 +60,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->qb
             ->setFirstResult($request->get('offset', 0))
             ->setMaxResults($request->get('limit', 50))
-            ->orderBy('u.'.$order_by, $sort_order)
+            ->orderBy('u.' . $order_by, $sort_order)
             ->groupBy('u.id');
 
         if ($request->get('filter_by_ids')) {
@@ -141,7 +141,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             $nameBasedQuery .= ' OR (lower(c.firstname) LIKE :qLike OR lower(c.lastname) LIKE :qLike)';
         }
 
-        $this->qb->setParameter('qLike', '%'.strtolower($searchTerm).'%');
+        $this->qb->setParameter('qLike', '%' . strtolower($searchTerm) . '%');
         $this->qb->andWhere($nameBasedQuery);
     }
 
@@ -156,8 +156,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             $nameBasedQuery .= ' OR (lower(c.firstname) LIKE :firstname AND (lower(c.firstname) LIKE :othername OR lower(c.lastname) LIKE :othername))';
         }
 
-        $this->qb->setParameter('firstname', '%'.strtolower($firstName.'%'));
-        $this->qb->setParameter('othername', '%'.strtolower($otherName.'%'));
+        $this->qb->setParameter('firstname', '%' . strtolower($firstName . '%'));
+        $this->qb->setParameter('othername', '%' . strtolower($otherName . '%'));
 
         $this->qb->andWhere($nameBasedQuery);
     }
@@ -423,6 +423,24 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         return $query->getSingleResult();
     }
+
+    public function findUserById(int $user_id): ?array
+    {
+        $sql = <<<SQL
+        SELECT u.*
+        FROM dd_user u
+        WHERE u.id = :userId
+        SQL;
+        $query = $this
+            ->getEntityManager()
+            ->getConnection()
+            ->prepare($sql)
+            ->executeQuery(['userId' => $user_id]);
+
+        $result = $query->fetchAllAssociative();
+        return 0 === count($result) ? null : $result;
+    }
+
 
     /**
      * Find accounts with the deputy UID $deputyUid but with an email different from $excludeEmail.

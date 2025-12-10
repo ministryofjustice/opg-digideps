@@ -45,7 +45,7 @@ class CourtOrderController extends AbstractController
     public function getOrderByUid(string $uid): array
     {
         $courtOrder = $this->courtOrderService->getByUid($uid);
-
+        file_put_contents('php://stderr', print_r('GETS HERE SO MANAGED TO DESERIALISE', true));
         /** @var Client $client */
         $client = $this->clientApi->getById($courtOrder->getClient()->getId());
 
@@ -64,6 +64,10 @@ class CourtOrderController extends AbstractController
 
         return $templateValues;
     }
+
+
+
+
 
     /**
      * Show court orders and reports for the currently-logged in deputy.
