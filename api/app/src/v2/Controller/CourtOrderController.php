@@ -67,10 +67,6 @@ class CourtOrderController extends AbstractController
             'code' => 200,
         ], 'json', $ctx);
 
-        //        file_put_contents('php://stderr', print_r($data, true));
-        //        file_put_contents('php://stderr', print_r('========= < NEW , OLD > ===========', true));
-        //        file_put_contents('php://stderr', print_r($data2, true));
-
         return new JsonResponse(data: $data, json: true);
     }
 
