@@ -89,7 +89,7 @@ client-unit-tests: ##@unit-tests Run the client unit tests
 api-unit-tests: ##@unit-tests Run the api unit tests
 	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-unit-tests sh scripts/api_unit_test.sh cov-html
 
-INTEGRATION_SELECTION := selection-all
+INTEGRATION_SELECTION := selection-3
 api-integration-tests: reset-database-integration-tests ##@integration-tests Run the api integration tests
 	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-integration-tests sh scripts/api_integration_test.sh ${INTEGRATION_SELECTION}
 

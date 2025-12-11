@@ -446,7 +446,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         u.registration_route,
         u.is_primary
         FROM dd_user u
-        WHERE u.id = :userId
+        WHERE u.id = :userId;
         SQL;
         $query = $this
             ->getEntityManager()
@@ -455,7 +455,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->executeQuery(['userId' => $user_id]);
 
         $result = $query->fetchAllAssociative();
-        return 0 === count($result) ? null : $result;
+        return 0 === count($result) ? null : $result[0];
     }
 
 
