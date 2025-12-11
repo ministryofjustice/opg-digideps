@@ -21,6 +21,7 @@ def lambda_invoke(lambda_client, function_name, payload):
 def assume_custom_sql_role(environment):
     environments = {
         "development": "248804316466",
+        "staging": "248804316466",
         "training": "454262938596",
         "integration": "454262938596",
         "preproduction": "454262938596",
@@ -28,6 +29,7 @@ def assume_custom_sql_role(environment):
     }
     environment_account_names = {
         "development": "development",
+        "staging": "development",
         "training": "preproduction",
         "integration": "preproduction",
         "preproduction": "preproduction",
@@ -56,6 +58,7 @@ def assume_custom_sql_role(environment):
 def get_account_name(environment):
     environment_account_names = {
         "development": "development",
+        "staging": "development",
         "training": "preproduction",
         "integration": "preproduction",
         "preproduction": "preproduction",

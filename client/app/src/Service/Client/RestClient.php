@@ -230,14 +230,12 @@ class RestClient implements RestClientInterface
      */
     public function getAndDeserialize(string $endpoint, string $deserializationClass): object
     {
-
         /** @var array $resultArray */
         $resultArray = $this->get($endpoint, 'array');
-//        error_log(print_r(json_encode($resultArray), true));
 
         /** @var T $deserializedObject */
         $deserializedObject = $this->serializer->deserialize(json_encode($resultArray, JSON_THROW_ON_ERROR), $deserializationClass, 'json');
-//        file_put_contents('php://stderr', print_r($deserializedObject, true));
+
         return $deserializedObject;
     }
 
@@ -317,9 +315,6 @@ class RestClient implements RestClientInterface
                 'addClientSecret' => !$authenticated,
                 'addAuthToken' => $authenticated,
             ]);
-
-//        error_log(print_r($response->getBody(), true));
-
         if ('raw' == $expectedResponseType) {
             return $response->getBody();
         }
