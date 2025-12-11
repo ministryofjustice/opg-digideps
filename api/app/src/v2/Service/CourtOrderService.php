@@ -29,8 +29,7 @@ class CourtOrderService
     ) {
     }
 
-
-    private function transformDate(mixed $dateValue, string $fieldName, string $format): ?string
+    private function transformDate(?string $dateValue, string $fieldName, string $format): ?string
     {
         if (empty($dateValue)) {
             return null;
@@ -64,40 +63,75 @@ class CourtOrderService
 
     public function getCourtOrderView(string $uid, ?UserInterface $user): ?array
     {
-        if (!$user) {
+        if ($user === null || !method_exists($user, 'getId')) {
             return null;
         }
-        $valid = false;
-        $userId = $user->getId();
-        $courtOrder = $this->courtOrderRepository->findCourtOrderByUID($uid, $userId);
-        $courtOrderView = $courtOrder[0];
-        $deputiesSqlResults = $this->deputyRepository->findDeputiesByUID($uid);
-        $reportsSqlResults = $this->reportRepository->findReportsByCourtOrderUID($uid);
-        $clientSqlResults = $this->clientRepository->findClientByCourtOrderUID($uid);
-        $courtOrderView['active_deputies'] = [];
-        $courtOrderView['client'] = $clientSqlResults[0];
+        $userId = (int) $user->getId();
 
+        /** @var array<int, array<string, mixed>> $courtOrderView */
+        $courtOrderView = $this->courtOrderRepository->findCourtOrderByUID($uid) ?? [];
+        if ($courtOrderView === []) {
+            return null;
+        }
+
+        // ===== Deputies + Authorisation Check =====
+        /** @var array<int, array<string, mixed>> $deputiesSqlResults */
+        $deputiesSqlResults = $this->deputyRepository->findDeputiesByUID($uid) ?? [];
+
+        $authorisedToViewCourtOrder = false;
+
+        $courtOrderView['active_deputies'] = [];
+        foreach ($deputiesSqlResults as $deputy) {
+            if (!is_array($deputy)) {
+                continue;
+            }
+            // Must have a numeric user_id to proceed
+            if (!isset($deputy['user_id']) || !is_numeric($deputy['user_id'])) {
+                continue;
+            }
+            $deputyUserId = (int) $deputy['user_id'];
+
+            // Authorisation flag
+            if ($deputyUserId === $userId) {
+                $authorisedToViewCourtOrder = true;
+            }
+
+            // Fetch deputy user details
+            /** @var array<int, array<string, mixed>> $userSqlResults */
+            $userSqlResults = $this->userRepository->findUserById($deputyUserId) ?? null;
+            unset($deputy['user_id']);
+            $deputy['user'] = $userSqlResults;
+            $courtOrderView['active_deputies'][] = $deputy;
+        }
+
+        if (!$authorisedToViewCourtOrder) {
+            return null;
+        }
+
+        // ===== Client =====
+        /** @var array<int, array<string, mixed>> $clientSqlResults */
+        $clientSqlResults = $this->clientRepository->findClientByCourtOrderUID($uid) ?? null;
+        $courtOrderView['client'] = $clientSqlResults;
+
+        // ===== Reports =====
+        /** @var array<int, array<string, mixed>> $reportsSqlResults */
+        $reportsSqlResults = $this->reportRepository->findReportsByCourtOrderUID($uid) ?? [];
         $courtOrderView['reports'] = [];
+
         foreach ($reportsSqlResults as $report) {
-            // Get user details for this deputy
-            $report['status']['status'] = $report['report_status_cached'];
+            if (!is_array($report)) {
+                continue;
+            }
+            assert(is_array($report));
+
+            $report['status'] = (array) ($report['status'] ?? []);
+            $report['status']['status'] = $report['report_status_cached'] ?? null;
             $report = $this->transformReportDates($report);
-            $report['submitted_by'] = null; // Set to null as not used and does not deserialise if not instance of user
+            $report['submitted_by'] = null; // not used so to avoid extra API calls we set to null
+
             $courtOrderView['reports'][] = $report;
         }
 
-        foreach ($deputiesSqlResults as $deputy) {
-            $userSqlResults = $this->userRepository->findUserById($deputy['user_id']);
-            if ($deputy['user_id'] == $userId) {
-                $valid = true;
-            }
-            unset($deputy['user_id']);
-            $deputy['user'] = $userSqlResults[0];
-            $courtOrderView['active_deputies'][] = $deputy;
-        }
-        if (!$valid) {
-            return null;
-        }
         return $courtOrderView;
     }
 
