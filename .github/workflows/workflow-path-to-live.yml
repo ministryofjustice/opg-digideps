@@ -195,6 +195,21 @@ jobs:
       account_name: preproduction
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
 
+  terraform_apply_end_to_end_staging:
+    name: end to end environment apply terraform
+    uses: ./.github/workflows/_run-terraform.yml
+    needs:
+      - terraform_apply_account_development
+      - workflow_variables
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+    with:
+      workspace: staging
+      terraform_path: environment
+      apply: true
+      account_name: development
+      container_version: ${{ needs.workflow_variables.outputs.version_tag }}
+
   scale_services_up:
     name: scale up end to end services
     uses: ./.github/workflows/_scale-services.yml
