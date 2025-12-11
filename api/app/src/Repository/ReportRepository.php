@@ -396,7 +396,7 @@ END deputy_type";
     public function findReportsByCourtOrderUID(string $uid): ?array
     {
         $sql = <<<SQL
-        SELECT r.*
+        SELECT DISTINCT r.*
         FROM court_order co
         INNER JOIN court_order_deputy cod ON cod.court_order_id = co.id
         INNER JOIN court_order_report cor ON cor.court_order_id = co.id

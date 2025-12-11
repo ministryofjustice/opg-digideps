@@ -48,7 +48,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: preproduction
-      account_id: 454262938596
+      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
       account_name: development
       task_name: "api_task_override"
       timeout: "1800"

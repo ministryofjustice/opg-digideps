@@ -111,12 +111,13 @@ class ClientRepository extends ServiceEntityRepository
     public function findClientByCourtOrderUID(string $uid): ?array
     {
         $sql = <<<SQL
-        SELECT c.*
+        SELECT DISTINCT c.*
         FROM court_order co
         INNER JOIN client c ON c.id = co.client_id
         INNER JOIN court_order_deputy cod ON cod.court_order_id = co.id
         WHERE co.court_order_uid = :courtOrderUid
-        AND cod.is_active = TRUE;
+        AND cod.is_active = TRUE
+        LIMIT 1;
         SQL;
         $query = $this
             ->getEntityManager()
@@ -126,7 +127,7 @@ class ClientRepository extends ServiceEntityRepository
 
         $result = $query->fetchAllAssociative();
 
-        return 0 === count($result) ? null : $result;
+        return 0 === count($result) ? null : $result[0];
     }
 
     public function findByCaseNumberIncludingDischarged(string $caseNumber): mixed
