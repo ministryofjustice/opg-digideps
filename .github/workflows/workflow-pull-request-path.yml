@@ -129,6 +129,7 @@ jobs:
       - workflow_variables
       - build_web_resources
       - trivy_secret_scanning
+      - php_style
     with:
       tag: ${{ needs.workflow_variables.outputs.version_tag }}
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
@@ -271,7 +272,7 @@ jobs:
     with:
       replicas: 10
       acu: 16
-      account_id: 248804316466
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
 
   reset_database:
@@ -293,7 +294,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-      account_id: 248804316466
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
       account_name: development
       task_name: "reset_database"
       timeout: "500"
@@ -309,7 +310,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-      account_id: 248804316466
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
       account_name: development
       task_name: "smoke_tests"
       timeout: "900"
@@ -325,7 +326,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-      account_id: 248804316466
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
@@ -342,7 +343,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-      account_id: 248804316466
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
@@ -359,7 +360,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-      account_id: 248804316466
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
@@ -376,7 +377,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-      account_id: 248804316466
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
@@ -393,7 +394,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-      account_id: 248804316466
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
@@ -410,7 +411,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-      account_id: 248804316466
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
       account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
@@ -431,7 +432,7 @@ jobs:
     with:
       replicas: 1
       acu: 4
-      account_id: 248804316466
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
 
   workflow_summary:
@@ -484,7 +485,7 @@ jobs:
     with:
       success: yes
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
-      account: 248804316466
+      account: ${{ vars.DEVELOPMENT_ACCOUNT }}
 
   slack_notify_failure:
     name: notify of failure
@@ -496,7 +497,7 @@ jobs:
     with:
       success: no
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
-      account: 248804316466
+      account: ${{ vars.DEVELOPMENT_ACCOUNT }}
 
   end_of_workflow:
     name: end of workflow
