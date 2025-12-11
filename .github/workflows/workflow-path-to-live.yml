@@ -219,7 +219,7 @@ jobs:
     with:
       replicas: 6
       acu: 16
-      account_id: 454262938596
+      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
       workspace: integration
 
   reset_database:
@@ -232,7 +232,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: integration
-      account_id: 454262938596
+      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
       account_name: preproduction
       task_name: "reset_database"
       timeout: "500"
@@ -247,7 +247,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: integration
-      account_id: 454262938596
+      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
       account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
@@ -263,7 +263,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: integration
-      account_id: 454262938596
+      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
       account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
@@ -279,7 +279,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: integration
-      account_id: 454262938596
+      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
       account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
@@ -295,7 +295,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: integration
-      account_id: 454262938596
+      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
       account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
@@ -311,7 +311,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: integration
-      account_id: 454262938596
+      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
       account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
@@ -327,7 +327,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: integration
-      account_id: 454262938596
+      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
       account_name: preproduction
       task_name: "integration_test_v2"
       timeout: "1200"
@@ -348,7 +348,7 @@ jobs:
     with:
       replicas: 1
       acu: 4
-      account_id: 454262938596
+      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
       workspace: integration
 
   terraform_apply_preproduction:
@@ -427,7 +427,7 @@ jobs:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
       workspace: production02
-      account_id: 515688267891
+      account_id: ${{ vars.PRODUCTION_ACCOUNT }}
       account_name: production
       task_name: "smoke_tests"
       timeout: "900"
@@ -455,7 +455,7 @@ jobs:
     with:
       success: yes
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
-      account: 515688267891
+      account: ${{ vars.PRODUCTION_ACCOUNT }}
 
   slack_notify_failure:
     name: notify of failure
@@ -467,4 +467,4 @@ jobs:
     with:
       success: no
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
-      account: 515688267891
+      account: ${{ vars.PRODUCTION_ACCOUNT }}
