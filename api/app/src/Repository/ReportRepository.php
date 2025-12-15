@@ -393,7 +393,7 @@ END deputy_type";
         return $query->getResult();
     }
 
-    public function findReportsByCourtOrderUID(string $uid): ?array
+    public function findReportsByCourtOrderUid(string $uid): ?array
     {
         $sql = <<<SQL
         SELECT DISTINCT r.*

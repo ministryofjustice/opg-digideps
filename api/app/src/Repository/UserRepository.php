@@ -424,41 +424,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $query->getSingleResult();
     }
 
-    public function findUserById(int $user_id): ?array
-    {
-        $sql = <<<SQL
-        SELECT DISTINCT
-        u.id, u.firstname, u.lastname, u.email, u.active,
-        u.registration_date, u.registration_token, u.token_date, u.role_name, u.phone_main,
-        u.phone_alternative, u.last_logged_in, u.odr_enabled, u.ad_managed, u.job_title,
-        u.agree_terms_use, u.agree_terms_use_date, u.codeputy_client_confirmed, u.address1, u.address2,
-        u.address3,
-        u.address_postcode,
-        u.address_country,
-        u.address4,
-        u.address5,
-        u.created_at,
-        u.updated_at,
-        u.created_by_id,
-        u.deletion_protection,
-        u.deputy_uid,
-        u.pre_register_validated,
-        u.registration_route,
-        u.is_primary
-        FROM dd_user u
-        WHERE u.id = :userId;
-        SQL;
-        $query = $this
-            ->getEntityManager()
-            ->getConnection()
-            ->prepare($sql)
-            ->executeQuery(['userId' => $user_id]);
-
-        $result = $query->fetchAllAssociative();
-        return 0 === count($result) ? null : $result[0];
-    }
-
-
     /**
      * Find accounts with the deputy UID $deputyUid but with an email different from $excludeEmail.
      *

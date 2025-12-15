@@ -18,7 +18,7 @@ class CourtOrderRepository extends ServiceEntityRepository
         parent::__construct($registry, CourtOrder::class);
     }
 
-    public function findCourtOrderByUID(string $uid): ?array
+    public function findCourtOrderByUid(string $uid): ?array
     {
         $sql = <<<SQL
         SELECT DISTINCT co.*
@@ -37,9 +37,9 @@ class CourtOrderRepository extends ServiceEntityRepository
             ->prepare($sql)
             ->executeQuery(['courtOrderUid' => $uid]);
 
-        $result = $query->fetchAllAssociative();
+        $result = $query->fetchAssociative();
 
-        return 0 === count($result) ? null : $result[0];
+        return false === $result ? null : $result;
     }
 
     public function findReportsInfoByUid(string $uid): ?array

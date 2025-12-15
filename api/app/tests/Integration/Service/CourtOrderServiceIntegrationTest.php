@@ -59,7 +59,7 @@ class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
         $em->flush();
 
         // --- Act ---
-        $result = self::$sut->getCourtOrderView($uid, $user);
+        $result = self::$sut->getCourtOrderData($uid, $user);
 
         // --- Assert ---
         self::assertNotNull($result, 'Expected court order view not to be null');
@@ -162,7 +162,7 @@ class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
         $em->persist($courtOrder);
         $em->flush();
 
-        $result = self::$sut->getCourtOrderView($uid, $user1);
+        $result = self::$sut->getCourtOrderData($uid, $user1);
 
         self::assertIsArray($result['reports']);
         self::assertCount(3, $result['reports'], 'Expect exactly 3 reports');
@@ -191,7 +191,7 @@ class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
         $em->persist($courtOrder);
         $em->flush();
 
-        $result = self::$sut->getCourtOrderView($uid, $userWhoIsNotDeputyOnReport);
+        $result = self::$sut->getCourtOrderData($uid, $userWhoIsNotDeputyOnReport);
 
         self::assertNull($result, 'Expected court order view to be null');
     }

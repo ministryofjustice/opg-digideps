@@ -29,59 +29,47 @@ class CourtOrderService
     ) {
     }
 
-    private function transformDate(?string $dateValue, string $fieldName, string $format): ?string
-    {
-        if (empty($dateValue)) {
-            return null;
-        }
 
-        try {
-            $date = new \DateTimeImmutable($dateValue);
-            return $date->format($format);
-        } catch (\Exception $e) {
-            // Optional: log the error for debugging
-            error_log(sprintf(
-                "Date transform failed for %s: %s (value: %s)\n",
-                $fieldName,
-                $e->getMessage(),
-                $dateValue
-            ));
-            return null;
-        }
-    }
-
-    public function transformReportDates(array $reportArray): ?array
+    private function transformReportDates(array $reportArray): array
     {
-        $reportArray['due_date'] = $this->transformDate($reportArray['due_date'], 'dueDate', 'Y-m-d');
-        $reportArray['submit_date'] = $this->transformDate($reportArray['submit_date'], 'submitDate', 'Y-m-d\TH:i:sP');
-        $reportArray['un_submit_date'] = $this->transformDate($reportArray['un_submit_date'], 'unSubmitDate', 'Y-m-d');
-        $reportArray['start_date'] = $this->transformDate($reportArray['start_date'], 'startDate', 'Y-m-d');
-        $reportArray['end_date'] = $this->transformDate($reportArray['end_date'], 'endDate', 'Y-m-d');
+        $dateFields = [
+            'submit_date' => 'Y-m-d\TH:i:sP',
+            'un_submit_date' => 'Y-m-d',
+            'start_date' => 'Y-m-d',
+            'end_date' => 'Y-m-d',
+            'due_date' => 'Y-m-d',
+        ];
+
+        foreach ($dateFields as $field => $format) {
+            $reportArray[$field] = !empty($reportArray[$field])
+                ? (new \DateTimeImmutable($reportArray[$field]))->format($format)
+                : null;
+        }
 
         return $reportArray;
     }
 
-    public function getCourtOrderView(string $uid, ?UserInterface $user): ?array
+    public function getCourtOrderData(string $uid, ?UserInterface $user): ?array
     {
         if ($user === null || !method_exists($user, 'getId')) {
             return null;
         }
         $userId = (int) $user->getId();
 
-        /** @var array<int, array<string, mixed>> $courtOrderView */
-        $courtOrderView = $this->courtOrderRepository->findCourtOrderByUID($uid) ?? [];
+        /** @var array<int, array<string, mixed>> $courtOrderData */
+        $courtOrderData = $this->courtOrderRepository->findCourtOrderByUid($uid) ?? [];
 
-        if ($courtOrderView === []) {
+        if ($courtOrderData === []) {
             return null;
         }
 
         // ===== Deputies + Authorisation Check =====
         /** @var array<int, array<string, mixed>> $deputiesSqlResults */
-        $deputiesSqlResults = $this->deputyRepository->findDeputiesByCourtOrderUID($uid) ?? [];
+        $deputiesSqlResults = $this->deputyRepository->findDeputiesByCourtOrderUid($uid) ?? [];
 
         $authorisedToViewCourtOrder = false;
 
-        $courtOrderView['active_deputies'] = [];
+        $courtOrderData['active_deputies'] = [];
         foreach ($deputiesSqlResults as $deputy) {
             if (!is_array($deputy)) {
                 continue;
@@ -97,12 +85,17 @@ class CourtOrderService
                 $authorisedToViewCourtOrder = true;
             }
 
-            // Fetch deputy user details
-            /** @var array<int, array<string, mixed>> $userSqlResults */
-            $userSqlResults = $this->userRepository->findUserById($deputyUserId) ?? null;
+            $userArray = $this->entityManager
+                ->getRepository(User::class)
+                ->createQueryBuilder('u')
+                ->where('u.id = :id')
+                ->setParameter('id', $deputyUserId)
+                ->getQuery()
+                ->getArrayResult();
+
             unset($deputy['user_id']);
-            $deputy['user'] = $userSqlResults;
-            $courtOrderView['active_deputies'][] = $deputy;
+            $deputy['user'] = $userArray[0] ?? null;
+            $courtOrderData['active_deputies'][] = $deputy;
         }
 
         if (!$authorisedToViewCourtOrder) {
@@ -111,29 +104,24 @@ class CourtOrderService
 
         // ===== Client =====
         /** @var array<int, array<string, mixed>> $clientSqlResults */
-        $clientSqlResults = $this->clientRepository->findClientByCourtOrderUID($uid) ?? null;
-        $courtOrderView['client'] = $clientSqlResults;
+        $clientSqlResults = $this->clientRepository->findClientByCourtOrderUid($uid) ?? null;
+        $courtOrderData['client'] = $clientSqlResults;
 
         // ===== Reports =====
         /** @var array<int, array<string, mixed>> $reportsSqlResults */
-        $reportsSqlResults = $this->reportRepository->findReportsByCourtOrderUID($uid) ?? [];
-        $courtOrderView['reports'] = [];
+        $reportsSqlResults = $this->reportRepository->findReportsByCourtOrderUid($uid) ?? [];
+        $courtOrderData['reports'] = [];
 
         foreach ($reportsSqlResults as $report) {
-            if (!is_array($report)) {
-                continue;
-            }
-            assert(is_array($report));
-
             $report['status'] = (array) ($report['status'] ?? []);
             $report['status']['status'] = $report['report_status_cached'] ?? null;
             $report = $this->transformReportDates($report);
             $report['submitted_by'] = null; // not used so to avoid extra API calls we set to null
 
-            $courtOrderView['reports'][] = $report;
+            $courtOrderData['reports'][] = $report;
         }
 
-        return $courtOrderView;
+        return $courtOrderData;
     }
 
     /**

@@ -108,7 +108,7 @@ class ClientRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function findClientByCourtOrderUID(string $uid): ?array
+    public function findClientByCourtOrderUid(string $uid): ?array
     {
         $sql = <<<SQL
         SELECT DISTINCT c.*
@@ -125,9 +125,9 @@ class ClientRepository extends ServiceEntityRepository
             ->prepare($sql)
             ->executeQuery(['courtOrderUid' => $uid]);
 
-        $result = $query->fetchAllAssociative();
+        $result = $query->fetchAssociative();
 
-        return 0 === count($result) ? null : $result[0];
+        return false === $result ? null : $result;
     }
 
     public function findByCaseNumberIncludingDischarged(string $caseNumber): mixed

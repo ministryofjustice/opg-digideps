@@ -37,7 +37,7 @@ class DeputyRepository extends ServiceEntityRepository
         return $mapping;
     }
 
-    public function findDeputiesByCourtOrderUID(string $uid): ?array
+    public function findDeputiesByCourtOrderUid(string $uid): ?array
     {
         $sql = <<<SQL
         SELECT DISTINCT d.*
