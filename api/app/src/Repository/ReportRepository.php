@@ -393,7 +393,7 @@ END deputy_type";
         return $query->getResult();
     }
 
-    public function findReportsByCourtOrderUid(string $uid): ?array
+    public function findReportsByCourtOrderUid(string $uid): array
     {
         $sql = <<<SQL
         SELECT DISTINCT r.*
@@ -410,8 +410,6 @@ END deputy_type";
             ->prepare($sql)
             ->executeQuery(['courtOrderUid' => $uid]);
 
-        $result = $query->fetchAllAssociative();
-
-        return 0 === count($result) ? null : $result;
+        return $query->fetchAllAssociative();
     }
 }
