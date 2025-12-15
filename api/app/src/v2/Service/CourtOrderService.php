@@ -49,12 +49,12 @@ class CourtOrderService
         return $reportArray;
     }
 
-    public function getCourtOrderData(string $uid, ?UserInterface $user): ?array
+    public function getCourtOrderData(string $uid, ?User $user): ?array
     {
-        if ($user === null || !method_exists($user, 'getId')) {
+        if (is_null($user)) {
             return null;
         }
-        $userId = (int) $user->getId();
+        $userId = $user->getId();
 
         /** @var array<int, array<string, mixed>> $courtOrderData */
         $courtOrderData = $this->courtOrderRepository->findCourtOrderByUid($uid) ?? [];
@@ -64,21 +64,17 @@ class CourtOrderService
         }
 
         // ===== Deputies + Authorisation Check =====
-        /** @var array<int, array<string, mixed>> $deputiesSqlResults */
-        $deputiesSqlResults = $this->deputyRepository->findDeputiesByCourtOrderUid($uid) ?? [];
+        $deputiesSqlResults = $this->deputyRepository->findDeputiesByCourtOrderUID($uid);
 
         $authorisedToViewCourtOrder = false;
 
         $courtOrderData['active_deputies'] = [];
         foreach ($deputiesSqlResults as $deputy) {
-            if (!is_array($deputy)) {
-                continue;
-            }
             // Must have a numeric user_id to proceed
-            if (!isset($deputy['user_id']) || !is_numeric($deputy['user_id'])) {
+            if (is_null($deputy['user_id'])) {
                 continue;
             }
-            $deputyUserId = (int) $deputy['user_id'];
+            $deputyUserId = $deputy['user_id'];
 
             // Authorisation flag
             if ($deputyUserId === $userId) {
@@ -95,7 +91,9 @@ class CourtOrderService
 
             unset($deputy['user_id']);
             $deputy['user'] = $userArray[0] ?? null;
-            $courtOrderData['active_deputies'][] = $deputy;
+            if (!is_null($deputy)) {
+                $courtOrderData['active_deputies'][] = $deputy;
+            }
         }
 
         if (!$authorisedToViewCourtOrder) {
@@ -108,12 +106,11 @@ class CourtOrderService
         $courtOrderData['client'] = $clientSqlResults;
 
         // ===== Reports =====
-        /** @var array<int, array<string, mixed>> $reportsSqlResults */
-        $reportsSqlResults = $this->reportRepository->findReportsByCourtOrderUid($uid) ?? [];
+        $reportsSqlResults = $this->reportRepository->findReportsByCourtOrderUid($uid);
         $courtOrderData['reports'] = [];
 
         foreach ($reportsSqlResults as $report) {
-            $report['status'] = (array) ($report['status'] ?? []);
+            $report['status'] = $report['status'] ?? [];
             $report['status']['status'] = $report['report_status_cached'] ?? null;
             $report = $this->transformReportDates($report);
             $report['submitted_by'] = null; // not used so to avoid extra API calls we set to null

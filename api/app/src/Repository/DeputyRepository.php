@@ -37,7 +37,7 @@ class DeputyRepository extends ServiceEntityRepository
         return $mapping;
     }
 
-    public function findDeputiesByCourtOrderUid(string $uid): ?array
+    public function findDeputiesByCourtOrderUid(string $uid): array
     {
         $sql = <<<SQL
         SELECT DISTINCT d.*
@@ -53,9 +53,7 @@ class DeputyRepository extends ServiceEntityRepository
             ->prepare($sql)
             ->executeQuery(['courtOrderUid' => $uid]);
 
-        $result = $query->fetchAllAssociative();
-
-        return 0 === count($result) ? null : $result;
+        return $query->fetchAllAssociative();
     }
 
     public function save(Deputy $deputy): void
