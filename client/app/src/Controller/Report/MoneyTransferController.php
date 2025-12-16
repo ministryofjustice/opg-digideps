@@ -159,11 +159,14 @@ class MoneyTransferController extends AbstractController
                 $this->restClient->put('/report/' . $reportId . '/money-transfers/' . $transferId, $transfer, ['money-transfer']);
 
                 return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
-            } else { // add
-                $this->restClient->post('/report/' . $reportId . '/money-transfers', $transfer, ['money-transfer']);
-
-                return $this->redirectToRoute('money_transfers_add_another', ['reportId' => $reportId]);
             }
+
+            // add
+            $this->restClient->post('/report/' . $reportId . '/money-transfers', $transfer, ['money-transfer']);
+
+            // TODO check whether "add another" radio choice was yes
+
+            return $this->redirectToRoute('money_transfers_add_another', ['reportId' => $reportId]);
         }
 
         return [
