@@ -6,7 +6,7 @@ namespace App\Model;
 
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
-use Doctrine\ORM\Query;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * Create a generator from a pair of queries: the first which gets the size of the result set, and
@@ -15,13 +15,10 @@ use Doctrine\ORM\Query;
 class QueryPager
 {
     public function __construct(
-        // this should return a single row with a single column containing the count of rows in the resultset,
-        // amenable to being called with getSingleScalarResult(); this doesn't have to include any ORDER BY
-        // clause, but should count all of the records which will eventually be returned by $pageQuery
-        private readonly Query $countQuery,
-        // query to get a page from the resultset; this should always include an ORDER BY clause to ensure that
-        // results are returned in a consistent order, as we are going to be paging with this query
-        private readonly Query $pageQuery,
+        // query builder set up with a query which will get a page from the resultset; this should always include an
+        // ORDER BY clause to ensure that results are returned in a consistent order, as we are going to be paging
+        // with this query
+        private readonly QueryBuilder $pageQueryBuilder,
     ) {
     }
 
@@ -37,8 +34,11 @@ class QueryPager
      */
     public function getRows(int $pageSize = 1000, bool $asArray = true, int $limit = 0): \Traversable
     {
+        $pageQuery = $this->pageQueryBuilder->getQuery();
+        $countQuery = (clone $this->pageQueryBuilder)->resetDQLPart('orderBy')->select('COUNT(1)')->getQuery();
+
         /** @var int $numRows */
-        $numRows = $this->countQuery->getSingleScalarResult();
+        $numRows = $countQuery->getSingleScalarResult();
 
         if ($limit > 0 && $numRows > $limit) {
             $numRows = $limit;
@@ -61,7 +61,7 @@ class QueryPager
                 $currentPageSize = min($pageSize, $rowsRemaining);
             }
 
-            $pagedQuery = $this->pageQuery->setFirstResult(($currentPage - 1) * $pageSize)->setMaxResults($currentPageSize);
+            $pagedQuery = $pageQuery->setFirstResult(($currentPage - 1) * $pageSize)->setMaxResults($currentPageSize);
 
             if ($asArray) {
                 /** @var iterable<array<string, mixed>> $rows */

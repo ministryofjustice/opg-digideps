@@ -23,10 +23,12 @@ class QueryPagerIntegrationIntegrationTest extends ApiIntegrationTestCase
 
         self::$entityManager->flush();
 
-        $countQuery = self::$entityManager->createQuery("SELECT count(1) FROM App\Entity\StagingSelectedCandidate ssc");
-        $pageQuery = self::$entityManager->createQuery("SELECT ssc FROM App\Entity\StagingSelectedCandidate ssc");
+        $pageQueryBuilder = self::$entityManager->createQueryBuilder()
+            ->select('ssc')
+            ->from(StagingSelectedCandidate::class, 'ssc')
+            ->orderBy('ssc.id', 'ASC');
 
-        $sut = new QueryPager($countQuery, $pageQuery);
+        $sut = new QueryPager($pageQueryBuilder);
 
         // test getting rows as objects
         $generator = $sut->getRows(pageSize: 3, asArray: false);
