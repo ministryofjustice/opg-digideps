@@ -18,16 +18,6 @@ existPage:
     save:
       label: Save and continue
 
-addAnotherPage:
-  htmlTitle: "Add another money transfer - Complete the deputy report | GOV.UK"
-  pageTitle: Add another money transfer
-  form:
-    addAnother:
-      label: The transfer has been saved. Would you like to add another now?
-      hint: If you prefer, you can come back to this section later to add more transfers
-    save:
-      label: Continue
-
 stepPage:
   htmlTitle: "Add a money transfer - Complete the deputy report | GOV.UK"
   pageTitle: Add a money transfer
