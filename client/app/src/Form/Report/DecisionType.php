@@ -2,6 +2,7 @@
 
 namespace App\Form\Report;
 
+use App\Form\AddAnotherThingType;
 use App\Service\StringUtils;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
@@ -9,7 +10,6 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class DecisionType extends AbstractType
 {
@@ -22,12 +22,7 @@ class DecisionType extends AbstractType
                 'expanded' => true,
             ])
             ->add('clientInvolvedDetails', FormTypes\TextareaType::class)
-            ->add('addAnother', FormTypes\ChoiceType::class, [
-                'choices' => ['Yes' => 'yes', 'No' => 'no'],
-                'expanded' => true,
-                'mapped' => false,
-                'constraints' => [new NotBlank(['message' => 'addAnotherThing.notBlank', 'groups' => ['add-another']])],
-            ])
+            ->add('addAnother', AddAnotherThingType::class)
             ->add('save', FormTypes\SubmitType::class);
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
@@ -49,7 +44,7 @@ class DecisionType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-decisions',
-            'validation_groups' => ['decision-description', 'decision-client-involved', 'decision-client-involved-details', 'add-another'],
+            'validation_groups' => ['decision-description', 'decision-client-involved', 'decision-client-involved-details'],
         ]);
     }
 
