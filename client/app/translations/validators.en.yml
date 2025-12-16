@@ -150,6 +150,7 @@ login:
     inValid: Enter a valid email address
   password:
     notBlank: Enter your password
+
 contact:
   name:
     notBlank: Enter the person's first and last name
@@ -173,8 +174,10 @@ contact:
   phone:
     maxMessage: The phone number cannot be longer than {{ limit }} numbers
   addAnother.notBlank: Please specify if you want to add another person
+
+addAnotherThing.notBlank: Please select either 'Yes' or 'No'
+
 decision:
-  noDecisionChoice.notBlank: Please select either 'Yes' or 'No'
   reasonForNoDecisions.notBlank: |
     Please explain why you have not had to make any significant decisions for the client
   description:
@@ -185,8 +188,6 @@ decision:
   clientInvolvedDetails:
     notBlank: Tell us how you involved the client or why you could not
     length: This description must be at least {{ limit }} letters long
-  addAnother:
-    notBlank: Please select either 'Yes' or 'No'
 
 document:
   file:
