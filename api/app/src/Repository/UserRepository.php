@@ -478,12 +478,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->innerJoin(PreRegistration::class, 'pr', Join::WITH, "CONCAT(u.deputyUid, '') = pr.deputyUid")
             ->leftJoin(Deputy::class, 'd', Join::WITH, 'u.id = d.user')
             ->where('u.active = true')
-            ->andWhere('d.id IS NULL');
+            ->andWhere('d.id IS NULL')
+            ->orderBy('u.id', 'ASC');
 
         $pageQuery = $qb->getQuery();
 
-        $qb = $qb->select('COUNT(1)');
-        $countQuery = $qb->getQuery();
+        $countQuery = $qb->select('COUNT(1)')->resetDQLPart('orderBy')->getQuery();
 
         $pager = new QueryPager($countQuery, $pageQuery);
 
