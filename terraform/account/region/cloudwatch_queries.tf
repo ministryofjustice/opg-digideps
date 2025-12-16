@@ -1,7 +1,7 @@
 locals {
   default_insights_query_log_identifier = {
     production    = "production02",
-    preproduction = "integration",
+    preproduction = "preproduction",
     development   = "staging"
   }
 }
