@@ -37,6 +37,25 @@ class DeputyRepository extends ServiceEntityRepository
         return $mapping;
     }
 
+    public function findDeputiesByCourtOrderUid(string $uid): array
+    {
+        $sql = <<<SQL
+        SELECT DISTINCT d.*
+        FROM court_order co
+        INNER JOIN court_order_deputy cod ON cod.court_order_id = co.id
+        INNER JOIN deputy d ON d.id = cod.deputy_id
+        WHERE co.court_order_uid = :courtOrderUid
+        AND cod.is_active = TRUE;
+        SQL;
+        $query = $this
+            ->getEntityManager()
+            ->getConnection()
+            ->prepare($sql)
+            ->executeQuery(['courtOrderUid' => $uid]);
+
+        return $query->fetchAllAssociative();
+    }
+
     public function save(Deputy $deputy): void
     {
         $this->_em->persist($deputy);

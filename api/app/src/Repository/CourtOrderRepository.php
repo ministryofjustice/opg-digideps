@@ -18,6 +18,30 @@ class CourtOrderRepository extends ServiceEntityRepository
         parent::__construct($registry, CourtOrder::class);
     }
 
+    public function findCourtOrderByUid(string $uid): ?array
+    {
+        $sql = <<<SQL
+        SELECT DISTINCT co.*
+        FROM court_order co
+        INNER JOIN court_order_deputy cod ON cod.court_order_id = co.id
+        INNER JOIN deputy d ON d.id = cod.deputy_id
+        INNER JOIN dd_user u ON u.id = d.user_id
+        WHERE co.court_order_uid = :courtOrderUid
+        AND cod.is_active = TRUE
+        AND co.status IN ('ACTIVE')
+        LIMIT 1;
+        SQL;
+        $query = $this
+            ->getEntityManager()
+            ->getConnection()
+            ->prepare($sql)
+            ->executeQuery(['courtOrderUid' => $uid]);
+
+        $result = $query->fetchAssociative();
+
+        return false === $result ? null : $result;
+    }
+
     public function findReportsInfoByUid(string $uid): ?array
     {
         $sql = <<<SQL
