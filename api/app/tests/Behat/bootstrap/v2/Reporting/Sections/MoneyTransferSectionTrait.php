@@ -38,9 +38,8 @@ trait MoneyTransferSectionTrait
         $this->selectOption('money_transfers_type[accountFromId]', '(****1234)');
         $this->selectOption('money_transfers_type[accountToId]', 'account-1 - Current account (****1111)');
         $this->fillInField('money_transfers_type[amount]', '100.00');
-        $this->pressButton('Save and continue');
-
         $this->addAnotherTransfer('no');
+        $this->pressButton('Save and continue');
     }
 
     /**
@@ -60,17 +59,13 @@ trait MoneyTransferSectionTrait
         $this->selectOption('money_transfers_type[accountToId]', 'account-1 - Current account (****1111)');
         $this->fillInField('money_transfers_type[amount]', '100.00');
         $this->fillinField('money_transfers_type[description]', $randomString);
-        $this->pressButton('Save and continue');
-
         $this->addAnotherTransfer('no');
+        $this->pressButton('Save and continue');
     }
 
     private function addAnotherTransfer($anotherFlag)
     {
-        $this->iAmOnMoneyTransfersAddAnotherPage();
-
-        $this->chooseOption('add_another[addAnother]', $anotherFlag);
-        $this->pressButton('Continue');
+        $this->chooseOption('money_transfers_type[addAnother]', $anotherFlag);
     }
 
     /**
