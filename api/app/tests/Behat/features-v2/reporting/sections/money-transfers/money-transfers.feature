@@ -45,3 +45,19 @@ Feature: Money Transfers
         And I confirm that I have a transfer to add
         Then I add the transfer details between two accounts with a description of 75 characters
         Then I should see the transfer listed on the money transfers summary page
+
+    @lay-pfa-high-not-started
+    Scenario: A user adds one money transfer and elects to add another
+        Given a Lay Deputy has not started a report
+        When I view the report overview page
+        And I visit the accounts report section
+        And I add one of each account type with valid details
+        And I visit the money transfers report section
+        And I confirm that I have a transfer to add
+        And I add the transfer details between two accounts with "add another" selected
+        Then I should be on the add money transfer page
+
+        # check that we can actually add another, and loop back to summary page;
+        # this sets "add another" to "no"
+        When I add the transfer details between two accounts
+        Then I should see the transfer listed on the money transfers summary page
