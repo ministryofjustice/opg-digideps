@@ -15,8 +15,8 @@ class DecisionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $builder/* ->add('title', FormTypes\TextType::class) */
-        ->add('description', FormTypes\TextareaType::class)
+        $builder
+            ->add('description', FormTypes\TextareaType::class)
             ->add('clientInvolvedBoolean', FormTypes\ChoiceType::class, [
                 'choices' => array_flip([1 => 'Yes', 0 => 'No']),
                 'expanded' => true,
@@ -26,7 +26,7 @@ class DecisionType extends AbstractType
                 'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
                 'mapped' => false,
-                'constraints' => [new NotBlank(['message' => 'decision.addAnother.notBlank','groups' => ['decision-add-another']])],
+                'constraints' => [new NotBlank(['message' => 'addAnotherThing.notBlank', 'groups' => ['add-another']])],
             ])
             ->add('save', FormTypes\SubmitType::class);
 
@@ -49,7 +49,7 @@ class DecisionType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-decisions',
-            'validation_groups' => ['decision-description', 'decision-client-involved', 'decision-client-involved-details', 'decision-add-another'],
+            'validation_groups' => ['decision-description', 'decision-client-involved', 'decision-client-involved-details', 'add-another'],
         ]);
     }
 
