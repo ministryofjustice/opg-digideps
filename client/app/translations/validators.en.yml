@@ -175,7 +175,8 @@ contact:
     maxMessage: The phone number cannot be longer than {{ limit }} numbers
   addAnother.notBlank: Please specify if you want to add another person
 
-addAnotherThing.notBlank: Please select either 'Yes' or 'No'
+addAnotherThing:
+  notBlank: Please select either 'Yes' or 'No'
 
 decision:
   reasonForNoDecisions.notBlank: |
