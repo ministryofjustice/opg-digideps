@@ -8,7 +8,6 @@ Feature: Money Transfers
         And I visit the money transfers report section
         Then I should not be able to add a transfer due to having fewer than two accounts
 
-
     @lay-pfa-high-not-started
     Scenario: A user adds add a money transfer
         Given a Lay Deputy has not started a report
@@ -20,7 +19,6 @@ Feature: Money Transfers
         And I confirm that I have a transfer to add
         Then I add the transfer details between two accounts
         Then I should see the transfer listed on the money transfers summary page
-
 
     @lay-pfa-high-not-started
     Scenario: A user deletes a money transfer that they had previously added
@@ -35,7 +33,6 @@ Feature: Money Transfers
         And I should see the transfer listed on the money transfers summary page
         When I remove the money transfer I just added
         Then I should be on the money transfers starting page and see entry deleted
-
 
     @lay-pfa-high-not-started
     Scenario: A user adds add a valid description to their money transfer
