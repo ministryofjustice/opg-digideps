@@ -16,6 +16,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class StagingSelectedCandidateRepository extends ServiceEntityRepository
 {
+    private const string CANDIDATES_QUERY = 'SELECT DISTINCT c.action, c.orderUid, c.deputyUid, c.status, ' .
+        'c.orderType, c.reportType, c.orderMadeDate, c.deputyType, c.deputyStatusOnOrder, c.orderId, c.clientId, ' .
+        'c.reportId, c.deputyId, c.ndrId FROM App\Entity\StagingSelectedCandidate c ORDER BY c.orderUid ASC';
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, StagingSelectedCandidate::class);
@@ -35,13 +39,9 @@ class StagingSelectedCandidateRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
 
-        $countQuery = $em->createQuery('SELECT count(1) FROM App\Entity\StagingSelectedCandidate ssc');
+        $countQuery = $em->createQuery('SELECT COUNT(1) FROM (' . self::CANDIDATES_QUERY . ') as distinctCandidates');
 
-        $pageQuery = $em->createQuery(
-            'SELECT DISTINCT c.action, c.orderUid, c.deputyUid, c.status, c.orderType, c.reportType, c.orderMadeDate, '.
-            'c.deputyType, c.deputyStatusOnOrder, c.orderId, c.clientId, c.reportId, c.deputyId, c.ndrId '.
-            'FROM App\Entity\StagingSelectedCandidate c ORDER BY c.orderUid ASC'
-        );
+        $pageQuery = $em->createQuery(self::CANDIDATES_QUERY);
 
         $queryPager = new QueryPager($countQuery, $pageQuery);
 
