@@ -81,16 +81,9 @@ class CourtOrderService
                 $authorisedToViewCourtOrder = true;
             }
 
-            $userArray = $this->entityManager
-                ->getRepository(User::class)
-                ->createQueryBuilder('u')
-                ->where('u.id = :id')
-                ->setParameter('id', $deputyUserId)
-                ->getQuery()
-                ->getArrayResult();
-
+            $userArray = $this->userRepository->findUserDataById($deputyUserId);
             unset($deputy['user_id']);
-            $deputy['user'] = $userArray[0] ?? null;
+            $deputy['user'] = $userArray ?? null;
             if (!is_null($deputy)) {
                 $courtOrderData['active_deputies'][] = $deputy;
             }

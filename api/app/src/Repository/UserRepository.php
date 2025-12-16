@@ -44,6 +44,24 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return 0 === count($result) ? null : $result[0];
     }
 
+    public function findUserDataById(int $user_id): ?array
+    {
+        $sql = <<<SQL
+        SELECT u.id AS user_id, u.firstName AS first_name,
+               u.lastName AS last_name, u.email AS email, u.last_logged_in as last_logged_in
+        FROM dd_user u
+        WHERE u.id = :userId
+        SQL;
+        $query = $this
+            ->getEntityManager()
+            ->getConnection()
+            ->prepare($sql)
+            ->executeQuery(['userId' => $user_id]);
+
+        $result = $query->fetchAssociative();
+        return false === $result ? null : $result;
+    }
+
     public function findUsersByQueryParameters(Request $request): ?array
     {
         $this->qb = $this->createQueryBuilder('u');

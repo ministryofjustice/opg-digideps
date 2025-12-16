@@ -6,7 +6,7 @@ if [ $# -eq 0 ]
 fi
 
 in_use_workspaces="$@"
-reserved_workspaces="default development staging preproduction integration training production production02"
+reserved_workspaces="default development staging integration training preproduction production production02"
 
 protected_workspaces="$in_use_workspaces $reserved_workspaces"
 all_workspaces=$(terraform workspace list|sed 's/*//g')

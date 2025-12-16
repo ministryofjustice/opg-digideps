@@ -51,11 +51,11 @@ class CourtOrderController extends AbstractController
         /** @var ?User $user */
         $user = $this->getUser();
 
-        $courtOrderView = $this->courtOrderService->getCourtOrderData($uid, $user);
+        $courtOrderData = $this->courtOrderService->getCourtOrderData($uid, $user);
         // NB we are returning a 404 if the user does not have permission to see the court order,
         // rather than returning a 403 or similar, as the latter might reveal information about whether the court order
         // UID exists or not (a 403 would imply the resource exists but the user doesn't have permission to see it)
-        if (is_null($courtOrderView)) {
+        if (is_null($courtOrderData)) {
             return $this->buildNotFoundResponse('Could not find court order');
         }
 
@@ -64,7 +64,7 @@ class CourtOrderController extends AbstractController
 
         $data = $this->serializer->serialize([
             'success' => true,
-            'data' => $courtOrderView,
+            'data' => $courtOrderData,
             'code' => 200,
         ], 'json', $ctx);
 
