@@ -26,18 +26,25 @@
         {{ form_select(form.accountFromId, 'form.accountFrom', {
             'inputClass': 'js-transfer-from'
         }) }}
+
         {{ form_select(form.accountToId, 'form.accountTo', {
             'inputClass': 'js-transfer-to'
         }) }}
 
         {{ form_input(form.amount, 'form.amount', {
-        'inputPrefix' : '£',
-        'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
-        'labelClass' : 'text'
+            'inputPrefix' : '£',
+            'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
+            'labelClass' : 'text'
         }) }}
 
         {{ form_input(form.description, 'form.description', {
             'inputClass': 'govuk-js-character-count govuk-!-width-two-thirds',
+        }) }}
+
+        {{ form_add_another({
+            'addAnother': form.addAnother,
+            'thingTranslationKey': 'form.thing',
+            'translationDomain': 'report-money-transfer'
         }) }}
 
     {{ macros.saveAndContinueButton(form.save) }}
