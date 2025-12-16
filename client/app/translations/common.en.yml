@@ -12,6 +12,9 @@ continue: Continue
 saveAndContinue: Save and continue
 saveAndAddAnother: Save and add another
 addAnother: Add another
+addAnotherThing:
+  heading: Add another %thing%
+  label: Would you like to add another %thing%?
 skipLink: Skip this question for now
 back: Back
 goBack: Go back
