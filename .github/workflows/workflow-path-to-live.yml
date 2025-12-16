@@ -196,7 +196,7 @@ jobs:
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
 
   terraform_apply_end_to_end_staging:
-    name: end to end environment apply terraform
+    name: end to end on staging environment apply terraform
     uses: ./.github/workflows/_run-terraform.yml
     needs:
       - terraform_apply_account_development
@@ -219,8 +219,8 @@ jobs:
     with:
       replicas: 6
       acu: 16
-      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
-      workspace: integration
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
+      workspace: staging
 
   reset_database:
     name: reset end to end database
@@ -231,8 +231,8 @@ jobs:
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
-      workspace: integration
-      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
+      workspace: staging
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
       account_name: preproduction
       task_name: "reset_database"
       timeout: "500"
@@ -246,9 +246,9 @@ jobs:
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
-      workspace: integration
-      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
-      account_name: preproduction
+      workspace: staging
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
+      account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_1,--profile,v2-tests-browserkit"
@@ -262,9 +262,9 @@ jobs:
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
-      workspace: integration
-      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
-      account_name: preproduction
+      workspace: staging
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
+      account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-browserkit"
@@ -278,9 +278,9 @@ jobs:
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
-      workspace: integration
-      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
-      account_name: preproduction
+      workspace: staging
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
+      account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_admin,--profile,v2-tests-browserkit"
@@ -294,9 +294,9 @@ jobs:
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
-      workspace: integration
-      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
-      account_name: preproduction
+      workspace: staging
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
+      account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_1,--profile,v2-tests-browserkit"
@@ -310,9 +310,9 @@ jobs:
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
-      workspace: integration
-      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
-      account_name: preproduction
+      workspace: staging
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
+      account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_2,--profile,v2-tests-browserkit"
@@ -326,9 +326,9 @@ jobs:
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
-      workspace: integration
-      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
-      account_name: preproduction
+      workspace: staging
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
+      account_name: development
       task_name: "integration_test_v2"
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests.sh,--tags,@v2_sequential_3,--profile,v2-tests-browserkit"
@@ -348,8 +348,8 @@ jobs:
     with:
       replicas: 1
       acu: 4
-      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
-      workspace: integration
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
+      workspace: staging
 
   terraform_apply_preproduction:
     name: preproduction environment apply terraform
