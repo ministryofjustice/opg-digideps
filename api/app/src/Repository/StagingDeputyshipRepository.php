@@ -29,7 +29,7 @@ class StagingDeputyshipRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
         $countQuery = $em->createQuery("SELECT COUNT(1) FROM App\Entity\StagingDeputyship sd");
-        $pageQuery = $em->createQuery("SELECT sd FROM App\Entity\StagingDeputyship sd");
+        $pageQuery = $em->createQuery("SELECT sd FROM App\Entity\StagingDeputyship sd ORDER BY id");
 
         $queryPager = new QueryPager($countQuery, $pageQuery);
 
