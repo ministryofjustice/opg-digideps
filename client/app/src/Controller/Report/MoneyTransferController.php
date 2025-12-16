@@ -164,9 +164,11 @@ class MoneyTransferController extends AbstractController
             // add
             $this->restClient->post('/report/' . $reportId . '/money-transfers', $transfer, ['money-transfer']);
 
-            // TODO check whether "add another" radio choice was yes
+            if ('yes' === $form['addAnother']->getData()) {
+                return $this->redirectToRoute('money_transfers_step', ['reportId' => $reportId, 'from' => 'another', 'step' => 1]);
+            }
 
-            return $this->redirectToRoute('money_transfers_add_another', ['reportId' => $reportId]);
+            return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
         }
 
         return [
@@ -177,30 +179,6 @@ class MoneyTransferController extends AbstractController
             'form' => $form->createView(),
             'backLink' => $stepRedirector->getBackLink(),
             'skipLink' => null,
-        ];
-    }
-
-    #[Route(path: '/report/{reportId}/money-transfers/add_another', name: 'money_transfers_add_another')]
-    #[Template('@App/Report/MoneyTransfer/addAnother.html.twig')]
-    public function addAnotherAction(Request $request, int $reportId): RedirectResponse|array
-    {
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-
-        $form = $this->createForm(AddAnotherRecordType::class, $report, ['translation_domain' => 'report-money-transfer']);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            switch ($form['addAnother']->getData()) {
-                case 'yes':
-                    return $this->redirectToRoute('money_transfers_step', ['reportId' => $reportId, 'from' => 'another', 'step' => 1]);
-                case 'no':
-                    return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
-            }
-        }
-
-        return [
-            'form' => $form->createView(),
-            'report' => $report,
         ];
     }
 
