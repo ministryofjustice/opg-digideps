@@ -57,6 +57,7 @@ errorPage:
   backToClientProfile: Back to client profile
 
 form:
+  thing: transfer
   accountFrom:
     label: Which account did you transfer money from?
     hint: ""
