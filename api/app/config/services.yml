@@ -471,3 +471,6 @@ services:
 
     App\Service\DeputyService:
         public: true
+
+    App\Service\UserDeputyService:
+        public: true
