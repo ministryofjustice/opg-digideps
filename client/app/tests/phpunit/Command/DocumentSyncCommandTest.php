@@ -20,30 +20,12 @@ class DocumentSyncCommandTest extends KernelTestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var ContainerInterface
-     */
-    protected static $container;
-    /**
-     * @var DocumentSyncService
-     */
-    private $syncService;
-    /**
-     * @var RestClient
-     */
-    private $restClient;
-    /**
-     * @var SerializerInterface
-     */
-    private $serializer;
-    /**
-     * @var ParameterStoreService
-     */
-    private $parameterStore;
-    /**
-     * @var CommandTester
-     */
-    private $commandTester;
+    protected static ContainerInterface $container;
+    private DocumentSyncService $syncService;
+    private RestClient $restClient;
+    private SerializerInterface $serializer;
+    private ParameterStoreService $parameterStore;
+    private CommandTester $commandTester;
 
     public function setUp(): void
     {
@@ -52,7 +34,11 @@ class DocumentSyncCommandTest extends KernelTestCase
 
         $this->syncService = self::prophesize(DocumentSyncService::class);
         $this->restClient = self::prophesize(RestClient::class);
-        $this->serializer = self::bootKernel()->getContainer()->get('serializer');
+
+        /** @var SerializerInterface $serializer */
+        $serializer = self::bootKernel()->getContainer()->get('serializer');
+        $this->serializer = $serializer;
+
         $this->parameterStore = self::prophesize(ParameterStoreService::class);
 
         $app->add(new DocumentSyncCommand($this->syncService->reveal(), $this->restClient->reveal(), $this->serializer, $this->parameterStore->reveal()));
