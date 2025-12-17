@@ -52,17 +52,12 @@ class DocumentSyncService
         $this->syncErrorSubmissionIds = $syncErrorSubmissionIds;
     }
 
-    public function addToSyncErrorSubmissionIds(int $submissionId)
-    {
-        $this->syncErrorSubmissionIds[] = $submissionId;
-    }
-
     public function getDocsNotSyncedCount(): int
     {
         return $this->docsNotSyncedCount;
     }
 
-    public function setDocsNotSyncedCount(int $count)
+    public function setDocsNotSyncedCount(int $count): int
     {
         return $this->docsNotSyncedCount = $count;
     }
@@ -74,15 +69,15 @@ class DocumentSyncService
     {
         if ($documentData->isReportPdf() && 'application/pdf' == MimeType::fromFilename($documentData->getFileName())) {
             return $this->syncReportDocument($documentData);
-        } else {
-            if (!$documentData->supportingDocumentCanBeSynced()) {
-                ++$this->docsNotSyncedCount;
+        }
 
-                return $this->handleDocumentStatusUpdate($documentData, Document::SYNC_STATUS_QUEUED);
-            }
-
+        if ($documentData->supportingDocumentCanBeSynced()) {
             return $this->syncSupportingDocument($documentData);
         }
+
+        ++$this->docsNotSyncedCount;
+
+        return $this->handleDocumentStatusUpdate($documentData, Document::SYNC_STATUS_QUEUED);
     }
 
     public function syncReportDocument(QueuedDocumentData $documentData): ?Document
@@ -92,7 +87,14 @@ class DocumentSyncService
 
             $data = json_decode(strval($siriusResponse->getBody()), true);
 
-            $this->handleReportSubmissionUpdate($documentData->getReportSubmissionId(), $data['data']['id']);
+            $this->restClient->apiCall(
+                'put',
+                sprintf('report-submission/%s/update-uuid', $documentData->getReportSubmissionId()),
+                json_encode(['uuid' => $data['data']['id']]),
+                'raw',
+                [],
+                false
+            );
 
             return $this->handleDocumentStatusUpdate($documentData, Document::SYNC_STATUS_SUCCESS);
         } catch (\Throwable $e) {
@@ -115,6 +117,9 @@ class DocumentSyncService
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     private function buildUpload(QueuedDocumentData $documentData): SiriusDocumentUpload
     {
         $fileName = FileNameManipulation::fileNameSanitation($documentData->getFileName());
@@ -130,12 +135,19 @@ class DocumentSyncService
             ->setS3Reference($documentData->getStorageReference());
 
         if ($documentData->isReportPdf()) {
+            $reportType = 'PF';
+            if ($documentData->getNdrId()) {
+                $reportType = 'NDR';
+            } elseif (in_array($documentData->getReportType(), [Report::TYPE_HEALTH_WELFARE, Report::TYPE_COMBINED_HIGH_ASSETS, Report::TYPE_COMBINED_LOW_ASSETS])) {
+                $reportType = 'HW';
+            }
+
             $siriusDocumentMetadata = (new SiriusReportPdfDocumentMetadata())
                 ->setReportingPeriodFrom($documentData->getReportStartDate())
                 ->setReportingPeriodTo($this->determineEndDate($documentData))
                 ->setYear((intval($documentData->getReportStartDate()->format('Y'))))
                 ->setDateSubmitted($documentData->getReportSubmitDate())
-                ->setType($this->determineReportType($documentData))
+                ->setType($reportType)
                 ->setSubmissionId($documentData->getReportSubmissionId());
 
             $type = 'reports';
@@ -151,17 +163,6 @@ class DocumentSyncService
             ->setType($type)
             ->setAttributes($siriusDocumentMetadata)
             ->setFile($file);
-    }
-
-    private function determineReportType(QueuedDocumentData $documentData): string
-    {
-        if ($documentData->getNdrId()) {
-            return 'NDR';
-        } elseif (in_array($documentData->getReportType(), [Report::TYPE_HEALTH_WELFARE, Report::TYPE_COMBINED_HIGH_ASSETS, Report::TYPE_COMBINED_LOW_ASSETS])) {
-            return 'HW';
-        }
-
-        return 'PF';
     }
 
     public function determineEndDate(QueuedDocumentData $documentData): ?\DateTime
@@ -230,18 +231,6 @@ class DocumentSyncService
         }
     }
 
-    private function handleReportSubmissionUpdate(int $reportSubmissionId, string $uuid): mixed
-    {
-        return $this->restClient->apiCall(
-            'put',
-            sprintf('report-submission/%s/update-uuid', $reportSubmissionId),
-            json_encode(['uuid' => $uuid]),
-            'raw',
-            [],
-            false
-        );
-    }
-
     private function handleSyncErrors(\Throwable $e, QueuedDocumentData $documentData): void
     {
         if (method_exists($e, 'getResponse') && method_exists($e->getResponse(), 'getBody')) {
@@ -263,7 +252,7 @@ class DocumentSyncService
 
         if (Document::SYNC_STATUS_PERMANENT_ERROR === $syncStatus) {
             if ($documentData->isReportPdf()) {
-                $this->addToSyncErrorSubmissionIds($documentData->getReportSubmissionId());
+                $this->syncErrorSubmissionIds[] = $documentData->getReportSubmissionId();
             }
 
             ++$this->docsNotSyncedCount;
