@@ -14,34 +14,17 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class DocumentSyncCommand extends DaemonableCommand
 {
-    public const FALLBACK_ROW_LIMITS = '100';
-    public const COMPLETED_MESSAGE = 'Sync command completed';
+    public const string FALLBACK_ROW_LIMITS = '100';
+    public const string COMPLETED_MESSAGE = 'Sync command completed';
 
     public static $defaultName = 'digideps:document-sync';
 
-    /** @var DocumentSyncService */
-    private $documentSyncService;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var SerializerInterface */
-    private $serializer;
-
-    /** @var ParameterStoreService */
-    private $parameterStore;
-
     public function __construct(
-        DocumentSyncService $documentSyncService,
-        RestClient $restClient,
-        SerializerInterface $serializer,
-        ParameterStoreService $parameterStore
+        private readonly DocumentSyncService $documentSyncService,
+        private readonly RestClient $restClient,
+        private readonly SerializerInterface $serializer,
+        private readonly ParameterStoreService $parameterStore
     ) {
-        $this->documentSyncService = $documentSyncService;
-        $this->restClient = $restClient;
-        $this->serializer = $serializer;
-        $this->parameterStore = $parameterStore;
-
         parent::__construct();
     }
 
@@ -56,63 +39,57 @@ class DocumentSyncCommand extends DaemonableCommand
     {
         ini_set('memory_limit', '512M');
 
-        if (!$this->isFeatureEnabled()) {
-            $output->writeln('Feature disabled, sleeping');
+        $isFeatureEnabled = '1' === $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC);
 
+        if (!$isFeatureEnabled) {
+            $output->writeln('Feature disabled, sleeping');
             return 0;
         }
 
-        /** @var QueuedDocumentData[] $documents */
-        $documents = $this->getQueuedDocumentsData();
+        $syncRowLimit = $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT);
+
+        $queuedDocumentData = $this->restClient->apiCall(
+            'get',
+            'document/queued',
+            ['row_limit' => $syncRowLimit ?? self::FALLBACK_ROW_LIMITS],
+            'array',
+            [],
+            false
+        );
+
+        $documents = $this->serializer->deserialize($queuedDocumentData, 'App\Model\Sirius\QueuedDocumentData[]', 'json');
 
         $output->writeln(sprintf('%d documents to upload', count($documents)));
 
+        /** @var QueuedDocumentData $document */
         foreach ($documents as $document) {
             $this->documentSyncService->syncDocument($document);
         }
 
         if (count($this->documentSyncService->getSyncErrorSubmissionIds()) > 0) {
-            $output->writeln(sprintf('sync_documents_to_sirius - failure - %d documents failed to sync', count($this->documentSyncService->getSyncErrorSubmissionIds())));
+            $output->writeln(
+                sprintf(
+                    'sync_documents_to_sirius - failure - %d documents failed to sync',
+                    count($this->documentSyncService->getSyncErrorSubmissionIds())
+                )
+            );
             $this->documentSyncService->setSubmissionsDocumentsToPermanentError();
             $this->documentSyncService->setSyncErrorSubmissionIds([]);
         }
 
         if ($this->documentSyncService->getDocsNotSyncedCount() > 0) {
-            $output->writeln(sprintf('sync_documents_to_sirius - success - %d documents remaining to sync', $this->documentSyncService->getDocsNotSyncedCount()));
+            $output->writeln(
+                sprintf(
+                    'sync_documents_to_sirius - success - %d documents remaining to sync',
+                    $this->documentSyncService->getDocsNotSyncedCount()
+                )
+            );
+
             $this->documentSyncService->setDocsNotSyncedCount(0);
         } else {
             $output->writeln(sprintf('sync_documents_to_sirius - success - %s', self::COMPLETED_MESSAGE));
         }
 
         return 0;
-    }
-
-    private function isFeatureEnabled(): bool
-    {
-        return '1' === $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC);
-    }
-
-    private function getSyncRowLimit(): string
-    {
-        $limit = $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT);
-
-        return $limit ? $limit : self::FALLBACK_ROW_LIMITS;
-    }
-
-    /**
-     * @return QueuedDocumentData[]
-     */
-    private function getQueuedDocumentsData(): array
-    {
-        $queuedDocumentData = $this->restClient->apiCall(
-            'get',
-            'document/queued',
-            ['row_limit' => $this->getSyncRowLimit()],
-            'array',
-            [],
-            false
-        );
-
-        return $this->serializer->deserialize($queuedDocumentData, 'App\Model\Sirius\QueuedDocumentData[]', 'json');
     }
 }
