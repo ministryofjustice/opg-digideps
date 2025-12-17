@@ -196,9 +196,9 @@ services:
 
   App\Service\DocumentSyncService:
     arguments:
-      $storage: '@App\Service\File\Storage\S3Storage'
       $siriusApiGatewayClient: '@App\Service\Client\Sirius\SiriusApiGatewayClient'
       $restClient: '@App\Service\Client\RestClient'
+      $errorTranslator: '@App\Service\SiriusApiErrorTranslator'
 
   League\MimeTypeDetection\FinfoMimeTypeDetector:
     class: League\MimeTypeDetection\FinfoMimeTypeDetector
