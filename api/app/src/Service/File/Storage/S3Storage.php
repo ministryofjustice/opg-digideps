@@ -86,7 +86,6 @@ class S3Storage implements StorageInterface
                 throw new RuntimeException('Could not remove file: No results returned');
             } else {
                 $objectVersions = $objectVersions->toArray();
-                $s3Result = [];
 
                 $objectsToDelete = $this->prepareObjectsToDelete($objectVersions);
                 if (empty($objectsToDelete)) {
