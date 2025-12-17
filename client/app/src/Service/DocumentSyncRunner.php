@@ -47,22 +47,26 @@ class DocumentSyncRunner
             $this->documentSyncService->syncDocument($document);
         }
 
-        if (count($this->documentSyncService->getSyncErrorSubmissionIds()) > 0) {
+        $countErrorIds = count($this->documentSyncService->getSyncErrorSubmissionIds());
+
+        if ($countErrorIds > 0) {
             $output->writeln(
                 sprintf(
                     'sync_documents_to_sirius - failure - %d documents failed to sync',
-                    count($this->documentSyncService->getSyncErrorSubmissionIds())
+                    $countErrorIds
                 )
             );
             $this->documentSyncService->setSubmissionsDocumentsToPermanentError();
             $this->documentSyncService->setSyncErrorSubmissionIds([]);
         }
 
-        if ($this->documentSyncService->getDocsNotSyncedCount() > 0) {
+        $docsNotSyncedCount = $this->documentSyncService->getDocsNotSyncedCount();
+
+        if ($docsNotSyncedCount > 0) {
             $output->writeln(
                 sprintf(
                     'sync_documents_to_sirius - success - %d documents remaining to sync',
-                    $this->documentSyncService->getDocsNotSyncedCount()
+                    $docsNotSyncedCount
                 )
             );
 
