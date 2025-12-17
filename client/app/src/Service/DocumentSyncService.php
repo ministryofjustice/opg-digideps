@@ -23,22 +23,15 @@ use Throwable;
 
 class DocumentSyncService
 {
-    const PERMANENT_ERRORS = [
-        Response::HTTP_REQUEST_ENTITY_TOO_LARGE,
-        Response::HTTP_UNSUPPORTED_MEDIA_TYPE,
-    ];
-
-    const MISSING_FILE_EXTENSION_ERROR =
+    private const string MISSING_FILE_EXTENSION_ERROR =
         'File extension is missing from filename. This file will need to be manually synced with Sirius';
 
     /** @var int[] */
-    private $syncErrorSubmissionIds;
+    private array $syncErrorSubmissionIds;
 
-    /** @var int */
-    private $docsNotSyncedCount;
+    private int $docsNotSyncedCount;
 
     public function __construct(
-        private readonly S3Storage $storage,
         private readonly SiriusApiGatewayClient $siriusApiGatewayClient,
         private readonly RestClient $restClient,
         private readonly SiriusApiErrorTranslator $errorTranslator,
@@ -48,9 +41,9 @@ class DocumentSyncService
     }
 
     /**
-     * @return array|int[]
+     * @return int[]
      */
-    public function getSyncErrorSubmissionIds()
+    public function getSyncErrorSubmissionIds(): array
     {
         return $this->syncErrorSubmissionIds;
     }
@@ -81,7 +74,7 @@ class DocumentSyncService
     /**
      * @return QueuedDocumentData|Exception|mixed|Throwable|null
      */
-    public function syncDocument(QueuedDocumentData $documentData)
+    public function syncDocument(QueuedDocumentData $documentData): mixed
     {
         if ($documentData->isReportPdf() && 'application/pdf' == MimeType::fromFilename($documentData->getFileName())) {
             return $this->syncReportDocument($documentData);
@@ -96,9 +89,6 @@ class DocumentSyncService
         }
     }
 
-    /**
-     * @param QueuedDocumentData $document
-     */
     public function syncReportDocument(QueuedDocumentData $documentData): ?Document
     {
         try {
@@ -129,7 +119,7 @@ class DocumentSyncService
         }
     }
 
-    private function buildUpload(QueuedDocumentData $documentData)
+    private function buildUpload(QueuedDocumentData $documentData): SiriusDocumentUpload
     {
         $fileName = FileNameManipulation::fileNameSanitation($documentData->getFileName());
         $mimeType = MimeType::fromFilename($fileName);
@@ -167,28 +157,20 @@ class DocumentSyncService
             ->setFile($file);
     }
 
-    private function determineReportType(QueuedDocumentData $documentData)
+    private function determineReportType(QueuedDocumentData $documentData): string
     {
         if ($documentData->getNdrId()) {
             return 'NDR';
         } elseif (in_array($documentData->getReportType(), [Report::TYPE_HEALTH_WELFARE, Report::TYPE_COMBINED_HIGH_ASSETS, Report::TYPE_COMBINED_LOW_ASSETS])) {
             return 'HW';
-        } else {
-            return 'PF';
         }
+
+        return 'PF';
     }
 
-    public function determineEndDate(QueuedDocumentData $documentData)
+    public function determineEndDate(QueuedDocumentData $documentData): ?\DateTime
     {
         return $documentData->getNdrId() ? $documentData->getReportStartDate() : $documentData->getReportEndDate();
-    }
-
-    /**
-     * @return string
-     */
-    private function retrieveDocumentContentFromS3(QueuedDocumentData $documentData)
-    {
-        return (string) $this->storage->retrieve($documentData->getStorageReference());
     }
 
     /**
@@ -196,7 +178,7 @@ class DocumentSyncService
      *
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function handleSiriusSync(QueuedDocumentData $documentData)
+    public function handleSiriusSync(QueuedDocumentData $documentData): mixed
     {
         if ($documentData->isReportPdf()) {
             return $this->siriusApiGatewayClient->sendReportPdfDocument(
@@ -214,7 +196,7 @@ class DocumentSyncService
         }
     }
 
-    public function setSubmissionsDocumentsToPermanentError()
+    public function setSubmissionsDocumentsToPermanentError(): void
     {
         $this->restClient->apiCall(
             'put',
@@ -229,7 +211,7 @@ class DocumentSyncService
     /**
      * @return Exception|mixed|Throwable
      */
-    private function handleDocumentStatusUpdate(QueuedDocumentData $documentData, string $status, ?string $errorMessage = null)
+    private function handleDocumentStatusUpdate(QueuedDocumentData $documentData, string $status, ?string $errorMessage = null): mixed
     {
         $data = ['syncStatus' => $status];
 
@@ -255,7 +237,7 @@ class DocumentSyncService
     /**
      * @return mixed
      */
-    private function handleReportSubmissionUpdate(int $reportSubmissionId, string $uuid)
+    private function handleReportSubmissionUpdate(int $reportSubmissionId, string $uuid): mixed
     {
         return $this->restClient->apiCall(
             'put',
@@ -267,7 +249,7 @@ class DocumentSyncService
         );
     }
 
-    private function handleSyncErrors(Throwable $e, QueuedDocumentData $documentData)
+    private function handleSyncErrors(Throwable $e, QueuedDocumentData $documentData): void
     {
         if (method_exists($e, 'getResponse') && method_exists($e->getResponse(), 'getBody')) {
             $errorMessage = $this->errorTranslator->translateApiError((string) $e->getResponse()->getBody());
