@@ -76,35 +76,34 @@ class DeputyServiceIntegrationTest extends ApiIntegrationTestCase
         self::assertEquals($report->getType(), $results[0]['report']['type']);
     }
 
-//    TODO - Fix this test
-//    public function testFindReportsInfoByUidDeputyNotActiveOnOrder()
-//    {
-//        $deputyUid = 7000000022;
-//        $courtOrderUid = '7100000081';
-//
-//        $client = ClientTestHelper::generateClient(em: self::$entityManager);
-//        $user = UserTestHelper::createAndPersistUser(em: self::$entityManager, client: $client, deputyUid: $deputyUid);
-//        $report = ReportTestHelper::generateReport(em: self::$entityManager, client: $client);
-//        $deputy = DeputyTestHelper::generateDeputy(deputyUid: "$deputyUid", user: $user);
-//        $client->setDeputy(deputy: $deputy);
-//
-//        self::$fixtures->persist($deputy, $client);
-//        self::$fixtures->flush();
-//
-//        // active court order saved to database, but deputy is not active on the order
-//        CourtOrderTestHelper::generateCourtOrder(
-//            em: self::$entityManager,
-//            client: $client,
-//            courtOrderUid: $courtOrderUid,
-//            report: $report,
-//            deputy: $deputy,
-//            deputyIsActive: false,
-//        );
-//
-//        $results = self::$sut->findReportsInfoByUid(uid: "$deputyUid");
-//
-//        self::assertEquals([], $results);
-//    }
+    public function testFindReportsInfoByUidDeputyNotActiveOnOrder()
+    {
+        $deputyUid = 7000000022;
+        $courtOrderUid = '7100000081';
+
+        $client = ClientTestHelper::generateClient(em: self::$entityManager);
+        $user = UserTestHelper::createAndPersistUser(em: self::$entityManager, client: $client, deputyUid: $deputyUid);
+        $report = ReportTestHelper::generateReport(em: self::$entityManager, client: $client);
+        $deputy = DeputyTestHelper::generateDeputy(deputyUid: "$deputyUid", user: $user);
+        $client->setDeputy(deputy: $deputy);
+
+        self::$fixtures->persist($deputy, $client);
+        self::$fixtures->flush();
+
+        // active court order saved to database, but deputy is not active on the order
+        CourtOrderTestHelper::generateCourtOrder(
+            em: self::$entityManager,
+            client: $client,
+            courtOrderUid: $courtOrderUid,
+            report: $report,
+            deputy: $deputy,
+            deputyIsActive: false,
+        );
+
+        $results = self::$sut->findReportsInfoByUid(uid: "$deputyUid");
+
+        self::assertEquals(null, $results);
+    }
 
     public function testFindReportsInfoByUidForNonExistentDeputyIsNull()
     {
