@@ -22,5 +22,5 @@ check-terraform: ##@checks Check terraform files are formatted correctly
 
 lint-terraform: ##@checks Lint Terraform
 	@echo "Checking with tflint"
-	@$(TFLINT) --chdir environment
-	@$(TFLINT) --chdir account
+	@$(TFLINT) --chdir terraform/environment
+	@$(TFLINT) --chdir terraform/account
