@@ -36,7 +36,8 @@ class S3Storage implements StorageInterface
         private readonly S3ClientInterface $s3Client,
         private readonly string $bucketName,
         private readonly LoggerInterface $logger
-    ) {}
+    ) {
+    }
 
     public function retrieve(string $key): string
     {
@@ -145,11 +146,11 @@ class S3Storage implements StorageInterface
         if (array_key_exists('Errors', $s3Result) && count($s3Result['Errors']) > 0) {
             foreach ($s3Result['Errors'] as $s3Error) {
                 $this->log('error', 'Unable to remove file from S3 -
-                            Key: '.$s3Error['Key'].', VersionId: '.
-                    $s3Error['VersionId'].', Code: '.$s3Error['Code'].', Message: '.$s3Error['Message']);
+                            Key: ' . $s3Error['Key'] . ', VersionId: ' .
+                    $s3Error['VersionId'] . ', Code: ' . $s3Error['Code'] . ', Message: ' . $s3Error['Message']);
             }
-            $this->log('error', 'Unable to remove key from S3: '.json_encode($s3Result['Errors']));
-            throw new RuntimeException('Could not remove files: '.json_encode($s3Result['Errors']));
+            $this->log('error', 'Unable to remove key from S3: ' . json_encode($s3Result['Errors']));
+            throw new RuntimeException('Could not remove files: ' . json_encode($s3Result['Errors']));
         }
     }
 
@@ -169,7 +170,7 @@ class S3Storage implements StorageInterface
         ));
 
         if (!$this->s3Client->doesObjectExistV2($this->bucketName, $key)) {
-            $this->log('error', 'Failed to upload file to S3. Filename: '. $key);
+            $this->log('error', 'Failed to upload file to S3. Filename: ' . $key);
 
             throw new FileUploadFailedException($key);
         }
@@ -189,11 +190,11 @@ class S3Storage implements StorageInterface
     {
         $this->log('info', "Appending Purge tag for $key to S3");
         if (empty($key)) {
-            throw new \Exception('Invalid Reference Key: '.$key.' when appending tag');
+            throw new \Exception('Invalid Reference Key: ' . $key . ' when appending tag');
         }
         foreach ($newTagset as $newTag) {
             if (!(array_key_exists('Key', $newTag) && array_key_exists('Value', $newTag))) {
-                throw new \Exception('Invalid Tagset updating: '.$key.print_r($newTagset, true));
+                throw new \Exception('Invalid Tagset updating: ' . $key . print_r($newTagset, true));
             }
         }
 
@@ -206,9 +207,9 @@ class S3Storage implements StorageInterface
             'Key' => $key,
         ]);
 
-        $newTagset = array_merge($existingTags['TagSet'], $newTagset);
-        $this->log('info', "Tagset retrieved for $key : ".print_r($existingTags, true));
-        $this->log('info', "Updating tagset for $key with ".print_r($newTagset, true));
+        $newTagset = array_merge($existingTags->toArray()['TagSet'], $newTagset);
+        $this->log('info', "Tagset retrieved for $key : " . print_r($existingTags, true));
+        $this->log('info', "Updating tagset for $key with " . print_r($newTagset, true));
 
         // Update tags in S3
         $this->s3Client->putObjectTagging([
