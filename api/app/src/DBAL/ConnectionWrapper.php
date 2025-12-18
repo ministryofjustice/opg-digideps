@@ -46,7 +46,6 @@ class ConnectionWrapper extends Connection
         if (null !== $this->_conn) {
             return false;
         }
-
         try {
             $params = $this->params;
             $this->_conn = $this->_driver->connect($params);
@@ -79,6 +78,7 @@ class ConnectionWrapper extends Connection
         $secretPrefix = getenv(self::SECRETS_PREFIX);
 
         $secretSuffix = 'application' === $this->params['user'] ? 'application-db-password' : 'database-password';
+        $secretName = sprintf('%s%s', $secretPrefix, $secretSuffix);
 
         // Use the Secrets Manager client to retrieve the secret value
         try {
