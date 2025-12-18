@@ -76,6 +76,7 @@ class SnapshotManagement:
         self.EngineMode = None
         self.serverless_v2_config = {}
         self.PointInTimeRecovery = datetime.strptime(pitr, "%Y-%m-%d %H:%M:%S")
+        self.do_point_in_time_restore = False
         self.AllocatedStorage = 1
         self.AvailabilityZones = ["eu-west-1b", "eu-west-1a", "eu-west-1c"]
         self.BackupRetentionPeriod = 14
@@ -156,15 +157,16 @@ class SnapshotManagement:
         no_point_in_time_argument_set = datetime.strptime(
             "1900-01-01 00:00:00", "%Y-%m-%d %H:%M:%S"
         )
+        if self.PointInTimeRecovery != no_point_in_time_argument_set:
+            self.do_point_in_time_restore = True
 
         self.KmsKeyIdLocal = self.get_kms_key(key_alias_local)
 
         if self.AWSBackup:
-            if self.PointInTimeRecovery == no_point_in_time_argument_set:
-                # Handles the point in time recovery internally if set
-                self.restore_from_recovery_point()
+            # Handles the point in time recovery internally if set
+            self.restore_from_recovery_point()
         else:
-            if self.PointInTimeRecovery == no_point_in_time_argument_set:
+            if self.do_point_in_time_restore:
                 if self.SnapshotIdentifier is not None:
                     if self.restore_from_remote:
                         self.create_backup_client_session()
@@ -291,20 +293,21 @@ class SnapshotManagement:
         metadata = {
             "DBClusterIdentifier": self.db_cluster_identifier_target,
             "AvailabilityZones": '["eu-west-1a","eu-west-1b","eu-west-1c"]',
-            "Engine": self.Engine,  # e.g., "aurora-postgresql" or "aurora-mysql"
-            "EngineVersion": self.EngineVersion,  # ensure version supports Serverless v2
+            "Engine": self.Engine,
+            "EngineVersion": self.EngineVersion,
             "DBSubnetGroupName": self.DBSubnetGroup,
             "DBClusterParameterGroupName": "default.aurora-postgresql14",
-            "EngineMode": self.EngineMode,  # typically "provisioned" for Serverless v2 clusters
+            "EngineMode": self.EngineMode,
             "KmsKeyId": self.KmsKeyIdLocal,
-            "UseLatestRestorableTime": "true",
         }
 
-        print(metadata)
-
-        # Include SnapshotIdentifier only if not None
-        if getattr(self, "SnapshotIdentifier", None):
-            metadata["SnapshotIdentifier"] = self.SnapshotIdentifier
+        # Decide PITR strategy
+        if self.do_point_in_time_restore:
+            print("pitr")
+            metadata["RestoreToTime"] = str(self.PointInTimeRecovery)
+        else:
+            print("latest restore")
+            metadata["UseLatestRestorableTime"] = "true"
 
         response = self.client_aws_backup.start_restore_job(
             RecoveryPointArn=self.recovery_point_arn,
