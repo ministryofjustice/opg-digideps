@@ -48,11 +48,13 @@ class ConnectionWrapper extends Connection
         }
 
         try {
-            $this->_conn = $this->_driver->connect($this->params);
+            $params = $this->params;
+            $this->_conn = $this->_driver->connect($params);
         } catch (Driver\Exception $e) {
             try {
                 $this->refreshPassword();
-                $this->_conn = $this->_driver->connect($this->params);
+                $params = $this->params;
+                $this->_conn = $this->_driver->connect($params);
             } catch (Driver\Exception $e) {
                 throw $this->convertException($e);
             }
