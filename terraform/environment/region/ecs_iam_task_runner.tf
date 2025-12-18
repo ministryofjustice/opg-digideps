@@ -26,6 +26,15 @@ data "aws_iam_policy_document" "task_runner" {
     ]
     actions = ["secretsmanager:GetSecretValue"]
   }
+
+  statement {
+    sid     = "SecretManagerKMSDecrypt"
+    effect  = "Allow"
+    actions = ["kms:Decrypt"]
+    resources = [
+      data.aws_kms_alias.secretmanager.target_key_arn,
+    ]
+  }
 }
 
 resource "aws_iam_role_policy" "task_runner" {
