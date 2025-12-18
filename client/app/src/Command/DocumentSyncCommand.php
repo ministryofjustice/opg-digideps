@@ -6,10 +6,11 @@ namespace App\Command;
 
 use App\Service\DocumentSyncRunner;
 use App\Service\ParameterStoreService;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class DocumentSyncCommand extends DaemonableCommand
+class DocumentSyncCommand extends Command
 {
     public static $defaultName = 'digideps:document-sync';
 
