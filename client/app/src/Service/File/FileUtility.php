@@ -6,7 +6,6 @@ use League\MimeTypeDetection\FinfoMimeTypeDetector;
 
 abstract class FileUtility
 {
-    protected FinfoMimeTypeDetector $mimeTypeDetector;
     // If a mimetype has multiple associated extensions, the first index of the array should be the default extension
     protected array $mimeMap = [
         'video/3gpp2' => '3g2',
@@ -190,10 +189,8 @@ abstract class FileUtility
         'text/x-scriptzsh' => 'zsh',
     ];
 
-    public function __construct(FinfoMimeTypeDetector $mimeTypeDetector)
-    {
-        $this->mimeTypeDetector = $mimeTypeDetector;
-    }
+    public function __construct(protected FinfoMimeTypeDetector $mimeTypeDetector)
+    {}
 
     /**
      * Courtesy of this gem of a comment - https://gist.github.com/alexcorvi/df8faecb59e86bee93411f6a7967df2c#gistcomment-2722664.

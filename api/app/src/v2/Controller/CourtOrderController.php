@@ -12,7 +12,6 @@ use App\v2\Service\CourtOrderService;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -49,26 +48,23 @@ class CourtOrderController extends AbstractController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function getByUid(string $uid): JsonResponse
     {
+        /** @var ?User $user */
         $user = $this->getUser();
 
-        $courtOrder = $this->courtOrderService->getByUidAsUser($uid, $user);
-
+        $courtOrderData = $this->courtOrderService->getCourtOrderData($uid, $user);
         // NB we are returning a 404 if the user does not have permission to see the court order,
         // rather than returning a 403 or similar, as the latter might reveal information about whether the court order
         // UID exists or not (a 403 would imply the resource exists but the user doesn't have permission to see it)
-        if (is_null($courtOrder)) {
+        if (is_null($courtOrderData)) {
             return $this->buildNotFoundResponse('Could not find court order');
         }
 
         $ctx = SerializationContext::create()
-            ->setGroups([
-                'court-order-full', 'client', 'deputy', 'deputy-user', 'user', 'report', 'ndr', 'report-submission', 'status',
-            ])
             ->setSerializeNull(true);
 
         $data = $this->serializer->serialize([
             'success' => true,
-            'data' => $courtOrder,
+            'data' => $courtOrderData,
             'code' => 200,
         ], 'json', $ctx);
 
@@ -81,7 +77,7 @@ class CourtOrderController extends AbstractController
      * path on API = /v2/courtorder/<UID>/lay-deputy-invite
      */
     #[Route('/{uid}/lay-deputy-invite', requirements: ['uid' => '\w+'], methods: ['POST'])]
-    #[Security('is_granted("ROLE_DEPUTY")')]
+    #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function layDeputyInviteAction(Request $request, string $uid): JsonResponse
     {
         try {

@@ -13,11 +13,12 @@ module "api_aurora" {
   master_password                     = data.aws_secretsmanager_secret_version.database_password.secret_string
   instance_count                      = var.account.aurora_instance_count
   instance_class                      = "db.t3.medium"
+  preferred_backup_window             = var.account.name == "preproduction" ? "22:00-00:00" : "23:00-23:30"
   kms_key_id                          = data.aws_kms_key.rds.arn
   skip_final_snapshot                 = var.account.deletion_protection ? false : true
   vpc_security_group_ids              = [module.api_rds_security_group.id]
   deletion_protection                 = var.account.deletion_protection ? true : false
-  tags                                = var.default_tags
+  tags                                = var.account.name == "preproduction" ? merge(var.default_tags, { backup_to_vault = "true" }, ) : merge(var.default_tags, { backup_to_vault = "false" }, )
   log_group                           = aws_cloudwatch_log_group.api_cluster.name
   iam_database_authentication_enabled = true
 }
@@ -64,8 +65,8 @@ data "aws_caller_identity" "current" {}
 
 # Allow the Operator Role to Connect via another Role
 
-data "aws_iam_role" "operator" {
-  name = "operator"
+data "aws_iam_role" "data_access" {
+  name = "data-access"
 }
 
 data "aws_iam_policy_document" "database_readonly_assume" {
@@ -76,7 +77,7 @@ data "aws_iam_policy_document" "database_readonly_assume" {
 
     principals {
       type        = "AWS"
-      identifiers = [data.aws_iam_role.operator.arn]
+      identifiers = [data.aws_iam_role.data_access.arn]
     }
   }
 }

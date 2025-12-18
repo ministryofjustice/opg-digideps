@@ -373,8 +373,8 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
                                 'storedBytes' => 645,
                             ],
                         ],
-                    ])
-                );
+                    ]
+                ));
 
             $events = $this->populateLogEvents($uploadedCSVs);
             $expectedResponseFromAWS = new Result(
@@ -437,7 +437,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $this->awsAuditLogHandler->getLogStreams($this->auditLogGroupName)
             ->shouldBeCalled()
             ->willReturn(new Result(
-                    [
+                [
                         'logStreams' => [
                             [
                                 'logStreamName' => 'CSV_UPLOADED',
@@ -450,8 +450,8 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
                                 'storedBytes' => 645,
                             ],
                         ],
-                    ])
-            );
+                ]
+            ));
 
         $exception = new AwsException(
             'The service cannot complete the request.',

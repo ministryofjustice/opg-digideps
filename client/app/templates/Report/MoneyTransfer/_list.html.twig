@@ -26,13 +26,13 @@
             {{ 'existPage.form.noTransfersToAdd.label' | trans(transOptions)  }}
         </dt>
         <dd class="govuk-summary-list__value">
-            {{ report.noTransfersToAdd is not null ? (report.noTransfersToAdd ? 'No' : 'Yes') : '-' }}
+            {{ report.noTransfersToAdd is not null ? (report.noTransfersToAdd ? 'No' : 'Yes') : 'not entered' | trans({}, 'common') }}
         </dd>
         {% if not hideEditLink  %}
             <dd class="govuk-summary-list__actions">
                 <a class="govuk-link behat-link-edit" href="{{ url('money_transfers_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
                     {{ 'edit' | trans({}, 'common') }}
-                    <span class="govuk-visually-hidden"> Question:{{ 'existPage.form.noTransfersToAdd.label' | trans(transOptions) }} Current answer:{{ report.noTransfersToAdd is not null ? (report.noTransfersToAdd ? 'No' : 'Yes') : '-'  }}</span>
+                    <span class="govuk-visually-hidden"> Question:{{ 'existPage.form.noTransfersToAdd.label' | trans(transOptions) }} Current answer:{{ report.noTransfersToAdd is not null ? (report.noTransfersToAdd ? 'No' : 'Yes') : 'not entered' | trans({}, 'common')  }}</span>
                 </a>
             </dd>
         {% endif %}

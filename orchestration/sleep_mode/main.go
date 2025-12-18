@@ -18,7 +18,7 @@ func main() {
 	action := flag.String("action", "", "Action to perform: OFF or ON")
 	flag.Parse()
 
-	allowedEnvironments := []string{"preproduction", "training", "integration", "development"}
+	allowedEnvironments := []string{"preproduction", "training", "integration", "staging", "development"}
 	environment := strings.ToLower(os.Getenv("ENVIRONMENT"))
 
 	// Check if environment variable is not equal to any of the allowed environments

@@ -5,7 +5,7 @@ form:
   submitButton: Upload
   files:
     label: Attach a file
-    hint: ""
+    hint: "You can upload up to maxFileUploads files at a time"
   errors:
     fileSize: "Your uploaded file exceeded the maximum size of 15M"
     risky: "Cannot upload file, risky content found inside. Technical details: %techDetails%"
@@ -25,7 +25,7 @@ attachPage:
   pageTitle: Upload documents
   supportingDocuments: Supporting documents
   step1Heading: Would you like to provide any supporting documents?
-  selectHeading: 1. Select the documents
+  selectHeading: Select the documents
   selectHelp: Please select 'Choose files' below to find your files.
   selectHint1: You only need to upload documents if we have asked you to.
   selectHint2: You can only upload PDF, JPG or PNG files, and they must be smaller than 15MB.
@@ -38,9 +38,11 @@ attachPage:
   dateAttached: Date attached
   deleteDocument: Remove
   sendDocuments: Send documents
-  pleaseWait: The file is being uploaded.
+  pleaseWait: Your files are being uploaded.
   successUploadedHeader: Files uploaded
   successUploaded: Your uploaded files are now attached to this report and listed below
+  successUploadedExtraFiles: Your files have been uploaded
+  successUploadedSendDocuments: Please select 'Send documents' to complete your submission
   uploadHint: |
     If the file takes more than 5 minutes to upload, please refresh the page and try again.
     To stop uploading the file, just refresh the page.

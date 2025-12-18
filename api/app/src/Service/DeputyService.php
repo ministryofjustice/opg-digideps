@@ -2,17 +2,23 @@
 
 namespace App\Service;
 
+use App\Entity\CourtOrder;
 use App\Entity\Deputy;
 use App\Entity\PreRegistration;
+use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Model\Hydrator;
+use App\Repository\CourtOrderRepository;
 use App\Repository\DeputyRepository;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 
 class DeputyService
 {
     public function __construct(
         private readonly DeputyRepository $deputyRepository,
+        private readonly CourtOrderRepository $courtOrderRepository,
         private readonly EntityManagerInterface $em,
     ) {
     }
@@ -85,5 +91,62 @@ class DeputyService
         ]);
 
         return $this->populateDeputy($data);
+    }
+
+    public function findReportsInfoByUid(string $uid, bool $includeInactive = false): ?array
+    {
+        /** @var ?Deputy $deputy */
+        $deputy = $this->deputyRepository->findOneBy(['deputyUid' => $uid]);
+        if (is_null($deputy)) {
+            return null;
+        }
+
+        $results = $this->courtOrderRepository->findReportsInfoByUid($deputy->getDeputyUid());
+        if (is_null($results)) {
+            return null;
+        }
+
+        // get the latest report for each court order, storing court order UIDs and deduplicating as we go
+        $reportAggregate = [];
+
+        foreach ($results as $courtOrderWithStatus) {
+            $courtOrderUids = [];
+
+            // whether a court order should be shown depends both on the court order status and the deputy
+            // status on the order
+            $show = $includeInactive || ($courtOrderWithStatus['isActive'] && $courtOrderWithStatus['status'] === 'ACTIVE');
+            if (!$show) {
+                continue;
+            }
+
+            if (str_contains($courtOrderWithStatus['courtOrderUid'], ',')) {
+                $courtOrderUids = explode(', ', $courtOrderWithStatus['courtOrderUid']);
+                $courtOrderLink = $courtOrderUids[0];
+            } else {
+                $courtOrderUids[] = $courtOrderWithStatus['courtOrderUid'];
+                $courtOrderLink = $courtOrderWithStatus['courtOrderUid'];
+            }
+
+            $caseNumber = $courtOrderWithStatus['caseNumber'];
+
+            $entry = $courtOrderLink . $caseNumber;
+
+            if (!array_key_exists($entry, $reportAggregate)) {
+                $reportAggregate[$entry] = [
+                    'client' => [
+                        'firstName' => $courtOrderWithStatus['firstName'],
+                        'lastName' => $courtOrderWithStatus['lastName'],
+                        'caseNumber' => $caseNumber,
+                    ],
+                    'report' => [
+                        'type' => $courtOrderWithStatus['type'],
+                    ],
+                    'courtOrderUids' => $courtOrderUids,
+                    'courtOrderLink' => $courtOrderLink,
+                ];
+            }
+        }
+
+        return array_values($reportAggregate);
     }
 }

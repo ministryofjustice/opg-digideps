@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\Traits\CreateUpdateTimestamps;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -74,15 +73,6 @@ class CourtOrder
     #[JMS\Type(Client::class)]
     #[JMS\Groups(['court-order-full'])]
     private Client $client;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr", cascade={"persist"}, fetch="EAGER")
-     *
-     * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="SET NULL")
-     */
-    #[JMS\Type(Ndr::class)]
-    #[JMS\Groups(['court-order-full'])]
-    private ?Ndr $ndr = null;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Report\Report", inversedBy="courtOrders", fetch="EXTRA_LAZY", cascade={"persist"})
@@ -218,23 +208,28 @@ class CourtOrder
         return $this->courtOrderDeputyRelationships;
     }
 
-    public function setNdr(Ndr $ndr): CourtOrder
-    {
-        $this->ndr = $ndr;
-
-        return $this;
-    }
-
-    public function getNdr(): ?Ndr
-    {
-        return $this->ndr;
-    }
-
     /**
      * @return Collection<int, Report>
      */
     public function getReports(): Collection
     {
         return $this->reports;
+    }
+
+    /**
+     * Get the most recent report for this CourtOrder
+     */
+    public function getLatestReport(): ?Report
+    {
+        /** @var ?Report $latest */
+        $latest = null;
+
+        foreach ($this->reports as $report) {
+            if (is_null($latest) || $report->getStartDate() > $latest->getStartDate()) {
+                $latest = $report;
+            }
+        }
+
+        return $latest;
     }
 }

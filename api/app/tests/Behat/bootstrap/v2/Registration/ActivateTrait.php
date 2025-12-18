@@ -56,10 +56,6 @@ trait ActivateTrait
         $this->selectOption('admin[roleType]', 'deputy');
         $this->selectOption('admin[roleNameDeputy]', $roleName);
 
-        if ('ndr' === $typeOfUser) {
-            $this->checkOption('admin_ndrEnabled');
-        }
-
         $this->pressButton('Save user');
         $this->clickLink('Sign out');
     }
@@ -168,7 +164,7 @@ trait ActivateTrait
                 $matchingString = $assertionByExpectation ? 'Yes' : 'No';
                 break;
             case 'Registration date':
-                $matchingString = $assertionByExpectation ? (new DateTime())->format('j/m/Y') : 'n.a.';
+                $matchingString = $assertionByExpectation ? (new DateTime())->format('j/m/Y') : 'Not registered';
                 break;
             default:
                 $supportedProperties = ['Registration date', 'Active flag'];
@@ -200,16 +196,10 @@ trait ActivateTrait
     /**
      * @When /^the user completes the final registration step$/
      */
-    public function theUserCompletesTheFinalRegistrationStep()
+    public function theUserCompletesTheFinalRegistrationStep(): void
     {
-        $this->completeFinalRegistrationSection($this->getUserForTestRun()['type']);
-    }
-
-    private function completeFinalRegistrationSection($userType)
-    {
+        $userType = $this->getUserForTestRun()['type'];
         $this->loginToFrontendAs($this->getUserForTestRun()['email']);
-
-        sleep(1);
 
         switch ($userType) {
             case 'org':

@@ -20,19 +20,20 @@ on:
       image_tag:
         description: "The latest version image tag"
         value: ${{ jobs.export_image_tag.outputs.image_tag }}
+
 jobs:
   export_image_tag:
     runs-on: ubuntu-latest
     outputs:
       image_tag: ${{ steps.export_tag.outputs.image_tag }}
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: "0"
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/.github/actions/terraform-version@c9c5dfb290b8f614df0884928c521165ba83d630 # v3.1.4
+        uses: ministryofjustice/opg-github-actions/actions/terraform-version@4f345be3f706950d1fdc05bc86383967a149bd99 # v4.3.4
         with:
           terraform_directory: terraform/${{ inputs.terraform_path }}
 
@@ -46,9 +47,9 @@ jobs:
           ssh-private-key: ${{ secrets.ssh_private_key }}
 
       - name: configure OIDC AWS credentials for latest deployment
-        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # v4.1.0
+        uses: aws-actions/configure-aws-credentials@00943011d9042930efac3dcd3a170e4273319bc8 # v5.1.0
         with:
-          role-to-assume: arn:aws:iam::631181914621:role/oidc-digideps-${{ inputs.account_name }}
+          role-to-assume: arn:aws:iam::${{ vars.IDENTITY_ACCOUNT }}:role/oidc-digideps-${{ inputs.account_name }}
           role-session-name: github-actions-slack-notifier
           role-duration-seconds: 900
           aws-region: eu-west-1
@@ -62,13 +63,18 @@ jobs:
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
         run: |
-          export IMAGE_TAG=$(terraform show -json | head -n 2 | tail -n 1 | jq -r '.values.root_module.child_modules[].resources[] | select(.address == "module.eu_west_1[0].aws_ecs_task_definition.front") | .values.container_definitions | fromjson[].image | split(":")[1]' | tail -n 1 2>/dev/null)
-          echo "image_tag=$(echo ${IMAGE_TAG})" >> $GITHUB_OUTPUT
+          IMAGE_TAG=$(terraform show -json | head -n 2 | tail -n 1 | jq -r '.values.root_module.child_modules[].resources[] | select(.address == "module.eu_west_1[0].aws_ecs_task_definition.front") | .values.container_definitions | fromjson[].image | split(":")[1]' | tail -n 1 2>/dev/null)
+
+          if [ -n "${IMAGE_TAG}" ]; then
+            echo "image_tag=${IMAGE_TAG}" >> "$GITHUB_OUTPUT"
+          fi
         working-directory: terraform/${{ inputs.terraform_path }}
 
       - name: Unset AWS variables
         if: always()
         run: |
-          echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
-          echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
-          echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV
+          {
+            echo "AWS_SECRET_ACCESS_KEY="
+            echo "AWS_ACCESS_KEY_ID="
+            echo "AWS_SESSION_TOKEN="
+          } >> "$GITHUB_ENV"

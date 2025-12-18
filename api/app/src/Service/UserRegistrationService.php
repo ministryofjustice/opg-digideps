@@ -82,7 +82,6 @@ class UserRegistrationService
             throw new \RuntimeException(json_encode($message) ?: '', 462);
         }
 
-        $user->setDeputyNo($preregMatches[0]->getDeputyUid());
         $user->setDeputyUid(intval($preregMatches[0]->getDeputyUid()));
         $user->setPreRegisterValidatedDate(new \DateTime('now'));
         $user->setRegistrationRoute(User::SELF_REGISTER);

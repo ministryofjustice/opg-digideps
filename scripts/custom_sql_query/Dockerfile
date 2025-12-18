@@ -2,7 +2,7 @@
 ARG FUNCTION_DIR="/function"
 
 # ===== BASE IMAGE =====
-FROM python:3.12-alpine3.20 AS python-alpine
+FROM python:3.12-alpine3.22 AS python-alpine
 RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 RUN apk update && apk upgrade
 

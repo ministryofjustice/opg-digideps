@@ -240,6 +240,7 @@ def get_secret_names(workspace):
             "local",
             "development",
             "integration",
+            "staging",
             "training",
             "preproduction",
             "production",

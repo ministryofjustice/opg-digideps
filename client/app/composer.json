@@ -5,9 +5,6 @@
     "description": "The \"Symfony Standard Edition\" distribution",
     "config": {
         "sort-packages": true,
-        "platform": {
-            "php": "8.2.28"
-        },
         "allow-plugins": {
             "php-http/discovery": true
         }
@@ -15,13 +12,15 @@
     "autoload": {
         "psr-4": {
             "App\\": "src/",
-            "DigidepsTests\\": "tests/phpunit"
+            "DigidepsTests\\": "tests/phpunit",
+            "RectorRules\\": "scripts/RectorRules"
         }
     },
     "require": {
-        "php": "^8.2",
+        "php": "^8.4",
         "alphagov/notifications-php-client": "^4.0.1",
         "aws/aws-sdk-php": "^3.337.3",
+        "doctrine/annotations": "^2.0",
         "doctrine/collections": "^2.0.0",
         "egulias/email-validator": "^4.0.4",
         "fakerphp/faker": "^1.24.0",
@@ -36,8 +35,8 @@
         "php-http/guzzle7-adapter": "^1.0",
         "predis/predis": "^2.3.0",
         "ramsey/uuid": "^4.2",
-        "sensio/framework-extra-bundle": "^6.2",
         "symfony/asset": "^6.4",
+        "symfony/cache": "^7.3",
         "symfony/config": "^6.4",
         "symfony/console": "^6.4",
         "symfony/debug-bundle": "^6.4",
@@ -65,6 +64,7 @@
         "symfony/serializer": "^6.4",
         "symfony/translation": "^6.4",
         "symfony/twig-bundle": "^6.4",
+        "symfony/uid": "^6.4",
         "symfony/validator": "^6.4",
         "symfony/web-profiler-bundle": "^6.4",
         "twig/extra-bundle": "^3.3",
@@ -97,6 +97,7 @@
         "phpstan/phpstan-phpunit": "^1.0.0",
         "phpunit/phpcov": "8.2.1",
         "phpunit/phpunit": "^9.5.10",
+        "rector/rector": "^1.2",
         "symfony/maker-bundle": "^1.50.0",
         "symfony/phpunit-bridge": "^6.4",
         "symfony/var-dumper": "^6.4"

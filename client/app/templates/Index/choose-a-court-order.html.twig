@@ -10,19 +10,19 @@
 
 {% block pageContent %}
 
-    <h3 class="govuk-heading-m">
+    <p class="govuk-heading-s">
         {{ 'chooseAnOrder.title'| trans }}
-    </h3>
-    {% for reports in courtOrders %}
+    </p>
+    {% for deputyship in deputyships %}
         <div class="govuk-summary-card opg-overview-courtorder">
             <div class="govuk-summary-card__title-wrapper">
                 <h2 class="govuk-summary-card__title">
-                    {{ reports.client.firstName }} {{ reports.client.lastName }}
+                    {{ deputyship.client.firstName }} {{ deputyship.client.lastName }}
                 </h2>
                 <ul class="govuk-summary-card__actions">
                     <li class="govuk-summary-card__action">
-                        <a href="{{ path('courtorder_by_uid', {'uid': reports.courtOrder.courtOrderLink}) }}">
-                            {{ 'chooseAnOrder.courtOrderLink'| trans }}
+                        <a href="{{ path('courtorder_by_uid', {'courtOrderUid': deputyship.courtOrderLink}) }}">
+                            {{ 'chooseAnOrder.courtOrderLink' | trans }}
                         </a>
                     </li>
                 </ul>
@@ -34,7 +34,7 @@
                             {{ 'chooseAnOrder.courtOrderNumber'| trans }}
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ reports.courtOrder.courtOrderUid }}
+                            {{ deputyship.courtOrderUids | join(', ') }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -42,7 +42,7 @@
                             {{ 'chooseAnOrder.caseNumber'| trans }}
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {{ reports.client.caseNumber }}
+                            {{ deputyship.client.caseNumber }}
                         </dd>
                     </div>
                     <div class="govuk-summary-list__row">
@@ -50,9 +50,9 @@
                             {{ 'chooseAnOrder.reportType'| trans }}
                         </dt>
                         <dd class="govuk-summary-list__value">
-                            {% set reportType = (reports.report.type matches '{\-4}') ?
+                            {% set reportType = (deputyship.report.type matches '{\-4}') ?
                                 'Property and financial; Health and welfare'
-                                : ('104' in reports.report.type) ? 'Health and welfare'
+                                : ('104' in deputyship.report.type) ? 'Health and welfare'
                                 : 'Property and financial'  %}
                             {{ reportType }}
                         </dd>

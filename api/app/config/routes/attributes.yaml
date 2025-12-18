@@ -18,11 +18,6 @@ app_v2_fixture:
     type: attribute
     prefix: /v2
 
-app_v2_tools:
-    resource: "../../src/v2/Tools/Controller/"
-    type: attribute
-    prefix: /v2
-
 kernel:
     resource: ../../src/Kernel.php
     type: attribute

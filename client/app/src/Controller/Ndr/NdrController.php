@@ -1,14 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Ndr;
 
 use App\Controller\AbstractController;
+use App\Entity\Ndr\Ndr;
 use App\Entity\User;
 use App\Exception\ReportNotSubmittableException;
 use App\Exception\ReportNotSubmittedException;
 use App\Exception\ReportSubmittedException;
-use App\Form as FormDir;
-use App\Model as ModelDir;
+use App\Form\FeedbackReportType;
+use App\Form\Ndr\ReportDeclarationType;
+use App\Model\FeedbackReport;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\NdrApi;
 use App\Service\Client\Internal\SatisfactionApi;
@@ -18,7 +22,7 @@ use App\Service\HtmlToPdfGenerator;
 use App\Service\NdrStatusService;
 use App\Service\Redirector;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,7 +30,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class NdrController extends AbstractController
 {
-    private static $ndrGroupsForValidation = [
+    private static array $ndrGroupsForValidation = [
         'client',
         'client-ndr',
         'client-benefits-check',
@@ -52,36 +56,26 @@ class NdrController extends AbstractController
     ];
 
     public function __construct(
-        private UserApi $userApi,
-        private ClientApi $clientApi,
-        private SatisfactionApi $satisfactionApi,
-        private NdrApi $ndrApi,
-        private HtmlToPdfGenerator $htmlToPdf,
-        private LoggerInterface $logger,
+        private readonly UserApi $userApi,
+        private readonly ClientApi $clientApi,
+        private readonly SatisfactionApi $satisfactionApi,
+        private readonly NdrApi $ndrApi,
+        private readonly HtmlToPdfGenerator $htmlToPdf,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
-    /**
-     * @Route("/ndr", name="ndr_index_deprecated")
-     *
-     * @Template("@App/Ndr/Ndr/index.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function indexAction()
+    #[Route(path: '/ndr', name: 'ndr_index_deprecated')]
+    #[Template('@App/Ndr/Ndr/index.html.twig')]
+    public function indexAction(): RedirectResponse|array
     {
         // Moved to ReportController::clientHomepageAction()
         return $this->redirectToRoute('homepage');
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/overview", name="ndr_overview")
-     *
-     * @Template("@App/Ndr/Ndr/overview.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function overviewAction(Redirector $redirector, int $ndrId)
+    #[Route(path: '/ndr/{ndrId}/overview', name: 'ndr_overview')]
+    #[Template('@App/Ndr/Ndr/overview.html.twig')]
+    public function overviewAction(Redirector $redirector, int $ndrId): RedirectResponse|array
     {
         // redirect if user has missing details or is on wrong page
         $user = $this->userApi->getUserWithData();
@@ -115,12 +109,10 @@ class NdrController extends AbstractController
 
     /**
      * Used for active and archived NDRs.
-     *
-     * @Route("/ndr/{ndrId}/review", name="ndr_review")
-     *
-     * @Template("@App/Ndr/Ndr/review.html.twig")
      */
-    public function reviewAction(int $ndrId)
+    #[Route(path: '/ndr/{ndrId}/review', name: 'ndr_review')]
+    #[Template('@App/Ndr/Ndr/review.html.twig')]
+    public function reviewAction(int $ndrId): array
     {
         $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id', 'report-submitted-by']));
 
@@ -137,7 +129,7 @@ class NdrController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        $backLink = $this->generateUrl('lay_home', ['clientId' => $clientId]);
+        $backLink = $this->generateUrl('courtorders_for_deputy');
 
         return [
             'ndr' => $ndr,
@@ -147,10 +139,8 @@ class NdrController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/deputyndr.pdf", name="ndr_pdf")
-     */
-    public function pdfViewAction(int $ndrId)
+    #[Route(path: '/ndr/{ndrId}/deputyndr.pdf', name: 'ndr_pdf')]
+    public function pdfViewAction(int $ndrId): Response
     {
         $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id']));
 
@@ -172,7 +162,7 @@ class NdrController extends AbstractController
             $ndr->getClient()->getCaseNumber()
         );
 
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.$attachmentName.'"');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . $attachmentName . '"');
 
         // Send headers before outputting anything
         $response->sendHeaders();
@@ -180,9 +170,9 @@ class NdrController extends AbstractController
         return $response;
     }
 
-    private function getPdfBinaryContent($ndr)
+    private function getPdfBinaryContent(Ndr $ndr)
     {
-        /** @var string */
+        /** @var string $html */
         $html = $this->render('@App/Ndr/Formatted/formatted_standalone.html.twig', [
             'ndr' => $ndr, 'adLoggedAsDeputy' => $this->isGranted(User::ROLE_AD),
         ])->getContent();
@@ -191,15 +181,11 @@ class NdrController extends AbstractController
     }
 
     /**
-     * @Route("/ndr/{ndrId}/declaration", name="ndr_declaration")
-     *
-     * @Template("@App/Ndr/Ndr/declaration.html.twig")
-     *
-     * @return array|RedirectResponse
-     *
      * @throws \Exception
      */
-    public function declarationAction(Request $request, int $ndrId, S3FileUploader $fileUploader)
+    #[Route(path: '/ndr/{ndrId}/declaration', name: 'ndr_declaration')]
+    #[Template('@App/Ndr/Ndr/declaration.html.twig')]
+    public function declarationAction(Request $request, int $ndrId, S3FileUploader $fileUploader): RedirectResponse|array
     {
         $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id']));
 
@@ -219,7 +205,7 @@ class NdrController extends AbstractController
             throw new ReportSubmittedException();
         }
 
-        $form = $this->createForm(FormDir\Ndr\ReportDeclarationType::class, $ndr);
+        $form = $this->createForm(ReportDeclarationType::class, $ndr);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $validForSubmission = $ndr->validForSubmission();
@@ -229,7 +215,7 @@ class NdrController extends AbstractController
                 }
 
                 if (!$validForSubmission['valid']) {
-                    throw new \RuntimeException(sprintf('Submission validation failed for client id '.$clientId));
+                    throw new \RuntimeException(sprintf('Submission validation failed for client id ' . $clientId));
                 }
             }
 
@@ -259,12 +245,10 @@ class NdrController extends AbstractController
 
     /**
      * Page displaying the report has been submitted.
-     *
-     * @Route("/ndr/{ndrId}/submitted", name="ndr_submit_confirmation")
-     *
-     * @Template("@App/Ndr/Ndr/submitConfirmation.html.twig")
      */
-    public function submitConfirmationAction(Request $request, int $ndrId)
+    #[Route(path: '/ndr/{ndrId}/submitted', name: 'ndr_submit_confirmation')]
+    #[Template('@App/Ndr/Ndr/submitConfirmation.html.twig')]
+    public function submitConfirmationAction(Request $request, int $ndrId): RedirectResponse|array
     {
         $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id']));
 
@@ -285,7 +269,7 @@ class NdrController extends AbstractController
 
         $ndrStatus = new NdrStatusService($ndr);
 
-        $form = $this->createForm(FormDir\FeedbackReportType::class, new ModelDir\FeedbackReport());
+        $form = $this->createForm(FeedbackReportType::class, new FeedbackReport());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -301,12 +285,9 @@ class NdrController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/ndr/{ndrId}/submit_feedback", name="ndr_submit_feedback")
-     *
-     * @Template("@App/Report/Report/submitFeedback.html.twig")
-     */
-    public function submitFeedbackAction(int $ndrId)
+    #[Route(path: '/ndr/{ndrId}/submit_feedback', name: 'ndr_submit_feedback')]
+    #[Template('@App/Report/Report/submitFeedback.html.twig')]
+    public function submitFeedbackAction(int $ndrId): array
     {
         $ndr = $this->ndrApi->getNdr($ndrId, array_merge(self::$ndrGroupsForValidation, ['ndr-client', 'client-id']));
 

@@ -77,7 +77,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
         $this->sut = new SiriusApiGatewayClient(
             $client,
             $this->signer->reveal(),
-            'http://'.$baseUrl.':'.$pactHostPort,
+            'http://' . $baseUrl . ':' . $pactHostPort,
             $serializer,
             $this->logger->reveal()
         );

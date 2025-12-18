@@ -1,5 +1,5 @@
 # Build Stage
-FROM golang:1.24.6-alpine3.22 AS build
+FROM golang:1.25.3-alpine3.22 AS build
 WORKDIR /go/src/clamav-rest
 
 COPY file-scanner/. .
@@ -44,6 +44,9 @@ COPY --from=build /go/src/clamav-rest/file-scanner /usr/bin/
 
 COPY file-scanner/entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
+
+#Check processes script
+COPY --chown=clamav:clamav scripts/process_checks/check_processes.sh /app/check_processes.sh
 
 # Harden security
 COPY scripts/hardening/harden.sh /app/harden.sh

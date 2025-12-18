@@ -4,12 +4,6 @@ variable "DEFAULT_ROLE" {
   default     = "digideps-ci"
 }
 
-variable "STATE_ROLE" {
-  type        = string
-  description = "Default state role to use"
-  default     = "digideps-state-write"
-}
-
 variable "OPG_DOCKER_TAG" {
   description = "docker tag to deploy"
   type        = string
@@ -35,7 +29,6 @@ variable "accounts" {
       db_subnet_group                        = string
       ec_subnet_group                        = string
       sirius_api_account                     = string
-      state_source                           = string
       elasticache_count                      = number
       cpu_low                                = number
       cpu_medium                             = number

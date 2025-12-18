@@ -33,26 +33,25 @@ class CourtOrderReportCandidatesFactory
                     (
                         (
                             d.order_type = 'pfa'
-                            AND d.is_hybrid IS NULL
                             AND r.type IN ('102', '102-5', '102-6', '103', '103-5', '103-6')
                         )
                         OR
                         (
                             d.order_type = 'hw'
-                            AND d.is_hybrid IS NULL
                             AND r.type IN ('104', '104-5', '104-6')
                         )
                         OR
                         (
                             d.order_type IN ('hw', 'pfa')
-                            AND d.is_hybrid = '1'
                             AND r.type IN ('102-4', '102-4-5', '102-4-6', '103-4', '103-4-5', '103-4-6')
                         )
                     ) AS report_type_is_compatible
                 FROM staging.deputyship d
                 INNER JOIN client c ON LOWER(d.case_number) = LOWER(c.case_number)
                 INNER JOIN report r ON c.id = r.client_id
-                WHERE r.start_date >= TO_DATE(d.order_made_date, 'YYYY-MM-DD')
+                WHERE r.due_date >= TO_DATE(d.order_made_date, 'YYYY-MM-DD')
+                AND c.archived_at IS NULL
+                AND c.deleted_at IS NULL
             ) compat
             WHERE report_type_is_compatible = true
             GROUP BY court_order_uid, report_id
@@ -66,40 +65,10 @@ class CourtOrderReportCandidatesFactory
         );
     SQL;
 
-    // NDRs are only assigned for pfa court orders, and only to Lay deputies, hence the WHERE clause
-    /** @var string */
-    private const COMPATIBLE_NDRS_QUERY = <<<SQL
-        SELECT
-            d.order_uid AS court_order_uid,
-            odr.id AS ndr_id
-        FROM staging.deputyship d
-        INNER JOIN client c ON LOWER(d.case_number) = LOWER(c.case_number)
-        INNER JOIN odr ON c.id = odr.client_id
-        WHERE d.order_type = 'pfa'
-        AND d.deputy_type = 'LAY'
-        AND odr.start_date >= TO_DATE(d.order_made_date, 'YYYY-MM-DD')
-        GROUP BY d.order_uid, odr.id
-        ORDER BY d.order_uid, odr.id;
-    SQL;
-
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly StagingSelectedCandidateFactory $candidateFactory,
     ) {
-    }
-
-    /**
-     * @param string $query SQL query to execute on the db connection
-     *
-     * @return \Traversable<int, array<string, mixed>>
-     *
-     * @throws Exception
-     */
-    private function runQuery(string $query): \Traversable
-    {
-        $conn = $this->entityManager->getConnection();
-
-        return $conn->executeQuery($query)->iterateAssociative();
     }
 
     /**
@@ -108,11 +77,11 @@ class CourtOrderReportCandidatesFactory
      *
      * A deputyship and existing report are compatible if:
      *
-     * deputyship order type == 'pfa' and existing report type == '102' or '103'
+     * deputyship order type == 'pfa' and existing report type is '102' or '103' or the PA/PRO equivalents
      * OR
-     * deputyship order type == 'hw' and existing report type == '104'
+     * deputyship order type == 'hw' and existing report type is '104' or the PA/PRO equivalents
      * OR
-     * deputyship order type == 'pfa' or 'hw' and deputyship is hybrid and existing report type == '102-4' or '103-4'
+     * deputyship order type == 'pfa' or 'hw' and existing report type ends with == '-4'
      *
      * @return \Traversable<StagingSelectedCandidate> Iterator over candidate court_order_report inserts
      *
@@ -120,31 +89,13 @@ class CourtOrderReportCandidatesFactory
      */
     public function createCompatibleReportCandidates(): \Traversable
     {
-        $result = $this->runQuery(self::COMPATIBLE_REPORTS_QUERY);
+        $conn = $this->entityManager->getConnection();
+        $result = $conn->executeQuery(self::COMPATIBLE_REPORTS_QUERY)->iterateAssociative();
 
         foreach ($result as $row) {
             yield $this->candidateFactory->createInsertOrderReportCandidate(
-                ''.$row['court_order_uid'],
-                intval(''.$row['report_id'])
-            );
-        }
-    }
-
-    /**
-     * Find NDRs which can be associated with a court order.
-     *
-     * @return \Traversable<StagingSelectedCandidate> Iterator over candidate court_order_ndr inserts
-     *
-     * @throws Exception
-     */
-    public function createCompatibleNdrCandidates(): \Traversable
-    {
-        $result = $this->runQuery(self::COMPATIBLE_NDRS_QUERY);
-
-        foreach ($result as $row) {
-            yield $this->candidateFactory->createInsertOrderNdrCandidate(
-                ''.$row['court_order_uid'],
-                intval(''.$row['ndr_id'])
+                '' . $row['court_order_uid'],
+                intval('' . $row['report_id'])
             );
         }
     }

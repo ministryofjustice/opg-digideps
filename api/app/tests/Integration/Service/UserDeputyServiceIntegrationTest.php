@@ -10,9 +10,9 @@ use App\Repository\UserRepository;
 use App\Service\UserDeputyService;
 use App\TestHelpers\DeputyTestHelper;
 use App\TestHelpers\UserTestHelper;
-use App\Tests\Integration\ApiBaseTestCase;
+use App\Tests\Integration\ApiIntegrationTestCase;
 
-class UserDeputyServiceIntegrationTest extends ApiBaseTestCase
+class UserDeputyServiceIntegrationTest extends ApiIntegrationTestCase
 {
     private UserRepository $userRepository;
     private UserDeputyService $sut;
@@ -22,11 +22,11 @@ class UserDeputyServiceIntegrationTest extends ApiBaseTestCase
         parent::setUp();
 
         /** @var UserRepository $repo */
-        $repo = $this->entityManager->getRepository(User::class);
+        $repo = self::$entityManager->getRepository(User::class);
         $this->userRepository = $repo;
 
         /** @var UserDeputyService $sut */
-        $sut = $this->container->get(UserDeputyService::class);
+        $sut = self::$container->get(UserDeputyService::class);
         $this->sut = $sut;
     }
 
@@ -38,24 +38,24 @@ class UserDeputyServiceIntegrationTest extends ApiBaseTestCase
 
         // existing deputy
         $deputy = DeputyTestHelper::generateDeputy(deputyUid: $existingDeputyUid);
-        $this->entityManager->persist($deputy);
+        self::$entityManager->persist($deputy);
 
         // a user referencing the deputy UID which already exists
         $user1 = UserTestHelper::createUser(deputyUid: intval($existingDeputyUid));
-        $this->entityManager->persist($user1);
+        self::$entityManager->persist($user1);
 
         // a user referencing a deputy UID which doesn't exist
-        $user2 = UserTestHelper::createUser(deputyUid: intval($nonExistentDeputyUid), email: $user2Email);
-        $this->entityManager->persist($user2);
+        $user2 = UserTestHelper::createUser(email: $user2Email, deputyUid: intval($nonExistentDeputyUid));
+        self::$entityManager->persist($user2);
 
         // pre-reg entries for both deputy UIDs
         $preReg1 = new PreRegistration(['DeputyUid' => $existingDeputyUid]);
-        $this->entityManager->persist($preReg1);
+        self::$entityManager->persist($preReg1);
 
         $preReg2 = new PreRegistration(['DeputyUid' => $nonExistentDeputyUid]);
-        $this->entityManager->persist($preReg2);
+        self::$entityManager->persist($preReg2);
 
-        $this->entityManager->flush();
+        self::$entityManager->flush();
 
         // test
         $this->sut->addMissingUserDeputies();

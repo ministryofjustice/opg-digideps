@@ -14,23 +14,18 @@ caseNumber:
   label: Case number
   hint: This is 8 or 10 characters long and can be found on your court order
 address:
-  label: Address
-  context: line 1 of 5
+  label: Address line 1
 address2:
-  label: " "
-  context: Address line 2 of 5
+  label: Address line 2
   hint: ""
 address3:
-  label: " "
-  context: Address line 3 of 5
+  label: Address line 3
   hint: ""
 address4:
-  label: " "
-  context: Address line 4 of 5
+  label: Address line 4
   hint: ""
 address5:
-  label: " "
-  context: Address line 5 of 5
+  label: Address line 5
   hint: ""
 postcode:
   label: Postcode

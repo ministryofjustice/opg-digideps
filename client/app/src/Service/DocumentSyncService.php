@@ -13,7 +13,7 @@ use App\Model\Sirius\SiriusReportPdfDocumentMetadata;
 use App\Model\Sirius\SiriusSupportingDocumentMetadata;
 use App\Service\Client\RestClient;
 use App\Service\Client\Sirius\SiriusApiGatewayClient;
-use App\Service\File\FileNameFixer;
+use App\Service\File\FileNameManipulation;
 use App\Service\File\Storage\S3Storage;
 use Exception;
 use GuzzleHttp\Psr7\MimeType;
@@ -31,40 +31,20 @@ class DocumentSyncService
     const MISSING_FILE_EXTENSION_ERROR =
         'File extension is missing from filename. This file will need to be manually synced with Sirius';
 
-    /** @var S3Storage */
-    private $storage;
-
-    /** @var SiriusApiGatewayClient */
-    private $siriusApiGatewayClient;
-
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var SiriusApiErrorTranslator */
-    private $errorTranslator;
-
     /** @var int[] */
     private $syncErrorSubmissionIds;
 
     /** @var int */
     private $docsNotSyncedCount;
 
-    private FileNameFixer $fileNameFixer;
-
     public function __construct(
-        S3Storage $storage,
-        SiriusApiGatewayClient $siriusApiGatewayClient,
-        RestClient $restClient,
-        SiriusApiErrorTranslator $errorTranslator,
-        FileNameFixer $fileNameFixer
+        private readonly S3Storage $storage,
+        private readonly SiriusApiGatewayClient $siriusApiGatewayClient,
+        private readonly RestClient $restClient,
+        private readonly SiriusApiErrorTranslator $errorTranslator,
     ) {
-        $this->storage = $storage;
-        $this->siriusApiGatewayClient = $siriusApiGatewayClient;
-        $this->restClient = $restClient;
         $this->syncErrorSubmissionIds = [];
         $this->docsNotSyncedCount = 0;
-        $this->errorTranslator = $errorTranslator;
-        $this->fileNameFixer = $fileNameFixer;
     }
 
     /**
@@ -151,7 +131,7 @@ class DocumentSyncService
 
     private function buildUpload(QueuedDocumentData $documentData)
     {
-        $fileName = $this->fileNameFixer->removeWhiteSpaceBeforeFileExtension($documentData->getFileName());
+        $fileName = FileNameManipulation::fileNameSanitation($documentData->getFileName());
         $mimeType = MimeType::fromFilename($fileName);
 
         if (is_null($mimeType)) {

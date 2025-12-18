@@ -22,7 +22,6 @@ resource "aws_cloudwatch_log_group" "container_insights" {
 }
 
 # Shared variables for tasks and services in cluster
-
 locals {
   api_service_app_variables = [
     {

@@ -19,8 +19,8 @@ class RequestSignerTest extends TestCase
             'X-Amz-Content-Sha256' => 'A payload',
             'Authorization' => [
                 'AWS4-HMAC-SHA256 '
-                .'Credential=abc123/some/scope, '
-                ."SignedHeaders={['header' => 'signed']}, Signature={aSignature}",
+                . 'Credential=abc123/some/scope, '
+                . "SignedHeaders={['header' => 'signed']}, Signature={aSignature}",
             ],
         ];
 

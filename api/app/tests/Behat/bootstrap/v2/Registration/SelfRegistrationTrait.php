@@ -95,19 +95,18 @@ trait SelfRegistrationTrait
     }
 
     /**
-     * @Given a lay deputy :name @ :jsonFile is invited to be a co-deputy for case :caseNumber
+     * @Given a lay deputy :name @ :jsonFile is invited to be a co-deputy for the court order with UID :courtOrderUid
      *
      * See aLayDeputyWithRefRegistersToDeputise for an explanation of the reference and JSON format.
      *
      * NB a user on the case referenced must be logged in for this sequence to work.
      */
-    public function aLayDeputyIsInvitedToBeACodeputy(string $name, string $jsonFile, string $caseNumber)
+    public function aLayDeputyIsInvitedToBeACodeputy(string $name, string $jsonFile, string $courtOrderUid)
     {
         $fixture = $this->getFixtureJson($jsonFile);
         $codeputy = $fixture[$name]['codeputy'];
 
-        $clientId = $this->getClientIdByCaseNumber($caseNumber);
-        $this->visitPath(sprintf('/codeputy/%s/add', $clientId));
+        $this->visitPath(sprintf('/courtorder/%s/invite', $courtOrderUid));
 
         $this->fillInField('co_deputy_invite_firstname', $codeputy['firstName']);
         $this->fillInField('co_deputy_invite_lastname', $codeputy['lastName']);
@@ -178,22 +177,22 @@ trait SelfRegistrationTrait
      */
     public function aLayDeputyRegistersToDeputiseForThisClientWithValidDetails()
     {
-        $this->userEmail = 'julie2@duck.co.uk';
-        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
-        $this->deputyUid = '700762222001';
+        $userEmail = 'julie2' . rand(0, 9999999) . '@duck.co.uk';
+        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $userEmail]);
+        $this->deputyUid = '700863322001';
 
         $this->visitFrontendPath('/register');
         $this->fillInSelfRegistrationFieldsAndSubmit(
             'Jeanne',
-            "d'Arc",
-            $this->userEmail,
+            'dArc',
+            $userEmail,
             'B1',
             'Sarah',
-            "O'Name",
+            'OName',
             '61616161',
         );
 
-        $this->completeUserRegistration($this->userEmail);
+        $this->completeUserRegistration($userEmail);
     }
 
     /**
@@ -404,7 +403,6 @@ trait SelfRegistrationTrait
             ['email' => strtolower($this->interactingWithUserDetails->getUserEmail())]
         );
 
-        $this->assertStringEqualsString($this->deputyUid, $deputy->getDeputyNo(), 'Asserting DeputyUid is the same');
         /* Assertion on the new Deputy UID value which is an exact match of the Deputy No value */
         $this->assertIntEqualsInt(intval($this->deputyUid), $deputy->getDeputyUid(), 'Asserting DeputyUid is the same');
         $this->assertStringEqualsString(
@@ -786,11 +784,6 @@ trait SelfRegistrationTrait
             ['email' => strtolower($this->coDeputyEmail)]
         );
 
-        $this->assertStringEqualsString(
-            $this->coDeputyUid,
-            $coDeputy->getDeputyNo(),
-            'Asserting CoDeputyUid is the same'
-        );
         /* Assertion on the new Deputy UID value which is an exact match of the Deputy No value */
         $this->assertIntEqualsInt(
             (int)$this->coDeputyUid,

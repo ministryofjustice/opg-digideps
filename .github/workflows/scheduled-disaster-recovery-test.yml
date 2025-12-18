@@ -23,10 +23,10 @@ jobs:
     runs-on: ubuntu-latest
     name: restore to a point in time
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: install python
-        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # 5.4.0
+        uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # 6.0.0
         with:
           python-version: "3.11"
           cache: "pip"
@@ -37,9 +37,9 @@ jobs:
         working-directory: disaster-recovery/restore
 
       - name: configure OIDC AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # v4.1.0
+        uses: aws-actions/configure-aws-credentials@00943011d9042930efac3dcd3a170e4273319bc8 # v5.1.0
         with:
-          role-to-assume: "arn:aws:iam::631181914621:role/oidc-digideps-preproduction"
+          role-to-assume: "arn:aws:iam::${{ vars.IDENTITY_ACCOUNT }}:role/oidc-digideps-preproduction"
           role-session-name: github-actions-terraform-run-task
           role-duration-seconds: 7200
           aws-region: eu-west-1
@@ -47,19 +47,21 @@ jobs:
       - name: restore to a point in time
         id: restore
         run: |
-          export TEN_MINS_AGO=$(TZ=UTC date -d '-5 minutes' +'%Y-%m-%d %H:%M:%S')
+          TEN_MINS_AGO="$(TZ=UTC date -d '-5 minutes' +'%Y-%m-%d %H:%M:%S')"
           python3 database_restore.py \
-          --environment preproduction \
-          --cluster_from api-integration \
-          --pitr "${TEN_MINS_AGO}"
+            --environment preproduction \
+            --cluster_from api-integration \
+            --pitr "${TEN_MINS_AGO}"
         working-directory: disaster-recovery/restore
 
       - name: Unset AWS variables
         if: always()
         run: |
-          echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
-          echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
-          echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV
+          {
+            echo "AWS_SECRET_ACCESS_KEY="
+            echo "AWS_ACCESS_KEY_ID="
+            echo "AWS_SESSION_TOKEN="
+          } >> "$GITHUB_ENV"
 
   restore_from_remote_backup:
     runs-on: ubuntu-latest
@@ -67,10 +69,10 @@ jobs:
     needs:
       - restore_to_point_in_time
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: install python
-        uses: actions/setup-python@42375524e23c412d93fb67b49958b491fce71c38 # 5.4.0
+        uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # 6.0.0
         with:
           python-version: "3.11"
           cache: "pip"
@@ -81,9 +83,9 @@ jobs:
         working-directory: disaster-recovery/restore
 
       - name: configure OIDC AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@ececac1a45f3b08a01d2dd070d28d111c5fe6722 # v4.1.0
+        uses: aws-actions/configure-aws-credentials@00943011d9042930efac3dcd3a170e4273319bc8 # v5.1.0
         with:
-          role-to-assume: "arn:aws:iam::631181914621:role/oidc-digideps-preproduction"
+          role-to-assume: "arn:aws:iam::${{ vars.IDENTITY_ACCOUNT }}:role/oidc-digideps-preproduction"
           role-session-name: github-actions-terraform-run-task
           role-duration-seconds: 7200
           aws-region: eu-west-1
@@ -91,8 +93,8 @@ jobs:
       - name: get latest integration snapshot id
         id: snapshot
         run: |
-          export SNAPSHOT_ID=$(python get_cross_acct_snapshot.py)
-          echo "snapshot_id=${SNAPSHOT_ID}" >> $GITHUB_OUTPUT
+          SNAPSHOT_ID="$(python get_cross_acct_snapshot.py)"
+          echo "snapshot_id=${SNAPSHOT_ID}" >> "$GITHUB_OUTPUT"
         working-directory: disaster-recovery/restore
 
       - name: restore from remote backup
@@ -101,18 +103,20 @@ jobs:
           SNAPSHOT_ID: ${{ steps.snapshot.outputs.snapshot_id }}
         run: |
           python database_restore.py \
-          --environment preproduction \
-          --cluster_from api-integration \
-          --restore_from_remote True \
-          --snapshot_id ${SNAPSHOT_ID}
+            --environment preproduction \
+            --cluster_from api-integration \
+            --restore_from_remote True \
+            --snapshot_id "${SNAPSHOT_ID}"
         working-directory: disaster-recovery/restore
 
       - name: Unset AWS variables
         if: always()
         run: |
-          echo "AWS_SECRET_ACCESS_KEY=" >> $GITHUB_ENV
-          echo "AWS_ACCESS_KEY_ID=" >> $GITHUB_ENV
-          echo "AWS_SESSION_TOKEN=" >> $GITHUB_ENV
+          {
+            echo "AWS_SECRET_ACCESS_KEY="
+            echo "AWS_ACCESS_KEY_ID="
+            echo "AWS_SESSION_TOKEN="
+          } >> "$GITHUB_ENV"
 
   slack_notify_success:
     name: notify of result
@@ -122,7 +126,7 @@ jobs:
     with:
       success: yes
       branch: integration
-      account: 248804316466
+      account: ${{ vars.DEVELOPMENT_ACCOUNT }}
 
   slack_notify_failure:
     name: notify of failure
@@ -133,4 +137,4 @@ jobs:
     with:
       success: no
       branch: integration
-      account: 248804316466
+      account: ${{ vars.DEVELOPMENT_ACCOUNT }}

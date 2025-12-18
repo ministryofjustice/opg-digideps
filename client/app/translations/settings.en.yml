@@ -70,20 +70,15 @@ form:
       lastname:
         label: Last name
       address1:
-        label: Address
-        context: 1 of 5
+        label: Address line 1
       address2:
-        label: " "
-        context: Address 2 of 5
+        label: Address line 2
       address3:
-        label: " "
-        context: Address 3 of 5
+        label: Address line 3
       address4:
-        label: " "
-        context: Address 4 of 5
+        label: Address line 4
       address5:
-        label: " "
-        context: Address 5 of 5
+        label: Address line 5
       addressPostcode:
         label: Postcode
       addressCountry:

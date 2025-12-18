@@ -101,11 +101,6 @@ parameters:
 			path: src/Controller/ClientController.php
 
 		-
-			message: "#^Negated boolean expression is always false\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
 			message: "#^Parameter \\#1 \\$query of method App\\\\Repository\\\\ClientRepository\\:\\:searchClients\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/ClientController.php
@@ -132,11 +127,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#5 \\$offset of method App\\\\Repository\\\\ClientRepository\\:\\:searchClients\\(\\) expects int, mixed given\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: "#^Result of && is always false\\.$#"
 			count: 1
 			path: src/Controller/ClientController.php
 
@@ -526,11 +516,6 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: "#^Cannot call method getAvailableSections\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
 			message: "#^Cannot call method updateSectionsStatusCache\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Controller/Report/ReportController.php
@@ -842,11 +827,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method setCoDeputyClientConfirmed\\(\\) on App\\\\Entity\\\\User\\|null\\.$#"
-			count: 1
-			path: src/Controller/SelfRegisterController.php
-
-		-
-			message: "#^Cannot call method setDeputyNo\\(\\) on App\\\\Entity\\\\User\\|null\\.$#"
 			count: 1
 			path: src/Controller/SelfRegisterController.php
 
@@ -1547,11 +1527,6 @@ parameters:
 
 		-
 			message: "#^Property App\\\\Entity\\\\Client\\:\\:\\$id is never written, only read\\.$#"
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Client\\:\\:\\$ndr has no type specified\\.$#"
 			count: 1
 			path: src/Entity/Client.php
 
@@ -4526,11 +4501,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: "#^Method App\\\\Service\\\\ReportStatusService\\:\\:getStatusIgnoringDueDate\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Parameter \\$transactions of method App\\\\Entity\\\\Report\\\\Report\\:\\:groupByCategory\\(\\) has invalid type App\\\\Entity\\\\Report\\\\Traits\\\\Transaction\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -4981,11 +4951,6 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:setDeputyNo\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\User\\:\\:setLastLoggedIn\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/User.php
@@ -5352,11 +5317,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\FixtureFactory\\\\LoadTestFactory\\:\\:createUsersClientsReports\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/FixtureFactory/LoadTestFactory.php
-
-		-
-			message: "#^Parameter \\#1 \\$em of method App\\\\TestHelpers\\\\ClientTestHelper\\:\\:generateClient\\(\\) expects Doctrine\\\\ORM\\\\EntityManager, Doctrine\\\\ORM\\\\EntityManagerInterface given\\.$#"
 			count: 1
 			path: src/FixtureFactory/LoadTestFactory.php
 
@@ -5991,11 +5951,6 @@ parameters:
 			path: src/Security/HeaderTokenAuthenticator.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:getRoleName\\(\\)\\.$#"
-			count: 3
-			path: src/Security/LoginRequestAuthenticator.php
-
-		-
 			message: "#^Cannot access offset 'email' on mixed\\.$#"
 			count: 4
 			path: src/Security/LoginRequestAuthenticator.php
@@ -6436,41 +6391,6 @@ parameters:
 			path: src/Service/File/Storage/S3Storage.php
 
 		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:deleteObject\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:deleteObjects\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:getObject\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:getObjectTagging\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:listObjectVersions\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:putObject\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:putObjectTagging\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
 			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\S3Storage\\:\\:appendTagset\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/File/Storage/S3Storage.php
@@ -6801,21 +6721,6 @@ parameters:
 			path: src/Service/ReportUtils.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:getCurrentRequest\\(\\)\\.$#"
-			count: 1
-			path: src/Service/RequestIdLoggerProcessor.php
-
-		-
-			message: "#^Left side of && is always true\\.$#"
-			count: 1
-			path: src/Service/RequestIdLoggerProcessor.php
-
-		-
-			message: "#^Method App\\\\Service\\\\RequestIdLoggerProcessor\\:\\:getRequestIdFromContainer\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/RequestIdLoggerProcessor.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:getEmailIdentifier\\(\\)\\.$#"
 			count: 1
 			path: src/Service/RestHandler/OrganisationRestHandler.php
@@ -7082,11 +6987,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Service\\\\UserService\\:\\:exceptionIfEmailExist\\(\\) has parameter \\$email with no type specified\\.$#"
-			count: 1
-			path: src/Service/UserService.php
-
-		-
-			message: "#^Method App\\\\Service\\\\UserService\\:\\:handleNdrStatusUpdate\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/UserService.php
 
@@ -7579,11 +7479,6 @@ parameters:
 			message: "#^Method App\\\\v2\\\\Assembler\\\\UserAssembler\\:\\:setPropertiesFromData\\(\\) has parameter \\$dto with no type specified\\.$#"
 			count: 1
 			path: src/v2/Assembler/UserAssembler.php
-
-		-
-			message: "#^Attribute class Sensio\\\\Bundle\\\\FrameworkExtraBundle\\\\Configuration\\\\Security does not exist\\.$#"
-			count: 1
-			path: src/v2/Controller/CourtOrderController.php
 
 		-
 			message: "#^Cannot call method getOrganisations\\(\\) on Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null\\.$#"
@@ -8246,11 +8141,6 @@ parameters:
 			path: src/v2/Registration/Uploader/LayDeputyshipUploader.php
 
 		-
-			message: "#^Cannot call method getDeputyNo\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/v2/Registration/Uploader/LayDeputyshipUploader.php
-
-		-
 			message: "#^Cannot call method getDeputyUid\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/v2/Registration/Uploader/LayDeputyshipUploader.php
@@ -8419,21 +8309,6 @@ parameters:
 			message: "#^Parameter \\#4 \\$endDate of class App\\\\Entity\\\\Report\\\\Report constructor expects DateTime, DateTime\\|null given\\.$#"
 			count: 1
 			path: src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
-			message: "#^Cannot access offset 'firstClientId' on mixed\\.$#"
-			count: 1
-			path: src/v2/Tools/Controller/ToolsController.php
-
-		-
-			message: "#^Cannot access offset 'secondClientId' on mixed\\.$#"
-			count: 1
-			path: src/v2/Tools/Controller/ToolsController.php
-
-		-
-			message: "#^Parameter \\#1 \\$value of function intval expects array\\|bool\\|float\\|int\\|resource\\|string\\|null, mixed given\\.$#"
-			count: 2
-			path: src/v2/Tools/Controller/ToolsController.php
 
 		-
 			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"

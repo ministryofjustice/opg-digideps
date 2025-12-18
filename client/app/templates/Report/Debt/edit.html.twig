@@ -21,20 +21,28 @@
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
     {% for debt in form.debts %}
-        <div class="{{ debt.moreDetails is defined ? ' js-details-expander ' : '' }}">
+        {% set jsEnabled = debt.moreDetails is defined ? ' js-details-expander ' : '' %}
+        <div class="{{ jsEnabled }}">
             {{ form_row(debt.debtTypeId) }}
             {{ form_input(debt.amount, 'amount', {
                 'inputPrefix' : '£',
                 'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
                 'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.label') | trans,
                 'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.hint') | trans(transOptions),
+                'jsEnabled': jsEnabled
             }) }}
 
             {% if debt.moreDetails is defined %}
 
+                {% set inputClass = 'opg-indented-block js-details-expandable' %}
+
+                {% if not debt.vars.value.amount %}
+                    {% set inputClass = inputClass ~ ' js-hidden' %}
+                {% endif %}
+
                 {{ form_input(debt.moreDetails, 'moreDetails', {
                     'labelText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInformations') | trans,
-                    'formGroupClass': 'opg-indented-block js-hidden js-details-expandable',
+                    'formGroupClass': inputClass,
                     'hintText': ('form.entries.' ~ debt.debtTypeId.vars.value ~ '.moreInfoHint') | trans(transOptions)
                 }) }}
 

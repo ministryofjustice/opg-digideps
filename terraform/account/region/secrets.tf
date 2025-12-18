@@ -37,15 +37,6 @@ module "development_environment_secrets" {
 
 # Account wide secrets
 #trivy:ignore:avd-aws-0098 - Complications with updating this secret and not a particularly sensitive secret
-resource "aws_secretsmanager_secret" "cloud9_users" {
-  name        = "cloud9-users"
-  description = "Digideps team Cloud9 users"
-  tags        = var.default_tags
-}
-
-data "aws_secretsmanager_secret_version" "cloud9_users" {
-  secret_id = aws_secretsmanager_secret.cloud9_users.id
-}
 
 resource "aws_secretsmanager_secret" "slack_webhook_url" {
   name        = "slack-webhook-url"

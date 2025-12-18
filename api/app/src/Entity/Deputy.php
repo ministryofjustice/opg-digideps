@@ -456,18 +456,40 @@ class Deputy
             && null !== $dto->getDeputyEmail();
     }
 
+    /**
+     * Associate the deputy with a court order. If an association already exists, update its status.
+     */
     public function associateWithCourtOrder(CourtOrder $courtOrder, bool $isActive = true): Deputy
     {
-        $courtOrderDeputy = new CourtOrderDeputy();
-        $courtOrderDeputy->setCourtOrder($courtOrder);
-        $courtOrderDeputy->setDeputy($this);
-        $courtOrderDeputy->setIsActive($isActive);
+        // find existing association between deputy and court order
+        $noExistingAssociation = true;
 
-        $this->courtOrderDeputyRelationships[] = $courtOrderDeputy;
+        /** @var CourtOrderDeputy $rel */
+        foreach ($this->courtOrderDeputyRelationships as $rel) {
+            if ($rel->getCourtOrder()->getCourtOrderUid() === $courtOrder->getCourtOrderUid()) {
+                $rel->setIsActive($isActive);
+                $noExistingAssociation = false;
+            }
+        }
+
+        // no existing association, so create a new one
+        if ($noExistingAssociation) {
+            $courtOrderDeputy = new CourtOrderDeputy();
+            $courtOrderDeputy->setCourtOrder($courtOrder);
+            $courtOrderDeputy->setDeputy($this);
+            $courtOrderDeputy->setIsActive($isActive);
+
+            $this->courtOrderDeputyRelationships[] = $courtOrderDeputy;
+        }
 
         return $this;
     }
 
+    /**
+     * Return the deputy's court orders, along with a marker of whether they are active on the court order.
+     *
+     * @return array
+     */
     public function getCourtOrdersWithStatus(): array
     {
         $result = [];

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace app\tests\Integration\Model;
 
+use App\Entity\CourtOrder;
+use App\Entity\Deputy;
 use App\Model\DeputyshipProcessingRawDbAccess;
 use App\Tests\Integration\ApiIntegrationTestCase;
 use App\Tests\Integration\Fixtures;
@@ -91,7 +93,7 @@ class DeputyshipProcessingRawDbAccessIntegrationIntegrationTest extends ApiInteg
         $courtOrderId = self::$sut->findOrderId($courtOrderUid)->data;
 
         self::$sut->beginTransaction();
-        $result = self::$sut->insertOrderDeputy($courtOrderId, ['deputyStatusOnOrder' => true, 'deputyId' => $deputy->getId()]);
+        $result = self::$sut->insertOrderDeputy($courtOrderId, ['deputyStatusOnOrder' => false, 'deputyId' => $deputy->getId()]);
         self::$sut->endTransaction();
 
         self::assertTrue($result->success);
@@ -107,9 +109,12 @@ class DeputyshipProcessingRawDbAccessIntegrationIntegrationTest extends ApiInteg
             ->fetchAssociative();
 
         self::assertNotFalse($result, 'court order deputy association was not found');
-        self::assertTrue($result['is_active']);
+        self::assertFalse($result['is_active']);
     }
 
+    /**
+     * @throws Exception
+     */
     public function testInsertOrderReport(): void
     {
         // insert report and court order (client is needed by the report)
@@ -132,7 +137,7 @@ class DeputyshipProcessingRawDbAccessIntegrationIntegrationTest extends ApiInteg
         self::assertTrue($result->success);
 
         // check association exists
-        $result = $this->getQueryBuilder()
+        $association = $this->getQueryBuilder()
             ->select('*')
             ->from('court_order_report')
             ->where('report_id = ?')
@@ -141,6 +146,69 @@ class DeputyshipProcessingRawDbAccessIntegrationIntegrationTest extends ApiInteg
             ->setParameter(1, $courtOrderId)
             ->fetchAssociative();
 
-        self::assertNotFalse($result, 'court order report association was not found');
+        self::assertNotFalse($association, 'court order report association was not found');
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testUpdateOrderStatus(): void
+    {
+        $courtOrderUid = uniqid();
+        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid, 'pfa', 'ACTIVE');
+        self::$fixtures->persist($courtOrder)->flush();
+
+        // use SUT to update order status
+        self::$entityManager->refresh($courtOrder);
+
+        self::$sut->beginTransaction();
+        $result = self::$sut->updateOrderStatus($courtOrder->getId(), ['status' => 'CLOSED']);
+        self::$sut->endTransaction();
+
+        self::assertTrue($result->success);
+
+        // check order status is correctly updated
+        self::$entityManager->refresh($courtOrder);
+
+        self::assertNotFalse($courtOrder, 'court order was not found');
+        self::assertEquals('CLOSED', $courtOrder->getStatus());
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function testUpdateDeputyStatus(): void
+    {
+        $courtOrderUid = uniqid();
+        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid, 'pfa', 'ACTIVE');
+        $deputy = self::$fixtures->createDeputy();
+        $deputy->associateWithCourtOrder($courtOrder);
+        self::$fixtures->persist($courtOrder, $deputy)->flush();
+
+        self::$entityManager->refresh($courtOrder);
+        self::$entityManager->refresh($deputy);
+
+        $ordersWithStatus = $deputy->getCourtOrdersWithStatus();
+        self::assertTrue($ordersWithStatus[0]['isActive']);
+
+        // use SUT to update deputy status on order to "false"
+        self::$sut->beginTransaction();
+        $result = self::$sut->updateDeputyStatus($courtOrder->getId(), ['deputyStatusOnOrder' => false, 'deputyId' => $deputy->getId()]);
+        self::$sut->endTransaction();
+
+        self::assertTrue($result->success);
+
+        // check deputy status is correctly updated
+        $association = $this->getQueryBuilder()
+            ->select('*')
+            ->from('court_order_deputy')
+            ->where('deputy_id = ?')
+            ->andWhere('court_order_id = ?')
+            ->setParameter(0, $deputy->getId())
+            ->setParameter(1, $courtOrder->getId())
+            ->fetchAssociative();
+
+        self::assertNotFalse($association, 'court order deputy association was not found');
+        self::assertFalse($association['is_active']);
     }
 }

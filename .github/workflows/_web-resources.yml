@@ -11,42 +11,33 @@ jobs:
   build-web:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
       - name: create nvmrc file
         run: grep "FROM node:" Dockerfile | awk -F' ' '{print $2}' | sed 's/^node:\(.*\)-.*/\1/' > .nvmrc
         working-directory: client/docker/resources
-      - uses: actions/setup-node@cdca7365b2dadb8aad0a33bc7601856ffabcc48e # v4.3.0
+      - uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6.0.0
         with:
           node-version-file: "client/docker/resources/.nvmrc"
       - name: cache node modules
         id: cache-npm
-        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
         env:
           cache-name: cache-node-modules
         with:
           path: client/resources/public
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json', '**/webpack.config.js') }}
-      - name: Check if directory exists and has content
-        id: check-directory
-        run: |
-          directory="client/resources/public/assets"
-          if [ -d "$directory" ] && [ "$(ls -A "$directory")" ]; then
-            echo "directory_exists=$(echo true)" >> $GITHUB_OUTPUT
-          else
-            echo "directory_exists=$(echo false)" >> $GITHUB_OUTPUT
-          fi
       - name: Build assets
-        if: steps.check-directory.outputs.directory_exists == 'false'
         run: |
           # Install NPM dependencies
           npm ci
           npm run lint
           npm audit --production
-          #Build assets
+
+          # Build assets
           NODE_ENV=production npm run build
         working-directory: client/resources
       - name: archive dist
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: web-distribution
           path: client/resources/public

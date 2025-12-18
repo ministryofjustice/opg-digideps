@@ -32,7 +32,7 @@ runtime=$(( end - start))
 
 echo "Time taken: ${runtime} secs"
 
-if [ "$WORKSPACE" = "integration" ]; then
+if [ "$WORKSPACE" = "staging" ]; then
     max_time=600
 else
     max_time=420

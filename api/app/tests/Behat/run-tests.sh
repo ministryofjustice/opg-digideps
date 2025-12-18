@@ -14,15 +14,8 @@ start=$(date +%s)
 echo "==== Starting test run ===="
 ./vendor/bin/behat --config=./tests/Behat/behat.yml --rerun --profile v2-tests-browserkit $@
 if [ $? -ne 0 ]; then
-    echo "==== Rerunning failed tests once ===="
-    ./vendor/bin/behat --config=./tests/Behat/behat.yml --rerun --profile v2-tests-browserkit $@
-    if [ $? -ne 0 ]; then
-        echo "==== Reruns failed. Exiting with failure ===="
-        exit 1
-    else
-        echo "==== Reruns successful. Exiting with success ===="
-        exit 0
-    fi
+    echo "==== Tests Failed. Exiting with failure ===="
+    exit 1
 fi
 
 end=$(date +%s)
@@ -31,7 +24,7 @@ runtime=$(( end - start))
 
 echo "Time taken: ${runtime} secs"
 
-if [ "$WORKSPACE" = "integration" ]; then
+if [ "$WORKSPACE" = "staging" ]; then
     max_time=600
 else
     max_time=420

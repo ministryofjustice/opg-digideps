@@ -56,6 +56,16 @@ trait DebtsSectionTrait
     }
 
     /**
+     * @When I add an 'Other' debt but don't complete the more details field
+     */
+    public function iAddOtherDebtWithoutMoreDetails()
+    {
+        $this->addADebtsPayment('other', 700, fillMoreDetails: false);
+
+        $this->pressButton('Save and continue');
+    }
+
+    /**
      * @When I say how the debts are being managed
      */
     public function iSayHowTheDebtsAreBeingManaged()
@@ -117,12 +127,20 @@ trait DebtsSectionTrait
         $this->assertOnAlertMessage('Enter at least one debt');
     }
 
-    public function addADebtsPayment(string $type, int $amount)
+    /**
+     * @Then I should see 'Give us more information' error
+     */
+    public function iShouldSeeBlahBlahError()
+    {
+        $this->assertOnErrorMessage('Give us more information about this amount');
+    }
+
+    public function addADebtsPayment(string $type, int $amount, bool $fillMoreDetails = true)
     {
         $fieldName = sprintf('debt[debts][%s][amount]', $this->debtTypeToFieldNameDictionary[$type]);
         $this->fillInFieldTrackTotal($fieldName, $amount, 'debts');
 
-        if ('other' === $type) {
+        if ($fillMoreDetails && 'other' === $type) {
             $this->fillInField('debt[debts][3][moreDetails]', $this->faker->text(60), 'debts');
         }
     }

@@ -4,23 +4,18 @@ editClient:
   pageSectionDescription: "You can update %client%'s details and your court order date below."
   lastLoggedIn: "Last signed in:"
   address:
-    label: Address
-    context: line 1 of 5
+    label: Address line 1
   address2:
-    label: " "
-    context: Address line 2 of 5
+    label: Address line 2
     hint: ""
   address3:
-    label: " "
-    context: Address line 3 of 5
+    label: Address line 3
     hint: ""
   address4:
-    label: " "
-    context: Address line 4 of 5
+    label: Address line 4
     hint: ""
   address5:
-    label: " "
-    context: Address line 5 of 5
+    label: Address line 5
     hint: ""
   postcode:
     label: Postcode

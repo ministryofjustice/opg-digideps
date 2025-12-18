@@ -1,13 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
-use App\Entity as EntityDir;
 use App\Entity\Report\Document;
+use App\Entity\Report\Report;
+use App\Entity\Report\Status;
 use App\Entity\User;
 use App\Exception\MimeTypeAndFileExtensionDoNotMatchException;
-use App\Form as FormDir;
+use App\Form\Report\DocumentType;
+use App\Form\Report\UploadType;
 use App\Security\DocumentVoter;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\ReportApi;
@@ -18,21 +22,19 @@ use App\Service\File\Storage\FileUploadFailedException;
 use App\Service\File\Storage\S3Storage;
 use App\Service\File\Verifier\MultiFileFormUploadVerifier;
 use App\Service\StepRedirector;
-use Exception;
 use Psr\Log\LoggerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DocumentController extends AbstractController
 {
-    private static $jmsGroups = [
+    private static array $jmsGroups = [
         'report-documents',
         'document-report-submission',
         'documents',
@@ -40,33 +42,28 @@ class DocumentController extends AbstractController
     ];
 
     public function __construct(
-        private RestClient $restClient,
-        private ReportApi $reportApi,
-        private S3FileUploader $fileUploader,
-        private ClientApi $clientApi,
-        private StepRedirector $stepRedirector,
-        private TranslatorInterface $translator,
-        private DocumentService $documentService,
-        private LoggerInterface $logger,
-        private S3Storage $s3Storage,
+        private readonly RestClient $restClient,
+        private readonly ReportApi $reportApi,
+        private readonly S3FileUploader $fileUploader,
+        private readonly ClientApi $clientApi,
+        private readonly StepRedirector $stepRedirector,
+        private readonly TranslatorInterface $translator,
+        private readonly DocumentService $documentService,
+        private readonly LoggerInterface $logger,
+        private readonly S3Storage $s3Storage,
     ) {
     }
 
-    /**
-     * @Route("/report/{reportId}/documents", name="documents")
-     *
-     * @Template("@App/Report/Document/start.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function startAction(Request $request, $reportId)
+    #[Route(path: '/report/{reportId}/documents', name: 'documents')]
+    #[Template('@App/Report/Document/start.html.twig')]
+    public function startAction(Request $request, int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (EntityDir\Report\Status::STATE_NOT_STARTED !== $report->getStatus()->getDocumentsState()['state']) {
+        if (Status::STATE_NOT_STARTED !== $report->getStatus()->getDocumentsState()['state']) {
             $referer = $request->headers->get('referer');
 
-            if (is_string($referer) && false !== strpos($referer, '/step/1')) {
+            if (is_string($referer) && str_contains($referer, '/step/1')) {
                 return $this->redirectToRoute('report_overview', ['reportId' => $reportId]);
             } else {
                 return $this->redirectToRoute('report_documents_summary', ['reportId' => $reportId, 'step' => 1]);
@@ -78,15 +75,10 @@ class DocumentController extends AbstractController
         ];
     }
 
-    /**
-     * @Route("/report/{reportId}/documents/step", name="documents_stepzero")
-     * @Route("/report/{reportId}/documents/step/1", name="documents_step")
-     *
-     * @Template("@App/Report/Document/step1.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function step1Action(Request $request, $reportId)
+    #[Route(path: '/report/{reportId}/documents/step', name: 'documents_stepzero')]
+    #[Route(path: '/report/{reportId}/documents/step/1', name: 'documents_step')]
+    #[Template('@App/Report/Document/step1.html.twig')]
+    public function step1Action(Request $request, int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
@@ -102,14 +94,14 @@ class DocumentController extends AbstractController
             ->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId]);
 
-        $form = $this->createForm(FormDir\Report\DocumentType::class, $report);
+        $form = $this->createForm(DocumentType::class, $report);
         $form->handleRequest($request);
 
         /** @var SubmitButton $submitBtn */
         $submitBtn = $form->get('save');
 
         if ($submitBtn->isClicked() && $form->isSubmitted() && $form->isValid()) {
-            /* @var $data EntityDir\Report\Report */
+            /* @var Report $data */
             $data = $form->getData();
 
             if ('no' === $data->getWishToProvideDocumentation()) {
@@ -118,7 +110,7 @@ class DocumentController extends AbstractController
 
                     $this->addFlash('error', $translatedMessage);
                 } else {
-                    $this->restClient->put('report/'.$reportId, $data, ['report', 'wish-to-provide-documentation']);
+                    $this->restClient->put('report/' . $reportId, $data, ['report', 'wish-to-provide-documentation']);
                 }
             }
 
@@ -138,24 +130,20 @@ class DocumentController extends AbstractController
     }
 
     /**
-     * @Route("/report/{reportId}/documents/step/2", defaults={"what"="new"}, name="report_documents")
-     *
-     * @Template("@App/Report/Document/step2.html.twig")
-     *
-     * @return array|RedirectResponse
-     *
      * @throws \Exception
      */
+    #[Route(path: '/report/{reportId}/documents/step/2', name: 'report_documents', defaults: ['what' => 'new'])]
+    #[Template('@App/Report/Document/step2.html.twig')]
     public function step2Action(
         Request $request,
         MultiFileFormUploadVerifier $multiFileVerifier,
         string $reportId,
         LoggerInterface $logger,
-    ) {
+    ): RedirectResponse|array {
         $report = $this->reportApi->refreshReportStatusCache($reportId, ['documents'], self::$jmsGroups);
 
         $formAction = $this->generateUrl('report_documents', ['reportId' => $reportId]);
-        $form = $this->createForm(FormDir\Report\UploadType::class, null, [
+        $form = $this->createForm(UploadType::class, null, [
             'action' => $formAction, 'report_submitted' => $report->isSubmitted(),
         ]);
 
@@ -188,7 +176,7 @@ class DocumentController extends AbstractController
 
                         $form->get('files')->addError(new FormError($errorMessage));
                     } catch (\Throwable $e) {
-                        $logger->warning('Error uploading file: '.$e->getMessage());
+                        $logger->warning('Error uploading file: ' . $e->getMessage());
 
                         $form->get('files')->addError(new FormError('Cannot upload file, please try again later'));
                     }
@@ -199,7 +187,17 @@ class DocumentController extends AbstractController
         /** @var string $successfullyUploaded */
         $successfullyUploaded = $request->get('successUploaded');
 
-        list($nextLink, $backLink) = $this->buildNavigationLinks($report, $successfullyUploaded);
+        [$nextLink, $backLink] = $this->buildNavigationLinks($report, $successfullyUploaded);
+
+        $maxFileUploadsHint = null;
+        $maxFileUploads = intval(ini_get('max_file_uploads'));
+        if ($maxFileUploads > 0) {
+            $maxFileUploadsHint = $this->translator->trans(
+                'form.files.hint',
+                ['maxFileUploads' => $maxFileUploads],
+                'report-documents'
+            );
+        }
 
         return [
             'report' => $report,
@@ -208,23 +206,22 @@ class DocumentController extends AbstractController
             'nextLink' => $nextLink,
             'successUploaded' => $successfullyUploaded,
             'form' => $form->createView(),
+            'maxFileUploadsHint' => $maxFileUploadsHint,
         ];
     }
 
     /**
-     * @Route("/report/documents/submissionRedirect", name="report_documents_submit_more_redirect")
-     *
-     * @Template("@App/Report/Document/submitMoreDocumentsConfirmed.html.twig")
-     *
      * @throws \Exception
      */
+    #[Route(path: '/report/documents/submissionRedirect', name: 'report_documents_submit_more_redirect')]
+    #[Template('@App/Report/Document/submitMoreDocumentsConfirmed.html.twig')]
     public function handleRedirectPostDocSubmission(Request $request): RedirectResponse
     {
         $reportId = $request->query->getInt('reportId');
         $report = $this->reportApi->getReport($reportId, self::$jmsGroups);
 
         // submit the report to generate the submission entry only
-        $this->restClient->put('report/'.$reportId.'/submit-documents', $report, ['submit']);
+        $this->restClient->put('report/' . $reportId . '/submit-documents', $report, ['submit']);
 
         if ('true' === $request->get('successUploaded')) {
             $this->addFlash('fileUploadSuccess', 'Your uploaded files are now attached to this report.');
@@ -240,25 +237,20 @@ class DocumentController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/report/{reportId}/documents/reupload", name="report_documents_reupload")
-     *
-     * @Template("@App/Report/Document/reupload.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
+    #[Route(path: '/report/{reportId}/documents/reupload', name: 'report_documents_reupload')]
+    #[Template('@App/Report/Document/reupload.html.twig')]
     public function documentReUpload(
         Request $request,
         MultiFileFormUploadVerifier $multiFileVerifier,
         string $reportId,
         LoggerInterface $logger,
-    ) {
+    ): RedirectResponse|array {
         $report = $this->reportApi->refreshReportStatusCache($reportId, ['documents'], self::$jmsGroups);
 
         $backLink = $this->generateUrl('report_overview', ['reportId' => $report->getId()]);
 
         $formAction = $this->generateUrl('report_documents_reupload', ['reportId' => $reportId]);
-        $form = $this->createForm(FormDir\Report\UploadType::class, null, ['action' => $formAction, 'report_submitted' => $report->isSubmitted()]);
+        $form = $this->createForm(UploadType::class, null, ['action' => $formAction, 'report_submitted' => $report->isSubmitted()]);
 
         if ('tooBig' == $request->get('error')) {
             $message = $this->translator->trans('document.file.errors.maxSizeMessage', [], 'validators');
@@ -297,7 +289,7 @@ class DocumentController extends AbstractController
 
                         $form->get('files')->addError(new FormError($errorMessage));
                     } catch (\Throwable $e) {
-                        $logger->warning('Error uploading file: '.$e->getMessage());
+                        $logger->warning('Error uploading file: ' . $e->getMessage());
 
                         $form->get('files')->addError(new FormError('Cannot upload file, please try again later'));
                     }
@@ -319,7 +311,7 @@ class DocumentController extends AbstractController
         ];
     }
 
-    private function identifyMissingFilesInS3Bucket(EntityDir\Report\Report $report): array
+    private function identifyMissingFilesInS3Bucket(Report $report): array
     {
         $documentIds = [];
 
@@ -340,11 +332,9 @@ class DocumentController extends AbstractController
         $documentsNotInS3 = [];
 
         // loop through references and check if they exist in S3
-        if (!empty($uploadedDocuments)) {
-            foreach ($uploadedDocuments as $uploadedDocument) {
-                if (!$this->s3Storage->checkFileExistsInS3($uploadedDocument->getStorageReference())) {
-                    $documentsNotInS3[] = $uploadedDocument->getStorageReference();
-                }
+        foreach ($uploadedDocuments as $uploadedDocument) {
+            if (!$this->s3Storage->checkFileExistsInS3($uploadedDocument->getStorageReference())) {
+                $documentsNotInS3[] = $uploadedDocument->getStorageReference();
             }
         }
 
@@ -354,7 +344,7 @@ class DocumentController extends AbstractController
     /**
      * @throws \Exception
      */
-    private function buildNavigationLinks(EntityDir\Report\Report $report, ?string $successfulUpload = null): array
+    private function buildNavigationLinks(Report $report, ?string $successfulUpload = null): array
     {
         if (!$report->isSubmitted()) {
             $nextLink = $this->generateUrl('report_documents_summary', ['reportId' => $report->getId(), 'step' => 3, 'from' => 'report_documents']);
@@ -379,17 +369,12 @@ class DocumentController extends AbstractController
         return [$nextLink, $backLink];
     }
 
-    /**
-     * @Route("/report/{reportId}/documents/summary", name="report_documents_summary")
-     *
-     * @Template("@App/Report/Document/summary.html.twig")
-     *
-     * @return array|RedirectResponse
-     */
-    public function summaryAction(Request $request, int $reportId)
+    #[Route(path: '/report/{reportId}/documents/summary', name: 'report_documents_summary')]
+    #[Template('@App/Report/Document/summary.html.twig')]
+    public function summaryAction(Request $request, int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (EntityDir\Report\Status::STATE_NOT_STARTED == $report->getStatus()->getDocumentsState()['state']) {
+        if (Status::STATE_NOT_STARTED == $report->getStatus()->getDocumentsState()['state']) {
             return $this->redirectToRoute('documents', ['reportId' => $report->getId()]);
         }
 
@@ -404,74 +389,34 @@ class DocumentController extends AbstractController
     }
 
     /**
-     * Confirm delete document form.
-     *
-     * @Route("/documents/{documentId}/delete", name="delete_document")
-     *
-     * @Template("@App/Common/confirmDelete.html.twig")
-     *
-     * @return array|RedirectResponse|Response
-     */
-    public function deleteConfirmAction(Request $request, string $documentId)
-    {
-        $document = $this->getDocument($documentId);
-
-        if ($document->getReportSubmission() instanceof EntityDir\Report\ReportSubmission) {
-            return $this->renderError('Document already submitted and cannot be removed.', Response::HTTP_FORBIDDEN);
-        }
-
-        $this->denyAccessUnlessGranted(DocumentVoter::DELETE_DOCUMENT, $document, 'Access denied');
-
-        $form = $this->createForm(FormDir\ConfirmDeleteType::class);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            return $this->deleteDocument($request, $documentId);
-        }
-
-        $report = $document->getReport();
-        $fromPage = $request->get('from');
-
-        if ('reUploadPage' == $fromPage) {
-            $backLink = $this->generateUrl('report_documents_reupload', ['reportId' => $document->getReportId()]);
-        } elseif ('summaryPage' == $fromPage) {
-            $backLink = $this->generateUrl('report_documents_summary', ['reportId' => $report->getId()]);
-        } else {
-            $backLink = $this->generateUrl('report_documents', ['reportId' => $report->getId()]);
-        }
-
-        return [
-            'translationDomain' => 'report-documents',
-            'report' => $report,
-            'form' => $form->createView(),
-            'summary' => [
-                ['label' => 'deletePage.summary.fileName', 'value' => $document->getFileName()],
-                ['label' => 'deletePage.summary.createdOn', 'value' => $document->getCreatedOn(), 'format' => 'date'],
-            ],
-            'backLink' => $backLink,
-        ];
-    }
-
-    /**
      * Retrieves the document object with required associated entities to populate the table and back links.
-     *
-     * @return Document
      */
-    private function getDocument(string $documentId)
+    private function getDocument(string $documentId): Document
     {
         return $this->restClient->get(
-            'document/'.$documentId,
+            "document/$documentId",
             'Report\Document',
-            ['documents', 'status', 'document-storage-reference', 'document-report-submission', 'document-report', 'report', 'report-client', 'client', 'client-users', 'user-id', 'client-organisations']
+            [
+                'documents',
+                'status',
+                'document-storage-reference',
+                'document-report-submission',
+                'document-report',
+                'report',
+                'report-client',
+                'client',
+                'client-users',
+                'user-id',
+                'client-organisations'
+            ]
         );
     }
 
     /**
      * Removes a document, adds a flash message and redirects to page.
-     *
-     * @return RedirectResponse
      */
-    public function deleteDocument(Request $request, string $documentId)
+    #[Route(path: '/documents/{documentId}/delete', name: 'delete_document')]
+    public function deleteDocument(Request $request, string $documentId): RedirectResponse
     {
         $document = $this->getDocument($documentId);
 
@@ -487,18 +432,15 @@ class DocumentController extends AbstractController
             try {
                 $result = $this->documentService->removeDocumentFromS3($document); // rethrows any exception
 
-                if ($result && !$report->isSubmitted()) {
-                    $this->addFlash('notice', 'Document has been removed');
-                } elseif ($result && $report->isSubmitted()) {
-                    $documentName = $document->getFileName();
-                    $this->addFlash('fileRemovalSuccess', sprintf('File named %s has been removed', $documentName));
+                if ($result) {
+                    $this->addFlash('fileRemovalSuccess', sprintf('File named %s has been removed', $document->getFileName()));
                 }
             } catch (\Throwable $e) {
                 $this->logger->error($e->getMessage());
 
                 $this->addFlash(
                     'error',
-                    'Document could not be removed. Details: '.$e->getMessage()
+                    'Document could not be removed. Details: ' . $e->getMessage()
                 );
             }
         }
@@ -525,13 +467,11 @@ class DocumentController extends AbstractController
 
     private function deleteMissingS3DocFromDocumentTable(string $documentId): void
     {
-        $this->restClient->delete('/document/'.$documentId);
+        $this->restClient->delete('/document/' . $documentId);
         $this->addFlash('notice', 'Document has been removed');
     }
 
-    /**
-     * @Route("/report/documents/deleteFilePostSubmission", name="delete_report_documents_post_submission")
-     */
+    #[Route(path: '/report/documents/deleteFilePostSubmission', name: 'delete_report_documents_post_submission')]
     public function deleteSelectedFilePostReportSubmission(Request $request): RedirectResponse
     {
         $documentId = $request->query->getInt('documentId');
@@ -539,10 +479,7 @@ class DocumentController extends AbstractController
         return $this->deleteDocument($request, strval($documentId));
     }
 
-    /**
-     * @return string
-     */
-    protected function getSectionId()
+    protected function getSectionId(): string
     {
         return 'documents';
     }

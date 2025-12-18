@@ -118,8 +118,8 @@ class CourtOrderInviteService
             // create deputy record if it doesn't exist, or get the existing deputy; if the latter, none of their data is updated
             $persistedDeputy = $this->deputyService->getOrAddDeputy($invitedLayDeputy, $persistedUser);
 
-            // associate deputy with court order, ignoring any existing duplicates
-            $this->courtOrderService->associateCourtOrderWithDeputy($persistedDeputy, $courtOrder, logDuplicateError: false);
+            // associate deputy with court order, or update any existing association
+            $this->courtOrderService->associateCourtOrderWithDeputy($persistedDeputy, $courtOrder);
         } catch (\Exception $e) {
             $this->entityManager->rollback();
 
