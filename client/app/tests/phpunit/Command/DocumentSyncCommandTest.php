@@ -39,6 +39,12 @@ class DocumentSyncRunnerTest extends KernelTestCase
             ->with(ParameterStoreService::FLAG_DOCUMENT_SYNC)
             ->willReturn('1');
 
+        $this->parameterStore
+            ->expects(self::once())
+            ->method('getParameter')
+            ->with(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT)
+            ->willReturn('100');
+
         $this->documentSyncRunner->expects(self::once())
             ->method('run');
 

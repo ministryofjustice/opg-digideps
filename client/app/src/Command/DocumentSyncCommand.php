@@ -14,6 +14,8 @@ class DocumentSyncCommand extends Command
 {
     public static $defaultName = 'digideps:document-sync';
 
+    public const int FALLBACK_ROW_LIMITS = 100;
+
     public function __construct(
         private readonly ParameterStoreService $parameterStore,
         private readonly DocumentSyncRunner $documentSyncRunner,
@@ -39,7 +41,13 @@ class DocumentSyncCommand extends Command
             return 0;
         }
 
-        $this->documentSyncRunner->run($output);
+        $syncRowLimit = $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT);
+
+        if (is_null($syncRowLimit)) {
+            $syncRowLimit = self::FALLBACK_ROW_LIMITS;
+        }
+
+        $this->documentSyncRunner->run($output, intval($syncRowLimit));
 
         return 0;
     }

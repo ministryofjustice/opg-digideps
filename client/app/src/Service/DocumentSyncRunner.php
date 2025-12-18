@@ -14,25 +14,21 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 class DocumentSyncRunner
 {
-    public const string FALLBACK_ROW_LIMITS = '100';
     public const string COMPLETED_MESSAGE = 'Sync command completed';
 
     public function __construct(
         private readonly DocumentSyncService $documentSyncService,
         private readonly RestClient $restClient,
         private readonly SerializerInterface $serializer,
-        private readonly ParameterStoreService $parameterStore
     ) {
     }
 
-    public function run(OutputInterface $output): void
+    public function run(OutputInterface $output, int $syncRowLimit): void
     {
-        $syncRowLimit = $this->parameterStore->getParameter(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT);
-
         $queuedDocumentData = $this->restClient->apiCall(
             'get',
             'document/queued',
-            ['row_limit' => $syncRowLimit ?? self::FALLBACK_ROW_LIMITS],
+            ['row_limit' => $syncRowLimit],
             'array',
             [],
             false
