@@ -6,14 +6,12 @@ use App\Model\Sirius\QueuedDocumentData;
 use App\Service\Client\RestClient;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
-use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class DocumentSyncRunnerTest extends KernelTestCase
 {
     private DocumentSyncService $syncService;
     private RestClient $restClient;
-    private ParameterStoreService $parameterStore;
     private DocumentSyncRunner $sut;
 
     public function setUp(): void
@@ -24,9 +22,8 @@ class DocumentSyncRunnerTest extends KernelTestCase
 
         $this->syncService = self::createMock(DocumentSyncService::class);
         $this->restClient = self::createMock(RestClient::class);
-        $this->parameterStore = self::createMock(ParameterStoreService::class);
 
-        $this->sut = new DocumentSyncRunner($this->syncService, $this->restClient, $this->serializer, $this->parameterStore);
+        $this->sut = new DocumentSyncRunner($this->syncService, $this->restClient, $this->serializer);
     }
 
     public function testRun(): void
@@ -60,12 +57,6 @@ class DocumentSyncRunnerTest extends KernelTestCase
             ->setReportSubmitDate(new \DateTime('2020-04-29 15:05:23', new \DateTimeZone('Europe/London')))
             ->setReportType('104');
 
-        $this->parameterStore
-            ->expects(self::once())
-            ->method('getParameter')
-            ->with(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT)
-            ->willReturn('100');
-
         $this->restClient
             ->expects(self::once())
             ->method('apiCall')
@@ -89,7 +80,7 @@ class DocumentSyncRunnerTest extends KernelTestCase
 
         $output = new BufferedOutput();
 
-        $this->sut->run($output);
+        $this->sut->run($output, 100);
 
         $content = $output->fetch();
 
@@ -99,12 +90,6 @@ class DocumentSyncRunnerTest extends KernelTestCase
 
     public function testExecuteWithSyncErrorSubmissionIds(): void
     {
-        $this->parameterStore
-            ->expects(self::once())
-            ->method('getParameter')
-            ->with(ParameterStoreService::PARAMETER_DOCUMENT_SYNC_ROW_LIMIT)
-            ->willReturn('100');
-
         $this->restClient
             ->expects(self::once())
             ->method('apiCall')
@@ -137,7 +122,7 @@ class DocumentSyncRunnerTest extends KernelTestCase
 
         $output = new BufferedOutput();
 
-        $this->sut->run($output);
+        $this->sut->run($output, 100);
 
         $content = $output->fetch();
 
