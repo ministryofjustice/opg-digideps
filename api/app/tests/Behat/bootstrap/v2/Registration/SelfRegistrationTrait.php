@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Registration;
 
+use Behat\Behat\Tester\Exception\PendingException;
+use Behat\Gherkin\Node\TableNode;
 use Exception;
 use App\Entity\Client;
 use App\Entity\User;
@@ -921,5 +923,33 @@ trait SelfRegistrationTrait
         $this->fillUserDetailsAndSubmit();
 
         $this->fillClientDetailsAndSubmit();
+    }
+
+    /**
+     * @Then /^(I register as a Deputy|a Deputy has registered via self-service) using the below details:$/
+     */
+    public function aDeputyHasBeenRegisteredUsingTheBelowDetails(TableNode $table)
+    {
+        $hash = $table->getHash();
+
+        if (count($hash) > 1) {
+            throw new BehatException('Only a single row of deputy details is supported. Remove additional rows from the test.');
+        }
+        $deputyName = explode(' ', trim($hash[0]['deputyName']));
+        $clientName = explode(' ', trim($hash[0]['clientName']));
+
+        $this->userEmail = $hash[0]['deputyEmail'];
+        $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
+
+        $this->visitFrontendPath('/register');
+        $this->fillInSelfRegistrationFieldsAndSubmit(
+            $deputyName[0],
+            $deputyName[1],
+            $this->userEmail,
+            $hash[0]['postcode'],
+            $clientName[0],
+            $clientName[1],
+            $hash[0]['caseNumber'],
+        );
     }
 }

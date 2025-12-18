@@ -75,3 +75,15 @@ Feature: Lay Deputy Self Registration
         When I run the lay CSV command the file contains 4 new pre-registration entities
         And a Lay Deputy registers to deputise for a client with a 9 digit case number
         Then an incorrect case number length error is 'thrown'
+
+    @super-admin @chris
+    Scenario: A Lay co-deputy user can register for an existing client
+        Given a csv has been uploaded to the sirius bucket with the file 'lay-2-rows-co-deputy.csv'
+        When I run the lay CSV command the file contains 2 new pre-registration entities
+        Then a Deputy has registered via self-service using the below details:
+            | deputyName | deputyEmail |  clientName | postcode | caseNumber |
+            | BRIAN MCDUCK | mcduck@mcduckindustries.com | JULIE LOUIE | B73 | 1717171T |
+        Then I register as a Deputy using the below details:
+            | deputyName | deputyEmail |  clientName | postcode | caseNumber |
+            | LIAM MCQUACK | mcquack@mcduckindustries.com | JULIE LOUIE | Y73 | 1717171T |
+        And I should see no errors
