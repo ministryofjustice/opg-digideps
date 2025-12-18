@@ -13,15 +13,21 @@ use Doctrine\DBAL\Driver;
 use Doctrine\DBAL\Event\ConnectionEventArgs;
 use Doctrine\DBAL\Events;
 
-class ConnectionWrapper extends Connection
+final class ConnectionWrapper extends Connection
 {
     public const SECRETS_PREFIX = 'SECRETS_PREFIX';
     public const SECRETS_ENDPOINT = 'SECRETS_ENDPOINT';
 
     private bool $_isConnected = false;
+
     private array $params;
+
     private readonly bool $autoCommit;
+
     private SecretsManagerClient $secretClient;
+
+    private readonly string $secretPrefix;
+    private readonly ?string $secretEndpoint;
 
     public function __construct(
         array $params,
@@ -31,31 +37,46 @@ class ConnectionWrapper extends Connection
     ) {
         parent::__construct($params, $driver, $config, $eventManager);
 
-        $secretPrefix = getenv(self::SECRETS_PREFIX);
-        $this->setSecretsManagerClient($secretPrefix);
-        $this->params = $this->getParams();
-        $this->autoCommit = $config->getAutoCommit();
+        // Read env once; allow sensible defaults
+        $this->secretPrefix = getenv(self::SECRETS_PREFIX) ?: '';
+        $this->secretEndpoint = getenv(self::SECRETS_ENDPOINT) ?: null;
+
+        $this->setSecretsManagerClient();
+
+        $p = $this->getParams();
+        $this->params = $p;
+
+        $this->autoCommit = $config ? $config->getAutoCommit() : true;
     }
 
-    public function connect()
+    /**
+     * Establishes the DB connection.
+     *
+     * @return bool true if connected, false otherwise (Doctrine returns bool)
+     */
+    public function connect(): bool
     {
         if (null !== $this->_conn) {
-            return false;
+            // Already connected; mirror Doctrine's semantics (return true)
+            return true;
         }
+
         try {
             $params = $this->params;
             $this->_conn = $this->_driver->connect($params);
         } catch (Driver\Exception $e) {
+            // Attempt to refresh secret and retry once
+            $this->refreshPassword();
+
             try {
-                $this->refreshPassword();
                 $params = $this->params;
                 $this->_conn = $this->_driver->connect($params);
-            } catch (Driver\Exception $e) {
-                throw $this->convertException($e);
+            } catch (Driver\Exception $e2) {
+                throw $this->convertException($e2);
             }
         }
 
-        if (false === $this->autoCommit) {
+        if ($this->autoCommit === false) {
             $this->beginTransaction();
         }
 
@@ -65,55 +86,61 @@ class ConnectionWrapper extends Connection
         }
 
         $this->_isConnected = true;
-
         return true;
     }
 
-    protected function refreshPassword()
+    /**
+     * Retrieves latest DB password from Secrets Manager and updates $this->params.
+     */
+    protected function refreshPassword(): void
     {
-        $secretPrefix = getenv(self::SECRETS_PREFIX);
+        // Determine secret name based on current user
+        $user = (string)($this->params['user'] ?? '');
+        $suffix = ($user === 'application') ? 'application-db-password' : 'database-password';
+        $secretName = $this->secretPrefix . $suffix;
 
-        $secretSuffix = 'application' === $this->params['user'] ? 'application-db-password' : 'database-password';
-        $secretName = sprintf('%s%s', $secretPrefix, $secretSuffix);
-
-        // Use the Secrets Manager client to retrieve the secret value
         try {
-            $result = $this->secretClient->getSecretValue([
-                'SecretId' => $secretName,
-            ]);
+            $result = $this->secretClient->getSecretValue(['SecretId' => $secretName]);
         } catch (SecretsManagerException $e) {
-            error_log($e->getMessage());
+            error_log(sprintf('SecretsManager error for "%s": %s', $secretName, $e->getMessage()));
+            return;
         }
-        // Update local env variable and params with latest password
-        // Subsequent connections will use new value stored in redis
-        $secretValue = $result['SecretString'];
 
+        $secretValue = $result['SecretString'] ?? null;
+
+        if ($secretValue === null) {
+            error_log(sprintf('Secret "%s" has no SecretString', $secretName));
+            return;
+        }
+
+        // Update the connection params with the new password
         $this->params['password'] = $secretValue;
     }
 
-    public function setSecretsManagerClient($secretPrefix)
+    /**
+     * Configures the Secrets Manager client (LocalStack or AWS).
+     */
+    private function setSecretsManagerClient(): void
     {
-        if ('local/' == $secretPrefix) {
-            $endpoint = getenv(self::SECRETS_ENDPOINT);
-            $this->secretClient = new SecretsManagerClient([
-                'region' => 'eu-west-1',
-                'version' => '2017-10-17',
-                'endpoint' => $endpoint,
-            ]);
-        } else {
-            $this->secretClient = new SecretsManagerClient([
-                'region' => 'eu-west-1',
-                'version' => '2017-10-17',
-            ]);
+        $base = [
+            'region' => 'eu-west-1',
+            'version' => '2017-10-17',
+        ];
+
+        // Simple local detection: prefix starts with "local/"
+        if ($this->secretEndpoint && str_starts_with($this->secretPrefix, 'local/')) {
+            $base['endpoint'] = $this->secretEndpoint;
         }
+
+        $this->secretClient = new SecretsManagerClient($base);
     }
 
-    public function isConnected()
+    public function isConnected(): bool
     {
         return $this->_isConnected;
     }
 
-    public function close()
+    public function close(): void
     {
         if ($this->isConnected()) {
             parent::close();
