@@ -474,21 +474,17 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      */
     public function findUsersWithoutDeputies(): \Traversable
     {
-        $qb = $this->createQueryBuilder('u')
+        $pageQueryBuilder = $this->createQueryBuilder('u')
             ->innerJoin(PreRegistration::class, 'pr', Join::WITH, "CONCAT(u.deputyUid, '') = pr.deputyUid")
             ->leftJoin(Deputy::class, 'd', Join::WITH, 'u.id = d.user')
             ->where('u.active = true')
-            ->andWhere('d.id IS NULL');
+            ->andWhere('d.id IS NULL')
+            ->orderBy('u.id', 'ASC');
 
-        $pageQuery = $qb->getQuery();
-
-        $qb = $qb->select('COUNT(1)');
-        $countQuery = $qb->getQuery();
-
-        $pager = new QueryPager($countQuery, $pageQuery);
+        $queryPager = new QueryPager($pageQueryBuilder);
 
         /** @var \Traversable<User> $result */
-        $result = $pager->getRows(pageSize: 100, asArray: false);
+        $result = $queryPager->getRows(pageSize: 100, asArray: false);
 
         return $result;
     }

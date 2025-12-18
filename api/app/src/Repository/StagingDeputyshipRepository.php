@@ -28,10 +28,12 @@ class StagingDeputyshipRepository extends ServiceEntityRepository
     public function findAllPaged(): \Traversable
     {
         $em = $this->getEntityManager();
-        $countQuery = $em->createQuery("SELECT COUNT(1) FROM App\Entity\StagingDeputyship sd");
-        $pageQuery = $em->createQuery("SELECT sd FROM App\Entity\StagingDeputyship sd");
+        $pageQueryBuilder = $em->createQueryBuilder()
+            ->select('sd')
+            ->from(StagingDeputyship::class, 'sd')
+            ->orderBy('sd.id', 'ASC');
 
-        $queryPager = new QueryPager($countQuery, $pageQuery);
+        $queryPager = new QueryPager($pageQueryBuilder);
 
         return $queryPager->getRows(asArray: false);
     }
