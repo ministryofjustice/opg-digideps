@@ -19,10 +19,6 @@ class ConnectionWrapper extends Connection
     public const SECRETS_ENDPOINT = 'SECRETS_ENDPOINT';
 
     private bool $_isConnected = false;
-
-    /**
-     * @var array|mixed[]
-     */
     private array $params;
     private readonly bool $autoCommit;
     private SecretsManagerClient $secretClient;

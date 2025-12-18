@@ -33,6 +33,7 @@ RUN composer dump-autoload --optimize
 FROM php:8.4-fpm-alpine3.22@sha256:ad846930aa226fad969e037bf14845bca0fae2371e7c53c49f160b27aa4540c9 AS base
 
 ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
+
 WORKDIR /var/www
 ENV TIMEOUT=60
 
