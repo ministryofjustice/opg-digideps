@@ -163,10 +163,11 @@ def restart_ecs_services(session, workspaces, aws_config, api_only=False):
 
 def main(environment, secret_type):
     accounts = {
-        "development": {"id": "248804316466", "workspaces": ["development", "staging"]},
+        # Can add key for development if it's been brought up
+        "development": {"id": "248804316466", "workspaces": ["staging"]},
         "preproduction": {
             "id": "454262938596",
-            "workspaces": ["integration", "training", "preproduction"],
+            "workspaces": ["training", "preproduction"],
         },
         "production": {"id": "515688267891", "workspaces": ["production02"]},
     }

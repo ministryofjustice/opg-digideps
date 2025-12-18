@@ -35,15 +35,14 @@ class StagingSelectedCandidateRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
 
-        $countQuery = $em->createQuery('SELECT count(1) FROM App\Entity\StagingSelectedCandidate ssc');
+        // order by is required for paged queries, to prevent duplicate rows being returned
+        $pageQueryBuilder = $em->createQueryBuilder()
+            ->select('ssc')
+            ->from(StagingSelectedCandidate::class, 'ssc')
+            ->distinct()
+            ->orderBy('ssc.id', 'ASC');
 
-        $pageQuery = $em->createQuery(
-            'SELECT DISTINCT c.action, c.orderUid, c.deputyUid, c.status, c.orderType, c.reportType, c.orderMadeDate, '.
-            'c.deputyType, c.deputyStatusOnOrder, c.orderId, c.clientId, c.reportId, c.deputyId, c.ndrId '.
-            'FROM App\Entity\StagingSelectedCandidate c ORDER BY c.orderUid ASC'
-        );
-
-        $queryPager = new QueryPager($countQuery, $pageQuery);
+        $queryPager = new QueryPager($pageQueryBuilder);
 
         /** @var \Traversable<array<string, mixed>> $rows */
         $rows = $queryPager->getRows();
