@@ -26,13 +26,13 @@ final class S3StorageTest extends TestCase
 
     public function setUp(): void
     {
-        $this->fileContent = 'FILE-CONTENT-'.microtime(true);
+        $this->fileContent = 'FILE-CONTENT-' . microtime(true);
     }
 
     public function testUploadDownloadDeleteTextContent(): void
     {
         // create timestamped file and key to undo effects of potential previous executions
-        $key = 'storagetest-upload-download-delete'.microtime(true);
+        $key = 'storagetest-upload-download-delete' . microtime(true);
 
         $awsClient = m::mock(S3ClientInterface::class);
 
@@ -44,20 +44,21 @@ final class S3StorageTest extends TestCase
         $awsClient->shouldReceive('waitUntil')->andReturn($awsClient);
         $awsClient->shouldReceive('doesObjectExistV2')->andReturn(true);
 
+        $mockObjectTagging = m::mock(Result::class);
+        $mockObjectTagging->shouldReceive('toArray')->andReturn([
+            'TagSet' => [
+                [
+                    'Key' => 'someKey',
+                    'Value' => 'someValue',
+                ],
+            ],
+            'VersionId' => 'someVersionId',
+        ]);
+
         $awsClient->shouldReceive('getObjectTagging')
             ->with(m::type('array'))
             ->once()
-            ->andReturn(
-                [
-                    'TagSet' => [
-                        [
-                            'Key' => 'someKey',
-                            'Value' => 'someValue',
-                        ],
-                    ],
-                    'VersionId' => 'someVersionId',
-                ]
-            );
+            ->andReturn($mockObjectTagging);
 
         $awsClient->shouldReceive('putObjectTagging')
             ->with(m::type('array'))
@@ -121,7 +122,7 @@ final class S3StorageTest extends TestCase
         $awsClient->shouldReceive('putObject')->andReturn($this->generateAwsResult(200));
         $awsClient->shouldReceive('getObject')->with(
             m::type('array')
-        )->andReturn($this->generateAwsResult(200, [], $this->createMockStream(file_get_contents(__DIR__.'/cat.jpg'))));
+        )->andReturn($this->generateAwsResult(200, [], $this->createMockStream(file_get_contents(__DIR__ . '/cat.jpg'))));
 
         $awsClient->shouldReceive('waitUntil')->andReturn($awsClient);
         $awsClient->shouldReceive('doesObjectExistV2')->andReturn(true);
@@ -133,8 +134,8 @@ final class S3StorageTest extends TestCase
         $this->object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
 
         // create timestamped file and key to undo effects of potential previous executions
-        $key = 'storagetest-upload-download-delete'.microtime(true).'.png';
-        $fileContent = file_get_contents(__DIR__.'/cat.jpg');
+        $key = 'storagetest-upload-download-delete' . microtime(true) . '.png';
+        $fileContent = file_get_contents(__DIR__ . '/cat.jpg');
 
         $this->object->store($key, $fileContent);
         $this->assertEquals($fileContent, $this->object->retrieve($key));
@@ -148,18 +149,19 @@ final class S3StorageTest extends TestCase
 
         $awsClient->shouldReceive('putObject')->andReturn($this->generateAwsResult(200));
 
-        $awsClient->shouldReceive('waitUntil')->andReturn($awsClient);;
+        $awsClient->shouldReceive('waitUntil')->andReturn($awsClient);
+        ;
         $awsClient->shouldReceive('doesObjectExistV2')->andReturn(false);
 
         // create timestamped file and key to undo effects of potential previous executions
-        $key = 'storagetest-upload-download-delete'.microtime(true).'.png';
-        $fileContent = file_get_contents(__DIR__.'/cat.jpg');
+        $key = 'storagetest-upload-download-delete' . microtime(true) . '.png';
+        $fileContent = file_get_contents(__DIR__ . '/cat.jpg');
 
         /** @var LoggerInterface */
         $mockLogger = m::mock(LoggerInterface::class);
         $mockLogger->shouldReceive('log')->withAnyArgs([
             'error',
-            'Failed to upload file to S3. Filename: '. $key
+            'Failed to upload file to S3. Filename: ' . $key
         ]);
 
         $this->object = new S3Storage($awsClient, 'unit_test_bucket', $mockLogger);
@@ -170,7 +172,7 @@ final class S3StorageTest extends TestCase
 
     public function testRemoveFromS3NoErrors(): void
     {
-        $key = 'storagetest-upload-download-delete'.microtime(true).'.png';
+        $key = 'storagetest-upload-download-delete' . microtime(true) . '.png';
 
         $awsClient = m::mock(S3ClientInterface::class);
 
@@ -226,7 +228,7 @@ final class S3StorageTest extends TestCase
 
     public function testRemoveFromS3WithErrors(): void
     {
-        $key = 'storagetest-upload-download-delete'.microtime(true).'.png';
+        $key = 'storagetest-upload-download-delete' . microtime(true) . '.png';
 
         $awsClient = m::mock(S3ClientInterface::class);
 
@@ -295,7 +297,7 @@ final class S3StorageTest extends TestCase
 
     public function testRemoveFromS3WithKeyNotFound(): void
     {
-        $key = 'storagetest-upload-download-delete'.microtime(true).'.png';
+        $key = 'storagetest-upload-download-delete' . microtime(true) . '.png';
 
         /** @var S3ClientInterface */
         $awsClient = m::mock(S3ClientInterface::class);
@@ -349,7 +351,7 @@ final class S3StorageTest extends TestCase
 
     public function testRemoveFromS3WhenS3NotWorking(): void
     {
-        $key = 'storagetest-upload-download-delete'.microtime(true).'.png';
+        $key = 'storagetest-upload-download-delete' . microtime(true) . '.png';
 
         $awsClient = m::mock(S3ClientInterface::class);
 
