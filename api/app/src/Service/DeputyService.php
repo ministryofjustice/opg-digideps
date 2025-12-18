@@ -119,7 +119,7 @@ class DeputyService
                 continue;
             }
 
-            if (preg_match('{,}', $courtOrderWithStatus['courtOrderUid'])) {
+            if (str_contains($courtOrderWithStatus['courtOrderUid'], ',')) {
                 $courtOrderUids = explode(', ', $courtOrderWithStatus['courtOrderUid']);
                 $courtOrderLink = $courtOrderUids[0];
             } else {

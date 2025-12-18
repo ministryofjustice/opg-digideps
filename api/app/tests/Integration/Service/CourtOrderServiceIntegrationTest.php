@@ -6,23 +6,19 @@ namespace App\Tests\Integration\Service;
 
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\CourtOrderTestHelper;
-use App\TestHelpers\ReportTestHelper;
-use App\v2\Service\CourtOrderService;
 use App\TestHelpers\DeputyTestHelper;
+use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
 use App\Tests\Integration\ApiIntegrationTestCase;
-use App\Tests\Integration\Fixtures;
+use App\v2\Service\CourtOrderService;
 
 class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
 {
-    private static Fixtures $fixtures;
     private static CourtOrderService $sut;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-
-        self::$fixtures = new Fixtures(self::$entityManager);
 
         /** @var CourtOrderService $sut */
         $sut = self::$container->get(CourtOrderService::class);

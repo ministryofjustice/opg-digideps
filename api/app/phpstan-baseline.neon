@@ -6391,41 +6391,6 @@ parameters:
 			path: src/Service/File/Storage/S3Storage.php
 
 		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:deleteObject\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:deleteObjects\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:getObject\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:getObjectTagging\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:listObjectVersions\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:putObject\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:putObjectTagging\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
 			message: "#^Method App\\\\Service\\\\File\\\\Storage\\\\S3Storage\\:\\:appendTagset\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/File/Storage/S3Storage.php
