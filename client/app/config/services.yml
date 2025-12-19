@@ -100,10 +100,16 @@ services:
     class: App\Sync\Service\Client\Sirius\SiriusApiGatewayClient
     arguments:
       $httpClient: "@guzzle_api_gateway_client"
-      $requestSigner: '@App\Service\AWS\RequestSigner'
+      $requestSigner: '@App\Sync\Service\AWS\RequestSigner'
       $baseUrl: "%env(SIRIUS_API_BASE_URI)%"
       $serializer: "@serializer"
       $logger: "@logger"
+
+  App\Sync\Service\AWS\RequestSigner:
+    class: App\Sync\Service\AWS\RequestSigner
+    arguments:
+      $credentialProvider: '@App\Sync\Service\AWS\DefaultCredentialProvider'
+      $signer: '@App\Sync\Service\AWS\SignatureV4Signer'
 
   App\Service\Client\Sirius\SiriusHealthCheckClient:
     class: App\Service\Client\Sirius\SiriusHealthCheckClient
@@ -112,17 +118,17 @@ services:
       $requestSigner: '@App\Service\AWS\RequestSigner'
       $baseUrl: "%env(SIRIUS_API_BASE_URI)%"
 
-  App\Service\Client\GovUK\BankHolidaysAPIClient:
-    class: App\Service\Client\GovUK\BankHolidaysAPIClient
-    arguments:
-      $httpClient: '@GuzzleHttp\Client'
-      $logger: "@logger"
-
   App\Service\AWS\RequestSigner:
     class: App\Service\AWS\RequestSigner
     arguments:
       $credentialProvider: '@App\Service\AWS\DefaultCredentialProvider'
       $signer: '@App\Service\AWS\SignatureV4Signer'
+
+  App\Service\Client\GovUK\BankHolidaysAPIClient:
+    class: App\Service\Client\GovUK\BankHolidaysAPIClient
+    arguments:
+      $httpClient: '@GuzzleHttp\Client'
+      $logger: "@logger"
 
   App\Service\AWS\DefaultCredentialProvider:
     class: App\Service\AWS\DefaultCredentialProvider
@@ -205,7 +211,7 @@ services:
     arguments:
       $siriusApiGatewayClient: '@App\Sync\Service\Client\Sirius\SiriusApiGatewayClient'
       $restClient: '@App\Service\Client\RestClient'
-      $errorTranslator: '@App\Service\SiriusApiErrorTranslator'
+      $errorTranslator: '@App\Sync\Service\SiriusApiErrorTranslator'
 
   League\MimeTypeDetection\FinfoMimeTypeDetector:
     class: League\MimeTypeDetection\FinfoMimeTypeDetector
