@@ -25,11 +25,13 @@
         'labelParameters': transOptions
     }) }}
 
-    {{ form_add_another({
-        'addAnother': form.addAnother,
-        'thingTranslationKey': 'form.thing',
-        'translationDomain': 'report-decisions'
-    }) }}
+    {% if form.addAnother %}
+        {{ form_add_another({
+            'addAnother': form.addAnother,
+            'thingTranslationKey': 'form.thing',
+            'translationDomain': 'report-decisions'
+        }) }}
+    {% endif %}
 
     {{ macros.saveAndContinueButton(form.save) }}
 

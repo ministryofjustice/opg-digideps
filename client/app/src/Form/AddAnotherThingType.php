@@ -50,6 +50,8 @@ class AddAnotherThingType extends AbstractType
 
             // this should match the groups given in the constraints setting above
             'validation_groups' => ['add-another'],
+
+            'auto_initialize' => false,
         ]);
     }
 
