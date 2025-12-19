@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model\Sirius;
+namespace App\Sync\Model\Sirius;
 
 use App\Entity\Report\ReportSubmission;
 
@@ -10,24 +10,24 @@ class QueuedDocumentData
 {
     private int $documentId;
     private int $reportSubmissionId;
-    private ?int $ndrId;
-    private ?int $documentSyncAttempts;
+    private ?int $ndrId = null;
+    private ?int $documentSyncAttempts = null;
     private bool $isReportPdf;
     private string $filename;
     private string $storageReference;
     private string $caseNumber;
 
-    private ?string $reportType;
-    private ?string $reportSubmissionUuid;
+    private ?string $reportType = null;
+    private ?string $reportSubmissionUuid = null;
 
     /** @var ReportSubmission[] */
     private array $reportSubmissions;
 
-    private ?\DateTime $reportStartDate;
-    private ?\DateTime $reportEndDate;
-    private ?\DateTime $reportSubmitDate;
+    private ?\DateTime $reportStartDate = null;
+    private ?\DateTime $reportEndDate = null;
+    private ?\DateTime $reportSubmitDate = null;
 
-    public function supportingDocumentCanBeSynced()
+    public function supportingDocumentCanBeSynced(): bool
     {
         return !$this->isReportPdf() && $this->getReportSubmissionUuid();
     }

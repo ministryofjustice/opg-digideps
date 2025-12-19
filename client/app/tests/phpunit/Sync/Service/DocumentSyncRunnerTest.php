@@ -2,8 +2,9 @@
 
 namespace DigidepsTests\Sync\Service;
 
-use App\Model\Sirius\QueuedDocumentData;
+use App\Serializer\SiriusDocumentUploadNormalizer;
 use App\Service\Client\RestClient;
+use App\Sync\Model\Sirius\QueuedDocumentData;
 use App\Sync\Service\DocumentSyncRunner;
 use App\Sync\Service\DocumentSyncService;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -20,12 +21,11 @@ class DocumentSyncRunnerTest extends KernelTestCase
     {
         /** @var SerializerInterface $serializer */
         $serializer = self::bootKernel()->getContainer()->get('serializer');
-        $this->serializer = $serializer;
 
         $this->syncService = self::createMock(DocumentSyncService::class);
         $this->restClient = self::createMock(RestClient::class);
 
-        $this->sut = new DocumentSyncRunner($this->syncService, $this->restClient, $this->serializer);
+        $this->sut = new DocumentSyncRunner($this->syncService, $this->restClient, $serializer);
     }
 
     public function testRun(): void

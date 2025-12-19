@@ -8831,11 +8831,6 @@ parameters:
 			path: src/Model/Sirius/QueuedChecklistData.php
 
 		-
-			message: "#^Method App\\\\Model\\\\Sirius\\\\QueuedDocumentData\\:\\:supportingDocumentCanBeSynced\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedDocumentData.php
-
-		-
 			message: "#^Property App\\\\Model\\\\Sirius\\\\SiriusApiError\\:\\:\\$code has no type specified\\.$#"
 			count: 1
 			path: src/Model/Sirius/SiriusApiError.php
@@ -9004,11 +8999,6 @@ parameters:
 			message: "#^Method App\\\\Security\\\\UserVoter\\:\\:determineCanAddPermission\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Security/UserVoter.php
-
-		-
-			message: "#^Cannot access offset 'file' on array\\|ArrayObject\\|bool\\|float\\|int\\|string\\|null\\.$#"
-			count: 1
-			path: src/Serializer/SiriusDocumentUploadSerializer.php
 
 		-
 			message: "#^Method App\\\\Service\\\\AWS\\\\RequestSigner\\:\\:signRequest\\(\\) has no return type specified\\.$#"
