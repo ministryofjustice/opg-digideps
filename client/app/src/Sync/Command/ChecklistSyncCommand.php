@@ -7,18 +7,16 @@ namespace App\Sync\Command;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\ParameterStoreService;
 use App\Sync\Service\ChecklistSyncService;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand('digideps:checklist-sync')]
 class ChecklistSyncCommand extends Command
 {
-    /** @var string */
-    public const FALLBACK_ROW_LIMITS = '30';
-    public const COMPLETED_MESSAGE = 'sync_checklists_to_sirius - success - Sync command completed';
-
-    /** @var string */
-    public static $defaultName = 'digideps:checklist-sync';
+    public const string FALLBACK_ROW_LIMITS = '30';
+    public const string COMPLETED_MESSAGE = 'sync_checklists_to_sirius - success - Sync command completed';
 
     public function __construct(
         private ChecklistSyncService $syncService,
