@@ -34,11 +34,11 @@ class DocumentSyncRunner
             false
         );
 
+        /** @var QueuedDocumentData[] $documents */
         $documents = $this->serializer->deserialize($queuedDocumentData, 'App\Model\Sirius\QueuedDocumentData[]', 'json');
 
         $output->writeln(sprintf('%d documents to upload', count($documents)));
 
-        /** @var QueuedDocumentData $document */
         foreach ($documents as $document) {
             $this->documentSyncService->syncDocument($document);
         }

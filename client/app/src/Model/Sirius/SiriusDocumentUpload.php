@@ -6,23 +6,15 @@ namespace App\Model\Sirius;
 
 class SiriusDocumentUpload
 {
-    /** @var string */
-    private $type;
+    private ?string $type = null;
+    private ?SiriusMetadataInterface $attributes = null;
+    private ?SiriusDocumentFile $file = null;
 
-    /** @var SiriusReportPdfDocumentMetadata */
-    private $attributes;
-
-    /** @var SiriusDocumentFile */
-    private $file;
-
-    public function getType(): string
+    public function getType(): ?string
     {
         return $this->type;
     }
 
-    /**
-     * @return SiriusDocumentUpload
-     */
     public function setType(string $type): self
     {
         $this->type = $type;
@@ -35,9 +27,6 @@ class SiriusDocumentUpload
         return $this->attributes;
     }
 
-    /**
-     * @return SiriusDocumentUpload
-     */
     public function setAttributes(?SiriusMetadataInterface $attributes): self
     {
         $this->attributes = $attributes;
@@ -45,15 +34,12 @@ class SiriusDocumentUpload
         return $this;
     }
 
-    public function getFile(): SiriusDocumentFile
+    public function getFile(): ?SiriusDocumentFile
     {
         return $this->file;
     }
 
-    /**
-     * @return SiriusDocumentUpload
-     */
-    public function setFile(SiriusDocumentFile $file): self
+    public function setFile(?SiriusDocumentFile $file): self
     {
         $this->file = $file;
 

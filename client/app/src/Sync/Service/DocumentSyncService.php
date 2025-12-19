@@ -6,6 +6,7 @@ namespace App\Sync\Service;
 
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
+use App\Exception\SiriusDocumentSyncFailedException;
 use App\Model\Sirius\QueuedDocumentData;
 use App\Model\Sirius\SiriusDocumentFile;
 use App\Model\Sirius\SiriusDocumentUpload;
@@ -15,6 +16,7 @@ use App\Service\Client\RestClient;
 use App\Service\Client\Sirius\SiriusApiGatewayClient;
 use App\Service\File\FileNameManipulation;
 use App\Service\SiriusApiErrorTranslator;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\MimeType;
 use Psr\Http\Message\ResponseInterface;
 
@@ -64,7 +66,7 @@ class DocumentSyncService
     }
 
     /**
-     * @return QueuedDocumentData|\Exception|mixed|\Throwable|null
+     * @return QueuedDocumentData|\Exception|mixed|\Throwable|null|Document
      */
     public function syncDocument(QueuedDocumentData $documentData): mixed
     {
@@ -81,12 +83,13 @@ class DocumentSyncService
         return $this->handleDocumentStatusUpdate($documentData, Document::SYNC_STATUS_QUEUED);
     }
 
-    public function syncReportDocument(QueuedDocumentData $documentData): ?Document
+    public function syncReportDocument(QueuedDocumentData $documentData): mixed
     {
         try {
             $siriusResponse = $this->handleSiriusSync($documentData);
 
-            $data = json_decode(strval($siriusResponse->getBody()), true);
+            /** @var array $data */
+            $data = json_decode(strval($siriusResponse->getBody()), associative: true);
 
             $this->restClient->apiCall(
                 'put',
@@ -105,7 +108,7 @@ class DocumentSyncService
         }
     }
 
-    public function syncSupportingDocument(QueuedDocumentData $documentData): ?Document
+    public function syncSupportingDocument(QueuedDocumentData $documentData): mixed
     {
         try {
             $this->handleSiriusSync($documentData);
@@ -146,16 +149,18 @@ class DocumentSyncService
             $siriusDocumentMetadata = (new SiriusReportPdfDocumentMetadata())
                 ->setReportingPeriodFrom($documentData->getReportStartDate())
                 ->setReportingPeriodTo($this->determineEndDate($documentData))
-                ->setYear((intval($documentData->getReportStartDate()->format('Y'))))
                 ->setDateSubmitted($documentData->getReportSubmitDate())
                 ->setType($reportType)
                 ->setSubmissionId($documentData->getReportSubmissionId());
 
+            if (!is_null($documentData->getReportStartDate())) {
+                $siriusDocumentMetadata->setYear(intval($documentData->getReportStartDate()->format('Y')));
+            }
+
             $type = 'reports';
         } else {
-            $siriusDocumentMetadata =
-                (new SiriusSupportingDocumentMetadata())
-                    ->setSubmissionId($documentData->getReportSubmissionId());
+            $siriusDocumentMetadata = (new SiriusSupportingDocumentMetadata())
+                ->setSubmissionId($documentData->getReportSubmissionId());
 
             $type = 'supportingdocuments';
         }
@@ -172,18 +177,16 @@ class DocumentSyncService
     }
 
     /**
-     * @return mixed|ResponseInterface
-     *
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException|SiriusDocumentSyncFailedException
      */
-    public function handleSiriusSync(QueuedDocumentData $documentData): mixed
+    public function handleSiriusSync(QueuedDocumentData $documentData): ResponseInterface
     {
         if ($documentData->isReportPdf()) {
             return $this->siriusApiGatewayClient->sendReportPdfDocument(
                 $this->buildUpload($documentData),
                 strtoupper($documentData->getCaseNumber())
             );
-        } else {
+        } elseif (!is_null($documentData->getReportSubmissionUuid())) {
             $upload = $this->buildUpload($documentData);
 
             return $this->siriusApiGatewayClient->sendSupportingDocument(
@@ -192,6 +195,8 @@ class DocumentSyncService
                 strtoupper($documentData->getCaseNumber())
             );
         }
+
+        throw new SiriusDocumentSyncFailedException(Document::SYNC_STATUS_TEMPORARY_ERROR);
     }
 
     public function setSubmissionsDocumentsToPermanentError(): void
@@ -235,9 +240,11 @@ class DocumentSyncService
     private function handleSyncErrors(\Throwable $e, QueuedDocumentData $documentData): void
     {
         if (method_exists($e, 'getResponse') && method_exists($e->getResponse(), 'getBody')) {
-            $errorMessage = $this->errorTranslator->translateApiError((string) $e->getResponse()->getBody());
+            /** @var ResponseInterface $response */
+            $response = $e->getResponse();
+            $errorMessage = $this->errorTranslator->translateApiError((string)$response->getBody());
         } else {
-            $errorMessage = (string) $e->getMessage();
+            $errorMessage = $e->getMessage();
         }
 
         if (method_exists($e, 'getCode')) {
