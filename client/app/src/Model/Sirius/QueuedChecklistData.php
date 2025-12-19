@@ -8,29 +8,22 @@ use App\Entity\Report\ReportSubmission;
 
 class QueuedChecklistData
 {
-    /** @var int */
-    private $checklistId;
-
-    /** @var string */
-    private $checklistUuid;
-    private $caseNumber;
-    private $checklistFileContents;
-    private $submitterEmail;
-    private $reportType;
-
-    /** @var \DateTime */
-    private $reportStartDate;
-    private $reportEndDate;
-
-    /** @var array|null */
-    private $reportSubmissions;
+    private int $checklistId;
+    private ?string $checklistUuid = null;
+    private string $caseNumber;
+    private string $checklistFileContents;
+    private string $submitterEmail;
+    private string $reportType;
+    private ?\DateTime $reportStartDate = null;
+    private ?\DateTime $reportEndDate = null;
+    private ?array $reportSubmissions = null;
 
     public function getChecklistId(): int
     {
         return $this->checklistId;
     }
 
-    public function setChecklistId(int $checklistId): QueuedChecklistData
+    public function setChecklistId(int $checklistId): self
     {
         $this->checklistId = $checklistId;
 
@@ -42,7 +35,7 @@ class QueuedChecklistData
         return $this->checklistUuid;
     }
 
-    public function setChecklistUuid(?string $checklistUuid): QueuedChecklistData
+    public function setChecklistUuid(?string $checklistUuid): self
     {
         $this->checklistUuid = $checklistUuid;
 
@@ -54,31 +47,31 @@ class QueuedChecklistData
         return $this->caseNumber;
     }
 
-    public function setCaseNumber(string $caseNumber): QueuedChecklistData
+    public function setCaseNumber(string $caseNumber): self
     {
         $this->caseNumber = $caseNumber;
 
         return $this;
     }
 
-    public function getReportStartDate(): \DateTime
+    public function getReportStartDate(): ?\DateTime
     {
         return $this->reportStartDate;
     }
 
-    public function setReportStartDate(\DateTime $reportStartDate): QueuedChecklistData
+    public function setReportStartDate(?\DateTime $reportStartDate): self
     {
         $this->reportStartDate = $reportStartDate;
 
         return $this;
     }
 
-    public function getReportEndDate(): \DateTime
+    public function getReportEndDate(): ?\DateTime
     {
         return $this->reportEndDate;
     }
 
-    public function setReportEndDate(\DateTime $reportEndDate): QueuedChecklistData
+    public function setReportEndDate(?\DateTime $reportEndDate): self
     {
         $this->reportEndDate = $reportEndDate;
 
@@ -90,7 +83,7 @@ class QueuedChecklistData
         return $this->checklistFileContents;
     }
 
-    public function setChecklistFileContents(string $checklistFileContents): QueuedChecklistData
+    public function setChecklistFileContents(string $checklistFileContents): self
     {
         $this->checklistFileContents = $checklistFileContents;
 
@@ -102,7 +95,7 @@ class QueuedChecklistData
         return $this->reportSubmissions;
     }
 
-    public function setReportSubmissions(?array $reportSubmissions): QueuedChecklistData
+    public function setReportSubmissions(?array $reportSubmissions): self
     {
         $this->reportSubmissions = $reportSubmissions;
 
@@ -129,9 +122,6 @@ class QueuedChecklistData
         return $this->submitterEmail;
     }
 
-    /**
-     * @return QueuedChecklistData
-     */
     public function setSubmitterEmail(string $submitterEmail): self
     {
         $this->submitterEmail = $submitterEmail;
@@ -144,9 +134,6 @@ class QueuedChecklistData
         return $this->reportType;
     }
 
-    /**
-     * @return QueuedChecklistData
-     */
     public function setReportType(string $reportType): self
     {
         $this->reportType = $reportType;

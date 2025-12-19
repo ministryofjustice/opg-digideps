@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Client\Sirius;
+namespace App\Sync\Service\Client\Sirius;
 
 use App\Model\Sirius\SiriusDocumentUpload;
 use App\Service\AWS\RequestSigner;
