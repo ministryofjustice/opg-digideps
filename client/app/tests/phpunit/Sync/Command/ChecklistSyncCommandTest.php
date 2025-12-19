@@ -39,7 +39,7 @@ class ChecklistSyncCommandTest extends KernelTestCase
 
         $app->add(new ChecklistSyncCommand($this->syncService, $this->parameterStore, $this->reportApi));
 
-        $command = $app->find(ChecklistSyncCommand::$defaultName);
+        $command = $app->find(ChecklistSyncCommand::getDefaultName());
         $this->commandTester = new CommandTester($command);
     }
 

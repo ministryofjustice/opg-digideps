@@ -27,7 +27,7 @@ class DocumentSyncRunnerTest extends KernelTestCase
 
         $app->add(new DocumentSyncCommand($this->parameterStore, $this->documentSyncRunner));
 
-        $command = $app->find(DocumentSyncCommand::$defaultName);
+        $command = $app->find(DocumentSyncCommand::getDefaultName());
         $this->commandTester = new CommandTester($command);
     }
 
