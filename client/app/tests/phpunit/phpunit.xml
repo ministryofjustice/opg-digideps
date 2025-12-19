@@ -33,6 +33,7 @@
             <directory>./Resolver</directory>
             <directory>./Security</directory>
             <directory>./Service</directory>
+            <directory>./Sync</directory>
             <directory>./Transformer</directory>
             <directory>./Twig</directory>
             <directory>./Validator</directory>
