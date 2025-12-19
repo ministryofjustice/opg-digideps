@@ -2,7 +2,6 @@
 
 namespace DigidepsTests\Sync\Service;
 
-use App\Serializer\SiriusDocumentUploadNormalizer;
 use App\Service\Client\RestClient;
 use App\Sync\Model\Sirius\QueuedDocumentData;
 use App\Sync\Service\DocumentSyncRunner;

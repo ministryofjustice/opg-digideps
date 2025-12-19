@@ -141,7 +141,7 @@ services:
     arguments:
       ['@Aws\SecretsManager\SecretsManagerClient', "%env(SECRETS_PREFIX)%"]
 
-  App\Serializer\SiriusDocumentUploadNormalizer:
+  App\Sync\Serializer\SiriusDocumentUploadNormalizer:
     tags: ["serializer.normalizer"]
 
   # Make optional availability services pullable
