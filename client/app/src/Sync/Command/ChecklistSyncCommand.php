@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace App\Sync\Command;
 
 use App\Service\ChecklistSyncService;
 use App\Service\Client\Internal\ReportApi;
