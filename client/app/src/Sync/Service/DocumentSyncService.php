@@ -25,7 +25,7 @@ class DocumentSyncService
         'File extension is missing from filename. This file will need to be manually synced with Sirius';
 
     /** @var int[] */
-    private array $syncErrorSubmissionIds;
+    private array $syncErrorSubmissionIds = [];
 
     private int $docsNotSyncedCount;
 
@@ -34,7 +34,6 @@ class DocumentSyncService
         private readonly RestClient $restClient,
         private readonly SiriusApiErrorTranslator $errorTranslator,
     ) {
-        $this->syncErrorSubmissionIds = [];
         $this->docsNotSyncedCount = 0;
     }
 
