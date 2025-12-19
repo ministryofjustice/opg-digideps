@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Sync\Service;
 
 use App\Entity\Report\Checklist;
 use App\Entity\Report\Report;
@@ -13,14 +13,15 @@ use App\Model\Sirius\QueuedChecklistData;
 use App\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
 use App\Model\Sirius\SiriusDocumentFile;
 use App\Model\Sirius\SiriusDocumentUpload;
+use App\Service\ChecklistPdfGenerator;
 use App\Service\Client\RestClient;
 use App\Service\Client\Sirius\SiriusApiGatewayClient;
+use App\Service\SiriusApiErrorTranslator;
 use GuzzleHttp\Exception\GuzzleException;
-
-use function GuzzleHttp\Psr7\mimetype_from_filename;
-
 use Psr\Http\Message\ResponseInterface;
 use Throwable;
+
+use function GuzzleHttp\Psr7\mimetype_from_filename;
 
 class ChecklistSyncService
 {
