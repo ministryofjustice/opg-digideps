@@ -22,7 +22,6 @@ class DecisionType extends AbstractType
                 'expanded' => true,
             ])
             ->add('clientInvolvedDetails', FormTypes\TextareaType::class)
-            ->add('addAnother', AddAnotherThingType::class)
             ->add('save', FormTypes\SubmitType::class);
 
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
