@@ -19,33 +19,25 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Serializer\Serializer;
 
 class SiriusApiGatewayClientTest extends KernelTestCase
 {
     use ProphecyTrait;
 
-    /** @var string */
-    private $caseRef;
-    private $reportPdfUuid;
-    private $expectedSupportingDocumentUuid;
-    private $checklistPdfUuid;
-    private $expectedChecklistPdfUuid;
-    private $fileName;
-    private $fileContents;
-    private $s3Reference;
-    private $submitterEmail;
-
-    /** @var RequestSigner&ObjectProphecy */
-    private $signer;
-
-    /** @var SiriusApiGatewayClient */
-    private $sut;
-
-    /** @var InteractionBuilder */
-    private $builder;
-
-    /** @var LoggerInterface&ObjectProphecy */
-    private $logger;
+    private string $caseRef;
+    private string $reportPdfUuid;
+    private string $expectedSupportingDocumentUuid;
+    private string $checklistPdfUuid;
+    private string $expectedChecklistPdfUuid;
+    private string $fileName;
+    private string $fileContents;
+    private string $s3Reference;
+    private string $submitterEmail;
+    private RequestSigner|ObjectProphecy $signer;
+    private LoggerInterface|ObjectProphecy $logger;
+    private InteractionBuilder $builder;
+    private SiriusApiGatewayClient $sut;
 
     public function setUp(): void
     {
@@ -56,6 +48,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
             $pactHostPort = 80;
         }
 
+        /** @var Serializer $serializer */
         $serializer = self::bootKernel(['debug' => false])->getContainer()->get('serializer');
 
         // Create a configuration that reflects the server that was started. You can create a custom MockServerConfigInterface if needed.
@@ -84,11 +77,9 @@ class SiriusApiGatewayClientTest extends KernelTestCase
     }
 
     /**
-     * @test
-     *
      * @throws \Exception
      */
-    public function sendReportPdfDocument()
+    public function testSendReportPdfDocument()
     {
         $this->setUpReportPdfPactBuilder($this->caseRef);
 
@@ -167,24 +158,29 @@ class SiriusApiGatewayClientTest extends KernelTestCase
             ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
     }
 
+    /**
+     * @throws \Exception
+     */
     private function throwReadableFailureMessage(\Throwable $e)
     {
-        $json = json_encode(json_decode((string) $e->getResponse()->getBody()), JSON_PRETTY_PRINT);
+        $json = 'JSON NOT AVAILABLE';
+        if (method_exists($e, 'getResponse')) {
+            $json = json_encode(json_decode((string)$e->getResponse()->getBody()), JSON_PRETTY_PRINT);
+        }
+
         throw new \Exception(sprintf('Pact test failed: %s', $json));
     }
 
     /**
-     * @test
-     *
      * @throws \Exception
      */
-    public function sendSupportingDocument()
+    public function testSendSupportingDocument()
     {
         $this->setUpSupportingDocumentPactBuilder($this->caseRef, $this->reportPdfUuid);
 
         $this->signer->signRequest(Argument::type(Request::class), 'execute-api')->willReturnArgument(0);
 
-        $upload = $siriusDocumentUpload = SiriusHelpers::generateSiriusSupportingDocumentUpload(
+        $upload = SiriusHelpers::generateSiriusSupportingDocumentUpload(
             9876,
             $this->fileName,
             null,
@@ -245,16 +241,13 @@ class SiriusApiGatewayClientTest extends KernelTestCase
             ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
     }
 
-    /**
-     * @test
-     */
-    public function postChecklistPdf()
+    public function testPostChecklistPdf()
     {
         $this->setUpChecklistPdfPostPactBuilder($this->caseRef, $this->reportPdfUuid);
 
         $this->signer->signRequest(Argument::type(Request::class), 'execute-api')->willReturnArgument(0);
 
-        $upload = $siriusDocumentUpload = SiriusHelpers::generateSiriusChecklistPdfUpload(
+        $upload = SiriusHelpers::generateSiriusChecklistPdfUpload(
             $this->fileName,
             $this->fileContents,
             11112,
@@ -324,16 +317,13 @@ class SiriusApiGatewayClientTest extends KernelTestCase
             ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
     }
 
-    /**
-     * @test
-     */
-    public function putChecklistPdf()
+    public function testPutChecklistPdf()
     {
         $this->setUpChecklistPdfPutPactBuilder($this->caseRef, $this->reportPdfUuid, $this->checklistPdfUuid);
 
         $this->signer->signRequest(Argument::type(Request::class), 'execute-api')->willReturnArgument(0);
 
-        $upload = $siriusDocumentUpload = SiriusHelpers::generateSiriusChecklistPdfUpload(
+        $upload = SiriusHelpers::generateSiriusChecklistPdfUpload(
             $this->fileName,
             $this->fileContents,
             11112,

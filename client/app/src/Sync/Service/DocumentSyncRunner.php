@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Sync\Service;
 
-use App\Model\Sirius\QueuedDocumentData;
 use App\Service\Client\RestClient;
+use App\Sync\Model\Sirius\QueuedDocumentData;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -35,7 +35,7 @@ class DocumentSyncRunner
         );
 
         /** @var QueuedDocumentData[] $documents */
-        $documents = $this->serializer->deserialize($queuedDocumentData, 'App\Model\Sirius\QueuedDocumentData[]', 'json');
+        $documents = $this->serializer->deserialize($queuedDocumentData, 'App\Sync\Model\Sirius\QueuedDocumentData[]', 'json');
 
         $output->writeln(sprintf('%d documents to upload', count($documents)));
 

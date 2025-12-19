@@ -29,7 +29,6 @@
             <directory>./Form</directory>
             <directory>./Logger</directory>
             <directory>./Mapper</directory>
-            <directory>./Model</directory>
             <directory>./Resolver</directory>
             <directory>./Security</directory>
             <directory>./Service</directory>

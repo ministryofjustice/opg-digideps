@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Model\Sirius\QueuedDocumentData;
+namespace DigidepsTests\Sync\Model\Sirius;
+
+use App\Sync\Model\Sirius\QueuedDocumentData;
 use PHPUnit\Framework\TestCase;
 
 class QueuedDocumentDataTest extends TestCase
