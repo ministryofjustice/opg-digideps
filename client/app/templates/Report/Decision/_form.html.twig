@@ -25,15 +25,13 @@
         'labelParameters': transOptions
     }) }}
 
-    <h3 class="govuk-heading-m">
-        {{ 'form.addAnother.heading' | trans({}, translationDomain) }}
-    </h3>
-
-    {{ form_checkbox_group(form.addAnother, 'form.addAnother', {
-        'fieldSetClass': 'inline',
-        'legendClass': 'form-label',
-        'labelParameters': transOptions
-    }) }}
+    {% if form.addAnother %}
+        {{ form_add_another({
+            'addAnother': form.addAnother,
+            'thingTranslationKey': 'form.thing',
+            'translationDomain': 'report-decisions'
+        }) }}
+    {% endif %}
 
     {{ macros.saveAndContinueButton(form.save) }}
 

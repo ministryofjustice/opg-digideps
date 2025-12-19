@@ -18,19 +18,14 @@ existPage:
     save:
       label: Save and continue
 
-addAnotherPage:
-  htmlTitle: "Add another money transfer - Complete the deputy report | GOV.UK"
-  pageTitle: Add another money transfer
-  form:
-    addAnother:
-      label: The transfer has been saved. Would you like to add another now?
-      hint: If you prefer, you can come back to this section later to add more transfers
-    save:
-      label: Continue
-
-stepPage:
+addPage:
   htmlTitle: "Add a money transfer - Complete the deputy report | GOV.UK"
   pageTitle: Add a money transfer
+  supportTitle: Money transfers
+
+editPage:
+  htmlTitle: "Edit a money transfer - Complete the deputy report | GOV.UK"
+  pageTitle: Edit a money transfer
   supportTitle: Money transfers
 
 summaryPage:
@@ -57,6 +52,7 @@ errorPage:
   backToClientProfile: Back to client profile
 
 form:
+  thing: transfer
   accountFrom:
     label: Which account did you transfer money from?
     hint: ""

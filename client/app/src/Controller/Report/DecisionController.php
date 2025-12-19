@@ -8,6 +8,7 @@ use App\Controller\AbstractController;
 use App\Entity\Report\Decision;
 use App\Entity\Report\MentalCapacity;
 use App\Entity\Report\Status;
+use App\Form\AddAnotherThingType;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\DecisionExistType;
 use App\Form\Report\DecisionType;
@@ -181,6 +182,7 @@ class DecisionController extends AbstractController
         $decision = new Decision();
 
         $form = $this->createForm(DecisionType::class, $decision);
+        $form->add('addAnother', AddAnotherThingType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -236,14 +238,7 @@ class DecisionController extends AbstractController
 
             $request->getSession()->getFlashBag()->add('notice', 'Decision edited');
 
-            /** @var Form $addAnother */
-            $addAnother = $form['addAnother'];
-            switch ($addAnother->getData()) {
-                case 'yes':
-                    return $this->redirectToRoute('decisions_add', ['reportId' => $reportId]);
-                case 'no':
-                    return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
-            }
+            return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
         }
 
         return [
