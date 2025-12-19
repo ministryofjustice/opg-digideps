@@ -58,6 +58,6 @@ Feature: Money Transfers
         Then I should be on the add money transfer page
 
         # check that we can actually add another, and loop back to summary page;
-        # this sets "add another" to "no"
+        # the next line sets the "add another" field to "no"
         When I add the transfer details between two accounts
         Then I should see the transfer listed on the money transfers summary page

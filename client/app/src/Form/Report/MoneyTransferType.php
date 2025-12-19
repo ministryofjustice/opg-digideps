@@ -47,8 +47,7 @@ class MoneyTransferType extends AbstractType
                 [
                     'required' => false,
                     'attr' => ['maxlength' => 75]]
-            )
-            ->add('addAnother', AddAnotherThingType::class);
+            );
 
         $builder
             ->add('save', FormTypes\SubmitType::class);

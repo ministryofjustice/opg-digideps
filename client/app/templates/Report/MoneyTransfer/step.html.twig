@@ -1,20 +1,19 @@
 {% extends '@App/Layouts/application.html.twig' %}
-{% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans(transOptions) }}{% endblock %}
-{% block pageTitle %}
-    {{ 'stepPage.pageTitle' | trans(transOptions) }}
-{% endblock %}
-
-
-{% block supportTitleTop %}
-    <span class="heading-secondary">{{ 'stepPage.supportTitle' | trans }}</span>
-{% endblock %}
-
 {% import '@App/Macros/macros.html.twig' as macros %}
 
 {% set translationDomain = "report-money-transfer" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname | striptags } %}
+{% set transOptions = {'%client%': report.client.firstname | striptags} %}
 
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans(transOptions) }}{% endblock %}
+
+{% block pageTitle %}
+    {{ (page ~ '.pageTitle') | trans(transOptions) }}
+{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
@@ -41,11 +40,13 @@
             'inputClass': 'govuk-js-character-count govuk-!-width-two-thirds',
         }) }}
 
-        {{ form_add_another({
-            'addAnother': form.addAnother,
-            'thingTranslationKey': 'form.thing',
-            'translationDomain': 'report-money-transfer'
-        }) }}
+        {% if form.addAnother %}
+            {{ form_add_another({
+                'addAnother': form.addAnother,
+                'thingTranslationKey': 'form.thing',
+                'translationDomain': 'report-money-transfer'
+            }) }}
+        {% endif %}
 
     {{ macros.saveAndContinueButton(form.save) }}
 
