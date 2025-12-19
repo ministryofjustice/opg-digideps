@@ -4,48 +4,36 @@ declare(strict_types=1);
 
 namespace App\Model\Sirius;
 
-use DateTime;
-
+/**
+ * This class is only serialized, which is why it has unused getters.
+ */
 class SiriusReportPdfDocumentMetadata implements SiriusMetadataInterface
 {
-    /** @var DateTime */
-    private $reportingPeriodFrom;
-    private $reportingPeriodTo;
-    private $dateSubmitted;
+    private \DateTime $reportingPeriodFrom;
+    private \DateTime $reportingPeriodTo;
+    private \DateTime $dateSubmitted;
+    private int $year;
+    private ?int $submissionId;
+    private string $type;
 
-    /** @var int */
-    private $year;
-
-    /** @var string */
-    private $type;
-
-    /** @var int|null */
-    private $submissionId;
-
-    public function getReportingPeriodFrom(): DateTime
+    public function getReportingPeriodFrom(): \DateTime
     {
         return $this->reportingPeriodFrom;
     }
 
-    /**
-     * @return SiriusReportPdfDocumentMetadata
-     */
-    public function setReportingPeriodFrom(DateTime $reportingPeriodFrom): self
+    public function setReportingPeriodFrom(\DateTime $reportingPeriodFrom): self
     {
         $this->reportingPeriodFrom = $reportingPeriodFrom;
 
         return $this;
     }
 
-    public function getReportingPeriodTo(): DateTime
+    public function getReportingPeriodTo(): \DateTime
     {
         return $this->reportingPeriodTo;
     }
 
-    /**
-     * @return SiriusReportPdfDocumentMetadata
-     */
-    public function setReportingPeriodTo(DateTime $reportingPeriodTo): self
+    public function setReportingPeriodTo(\DateTime $reportingPeriodTo): self
     {
         $this->reportingPeriodTo = $reportingPeriodTo;
 
@@ -57,9 +45,6 @@ class SiriusReportPdfDocumentMetadata implements SiriusMetadataInterface
         return $this->year;
     }
 
-    /**
-     * @return SiriusReportPdfDocumentMetadata
-     */
     public function setYear(int $year): self
     {
         $this->year = $year;
@@ -67,15 +52,12 @@ class SiriusReportPdfDocumentMetadata implements SiriusMetadataInterface
         return $this;
     }
 
-    public function getDateSubmitted(): DateTime
+    public function getDateSubmitted(): \DateTime
     {
         return $this->dateSubmitted;
     }
 
-    /**
-     * @return SiriusReportPdfDocumentMetadata
-     */
-    public function setDateSubmitted(DateTime $dateSubmitted): self
+    public function setDateSubmitted(\DateTime $dateSubmitted): self
     {
         $this->dateSubmitted = $dateSubmitted;
 
@@ -87,9 +69,6 @@ class SiriusReportPdfDocumentMetadata implements SiriusMetadataInterface
         return $this->type;
     }
 
-    /**
-     * @return SiriusReportPdfDocumentMetadata
-     */
     public function setType(string $type): self
     {
         $this->type = $type;
@@ -102,9 +81,6 @@ class SiriusReportPdfDocumentMetadata implements SiriusMetadataInterface
         return $this->submissionId;
     }
 
-    /**
-     * @return SiriusReportPdfDocumentMetadata
-     */
     public function setSubmissionId(?int $submissionId): self
     {
         $this->submissionId = $submissionId;

@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace App\Model\Sirius;
 
+/**
+ * This class is only serialized, which is why it has unused getters.
+ */
 class SiriusSupportingDocumentMetadata implements SiriusMetadataInterface
 {
-    /** @var int */
-    private $submissionId;
+    private int $submissionId;
 
     public function getSubmissionId(): int
     {
         return $this->submissionId;
     }
 
-    /**
-     * @return SiriusSupportingDocumentMetadata
-     */
     public function setSubmissionId(int $submissionId): self
     {
         $this->submissionId = $submissionId;
