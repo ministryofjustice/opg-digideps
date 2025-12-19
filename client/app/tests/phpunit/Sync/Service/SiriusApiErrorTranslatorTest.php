@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Service\SiriusApiErrorTranslator;
+namespace DigidepsTests\Sync\Service;
+
+use App\Sync\Service\SiriusApiErrorTranslator;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
@@ -32,9 +34,9 @@ class SiriusApiErrorTranslatorTest extends KernelTestCase
         self::assertEquals($unexpectedErrorJson, $translation);
     }
 
-     /**
-      * @test
-      */
+    /**
+     * @test
+     */
     public function translateApiError()
     {
 
