@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace DigidepsTests\Helpers;
 
-use App\Model\Sirius\SiriusDocumentFile;
-use App\Model\Sirius\SiriusDocumentUpload;
 use App\Model\Sirius\SiriusReportPdfDocumentMetadata;
 use App\Model\Sirius\SiriusSupportingDocumentMetadata;
 use App\Sync\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
+use App\Sync\Model\Sirius\SiriusDocumentFile;
+use App\Sync\Model\Sirius\SiriusDocumentUpload;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class SiriusHelpers extends KernelTestCase
