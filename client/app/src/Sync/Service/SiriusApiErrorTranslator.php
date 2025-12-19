@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Sync\Service;
 
-use App\Model\Sirius\SiriusApiError;
+use App\Sync\Model\Sirius\SiriusApiError;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class SiriusApiErrorTranslator
@@ -13,7 +13,7 @@ class SiriusApiErrorTranslator
     {
     }
 
-    public function translateApiError(string $errorString)
+    public function translateApiError(string $errorString): string
     {
         if ($this->jsonIsInUnexpectedFormat($errorString)) {
             return $errorString;
@@ -22,24 +22,25 @@ class SiriusApiErrorTranslator
         $apiError = $this->deserializeError($errorString);
 
         return sprintf('%s: %s', $apiError->getCode(), $apiError->getDetail());
-
     }
 
     private function deserializeError(string $errorString): SiriusApiError
     {
-        $decodedJson = json_decode($errorString, true)['error'];
+        /** @var array $decodedError */
+        $decodedError = json_decode($errorString, true);
 
-        return $this->serializer->deserialize(json_encode($decodedJson), SiriusApiError::class, 'json');
+        return $this->serializer->deserialize(json_encode($decodedError['error']), SiriusApiError::class, 'json');
     }
 
     private function jsonIsInUnexpectedFormat(string $errorString): bool
     {
+        /** @var ?array $decodedJson */
         $decodedJson = json_decode($errorString, true);
 
         return is_null($decodedJson) ||
-        !array_key_exists('error', $decodedJson) ||
-        (array_key_exists('error', $decodedJson) && (!array_key_exists('code', $decodedJson['error']))) ||
-        (array_key_exists('error', $decodedJson) && (!array_key_exists('detail', $decodedJson['error']))) ||
-        (array_key_exists('error', $decodedJson) && (!array_key_exists('title', $decodedJson['error'])));
+            !array_key_exists('error', $decodedJson) ||
+            !array_key_exists('code', $decodedJson['error']) ||
+            !array_key_exists('detail', $decodedJson['error']) ||
+            !array_key_exists('title', $decodedJson['error']);
     }
 }

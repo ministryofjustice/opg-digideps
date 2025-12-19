@@ -8801,21 +8801,6 @@ parameters:
 			path: src/Model/FeedbackReport.php
 
 		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\SiriusApiError\\:\\:\\$code has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/SiriusApiError.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\SiriusApiError\\:\\:\\$detail has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/SiriusApiError.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\SiriusApiError\\:\\:\\$title \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Model/Sirius/SiriusApiError.php
-
-		-
 			message: "#^Method App\\\\Resolver\\\\SubSectionRoute\\\\ProfCostsEstimateSubSectionRouteResolver\\:\\:breakdownSubsectionIsIncomplete\\(\\) has parameter \\$state with no type specified\\.$#"
 			count: 1
 			path: src/Resolver/SubSectionRoute/ProfCostsEstimateSubSectionRouteResolver.php
@@ -10589,21 +10574,6 @@ parameters:
 			message: "#^Method App\\\\Service\\\\SecretManagerService\\:\\:getSecret\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/SecretManagerService.php
-
-		-
-			message: "#^Cannot access offset 'error' on mixed\\.$#"
-			count: 1
-			path: src/Service/SiriusApiErrorTranslator.php
-
-		-
-			message: "#^Method App\\\\Service\\\\SiriusApiErrorTranslator\\:\\:translateApiError\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/SiriusApiErrorTranslator.php
-
-		-
-			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, mixed given\\.$#"
-			count: 1
-			path: src/Service/SiriusApiErrorTranslator.php
 
 		-
 			message: "#^Binary operation \"\\+\" between string and 1 results in an error\\.$#"

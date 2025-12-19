@@ -13,7 +13,6 @@ use App\Model\Sirius\SiriusReportPdfDocumentMetadata;
 use App\Model\Sirius\SiriusSupportingDocumentMetadata;
 use App\Service\Client\RestClient;
 use App\Service\File\FileNameManipulation;
-use App\Service\SiriusApiErrorTranslator;
 use App\Sync\Model\Sirius\QueuedDocumentData;
 use App\Sync\Service\Client\Sirius\SiriusApiGatewayClient;
 use GuzzleHttp\Exception\GuzzleException;
