@@ -8801,11 +8801,6 @@ parameters:
 			path: src/Model/FeedbackReport.php
 
 		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\QueuedChecklistData\\:\\:\\$checklistUuid \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedChecklistData.php
-
-		-
 			message: "#^Property App\\\\Model\\\\Sirius\\\\SiriusApiError\\:\\:\\$code has no type specified\\.$#"
 			count: 1
 			path: src/Model/Sirius/SiriusApiError.php
