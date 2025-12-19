@@ -5,38 +5,27 @@ declare(strict_types=1);
 namespace App\Model\Sirius;
 
 use App\Entity\Report\ReportSubmission;
-use DateTime;
 
 class QueuedDocumentData
 {
-    /** @var int */
-    private $documentId;
-    private $reportSubmissionId;
+    private int $documentId;
+    private int $reportSubmissionId;
+    private ?int $ndrId;
+    private ?int $documentSyncAttempts;
+    private bool $isReportPdf;
+    private string $filename;
+    private string $storageReference;
+    private string $caseNumber;
 
-    /** @var int|null */
-    private $ndrId;
-    private $documentSyncAttempts;
-
-    /** @var bool */
-    private $isReportPdf;
-
-    /** @var string */
-    private $filename;
-    private $storageReference;
-    private $caseNumber;
-
-    /** @var string|null */
-    private $reportType;
-    private $s3Reference;
-    private $reportSubmissionUuid;
+    private ?string $reportType;
+    private ?string $reportSubmissionUuid;
 
     /** @var ReportSubmission[] */
-    private $reportSubmissions;
+    private array $reportSubmissions;
 
-    /** @var DateTime|null */
-    private $reportStartDate;
-    private $reportEndDate;
-    private $reportSubmitDate;
+    private ?\DateTime $reportStartDate;
+    private ?\DateTime $reportEndDate;
+    private ?\DateTime $reportSubmitDate;
 
     public function supportingDocumentCanBeSynced()
     {
@@ -153,7 +142,7 @@ class QueuedDocumentData
         return $this;
     }
 
-    public function getReportStartDate(): ?DateTime
+    public function getReportStartDate(): ?\DateTime
     {
         return $this->reportStartDate;
     }
@@ -161,14 +150,14 @@ class QueuedDocumentData
     /**
      * @return QueuedDocumentData
      */
-    public function setReportStartDate(?DateTime $reportStartDate): self
+    public function setReportStartDate(?\DateTime $reportStartDate): self
     {
         $this->reportStartDate = $reportStartDate;
 
         return $this;
     }
 
-    public function getReportEndDate(): ?DateTime
+    public function getReportEndDate(): ?\DateTime
     {
         return $this->reportEndDate;
     }
@@ -176,22 +165,19 @@ class QueuedDocumentData
     /**
      * @return QueuedDocumentData
      */
-    public function setReportEndDate(?DateTime $reportEndDate): self
+    public function setReportEndDate(?\DateTime $reportEndDate): self
     {
         $this->reportEndDate = $reportEndDate;
 
         return $this;
     }
 
-    public function getReportSubmitDate(): ?DateTime
+    public function getReportSubmitDate(): ?\DateTime
     {
         return $this->reportSubmitDate;
     }
 
-    /**
-     * @return QueuedDocumentData
-     */
-    public function setReportSubmitDate(?DateTime $reportSubmitDate): self
+    public function setReportSubmitDate(?\DateTime $reportSubmitDate): self
     {
         $this->reportSubmitDate = $reportSubmitDate;
 
@@ -203,9 +189,6 @@ class QueuedDocumentData
         return $this->reportType;
     }
 
-    /**
-     * @return QueuedDocumentData
-     */
     public function setReportType(?string $reportType): self
     {
         $this->reportType = $reportType;
@@ -218,9 +201,6 @@ class QueuedDocumentData
         return $this->reportSubmissionId;
     }
 
-    /**
-     * @return QueuedDocumentData
-     */
     public function setReportSubmissionId(int $reportSubmissionId): self
     {
         $this->reportSubmissionId = $reportSubmissionId;
@@ -233,9 +213,6 @@ class QueuedDocumentData
         return $this->reportSubmissionUuid;
     }
 
-    /**
-     * @return QueuedDocumentData
-     */
     public function setReportSubmissionUuid(?string $reportSubmissionUuid): self
     {
         $this->reportSubmissionUuid = $reportSubmissionUuid;
@@ -248,9 +225,6 @@ class QueuedDocumentData
         return $this->documentSyncAttempts;
     }
 
-    /**
-     * @return QueuedDocumentData
-     */
     public function setDocumentSyncAttempts(?int $documentSyncAttempts): self
     {
         $this->documentSyncAttempts = $documentSyncAttempts;
