@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Sync\Model\Sirius;
 
-use App\Model\Sirius\SiriusMetadataInterface;
-
 class SiriusChecklistPdfDocumentMetadata implements SiriusMetadataInterface
 {
     private int $year;
