@@ -61,3 +61,22 @@ Feature: Money Transfers
         # the next line sets the "add another" field to "no"
         When I add the transfer details between two accounts
         Then I should see the transfer listed on the money transfers summary page
+
+    @lay-pfa-high-not-started
+    Scenario: A user edits a money transfer
+        Given a Lay Deputy has not started a report
+        When I view the report overview page
+        And I visit the accounts report section
+        And I add one of each account type with valid details
+        And I follow link back to report overview page
+        And I visit the money transfers report section
+        And I confirm that I have a transfer to add
+        And I add the transfer details between two accounts
+        Then I should see the transfer listed on the money transfers summary page
+
+        When I edit the money transfer
+        Then I should not see "Add another money transfer"
+
+        When I click save and continue
+        Then I should see "£10,092,934.00"
+        And I should see "edited transfer"

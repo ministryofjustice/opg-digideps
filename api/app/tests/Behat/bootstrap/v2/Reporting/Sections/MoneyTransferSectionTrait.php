@@ -119,6 +119,17 @@ trait MoneyTransferSectionTrait
     }
 
     /**
+     * @Given /^I edit the money transfer$/
+     */
+    public function iEditTheMoneyTransfer(): void
+    {
+        $this->findAllCssElements('[data-role="money-transfer-edit-link"]')[0]->click();
+        $this->iAmOnPage('/report\/.*\/money-transfers\/step1\/.*$/');
+        $this->fillInField('money_transfers_type[amount]', '10092934');
+        $this->fillinField('money_transfers_type[description]', 'edited transfer');
+    }
+
+    /**
      * @Then I should be on the money transfer delete page
      */
     public function iShouldBeOnTheMoneyTransferDeletePage(): bool
