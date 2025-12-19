@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Sync\Serializer;
 
-use App\Model\Sirius\SiriusDocumentUpload;
+use App\Sync\Model\Sirius\SiriusDocumentUpload;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
