@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Sync\Service;
 
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
@@ -14,6 +14,7 @@ use App\Model\Sirius\SiriusSupportingDocumentMetadata;
 use App\Service\Client\RestClient;
 use App\Service\Client\Sirius\SiriusApiGatewayClient;
 use App\Service\File\FileNameManipulation;
+use App\Service\SiriusApiErrorTranslator;
 use GuzzleHttp\Psr7\MimeType;
 use Psr\Http\Message\ResponseInterface;
 

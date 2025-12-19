@@ -2,9 +2,9 @@
 
 namespace App\Tests\Sync\Command;
 
-use App\Service\DocumentSyncRunner;
 use App\Service\ParameterStoreService;
 use App\Sync\Command\DocumentSyncCommand;
+use App\Sync\Service\DocumentSyncRunner;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;

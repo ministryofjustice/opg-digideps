@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Service;
+namespace DigidepsTests\Sync\Service;
 
 use App\Model\Sirius\QueuedDocumentData;
 use App\Service\Client\RestClient;
+use App\Sync\Service\DocumentSyncRunner;
+use App\Sync\Service\DocumentSyncService;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Serializer\SerializerInterface;

@@ -194,7 +194,7 @@ services:
   App\Service\File\Scanner\ClamFileScanner:
     arguments: ["@guzzle_file_scanner_client", "@logger", "%bad_pdf_keywords%"]
 
-  App\Service\DocumentSyncService:
+  App\Sync\Service\DocumentSyncService:
     arguments:
       $siriusApiGatewayClient: '@App\Service\Client\Sirius\SiriusApiGatewayClient'
       $restClient: '@App\Service\Client\RestClient'
