@@ -9,31 +9,31 @@ namespace App\Model\Sirius;
  */
 class SiriusReportPdfDocumentMetadata implements SiriusMetadataInterface
 {
-    private \DateTime $reportingPeriodFrom;
-    private \DateTime $reportingPeriodTo;
-    private \DateTime $dateSubmitted;
+    private ?\DateTime $reportingPeriodFrom;
+    private ?\DateTime $reportingPeriodTo;
+    private ?\DateTime $dateSubmitted;
     private int $year;
     private ?int $submissionId;
     private string $type;
 
-    public function getReportingPeriodFrom(): \DateTime
+    public function getReportingPeriodFrom(): ?\DateTime
     {
         return $this->reportingPeriodFrom;
     }
 
-    public function setReportingPeriodFrom(\DateTime $reportingPeriodFrom): self
+    public function setReportingPeriodFrom(?\DateTime $reportingPeriodFrom): self
     {
         $this->reportingPeriodFrom = $reportingPeriodFrom;
 
         return $this;
     }
 
-    public function getReportingPeriodTo(): \DateTime
+    public function getReportingPeriodTo(): ?\DateTime
     {
         return $this->reportingPeriodTo;
     }
 
-    public function setReportingPeriodTo(\DateTime $reportingPeriodTo): self
+    public function setReportingPeriodTo(?\DateTime $reportingPeriodTo): self
     {
         $this->reportingPeriodTo = $reportingPeriodTo;
 
@@ -52,12 +52,12 @@ class SiriusReportPdfDocumentMetadata implements SiriusMetadataInterface
         return $this;
     }
 
-    public function getDateSubmitted(): \DateTime
+    public function getDateSubmitted(): ?\DateTime
     {
         return $this->dateSubmitted;
     }
 
-    public function setDateSubmitted(\DateTime $dateSubmitted): self
+    public function setDateSubmitted(?\DateTime $dateSubmitted): self
     {
         $this->dateSubmitted = $dateSubmitted;
 
