@@ -2,10 +2,10 @@
 
 namespace App\Tests\Sync\Command;
 
-use App\Service\ChecklistSyncService;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\ParameterStoreService;
 use App\Sync\Command\ChecklistSyncCommand;
+use App\Sync\Service\ChecklistSyncService;
 use App\TestHelpers\ChecklistTestHelper;
 use PHPUnit\Framework\MockObject\MockObject;
 use Prophecy\PhpUnit\ProphecyTrait;
