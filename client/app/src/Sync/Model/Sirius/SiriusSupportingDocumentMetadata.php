@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model\Sirius;
+namespace App\Sync\Model\Sirius;
 
 /**
  * This class is only serialized, which is why it has unused getters.
