@@ -2,13 +2,13 @@
 
 namespace App\Service\Availability;
 
-use App\Service\Client\Sirius\SiriusApiGatewayClient;
+use App\Service\Client\Sirius\SiriusHealthCheckClient;
 
 class SiriusApiAvailability extends ServiceAvailabilityAbstract
 {
-    private SiriusApiGatewayClient $client;
+    private SiriusHealthCheckClient $client;
 
-    public function __construct(SiriusApiGatewayClient $client)
+    public function __construct(SiriusHealthCheckClient $client)
     {
         $this->isHealthy = true;
         $this->client = $client;
@@ -21,7 +21,7 @@ class SiriusApiAvailability extends ServiceAvailabilityAbstract
 
             if (200 !== $response->getStatusCode()) {
                 $this->isHealthy = false;
-                $this->errors = 'Returned HTTP code '.$response->getStatusCode();
+                $this->errors = 'Returned HTTP code ' . $response->getStatusCode();
             }
         } catch (\Throwable $e) {
             $this->isHealthy = false;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Service\AWS\RequestSigner;
-use App\Service\Client\Sirius\SiriusApiGatewayClient;
+use App\Sync\Service\Client\Sirius\SiriusApiGatewayClient;
 use DigidepsTests\Helpers\SiriusHelpers;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Request;

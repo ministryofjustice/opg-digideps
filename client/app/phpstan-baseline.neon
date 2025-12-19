@@ -8801,32 +8801,7 @@ parameters:
 			path: src/Model/FeedbackReport.php
 
 		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\QueuedChecklistData\\:\\:\\$caseNumber has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedChecklistData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\QueuedChecklistData\\:\\:\\$checklistFileContents has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedChecklistData.php
-
-		-
 			message: "#^Property App\\\\Model\\\\Sirius\\\\QueuedChecklistData\\:\\:\\$checklistUuid \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedChecklistData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\QueuedChecklistData\\:\\:\\$reportEndDate has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedChecklistData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\QueuedChecklistData\\:\\:\\$reportType has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedChecklistData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\QueuedChecklistData\\:\\:\\$submitterEmail has no type specified\\.$#"
 			count: 1
 			path: src/Model/Sirius/QueuedChecklistData.php
 
@@ -8844,16 +8819,6 @@ parameters:
 			message: "#^Property App\\\\Model\\\\Sirius\\\\SiriusApiError\\:\\:\\$title \\(string\\) does not accept string\\|null\\.$#"
 			count: 1
 			path: src/Model/Sirius/SiriusApiError.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\SiriusChecklistPdfDocumentMetadata\\:\\:\\$reportingPeriodTo has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/SiriusChecklistPdfDocumentMetadata.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\SiriusChecklistPdfDocumentMetadata\\:\\:\\$type has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/SiriusChecklistPdfDocumentMetadata.php
 
 		-
 			message: "#^Method App\\\\Resolver\\\\SubSectionRoute\\\\ProfCostsEstimateSubSectionRouteResolver\\:\\:breakdownSubsectionIsIncomplete\\(\\) has parameter \\$state with no type specified\\.$#"
@@ -9149,81 +9114,6 @@ parameters:
 			message: "#^Strict comparison using \\=\\=\\= between false and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Service/ChecklistPdfGenerator.php
-
-		-
-			message: "#^Call to an undefined method Throwable\\:\\:getResponse\\(\\)\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Cannot access offset 'data' on mixed\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Cannot access offset 'id' on mixed\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Cannot call method getBody\\(\\) on class\\-string\\|object\\.$#"
-			count: 2
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Cannot call method getBody\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Method App\\\\Service\\\\ChecklistSyncService\\:\\:updateChecklistWithError\\(\\) has parameter \\$e with no type specified\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Method App\\\\Service\\\\ChecklistSyncService\\:\\:updateChecklistWithSuccess\\(\\) has parameter \\$uuid with no type specified\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$content$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$report$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Parameter \\#1 \\$mimetype of method App\\\\Model\\\\Sirius\\\\SiriusDocumentFile\\:\\:setMimetype\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Parameter \\#1 \\$reportEndDate of method App\\\\Model\\\\Sirius\\\\QueuedChecklistData\\:\\:setReportEndDate\\(\\) expects DateTime, DateTime\\|null given\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Parameter \\#1 \\$reportStartDate of method App\\\\Model\\\\Sirius\\\\QueuedChecklistData\\:\\:setReportStartDate\\(\\) expects DateTime, DateTime\\|null given\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Parameter \\#2 \\$reportSubmissionUuid of method App\\\\Service\\\\ChecklistSyncService\\:\\:postChecklist\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Parameter \\#2 \\$reportSubmissionUuid of method App\\\\Service\\\\ChecklistSyncService\\:\\:putChecklist\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Parameter \\#4 \\$checklistUuid of method App\\\\Service\\\\Client\\\\Sirius\\\\SiriusApiGatewayClient\\:\\:putChecklistPdf\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
 
 		-
 			message: "#^Method App\\\\Service\\\\Client\\\\GovUK\\\\BankHolidaysAPIClient\\:\\:getBankHolidays\\(\\) should return array but returns mixed\\.$#"

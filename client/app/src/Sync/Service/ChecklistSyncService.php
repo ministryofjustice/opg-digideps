@@ -15,67 +15,69 @@ use App\Model\Sirius\SiriusDocumentFile;
 use App\Model\Sirius\SiriusDocumentUpload;
 use App\Service\ChecklistPdfGenerator;
 use App\Service\Client\RestClient;
-use App\Service\Client\Sirius\SiriusApiGatewayClient;
 use App\Service\SiriusApiErrorTranslator;
+use App\Sync\Service\Client\Sirius\SiriusApiGatewayClient;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Psr7\MimeType;
 use Psr\Http\Message\ResponseInterface;
-use Throwable;
-
-use function GuzzleHttp\Psr7\mimetype_from_filename;
 
 class ChecklistSyncService
 {
-    /** @var int */
-    const FAILED_TO_SYNC = -1;
-
-    /** @var string */
-    const PAPER_REPORT_UUID_FALLBACK = '99999999-9999-9999-9999-999999999999';
+    const string PAPER_REPORT_UUID_FALLBACK = '99999999-9999-9999-9999-999999999999';
 
     public function __construct(
-        private RestClient $restClient,
-        private SiriusApiGatewayClient $siriusApiGatewayClient,
-        private SiriusApiErrorTranslator $errorTranslator,
-        private ChecklistPdfGenerator $pdfGenerator,
+        private readonly RestClient $restClient,
+        private readonly SiriusApiGatewayClient $siriusApiGatewayClient,
+        private readonly SiriusApiErrorTranslator $errorTranslator,
+        private readonly ChecklistPdfGenerator $pdfGenerator,
     ) {
     }
 
-    /**
-     * @return mixed
-     */
-    public function sync(QueuedChecklistData $checklistData)
+    public function sync(QueuedChecklistData $checklistData): string
     {
         try {
             $siriusResponse = $this->sendDocument($checklistData);
 
-            return json_decode(strval($siriusResponse->getBody()), true)['data']['id'];
-        } catch (Throwable $e) {
-            throw new SiriusDocumentSyncFailedException($this->determineErrorMessage($e));
+            /** @var array $body */
+            $body = json_decode(strval($siriusResponse->getBody()), true);
+
+            return (string) $body['data']['id'];
+        } catch (\Exception $e) {
+            $message = substr($e->getMessage(), 0, 254);
+
+            if ($e instanceof ClientException) {
+                $message = $this->errorTranslator->translateApiError((string) $e->getResponse()->getBody());
+            }
+
+            throw new SiriusDocumentSyncFailedException($message);
         }
     }
 
     /**
-     * @return mixed|ResponseInterface|void
-     *
      * @throws GuzzleException
      */
-    private function sendDocument(QueuedChecklistData $checklistData)
+    private function sendDocument(QueuedChecklistData $checklistData): ResponseInterface
     {
         $reportSubmission = $checklistData->getSyncedReportSubmission();
-        $reportSubmissionUuid = ($reportSubmission instanceof ReportSubmission) ?
-            $reportSubmission->getUuid() :
-            self::PAPER_REPORT_UUID_FALLBACK;
 
-        return (null === $checklistData->getChecklistUuid()) ?
+        $reportSubmissionUuid = self::PAPER_REPORT_UUID_FALLBACK;
+        if ($reportSubmission instanceof ReportSubmission) {
+            $actualUuid = $reportSubmission->getUuid();
+            if (!is_null($actualUuid)) {
+                $reportSubmissionUuid = $actualUuid;
+            }
+        }
+
+        return is_null($checklistData->getChecklistUuid()) ?
             $this->postChecklist($checklistData, $reportSubmissionUuid) :
             $this->putChecklist($checklistData, $reportSubmissionUuid);
     }
 
     /**
-     * @return mixed
-     *
      * @throws GuzzleException
      */
-    private function postChecklist(QueuedChecklistData $checklistData, string $reportSubmissionUuid)
+    private function postChecklist(QueuedChecklistData $checklistData, string $reportSubmissionUuid): ResponseInterface
     {
         $upload = $this->buildUpload($checklistData);
 
@@ -87,43 +89,37 @@ class ChecklistSyncService
     }
 
     /**
-     * @return mixed
-     *
      * @throws GuzzleException
      */
-    private function putChecklist(QueuedChecklistData $checklistData, string $reportSubmissionUuid)
+    private function putChecklist(QueuedChecklistData $checklistData, string $reportSubmissionUuid): ResponseInterface
     {
         return $this->siriusApiGatewayClient->putChecklistPdf(
             $this->buildUpload($checklistData),
             $reportSubmissionUuid,
             strtoupper($checklistData->getCaseNumber()),
-            $checklistData->getChecklistUuid()
+            $checklistData->getChecklistUuid() ?? self::PAPER_REPORT_UUID_FALLBACK
         );
     }
 
-    /**
-     * @param string $content
-     * @param Report $report
-     */
     private function buildUpload(QueuedChecklistData $checklistData): SiriusDocumentUpload
     {
         $filename = sprintf(
             'checklist-%s-%s-%s.pdf',
             $checklistData->getCaseNumber(),
-            $checklistData->getReportStartDate()->format('Y'),
-            $checklistData->getReportEndDate()->format('Y')
+            $checklistData->getReportStartDate()?->format('Y'),
+            $checklistData->getReportEndDate()?->format('Y')
         );
 
         $file = (new SiriusDocumentFile())
             ->setName($filename)
-            ->setMimetype(mimetype_from_filename($filename))
+            ->setMimetype(MimeType::fromFilename($filename) ?? '')
             ->setSource(base64_encode($checklistData->getChecklistFileContents()));
 
         $submissionId = is_null($checklistData->getSyncedReportSubmission()) ?
             null : $checklistData->getSyncedReportSubmission()->getId();
 
         $metadata = (new SiriusChecklistPdfDocumentMetadata())
-            ->setYear((int) $checklistData->getReportEndDate()->format('Y'))
+            ->setYear(intval($checklistData->getReportEndDate()?->format('Y')))
             ->setType($checklistData->getReportType())
             ->setSubmitterEmail($checklistData->getSubmitterEmail())
             ->setReportingPeriodFrom($checklistData->getReportStartDate())
@@ -134,16 +130,6 @@ class ChecklistSyncService
             ->setType('checklists')
             ->setAttributes($metadata)
             ->setFile($file);
-    }
-
-    /**
-     * @param $e
-     */
-    private function determineErrorMessage(Throwable $e): string
-    {
-        return ($this->errorCanBeTranslated($e)) ?
-            $this->errorTranslator->translateApiError((string) $e->getResponse()->getBody()) :
-            substr($e->getMessage(), 0, 254);
     }
 
     private function updateChecklist(int $id, string $status, ?string $message = null, ?string $uuid = null): void
@@ -167,15 +153,6 @@ class ChecklistSyncService
             [],
             false
         );
-    }
-
-    private function errorCanBeTranslated(Throwable $e): bool
-    {
-        return
-            method_exists($e, 'getResponse') &&
-            method_exists($e->getResponse(), 'getBody') &&
-            is_array($e->getResponse()->getBody()) &&
-            isset($e->getResponse()->getBody()['errors']);
     }
 
     public function syncChecklistsByReports(array $reports): int
@@ -219,12 +196,12 @@ class ChecklistSyncService
             ->setReportType($report->determineReportType());
     }
 
-    protected function updateChecklistWithError(Report $report, $e): void
+    protected function updateChecklistWithError(Report $report, \Throwable $e): void
     {
         $this->updateChecklist($report->getChecklist()->getId(), Checklist::SYNC_STATUS_PERMANENT_ERROR, $e->getMessage());
     }
 
-    protected function updateChecklistWithSuccess(Report $report, $uuid): void
+    protected function updateChecklistWithSuccess(Report $report, ?string $uuid): void
     {
         $this->updateChecklist($report->getChecklist()->getId(), Checklist::SYNC_STATUS_SUCCESS, null, $uuid);
     }

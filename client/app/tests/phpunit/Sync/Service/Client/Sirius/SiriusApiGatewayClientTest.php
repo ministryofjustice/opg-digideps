@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Client\Sirius;
+namespace DigidepsTests\Sync\Service\Client\Sirius;
 
 use App\Service\AWS\RequestSigner;
+use App\Sync\Service\Client\Sirius\SiriusApiGatewayClient;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
@@ -18,23 +19,12 @@ class SiriusApiGatewayClientTest extends KernelTestCase
 {
     use ProphecyTrait;
 
-    /** @var string */
-    private $baseURL;
-
-    /** @var string */
-    private $endpoint;
-
-    /** @var Client&ObjectProphecy */
-    private $httpClient;
-
-    /** @var RequestSigner&ObjectProphecy */
-    private $requestSigner;
-
-    /** @var Serializer */
-    private $serializer;
-
-    /** @var LoggerInterface&ObjectProphecy */
-    private $logger;
+    private string $baseURL;
+    private string $endpoint;
+    private Client|ObjectProphecy $httpClient;
+    private RequestSigner|ObjectProphecy $requestSigner;
+    private Serializer $serializer;
+    private LoggerInterface|ObjectProphecy $logger;
 
     public function setUp(): void
     {
@@ -43,11 +33,13 @@ class SiriusApiGatewayClientTest extends KernelTestCase
         $this->httpClient = self::prophesize(Client::class);
         $this->requestSigner = self::prophesize(RequestSigner::class);
         $this->logger = self::prophesize(LoggerInterface::class);
-        $this->serializer = (self::bootKernel(['debug' => false]))->getContainer()->get('serializer');
+
+        /** @var Serializer $serializer */
+        $serializer = (self::bootKernel(['debug' => false]))->getContainer()->get('serializer');
+        $this->serializer = $serializer;
     }
 
-    /** @test */
-    public function get()
+    public function testGet()
     {
         $expectedRequest = $this->buildRequest($this->baseURL, $this->endpoint, 'GET');
         $signedRequest = $this->buildRequest($this->baseURL, $this->endpoint, 'GET', ['A-Header' => 'value']);
