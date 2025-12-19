@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Sync\Service;
 
 use App\Model\Sirius\QueuedDocumentData;
 use App\Service\Client\RestClient;

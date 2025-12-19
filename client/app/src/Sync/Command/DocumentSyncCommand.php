@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Sync\Command;
 
-use App\Service\DocumentSyncRunner;
 use App\Service\ParameterStoreService;
+use App\Sync\Service\DocumentSyncRunner;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

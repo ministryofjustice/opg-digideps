@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace DigidepsTests\Sync\Service;
 
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
@@ -11,6 +11,8 @@ use App\Model\Sirius\QueuedDocumentData;
 use App\Service\Client\RestClient;
 use App\Service\Client\Sirius\SiriusApiGatewayClient;
 use App\Service\File\FileNameManipulation;
+use App\Service\SiriusApiErrorTranslator;
+use App\Sync\Service\DocumentSyncService;
 use DigidepsTests\Helpers\SiriusHelpers;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\Request;
