@@ -18,8 +18,8 @@
     },
     "require": {
         "php": "^8.4",
-        "alphagov/notifications-php-client": "^4.0.1",
-        "aws/aws-sdk-php": "3.337.3",
+        "alphagov/notifications-php-client": "^6.2.0",
+        "aws/aws-sdk-php": "^3.369.0",
         "doctrine/annotations": "^2.0",
         "doctrine/collections": "^2.0.0",
         "egulias/email-validator": "^4.0.4",
