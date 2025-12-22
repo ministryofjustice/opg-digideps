@@ -1,5 +1,5 @@
 # Build Stage
-FROM golang:1.25.3-alpine3.22 AS build
+FROM golang:1.25.5-alpine3.23@sha256:ac09a5f469f307e5da71e766b0bd59c9c49ea460a528cc3e6686513d64a6f1fb AS build
 WORKDIR /go/src/clamav-rest
 
 COPY file-scanner/. .
