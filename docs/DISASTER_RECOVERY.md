@@ -85,6 +85,30 @@ python3 database_restore.py \
 --cluster_from api-ddpb9999 --cluster_to api-new_test_cluster --pitr '2022-01-01 09:10:00'
 ```
 
+Title: Restore from AWS Backup to latest restore point
+Example disaster: You have broken the DB in some way where it's not recoverable and want to
+restore to the latest state of the data and your DB is covered by AWS Backup and has a continuous backup
+item in a vault.
+Remediation: Restore from an existing continuous recovery point from AWS Backup.
+```
+aws-vault exec identity --duration=2h -- \
+docker compose -f docker-compose.commands.yml run -rm dr-restore \
+python3 database_restore.py \
+--cluster_from api-ddpb9999 --aws_backup True
+```
+
+Title: Restore from AWS Backup to a point in time
+Example disaster: An update was run directly on database that had huge unintended consequences
+and you're willing to accept a small loss of data that would happen in the intervening time but your
+DB is backed up via a continuous recovery point in AWS Backup vault.
+Remediation: Restore from an existing continuous recovery point from AWS Backup to a point in time.
+```
+aws-vault exec identity --duration=2h -- \
+docker compose -f docker-compose.commands.yml run -rm dr-restore \
+python3 database_restore.py \
+--cluster_from api-ddpb9999 --pitr '2022-01-01 09:10:00' --aws_backup True
+```
+
 | Disaster                                                                                                           | Severity | Likelihood | Recovery                                                                                                                                                                                                                       |
 |--------------------------------------------------------------------------------------------------------------------|----------|------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Loss of data due to accidental/intentional misconfiguration of AWS resources                                       | High     | Low        | - Db snapshot restore                                                                                                                                                                                                          |
