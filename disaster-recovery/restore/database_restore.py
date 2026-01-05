@@ -1,4 +1,5 @@
 import math
+import sys
 
 import boto3
 import click
@@ -29,6 +30,7 @@ class SnapshotManagement:
         engine_mode_override: str,
         pitr: str,
         restore_from_remote: bool,
+        aws_backup: bool,
     ):
         self.sts_client = boto3.client("sts")
         self.account = (
@@ -36,6 +38,7 @@ class SnapshotManagement:
             if environment not in environments.keys()
             else environments[environment]
         )
+        self.environment = environment
         self.backup_account = environments["backup"]
         self.role = "digideps-ci" if os.getenv("CI") else "breakglass"
         self.backup_role = (
@@ -50,6 +53,7 @@ class SnapshotManagement:
         self.region = "eu-west-1"
         self.client = None
         self.client_kms = None
+        self.client_aws_backup = None
         self.client_backup_rds = None
         self.client_backup_kms = None
         self.restore_from_remote = restore_from_remote
@@ -64,6 +68,7 @@ class SnapshotManagement:
             if self.db_cluster_identifier_target == self.db_cluster_identifier_source
             else False
         )
+        self.recovery_point_arn = ""
         self.SnapshotIdentifier = snapshot_id
         self.multi_az_override = multi_az_override
         self.MultiAZ = False
@@ -71,6 +76,7 @@ class SnapshotManagement:
         self.EngineMode = None
         self.serverless_v2_config = {}
         self.PointInTimeRecovery = datetime.strptime(pitr, "%Y-%m-%d %H:%M:%S")
+        self.do_point_in_time_restore = False
         self.AllocatedStorage = 1
         self.AvailabilityZones = ["eu-west-1b", "eu-west-1a", "eu-west-1c"]
         self.BackupRetentionPeriod = 14
@@ -98,11 +104,36 @@ class SnapshotManagement:
             },
         ]
         self.AutoMinorVersionUpgrade = True
+        self.AWSBackup = aws_backup
+
+    def get_latest_recovery_point_arn(self):
+        cluster_name = self.db_cluster_identifier_source
+        client = self.client_aws_backup
+
+        # List recovery points for the given resource in the specified vault
+        paginator = client.get_paginator("list_recovery_points_by_resource")
+        pages = paginator.paginate(
+            ResourceArn=f"arn:aws:rds:eu-west-1:{self.account}:cluster:{cluster_name}"
+        )
+
+        latest_arn = None
+        latest_time = None
+
+        for page in pages:
+            for rp in page.get("RecoveryPoints", []):
+                creation_date = rp.get("CreationDate")
+                current_recovery_point_arn = rp.get("RecoveryPointArn")
+            if creation_date and (latest_time is None or creation_date > latest_time):
+                if "recovery-point:continuous" in current_recovery_point_arn:
+                    latest_time = creation_date
+                    latest_arn = current_recovery_point_arn
+
+        self.recovery_point_arn = latest_arn
 
     def restore(self):
         if self.account is None:
             print("No valid account set! Exiting...")
-            os.exit(1)
+            sys.exit(1)
         self.create_digideps_client_session()
 
         if self.db_cluster_identifier_source is not None:
@@ -114,29 +145,41 @@ class SnapshotManagement:
                 and self.DeletionProtection
             ):
                 self.drop_protection()
+            if self.AWSBackup:
+                self.get_latest_recovery_point_arn()
+                print(f"Latest Recovery Point ARN: {self.recovery_point_arn}")
+        else:
+            print("Please set a cluster_from parameter")
+            sys.exit(1)
 
         self.apply_overrides()
 
         no_point_in_time_argument_set = datetime.strptime(
             "1900-01-01 00:00:00", "%Y-%m-%d %H:%M:%S"
         )
+        if self.PointInTimeRecovery != no_point_in_time_argument_set:
+            self.do_point_in_time_restore = True
 
         self.KmsKeyIdLocal = self.get_kms_key(key_alias_local)
 
-        if self.PointInTimeRecovery == no_point_in_time_argument_set:
-            if self.SnapshotIdentifier is not None:
-                if self.restore_from_remote:
-                    self.create_backup_client_session()
-                    self.KmsKeyId = self.get_kms_key(key_alias_remote)
-                    self.share_snapshot_with_digideps()
-                    self.copy_snapshot_to_manual_digideps()
-                self.restore_from_snapshot()
-            else:
-                print(
-                    "No snapshot specified. Either specify snapshot or do point in time recovery"
-                )
+        if self.AWSBackup:
+            # Handles the point in time recovery internally if set
+            self.restore_from_recovery_point()
         else:
-            self.restore_to_point_in_time()
+            if self.do_point_in_time_restore:
+                if self.SnapshotIdentifier is not None:
+                    if self.restore_from_remote:
+                        self.create_backup_client_session()
+                        self.KmsKeyId = self.get_kms_key(key_alias_remote)
+                        self.share_snapshot_with_digideps()
+                        self.copy_snapshot_to_manual_digideps()
+                    self.restore_from_snapshot()
+                else:
+                    print(
+                        "No snapshot specified. Either specify snapshot or do point in time recovery"
+                    )
+            else:
+                self.restore_to_point_in_time()
 
         print("Process has finished. Please go and check your databases")
 
@@ -231,6 +274,65 @@ class SnapshotManagement:
 
         if self.same_target:
             self.overwrite_existing_cluster()
+
+    def restore_from_recovery_point(self):
+        if self.same_target:
+            self.db_cluster_identifier_target = (
+                f"{self.db_cluster_identifier_source}-temp"
+            )
+
+        self.restore_cluster_recovery_point()
+        self.configure_cluster_serverless_v2_and_sg()
+        if self.EngineMode != "serverless":
+            self.create_db_instances()
+
+        if self.same_target:
+            self.overwrite_existing_cluster()
+
+    def restore_cluster_recovery_point(self):
+        metadata = {
+            "DBClusterIdentifier": self.db_cluster_identifier_target,
+            "AvailabilityZones": '["eu-west-1a","eu-west-1b","eu-west-1c"]',
+            "Engine": self.Engine,
+            "EngineVersion": self.EngineVersion,
+            "DBSubnetGroupName": self.DBSubnetGroup,
+            "DBClusterParameterGroupName": "default.aurora-postgresql14",
+            "EngineMode": self.EngineMode,
+            "KmsKeyId": self.KmsKeyIdLocal,
+        }
+
+        # Decide PITR strategy
+        if self.do_point_in_time_restore:
+            print("pitr")
+            metadata["RestoreToTime"] = str(self.PointInTimeRecovery)
+        else:
+            print("latest restore")
+            metadata["UseLatestRestorableTime"] = "true"
+
+        response = self.client_aws_backup.start_restore_job(
+            RecoveryPointArn=self.recovery_point_arn,
+            IamRoleArn=f"arn:aws:iam::{self.account}:role/service-role/AWSBackupDefaultServiceRole",
+            ResourceType="Aurora",
+            Metadata=metadata,
+        )
+
+        self.command_response("Restore from snapshot", response)
+
+        self.wait_on_cluster_available()
+
+    def configure_cluster_serverless_v2_and_sg(self):
+        response = self.client.modify_db_cluster(
+            DBClusterIdentifier=self.db_cluster_identifier_target,
+            ServerlessV2ScalingConfiguration={
+                "MinCapacity": float(self.serverless_v2_config["MinCapacity"]),
+                "MaxCapacity": float(self.serverless_v2_config["MaxCapacity"]),
+            },
+            VpcSecurityGroupIds=self.VpcSecurityGroups,
+            ApplyImmediately=True,
+        )
+
+        self.command_response("Restore from snapshot", response)
+        self.wait_on_cluster_available()
 
     def restore_cluster_snapshot(self):
         if self.EngineMode == "serverless":
@@ -628,7 +730,9 @@ class SnapshotManagement:
         session.set_config_variable("region", self.region)
         autorefresh_session = boto3.Session(botocore_session=session)
         self.client = autorefresh_session.client("rds", region_name=self.region)
-
+        self.client_aws_backup = autorefresh_session.client(
+            "backup", region_name=self.region
+        )
         self.client_kms = autorefresh_session.client("kms", region_name=self.region)
 
     def refresh_creds_backup(self):
@@ -720,6 +824,7 @@ class SnapshotManagement:
 @click.option(
     "--restore_from_remote", default=False, help="Whether to restore from remote backup"
 )
+@click.option("--aws_backup", default=False, help="Whether to restore AWS Backup")
 def main(
     environment,
     cluster_from,
@@ -729,6 +834,7 @@ def main(
     engine_mode_override,
     pitr,
     restore_from_remote,
+    aws_backup,
 ):
     dr_job = SnapshotManagement(
         environment=environment,
@@ -739,6 +845,7 @@ def main(
         engine_mode_override=engine_mode_override,
         pitr=pitr,
         restore_from_remote=restore_from_remote,
+        aws_backup=aws_backup,
     )
     dr_job.restore()
 
