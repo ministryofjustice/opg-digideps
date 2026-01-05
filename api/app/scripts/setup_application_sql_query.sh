@@ -25,7 +25,7 @@ for sql_file in $(ls $SQL_DIR/*.sql | sort -V); do
         exit 1
     fi
 
-    sed "s/password-string/$APP_DB_PASSWORD/g" "$sql_file" > "$temp_file"
+    sed "s/app_password_string/$APP_DB_PASSWORD/g" "$sql_file" > "$temp_file"
 
     cat $temp_file
 
