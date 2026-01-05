@@ -10,8 +10,8 @@ use Psr\Http\Message\RequestInterface;
 class RequestSigner
 {
     public function __construct(
-        private DefaultCredentialProvider $credentialProvider,
-        private SignatureV4Signer $signer
+        private readonly DefaultCredentialProvider $credentialProvider,
+        private readonly SignatureV4Signer $signer
     ) {
     }
 
