@@ -6,34 +6,19 @@ namespace App\Service;
 
 use App\Entity\Report\Report;
 use App\Sync\Exception\PdfGenerationFailedException;
-use Psr\Log\LoggerInterface;
-use Throwable;
 use Twig\Environment;
 
 class ChecklistPdfGenerator
 {
-    /** @var Environment container */
-    private $templating;
+    public const string TEMPLATE_FILE = '@App/Admin/Client/Report/Formatted/checklist_formatted_standalone.html.twig';
 
-    /** @var HtmlToPdfGenerator */
-    private $htmltopdf;
-
-    /** @var LoggerInterface */
-    private $logger;
-
-    public const TEMPLATE_FILE = '@App/Admin/Client/Report/Formatted/checklist_formatted_standalone.html.twig';
-
-    public function __construct(Environment $templating, HtmlToPdfGenerator $htmltopdf, LoggerInterface $logger)
-    {
-        $this->templating = $templating;
-        $this->htmltopdf = $htmltopdf;
-        $this->logger = $logger;
+    public function __construct(
+        private readonly Environment $templating,
+        private readonly HtmlToPdfGenerator $htmltopdf
+    ) {
     }
 
-    /**
-     * @return string
-     */
-    public function generate(Report $report)
+    public function generate(Report $report): string
     {
         try {
             $html = $this->templating->render(self::TEMPLATE_FILE, [
@@ -47,7 +32,7 @@ class ChecklistPdfGenerator
             }
 
             return $pdf;
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             throw new PdfGenerationFailedException(sprintf('Unable to generate checklist PDF: %s: %s', $e->getCode(), $e->getMessage()));
         }
     }

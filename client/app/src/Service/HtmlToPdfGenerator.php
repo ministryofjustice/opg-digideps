@@ -8,41 +8,23 @@ namespace App\Service;
  */
 class HtmlToPdfGenerator
 {
-    /**
-     * @var string
-     */
-    private $url;
-
-    /**
-     * @var int
-     */
-    private $timeoutSeconds;
-
-    /**
-     * @param string $url
-     */
-    public function __construct($url, $timeoutSeconds)
-    {
-        $this->url = $url;
-        $this->timeoutSeconds = $timeoutSeconds;
+    public function __construct(
+        private readonly string $url,
+        private readonly int $timeoutSeconds
+    ) {
     }
 
     /**
      * @return bool true if working
      */
-    public function isAlive()
+    public function isAlive(): bool
     {
         $pdf = $this->getPdfFromHtml('test');
 
         return strlen($pdf) > 700 && preg_match('/PDF-\d/', $pdf);
     }
 
-    /**
-     * @param string $html
-     *
-     * @return string pdf
-     */
-    public function getPdfFromHtml($html)
+    public function getPdfFromHtml(string $html): string|false
     {
         // Example from https://github.com/openlabs/docker-htmltopdf-aas/issues/18
         $data = [
@@ -54,7 +36,7 @@ class HtmlToPdfGenerator
         $dataString = json_encode($data);
         $headers = [
             'Content-Type: application/json',
-            'Content-Length: '.strlen($dataString),
+            'Content-Length: ' . strlen($dataString),
         ];
 
         $ch = curl_init();
@@ -69,7 +51,8 @@ class HtmlToPdfGenerator
 
         $httpCode = 0;
         $count = 0;
-        while (200 != $httpCode and $count < 3) {
+        $pdfBody = false;
+        while (200 !== $httpCode and $count < 3) {
             $pdfBody = curl_exec($ch);
             $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             ++$count;
