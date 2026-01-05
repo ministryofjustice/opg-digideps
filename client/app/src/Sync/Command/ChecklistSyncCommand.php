@@ -22,9 +22,8 @@ class ChecklistSyncCommand extends Command
         private readonly ChecklistSyncService $syncService,
         private readonly ParameterStoreService $parameterStore,
         private readonly ReportApi $reportApi,
-        string $name = null
     ) {
-        parent::__construct($name);
+        parent::__construct();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
