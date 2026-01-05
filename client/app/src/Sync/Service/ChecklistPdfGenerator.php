@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Sync\Service;
 
 use App\Entity\Report\Report;
+use App\Service\HtmlToPdfGenerator;
 use App\Sync\Exception\PdfGenerationFailedException;
 use Twig\Environment;
 

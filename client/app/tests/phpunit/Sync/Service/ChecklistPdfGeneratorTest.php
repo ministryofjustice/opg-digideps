@@ -2,39 +2,32 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace DigidepsTests\Sync\Service;
 
 use App\Entity\Report\Checklist;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReviewChecklist;
+use App\Service\HtmlToPdfGenerator;
 use App\Sync\Exception\PdfGenerationFailedException;
+use App\Sync\Service\ChecklistPdfGenerator;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\LoggerInterface;
 use Twig\Environment;
 
 class ChecklistPdfGeneratorTest extends TestCase
 {
-    /** @var \PHPUnit_Framework_MockObject_MockObject */
-    private $templating;
-    private $htmltopdf;
-    private $logger;
-
-    /** @var ChecklistPdfGenerator */
-    private $sut;
+    private Environment $templating;
+    private HtmlToPdfGenerator $htmltopdf;
+    private ChecklistPdfGenerator $sut;
 
     public function setUp(): void
     {
         $this->templating = $this->getMockBuilder(Environment::class)->disableOriginalConstructor()->getMock();
         $this->htmltopdf = $this->getMockBuilder(HtmlToPdfGenerator::class)->disableOriginalConstructor()->getMock();
-        $this->logger = $this->getMockBuilder(LoggerInterface::class)->disableOriginalConstructor()->getMock();
 
-        $this->sut = new ChecklistPdfGenerator($this->templating, $this->htmltopdf, $this->logger);
+        $this->sut = new ChecklistPdfGenerator($this->templating, $this->htmltopdf);
     }
 
-    /**
-     * @test
-     */
-    public function rendersHtmlAndConvertsToPdf()
+    public function testRendersHtmlAndConvertsToPdf(): void
     {
         $report = $this->buildReportInput();
 
@@ -46,10 +39,7 @@ class ChecklistPdfGeneratorTest extends TestCase
         $this->assertEquals('pdf-content', $result);
     }
 
-    /**
-     * @test
-     */
-    public function throwsExceptionOnHtmlRenderError()
+    public function testThrowsExceptionOnHtmlRenderError(): void
     {
         $report = $this->buildReportInput();
         $expectedException = new PdfGenerationFailedException('Failed to render HTML');
@@ -61,10 +51,7 @@ class ChecklistPdfGeneratorTest extends TestCase
         $this->sut->generate($report);
     }
 
-    /**
-     * @test
-     */
-    public function throwsExceptionOnHtmlToPdfError()
+    public function testThrowsExceptionOnHtmlToPdfError()
     {
         $report = $this->buildReportInput();
         $expectedException = new PdfGenerationFailedException('Unable to generate PDF using htmltopdf service');

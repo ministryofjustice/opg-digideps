@@ -7,7 +7,6 @@ namespace App\Sync\Service;
 use App\Entity\Report\Checklist;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
-use App\Service\ChecklistPdfGenerator;
 use App\Service\Client\RestClient;
 use App\Sync\Exception\PdfGenerationFailedException;
 use App\Sync\Exception\SiriusDocumentSyncFailedException;
