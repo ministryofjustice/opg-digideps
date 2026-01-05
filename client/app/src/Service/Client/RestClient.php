@@ -38,7 +38,7 @@ class RestClient implements RestClientInterface
 
     protected array $history;
     protected bool $saveHistory;
-    protected int $userId;
+    protected ?int $userId = null;
 
     /**
      * @var int set at the class level for the next request
