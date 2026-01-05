@@ -34,9 +34,6 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Twig\Error\Error;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 #[Route(path: '/admin/report/{id}/', requirements: ['id' => '\d+'])]
 class ReportController extends AbstractController
