@@ -52,7 +52,7 @@
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>
     </php>
     <listeners>
-        <listener class="App\Pact\Listener\PactTestListener" file="./Pact/Listener/PactTestListener.php">
+        <listener class="DigidepsTests\Pact\Listener\PactTestListener" file="./Pact/Listener/PactTestListener.php">
             <arguments>
                 <array>
                     <element key="0">
