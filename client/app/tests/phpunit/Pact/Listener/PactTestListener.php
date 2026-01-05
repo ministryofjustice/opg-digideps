@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Pact\Listener;
+namespace DigidepsTests\Pact\Listener;
 
-use App\Sync\Service\Client\Sirius\SiriusApiGatewayClient;
 use GuzzleHttp\Psr7\Uri;
 use PhpPact\Broker\Service\BrokerHttpClient;
 use PhpPact\Http\GuzzleClient;
@@ -23,6 +22,8 @@ use PHPUnit\Framework\TestSuite;
 class PactTestListener implements TestListener
 {
     use TestListenerDefaultImplementation;
+
+    public const string SIRIUS_API_GATEWAY_VERSION = 'v2';
 
     /**
      * Name of the test suite configured in your phpunit config.
@@ -100,7 +101,7 @@ class PactTestListener implements TestListener
                         ];
                     }
                     $headers = [];
-                    $tag = SiriusApiGatewayClient::SIRIUS_API_GATEWAY_VERSION;
+                    $tag = self::SIRIUS_API_GATEWAY_VERSION;
                     $pactBrokerUriFull = 'https://' . $pactBrokerUri . '/';
                     $client = new GuzzleClient($clientConfig);
                     $brokerHttpService = new BrokerHttpClient($client, new Uri($pactBrokerUriFull), $headers);
