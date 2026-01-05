@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Sync\Service\Client\Sirius;
 
+use App\Service\AWS\RequestSigner;
 use App\Sync\Model\Sirius\SiriusDocumentUpload;
-use App\Sync\Service\AWS\RequestSigner;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;

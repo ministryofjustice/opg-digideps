@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace DigidepsTests\Sync\Service\AWS;
 
-use App\Sync\Service\AWS\DefaultCredentialProvider;
-use App\Sync\Service\AWS\RequestSigner;
-use App\Sync\Service\AWS\SignatureV4Signer;
+use App\Service\AWS\DefaultCredentialProvider;
+use App\Service\AWS\RequestSigner;
+use App\Service\AWS\SignatureV4Signer;
 use Aws\Credentials\Credentials;
 use GuzzleHttp\Psr7\Request;
 use PHPUnit\Framework\TestCase;
