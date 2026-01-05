@@ -22,7 +22,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class ChecklistSyncService
 {
-    const string PAPER_REPORT_UUID_FALLBACK = '99999999-9999-9999-9999-999999999999';
+    public const string PAPER_REPORT_UUID_FALLBACK = '99999999-9999-9999-9999-999999999999';
 
     public function __construct(
         private readonly RestClient $restClient,
