@@ -33,6 +33,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Twig\Error\Error;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 #[Route(path: '/admin/report/{id}/', requirements: ['id' => '\d+'])]
 class ReportController extends AbstractController
@@ -255,13 +259,24 @@ class ReportController extends AbstractController
     {
         $report = $this->reportApi->getReport($id, array_merge(self::$reportGroupsAll, ['report-checklist', 'checklist-information', 'user']));
 
-        $pdfBinary = $reportSubmissionService->getChecklistPdfBinaryContent($report);
-        $response = new Response($pdfBinary);
-        $response->headers->set('Content-Type', 'application/pdf');
-
         if (is_null($report->getEndDate())) {
             throw $this->createNotFoundException();
         }
+
+        try {
+            $pdfBinary = $reportSubmissionService->getChecklistPdfBinaryContent($report);
+
+            if (false === $pdfBinary) {
+                // could not access PDF generator endpoint
+                throw $this->createNotFoundException();
+            }
+        } catch (Error) {
+            // error thrown while rendering report to Twig template
+            throw $this->createNotFoundException();
+        }
+
+        $response = new Response($pdfBinary);
+        $response->headers->set('Content-Type', 'application/pdf');
 
         $attachmentName = sprintf(
             'DigiChecklist-%s_%s_%s.pdf',

@@ -4771,16 +4771,6 @@ parameters:
 			path: src/Entity/Report/BankAccount.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Checklist\\:\\:getChecklistInformation\\(\\) has invalid return type App\\\\Entity\\\\Report\\\\ArrayCollection\\.$#"
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Checklist\\:\\:getChecklistInformation\\(\\) should return App\\\\Entity\\\\Report\\\\ArrayCollection but returns array\\<App\\\\Entity\\\\Report\\\\CheclistInformation\\>\\.$#"
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Checklist\\:\\:setChecklistInformation\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/Checklist.php
@@ -4822,21 +4812,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$report of method App\\\\Entity\\\\Report\\\\Checklist\\:\\:setReport\\(\\) expects App\\\\Entity\\\\Report\\\\Report, App\\\\Entity\\\\ReportInterface given\\.$#"
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: "#^Parameter \\$checklistInformation of method App\\\\Entity\\\\Report\\\\Checklist\\:\\:setChecklistInformation\\(\\) has invalid type App\\\\Entity\\\\Report\\\\ArrayCollection\\.$#"
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\Checklist\\:\\:\\$checklistInformation \\(array\\<App\\\\Entity\\\\Report\\\\CheclistInformation\\>\\) does not accept App\\\\Entity\\\\Report\\\\ArrayCollection\\.$#"
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\Checklist\\:\\:\\$checklistInformation has unknown class App\\\\Entity\\\\Report\\\\CheclistInformation as its type\\.$#"
 			count: 1
 			path: src/Entity/Report/Checklist.php
 
@@ -8946,11 +8921,6 @@ parameters:
 			path: src/Security/UserVoter.php
 
 		-
-			message: "#^Method App\\\\Service\\\\AWS\\\\RequestSigner\\:\\:signRequest\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/AWS/RequestSigner.php
-
-		-
 			message: "#^Method App\\\\Service\\\\ApiCollector\\:\\:getCalls\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/ApiCollector.php
@@ -9084,16 +9054,6 @@ parameters:
 			message: "#^Method App\\\\Service\\\\Availability\\\\SiriusApiAvailability\\:\\:ping\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/Availability/SiriusApiAvailability.php
-
-		-
-			message: "#^Property App\\\\Service\\\\ChecklistPdfGenerator\\:\\:\\$logger is never read, only written\\.$#"
-			count: 1
-			path: src/Service/ChecklistPdfGenerator.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between false and string will always evaluate to false\\.$#"
-			count: 1
-			path: src/Service/ChecklistPdfGenerator.php
 
 		-
 			message: "#^Method App\\\\Service\\\\Client\\\\GovUK\\\\BankHolidaysAPIClient\\:\\:getBankHolidays\\(\\) should return array but returns mixed\\.$#"
@@ -9547,11 +9507,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#3 \\$data of class App\\\\Exception\\\\RestClientException constructor expects array, mixed given\\.$#"
-			count: 1
-			path: src/Service/Client/RestClient.php
-
-		-
-			message: "#^Property App\\\\Service\\\\Client\\\\RestClient\\:\\:\\$saveHistory \\(bool\\) does not accept array\\|bool\\|float\\|int\\|string\\|UnitEnum\\|null\\.$#"
 			count: 1
 			path: src/Service/Client/RestClient.php
 
@@ -10161,16 +10116,6 @@ parameters:
 			path: src/Service/File/Verifier/VerificationStatus.php
 
 		-
-			message: "#^Method App\\\\Service\\\\HtmlToPdfGenerator\\:\\:__construct\\(\\) has parameter \\$timeoutSeconds with no type specified\\.$#"
-			count: 1
-			path: src/Service/HtmlToPdfGenerator.php
-
-		-
-			message: "#^Method App\\\\Service\\\\HtmlToPdfGenerator\\:\\:getPdfFromHtml\\(\\) should return string but returns bool\\|string\\.$#"
-			count: 1
-			path: src/Service/HtmlToPdfGenerator.php
-
-		-
 			message: "#^Parameter \\#1 \\$string of function strlen expects string, string\\|false given\\.$#"
 			count: 1
 			path: src/Service/HtmlToPdfGenerator.php
@@ -10516,11 +10461,6 @@ parameters:
 			path: src/Service/ReportSectionsLinkService.php
 
 		-
-			message: "#^Call to method render\\(\\) on an unknown class App\\\\Service\\\\Templating\\.$#"
-			count: 2
-			path: src/Service/ReportSubmissionService.php
-
-		-
 			message: "#^Cannot call method getId\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Service/ReportSubmissionService.php
@@ -10531,42 +10471,7 @@ parameters:
 			path: src/Service/ReportSubmissionService.php
 
 		-
-			message: "#^Method App\\\\Service\\\\ReportSubmissionService\\:\\:generateReportDocuments\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/ReportSubmissionService.php
-
-		-
 			message: "#^Method App\\\\Service\\\\ReportSubmissionService\\:\\:getReportSubmissionById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/ReportSubmissionService.php
-
-		-
-			message: "#^PHPDoc tag @throws with type App\\\\Service\\\\ReportSubmissionDocumentsNotDownloadableExceptionAlias is not subtype of Throwable$#"
-			count: 1
-			path: src/Service/ReportSubmissionService.php
-
-		-
-			message: "#^Property App\\\\Service\\\\ReportSubmissionService\\:\\:\\$mailFactory is never read, only written\\.$#"
-			count: 1
-			path: src/Service/ReportSubmissionService.php
-
-		-
-			message: "#^Property App\\\\Service\\\\ReportSubmissionService\\:\\:\\$mailSender is never read, only written\\.$#"
-			count: 1
-			path: src/Service/ReportSubmissionService.php
-
-		-
-			message: "#^Property App\\\\Service\\\\ReportSubmissionService\\:\\:\\$templating \\(App\\\\Service\\\\Templating\\) does not accept Twig\\\\Environment\\.$#"
-			count: 1
-			path: src/Service/ReportSubmissionService.php
-
-		-
-			message: "#^Property App\\\\Service\\\\ReportSubmissionService\\:\\:\\$templating has unknown class App\\\\Service\\\\Templating as its type\\.$#"
-			count: 1
-			path: src/Service/ReportSubmissionService.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between false and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Service/ReportSubmissionService.php
 

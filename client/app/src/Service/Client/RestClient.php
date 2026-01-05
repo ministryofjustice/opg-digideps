@@ -36,7 +36,7 @@ class RestClient implements RestClientInterface
      */
     protected static array $availableOptions = ['addAuthToken', 'addClientSecret', 'deserialise_groups'];
 
-    protected array $history;
+    protected array $history = [];
     protected bool $saveHistory;
     protected ?int $userId = null;
 
@@ -77,8 +77,11 @@ class RestClient implements RestClientInterface
         protected HttpClientInterface $openInternetClient,
         protected JWTService $JWTService
     ) {
-        $this->saveHistory = $params->get('kernel.debug') ?? false;
-        $this->history = [];
+        $saveHistory = $params->get('kernel.debug');
+        if (true !== $saveHistory) {
+            $saveHistory = false;
+        }
+        $this->saveHistory = $saveHistory;
     }
 
     /**
