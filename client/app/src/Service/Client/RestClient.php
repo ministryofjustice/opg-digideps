@@ -2,14 +2,12 @@
 
 namespace App\Service\Client;
 
-use App\Entity\CourtOrder;
 use App\Entity\User;
 use App\Exception as AppException;
 use App\Model\SelfRegisterData;
 use App\Service\Client\TokenStorage\RedisStorage;
 use App\Service\JWT\JWTService;
 use App\Service\RequestIdLoggerProcessor;
-use Firebase\JWT\JWT;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\TransferException;
