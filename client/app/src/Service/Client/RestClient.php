@@ -30,57 +30,41 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  */
 class RestClient implements RestClientInterface
 {
-    public const HTTP_CODE_AUTHTOKEN_EXPIRED = 419;
-
     /**
      * Keep here a list of options for the methods
      * Needed on the rawSafeCall.
-     *
-     * @var array
      */
-    protected static $availableOptions = ['addAuthToken', 'addClientSecret', 'deserialise_groups'];
+    protected static array $availableOptions = ['addAuthToken', 'addClientSecret', 'deserialise_groups'];
 
-    /**
-     * @var array
-     */
-    protected $history;
-
-    /**
-     * @var bool
-     */
-    protected $saveHistory;
-
-    /**
-     * @var int
-     */
-    protected $userId;
+    protected array $history;
+    protected bool $saveHistory;
+    protected int $userId;
 
     /**
      * @var int set at the class level for the next request
      */
-    protected $timeout = 0;
+    protected int $timeout = 0;
 
     /**
      * Header name holding auth token, returned at login time and re-sent at each requests.
      */
-    public const HEADER_AUTH_TOKEN = 'AuthToken';
+    public const string HEADER_AUTH_TOKEN = 'AuthToken';
 
     /**
      * Header name holding client secret, to send at login time.
      */
-    public const HEADER_CLIENT_SECRET = 'ClientSecret';
+    public const string HEADER_CLIENT_SECRET = 'ClientSecret';
 
     /**
      * Header name holding auth token, returned at login time and re-sent at each requests.
      */
-    public const HEADER_JWT = 'JWT';
+    public const string HEADER_JWT = 'JWT';
 
     /**
      * Error Messages.
      */
-    public const ERROR_CONNECT = 'API returned an exception';
-    public const ERROR_NO_SUCCESS = 'Endpoint failed with message %s';
-    public const ERROR_FORMAT = 'Cannot decode endpoint response';
+    public const string ERROR_NO_SUCCESS = 'Endpoint failed with message %s';
+    public const string ERROR_FORMAT = 'Cannot decode endpoint response';
 
     public function __construct(
         protected ContainerInterface $container,
