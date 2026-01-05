@@ -25,7 +25,7 @@ class SiriusApiErrorTranslatorTest extends KernelTestCase
     /**
      * @test
      */
-    public function translateApiErrors_unexpected_format()
+    public function translateApiErrorsUnexpectedFormat()
     {
         $sut = new SiriusApiErrorTranslator($this->serializer);
         $unexpectedErrorJson = '{"An error occurred"}';
