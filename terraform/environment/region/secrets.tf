@@ -58,7 +58,7 @@ data "aws_secretsmanager_secret" "anonymise-default-pw" {
   name = "anonymisation-default-user-pw"
 }
 
-##### Shared Application KMS key for logs #####
+##### Shared Application KMS key for secrets #####
 data "aws_kms_alias" "cloudwatch_application_secret_encryption" {
   name = "alias/digideps_secret_encryption_key"
 }

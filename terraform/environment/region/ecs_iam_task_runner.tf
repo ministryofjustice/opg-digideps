@@ -32,7 +32,7 @@ data "aws_iam_policy_document" "task_runner" {
     effect  = "Allow"
     actions = ["kms:Decrypt"]
     resources = [
-      data.aws_kms_alias.secretmanager.target_key_arn,
+      data.aws_kms_alias.cloudwatch_application_secret_encryption.target_key_arn,
     ]
   }
 }
