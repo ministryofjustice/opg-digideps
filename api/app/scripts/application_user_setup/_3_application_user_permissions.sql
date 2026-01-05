@@ -2,6 +2,14 @@ DO $$
 DECLARE
     rolename text;
 BEGIN
+    IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'pg_read_all_data') THEN
+        GRANT pg_read_all_data TO application;
+    END IF;
+
+    IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'pg_write_all_data') THEN
+        GRANT pg_write_all_data TO application;
+    END IF;
+
     FOR rolename IN
         SELECT unnest(ARRAY['pg_read_server_files', 'pg_write_server_files',
                             'pg_read_all_settings', 'pg_read_all_stats', 'pg_stat_scan_tables',
