@@ -77,7 +77,7 @@ class RestClient implements RestClientInterface
         protected HttpClientInterface $openInternetClient,
         protected JWTService $JWTService
     ) {
-        $this->saveHistory = $params->get('kernel.debug');
+        $this->saveHistory = $params->get('kernel.debug') ?? false;
         $this->history = [];
     }
 
