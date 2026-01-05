@@ -262,7 +262,7 @@ class Checklist implements SynchronisableInterface
     private $finalDecision;
 
     /**
-     * @var CheclistInformation[]
+     * @var ChecklistInformation[]
      *
      * @JMS\Groups({"checklist-information"})
      *
