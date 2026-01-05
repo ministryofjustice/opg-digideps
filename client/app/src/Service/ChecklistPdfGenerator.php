@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Report\Report;
-use App\Exception\PdfGenerationFailedException;
+use App\Sync\Exception\PdfGenerationFailedException;
 use Psr\Log\LoggerInterface;
 use Throwable;
 use Twig\Environment;

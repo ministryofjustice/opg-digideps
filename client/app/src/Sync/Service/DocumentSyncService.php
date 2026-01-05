@@ -6,9 +6,9 @@ namespace App\Sync\Service;
 
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
-use App\Exception\SiriusDocumentSyncFailedException;
 use App\Service\Client\RestClient;
 use App\Service\File\FileNameManipulation;
+use App\Sync\Exception\SiriusDocumentSyncFailedException;
 use App\Sync\Model\Sirius\QueuedDocumentData;
 use App\Sync\Model\Sirius\SiriusDocumentFile;
 use App\Sync\Model\Sirius\SiriusDocumentUpload;

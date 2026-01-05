@@ -7,7 +7,7 @@ namespace App\Service;
 use App\Entity\Report\Checklist;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReviewChecklist;
-use App\Exception\PdfGenerationFailedException;
+use App\Sync\Exception\PdfGenerationFailedException;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Twig\Environment;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exception;
+namespace App\Sync\Exception;
 
 class PdfGenerationFailedException extends \RuntimeException
 {
