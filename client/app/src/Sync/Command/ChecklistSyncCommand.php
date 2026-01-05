@@ -19,10 +19,10 @@ class ChecklistSyncCommand extends Command
     public const string COMPLETED_MESSAGE = 'sync_checklists_to_sirius - success - Sync command completed';
 
     public function __construct(
-        private ChecklistSyncService $syncService,
-        private ParameterStoreService $parameterStore,
-        private ReportApi $reportApi,
-        $name = null
+        private readonly ChecklistSyncService $syncService,
+        private readonly ParameterStoreService $parameterStore,
+        private readonly ReportApi $reportApi,
+        string $name = null
     ) {
         parent::__construct($name);
     }
