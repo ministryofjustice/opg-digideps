@@ -90,7 +90,7 @@
                         <td class="govuk-table__cell govuk-table__cell--numeric">
                             <a
                                 href="{{ url('money_transfers_step', { 'reportId': report.id, 'transferId': transfer.id, 'step': 1 }) }}"
-                                class="behat-link-edit govuk-link">
+                                class="behat-link-edit govuk-link" data-role="money-transfer-edit-link">
                                 {{ 'edit' | trans({}, 'common') }}
                                 <span class="govuk-visually-hidden">{{transfer.accountFrom.bank}}-{{transfer.accountTo.bank}} £{{transfer.amount | money_format}} {{transfer.description}}</span>
                             </a>

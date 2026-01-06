@@ -34,7 +34,27 @@ class FormFieldsExtension extends AbstractExtension
             new TwigFunction('form_sort_code', [$this, 'renderFormSortCode']),
             new TwigFunction('form_checkbox_group', [$this, 'renderCheckboxGroup']),
             new TwigFunction('form_checkbox', [$this, 'renderCheckboxInput']),
+            new TwigFunction('form_add_another', [$this, 'renderAddAnother']),
         ];
+    }
+
+    /**
+     * @param array $options
+     *
+     * Required options
+     * - addAnother: form element this add another component is associated with
+     * - thingTranslationKey: the translation key in the yaml translations file for this page representing the "thing"
+     *   the user is being asked about (will translate to "decision", "money transfer" etc. in the heading and the
+     *   label on the element)
+     * - translationDomain: the translation domain containing thingTranslationKey (e.g. "report-decisions")
+     *
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
+    public function renderAddAnother(array $options): void
+    {
+        echo $this->environment->render('@App/Components/Form/_add-another.html.twig', $options);
     }
 
     /**
@@ -82,14 +102,9 @@ class FormFieldsExtension extends AbstractExtension
         );
     }
 
-    /**
-     * @DEPRECATED
-     *
-     * //TODO consider refactor using getFormComponentTwigVariables
-     */
     public function renderCheckboxGroup(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null): void
     {
-        // lets get the translation for hintText, labelClass and labelText
+        // enables getting the translation for hintText, labelClass and labelText
         $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
         $domain = $element->parent->vars['translation_domain'];
 
@@ -141,55 +156,6 @@ class FormFieldsExtension extends AbstractExtension
             'items' => empty($vars['items']) ? [] : $vars['items'],
             'translationDomain' => $domain,
             'multitoggle' => empty($vars['multitoggle']) ? [] : $vars['multitoggle'],
-        ]);
-    }
-
-    /**
-     * @DEPRECATED
-     */
-    public function renderCheckboxGroupNew(FormView $element, string $elementName, array $vars = [], $transIndex = null): void
-    {
-        // lets get the translation for hintText, labelClass and labelText
-        $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
-        $domain = $element->parent->vars['translation_domain'];
-
-        // sort hint text translation
-        if (isset($vars['hintText'])) {
-            $hintText = $vars['hintText'];
-        } else {
-            $hintTextTrans = $this->translator->trans($translationKey . '.hint', [], $domain);
-            $hintText = ($hintTextTrans != $translationKey . '.hint') ? $hintTextTrans : null;
-        }
-
-        if (isset($vars['legendText'])) {
-            $legendText = $vars['legendText'];
-        } else {
-            // get legendText translation. Look for a .legend value, if there isn't one then try the top level
-            $legendTextTrans = $this->translator->trans($translationKey . '.legend', [], $domain);
-
-            if ($legendTextTrans != $translationKey . '.legend') {
-                $legendText = $legendTextTrans;
-            } else {
-                $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
-                $legendTextTrans = $this->translator->trans($translationKey . '.label', $labelParams, $domain);
-                if ($legendTextTrans != $translationKey . '.label') {
-                    $legendText = $legendTextTrans;
-                } else {
-                    $legendText = null;
-                }
-            }
-        }
-
-        // generate input field html using variables supplied
-        echo $this->environment->render('@App/Components/Form/_checkboxgroup_new.html.twig', [
-            'fieldSetClass' => isset($vars['fieldSetClass']) ? $vars['fieldSetClass'] : null,
-            'legendText' => $legendText,
-            'legendClass' => isset($vars['legendClass']) ? $vars['legendClass'] : null,
-            'hintText' => $hintText,
-            'element' => $element,
-            'vertical' => isset($vars['vertical']) ? $vars['vertical'] : false,
-            'items' => empty($vars['items']) ? [] : $vars['items'],
-            'translationDomain' => $domain,
         ]);
     }
 
