@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DigidepsTests\Sync\Service\Client\Sirius;
+namespace DigidepsTests\Pact;
 
 use App\Service\AWS\RequestSigner;
 use App\Sync\Service\Client\Sirius\SiriusApiGatewayClient;
