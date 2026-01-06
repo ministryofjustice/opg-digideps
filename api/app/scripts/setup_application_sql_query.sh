@@ -27,7 +27,10 @@ for sql_file in $(ls $SQL_DIR/*.sql | sort -V); do
 
     sed "s/app_password_string/$APP_DB_PASSWORD/g" "$sql_file" > "$temp_file"
 
-    cat $temp_file
+    # Only cat the file if the filename DOES NOT contain "_password"
+    if [[ "$sql_file" != *"_password"* ]]; then
+        cat "$temp_file"
+    fi
 
     # Run the modified SQL file
     psql -h "$DATABASE_HOSTNAME" -U "$DATABASE_USERNAME" -d "$DATABASE_NAME" -p "$DATABASE_PORT" -f "$temp_file"

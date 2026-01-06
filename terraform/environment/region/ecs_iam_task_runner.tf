@@ -16,29 +16,3 @@ data "aws_iam_policy_document" "ecs_task_assume_policy" {
     }
   }
 }
-
-data "aws_iam_policy_document" "task_runner" {
-  statement {
-    sid    = "AllowSecretsAccess"
-    effect = "Allow"
-    resources = [
-      data.aws_secretsmanager_secret.application_db_password.arn
-    ]
-    actions = ["secretsmanager:GetSecretValue"]
-  }
-
-  statement {
-    sid     = "SecretManagerKMSDecrypt"
-    effect  = "Allow"
-    actions = ["kms:Decrypt"]
-    resources = [
-      data.aws_kms_alias.cloudwatch_application_secret_encryption.target_key_arn,
-    ]
-  }
-}
-
-resource "aws_iam_role_policy" "task_runner" {
-  name   = "task-runner.${local.environment}"
-  policy = data.aws_iam_policy_document.task_runner.json
-  role   = aws_iam_role.task_runner.id
-}
