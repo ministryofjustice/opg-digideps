@@ -31,16 +31,15 @@ trait MoneyTransferSectionTrait
     }
 
     /**
-     * @Then /^I add the transfer details between two accounts$/
+     * @Then /^I add the transfer details between two accounts with "add another" selected$/
      */
-    public function iAddTheTransferDetailsBetweenTwoAccounts()
+    public function iAddTheTransferDetailsBetweenTwoAccountsWithAddAnother()
     {
         $this->selectOption('money_transfers_type[accountFromId]', '(****1234)');
         $this->selectOption('money_transfers_type[accountToId]', 'account-1 - Current account (****1111)');
         $this->fillInField('money_transfers_type[amount]', '100.00');
+        $this->addAnotherTransfer('yes');
         $this->pressButton('Save and continue');
-
-        $this->addAnotherTransfer('no');
     }
 
     /**
@@ -60,17 +59,25 @@ trait MoneyTransferSectionTrait
         $this->selectOption('money_transfers_type[accountToId]', 'account-1 - Current account (****1111)');
         $this->fillInField('money_transfers_type[amount]', '100.00');
         $this->fillinField('money_transfers_type[description]', $randomString);
-        $this->pressButton('Save and continue');
-
         $this->addAnotherTransfer('no');
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @Then /^I add the transfer details between two accounts$/
+     */
+    public function iAddTheTransferDetailsBetweenTwoAccounts()
+    {
+        $this->selectOption('money_transfers_type[accountFromId]', '(****1234)');
+        $this->selectOption('money_transfers_type[accountToId]', 'account-1 - Current account (****1111)');
+        $this->fillInField('money_transfers_type[amount]', '100.00');
+        $this->addAnotherTransfer('no');
+        $this->pressButton('Save and continue');
     }
 
     private function addAnotherTransfer($anotherFlag)
     {
-        $this->iAmOnMoneyTransfersAddAnotherPage();
-
-        $this->chooseOption('add_another[addAnother]', $anotherFlag);
-        $this->pressButton('Continue');
+        $this->chooseOption('money_transfers_type[addAnother]', $anotherFlag);
     }
 
     /**
@@ -112,11 +119,30 @@ trait MoneyTransferSectionTrait
     }
 
     /**
+     * @Given /^I edit the money transfer$/
+     */
+    public function iEditTheMoneyTransfer(): void
+    {
+        $this->findAllCssElements('[data-role="money-transfer-edit-link"]')[0]->click();
+        $this->iAmOnPage('/report\/.*\/money-transfers\/step1\/.*$/');
+        $this->fillInField('money_transfers_type[amount]', '10092934');
+        $this->fillinField('money_transfers_type[description]', 'edited transfer');
+    }
+
+    /**
      * @Then I should be on the money transfer delete page
      */
     public function iShouldBeOnTheMoneyTransferDeletePage(): bool
     {
         return $this->iAmOnPage('/report\/.*\/money-transfers\/.*\/delete$/');
+    }
+
+    /**
+     * @Given I should be on the add money transfer page
+     */
+    public function iShouldBeOnTheAddMoneyTransferPage(): bool
+    {
+        return $this->iAmOnPage('/report\/.*\/money-transfers\/step1\?from=another$/');
     }
 
     /**

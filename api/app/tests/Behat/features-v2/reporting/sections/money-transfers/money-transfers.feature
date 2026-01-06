@@ -8,7 +8,6 @@ Feature: Money Transfers
         And I visit the money transfers report section
         Then I should not be able to add a transfer due to having fewer than two accounts
 
-
     @lay-pfa-high-not-started
     Scenario: A user adds add a money transfer
         Given a Lay Deputy has not started a report
@@ -20,7 +19,6 @@ Feature: Money Transfers
         And I confirm that I have a transfer to add
         Then I add the transfer details between two accounts
         Then I should see the transfer listed on the money transfers summary page
-
 
     @lay-pfa-high-not-started
     Scenario: A user deletes a money transfer that they had previously added
@@ -36,7 +34,6 @@ Feature: Money Transfers
         When I remove the money transfer I just added
         Then I should be on the money transfers starting page and see entry deleted
 
-
     @lay-pfa-high-not-started
     Scenario: A user adds add a valid description to their money transfer
         Given a Lay Deputy has not started a report
@@ -48,3 +45,38 @@ Feature: Money Transfers
         And I confirm that I have a transfer to add
         Then I add the transfer details between two accounts with a description of 75 characters
         Then I should see the transfer listed on the money transfers summary page
+
+    @lay-pfa-high-not-started
+    Scenario: A user adds one money transfer and elects to add another
+        Given a Lay Deputy has not started a report
+        When I view the report overview page
+        And I visit the accounts report section
+        And I add one of each account type with valid details
+        And I visit the money transfers report section
+        And I confirm that I have a transfer to add
+        And I add the transfer details between two accounts with "add another" selected
+        Then I should be on the add money transfer page
+
+        # check that we can actually add another, and loop back to summary page;
+        # the next line sets the "add another" field to "no"
+        When I add the transfer details between two accounts
+        Then I should see the transfer listed on the money transfers summary page
+
+    @lay-pfa-high-not-started
+    Scenario: A user edits a money transfer
+        Given a Lay Deputy has not started a report
+        When I view the report overview page
+        And I visit the accounts report section
+        And I add one of each account type with valid details
+        And I follow link back to report overview page
+        And I visit the money transfers report section
+        And I confirm that I have a transfer to add
+        And I add the transfer details between two accounts
+        Then I should see the transfer listed on the money transfers summary page
+
+        When I edit the money transfer
+        Then I should not see "Add another money transfer"
+
+        When I click save and continue
+        Then I should see "£10,092,934.00"
+        And I should see "edited transfer"
