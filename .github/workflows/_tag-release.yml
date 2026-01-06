@@ -34,7 +34,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-region: eu-west-1
-          role-to-assume: arn:aws:iam::${{ vars.MANAGEMENT_ACCOUNT }}:role/serve-gh-actions-ecr-push
+          role-to-assume: arn:aws:iam::${{ vars.MANAGEMENT_ACCOUNT }}:role/digideps-gh-actions-ecr-push
           role-session-name: github-actions-ecr-tagger
           role-duration-seconds: 900
 
