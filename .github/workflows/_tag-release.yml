@@ -16,9 +16,18 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - svc_name: "app"
-          - svc_name: "web"
-          - svc_name: "backup"
+          - svc_name: "client-webserver"
+          - svc_name: "client"
+          - svc_name: "client-devtools"
+          - svc_name: "api-webserver"
+          - svc_name: "api"
+          - svc_name: "api-devtools"
+          - svc_name: "sync"
+          - svc_name: "htmltopdf"
+          - svc_name: "file-scanner"
+          - svc_name: "dr-backup"
+          - svc_name: "custom-sql-lambda"
+
     runs-on: ubuntu-latest
     steps:
       - name: Configure AWS credentials for ECR tagging
@@ -32,7 +41,7 @@ jobs:
       - name: Tag existing image digest with new release tag
         env:
           RELEASE_TAG: ${{ inputs.release_tag }}
-          REPOSITORY: "serve-opg"
+          REPOSITORY: "digideps"
           CURRENT_TAG: ${{ inputs.current_tag }}
         run: |
           REPO_NAME="${REPOSITORY}/${{ matrix.svc_name }}"

@@ -43,13 +43,20 @@ jobs:
         id: variables
         env:
           PR_NUMBER: ${{ github.event.pull_request.number }}
+          WORKFLOW_TYPE: ${{ github.event_name }}
         run: |
           branch_ref="${GITHUB_HEAD_REF:-${GITHUB_REF##*/}}"
           BRANCH="$(echo "$branch_ref" | awk -F'_' '{print $1}' | tr -cd '[:alnum:]' | tr '[:upper:]' '[:lower:]' | cut -c1-8)"
           export BRANCH
           echo "branch_formatted=${BRANCH}" >> "$GITHUB_OUTPUT"
-          echo "build_identifier=${BRANCH}${PR_NUMBER}" >> "$GITHUB_OUTPUT"
           echo "${BRANCH}${PR_NUMBER}"
+          {
+            if [ "${WORKFLOW_TYPE}" == "pull_request" ]; then
+              echo "build_identifier=${BRANCH}${PR_NUMBER}"
+            else
+              echo "build_identifier=staging"
+            fi
+          } >> "$GITHUB_OUTPUT"
 
       - name: Generate build output using Markdown
         env:
@@ -451,7 +458,6 @@ jobs:
       - end_to_end_tests_1
       - end_to_end_tests_2
       - end_to_end_tests_admin
-    if: ${{ always() }}
     steps:
       - name: output workflow variables
         run: |
@@ -480,19 +486,18 @@ jobs:
   create_tag_release:
     if: github.event_name == 'merge_group'
     name: Create release tag from releasable
-    needs: [workflow_variables, behat_branch_environment]
+    needs: [workflow_variables, workflow_summary]
     uses: ./.github/workflows/_tag-release.yml
     with:
       current_tag: ${{ needs.workflow_variables.outputs.version_tag }}
       release_tag: releasable
-    secrets: inherit
 
   slack_notify_success:
     name: notify of success
     uses: ./.github/workflows/_slack-notification.yml
     needs:
       - workflow_variables
-      - workflow_summary
+      - create_tag_release
     with:
       success: yes
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
@@ -504,7 +509,7 @@ jobs:
     if: ${{ failure() }}
     needs:
       - workflow_variables
-      - workflow_summary
+      - create_tag_release
     with:
       success: no
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
@@ -513,8 +518,15 @@ jobs:
   end_of_workflow:
     name: end of workflow
     runs-on: ubuntu-latest
-    needs:
-      - slack_notify_success
+    needs: [workflow_variables, workflow_summary]
+    if: always()
     steps:
-      - name: Mark workflow as successful
-        run: echo "workflow ended successfully"
+      - name: Check failure status
+        run: |
+          echo ${{ needs.workflow_summary.result }}
+          if [ "${{ needs.workflow_summary.result }}" != "success" ]; then
+            echo "❌ Workflow failed"
+            exit 1
+          fi
+      - name: End of PR Workflow
+        run: echo "${{ needs.workflow_variables.outputs.version_tag }} tested, built, and deployed to Development"
