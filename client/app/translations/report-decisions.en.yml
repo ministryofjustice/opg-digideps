@@ -78,16 +78,6 @@ existPage:
       label: Please give us an explanation
       hint: ""
 
-addAnotherPage:
-  htmlTitle: "Add another decision - Complete the deputy report | GOV.UK"
-  pageTitle: Add another decision
-  form:
-    addAnother:
-      label: The decision has been saved. Would you like to add another now?
-      hint: If you prefer, you can come back to this section later to add more decisions
-    save:
-      label: Continue
-
 addPage:
   htmlTitle: "Add a decision - Complete the deputy report | GOV.UK"
   pageTitle: Add a decision
@@ -121,6 +111,7 @@ deletePage:
     description: Decision description
 
 form:
+  thing: decision
   title:
     label: Title
     hint: Add a title to help you identify the decision.
@@ -136,8 +127,5 @@ form:
   clientInvolvedDetails:
     label: If yes, tell us how you involved %client% in the decision. If no, tell us why you could not.
     hint: ""
-  addAnother:
-    heading: Add another decision
-    label: Would you like to add another decision?
   save:
     label: Save and continue

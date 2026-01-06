@@ -12,7 +12,6 @@ Feature: Decisions
         And I confirm that 'No' significant decisions have been made for the client
         Then the decisions summary page should contain the details I entered
 
-
     @lay-pfa-high-not-started
     Scenario: A user edits their response to the significant decisions question
         Given a Lay Deputy has not started a report
@@ -58,8 +57,5 @@ Feature: Decisions
         Then the decisions summary page should reflect the updated details I entered
         Then I edit an existing decision
         Then I should be on the clients edit decision page
-        And I confirm that 'yes' additional significant decisions have been made for the client
-        Then I should be on the clients add decision page
-        And I add the details of the additional decision as requested
-        And I confirm that 'no' additional significant decisions have been made for the client
+        When I click save and continue
         Then the decisions summary page should reflect the updated details I entered
