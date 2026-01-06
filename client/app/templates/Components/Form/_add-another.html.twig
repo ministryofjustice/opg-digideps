@@ -1,10 +1,6 @@
 {# variables to be interpolated into translations #}
 {% set transVars = {'%thing%': thingTranslationKey | trans({}, translationDomain)} %}
 
-<h3 class="govuk-heading-m">
-    {{ 'addAnotherThing.heading' | trans(transVars, 'common') }}
-</h3>
-
 {% set checkboxGroupOpts = {
     'fieldSetClass': 'inline',
     'legend': {
