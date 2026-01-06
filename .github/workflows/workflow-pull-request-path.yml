@@ -11,6 +11,7 @@ on:
   pull_request:
     branches:
       - main
+  merge_group:
 
 permissions:
   id-token: write
@@ -475,6 +476,16 @@ jobs:
             echo "- Service Admin URL: ${SERVICE_ADMIN_URL}"
             echo "- Tag Used: ${{ needs.workflow_variables.outputs.version_tag }}"
           } >> "$GITHUB_STEP_SUMMARY"
+
+  create_tag_release:
+    if: github.event_name == 'merge_group'
+    name: Create release tag from releasable
+    needs: [workflow_variables, behat_branch_environment]
+    uses: ./.github/workflows/_tag-release.yml
+    with:
+      current_tag: ${{ needs.workflow_variables.outputs.version_tag }}
+      release_tag: releasable
+    secrets: inherit
 
   slack_notify_success:
     name: notify of success

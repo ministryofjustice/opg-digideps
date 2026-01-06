@@ -1,0 +1,58 @@
+name: "[Tag] Releasable Image as Release"
+
+on:
+  workflow_call:
+    inputs:
+      release_tag:
+        required: true
+        type: string
+      current_tag:
+        required: true
+        type: string
+
+jobs:
+  tag_releasable_image:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - svc_name: "app"
+          - svc_name: "web"
+          - svc_name: "backup"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials for ECR tagging
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: eu-west-1
+          role-to-assume: arn:aws:iam::${{ vars.MANAGEMENT_ACCOUNT }}:role/serve-gh-actions-ecr-push
+          role-session-name: github-actions-ecr-tagger
+          role-duration-seconds: 900
+
+      - name: Tag existing image digest with new release tag
+        env:
+          RELEASE_TAG: ${{ inputs.release_tag }}
+          REPOSITORY: "serve-opg"
+          CURRENT_TAG: ${{ inputs.current_tag }}
+        run: |
+          REPO_NAME="${REPOSITORY}/${{ matrix.svc_name }}"
+
+          DIGEST="$(aws ecr describe-images --repository-name "$REPO_NAME" --query "imageDetails[?contains(imageTags, \`$CURRENT_TAG\`)].imageDigest" --output text)"
+          echo "Digest for $CURRENT_TAG is $DIGEST"
+
+          if [ -z "$DIGEST" ]; then
+            echo "No image found with tag $CURRENT_TAG in repository $REPO_NAME"
+            exit 1
+          fi
+          echo "Found image digest $DIGEST for tag $CURRENT_TAG"
+
+          MANIFEST="$(aws ecr batch-get-image --repository-name "$REPO_NAME" --image-ids imageDigest="$DIGEST" --query 'images[0].imageManifest' --output text)"
+
+          if [ -z "$MANIFEST" ]; then
+            echo "Failed to retrieve image manifest for digest $DIGEST"
+            exit 1
+          fi
+          echo "Retrieved image manifest for digest $DIGEST"
+
+          aws ecr put-image --repository-name "$REPO_NAME" --image-tag "$RELEASE_TAG" --image-manifest "$MANIFEST"
+          echo "Tagged $REPO_NAME:$CURRENT_TAG as $REPO_NAME:$RELEASE_TAG"
