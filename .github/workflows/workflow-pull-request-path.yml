@@ -484,7 +484,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
   create_tag_release:
-    if: github.event_name == 'merge_group'
+    #    if: github.event_name == 'merge_group'
     name: Create release tag from releasable
     needs: [workflow_variables, workflow_summary]
     uses: ./.github/workflows/_tag-release.yml
@@ -497,7 +497,7 @@ jobs:
     uses: ./.github/workflows/_slack-notification.yml
     needs:
       - workflow_variables
-      - create_tag_release
+      - workflow_summary
     with:
       success: yes
       branch: ${{ needs.workflow_variables.outputs.build_identifier }}
