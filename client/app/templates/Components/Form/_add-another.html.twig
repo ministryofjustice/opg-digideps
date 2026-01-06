@@ -1,0 +1,17 @@
+{# variables to be interpolated into translations #}
+{% set transVars = {'%thing%': thingTranslationKey | trans({}, translationDomain)} %}
+
+{% set checkboxGroupOpts = {
+    'fieldSetClass': 'inline',
+    'legend': {
+        'isPageHeading': false,
+        'caption': false,
+        'text': 'addAnotherThing.label' | trans(transVars, 'common')
+    },
+    'legendClass': 'form-label',
+    'useFormGroup': true,
+    'element': addAnother,
+    'translationDomain': translationDomain
+} %}
+
+{% include '@App/Components/Form/_checkboxgroup.html.twig' with checkboxGroupOpts only %}
