@@ -1,20 +1,19 @@
 {% extends '@App/Layouts/application.html.twig' %}
-{% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans(transOptions) }}{% endblock %}
-{% block pageTitle %}
-    {{ 'stepPage.pageTitle' | trans(transOptions) }}
-{% endblock %}
-
-
-{% block supportTitleTop %}
-    <span class="heading-secondary">{{ 'stepPage.supportTitle' | trans }}</span>
-{% endblock %}
-
 {% import '@App/Macros/macros.html.twig' as macros %}
 
 {% set translationDomain = "report-money-transfer" %}
 {% trans_default_domain translationDomain %}
-{% set transOptions = {'%client%': report.client.firstname | striptags } %}
+{% set transOptions = {'%client%': report.client.firstname | striptags} %}
 
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans(transOptions) }}{% endblock %}
+
+{% block pageTitle %}
+    {{ (page ~ '.pageTitle') | trans(transOptions) }}
+{% endblock %}
+
+{% block supportTitleTop %}
+    <span class="heading-secondary">{{ (page ~ '.supportTitle') | trans }}</span>
+{% endblock %}
 
 {% block linkBack %}
     {{ macros.linkBackStep(backLink, 'back' | trans({}, 'common')) }}
@@ -26,19 +25,28 @@
         {{ form_select(form.accountFromId, 'form.accountFrom', {
             'inputClass': 'js-transfer-from'
         }) }}
+
         {{ form_select(form.accountToId, 'form.accountTo', {
             'inputClass': 'js-transfer-to'
         }) }}
 
         {{ form_input(form.amount, 'form.amount', {
-        'inputPrefix' : '£',
-        'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
-        'labelClass' : 'text'
+            'inputPrefix' : '£',
+            'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
+            'labelClass' : 'text'
         }) }}
 
         {{ form_input(form.description, 'form.description', {
             'inputClass': 'govuk-js-character-count govuk-!-width-two-thirds',
         }) }}
+
+        {% if form.addAnother %}
+            {{ form_add_another({
+                'addAnother': form.addAnother,
+                'thingTranslationKey': 'form.thing',
+                'translationDomain': 'report-money-transfer'
+            }) }}
+        {% endif %}
 
     {{ macros.saveAndContinueButton(form.save) }}
 
