@@ -55,7 +55,7 @@ jobs:
         id: unit-tests
         run: |
           make client-unit-tests ADDITIONAL_CONFIG=""
-          docker compose -f docker-compose.yml exec -T pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
+          docker compose -f docker-compose.yml exec -T pact-mock cat /tmp/complete_the_deputy_report-opg_data.json > pact.json
           docker compose -f docker-compose.yml down
 
       - name: Move cache
