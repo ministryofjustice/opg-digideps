@@ -41,3 +41,13 @@ resource "aws_db_subnet_group" "private" {
     { Name = "rds-subnet-group-${var.account.name}" },
   )
 }
+
+resource "aws_db_subnet_group" "data" {
+  count      = var.account.network.enabled ? 1 : 0
+  name       = "data-subnet-group-${var.account.name}"
+  subnet_ids = module.network[0].data_subnets[*].id
+  tags = merge(
+    var.default_tags,
+    { Name = "data-subnet-group-${var.account.name}" },
+  )
+}
