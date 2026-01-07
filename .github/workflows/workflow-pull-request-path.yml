@@ -143,14 +143,6 @@ jobs:
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
       push_to_ecr: true
 
-  test_tag_release:
-    name: Create release tag from releasable
-    needs: [workflow_variables, docker_build_scan_push]
-    uses: ./.github/workflows/_tag-release.yml
-    with:
-      current_tag: ${{ needs.workflow_variables.outputs.version_tag }}
-      release_tag: releasable
-
   api_phpstan:
     name: api phpstan
     uses: ./.github/workflows/_phpstan-api.yml
