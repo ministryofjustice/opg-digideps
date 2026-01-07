@@ -132,9 +132,14 @@ class ClientBenefitsCheckController extends AbstractController
             $clientBenefitsCheck = $form->getData();
             'ndr' === $reportOrNdr ? $clientBenefitsCheck->setNdr($report) : $clientBenefitsCheck->setReport($report);
 
-            /** @var Form $addAnother */
-            $addAnother = $form->get('addAnother');
-            if ($form->has('addAnother') && 'yes' === $addAnother->getData()) {
+
+            $addAnother = null;
+            if ($form->has('addAnother')) {
+                /** @var Form $addAnother */
+                $addAnother = $form->get('addAnother');
+            }
+
+            if ($addAnother !== null && 'yes' === $addAnother->getData()) {
                 $redirectRoute = $request->getUri();
             } else {
                 $stepToRedirectFrom = $this->incomeNotReceivedByOthers($form) ? $step + 1 : $step;
