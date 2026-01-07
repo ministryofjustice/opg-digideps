@@ -18,8 +18,6 @@ final class ConnectionWrapper extends Connection
     public const SECRETS_PREFIX = 'SECRETS_PREFIX';
     public const SECRETS_ENDPOINT = 'SECRETS_ENDPOINT';
 
-    private bool $_isConnected = false;
-
     private array $params;
 
     private readonly bool $autoCommit;
@@ -52,27 +50,26 @@ final class ConnectionWrapper extends Connection
     /**
      * Establishes the DB connection.
      *
-     * @return bool true if connected, false otherwise (Doctrine returns bool)
+     * @return bool TRUE if the connection was successfully established, FALSE if the connection is already open.
      */
     public function connect(): bool
     {
-        if (null !== $this->_conn) {
-            // Already connected; mirror Doctrine's semantics (return true)
-            return true;
+        if ($this->_conn !== null) {
+            return false;
         }
 
         try {
             $params = $this->params;
             $this->_conn = $this->_driver->connect($params);
-        } catch (Driver\Exception $e) {
+        } catch (Driver\Exception) {
             // Attempt to refresh secret and retry once
             $this->refreshPassword();
 
             try {
                 $params = $this->params;
                 $this->_conn = $this->_driver->connect($params);
-            } catch (Driver\Exception $e2) {
-                throw $this->convertException($e2);
+            } catch (Driver\Exception $e) {
+                throw $this->convertException($e);
             }
         }
 
@@ -85,7 +82,6 @@ final class ConnectionWrapper extends Connection
             $this->_eventManager->dispatchEvent(Events::postConnect, $eventArgs);
         }
 
-        $this->_isConnected = true;
         return true;
     }
 
@@ -133,18 +129,5 @@ final class ConnectionWrapper extends Connection
         }
 
         $this->secretClient = new SecretsManagerClient($base);
-    }
-
-    public function isConnected(): bool
-    {
-        return $this->_isConnected;
-    }
-
-    public function close(): void
-    {
-        if ($this->isConnected()) {
-            parent::close();
-            $this->_isConnected = false;
-        }
     }
 }
