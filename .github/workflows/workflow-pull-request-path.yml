@@ -10,7 +10,7 @@ defaults:
 on:
   pull_request:
     branches:
-      - main
+      - nothing-to-match-this
 
 permissions:
   id-token: write
