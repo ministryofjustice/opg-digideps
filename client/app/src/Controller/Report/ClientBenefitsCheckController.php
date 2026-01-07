@@ -20,6 +20,7 @@ use App\Service\Client\Internal\ReportApi;
 use App\Service\StepRedirector;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -131,7 +132,9 @@ class ClientBenefitsCheckController extends AbstractController
             $clientBenefitsCheck = $form->getData();
             'ndr' === $reportOrNdr ? $clientBenefitsCheck->setNdr($report) : $clientBenefitsCheck->setReport($report);
 
-            if ($form->has('addAnother') && 'yes' === $form['addAnother']->getData()) {
+            /** @var Form $addAnother */
+            $addAnother = $form->get('addAnother');
+            if ($form->has('addAnother') && 'yes' === $addAnother->getData()) {
                 $redirectRoute = $request->getUri();
             } else {
                 $stepToRedirectFrom = $this->incomeNotReceivedByOthers($form) ? $step + 1 : $step;
