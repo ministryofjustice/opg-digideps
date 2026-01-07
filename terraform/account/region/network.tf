@@ -2,23 +2,25 @@ locals {
   firewall_config = lookup(local.account_level_configurations, terraform.workspace, local.account_level_configurations["production"])
   account_level_configurations = {
     development = {
-      network_firewall_enabled     = true
-      none_matching_traffic_action = "alert"
-      shared_firewall_configuration = {
-        account_id   = "679638075911"
-        account_name = "development"
-      }
+      network_firewall_enabled      = false
+      none_matching_traffic_action  = "alert"
+      shared_firewall_configuration = null
+      # shared_firewall_configuration = {
+      #   account_id   = "679638075911"
+      #   account_name = "development"
+      # }
     }
     preproduction = {
-      network_firewall_enabled     = true
-      none_matching_traffic_action = "alert"
-      shared_firewall_configuration = {
-        account_id   = "997462338508"
-        account_name = "production"
-      }
+      network_firewall_enabled      = false
+      none_matching_traffic_action  = "alert"
+      shared_firewall_configuration = null
+      # shared_firewall_configuration = {
+      #   account_id   = "997462338508"
+      #   account_name = "production"
+      # }
     }
     production = {
-      network_firewall_enabled      = true
+      network_firewall_enabled      = false
       none_matching_traffic_action  = "alert"
       shared_firewall_configuration = null
     }
