@@ -123,10 +123,9 @@ class StatsController extends AbstractController
                 /** @var DateRangeQuery $query */
                 $query = $form->getData();
 
-                /** @var string $userResearchResponses */
                 $userResearchResponses = $mapper->getBy($query);
 
-                $reportData = json_decode($userResearchResponses, true)['data'];
+                $reportData = json_decode($userResearchResponses->getContents(), true)['data'];
                 $csv = $this->userResearchResponseCsvGenerator->generateUserResearchResponsesCsv($reportData);
 
                 return $this->csvResponseGeneration($fileName, $csv);

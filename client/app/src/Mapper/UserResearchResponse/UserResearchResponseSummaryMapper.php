@@ -6,24 +6,16 @@ namespace App\Mapper\UserResearchResponse;
 
 use App\Mapper\DateRangeQuery;
 use App\Service\Client\Internal\UserResearchApi;
-use App\Service\Client\RestClient;
+use Psr\Http\Message\StreamInterface;
 
-class UserResearchResponseSummaryMapper
+readonly class UserResearchResponseSummaryMapper
 {
-    private UserResearchApi $userResearchApi;
-
-    /**
-     * @param RestClient $restClient
-     */
-    public function __construct(UserResearchApi $userResearchApi)
-    {
-        $this->userResearchApi = $userResearchApi;
+    public function __construct(
+        private UserResearchApi $userResearchApi
+    ) {
     }
 
-    /**
-     * @return mixed
-     */
-    public function getBy(DateRangeQuery $query)
+    public function getBy(DateRangeQuery $query): StreamInterface
     {
         return $this->userResearchApi->getUserResearchResponseData($query);
     }
