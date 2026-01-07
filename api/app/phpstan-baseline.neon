@@ -971,31 +971,6 @@ parameters:
 			path: src/Controller/UserResearchController.php
 
 		-
-			message: "#^Cannot call method getAutoCommit\\(\\) on Doctrine\\\\DBAL\\\\Configuration\\|null\\.$#"
-			count: 1
-			path: src/DBAL/ConnectionWrapper.php
-
-		-
-			message: "#^Method App\\\\DBAL\\\\ConnectionWrapper\\:\\:refreshPassword\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/DBAL/ConnectionWrapper.php
-
-		-
-			message: "#^Method App\\\\DBAL\\\\ConnectionWrapper\\:\\:setSecretsManagerClient\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/DBAL/ConnectionWrapper.php
-
-		-
-			message: "#^Method App\\\\DBAL\\\\ConnectionWrapper\\:\\:setSecretsManagerClient\\(\\) has parameter \\$secretPrefix with no type specified\\.$#"
-			count: 1
-			path: src/DBAL/ConnectionWrapper.php
-
-		-
-			message: "#^Variable \\$result might not be defined\\.$#"
-			count: 1
-			path: src/DBAL/ConnectionWrapper.php
-
-		-
 			message: "#^Method App\\\\DataFixtures\\\\AbstractDataFixture\\:\\:doLoad\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/DataFixtures/AbstractDataFixture.php
