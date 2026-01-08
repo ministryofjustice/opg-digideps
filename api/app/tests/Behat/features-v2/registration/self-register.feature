@@ -83,7 +83,16 @@ Feature: Lay Deputy Self Registration
         Then a Deputy has registered via self-service using the below details:
             | deputyName | deputyEmail |  clientName | postcode | caseNumber |
             | BRIAN MCDUCK | mcduck@mcduckindustries.com | JULIE LOUIE | B73 | 1717171T |
+        When a Lay Deputy clicks the activation link in the registration email
+        And I set a password and login using my details
+        And I complete the user registration flow for deputy with deputyUid of '35672419'
+        And I am on "/logout"
         Then I register as a Deputy using the below details:
             | deputyName | deputyEmail |  clientName | postcode | caseNumber |
             | LIAM MCQUACK | mcquack@mcduckindustries.com | JULIE LOUIE | Y73 | 1717171T |
         And I should see no errors
+        When a Lay Deputy clicks the activation link in the registration email
+        And I set a password and login using my details
+        And I complete the user registration flow for deputy with deputyUid of '85462817'
+        Then my deputy details should be saved to my account
+        And I should be on the Lay homepage

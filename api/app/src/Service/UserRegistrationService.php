@@ -7,6 +7,9 @@ use App\Entity\Organisation;
 use App\Entity\PreRegistration;
 use App\Entity\User;
 use App\Model\SelfRegisterData;
+use App\Repository\ClientRepository;
+use App\Repository\OrganisationRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class UserRegistrationService
@@ -18,54 +21,39 @@ class UserRegistrationService
     }
 
     /**
-     * - throw error 403 if user is a co-deputy attempting to self-register
      * - throw error 421 if user and client not found
      * - throw error 422 if user email is already found
+     * - throw error 423 is user deputyUid is associated with another account *
      * - throw error 424 if user and client are found but the postcode doesn't match
-     * - throw error 425 if client is already used
+     * - throw error 460 if a user that is associated with an organisation attempts to sign up *
      * - throw error 462 if deputy could not be uniquely identified.
      *
      * @throws \RuntimeException with one of the error codes above if self-registration failed
      */
     public function selfRegisterUser(SelfRegisterData $selfRegisterData): User
     {
+        /** @var UserRepository $userRepository */
+        $userRepository = $this->em->getRepository(User::class);
+        /** @var ClientRepository $clientRepository */
+        $clientRepository = $this->em->getRepository(Client::class);
+        /** @var OrganisationRepository $orgRepository  */
+        $organisationRepository = $this->em->getRepository(Organisation::class);
+
         $caseNumber = $selfRegisterData->getCaseNumber() ?? '';
-
-        $isMultiDeputyCase = $this->preRegistrationVerificationService->isMultiDeputyCase($caseNumber);
-        $existingClient = $this->em->getRepository(Client::class)->findByCaseNumber($caseNumber);
-
-        // ward off non-fee-paying codeps trying to self-register
-        if ($isMultiDeputyCase && ($existingClient instanceof Client) && $existingClient->hasDeputies()) {
-            // if client exists with case number, the first codep already registered.
-            throw new \RuntimeException(json_encode('Co-deputy cannot self register.') ?: '', 403);
-        }
+        $email = $selfRegisterData->getEmail() ?? '';
 
         // Check the user doesn't already exist
-        $existingUser = $this->em->getRepository(User::class)->findOneByEmail($selfRegisterData->getEmail());
+        $existingUser = $userRepository->findOneByEmail($email);
         if ($existingUser) {
             $message = sprintf('User with email %s already exists.', $existingUser->getEmail());
             throw new \RuntimeException(json_encode($message) ?: '', 422);
         }
 
-        // Check the client is unique and has no deputies attached
-        if ($existingClient instanceof Client) {
-            if ($existingClient->hasDeputies() || $existingClient->getOrganisation() instanceof Organisation) {
-                $message = sprintf('User registration: Case number %s already used', $existingClient->getCaseNumber());
-                throw new \RuntimeException(json_encode($message) ?: '', 425);
-            } else {
-                // soft delete client
-                $this->em->remove($existingClient);
-                $this->em->flush();
-            }
+        $orgExists = $organisationRepository->findByEmailIdentifier($email);
+        if ($orgExists) {
+            $message = sprintf('An Organisation User attempting to sign up via Lay self-service registration pathway');
+            throw new \RuntimeException(json_encode($message) ?: '', 460);
         }
-
-        // proceed with brand new deputy and client
-        $user = new User();
-        $user->recreateRegistrationToken();
-        $this->populateUser($user, $selfRegisterData);
-
-        $client = new Client();
-        $this->populateClient($client, $selfRegisterData);
 
         // if validation fails, this throws a runtime exception which propagates to callers of this method
         $preregMatches = $this->preRegistrationVerificationService->validate(
@@ -73,7 +61,7 @@ class UserRegistrationService
             $selfRegisterData->getClientLastname(),
             $selfRegisterData->getFirstname(),
             $selfRegisterData->getLastname(),
-            $user->getAddressPostcode()
+            $selfRegisterData->getPostcode()
         );
 
         if (1 !== count($preregMatches)) {
@@ -82,15 +70,24 @@ class UserRegistrationService
             throw new \RuntimeException(json_encode($message) ?: '', 462);
         }
 
-        $user->setDeputyUid(intval($preregMatches[0]->getDeputyUid()));
-        $user->setPreRegisterValidatedDate(new \DateTime('now'));
-        $user->setRegistrationRoute(User::SELF_REGISTER);
-
-        if (!$this->preRegistrationVerificationService->deputyUidHasOtherUserAccounts($preregMatches[0]->getDeputyUid())) {
-            $user->setIsPrimary(true);
+        $deputyUid = $preregMatches[0]->getDeputyUid();
+        if ($this->preRegistrationVerificationService->deputyUidHasOtherUserAccounts($deputyUid)) {
+            $message = sprintf('A deputy with the UID %s has already been registered', $deputyUid);
+            throw new \RunTimeException(json_encode($message) ?: '', 423);
         }
 
-        $user->setNdrEnabled(true === $preregMatches[0]->getNdr());
+        $user = new User();
+        $user->recreateRegistrationToken();
+        $user->setPreRegisterValidatedDate(new \DateTime('now'));
+        $this->populateLayUser($user, $selfRegisterData, intval($deputyUid), User::SELF_REGISTER);
+
+        $existingClient = $clientRepository->findByCaseNumber($caseNumber);
+        if ($existingClient instanceof Client) {
+            $client = $existingClient;
+        } else {
+            $client = new Client();
+            $this->populateClient($client, $selfRegisterData);
+        }
 
         $this->saveUserAndClient($user, $client);
 
@@ -104,7 +101,9 @@ class UserRegistrationService
      */
     public function validateCoDeputy(SelfRegisterData $selfRegisterData): array
     {
-        $user = $this->em->getRepository(User::class)->findOneByEmail($selfRegisterData->getEmail());
+        /** @var UserRepository $repo */
+        $repo = $this->em->getRepository(User::class);
+        $user = $repo->findOneByEmail($selfRegisterData->getEmail());
         if (!$user) {
             throw new \RuntimeException('User registration: not found', 421);
         }
@@ -153,7 +152,7 @@ class UserRegistrationService
         }
     }
 
-    private function populateUser(User $user, SelfRegisterData $selfRegisterData)
+    private function populateLayUser(User $user, SelfRegisterData $selfRegisterData, int $deputyUid, string $registrationType): void
     {
         $user->setFirstname($selfRegisterData->getFirstname() ?? '');
         $user->setLastname($selfRegisterData->getLastname() ?? '');
@@ -161,9 +160,12 @@ class UserRegistrationService
         $user->setAddressPostcode($selfRegisterData->getPostcode() ?? '');
         $user->setActive(false);
         $user->setRoleName(User::ROLE_LAY_DEPUTY);
+        $user->setIsPrimary(true);
+        $user->setDeputyUid($deputyUid);
+        $user->setRegistrationRoute($registrationType);
     }
 
-    private function populateClient(Client $client, SelfRegisterData $selfRegisterData)
+    private function populateClient(Client $client, SelfRegisterData $selfRegisterData): void
     {
         $client->setFirstname($selfRegisterData->getClientFirstname() ?? '');
         $client->setLastname($selfRegisterData->getClientLastname() ?? '');
