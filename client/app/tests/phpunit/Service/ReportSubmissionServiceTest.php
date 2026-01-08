@@ -34,8 +34,6 @@ class ReportSubmissionServiceTest extends TestCase
 
     private $mockFileUploader;
     private $mockRestClient;
-    private $mockMailSender;
-    private $mockMailFactory;
     private $mockTemplatingEngine;
     private $mockPdfGenerator;
     private $mockLogger;
@@ -66,8 +64,6 @@ class ReportSubmissionServiceTest extends TestCase
     {
         $this->mockFileUploader = m::mock(S3FileUploader::class);
         $this->mockRestClient = m::mock(RestClient::class);
-        $this->mockMailSender = m::mock(MailSender::class);
-        $this->mockMailFactory = m::mock(MailFactory::class);
         $this->mockTemplatingEngine = m::mock(Environment::class);
         $this->mockPdfGenerator = m::mock(HtmlToPdfGenerator::class);
         $this->mockLogger = m::mock(LoggerInterface::class);
@@ -77,8 +73,6 @@ class ReportSubmissionServiceTest extends TestCase
 
         $this->fileUploader = self::prophesize(S3FileUploader::class);
         $this->restClient = self::prophesize(RestClient::class);
-        $this->mailSender = self::prophesize(MailSender::class);
-        $this->mailFactory = self::prophesize(MailFactory::class);
         $this->twig = self::prophesize(Environment::class);
         $this->pdfGenerator = self::prophesize(HtmlToPdfGenerator::class);
         $this->logger = self::prophesize(LoggerInterface::class);
@@ -117,8 +111,6 @@ class ReportSubmissionServiceTest extends TestCase
             $this->fileUploader->reveal(),
             $this->restClient->reveal(),
             $this->logger->reveal(),
-            $this->mailFactory->reveal(),
-            $this->mailSender->reveal(),
             $this->pdfGenerator->reveal(),
         );
     }
@@ -133,11 +125,9 @@ class ReportSubmissionServiceTest extends TestCase
     }
 
     /**
-     * @test
-     *
      * @dataProvider HighAssetsReportTypeProvider
      */
-    public function generateReportDocumentsWithTransactionCsv(string $reportType)
+    public function testGenerateReportDocumentsWithTransactionCsv(string $reportType)
     {
         $report = self::prophesize(Report::class);
         $report->getType()->willReturn($reportType);
@@ -198,8 +188,6 @@ class ReportSubmissionServiceTest extends TestCase
 
         $mockContainer->shouldReceive('get')->with('file_uploader')->andReturn($this->mockFileUploader);
         $mockContainer->shouldReceive('get')->with('rest_client')->andReturn($this->mockRestClient);
-        $mockContainer->shouldReceive('get')->with('App\Service\Mailer\MailSender')->andReturn($this->mockMailSender);
-        $mockContainer->shouldReceive('get')->with('App\Service\Mailer\MailFactory')->andReturn($this->mockMailFactory);
         $mockContainer->shouldReceive('get')->with('templating')->andReturn($this->mockTemplatingEngine);
         $mockContainer->shouldReceive('get')->with('logger')->andReturn($this->mockLogger);
         $mockContainer->shouldReceive('get')->with('csv_generator_service')->andReturn($this->mockCsvGenerator);
@@ -210,8 +198,6 @@ class ReportSubmissionServiceTest extends TestCase
             $this->mockFileUploader,
             $this->mockRestClient,
             $this->mockLogger,
-            $this->mockMailFactory,
-            $this->mockMailSender,
             $this->mockPdfGenerator
         );
     }
