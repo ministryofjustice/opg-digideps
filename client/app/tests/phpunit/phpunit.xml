@@ -29,10 +29,10 @@
             <directory>./Form</directory>
             <directory>./Logger</directory>
             <directory>./Mapper</directory>
-            <directory>./Model</directory>
             <directory>./Resolver</directory>
             <directory>./Security</directory>
             <directory>./Service</directory>
+            <directory>./Sync</directory>
             <directory>./Transformer</directory>
             <directory>./Twig</directory>
             <directory>./Validator</directory>
@@ -52,7 +52,7 @@
         <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>
     </php>
     <listeners>
-        <listener class="App\Pact\Listener\PactTestListener" file="./Pact/Listener/PactTestListener.php">
+        <listener class="DigidepsTests\Pact\Listener\PactTestListener" file="./Pact/Listener/PactTestListener.php">
             <arguments>
                 <array>
                     <element key="0">

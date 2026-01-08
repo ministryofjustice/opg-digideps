@@ -2,20 +2,18 @@
 
 declare(strict_types=1);
 
-namespace DigidepsTests\Pact;
+namespace DigidepsTests\Service\Client\Sirius;
 
 use App\Service\AWS\RequestSigner;
-use App\Sync\Service\Client\Sirius\SiriusApiGatewayClient;
+use App\Service\Client\Sirius\SiriusHealthCheckClient;
 use GuzzleHttp\Client;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Serializer\Serializer;
 
-class SiriusApiGatewayClientTest extends KernelTestCase
+class SiriusHealthCheckClientTest extends KernelTestCase
 {
     use ProphecyTrait;
 
@@ -23,20 +21,13 @@ class SiriusApiGatewayClientTest extends KernelTestCase
     private string $endpoint;
     private Client|ObjectProphecy $httpClient;
     private RequestSigner|ObjectProphecy $requestSigner;
-    private Serializer $serializer;
-    private LoggerInterface|ObjectProphecy $logger;
 
     public function setUp(): void
     {
         $this->baseURL = 'test.com';
-        $this->endpoint = 'an-endpoint';
+        $this->endpoint = 'healthcheck';
         $this->httpClient = self::prophesize(Client::class);
         $this->requestSigner = self::prophesize(RequestSigner::class);
-        $this->logger = self::prophesize(LoggerInterface::class);
-
-        /** @var Serializer $serializer */
-        $serializer = (self::bootKernel(['debug' => false]))->getContainer()->get('serializer');
-        $this->serializer = $serializer;
     }
 
     public function testGet()
@@ -47,7 +38,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
         $this->requestSigner->signRequest($expectedRequest, 'execute-api')->shouldBeCalled()->willReturn($signedRequest);
         $this->httpClient->send($signedRequest, ['connect_timeout' => 1, 'timeout' => 1.5])->shouldBeCalled()->willReturn(new Response());
 
-        $sut = new SiriusApiGatewayClient($this->httpClient->reveal(), $this->requestSigner->reveal(), $this->baseURL, $this->serializer, $this->logger->reveal());
+        $sut = new SiriusHealthCheckClient($this->httpClient->reveal(), $this->requestSigner->reveal(), $this->baseURL);
         $sut->get($this->endpoint);
     }
 

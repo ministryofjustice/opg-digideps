@@ -606,6 +606,11 @@ class ReportController extends AbstractController
         $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
         $pdfBinary = $reportSubmissionService->getPdfBinaryContent($report);
 
+        if (false === $pdfBinary) {
+            // unable to get the PDF for the report
+            throw $this->createNotFoundException();
+        }
+
         $response = new Response($pdfBinary);
         $response->headers->set('Content-Type', 'application/pdf');
 
