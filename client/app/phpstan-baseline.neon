@@ -10726,11 +10726,6 @@ parameters:
 			path: src/Twig/ComponentsExtension.php
 
 		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderCheckboxGroupNew\\(\\) has parameter \\$transIndex with no type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
 			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderFormDropDown\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Twig/FormFieldsExtension.php

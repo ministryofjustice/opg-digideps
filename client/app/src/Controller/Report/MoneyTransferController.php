@@ -8,6 +8,7 @@ use App\Controller\AbstractController;
 use App\Entity\Report\MoneyTransfer;
 use App\Entity\Report\Status;
 use App\Form\AddAnotherRecordType;
+use App\Form\AddAnotherThingType;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\MoneyTransferType;
 use App\Form\YesNoType;
@@ -113,8 +114,10 @@ class MoneyTransferController extends AbstractController
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId, 'transferId' => $transferId]);
 
+        $inEditMode = !is_null($transferId);
+
         // create (add mode) or load transaction (edit mode)
-        if ($transferId) {
+        if ($inEditMode) {
             $transfer = $report->getMoneyTransferWithId($transferId);
 
             if (is_null($transfer)) {
@@ -134,12 +137,18 @@ class MoneyTransferController extends AbstractController
             $transfer->setAccountToId($dataFromUrl['to-id']);
             $transfer->setAccountTo($report->getBankAccountById($dataFromUrl['to-id']));
         }
+
         $stepRedirector->setStepUrlAdditionalParams([
             'data' => $dataFromUrl,
         ]);
 
         // create and handle form
         $form = $this->createForm(MoneyTransferType::class, $transfer, ['banks' => $report->getBankAccounts()]);
+
+        if (!$inEditMode) {
+            $form->add('addAnother', AddAnotherThingType::class);
+        }
+
         $form->handleRequest($request);
 
         /** @var SubmitButton $submitBtn */
@@ -151,19 +160,26 @@ class MoneyTransferController extends AbstractController
             $stepUrlData['from-id'] = $transfer->getAccountFromId();
             $stepUrlData['to-id'] = $transfer->getAccountToId();
 
-            if ($transferId) { // edit
+            // edit
+            if ($inEditMode) {
                 $this->addFlash(
                     'notice',
                     'Entry edited'
                 );
+
                 $this->restClient->put('/report/' . $reportId . '/money-transfers/' . $transferId, $transfer, ['money-transfer']);
 
                 return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
-            } else { // add
-                $this->restClient->post('/report/' . $reportId . '/money-transfers', $transfer, ['money-transfer']);
-
-                return $this->redirectToRoute('money_transfers_add_another', ['reportId' => $reportId]);
             }
+
+            // add
+            $this->restClient->post('/report/' . $reportId . '/money-transfers', $transfer, ['money-transfer']);
+
+            if ('yes' === $form['addAnother']->getData()) {
+                return $this->redirectToRoute('money_transfers_step', ['reportId' => $reportId, 'from' => 'another', 'step' => 1]);
+            }
+
+            return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
         }
 
         return [
@@ -174,30 +190,7 @@ class MoneyTransferController extends AbstractController
             'form' => $form->createView(),
             'backLink' => $stepRedirector->getBackLink(),
             'skipLink' => null,
-        ];
-    }
-
-    #[Route(path: '/report/{reportId}/money-transfers/add_another', name: 'money_transfers_add_another')]
-    #[Template('@App/Report/MoneyTransfer/addAnother.html.twig')]
-    public function addAnotherAction(Request $request, int $reportId): RedirectResponse|array
-    {
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-
-        $form = $this->createForm(AddAnotherRecordType::class, $report, ['translation_domain' => 'report-money-transfer']);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            switch ($form['addAnother']->getData()) {
-                case 'yes':
-                    return $this->redirectToRoute('money_transfers_step', ['reportId' => $reportId, 'from' => 'another', 'step' => 1]);
-                case 'no':
-                    return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
-            }
-        }
-
-        return [
-            'form' => $form->createView(),
-            'report' => $report,
+            'page' => ($inEditMode ? 'editPage' : 'addPage'),
         ];
     }
 

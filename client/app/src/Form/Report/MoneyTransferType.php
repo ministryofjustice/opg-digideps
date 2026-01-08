@@ -2,6 +2,7 @@
 
 namespace App\Form\Report;
 
+use App\Form\AddAnotherThingType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -24,12 +25,14 @@ class MoneyTransferType extends AbstractType
                 FormTypes\ChoiceType::class,
                 [
                     'choices' => $banks, 'placeholder' => 'Please select', ]
-            )->add(
+            )
+            ->add(
                 'accountToId',
                 FormTypes\ChoiceType::class,
                 [
                     'choices' => $banks, 'placeholder' => 'Please select', ]
-            )->add(
+            )
+            ->add(
                 'amount',
                 FormTypes\NumberType::class,
                 [
@@ -37,7 +40,8 @@ class MoneyTransferType extends AbstractType
                     'grouping' => true,
                     'error_bubbling' => false,
                     'invalid_message' => 'transfer.amount.notNumeric', ]
-            )->add(
+            )
+            ->add(
                 'description',
                 FormTypes\TextType::class,
                 [
