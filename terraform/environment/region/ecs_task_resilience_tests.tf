@@ -91,7 +91,7 @@ module "resilience_tests_security_group" {
   description = "Resilience Test SG Rules"
   rules       = local.resilience_tests_sg_rules
   tags        = var.default_tags
-  vpc_id      = data.aws_vpc.vpc.id
+  vpc_id      = var.account.use_new_network ? data.aws_vpc.main.id : data.aws_vpc.vpc.id
   environment = local.environment
 }
 
@@ -107,7 +107,7 @@ module "resilience_tests" {
   tags                  = var.default_tags
   environment           = local.environment
   execution_role_arn    = aws_iam_role.execution_role.arn
-  subnet_ids            = data.aws_subnet.private[*].id
+  subnet_ids            = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
   task_role_arn         = aws_iam_role.resilience_tests.arn
   architecture          = "ARM64"
   os                    = "LINUX"

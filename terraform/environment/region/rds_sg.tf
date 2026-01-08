@@ -44,7 +44,7 @@ module "api_rds_security_group" {
   rules       = local.api_rds_sg_rules
   name        = "api-rds"
   tags        = var.default_tags
-  vpc_id      = data.aws_vpc.vpc.id
+  vpc_id      = var.account.use_new_network ? data.aws_vpc.main.id : data.aws_vpc.vpc.id
   environment = local.environment
 }
 
