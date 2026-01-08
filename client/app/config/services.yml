@@ -96,8 +96,8 @@ services:
         timeout: 30
         allow_redirects: false
 
-  App\Service\Client\Sirius\SiriusApiGatewayClient:
-    class: App\Service\Client\Sirius\SiriusApiGatewayClient
+  App\Sync\Service\Client\Sirius\SiriusApiGatewayClient:
+    class: App\Sync\Service\Client\Sirius\SiriusApiGatewayClient
     arguments:
       $httpClient: "@guzzle_api_gateway_client"
       $requestSigner: '@App\Service\AWS\RequestSigner'
@@ -105,17 +105,24 @@ services:
       $serializer: "@serializer"
       $logger: "@logger"
 
-  App\Service\Client\GovUK\BankHolidaysAPIClient:
-    class: App\Service\Client\GovUK\BankHolidaysAPIClient
+  App\Service\Client\Sirius\SiriusHealthCheckClient:
+    class: App\Service\Client\Sirius\SiriusHealthCheckClient
     arguments:
-      $httpClient: '@GuzzleHttp\Client'
-      $logger: "@logger"
+      $httpClient: "@guzzle_api_gateway_client"
+      $requestSigner: '@App\Service\AWS\RequestSigner'
+      $baseUrl: "%env(SIRIUS_API_BASE_URI)%"
 
   App\Service\AWS\RequestSigner:
     class: App\Service\AWS\RequestSigner
     arguments:
       $credentialProvider: '@App\Service\AWS\DefaultCredentialProvider'
       $signer: '@App\Service\AWS\SignatureV4Signer'
+
+  App\Service\Client\GovUK\BankHolidaysAPIClient:
+    class: App\Service\Client\GovUK\BankHolidaysAPIClient
+    arguments:
+      $httpClient: '@GuzzleHttp\Client'
+      $logger: "@logger"
 
   App\Service\AWS\DefaultCredentialProvider:
     class: App\Service\AWS\DefaultCredentialProvider
@@ -141,7 +148,7 @@ services:
     arguments:
       ['@Aws\SecretsManager\SecretsManagerClient', "%env(SECRETS_PREFIX)%"]
 
-  App\Serializer\SiriusDocumentUploadSerializer:
+  App\Sync\Serializer\SiriusDocumentUploadNormalizer:
     tags: ["serializer.normalizer"]
 
   # Make optional availability services pullable
@@ -149,7 +156,7 @@ services:
     arguments: ["@guzzle_file_scanner_client"]
 
   App\Service\Availability\SiriusApiAvailability:
-    arguments: ['@App\Service\Client\Sirius\SiriusApiGatewayClient']
+    arguments: ['@App\Service\Client\Sirius\SiriusHealthCheckClient']
 
   App\Service\Availability\HtmlToPdfAvailability:
     arguments: ['@App\Service\HtmlToPdfGenerator']
@@ -194,11 +201,11 @@ services:
   App\Service\File\Scanner\ClamFileScanner:
     arguments: ["@guzzle_file_scanner_client", "@logger", "%bad_pdf_keywords%"]
 
-  App\Service\DocumentSyncService:
+  App\Sync\Service\DocumentSyncService:
     arguments:
-      $storage: '@App\Service\File\Storage\S3Storage'
-      $siriusApiGatewayClient: '@App\Service\Client\Sirius\SiriusApiGatewayClient'
+      $siriusApiGatewayClient: '@App\Sync\Service\Client\Sirius\SiriusApiGatewayClient'
       $restClient: '@App\Service\Client\RestClient'
+      $errorTranslator: '@App\Sync\Service\SiriusApiErrorTranslator'
 
   League\MimeTypeDetection\FinfoMimeTypeDetector:
     class: League\MimeTypeDetection\FinfoMimeTypeDetector
