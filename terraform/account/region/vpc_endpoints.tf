@@ -57,7 +57,6 @@ resource "aws_vpc_endpoint" "s3" {
 }
 
 # New VPC Endpoints
-
 module "secrets_endpoint_vpc" {
   source              = "./modules/vpc_endpoint"
   subnet_ids          = module.network[0].application_subnets[*].id
