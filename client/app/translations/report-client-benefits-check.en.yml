@@ -62,6 +62,7 @@ summaryPage:
       remove: Remove
 
 form:
+  thing: benefit payment received on %client%'s behalf
   whenLastChecked:
     choices:
       haveChecked: Yes, I checked this and believe %client% is getting all the benefits they’re entitled to
