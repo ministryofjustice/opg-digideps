@@ -5,7 +5,7 @@ module "front_service_security_group" {
   rules       = local.front_sg_rules
   name        = "front-service"
   tags        = var.default_tags
-  vpc_id      = data.aws_vpc.vpc.id
+  vpc_id      = var.account.use_new_network ? data.aws_vpc.main.id : data.aws_vpc.vpc.id
   environment = local.environment
 }
 

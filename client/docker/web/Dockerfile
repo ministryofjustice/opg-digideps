@@ -35,5 +35,22 @@ COPY --chown=nginx scripts/process_checks/check_processes.sh /www/data/check_pro
 
 USER nginx
 
-# Start services
-CMD sh -c "/www/data/check_processes.sh & exec nginx -g 'daemon off;'"
+
+CMD ["sh", "-lc", "\
+  set -e; \
+  # Start a background probe; it will stop once endpoints return 200 \
+  ( \
+    for i in $(seq 1 30); do \
+      code1=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1/health-check || true); \
+      code2=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1/health-check/service || true); \
+      if [ \"$code1\" = 200 ] && [ \"$code2\" = 200 ]; then \
+        echo \"health checks OK (200/200)\"; \
+        break; \
+      fi; \
+      echo \"waiting for app: /health-check=$code1, /health-check/service=$code2\"; \
+      sleep 1; \
+    done \
+  ) & \
+  # Now run Nginx in the foreground \
+  exec nginx -g 'daemon off;' \
+"]

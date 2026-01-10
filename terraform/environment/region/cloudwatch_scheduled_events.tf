@@ -18,10 +18,9 @@ resource "aws_cloudwatch_event_target" "csv_automation_court_order_processing" {
     task_definition_arn = aws_ecs_task_definition.api_high_memory.arn
     launch_type         = "FARGATE"
     platform_version    = "1.4.0"
-
     network_configuration {
       security_groups  = [module.api_service_security_group.id]
-      subnets          = data.aws_subnet.private[*].id
+      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
       assign_public_ip = false
     }
   }
@@ -60,7 +59,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_lay_processing" {
 
     network_configuration {
       security_groups  = [module.api_service_security_group.id]
-      subnets          = data.aws_subnet.private[*].id
+      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
       assign_public_ip = false
     }
   }
@@ -99,7 +98,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_org_processing" {
 
     network_configuration {
       security_groups  = [module.api_service_security_group.id]
-      subnets          = data.aws_subnet.private[*].id
+      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
       assign_public_ip = false
     }
   }
@@ -137,7 +136,7 @@ resource "aws_cloudwatch_event_target" "delete_inactive_users" {
 
     network_configuration {
       security_groups  = [module.api_service_security_group.id]
-      subnets          = data.aws_subnet.private[*].id
+      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
       assign_public_ip = false
     }
   }
@@ -177,7 +176,7 @@ resource "aws_cloudwatch_event_target" "delete_zero_activity_users" {
 
     network_configuration {
       security_groups  = [module.api_service_security_group.id]
-      subnets          = data.aws_subnet.private[*].id
+      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
       assign_public_ip = false
     }
   }
@@ -215,7 +214,7 @@ resource "aws_cloudwatch_event_target" "resubmit_error_documents" {
 
     network_configuration {
       security_groups  = [module.api_service_security_group.id]
-      subnets          = data.aws_subnet.private[*].id
+      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
       assign_public_ip = false
     }
   }
@@ -253,7 +252,7 @@ resource "aws_cloudwatch_event_target" "resubmit_error_checklists" {
 
     network_configuration {
       security_groups  = [module.api_service_security_group.id]
-      subnets          = data.aws_subnet.private[*].id
+      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
       assign_public_ip = false
     }
   }
@@ -322,7 +321,7 @@ resource "aws_cloudwatch_event_target" "db_analyse_command" {
 
     network_configuration {
       security_groups  = [module.db_access_task_security_group.id]
-      subnets          = data.aws_subnet.private[*].id
+      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
       assign_public_ip = false
     }
   }
@@ -351,7 +350,7 @@ resource "aws_cloudwatch_event_target" "satisfaction_performance_stats" {
 
     network_configuration {
       security_groups  = [module.api_service_security_group.id]
-      subnets          = data.aws_subnet.private[*].id
+      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
       assign_public_ip = false
     }
   }
@@ -390,7 +389,7 @@ resource "aws_cloudwatch_event_target" "sleep_mode_on" {
 
     network_configuration {
       security_groups  = [module.sleep_mode_security_group.id]
-      subnets          = data.aws_subnet.private[*].id
+      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
       assign_public_ip = false
     }
   }
@@ -429,7 +428,7 @@ resource "aws_cloudwatch_event_target" "sleep_mode_off" {
 
     network_configuration {
       security_groups  = [module.sleep_mode_security_group.id]
-      subnets          = data.aws_subnet.private[*].id
+      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
       assign_public_ip = false
     }
   }

@@ -6,7 +6,7 @@ module "api_aurora" {
   apply_immediately                   = var.account.deletion_protection ? false : true
   cluster_identifier                  = "api"
   ca_cert_identifier                  = "rds-ca-rsa2048-g1"
-  db_subnet_group_name                = var.account.db_subnet_group
+  db_subnet_group_name                = var.account.use_new_network ? "data-subnet-group-${var.account.name}" : var.account.db_subnet_group
   database_name                       = "api"
   engine_version                      = var.account.psql_engine_version
   master_username                     = "digidepsmaster"

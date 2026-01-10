@@ -3,7 +3,7 @@ resource "aws_route53_zone" "internal" {
   comment = "Private Route53 Zone for ${local.environment}"
 
   vpc {
-    vpc_id = data.aws_vpc.vpc.id
+    vpc_id = var.account.use_new_network ? data.aws_vpc.main.id : data.aws_vpc.vpc.id
   }
 
   tags = var.default_tags

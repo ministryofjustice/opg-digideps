@@ -10,7 +10,7 @@ module "restore" {
   tags                  = var.default_tags
   environment           = local.environment
   execution_role_arn    = aws_iam_role.execution_role_db.arn
-  subnet_ids            = data.aws_subnet.private[*].id
+  subnet_ids            = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
   task_role_arn         = data.aws_iam_role.sync.arn
   architecture          = "ARM64"
   os                    = "LINUX"

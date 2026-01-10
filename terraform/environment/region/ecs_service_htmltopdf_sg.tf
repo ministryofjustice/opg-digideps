@@ -34,6 +34,6 @@ module "htmltopdf_security_group" {
   rules       = local.htmltopdf_sg_rules
   name        = "htmltopdf"
   tags        = var.default_tags
-  vpc_id      = data.aws_vpc.vpc.id
+  vpc_id      = var.account.use_new_network ? data.aws_vpc.main.id : data.aws_vpc.vpc.id
   environment = local.environment
 }

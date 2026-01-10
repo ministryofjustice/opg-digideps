@@ -7,7 +7,7 @@ module "sleep_mode" {
   tags                  = var.default_tags
   environment           = local.environment
   execution_role_arn    = aws_iam_role.execution_role.arn
-  subnet_ids            = data.aws_subnet.private[*].id
+  subnet_ids            = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
   task_role_arn         = aws_iam_role.sleep_mode.arn
   architecture          = "ARM64"
   os                    = "LINUX"
@@ -64,6 +64,6 @@ module "sleep_mode_security_group" {
   description = "Sleep Mode SG Rules"
   rules       = local.sleep_mode_sg_rules
   tags        = var.default_tags
-  vpc_id      = data.aws_vpc.vpc.id
+  vpc_id      = var.account.use_new_network ? data.aws_vpc.main.id : data.aws_vpc.vpc.id
   environment = local.environment
 }
