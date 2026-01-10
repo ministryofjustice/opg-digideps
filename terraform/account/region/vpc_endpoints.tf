@@ -58,6 +58,7 @@ resource "aws_vpc_endpoint" "s3" {
 
 # New VPC Endpoints
 module "secrets_endpoint_vpc" {
+  count               = var.account.network.enabled ? 1 : 0
   source              = "./modules/vpc_endpoint"
   subnet_ids          = module.network[0].application_subnets[*].id
   vpc                 = module.network[0].vpc
@@ -68,6 +69,7 @@ module "secrets_endpoint_vpc" {
 }
 
 module "ecr_endpoint_vpc" {
+  count               = var.account.network.enabled ? 1 : 0
   source              = "./modules/vpc_endpoint"
   subnet_ids          = module.network[0].application_subnets[*].id
   vpc                 = module.network[0].vpc
@@ -78,6 +80,7 @@ module "ecr_endpoint_vpc" {
 }
 
 module "ecr_api_endpoint_vpc" {
+  count               = var.account.network.enabled ? 1 : 0
   source              = "./modules/vpc_endpoint"
   subnet_ids          = module.network[0].application_subnets[*].id
   vpc                 = module.network[0].vpc
@@ -88,6 +91,7 @@ module "ecr_api_endpoint_vpc" {
 }
 
 module "logs_endpoint_vpc" {
+  count               = var.account.network.enabled ? 1 : 0
   source              = "./modules/vpc_endpoint"
   subnet_ids          = module.network[0].application_subnets[*].id
   vpc                 = module.network[0].vpc
@@ -98,6 +102,7 @@ module "logs_endpoint_vpc" {
 }
 
 module "ssm_endpoint_vpc" {
+  count               = var.account.network.enabled ? 1 : 0
   source              = "./modules/vpc_endpoint"
   subnet_ids          = module.network[0].application_subnets[*].id
   vpc                 = module.network[0].vpc
@@ -108,6 +113,7 @@ module "ssm_endpoint_vpc" {
 }
 
 resource "aws_vpc_endpoint" "s3_endpoint_vpc" {
+  count             = var.account.network.enabled ? 1 : 0
   service_name      = "com.amazonaws.eu-west-1.s3"
   vpc_id            = module.network[0].vpc.id
   vpc_endpoint_type = "Gateway"
