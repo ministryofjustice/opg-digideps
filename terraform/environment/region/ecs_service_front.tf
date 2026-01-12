@@ -86,15 +86,15 @@ locals {
         hostPort      = 80,
         protocol      = "tcp"
       }],
-      healthCheck = {
-        command : [
-          "CMD-SHELL",
-          "/opt/scripts/health-check.sh"
-        ],
-        interval = 30,
-        timeout  = 5,
-        retries  = 3
-      },
+      #      healthCheck = {
+      #        command : [
+      #          "CMD-SHELL",
+      #          "/opt/scripts/health-check.sh"
+      #        ],
+      #        interval = 30,
+      #        timeout  = 5,
+      #        retries  = 3
+      #      },
       volumesFrom = [],
       logConfiguration = {
         logDriver = "awslogs",
