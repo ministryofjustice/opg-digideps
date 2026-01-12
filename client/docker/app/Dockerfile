@@ -53,7 +53,7 @@ RUN apk update && apk upgrade && apk add --no-cache \
     autoconf \
     build-base \
     wget
-
+RUN apk add --no-cache fcgi
 RUN docker-php-ext-install pcntl zip opcache gmp && docker-php-ext-enable opcache
 RUN pecl install pcov && docker-php-ext-enable pcov
 
@@ -122,7 +122,19 @@ COPY scripts/hardening/harden.sh /harden.sh
 #RUN /harden.sh www-data && rm /harden.sh
 
 USER www-data
-CMD sh -c "exec php-fpm"
+CMD sh -lc '\
+  php-fpm -F & \
+  fpm_pid=$!; \
+  echo "Starting php-fpm..."; \
+  for i in $(seq 1 30); do \
+    nc -z 127.0.0.1 9000 && break || sleep 1; \
+  done; \
+  echo "php-fpm is listening, checking ping..."; \
+  SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_URI=/ping REQUEST_METHOD=GET QUERY_STRING= \
+    cgi-fcgi -bind -connect 127.0.0.1:9000 || { echo "Ping failed"; kill $fpm_pid; exit 1; }; \
+  echo "Ping OK, keeping php-fpm in foreground"; \
+  wait $fpm_pid \
+'
 
 ##############################
 # Stage 3b: Devtools Base (with dev dependencies)
@@ -161,9 +173,23 @@ RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup
 FROM devtools-base AS devtools
 RUN chown -R www-data:www-data /var/www/var && chmod -R ug+rwX /var/www/var
 COPY scripts/hardening/harden.sh /harden.sh
-RUN /harden.sh www-data && rm /harden.sh
+#RUN /harden.sh www-data && rm /harden.sh
 USER www-data
-CMD sh -c "exec php-fpm"
+
+CMD sh -lc '\
+  php-fpm -F & \
+  fpm_pid=$!; \
+  echo "Starting php-fpm..."; \
+  for i in $(seq 1 30); do \
+    nc -z 127.0.0.1 9000 && break || sleep 1; \
+  done; \
+  echo "php-fpm is listening, checking ping..."; \
+  SCRIPT_NAME=/ping SCRIPT_FILENAME=/ping REQUEST_URI=/ping REQUEST_METHOD=GET QUERY_STRING= \
+    cgi-fcgi -bind -connect 127.0.0.1:9000 || { echo "Ping failed"; kill $fpm_pid; exit 1; }; \
+  echo "Ping OK, keeping php-fpm in foreground"; \
+  wait $fpm_pid \
+'
+
 
 ##############################
 # Stage 3b2: Devtools Admin (root)

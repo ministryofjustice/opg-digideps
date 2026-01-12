@@ -4,7 +4,7 @@ monolog:
     main:
       type: stream
       path: php://stderr
-      level: "%log_level%"
+      level: "debug"
       formatter: opg_json_formatter
       channels: ["!verbose"]
       bubble: false
