@@ -119,7 +119,7 @@ RUN ./generate_parameters_yml.sh && mv /var/www/parameters.yml config/parameters
 RUN su-exec www-data php -d memory_limit=-1 app/console cache:warmup --env=prod --no-debug
 
 COPY scripts/hardening/harden.sh /harden.sh
-RUN /harden.sh www-data && rm /harden.sh
+#RUN /harden.sh www-data && rm /harden.sh
 
 USER www-data
 CMD sh -c "exec php-fpm"

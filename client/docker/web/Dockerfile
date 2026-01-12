@@ -43,11 +43,12 @@ CMD ["sh", "-lc", "\
     for i in $(seq 1 30); do \
       code1=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1/health-check || true); \
       code2=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1/health-check/service || true); \
-      if [ \"$code1\" = 200 ] && [ \"$code2\" = 200 ]; then \
-        echo \"health checks OK (200/200)\"; \
+      code3=$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1/login || true); \
+      if [ \"$code1\" = 200 ] && [ \"$code2\" = 200 ] && [ \"$code3\" = 200 ]; then \
+        echo \"health checks OK (200/200/200)\"; \
         break; \
       fi; \
-      echo \"waiting for app: /health-check=$code1, /health-check/service=$code2\"; \
+      echo \"waiting for app: /health-check=$code1, /health-check/service=$code2, /login=$code3\"; \
       sleep 1; \
     done \
   ) & \
