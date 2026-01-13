@@ -11,7 +11,7 @@ locals {
       type        = "egress"
       protocol    = "tcp"
       target_type = "security_group_id"
-      target      = data.aws_security_group.cache_api_sg.id
+      target      = var.account.use_new_network ? data.aws_security_group.redis_api_sg.id : data.aws_security_group.cache_api_sg.id
     }
     rds = {
       port        = 5432

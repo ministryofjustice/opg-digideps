@@ -29,7 +29,7 @@ locals {
       type        = "egress"
       protocol    = "tcp"
       target_type = "security_group_id"
-      target      = data.aws_security_group.cache_front_sg.id
+      target      = var.account.use_new_network ? data.aws_security_group.redis_front_sg.id : data.aws_security_group.cache_front_sg.id
     }
     api = {
       port        = 80

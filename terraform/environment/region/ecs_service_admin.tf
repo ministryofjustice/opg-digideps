@@ -32,11 +32,11 @@ resource "aws_ecs_service" "admin" {
     assign_public_ip = false
   }
 
-  #  load_balancer {
-  #    target_group_arn = aws_lb_target_group.admin.arn
-  #    container_name   = "admin_web"
-  #    container_port   = 80
-  #  }
+  load_balancer {
+    target_group_arn = aws_lb_target_group.admin.arn
+    container_name   = "admin_web"
+    container_port   = 80
+  }
 
   service_connect_configuration {
     enabled   = true
@@ -87,15 +87,15 @@ locals {
           protocol = "tcp"
         }
       ],
-      #      healthCheck = {
-      #        command : [
-      #          "CMD-SHELL",
-      #          "/opt/scripts/health-check.sh"
-      #        ],
-      #        interval = 30,
-      #        timeout  = 5,
-      #        retries  = 3
-      #      },
+      healthCheck = {
+        command : [
+          "CMD-SHELL",
+          "/opt/scripts/health-check.sh"
+        ],
+        interval = 30,
+        timeout  = 5,
+        retries  = 3
+      },
       volumesFrom = [],
       logConfiguration = {
         logDriver = "awslogs",
