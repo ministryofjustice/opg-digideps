@@ -23,7 +23,6 @@ resource "aws_ecs_service" "admin" {
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
   wait_for_steady_state   = true
-  enable_execute_command  = true
   tags                    = var.default_tags
 
   network_configuration {

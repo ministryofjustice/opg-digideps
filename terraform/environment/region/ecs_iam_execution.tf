@@ -162,15 +162,4 @@ data "aws_iam_policy_document" "execution_role_secrets_db" {
       data.aws_kms_alias.cloudwatch_application_secret_encryption.target_key_arn
     ]
   }
-
-  statement {
-    sid    = "ExecIn"
-    effect = "Allow"
-    actions = [
-      "ssmmessages:*",
-      "ecs:ExecuteCommand",
-      "logs:*"
-    ]
-    resources = ["*"]
-  }
 }

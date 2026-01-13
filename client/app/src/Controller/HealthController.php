@@ -29,7 +29,6 @@ class HealthController extends AbstractController
     #[Template('@App/Health/health-check.html.twig')]
     public function containerHealthAction(): array
     {
-        error_log('AAAARGH');
         return ['status' => 'OK'];
     }
 
