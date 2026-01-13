@@ -202,7 +202,6 @@ trait ClientBenefitsCheckSectionTrait
         $this->pressButton('Add money');
 
         $this->iAddNumberOfMoneyTypesWithAddAnother($numOfMoneyTypes);
-        $this->iHaveNoFurtherTypesOfMoneyToAdd();
     }
 
     /**
@@ -214,21 +213,21 @@ trait ClientBenefitsCheckSectionTrait
 
         $numOfMoneyTypes = $numOfMoneyTypes - 1;
 
-        foreach (range(0, $numOfMoneyTypes) as $index) {
+        foreach (range(0, $numOfMoneyTypes) as $ignored) {
             $this->fillInField(
-                "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][$index][moneyType]",
+                "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][0][moneyType]",
                 $this->faker->sentence(3),
                 'moneyType'
             );
 
             $this->fillInField(
-                "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][$index][whoReceivedMoney]",
+                "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][0][whoReceivedMoney]",
                 $this->faker->sentence(2),
                 'moneyType'
             );
 
             $this->fillInField(
-                "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][$index][amount]",
+                "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][0][amount]",
                 $this->faker->numberBetween(10, 2000),
                 'moneyType'
             );
