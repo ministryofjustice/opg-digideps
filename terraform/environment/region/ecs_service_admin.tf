@@ -23,6 +23,7 @@ resource "aws_ecs_service" "admin" {
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
   wait_for_steady_state   = true
+  enable_execute_command  = true
   tags                    = var.default_tags
 
   network_configuration {
@@ -86,15 +87,15 @@ locals {
           protocol = "tcp"
         }
       ],
-      healthCheck = {
-        command : [
-          "CMD-SHELL",
-          "/opt/scripts/health-check.sh"
-        ],
-        interval = 30,
-        timeout  = 5,
-        retries  = 3
-      },
+      #      healthCheck = {
+      #        command : [
+      #          "CMD-SHELL",
+      #          "/opt/scripts/health-check.sh"
+      #        ],
+      #        interval = 30,
+      #        timeout  = 5,
+      #        retries  = 3
+      #      },
       volumesFrom = [],
       logConfiguration = {
         logDriver = "awslogs",

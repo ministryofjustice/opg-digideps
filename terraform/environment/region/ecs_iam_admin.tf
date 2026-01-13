@@ -37,6 +37,17 @@ data "aws_iam_policy_document" "admin_s3" {
       "${module.pa_uploads.arn}/*"
     ]
   }
+
+  statement {
+    sid    = "ExecIn"
+    effect = "Allow"
+    actions = [
+      "ssmmessages:*",
+      "ecs:ExecuteCommand",
+      "logs:*"
+    ]
+    resources = ["*"]
+  }
 }
 
 resource "aws_iam_role_policy" "admin_query_ssm" {
