@@ -12,7 +12,7 @@ locals {
       protocol    = "tcp"
       type        = "ingress"
       target_type = "security_group_id"
-      target      = data.aws_security_group.ssm_ec2_data_access.id
+      target      = var.account.use_new_network ? data.aws_security_group.ssm_data_access[0].id : data.aws_security_group.ssm_ec2_data_access.id
     }
     db_access_tasks = {
       port        = 5432
@@ -33,7 +33,7 @@ locals {
       type        = "ingress"
       protocol    = "tcp"
       target_type = "security_group_id"
-      target      = data.aws_security_group.lambda_custom_sql.id
+      target      = var.account.use_new_network ? data.aws_security_group.lambda_custom_sql_tool[0].id : data.aws_security_group.lambda_custom_sql.id
     }
   }
 }
@@ -44,12 +44,20 @@ module "api_rds_security_group" {
   rules       = local.api_rds_sg_rules
   name        = "api-rds"
   tags        = var.default_tags
-  vpc_id      = data.aws_vpc.vpc.id
+  vpc_id      = var.account.use_new_network ? data.aws_vpc.main[0].id : data.aws_vpc.vpc.id
   environment = local.environment
 }
 
 data "aws_security_group" "ssm_ec2_data_access" {
-  name = "data-access-ssm-instance"
+  name   = "data-access-ssm-instance"
+  vpc_id = data.aws_vpc.vpc.id
+}
+
+# New:
+data "aws_security_group" "ssm_data_access" {
+  count  = var.account.use_new_network ? 1 : 0
+  name   = "data-access-ssm-instance"
+  vpc_id = data.aws_vpc.main[0].id
 }
 
 // Egress rules allowing the SSM instance to connect to the database.
@@ -61,5 +69,5 @@ resource "aws_security_group_rule" "postgres_ssm_egress_data_access" {
   protocol    = "tcp"
 
   source_security_group_id = module.api_rds_security_group.id
-  security_group_id        = data.aws_security_group.ssm_ec2_data_access.id
+  security_group_id        = var.account.use_new_network ? data.aws_security_group.ssm_data_access[0].id : data.aws_security_group.ssm_ec2_data_access.id
 }

@@ -11,7 +11,7 @@ locals {
       type        = "egress"
       protocol    = "tcp"
       target_type = "security_group_id"
-      target      = data.aws_security_group.cache_api_sg.id
+      target      = var.account.use_new_network ? data.aws_security_group.redis_api_sg[0].id : data.aws_security_group.cache_api_sg.id
     }
     rds = {
       port        = 5432
@@ -50,6 +50,6 @@ module "api_service_security_group" {
   rules       = local.api_service_sg_rules
   name        = "api-service"
   tags        = var.default_tags
-  vpc_id      = data.aws_vpc.vpc.id
+  vpc_id      = var.account.use_new_network ? data.aws_vpc.main[0].id : data.aws_vpc.vpc.id
   environment = local.environment
 }

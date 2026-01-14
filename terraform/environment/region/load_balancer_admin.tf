@@ -2,7 +2,7 @@ resource "aws_lb" "admin" {
   name                       = "admin-${local.environment}"
   internal                   = false #tfsec:ignore:aws-elb-alb-not-public - This is public LB
   load_balancer_type         = "application"
-  subnets                    = data.aws_subnet.public[*].id
+  subnets                    = var.account.use_new_network ? data.aws_subnet.load_balancer[*].id : data.aws_subnet.public[*].id
   idle_timeout               = 300
   drop_invalid_header_fields = true
 
@@ -86,7 +86,7 @@ resource "aws_lb_target_group" "admin" {
   port                 = 80
   protocol             = "HTTP"
   target_type          = "ip"
-  vpc_id               = data.aws_vpc.vpc.id
+  vpc_id               = var.account.use_new_network ? data.aws_vpc.main[0].id : data.aws_vpc.vpc.id
   deregistration_delay = 0
   tags                 = var.default_tags
 
