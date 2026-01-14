@@ -51,3 +51,17 @@ resource "aws_iam_role_policy_attachment" "start_ec2_data_access" {
   role       = data.aws_iam_role.data_access.name
   policy_arn = aws_iam_policy.start_ec2_data_access.arn
 }
+
+module "ssm_ec2_data_access" {
+  count  = var.account.network.enabled ? 1 : 0
+  source = "./modules/ssm_ec2_instance"
+
+  instance_type = "t3.micro"
+  subnet_id     = module.network[0].application_subnets[0].id
+  name          = "data-access"
+  tags          = var.default_tags
+  # kms_key_id  = module.logs_kms.eu_west_1_target_key_arn
+  instance_profile = data.aws_iam_instance_profile.data_access.name
+
+  vpc_id = module.network[0].vpc.id
+}
