@@ -33,7 +33,7 @@ locals {
       type        = "ingress"
       protocol    = "tcp"
       target_type = "security_group_id"
-      target      = data.aws_security_group.lambda_custom_sql.id
+      target      = var.account.use_new_network ? data.aws_security_group.lambda_custom_sql_tool[0].id : data.aws_security_group.lambda_custom_sql.id
     }
   }
 }
