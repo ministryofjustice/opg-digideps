@@ -8,9 +8,9 @@ module "disaster_recovery_backup" {
   cross_account_role_name = local.cross_account_role_name
   images                  = local.images
   aws_ecs_cluster_arn     = aws_ecs_cluster.main.arn
-  aws_subnet_ids          = data.aws_subnet.private[*].id
+  aws_subnet_ids          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
   db                      = local.db
-  aws_vpc_id              = data.aws_vpc.vpc.id
+  aws_vpc_id              = var.account.use_new_network ? data.aws_vpc.main[0].id : data.aws_vpc.vpc.id
   logs_kms_key_arn        = data.aws_kms_alias.cloudwatch_application_logs_encryption.arn
   log_retention           = 30
   common_sg_rules         = local.common_sg_rules

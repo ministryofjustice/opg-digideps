@@ -1,31 +1,31 @@
 data "aws_security_group" "ecr_endpoint" {
   tags   = { Name = "ecr_endpoint" }
-  vpc_id = data.aws_vpc.vpc.id
+  vpc_id = var.account.use_new_network ? data.aws_vpc.main[0].id : data.aws_vpc.vpc.id
 }
 
 data "aws_security_group" "logs_endpoint" {
   tags   = { Name = "logs_endpoint" }
-  vpc_id = data.aws_vpc.vpc.id
+  vpc_id = var.account.use_new_network ? data.aws_vpc.main[0].id : data.aws_vpc.vpc.id
 }
 
 data "aws_vpc_endpoint" "s3_endpoint" {
   service_name = "com.amazonaws.eu-west-1.s3"
-  vpc_id       = data.aws_vpc.vpc.id
+  vpc_id       = var.account.use_new_network ? data.aws_vpc.main[0].id : data.aws_vpc.vpc.id
 }
 
 data "aws_security_group" "ssm_endpoint" {
   tags   = { Name = "ssm_endpoint" }
-  vpc_id = data.aws_vpc.vpc.id
+  vpc_id = var.account.use_new_network ? data.aws_vpc.main[0].id : data.aws_vpc.vpc.id
 }
 
 data "aws_security_group" "secrets_endpoint" {
   tags   = { Name = "secrets_endpoint" }
-  vpc_id = data.aws_vpc.vpc.id
+  vpc_id = var.account.use_new_network ? data.aws_vpc.main[0].id : data.aws_vpc.vpc.id
 }
 
 data "aws_security_group" "ecr_api_endpoint" {
   tags   = { Name = "ecr_api_endpoint" }
-  vpc_id = data.aws_vpc.vpc.id
+  vpc_id = var.account.use_new_network ? data.aws_vpc.main[0].id : data.aws_vpc.vpc.id
 }
 
 locals {
