@@ -5,26 +5,17 @@ declare(strict_types=1);
 namespace App\Service\AWS;
 
 use GuzzleHttp\Psr7\Request;
+use Psr\Http\Message\RequestInterface;
 
 class RequestSigner
 {
-    /**
-     * @var DefaultCredentialProvider
-     */
-    private $credentialProvider;
-
-    /**
-     * @var SignatureV4Signer
-     */
-    private $signer;
-
-    public function __construct(DefaultCredentialProvider $credentialProvider, SignatureV4Signer $signer)
-    {
-        $this->credentialProvider = $credentialProvider;
-        $this->signer = $signer;
+    public function __construct(
+        private readonly DefaultCredentialProvider $credentialProvider,
+        private readonly SignatureV4Signer $signer
+    ) {
     }
 
-    public function signRequest(Request $request, string $service)
+    public function signRequest(Request $request, string $service): RequestInterface|Request
     {
         $credentials = $this->credentialProvider->getCredentials();
 

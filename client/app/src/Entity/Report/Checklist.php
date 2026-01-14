@@ -262,7 +262,7 @@ class Checklist implements SynchronisableInterface
     private $finalDecision;
 
     /**
-     * @var CheclistInformation[]
+     * @var ChecklistInformation[]
      *
      * @JMS\Groups({"checklist-information"})
      *
@@ -853,17 +853,17 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @return ArrayCollection
+     * @return ChecklistInformation[]
      */
-    public function getChecklistInformation()
+    public function getChecklistInformation(): array
     {
         return $this->checklistInformation;
     }
 
     /**
-     * @param ArrayCollection $checklistInformation
+     * @param ChecklistInformation[] $checklistInformation
      */
-    public function setChecklistInformation($checklistInformation)
+    public function setChecklistInformation(array $checklistInformation)
     {
         $this->checklistInformation = $checklistInformation;
     }
