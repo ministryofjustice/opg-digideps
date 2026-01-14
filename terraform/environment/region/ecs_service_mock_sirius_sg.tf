@@ -39,6 +39,6 @@ module "mock_sirius_integration_security_group" {
   rules       = local.mock_sirius_integration_sg_rules
   name        = "mock-sirius-integration"
   tags        = var.default_tags
-  vpc_id      = var.account.use_new_network ? data.aws_vpc.main.id : data.aws_vpc.vpc.id
+  vpc_id      = var.account.use_new_network ? data.aws_vpc.main[0].id : data.aws_vpc.vpc.id
   environment = local.environment
 }

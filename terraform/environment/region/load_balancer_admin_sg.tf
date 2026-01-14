@@ -3,7 +3,7 @@ module "admin_elb_security_group" {
   source      = "./modules/security_group"
   rules       = local.admin_elb_sg_rules
   tags        = var.default_tags
-  vpc_id      = var.account.use_new_network ? data.aws_vpc.main.id : data.aws_vpc.vpc.id
+  vpc_id      = var.account.use_new_network ? data.aws_vpc.main[0].id : data.aws_vpc.vpc.id
   environment = local.environment
   description = "Admin Elastic Load Balancer"
 }
@@ -47,7 +47,7 @@ module "admin_elb_security_group_route53_hc" {
   source      = "./modules/security_group"
   rules       = local.admin_elb_sg_rules
   tags        = var.default_tags
-  vpc_id      = var.account.use_new_network ? data.aws_vpc.main.id : data.aws_vpc.vpc.id
+  vpc_id      = var.account.use_new_network ? data.aws_vpc.main[0].id : data.aws_vpc.vpc.id
   environment = local.environment
   description = "Admin Elastic Load Balancer Healthcheck"
 }

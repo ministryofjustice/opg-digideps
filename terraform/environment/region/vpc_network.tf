@@ -38,8 +38,8 @@ data "aws_subnet" "public" {
 # New VPC Subnets:
 
 data "aws_subnet" "application" {
-  count             = 3
-  vpc_id            = data.aws_vpc.main.id
+  count             = var.account.use_new_network ? 3 : 0
+  vpc_id            = data.aws_vpc.main[0].id
   availability_zone = data.aws_availability_zones.available.names[count.index]
 
   filter {
@@ -49,8 +49,8 @@ data "aws_subnet" "application" {
 }
 
 data "aws_subnet" "nat" {
-  count             = 3
-  vpc_id            = data.aws_vpc.main.id
+  count             = var.account.use_new_network ? 3 : 0
+  vpc_id            = data.aws_vpc.main[0].id
   availability_zone = data.aws_availability_zones.available.names[count.index]
 
   filter {
@@ -60,8 +60,8 @@ data "aws_subnet" "nat" {
 }
 
 data "aws_subnet" "load_balancer" {
-  count             = 3
-  vpc_id            = data.aws_vpc.main.id
+  count             = var.account.use_new_network ? 3 : 0
+  vpc_id            = data.aws_vpc.main[0].id
   availability_zone = data.aws_availability_zones.available.names[count.index]
 
   filter {
@@ -71,11 +71,12 @@ data "aws_subnet" "load_balancer" {
 }
 
 data "aws_nat_gateway" "nat_gateway" {
+  count     = var.account.use_new_network ? 3 : 0
   subnet_id = element(data.aws_subnet.nat[*].id, count.index)
-  count     = 3
 }
 
 data "aws_vpc" "main" {
+  count = var.account.use_new_network ? 1 : 0
   filter {
     name   = "tag:Name"
     values = ["Digideps-${var.account.name}-vpc"]

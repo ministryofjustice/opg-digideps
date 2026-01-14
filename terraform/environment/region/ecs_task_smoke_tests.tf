@@ -59,7 +59,7 @@ module "smoke_tests_security_group" {
   description = "Smoke Test SG Rules"
   rules       = local.smoke_tests_sg_rules
   tags        = var.default_tags
-  vpc_id      = var.account.use_new_network ? data.aws_vpc.main.id : data.aws_vpc.vpc.id
+  vpc_id      = var.account.use_new_network ? data.aws_vpc.main[0].id : data.aws_vpc.vpc.id
   environment = local.environment
 }
 

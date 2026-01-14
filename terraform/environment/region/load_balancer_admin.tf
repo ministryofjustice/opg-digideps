@@ -86,7 +86,7 @@ resource "aws_lb_target_group" "admin" {
   port                 = 80
   protocol             = "HTTP"
   target_type          = "ip"
-  vpc_id               = var.account.use_new_network ? data.aws_vpc.main.id : data.aws_vpc.vpc.id
+  vpc_id               = var.account.use_new_network ? data.aws_vpc.main[0].id : data.aws_vpc.vpc.id
   deregistration_delay = 0
   tags                 = var.default_tags
 

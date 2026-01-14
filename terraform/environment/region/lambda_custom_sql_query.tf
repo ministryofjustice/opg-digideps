@@ -1,6 +1,6 @@
 data "aws_security_group" "lambda_custom_sql" {
   tags   = { Name = "${var.account.name}-custom-sql-query" }
-  vpc_id = var.account.use_new_network ? data.aws_vpc.main.id : data.aws_vpc.vpc.id
+  vpc_id = var.account.use_new_network ? data.aws_vpc.main[0].id : data.aws_vpc.vpc.id
 }
 
 resource "aws_security_group_rule" "lambda_custom_sql_query_to_front" {
