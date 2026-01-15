@@ -474,3 +474,8 @@ services:
 
     App\Service\UserDeputyService:
         public: true
+
+    App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester:
+        public: true
+        arguments:
+            $dataFactory: '@App\Factory\ChainedDataFactory'

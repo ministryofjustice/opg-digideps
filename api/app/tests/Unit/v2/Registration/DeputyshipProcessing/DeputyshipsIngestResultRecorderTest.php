@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
 
-use App\v2\Service\DataFixerResult;
-use ArrayIterator;
-use DateTimeImmutable;
+use App\Factory\DataFactoryResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesSelectorResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoaderResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
+use ArrayIterator;
+use DateTimeImmutable;
 use Doctrine\DBAL\Exception;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -55,7 +55,7 @@ final class DeputyshipsIngestResultRecorderTest extends TestCase
         $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new ArrayIterator([]), 20, null);
         $this->sut->recordDeputyshipCandidatesResult($candidatesSelectorResult);
 
-        $this->sut->recordDataFixerResult(new DataFixerResult(true));
+        $this->sut->recordDataFactoryResult(new DataFactoryResult(true));
 
         $expectedMessage1 = 'loaded 10 deputyships from CSV file /tmp/deputyships.csv; found 20 candidate database ' .
             'updates; data fixes applied successfully; number of candidates applied = 0; ' .
