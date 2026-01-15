@@ -18,12 +18,37 @@ const environment = process.env.ENVIRONMENT;
 const endpoint = process.env.ENDPOINT;
 
 const runSmoke = async () => {
-  const browser = await puppeteer.launch(
-    {
-      executablePath: '/usr/bin/chromium-browser',
-      args: ['--no-sandbox', '--headless'],
-      protocolTimeout: 30000
-    });
+  const browser = await puppeteer.launch({
+    executablePath: '/usr/bin/chromium-browser',
+    headless: true,
+    protocolTimeout: 30000,
+    args: [
+      '--no-sandbox',
+      '--disable-dev-shm-usage',
+      '--no-first-run',
+      '--no-default-browser-check',
+      '--disable-background-networking',
+      '--disable-background-timer-throttling',
+      '--disable-backgrounding-occluded-windows',
+      '--disable-breakpad',
+      '--disable-client-side-phishing-detection',
+      '--disable-component-update',
+      '--disable-default-apps',
+      '--disable-features=AutofillServerCommunication,AutofillDomainReliability,AutofillPredictionImprovements,PasswordManagerExtension,AccountConsistency,OptimizationGuideModelDownloading,InterestFeedContentSuggestions',
+      '--disable-hang-monitor',
+      '--disable-ipc-flooding-protection',
+      '--disable-popup-blocking',
+      '--disable-prompt-on-repost',
+      '--disable-renderer-backgrounding',
+      '--disable-sync',
+      '--metrics-recording-only',
+      '--safebrowsing-disable-auto-update',
+      '--safebrowsing-disable-download-protection',
+      '--window-size=1280,800',
+      '--host-resolver-rules=MAP accounts.google.com 127.0.0.1,MAP content-autofill.googleapis.com 127.0.0.1'
+    ],
+  });
+
   const version = await browser.version();
   console.log(`Running Chromium version: ${version}`);
 
