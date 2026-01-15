@@ -3,7 +3,7 @@ locals {
   account_level_configurations = {
     development = {
       network_firewall_enabled      = true
-      none_matching_traffic_action  = "alert"
+      none_matching_traffic_action  = "drop"
       shared_firewall_configuration = null
       # shared_firewall_configuration = {
       #   account_id   = "679638075911"
@@ -29,21 +29,8 @@ locals {
     "www.gov.uk",
     "api.notifications.service.gov.uk",
     "www.ncsc.gov.uk",
-    "registry-1.docker.io",
-    "auth.docker.io",
-    "content-autofill.googleapis.com",
     "www.google.com",
-    "production.cloudflare.docker.com",
-    "accounts.google.com",
-    "www.googletagmanager.com",
     "database.clamav.net",
-    "r4---sn-aigzrnse.gvt1.com",
-    "www.google-analytics.com",
-    "redirector.gvt1.com",
-    "android.clients.google.com",
-    "region1.google-analytics.com",
-    "update.googleapis.com",
-    "passwordsleakcheck-pa.googleapis.com",
     "raw.githubusercontent.com"
   ]
   allowed_prefixed_domains = [
