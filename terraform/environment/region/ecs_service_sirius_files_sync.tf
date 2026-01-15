@@ -33,7 +33,7 @@ resource "aws_ecs_service" "sirius_files_sync" {
 
   network_configuration {
     security_groups  = [module.sirius_files_sync_service_security_group.id]
-    subnets          = data.aws_subnet.private[*].id
+    subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
     assign_public_ip = false
   }
 
@@ -203,6 +203,6 @@ module "sirius_files_sync_service_security_group" {
   rules       = local.sirius_files_sync_sg_rules
   name        = "sirius-files-sync-service"
   tags        = var.default_tags
-  vpc_id      = data.aws_vpc.vpc.id
+  vpc_id      = var.account.use_new_network ? data.aws_vpc.main[0].id : data.aws_vpc.vpc.id
   environment = local.environment
 }
