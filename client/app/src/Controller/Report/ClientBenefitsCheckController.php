@@ -100,7 +100,9 @@ class ClientBenefitsCheckController extends AbstractController
         }
 
         if (3 === $step) {
-            $clientBenefitsCheck->setTypesOfMoneyReceivedOnClientsBehalf(new ArrayCollection());
+            if (!$clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf() instanceof ArrayCollection) {
+                $clientBenefitsCheck->setTypesOfMoneyReceivedOnClientsBehalf(new ArrayCollection());
+            }
 
             $income = ('ndr' === $reportOrNdr) ? new NdrMoneyReceivedOnClientsBehalf() : new MoneyReceivedOnClientsBehalf();
             $clientBenefitsCheck->addTypeOfMoneyReceivedOnClientsBehalf($income);
