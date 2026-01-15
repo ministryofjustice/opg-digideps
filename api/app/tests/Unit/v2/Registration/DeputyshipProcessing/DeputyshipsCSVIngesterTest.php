@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
 
-use App\v2\Service\DataFixer;
-use App\v2\Service\DataFixerResult;
-use ArrayIterator;
 use App\Entity\StagingSelectedCandidate;
+use App\Factory\DataFactoryInterface;
+use App\Factory\DataFactoryResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilder;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesSelectorResult;
@@ -18,6 +17,7 @@ use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoaderResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
 use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
+use ArrayIterator;
 use Doctrine\DBAL\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -28,7 +28,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
     private DeputyshipsCandidatesSelector|MockObject $mockDeputyshipsCandidatesSelector;
     private DeputyshipBuilder|MockObject $mockDeputyshipBuilder;
     private DeputyshipsIngestResultRecorder|MockObject $mockDeputyshipsIngestResultRecorder;
-    private DataFixer|MockObject $mockDataFixer;
+    private DataFactoryInterface|MockObject $mockDataFactory;
     private DeputyshipsCSVIngester $sut;
 
     public function setUp(): void
@@ -36,14 +36,14 @@ final class DeputyshipsCSVIngesterTest extends TestCase
         $this->mockDeputyshipsCSVLoader = self::createMock(DeputyshipsCSVLoader::class);
         $this->mockDeputyshipsCandidatesSelector = self::createMock(DeputyshipsCandidatesSelector::class);
         $this->mockDeputyshipBuilder = self::createMock(DeputyshipBuilder::class);
-        $this->mockDataFixer = self::createMock(DataFixer::class);
+        $this->mockDataFactory = self::createMock(DataFactoryInterface::class);
         $this->mockDeputyshipsIngestResultRecorder = self::createMock(DeputyshipsIngestResultRecorder::class);
 
         $this->sut = new DeputyshipsCSVIngester(
             $this->mockDeputyshipsCSVLoader,
             $this->mockDeputyshipsCandidatesSelector,
             $this->mockDeputyshipBuilder,
-            $this->mockDataFixer,
+            $this->mockDataFactory,
             $this->mockDeputyshipsIngestResultRecorder
         );
     }
@@ -103,17 +103,17 @@ final class DeputyshipsCSVIngesterTest extends TestCase
         self::assertFalse($result->success);
     }
 
-    public function testDataFixerFails(): void
+    public function testDataFactoryFails(): void
     {
         $mockCSVLoaderResult = $this->createMock(DeputyshipsCSVLoaderResult::class);
         $mockCSVLoaderResult->loadedOk = true;
 
-        $builderResult = new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidatesApplied);
-
         $candidates = [$this->createMock(StagingSelectedCandidate::class)];
         $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new ArrayIterator($candidates), 1);
 
-        $dataFixerResult = new DataFixerResult(false);
+        $builderResult = new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidatesApplied);
+
+        $dataFactoryResult = new DataFactoryResult(false);
 
         $this->mockDeputyshipsCSVLoader->expects(self::once())
             ->method('load')
@@ -141,13 +141,13 @@ final class DeputyshipsCSVIngesterTest extends TestCase
             ->method('recordBuilderResult')
             ->with($builderResult);
 
-        $this->mockDataFixer->expects(self::once())
-            ->method('fix')
-            ->willReturn($dataFixerResult);
+        $this->mockDataFactory->expects(self::once())
+            ->method('run')
+            ->willReturn($dataFactoryResult);
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
-            ->method('recordDataFixerResult')
-            ->with($dataFixerResult);
+            ->method('recordDataFactoryResult')
+            ->with($dataFactoryResult);
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('result')
@@ -160,13 +160,15 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
     public function testProcessCsvRows(): void
     {
-        $builderResult = new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidatesApplied);
+        $mockCSVLoaderResult = $this->createMock(DeputyshipsCSVLoaderResult::class);
+        $mockCSVLoaderResult->loadedOk = true;
 
         $candidates = [$this->createMock(StagingSelectedCandidate::class)];
         $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new ArrayIterator($candidates), 1);
 
-        $mockCSVLoaderResult = $this->createMock(DeputyshipsCSVLoaderResult::class);
-        $mockCSVLoaderResult->loadedOk = true;
+        $builderResult = new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidatesApplied);
+
+        $dataFactoryResult = new DataFactoryResult(false);
 
         $this->mockDeputyshipsCSVLoader->expects(self::once())
             ->method('load')
@@ -193,6 +195,14 @@ final class DeputyshipsCSVIngesterTest extends TestCase
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordBuilderResult')
             ->with($builderResult);
+
+        $this->mockDataFactory->expects(self::once())
+            ->method('run')
+            ->willReturn($dataFactoryResult);
+
+        $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
+            ->method('recordDataFactoryResult')
+            ->with($dataFactoryResult);
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('result')
