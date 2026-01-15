@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
 
+use App\v2\Service\DataFixerResult;
 use ArrayIterator;
 use DateTimeImmutable;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
@@ -21,7 +22,7 @@ final class DeputyshipsIngestResultRecorderTest extends TestCase
 
     public function setUp(): void
     {
-        $this->mockLogger = $this->createMock(LoggerInterface::class);
+        $this->mockLogger = self::createMock(LoggerInterface::class);
         $this->sut = new DeputyshipsIngestResultRecorder($this->mockLogger);
     }
 
@@ -54,9 +55,11 @@ final class DeputyshipsIngestResultRecorderTest extends TestCase
         $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new ArrayIterator([]), 20, null);
         $this->sut->recordDeputyshipCandidatesResult($candidatesSelectorResult);
 
-        $expectedMessage1 = 'loaded 10 deputyships from CSV file /tmp/deputyships.csv; found 20 candidate database '.
-            'updates; number of candidates applied = 0; number of candidates failed = 0; successfully ingested '.
-            'deputyships CSV';
+        $this->sut->recordDataFixerResult(new DataFixerResult(true));
+
+        $expectedMessage1 = 'loaded 10 deputyships from CSV file /tmp/deputyships.csv; found 20 candidate database ' .
+            'updates; data fixes applied successfully; number of candidates applied = 0; ' .
+            'number of candidates failed = 0; successfully ingested deputyships CSV';
 
         $result = $this->sut->result();
 
@@ -66,7 +69,7 @@ final class DeputyshipsIngestResultRecorderTest extends TestCase
 
     public function testRecordBuilderResult(): void
     {
-        $builderResult1 = $this->createMock(DeputyshipBuilderResult::class);
+        $builderResult1 = self::createMock(DeputyshipBuilderResult::class);
         $builderResult1->expects($this->once())->method('getNumCandidatesApplied')->willReturn(7);
         $builderResult1->expects($this->once())->method('getNumCandidatesFailed')->willReturn(1);
         $this->sut->recordBuilderResult($builderResult1);
@@ -75,7 +78,7 @@ final class DeputyshipsIngestResultRecorderTest extends TestCase
         self::assertStringContainsString('number of candidates applied = 7', $result->message);
         self::assertStringContainsString('number of candidates failed = 1', $result->message);
 
-        $builderResult2 = $this->createMock(DeputyshipBuilderResult::class);
+        $builderResult2 = self::createMock(DeputyshipBuilderResult::class);
         $builderResult2->expects($this->once())->method('getNumCandidatesApplied')->willReturn(3);
         $builderResult2->expects($this->once())->method('getNumCandidatesFailed')->willReturn(4);
         $this->sut->recordBuilderResult($builderResult2);
