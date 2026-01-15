@@ -67,8 +67,6 @@ Feature: Client benefits check - Lay users
         And the deputies 'current' report ends and is due 'more' than 60 days after the client benefits check feature flag date
         When I visit the client benefits check summary page
         And I add 3 money types from the summary page
-        And I add a type of money where I don't know the value
-        And I have no further types of money to add
         Then the client benefits check summary page should contain the details I entered
 
     @lay-combined-high-not-started
@@ -79,7 +77,6 @@ Feature: Client benefits check - Lay users
         And I confirm I have never checked the benefits the client is entitled to and provide a reason
         And I confirm others receive money on the clients behalf
         And I add 1 type of money with values
-        And I add a type of money where I don't know the value
         And I have no further types of money to add
         And I 'edit' the last type of money I added
         Then the client benefits check summary page should contain the details I entered
@@ -96,7 +93,6 @@ Feature: Client benefits check - Lay users
         And I confirm I checked the clients benefit entitlement on '01/01/2021'
         And I confirm others receive money on the clients behalf
         And I add 2 types of money with values
-        And I add a type of money where I don't know the value
         And I have no further types of money to add
         And I 'remove' the last type of money I added
         Then the client benefits check summary page should contain the details I entered
