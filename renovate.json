@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
+    "config:recommended",
     "schedule:earlyMondays",
     "helpers:pinGitHubActionDigests"
   ],
@@ -9,9 +9,10 @@
   "commitMessageAction": "Renovate Update",
   "labels": ["Dependencies", "Renovate"],
   "branchConcurrentLimit": 5,
-  "regexManagers": [
+  "customManagers": [
     {
-      "fileMatch": ["^Dockerfile.*$"],
+      "customType": "regex",
+      "managerFilePatterns": ["/^Dockerfile.*$/"],
       "matchStrings": ["FROM node:(?<currentValue>.*?)-alpine.*\\n"],
       "depNameTemplate": "node",
       "datasourceTemplate": "node",
@@ -23,74 +24,73 @@
       "groupName": "Minor and Patch Updates PHP",
       "groupSlug": "all-patch-updates-php",
       "labels": ["Dependencies", "Renovate", "PHP"],
-      "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["minor", "patch"],
       "prPriority": 0,
       "schedule": ["after 6am and before 9am on Monday"],
-      "stabilityDays": 3,
+      "minimumReleaseAge": "3 days",
       "prCreation": "immediate",
-      "excludePackageNames": ["php"],
-      "matchLanguages": ["php"]
+      "matchCategories": ["php"],
+      "matchPackageNames": ["*", "!php"]
     },
     {
       "groupName": "Minor and Patch Updates Node",
       "groupSlug": "all-patch-updates-node",
       "labels": ["Dependencies", "Renovate", "Node"],
-      "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["minor", "patch"],
       "prPriority": 0,
       "schedule": ["after 6am and before 9am on Monday"],
-      "stabilityDays": 3,
+      "minimumReleaseAge": "3 days",
       "prCreation": "immediate",
-      "matchLanguages": ["node"]
+      "matchCategories": ["node"],
+      "matchPackageNames": ["*"]
     },
     {
       "groupName": "Minor and Patch Updates Docker",
       "groupSlug": "all-patch-updates-docker",
       "labels": ["Dependencies", "Renovate", "Docker"],
-      "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["minor", "patch"],
       "prPriority": 0,
       "schedule": ["after 6am and before 9am on Monday"],
-      "stabilityDays": 3,
+      "minimumReleaseAge": "3 days",
       "prCreation": "immediate",
-      "matchLanguages": ["docker"]
+      "matchCategories": ["docker"],
+      "matchPackageNames": ["*"]
     },
     {
       "groupName": "Minor and Patch Updates Python",
       "groupSlug": "all-patch-updates-python",
       "labels": ["Dependencies", "Renovate", "Python"],
-      "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["minor", "patch"],
       "prPriority": 0,
       "schedule": ["after 6am and before 9am on Monday"],
-      "stabilityDays": 3,
+      "minimumReleaseAge": "3 days",
       "prCreation": "immediate",
-      "matchLanguages": ["python"]
+      "matchCategories": ["python"],
+      "matchPackageNames": ["*"]
     },
     {
       "groupName": "Minor and Patch Updates Golang",
       "groupSlug": "all-patch-updates-golang",
       "labels": ["Dependencies", "Renovate", "Golang"],
-      "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["minor", "patch"],
       "prPriority": 0,
       "schedule": ["after 6am and before 9am on Monday"],
-      "stabilityDays": 3,
+      "minimumReleaseAge": "3 days",
       "prCreation": "immediate",
-      "matchLanguages": ["golang"]
+      "matchCategories": ["golang"],
+      "matchPackageNames": ["*"]
     },
     {
       "groupName": "GitHub Actions",
-      "matchPackagePatterns": ["actions/*"],
       "automerge": true,
       "dependencyDashboardApproval": true,
       "prPriority": 0,
       "labels": ["Dependencies", "Renovate", "Actions"],
       "prBody": "Updates the following GitHub Actions dependencies:\n\n{{#each dependencies}}- {{this.name}}\n{{/each}}",
       "schedule": ["after 6am and before 9am on Monday"],
-      "stabilityDays": 3,
-      "prCreation": "immediate"
+      "minimumReleaseAge": "3 days",
+      "prCreation": "immediate",
+      "matchPackageNames": ["/actions/*/"]
     },
     {
       "groupName": "Disable node updates for dockerfiles",
@@ -102,13 +102,12 @@
       "groupName": "Minor Updates",
       "groupSlug": "all-minor-updates",
       "labels": ["Dependencies", "Renovate", "All-Minor"],
-      "matchPackagePatterns": ["*"],
       "matchUpdateTypes": ["minor"],
       "prPriority": -1,
       "schedule": ["after 6am and before 9am on Monday"],
-      "stabilityDays": 3,
+      "minimumReleaseAge": "3 days",
       "prCreation": "immediate",
-      "excludePackageNames": ["php"]
+      "matchPackageNames": ["*", "!php"]
     }
   ],
   "major": {
@@ -123,7 +122,7 @@
     "labels": ["Dependencies", "Renovate", "Vulnerability"],
     "schedule": ["after 6am and before 9am every weekday"],
     "dependencyDashboardApproval": false,
-    "stabilityDays": 0,
+    "minimumReleaseAge": null,
     "rangeStrategy": "pin",
     "commitMessagePrefix": "[SECURITY]",
     "branchTopic": "{{{datasource}}}-{{{depName}}}-vulnerability",
