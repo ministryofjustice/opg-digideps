@@ -26,10 +26,30 @@ locals {
     }
   }
   allowed_domains = [
-    "www.gov.uk"
+    "www.gov.uk",
+    "api.notifications.service.gov.uk",
+    "www.ncsc.gov.uk",
+    "registry-1.docker.io",
+    "auth.docker.io",
+    "content-autofill.googleapis.com",
+    "www.google.com",
+    "production.cloudflare.docker.com",
+    "accounts.google.com",
+    "www.googletagmanager.com",
+    "database.clamav.net",
+    "r4---sn-aigzrnse.gvt1.com",
+    "www.google-analytics.com",
+    "redirector.gvt1.com",
+    "android.clients.google.com",
+    "region1.google-analytics.com",
+    "update.googleapis.com",
+    "passwordsleakcheck-pa.googleapis.com",
+    "raw.githubusercontent.com"
   ]
   allowed_prefixed_domains = [
-    ".api.opg.service.justice.gov.uk"
+    ".api.opg.service.justice.gov.uk",
+    ".digideps.opg.service.justice.gov.uk",
+    ".admin.digideps.opg.service.justice.gov.uk"
   ]
 }
 
