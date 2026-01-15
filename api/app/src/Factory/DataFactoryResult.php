@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Service;
+namespace App\Factory;
 
-class DataFixerResult
+class DataFactoryResult
 {
     public function __construct(
         public bool $success = true,
