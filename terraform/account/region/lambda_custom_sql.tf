@@ -278,6 +278,7 @@ resource "aws_security_group" "custom_sql_tool" {
 }
 
 data "aws_security_group" "secrets_vpc_endpoint" {
+  count  = var.account.network.enabled ? 1 : 0
   tags   = { Name = "secrets_endpoint" }
   vpc_id = module.network[0].vpc.id
 }
@@ -288,7 +289,7 @@ resource "aws_security_group_rule" "lambda_custom_sql_tool_to_secrets_endpoint" 
   protocol                 = "tcp"
   from_port                = 443
   to_port                  = 443
-  source_security_group_id = data.aws_security_group.secrets_vpc_endpoint.id
+  source_security_group_id = data.aws_security_group.secrets_vpc_endpoint[0].id
   security_group_id        = aws_security_group.custom_sql_tool[0].id
   description              = "Outbound lambda custom_sql to secrets endpoint"
 }
