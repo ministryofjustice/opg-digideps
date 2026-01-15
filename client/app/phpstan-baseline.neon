@@ -46,11 +46,6 @@ parameters:
 			path: src/Command/DocumentRecoverCommand.php
 
 		-
-			message: "#^Method App\\\\Command\\\\DocumentSyncCommand\\:\\:getQueuedDocumentsData\\(\\) should return array\\<App\\\\Model\\\\Sirius\\\\QueuedDocumentData\\> but returns mixed\\.$#"
-			count: 1
-			path: src/Command/DocumentSyncCommand.php
-
-		-
 			message: "#^Call to method getMessage\\(\\) on an unknown class App\\\\Command\\\\Throwable\\.$#"
 			count: 1
 			path: src/Command/ProcessLayCSVCommand.php
@@ -4776,16 +4771,6 @@ parameters:
 			path: src/Entity/Report/BankAccount.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Checklist\\:\\:getChecklistInformation\\(\\) has invalid return type App\\\\Entity\\\\Report\\\\ArrayCollection\\.$#"
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Checklist\\:\\:getChecklistInformation\\(\\) should return App\\\\Entity\\\\Report\\\\ArrayCollection but returns array\\<App\\\\Entity\\\\Report\\\\CheclistInformation\\>\\.$#"
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Checklist\\:\\:setChecklistInformation\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/Checklist.php
@@ -4827,21 +4812,6 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$report of method App\\\\Entity\\\\Report\\\\Checklist\\:\\:setReport\\(\\) expects App\\\\Entity\\\\Report\\\\Report, App\\\\Entity\\\\ReportInterface given\\.$#"
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: "#^Parameter \\$checklistInformation of method App\\\\Entity\\\\Report\\\\Checklist\\:\\:setChecklistInformation\\(\\) has invalid type App\\\\Entity\\\\Report\\\\ArrayCollection\\.$#"
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\Checklist\\:\\:\\$checklistInformation \\(array\\<App\\\\Entity\\\\Report\\\\CheclistInformation\\>\\) does not accept App\\\\Entity\\\\Report\\\\ArrayCollection\\.$#"
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\Checklist\\:\\:\\$checklistInformation has unknown class App\\\\Entity\\\\Report\\\\CheclistInformation as its type\\.$#"
 			count: 1
 			path: src/Entity/Report/Checklist.php
 
@@ -8706,11 +8676,6 @@ parameters:
 			path: src/Mapper/ReportSubmission/ReportSubmissionSummaryMapper.php
 
 		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$restClient$#"
-			count: 1
-			path: src/Mapper/UserResearchResponse/UserResearchResponseSummaryMapper.php
-
-		-
 			message: "#^Property App\\\\Model\\\\Email\\:\\:\\$fromEmailNotifyID has no type specified\\.$#"
 			count: 1
 			path: src/Model/Email.php
@@ -8804,126 +8769,6 @@ parameters:
 			message: "#^Property App\\\\Model\\\\FeedbackReport\\:\\:\\$satisfactionLevel has no type specified\\.$#"
 			count: 1
 			path: src/Model/FeedbackReport.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\QueuedChecklistData\\:\\:\\$caseNumber has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedChecklistData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\QueuedChecklistData\\:\\:\\$checklistFileContents has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedChecklistData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\QueuedChecklistData\\:\\:\\$checklistUuid \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedChecklistData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\QueuedChecklistData\\:\\:\\$reportEndDate has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedChecklistData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\QueuedChecklistData\\:\\:\\$reportType has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedChecklistData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\QueuedChecklistData\\:\\:\\$submitterEmail has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedChecklistData.php
-
-		-
-			message: "#^Method App\\\\Model\\\\Sirius\\\\QueuedDocumentData\\:\\:supportingDocumentCanBeSynced\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedDocumentData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\QueuedDocumentData\\:\\:\\$caseNumber has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedDocumentData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\QueuedDocumentData\\:\\:\\$documentSyncAttempts has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedDocumentData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\QueuedDocumentData\\:\\:\\$reportEndDate has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedDocumentData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\QueuedDocumentData\\:\\:\\$reportSubmissionId has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedDocumentData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\QueuedDocumentData\\:\\:\\$reportSubmissionUuid has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedDocumentData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\QueuedDocumentData\\:\\:\\$reportSubmitDate has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedDocumentData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\QueuedDocumentData\\:\\:\\$s3Reference has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedDocumentData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\QueuedDocumentData\\:\\:\\$s3Reference is unused\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedDocumentData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\QueuedDocumentData\\:\\:\\$storageReference has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/QueuedDocumentData.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\SiriusApiError\\:\\:\\$code has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/SiriusApiError.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\SiriusApiError\\:\\:\\$detail has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/SiriusApiError.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\SiriusApiError\\:\\:\\$title \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Model/Sirius/SiriusApiError.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\SiriusChecklistPdfDocumentMetadata\\:\\:\\$reportingPeriodTo has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/SiriusChecklistPdfDocumentMetadata.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\SiriusChecklistPdfDocumentMetadata\\:\\:\\$type has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/SiriusChecklistPdfDocumentMetadata.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\SiriusDocumentUpload\\:\\:\\$attributes \\(App\\\\Model\\\\Sirius\\\\SiriusReportPdfDocumentMetadata\\) does not accept App\\\\Model\\\\Sirius\\\\SiriusMetadataInterface\\|null\\.$#"
-			count: 1
-			path: src/Model/Sirius/SiriusDocumentUpload.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\SiriusReportPdfDocumentMetadata\\:\\:\\$dateSubmitted has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/SiriusReportPdfDocumentMetadata.php
-
-		-
-			message: "#^Property App\\\\Model\\\\Sirius\\\\SiriusReportPdfDocumentMetadata\\:\\:\\$reportingPeriodTo has no type specified\\.$#"
-			count: 1
-			path: src/Model/Sirius/SiriusReportPdfDocumentMetadata.php
 
 		-
 			message: "#^Method App\\\\Resolver\\\\SubSectionRoute\\\\ProfCostsEstimateSubSectionRouteResolver\\:\\:breakdownSubsectionIsIncomplete\\(\\) has parameter \\$state with no type specified\\.$#"
@@ -9071,16 +8916,6 @@ parameters:
 			path: src/Security/UserVoter.php
 
 		-
-			message: "#^Cannot access offset 'file' on array\\|ArrayObject\\|bool\\|float\\|int\\|string\\|null\\.$#"
-			count: 1
-			path: src/Serializer/SiriusDocumentUploadSerializer.php
-
-		-
-			message: "#^Method App\\\\Service\\\\AWS\\\\RequestSigner\\:\\:signRequest\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/AWS/RequestSigner.php
-
-		-
 			message: "#^Method App\\\\Service\\\\ApiCollector\\:\\:getCalls\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/ApiCollector.php
@@ -9211,99 +9046,9 @@ parameters:
 			path: src/Service/Availability/ServiceAvailabilityAbstract.php
 
 		-
-			message: "#^Cannot call method getStatusCode\\(\\) on mixed\\.$#"
-			count: 2
-			path: src/Service/Availability/SiriusApiAvailability.php
-
-		-
 			message: "#^Method App\\\\Service\\\\Availability\\\\SiriusApiAvailability\\:\\:ping\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/Availability/SiriusApiAvailability.php
-
-		-
-			message: "#^Property App\\\\Service\\\\ChecklistPdfGenerator\\:\\:\\$logger is never read, only written\\.$#"
-			count: 1
-			path: src/Service/ChecklistPdfGenerator.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between false and string will always evaluate to false\\.$#"
-			count: 1
-			path: src/Service/ChecklistPdfGenerator.php
-
-		-
-			message: "#^Call to an undefined method Throwable\\:\\:getResponse\\(\\)\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Cannot access offset 'data' on mixed\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Cannot access offset 'id' on mixed\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Cannot call method getBody\\(\\) on class\\-string\\|object\\.$#"
-			count: 2
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Cannot call method getBody\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Method App\\\\Service\\\\ChecklistSyncService\\:\\:updateChecklistWithError\\(\\) has parameter \\$e with no type specified\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Method App\\\\Service\\\\ChecklistSyncService\\:\\:updateChecklistWithSuccess\\(\\) has parameter \\$uuid with no type specified\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$content$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$report$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Parameter \\#1 \\$mimetype of method App\\\\Model\\\\Sirius\\\\SiriusDocumentFile\\:\\:setMimetype\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Parameter \\#1 \\$reportEndDate of method App\\\\Model\\\\Sirius\\\\QueuedChecklistData\\:\\:setReportEndDate\\(\\) expects DateTime, DateTime\\|null given\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Parameter \\#1 \\$reportStartDate of method App\\\\Model\\\\Sirius\\\\QueuedChecklistData\\:\\:setReportStartDate\\(\\) expects DateTime, DateTime\\|null given\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Parameter \\#2 \\$reportSubmissionUuid of method App\\\\Service\\\\ChecklistSyncService\\:\\:postChecklist\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Parameter \\#2 \\$reportSubmissionUuid of method App\\\\Service\\\\ChecklistSyncService\\:\\:putChecklist\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
-
-		-
-			message: "#^Parameter \\#4 \\$checklistUuid of method App\\\\Service\\\\Client\\\\Sirius\\\\SiriusApiGatewayClient\\:\\:putChecklistPdf\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Service/ChecklistSyncService.php
 
 		-
 			message: "#^Method App\\\\Service\\\\Client\\\\GovUK\\\\BankHolidaysAPIClient\\:\\:getBankHolidays\\(\\) should return array but returns mixed\\.$#"
@@ -9596,21 +9341,6 @@ parameters:
 			path: src/Service/Client/Internal/UserApi.php
 
 		-
-			message: "#^Method App\\\\Service\\\\Client\\\\Internal\\\\UserResearchApi\\:\\:createPostSubmissionUserResearch\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/Client/Internal/UserResearchApi.php
-
-		-
-			message: "#^Method App\\\\Service\\\\Client\\\\Internal\\\\UserResearchApi\\:\\:getUserResearchResponseData\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/Client/Internal/UserResearchApi.php
-
-		-
-			message: "#^Property App\\\\Service\\\\Client\\\\Internal\\\\UserResearchApi\\:\\:\\$restClient \\(App\\\\Service\\\\Client\\\\RestClient\\) does not accept App\\\\Service\\\\Client\\\\RestClientInterface\\.$#"
-			count: 1
-			path: src/Service/Client/Internal/UserResearchApi.php
-
-		-
 			message: "#^Ternary operator condition is always true\\.$#"
 			count: 2
 			path: src/Service/Client/Internal/UserResearchApi.php
@@ -9761,11 +9491,6 @@ parameters:
 			path: src/Service/Client/RestClient.php
 
 		-
-			message: "#^Property App\\\\Service\\\\Client\\\\RestClient\\:\\:\\$saveHistory \\(bool\\) does not accept array\\|bool\\|float\\|int\\|string\\|UnitEnum\\|null\\.$#"
-			count: 1
-			path: src/Service/Client/RestClient.php
-
-		-
 			message: "#^Method App\\\\Service\\\\Client\\\\RestClientInterface\\:\\:post\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/Client/RestClientInterface.php
@@ -9809,11 +9534,6 @@ parameters:
 			message: "#^Method App\\\\Service\\\\Client\\\\RestClientMock\\:\\:post\\(\\) has parameter \\$mixed with no type specified\\.$#"
 			count: 1
 			path: src/Service/Client/RestClientMock.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$content$#"
-			count: 1
-			path: src/Service/Client/Sirius/SiriusApiGatewayClient.php
 
 		-
 			message: "#^Method App\\\\Service\\\\Client\\\\TokenStorage\\\\RedisStorage\\:\\:get\\(\\) has no return type specified\\.$#"
@@ -10126,106 +9846,6 @@ parameters:
 			path: src/Service/DocumentService.php
 
 		-
-			message: "#^Cannot access offset 'data' on mixed\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
-			message: "#^Cannot access offset 'id' on mixed\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
-			message: "#^Cannot call method format\\(\\) on DateTime\\|null\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
-			message: "#^Cannot call method getBody\\(\\) on class\\-string\\|object\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
-			message: "#^Cannot call method getBody\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
-			message: "#^Method App\\\\Service\\\\DocumentSyncService\\:\\:addToSyncErrorSubmissionIds\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
-			message: "#^Method App\\\\Service\\\\DocumentSyncService\\:\\:buildUpload\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
-			message: "#^Method App\\\\Service\\\\DocumentSyncService\\:\\:determineEndDate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
-			message: "#^Method App\\\\Service\\\\DocumentSyncService\\:\\:determineReportType\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
-			message: "#^Method App\\\\Service\\\\DocumentSyncService\\:\\:handleSyncErrors\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
-			message: "#^Method App\\\\Service\\\\DocumentSyncService\\:\\:retrieveDocumentContentFromS3\\(\\) is unused\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
-			message: "#^Method App\\\\Service\\\\DocumentSyncService\\:\\:setDocsNotSyncedCount\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
-			message: "#^Method App\\\\Service\\\\DocumentSyncService\\:\\:setSubmissionsDocumentsToPermanentError\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
-			message: "#^Method App\\\\Service\\\\DocumentSyncService\\:\\:syncReportDocument\\(\\) should return App\\\\Entity\\\\Report\\\\Document\\|null but returns mixed\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
-			message: "#^Method App\\\\Service\\\\DocumentSyncService\\:\\:syncSupportingDocument\\(\\) should return App\\\\Entity\\\\Report\\\\Document\\|null but returns mixed\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$document$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
-			message: "#^Parameter \\#1 \\$dateSubmitted of method App\\\\Model\\\\Sirius\\\\SiriusReportPdfDocumentMetadata\\:\\:setDateSubmitted\\(\\) expects DateTime, DateTime\\|null given\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
-			message: "#^Parameter \\#1 \\$reportingPeriodFrom of method App\\\\Model\\\\Sirius\\\\SiriusReportPdfDocumentMetadata\\:\\:setReportingPeriodFrom\\(\\) expects DateTime, DateTime\\|null given\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
-			message: "#^Parameter \\#2 \\$submissionUuid of method App\\\\Service\\\\Client\\\\Sirius\\\\SiriusApiGatewayClient\\:\\:sendSupportingDocument\\(\\) expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
-			message: "#^Parameter \\#2 \\$uuid of method App\\\\Service\\\\DocumentSyncService\\:\\:handleReportSubmissionUpdate\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Service/DocumentSyncService.php
-
-		-
 			message: "#^Method App\\\\Service\\\\File\\\\DocumentsZipFileCreator\\:\\:cleanUp\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/File/DocumentsZipFileCreator.php
@@ -10474,16 +10094,6 @@ parameters:
 			message: "#^Method App\\\\Service\\\\File\\\\Verifier\\\\VerificationStatus\\:\\:addError\\(\\) has parameter \\$message with no type specified\\.$#"
 			count: 1
 			path: src/Service/File/Verifier/VerificationStatus.php
-
-		-
-			message: "#^Method App\\\\Service\\\\HtmlToPdfGenerator\\:\\:__construct\\(\\) has parameter \\$timeoutSeconds with no type specified\\.$#"
-			count: 1
-			path: src/Service/HtmlToPdfGenerator.php
-
-		-
-			message: "#^Method App\\\\Service\\\\HtmlToPdfGenerator\\:\\:getPdfFromHtml\\(\\) should return string but returns bool\\|string\\.$#"
-			count: 1
-			path: src/Service/HtmlToPdfGenerator.php
 
 		-
 			message: "#^Parameter \\#1 \\$string of function strlen expects string, string\\|false given\\.$#"
@@ -10831,11 +10441,6 @@ parameters:
 			path: src/Service/ReportSectionsLinkService.php
 
 		-
-			message: "#^Call to method render\\(\\) on an unknown class App\\\\Service\\\\Templating\\.$#"
-			count: 2
-			path: src/Service/ReportSubmissionService.php
-
-		-
 			message: "#^Cannot call method getId\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Service/ReportSubmissionService.php
@@ -10846,42 +10451,7 @@ parameters:
 			path: src/Service/ReportSubmissionService.php
 
 		-
-			message: "#^Method App\\\\Service\\\\ReportSubmissionService\\:\\:generateReportDocuments\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/ReportSubmissionService.php
-
-		-
 			message: "#^Method App\\\\Service\\\\ReportSubmissionService\\:\\:getReportSubmissionById\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/ReportSubmissionService.php
-
-		-
-			message: "#^PHPDoc tag @throws with type App\\\\Service\\\\ReportSubmissionDocumentsNotDownloadableExceptionAlias is not subtype of Throwable$#"
-			count: 1
-			path: src/Service/ReportSubmissionService.php
-
-		-
-			message: "#^Property App\\\\Service\\\\ReportSubmissionService\\:\\:\\$mailFactory is never read, only written\\.$#"
-			count: 1
-			path: src/Service/ReportSubmissionService.php
-
-		-
-			message: "#^Property App\\\\Service\\\\ReportSubmissionService\\:\\:\\$mailSender is never read, only written\\.$#"
-			count: 1
-			path: src/Service/ReportSubmissionService.php
-
-		-
-			message: "#^Property App\\\\Service\\\\ReportSubmissionService\\:\\:\\$templating \\(App\\\\Service\\\\Templating\\) does not accept Twig\\\\Environment\\.$#"
-			count: 1
-			path: src/Service/ReportSubmissionService.php
-
-		-
-			message: "#^Property App\\\\Service\\\\ReportSubmissionService\\:\\:\\$templating has unknown class App\\\\Service\\\\Templating as its type\\.$#"
-			count: 1
-			path: src/Service/ReportSubmissionService.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between false and string will always evaluate to false\\.$#"
 			count: 1
 			path: src/Service/ReportSubmissionService.php
 
@@ -10889,21 +10459,6 @@ parameters:
 			message: "#^Method App\\\\Service\\\\SecretManagerService\\:\\:getSecret\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/SecretManagerService.php
-
-		-
-			message: "#^Cannot access offset 'error' on mixed\\.$#"
-			count: 1
-			path: src/Service/SiriusApiErrorTranslator.php
-
-		-
-			message: "#^Method App\\\\Service\\\\SiriusApiErrorTranslator\\:\\:translateApiError\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/SiriusApiErrorTranslator.php
-
-		-
-			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, mixed given\\.$#"
-			count: 1
-			path: src/Service/SiriusApiErrorTranslator.php
 
 		-
 			message: "#^Binary operation \"\\+\" between string and 1 results in an error\\.$#"

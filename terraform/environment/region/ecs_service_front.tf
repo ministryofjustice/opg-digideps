@@ -27,7 +27,7 @@ resource "aws_ecs_service" "front" {
 
   network_configuration {
     security_groups  = [module.front_service_security_group.id]
-    subnets          = data.aws_subnet.private[*].id
+    subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
     assign_public_ip = false
   }
 

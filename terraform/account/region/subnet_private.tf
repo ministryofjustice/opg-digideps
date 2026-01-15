@@ -33,11 +33,27 @@ resource "aws_elasticache_subnet_group" "private" {
   subnet_ids = aws_subnet.private[*].id
 }
 
+resource "aws_elasticache_subnet_group" "application" {
+  count      = var.account.network.enabled ? 1 : 0
+  name       = "application"
+  subnet_ids = module.network[0].data_subnets[*].id
+}
+
 resource "aws_db_subnet_group" "private" {
   name       = var.account.db_subnet_group
   subnet_ids = aws_subnet.private[*].id
   tags = merge(
     var.default_tags,
     { Name = "rds-subnet-group-${var.account.name}" },
+  )
+}
+
+resource "aws_db_subnet_group" "data" {
+  count      = var.account.network.enabled ? 1 : 0
+  name       = "data-subnet-group-${var.account.name}"
+  subnet_ids = module.network[0].data_subnets[*].id
+  tags = merge(
+    var.default_tags,
+    { Name = "data-subnet-group-${var.account.name}" },
   )
 }

@@ -27,7 +27,7 @@ resource "aws_ecs_service" "api" {
 
   network_configuration {
     security_groups  = [module.api_service_security_group.id]
-    subnets          = data.aws_subnet.private[*].id
+    subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
     assign_public_ip = false
   }
 
@@ -173,7 +173,7 @@ module "api_task_override" {
   tags                  = var.default_tags
   environment           = local.environment
   execution_role_arn    = aws_iam_role.execution_role_db.arn
-  subnet_ids            = data.aws_subnet.private[*].id
+  subnet_ids            = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
   task_role_arn         = aws_iam_role.integration_tests.arn
   security_group_id     = module.api_service_security_group.id
   cpu                   = 1024

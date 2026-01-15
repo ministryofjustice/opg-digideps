@@ -32,6 +32,6 @@ module "scan_security_group" {
   rules       = local.scan_sg_rules
   name        = "scan"
   tags        = var.default_tags
-  vpc_id      = data.aws_vpc.vpc.id
+  vpc_id      = var.account.use_new_network ? data.aws_vpc.main[0].id : data.aws_vpc.vpc.id
   environment = local.environment
 }

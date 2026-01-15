@@ -4,26 +4,25 @@ declare(strict_types=1);
 
 namespace DigidepsTests\Helpers;
 
-use App\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
-use App\Model\Sirius\SiriusDocumentFile;
-use App\Model\Sirius\SiriusDocumentUpload;
-use App\Model\Sirius\SiriusReportPdfDocumentMetadata;
-use App\Model\Sirius\SiriusSupportingDocumentMetadata;
-use DateTime;
+use App\Sync\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
+use App\Sync\Model\Sirius\SiriusDocumentFile;
+use App\Sync\Model\Sirius\SiriusDocumentUpload;
+use App\Sync\Model\Sirius\SiriusReportPdfDocumentMetadata;
+use App\Sync\Model\Sirius\SiriusSupportingDocumentMetadata;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class SiriusHelpers extends KernelTestCase
 {
     public static function generateSiriusReportPdfDocumentUpload(
-        DateTime $startDate,
-        DateTime $endDate,
-        DateTime $submittedDate,
+        \DateTime $startDate,
+        \DateTime $endDate,
+        \DateTime $submittedDate,
         string $orderType,
         int $submissionId,
         string $fileName,
         ?string $fileContents,
         ?string $s3Reference
-    ) {
+    ): SiriusDocumentUpload {
         $siriusReportPdfDocumentMetadata = (new SiriusReportPdfDocumentMetadata())
             ->setReportingPeriodFrom($startDate)
             ->setReportingPeriodTo($endDate)
@@ -50,8 +49,12 @@ class SiriusHelpers extends KernelTestCase
             ->setFile($file);
     }
 
-    public static function generateSiriusSupportingDocumentUpload(int $submissionId, string $fileName, ?string $fileContents, ?string $s3Reference)
-    {
+    public static function generateSiriusSupportingDocumentUpload(
+        int $submissionId,
+        string $fileName,
+        ?string $fileContents,
+        ?string $s3Reference
+    ): SiriusDocumentUpload {
         $siriusSupportingDocumentMetadata = (new SiriusSupportingDocumentMetadata())
             ->setSubmissionId($submissionId);
 
@@ -78,8 +81,8 @@ class SiriusHelpers extends KernelTestCase
         string $fileContents,
         int $submissionId,
         string $submitterEmail,
-        DateTime $reportingPeriodFrom,
-        DateTime $reportingPeriodTo,
+        \DateTime $reportingPeriodFrom,
+        \DateTime $reportingPeriodTo,
         int $year,
         string $type
     ) {
