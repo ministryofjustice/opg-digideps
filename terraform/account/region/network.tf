@@ -2,7 +2,7 @@ locals {
   firewall_config = lookup(local.account_level_configurations, terraform.workspace, local.account_level_configurations["production"])
   account_level_configurations = {
     development = {
-      network_firewall_enabled      = false
+      network_firewall_enabled      = true
       none_matching_traffic_action  = "alert"
       shared_firewall_configuration = null
       # shared_firewall_configuration = {
@@ -43,7 +43,7 @@ module "network" {
   enable_dns_hostnames                                    = true
   flow_log_cloudwatch_log_group_kms_key_id                = module.logs_kms.eu_west_1_target_key_arn
   flow_log_cloudwatch_log_group_retention_in_days         = 400
-  network_firewall_enabled                                = false
+  network_firewall_enabled                                = local.firewall_config.network_firewall_enabled
   shared_firewall_configuration                           = local.firewall_config.shared_firewall_configuration
   network_firewall_cloudwatch_log_group_kms_key_id        = module.logs_kms.eu_west_1_target_key_arn
   network_firewall_cloudwatch_log_group_retention_in_days = 400
