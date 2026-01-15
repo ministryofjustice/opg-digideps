@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
+use App\v2\Service\DataFixerResult;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 
 class DeputyshipsIngestResultRecorder
 {
-    private const SUCCESS_MESSAGE = 'successfully ingested deputyships CSV';
+    private const string SUCCESS_MESSAGE = 'successfully ingested deputyships CSV';
 
     private bool $csvLoadedSuccessfully = false;
     private bool $candidatesSelectedSuccessfully = false;
+    private bool $dataFixesAppliedSuccessfully = false;
 
     // for storing builder counts
     private int $numCandidatesApplied = 0;
@@ -42,7 +44,7 @@ class DeputyshipsIngestResultRecorder
 
     private function formatMessage(string $message): string
     {
-        return $this->formatDate(new \DateTimeImmutable()).' deputyships-ingest '.$message;
+        return $this->formatDate(new \DateTimeImmutable()) . ' deputyships-ingest ' . $message;
     }
 
     private function logMessage(string $message): void
@@ -56,7 +58,7 @@ class DeputyshipsIngestResultRecorder
         $this->errorMessages[] = $errorMessage;
 
         if ($this->dryRun) {
-            $this->logger->warning('{ERROR if not dry run} - '.$this->formatMessage($errorMessage));
+            $this->logger->warning('{ERROR if not dry run} - ' . $this->formatMessage($errorMessage));
         } else {
             $this->logger->error($this->formatMessage($errorMessage));
         }
@@ -102,11 +104,22 @@ class DeputyshipsIngestResultRecorder
         $this->numCandidatesFailed += $builderResult->getNumCandidatesFailed();
 
         // these messages are not output with logMessage() or logError() because there will be a lot of them
-        $this->logMessage('++++++++ '.$builderResult->getMessage());
+        $this->logMessage('++++++++ ' . $builderResult->getMessage());
 
         $errorMessage = $builderResult->getErrorMessage();
         if (!is_null($errorMessage)) {
-            $this->logError('!!!!!!! '.$errorMessage);
+            $this->logError('!!!!!!! ' . $errorMessage);
+        }
+    }
+
+    public function recordDataFixerResult(DataFixerResult $dataFixerResult): void
+    {
+        $this->dataFixesAppliedSuccessfully = $dataFixerResult->success;
+
+        if ($this->dataFixesAppliedSuccessfully) {
+            $this->logMessage('data fixes applied successfully');
+        } else {
+            $this->logError('one or more data fixes failed to apply');
         }
     }
 
@@ -117,29 +130,31 @@ class DeputyshipsIngestResultRecorder
 
     public function result(): DeputyshipsCSVIngestResult
     {
-        $memMessage = 'PEAK MEMORY USAGE = '.floor(memory_get_peak_usage(true) / pow(1024, 2)).'M';
+        $memMessage = 'PEAK MEMORY USAGE = ' . floor(memory_get_peak_usage(true) / pow(1024, 2)) . 'M';
         $this->logger->warning($this->formatMessage($memMessage));
 
         // note that we don't count builder errors towards the overall success of the ingest
-        $success = $this->csvLoadedSuccessfully && $this->candidatesSelectedSuccessfully;
+        $success = $this->csvLoadedSuccessfully
+            && $this->candidatesSelectedSuccessfully
+            && $this->dataFixesAppliedSuccessfully;
 
         if (is_null($this->startDateTime) || is_null($this->endDateTime)) {
             $message = 'Ingest timings not available - incomplete start/end datetimes';
         } else {
-            $message = 'Ingest started at: '.$this->formatDate($this->startDateTime).
-                '; ended at: '.$this->formatDate($this->endDateTime).
-                '; execution time: '.$this->endDateTime->diff($this->startDateTime)->format('%hh %im %ss');
+            $message = 'Ingest started at: ' . $this->formatDate($this->startDateTime) .
+                '; ended at: ' . $this->formatDate($this->endDateTime) .
+                '; execution time: ' . $this->endDateTime->diff($this->startDateTime)->format('%hh %im %ss');
         }
 
-        $message .= ' --- '.implode('; ', $this->messages);
+        $message .= ' --- ' . implode('; ', $this->messages);
 
-        $message .= '; number of candidates applied = '.$this->numCandidatesApplied.
-            '; number of candidates failed = '.$this->numCandidatesFailed;
+        $message .= '; number of candidates applied = ' . $this->numCandidatesApplied .
+            '; number of candidates failed = ' . $this->numCandidatesFailed;
 
         if ($success) {
-            $message .= '; '.self::SUCCESS_MESSAGE;
+            $message .= '; ' . self::SUCCESS_MESSAGE;
         } else {
-            $message .= '; ERRORS: '.implode(' / ', $this->errorMessages);
+            $message .= '; ERRORS: ' . implode(' / ', $this->errorMessages);
         }
 
         $this->logMessage($message);

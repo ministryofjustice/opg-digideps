@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
 
+use App\v2\Service\DataFixer;
+use App\v2\Service\DataFixerResult;
 use ArrayIterator;
 use App\Entity\StagingSelectedCandidate;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilder;
@@ -26,44 +28,47 @@ final class DeputyshipsCSVIngesterTest extends TestCase
     private DeputyshipsCandidatesSelector|MockObject $mockDeputyshipsCandidatesSelector;
     private DeputyshipBuilder|MockObject $mockDeputyshipBuilder;
     private DeputyshipsIngestResultRecorder|MockObject $mockDeputyshipsIngestResultRecorder;
+    private DataFixer|MockObject $mockDataFixer;
     private DeputyshipsCSVIngester $sut;
 
     public function setUp(): void
     {
-        $this->mockDeputyshipsCSVLoader = $this->createMock(DeputyshipsCSVLoader::class);
-        $this->mockDeputyshipsCandidatesSelector = $this->createMock(DeputyshipsCandidatesSelector::class);
-        $this->mockDeputyshipBuilder = $this->createMock(DeputyshipBuilder::class);
-        $this->mockDeputyshipsIngestResultRecorder = $this->createMock(DeputyshipsIngestResultRecorder::class);
+        $this->mockDeputyshipsCSVLoader = self::createMock(DeputyshipsCSVLoader::class);
+        $this->mockDeputyshipsCandidatesSelector = self::createMock(DeputyshipsCandidatesSelector::class);
+        $this->mockDeputyshipBuilder = self::createMock(DeputyshipBuilder::class);
+        $this->mockDataFixer = self::createMock(DataFixer::class);
+        $this->mockDeputyshipsIngestResultRecorder = self::createMock(DeputyshipsIngestResultRecorder::class);
 
         $this->sut = new DeputyshipsCSVIngester(
             $this->mockDeputyshipsCSVLoader,
             $this->mockDeputyshipsCandidatesSelector,
             $this->mockDeputyshipBuilder,
+            $this->mockDataFixer,
             $this->mockDeputyshipsIngestResultRecorder
         );
     }
 
     public function testCsvLoadFailed(): void
     {
-        $mockCsvLoaderResult = $this->createMock(DeputyshipsCSVLoaderResult::class);
+        $mockCsvLoaderResult = self::createMock(DeputyshipsCSVLoaderResult::class);
         $mockCsvLoaderResult->loadedOk = false;
 
-        $this->mockDeputyshipsCSVLoader->expects($this->once())
+        $this->mockDeputyshipsCSVLoader->expects(self::once())
             ->method('load')
             ->with('/tmp/deputyshipsReport.csv')
             ->willReturn($mockCsvLoaderResult);
 
-        $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
+        $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordCsvLoadResult')
             ->with($mockCsvLoaderResult);
 
-        $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
+        $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('result')
             ->willReturn(new DeputyshipsCSVIngestResult(false, 'failed to load CSV'));
 
         $result = $this->sut->processCsv('/tmp/deputyshipsReport.csv');
 
-        $this->assertFalse($result->success);
+        self::assertFalse($result->success);
     }
 
     public function testCandidateSelectionFailed(): void
@@ -81,21 +86,76 @@ final class DeputyshipsCSVIngesterTest extends TestCase
             new Exception('unexpected database exception')
         );
 
-        $this->mockDeputyshipsCandidatesSelector->expects($this->once())
+        $this->mockDeputyshipsCandidatesSelector->expects(self::once())
             ->method('select')
             ->willReturn($candidatesSelectorResult);
 
-        $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
+        $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordDeputyshipCandidatesResult')
             ->with($candidatesSelectorResult);
 
-        $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
+        $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('result')
             ->willReturn(new DeputyshipsCSVIngestResult(false, 'unexpected database exception'));
 
         $result = $this->sut->processCsv('/tmp/deputyshipsReport.csv');
 
-        $this->assertFalse($result->success);
+        self::assertFalse($result->success);
+    }
+
+    public function testDataFixerFails(): void
+    {
+        $mockCSVLoaderResult = $this->createMock(DeputyshipsCSVLoaderResult::class);
+        $mockCSVLoaderResult->loadedOk = true;
+
+        $builderResult = new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidatesApplied);
+
+        $candidates = [$this->createMock(StagingSelectedCandidate::class)];
+        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new ArrayIterator($candidates), 1);
+
+        $dataFixerResult = new DataFixerResult(false);
+
+        $this->mockDeputyshipsCSVLoader->expects(self::once())
+            ->method('load')
+            ->with('/tmp/deputyshipsReport.csv')
+            ->willReturn($mockCSVLoaderResult);
+
+        $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
+            ->method('recordCsvLoadResult')
+            ->with($mockCSVLoaderResult);
+
+        $this->mockDeputyshipsCandidatesSelector->expects(self::once())
+            ->method('select')
+            ->willReturn($candidatesSelectorResult);
+
+        $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
+            ->method('recordDeputyshipCandidatesResult')
+            ->with($candidatesSelectorResult);
+
+        $this->mockDeputyshipBuilder->expects(self::once())
+            ->method('build')
+            ->with(new ArrayIterator($candidates))
+            ->willReturn(new ArrayIterator([$builderResult]));
+
+        $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
+            ->method('recordBuilderResult')
+            ->with($builderResult);
+
+        $this->mockDataFixer->expects(self::once())
+            ->method('fix')
+            ->willReturn($dataFixerResult);
+
+        $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
+            ->method('recordDataFixerResult')
+            ->with($dataFixerResult);
+
+        $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
+            ->method('result')
+            ->willReturn(new DeputyshipsCSVIngestResult(false, ''));
+
+        $result = $this->sut->processCsv('/tmp/deputyshipsReport.csv');
+
+        self::assertFalse($result->success);
     }
 
     public function testProcessCsvRows(): void
@@ -108,38 +168,38 @@ final class DeputyshipsCSVIngesterTest extends TestCase
         $mockCSVLoaderResult = $this->createMock(DeputyshipsCSVLoaderResult::class);
         $mockCSVLoaderResult->loadedOk = true;
 
-        $this->mockDeputyshipsCSVLoader->expects($this->once())
+        $this->mockDeputyshipsCSVLoader->expects(self::once())
             ->method('load')
             ->with('/tmp/deputyshipsReport.csv')
             ->willReturn($mockCSVLoaderResult);
 
-        $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
+        $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordCsvLoadResult')
             ->with($mockCSVLoaderResult);
 
-        $this->mockDeputyshipsCandidatesSelector->expects($this->once())
+        $this->mockDeputyshipsCandidatesSelector->expects(self::once())
             ->method('select')
             ->willReturn($candidatesSelectorResult);
 
-        $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
+        $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordDeputyshipCandidatesResult')
             ->with($candidatesSelectorResult);
 
-        $this->mockDeputyshipBuilder->expects($this->once())
+        $this->mockDeputyshipBuilder->expects(self::once())
             ->method('build')
             ->with(new ArrayIterator($candidates))
             ->willReturn(new ArrayIterator([$builderResult]));
 
-        $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
+        $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordBuilderResult')
             ->with($builderResult);
 
-        $this->mockDeputyshipsIngestResultRecorder->expects($this->once())
+        $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('result')
             ->willReturn(new DeputyshipsCSVIngestResult(true, ''));
 
         $result = $this->sut->processCsv('/tmp/deputyshipsReport.csv');
 
-        $this->assertTrue($result->success);
+        self::assertTrue($result->success);
     }
 }
