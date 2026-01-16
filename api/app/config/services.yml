@@ -475,7 +475,17 @@ services:
     App\Service\UserDeputyService:
         public: true
 
-    App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester:
+    App\Factory\ChainedDataFactory:
         public: true
         arguments:
-            $dataFactory: '@App\Factory\ChainedDataFactory'
+            $dataFactories:
+                - '@App\Factory\NoopDataFactory'
+
+    App\Factory\NoopDataFactory:
+        public: true
+
+    App\Factory\DataFactoryInterface:
+        alias: App\Factory\ChainedDataFactory
+
+    App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester:
+        public: true
