@@ -55,7 +55,7 @@ final class DeputyshipsIngestResultRecorderTest extends TestCase
         $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new ArrayIterator([]), 20, null);
         $this->sut->recordDeputyshipCandidatesResult($candidatesSelectorResult);
 
-        $this->sut->recordDataFactoryResult(new DataFactoryResult(true));
+        $this->sut->recordDataFactoryResult(new DataFactoryResult());
 
         $expectedMessage1 = 'loaded 10 deputyships from CSV file /tmp/deputyships.csv; found 20 candidate database ' .
             'updates; data fixes applied successfully; number of candidates applied = 0; ' .
