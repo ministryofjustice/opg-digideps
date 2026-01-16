@@ -114,12 +114,22 @@ class DeputyshipsIngestResultRecorder
 
     public function recordDataFactoryResult(DataFactoryResult $dataFactoryResult): void
     {
-        $this->dataFixesAppliedSuccessfully = $dataFactoryResult->success;
+        $this->dataFixesAppliedSuccessfully = $dataFactoryResult->getSuccess();
 
         if ($this->dataFixesAppliedSuccessfully) {
             $this->logMessage('data fixes applied successfully');
+            foreach ($dataFactoryResult->getMessages() as $source => $messages) {
+                foreach ($messages as $message) {
+                    $this->logMessage("[$source] $message");
+                }
+            }
         } else {
             $this->logError('one or more data fixes failed to apply');
+            foreach ($dataFactoryResult->getErrorMessages() as $source => $messages) {
+                foreach ($messages as $message) {
+                    $this->logError("[$source] $message");
+                }
+            }
         }
     }
 

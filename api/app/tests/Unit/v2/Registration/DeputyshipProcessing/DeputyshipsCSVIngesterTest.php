@@ -113,7 +113,8 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
         $builderResult = new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidatesApplied);
 
-        $dataFactoryResult = new DataFactoryResult(false);
+        $dataFactoryResult = new DataFactoryResult();
+        $dataFactoryResult->addErrorMessages('DataFixes', ['Failed to apply data fix']);
 
         $this->mockDeputyshipsCSVLoader->expects(self::once())
             ->method('load')
@@ -168,7 +169,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
         $builderResult = new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidatesApplied);
 
-        $dataFactoryResult = new DataFactoryResult(false);
+        $dataFactoryResult = new DataFactoryResult();
 
         $this->mockDeputyshipsCSVLoader->expects(self::once())
             ->method('load')
