@@ -84,7 +84,7 @@ const getSecret = async (environment, endpoint) => {
 
 const loginAsUser = async (page, url, user, password, expectedPage) => {
   console.log('=== Logging in to application as ' + expectedPage + ' smoke user ===');
-  await page.goto(url + '/login')
+  await page.goto(url + '/login', { waitUntil: 'domcontentloaded' });
   await page.type('#login_email', user);
   await page.type('#login_password', password);
   await Promise.all([
@@ -259,7 +259,7 @@ const logOutUser = async (page, url) => {
 
 const checkServiceHealthAdmin = async (page, url) => {
     console.log('=== Check service health admin ===');
-    await page.goto(url + '/health-check/service');
+    await page.goto(url + '/health-check/service', { waitUntil: 'domcontentloaded' });
     const healthText = await page.$eval('body', body => body.textContent.replace(/\s+/g, '').trim());
     checkTextInElement('Api:OK', healthText);
     checkTextInElement('Redis:OK', healthText);
@@ -267,7 +267,7 @@ const checkServiceHealthAdmin = async (page, url) => {
 
 const checkServiceHealthFront = async (page, url) => {
     console.log('=== Check service health frontend ===');
-    await page.goto(url + '/health-check/service')
+    await page.goto(url + '/health-check/service', { waitUntil: 'domcontentloaded' });
     const healthText = await page.$eval('body', body => body.textContent.replace(/\s+/g, '').trim());
     checkTextInElement('Api:OK', healthText);
     checkTextInElement('Redis:OK', healthText);
