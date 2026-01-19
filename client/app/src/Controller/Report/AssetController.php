@@ -125,7 +125,13 @@ class AssetController extends AbstractController
             $asset = $form->getData();
             $this->restClient->post("report/$reportId/asset", $asset);
 
-            return $this->redirect($this->generateUrl('assets_add_another', ['reportId' => $reportId]));
+            $addAnother = $form['addAnother'];
+            switch ($addAnother->getData()) {
+                case 'yes':
+                    return $this->redirectToRoute('assets_type', ['reportId' => $reportId, 'from' => 'another']);
+                case 'no':
+                    return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
+            }
         }
 
         return [
@@ -164,30 +170,6 @@ class AssetController extends AbstractController
         return [
             'asset' => $asset,
             'backLink' => $this->generateUrl('assets_summary', ['reportId' => $reportId]),
-            'form' => $form->createView(),
-            'report' => $report,
-        ];
-    }
-
-    #[Route(path: '/report/{reportId}/assets/add_another', name: 'assets_add_another')]
-    #[Template('@App/Report/Asset/addAnother.html.twig')]
-    public function addAnotherAction(Request $request, int $reportId): array|RedirectResponse
-    {
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId);
-
-        $form = $this->createForm(Form\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-assets']);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            switch ($form['addAnother']->getData()) {
-                case 'yes':
-                    return $this->redirectToRoute('assets_type', ['reportId' => $reportId, 'from' => 'another']);
-                case 'no':
-                    return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
-            }
-        }
-
-        return [
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -287,7 +269,13 @@ class AssetController extends AbstractController
             if ($step == $totalSteps) {
                 $this->restClient->post("report/$reportId/asset", $asset);
 
-                return $this->redirect($this->generateUrl('assets_add_another', ['reportId' => $reportId]));
+                $addAnother = $form['addAnother'];
+                switch ($addAnother->getData()) {
+                    case 'yes':
+                        return $this->redirectToRoute('assets_type', ['reportId' => $reportId, 'from' => 'another']);
+                    case 'no':
+                        return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
+                }
             }
 
             $stepRedirector->setStepUrlAdditionalParams([

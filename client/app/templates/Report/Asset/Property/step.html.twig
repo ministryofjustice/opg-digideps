@@ -118,6 +118,11 @@
                         'inputClass' : 'govuk-!-width-one-quarter js-format-currency'
                     }) }}
                 </div>
+
+                {{ form_checkbox_group(form.addAnother, (page ~ '.form.addAnother'), {
+                    'fieldSetClass' : 'inline',
+                    'legendClass' : 'govuk-fieldset__legend--s'
+                }) }}
             </div>
         </div>
     {% endif %}

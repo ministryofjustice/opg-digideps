@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 /**
  * Asset form.
@@ -26,8 +27,13 @@ class AssetTypeOther extends AbstractType
                 ->add('valuationDate', FormTypes\DateType::class, ['widget' => 'text',
                     'input' => 'datetime',
                     'format' => 'dd-MM-yyyy',
-                    'invalid_message' => 'Enter a valid date',
-        ]);
+                    'invalid_message' => 'Enter a valid date',])
+                ->add('addAnother', FormTypes\ChoiceType::class, [
+                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
+                    'expanded' => true,
+                    'mapped' => false,
+                    'constraints' => [new NotBlank(['message' => "Please select either 'Yes' or 'No'"])],
+                ]);
 
 
         $builder

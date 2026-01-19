@@ -8,6 +8,11 @@
 } ) }}
 {{ form_input(form.description, 'form.description') }}
 {{ form_known_date(form.valuationDate, 'form.valuationDate') }}
+{{ form_checkbox_group(form.addAnother, (page ~ '.form.addAnother'), {
+    'fieldSetClass' : 'inline',
+    'legendClass' : 'govuk-fieldset__legend--s'
+}) }}
+
 {{ macros.saveAndContinueButton(form.save) }}
 
 {{ form_end(form) }}

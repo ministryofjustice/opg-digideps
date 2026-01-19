@@ -28,9 +28,22 @@ typePage:
   formstartButton: Save and continue
   backLink: Back
 
+stepPageProperty:
+  htmlTitle: "Add an asset: property - Complete the deputy report | GOV.UK"
+  pageTitle: "Add an asset: property"
+  form:
+    addAnother:
+      label: Would you like to add another?
+      hint: If you prefer, you can come back to this section later to add more assets
+  supportTitle: Assets
+
 addPage:
   htmlTitle: "Add an asset: %assetTitle% - Complete the deputy report | GOV.UK"
   pageTitle: "Add an asset: %assetTitle%"
+  form:
+    addAnother:
+      label: Would you like to add another?
+      hint: If you prefer, you can come back to this section later to add more assets
   supportTitle: Assets
 
 editPage:
@@ -47,11 +60,6 @@ addAnotherPage:
       hint: If you prefer, you can come back to this section later to add more assets
     save:
       label: Continue
-
-stepPageProperty:
-  htmlTitle: "Add an asset: property - Complete the deputy report | GOV.UK"
-  pageTitle: "Add an asset: property"
-  supportTitle: Assets
 
 summaryPage:
   htmlTitle: "Assets - Complete the deputy report | GOV.UK"

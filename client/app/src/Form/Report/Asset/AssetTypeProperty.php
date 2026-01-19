@@ -9,6 +9,7 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class AssetTypeProperty extends AbstractType
 {
@@ -93,6 +94,12 @@ class AssetTypeProperty extends AbstractType
                     'grouping' => true,
                     'scale' => 2,
                     'invalid_message' => 'asset.property.rentIncomeMonth.type',
+                ])
+                ->add('addAnother', FormTypes\ChoiceType::class, [
+                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
+                    'expanded' => true,
+                    'mapped' => false,
+                    'constraints' => [new NotBlank(['message' => "Please select either 'Yes' or 'No'"])],
                 ]);
 
             $builder
