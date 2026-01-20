@@ -15,6 +15,11 @@ class ChainedDataFactory implements DataFactoryInterface
     ) {
     }
 
+    public function getName(): string
+    {
+        return 'Chained';
+    }
+
     /**
      * @return DataFactoryResult Aggregated results from all data factories; the messages and error messages are
      * keyed by the name of the data factory that produced them.
@@ -38,10 +43,5 @@ class ChainedDataFactory implements DataFactoryInterface
         }
 
         return $result;
-    }
-
-    public function getName(): string
-    {
-        return 'ChainedDataFactory';
     }
 }

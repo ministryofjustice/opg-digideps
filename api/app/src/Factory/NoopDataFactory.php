@@ -11,7 +11,7 @@ class NoopDataFactory implements DataFactoryInterface
 {
     public function getName(): string
     {
-        return 'NoopDataFactory';
+        return 'Noop';
     }
 
     public function run(): DataFactoryResult

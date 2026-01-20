@@ -480,6 +480,7 @@ services:
         arguments:
             $dataFactories:
                 - '@App\Factory\NoopDataFactory'
+                - '@App\Factory\ClientIdFixDataFactory'
 
     App\Factory\NoopDataFactory:
         public: true
