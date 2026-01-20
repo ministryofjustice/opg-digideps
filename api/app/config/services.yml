@@ -479,11 +479,7 @@ services:
         public: true
         arguments:
             $dataFactories:
-                - '@App\Factory\NoopDataFactory'
                 - '@App\Factory\ClientIdFixDataFactory'
-
-    App\Factory\NoopDataFactory:
-        public: true
 
     App\Factory\DataFactoryInterface:
         alias: App\Factory\ChainedDataFactory
