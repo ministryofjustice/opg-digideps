@@ -82,18 +82,23 @@ const getSecret = async (environment, endpoint) => {
   return { admin_user, admin_password, client, deputy_user, deputy_password };
 };
 
+
 const loginAsUser = async (page, url, user, password, expectedPage) => {
-  console.log('=== Logging in to application as ' + expectedPage + ' smoke user ===');
-  await page.goto(url + '/login', { waitUntil: 'domcontentloaded' });
+  console.log(`=== Logging in as ${expectedPage} ===`);
+
+  await page.goto(`${url}/login`, { waitUntil: 'domcontentloaded' });
+
+  await page.waitForSelector('#login_email', { timeout: 10000 });
+
   await page.type('#login_email', user);
   await page.type('#login_password', password);
-  await Promise.all([
-      page.waitForNavigation(),
-      page.click('#login_login')
-    ]);
 
-  const actualUrl = page.url();
-  checkUrl(actualUrl, url, expectedPage);
+  await Promise.all([
+    page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+    page.click('#login_login')
+  ]);
+
+  checkUrl(page.url(), url, expectedPage);
 };
 
 const searchForUser = async (page, user) => {
