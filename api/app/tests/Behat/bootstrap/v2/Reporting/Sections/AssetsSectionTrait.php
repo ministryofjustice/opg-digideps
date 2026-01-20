@@ -95,9 +95,7 @@ trait AssetsSectionTrait
 
             $this->iFillAssetDescriptionAndValue($assetType);
 
-            $formTarget = 'ndr' == $this->reportUrlPrefix ? 'ndr_asset[addAnother]' : 'asset[addAnother]';
-
-            $this->selectOption($formTarget, $numberOfAssets === $propertyNumber ? 'no' : 'yes');
+            $this->selectOption('asset[addAnother]', $numberOfAssets === $propertyNumber ? 'no' : 'yes');
             $this->pressButton('Save and continue');
         }
 
@@ -145,9 +143,7 @@ trait AssetsSectionTrait
 
             $this->iFillPropertyDetailsAndValue();
 
-            $formTarget = 'ndr' == $this->reportUrlPrefix ? 'ndr_asset[addAnother]' : 'asset[addAnother]';
-
-            $this->selectOption($formTarget, $numberOfProperties === $propertyNumber ? 'no' : 'yes');
+            $this->selectOption('asset[addAnother]', $numberOfProperties === $propertyNumber ? 'no' : 'yes');
             $this->pressButton('Save and continue');
         }
     }
