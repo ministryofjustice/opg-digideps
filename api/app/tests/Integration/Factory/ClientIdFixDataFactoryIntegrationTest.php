@@ -9,18 +9,15 @@ use App\Tests\Integration\ApiIntegrationTestCase;
 use App\Tests\Integration\Fixtures;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-class ClientIdFixDataFactoryTest extends ApiIntegrationTestCase
+class ClientIdFixDataFactoryIntegrationTest extends ApiIntegrationTestCase
 {
     private static Fixtures $fixtures;
-    private static ClientIdFixDataFactory $sut;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
         self::$fixtures = new Fixtures(self::$entityManager);
-
-        self::$sut = new ClientIdFixDataFactory(self::$entityManager);
     }
 
     public static function oldClientFieldsProvider(): array
@@ -43,6 +40,8 @@ class ClientIdFixDataFactoryTest extends ApiIntegrationTestCase
     #[DataProvider('oldClientFieldsProvider')]
     public function testRun(string $courtOrderUid, string $caseNumber, array $oldClientFields): void
     {
+        $sut = new ClientIdFixDataFactory(self::$entityManager);
+
         $oldClientFields['setCaseNumber'] = $caseNumber;
 
         $user = self::$fixtures->createUser();
@@ -75,9 +74,10 @@ class ClientIdFixDataFactoryTest extends ApiIntegrationTestCase
         self::$entityManager->flush();
 
         // run
-        self::$sut->run();
+        $dataFactoryResult = $sut->run();
 
         // assertions
+        self::assertTrue($dataFactoryResult->getSuccess());
 
         // check the court order
         self::$entityManager->refresh($courtOrder);
