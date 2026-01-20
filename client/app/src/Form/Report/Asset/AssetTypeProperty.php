@@ -2,6 +2,7 @@
 
 namespace App\Form\Report\Asset;
 
+use App\Form\AddAnotherThingType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -95,12 +96,7 @@ class AssetTypeProperty extends AbstractType
                     'scale' => 2,
                     'invalid_message' => 'asset.property.rentIncomeMonth.type',
                 ])
-                ->add('addAnother', FormTypes\ChoiceType::class, [
-                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
-                    'expanded' => true,
-                    'mapped' => false,
-                    'constraints' => [new NotBlank(['message' => "Please select either 'Yes' or 'No'"])],
-                ]);
+                ->add('addAnother', AddAnotherThingType::class);
 
             $builder
                 ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
