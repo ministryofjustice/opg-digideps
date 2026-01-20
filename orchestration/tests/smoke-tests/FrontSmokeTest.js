@@ -21,8 +21,22 @@ const runSmoke = async () => {
       args: ['--no-sandbox', '--headless'],
       protocolTimeout: 30000
     });
-    const page = await openPageWithRetries(browser);
 
+  const page = await openPageWithRetries(browser);
+  await page.setRequestInterception(true);
+
+  page.on('request', req => {
+    const url = req.url();
+
+    if (
+      url.includes('googletagmanager.com') ||
+      url.includes('google-analytics.com')
+    ) {
+      return req.abort();
+    }
+
+    req.continue();
+  });
   try {
     const { admin_user, admin_password, client, deputy_user, deputy_password } = await getSecret(environment, endpoint);
     const user = deputy_user;
