@@ -158,13 +158,10 @@ class DeputyshipsIngestResultRecorder
 
         $message .= ' --- ' . implode('; ', $this->messages);
 
-        $message .= '; number of candidates applied = ' . $this->numCandidatesApplied .
-            '; number of candidates failed = ' . $this->numCandidatesFailed;
-
         if ($success) {
-            $message .= '; ' . self::SUCCESS_MESSAGE;
+            $message .= ' --- ' . self::SUCCESS_MESSAGE;
         } else {
-            $message .= '; ERRORS: ' . implode(' / ', $this->errorMessages);
+            $message .= ' --- ERRORS: ' . implode(' / ', $this->errorMessages);
         }
 
         $this->logMessage($message);
