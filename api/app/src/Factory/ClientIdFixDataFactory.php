@@ -19,14 +19,11 @@ class ClientIdFixDataFactory implements DataFactoryInterface
         return 'ClientIdFix';
     }
 
-    /**
-     * @throws Exception
-     */
     public function run(): DataFactoryResult
     {
         // while this SQL only queries for court orders where the client ID needs to be updated,
         // we will (for now) also update reports associated with those clients
-        $sql = <<<'SQL'
+        $sql = <<<SQL
         SELECT DISTINCT old_client_id, new_client_id
         FROM (
           SELECT
@@ -50,23 +47,29 @@ class ClientIdFixDataFactory implements DataFactoryInterface
         SQL;
 
         // find client IDs needing update
-        $result = $this->em->getConnection()->executeQuery($sql)->fetchAllAssociative();
+        $conn = $this->em->getConnection();
 
-        foreach ($result as $row) {
-            $oldClientId = $row['old_client_id'];
-            $newClientId = $row['new_client_id'];
+        try {
+            $result = $conn->executeQuery($sql)->fetchAllAssociative();
 
-            // update court orders
-            $this->em->getConnection()->executeStatement(
-                'UPDATE court_order SET client_id = ? WHERE client_id = ?',
-                [$newClientId, $oldClientId],
-            );
+            foreach ($result as $row) {
+                $oldClientId = $row['old_client_id'];
+                $newClientId = $row['new_client_id'];
 
-            // update reports
-            $this->em->getConnection()->executeStatement(
-                'UPDATE report SET client_id = ? WHERE client_id = ?',
-                [$newClientId, $oldClientId],
-            );
+                // update court orders
+                $this->em->getConnection()->executeStatement(
+                    'UPDATE court_order SET client_id = ? WHERE client_id = ?',
+                    [$newClientId, $oldClientId],
+                );
+
+                // update reports
+                $this->em->getConnection()->executeStatement(
+                    'UPDATE report SET client_id = ? WHERE client_id = ?',
+                    [$newClientId, $oldClientId],
+                );
+            }
+        } catch (Exception $e) {
+            return new DataFactoryResult(errorMessages: ['Error' => ['Database error: ' . $e->getMessage()]]);
         }
 
         return new DataFactoryResult(messages: ['Success' => ['Client IDs patched successfully']]);
