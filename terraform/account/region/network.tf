@@ -30,7 +30,6 @@ locals {
     "api.notifications.service.gov.uk",
     "www.ncsc.gov.uk",
     "database.clamav.net",
-    "raw.githubusercontent.com"
   ]
 
   allowed_prefixed_domains = [

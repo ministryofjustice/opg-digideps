@@ -224,8 +224,15 @@
             <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" />
         {% endfor %}
 
+        {% if form.addAnother %}
+            {{ form_add_another({
+                'addAnother': form.addAnother,
+                'thingTranslationKey': 'form.thing'|trans(transOptions, translationDomain),
+                translationDomain: translationDomain,
+            }) }}
+        {% endif %}
+
         {{ macros.saveAndContinueButton(form.save) }}
-        {{ macros.addAnotherSaveButton(form.addAnother, 'addAnother', 'govuk-button--secondary') }}
     {% endif %}
 
     {{ form_end(form) }}
