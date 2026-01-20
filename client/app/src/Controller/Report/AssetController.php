@@ -13,6 +13,7 @@ use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
 use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -89,6 +90,7 @@ class AssetController extends AbstractController
     public function typeAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        /** @var FormInterface $form */
         $form = $this->createForm(Form\Report\Asset\AssetTypeTitle::class, new AssetOther());
         $form->handleRequest($request);
 
@@ -118,6 +120,7 @@ class AssetController extends AbstractController
         $asset->setTitle($title);
         $asset->setReport($report);
 
+        /** @var FormInterface $form */
         $form = $this->createForm(Form\Report\Asset\AssetTypeOther::class, $asset);
         $form->handleRequest($request);
 
@@ -125,6 +128,7 @@ class AssetController extends AbstractController
             $asset = $form->getData();
             $this->restClient->post("report/$reportId/asset", $asset);
 
+            /** @var FormInterface $form */
             $addAnother = $form['addAnother'];
             switch ($addAnother->getData()) {
                 case 'yes':
@@ -156,6 +160,7 @@ class AssetController extends AbstractController
             $asset->setReport($report);
         }
 
+        /** @var FormInterface $form */
         $form = $this->createForm(Form\Report\Asset\AssetTypeOther::class, $asset);
         $form->handleRequest($request);
 
@@ -221,7 +226,7 @@ class AssetController extends AbstractController
             'data' => $dataFromUrl,
         ]);
 
-        // crete and handle form
+        /** @var FormInterface $form */
         $form = $this->createForm(Form\Report\Asset\AssetTypeProperty::class, $asset, ['step' => $step]);
         $form->handleRequest($request);
 
@@ -269,6 +274,7 @@ class AssetController extends AbstractController
             if ($step == $totalSteps) {
                 $this->restClient->post("report/$reportId/asset", $asset);
 
+                /** @var FormInterface $addAnother */
                 $addAnother = $form['addAnother'];
                 switch ($addAnother->getData()) {
                     case 'yes':
