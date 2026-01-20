@@ -119,9 +119,10 @@
                     }) }}
                 </div>
 
-                {{ form_checkbox_group(form.addAnother, (page ~ '.form.addAnother'), {
-                    'fieldSetClass' : 'inline',
-                    'legendClass' : 'govuk-fieldset__legend--s'
+                {{ form_add_another({
+                    'addAnother': form.addAnother,
+                    'thingTranslationKey': 'form.thing'|trans(transOptions, translationDomain),
+                    translationDomain: translationDomain,
                 }) }}
             </div>
         </div>
