@@ -128,7 +128,7 @@ class AssetController extends AbstractController
             $asset = $form->getData();
             $this->restClient->post("report/$reportId/asset", $asset);
 
-            /** @var FormInterface $form */
+            /** @var FormInterface $addAnother */
             $addAnother = $form['addAnother'];
             switch ($addAnother->getData()) {
                 case 'yes':
