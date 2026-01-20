@@ -50,6 +50,10 @@ data "aws_iam_policy_document" "execution_role_assume_policy" {
   }
 }
 
+locals {
+  open_api_image_arn = "arn:aws:ecr:eu-west-1:311462405659:repository/docker-hub/muonsoft/openapi-mock"
+}
+
 data "aws_iam_policy_document" "execution_role" {
   statement {
     sid       = "AllowECRTokenAccess"
@@ -62,7 +66,17 @@ data "aws_iam_policy_document" "execution_role" {
     sid    = "AllowECRAccess"
     effect = "Allow"
     resources = [
-      "*"
+      data.aws_ecr_repository.images["api"].arn,
+      data.aws_ecr_repository.images["api-webserver"].arn,
+      data.aws_ecr_repository.images["api-devtools"].arn,
+      data.aws_ecr_repository.images["client"].arn,
+      data.aws_ecr_repository.images["client-devtools"].arn,
+      data.aws_ecr_repository.images["client-webserver"].arn,
+      data.aws_ecr_repository.images["sync"].arn,
+      data.aws_ecr_repository.images["htmltopdf"].arn,
+      data.aws_ecr_repository.images["dr-backup"].arn,
+      data.aws_ecr_repository.images["file-scanner"].arn,
+      local.open_api_image_arn,
     ]
     actions = [
       "ecr:BatchCheckLayerAvailability",
@@ -71,12 +85,22 @@ data "aws_iam_policy_document" "execution_role" {
       "ecr:GetAuthorizationToken",
       "ecr:BatchGetImage",
       "ecr:DescribeRepositories",
+    ]
+  }
+
+  statement {
+    sid    = "AllowECRPullThrough"
+    effect = "Allow"
+    resources = [
+      local.open_api_image_arn
+    ]
+    actions = [
       "ecr:BatchImportUpstreamImage",
       "ecr:GetImageCopyStatus",
       "ecr:InitiateLayerUpload",
       "ecr:UploadLayerPart",
       "ecr:CompleteLayerUpload",
-      "ecr:PutImage"
+      "ecr:PutImage",
     ]
   }
 
