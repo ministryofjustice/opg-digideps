@@ -164,6 +164,7 @@ def restart_ecs_services(session, workspaces, aws_config, api_only=False):
 def main(environment, secret_type):
     accounts = {
         # Can add key for development if it's been brought up
+        # NETWORK MOVE - Update needed here
         "development": {"id": "248804316466", "workspaces": ["staging"]},
         "preproduction": {
             "id": "454262938596",

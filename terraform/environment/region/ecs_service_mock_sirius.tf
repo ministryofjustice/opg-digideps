@@ -14,7 +14,7 @@ resource "aws_ecs_service" "mock_sirius_integration" {
   name                    = aws_ecs_task_definition.mock_sirius_integration.family
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.mock_sirius_integration.arn
-  desired_count           = local.environment == "production02" ? 0 : 1
+  desired_count           = local.environment == "production02" || local.environment == "production" ? 0 : 1
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
