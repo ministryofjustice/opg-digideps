@@ -126,7 +126,7 @@ trait MoneyInShortSectionTrait
 
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
 
-        $this->addMoneyInPayment('Lorem ipsum', 1500);
+        $this->addMoneyInPayment('Lorem ipsum', 1500, 1);
 
         $this->chooseOption('add_another[addAnother]', 'no');
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'add_another_save');
@@ -171,6 +171,8 @@ trait MoneyInShortSectionTrait
         $this->iAnswerToAddingMoneyInOnTheClientsBehalf('Yes');
         $this->iClickSaveAndContinue();
 
+        $this->iSelectTheCategoryForMoneyInShort('Salary or wages');
+
         $this->chooseOption('yes_no[moneyTransactionsShortInExist]', 'yes', 'one-off-payments');
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
 
@@ -214,6 +216,8 @@ trait MoneyInShortSectionTrait
 
         $this->iAnswerToAddingMoneyInOnTheClientsBehalf('Yes');
         $this->iClickSaveAndContinue();
+
+        $this->iSelectTheCategoryForMoneyInShort('Salary or wages');
 
         $this->chooseOption('yes_no[moneyTransactionsShortInExist]', 'yes', 'one-off-payments');
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
@@ -321,7 +325,9 @@ trait MoneyInShortSectionTrait
 
         $count = 0;
         foreach ($this->paymentNumber as $payment) {
-            $this->getSectionAnswers('moneyInDetails' . $payment) ? $count++ : $count;
+            if ($this->getSectionAnswers('moneyInDetails' . $payment)) {
+                $count++;
+            }
         }
         if (0 == $count) {
             $this->removeSection('one-off-payments');
@@ -334,22 +340,35 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @Then I should be on the delete page
-     */
-    private function iShouldBeOnTheMoneyInShortDeletePage(): bool
-    {
-        return $this->iAmOnPage(sprintf('/report\/.*\/money-in-short\/.*\/delete$/'));
-    }
-
-    /**
      * @Then /^I edit the answer to the money in one off payment over 1k$/
      */
-    public function iEditTheAnswerToTheOneOffPaymentsOver1K()
+    public function iEditTheAnswerToTheOneOffPaymentsOver1K(): void
     {
         $this->removeSection('one-off-payments');
 
         $urlRegex = sprintf('/%s\/.*\/money-in-short\/oneOffPaymentsExist\?from\=summary$/', $this->reportUrlPrefix);
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
+    }
+
+    /**
+     * @When /^I select the "([^"]*)" category for money in short$/
+     */
+    public function iSelectTheCategoryForMoneyInShort(string $category): void
+    {
+        $optionIndex = array_search($category, $this->moneyInShortTypeDictionary);
+
+        if ($optionIndex === false) {
+            throw new \InvalidArgumentException(sprintf('The category "%s" does not exist in the money-in type dictionary.', $category));
+        }
+
+        $this->tickCheckbox(
+            'money-types',
+            $this->moneyInShortTypeDictionary[$optionIndex],
+            'money-types',
+            $this->moneyInShortTypeDictionary[$optionIndex]
+        );
+
+        $this->pressButton('Save and continue');
     }
 
     private function addAnotherMoneyInPayment($selection)

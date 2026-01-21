@@ -100,6 +100,7 @@ Feature: Money in Low Assets - Lay users
         And I answer "Yes" to adding money in on the clients behalf
         And I am reporting on:
             | Benefit Type    |
+            | Salary or wages |
         And I add 3 one-off payments over £1k
         Then I should see the expected money in section summary
         When I edit the money in short "exist" summary section
@@ -110,6 +111,7 @@ Feature: Money in Low Assets - Lay users
         Then I answer "Yes" to adding money in on the clients behalf
         And I am reporting on:
             | Benefit Type    |
+            | Salary or wages |
         And I answer "yes" to one off payments over £1k
         Then there should be "3" one off payments displayed on the money in summary page
 
@@ -120,6 +122,7 @@ Feature: Money in Low Assets - Lay users
         And I answer "Yes" to adding money in on the clients behalf
         And I am reporting on:
             | Benefit Type    |
+            | Salary or wages |
         And I add 1 one-off payments over £1k
         Then I should see the expected money in section summary
         When I delete the transaction from the summary page
