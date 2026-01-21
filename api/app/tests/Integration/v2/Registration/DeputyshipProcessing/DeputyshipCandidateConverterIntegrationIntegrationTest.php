@@ -87,8 +87,9 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
 
         $result = self::$sut->convert($candidatesGroup, dryRun: false);
 
-        self::assertEquals(2, $result->getNumCandidatesApplied(), 'two candidates should be applied');
         self::assertCount(0, $result->getErrors(), 'candidate group should have no errors');
+        self::assertStringContainsString('failed candidates = 0', $result->getMessage());
+        self::assertStringContainsString('applied candidates = 2', $result->getMessage());
         self::assertTrue($this->hasCourtOrderDeputyAssociationBeenAdded($deputy, $orderUid));
     }
 
@@ -133,8 +134,9 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
 
         $result = self::$sut->convert($candidatesGroup, dryRun: false);
 
-        self::assertEquals(1, $result->getNumCandidatesApplied(), 'one candidate should be applied');
         self::assertCount(0, $result->getErrors(), 'candidate group should have no errors');
+        self::assertStringContainsString('failed candidates = 0', $result->getMessage());
+        self::assertStringContainsString('applied candidates = 1', $result->getMessage());
         self::assertTrue($this->hasCourtOrderDeputyAssociationBeenAdded($deputy, $orderUid));
     }
 }
