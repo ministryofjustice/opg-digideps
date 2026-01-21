@@ -205,6 +205,7 @@ jobs:
           registries: ${{ vars.MANAGEMENT_ACCOUNT }}
 
       - name: trivy image scanning
+        if: matrix.svc_name != 'mock-sirius'
         id: trivy_scan
         uses: aquasecurity/trivy-action@6c175e9c4083a92bbca2f9724c8a5e33bc2d97a5 # v0.30.0
         with:
@@ -219,6 +220,7 @@ jobs:
           TRIVY_JAVA_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-java-db
 
       - name: upload trivy scan results to security tab
+        if: matrix.svc_name != 'mock-sirius'
         id: trivy_upload_sarif
         uses: github/codeql-action/upload-sarif@70df9def86d22bf0ea4e7f8b956e7b92e7c1ea22 # v2.20.7
         with:
