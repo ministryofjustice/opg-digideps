@@ -20,7 +20,7 @@ Feature: Money in Low Assets - Lay users
         And I answer "Yes" to adding money in on the clients behalf
         When I don't select a category for money in
         Then I should see the correct validation message for no category selected
-        And I am reporting on:
+        When I am reporting on:
             | Benefit Type    |
             | Salary or wages |
         And I answer "no" to one off payments over £1k
