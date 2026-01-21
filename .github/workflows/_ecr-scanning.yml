@@ -38,7 +38,7 @@ jobs:
       - name: Check ECR scan results
         env:
           TAG: ${{ inputs.tag }}
-        run: python ./scripts/pipeline/ecrscan/ecr_scan_results.py --search digideps --tag "${TAG}" --print_to_terminal --fail_pipe
+        run: python ./scripts/pipeline/ecrscan/ecr_scan_results.py --search digideps --ignore mock-sirius --tag "${TAG}" --print_to_terminal --fail_pipe
 
       - name: Unset AWS variables
         if: always()
