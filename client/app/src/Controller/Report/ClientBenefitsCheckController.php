@@ -10,6 +10,7 @@ use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrMoneyReceivedOnClientsBeha
 use App\Entity\Report\ClientBenefitsCheck;
 use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\Entity\Report\Status;
+use App\Form\AddAnotherThingType;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\ClientBenefitsCheckType;
 use App\Service\Client\Internal\ClientBenefitsCheckApi;
@@ -19,6 +20,7 @@ use App\Service\Client\Internal\ReportApi;
 use App\Service\StepRedirector;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -121,13 +123,23 @@ class ClientBenefitsCheckController extends AbstractController
             ]
         );
 
+        if ($step === 3) {
+            $form->add('addAnother', AddAnotherThingType::class);
+        }
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $clientBenefitsCheck = $form->getData();
             'ndr' === $reportOrNdr ? $clientBenefitsCheck->setNdr($report) : $clientBenefitsCheck->setReport($report);
 
-            if ($form->has('addAnother') && $form->get('addAnother')->isClicked()) {
+
+            $addAnother = null;
+            if ($form->has('addAnother')) {
+                /** @var Form $addAnother */
+                $addAnother = $form->get('addAnother');
+            }
+
+            if ($addAnother !== null && 'yes' === $addAnother->getData()) {
                 $redirectRoute = $request->getUri();
             } else {
                 $stepToRedirectFrom = $this->incomeNotReceivedByOthers($form) ? $step + 1 : $step;
