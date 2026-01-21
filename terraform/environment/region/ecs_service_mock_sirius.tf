@@ -59,7 +59,7 @@ locals {
   mock_sirius_integration_container = jsonencode(
     {
       name  = "mock-sirius-integration",
-      image = "muonsoft/openapi-mock:${local.openapi_mock_version}",
+      image = "311462405659.dkr.ecr.eu-west-1.amazonaws.com/docker-hub/muonsoft/openapi-mock:${local.openapi_mock_version}",
       portMappings = [{
         name          = "mock-sirius-integration-port",
         containerPort = 8080,
