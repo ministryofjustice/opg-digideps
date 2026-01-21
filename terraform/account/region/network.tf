@@ -3,7 +3,7 @@ locals {
   account_level_configurations = {
     development = {
       network_firewall_enabled      = true
-      none_matching_traffic_action  = "alert"
+      none_matching_traffic_action  = "drop"
       shared_firewall_configuration = null
       # shared_firewall_configuration = {
       #   account_id   = "679638075911"
