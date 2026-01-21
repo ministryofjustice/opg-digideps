@@ -59,7 +59,7 @@ locals {
   mock_sirius_integration_container = jsonencode(
     {
       name  = "mock-sirius-integration",
-      image = "311462405659.dkr.ecr.eu-west-1.amazonaws.com/docker-hub/muonsoft/openapi-mock:${local.openapi_mock_version}",
+      image = local.images.mock-sirius,
       portMappings = [{
         name          = "mock-sirius-integration-port",
         containerPort = 8080,
@@ -77,7 +77,7 @@ locals {
       environment = [
         {
           name  = "OPENAPI_MOCK_SPECIFICATION_URL",
-          value = "https://raw.githubusercontent.com/ministryofjustice/opg-data-deputy-reporting/master/lambda_functions/v2/openapi/deputy-reporting-openapi.yml"
+          value = "/app/deputy-reporting-openapi.yml"
         }
       ]
     }
