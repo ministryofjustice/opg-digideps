@@ -151,6 +151,7 @@ class MoneyInShortController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
+            /** @var Report $data */
             $data = $form->getData();
             $categories = $data->getMoneyShortCategoriesIn();
 
