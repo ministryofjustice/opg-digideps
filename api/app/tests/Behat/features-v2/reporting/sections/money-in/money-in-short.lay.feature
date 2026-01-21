@@ -18,6 +18,8 @@ Feature: Money in Low Assets - Lay users
         Given a Lay Deputy has not started a Pfa Low Assets report
         When I view and start the money in short report section
         And I answer "Yes" to adding money in on the clients behalf
+        When I don't select a category for money in
+        Then I should see the correct validation message for no category selected
         And I am reporting on:
             | Benefit Type    |
             | Salary or wages |
