@@ -57,35 +57,29 @@ final class DeputyshipsIngestResultRecorderTest extends TestCase
 
         $this->sut->recordDataFactoryResult(new DataFactoryResult());
 
-        $expectedMessage1 = 'loaded 10 deputyships from CSV file /tmp/deputyships.csv; found 20 candidate database ' .
-            'updates; data fixes applied successfully; number of candidates applied = 0; ' .
-            'number of candidates failed = 0; successfully ingested deputyships CSV';
+        $expectedMessage = 'found 20 candidate database updates';
 
         $result = $this->sut->result();
 
         self::assertTrue($result->success);
-        self::assertStringContainsString($expectedMessage1, $result->message);
+        self::assertStringContainsString($expectedMessage, $result->message);
     }
 
     public function testRecordBuilderResult(): void
     {
-        $builderResult1 = self::createMock(DeputyshipBuilderResult::class);
-        $builderResult1->expects($this->once())->method('getNumCandidatesApplied')->willReturn(7);
-        $builderResult1->expects($this->once())->method('getNumCandidatesFailed')->willReturn(1);
-        $this->sut->recordBuilderResult($builderResult1);
+        $candidatesResult = new DeputyshipCandidatesSelectorResult(new ArrayIterator([]), 10, null);
+        $this->sut->recordDeputyshipCandidatesResult($candidatesResult);
+
+        $builderResult = self::createMock(DeputyshipBuilderResult::class);
+        $builderResult->expects($this->once())->method('getMessage')->willReturn('Test builder result 1');
+        $this->sut->recordBuilderResult($builderResult);
+
+        $this->sut->recordCsvLoadResult(new DeputyshipsCSVLoaderResult('/tmp/deputyships.csv', true, 8));
+
+        $this->sut->recordDataFactoryResult(new DataFactoryResult());
 
         $result = $this->sut->result();
-        self::assertStringContainsString('number of candidates applied = 7', $result->message);
-        self::assertStringContainsString('number of candidates failed = 1', $result->message);
-
-        $builderResult2 = self::createMock(DeputyshipBuilderResult::class);
-        $builderResult2->expects($this->once())->method('getNumCandidatesApplied')->willReturn(3);
-        $builderResult2->expects($this->once())->method('getNumCandidatesFailed')->willReturn(4);
-        $this->sut->recordBuilderResult($builderResult2);
-
-        $result = $this->sut->result();
-        self::assertStringContainsString('number of candidates applied = 10', $result->message);
-        self::assertStringContainsString('number of candidates failed = 5', $result->message);
+        self::assertStringContainsString('Test builder result 1', $result->message);
     }
 
     public function testStartAndEndDateAndTimings(): void

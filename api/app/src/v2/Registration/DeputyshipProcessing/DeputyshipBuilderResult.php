@@ -21,10 +21,8 @@ class DeputyshipBuilderResult
 
     public function __construct(
         private readonly DeputyshipBuilderResultOutcome $outcome,
-
         /** @var string[] $errors */
         private array $errors = [],
-
         /** @var array<string, int> $candidatesApplied */
         private array $candidatesApplied = [],
     ) {
@@ -46,16 +44,16 @@ class DeputyshipBuilderResult
 
     public function getMessage(): string
     {
-        $message = 'Builder result: failed candidates = '.$this->numCandidatesFailed.
-            '; applied candidates = '.$this->numCandidatesApplied;
+        $message = 'Builder result: failed candidates = ' . $this->numCandidatesFailed .
+            '; applied candidates = ' . $this->numCandidatesApplied;
 
         $candidateDetails = [];
         foreach ($this->candidatesApplied as $action => $num) {
-            $candidateDetails[] = $action.':'.$num;
+            $candidateDetails[] = $action . ':' . $num;
         }
 
         if (count($candidateDetails) > 0) {
-            $message .= '; candidate details = '.implode('|', $candidateDetails);
+            $message .= '; candidate details = ' . implode('|', $candidateDetails);
         }
 
         return $message;
@@ -67,17 +65,7 @@ class DeputyshipBuilderResult
             return null;
         }
 
-        return 'ERRORS while applying candidates: '.implode(' / ', $this->errors);
-    }
-
-    public function getNumCandidatesFailed(): int
-    {
-        return $this->numCandidatesFailed;
-    }
-
-    public function getNumCandidatesApplied(): int
-    {
-        return $this->numCandidatesApplied;
+        return 'ERRORS while applying candidates: ' . implode(' / ', $this->errors);
     }
 
     /**

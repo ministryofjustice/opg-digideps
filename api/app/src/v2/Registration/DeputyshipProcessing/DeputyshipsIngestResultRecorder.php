@@ -16,10 +16,6 @@ class DeputyshipsIngestResultRecorder
     private bool $candidatesSelectedSuccessfully = false;
     private bool $dataFixesAppliedSuccessfully = false;
 
-    // for storing builder counts
-    private int $numCandidatesApplied = 0;
-    private int $numCandidatesFailed = 0;
-
     /** @var string[] */
     private array $errorMessages = [];
 
@@ -100,9 +96,6 @@ class DeputyshipsIngestResultRecorder
 
     public function recordBuilderResult(DeputyshipBuilderResult $builderResult): void
     {
-        $this->numCandidatesApplied += $builderResult->getNumCandidatesApplied();
-        $this->numCandidatesFailed += $builderResult->getNumCandidatesFailed();
-
         // these messages are not output with logMessage() or logError() because there will be a lot of them
         $this->logMessage('++++++++ ' . $builderResult->getMessage());
 
@@ -148,6 +141,10 @@ class DeputyshipsIngestResultRecorder
             && $this->candidatesSelectedSuccessfully
             && $this->dataFixesAppliedSuccessfully;
 
+        print("CSV: " . ($this->csvLoadedSuccessfully ? "OK" : "FAIL") . "\n");
+        print("CANDIDATES: " . ($this->candidatesSelectedSuccessfully ? "OK" : "FAIL") . "\n");
+        print("DATA FIXES: " . ($this->dataFixesAppliedSuccessfully ? "OK" : "FAIL") . "\n");
+
         if (is_null($this->startDateTime) || is_null($this->endDateTime)) {
             $message = 'Ingest timings not available - incomplete start/end datetimes';
         } else {
@@ -160,7 +157,7 @@ class DeputyshipsIngestResultRecorder
 
         if ($success) {
             $message .= ' --- ' . self::SUCCESS_MESSAGE;
-        } else {
+        } elseif (count($this->errorMessages) > 0) {
             $message .= ' --- ERRORS: ' . implode(' / ', $this->errorMessages);
         }
 
