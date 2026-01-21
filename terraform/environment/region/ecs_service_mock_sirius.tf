@@ -14,7 +14,7 @@ resource "aws_ecs_service" "mock_sirius_integration" {
   name                    = aws_ecs_task_definition.mock_sirius_integration.family
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.mock_sirius_integration.arn
-  desired_count           = local.environment == "production02" ? 0 : 1
+  desired_count           = local.environment == "production02" || local.environment == "production" ? 0 : 1
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
@@ -59,7 +59,7 @@ locals {
   mock_sirius_integration_container = jsonencode(
     {
       name  = "mock-sirius-integration",
-      image = "311462405659.dkr.ecr.eu-west-1.amazonaws.com/docker-hub/muonsoft/openapi-mock:${local.openapi_mock_version}",
+      image = local.images.mock-sirius,
       portMappings = [{
         name          = "mock-sirius-integration-port",
         containerPort = 8080,
@@ -77,7 +77,7 @@ locals {
       environment = [
         {
           name  = "OPENAPI_MOCK_SPECIFICATION_URL",
-          value = "https://raw.githubusercontent.com/ministryofjustice/opg-data-deputy-reporting/master/lambda_functions/v2/openapi/deputy-reporting-openapi.yml"
+          value = "/app/deputy-reporting-openapi.yml"
         }
       ]
     }

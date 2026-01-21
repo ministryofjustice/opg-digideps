@@ -27,6 +27,7 @@ jobs:
           - svc_name: "file-scanner"
           - svc_name: "dr-backup"
           - svc_name: "custom-sql-lambda"
+          - svc_name: "mock-sirius"
 
     runs-on: ubuntu-latest
     steps:

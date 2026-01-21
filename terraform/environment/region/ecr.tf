@@ -13,6 +13,7 @@ locals {
     dr-backup        = "${data.aws_ecr_repository.images["dr-backup"].repository_url}:${var.docker_tag}"
     file-scanner     = "${data.aws_ecr_repository.images["file-scanner"].repository_url}:${var.docker_tag}"
     custom-sql       = "${data.aws_ecr_repository.images["custom-sql-lambda"].repository_url}:${var.docker_tag}"
+    mock-sirius      = "${data.aws_ecr_repository.images["mock-sirius"].repository_url}:${var.docker_tag}"
   }
 
   repositories = [
@@ -26,7 +27,8 @@ locals {
     "sync",
     "htmltopdf",
     "file-scanner",
-    "custom-sql-lambda"
+    "custom-sql-lambda",
+    "mock-sirius"
   ]
 }
 
