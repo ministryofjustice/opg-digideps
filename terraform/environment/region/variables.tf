@@ -70,8 +70,6 @@ locals {
 
   environment = lower(terraform.workspace)
 
-  openapi_mock_version = "v0.3.3"
-
   capacity_provider = var.account.fargate_spot ? "FARGATE_SPOT" : "FARGATE"
 
   pa_pro_report_csv_filename  = "paProDeputyReport.csv"
