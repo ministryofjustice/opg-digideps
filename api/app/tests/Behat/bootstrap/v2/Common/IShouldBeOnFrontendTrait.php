@@ -640,14 +640,6 @@ trait IShouldBeOnFrontendTrait
     }
 
     /**
-     * @Then I should be on the add another asset page
-     */
-    public function iAmOnAddAnotherAssetPage(): bool
-    {
-        return $this->iAmOnPage(sprintf('/%s\/.*\/assets\/add_another/', $this->reportUrlPrefix));
-    }
-
-    /**
      * @Then I should be on the assets summary page
      */
     public function iAmOnAssetsSummaryPage(): bool
