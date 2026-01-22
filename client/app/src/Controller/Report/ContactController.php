@@ -14,6 +14,8 @@ use App\Form\Report\ContactType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -98,7 +100,14 @@ class ContactController extends AbstractController
             // update contact. The API will also delete reason for no contact
             $this->restClient->post('report/contact', $data, ['contact', 'report-id']);
 
-            return $this->redirect($this->generateUrl('contacts_add_another', ['reportId' => $reportId]));
+            /** @var Form $addAnother */
+            $addAnother = $form->get('addAnother');
+            switch ($addAnother->getData()) {
+                case 'yes':
+                    return $this->redirectToRoute('contacts_add', ['reportId' => $reportId, 'from' => 'add_another']);
+                case 'no':
+                    return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
+            }
         }
 
         try {
@@ -119,30 +128,6 @@ class ContactController extends AbstractController
         }
     }
 
-    #[Route(path: '/report/{reportId}/contacts/add_another', name: 'contacts_add_another')]
-    #[Template('@App/Report/Contact/addAnother.html.twig')]
-    public function addAnotherAction(Request $request, int $reportId): array|RedirectResponse
-    {
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-
-        $form = $this->createForm(AddAnotherRecordType::class, $report, ['translation_domain' => 'report-contacts']);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            switch ($form['addAnother']->getData()) {
-                case 'yes':
-                    return $this->redirectToRoute('contacts_add', ['reportId' => $reportId, 'from' => 'add_another']);
-                case 'no':
-                    return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
-            }
-        }
-
-        return [
-            'form' => $form->createView(),
-            'report' => $report,
-        ];
-    }
-
     #[Route(path: '/report/{reportId}/contacts/edit/{contactId}', name: 'contacts_edit')]
     #[Template('@App/Report/Contact/edit.html.twig')]
     public function editAction(Request $request, int $reportId, int $contactId): array|RedirectResponse
@@ -161,8 +146,14 @@ class ContactController extends AbstractController
             $request->getSession()->getFlashBag()->add('notice', 'Contact edited');
 
             $this->restClient->put('report/contact', $data);
-
-            return $this->redirect($this->generateUrl('contacts', ['reportId' => $reportId]));
+            /** @var Form $addAnother */
+            $addAnother = $form->get('addAnother');
+            switch ($addAnother->getData()) {
+                case 'yes':
+                    return $this->redirectToRoute('contacts_add', ['reportId' => $reportId, 'from' => 'add_another']);
+                case 'no':
+                    return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
+            }
         }
 
         return [
