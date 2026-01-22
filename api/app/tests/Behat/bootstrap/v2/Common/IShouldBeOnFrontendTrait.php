@@ -109,14 +109,6 @@ trait IShouldBeOnFrontendTrait
     }
 
     /**
-     * @Then I should be on the contacts add another page
-     */
-    public function iAmOnContactsAddAnotherPage(): bool
-    {
-        return $this->iAmOnPage('/report\/.*\/contacts\/add_another$/');
-    }
-
-    /**
      * @Then I should be on the additional information summary page
      */
     public function iAmOnAdditionalInformationSummaryPage(): bool
