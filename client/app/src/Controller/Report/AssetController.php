@@ -13,6 +13,7 @@ use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
 use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -89,6 +90,7 @@ class AssetController extends AbstractController
     public function typeAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        /** @var FormInterface $form */
         $form = $this->createForm(Form\Report\Asset\AssetTypeTitle::class, new AssetOther());
         $form->handleRequest($request);
 
@@ -118,6 +120,7 @@ class AssetController extends AbstractController
         $asset->setTitle($title);
         $asset->setReport($report);
 
+        /** @var FormInterface $form */
         $form = $this->createForm(Form\Report\Asset\AssetTypeOther::class, $asset);
         $form->handleRequest($request);
 
@@ -125,7 +128,14 @@ class AssetController extends AbstractController
             $asset = $form->getData();
             $this->restClient->post("report/$reportId/asset", $asset);
 
-            return $this->redirect($this->generateUrl('assets_add_another', ['reportId' => $reportId]));
+            /** @var FormInterface $addAnother */
+            $addAnother = $form['addAnother'];
+            switch ($addAnother->getData()) {
+                case 'yes':
+                    return $this->redirectToRoute('assets_type', ['reportId' => $reportId, 'from' => 'another']);
+                case 'no':
+                    return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
+            }
         }
 
         return [
@@ -150,6 +160,7 @@ class AssetController extends AbstractController
             $asset->setReport($report);
         }
 
+        /** @var FormInterface $form */
         $form = $this->createForm(Form\Report\Asset\AssetTypeOther::class, $asset);
         $form->handleRequest($request);
 
@@ -164,30 +175,6 @@ class AssetController extends AbstractController
         return [
             'asset' => $asset,
             'backLink' => $this->generateUrl('assets_summary', ['reportId' => $reportId]),
-            'form' => $form->createView(),
-            'report' => $report,
-        ];
-    }
-
-    #[Route(path: '/report/{reportId}/assets/add_another', name: 'assets_add_another')]
-    #[Template('@App/Report/Asset/addAnother.html.twig')]
-    public function addAnotherAction(Request $request, int $reportId): array|RedirectResponse
-    {
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId);
-
-        $form = $this->createForm(Form\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-assets']);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            switch ($form['addAnother']->getData()) {
-                case 'yes':
-                    return $this->redirectToRoute('assets_type', ['reportId' => $reportId, 'from' => 'another']);
-                case 'no':
-                    return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
-            }
-        }
-
-        return [
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -239,7 +226,7 @@ class AssetController extends AbstractController
             'data' => $dataFromUrl,
         ]);
 
-        // crete and handle form
+        /** @var FormInterface $form */
         $form = $this->createForm(Form\Report\Asset\AssetTypeProperty::class, $asset, ['step' => $step]);
         $form->handleRequest($request);
 
@@ -287,7 +274,14 @@ class AssetController extends AbstractController
             if ($step == $totalSteps) {
                 $this->restClient->post("report/$reportId/asset", $asset);
 
-                return $this->redirect($this->generateUrl('assets_add_another', ['reportId' => $reportId]));
+                /** @var FormInterface $addAnother */
+                $addAnother = $form['addAnother'];
+                switch ($addAnother->getData()) {
+                    case 'yes':
+                        return $this->redirectToRoute('assets_type', ['reportId' => $reportId, 'from' => 'another']);
+                    case 'no':
+                        return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
+                }
             }
 
             $stepRedirector->setStepUrlAdditionalParams([

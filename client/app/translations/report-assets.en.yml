@@ -28,6 +28,15 @@ typePage:
   formstartButton: Save and continue
   backLink: Back
 
+stepPageProperty:
+  htmlTitle: "Add an asset: property - Complete the deputy report | GOV.UK"
+  pageTitle: "Add an asset: property"
+  form:
+    addAnother:
+      label: Would you like to add another?
+      hint: If you prefer, you can come back to this section later to add more assets
+  supportTitle: Assets
+
 addPage:
   htmlTitle: "Add an asset: %assetTitle% - Complete the deputy report | GOV.UK"
   pageTitle: "Add an asset: %assetTitle%"
@@ -36,21 +45,6 @@ addPage:
 editPage:
   htmlTitle: "Edit %assetTitle% - Complete the deputy report | GOV.UK"
   pageTitle: Edit %assetTitle%
-  supportTitle: Assets
-
-addAnotherPage:
-  htmlTitle: "Assets - Complete the deputy report | GOV.UK"
-  pageTitle: Assets
-  form:
-    addAnother:
-      label: The asset has been saved. Would you like to add another now?
-      hint: If you prefer, you can come back to this section later to add more assets
-    save:
-      label: Continue
-
-stepPageProperty:
-  htmlTitle: "Add an asset: property - Complete the deputy report | GOV.UK"
-  pageTitle: "Add an asset: property"
   supportTitle: Assets
 
 summaryPage:
@@ -75,6 +69,7 @@ deletePage:
     valuationDate: Valuation date
 
 form:
+  thing: asset
   clientAssets.label: "%client%'s assets"
   doesClientHaveAssets:
     label: Does %client% own any assets?

@@ -1526,11 +1526,6 @@ parameters:
 			path: src/Controller/Report/AssetController.php
 
 		-
-			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
 			message: "#^Cannot call method getDescription\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Controller/Report/AssetController.php
