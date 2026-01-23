@@ -58,7 +58,10 @@ class ContactController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            switch ($form['hasContacts']->getData()) {
+            /** @var Form $hasContacts */
+            $hasContacts = $form->get('hasContacts');
+
+            switch ($hasContacts->getData()) {
                 case 'yes':
                     return $this->redirectToRoute('contacts_add', ['reportId' => $reportId, 'from' => 'exist']);
                 case 'no':
