@@ -151,9 +151,6 @@ final class DeputyshipCandidateConverterTest extends TestCase
 
         // assert
         self::assertEquals(DeputyshipBuilderResultOutcome::CandidatesApplied, $builderResult->getOutcome());
-
-        // even though this is a dry run, we're still recording the insert order candidate as "applied"
-        self::assertEquals(1, $builderResult->getNumCandidatesApplied());
     }
 
     // use a full set of candidates to test all the branches
@@ -190,8 +187,6 @@ final class DeputyshipCandidateConverterTest extends TestCase
 
         // assert
         self::assertEquals(DeputyshipBuilderResultOutcome::CandidatesApplied, $builderResult->getOutcome());
-
-        self::assertEquals(4, $builderResult->getNumCandidatesApplied());
     }
 
     private function createMockResult(

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace app\tests\Integration\Model;
+namespace App\Tests\Integration\Model;
 
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
