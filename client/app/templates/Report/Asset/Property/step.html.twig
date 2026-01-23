@@ -118,6 +118,12 @@
                         'inputClass' : 'govuk-!-width-one-quarter js-format-currency'
                     }) }}
                 </div>
+
+                {{ form_add_another({
+                    'addAnother': form.addAnother,
+                    'thingTranslationKey': 'form.thing'|trans(transOptions, translationDomain),
+                    translationDomain: translationDomain,
+                }) }}
             </div>
         </div>
     {% endif %}
