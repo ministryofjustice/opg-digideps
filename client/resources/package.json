@@ -21,7 +21,7 @@
     "jest-fetch-mock": "^3.0.3",
     "sass-embedded": "^1.93.3",
     "standard": "^16.0.4",
-    "@testing-library/dom": "^9.2.0",
+    "@testing-library/dom": "^10.0.0",
     "@testing-library/user-event": "^14.4.3"
   },
   "dependencies": {
