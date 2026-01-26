@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
+use App\Factory\DataFactoryInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 
 /**
@@ -15,6 +16,7 @@ class DeputyshipsCSVIngester
         private readonly DeputyshipsCSVLoader $deputyshipsCSVLoader,
         private readonly DeputyshipsCandidatesSelector $deputyshipsCandidatesSelector,
         private readonly DeputyshipBuilder $deputyshipBuilder,
+        private readonly DataFactoryInterface $dataFactory,
         private readonly DeputyshipsIngestResultRecorder $deputyshipsIngestResultRecorder,
     ) {
     }
@@ -57,6 +59,10 @@ class DeputyshipsCSVIngester
         foreach ($builderResults as $builderResult) {
             $this->deputyshipsIngestResultRecorder->recordBuilderResult($builderResult);
         }
+
+        // apply manual data fixes
+        $dataFactoryResult = $this->dataFactory->run();
+        $this->deputyshipsIngestResultRecorder->recordDataFactoryResult($dataFactoryResult);
 
         $this->deputyshipsIngestResultRecorder->recordEnd();
 
