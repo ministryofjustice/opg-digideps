@@ -23,19 +23,15 @@ class ComponentsExtension extends AbstractExtension
      */
     private $reportSectionsLinkService;
 
-    private Environment $environment;
-
     /**
      * ComponentsExtension constructor.
      */
     public function __construct(
         TranslatorInterface $translator,
         ReportSectionsLinkService $reportSectionsLinkService,
-        Environment $environment,
     ) {
         $this->translator = $translator;
         $this->reportSectionsLinkService = $reportSectionsLinkService;
-        $this->environment = $environment;
     }
 
     public function getFunctions()
