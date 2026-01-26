@@ -50,7 +50,6 @@ class ComponentsExtension extends AbstractExtension
             new TwigFunction('class_const', function ($className, $constant) {
                 return constant("$className::$constant");
             }),
-            new TwigFunction('hidden_ga_event', [$this, 'renderHiddenGaEvent']),
         ];
     }
 
@@ -73,7 +72,7 @@ class ComponentsExtension extends AbstractExtension
             }),
             'pad_day_month' => new TwigFilter('pad_day_month', function ($value) {
                 if ($value && (int) $value >= 1 && (int) $value <= 9) {
-                    return '0'.(int) $value;
+                    return '0' . (int) $value;
                 }
 
                 return $value;
@@ -153,22 +152,22 @@ class ComponentsExtension extends AbstractExtension
         $secondsDiff = $to->getTimestamp() - $from->getTimestamp();
 
         if ($secondsDiff < 60) {
-            return $this->translator->trans($translationPrefix.'lessThenAMinuteAgo', [], $translationDomain);
+            return $this->translator->trans($translationPrefix . 'lessThenAMinuteAgo', [], $translationDomain);
         }
 
         if ($secondsDiff < 3600) {
             $minutes = (int) round($secondsDiff / 60, 0);
 
-            return $this->translator->transChoice($translationPrefix.'minutesAgo', $minutes, ['%count%' => $minutes], $translationDomain);
+            return $this->translator->transChoice($translationPrefix . 'minutesAgo', $minutes, ['%count%' => $minutes], $translationDomain);
         }
 
         if ($secondsDiff < 86400) {
             $hours = (int) round($secondsDiff / 3600, 0);
 
-            return $this->translator->transChoice($translationPrefix.'hoursAgo', $hours, ['%count%' => $hours], $translationDomain);
+            return $this->translator->transChoice($translationPrefix . 'hoursAgo', $hours, ['%count%' => $hours], $translationDomain);
         }
 
-        return $this->translator->trans($translationPrefix.'exactDate', ['%date%' => $from->format($defaultDateFormat)], $translationDomain);
+        return $this->translator->trans($translationPrefix . 'exactDate', ['%date%' => $from->format($defaultDateFormat)], $translationDomain);
     }
 
     /**
@@ -253,11 +252,6 @@ class ComponentsExtension extends AbstractExtension
         ]);
     }
 
-    public function renderHiddenGaEvent(string $documentTitle)
-    {
-        echo $this->environment->render('@App/Components/GoogleAnalytics/hiddenEvent.html.twig', ['dt' => urlencode($documentTitle)]);
-    }
-
     public function getName()
     {
         return 'components_extension';
@@ -271,8 +265,8 @@ class ComponentsExtension extends AbstractExtension
         foreach ($availableStepIds as $currentStepNumber => $availableStepId) {
             $progressSteps[$availableStepId] = [
                 'class' => (($selectedStepNumber == $currentStepNumber) ? ' opg-progress-bar__item--active ' : '')
-                    .(($currentStepNumber < $selectedStepNumber) ? ' opg-progress-bar__item--completed ' : '')
-                    .(($currentStepNumber == intval($selectedStepNumber) - 1) ? ' opg-progress-bar__item--previous ' : ''),
+                    . (($currentStepNumber < $selectedStepNumber) ? ' opg-progress-bar__item--completed ' : '')
+                    . (($currentStepNumber == intval($selectedStepNumber) - 1) ? ' opg-progress-bar__item--previous ' : ''),
             ];
         }
 

@@ -38,16 +38,6 @@
         {{ form_input(form.clientLastname,'clientLastname') }}
         {{ form_input(form.caseNumber,'caseNumber') }}
 
-        {{ form_submit_ga(
-            form.save,
-            'save',
-            gaCategory,
-            gaAction,
-            gaLabel,
-            null,
-            {})
-        }}
-
     {{ form_end(form) }}
 
 {% endblock %}

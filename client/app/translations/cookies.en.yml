@@ -7,19 +7,12 @@ intro:
 
 form:
   title: Cookie settings
-  intro: We use 2 types of cookie. One type is strictly necessary and the other type of cookie is optional.
-  usage:
-    label: Cookies that measure website use
-    hint:
-      para01: "We use Google Analytics to measure how you use the service so we can improve it based on user needs. Google Analytics sets cookies that store anonymised information about:"
-      bullet01: what pages you visit and how long you spend on each
-      bullet02: what you click on while you're visiting the site
-      para02: We do not allow Google to use or share the data about how you use this site.
+  intro: This service uses only one type of cookie. These cookies are strictly necessary for the service to work.
   necessary:
     label: Strictly necessary cookies
     description: These essential cookies allow you to log in to the service. They always need to be on.
-  yes: Yes, allow usage cookies
-  no: No, do not allow usage cookies
+  yes: Yes, allow cookies
+  no: No, do not allow cookies
   missingChoiceValidation: Please select either 'Yes' or 'No'
   confirm:
     label: Save changes
