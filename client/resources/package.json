@@ -25,7 +25,7 @@
     "@testing-library/user-event": "^14.4.3"
   },
   "dependencies": {
-    "@ministryofjustice/frontend": "^6.0.0",
+    "@ministryofjustice/frontend": "^8.0.0",
     "govuk-elements-sass": "^3.1.0",
     "govuk-frontend": "^5.13.0",
     "jquery": "^3.6.0"
