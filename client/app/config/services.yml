@@ -398,8 +398,6 @@ services:
 
   App\Twig\ComponentsExtension:
     class: App\Twig\ComponentsExtension
-    arguments:
-      $environment: "@twig"
 
   # Logtash formatter for Kibana
   logstash_formatter:
