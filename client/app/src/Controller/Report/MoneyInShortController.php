@@ -363,10 +363,8 @@ class MoneyInShortController extends AbstractController
         if (Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyInShortState()['state'] && 'skip-step' != $fromPage) {
             return $this->redirectToRoute('money_in_short', ['reportId' => $reportId]);
         }
-
         return [
             'report' => $report,
-            'status' => $report->getStatus(),
         ];
     }
 
