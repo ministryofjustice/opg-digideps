@@ -10706,11 +10706,6 @@ parameters:
 			path: src/Twig/FormFieldsExtension.php
 
 		-
-			message: "#^PHPDoc tag @param for parameter \\$gaTrackingCategory with type string\\|null is not subtype of native type string\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
 			message: "#^Property App\\\\Validator\\\\Constraints\\\\Chain\\:\\:\\$constraints has no type specified\\.$#"
 			count: 1
 			path: src/Validator/Constraints/Chain.php
