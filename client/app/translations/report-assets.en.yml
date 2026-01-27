@@ -31,10 +31,6 @@ typePage:
 stepPageProperty:
   htmlTitle: "Add an asset: property - Complete the deputy report | GOV.UK"
   pageTitle: "Add an asset: property"
-  form:
-    addAnother:
-      label: Would you like to add another?
-      hint: If you prefer, you can come back to this section later to add more assets
   supportTitle: Assets
 
 addPage:

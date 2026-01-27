@@ -15,6 +15,12 @@
     {{ form_input(form.explanation, 'form.explanation') }}
     {{ macros.addressFields(form, translationDomain, translationPrefix) }}
 
+    {{ form_add_another({
+        'addAnother': form.addAnother,
+        'thingTranslationKey': 'form.thing',
+        'translationDomain': 'report-contacts'
+    }) }}
+
     {{ macros.saveAndContinueButton(form.save) }}
 
 {{ form_end(form) }}
