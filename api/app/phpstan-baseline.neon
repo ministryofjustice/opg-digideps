@@ -8236,46 +8236,6 @@ parameters:
 			path: src/v2/Registration/Uploader/OrgDeputyshipUploader.php
 
 		-
-			message: "#^Method App\\\\v2\\\\Registration\\\\Uploader\\\\OrgDeputyshipUploader\\:\\:handleClient\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Registration\\\\Uploader\\\\OrgDeputyshipUploader\\:\\:handleDeputy\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Registration\\\\Uploader\\\\OrgDeputyshipUploader\\:\\:handleDtoErrors\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Registration\\\\Uploader\\\\OrgDeputyshipUploader\\:\\:handleOrganisation\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Registration\\\\Uploader\\\\OrgDeputyshipUploader\\:\\:handleReport\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Registration\\\\Uploader\\\\OrgDeputyshipUploader\\:\\:removeDuplicateIds\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Registration\\\\Uploader\\\\OrgDeputyshipUploader\\:\\:resetDeputyshipUploaderObjects\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Registration\\\\Uploader\\\\OrgDeputyshipUploader\\:\\:skipArchivedClients\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
 			message: "#^Parameter \\#1 \\$client of class App\\\\Entity\\\\Report\\\\Report constructor expects App\\\\Entity\\\\Client, App\\\\Entity\\\\Client\\|null given\\.$#"
 			count: 1
 			path: src/v2/Registration/Uploader/OrgDeputyshipUploader.php
