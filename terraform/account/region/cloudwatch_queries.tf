@@ -1,3 +1,4 @@
+# NEW_NETWORK_SWITCH
 locals {
   default_insights_query_log_identifier = {
     production    = "production02",
