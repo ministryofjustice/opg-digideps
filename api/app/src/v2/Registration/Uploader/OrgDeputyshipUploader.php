@@ -254,7 +254,15 @@ class OrgDeputyshipUploader
      */
     private function clientHasSwitchedOrganisation(Client $client): bool
     {
-        return $client->getOrganisation()?->getId() !== $this->currentOrganisation?->getId();
+        if (
+            $client->getOrganisation() instanceof Organisation
+            && $this->currentOrganisation instanceof Organisation
+            && $client->getOrganisation()->getId() !== $this->currentOrganisation->getId()
+        ) {
+            return true;
+        }
+
+        return false;
     }
 
     private function clientHasNewDeputy(Client $client, Deputy $deputy): bool
