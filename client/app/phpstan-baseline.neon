@@ -1841,11 +1841,6 @@ parameters:
 			path: src/Controller/Report/ContactController.php
 
 		-
-			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
-			count: 2
-			path: src/Controller/Report/ContactController.php
-
-		-
 			message: "#^Cannot call method getExplanation\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Controller/Report/ContactController.php
