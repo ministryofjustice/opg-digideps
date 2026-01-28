@@ -18,7 +18,7 @@ resource "aws_ecs_service" "sirius_files_sync" {
   name                    = aws_ecs_task_definition.sirius_files_sync.family
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.sirius_files_sync.arn
-  desired_count           = local.environment == "production02" ? 1 : 0
+  desired_count           = local.environment == "production02" || local.environment == "production" ? 1 : 0
   launch_type             = "FARGATE"
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true

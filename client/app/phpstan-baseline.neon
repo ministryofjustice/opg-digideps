@@ -1526,11 +1526,6 @@ parameters:
 			path: src/Controller/Report/AssetController.php
 
 		-
-			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/AssetController.php
-
-		-
 			message: "#^Cannot call method getDescription\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Controller/Report/AssetController.php
@@ -1843,11 +1838,6 @@ parameters:
 		-
 			message: "#^Cannot call method getContactName\\(\\) on mixed\\.$#"
 			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
-			count: 2
 			path: src/Controller/Report/ContactController.php
 
 		-
@@ -2282,7 +2272,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 7
+			count: 6
 			path: src/Controller/Report/MoneyInShortController.php
 
 		-

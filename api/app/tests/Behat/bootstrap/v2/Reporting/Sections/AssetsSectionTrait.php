@@ -95,10 +95,8 @@ trait AssetsSectionTrait
 
             $this->iFillAssetDescriptionAndValue($assetType);
 
-            $this->iAmOnAddAnotherAssetPage();
-
-            $this->selectOption('add_another[addAnother]', $numberOfAssets === $propertyNumber ? 'no' : 'yes');
-            $this->pressButton('Continue');
+            $this->selectOption('asset[addAnother]', $numberOfAssets === $propertyNumber ? 'no' : 'yes');
+            $this->pressButton('Save and continue');
         }
 
         // We only need to assert on the combined section title once so removing the duplicates
@@ -116,8 +114,6 @@ trait AssetsSectionTrait
             $this->fillInFieldTrackTotal('asset[value]', mt_rand(5, 2000), 'asset-' . $assetType);
             $this->fillInField('asset[description]', $this->faker->sentence(5, 25), 'asset-' . $assetType);
         }
-
-        $this->pressButton('Save and continue');
     }
 
     /**
@@ -147,10 +143,8 @@ trait AssetsSectionTrait
 
             $this->iFillPropertyDetailsAndValue();
 
-            $this->iAmOnAddAnotherAssetPage();
-
-            $this->selectOption('add_another[addAnother]', $numberOfProperties === $propertyNumber ? 'no' : 'yes');
-            $this->pressButton('Continue');
+            $this->selectOption('asset[addAnother]', $numberOfProperties === $propertyNumber ? 'no' : 'yes');
+            $this->pressButton('Save and continue');
         }
     }
 
@@ -227,8 +221,6 @@ trait AssetsSectionTrait
             $this->fillInDateFields('asset[rentAgreementEndDate]', null, mt_rand(1, 12), mt_rand(2018, 2028), 'assetDetailsPropertyRented');
             $this->fillInField('asset_rentIncomeMonth', mt_rand(100, 1000), 'assetDetailsPropertyRented');
         }
-
-        $this->pressButton('Save and continue');
     }
 
     /**

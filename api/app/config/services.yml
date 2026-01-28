@@ -474,3 +474,15 @@ services:
 
     App\Service\UserDeputyService:
         public: true
+
+    App\Factory\ChainedDataFactory:
+        public: true
+        arguments:
+            $dataFactories:
+                - '@App\Factory\ClientIdFixDataFactory'
+
+    App\Factory\DataFactoryInterface:
+        alias: App\Factory\ChainedDataFactory
+
+    App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester:
+        public: true
