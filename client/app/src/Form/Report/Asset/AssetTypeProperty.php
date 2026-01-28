@@ -26,14 +26,11 @@ class AssetTypeProperty extends AbstractType
                 ->add('address2', FormTypes\TextType::class)
                 ->add('postcode', FormTypes\TextType::class)
                 ->add('county', FormTypes\TextType::class)
-                ->add('occupants', FormTypes\TextareaType::class);
-        }
-
-        if (2 === $this->step) {
-            $builder->add('owned', FormTypes\ChoiceType::class, [
+                ->add('occupants', FormTypes\TextareaType::class)
+                ->add('owned', FormTypes\ChoiceType::class, [
                 'choices' => array_flip(['fully' => 'Fully-owned', 'partly' => 'Part-owned']),
                 'expanded' => true,
-            ])
+                ])
                 ->add('ownedPercentage', FormTypes\NumberType::class, [
                     'grouping' => false,
                     'scale' => 0,
@@ -51,7 +48,7 @@ class AssetTypeProperty extends AbstractType
                 ]);
         }
 
-        if (3 === $this->step) {
+        if (2 === $this->step) {
             $builder->add('value', FormTypes\NumberType::class, [
                 'grouping' => true,
                 'scale' => 2,
@@ -59,7 +56,7 @@ class AssetTypeProperty extends AbstractType
             ]);
         }
 
-        if (4 === $this->step) {
+        if (3 === $this->step) {
             $builder
                 ->add('isSubjectToEquityRelease', FormTypes\ChoiceType::class, [
                     'choices' => ['Yes' => 'yes', 'No' => 'no'],
@@ -67,7 +64,7 @@ class AssetTypeProperty extends AbstractType
                 ]);
         }
 
-        if (5 === $this->step) {
+        if (4 === $this->step) {
             $builder
                 ->add('hasCharges', FormTypes\ChoiceType::class, [
                     'choices' => ['Yes' => 'yes', 'No' => 'no'],
@@ -75,7 +72,7 @@ class AssetTypeProperty extends AbstractType
                 ]);
         }
 
-        if (6 === $this->step) {
+        if (5 === $this->step) {
             $builder
                 ->add('isRentedOut', FormTypes\ChoiceType::class, [
                     'choices' => ['Yes' => 'yes', 'No' => 'no'],
@@ -117,7 +114,7 @@ class AssetTypeProperty extends AbstractType
         return function (FormInterface $form) {
             /** @var $asset \App\Entity\Report\AssetProperty */
             $asset = $form->getData();
-            $val = ['property-owned','property-mortgage'];
+            $val = ['property-address', 'property-occupants','property-owned','property-mortgage'];
 
             if ('partly' == $asset->getOwned()) {
                 $val[] = 'property-owned-partly';
@@ -128,12 +125,11 @@ class AssetTypeProperty extends AbstractType
             }
 
             return [
-                1 => ['property-address', 'property-occupants'],
-                2 => $val,
-                3 => ['property-value'],
-                4 => ['property-subject-equity-release'],
-                5 => ['property-has-charges'],
-                6 => ('yes' == $asset->getIsRentedOut())
+                1 => $val,
+                2 => ['property-value'],
+                3 => ['property-subject-equity-release'],
+                4 => ['property-has-charges'],
+                5 => ('yes' == $asset->getIsRentedOut())
                     ? ['property-rented-out', 'property-rent-agree-date', 'property-rent-income-month']
                     : ['property-rented-out'],
             ][$this->step];
