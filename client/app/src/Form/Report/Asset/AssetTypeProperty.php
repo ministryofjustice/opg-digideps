@@ -128,7 +128,7 @@ class AssetTypeProperty extends AbstractType
             }
 
             return [
-                1 => ['property-address'],
+                1 => ['property-address', 'property-occupants'],
                 2 => $val,
                 3 => ['property-value'],
                 4 => ['property-subject-equity-release'],

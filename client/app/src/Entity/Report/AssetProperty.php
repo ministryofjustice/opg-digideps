@@ -46,8 +46,8 @@ class AssetProperty extends Asset
     private $postcode;
 
     /**
-     * @Assert\NotBlank(message="asset.property.occupants.notBlank", groups={"property-address"})
-     * @Assert\Length( max=550, maxMessage="asset.property.occupants.maxMessage", groups={"property-address"})
+     * @Assert\NotBlank(message="asset.property.occupants.notBlank", groups={"property-occupants"})
+     * @Assert\Length( max=550, maxMessage="asset.property.occupants.maxMessage", groups={"property-occupants"})
      *
      * @var string
      *
