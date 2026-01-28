@@ -2,6 +2,7 @@
 
 namespace App\Form\Report;
 
+use App\Form\AddAnotherThingType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -23,6 +24,7 @@ class ContactType extends AbstractType
                       'preferred_choices' => ['GB'],
                       'placeholder' => 'form.country.defaultOption',
                 ])
+                ->add('addAnother', AddAnotherThingType::class)
                 ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
     }
 

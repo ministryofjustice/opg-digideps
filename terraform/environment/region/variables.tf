@@ -70,8 +70,6 @@ locals {
 
   environment = lower(terraform.workspace)
 
-  openapi_mock_version = "v0.3.3"
-
   capacity_provider = var.account.fargate_spot ? "FARGATE_SPOT" : "FARGATE"
 
   pa_pro_report_csv_filename  = "paProDeputyReport.csv"
@@ -79,6 +77,5 @@ locals {
   deputyships_report_csv_file = "deputyshipsReport.csv"
 
   # DNS switch variables
-  certificate_arn                  = var.certificate_arn == "" ? data.aws_acm_certificate.service_justice.arn : var.certificate_arn
-  alternative_certificates_enabled = var.certificate_arn == "" ? 0 : 1
+  certificate_arn = var.certificate_arn == "" ? data.aws_acm_certificate.service_justice.arn : var.certificate_arn
 }

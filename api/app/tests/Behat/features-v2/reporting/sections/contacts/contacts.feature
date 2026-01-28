@@ -16,8 +16,7 @@ Feature: Contacts
         Given a Lay Deputy has not started a Health and Welfare report
         When I view and start the contacts report section
         And there are contacts to add
-        And I enter valid contact details
-        And there are no further contacts to add
+        And I enter valid contact details "without" wanting to add another
         Then the contacts summary page should contain the details I entered
         When I follow link back to report overview page
         Then I should see "contacts" as "1 contact"
@@ -27,9 +26,8 @@ Feature: Contacts
         Given a Lay Deputy has not started a Health and Welfare report
         When I view and start the contacts report section
         And there are contacts to add
-        And I enter valid contact details
-        And I enter another contacts details
-        And there are no further contacts to add
+        And I enter valid contact details "while" wanting to add another
+        And I enter valid contact details "without" wanting to add another
         Then the contacts summary page should contain the details I entered
         When I follow link back to report overview page
         Then I should see "contacts" as "2 contacts"
