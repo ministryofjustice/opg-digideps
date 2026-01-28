@@ -7,7 +7,7 @@ intro:
 
 form:
   title: Cookie settings
-  intro: This service uses only one type of cookie. These cookies are strictly necessary for the service to work.
+  intro: This service uses only one type of cookie. This cookie is strictly necessary for the service to work.
   necessary:
     label: Strictly necessary cookies
     description: These essential cookies allow you to log in to the service. They always need to be on.
