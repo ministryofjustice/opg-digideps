@@ -49,18 +49,21 @@ class UserDeputyService
             if (array_key_exists($deputyUid, $deputyUidsToIds)) {
                 /** @var ?Deputy $deputy */
                 $deputy = $this->deputyRepository->find($deputyUidsToIds[$deputyUid]);
-                /** @var ?User $existingUser */
-                $existingUser = $deputy->getUser();
 
-                if (!is_null($existingUser)) {
-                    $this->logger->error(
-                        sprintf(
-                            'Deputy with ID:%s already associated with a User under ID:%s',
-                            $deputy->getId(),
-                            $existingUser->getId()
-                        )
-                    );
-                    continue;
+                if (!is_null($deputy)) {
+                    /** @var ?User $existingUser */
+                    $existingUser = $deputy->getUser();
+
+                    if (!is_null($existingUser)) {
+                        $this->logger->error(
+                            sprintf(
+                                'Deputy with ID:%s already associated with a User under ID:%s',
+                                $deputy->getId(),
+                                $existingUser->getId()
+                            )
+                        );
+                        continue;
+                    }
                 }
             } else {
                 // get pre-reg row for this deputy UID
