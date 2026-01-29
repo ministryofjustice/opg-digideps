@@ -184,7 +184,7 @@ class AssetController extends AbstractController
     #[Template('@App/Report/Asset/Property/step.html.twig')]
     public function propertyStepAction(Request $request, int $reportId, int $step, ?int $assetId = null): RedirectResponse|array
     {
-        $totalSteps = 5;
+        $totalSteps = 4;
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
         }
@@ -252,15 +252,13 @@ class AssetController extends AbstractController
                 $stepUrlData['owned_p'] = $asset->getOwnedPercentage();
                 $stepUrlData['has_mg'] = $asset->getHasMortgage();
                 $stepUrlData['mg_oa'] = $asset->getMortgageOutstandingAmount();
+                $stepUrlData['value'] = $asset->getValue();
             }
 
             if (2 == $step) {
-                $stepUrlData['value'] = $asset->getValue();
-            }
-            if (3 == $step) {
                 $stepUrlData['ser'] = $asset->getIsSubjectToEquityRelease();
             }
-            if (4 == $step) {
+            if (3 == $step) {
                 $stepUrlData['hc'] = $asset->getHasCharges();
             }
 
