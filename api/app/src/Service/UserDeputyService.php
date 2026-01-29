@@ -49,15 +49,15 @@ class UserDeputyService
             if (array_key_exists($deputyUid, $deputyUidsToIds)) {
                 /** @var ?Deputy $deputy */
                 $deputy = $this->deputyRepository->find($deputyUidsToIds[$deputyUid]);
-                /** @var ?User $exitingUser */
-                $exitingUser = $deputy->getUser();
+                /** @var ?User $existingUser */
+                $existingUser = $deputy->getUser();
 
-                if (is_null($exitingUser)) {
+                if (!is_null($existingUser)) {
                     $this->logger->error(
                         sprintf(
                             'Deputy with ID:%s already associated with a User under ID:%s',
                             $deputy->getId(),
-                            $exitingUser->getId()
+                            $existingUser->getId()
                         )
                     );
                     continue;
