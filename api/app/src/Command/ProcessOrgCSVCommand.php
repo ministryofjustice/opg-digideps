@@ -19,11 +19,11 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 class ProcessOrgCSVCommand extends Command
 {
     public static $defaultName = 'digideps:api:process-org-csv';
-    private const JOB_NAME = 'org_csv_processing';
+    private const string JOB_NAME = 'org_csv_processing';
 
-    private const CHUNK_SIZE = 50;
+    private const int CHUNK_SIZE = 50;
 
-    private const EXPECTED_COLUMNS = [
+    private const array EXPECTED_COLUMNS = [
         'Case',
         'ClientForename',
         'ClientSurname',
@@ -43,7 +43,7 @@ class ProcessOrgCSVCommand extends Command
         'Hybrid',
     ];
 
-    protected const OPTIONAL_COLUMNS = [
+    protected const array OPTIONAL_COLUMNS = [
         'CourtOrderUid',
         'ClientAddress1',
         'ClientAddress2',
@@ -171,7 +171,7 @@ class ProcessOrgCSVCommand extends Command
             $logMessage = sprintf('Error processing CSV: %s', $e->getMessage());
 
             $this->verboseLogger->error($logMessage);
-            $this->cliOutput->writeln(self::JOB_NAME.' - failure - '.$logMessage);
+            $this->cliOutput->writeln(self::JOB_NAME . ' - failure - ' . $logMessage);
         }
 
         return [];

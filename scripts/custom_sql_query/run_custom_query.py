@@ -254,7 +254,10 @@ def get_db_endpoint(environment):
         return "http://postgres"
     else:
         instance_environment = (
-            environment if environment != "production" else "production02"
+            # NEW_NETWORK_SWITCH
+            environment
+            if environment != "production"
+            else "production02"
         )
         instance_id = f"api-{instance_environment}-0"
         session = assume_custom_sql_role(environment)
@@ -284,6 +287,7 @@ def main(
     lambda_client = get_lambda_client(environment)
     db_endpoint = get_db_endpoint(environment)
 
+    # NEW_NETWORK_SWITCH
     workspace = environment if environment != "production" else "production02"
     account_name = get_account_name(environment)
     function_name = (
