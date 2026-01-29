@@ -42,41 +42,42 @@ def application(request):
 
         if request_is_json:
             payload = json.loads(request.data)
-            # source_file.write(base64.b64decode(payload["contents"]))
             raw_bytes = base64.b64decode(payload["contents"])
         elif request.files:
-            # source_file.write(request.files["file"].read())
             raw_bytes = request.files["file"].read()
         else:
             return Response("No HTML provided", status=400)
 
         html_string = safe_decode(raw_bytes)
+
         file_name = source_file.name
-        file_parts = file_name.split(".html")
-        safe_file_name = f"{file_parts[0]}_tmp.html"
+        # file_parts = file_name.split(".html")
+        # safe_file_name = f"{file_parts[0]}_tmp.html"
+        logger.warning(f"Raw bytes length: {len(raw_bytes)}")
+        # with open(safe_file_name, "w", encoding="utf-8") as f:
+        #     f.write(html_string)
 
-        with open(safe_file_name, "w", encoding="utf-8") as f:
-            f.write(html_string)
-
-        # with open(file_name) as f:  # The with keyword automatically closes the file when you are done
-        #     print(f.read())
-        #
-        with open(
-            safe_file_name
-        ) as f:  # The with keyword automatically closes the file when you are done
-            print(f.read())
+        base_url = "/tmp"  # adjust to your runtime folder
+        css_text = "@page {size: Letter;margin: 0.2in 0.44in 0.2in 0.44in;}"
 
         pdf_file_name = f"{file_name}.pdf"
         try:
             # Split out additional CSS into a file if we need more in the future...
-            HTML(safe_file_name, media_type="screen", encoding="utf-8").write_pdf(
-                pdf_file_name,
-                stylesheets=[
-                    CSS(
-                        string="@page {size: Letter;margin: 0.2in 0.44in 0.2in 0.44in;}"
-                    )
-                ],
-            )
+            # HTML(string=html_string, base_url=base_url, media_type="print", encoding="utf-8").write_pdf(
+            #     pdf_file_name,
+            #     stylesheets=[
+            #         CSS(
+            #             string="@page {size: Letter;margin: 0.2in 0.44in 0.2in 0.44in;}"
+            #         )
+            #     ],
+            # )
+
+            doc = HTML(
+                string=html_string, base_url=base_url, media_type="print"
+            ).render(stylesheets=[CSS(string=css_text)])
+            logger.info("Rendered pages: %d", len(doc.pages))
+            doc.write_pdf(pdf_file_name)
+
             logger.info("%s rendered successfully", file_name)
         except Exception as e:
             logger.error("PDF generation failed:\n%s", traceback.format_exc())

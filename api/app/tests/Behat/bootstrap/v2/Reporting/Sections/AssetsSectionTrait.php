@@ -160,16 +160,14 @@ trait AssetsSectionTrait
         } else {
             $this->fillInField('asset[address]', $streetAddress, 'assetDetailsPropertyAddress');
             $this->fillInField('asset[postcode]', $postcode, 'assetDetailsPropertyAddress');
+            $this->fillInField('asset[occupants]', $this->faker->text(50), 'assetDetailsPropertyOccupants');
         }
         $this->pressButton('Save and continue');
 
         if ('ndr' == $this->reportUrlPrefix) {
             $this->fillInField('ndr_asset[occupants]', $this->faker->text(50), 'assetDetailsPropertyOccupants');
-        } else {
-            $this->fillInField('asset[occupants]', $this->faker->text(50), 'assetDetailsPropertyOccupants');
+            $this->pressButton('Save and continue');
         }
-
-        $this->pressButton('Save and continue');
 
         if ('ndr' == $this->reportUrlPrefix) {
             $this->chooseOption('ndr_asset[owned]', 'partly', 'assetDetailsPropertyPercentage', 'Partly owned');
