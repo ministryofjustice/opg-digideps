@@ -16,6 +16,57 @@ logger.addHandler(handler)
 logger.setLevel(logging.INFO)
 
 
+debug_css = CSS(
+    string="""
+  /* Ensure deterministic page size and margins */
+  @page { size: A4; margin: 12mm; }
+
+  /* Reset media queries: apply same rules for print */
+  @media print {
+    * {
+      break-before: auto !important;
+      break-after: auto !important;
+      break-inside: auto !important;
+      page-break-before: auto !important;
+      page-break-after: auto !important;
+      page-break-inside: auto !important;
+    }
+  }
+
+  /* Kill floats and positioned layout that cause recursive layout work */
+  *[style*="float"],
+  .float, img[align],
+  [class*="float-"],
+  [style*="position: absolute"],
+  [style*="position:absolute"],
+  [style*="position: fixed"],
+  [style*="position:fixed"] {
+    float: none !important;
+    position: static !important;
+  }
+
+  /* Make images safe */
+  img, svg {
+    max-width: 100% !important;
+    height: auto !important;
+    page-break-inside: avoid !important;
+  }
+
+  /* Tables – allow breaks inside the table, but avoid breaking inside a row */
+  table { width: 100% !important; table-layout: fixed !important; page-break-inside: auto !important; }
+  tr, td, th { page-break-inside: avoid !important; }
+
+  /* Avoid tiny content area from huge margins/paddings */
+  html, body { margin: 0; padding: 0; }
+  * { box-sizing: border-box; }
+
+  /* Remove min-heights/overflow that can force pathological breaks */
+  [style*="min-height"], [style*="min-height:"] { min-height: 0 !important; }
+  [style*="overflow"], [style*="overflow:"] { overflow: visible !important; }
+"""
+)
+
+
 def safe_decode(b):
     """Decode bytes to UTF‑8 safely, replacing invalid bytes."""
     try:
@@ -73,9 +124,22 @@ def application(request):
             # )
 
             doc = HTML(
-                string=html_string, base_url=base_url, media_type="print"
-            ).render(stylesheets=[CSS(string=css_text)])
-            logger.info("Rendered pages: %d", len(doc.pages))
+                string=html_string,
+                base_url=base_url,
+                media_type="print",  # force print rules while debugging
+            ).render(
+                stylesheets=[CSS(string="@page { size: A4; margin: 12mm; }"), debug_css]
+            )
+
+            page_count = len(doc.pages)
+            logger.info("Rendered pages (debug): %d", page_count)
+
+            if page_count > 150:
+                return Response(
+                    "Document too complex (excessive pagination). Try simplifying layout.",
+                    status=422,
+                )
+
             doc.write_pdf(pdf_file_name)
 
             logger.info("%s rendered successfully", file_name)
