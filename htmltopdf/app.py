@@ -42,29 +42,20 @@ def application(request):
 
         if request_is_json:
             payload = json.loads(request.data)
-            # source_file.write(base64.b64decode(payload["contents"]))
             raw_bytes = base64.b64decode(payload["contents"])
         elif request.files:
-            # source_file.write(request.files["file"].read())
             raw_bytes = request.files["file"].read()
         else:
             return Response("No HTML provided", status=400)
 
         html_string = safe_decode(raw_bytes)
+
         file_name = source_file.name
         file_parts = file_name.split(".html")
         safe_file_name = f"{file_parts[0]}_tmp.html"
-
+        logger.warning(f"Raw bytes length: {len(raw_bytes)}")
         with open(safe_file_name, "w", encoding="utf-8") as f:
             f.write(html_string)
-
-        # with open(file_name) as f:  # The with keyword automatically closes the file when you are done
-        #     print(f.read())
-        #
-        with open(
-            safe_file_name
-        ) as f:  # The with keyword automatically closes the file when you are done
-            print(f.read())
 
         pdf_file_name = f"{file_name}.pdf"
         try:
