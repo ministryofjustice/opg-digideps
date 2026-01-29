@@ -52,7 +52,7 @@ class UserDeputyService
                 /** @var ?User $exitingUser */
                 $exitingUser = $deputy->getUser();
 
-                if (is_null($exitingUser)) {
+                if (!is_null($exitingUser)) {
                     $this->logger->error(
                         sprintf(
                             'Deputy with ID:%s already associated with a User under ID:%s',
