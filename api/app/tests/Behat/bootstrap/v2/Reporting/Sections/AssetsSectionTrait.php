@@ -166,6 +166,7 @@ trait AssetsSectionTrait
             $this->fillInField('asset[ownedPercentage]', $percentage, 'assetDetailsPropertyPercentage', $percentage . '%');
             $this->chooseOption('asset[hasMortgage]', 'yes', 'assetDetailsPropertyMortgage');
             $this->fillInField('asset[mortgageOutstandingAmount]', mt_rand(10000, 100000));
+            $this->fillInFieldTrackTotal('asset[value]', mt_rand(100000, 200000), 'assetDetailsPropertyValue');
         }
         $this->pressButton('Save and continue');
 
@@ -189,10 +190,8 @@ trait AssetsSectionTrait
 
         if ('ndr' == $this->reportUrlPrefix) {
             $this->fillInFieldTrackTotal('ndr_asset[value]', mt_rand(100000, 200000), 'assetDetailsPropertyValue');
-        } else {
-            $this->fillInFieldTrackTotal('asset[value]', mt_rand(100000, 200000), 'assetDetailsPropertyValue');
+            $this->pressButton('Save and continue');
         }
-        $this->pressButton('Save and continue');
 
         if ('ndr' == $this->reportUrlPrefix) {
             $this->chooseOption('ndr_asset_isSubjectToEquityRelease_1', 'no', 'assetDetailsPropertyEquityRelease');
