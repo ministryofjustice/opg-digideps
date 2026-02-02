@@ -65,6 +65,7 @@ class UserDeputyServiceIntegrationTest extends ApiIntegrationTestCase
         $user1 = $this->userRepository->findOneBy(['deputyUid' => $existingDeputyUid]);
         self::assertNotNull($user1);
         self::assertEquals($deputy, $user1->getDeputy());
+        self::assertEquals($user1, $deputy->getUser());
 
         // check that a deputy was created for $user2 and that they are associated
         /** @var User $user2 */
@@ -73,6 +74,7 @@ class UserDeputyServiceIntegrationTest extends ApiIntegrationTestCase
 
         $newDeputy = $user2->getDeputy();
         self::assertEquals($nonExistentDeputyUid, $newDeputy->getDeputyUid());
+        self::assertEquals($user2, $newDeputy->getUser());
 
         // email1 should match the user's email
         self::assertEquals($user2Email, $newDeputy->getEmail1());
