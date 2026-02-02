@@ -84,6 +84,9 @@ locals {
         timeout  = 5,
         retries  = 3
       },
+      environment = [
+        { name = "BUCKET", value = "pa-uploads-${local.environment}" },
+      ],
       logConfiguration = {
         logDriver = "awslogs",
         options = {
