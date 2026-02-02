@@ -26,9 +26,6 @@
     {% if step == 1 %}
         {{ macros.addressFields(form, translationDomain, translationPrefix) }}
         {{ form_input(form.occupants, 'form.property.occupants') }}
-    {% endif %}
-
-    {% if step == 2 %}
         <div class="push--bottom">
             <div class="govuk-form-group flush--bottom {% if not form.owned.vars.valid %}govuk-form-group--error{% endif %}">
                 {{ form_checkbox_group(form.owned, 'form.property.owned', {
@@ -69,30 +66,27 @@
                 </div>
             </div>
         </div>
-    {% endif %}
-
-    {% if step == 3 %}
         {{ form_input(form.value, 'form.property.value', {
             'inputPrefix' : '£',
             'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
         } ) }}
     {% endif %}
 
-    {% if step == 4 %}
+    {% if step == 2 %}
         {{ form_checkbox_group(form.isSubjectToEquityRelease, 'form.property.isSubjectToEquityRelease', {
             'fieldSetClass' : 'inline',
             'legendClass': 'govuk-fieldset__legend--s'
         }) }}
     {% endif %}
 
-    {% if step == 5 %}
+    {% if step == 3 %}
         {{ form_checkbox_group(form.hasCharges, 'form.property.hasCharges', {
             'fieldSetClass' : 'inline',
             'legendClass': 'govuk-fieldset__legend--s'
         }) }}
     {% endif %}
 
-    {% if step == 6 %}
+    {% if step == 4 %}
         <div class="push--bottom">
             <div class="govuk-form-group flush--bottom {% if not form.isRentedOut.vars.valid %}govuk-form-group--error{% endif %}">
                 {{ form_checkbox_group(form.isRentedOut, 'form.property.isRentedOut', {
