@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Repository\DeputyRepository;
 use App\Repository\PreRegistrationRepository;
 use App\Repository\UserRepository;
+use Psr\Log\LoggerInterface;
 
 class UserDeputyService
 {
@@ -18,6 +19,7 @@ class UserDeputyService
         private readonly DeputyService $deputyService,
         private readonly UserRepository $userRepository,
         private readonly DeputyRepository $deputyRepository,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -47,6 +49,22 @@ class UserDeputyService
             if (array_key_exists($deputyUid, $deputyUidsToIds)) {
                 /** @var ?Deputy $deputy */
                 $deputy = $this->deputyRepository->find($deputyUidsToIds[$deputyUid]);
+
+                if (!is_null($deputy)) {
+                    /** @var ?User $existingUser */
+                    $existingUser = $deputy->getUser();
+
+                    if (!is_null($existingUser)) {
+                        $this->logger->error(
+                            sprintf(
+                                'Deputy with ID:%s already associated with a User under ID:%s',
+                                $deputy->getId(),
+                                $existingUser->getId()
+                            )
+                        );
+                        continue;
+                    }
+                }
             } else {
                 // get pre-reg row for this deputy UID
                 /** @var ?PreRegistration $preReg */
@@ -61,6 +79,7 @@ class UserDeputyService
             }
 
             if (!is_null($deputy)) {
+                $deputy->setUser($user);
                 $user->setDeputy($deputy);
                 $this->userRepository->save($user);
 
