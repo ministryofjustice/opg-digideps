@@ -497,7 +497,7 @@ class Client
 
     public function getFullname()
     {
-        $this->fullname = $this->firstname.' '.$this->lastname;
+        $this->fullname = $this->firstname . ' ' . $this->lastname;
 
         return $this->fullname;
     }
@@ -828,47 +828,6 @@ class Client
     public function setClientContacts($clientContacts)
     {
         $this->clientContacts = $clientContacts;
-    }
-
-    /**
-     * @return array $coDeps an array of users sorted by firstname, or email if no firstname
-     */
-    public function getCoDeputies()
-    {
-        $coDeps = [];
-        if (is_array($this->users) && count($this->users) > 0) {
-            foreach ($this->users as $user) {
-                if (!$user->getFirstname()) {
-                    $matches = [];
-                    preg_match('(^\w+)', $user->getEmail(), $matches);
-                    if (!empty($matches[0])) {
-                        $coDeps[strtolower($matches[0]).$user->getId()] = $user;
-                    }
-                } else {
-                    if (!is_null($user->getFirstname())) {
-                        $coDeps[strtolower($user->getFirstname()).$user->getId()] = $user;
-                    }
-                }
-            }
-            ksort($coDeps);
-        }
-
-        return array_values($coDeps);
-    }
-
-    /**
-     * @return array $submittedReports an array of submitted reports
-     */
-    public function getSubmittedReports()
-    {
-        $submittedReports = [];
-        foreach ($this->getReports() as $report) {
-            if ($report->isSubmitted()) {
-                $submittedReports[] = $report;
-            }
-        }
-
-        return $submittedReports;
     }
 
     /**
