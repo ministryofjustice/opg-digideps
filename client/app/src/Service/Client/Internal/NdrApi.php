@@ -33,19 +33,8 @@ class NdrApi
         $this->userApi = $userApi;
     }
 
-    public function submit(Ndr $ndrToSubmit, Document $ndrPdfDocument)
+    public function submit(Ndr $ndrToSubmit, Document $ndrPdfDocument): void
     {
-        $this->restClient->put(
-            sprintf(self::SUBMIT_NDR_ENDPOINT, $ndrToSubmit->getId(), $ndrPdfDocument->getId()),
-            $ndrToSubmit,
-            ['submit']
-        );
-
-        $submittedByWithClientsAndReports = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report']);
-        $client = $submittedByWithClientsAndReports->getClients()[0];
-
-        $ndrSubmittedEvent = new NdrSubmittedEvent($submittedByWithClientsAndReports, $ndrToSubmit, $client->getActiveReport());
-        $this->eventDispatcher->dispatch($ndrSubmittedEvent, NdrSubmittedEvent::NAME);
     }
 
     public function getNdr(int $ndrId, array $groups = []): Ndr
