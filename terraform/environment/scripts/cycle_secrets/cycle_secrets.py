@@ -8,7 +8,7 @@ import secrets
 
 db_password_suffix = "database-password"
 
-db_secrets_list = ["database-password"]
+db_secrets_list = ["database-password", "application-db-password"]
 
 app_secrets_list = [
     "api-secret",
