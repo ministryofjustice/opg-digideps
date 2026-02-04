@@ -105,10 +105,4 @@ class PreRegistrationController extends RestController
 
         return $result;
     }
-
-    #[Route(path: '/clientHasCoDeputies/{caseNumber}', methods: ['GET'])]
-    public function clientHasCoDeputies(string $caseNumber): bool
-    {
-        return $this->preRegistrationVerificationService->isMultiDeputyCase($caseNumber);
-    }
 }
