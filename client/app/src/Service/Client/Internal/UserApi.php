@@ -7,7 +7,6 @@ namespace App\Service\Client\Internal;
 use App\Entity\User;
 use App\Event\AdminManagerCreatedEvent;
 use App\Event\AdminUserCreatedEvent;
-use App\Event\CoDeputyCreatedEvent;
 use App\Event\CoDeputyInvitedEvent;
 use App\Event\DeputyInvitedEvent;
 use App\Event\DeputySelfRegisteredEvent;
@@ -223,27 +222,9 @@ class UserApi
         $this->eventDispatcher->dispatch($deputySelfRegisteredEvent, DeputySelfRegisteredEvent::NAME);
     }
 
-    /**
-     * @return User
-     */
-    public function createCoDeputy(User $invitedCoDeputy, User $invitedByDeputyName, int $clientId)
-    {
-        $createdCoDeputy = $this->restClient->post(
-            sprintf(self::CREATE_CODEPUTY_ENDPOINT, $clientId),
-            $invitedCoDeputy,
-            ['codeputy'],
-            'User'
-        );
-
-        $coDeputyCreatedEvent = new CoDeputyCreatedEvent($createdCoDeputy, $invitedByDeputyName);
-        $this->eventDispatcher->dispatch($coDeputyCreatedEvent, CoDeputyCreatedEvent::NAME);
-
-        return $createdCoDeputy;
-    }
-
     public function agreeTermsUse($token)
     {
-        return $this->restClient->apiCall('put', 'user/agree-terms-use/'.$token, null, 'raw', [], false);
+        return $this->restClient->apiCall('put', 'user/agree-terms-use/' . $token, null, 'raw', [], false);
     }
 
     public function clearRegistrationToken(string $token)
@@ -251,7 +232,11 @@ class UserApi
         return $this->restClient->apiCall(
             'put',
             sprintf(self::CLEAR_REGISTRATION_TOKEN_ENDPOINT, $token),
-            null, 'raw', [], false);
+            null,
+            'raw',
+            [],
+            false
+        );
     }
 
     private function dispatchAdminManagerCreatedEvent(User $createdUser)
