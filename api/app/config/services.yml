@@ -198,6 +198,10 @@ services:
         tags:
             - { name: security.voter }
 
+    App\Security\MicrosoftTokenAuthenticator:
+        arguments:
+          $httpClient: "@app.guzzlehttp_clientinterface"
+
     App\Service\Client\TokenStorage\RedisStorage:
         arguments:
             $redis: "@snc_redis.default"

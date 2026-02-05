@@ -53,11 +53,10 @@ if (str_starts_with($_SERVER['REQUEST_URI'], '/token')) {
 }
 
 if (str_starts_with($_SERVER['REQUEST_URI'], '/graph/v1.0/me')) {
-    $accessToken = $_GET['access_token'] ?? '';
+    $accessToken = $_SERVER['HTTP_AUTHORIZATION'] ?? '';
 
-    $email = str_replace('my-access:', '', $accessToken);
+    $email = str_replace('Bearer my-access:', '', $accessToken);
     $identifier = explode('@', $email)[0];
-
 
     echo json_encode([
         "@odata.context" => 'https://graph.microsoft.com/v1.0/$metadata#users/$entity',

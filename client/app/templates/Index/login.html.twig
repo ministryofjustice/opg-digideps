@@ -52,41 +52,41 @@
     {% endif %}
 
     {% if isAdmin %}
+        <a class="behat-link-forgotten-password" href="/connect/microsoft">
+            <img src="{{ asset('images/ms-signin-light.svg') }}" alt="Sign in with Microsoft" />
+        </a>
 
-        <a class="behat-link-forgotten-password" href="/connect/microsoft">Login with O365</a>
-
-    {% else %}
-
-        {% if app.session.get('login-context') == 'email-update' %}
-            <div class="moj-banner">
-                {{ macros.icon('information', 'moj-banner__icon') }}
-                <div class="moj-banner__message">
-                    <h3 class="govuk-heading-m govuk-!-margin-bottom-2">Do you also need to change your email on any deputyship records?</h3>
-                    <span class="moj-banner__assistive">information</span>
-                    <p class="govuk-body govuk-!-margin-bottom-2">If you have a new email address and you're a deputy or contact on any deputyships, you'll need to ask us to update
-                        your contact details on the deputyship records.</p>
-                    <p class="govuk-body">Send an email to: <a href="mailto:opg.pro@publicguardian.gov.uk">opg.pro@publicguardian.gov.uk</a></p>
-                </div>
-            </div>
-        {% endif %}
-
-        {# Content gets injected here when manually signing out (login-from-logout) #}
-        {% block loginHeader %}
-        {% endblock %}
-
-        {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
-
-        {{ form_input(form.email, 'signInForm.email') }}
-
-        {{ form_password(form.password) }}
-
-        {{ form_submit(form.login, 'signInForm.signin', {'buttonClass': 'behat-link-login', 'attr': {'data-prevent-double-click': 'true'}}) }}
-
-        {{ form_end(form) }}
-
-        <a class="behat-link-forgotten-password" href="{{ path('password_forgotten') }}">{{ 'forgottenPassword' | trans }}</a>
-
+        <hr class="govuk-section-break govuk-section-break--m">
     {% endif %}
+
+    {% if app.session.get('login-context') == 'email-update' %}
+        <div class="moj-banner">
+            {{ macros.icon('information', 'moj-banner__icon') }}
+            <div class="moj-banner__message">
+                <h3 class="govuk-heading-m govuk-!-margin-bottom-2">Do you also need to change your email on any deputyship records?</h3>
+                <span class="moj-banner__assistive">information</span>
+                <p class="govuk-body govuk-!-margin-bottom-2">If you have a new email address and you're a deputy or contact on any deputyships, you'll need to ask us to update
+                    your contact details on the deputyship records.</p>
+                <p class="govuk-body">Send an email to: <a href="mailto:opg.pro@publicguardian.gov.uk">opg.pro@publicguardian.gov.uk</a></p>
+            </div>
+        </div>
+    {% endif %}
+
+    {# Content gets injected here when manually signing out (login-from-logout) #}
+    {% block loginHeader %}
+    {% endblock %}
+
+    {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
+
+    {{ form_input(form.email, 'signInForm.email') }}
+
+    {{ form_password(form.password) }}
+
+    {{ form_submit(form.login, 'signInForm.signin', {'buttonClass': 'behat-link-login', 'attr': {'data-prevent-double-click': 'true'}}) }}
+
+    {{ form_end(form) }}
+
+    <a class="behat-link-forgotten-password" href="{{ path('password_forgotten') }}">{{ 'forgottenPassword' | trans }}</a>
 
     <hr class="govuk-section-break govuk-section-break--m">
 
