@@ -189,6 +189,7 @@ class MoneyInController extends AbstractController
             ->setRouteBaseParams(['reportId' => $reportId, 'transactionId' => $transactionId]);
 
         // create (add mode) or load transaction (edit mode)
+        $addingItem = false;
         if ($transactionId) {
             $transaction = array_filter($report->getMoneyTransactionsIn(), function ($t) use ($transactionId): bool {
                 if ($t->getBankAccount() instanceof BankAccount) {
@@ -200,6 +201,7 @@ class MoneyInController extends AbstractController
             $transaction = array_shift($transaction);
         } else {
             $transaction = new MoneyTransaction();
+            $addingItem = true;
         }
 
         if (is_null($transaction)) {
@@ -225,8 +227,8 @@ class MoneyInController extends AbstractController
             ]
         );
 
-        // if we are on step 2, we need an "add another" option
-        if (2 === $step) {
+        // if we are adding an item and on the second page, we need the "add another" option
+        if ($addingItem && 2 === $step) {
             $form->add('addAnother', AddAnotherThingType::class);
         }
 
@@ -242,8 +244,19 @@ class MoneyInController extends AbstractController
                 $stepRedirector->setFromPage(null);
 
                 $stepUrlData['category'] = $transaction->getCategory();
-            } elseif ($step == $totalSteps) {
-                if ($transactionId) {
+            } elseif ($step === $totalSteps) {
+                if ($addingItem) {
+                    // add
+                    $this->restClient->post("/report/$reportId/money-transaction", $transaction, ['transaction', 'account']);
+
+                    // check whether we are adding another after this one and redirect appropriately
+                    switch ($form['addAnother']?->getData()) {
+                        case 'yes':
+                            return $this->redirectToRoute('money_in_step', ['step' => 1, 'reportId' => $reportId]);
+                        case 'no':
+                            return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
+                    }
+                } else {
                     // edit
                     $this->addFlash(
                         'notice',
@@ -253,17 +266,6 @@ class MoneyInController extends AbstractController
                     $this->restClient->put("/report/$reportId/money-transaction/$transactionId", $transaction, ['transaction', 'account']);
 
                     return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
-                } else {
-                    // add
-                    $this->restClient->post("/report/$reportId/money-transaction", $transaction, ['transaction', 'account']);
-
-                    // check whether we are adding another after this one and redirect appropriately
-                    switch ($form['addAnother']->getData()) {
-                        case 'yes':
-                            return $this->redirectToRoute('money_in_step', ['step' => 1, 'reportId' => $reportId]);
-                        case 'no':
-                            return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
-                    }
                 }
             }
 
