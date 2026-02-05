@@ -84,6 +84,7 @@ security:
       custom_authenticators:
         - App\Security\LoginFormAuthenticator
         - App\Security\SessionAuthenticator
+        - App\Security\MicrosoftAuthenticator
       logout:
         path: app_logout
         # needed to save custom login params

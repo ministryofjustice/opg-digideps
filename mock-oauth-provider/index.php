@@ -68,11 +68,8 @@ if (str_starts_with($_SERVER['REQUEST_URI'], '/graph/v1.0/me')) {
         "id" => "10a08e2e-3ea2-4ce0-80cb-ddddd4b05ea6"
     ]);
 
-    error_log("Returned user info for " . $email);
-
     return;
 }
 
 http_response_code(404);
-error_log("Page not found: " . $_SERVER['REQUEST_URI']);
 echo "Page not found";
