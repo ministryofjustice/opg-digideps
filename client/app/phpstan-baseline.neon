@@ -11084,13 +11084,3 @@ parameters:
 			message: "#^Cannot call method getCourtDate\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Validator/Constraints/YearMustBeFourDigitsAndValidValidator.php
-
-		-
-			message: "#^Property App\\\\Validator\\\\Constraints\\\\YesNoNa\\:\\:\\$message has no type specified\\.$#"
-			count: 1
-			path: src/Validator/Constraints/YesNoNa.php
-
-		-
-			message: "#^Access to an undefined property Symfony\\\\Component\\\\Validator\\\\Constraint\\:\\:\\$message\\.$#"
-			count: 1
-			path: src/Validator/Constraints/YesNoNaValidator.php
