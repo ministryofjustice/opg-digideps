@@ -484,6 +484,7 @@ class Client
         if (!empty($this->getAddress())) {
             return true;
         }
+        return false;
     }
 
     public function hasReport()
@@ -791,7 +792,7 @@ class Client
     public function getAge()
     {
         if (!$this->dateOfBirth) {
-            return;
+            return 0;
         }
         $to = new \DateTime('today');
 
@@ -831,17 +832,18 @@ class Client
     }
 
     /**
-     * @return Report|null
+     * @return array $submittedReports an array of submitted reports
      */
-    public function getActiveReport()
+    public function getSubmittedReports()
     {
+        $submittedReports = [];
         foreach ($this->getReports() as $report) {
-            if (!$report->isSubmitted() && !$report->getUnSubmitDate()) {
-                return $report;
+            if ($report->isSubmitted()) {
+                $submittedReports[] = $report;
             }
         }
 
-        return null;
+        return $submittedReports;
     }
 
     /**
