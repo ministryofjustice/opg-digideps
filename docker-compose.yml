@@ -409,3 +409,8 @@ services:
     working_dir: /app
     environment:
       NODE_ENV: production
+
+  mock-oauth-provider:
+    build: mock-oauth-provider
+    ports:
+      - 8081:80

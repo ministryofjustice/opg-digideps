@@ -108,6 +108,7 @@ security:
     # open URLs
     - { path: ^/v2/*, roles: PUBLIC_ACCESS }
     - { path: ^/login, roles: PUBLIC_ACCESS }
+    - { path: ^/connect\/, roles: PUBLIC_ACCESS }
     - { path: ^/logout, roles: PUBLIC_ACCESS }
     - { path: ^/login-ad, roles: PUBLIC_ACCESS }
     - { path: ^/manage, roles: PUBLIC_ACCESS }

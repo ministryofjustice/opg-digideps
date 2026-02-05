@@ -1,0 +1,11 @@
+knpu_oauth2_client:
+    clients:
+        office365:
+            type: microsoft
+            client_id: 'client_id'
+            client_secret: 'client_secret:'
+            redirect_route: connect_microsoft_check
+            redirect_params: {}
+            url_authorize: http://localhost:8081/authorize
+            url_access_token: http://mock-oauth-provider/token
+            url_resource_owner_details: http://mock-oauth-provider/graph/v1.0/me
