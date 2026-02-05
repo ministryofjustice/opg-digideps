@@ -2946,11 +2946,6 @@ parameters:
 			path: src/Entity/Client.php
 
 		-
-			message: "#^Negated boolean expression is always true\\.$#"
-			count: 1
-			path: src/Entity/Client.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\Client\\:\\:\\$address2 \\(string\\) does not accept string\\|null\\.$#"
 			count: 1
 			path: src/Entity/Client.php
@@ -9152,11 +9147,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Service\\\\Client\\\\Internal\\\\NdrApi\\:\\:getNdr\\(\\) should return App\\\\Entity\\\\Ndr\\\\Ndr but returns mixed\\.$#"
-			count: 1
-			path: src/Service/Client/Internal/NdrApi.php
-
-		-
-			message: "#^Method App\\\\Service\\\\Client\\\\Internal\\\\NdrApi\\:\\:submit\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/Client/Internal/NdrApi.php
 

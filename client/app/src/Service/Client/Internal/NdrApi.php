@@ -6,31 +6,16 @@ namespace App\Service\Client\Internal;
 
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Document;
-use App\Event\NdrSubmittedEvent;
-use App\EventDispatcher\ObservableEventDispatcher;
 use App\Exception\RestClientException;
 use App\Service\Client\RestClient;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class NdrApi
 {
-    private const SUBMIT_NDR_ENDPOINT = 'ndr/%s/submit?documentId=%s';
     private const GET_NDR_ENDPOINT = 'ndr/%s';
 
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var ObservableEventDispatcher */
-    private $eventDispatcher;
-
-    /** @var UserApi */
-    private $userApi;
-
-    public function __construct(RestClient $restClient, ObservableEventDispatcher $eventDispatcher, UserApi $userApi)
+    public function __construct(private readonly RestClient $restClient)
     {
-        $this->restClient = $restClient;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->userApi = $userApi;
     }
 
     public function submit(Ndr $ndrToSubmit, Document $ndrPdfDocument): void
