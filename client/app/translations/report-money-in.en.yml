@@ -1,3 +1,6 @@
+form:
+  thing: item of income
+
 deletePage:
   htmlTitle: "Money in - Complete the deputy report | GOV.UK"
   subject: item of income
@@ -12,7 +15,6 @@ existPage:
   htmlTitle: "Money In - Complete the deputy report | GOV.UK"
   supportTitle: Money in
   form:
-    thing: item of income
     exist:
       label: Has any money been added to %client%'s account(s) during this reporting period?
     save:
