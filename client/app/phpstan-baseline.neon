@@ -2866,11 +2866,6 @@ parameters:
 			path: src/Entity/Client.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Client\\:\\:hasDetails\\(\\) should return bool but return statement is missing\\.$#"
-			count: 1
-			path: src/Entity/Client.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Client\\:\\:hasReport\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Client.php
