@@ -9,6 +9,8 @@ use App\Entity\User;
 use App\Form\CoDeputyInviteType;
 use App\Form\CoDeputyVerificationType;
 use App\Model\SelfRegisterData;
+use App\Service\Audit\AuditEvents;
+use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\DeputyApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
@@ -25,6 +27,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class CoDeputyController extends AbstractController
 {
     public function __construct(
+        private readonly ClientApi $clientApi,
         private readonly UserApi $userApi,
         private readonly DeputyApi $deputyApi,
         private readonly RestClient $restClient,
@@ -136,6 +139,61 @@ class CoDeputyController extends AbstractController
             'form' => $form->createView(),
             'user' => $user,
             'client_validated' => false,
+        ];
+    }
+
+    /**
+     * For an existing deputy to invite a co-deputy (who must exist in the pre_registration table).
+     *
+     * @throws \Throwable
+     */
+    #[Route(path: '/codeputy/{clientId}/add', name: 'add_co_deputy')]
+    #[Template('@App/CoDeputy/add.html.twig')]
+    public function addAction(Request $request, Redirector $redirector, int $clientId): array|RedirectResponse
+    {
+        $loggedInUser = $this->userApi->getUserWithData(['user-clients', 'client']);
+
+        // redirect if user has missing details or is on wrong page
+        if ($route = $redirector->getCorrectRouteIfDifferent($loggedInUser, 'add_co_deputy')) {
+            return $this->redirectToRoute($route);
+        }
+
+        $invitedUser = new User();
+        $form = $this->createForm(CoDeputyInviteType::class, $invitedUser);
+
+        $backLink = $this->generateUrl('courtorders_for_deputy');
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                $this->userApi->createCoDeputy($invitedUser, $loggedInUser, $clientId);
+
+                $this->userApi->update(
+                    $loggedInUser,
+                    $loggedInUser->setCoDeputyClientConfirmed(true),
+                    AuditEvents::TRIGGER_CODEPUTY_CREATED
+                );
+
+                $request->getSession()->getFlashBag()->add('notice', 'Deputy invitation has been sent');
+
+                return $this->redirect($backLink);
+            } catch (\Throwable $e) {
+                switch ((int) $e->getCode()) {
+                    case 422:
+                        $form->get('email')->addError(new FormError($this->translator->trans('form.email.existingError', [], 'co-deputy')));
+                        break;
+                    default:
+                        $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+                        throw $e;
+                }
+                $this->logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
+            }
+        }
+
+        return [
+            'form' => $form->createView(),
+            'backLink' => $backLink,
+            'client' => $this->clientApi->getFirstClient(),
         ];
     }
 

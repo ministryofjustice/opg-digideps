@@ -53,6 +53,12 @@ Feature: Users logging into the service
         When the user tries to access their clients report overview page
         Then they get redirected back to the log in page
 
+    @lay-pfa-high-not-started-multi-client-deputy
+    Scenario: A user logs in with their primary account and uses breadcrumbs to navigate to Your details page
+        And a Lay Deputy tries to login with their "primary" email address
+        When the Lay deputy navigates to your details page
+        And the Lay deputy navigates to the Choose a client page
+
     @lay-pfa-high-not-started-multi-client-deputy @login-breadcrumbs-client-details
     Scenario: A user logs in with their primary account and uses breadcrumbs to navigate to Client details page
         Given a Lay Deputy tries to login with their "primary" email address

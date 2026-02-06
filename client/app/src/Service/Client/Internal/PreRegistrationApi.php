@@ -12,6 +12,14 @@ class PreRegistrationApi
     {
     }
 
+    /**
+     * @return bool
+     */
+    public function clientHasCoDeputies(string $caseNumber)
+    {
+        return $this->restClient->get(sprintf('/pre-registration/clientHasCoDeputies/%s', $caseNumber), 'array');
+    }
+
     public function deleteAll(): void
     {
         $this->restClient->delete('/pre-registration/delete');
