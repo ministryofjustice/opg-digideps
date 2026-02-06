@@ -2137,7 +2137,7 @@ parameters:
 
 		-
 			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
-			count: 3
+			count: 2
 			path: src/Controller/Report/MoneyInController.php
 
 		-
