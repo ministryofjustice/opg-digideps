@@ -276,7 +276,7 @@ fields @message
 | parse @message /"httpMethod":"(?<method>[^"]+)"/
 | parse @message /"User-Agent","value":"(?<user_agent>[^"]+)"/
 | parse @message /"terminatingRuleId":"(?<rule_id>[^"]+)"/
-| filter uri like /\\/client/ or uri like /\\/org/ or uri like /\\/choose-a-client/
+| filter uri like /\\/client/ or uri like /\\/org/ or uri like /\\/choose-a-court-order/
 | stats count() as blocked_requests by client_ip, country, method, uri, user_agent, rule_id
 | sort blocked_requests desc
 QUERY

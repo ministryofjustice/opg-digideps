@@ -19,14 +19,12 @@ use App\Form\Report\ReportDeclarationType;
 use App\Form\Report\ReportType;
 use App\Model\FeedbackReport;
 use App\Service\Client\Internal\ClientApi;
-use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\Internal\SatisfactionApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Csv\TransactionsCsvGenerator;
 use App\Service\File\Storage\S3Storage;
-use App\Service\NdrStatusService;
 use App\Service\Redirector;
 use App\Service\ReportSubmissionService;
 use Symfony\Bridge\Twig\Attribute\Template;
@@ -35,7 +33,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ReportController extends AbstractController
@@ -96,142 +93,17 @@ class ReportController extends AbstractController
         'wish-to-provide-documentation',
     ];
 
-    private static array $ndrGroupsForValidation = [
-        'client',
-        'client-ndr',
-        'client-benefits-check',
-        'client-case-number',
-        'client-reports',
-        'damages',
-        'ndr',
-        'ndr-action-give-gifts',
-        'ndr-action-more-info',
-        'ndr-action-property',
-        'ndr-account',
-        'ndr-asset',
-        'ndr-debt',
-        'ndr-debt-management',
-        'ndr-expenses',
-        'one-off',
-        'pension',
-        'report',
-        'state-benefits',
-        'user',
-        'user-clients',
-        'visits-care',
-    ];
-
     public function __construct(
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
         private readonly UserApi $userApi,
         private readonly ClientApi $clientApi,
         private readonly SatisfactionApi $satisfactionApi,
-        private readonly PreRegistrationApi $preRegistrationApi,
         private readonly FormFactoryInterface $formFactory,
         private readonly TranslatorInterface $translator,
         private readonly ObservableEventDispatcher $eventDispatcher,
         private readonly S3Storage $s3Storage,
     ) {
-    }
-
-    /**
-     * List of reports.
-     */
-    #[Route(path: '/client/{clientId}', name: 'lay_home')]
-    #[Template('@App/Report/Report/index.html.twig')]
-    public function clientHomepageAction(Redirector $redirector, string $clientId): RedirectResponse|array
-    {
-        $ndrEnabledOnDeputy = false;
-        $users = $this->clientApi->getWithUsersV2(intval($clientId))->getUsers();
-
-        foreach ($users as $user) {
-            if ($user->isNdrEnabled()) {
-                $ndrEnabledOnDeputy = true;
-            }
-        }
-
-        if ($ndrEnabledOnDeputy) {
-            $user = $this->userApi->getUserWithData();
-        } else {
-            // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
-            // due to the way
-            $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
-        }
-
-        // redirect if user has missing details or is on wrong page
-        $route = $redirector->getCorrectRouteIfDifferent($user, 'lay_home');
-        if (is_string($route)) {
-            return $this->redirectToRoute($route);
-        }
-
-        $clientWithCoDeputies = $this->clientApi->getWithUsersV2(intval($clientId));
-        $coDeputies = $clientWithCoDeputies->getCoDeputies();
-
-        $resultsArray = [
-            'coDeputies' => $coDeputies,
-            'inviteUrl' => $this->generateUrl('add_co_deputy', ['clientId' => $clientId]),
-            'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($clientWithCoDeputies->getCaseNumber()),
-        ];
-
-        $client = $this->clientApi->getById(intval($clientId));
-
-        if ($ndrEnabledOnDeputy && $client->getNdr()) {
-            $ndr = $this->reportApi->getNdr($client->getNdr()->getId(), self::$ndrGroupsForValidation);
-
-            return array_merge(
-                [
-                    'ndrEnabled' => true,
-                    'client' => $client,
-                    'ndr' => $client->getNdr(),
-                    'reportsSubmitted' => $client->getSubmittedReports(),
-                    'reportActive' => $client->getActiveReport(),
-                    'ndrStatus' => new NdrStatusService($ndr),
-                ],
-                $resultsArray
-            );
-        }
-
-        return array_merge(
-            [
-                'ndrEnabled' => false,
-                'client' => $client,
-            ],
-            $resultsArray
-        );
-    }
-
-    /**
-     * List of reports.
-     */
-    #[Route(path: '/choose-a-client', name: 'choose_a_client')]
-    #[IsGranted(attribute: 'ROLE_LAY_DEPUTY')] // *
-    #[Template('@App/Index/choose-a-client.html.twig')]
-    public function chooseAClientAction(Redirector $redirector): RedirectResponse|array
-    {
-        $user = $this->userApi->getUserWithData(['user-clients', 'client']);
-
-        // redirect if user has missing details or is on wrong page
-        $route = $redirector->getCorrectRouteIfDifferent($user, 'choose_a_client');
-        if (is_string($route)) {
-            return $this->redirectToRoute($route);
-        }
-
-        $groups = ['client', 'client-name', 'client-case-number', 'client-reports', 'client-ndr', 'ndr', 'report', 'status'];
-        $clients = [];
-        $deputyUid = $user->getDeputyUid();
-        if (!is_null($deputyUid)) {
-            $clients = $this->clientApi->getAllClientsByDeputyUid($deputyUid, $groups);
-        }
-
-        if (empty($clients)) {
-            throw $this->createNotFoundException('Client not added');
-        }
-
-        return [
-            'user' => $user,
-            'clients' => $clients,
-        ];
     }
 
     /**
