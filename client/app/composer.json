@@ -26,7 +26,6 @@
         "fakerphp/faker": "^1.24.0",
         "gbprod/uuid-normalizer": "^7.0.1",
         "guzzlehttp/guzzle": "^7.4.0",
-        "hwi/oauth-bundle": "^2.4",
         "jms/serializer-bundle": "^5.0.0",
         "jolicode/slack-php-api": "^4.4",
         "knpuniversity/oauth2-client-bundle": "^2.20",
