@@ -16,6 +16,15 @@ trait INavigateToFrontendTrait
     }
 
     /**
+     * @When /^the Lay deputy navigates to the Choose a client page$/
+     */
+    public function theLayDeputyNavigatesToTheChooseAClientPage()
+    {
+        $this->visitPath('/choose-a-client');
+        $this->iAmOnChooseAClientMainPage();
+    }
+
+    /**
      * @When /^the Lay deputy navigates to the report overview page$/
      */
     public function theLayDeputyNavigatesToTheReportOverviewPage()
