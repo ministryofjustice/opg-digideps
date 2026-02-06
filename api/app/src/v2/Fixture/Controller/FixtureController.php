@@ -770,10 +770,15 @@ class FixtureController extends AbstractController
         $coDeputyRecord = $this->generateDeputy($coDeputy);
 
         $deputyRecord = $this->deputyRepository->findOneBy(['email1' => $deputy->getEmail()]);
+        if (!$deputyRecord instanceof Deputy) {
+            throw new \RuntimeException('No deputy found with email: ' . $deputy->getEmail());
+        }
+
         $courtOrder = $deputyRecord->getCourtOrdersWithStatus()[0]['courtOrder'] ?? null;
         if (empty($courtOrder)) {
             throw new \RuntimeException('No court order found for deputy with email ' . $deputy->getEmail());
         }
+
         $coDeputyRecord->associateWithCourtOrder($courtOrder);
         $this->em->persist($coDeputyRecord);
         $this->em->flush();
