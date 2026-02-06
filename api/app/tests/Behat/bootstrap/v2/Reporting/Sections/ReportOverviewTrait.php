@@ -101,6 +101,26 @@ trait ReportOverviewTrait
         );
     }
 
+    /**
+     * @Given the Public Authority Admin Deputy has a submitted report
+     */
+    public function thePublicAuthorityAdminDeputyHasASubmittedReport()
+    {
+        $deputy = $this->fixtureUsers[0];
+        $this->createSubmittedReportForClient(
+            clientId: $deputy->getClientId(),
+            type: '102',
+            submitDate: new \DateTime()
+        );
+    }
+
+    /**
+     * @Given I should see the correct report details
+     */
+    public function iShouldSeeTheCorrectReportDetails()
+    {
+    }
+
     private function extractSectionHeadersAndContents()
     {
         // Finding all section headings (via buttons) and section contents
