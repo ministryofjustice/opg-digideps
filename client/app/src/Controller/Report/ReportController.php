@@ -320,104 +320,48 @@ class ReportController extends AbstractController
     #[Template('@App/Report/Report/overview.html.twig')]
     public function overviewAction(Redirector $redirector, int $reportId): RedirectResponse|Response
     {
-        $reportJmsGroup = ['status', 'balance', 'user', 'client', 'client-reports', 'balance-state'];
-        // redirect if user has missing details or is on wrong page
         $user = $this->userApi->getUserWithData();
 
+        // redirect if user has missing details or is on wrong page
         $route = $redirector->getCorrectRouteIfDifferent($user, 'report_overview');
         if (is_string($route)) {
             return $this->redirectToRoute($route);
         }
 
-        // get all the groups (needed by EntityDir\Report\Status
-        $clientId = $this->reportApi->getReportIfNotSubmitted($reportId, $reportJmsGroup)->getClient()->getId();
+        $reportJmsGroup = ['status', 'balance', 'user', 'client', 'client-reports', 'balance-state'];
 
-        $client = $this->generateClient($user, "$clientId");
+        // get all the groups (needed by EntityDir\Report\Status)
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, $reportJmsGroup);
 
-        $deputy = $client->getDeputy();
+        $client = $this->generateClient($user, "{$report->getClient()->getId()}");
 
-        $activeReportId = null;
+        $activeReport = null;
+        $template = '@App/Report/Report/overview.html.twig';
+
         if ($user->isDeputyOrg()) {
-            // PR and PROF: unsubmitted at the top (if exists), active below (
             $template = '@App/Org/ClientProfile/overview.html.twig';
 
-            // if there is an unsubmitted report, swap them, so links will both show the unsubmitted first
+            // if there is an unsubmitted report, put that report above the current (active) report
+            // and mark the unsubmitted report as "incomplete"
             $unsubmittedReport = $client->getUnsubmittedReport();
-            if ($unsubmittedReport instanceof Report) {
-                $reportId = $unsubmittedReport->getId();
 
-                $activeReport = $client->getActiveReport();
-                if ($activeReport instanceof Report) {
-                    $activeReportId = $activeReport->getId();
-                }
+            if (!is_null($unsubmittedReport)) {
+                $activeReport = $report;
+
+                $report = $this->reportApi->getReportIfNotSubmitted(
+                    $unsubmittedReport->getId(),
+                    $reportJmsGroup,
+                );
             }
-        } else { // Lay, so keep the report id
-            $template = '@App/Report/Report/overview.html.twig';
         }
-
-        $report = $this->reportApi->getReportIfNotSubmitted(
-            $reportId,
-            $reportJmsGroup,
-        );
-
-        $activeReport = $activeReportId ? $this->reportApi->getReportIfNotSubmitted($activeReportId, $reportJmsGroup) : null;
 
         return $this->render($template, [
             'user' => $user,
             'client' => $client,
-            'deputy' => $deputy,
+            'deputy' => $client->getDeputy(),
             'report' => $report,
             'activeReport' => $activeReport,
         ]);
-    }
-
-    /**
-     * Due to some profs having many dozens of deputies attached to clients, we need to be conservative about generating
-     * the list. It's needed for a permissions check on add client contact (logged-in user has to be associated).
-     */
-    private function generateClient(User $user, string $clientId): Client
-    {
-        $jms = $this->determineJmsGroups($user);
-
-        /* Get client with all other JMS groups required */
-        $client = $this->restClient->get("client/$clientId", 'Client', $jms);
-
-        if ($user->isDeputyOrg()) {
-            /*
-            Separate call to get client Users as query taking too long for some profs with many deputies attached.
-            We only need the user id for the add client contact permission check
-             */
-            $clientWithUsers = $this->restClient->get("client/$clientId", 'Client', ['user-id', 'client-users']);
-            $client->setUsers($clientWithUsers->getUsers());
-        }
-
-        return $client;
-    }
-
-    /**
-     * Method to return JMS groups required for overview page.
-     */
-    private function determineJmsGroups(User $user): array
-    {
-        $jms = [
-            'client',
-            'user',
-            'client-reports',
-            'report', // needed ?
-            'client-clientcontacts',
-            'clientcontact',
-            'client-notes',
-            'notes',
-        ];
-
-        if ($user->isLayDeputy()) {
-            $jms[] = 'client-users';
-        } elseif ($user->isDeputyOrg()) {
-            $jms[] = 'client-deputy';
-            $jms[] = 'deputy';
-        }
-
-        return $jms;
     }
 
     #[Route(path: '/report/{reportId}/confirm-details', name: 'report_confirm_details')]
@@ -721,5 +665,53 @@ class ReportController extends AbstractController
             'email' => $deputy->getEmail(),
             'editUrl' => $editUrl,
         ];
+    }
+    /**
+     * Due to some profs having many dozens of deputies attached to clients, we need to be conservative about generating
+     * the list. It's needed for a permissions check on add client contact (logged-in user has to be associated).
+     */
+    private function generateClient(User $user, string $clientId): Client
+    {
+        $jms = $this->determineJmsGroups($user);
+
+        /* Get client with all other JMS groups required */
+        $client = $this->restClient->get("client/$clientId", 'Client', $jms);
+
+        if ($user->isDeputyOrg()) {
+            /*
+            Separate call to get client Users as query taking too long for some profs with many deputies attached.
+            We only need the user id for the add client contact permission check
+             */
+            $clientWithUsers = $this->restClient->get("client/$clientId", 'Client', ['user-id', 'client-users']);
+            $client->setUsers($clientWithUsers->getUsers());
+        }
+
+        return $client;
+    }
+
+    /**
+     * Method to return JMS groups required for overview page.
+     */
+    private function determineJmsGroups(User $user): array
+    {
+        $jms = [
+            'client',
+            'user',
+            'client-reports',
+            'report', // needed ?
+            'client-clientcontacts',
+            'clientcontact',
+            'client-notes',
+            'notes',
+        ];
+
+        if ($user->isLayDeputy()) {
+            $jms[] = 'client-users';
+        } elseif ($user->isDeputyOrg()) {
+            $jms[] = 'client-deputy';
+            $jms[] = 'deputy';
+        }
+
+        return $jms;
     }
 }

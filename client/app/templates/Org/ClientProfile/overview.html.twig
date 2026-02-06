@@ -50,19 +50,19 @@
             <div class="govuk-accordion__section-content">
                 {% if app.user.isDeputyProf %}
                     {% include '@App/Org/ClientProfile/_reportDetail-Prof.html.twig' with {
-                    'report': report,
-                    'incomplete': activeReport ? true : false
+                        'report': report,
+                        'incomplete': activeReport ? true : false
                     } %}
                 {% else %}
                     {% include '@App/Org/ClientProfile/_reportDetail-PA.html.twig' with {
-                    'report': report,
-                    'incomplete': activeReport ? true : false
+                        'report': report,
+                        'incomplete': activeReport ? true : false
                     } %}
                 {% endif %}
             </div>
         </div>
 
-        {# if the report is unsubmitted, show the other active one #}
+        {# if the report has been unsubmitted and is incomplete, show the active one here #}
         {% if activeReport %}
             <div class="govuk-accordion__section">
 
@@ -77,17 +77,17 @@
                 <div class="govuk-accordion__section-content">
                     {% if app.user.isDeputyProf %}
                         {% include '@App/Org/ClientProfile/_reportDetail-Prof.html.twig' with {
-                        'report': activeReport,
-                        'incomplete': false
+                            'report': activeReport,
+                            'incomplete': false
                         } %}
                     {% else %}
                         {% include '@App/Org/ClientProfile/_reportDetail-PA.html.twig' with {
-                        'report': activeReport,
-                        'incomplete': false
+                            'report': activeReport,
+                            'incomplete': false
                         } %}
                     {% endif %}
                 </div>
-            </details>
+            </div>
         {% endif %}
 
         {% include '@App/Org/ClientProfile/_notes.html.twig' with {
@@ -97,12 +97,12 @@
 
         {% include '@App/Org/ClientProfile/_contacts.html.twig' with {
             'contacts': client.clientContacts,
-                ' client': client
+            'client': client
         } %}
 
         {% include '@App/Org/ClientProfile/_reports.html.twig' with {
             'reports': client.submittedReports,
-                'client': client
+            'client': client
         } %}
     </div>
 {% endblock %}
