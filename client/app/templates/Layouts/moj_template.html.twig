@@ -34,14 +34,6 @@
 </head>
 
 <body class="govuk-template__body">
-{% if ga is defined and ga is not null %}
-    <div id="gaCustomElements"
-        data-ga-default="{{ ga.default }}"
-        data-ga-gds="{{ ga.gds }}"
-        {% if app.user is not null %}data-tracking-id="{{ app.user.gaTrackingId() }}"{% endif %}
-        {% if gaCustomUrl is defined %}data-ga-custom-url="{{ gaCustomUrl }}"{% endif %}></d>
-    {% include '@App/Layouts/_google_analytics_events_gtag.html.twig' %}
-{% endif %}
 
 <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
 
