@@ -18,7 +18,7 @@ class MicrosoftAuthController extends AbstractController
     /**
      * Link to this controller to start the "connect" process
      *
-     * @Route("/connect/microsoft", name="connect_microsoft_start")
+     * @Route("/connect/entra", name="connect_entra_start")
      */
     public function connectAction(ClientRegistry $clientRegistry)
     {
@@ -27,7 +27,7 @@ class MicrosoftAuthController extends AbstractController
         }
 
         return $clientRegistry
-            ->getClient('office365')
+            ->getClient('entra')
             ->redirect([
                 'openid User.Read'
             ], []);
@@ -38,9 +38,9 @@ class MicrosoftAuthController extends AbstractController
      * because this is the "redirect_route" you configured
      * in config/packages/knpu_oauth2_client.yaml
      *
-     * @Route("/connect/microsoft/check", name="connect_microsoft_check")
+     * @Route("/connect/entra/check", name="connect_entra_check")
      */
-    public function connectCheckAction(Request $request, ClientRegistry $clientRegistry)
+    public function connectCheckAction()
     {
         // Handled in MicrosoftAuthenticator
     }

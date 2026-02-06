@@ -7,7 +7,6 @@ namespace App\Security;
 use App\Entity\User;
 use App\Service\Client\RestClient;
 use App\Service\Client\TokenStorage\RedisStorage;
-use App\Service\Logger;
 use App\Service\Redirector;
 use App\Validator\RouteValidator;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
@@ -27,7 +26,7 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Uid\Uuid;
 
-class MicrosoftAuthenticator extends OAuth2Authenticator implements AuthenticationEntryPointInterface
+class MicrosoftAuthenticator extends OAuth2Authenticator //implements AuthenticationEntryPointInterface
 {
     public function __construct(
         private readonly ClientRegistry $clientRegistry,
@@ -41,13 +40,13 @@ class MicrosoftAuthenticator extends OAuth2Authenticator implements Authenticati
 
     public function supports(Request $request): ?bool
     {
-        return $request->attributes->get('_route') === 'connect_microsoft_check' && $this->environment === 'admin';
+        return $request->attributes->get('_route') === 'connect_entra_check' && $this->environment === 'admin';
     }
 
     public function authenticate(Request $request): Passport
     {
         /** @var \KnpU\OAuth2ClientBundle\Client\Provider\MicrosoftClient $client */
-        $client = $this->clientRegistry->getClient('office365');
+        $client = $this->clientRegistry->getClient('entra');
 
         try {
             $msUser = $client->getAccessToken();
@@ -61,7 +60,7 @@ class MicrosoftAuthenticator extends OAuth2Authenticator implements Authenticati
          * @var User $user
          * @var string $authToken
          */
-        [$user, $authToken] = $this->restClient->login(['msAccessToken' => $msUser->getToken()]);
+        [$user, $authToken] = $this->restClient->login(['entraAccessToken' => $msUser->getToken()]);
 
         return new Passport(
             new UserBadge($user->getEmail(), function () use ($user, $authToken) {
@@ -114,13 +113,14 @@ class MicrosoftAuthenticator extends OAuth2Authenticator implements Authenticati
     }
 
     /**
-     * Called when authentication is needed, but it's not sent.
-     * This redirects to the 'login'.
+     * This won't do anything unless the Authenticator implements `AuthenticationEntryPointInterface`
+     * At that point, it will automatically intercept unauthenticated requests and redirect to via
+     * Microsoft, which would provide a seamless transition for people already logged in.
      */
     public function start(Request $request, AuthenticationException $authException = null): Response
     {
         return new RedirectResponse(
-            '/connect/microsoft', // might be the site, where users choose their oauth provider
+            '/connect/entra', // might be the site, where users choose their oauth provider
             Response::HTTP_TEMPORARY_REDIRECT
         );
     }

@@ -37,7 +37,8 @@ class MicrosoftTokenAuthenticator extends AbstractAuthenticator
         private readonly AuthService $authService,
         private readonly TokenStorageInterface $tokenStorage,
         private readonly LoggerInterface $verboseLogger,
-        private readonly Client $httpClient
+        private readonly Client $httpClient,
+        private readonly string $entraUserInfoUrl,
     ) {}
 
     public function supports(Request $request): ?bool
@@ -60,11 +61,10 @@ class MicrosoftTokenAuthenticator extends AbstractAuthenticator
         }
 
         $data = json_decode($request->getContent(), true);
-        $accessToken = $data['msAccessToken'];
+        $accessToken = $data['entraAccessToken'];
 
         try {
-            // $msMeRequest = $this->httpClient->request('GET', 'http://mock-oauth-provider/graph/v1.0/me', [
-            $msMeRequest = $this->httpClient->request('GET', 'https://graph.microsoft.com/v1.0/me', [
+            $msMeRequest = $this->httpClient->request('GET', $this->entraUserInfoUrl, [
                 'headers' => [
                     'Authorization' => 'Bearer ' . $accessToken,
                 ],
@@ -148,7 +148,7 @@ class MicrosoftTokenAuthenticator extends AbstractAuthenticator
 
         $body = json_decode($request->getContent(), true);
 
-        if (empty($body['msAccessToken'])) {
+        if (empty($body['entraAccessToken'])) {
             return false;
         }
 

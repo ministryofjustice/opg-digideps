@@ -201,6 +201,7 @@ services:
     App\Security\MicrosoftTokenAuthenticator:
         arguments:
           $httpClient: "@app.guzzlehttp_clientinterface"
+          $entraUserInfoUrl: "%env(OAUTH_ENTRA_URL_USERINFO)%"
 
     App\Service\Client\TokenStorage\RedisStorage:
         arguments:

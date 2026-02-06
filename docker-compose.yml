@@ -101,6 +101,7 @@ services:
       - htmltopdf
       - localstack
       - mock-notify-api
+      - mock-oauth-provider
       - resources
     environment:
       APP_ENV: ${APP_ENV:-local}
@@ -413,4 +414,4 @@ services:
   mock-oauth-provider:
     build: mock-oauth-provider
     ports:
-      - 8081:80
+      - 8080:80
