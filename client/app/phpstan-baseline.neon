@@ -2137,7 +2137,7 @@ parameters:
 
 		-
 			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
-			count: 3
+			count: 2
 			path: src/Controller/Report/MoneyInController.php
 
 		-
@@ -11059,13 +11059,3 @@ parameters:
 			message: "#^Cannot call method getCourtDate\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Validator/Constraints/YearMustBeFourDigitsAndValidValidator.php
-
-		-
-			message: "#^Property App\\\\Validator\\\\Constraints\\\\YesNoNa\\:\\:\\$message has no type specified\\.$#"
-			count: 1
-			path: src/Validator/Constraints/YesNoNa.php
-
-		-
-			message: "#^Access to an undefined property Symfony\\\\Component\\\\Validator\\\\Constraint\\:\\:\\$message\\.$#"
-			count: 1
-			path: src/Validator/Constraints/YesNoNaValidator.php

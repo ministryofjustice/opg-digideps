@@ -749,6 +749,12 @@ checklist:
     notBlank: Please choose an option
   bondOrderMatchSirius:
     notBlank: Please choose an option
+  paymentsMatchCostCertificate:
+    notBlank: Please choose an option
+  profCostsReasonableAndProportionate:
+    notBlank: Please choose an option
+  hasDeputyOverchargedFromPreviousEstimates:
+    notBlank: Please choose an option
   nextBillingEstimatesSatisfactory:
     notBlank: Please select 'Yes' or 'No'
   futureSignificantDecisions:
