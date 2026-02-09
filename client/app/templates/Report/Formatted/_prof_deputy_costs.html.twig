@@ -33,17 +33,17 @@
             {% if report.profDeputyCostsHasPrevious == 'yes' and report.profDeputyPreviousCosts is not empty %}
                 {% for previous in report.profDeputyPreviousCosts %}
                     <div class="push-half--top" data-prof-deputy-costs-previous-item>
-                        <dl class="labelvalue third-width first" id="report-start-date">
+                        <dl class="labelvalue" id="report-start-date">
                             <dt class="label">Start date</dt>
                             <dd class="value">{{ previous.startDate | date("d / m / Y") }}</dd>
                         </dl>
 
-                        <dl class="labelvalue third-width"  id="report-end-date">
+                        <dl class="labelvalue" id="report-end-date">
                             <dt class="label">End date</dt>
                             <dd class="value">{{ previous.endDate | date("d / m / Y") }}</dd>
                         </dl>
 
-                        <dl class="labelvalue third-width push--bottom last"  id="report-end-date">
+                        <dl class="labelvalue"  id="report-end-date">
                             <dt class="label">Amount</dt>
                             <dd class="value">£{{ previous.amount | money_format }}</dd>
                         </dl>
@@ -91,7 +91,7 @@
                     {% for j in range(0, 2) %}
                         <div data-prof-deputy-costs-interim-list-item>
                             <h4>Interim {{ j + 1 }}</h4>
-                            <dl class="labelvalue half-width first">
+                            <dl class="labelvalue">
                                 <dt class="label">{{ 'interim.form.amount.label' | trans(transOptions) }}</dt>
                                 {% if report.profDeputyInterimCosts[j] is defined %}
                                     <dd class="value">£{{ attribute(report.profDeputyInterimCosts, j).amount | money_format }}</dd>
@@ -100,7 +100,7 @@
                                 {% endif %}
                             </dl>
 
-                            <dl class="labelvalue half-width push--bottom">
+                            <dl class="labelvalue">
                                 <dt class="label">{{ 'interim.form.date.label' | trans(transOptions) }}</dt>
                                 {% if report.profDeputyInterimCosts[j] is defined %}
                                     <dd class="value">{{ attribute(report.profDeputyInterimCosts, j).date | date("d / m / Y") }}</dd>
