@@ -110,11 +110,13 @@ class FixtureController extends AbstractController
             $this->em->persist($deputyPreRegistration);
         }
 
-        $deputy = $this->generateDeputy($user);
-        $courtOrder = $this->generateCourtOrder($client);
+        if (User::TYPE_LAY === $fromRequest['deputyType']) {
+            $deputy = $this->generateDeputy($user);
+            $courtOrder = $this->generateCourtOrder($client);
 
-        $deputy->associateWithCourtOrder($courtOrder);
-        $this->em->persist($deputy);
+            $deputy->associateWithCourtOrder($courtOrder);
+            $this->em->persist($deputy);
+        }
 
         if (!isset($fromRequest['reportType']) || !is_string($fromRequest['reportType'])) {
             throw new \InvalidArgumentException('Missing or invalid "reportType" field in request.');
@@ -128,8 +130,10 @@ class FixtureController extends AbstractController
         } else {
             $report = $this->generateReport($fromRequest, $client);
             $this->em->persist($report);
-            $courtOrder->addReport($report);
-            $this->em->persist($courtOrder);
+            if (User::TYPE_LAY === $fromRequest['deputyType']) {
+                $courtOrder->addReport($report);
+                $this->em->persist($courtOrder);
+            }
         }
 
         if (User::TYPE_LAY === $fromRequest['deputyType']) {
