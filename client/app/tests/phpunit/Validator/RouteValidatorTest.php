@@ -6,6 +6,8 @@ namespace DigidepsTests\Validator;
 
 use App\Validator\RouteValidator;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
 
 class RouteValidatorTest extends KernelTestCase
@@ -26,10 +28,11 @@ class RouteValidatorTest extends KernelTestCase
      */
     public function testValidateRoutes(string $path, bool $return): void
     {
+        $context = (new RequestContext())->setMethod(Request::METHOD_GET);
         if ($return) {
-            self::assertTrue(RouteValidator::validateRoute($this->router, $path));
+            self::assertTrue(RouteValidator::validateRoute($this->router, $path, $context));
         } else {
-            self::assertFalse(RouteValidator::validateRoute($this->router, $path));
+            self::assertFalse(RouteValidator::validateRoute($this->router, $path, $context));
         }
     }
 

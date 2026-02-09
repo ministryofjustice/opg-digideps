@@ -11,6 +11,7 @@ use App\Validator\RouteValidator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -90,9 +91,17 @@ class LoginFormAuthenticator extends AbstractAuthenticator
         $redirectUrl = $this->redirector->getFirstPageAfterLogin($session);
 
         if ($request->query->has('lastPage')) {
-            $decodedURL = urldecode($request->query->get('lastPage'));
-            if (RouteValidator::validateRoute($this->router, $decodedURL)) {
-                $redirectUrl = $decodedURL;
+            $lastPage = $request->query->get('lastPage');
+
+            // as we're getting a page to redirect to, set the context's method to GET;
+            // otherwise whatever method was used for the request is used
+            // to validate the path (which might be a POST)
+            $context = new RequestContext();
+            $context->fromRequest($request);
+            $context->setMethod(Request::METHOD_GET);
+
+            if (RouteValidator::validateRoute($this->router, $lastPage, $context)) {
+                $redirectUrl = urldecode($lastPage);
             }
         }
 
