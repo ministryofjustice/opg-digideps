@@ -170,7 +170,7 @@ def main(environment, secret_type):
             "id": "454262938596",
             "workspaces": ["training", "preproduction"],
         },
-        "production": {"id": "515688267891", "workspaces": ["production02"]},
+        "production": {"id": "515688267891", "workspaces": ["production"]},
     }
     region_name = os.environ.get("AWS_REGION", "eu-west-1")
     aws_config = Config(region_name=region_name)
