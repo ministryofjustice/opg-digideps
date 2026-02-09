@@ -257,46 +257,6 @@ $print-text: #454572;
 
   .full-width {
     width: 100%;
-    float: left;
-  }
-
-  .half-width {
-    width: 49%;
-    float: left;
-    box-sizing: border-box;
-
-    &.first {
-      margin-right: 2%;
-    }
-
-    &.tight {
-      width: 50%;
-      margin-right: 0;
-      border-right: 1px solid $white;
-    }
-
-    &.last {
-      margin-right: 0;
-      border-right: 0;
-    }
-  }
-
-  .third-width {
-    width: 32%;
-    margin-right: 2%;
-    float: left;
-    box-sizing: border-box;
-
-    &.tight {
-      width: 33.33%;
-      margin-right: 0;
-      border-right: 1px solid $white;
-    }
-
-    &.last {
-      margin-right: 0;
-      border-right: 0;
-    }
   }
 
   // =======================================================
