@@ -49,7 +49,9 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
             dateChecks: false,
         );
 
+        $report->setSubmitted(true);
         $report->setSubmitDate($submitDate);
+
         $this->em->persist($report);
         $this->em->flush();
 
