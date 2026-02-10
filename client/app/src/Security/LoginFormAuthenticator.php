@@ -91,6 +91,7 @@ class LoginFormAuthenticator extends AbstractAuthenticator
         $redirectUrl = $this->redirector->getFirstPageAfterLogin($session);
 
         if ($request->query->has('lastPage')) {
+            /** @var string $lastPage */
             $lastPage = $request->query->get('lastPage');
 
             // as we're getting a page to redirect to, set the context's method to GET;
