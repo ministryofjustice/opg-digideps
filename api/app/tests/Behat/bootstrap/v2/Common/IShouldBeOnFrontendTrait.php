@@ -676,7 +676,7 @@ trait IShouldBeOnFrontendTrait
      */
     public function iAmOnClientLoginPage()
     {
-        return $this->iAmOnPage('/login$/');
+        return $this->iAmOnPage('/login.*$/');
     }
 
     /**
@@ -877,6 +877,6 @@ trait IShouldBeOnFrontendTrait
      */
     public function iShouldBeOnTheCourtOrderPage()
     {
-        return $this->iAmOnPage('/courtorder\/.*/');
+        return $this->iAmOnPage('|/courtorder/\d+$|');
     }
 }

@@ -74,3 +74,13 @@ Feature: Users logging into the service
         And a flash message should be displayed to the user with their primary email address
         When the user tries to access their clients report overview page
         Then they get redirected back to the log in page
+
+    @lay-pfa-low-completed @login-redirect
+    Scenario: A user accesses a protected page, is redirected to login, then is sent back to their original page (DDLS-1188)
+        Given a Lay Deputy has completed a Pfa Low Assets report
+        And I am associated with '1' 'pfa' court order(s)
+        And I log out
+        And I visit the page of a court order that 'I am' associated with
+        Then I should be on client login page
+        When I log in
+        Then I should be on the court order page
