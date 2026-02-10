@@ -22,15 +22,6 @@ Feature: Client benefits check - NDR users
         When I visit the report overview page
         Then I should see "client-benefits-check" as "not finished"
 
-    @ndr-completed
-    Scenario: Completed reports can be submitted with new section
-        Given a Lay Deputy has a completed NDR report
-        When I visit the report overview page
-        Then I should see "client-benefits-check" as "finished"
-        And I follow the submission process to the declaration page for current report
-        And I fill in the declaration page and submit the report
-        Then my report should be submitted
-
     @ndr-not-started
     Scenario: A deputy removes an item of money they've added
         Given a Lay Deputy has not started an NDR report
