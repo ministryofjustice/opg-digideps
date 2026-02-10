@@ -8866,11 +8866,6 @@ parameters:
 			path: src/Security/LoginFormAuthenticator.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function urldecode expects string, bool\\|float\\|int\\|string\\|null given\\.$#"
-			count: 1
-			path: src/Security/LoginFormAuthenticator.php
-
-		-
 			message: "#^Result of && is always false\\.$#"
 			count: 1
 			path: src/Security/NoteVoter.php
