@@ -61,6 +61,8 @@
         <p class="govuk-body">{{ 'page.feedback.limit' | trans }}</p>
         <p class="govuk-body">{{ 'page.feedback.disclaimer' | trans }}</p>
 
+        {{ form_submit(form.save, 'form.send') }}
+
     {{ form_end(form) }}
     {# end feedback form #}
 
