@@ -34,6 +34,7 @@ jobs:
       parsed_branch: ${{ steps.variables.outputs.branch_formatted }}
       build_identifier: ${{ steps.variables.outputs.build_identifier }}
       version_tag: ${{ steps.semver_tag.outputs.tag }}
+      start_time: ${{ steps.variables.outputs.start_time }}
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
@@ -50,6 +51,7 @@ jobs:
           export BRANCH
           echo "branch_formatted=${BRANCH}" >> "$GITHUB_OUTPUT"
           echo "${BRANCH}${PR_NUMBER}"
+          echo "start_time=$(date +%s)" >> "$GITHUB_OUTPUT"
           {
             if [ "${WORKFLOW_TYPE}" == "pull_request" ]; then
               echo "build_identifier=${BRANCH}${PR_NUMBER}"
@@ -68,6 +70,13 @@ jobs:
             echo ""
             echo "- Branch: ${PARSED_BRANCH}"
             echo "- Build Identifier: ${BUILD_IDENTIFIER}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          {
+            echo "### Environment Details"
+            echo ""
+            echo "- Service Frontend URL: https://${BUILD_IDENTIFIER}.digideps.opg.service.justice.gov.uk"
+            echo "- Service Admin URL: https://${BUILD_IDENTIFIER}.admin.digideps.opg.service.justice.gov.uk"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: get default bump
@@ -458,29 +467,17 @@ jobs:
       - end_to_end_tests_1
       - end_to_end_tests_2
       - end_to_end_tests_admin
+    env:
+      START_TIME: ${{ needs.workflow_variables.outputs.start_time }}
     steps:
       - name: output workflow variables
         run: |
-          PUBLIC_FRONTEND_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.complete-deputy-report.service.gov.uk"
-          export PUBLIC_FRONTEND_URL
-          SERVICE_FRONTEND_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.digideps.opg.service.justice.gov.uk"
-          export SERVICE_FRONTEND_URL
-          SERVICE_ADMIN_URL="https://${{ needs.workflow_variables.outputs.build_identifier }}.admin.digideps.opg.service.justice.gov.uk"
-          export SERVICE_ADMIN_URL
-
-          echo "${{ needs.workflow_variables.outputs.build_identifier }} PR environment tested, built and deployed"
-          echo "Public Frontend URL: ${PUBLIC_FRONTEND_URL}"
-          echo "Service Frontend URL: ${SERVICE_FRONTEND_URL}"
-          echo "Service Admin URL: ${SERVICE_ADMIN_URL}"
-          echo "Tag Used: ${{ needs.workflow_variables.outputs.version_tag }}"
-
+          END_TIME=$(date +%s)
+          DURATION=$((END_TIME - START_TIME))
           {
-            echo "### Environment Details"
+            echo "### Total Time Taken"
             echo ""
-            echo "- Public Frontend URL: ${PUBLIC_FRONTEND_URL}"
-            echo "- Service Frontend URL: ${SERVICE_FRONTEND_URL}"
-            echo "- Service Admin URL: ${SERVICE_ADMIN_URL}"
-            echo "- Tag Used: ${{ needs.workflow_variables.outputs.version_tag }}"
+            echo "- Time in Seconds: ${DURATION}"
           } >> "$GITHUB_STEP_SUMMARY"
 
   create_tag_release:
