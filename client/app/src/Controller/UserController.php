@@ -197,17 +197,20 @@ class UserController extends AbstractController
         $client_validated = $this->clientApi->getFirstClient() instanceof Client
             && !$user->isDeputyOrg();
 
-        $formTypeAndGroups = $this->getFormAndJmsGroupBasedOnUserRole($user);
-
-        /** @var string $formType */
-        $formType = $formTypeAndGroups[0];
+        [$formType, $jmsPutGroups] = match ($user->getRoleName()) {
+            User::ROLE_LAY_DEPUTY => [UserDetailsFullType::class, ['user_details_full']],
+            User::ROLE_PA_NAMED,
+            User::ROLE_PA_ADMIN,
+            User::ROLE_PA_TEAM_MEMBER,
+            User::ROLE_PROF_NAMED,
+            User::ROLE_PROF_ADMIN,
+            User::ROLE_PROF_TEAM_MEMBER => [UserDetailsPaType::class, ['user_details_org']],
+            default => [UserDetailsBasicType::class, ['user_details_basic']],
+        };
 
         $form = $this->createForm($formType, $user);
-
-        /** @var array $jmsPutGroups */
-        $jmsPutGroups = $formTypeAndGroups[1];
-
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var array $data */
             $data = $form->getData();
@@ -310,61 +313,31 @@ class UserController extends AbstractController
                     }
                 }
 
-                switch ((int) $e->getCode()) {
-                    case 403:
-                        $form->addError(new FormError($this->translator->trans('formErrors.coDepCaseAlreadyRegistered', [], 'register')));
-                        break;
-
-                    case 422:
-                        $form->addError(new FormError(
-                            $this->translator->trans('email.first.existingError', [], 'register')
-                        ));
-                        break;
-
-                    case 400:
-                        $form->addError(new FormError($this->translator->trans('formErrors.matching', [], 'register')));
-                        break;
-
-                    case 424:
-                        $form->get('postcode')->addError(new FormError($this->translator->trans('postcode.matchingError', [], 'register')));
-                        break;
-
-                    case 425:
-                        $form->addError(new FormError($this->translator->trans('formErrors.caseNumberAlreadyUsed', [], 'register')));
-                        break;
-
-                    case 460:
-                        $form->get('caseNumber')->addError(new FormError($this->translator->trans('matchingErrors.caseNumber', [], 'register')));
-                        break;
-
-                    case 461:
+                match ($e->getCode()) {
+                    403 => $form->addError(new FormError($this->translator->trans('formErrors.coDepCaseAlreadyRegistered', [], 'register'))),
+                    422 => $form->addError(new FormError($this->translator->trans('email.first.existingError', [], 'register'))),
+                    400 => $form->addError(new FormError($this->translator->trans('formErrors.matching', [], 'register'))),
+                    424 => $form->get('postcode')->addError(new FormError($this->translator->trans('postcode.matchingError', [], 'register'))),
+                    425 => $form->addError(new FormError($this->translator->trans('formErrors.caseNumberAlreadyUsed', [], 'register'))),
+                    460 => $form->get('caseNumber')->addError(new FormError($this->translator->trans('matchingErrors.caseNumber', [], 'register'))),
+                    461 => (function () use ($form, $failureData) {
                         $matchingErrors = $failureData['matching_errors'] ?? [];
-
                         if (isset($matchingErrors['client_lastname'])) {
                             $form->get('clientLastname')->addError(new FormError($this->translator->trans('matchingErrors.clientLastname', [], 'register')));
                         }
-
                         if (isset($matchingErrors['deputy_lastname'])) {
                             $form->get('lastname')->addError(new FormError($this->translator->trans('matchingErrors.deputyLastname', [], 'register')));
                         }
-
                         if (isset($matchingErrors['deputy_firstname'])) {
                             $form->get('firstname')->addError(new FormError($this->translator->trans('matchingErrors.deputyFirstname', [], 'register')));
                         }
-
                         if (isset($matchingErrors['deputy_postcode'])) {
                             $form->get('postcode')->addError(new FormError($this->translator->trans('matchingErrors.deputyPostcode', [], 'register')));
                         }
-
-                        break;
-
-                    case 462:
-                        $form->addError(new FormError($this->translator->trans('formErrors.deputyNotUniquelyIdentified', [], 'register')));
-                        break;
-
-                    default:
-                        $form->addError(new FormError($this->translator->trans('formErrors.generic', [], 'register')));
-                }
+                    })(),
+                    462 => $form->addError(new FormError($this->translator->trans('formErrors.deputyNotUniquelyIdentified', [], 'register'))),
+                    default => $form->addError(new FormError($this->translator->trans('formErrors.generic', [], 'register'))),
+                };
 
                 $event = new RegistrationFailedEvent(['failure_message' => $failureData], $e->getMessage());
                 $this->eventDispatcher->dispatch($event, RegistrationFailedEvent::NAME);
@@ -400,23 +373,5 @@ class UserController extends AbstractController
             'user' => $user,
             'form' => $form->createView(),
         ]);
-    }
-
-    /**
-     * @return array [string FormType, array of JMS groups]
-     */
-    private function getFormAndJmsGroupBasedOnUserRole(User $user): array
-    {
-        // define form, route, JMS groups
-        return match ($user->getRoleName()) {
-            User::ROLE_LAY_DEPUTY => [UserDetailsFullType::class, ['user_details_full']],
-            User::ROLE_PA_NAMED,
-                User::ROLE_PA_ADMIN,
-                User::ROLE_PA_TEAM_MEMBER,
-                User::ROLE_PROF_NAMED,
-                User::ROLE_PROF_ADMIN,
-                User::ROLE_PROF_TEAM_MEMBER => [UserDetailsPaType::class, ['user_details_org']],
-            default => [UserDetailsBasicType::class, ['user_details_basic']],
-        };
     }
 }
