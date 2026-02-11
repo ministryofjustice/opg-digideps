@@ -10,26 +10,36 @@
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
-            {{ form_start(form) }}
 
             <p class="govuk-body">{{ 'intro.para01' | trans }}</p>
             <p class="govuk-body">{{ 'intro.para02' | trans }}</p>
 
-            <h2 class="govuk-heading-l">{{ 'form.title' | trans }}</h2>
+            <h2 class="govuk-heading-l">{{ 'essential.title' | trans }}</h2>
 
-            <p class="govuk-body">{{ 'form.intro' | trans }}</p>
+            <p class="govuk-body">{{ 'essential.description' | trans }}</p>
 
-            {{ form_checkbox_group(form.usage, 'form.usage', {
-                'legendClass' : 'govuk-visually-hidden'
-            }) }}
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th scope="col" class="govuk-table__header">{{ 'essential.table.headers.0' | trans }}</th>
+                        <th scope="col" class="govuk-table__header">{{ 'essential.table.headers.1' | trans }}</th>
+                        <th scope="col" class="govuk-table__header">{{ 'essential.table.headers.2' | trans }}</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">{{ 'essential.table.rows.0.name' | trans }}</td>
+                        <td class="govuk-table__cell">{{ 'essential.table.rows.0.purpose' | trans }}</td>
+                        <td class="govuk-table__cell">{{ 'essential.table.rows.0.expires' | trans }}</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">{{ 'essential.table.rows.1.name' | trans }}</td>
+                        <td class="govuk-table__cell">{{ 'essential.table.rows.1.purpose' | trans }}</td>
+                        <td class="govuk-table__cell">{{ 'essential.table.rows.1.expires' | trans }}</td>
+                    </tr>
+                </tbody>
+            </table>
 
-            <h3 class="govuk-heading-m">{{ 'form.necessary.label' | trans }}</h3>
-
-            <p class="govuk-body">{{ 'form.necessary.description' | trans }}</p>
-
-            {{ form_submit(form.confirm, 'form.confirm') }}
-
-            {{ form_end(form) }}
         </div>
     </div>
 

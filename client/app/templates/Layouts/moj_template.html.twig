@@ -37,6 +37,7 @@
 
 <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
 
+{#
 {% if not app.request.cookies.has('cookie_policy') %}
     <div class="govuk-cookie-banner behat-region-cookie-banner" data-module="opg-cookie-banner" data-nosnippet
          role="region" aria-label="Cookies on Complete the Deputy Report">
@@ -105,7 +106,7 @@
         </div>
     </div>
 {% endif %}
-
+#}
 
 {% block header %}
     <header class="govuk-header govuk-header--full-width-border" data-module="govuk-header">
