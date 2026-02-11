@@ -3,7 +3,7 @@ pageTitle: Cookies
 
 intro:
   para01: Cookies are files saved on your phone, tablet or computer when you visit a website.
-  para02: We use cookies to make this service work and collect information about how you use the Complete the deputy report service.
+  para02: We only use essential cookies that are required to make the service work.
 
 essential:
   title: Essential cookies
@@ -18,8 +18,4 @@ essential:
     rows:
       - name: digideps
         purpose: Used to keep you signed in
-        expires: 1 year
-
-      - name: cookie_policy
-        purpose: Saves your cookie consent settings
-        expires: 1 year
+        expires: 1 hour
