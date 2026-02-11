@@ -37,7 +37,7 @@ resource "aws_iam_role_policy" "front_query_secretsmanager" {
   policy = data.aws_iam_policy_document.front_query_secretsmanager.json
   role   = aws_iam_role.front.id
 }
-
+# Remove DB Password
 data "aws_iam_policy_document" "front_query_secretsmanager" {
   statement {
     sid    = "AllowQuerySecretsmanagerSecrets"

@@ -5,3 +5,5 @@ doctrine:
                 dbname: digideps_unit_test
             ingestwriter:
                 dbname: digideps_unit_test
+            migrations:
+                dbname: digideps_unit_test
