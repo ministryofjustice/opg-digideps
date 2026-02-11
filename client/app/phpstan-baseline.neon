@@ -672,7 +672,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
-			count: 2
+			count: 1
 			path: src/Controller/CoDeputyController.php
 
 		-
@@ -727,7 +727,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$route of method Symfony\\\\Bundle\\\\FrameworkBundle\\\\Controller\\\\AbstractController\\:\\:redirectToRoute\\(\\) expects string, string\\|true given\\.$#"
-			count: 2
+			count: 1
 			path: src/Controller/CoDeputyController.php
 
 		-
@@ -2942,11 +2942,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Entity\\\\Client\\:\\:userBelongsToClientsOrganisation\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: "#^Negated boolean expression is always true\\.$#"
 			count: 1
 			path: src/Entity/Client.php
 
@@ -9151,11 +9146,6 @@ parameters:
 			path: src/Service/Client/Internal/NdrApi.php
 
 		-
-			message: "#^Method App\\\\Service\\\\Client\\\\Internal\\\\NdrApi\\:\\:submit\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/Client/Internal/NdrApi.php
-
-		-
 			message: "#^Method App\\\\Service\\\\Client\\\\Internal\\\\OrganisationApi\\:\\:addUserToOrganisation\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/Client/Internal/OrganisationApi.php
@@ -9164,11 +9154,6 @@ parameters:
 			message: "#^Method App\\\\Service\\\\Client\\\\Internal\\\\OrganisationApi\\:\\:removeUserFromOrganisation\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/Client/Internal/OrganisationApi.php
-
-		-
-			message: "#^Method App\\\\Service\\\\Client\\\\Internal\\\\PreRegistrationApi\\:\\:clientHasCoDeputies\\(\\) should return bool but returns mixed\\.$#"
-			count: 1
-			path: src/Service/Client/Internal/PreRegistrationApi.php
 
 		-
 			message: "#^Method App\\\\Service\\\\Client\\\\Internal\\\\PreRegistrationApi\\:\\:count\\(\\) has no return type specified\\.$#"
