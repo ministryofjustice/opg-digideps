@@ -37,15 +37,7 @@
         {% endif %}
 
         <div class="custom-submit">
-        {{ form_submit_ga(
-            form.save,
-            'submit',
-            gaCategory,
-            gaAction,
-            gaLabel,
-            null,
-            {'buttonClass': 'govuk-button behat-link-save'})
-        }}
+            {{ form_submit(form.save, 'submit') }}
         </div>
 
     {{ form_end(form) }}

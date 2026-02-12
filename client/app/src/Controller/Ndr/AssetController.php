@@ -134,8 +134,6 @@ class AssetController extends AbstractController
             'backLink' => $this->generateUrl('ndr_assets_type', ['ndrId' => $ndrId]),
             'form' => $form->createView(),
             'ndr' => $ndr,
-            // avoid sending query string to GA containing user's data
-            'gaCustomUrl' => $this->generateUrl('ndr_asset_other_add', ['ndrId' => $ndrId, 'title' => 'type']),
         ];
     }
 
@@ -308,7 +306,6 @@ class AssetController extends AbstractController
             'form' => $form->createView(),
             'backLink' => $stepRedirector->getBackLink(),
             'skipLink' => null,
-            'gaCustomUrl' => $request->getPathInfo(), // avoid sending query string to GA containing user's data
         ];
     }
 
