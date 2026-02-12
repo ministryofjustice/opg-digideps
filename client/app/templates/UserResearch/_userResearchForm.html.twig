@@ -12,6 +12,14 @@
 
     {{ radio_group(form.hasAccessToVideoCallDevice) }}
 
-    {{ form_submit(form.submitButton, 'form.submitButton') }}
+    {{ form_submit_ga(
+        form.submitButton,
+        'form.submitButton',
+        gaCategory,
+        gaAction,
+        gaLabel,
+        null,
+        {'labelText': 'form.submitButton.label' | trans({}, translationDomain)}
+    ) }}
 
 {{ form_end(form) }}

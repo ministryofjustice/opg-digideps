@@ -147,6 +147,7 @@ class BankAccountController extends AbstractController
             'reportStatus' => $report->getStatus(),
             'form' => $form->createView(),
             'backLink' => $stepRedirector->getBackLink(),
+            'gaCustomUrl' => $request->getPathInfo(), // avoid sending query string to GA containing user's data
         ];
     }
 
