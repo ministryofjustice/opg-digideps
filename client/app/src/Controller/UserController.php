@@ -347,6 +347,11 @@ class UserController extends AbstractController
             }
         }
 
+        // send different URL to google analytics
+        if (count($form->getErrors()) > 0) {
+            $vars['gaCustomUrl'] = '/register/form-errors';
+        }
+
         return $vars + [
             'form' => $form->createView(),
         ];
