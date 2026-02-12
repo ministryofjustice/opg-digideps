@@ -26,7 +26,6 @@ class FormFieldsExtension extends AbstractExtension
             new TwigFunction('form_password', [$this, 'renderPasswordInput']),
             new TwigFunction('form_hidden', [$this, 'renderHiddenInput']),
             new TwigFunction('form_submit', [$this, 'renderFormSubmit']),
-            new TwigFunction('form_submit_ga', [$this, 'renderGATrackedFormSubmit']),
             new TwigFunction('form_errors', [$this, 'renderFormErrors']),
             new TwigFunction('form_errors_list', [$this, 'renderFormErrorsList']),
             new TwigFunction('form_select', [$this, 'renderFormDropDown']),
@@ -279,56 +278,6 @@ class FormFieldsExtension extends AbstractExtension
         $html = $this->environment->render('@App/Components/Form/_button.html.twig', $options);
 
         echo $html;
-    }
-
-    /**
-     * @param string      $elementName        used to pick the translation by appending ".label"
-     * @param array       $vars               [buttonClass => additional class. "disabled" supported]
-     * @param string|null $gaTrackingCategory (required) Use the format {Page Title}:{Sub Section i.e. in a form} (sub section optional)
-     * @param string|null $gaTrackingAction   (required) Use the format {event}: { Element Type}: {Element Specifics}
-     * @param string|null $gaTrackingLabel    (required) Use the format {Human summary and additional detail} {path uri with any query params}
-     * @param int|null    $gaTrackingValue    (optional) a numerical value that related to the event
-     *
-     * See GOOGLE-ANALYTICS.md for usage
-     */
-    public function renderGATrackedFormSubmit(
-        FormView $element,
-        string $elementName,
-        string $gaTrackingCategory,
-        string $gaTrackingAction,
-        ?string $gaTrackingLabel = null,
-        ?int $gaTrackingValue = null,
-        array $vars = [],
-    ) {
-        $vars['attr'] = $this->addGaAttrsToElementAttrs(
-            $gaTrackingCategory,
-            $gaTrackingAction,
-            $gaTrackingLabel,
-            $gaTrackingValue,
-            $vars['attr'] ?? []
-        );
-
-        $this->renderFormSubmit($element, $elementName, $vars);
-    }
-
-    private function addGaAttrsToElementAttrs(
-        string $gaTrackingCategory,
-        string $gaTrackingAction,
-        string $gaTrackingLabel,
-        ?int $gaTrackingValue,
-        ?array $attrs = [],
-    ): array {
-        $attrs = is_null($attrs) ? [] : $attrs;
-
-        $gaTrackingAttrs = [
-            'data-attribute' => 'ga-event',
-            'data-ga-action' => $gaTrackingAction,
-            'data-ga-category' => $gaTrackingCategory,
-            'data-ga-label' => $gaTrackingLabel,
-            'data-ga-value' => strval($gaTrackingValue),
-        ];
-
-        return array_merge($attrs, $gaTrackingAttrs);
     }
 
     /**
