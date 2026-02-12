@@ -23,15 +23,19 @@ class ComponentsExtension extends AbstractExtension
      */
     private $reportSectionsLinkService;
 
+    private Environment $environment;
+
     /**
      * ComponentsExtension constructor.
      */
     public function __construct(
         TranslatorInterface $translator,
         ReportSectionsLinkService $reportSectionsLinkService,
+        Environment $environment,
     ) {
         $this->translator = $translator;
         $this->reportSectionsLinkService = $reportSectionsLinkService;
+        $this->environment = $environment;
     }
 
     public function getFunctions()
@@ -46,6 +50,7 @@ class ComponentsExtension extends AbstractExtension
             new TwigFunction('class_const', function ($className, $constant) {
                 return constant("$className::$constant");
             }),
+            new TwigFunction('hidden_ga_event', [$this, 'renderHiddenGaEvent']),
         ];
     }
 
@@ -246,6 +251,11 @@ class ComponentsExtension extends AbstractExtension
             'progressSteps' => $progressSteps,
             'progressBar' => 'reportSubmissionProgressBar',
         ]);
+    }
+
+    public function renderHiddenGaEvent(string $documentTitle)
+    {
+        echo $this->environment->render('@App/Components/GoogleAnalytics/hiddenEvent.html.twig', ['dt' => urlencode($documentTitle)]);
     }
 
     public function getName()

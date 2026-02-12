@@ -21,6 +21,9 @@ parameters:
   log_level: warning
   verbose_log_level: notice
   log_path: /var/log/app/application.log
+  ga:
+    default: "%env(GA_DEFAULT)%"
+    gds: "%env(GA_GDS)%"
   opg_docker_tag: "%env(OPG_DOCKER_TAG)%"
   email_params:
     update_send_to_address: "%env(UPDATE_ADDRESS)%"

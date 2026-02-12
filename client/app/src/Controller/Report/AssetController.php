@@ -143,6 +143,8 @@ class AssetController extends AbstractController
             'backLink' => $this->generateUrl('assets_type', ['reportId' => $reportId]),
             'form' => $form->createView(),
             'report' => $report,
+            // avoid sending query string to GA containing user's data
+            'gaCustomUrl' => $this->generateUrl('asset_other_add', ['reportId' => $reportId, 'title' => 'type']),
         ];
     }
 
@@ -288,6 +290,7 @@ class AssetController extends AbstractController
             'form' => $form->createView(),
             'backLink' => $stepRedirector->getBackLink(),
             'skipLink' => null,
+            'gaCustomUrl' => $request->getPathInfo(), // avoid sending query string to GA containing user's data
         ];
     }
 
