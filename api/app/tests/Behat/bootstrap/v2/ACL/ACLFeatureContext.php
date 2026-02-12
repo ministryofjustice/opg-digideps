@@ -15,4 +15,20 @@ class ACLFeatureContext extends BaseFeatureContext
     use CourtOrderTrait;
     use DeputyManagementTrait;
     use FormTrait;
+
+    /**
+     * @When I log out
+     */
+    public function iLogOut(): void
+    {
+        $this->visitPath('/logout');
+    }
+
+    /**
+     * @When I log in
+     */
+    public function iLogin(): void
+    {
+        $this->loginToFrontendAs($this->layDeputyCompletedPfaLowAssetsDetails->getUserEmail());
+    }
 }

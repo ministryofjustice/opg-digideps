@@ -18,12 +18,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ReportApi
 {
-    private const REPORT_ENDPOINT_BY_ID = 'report/%s';
-    private const REPORT_SUBMIT_ENDPOINT = 'report/%s/submit';
-    private const REPORT_UNSUBMIT_ENDPOINT = 'report/%s/unsubmit';
-    private const REPORT_REFRESH_CACHE_ENDPOINT = 'report/%s/refresh-cache';
-    private const REPORT_GET_ALL_WITH_QUEUED_CHECKLISTS_ENDPOINT = 'report/all-with-queued-checklists';
-    private const NDR_ENDPOINT_BY_ID = 'ndr/%s';
+    private const string REPORT_ENDPOINT_BY_ID = 'report/%s';
+    private const string REPORT_SUBMIT_ENDPOINT = 'report/%s/submit';
+    private const string REPORT_UNSUBMIT_ENDPOINT = 'report/%s/unsubmit';
+    private const string REPORT_REFRESH_CACHE_ENDPOINT = 'report/%s/refresh-cache';
+    private const string REPORT_GET_ALL_WITH_QUEUED_CHECKLISTS_ENDPOINT = 'report/all-with-queued-checklists';
+    private const string NDR_ENDPOINT_BY_ID = 'ndr/%s';
 
     public function __construct(
         private readonly RestClient $restClient,
@@ -55,16 +55,13 @@ class ReportApi
 
     public function getReport(int $reportId, array $groups = []): Report
     {
-        $groups[] = 'report';
-        $groups[] = 'report-client';
-        $groups[] = 'client';
-        $groups = array_unique($groups);
+        $groups = array_merge($groups, ['report', 'report-client', 'client']);
         sort($groups); // helps HTTP caching
 
         try {
             $report = $this->restClient->get(
                 sprintf(self::REPORT_ENDPOINT_BY_ID, $reportId),
-                'Report\\Report',
+                Report::class,
                 $groups
             );
         } catch (RestClientException $e) {
