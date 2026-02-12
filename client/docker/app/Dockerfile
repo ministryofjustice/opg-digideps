@@ -61,8 +61,8 @@ RUN mkdir -p var/cache var/logs /var/log/app \
 # Pwned Passwords
 COPY client/docker/app/extra/commonpasswords.txt /tmp/commonpasswords.txt
 RUN wget -q -O /tmp/commonpasswords.txt \
-      "https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt" \
- || echo "Using local copy" \
+    "https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt" \
+    || echo "Using local copy" \
  && chown www-data /tmp/commonpasswords.txt
 
 # Shared app assets
@@ -85,10 +85,11 @@ COPY --chown=www-data:www-data scripts/process_checks/check_processes.sh check_p
 ##############################
 FROM base AS runtime
 
-COPY --chown=www-data:www-data --from=composer-runtime /app .
-
-# Shared files from base
-COPY --from=base /var/www /var/www
+COPY --chown=www-data:www-data --from=composer-runtime /app/vendor vendor
+COPY --chown=www-data:www-data --from=composer-runtime /app/app app
+COPY --chown=www-data:www-data --from=composer-runtime /app/config config
+COPY --chown=www-data:www-data --from=composer-runtime /app/src src
+COPY --chown=www-data:www-data --from=composer-runtime /app/composer.lock composer.lock
 
 RUN sed "s|TAG|${TAG:-latest}|" public/meta.json.tmpl > public/meta.json \
  && ./generate_parameters_yml.sh \
@@ -106,7 +107,11 @@ CMD sh -c "./check_processes.sh & exec php-fpm"
 ##############################
 FROM base AS devtools-base
 
-COPY --chown=www-data:www-data --from=composer-devtools /app .
+COPY --chown=www-data:www-data --from=composer-devtools /app/vendor vendor
+COPY --chown=www-data:www-data --from=composer-devtools /app/app app
+COPY --chown=www-data:www-data --from=composer-devtools /app/config config
+COPY --chown=www-data:www-data --from=composer-devtools /app/src src
+COPY --chown=www-data:www-data --from=composer-devtools /app/composer.lock composer.lock
 
 COPY --chown=www-data:www-data client/app/tests tests
 COPY --chown=www-data:www-data client/app/phpstan.neon .
