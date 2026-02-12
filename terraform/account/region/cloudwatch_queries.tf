@@ -1,7 +1,6 @@
-# NEW_NETWORK_SWITCH
 locals {
   default_insights_query_log_identifier = {
-    production    = "production02",
+    production    = "production",
     preproduction = "preproduction",
     development   = "staging"
   }
@@ -171,7 +170,7 @@ resource "aws_cloudwatch_query_definition" "container_cpu_memory" {
 # Purpose: Container CPU and Memory Stats
 # Usage: Initial insights on performance. For better visualization, see the metric graphs in ECS
 fields @timestamp, ContainerName, TaskId, CpuUtilized, MemoryUtilized, Image
-| filter ServiceName like /front-production02|admin-production02|api-production02/
+| filter ServiceName like /front-production|admin-production|api-production/
 | filter Type like /Container/
 | sort @timestamp desc
 | limit 1000
@@ -203,7 +202,7 @@ resource "aws_cloudwatch_query_definition" "container_turnover" {
 # Usage: Find out if errors (found using different queries) coincide with container restarts
 # Notes: More detailed information available in ECS
 fields @timestamp, ServiceName, DesiredTaskCount, RunningTaskCount, PendingTaskCount
-| filter ServiceName like /front-production02|admin-production02|api-production02/
+| filter ServiceName like /front-production|admin-production|api-production/
 | filter Type like /Service/
 | filter PendingTaskCount > 0
 | sort @timestamp desc
