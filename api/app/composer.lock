@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b28e563c9c8f62e2e7fe9e84241edd81",
+    "content-hash": "b265c131f33bf1ca331d1c75653dd670",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -62,16 +62,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.368.0",
+            "version": "3.369.31",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "c1189f8e4ba3268d6306e515f6f65611c671d033"
+                "reference": "c7bf53dfb09bea3ebfd19b89213625aa134dcc71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/c1189f8e4ba3268d6306e515f6f65611c671d033",
-                "reference": "c1189f8e4ba3268d6306e515f6f65611c671d033",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/c7bf53dfb09bea3ebfd19b89213625aa134dcc71",
+                "reference": "c7bf53dfb09bea3ebfd19b89213625aa134dcc71",
                 "shasum": ""
             },
             "require": {
@@ -85,7 +85,7 @@
                 "mtdowling/jmespath.php": "^2.8.0",
                 "php": ">=8.1",
                 "psr/http-message": "^1.0 || ^2.0",
-                "symfony/filesystem": "^v6.4.3 || ^v7.1.0 || ^v8.0.0"
+                "symfony/filesystem": "^v5.4.45 || ^v6.4.3 || ^v7.1.0 || ^v8.0.0"
             },
             "require-dev": {
                 "andrewsville/php-token-reflection": "^1.4",
@@ -153,9 +153,9 @@
             "support": {
                 "forum": "https://github.com/aws/aws-sdk-php/discussions",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.368.0"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.369.31"
             },
-            "time": "2025-12-16T20:11:32+00:00"
+            "time": "2026-02-10T19:13:30+00:00"
         },
         {
             "name": "brick/math",
@@ -2515,16 +2515,16 @@
         },
         {
             "name": "league/csv",
-            "version": "9.27.1",
+            "version": "9.28.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/csv.git",
-                "reference": "26de738b8fccf785397d05ee2fc07b6cd8749797"
+                "reference": "6582ace29ae09ba5b07049d40ea13eb19c8b5073"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/csv/zipball/26de738b8fccf785397d05ee2fc07b6cd8749797",
-                "reference": "26de738b8fccf785397d05ee2fc07b6cd8749797",
+                "url": "https://api.github.com/repos/thephpleague/csv/zipball/6582ace29ae09ba5b07049d40ea13eb19c8b5073",
+                "reference": "6582ace29ae09ba5b07049d40ea13eb19c8b5073",
                 "shasum": ""
             },
             "require": {
@@ -2534,14 +2534,14 @@
             "require-dev": {
                 "ext-dom": "*",
                 "ext-xdebug": "*",
-                "friendsofphp/php-cs-fixer": "^3.75.0",
-                "phpbench/phpbench": "^1.4.1",
-                "phpstan/phpstan": "^1.12.27",
+                "friendsofphp/php-cs-fixer": "^3.92.3",
+                "phpbench/phpbench": "^1.4.3",
+                "phpstan/phpstan": "^1.12.32",
                 "phpstan/phpstan-deprecation-rules": "^1.2.1",
                 "phpstan/phpstan-phpunit": "^1.4.2",
                 "phpstan/phpstan-strict-rules": "^1.6.2",
-                "phpunit/phpunit": "^10.5.16 || ^11.5.22 || ^12.3.6",
-                "symfony/var-dumper": "^6.4.8 || ^7.3.0"
+                "phpunit/phpunit": "^10.5.16 || ^11.5.22 || ^12.5.4",
+                "symfony/var-dumper": "^6.4.8 || ^7.4.0 || ^8.0"
             },
             "suggest": {
                 "ext-dom": "Required to use the XMLConverter and the HTMLConverter classes",
@@ -2602,7 +2602,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-10-25T08:35:20+00:00"
+            "time": "2025-12-27T15:18:42+00:00"
         },
         {
             "name": "monolog/monolog",
@@ -9243,25 +9243,25 @@
         },
         {
             "name": "liuggio/fastest",
-            "version": "v1.13.0",
+            "version": "v1.14.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/liuggio/fastest.git",
-                "reference": "a3d9d23607fdf28cc7a539f5b7fcae867d79dbfc"
+                "reference": "3c53c1160166f1d41c165cc568a880b1556037d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/liuggio/fastest/zipball/a3d9d23607fdf28cc7a539f5b7fcae867d79dbfc",
-                "reference": "a3d9d23607fdf28cc7a539f5b7fcae867d79dbfc",
+                "url": "https://api.github.com/repos/liuggio/fastest/zipball/3c53c1160166f1d41c165cc568a880b1556037d7",
+                "reference": "3c53c1160166f1d41c165cc568a880b1556037d7",
                 "shasum": ""
             },
             "require": {
                 "doctrine/collections": "^1.2|^2.0",
                 "php": "^8.0",
-                "symfony/console": "^5.4|^6.4|^7.2",
+                "symfony/console": "^5.4|^6.4|^7.4|^8.0",
                 "symfony/deprecation-contracts": "^2.1|^3",
-                "symfony/process": "^5.4|^6.4|^7.2",
-                "symfony/stopwatch": "^5.4|^6.4|^7.2"
+                "symfony/process": "^5.4|^6.4|^7.4|^8.0",
+                "symfony/stopwatch": "^5.4|^6.4|^7.4|^8.0"
             },
             "require-dev": {
                 "behat/behat": "^3.6",
@@ -9301,9 +9301,9 @@
             "description": "Simple parallel testing execution... with some goodies for functional tests.",
             "support": {
                 "issues": "https://github.com/liuggio/fastest/issues",
-                "source": "https://github.com/liuggio/fastest/tree/v1.13.0"
+                "source": "https://github.com/liuggio/fastest/tree/v1.14.1"
             },
-            "time": "2025-03-11T13:52:24+00:00"
+            "time": "2026-01-27T10:13:40+00:00"
         },
         {
             "name": "marc-mabe/php-enum",
@@ -9781,35 +9781,34 @@
         },
         {
             "name": "osteel/openapi-httpfoundation-testing",
-            "version": "v0.11",
+            "version": "v0.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/osteel/openapi-httpfoundation-testing.git",
-                "reference": "978cfc7c212db6000ba4d2716a430ef74902e66a"
+                "reference": "48096d4193b6ef68a99cc3da148a1f39af040bb9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/osteel/openapi-httpfoundation-testing/zipball/978cfc7c212db6000ba4d2716a430ef74902e66a",
-                "reference": "978cfc7c212db6000ba4d2716a430ef74902e66a",
+                "url": "https://api.github.com/repos/osteel/openapi-httpfoundation-testing/zipball/48096d4193b6ef68a99cc3da148a1f39af040bb9",
+                "reference": "48096d4193b6ef68a99cc3da148a1f39af040bb9",
                 "shasum": ""
             },
             "require": {
-                "ext-json": "*",
                 "league/openapi-psr7-validator": "^0.22",
                 "nyholm/psr7": "^1.3.1",
                 "php": "^8.0",
                 "psr/cache": "^1.0 || ^2.0 || ^3.0",
                 "psr/http-message": "^1.0 || ^2.0",
                 "psr/simple-cache": "^1.0 || ^2.0 || ^3.0",
-                "symfony/cache": "^5.0.9 || ^6.0 || ^7.0",
-                "symfony/http-foundation": "^5.0.9 || ^6.0 || ^7.0",
-                "symfony/psr-http-message-bridge": "^2.0 || ^6.0 || ^7.0"
+                "symfony/cache": "^5.0.9 || ^6.0 || ^7.0 || ^8.0",
+                "symfony/http-foundation": "^5.0.9 || ^6.0 || ^7.0 || ^8.0",
+                "symfony/psr-http-message-bridge": "^2.0 || ^6.0 || ^7.0 || ^8.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.17",
-                "phpstan/phpstan": "^1.10",
+                "friendsofphp/php-cs-fixer": "^3.80",
+                "phpstan/phpstan": "^2.1.0",
                 "phpunit/phpunit": "^9.6",
-                "rector/rector": "^0.17.1"
+                "rector/rector": "^2.1.0"
             },
             "type": "library",
             "extra": {
@@ -9848,9 +9847,9 @@
             ],
             "support": {
                 "issues": "https://github.com/osteel/openapi-httpfoundation-testing/issues",
-                "source": "https://github.com/osteel/openapi-httpfoundation-testing/tree/v0.11"
+                "source": "https://github.com/osteel/openapi-httpfoundation-testing/tree/v0.14"
             },
-            "time": "2024-01-12T15:36:27+00:00"
+            "time": "2025-12-04T11:02:14+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -10218,22 +10217,22 @@
         },
         {
             "name": "phpspec/prophecy-phpunit",
-            "version": "v2.4.0",
+            "version": "v2.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy-phpunit.git",
-                "reference": "d3c28041d9390c9bca325a08c5b2993ac855bded"
+                "reference": "89f91b01d0640b7820e427e02a007bc6489d8a26"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy-phpunit/zipball/d3c28041d9390c9bca325a08c5b2993ac855bded",
-                "reference": "d3c28041d9390c9bca325a08c5b2993ac855bded",
+                "url": "https://api.github.com/repos/phpspec/prophecy-phpunit/zipball/89f91b01d0640b7820e427e02a007bc6489d8a26",
+                "reference": "89f91b01d0640b7820e427e02a007bc6489d8a26",
                 "shasum": ""
             },
             "require": {
                 "php": "^7.3 || ^8",
                 "phpspec/prophecy": "^1.18",
-                "phpunit/phpunit": "^9.1 || ^10.1 || ^11.0 || ^12.0"
+                "phpunit/phpunit": "^9.1 || ^10.1 || ^11.0 || ^12.0 || ^13.0"
             },
             "require-dev": {
                 "phpstan/phpstan": "^1.10"
@@ -10267,9 +10266,9 @@
             ],
             "support": {
                 "issues": "https://github.com/phpspec/prophecy-phpunit/issues",
-                "source": "https://github.com/phpspec/prophecy-phpunit/tree/v2.4.0"
+                "source": "https://github.com/phpspec/prophecy-phpunit/tree/v2.5.0"
             },
-            "time": "2025-05-13T13:52:32+00:00"
+            "time": "2026-02-09T15:40:55+00:00"
         },
         {
             "name": "phpstan/phpstan",
@@ -12604,16 +12603,16 @@
         },
         {
             "name": "symfony/maker-bundle",
-            "version": "v1.65.1",
+            "version": "v1.66.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/maker-bundle.git",
-                "reference": "eba30452d212769c9a5bcf0716959fd8ba1e54e3"
+                "reference": "b5b4afa2a570b926682e9f34615a6766dd560ff4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/eba30452d212769c9a5bcf0716959fd8ba1e54e3",
-                "reference": "eba30452d212769c9a5bcf0716959fd8ba1e54e3",
+                "url": "https://api.github.com/repos/symfony/maker-bundle/zipball/b5b4afa2a570b926682e9f34615a6766dd560ff4",
+                "reference": "b5b4afa2a570b926682e9f34615a6766dd560ff4",
                 "shasum": ""
             },
             "require": {
@@ -12636,7 +12635,7 @@
             },
             "require-dev": {
                 "composer/semver": "^3.0",
-                "doctrine/doctrine-bundle": "^2.5.0|^3.0.0",
+                "doctrine/doctrine-bundle": "^2.10|^3.0",
                 "doctrine/orm": "^2.15|^3",
                 "doctrine/persistence": "^3.1|^4.0",
                 "symfony/http-client": "^6.4|^7.0|^8.0",
@@ -12678,7 +12677,7 @@
             ],
             "support": {
                 "issues": "https://github.com/symfony/maker-bundle/issues",
-                "source": "https://github.com/symfony/maker-bundle/tree/v1.65.1"
+                "source": "https://github.com/symfony/maker-bundle/tree/v1.66.0"
             },
             "funding": [
                 {
@@ -12698,7 +12697,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-12-02T07:14:37+00:00"
+            "time": "2026-02-09T08:55:54+00:00"
         },
         {
             "name": "symfony/mime",
@@ -13274,5 +13273,5 @@
     "platform-overrides": {
         "php": "8.3.23"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
