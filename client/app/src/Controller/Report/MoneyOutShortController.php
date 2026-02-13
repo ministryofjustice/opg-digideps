@@ -151,20 +151,34 @@ class MoneyOutShortController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
+            /** @var Report $data */
             $data = $form->getData();
+            $categories = $data->getMoneyShortCategoriesOut();
 
-            $this->restClient->put('report/' . $reportId, $data, ['moneyShortCategoriesOut']);
-
-            if ($fromSummaryPage) {
-                $request->getSession()->getFlashBag()->add(
-                    'notice',
-                    'Answer edited'
-                );
-
-                return $this->redirectToRoute('money_out_short_summary', ['reportId' => $reportId]);
+            // Count the number of categories where 'present' is true
+            $presentCount = 0;
+            foreach ($categories as $category) {
+                if ($category->isPresent()) {
+                    $presentCount++;
+                }
             }
 
-            return $this->redirectToRoute('money_out_short_one_off_payments_exist', ['reportId' => $reportId]);
+            if ($presentCount === 0) {
+                $this->addFlash('error', 'Select at least one category of money');
+            } else {
+                $this->restClient->put('report/' . $reportId, $data, ['moneyShortCategoriesOut']);
+
+                if ($fromSummaryPage) {
+                    $request->getSession()->getFlashBag()->add(
+                        'notice',
+                        'Answer edited'
+                    );
+
+                    return $this->redirectToRoute('money_out_short_summary', ['reportId' => $reportId]);
+                }
+
+                return $this->redirectToRoute('money_out_short_one_off_payments_exist', ['reportId' => $reportId]);
+            }
         }
 
         return [
