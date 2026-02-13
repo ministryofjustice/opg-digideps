@@ -18,6 +18,8 @@ variable "accounts" {
       admin_allow_list                       = list(string)
       force_destroy_bucket                   = bool
       front_allow_list                       = list(string)
+      ga_default                             = string
+      ga_gds                                 = string
       subdomain_enabled                      = bool
       is_production                          = number
       fixtures_enabled                       = bool

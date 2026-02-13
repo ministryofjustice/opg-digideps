@@ -131,6 +131,7 @@ class BankAccountController extends AbstractController
             'ndrStatus' => new NdrStatusService($ndr),
             'form' => $form->createView(),
             'backLink' => $stepRedirector->getBackLink(),
+            'gaCustomUrl' => $request->getPathInfo(), // avoid sending query string to GA containing user's data
         ];
     }
 

@@ -160,7 +160,7 @@ jobs:
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
-      workspace: production02
+      workspace: production
       terraform_path: environment
       apply: true
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
@@ -175,7 +175,7 @@ jobs:
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
-      workspace: production02
+      workspace: production
       account_id: ${{ vars.PRODUCTION_ACCOUNT }}
       account_name: production
       task_name: "smoke_tests"
