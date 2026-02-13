@@ -8,7 +8,7 @@ COPY anonymisation /app/anonymisation
 WORKDIR /app/anonymisation
 RUN go build -o anonymise main.go
 
-FROM alpine:3.22
+FROM alpine:3.23
 RUN apk update && apk upgrade
 
 ENV POSTGRES_DATABASE=**None**

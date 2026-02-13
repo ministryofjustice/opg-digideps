@@ -82,7 +82,7 @@
         "liuggio/fastest": "^1.13",
         "ministryofjustice/mink-extension": "^2.7.3",
         "mockery/mockery": "^1.6.12",
-        "osteel/openapi-httpfoundation-testing": "^0.11.0",
+        "osteel/openapi-httpfoundation-testing": "^0.14.0",
         "phpspec/prophecy-phpunit": "^2.4.0",
         "phpstan/phpstan": "^1.12.32",
         "phpstan/phpstan-mockery": "^1.1.3",
