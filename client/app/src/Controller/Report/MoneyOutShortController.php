@@ -368,9 +368,7 @@ class MoneyOutShortController extends AbstractController
         }
 
         return [
-            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
             'report' => $report,
-            'status' => $report->getStatus(),
         ];
     }
 
