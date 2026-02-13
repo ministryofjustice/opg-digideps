@@ -2427,7 +2427,7 @@ parameters:
 
 		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 7
+			count: 6
 			path: src/Controller/Report/MoneyOutShortController.php
 
 		-
