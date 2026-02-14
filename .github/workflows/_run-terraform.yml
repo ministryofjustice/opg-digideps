@@ -40,10 +40,10 @@ jobs:
 
       - uses: unfor19/install-aws-cli-action@f5b46b7f32cf5e7ebd652656c5036bf83dd1e60c # v1
 
-      - uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # 6.0.0
+      - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # 6.2.0
         if: inputs.terraform_path == 'shared'
         with:
-          python-version: "3.11"
+          python-version: "3.14"
 
       - name: python layers folder
         if: inputs.terraform_path == 'account'

@@ -159,7 +159,7 @@ services:
 
   postgres:
     container_name: opg-digideps-postgres
-    image: postgres:14.18
+    image: postgres:14.20
     ports:
       - 5432:5432
     env_file:
@@ -258,7 +258,7 @@ services:
       - OPENAPI_MOCK_SPECIFICATION_URL=/app/deputy-reporting-openapi.yml
 
   mock-notify-api:
-    image: stoplight/prism:5.12.1
+    image: stoplight/prism:5.14.3
     ports:
       - 4010:4010
     command:
@@ -269,7 +269,7 @@ services:
       - --dynamic
 
   composer:
-    image: composer:2.8.12
+    image: composer:2.9.4
     command: ["install"]
 
   custom-sql-query:
