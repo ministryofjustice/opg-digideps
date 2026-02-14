@@ -61,11 +61,6 @@ jobs:
           terraform_version: ${{ steps.terraform_version.outputs.version }}
           terraform_wrapper: false
 
-      - name: build redeployer
-        if: inputs.terraform_path == 'account'
-        run: GOARCH=amd64 GOOS=linux go build -o bootstrap ./main.go
-        working-directory: terraform/account/region/go_redeployer
-
       - id: terraform_workspace_manager
         if: inputs.apply && inputs.terraform_path == 'environment' && inputs.pull_request_path
         name: register workspace

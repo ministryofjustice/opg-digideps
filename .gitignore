@@ -40,8 +40,6 @@ vendor/
 **/terraform.plan*
 **/account/builds
 **/account/region/.terraform.lock.hcl
-**/go_redeployer/bootstrap
-**/go_redeployer/function.zip
 **/modules/**/.terraform.lock.hcl
 
 
