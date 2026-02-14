@@ -96,7 +96,7 @@
         "phpstan/phpstan-mockery": "^1.0.0",
         "phpstan/phpstan-phpunit": "^1.0.0",
         "phpunit/phpcov": "8.2.1",
-        "phpunit/phpunit": "9.6.29",
+        "phpunit/phpunit": "9.6.33",
         "rector/rector": "^1.2",
         "symfony/maker-bundle": "^1.50.0",
         "symfony/phpunit-bridge": "^6.4",
