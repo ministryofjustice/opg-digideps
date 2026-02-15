@@ -3,7 +3,7 @@ module github.com/ministryofjustice/opg-digideps/account/go_redeployer
 go 1.25.5
 
 require (
-	github.com/aws/aws-lambda-go v1.51.1
+	github.com/aws/aws-lambda-go v1.52.0
 	github.com/aws/aws-sdk-go v1.55.8
 )
 

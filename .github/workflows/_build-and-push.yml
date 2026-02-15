@@ -115,7 +115,7 @@ jobs:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: set up docker buildx
-        uses: docker/setup-buildx-action@b5ca514318bd6ebac0fb2aedd5d36ec1b5c232a2 # v3.10.0
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
         id: buildx_setup
         with:
           version: v0.15.1
@@ -207,7 +207,7 @@ jobs:
       - name: trivy image scanning
         if: matrix.svc_name != 'mock-sirius'
         id: trivy_scan
-        uses: aquasecurity/trivy-action@6c175e9c4083a92bbca2f9724c8a5e33bc2d97a5 # v0.30.0
+        uses: aquasecurity/trivy-action@c1824fd6edce30d7ab345a9989de00bbd46ef284 # 0.34.0
         with:
           image-ref: ${{ matrix.svc_name }}:latest
           severity: "HIGH,CRITICAL"
@@ -222,7 +222,7 @@ jobs:
       - name: upload trivy scan results to security tab
         if: matrix.svc_name != 'mock-sirius'
         id: trivy_upload_sarif
-        uses: github/codeql-action/upload-sarif@70df9def86d22bf0ea4e7f8b956e7b92e7c1ea22 # v2.20.7
+        uses: github/codeql-action/upload-sarif@b8d3b6e8af63cde30bdc382c0bc28114f4346c88 # v2.28.1
         with:
           sarif_file: "trivy-results.sarif"
 
