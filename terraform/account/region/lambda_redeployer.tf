@@ -8,7 +8,7 @@ resource "aws_lambda_function" "redeployer_lambda" {
   function_name = local.redeployer_lambda_function_name
   role          = aws_iam_role.lambda_redeployer.arn
   handler       = "bootstrap"
-  runtime       = "provided.al2"
+  runtime       = "provided.al2023"
   depends_on    = [aws_cloudwatch_log_group.redeployer_lambda]
   tracing_config {
     mode = "Active"
