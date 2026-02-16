@@ -1,4 +1,4 @@
-FROM localstack/localstack:4.6.0 AS localstack
+FROM localstack/localstack:4.13.1 AS localstack
 
 RUN apt-get -yq install bash
 

@@ -1,7 +1,7 @@
 ##############################
 # Stage 1: Composer Build
 ##############################
-FROM composer:2.8.12@sha256:5248900ab8b5f7f880c2d62180e40960cd87f60149ec9a1abfd62ac72a02577c AS composer
+FROM composer:2.9.4@sha256:22a95bd2bc3cf6ff19550a246208138d35f0015602db3d67dc6841945324acc1 AS composer
 
 WORKDIR /app
 
