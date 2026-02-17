@@ -896,7 +896,7 @@ trait UserManagementTrait
             throw new BehatException(sprintf('The user search results list did not contain the required occurrences of the users full name. Expected: "%s" (at least %s times), got (full HTML): %s', $searchName, $this->userCount, $userNamesFoundCount));
         }
 
-        $this->assertIntEqualsInt($userNamesFoundCount, $this->userCount, 'User rows visible');
+        $this->assertIntEqualsInt($this->userCount, $userNamesFoundCount, 'User rows visible');
     }
 
     private function assertUserCountSet()
