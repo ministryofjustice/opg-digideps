@@ -27,7 +27,7 @@ resource "aws_ecs_service" "admin" {
 
   network_configuration {
     security_groups  = [module.admin_service_security_group.id]
-    subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
+    subnets          = data.aws_subnet.application[*].id
     assign_public_ip = false
   }
 
