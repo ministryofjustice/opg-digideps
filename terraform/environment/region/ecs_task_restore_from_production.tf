@@ -48,7 +48,7 @@ locals {
           },
           {
             name  = "S3_PREFIX",
-            value = "production02"
+            value = "production"
           },
           {
             name  = "DROP_PUBLIC",
