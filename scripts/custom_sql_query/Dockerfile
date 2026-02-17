@@ -1,7 +1,7 @@
 ARG FUNCTION_DIR="/function"
 
 # ===== BASE IMAGE =====
-FROM python:3.12-alpine3.22 AS python-base
+FROM python:3.14-alpine3.22 AS python-base
 RUN apk update && apk upgrade
 
 # ===== Build Image =====
