@@ -1,10 +1,11 @@
 framework:
-  test: ~
+  test: true
   http_client:
     default_options:
       verify_host: false
       verify_peer: false
       # by setting base_uri, relative URLs (e.g. request("GET", "/registration/new"))
       # will default to these options
+    scoped_clients:
       php.api.client:
         base_uri: "%api_base_url%/v3/"
