@@ -45,6 +45,11 @@ jobs:
         with:
           python-version: "3.11"
 
+      - uses: actions/setup-go@6c26f8a5cd34bc65f9d868dde526513ff1cdf93e # v6.2.0
+        if: inputs.terraform_path == 'account'
+        with:
+          go-version: "1.25.5"
+
       - name: python layers folder
         if: inputs.terraform_path == 'account'
         run: pip3 install -r requirements.txt --target ./layers/python/lib/python3.11/site-packages/
@@ -61,6 +66,7 @@ jobs:
           terraform_version: ${{ steps.terraform_version.outputs.version }}
           terraform_wrapper: false
 
+      # requires go 1.25.5
       - name: build redeployer
         if: inputs.terraform_path == 'account'
         run: GOARCH=amd64 GOOS=linux go build -o bootstrap ./main.go
