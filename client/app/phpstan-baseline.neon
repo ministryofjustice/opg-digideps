@@ -8851,21 +8851,6 @@ parameters:
 			path: src/Service/Audit/AuditEvents.php
 
 		-
-			message: "#^Method App\\\\Service\\\\Audit\\\\AuditEvents\\:\\:buildEmailEvent\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/Audit/AuditEvents.php
-
-		-
-			message: "#^Method App\\\\Service\\\\Audit\\\\AuditEvents\\:\\:clientEmailChanged\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/Audit/AuditEvents.php
-
-		-
-			message: "#^Method App\\\\Service\\\\Audit\\\\AuditEvents\\:\\:userEmailChanged\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/Audit/AuditEvents.php
-
-		-
 			message: "#^Parameter \\#1 \\$array of function array_flip expects array\\<int\\|string\\>, array\\<string, mixed\\> given\\.$#"
 			count: 1
 			path: src/Service/Audit/AuditEvents.php
@@ -8877,11 +8862,6 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 0 on mixed\\.$#"
-			count: 1
-			path: src/Service/Audit/AwsAuditLogHandler.php
-
-		-
-			message: "#^Method App\\\\Service\\\\Audit\\\\AwsAuditLogHandler\\:\\:__construct\\(\\) has parameter \\$group with no type specified\\.$#"
 			count: 1
 			path: src/Service/Audit/AwsAuditLogHandler.php
 
@@ -9877,41 +9857,6 @@ parameters:
 
 		-
 			message: "#^Binary operation \"\\.\" between 'Invalid Reference…' and 0\\|0\\.0\\|''\\|'0'\\|array\\{\\}\\|false\\|null results in an error\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:deleteObject\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:deleteObjects\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:getObject\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:getObjectTagging\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:listObjectVersions\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:putObject\\(\\)\\.$#"
-			count: 1
-			path: src/Service/File/Storage/S3Storage.php
-
-		-
-			message: "#^Call to an undefined method Aws\\\\S3\\\\S3ClientInterface\\:\\:putObjectTagging\\(\\)\\.$#"
 			count: 1
 			path: src/Service/File/Storage/S3Storage.php
 
