@@ -39,7 +39,6 @@ locals {
 }
 
 module "network" {
-  count                                                   = var.account.network.enabled ? 1 : 0
   source                                                  = "git@github.com:ministryofjustice/opg-terraform-aws-firewalled-network.git?ref=v1.1.0"
   cidr                                                    = data.aws_region.current.name == "eu-west-1" ? var.account.network.cidr_eu_west_1 : var.account.network.cidr_eu_west_2
   default_security_group_ingress                          = []
@@ -52,12 +51,11 @@ module "network" {
   shared_firewall_configuration                           = local.firewall_config.shared_firewall_configuration
   network_firewall_cloudwatch_log_group_kms_key_id        = module.logs_kms.eu_west_1_target_key_arn
   network_firewall_cloudwatch_log_group_retention_in_days = 400
-  aws_networkfirewall_firewall_policy                     = local.firewall_config.shared_firewall_configuration != null ? null : aws_networkfirewall_firewall_policy.main[0]
+  aws_networkfirewall_firewall_policy                     = local.firewall_config.shared_firewall_configuration != null ? null : aws_networkfirewall_firewall_policy.main
 }
 
 resource "aws_networkfirewall_firewall_policy" "main" {
-  count = var.account.network.enabled ? 1 : 0
-  name  = "main"
+  name = "main"
 
   firewall_policy {
     stateless_default_actions          = ["aws:forward_to_sfe"]
@@ -68,13 +66,12 @@ resource "aws_networkfirewall_firewall_policy" "main" {
       stream_exception_policy = "DROP"
     }
     stateful_rule_group_reference {
-      resource_arn = aws_networkfirewall_rule_group.rule_file[0].arn
+      resource_arn = aws_networkfirewall_rule_group.rule_file.arn
     }
   }
 }
 
 resource "aws_networkfirewall_rule_group" "rule_file" {
-  count    = var.account.network.enabled ? 1 : 0
   capacity = 100
   name     = "main-${replace(filebase64sha256("${path.module}/network_firewall_rules.rules.tpl"), "/[^[:alnum:]]/", "")}"
   type     = "STATEFUL"
