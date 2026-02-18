@@ -32,6 +32,8 @@ RUN composer install --prefer-dist --no-interaction --no-scripts \
 ##############################
 FROM php:8.4-fpm-alpine3.22@sha256:414f669f6be259cf658e88b08b302ca883caec21f15ac0d01e38ba512d70119f AS base
 
+ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
+
 WORKDIR /var/www
 ENV TIMEOUT=60
 
