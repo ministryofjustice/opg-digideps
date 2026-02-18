@@ -6,7 +6,8 @@
     "config": {
         "sort-packages": true,
         "allow-plugins": {
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "pact-foundation/composer-downloads-plugin": false
         }
     },
     "autoload": {
@@ -18,14 +19,14 @@
     },
     "require": {
         "php": "^8.4",
-        "alphagov/notifications-php-client": "^4.2.0",
+        "alphagov/notifications-php-client": "^6.2.0",
         "aws/aws-sdk-php": "3.368.0",
         "doctrine/annotations": "^2.0.2",
         "doctrine/collections": "^2.6.0",
         "egulias/email-validator": "^4.0.4",
         "fakerphp/faker": "^1.24.1",
         "gbprod/uuid-normalizer": "^7.0.2",
-        "guzzlehttp/guzzle": "^7.8.2",
+        "guzzlehttp/guzzle": "^7.10.0",
         "jms/serializer-bundle": "^5.5.2",
         "jolicode/slack-php-api": "^4.8",
         "lcobucci/jwt": "^4.3",
