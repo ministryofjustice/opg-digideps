@@ -27,7 +27,7 @@ resource "aws_route53_resolver_query_log_config" "egress" {
 resource "aws_route53_resolver_query_log_config_association" "egress" {
   count                        = var.account.dns_firewall.enabled ? 1 : 0
   resolver_query_log_config_id = aws_route53_resolver_query_log_config.egress[0].id
-  resource_id                  = aws_vpc.main.id
+  resource_id                  = module.network.vpc.id
 }
 
 locals {
@@ -184,7 +184,7 @@ resource "aws_route53_resolver_firewall_rule_group_association" "egress" {
   name                   = "egress"
   firewall_rule_group_id = aws_route53_resolver_firewall_rule_group.egress[0].id
   priority               = 500
-  vpc_id                 = aws_vpc.main.id
+  vpc_id                 = module.network.vpc.id
 }
 
 
