@@ -23,7 +23,7 @@ resource "aws_ecs_service" "mock_sirius_integration" {
 
   network_configuration {
     security_groups  = [module.mock_sirius_integration_security_group.id]
-    subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
+    subnets          = data.aws_subnet.application[*].id
     assign_public_ip = false
   }
 
