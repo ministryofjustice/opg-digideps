@@ -232,7 +232,6 @@ resource "aws_iam_role_policy_attachment" "vpc_access_execution_role" {
 
 # ==== NEW VPC Lambda =====
 resource "aws_lambda_function" "custom_sql_tool" {
-  count         = var.account.network.enabled ? 1 : 0
   function_name = "${local.lambda_custom_sql_name_tool}-${var.account.name}"
   description   = "Function to run custom sql queries"
   image_uri     = "${data.aws_ecr_repository.custom_sql_query.repository_url}:latest"
@@ -243,8 +242,8 @@ resource "aws_lambda_function" "custom_sql_tool" {
   depends_on    = [aws_cloudwatch_log_group.custom_sql_query]
 
   vpc_config {
-    subnet_ids         = module.network[0].application_subnets[*].id
-    security_group_ids = [aws_security_group.custom_sql_tool[0].id]
+    subnet_ids         = module.network.application_subnets[*].id
+    security_group_ids = [aws_security_group.custom_sql_tool.id]
   }
 
   tracing_config {
@@ -260,9 +259,8 @@ resource "aws_lambda_function" "custom_sql_tool" {
 }
 
 resource "aws_security_group" "custom_sql_tool" {
-  count       = var.account.network.enabled ? 1 : 0
   name        = "${var.account.name}-${local.lambda_custom_sql_name_tool}"
-  vpc_id      = module.network[0].vpc.id
+  vpc_id      = module.network.vpc.id
   description = "Custom SQL Shared Lambda"
 
   lifecycle {
@@ -278,18 +276,16 @@ resource "aws_security_group" "custom_sql_tool" {
 }
 
 data "aws_security_group" "secrets_vpc_endpoint" {
-  count  = var.account.network.enabled ? 1 : 0
   tags   = { Name = "secrets_endpoint" }
-  vpc_id = module.network[0].vpc.id
+  vpc_id = module.network.vpc.id
 }
 
 resource "aws_security_group_rule" "lambda_custom_sql_tool_to_secrets_endpoint" {
-  count                    = var.account.network.enabled ? 1 : 0
   type                     = "egress"
   protocol                 = "tcp"
   from_port                = 443
   to_port                  = 443
-  source_security_group_id = data.aws_security_group.secrets_vpc_endpoint[0].id
-  security_group_id        = aws_security_group.custom_sql_tool[0].id
+  source_security_group_id = data.aws_security_group.secrets_vpc_endpoint.id
+  security_group_id        = aws_security_group.custom_sql_tool.id
   description              = "Outbound lambda custom_sql to secrets endpoint"
 }

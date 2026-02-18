@@ -34,9 +34,8 @@ resource "aws_elasticache_subnet_group" "private" {
 }
 
 resource "aws_elasticache_subnet_group" "application" {
-  count      = var.account.network.enabled ? 1 : 0
   name       = "application"
-  subnet_ids = module.network[0].data_subnets[*].id
+  subnet_ids = module.network.data_subnets[*].id
 }
 
 resource "aws_db_subnet_group" "private" {
@@ -49,9 +48,8 @@ resource "aws_db_subnet_group" "private" {
 }
 
 resource "aws_db_subnet_group" "data" {
-  count      = var.account.network.enabled ? 1 : 0
   name       = "data-subnet-group-${var.account.name}"
-  subnet_ids = module.network[0].data_subnets[*].id
+  subnet_ids = module.network.data_subnets[*].id
   tags = merge(
     var.default_tags,
     { Name = "data-subnet-group-${var.account.name}" },

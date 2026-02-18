@@ -58,10 +58,9 @@ resource "aws_vpc_endpoint" "s3" {
 
 # New VPC Endpoints
 module "secrets_endpoint_vpc" {
-  count               = var.account.network.enabled ? 1 : 0
   source              = "./modules/vpc_endpoint"
-  subnet_ids          = module.network[0].application_subnets[*].id
-  vpc                 = module.network[0].vpc
+  subnet_ids          = module.network.application_subnets[*].id
+  vpc                 = module.network.vpc
   region              = data.aws_region.current.name
   service             = "secretsmanager"
   service_short_title = "secrets"
@@ -69,10 +68,9 @@ module "secrets_endpoint_vpc" {
 }
 
 module "ecr_endpoint_vpc" {
-  count               = var.account.network.enabled ? 1 : 0
   source              = "./modules/vpc_endpoint"
-  subnet_ids          = module.network[0].application_subnets[*].id
-  vpc                 = module.network[0].vpc
+  subnet_ids          = module.network.application_subnets[*].id
+  vpc                 = module.network.vpc
   region              = data.aws_region.current.name
   service             = "ecr.dkr"
   service_short_title = "ecr"
@@ -80,10 +78,9 @@ module "ecr_endpoint_vpc" {
 }
 
 module "ecr_api_endpoint_vpc" {
-  count               = var.account.network.enabled ? 1 : 0
   source              = "./modules/vpc_endpoint"
-  subnet_ids          = module.network[0].application_subnets[*].id
-  vpc                 = module.network[0].vpc
+  subnet_ids          = module.network.application_subnets[*].id
+  vpc                 = module.network.vpc
   region              = data.aws_region.current.name
   service             = "ecr.api"
   service_short_title = "ecr_api"
@@ -91,10 +88,9 @@ module "ecr_api_endpoint_vpc" {
 }
 
 module "logs_endpoint_vpc" {
-  count               = var.account.network.enabled ? 1 : 0
   source              = "./modules/vpc_endpoint"
-  subnet_ids          = module.network[0].application_subnets[*].id
-  vpc                 = module.network[0].vpc
+  subnet_ids          = module.network.application_subnets[*].id
+  vpc                 = module.network.vpc
   region              = data.aws_region.current.name
   service             = "logs"
   service_short_title = "logs"
@@ -102,10 +98,9 @@ module "logs_endpoint_vpc" {
 }
 
 module "ssm_endpoint_vpc" {
-  count               = var.account.network.enabled ? 1 : 0
   source              = "./modules/vpc_endpoint"
-  subnet_ids          = module.network[0].application_subnets[*].id
-  vpc                 = module.network[0].vpc
+  subnet_ids          = module.network.application_subnets[*].id
+  vpc                 = module.network.vpc
   region              = data.aws_region.current.name
   service             = "ssm"
   service_short_title = "ssm"
@@ -113,10 +108,9 @@ module "ssm_endpoint_vpc" {
 }
 
 module "ec2messages_endpoint_vpc" {
-  count               = var.account.network.enabled ? 1 : 0
   source              = "./modules/vpc_endpoint"
-  subnet_ids          = module.network[0].application_subnets[*].id
-  vpc                 = module.network[0].vpc
+  subnet_ids          = module.network.application_subnets[*].id
+  vpc                 = module.network.vpc
   region              = data.aws_region.current.name
   service             = "ec2messages"
   service_short_title = "ec2messages"
@@ -124,10 +118,9 @@ module "ec2messages_endpoint_vpc" {
 }
 
 module "ssmmessages_endpoint_vpc" {
-  count               = var.account.network.enabled ? 1 : 0
   source              = "./modules/vpc_endpoint"
-  subnet_ids          = module.network[0].application_subnets[*].id
-  vpc                 = module.network[0].vpc
+  subnet_ids          = module.network.application_subnets[*].id
+  vpc                 = module.network.vpc
   region              = data.aws_region.current.name
   service             = "ssmmessages"
   service_short_title = "ssmmessages"
@@ -135,10 +128,9 @@ module "ssmmessages_endpoint_vpc" {
 }
 
 resource "aws_vpc_endpoint" "s3_endpoint_vpc" {
-  count             = var.account.network.enabled ? 1 : 0
   service_name      = "com.amazonaws.eu-west-1.s3"
-  vpc_id            = module.network[0].vpc.id
+  vpc_id            = module.network.vpc.id
   vpc_endpoint_type = "Gateway"
-  route_table_ids   = module.network[0].application_subnet_route_tables[*].id
+  route_table_ids   = module.network.application_subnet_route_tables[*].id
   tags              = merge(var.default_tags, { Name = "s3" })
 }
