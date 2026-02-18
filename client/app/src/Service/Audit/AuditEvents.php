@@ -14,54 +14,47 @@ use App\Service\Time\DateTimeProvider;
 
 final class AuditEvents
 {
-    public const EVENT_USER_EMAIL_CHANGED = 'USER_EMAIL_CHANGED';
-    public const EVENT_ROLE_CHANGED = 'ROLE_CHANGED';
-    public const EVENT_CLIENT_EMAIL_CHANGED = 'CLIENT_EMAIL_CHANGED';
-    public const EVENT_CLIENT_DELETED = 'CLIENT_DELETED';
-    public const EVENT_DEPUTY_DELETED = 'DEPUTY_DELETED';
-    public const EVENT_USER_SELF_REGISTER_FAILED = 'USER_SELF_REGISTER_FAILED';
-    public const EVENT_USER_SELF_REGISTER_SUCCEEDED = 'USER_SELF_REGISTER_SUCCEEDED';
-    public const EVENT_ADMIN_DELETED = 'ADMIN_DELETED';
-    public const EVENT_REPORT_UNSUBMITTED = 'REPORT_UNSUBMITTED';
-    public const EVENT_REPORT_RESUBMITTED = 'REPORT_RESUBMITTED';
-    public const EVENT_USER_ADDED_TO_ORG = 'USER_ADDED_TO_ORG';
-    public const EVENT_USER_REMOVED_FROM_ORG = 'USER_REMOVED_FROM_ORG';
-    public const EVENT_CSV_UPLOADED = 'CSV_UPLOADED';
-    public const EVENT_ORG_CREATED = 'ORG_CREATED';
-    public const EVENT_ADMIN_MANAGER_CREATED = 'ADMIN_MANAGER_CREATED';
-    public const EVENT_ADMIN_MANAGER_DELETED = 'ADMIN_MANAGER_DELETED';
-    public const EVENT_EMAIL_NOT_SENT = 'EMAIL_NOT_SENT';
-    public const EVENT_EMAIL_SENT = 'EMAIL_SENT';
-    public const EVENT_DEPUTY_CHANGED_ORG = 'DEPUTY_CHANGED_ORG';
-    public const EVENT_ADMIN_USER_REGISTER_SUCCEEDED = 'ADMIN_USER_REGISTER_SUCCEEDED';
+    public const string EVENT_USER_EMAIL_CHANGED = 'USER_EMAIL_CHANGED';
+    public const string EVENT_ROLE_CHANGED = 'ROLE_CHANGED';
+    public const string EVENT_CLIENT_EMAIL_CHANGED = 'CLIENT_EMAIL_CHANGED';
+    public const string EVENT_CLIENT_DELETED = 'CLIENT_DELETED';
+    public const string EVENT_DEPUTY_DELETED = 'DEPUTY_DELETED';
+    public const string EVENT_USER_SELF_REGISTER_FAILED = 'USER_SELF_REGISTER_FAILED';
+    public const string EVENT_USER_SELF_REGISTER_SUCCEEDED = 'USER_SELF_REGISTER_SUCCEEDED';
+    public const string EVENT_ADMIN_DELETED = 'ADMIN_DELETED';
+    public const string EVENT_REPORT_UNSUBMITTED = 'REPORT_UNSUBMITTED';
+    public const string EVENT_REPORT_RESUBMITTED = 'REPORT_RESUBMITTED';
+    public const string EVENT_USER_ADDED_TO_ORG = 'USER_ADDED_TO_ORG';
+    public const string EVENT_USER_REMOVED_FROM_ORG = 'USER_REMOVED_FROM_ORG';
+    public const string EVENT_CSV_UPLOADED = 'CSV_UPLOADED';
+    public const string EVENT_ORG_CREATED = 'ORG_CREATED';
+    public const string EVENT_ADMIN_MANAGER_CREATED = 'ADMIN_MANAGER_CREATED';
+    public const string EVENT_ADMIN_MANAGER_DELETED = 'ADMIN_MANAGER_DELETED';
+    public const string EVENT_EMAIL_NOT_SENT = 'EMAIL_NOT_SENT';
+    public const string EVENT_EMAIL_SENT = 'EMAIL_SENT';
+    public const string EVENT_DEPUTY_CHANGED_ORG = 'DEPUTY_CHANGED_ORG';
+    public const string EVENT_ADMIN_USER_REGISTER_SUCCEEDED = 'ADMIN_USER_REGISTER_SUCCEEDED';
 
-    public const TRIGGER_ADMIN_USER_EDIT = 'ADMIN_USER_EDIT';
-    public const TRIGGER_ADMIN_BUTTON = 'ADMIN_BUTTON';
-    public const TRIGGER_ADMIN_MANAGER_MANUALLY_CREATED = 'ADMIN_MANAGER_MANUALLY_CREATED';
-    public const TRIGGER_ADMIN_MANAGER_MANUALLY_DELETED = 'ADMIN_MANAGER_MANUALLY_DELETED';
-    public const TRIGGER_CSV_UPLOAD = 'CSV_UPLOAD';
-    public const TRIGGER_DEPUTY_USER_EDIT_CLIENT_DURING_REGISTRATION = 'TRIGGER_DEPUTY_USER_EDIT_CLIENT_DURING_REGISTRATION';
-    public const TRIGGER_DEPUTY_USER_EDIT = 'DEPUTY_USER_EDIT';
-    public const TRIGGER_DEPUTY_USER_EDIT_SELF = 'DEPUTY_USER_EDIT_SELF';
-    public const TRIGGER_DEPUTY_USER_SELF_REGISTER_ATTEMPT = 'DEPUTY_USER_SELF_REGISTER_ATTEMPT';
-    public const TRIGGER_DEPUTY_USER_REGISTRATION_FLOW_COMPLETED = 'DEPUTY_USER_REGISTRATION_FLOW_COMPLETED';
-    public const TRIGGER_CODEPUTY_CREATED = 'CODEPUTY_CREATED';
-    public const TRIGGER_ORG_USER_MANAGE_ORG_MEMBER = 'ORG_USER_MANAGE_ORG_MEMBER';
-    public const TRIGGER_ADMIN_USER_MANAGE_ORG_MEMBER = 'ADMIN_USER_MANAGE_ORG_USER';
-    public const TRIGGER_ADMIN_MANUAL_ORG_CREATION = 'ADMIN_MANUAL_ORG_CREATION';
-    public const TRIGGER_UNSUBMIT_REPORT = 'UNSUBMIT_REPORT';
-    public const TRIGGER_RESUBMIT_REPORT = 'RESUBMIT_REPORT';
-    public const TRIGGER_DEPUTY_CHANGED_ORG = 'DEPUTY_CHANGED_ORG';
-    public const TRIGGER_ADMIN_USER_REGISTER_ATTEMPT = 'ADMIN_USER_REGISTER_ATTEMPT';
+    public const string TRIGGER_ADMIN_BUTTON = 'ADMIN_BUTTON';
+    public const string TRIGGER_ADMIN_MANAGER_MANUALLY_CREATED = 'ADMIN_MANAGER_MANUALLY_CREATED';
+    public const string TRIGGER_ADMIN_MANAGER_MANUALLY_DELETED = 'ADMIN_MANAGER_MANUALLY_DELETED';
+    public const string TRIGGER_CSV_UPLOAD = 'CSV_UPLOAD';
+    public const string TRIGGER_DEPUTY_USER_EDIT_CLIENT_DURING_REGISTRATION = 'TRIGGER_DEPUTY_USER_EDIT_CLIENT_DURING_REGISTRATION';
+    public const string TRIGGER_DEPUTY_USER_EDIT = 'DEPUTY_USER_EDIT';
+    public const string TRIGGER_DEPUTY_USER_EDIT_SELF = 'DEPUTY_USER_EDIT_SELF';
+    public const string TRIGGER_DEPUTY_USER_SELF_REGISTER_ATTEMPT = 'DEPUTY_USER_SELF_REGISTER_ATTEMPT';
+    public const string TRIGGER_DEPUTY_USER_REGISTRATION_FLOW_COMPLETED = 'DEPUTY_USER_REGISTRATION_FLOW_COMPLETED';
+    public const string TRIGGER_ORG_USER_MANAGE_ORG_MEMBER = 'ORG_USER_MANAGE_ORG_MEMBER';
+    public const string TRIGGER_ADMIN_USER_MANAGE_ORG_MEMBER = 'ADMIN_USER_MANAGE_ORG_USER';
+    public const string TRIGGER_ADMIN_MANUAL_ORG_CREATION = 'ADMIN_MANUAL_ORG_CREATION';
+    public const string TRIGGER_UNSUBMIT_REPORT = 'UNSUBMIT_REPORT';
+    public const string TRIGGER_RESUBMIT_REPORT = 'RESUBMIT_REPORT';
+    public const string TRIGGER_DEPUTY_CHANGED_ORG = 'DEPUTY_CHANGED_ORG';
+    public const string TRIGGER_ADMIN_USER_REGISTER_ATTEMPT = 'ADMIN_USER_REGISTER_ATTEMPT';
 
-    /**
-     * @var DateTimeProvider
-     */
-    private $dateTimeProvider;
-
-    public function __construct(DateTimeProvider $dateTimeProvider)
-    {
-        $this->dateTimeProvider = $dateTimeProvider;
+    public function __construct(
+        private readonly DateTimeProvider $dateTimeProvider
+    ) {
     }
 
     /**
@@ -80,7 +73,7 @@ final class AuditEvents
             'discharged_by' => $dischargedBy,
             'deputy_name' => $deputyName,
             'discharged_on' => $this->dateTimeProvider->getDateTime()->format(\DateTime::ATOM),
-            'deputyship_start_date' => $deputyshipStartDate ? $deputyshipStartDate->format(\DateTime::ATOM) : null,
+            'deputyship_start_date' => $deputyshipStartDate?->format(\DateTime::ATOM),
         ];
 
         return $event + $this->baseEvent(AuditEvents::EVENT_CLIENT_DELETED);
@@ -93,7 +86,7 @@ final class AuditEvents
         string $changedBy,
         string $subjectFullName,
         string $subjectRole
-    ) {
+    ): array {
         $event = [
             'trigger' => $trigger,
             'email_changed_from' => $emailChangedFrom,
@@ -113,7 +106,7 @@ final class AuditEvents
         ?string $emailChangedTo,
         string $changedByEmail,
         string $subjectFullName
-    ) {
+    ): array {
         $event = [
             'trigger' => $trigger,
             'email_changed_from' => $emailChangedFrom,
@@ -145,7 +138,7 @@ final class AuditEvents
     }
 
     /**
-     * @return array|string[]
+     * @return string[]
      *
      * @throws \Exception
      */
@@ -167,16 +160,16 @@ final class AuditEvents
     }
 
     /**
-     * @param string       $trigger      ,      what caused the event
-     * @param User         $addedUser    ,    the user that was added to the org
-     * @param Organisation $organisation , the org the user has been added to
-     * @param User         $addedBy      ,      the user who added the the user to the org
+     * @param string       $trigger      what caused the event
+     * @param User         $addedUser    the user that was added to the org
+     * @param Organisation $organisation the org the user has been added to
+     * @param User         $addedBy      the user who added the the user to the org
      *
      * @return array|string[]
      *
      * @throws \Exception
      */
-    public function userAddedToOrg(string $trigger, User $addedUser, Organisation $organisation, User $addedBy)
+    public function userAddedToOrg(string $trigger, User $addedUser, Organisation $organisation, User $addedBy): array
     {
         $event = [
             'trigger' => $trigger,
@@ -191,16 +184,16 @@ final class AuditEvents
     }
 
     /**
-     * @param string       $trigger      ,      what caused the event
-     * @param User         $removedUser  ,  the user that was removed from the org
-     * @param Organisation $organisation , the org the user has been removed from
-     * @param User         $removedBy    ,    the user who removed the the user from the org
+     * @param string       $trigger      what caused the event
+     * @param User         $removedUser  the user that was removed from the org
+     * @param Organisation $organisation the org the user has been removed from
+     * @param User         $removedBy    the user who removed the the user from the org
      *
-     * @return array|string[]
+     * @return string[]
      *
      * @throws \Exception
      */
-    public function userRemovedFromOrg(string $trigger, User $removedUser, Organisation $organisation, User $removedBy)
+    public function userRemovedFromOrg(string $trigger, User $removedUser, Organisation $organisation, User $removedBy): array
     {
         $event = [
             'trigger' => $trigger,
@@ -216,14 +209,14 @@ final class AuditEvents
     }
 
     /**
-     * @param string $trigger             ,             what caused the event
-     * @param User   $reportUnsubmittedBy ,
+     * @param string $trigger             what caused the event
+     * @param User   $reportUnsubmittedBy
      *
-     * @return array|string[]
+     * @return string[]
      *
      * @throws \Exception
      */
-    public function reportUnsubmitted(Report $unsubmittedReport, User $reportUnsubmittedBy, string $trigger)
+    public function reportUnsubmitted(Report $unsubmittedReport, User $reportUnsubmittedBy, string $trigger): array
     {
         $event = [
             'trigger' => $trigger,
@@ -236,9 +229,9 @@ final class AuditEvents
     }
 
     /**
-     * @return array|string[]
+     * @return string[]
      */
-    public function reportResubmitted(Report $resubmittedReport, User $reportSubmittedBy)
+    public function reportResubmitted(Report $resubmittedReport, User $reportSubmittedBy): array
     {
         $event = [
             'trigger' => AuditEvents::TRIGGER_RESUBMIT_REPORT,
@@ -267,11 +260,11 @@ final class AuditEvents
     }
 
     /**
-     * @param string $trigger      , what caused the event
-     * @param array  $organisation , the org the user has added
-     * @param User   $currentUser  , return the logged in user
+     * @param string $trigger      what caused the event
+     * @param array  $organisation the org the user has added
+     * @param User   $currentUser  return the logged in user
      *
-     * @return array|string[]
+     * @return string[]
      *
      * @throws \Exception
      */
@@ -327,9 +320,9 @@ final class AuditEvents
     }
 
     /**
-     * @param string $trigger             , what caused the event
-     * @param User   $createdAdminManager , the newly created admin manager
-     * @param User   $currentUser         , the logged in user
+     * @param string $trigger             what caused the event
+     * @param User   $createdAdminManager the newly created admin manager
+     * @param User   $currentUser         the logged in user
      *
      * @throws \Exception
      */
@@ -350,9 +343,9 @@ final class AuditEvents
     }
 
     /**
-     * @param string $trigger             , what caused the event
-     * @param User   $deletedAdminManager , the deleted admin manager
-     * @param User   $currentUser         , the logged in user
+     * @param string $trigger             what caused the event
+     * @param User   $deletedAdminManager the deleted admin manager
+     * @param User   $currentUser         the logged in user
      *
      * @throws \Exception
      */
@@ -382,7 +375,7 @@ final class AuditEvents
         return $this->buildEmailEvent($email, $loggedInUser) + $this->baseEvent(AuditEvents::EVENT_EMAIL_NOT_SENT) + ['error_message' => $error->getMessage()];
     }
 
-    private function buildEmailEvent(Email $email, User|string|null $loggedInUser)
+    private function buildEmailEvent(Email $email, User|string|null $loggedInUser): array
     {
         $class = new \ReflectionClass(MailFactory::class);
         $constants = array_flip($class->getConstants());
@@ -401,11 +394,11 @@ final class AuditEvents
     }
 
     /**
-     * @param string $trigger       , what caused the event
-     * @param int    $deputyId      , deputyId
-     * @param int    $previousOrgId , previous deputy organisation
-     * @param int    $newOrgId      , new deputy organisation
-     * @param int    $clientId      , the client that moved across with deputy
+     * @param string $trigger       what caused the event
+     * @param int    $deputyId      deputyId
+     * @param int    $previousOrgId previous deputy organisation
+     * @param int    $newOrgId      new deputy organisation
+     * @param int    $clientId      the client that moved across with deputy
      */
     public function deputyChangedOrganisationEvent(string $trigger, int $deputyId, int $previousOrgId, int $newOrgId, int $clientId): array
     {
