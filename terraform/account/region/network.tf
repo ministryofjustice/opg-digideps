@@ -19,7 +19,7 @@ locals {
       # }
     }
     production = {
-      network_firewall_enabled      = false
+      network_firewall_enabled      = true
       none_matching_traffic_action  = "alert"
       shared_firewall_configuration = null
     }
@@ -34,7 +34,8 @@ locals {
   allowed_prefixed_domains = [
     ".api.opg.service.justice.gov.uk",
     ".digideps.opg.service.justice.gov.uk",
-    ".admin.digideps.opg.service.justice.gov.uk"
+    ".admin.digideps.opg.service.justice.gov.uk",
+    ".complete-deputy-report.service.gov.uk"
   ]
 }
 
