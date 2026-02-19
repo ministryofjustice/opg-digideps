@@ -1,8 +1,7 @@
 # Security Groups
 resource "aws_security_group" "custom_sql_query_sg" {
-  count       = var.account.network.enabled ? 1 : 0
   name        = "${var.account.name}-${local.lambda_custom_sql_name}"
-  vpc_id      = module.network[0].vpc.id
+  vpc_id      = module.network.vpc.id
   description = "Custom SQL Shared Lambda"
 
   lifecycle {

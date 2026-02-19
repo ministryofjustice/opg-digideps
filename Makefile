@@ -84,7 +84,7 @@ else
 endif
 
 client-unit-tests: ##@unit-tests Run the client unit tests
-	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=dev -e APP_DEBUG=0 --rm client-unit-tests sh scripts/client-unit-tests.sh cov-html
+	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm client-unit-tests sh scripts/client-unit-tests.sh cov-html
 
 api-unit-tests: ##@unit-tests Run the api unit tests
 	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm api-unit-tests sh scripts/api_unit_test.sh cov-html
