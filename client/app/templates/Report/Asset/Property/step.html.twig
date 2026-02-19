@@ -70,23 +70,20 @@
             'inputPrefix' : '£',
             'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
         } ) }}
-    {% endif %}
-
-    {% if step == 2 %}
         {{ form_checkbox_group(form.isSubjectToEquityRelease, 'form.property.isSubjectToEquityRelease', {
             'fieldSetClass' : 'inline',
             'legendClass': 'govuk-fieldset__legend--s'
         }) }}
     {% endif %}
 
-    {% if step == 3 %}
+    {% if step == 2 %}
         {{ form_checkbox_group(form.hasCharges, 'form.property.hasCharges', {
             'fieldSetClass' : 'inline',
             'legendClass': 'govuk-fieldset__legend--s'
         }) }}
     {% endif %}
 
-    {% if step == 4 %}
+    {% if step == 3 %}
         <div class="push--bottom">
             <div class="govuk-form-group flush--bottom {% if not form.isRentedOut.vars.valid %}govuk-form-group--error{% endif %}">
                 {{ form_checkbox_group(form.isRentedOut, 'form.property.isRentedOut', {

@@ -50,18 +50,14 @@ class AssetTypeProperty extends AbstractType
                     'grouping' => true,
                     'scale' => 2,
                     'invalid_message' => 'asset.property.value.type',
-                ]);
-        }
-
-        if (2 === $this->step) {
-            $builder
+                ])
                 ->add('isSubjectToEquityRelease', FormTypes\ChoiceType::class, [
                     'choices' => ['Yes' => 'yes', 'No' => 'no'],
                     'expanded' => true,
                 ]);
         }
 
-        if (3 === $this->step) {
+        if (2 === $this->step) {
             $builder
                 ->add('hasCharges', FormTypes\ChoiceType::class, [
                     'choices' => ['Yes' => 'yes', 'No' => 'no'],
@@ -69,7 +65,7 @@ class AssetTypeProperty extends AbstractType
                 ]);
         }
 
-        if (4 === $this->step) {
+        if (3 === $this->step) {
             $builder
                 ->add('isRentedOut', FormTypes\ChoiceType::class, [
                     'choices' => ['Yes' => 'yes', 'No' => 'no'],
@@ -111,7 +107,7 @@ class AssetTypeProperty extends AbstractType
         return function (FormInterface $form) {
             /** @var $asset \App\Entity\Report\AssetProperty */
             $asset = $form->getData();
-            $val = ['property-address', 'property-occupants','property-owned','property-mortgage','property-value'];
+            $val = ['property-address', 'property-occupants','property-owned','property-mortgage','property-value','property-subject-equity-release'];
 
             if ('partly' == $asset->getOwned()) {
                 $val[] = 'property-owned-partly';
@@ -123,9 +119,8 @@ class AssetTypeProperty extends AbstractType
 
             return [
                 1 => $val,
-                2 => ['property-subject-equity-release'],
-                3 => ['property-has-charges'],
-                4 => ('yes' == $asset->getIsRentedOut())
+                2 => ['property-has-charges'],
+                3 => ('yes' == $asset->getIsRentedOut())
                     ? ['property-rented-out', 'property-rent-agree-date', 'property-rent-income-month']
                     : ['property-rented-out'],
             ][$this->step];
