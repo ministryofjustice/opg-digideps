@@ -23,3 +23,14 @@ Feature: View client details
         Given a Lay Deputy exists
         Given I view the lay deputy your details page
         Then I should not see the link for client details
+
+  @lay-pfa-high-completed-no-client-details
+  Scenario: A Lay user can see Client details in navigation bar
+    Given a Lay Deputy has a completed report with no client details
+    And I visit the report overview page
+    Then I should see "Client details"
+    When the Lay deputy navigates to client details page
+    And I click on the button to edit my client's details
+    And I click the save button
+    Then I should see validation errors for address and postcode fields
+    And I should not see the validation error for the court order date
