@@ -242,33 +242,28 @@ class AssetController extends AbstractController
                 return $this->redirect($this->generateUrl('assets_summary', ['reportId' => $reportId]));
             }
 
-            if (1 == $step) {
-                $stepUrlData['address'] = $asset->getAddress();
-                $stepUrlData['address2'] = $asset->getAddress2();
-                $stepUrlData['postcode'] = $asset->getPostcode();
-                $stepUrlData['county'] = $asset->getCounty();
-                $stepUrlData['occupants'] = $asset->getOccupants();
-                $stepUrlData['owned'] = $asset->getOwned();
-                $stepUrlData['owned_p'] = $asset->getOwnedPercentage();
-                $stepUrlData['has_mg'] = $asset->getHasMortgage();
-                $stepUrlData['mg_oa'] = $asset->getMortgageOutstandingAmount();
-                $stepUrlData['value'] = $asset->getValue();
-                $stepUrlData['ser'] = $asset->getIsSubjectToEquityRelease();
-                $stepUrlData['hc'] = $asset->getHasCharges();
-            }
+            $stepUrlData['address'] = $asset->getAddress();
+            $stepUrlData['address2'] = $asset->getAddress2();
+            $stepUrlData['postcode'] = $asset->getPostcode();
+            $stepUrlData['county'] = $asset->getCounty();
+            $stepUrlData['occupants'] = $asset->getOccupants();
+            $stepUrlData['owned'] = $asset->getOwned();
+            $stepUrlData['owned_p'] = $asset->getOwnedPercentage();
+            $stepUrlData['has_mg'] = $asset->getHasMortgage();
+            $stepUrlData['mg_oa'] = $asset->getMortgageOutstandingAmount();
+            $stepUrlData['value'] = $asset->getValue();
+            $stepUrlData['ser'] = $asset->getIsSubjectToEquityRelease();
+            $stepUrlData['hc'] = $asset->getHasCharges();
 
-            // last step: save
-            if ($step == $totalSteps) {
-                $this->restClient->post("report/$reportId/asset", $asset);
+            $this->restClient->post("report/$reportId/asset", $asset);
 
-                /** @var FormInterface $addAnother */
-                $addAnother = $form['addAnother'];
-                switch ($addAnother->getData()) {
-                    case 'yes':
-                        return $this->redirectToRoute('assets_type', ['reportId' => $reportId, 'from' => 'another']);
-                    case 'no':
-                        return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
-                }
+            /** @var FormInterface $addAnother */
+            $addAnother = $form['addAnother'];
+            switch ($addAnother->getData()) {
+                case 'yes':
+                    return $this->redirectToRoute('assets_type', ['reportId' => $reportId, 'from' => 'another']);
+                case 'no':
+                    return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
             }
 
             $stepRedirector->setStepUrlAdditionalParams([
