@@ -78,9 +78,7 @@
             'fieldSetClass' : 'inline',
             'legendClass': 'govuk-fieldset__legend--s'
         }) }}
-    {% endif %}
 
-    {% if step == 2 %}
         <div class="push--bottom">
             <div class="govuk-form-group flush--bottom {% if not form.isRentedOut.vars.valid %}govuk-form-group--error{% endif %}">
                 {{ form_checkbox_group(form.isRentedOut, 'form.property.isRentedOut', {

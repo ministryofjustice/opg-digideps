@@ -58,11 +58,7 @@ class AssetTypeProperty extends AbstractType
                 ->add('hasCharges', FormTypes\ChoiceType::class, [
                     'choices' => ['Yes' => 'yes', 'No' => 'no'],
                     'expanded' => true,
-                ]);
-        }
-
-        if (2 === $this->step) {
-            $builder
+                ])
                 ->add('isRentedOut', FormTypes\ChoiceType::class, [
                     'choices' => ['Yes' => 'yes', 'No' => 'no'],
                     'expanded' => true,
@@ -113,11 +109,14 @@ class AssetTypeProperty extends AbstractType
                 $val[] = 'property-mortgage-outstanding-amount';
             }
 
+            if ('yes' == $asset->getIsRentedOut()) {
+                $val[] = array_merge(['property-rented-out','property-rent-agree-date', 'property-rent-income-month']);
+            } else {
+                $val[] = 'property-rented-out';
+            }
+
             return [
                 1 => $val,
-                2 => ('yes' == $asset->getIsRentedOut())
-                    ? ['property-rented-out', 'property-rent-agree-date', 'property-rent-income-month']
-                    : ['property-rented-out'],
             ][$this->step];
         };
     }
