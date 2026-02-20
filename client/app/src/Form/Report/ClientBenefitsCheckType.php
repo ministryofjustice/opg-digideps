@@ -21,14 +21,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ClientBenefitsCheckType extends AbstractType
 {
     private int $step = 1;
-    private TranslatorInterface $translator;
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(private TranslatorInterface $translator)
     {
-        $this->translator = $translator;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->step = (int) $options['step'];
         $baseTransParams = ['%client%' => $options['label_translation_parameters']['clientFirstname']];
@@ -96,7 +94,7 @@ class ClientBenefitsCheckType extends AbstractType
         });
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(
             [
@@ -114,7 +112,7 @@ class ClientBenefitsCheckType extends AbstractType
             ->setRequired(['step', 'allow_delete_empty']);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'report-client-benefits-check';
     }
