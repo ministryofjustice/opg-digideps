@@ -8,6 +8,7 @@ Feature: Client benefits check - NDR users
         And I confirm I checked the clients benefit entitlement on '01/01/2021'
         And I confirm others receive money on the clients behalf
         And I add 2 types of money with values
+        Then I want to add another money recieved on the clients behalf
         And I add a type of money where I don't know the value
         And I have no further types of money to add
         Then the client benefits check summary page should contain the details I entered
@@ -38,6 +39,7 @@ Feature: Client benefits check - NDR users
         And I confirm I checked the clients benefit entitlement on '01/01/2021'
         And I confirm others receive money on the clients behalf
         And I add 2 types of money with values
+        Then I want to add another money recieved on the clients behalf
         And I add a type of money where I don't know the value
         And I have no further types of money to add
         And I 'remove' the last type of money I added
@@ -50,7 +52,6 @@ Feature: Client benefits check - NDR users
         And I confirm I have never checked the benefits the client is entitled to and provide a reason
         And I confirm others receive money on the clients behalf
         And I add 1 type of money with values
-        And I have no further types of money to add
         And I 'edit' the last type of money I added
         Then the client benefits check summary page should contain the details I entered
         Given I edit my response to do others receive money on a clients behalf to 'no'

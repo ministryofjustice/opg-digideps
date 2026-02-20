@@ -6,6 +6,8 @@ namespace App\Tests\Behat\v2\Reporting\Sections;
 
 use App\Entity\Report\Report;
 use App\Tests\Behat\BehatException;
+use Behat\Behat\Tester\Exception\PendingException;
+use Behat\Gherkin\Node\TableNode;
 
 trait ClientBenefitsCheckSectionTrait
 {
@@ -159,6 +161,8 @@ trait ClientBenefitsCheckSectionTrait
      */
     public function iAddMoneyTypeWithNoValue(): void
     {
+
+
         $this->iAmOnClientBenefitsCheckStep3Page();
 
         $moneyTypesXpath = "//fieldset[contains(@class, 'add-another__item')]";
@@ -202,7 +206,6 @@ trait ClientBenefitsCheckSectionTrait
         $this->pressButton('Add money');
 
         $this->iAddNumberOfMoneyTypesWithAddAnother($numOfMoneyTypes);
-        $this->iHaveNoFurtherTypesOfMoneyToAdd();
     }
 
     /**
@@ -214,26 +217,28 @@ trait ClientBenefitsCheckSectionTrait
 
         $numOfMoneyTypes = $numOfMoneyTypes - 1;
 
-        foreach (range(0, $numOfMoneyTypes) as $index) {
+        for ($i = 0; $i <= $numOfMoneyTypes; $i++) {
             $this->fillInField(
-                "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][$index][moneyType]",
+                "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][0][moneyType]",
                 $this->faker->sentence(3),
                 'moneyType'
             );
 
             $this->fillInField(
-                "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][$index][whoReceivedMoney]",
+                "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][0][whoReceivedMoney]",
                 $this->faker->sentence(2),
                 'moneyType'
             );
 
             $this->fillInField(
-                "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][$index][amount]",
+                "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][0][amount]",
                 $this->faker->numberBetween(10, 2000),
                 'moneyType'
             );
 
-            $this->addAnotherClientBenefit('yes');
+            $addAnother = $i != $numOfMoneyTypes ? 'yes' : 'no';
+
+            $this->addAnotherClientBenefit($addAnother);
             $this->pressButton('Save and continue');
         }
     }
@@ -255,7 +260,7 @@ trait ClientBenefitsCheckSectionTrait
      */
     public function iActionMoneyTypeIAdded(string $action): void
     {
-        $this->iAmOnClientBenefitsCheckSummaryPage();
+//        $this->iAmOnClientBenefitsCheckSummaryPage();
 
         $moneyTypeAnswers = $this->getSectionAnswers('moneyType')[0];
         $moneyTypeDescription = $moneyTypeAnswers[array_key_first($moneyTypeAnswers)];
@@ -531,5 +536,17 @@ trait ClientBenefitsCheckSectionTrait
     private function addAnotherClientBenefit($anotherFlag): void
     {
         $this->chooseOption('report-client-benefits-check[addAnother]', $anotherFlag);
+    }
+
+    /**
+     * @Then /^I want to add another money recieved on the clients behalf$/
+     */
+    public function iWantToAddAnotherMoneyRecievedOnTheClientsBehalf()
+    {
+        if (!$this->iAmOnPage('/\/client-benefits-check\/summary/')) {
+            throw new BehatException('Not on Benefits Summary page');
+        }
+
+        $this->pressButton('Add money');
     }
 }

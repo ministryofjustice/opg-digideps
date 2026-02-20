@@ -15,7 +15,7 @@ use Doctrine\ORM\EntityManager;
 class CourtOrderTestHelper
 {
     public static function generateCourtOrder(
-        EntityManager $em,
+        EntityManagerInterface $em,
         Client $client,
         string $courtOrderUid,
         string $status = 'ACTIVE',
@@ -25,7 +25,6 @@ class CourtOrderTestHelper
         bool $deputyIsActive = true,
         \DateTime $orderDate = (new \DateTime()),
     ): CourtOrder {
-        /** @var CourtOrder $courtOrder */
         $courtOrder = (new CourtOrder())
             ->setCourtOrderUid($courtOrderUid)
             ->setClient($client)
