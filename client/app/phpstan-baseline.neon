@@ -7896,51 +7896,6 @@ parameters:
 			path: src/Form/Report/Asset/AssetTypeOther.php
 
 		-
-			message: "#^Cannot access offset 'day' on mixed\\.$#"
-			count: 1
-			path: src/Form/Report/Asset/AssetTypeProperty.php
-
-		-
-			message: "#^Cannot access offset 'month' on mixed\\.$#"
-			count: 1
-			path: src/Form/Report/Asset/AssetTypeProperty.php
-
-		-
-			message: "#^Cannot access offset 'rentAgreementEndDate' on mixed\\.$#"
-			count: 1
-			path: src/Form/Report/Asset/AssetTypeProperty.php
-
-		-
-			message: "#^Cannot access offset 'year' on mixed\\.$#"
-			count: 1
-			path: src/Form/Report/Asset/AssetTypeProperty.php
-
-		-
-			message: "#^Cannot call method getHasMortgage\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Form/Report/Asset/AssetTypeProperty.php
-
-		-
-			message: "#^Cannot call method getIsRentedOut\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Form/Report/Asset/AssetTypeProperty.php
-
-		-
-			message: "#^Cannot call method getOwned\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Form/Report/Asset/AssetTypeProperty.php
-
-		-
-			message: "#^Method App\\\\Form\\\\Report\\\\Asset\\\\AssetTypeProperty\\:\\:getValidationGroups\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/Asset/AssetTypeProperty.php
-
-		-
-			message: "#^PHPDoc tag @var has invalid value \\(\\$asset \\\\App\\\\Entity\\\\Report\\\\AssetProperty\\)\\: Unexpected token \"\\$asset\", expected type at offset 9$#"
-			count: 1
-			path: src/Form/Report/Asset/AssetTypeProperty.php
-
-		-
 			message: "#^Call to method trans\\(\\) on an unknown class App\\\\Form\\\\Report\\\\Asset\\\\Translator\\.$#"
 			count: 1
 			path: src/Form/Report/Asset/AssetTypeTitle.php

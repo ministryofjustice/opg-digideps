@@ -76,7 +76,11 @@ class AssetTypeProperty extends AbstractType
                 $data = $event->getData();
 
                 // rentAgreementEndDate; set day=01 if month and year are set
-                if (!empty($data['rentAgreementEndDate']['month']) && !empty($data['rentAgreementEndDate']['year'])) {
+                if (
+                    is_array($data) &&
+                    isset($data['rentAgreementEndDate']) && is_array($data['rentAgreementEndDate']) &&
+                    !empty($data['rentAgreementEndDate']['month']) && !empty($data['rentAgreementEndDate']['year'])
+                ) {
                     $data['rentAgreementEndDate']['day'] = '01';
                     $event->setData($data);
                 }
@@ -88,10 +92,10 @@ class AssetTypeProperty extends AbstractType
         ->add('save', FormTypes\SubmitType::class);
     }
 
-    protected function getValidationGroups()
+    protected function getValidationGroups(): callable
     {
         return function (FormInterface $form) {
-            /** @var $asset \App\Entity\Report\AssetProperty */
+            /** @var \App\Entity\Report\AssetProperty $asset */
             $asset = $form->getData();
             $val = ['property-address', 'property-occupants','property-owned','property-mortgage','property-value','property-subject-equity-release','property-has-charges'];
 
