@@ -9,6 +9,7 @@ use App\Entity\Report\BankAccount;
 use App\Entity\Report\MoneyTransaction;
 use App\Entity\Report\Status;
 use App\Form\AddAnotherRecordType;
+use App\Form\AddAnotherThingType;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\DoesMoneyInExistType;
 use App\Form\Report\MoneyTransactionType;
@@ -188,6 +189,7 @@ class MoneyInController extends AbstractController
             ->setRouteBaseParams(['reportId' => $reportId, 'transactionId' => $transactionId]);
 
         // create (add mode) or load transaction (edit mode)
+        $addingItem = false;
         if ($transactionId) {
             $transaction = array_filter($report->getMoneyTransactionsIn(), function ($t) use ($transactionId): bool {
                 if ($t->getBankAccount() instanceof BankAccount) {
@@ -199,6 +201,7 @@ class MoneyInController extends AbstractController
             $transaction = array_shift($transaction);
         } else {
             $transaction = new MoneyTransaction();
+            $addingItem = true;
         }
 
         if (is_null($transaction)) {
@@ -223,10 +226,17 @@ class MoneyInController extends AbstractController
                 'report' => $report,
             ]
         );
+
+        // if we are adding an item and on the second page, we need the "add another" option
+        if ($addingItem && 2 === $step) {
+            $form->add('addAnother', AddAnotherThingType::class);
+        }
+
         $form->handleRequest($request);
 
         /** @var SubmitButton $saveButton */
         $saveButton = $form->get('save');
+
         if ($saveButton->isClicked() && $form->isSubmitted() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
             if (1 == $step) {
@@ -234,19 +244,28 @@ class MoneyInController extends AbstractController
                 $stepRedirector->setFromPage(null);
 
                 $stepUrlData['category'] = $transaction->getCategory();
-            } elseif ($step == $totalSteps) {
-                if ($transactionId) { // edit
+            } elseif ($step === $totalSteps) {
+                if ($addingItem) {
+                    // add
+                    $this->restClient->post("/report/$reportId/money-transaction", $transaction, ['transaction', 'account']);
+
+                    // check whether we are adding another after this one and redirect appropriately
+                    switch ($form['addAnother']?->getData()) {
+                        case 'yes':
+                            return $this->redirectToRoute('money_in_step', ['step' => 1, 'reportId' => $reportId]);
+                        case 'no':
+                            return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
+                    }
+                } else {
+                    // edit
                     $this->addFlash(
                         'notice',
                         'Entry edited'
                     );
+
                     $this->restClient->put("/report/$reportId/money-transaction/$transactionId", $transaction, ['transaction', 'account']);
 
                     return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
-                } else { // add
-                    $this->restClient->post("/report/$reportId/money-transaction", $transaction, ['transaction', 'account']);
-
-                    return $this->redirectToRoute('money_in_add_another', ['reportId' => $reportId]);
                 }
             }
 
@@ -266,30 +285,6 @@ class MoneyInController extends AbstractController
             'backLink' => $stepRedirector->getBackLink(),
             'skipLink' => null,
             'categoriesGrouped' => MoneyTransaction::getCategoriesGrouped('in'),
-        ];
-    }
-
-    #[Route(path: '/report/{reportId}/money-in/add_another', name: 'money_in_add_another')]
-    #[Template('@App/Report/MoneyIn/addAnother.html.twig')]
-    public function addAnotherAction(Request $request, int $reportId): RedirectResponse|array
-    {
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId);
-
-        $form = $this->createForm(AddAnotherRecordType::class, $report, ['translation_domain' => 'report-money-transaction']);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            switch ($form['addAnother']->getData()) {
-                case 'yes':
-                    return $this->redirectToRoute('money_in_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'money_in_add_another']);
-                case 'no':
-                    return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
-            }
-        }
-
-        return [
-            'form' => $form->createView(),
-            'report' => $report,
         ];
     }
 

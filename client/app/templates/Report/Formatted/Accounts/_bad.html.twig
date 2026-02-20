@@ -6,21 +6,21 @@
 
     <div class="box-contain">
 
-        <div class="third-width tight">
+        <div>
             <div class="box flush">
                 <div class="message">Report closing balance:</div>
                 <div class="total">&pound;{{ report.calculatedBalance | money_format }}</div>
             </div>
         </div>
 
-        <div class="third-width tight">
+        <div>
             <div class="box flush">
                 <div class="message">Accounts closing balance:</div>
                 <div class="total">&pound;{{ report.accountsClosingBalanceTotal | money_format }}</div>
             </div>
         </div>
 
-        <div class="third-width tight last">
+        <div>
             <div class="box flush">
                 <div class="message">Difference:</div>
                 <div class="total">&pound;{{ report.totalsOffset | abs | money_format }}</div>

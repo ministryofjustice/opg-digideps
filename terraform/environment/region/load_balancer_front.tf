@@ -1,8 +1,12 @@
+locals {
+  maintenance_mode = local.environment == "production02" ? "*" : "/dd-maintenance"
+}
+
 resource "aws_lb" "front" {
   name                       = "front-${local.environment}"
   internal                   = false #tfsec:ignore:aws-elb-alb-not-public - This is a public LB
   load_balancer_type         = "application"
-  subnets                    = var.account.use_new_network ? data.aws_subnet.load_balancer[*].id : data.aws_subnet.public[*].id
+  subnets                    = data.aws_subnet.load_balancer[*].id
   idle_timeout               = 300
   drop_invalid_header_fields = true
 
@@ -55,7 +59,7 @@ resource "aws_lb_listener_rule" "front_maintenance" {
 
   condition {
     path_pattern {
-      values = ["/dd-maintenance"]
+      values = [local.maintenance_mode]
     }
   }
 }
@@ -81,7 +85,7 @@ resource "aws_lb_target_group" "front" {
   port                 = 80
   protocol             = "HTTP"
   target_type          = "ip"
-  vpc_id               = var.account.use_new_network ? data.aws_vpc.main[0].id : data.aws_vpc.vpc.id
+  vpc_id               = data.aws_vpc.main.id
   deregistration_delay = 0
   tags                 = var.default_tags
 

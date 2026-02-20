@@ -11,21 +11,12 @@ use Monolog\Logger;
 
 class AwsAuditLogHandler extends AbstractProcessingHandler
 {
-    /** @var CloudWatchLogsClient */
-    private $client;
-
-    /** @var string */
-    private $group;
-
-    /**
-     * @param int  $level
-     * @param bool $bubble
-     */
-    public function __construct(CloudWatchLogsClient $client, $group, $level = Logger::NOTICE, $bubble = true)
-    {
-        $this->client = $client;
-        $this->group = $group;
-
+    public function __construct(
+        private readonly CloudWatchLogsClient $client,
+        private readonly string $group,
+        int $level = Logger::NOTICE,
+        bool $bubble = true
+    ) {
         parent::__construct($level, $bubble);
     }
 

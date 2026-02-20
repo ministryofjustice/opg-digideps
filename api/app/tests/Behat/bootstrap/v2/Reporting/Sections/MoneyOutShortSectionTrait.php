@@ -271,6 +271,8 @@ trait MoneyOutShortSectionTrait
         $this->iAnswerToTakingMoneyOutOnTheClientsBehalf('Yes');
         $this->iClickSaveAndContinue();
 
+        $this->iAddOneCategoryOfMoneyPaidOut();
+
         $this->iAnswerNumberOneOffPaymentsOver1k(1);
 
         $this->iAmOnMoneyOutShortSummaryPage();

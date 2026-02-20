@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
+use App\Entity\Report\Report;
+
 trait ReportOverviewTrait
 {
     private array $sectionList = [];
+    private Report $submittedReport;
 
     /**
      * @Then I should see the correct client details
@@ -98,6 +101,33 @@ trait ReportOverviewTrait
             $email,
             $banner->getText(),
             'Asserting correct contact email found on Overview page'
+        );
+    }
+
+    /**
+     * @Given the Public Authority Admin Deputy has a submitted report
+     */
+    public function thePublicAuthorityAdminDeputyHasASubmittedReport(): void
+    {
+        $deputy = $this->fixtureUsers[0];
+        $this->submittedReport = $this->createSubmittedReportForClient(
+            clientId: $deputy->getClientId(),
+            type: '102',
+            submitDate: new \DateTime()
+        );
+    }
+
+    /**
+     * @Given I should see the correct report details
+     */
+    public function iShouldSeeTheCorrectReportDetails(): void
+    {
+        $expectedSubmitDate = $this->submittedReport->getSubmitDate()->format('j F Y');
+
+        $this->assertStringContainsString(
+            $expectedSubmitDate,
+            $this->getPageContent(),
+            "Report submit date '$expectedSubmitDate' should be visible on the report-overview page"
         );
     }
 

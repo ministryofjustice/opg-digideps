@@ -212,7 +212,7 @@ class Checklist implements SynchronisableInterface
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @AppAssert\YesNoNa(groups={"submit-profDeputyCosts-checklist"})
+     * @Assert\NotBlank(message="checklist.paymentsMatchCostCertificate.notBlank", groups={"submit-profDeputyCosts-checklist"})
      */
     private $paymentsMatchCostCertificate;
 
@@ -221,7 +221,7 @@ class Checklist implements SynchronisableInterface
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @AppAssert\YesNoNa(groups={"submit-profDeputyCosts-checklist"})
+     * @Assert\NotBlank(message="checklist.profCostsReasonableAndProportionate.notBlank", groups={"submit-profDeputyCosts-checklist"})
      */
     private $profCostsReasonableAndProportionate;
 
@@ -230,7 +230,7 @@ class Checklist implements SynchronisableInterface
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @AppAssert\YesNoNa(groups={"submit-profDeputyCosts-checklist"})
+     * @Assert\NotBlank(message="checklist.hasDeputyOverchargedFromPreviousEstimates.notBlank", groups={"submit-profDeputyCosts-checklist"})
      */
     private $hasDeputyOverchargedFromPreviousEstimates;
 

@@ -372,7 +372,7 @@ trait FormFillingTrait
 
         $this->pressButton('Save and continue');
 
-        return list($currentValueInt, $newValue) = [$currentValueInt, $newValue];
+        return [$currentValueInt, $newValue];
     }
 
     /**

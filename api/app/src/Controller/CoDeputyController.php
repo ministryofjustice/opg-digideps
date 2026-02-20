@@ -36,33 +36,6 @@ class CoDeputyController extends RestController
         return $result;
     }
 
-    #[Route(path: 'add/{clientId}', methods: ['POST'])]
-    #[IsGranted(attribute: 'ROLE_DEPUTY')]
-    public function add(Request $request, int $clientId): User
-    {
-        $data = $this->formatter->deserializeBodyContent($request, [
-            'email' => 'notEmpty',
-            'firstname' => 'notEmpty',
-            'lastname' => 'notEmpty',
-        ]);
-
-        /** @var User $loggedInUser */
-        $loggedInUser = $this->getUser();
-        $newUser = new User();
-
-        $newUser->setFirstname($data['firstname']);
-        $newUser->setLastname($data['lastname']);
-        $newUser->setEmail($data['email']);
-        $newUser->recreateRegistrationToken();
-        $newUser->setRoleName(User::ROLE_LAY_DEPUTY);
-
-        $this->userService->addUser($loggedInUser, $newUser, $clientId);
-
-        $this->formatter->setJmsSerialiserGroups(['user']);
-
-        return $newUser;
-    }
-
     #[Route(path: '{id}', methods: ['PUT'])]
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function update(Request $request, $id): array

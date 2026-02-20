@@ -253,12 +253,7 @@ def get_db_endpoint(environment):
     if environment == "local":
         return "http://postgres"
     else:
-        instance_environment = (
-            # NEW_NETWORK_SWITCH
-            environment
-            if environment != "production"
-            else "production02"
-        )
+        instance_environment = environment
         instance_id = f"api-{instance_environment}-0"
         session = assume_custom_sql_role(environment)
         rds = session.client("rds", region_name="eu-west-1")
@@ -288,7 +283,7 @@ def main(
     db_endpoint = get_db_endpoint(environment)
 
     # NEW_NETWORK_SWITCH
-    workspace = environment if environment != "production" else "production02"
+    workspace = environment
     account_name = get_account_name(environment)
     function_name = (
         "function" if environment == "local" else f"custom-sql-query-{account_name}"

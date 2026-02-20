@@ -31,7 +31,7 @@ list_databases() {
 
   echo
   echo "To connect: database connect <environment|database> <read|edit>"
-  echo "Example:    database connect production02 read"
+  echo "Example:    database connect production read"
 }
 
 connect_to_database() {
@@ -221,7 +221,7 @@ Available commands:
 
   database connect <environment|database> <read|edit>
     → Connects you to the given database using psql
-    → Example: database connect production02 read
+    → Example: database connect production read
 EOM
 EOF
 

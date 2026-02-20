@@ -110,6 +110,14 @@ class FixtureController extends AbstractController
             $this->em->persist($deputyPreRegistration);
         }
 
+        if (User::TYPE_LAY === $fromRequest['deputyType']) {
+            $deputy = $this->generateDeputy($user);
+            $courtOrder = $this->generateCourtOrder($client);
+
+            $deputy->associateWithCourtOrder($courtOrder);
+            $this->em->persist($deputy);
+        }
+
         if (!isset($fromRequest['reportType']) || !is_string($fromRequest['reportType'])) {
             throw new \InvalidArgumentException('Missing or invalid "reportType" field in request.');
         }
@@ -122,6 +130,10 @@ class FixtureController extends AbstractController
         } else {
             $report = $this->generateReport($fromRequest, $client);
             $this->em->persist($report);
+            if (User::TYPE_LAY === $fromRequest['deputyType']) {
+                $courtOrder->addReport($report);
+                $this->em->persist($courtOrder);
+            }
         }
 
         if (User::TYPE_LAY === $fromRequest['deputyType']) {
@@ -757,6 +769,23 @@ class FixtureController extends AbstractController
 
         $this->em->persist($coDeputyPreRegistration);
         $this->em->persist($coDeputy);
+        $this->em->flush();
+
+        $coDeputyRecord = $this->generateDeputy($coDeputy);
+
+        $deputyRecord = $this->deputyRepository->findOneBy(['email1' => $deputy->getEmail()]);
+        if (!$deputyRecord instanceof Deputy) {
+            throw new \RuntimeException('No deputy found with email: ' . $deputy->getEmail());
+        }
+
+        $courtOrder = $deputyRecord->getCourtOrdersWithStatus()[0]['courtOrder'] ?? null;
+        if (empty($courtOrder)) {
+            throw new \RuntimeException('No court order found for deputy with email ' . $deputy->getEmail());
+        }
+
+        $coDeputyRecord->associateWithCourtOrder($courtOrder);
+        $this->em->persist($coDeputyRecord);
+        $this->em->flush();
 
         return $coDeputy;
     }

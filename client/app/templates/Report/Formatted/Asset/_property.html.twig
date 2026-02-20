@@ -18,7 +18,7 @@
 
         {# property details #}
         <div class="box">
-            <div class="half-width first">
+            <div>
                 <dl class="labelvalue">
                     <dt class="label">Who lives at the property?</dt>
                     <dd class="value">{{ asset.occupants | nl2br }}</dd>
@@ -51,7 +51,7 @@
                 </table>
             </div>
 
-            <div class="half-width">
+            <div>
                 <dl class="labelvalue">
                     <dt class="label">Estimated value of the property?</dt>
                     <dd class="value">&pound;{{ asset.value | money_format }}</dd>

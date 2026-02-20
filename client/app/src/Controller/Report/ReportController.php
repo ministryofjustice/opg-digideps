@@ -19,14 +19,12 @@ use App\Form\Report\ReportDeclarationType;
 use App\Form\Report\ReportType;
 use App\Model\FeedbackReport;
 use App\Service\Client\Internal\ClientApi;
-use App\Service\Client\Internal\PreRegistrationApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\Internal\SatisfactionApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Csv\TransactionsCsvGenerator;
 use App\Service\File\Storage\S3Storage;
-use App\Service\NdrStatusService;
 use App\Service\Redirector;
 use App\Service\ReportSubmissionService;
 use Symfony\Bridge\Twig\Attribute\Template;
@@ -35,7 +33,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ReportController extends AbstractController
@@ -96,142 +93,17 @@ class ReportController extends AbstractController
         'wish-to-provide-documentation',
     ];
 
-    private static array $ndrGroupsForValidation = [
-        'client',
-        'client-ndr',
-        'client-benefits-check',
-        'client-case-number',
-        'client-reports',
-        'damages',
-        'ndr',
-        'ndr-action-give-gifts',
-        'ndr-action-more-info',
-        'ndr-action-property',
-        'ndr-account',
-        'ndr-asset',
-        'ndr-debt',
-        'ndr-debt-management',
-        'ndr-expenses',
-        'one-off',
-        'pension',
-        'report',
-        'state-benefits',
-        'user',
-        'user-clients',
-        'visits-care',
-    ];
-
     public function __construct(
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
         private readonly UserApi $userApi,
         private readonly ClientApi $clientApi,
         private readonly SatisfactionApi $satisfactionApi,
-        private readonly PreRegistrationApi $preRegistrationApi,
         private readonly FormFactoryInterface $formFactory,
         private readonly TranslatorInterface $translator,
         private readonly ObservableEventDispatcher $eventDispatcher,
         private readonly S3Storage $s3Storage,
     ) {
-    }
-
-    /**
-     * List of reports.
-     */
-    #[Route(path: '/client/{clientId}', name: 'lay_home')]
-    #[Template('@App/Report/Report/index.html.twig')]
-    public function clientHomepageAction(Redirector $redirector, string $clientId): RedirectResponse|array
-    {
-        $ndrEnabledOnDeputy = false;
-        $users = $this->clientApi->getWithUsersV2(intval($clientId))->getUsers();
-
-        foreach ($users as $user) {
-            if ($user->isNdrEnabled()) {
-                $ndrEnabledOnDeputy = true;
-            }
-        }
-
-        if ($ndrEnabledOnDeputy) {
-            $user = $this->userApi->getUserWithData();
-        } else {
-            // not ideal to specify both user-client and client-users, but can't fix this differently with DDPB-1711. Consider a separate call to get
-            // due to the way
-            $user = $this->userApi->getUserWithData(['user-clients', 'client', 'client-reports', 'report', 'status']);
-        }
-
-        // redirect if user has missing details or is on wrong page
-        $route = $redirector->getCorrectRouteIfDifferent($user, 'lay_home');
-        if (is_string($route)) {
-            return $this->redirectToRoute($route);
-        }
-
-        $clientWithCoDeputies = $this->clientApi->getWithUsersV2(intval($clientId));
-        $coDeputies = $clientWithCoDeputies->getCoDeputies();
-
-        $resultsArray = [
-            'coDeputies' => $coDeputies,
-            'inviteUrl' => $this->generateUrl('add_co_deputy', ['clientId' => $clientId]),
-            'clientHasCoDeputies' => $this->preRegistrationApi->clientHasCoDeputies($clientWithCoDeputies->getCaseNumber()),
-        ];
-
-        $client = $this->clientApi->getById(intval($clientId));
-
-        if ($ndrEnabledOnDeputy && $client->getNdr()) {
-            $ndr = $this->reportApi->getNdr($client->getNdr()->getId(), self::$ndrGroupsForValidation);
-
-            return array_merge(
-                [
-                    'ndrEnabled' => true,
-                    'client' => $client,
-                    'ndr' => $client->getNdr(),
-                    'reportsSubmitted' => $client->getSubmittedReports(),
-                    'reportActive' => $client->getActiveReport(),
-                    'ndrStatus' => new NdrStatusService($ndr),
-                ],
-                $resultsArray
-            );
-        }
-
-        return array_merge(
-            [
-                'ndrEnabled' => false,
-                'client' => $client,
-            ],
-            $resultsArray
-        );
-    }
-
-    /**
-     * List of reports.
-     */
-    #[Route(path: '/choose-a-client', name: 'choose_a_client')]
-    #[IsGranted(attribute: 'ROLE_LAY_DEPUTY')] // *
-    #[Template('@App/Index/choose-a-client.html.twig')]
-    public function chooseAClientAction(Redirector $redirector): RedirectResponse|array
-    {
-        $user = $this->userApi->getUserWithData(['user-clients', 'client']);
-
-        // redirect if user has missing details or is on wrong page
-        $route = $redirector->getCorrectRouteIfDifferent($user, 'choose_a_client');
-        if (is_string($route)) {
-            return $this->redirectToRoute($route);
-        }
-
-        $groups = ['client', 'client-name', 'client-case-number', 'client-reports', 'client-ndr', 'ndr', 'report', 'status'];
-        $clients = [];
-        $deputyUid = $user->getDeputyUid();
-        if (!is_null($deputyUid)) {
-            $clients = $this->clientApi->getAllClientsByDeputyUid($deputyUid, $groups);
-        }
-
-        if (empty($clients)) {
-            throw $this->createNotFoundException('Client not added');
-        }
-
-        return [
-            'user' => $user,
-            'clients' => $clients,
-        ];
     }
 
     /**
@@ -320,104 +192,48 @@ class ReportController extends AbstractController
     #[Template('@App/Report/Report/overview.html.twig')]
     public function overviewAction(Redirector $redirector, int $reportId): RedirectResponse|Response
     {
-        $reportJmsGroup = ['status', 'balance', 'user', 'client', 'client-reports', 'balance-state'];
-        // redirect if user has missing details or is on wrong page
         $user = $this->userApi->getUserWithData();
 
+        // redirect if user has missing details or is on wrong page
         $route = $redirector->getCorrectRouteIfDifferent($user, 'report_overview');
         if (is_string($route)) {
             return $this->redirectToRoute($route);
         }
 
-        // get all the groups (needed by EntityDir\Report\Status
-        $clientId = $this->reportApi->getReportIfNotSubmitted($reportId, $reportJmsGroup)->getClient()->getId();
+        $reportJmsGroup = ['status', 'balance', 'user', 'client', 'client-reports', 'balance-state'];
 
-        $client = $this->generateClient($user, "$clientId");
+        // get all the groups (needed by EntityDir\Report\Status)
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, $reportJmsGroup);
 
-        $deputy = $client->getDeputy();
+        $client = $this->generateClient($user, "{$report->getClient()->getId()}");
 
-        $activeReportId = null;
+        $activeReport = null;
+        $template = '@App/Report/Report/overview.html.twig';
+
         if ($user->isDeputyOrg()) {
-            // PR and PROF: unsubmitted at the top (if exists), active below (
             $template = '@App/Org/ClientProfile/overview.html.twig';
 
-            // if there is an unsubmitted report, swap them, so links will both show the unsubmitted first
+            // if there is an unsubmitted report, put that report above the current (active) report
+            // and mark the unsubmitted report as "incomplete"
             $unsubmittedReport = $client->getUnsubmittedReport();
-            if ($unsubmittedReport instanceof Report) {
-                $reportId = $unsubmittedReport->getId();
 
-                $activeReport = $client->getActiveReport();
-                if ($activeReport instanceof Report) {
-                    $activeReportId = $activeReport->getId();
-                }
+            if (!is_null($unsubmittedReport)) {
+                $activeReport = $report;
+
+                $report = $this->reportApi->getReportIfNotSubmitted(
+                    $unsubmittedReport->getId(),
+                    $reportJmsGroup,
+                );
             }
-        } else { // Lay, so keep the report id
-            $template = '@App/Report/Report/overview.html.twig';
         }
-
-        $report = $this->reportApi->getReportIfNotSubmitted(
-            $reportId,
-            $reportJmsGroup,
-        );
-
-        $activeReport = $activeReportId ? $this->reportApi->getReportIfNotSubmitted($activeReportId, $reportJmsGroup) : null;
 
         return $this->render($template, [
             'user' => $user,
             'client' => $client,
-            'deputy' => $deputy,
+            'deputy' => $client->getDeputy(),
             'report' => $report,
             'activeReport' => $activeReport,
         ]);
-    }
-
-    /**
-     * Due to some profs having many dozens of deputies attached to clients, we need to be conservative about generating
-     * the list. It's needed for a permissions check on add client contact (logged-in user has to be associated).
-     */
-    private function generateClient(User $user, string $clientId): Client
-    {
-        $jms = $this->determineJmsGroups($user);
-
-        /* Get client with all other JMS groups required */
-        $client = $this->restClient->get("client/$clientId", 'Client', $jms);
-
-        if ($user->isDeputyOrg()) {
-            /*
-            Separate call to get client Users as query taking too long for some profs with many deputies attached.
-            We only need the user id for the add client contact permission check
-             */
-            $clientWithUsers = $this->restClient->get("client/$clientId", 'Client', ['user-id', 'client-users']);
-            $client->setUsers($clientWithUsers->getUsers());
-        }
-
-        return $client;
-    }
-
-    /**
-     * Method to return JMS groups required for overview page.
-     */
-    private function determineJmsGroups(User $user): array
-    {
-        $jms = [
-            'client',
-            'user',
-            'client-reports',
-            'report', // needed ?
-            'client-clientcontacts',
-            'clientcontact',
-            'client-notes',
-            'notes',
-        ];
-
-        if ($user->isLayDeputy()) {
-            $jms[] = 'client-users';
-        } elseif ($user->isDeputyOrg()) {
-            $jms[] = 'client-deputy';
-            $jms[] = 'deputy';
-        }
-
-        return $jms;
     }
 
     #[Route(path: '/report/{reportId}/confirm-details', name: 'report_confirm_details')]
@@ -721,5 +537,53 @@ class ReportController extends AbstractController
             'email' => $deputy->getEmail(),
             'editUrl' => $editUrl,
         ];
+    }
+    /**
+     * Due to some profs having many dozens of deputies attached to clients, we need to be conservative about generating
+     * the list. It's needed for a permissions check on add client contact (logged-in user has to be associated).
+     */
+    private function generateClient(User $user, string $clientId): Client
+    {
+        $jms = $this->determineJmsGroups($user);
+
+        /* Get client with all other JMS groups required */
+        $client = $this->restClient->get("client/$clientId", 'Client', $jms);
+
+        if ($user->isDeputyOrg()) {
+            /*
+            Separate call to get client Users as query taking too long for some profs with many deputies attached.
+            We only need the user id for the add client contact permission check
+             */
+            $clientWithUsers = $this->restClient->get("client/$clientId", 'Client', ['user-id', 'client-users']);
+            $client->setUsers($clientWithUsers->getUsers());
+        }
+
+        return $client;
+    }
+
+    /**
+     * Method to return JMS groups required for overview page.
+     */
+    private function determineJmsGroups(User $user): array
+    {
+        $jms = [
+            'client',
+            'user',
+            'client-reports',
+            'report', // needed ?
+            'client-clientcontacts',
+            'clientcontact',
+            'client-notes',
+            'notes',
+        ];
+
+        if ($user->isLayDeputy()) {
+            $jms[] = 'client-users';
+        } elseif ($user->isDeputyOrg()) {
+            $jms[] = 'client-deputy';
+            $jms[] = 'deputy';
+        }
+
+        return $jms;
     }
 }

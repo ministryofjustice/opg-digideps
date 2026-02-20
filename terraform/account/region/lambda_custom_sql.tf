@@ -1,5 +1,4 @@
 locals {
-  lambda_custom_sql_name      = "custom-sql-query"
   lambda_custom_sql_name_tool = "custom-sql-tool"
   custom_sql_lambda_env_vars = {
     ENVIRONMENT       = var.account.name
@@ -30,9 +29,8 @@ locals {
   ])
 }
 
-# ===== LAMBDA FUNCTION AND LOG GROUP =====
-resource "aws_lambda_function" "custom_sql_query" {
-  function_name = "${local.lambda_custom_sql_name}-${var.account.name}"
+resource "aws_lambda_function" "custom_sql_tool" {
+  function_name = "${local.lambda_custom_sql_name_tool}-${var.account.name}"
   description   = "Function to run custom sql queries"
   image_uri     = "${data.aws_ecr_repository.custom_sql_query.repository_url}:latest"
   package_type  = "Image"
@@ -42,8 +40,8 @@ resource "aws_lambda_function" "custom_sql_query" {
   depends_on    = [aws_cloudwatch_log_group.custom_sql_query]
 
   vpc_config {
-    subnet_ids         = aws_subnet.private[*].id
-    security_group_ids = [aws_security_group.custom_sql_query.id]
+    subnet_ids         = module.network.application_subnets[*].id
+    security_group_ids = [aws_security_group.custom_sql_tool.id]
   }
 
   tracing_config {
@@ -59,12 +57,12 @@ resource "aws_lambda_function" "custom_sql_query" {
 }
 
 resource "aws_cloudwatch_log_group" "custom_sql_query" {
-  name              = "/aws/lambda/${local.lambda_custom_sql_name}"
+  name              = "/aws/lambda/${local.lambda_custom_sql_name_tool}"
   retention_in_days = 14
   kms_key_id        = module.logs_kms.eu_west_1_target_key_arn
   tags = merge(
     var.default_tags,
-    { Name = "${var.account.name}-custom-sql-query" },
+    { Name = "${var.account.name}-custom-sql-tool" },
   )
 }
 
@@ -77,15 +75,15 @@ data "aws_iam_role" "custom_sql_developer_role" {
 resource "aws_lambda_permission" "allow_invoke_from_users" {
   statement_id  = "AllowExecutionFromCLI"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.custom_sql_query.function_name
+  function_name = aws_lambda_function.custom_sql_tool.function_name
   principal     = data.aws_iam_role.custom_sql_developer_role.arn
 }
 
 # ===== CUSTOM SQL SECURITY GROUP =====
 # DB rules are applied to this from the environment terraform for each environment
-resource "aws_security_group" "custom_sql_query" {
-  name        = "${var.account.name}-${local.lambda_custom_sql_name}"
-  vpc_id      = aws_vpc.main.id
+resource "aws_security_group" "custom_sql_tool" {
+  name        = "${var.account.name}-${local.lambda_custom_sql_name_tool}"
+  vpc_id      = module.network.vpc.id
   description = "Custom SQL Shared Lambda"
 
   lifecycle {
@@ -96,35 +94,35 @@ resource "aws_security_group" "custom_sql_query" {
 
   tags = merge(
     var.default_tags,
-    { Name = "${var.account.name}-custom-sql-query" },
+    { Name = "${var.account.name}-custom-sql-tool" },
   )
 }
 
-data "aws_security_group" "secrets_endpoint" {
+data "aws_security_group" "secrets_vpc_endpoint" {
   tags   = { Name = "secrets_endpoint" }
-  vpc_id = aws_vpc.main.id
+  vpc_id = module.network.vpc.id
 }
 
-resource "aws_security_group_rule" "lambda_custom_sql_query_to_secrets_endpoint" {
+resource "aws_security_group_rule" "lambda_custom_sql_tool_to_secrets_endpoint" {
   type                     = "egress"
   protocol                 = "tcp"
   from_port                = 443
   to_port                  = 443
-  source_security_group_id = data.aws_security_group.secrets_endpoint.id
-  security_group_id        = aws_security_group.custom_sql_query.id
+  source_security_group_id = data.aws_security_group.secrets_vpc_endpoint.id
+  security_group_id        = aws_security_group.custom_sql_tool.id
   description              = "Outbound lambda custom_sql to secrets endpoint"
 }
 
 # ===== LAMBDA TASK ROLE PERMISSIONS =====
 resource "aws_iam_role" "custom_sql_query_task_role" {
-  name               = local.lambda_custom_sql_name
+  name               = local.lambda_custom_sql_name_tool
   assume_role_policy = data.aws_iam_policy_document.lambda_assume.json
   lifecycle {
     create_before_destroy = true
   }
   tags = merge(
     var.default_tags,
-    { Name = "${var.account.name}-custom-sql-query" },
+    { Name = "${var.account.name}-custom-sql-tool" },
   )
 }
 
@@ -228,68 +226,4 @@ data "aws_iam_policy_document" "custom_sql_query" {
 resource "aws_iam_role_policy_attachment" "vpc_access_execution_role" {
   role       = aws_iam_role.custom_sql_query_task_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
-}
-
-# ==== NEW VPC Lambda =====
-resource "aws_lambda_function" "custom_sql_tool" {
-  count         = var.account.network.enabled ? 1 : 0
-  function_name = "${local.lambda_custom_sql_name_tool}-${var.account.name}"
-  description   = "Function to run custom sql queries"
-  image_uri     = "${data.aws_ecr_repository.custom_sql_query.repository_url}:latest"
-  package_type  = "Image"
-  role          = aws_iam_role.custom_sql_query_task_role.arn
-  timeout       = 600
-  memory_size   = 1024
-  depends_on    = [aws_cloudwatch_log_group.custom_sql_query]
-
-  vpc_config {
-    subnet_ids         = module.network[0].application_subnets[*].id
-    security_group_ids = [aws_security_group.custom_sql_tool[0].id]
-  }
-
-  tracing_config {
-    mode = "Active"
-  }
-
-  dynamic "environment" {
-    for_each = length(keys(local.custom_sql_lambda_env_vars)) == 0 ? [] : [true]
-    content {
-      variables = local.custom_sql_lambda_env_vars
-    }
-  }
-}
-
-resource "aws_security_group" "custom_sql_tool" {
-  count       = var.account.network.enabled ? 1 : 0
-  name        = "${var.account.name}-${local.lambda_custom_sql_name_tool}"
-  vpc_id      = module.network[0].vpc.id
-  description = "Custom SQL Shared Lambda"
-
-  lifecycle {
-    create_before_destroy = true
-  }
-
-  revoke_rules_on_delete = true
-
-  tags = merge(
-    var.default_tags,
-    { Name = "${var.account.name}-custom-sql-query" },
-  )
-}
-
-data "aws_security_group" "secrets_vpc_endpoint" {
-  count  = var.account.network.enabled ? 1 : 0
-  tags   = { Name = "secrets_endpoint" }
-  vpc_id = module.network[0].vpc.id
-}
-
-resource "aws_security_group_rule" "lambda_custom_sql_tool_to_secrets_endpoint" {
-  count                    = var.account.network.enabled ? 1 : 0
-  type                     = "egress"
-  protocol                 = "tcp"
-  from_port                = 443
-  to_port                  = 443
-  source_security_group_id = data.aws_security_group.secrets_vpc_endpoint[0].id
-  security_group_id        = aws_security_group.custom_sql_tool[0].id
-  description              = "Outbound lambda custom_sql to secrets endpoint"
 }

@@ -32,7 +32,7 @@ module "check_csv_uploaded_service_security_group" {
   rules       = local.check_csv_uploaded_sg_rules
   name        = "check-csv-uploaded-service"
   tags        = var.default_tags
-  vpc_id      = var.account.use_new_network ? data.aws_vpc.main[0].id : data.aws_vpc.vpc.id
+  vpc_id      = data.aws_vpc.main.id
   environment = local.environment
 }
 
@@ -57,7 +57,7 @@ resource "aws_cloudwatch_event_rule" "check_csv_uploaded_cron_rule" {
   description         = "Check daily which CSVs have been uploaded in ${terraform.workspace}"
   schedule_expression = local.check_csv_uploaded_interval
   tags                = var.default_tags
-  state               = local.environment == "production02" || local.environment == "production" ? "ENABLED" : "DISABLED"
+  state               = local.environment == "production" ? "ENABLED" : "DISABLED"
 }
 
 resource "aws_cloudwatch_event_target" "check_csv_uploaded_scheduled_task" {
@@ -72,7 +72,7 @@ resource "aws_cloudwatch_event_target" "check_csv_uploaded_scheduled_task" {
     launch_type         = "FARGATE"
     platform_version    = "1.4.0"
     network_configuration {
-      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
+      subnets          = data.aws_subnet.application[*].id
       assign_public_ip = false
       security_groups  = [module.check_csv_uploaded_service_security_group.id]
     }

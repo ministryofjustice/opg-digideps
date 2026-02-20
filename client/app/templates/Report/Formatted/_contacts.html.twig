@@ -10,7 +10,7 @@
                 </div>
             {% else %}
                 {% for contact in contacts %}
-                    <dl class="labelvalue half-width first">
+                    <dl class="labelvalue">
                         <dt class="label">Full name</dt>
                         <dd class="value">{{ contact.contactName }}</dd>
 
@@ -27,7 +27,7 @@
                             {% endif %}
                         </dd>
                     </dl>
-                    <dl class="labelvalue half-width">
+                    <dl class="labelvalue">
                         <dt class="label">Relationship to client</dt>
                         <dd class="value">{{ contact.relationship }}</dd>
 
