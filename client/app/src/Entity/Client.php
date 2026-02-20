@@ -1050,9 +1050,7 @@ class Client
     public function getSubmittedReports()
     {
         $submittedReports = [];
-        error_log("===================");
         foreach ($this->getReports() as $report) {
-            error_log("++++++++++++++++++++++ REPORT ID: " . $report->getId() . "; SUBMIT DATE: " . $report->getSubmitted());
             if ($report->isSubmitted()) {
                 $submittedReports[] = $report;
             }

@@ -44,7 +44,7 @@ jobs:
           role-duration-seconds: 7200
           aws-region: eu-west-1
 
-      - name: restore to a point in time
+      - name: restore from cross account backup
         id: restore
         run: |
           TEN_MINS_AGO="$(TZ=UTC date -d '-5 minutes' +'%Y-%m-%d %H:%M:%S')"

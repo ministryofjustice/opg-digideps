@@ -252,7 +252,7 @@ class ChecklistSyncServiceTest extends TestCase
     private function getSuccessfulResponse(): Response
     {
         $successResponseBody = ['data' => ['id' => 'returned-checklist-uuid']];
-        return new Response('200', [], json_encode($successResponseBody));
+        return new Response(200, [], json_encode($successResponseBody));
     }
 
     public function testSyncChecklistsByReportsSyncsMultipleValidChecklists(): void

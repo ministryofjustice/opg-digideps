@@ -1,5 +1,5 @@
 # Use the official Nginx base image
-FROM nginx:1.27
+FROM nginx:1.29
 
 # Copy the nginx.conf file to the container
 COPY nginx.conf /etc/nginx/nginx.conf
