@@ -14,84 +14,78 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class AssetTypeProperty extends AbstractType
 {
-    private $step;
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->step = (int) $options['step'];
-
-        if (1 === $this->step) {
-            $builder
-                ->add('address', FormTypes\TextType::class)
-                ->add('address2', FormTypes\TextType::class)
-                ->add('postcode', FormTypes\TextType::class)
-                ->add('county', FormTypes\TextType::class)
-                ->add('occupants', FormTypes\TextareaType::class)
-                ->add('owned', FormTypes\ChoiceType::class, [
-                'choices' => array_flip(['fully' => 'Fully-owned', 'partly' => 'Part-owned']),
-                'expanded' => true,
-                ])
-                ->add('ownedPercentage', FormTypes\NumberType::class, [
-                    'grouping' => false,
-                    'scale' => 0,
-                    'attr' => ['maxlength' => 2],
-                    'invalid_message' => 'asset.property.ownedPercentage.type',
-                ])
-                ->add('hasMortgage', FormTypes\ChoiceType::class, [
+        $builder
+            ->add('address', FormTypes\TextType::class)
+            ->add('address2', FormTypes\TextType::class)
+            ->add('postcode', FormTypes\TextType::class)
+            ->add('county', FormTypes\TextType::class)
+            ->add('occupants', FormTypes\TextareaType::class)
+            ->add('owned', FormTypes\ChoiceType::class, [
+            'choices' => array_flip(['fully' => 'Fully-owned', 'partly' => 'Part-owned']),
+            'expanded' => true,
+            ])
+            ->add('ownedPercentage', FormTypes\NumberType::class, [
+                'grouping' => false,
+                'scale' => 0,
+                'attr' => ['maxlength' => 2],
+                'invalid_message' => 'asset.property.ownedPercentage.type',
+            ])
+            ->add('hasMortgage', FormTypes\ChoiceType::class, [
+            'choices' => ['Yes' => 'yes', 'No' => 'no'],
+            'expanded' => true,
+            ])
+            ->add('mortgageOutstandingAmount', FormTypes\NumberType::class, [
+                'grouping' => true,
+                'scale' => 2,
+                'invalid_message' => 'asset.property.mortgageOutstandingAmount.type',
+            ])
+            ->add('value', FormTypes\NumberType::class, [
+                'grouping' => true,
+                'scale' => 2,
+                'invalid_message' => 'asset.property.value.type',
+            ])
+            ->add('isSubjectToEquityRelease', FormTypes\ChoiceType::class, [
                 'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
-                ])
-                ->add('mortgageOutstandingAmount', FormTypes\NumberType::class, [
-                    'grouping' => true,
-                    'scale' => 2,
-                    'invalid_message' => 'asset.property.mortgageOutstandingAmount.type',
-                ])
-                ->add('value', FormTypes\NumberType::class, [
-                    'grouping' => true,
-                    'scale' => 2,
-                    'invalid_message' => 'asset.property.value.type',
-                ])
-                ->add('isSubjectToEquityRelease', FormTypes\ChoiceType::class, [
-                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
-                    'expanded' => true,
-                ])
-                ->add('hasCharges', FormTypes\ChoiceType::class, [
-                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
-                    'expanded' => true,
-                ])
-                ->add('isRentedOut', FormTypes\ChoiceType::class, [
-                    'choices' => ['Yes' => 'yes', 'No' => 'no'],
-                    'expanded' => true,
-                ])
-                ->add('rentAgreementEndDate', FormTypes\DateType::class, [
-                    'widget' => 'text',
-                    'input' => 'datetime',
-                    'format' => 'dd-MM-yyyy',
-                    'invalid_message' => 'Enter a valid date',
-                ])
-                ->add('rentIncomeMonth', FormTypes\NumberType::class, [
-                    'grouping' => true,
-                    'scale' => 2,
-                    'invalid_message' => 'asset.property.rentIncomeMonth.type',
-                ])
-                ->add('addAnother', AddAnotherThingType::class);
-
-            $builder
-                ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
-                    $data = $event->getData();
-
-                    // rentAgreementEndDate; set day=01 if month and year are set
-                    if (!empty($data['rentAgreementEndDate']['month']) && !empty($data['rentAgreementEndDate']['year'])) {
-                        $data['rentAgreementEndDate']['day'] = '01';
-                        $event->setData($data);
-                    }
-                });
-        }
+            ])
+            ->add('hasCharges', FormTypes\ChoiceType::class, [
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
+                'expanded' => true,
+            ])
+            ->add('isRentedOut', FormTypes\ChoiceType::class, [
+                'choices' => ['Yes' => 'yes', 'No' => 'no'],
+                'expanded' => true,
+            ])
+            ->add('rentAgreementEndDate', FormTypes\DateType::class, [
+                'widget' => 'text',
+                'input' => 'datetime',
+                'format' => 'dd-MM-yyyy',
+                'invalid_message' => 'Enter a valid date',
+            ])
+            ->add('rentIncomeMonth', FormTypes\NumberType::class, [
+                'grouping' => true,
+                'scale' => 2,
+                'invalid_message' => 'asset.property.rentIncomeMonth.type',
+            ])
+            ->add('addAnother', AddAnotherThingType::class);
 
         $builder
-            ->add('title', FormTypes\HiddenType::class)
-            ->add('id', FormTypes\HiddenType::class)
-            ->add('save', FormTypes\SubmitType::class);
+            ->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+                $data = $event->getData();
+
+                // rentAgreementEndDate; set day=01 if month and year are set
+                if (!empty($data['rentAgreementEndDate']['month']) && !empty($data['rentAgreementEndDate']['year'])) {
+                    $data['rentAgreementEndDate']['day'] = '01';
+                    $event->setData($data);
+                }
+            });
+
+        $builder
+        ->add('title', FormTypes\HiddenType::class)
+        ->add('id', FormTypes\HiddenType::class)
+        ->add('save', FormTypes\SubmitType::class);
     }
 
     protected function getValidationGroups()
@@ -109,15 +103,13 @@ class AssetTypeProperty extends AbstractType
                 $val[] = 'property-mortgage-outstanding-amount';
             }
 
+            $val[] = 'property-rented-out';
             if ('yes' == $asset->getIsRentedOut()) {
-                $val[] = array_merge(['property-rented-out','property-rent-agree-date', 'property-rent-income-month']);
-            } else {
-                $val[] = 'property-rented-out';
+                $val[] = 'property-rent-agree-date';
+                $val[] = 'property-rent-income-month';
             }
 
-            return [
-                1 => $val,
-            ][$this->step];
+            return $val;
         };
     }
 
@@ -131,7 +123,6 @@ class AssetTypeProperty extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'report-assets',
             'validation_groups' => $this->getValidationGroups(),
-        ])
-        ->setRequired(['step']);
+        ]);
     }
 }

@@ -11,7 +11,6 @@ use App\Entity\Report\Status;
 use App\Form;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
-use App\Service\StepRedirector;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -28,7 +27,6 @@ class AssetController extends AbstractController
     public function __construct(
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
-        private readonly StepRedirector $stepRedirector,
     ) {
     }
 
@@ -97,7 +95,7 @@ class AssetController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $title = $form->getData()->getTitle();
             return match ($title) {
-                'Property' => $this->redirect($this->generateUrl('assets_property_step', ['reportId' => $reportId, 'step' => 1])),
+                'Property' => $this->redirect($this->generateUrl('assets_property_step', ['reportId' => $reportId])),
                 default => $this->redirect($this->generateUrl('asset_other_add', ['reportId' => $reportId, 'title' => $title])),
             };
         }
@@ -180,54 +178,21 @@ class AssetController extends AbstractController
         ];
     }
 
-    #[Route(path: '/report/{reportId}/assets/property/step{step}/{assetId}', name: 'assets_property_step', requirements: ['step' => '\d+'])]
+    #[Route(path: '/report/{reportId}/assets/property/{assetId}', name: 'assets_property_step')]
     #[Template('@App/Report/Asset/Property/step.html.twig')]
-    public function propertyStepAction(Request $request, int $reportId, int $step, ?int $assetId = null): RedirectResponse|array
+    public function propertyStepAction(Request $request, int $reportId, ?int $assetId = null): RedirectResponse|array
     {
-        $totalSteps = 1;
-        if ($step < 1 || $step > $totalSteps) {
-            return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
-        }
-
-        // common vars and data
-        $dataFromUrl = $request->get('data') ?: [];
-        $stepUrlData = $dataFromUrl;
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $fromPage = $request->get('from');
-
-        $stepRedirector = $this->stepRedirector
-            ->setRoutes('assets_type', 'assets_property_step', 'assets_summary')
-            ->setFromPage($fromPage)
-            ->setCurrentStep($step)->setTotalSteps($totalSteps)
-            ->setRouteBaseParams(['reportId' => $reportId, 'assetId' => $assetId]);
 
         if ($assetId) { // edit asset
             $assets = array_filter($report->getAssets(), fn($t): bool => $t->getId() == $assetId);
             $asset = array_shift($assets);
-            $stepRedirector->setFromPage('summary');
         } else { // add new asset
             $asset = new AssetProperty();
         }
 
-        // add URL-data into model
-        isset($dataFromUrl['address']) && $asset->setAddress($dataFromUrl['address']);
-        isset($dataFromUrl['address2']) && $asset->setAddress2($dataFromUrl['address2']);
-        isset($dataFromUrl['postcode']) && $asset->setPostcode($dataFromUrl['postcode']);
-        isset($dataFromUrl['county']) && $asset->setCounty($dataFromUrl['county']);
-        isset($dataFromUrl['occupants']) && $asset->setOccupants($dataFromUrl['occupants']);
-        isset($dataFromUrl['owned']) && $asset->setOwned($dataFromUrl['owned']);
-        isset($dataFromUrl['owned_p']) && $asset->setOwnedPercentage($dataFromUrl['owned_p']);
-        isset($dataFromUrl['has_mg']) && $asset->setHasMortgage($dataFromUrl['has_mg']);
-        isset($dataFromUrl['mg_oa']) && $asset->setMortgageOutstandingAmount($dataFromUrl['mg_oa']);
-        isset($dataFromUrl['value']) && $asset->setValue($dataFromUrl['value']);
-        isset($dataFromUrl['ser']) && $asset->setIsSubjectToEquityRelease($dataFromUrl['ser']);
-        isset($dataFromUrl['hc']) && $asset->setHasCharges($dataFromUrl['hc']);
-        $stepRedirector->setStepUrlAdditionalParams([
-            'data' => $dataFromUrl,
-        ]);
-
         /** @var FormInterface $form */
-        $form = $this->createForm(Form\Report\Asset\AssetTypeProperty::class, $asset, ['step' => $step]);
+        $form = $this->createForm(Form\Report\Asset\AssetTypeProperty::class, $asset);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
@@ -239,21 +204,15 @@ class AssetController extends AbstractController
                 $this->restClient->put("report/$reportId/asset/$assetId", $asset);
                 $request->getSession()->getFlashBag()->add('notice', 'Asset edited');
 
-                return $this->redirect($this->generateUrl('assets_summary', ['reportId' => $reportId]));
+                /** @var FormInterface $addAnother */
+                $addAnother = $form['addAnother'];
+                switch ($addAnother->getData()) {
+                    case 'yes':
+                        return $this->redirectToRoute('assets_type', ['reportId' => $reportId, 'from' => 'another']);
+                    case 'no':
+                        return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
+                }
             }
-
-            $stepUrlData['address'] = $asset->getAddress();
-            $stepUrlData['address2'] = $asset->getAddress2();
-            $stepUrlData['postcode'] = $asset->getPostcode();
-            $stepUrlData['county'] = $asset->getCounty();
-            $stepUrlData['occupants'] = $asset->getOccupants();
-            $stepUrlData['owned'] = $asset->getOwned();
-            $stepUrlData['owned_p'] = $asset->getOwnedPercentage();
-            $stepUrlData['has_mg'] = $asset->getHasMortgage();
-            $stepUrlData['mg_oa'] = $asset->getMortgageOutstandingAmount();
-            $stepUrlData['value'] = $asset->getValue();
-            $stepUrlData['ser'] = $asset->getIsSubjectToEquityRelease();
-            $stepUrlData['hc'] = $asset->getHasCharges();
 
             $this->restClient->post("report/$reportId/asset", $asset);
 
@@ -265,20 +224,13 @@ class AssetController extends AbstractController
                 case 'no':
                     return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
             }
-
-            $stepRedirector->setStepUrlAdditionalParams([
-                'data' => $stepUrlData,
-            ]);
-
-            return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
         }
 
         return [
             'asset' => $asset,
             'report' => $report,
-            'step' => $step,
             'form' => $form->createView(),
-            'backLink' => $stepRedirector->getBackLink(),
+            'backLink' => $this->generateUrl('assets_summary', ['reportId' => $reportId]),
             'skipLink' => null,
             'gaCustomUrl' => $request->getPathInfo(), // avoid sending query string to GA containing user's data
         ];
