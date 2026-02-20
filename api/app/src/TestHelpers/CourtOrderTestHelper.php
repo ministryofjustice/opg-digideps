@@ -6,11 +6,9 @@ namespace App\TestHelpers;
 
 use App\Entity\Client;
 use App\Entity\CourtOrder;
-use App\Entity\CourtOrderDeputy;
 use App\Entity\Deputy;
-use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 class CourtOrderTestHelper
 {

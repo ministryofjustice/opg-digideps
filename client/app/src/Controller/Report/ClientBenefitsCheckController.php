@@ -68,7 +68,7 @@ class ClientBenefitsCheckController extends AbstractController
 
     #[Route(path: '/{reportOrNdr}/{reportId}/client-benefits-check/step/{step}/{moneyTypeId}', name: 'client_benefits_check_step')]
     #[Template('@App/Report/ClientBenefitsCheck/step.html.twig')]
-    public function step(Request $request, int $reportId, int $step, string $reportOrNdr, string $moneyTypeId = null): array|RedirectResponse
+    public function step(Request $request, int $reportId, int $step, string $reportOrNdr, ?string $moneyTypeId = null): array|RedirectResponse
     {
         $totalSteps = 3;
 
@@ -209,7 +209,9 @@ class ClientBenefitsCheckController extends AbstractController
         $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, self::$jmsGroups) :
             $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        foreach ($report->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf() as $moneyType) {
+        /** @var ArrayCollection<int,NdrMoneyReceivedOnClientsBehalf|MoneyReceivedOnClientsBehalf> $typesOfMoniesReceived */
+        $typesOfMoniesReceived = $report->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf();
+        foreach ($typesOfMoniesReceived as $moneyType) {
             if ($moneyType->getId() === $moneyTypeId) {
                 $moneyTypeToDelete = $moneyType;
                 break;
