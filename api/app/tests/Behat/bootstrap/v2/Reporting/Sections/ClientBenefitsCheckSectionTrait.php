@@ -161,8 +161,6 @@ trait ClientBenefitsCheckSectionTrait
      */
     public function iAddMoneyTypeWithNoValue(): void
     {
-
-
         $this->iAmOnClientBenefitsCheckStep3Page();
 
         $moneyTypesXpath = "//fieldset[contains(@class, 'add-another__item')]";
@@ -260,7 +258,7 @@ trait ClientBenefitsCheckSectionTrait
      */
     public function iActionMoneyTypeIAdded(string $action): void
     {
-//        $this->iAmOnClientBenefitsCheckSummaryPage();
+        $this->iAmOnClientBenefitsCheckSummaryPage();
 
         $moneyTypeAnswers = $this->getSectionAnswers('moneyType')[0];
         $moneyTypeDescription = $moneyTypeAnswers[array_key_first($moneyTypeAnswers)];

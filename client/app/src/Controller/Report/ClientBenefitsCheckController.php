@@ -152,13 +152,10 @@ class ClientBenefitsCheckController extends AbstractController
             }
 
             if ($addAnother !== null && 'yes' === $addAnother->getData()) {
-                if (!is_null($moneyTypeId)) {
-                    $pattern = sprintf('/\/%s$/', $moneyTypeId);
-
-                    $redirectRoute = preg_replace($pattern, '', $request->getUri());
-                } else {
-                    $redirectRoute = $request->getUri();
-                }
+                $redirectRoute = $this->generateUrl(
+                    'client_benefits_check_step',
+                    ['reportId' => $reportId, 'reportOrNdr' => $reportOrNdr, 'step' => 3]
+                );
             } else {
                 $stepToRedirectFrom = $this->incomeNotReceivedByOthers($form) ? $step + 1 : $step;
                 $redirectRoute = $stepRedirector->setCurrentStep($stepToRedirectFrom)->getRedirectLinkAfterSaving(['reportOrNdr' => $reportOrNdr]);
