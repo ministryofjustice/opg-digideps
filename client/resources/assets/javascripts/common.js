@@ -1,5 +1,4 @@
 import SessionTimeout from './globals/SessionTimeout'
-import CookieBanner from './globals/CookieBanner'
 import ConditionalFieldRevealer from './modules_new/ConditionalFieldRevealer'
 import TextAreaAutoSize from './modules_new/TextAreaAutoSize'
 import PreventDoubleClickButton from './modules_new/PreventDoubleClickButton'
