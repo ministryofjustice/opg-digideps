@@ -111,6 +111,8 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $layNdrDeputyNotStartedDetails;
     public UserDetails $layNdrDeputyCompletedDetails;
 
+    public UserDetails $layDeputyCompletedPfaHighAssetsDetailsNoClientDetails;
+
     public ?UserDetails $loggedInUserDetails = null;
     public ?UserDetails $interactingWithUserDetails = null;
 
@@ -713,5 +715,22 @@ class BaseFeatureContext extends MinkContext
 
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetails;
+    }
+
+    /**
+     * @BeforeScenario @lay-pfa-high-completed-no-client-details
+     */
+    public function createPfaHighCompletedWithNoClientDetails(): void
+    {
+        $userDetails = $this->fixtureHelper->createLayPfaHighAssetsCompleted($this->testRunId);
+        $this->fixtureUsers[] = $this->layDeputyCompletedPfaHighAssetsDetailsNoClientDetails = new UserDetails($userDetails);
+
+        $clientId = $this->layDeputyCompletedPfaHighAssetsDetailsNoClientDetails->getClientId();
+        $client = $this->em->getRepository(Client::class)->find($clientId);
+        $client->setAddress(null);
+        $client->setPostcode(null);
+        $client->setCourtDate(null);
+        $this->em->persist($client);
+        $this->em->flush();
     }
 }
