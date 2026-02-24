@@ -32,17 +32,22 @@ const runSmoke = async () => {
 
   await page.setRequestInterception(true);
 
-  page.on('request', req => {
-    const url = req.url();
 
-    const googleRegex = /(google|googleapis|gvt1)\.com/i;
+    page.removeAllListeners('request');   // <– ensure no previous listeners exist
 
-    if (googleRegex.test(url)) {
-    return req.abort();
-    }
+    page.on('request', req => {
+      const url = req.url();
+      const googleRegex = /(google|googleapis|gvt1|googletagmanager|google-analytics)\.com/i;
 
-    req.continue();
-  });
+      if (googleRegex.test(url)) {
+        console.log("🚫 BLOCKED:", url);
+        return req.abort();
+      }
+
+      console.log("→", req.method(), url);
+      return req.continue();
+    });
+
 
   try {
     const { admin_user, admin_password, client, deputy_user, deputy_password } = await getSecret(environment, endpoint);
