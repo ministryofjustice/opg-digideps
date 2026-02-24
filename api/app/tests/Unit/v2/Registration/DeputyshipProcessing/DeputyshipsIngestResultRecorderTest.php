@@ -55,7 +55,8 @@ final class DeputyshipsIngestResultRecorderTest extends TestCase
         $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new ArrayIterator([]), 20, null);
         $this->sut->recordDeputyshipCandidatesResult($candidatesSelectorResult);
 
-        $this->sut->recordDataFactoryResult(new DataFactoryResult());
+        $this->sut->recordPreCSVDataFactoryResult(new DataFactoryResult());
+        $this->sut->recordPostCSVDataFactoryResult(new DataFactoryResult());
 
         $expectedMessage = 'found 20 candidate database updates';
 
@@ -76,7 +77,8 @@ final class DeputyshipsIngestResultRecorderTest extends TestCase
 
         $this->sut->recordCsvLoadResult(new DeputyshipsCSVLoaderResult('/tmp/deputyships.csv', true, 8));
 
-        $this->sut->recordDataFactoryResult(new DataFactoryResult());
+        $this->sut->recordPreCSVDataFactoryResult(new DataFactoryResult());
+        $this->sut->recordPostCSVDataFactoryResult(new DataFactoryResult());
 
         $result = $this->sut->result();
         self::assertStringContainsString('Test builder result 1', $result->message);

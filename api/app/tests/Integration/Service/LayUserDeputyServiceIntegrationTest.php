@@ -7,15 +7,15 @@ namespace App\Tests\Integration\Service;
 use App\Entity\PreRegistration;
 use App\Entity\User;
 use App\Repository\UserRepository;
-use App\Service\UserDeputyService;
+use App\Service\LayUserDeputyService;
 use App\TestHelpers\DeputyTestHelper;
 use App\TestHelpers\UserTestHelper;
 use App\Tests\Integration\ApiIntegrationTestCase;
 
-class UserDeputyServiceIntegrationTest extends ApiIntegrationTestCase
+class LayUserDeputyServiceIntegrationTest extends ApiIntegrationTestCase
 {
     private UserRepository $userRepository;
-    private UserDeputyService $sut;
+    private LayUserDeputyService $sut;
 
     public function setUp(): void
     {
@@ -25,8 +25,8 @@ class UserDeputyServiceIntegrationTest extends ApiIntegrationTestCase
         $repo = self::$entityManager->getRepository(User::class);
         $this->userRepository = $repo;
 
-        /** @var UserDeputyService $sut */
-        $sut = self::$container->get(UserDeputyService::class);
+        /** @var LayUserDeputyService $sut */
+        $sut = self::$container->get(LayUserDeputyService::class);
         $this->sut = $sut;
     }
 
@@ -58,7 +58,7 @@ class UserDeputyServiceIntegrationTest extends ApiIntegrationTestCase
         self::$entityManager->flush();
 
         // test
-        $this->sut->addMissingUserDeputies();
+        $this->sut->addMissingLayUserDeputies();
 
         // check that $user1 is associated with existing $deputy
         /** @var User $user1 */
