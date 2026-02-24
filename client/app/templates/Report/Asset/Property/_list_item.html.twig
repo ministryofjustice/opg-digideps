@@ -14,8 +14,18 @@
         </div>
         <div class="govuk-grid-column-one-half text--right">
             {% if not hideEditLink  %}
-                <a class="govuk-link behat-link-edit govuk-!-static-padding-right-2" href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
-                <a class="govuk-link behat-link-delete" href="{{ path('asset_delete', {'reportId': report.id, 'assetId': asset.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a>
+                <a
+                    class="govuk-link behat-link-edit govuk-!-static-padding-right-2"
+                    href="{{ path('assets_property_step', {'reportId': report.id, 'assetId': asset.id}) }}">
+                    {{ 'edit' | trans({}, 'common' ) }}
+                    <span class="govuk-visually-hidden">{{ (page ~ '.' ~ (groupId | lower)) | trans() }} {{ loop.index }}</span>
+                </a>
+                <a
+                    class="govuk-link behat-link-delete"
+                    href="{{ path('asset_delete', {'reportId': report.id, 'assetId': asset.id}) }}">
+                    {{ 'remove' | trans({}, 'common' ) }}
+                    <span class="govuk-visually-hidden">{{ (page ~ '.' ~ (groupId | lower)) | trans() }} {{ loop.index }}</span>
+                </a>
             {% endif %}
         </div>
     </div>
