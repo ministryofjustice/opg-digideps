@@ -6,14 +6,14 @@ module "api_aurora" {
   apply_immediately                   = var.account.deletion_protection ? false : true
   cluster_identifier                  = "api"
   ca_cert_identifier                  = "rds-ca-rsa2048-g1"
-  db_subnet_group_name                = "data-subnet-group-${var.account.name}"
+  db_subnet_group_name                = "data-subnet-group-${var.account.environment.name}"
   database_name                       = "api"
   engine_version                      = var.account.psql_engine_version
   master_username                     = "digidepsmaster"
   master_password                     = data.aws_secretsmanager_secret_version.database_password.secret_string
   instance_count                      = var.account.aurora_instance_count
   instance_class                      = "db.t3.medium"
-  preferred_backup_window             = var.account.name == "preproduction" ? "22:00-00:00" : "23:00-23:30"
+  preferred_backup_window             = var.account.environment.name == "preproduction" ? "22:00-00:00" : "23:00-23:30"
   kms_key_id                          = data.aws_kms_key.rds.arn
   skip_final_snapshot                 = var.account.deletion_protection ? false : true
   vpc_security_group_ids              = [module.api_rds_security_group.id]

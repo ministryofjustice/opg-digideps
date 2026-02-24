@@ -118,7 +118,7 @@ locals {
         },
         {
           name  = "APP_ENV",
-          value = var.account.app_env
+          value = var.account.environment.app_env
         },
         {
           name  = "AUDIT_LOG_GROUP_NAME",
@@ -126,7 +126,7 @@ locals {
         },
         {
           name  = "EMAIL_SEND_INTERNAL",
-          value = var.account.is_production == 1 ? "true" : "false"
+          value = var.account.environment.is_production == 1 ? "true" : "false"
         },
         {
           name  = "ENVIRONMENT",
@@ -196,7 +196,7 @@ locals {
           name  = "WORKSPACE",
           value = local.environment
         },
-        { name = "FIXTURES_ENABLED", value = tostring(var.account.fixtures_enabled) }
+        { name = "FIXTURES_ENABLED", value = tostring(var.account.environment.fixtures_enabled) }
       ]
     }
   )

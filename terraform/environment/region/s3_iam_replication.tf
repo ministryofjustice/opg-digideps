@@ -98,7 +98,7 @@ data "aws_iam_policy_document" "replication_policy" {
     }
     #trivy:ignore:avd-aws-0057 - Not overly permissive
     resources = [
-      "arn:aws:s3:::${var.account.name}.backup.digideps.opg.service.justice.gov.uk/*",
+      "arn:aws:s3:::${var.account.environment.name}.backup.digideps.opg.service.justice.gov.uk/*",
       "${local.replication_bucket}/*"
     ]
   }
@@ -155,7 +155,7 @@ data "aws_iam_policy_document" "replication_policy" {
       variable = "kms:EncryptionContext:aws:s3:arn"
 
       values = [
-        "arn:aws:s3:::${var.account.name}.backup.digideps.opg.service.justice.gov.uk/*",
+        "arn:aws:s3:::${var.account.environment.name}.backup.digideps.opg.service.justice.gov.uk/*",
       ]
     }
 

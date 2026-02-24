@@ -101,7 +101,7 @@ locals {
         },
         {
           name  = "APP_ENV",
-          value = var.account.app_env
+          value = var.account.environment.app_env
         },
         {
           name  = "OPG_DOCKER_TAG",
@@ -151,7 +151,7 @@ locals {
           name  = "WORKSPACE",
           value = local.environment
         },
-        { name = "FIXTURES_ENABLED", value = tostring(var.account.fixtures_enabled) }
+        { name = "FIXTURES_ENABLED", value = tostring(var.account.environment.fixtures_enabled) }
       ]
     }
   )
