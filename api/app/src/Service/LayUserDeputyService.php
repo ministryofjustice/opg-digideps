@@ -10,9 +10,17 @@ use App\Entity\User;
 use App\Repository\DeputyRepository;
 use App\Repository\PreRegistrationRepository;
 use App\Repository\UserRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Psr\Log\LoggerInterface;
 
-class UserDeputyService
+/**
+ * Data services for lay user <-> deputy relationships.
+ *
+ * This requires a dedicated service as we have access to the pre-reg table to find lay deputy data,
+ * but we need to take a different tack for PA/PRO deputies.
+ */
+class LayUserDeputyService
 {
     public function __construct(
         private readonly PreRegistrationRepository $preRegistrationRepository,
@@ -25,14 +33,16 @@ class UserDeputyService
 
     /**
      * Create deputy records for deputy UIDs in pre_registration where they don't exist.
-     * Associate users with deputy records where they aren't already associated.
+     * Associate lay users with deputy records where they aren't already associated.
      *
      * @return int Number of associations between deputies and users which were added
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
-    public function addMissingUserDeputies(): int
+    public function addMissingLayUserDeputies(): int
     {
-        // find users who have no deputy associated with them (but whose deputy UID is in the pre-reg table)
-        $usersWithoutDeputies = $this->userRepository->findUsersWithoutDeputies();
+        // find lay users who have no deputy associated with them (but whose deputy UID is in the pre-reg table)
+        $usersWithoutDeputies = $this->userRepository->findLayUsersWithoutDeputies();
 
         // get mapping from deputy UIDs to IDs (so we can quickly find the deputy ID from the user's deputy UID)
         $deputyUidsToIds = $this->deputyRepository->getUidToIdMapping();
