@@ -145,14 +145,6 @@ locals {
           value = "http://scan:8080"
         },
         {
-          name  = "GA_DEFAULT",
-          value = var.account.ga_default
-        },
-        {
-          name  = "GA_GDS",
-          value = var.account.ga_gds
-        },
-        {
           name  = "HTMLTOPDF_ADDRESS",
           value = "http://htmltopdf:8080"
         },
