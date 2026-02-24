@@ -32,8 +32,8 @@ variable "accounts" {
         admin_allow_list  = list(string)
       })
       ecs = object({
-        scale_min = number
-        scale_max = number
+        scale_min     = number
+        scale_max     = number
         task_count    = number
         scan_count    = number
         cpu_low       = string
