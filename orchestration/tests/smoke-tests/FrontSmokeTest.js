@@ -18,24 +18,55 @@ const runSmoke = async () => {
   const browser = await puppeteer.launch(
     {
       executablePath: '/usr/bin/chromium-browser',
-      args: ['--no-sandbox', '--headless'],
+      args: [
+        '--no-sandbox',
+        '--disable-background-networking',
+        '--disable-background-timer-throttling',
+        '--disable-backgrounding-occluded-windows',
+        '--disable-breakpad',
+        '--disable-client-side-phishing-detection',
+        '--disable-component-update',
+        '--disable-default-apps',
+        '--disable-dev-shm-usage',
+        '--disable-domain-reliability',
+        '--disable-features=AudioServiceOutOfProcess,IsolateOrigins,site-per-process,NetworkService,NetworkServiceInProcess,OptimizationHints,TranslateUI,AutofillServerCommunication',
+        '--disable-hang-monitor',
+        '--disable-ipc-flooding-protection',
+        '--disable-notifications',
+        '--disable-popup-blocking',
+        '--disable-prompt-on-repost',
+        '--disable-renderer-backgrounding',
+        '--disable-sync',
+        '--disable-features=SafeBrowsingEnhancedProtection,SafetyTips',
+        '--safe-browsing-disable-auto-update',
+        '--metrics-recording-only',
+        '--mute-audio',
+        '--no-default-browser-check',
+        '--no-first-run',
+        '--no-service-autorun',
+        '--password-store=basic',
+        '--use-mock-keychain'
+      ],
       protocolTimeout: 30000
     });
 
   const page = await openPageWithRetries(browser);
   await page.setRequestInterception(true);
 
-  page.on('request', req => {
-    const url = req.url();
+    page.removeAllListeners('request');   // <– ensure no previous listeners exist
 
-    const googleRegex = /(google|googleapis|gvt1)\.com/i;
+    page.on('request', req => {
+      const url = req.url();
+      const googleRegex = /(google|googleapis|gvt1|googletagmanager|google-analytics)\.com/i;
 
-    if (googleRegex.test(url)) {
-    return req.abort();
-    }
+      if (googleRegex.test(url)) {
+        console.log("🚫 BLOCKED:", url);
+        return req.abort();
+      }
 
-    req.continue();
-  });
+      console.log("→", req.method(), url);
+      return req.continue();
+    });
 
   try {
     const { admin_user, admin_password, client, deputy_user, deputy_password } = await getSecret(environment, endpoint);

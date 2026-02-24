@@ -11,6 +11,11 @@ RUN go build -o anonymise main.go
 FROM alpine:3.23
 RUN apk update && apk upgrade
 
+
+# Install tcpdump for monitoring outbound traffic
+RUN apk add --no-cache tcpdump
+
+
 ENV POSTGRES_DATABASE=**None**
 ENV POSTGRES_HOST=**None**
 ENV POSTGRES_PORT=5432
