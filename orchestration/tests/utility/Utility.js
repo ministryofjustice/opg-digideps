@@ -85,7 +85,7 @@ const getSecret = async (environment, endpoint) => {
 
 const loginAsUser = async (page, url, user, password, expectedPage) => {
   console.log(`=== Logging in as ${expectedPage} ===`);
-
+  console.log(`=== Going to ${url} ===`);
   await page.goto(url + '/login', { waitUntil: 'domcontentloaded' });
 
   await page.waitForSelector('#login_email', { timeout: 10000 });

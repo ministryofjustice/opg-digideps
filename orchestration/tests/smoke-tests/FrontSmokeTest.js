@@ -18,24 +18,27 @@ const runSmoke = async () => {
   const browser = await puppeteer.launch(
     {
       executablePath: '/usr/bin/chromium-browser',
-      args: ['--no-sandbox', '--headless'],
+      args: ['--no-sandbox', '--headless', '--disable-background-networking', '--disable-component-update', '--disable-sync'],
       protocolTimeout: 30000
     });
 
   const page = await openPageWithRetries(browser);
   await page.setRequestInterception(true);
 
-  page.on('request', req => {
-    const url = req.url();
+    page.removeAllListeners('request');   // <– ensure no previous listeners exist
 
-    const googleRegex = /(google|googleapis|gvt1)\.com/i;
+    page.on('request', req => {
+      const url = req.url();
+      const googleRegex = /(google|googleapis|gvt1|googletagmanager|google-analytics)\.com/i;
 
-    if (googleRegex.test(url)) {
-    return req.abort();
-    }
+      if (googleRegex.test(url)) {
+        console.log("🚫 BLOCKED:", url);
+        return req.abort();
+      }
 
-    req.continue();
-  });
+      console.log("→", req.method(), url);
+      return req.continue();
+    });
 
   try {
     const { admin_user, admin_password, client, deputy_user, deputy_password } = await getSecret(environment, endpoint);

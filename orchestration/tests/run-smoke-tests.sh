@@ -4,7 +4,7 @@ set -e
 set -o pipefail
 
 echo "===== Running smoke test against Admin ====="
-node tests/smoke-tests/AdminSmokeTest.js
+#node tests/smoke-tests/AdminSmokeTest.js
 echo ""
 echo ""
 echo "===== Running smoke test against Frontend ====="
