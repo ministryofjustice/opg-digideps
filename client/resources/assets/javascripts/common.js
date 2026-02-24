@@ -20,9 +20,6 @@ window.addEventListener('DOMContentLoaded', () => {
   // Session Timeout
   SessionTimeout()
 
-  // Cookie Banner
-  CookieBanner()
-
   // Format currency module
   FormatCurrency.init(document)
 
