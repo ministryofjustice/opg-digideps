@@ -32,14 +32,14 @@ variable "accounts" {
         admin_allow_list  = list(string)
       })
       ecs = object({
-        scale_min     = number
-        scale_max     = number
-        task_count    = number
-        scan_count    = number
-        cpu_low       = string
-        memory_low    = string
-        memory_high   = string
-        fargate_spot  = bool
+        scale_min    = number
+        scale_max    = number
+        task_count   = number
+        scan_count   = number
+        cpu_low      = string
+        memory_low   = string
+        memory_high  = string
+        fargate_spot = bool
       })
       db = object({
         aurora_instance_count   = number
@@ -50,9 +50,9 @@ variable "accounts" {
         psql_engine_version     = string
       })
       s3 = object({
-        backup_kms_arn     = string
-        backup_replication = bool
-        force_destroy_bucket  = bool
+        backup_kms_arn       = string
+        backup_replication   = bool
+        force_destroy_bucket = bool
       })
       waf = object({
         associate_alb_with_waf_web_acl_enabled = bool
