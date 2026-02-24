@@ -31,6 +31,7 @@
     </div>
 
     <dl class="govuk-summary-list behat-region-list-properties">
+        {% set hideEditLink = true %}
         {{ macros.summaryListHeaderQA(hideEditLink) }}
         {# address #}
         <div class="govuk-summary-list__row behat-region-property-{{ asset.postcode | behat_namify }}-address">
