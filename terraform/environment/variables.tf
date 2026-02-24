@@ -37,10 +37,7 @@ variable "accounts" {
         task_count    = number
         scan_count    = number
         cpu_low       = string
-        cpu_medium    = string
-        cpu_high      = string
         memory_low    = string
-        memory_medium = string
         memory_high   = string
         fargate_spot  = bool
       })
@@ -53,8 +50,8 @@ variable "accounts" {
         psql_engine_version     = string
       })
       s3 = object({
-        s3_backup_kms_arn     = string
-        s3_backup_replication = bool
+        backup_kms_arn     = string
+        backup_replication = bool
         force_destroy_bucket  = bool
       })
       waf = object({
@@ -94,7 +91,7 @@ locals {
     environment-name       = local.environment
     owner                  = "OPG Supervision"
     infrastructure-support = "OPG WebOps: opgteam@digital.justice.gov.uk"
-    is-production          = local.account.is_production
+    is-production          = local.account.environment.is_production
   }
 
   shared_environment_variables = {
@@ -105,7 +102,7 @@ locals {
   }
 
   # DNS Switchover variables
-  complete_deputy_dns_enabled = local.account.name == "development" ? 0 : 1
+  complete_deputy_dns_enabled = local.account.environment.name == "development" ? 0 : 1
   main_cert                   = local.complete_deputy_dns_enabled == 1 ? aws_acm_certificate_validation.wildcard[0].certificate_arn : ""
   new_cert                    = local.complete_deputy_dns_enabled == 1 ? aws_acm_certificate_validation.complete_deputy_report_wildcard[0].certificate_arn : ""
   dns_account                 = local.complete_deputy_dns_enabled == 1 ? "515688267891" : local.account["account_id"]

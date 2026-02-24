@@ -14,7 +14,7 @@ module "pa_uploads" {
   source                               = "./modules/s3_bucket"
   account_name                         = var.account.environment.name
   bucket_name                          = "pa-uploads-${local.environment}"
-  force_destroy                        = var.account.force_destroy_bucket
+  force_destroy                        = var.account.s3.force_destroy_bucket
   kms_key_id                           = data.aws_kms_key.s3.key_id
   environment_name                     = local.environment
   enable_lifecycle                     = true
@@ -22,10 +22,10 @@ module "pa_uploads" {
   non_current_expiration_days          = local.noncurrent_expiration_days
   replication_within_account           = local.bucket_replication_status
   replication_within_account_bucket    = local.replication_bucket
-  replication_to_backup                = var.account.s3_backup_replication
+  replication_to_backup                = var.account.s3.backup_replication
   replication_to_backup_account_bucket = "arn:aws:s3:::${var.account.environment.name}.backup.digideps.opg.service.justice.gov.uk"
   replication_role_arn                 = aws_iam_role.backup_role.arn
-  backup_kms_key_id                    = "arn:aws:kms:eu-west-1:${local.backup_account_id}:key/${var.account.s3_backup_kms_arn}"
+  backup_kms_key_id                    = "arn:aws:kms:eu-west-1:${local.backup_account_id}:key/${var.account.s3.backup_kms_arn}"
   backup_account_id                    = local.backup_account_id
 
   providers = {

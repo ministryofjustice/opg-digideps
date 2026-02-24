@@ -67,7 +67,7 @@ locals {
 
   environment = lower(terraform.workspace)
 
-  capacity_provider = var.account.fargate_spot ? "FARGATE_SPOT" : "FARGATE"
+  capacity_provider = var.account.ecs.fargate_spot ? "FARGATE_SPOT" : "FARGATE"
 
   pa_pro_report_csv_filename  = "paProDeputyReport.csv"
   lay_report_csv_file         = "layDeputyReport.csv"

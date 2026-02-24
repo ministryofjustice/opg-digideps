@@ -453,7 +453,7 @@ resource "aws_cloudwatch_event_rule" "block_ips" {
   name                = "block-ips-${terraform.workspace}"
   description         = "Execute the blocking of malicious IPs for ${terraform.workspace}"
   schedule_expression = "rate(5 minutes)"
-  is_enabled          = var.account.waf_ip_blocking_enabled
+  is_enabled          = var.account.waf.waf_ip_blocking_enabled
 }
 
 resource "aws_cloudwatch_event_target" "block_ips" {
