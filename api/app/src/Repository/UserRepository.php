@@ -9,6 +9,8 @@ use App\Entity\User;
 use App\Model\QueryPager;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
@@ -471,8 +473,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      * Find lay deputy users whose deputy UID is in the pre_registration table but who are not associated with a deputy.
      *
      * @return \Traversable<User>
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
-    public function findUsersWithoutDeputies(): \Traversable
+    public function findLayUsersWithoutDeputies(): \Traversable
     {
         $pageQueryBuilder = $this->createQueryBuilder('u')
             ->innerJoin(PreRegistration::class, 'pr', Join::WITH, "CONCAT(u.deputyUid, '') = pr.deputyUid")
