@@ -406,7 +406,7 @@ class UserRepositoryTest extends KernelTestCase
         self::$entityManager->flush();
 
         // test
-        $foundUsers = iterator_to_array(self::$sut->findLayUsersWithoutDeputies());
+        $foundUsers = iterator_to_array(self::$sut->findUsersWithoutDeputies());
 
         self::assertCount(2, $foundUsers);
         self::assertContains($user1, $foundUsers);
