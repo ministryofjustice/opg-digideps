@@ -28,7 +28,7 @@ use App\Entity\ReportInterface;
 use App\Entity\User;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 class ReportTestHelper
 {
@@ -38,7 +38,7 @@ class ReportTestHelper
     }
 
     public static function generateReport(
-        EntityManager $em,
+        EntityManagerInterface $em,
         ?Client $client = null,
         ?string $type = null,
         ?DateTime $startDate = null,
@@ -56,7 +56,7 @@ class ReportTestHelper
         return $report;
     }
 
-    public static function generateNdr(EntityManager $em, User $deputy, ?Client $client = null): Ndr
+    public static function generateNdr(EntityManagerInterface $em, User $deputy, ?Client $client = null): Ndr
     {
         $ndr = new Ndr($client);
         $deputy->setNdrEnabled(true);
@@ -69,7 +69,7 @@ class ReportTestHelper
         return $ndr;
     }
 
-    public static function completeLayReport(ReportInterface $report, EntityManager $em): void
+    public static function completeLayReport(ReportInterface $report, EntityManagerInterface $em): void
     {
         self::completeDecisions($report);
         self::completeContacts($report);
@@ -89,7 +89,7 @@ class ReportTestHelper
         self::completeClientBenefitsCheck($report);
     }
 
-    public static function completeNdrLayReport(ReportInterface $report, EntityManager $em): void
+    public static function completeNdrLayReport(ReportInterface $report, EntityManagerInterface $em): void
     {
         self::completeVisitsCare($report);
         self::completeActions($report);
@@ -101,7 +101,7 @@ class ReportTestHelper
         self::completeClientBenefitsCheck($report);
     }
 
-    public static function submitReport(ReportInterface $report, EntityManager $em, ?User $submittedBy = null, ?DateTime $submitDate = null): void
+    public static function submitReport(ReportInterface $report, EntityManagerInterface $em, ?User $submittedBy = null, ?DateTime $submitDate = null): void
     {
         if (is_null($submittedBy)) {
             if ($report->getClient()->getOrganisation()) {
@@ -246,7 +246,7 @@ class ReportTestHelper
         $report->setGiftsExist('no');
     }
 
-    private static function completeBankAccounts(ReportInterface $report, EntityManager $em): void
+    private static function completeBankAccounts(ReportInterface $report, EntityManagerInterface $em): void
     {
         if ($report instanceof Ndr) {
             $ba = (new NdrBankAccount())
@@ -268,9 +268,11 @@ class ReportTestHelper
 
     private static function completeMoneyIn(ReportInterface $report): void
     {
-        if (Report::LAY_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
+        if (
+            Report::LAY_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
             || Report::PA_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::PA_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
-            || Report::PROF_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_HIGH_ASSETS_TYPE === $report->getType()) {
+            || Report::PROF_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
+        ) {
             $report->setMoneyInExists('Yes');
         }
 
@@ -280,9 +282,11 @@ class ReportTestHelper
 
     private static function completeMoneyOut(ReportInterface $report): void
     {
-        if (Report::LAY_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
+        if (
+            Report::LAY_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
             || Report::PA_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::PA_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
-            || Report::PROF_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_HIGH_ASSETS_TYPE === $report->getType()) {
+            || Report::PROF_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
+        ) {
             $report->setMoneyOutExists('Yes');
         }
 
@@ -297,7 +301,7 @@ class ReportTestHelper
         $report->setNoAssetToAdd(true);
     }
 
-    private static function completeDebts(ReportInterface $report, EntityManager $em): void
+    private static function completeDebts(ReportInterface $report, EntityManagerInterface $em): void
     {
         $report->setHasDebts('yes');
 
@@ -326,9 +330,11 @@ class ReportTestHelper
 
     private static function completeMoneyInShort(ReportInterface $report): void
     {
-        if (Report::LAY_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_LOW_ASSETS_TYPE === $report->getType()
+        if (
+            Report::LAY_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_LOW_ASSETS_TYPE === $report->getType()
             || Report::PA_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PA_COMBINED_LOW_ASSETS_TYPE === $report->getType()
-            || Report::PROF_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_LOW_ASSETS_TYPE === $report->getType()) {
+            || Report::PROF_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_LOW_ASSETS_TYPE === $report->getType()
+        ) {
             $report->setMoneyInExists('No');
             $report->setReasonForNoMoneyIn('No money in');
         }
@@ -336,9 +342,11 @@ class ReportTestHelper
 
     private static function completeMoneyOutShort(ReportInterface $report): void
     {
-        if (Report::LAY_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_LOW_ASSETS_TYPE === $report->getType()
+        if (
+            Report::LAY_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_LOW_ASSETS_TYPE === $report->getType()
             || Report::PA_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PA_COMBINED_LOW_ASSETS_TYPE === $report->getType()
-            || Report::PROF_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_LOW_ASSETS_TYPE === $report->getType()) {
+            || Report::PROF_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_LOW_ASSETS_TYPE === $report->getType()
+        ) {
             $report->setMoneyOutExists('No');
             $report->setReasonForNoMoneyOut('No money out');
         }
