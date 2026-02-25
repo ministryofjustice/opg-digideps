@@ -457,7 +457,7 @@ services:
   App\Service\DeputyService:
     public: true
 
-  App\Service\LayUserDeputyService:
+  App\Service\UserDeputyService:
     public: true
 
   preCSVDataFactory:
@@ -465,7 +465,7 @@ services:
     public: true
     arguments:
       $dataFactories:
-        - '@App\Factory\MissingLayDeputyDataFactory'
+        - '@App\Factory\MissingDeputyDataFactory'
 
   postCSVDataFactory:
     class: App\Factory\ChainedDataFactory

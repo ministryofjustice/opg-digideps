@@ -11,28 +11,25 @@ use App\Repository\DeputyRepository;
 use App\Repository\PreRegistrationRepository;
 use App\Repository\UserRepository;
 use App\Service\DeputyService;
-use App\Service\LayUserDeputyService;
+use App\Service\UserDeputyService;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 class UserDeputyServiceTest extends TestCase
 {
-    private PreRegistrationRepository $mockPreRegistrationRepository;
     private DeputyService $mockDeputyService;
     private UserRepository $mockUserRepository;
     private DeputyRepository $mockDeputyRepository;
-    private LayUserDeputyService $sut;
+    private UserDeputyService $sut;
 
     public function setUp(): void
     {
-        $this->mockPreRegistrationRepository = self::createMock(PreRegistrationRepository::class);
         $this->mockDeputyService = self::createMock(DeputyService::class);
         $this->mockUserRepository = self::createMock(UserRepository::class);
         $this->mockDeputyRepository = self::createMock(DeputyRepository::class);
         $this->mockLogger = self::createMock(LoggerInterface::class);
 
-        $this->sut = new LayUserDeputyService(
-            $this->mockPreRegistrationRepository,
+        $this->sut = new UserDeputyService(
             $this->mockDeputyService,
             $this->mockUserRepository,
             $this->mockDeputyRepository,
@@ -50,7 +47,7 @@ class UserDeputyServiceTest extends TestCase
 
         // expect user repo to provide list of users whose deputy UID is in pre-reg but who have no deputy
         $this->mockUserRepository->expects(self::once())
-            ->method('findLayUsersWithoutDeputies')
+            ->method('findUsersWithoutDeputies')
             ->willReturnCallback(function () use ($mockUser) {
                 yield $mockUser;
             });
@@ -73,7 +70,7 @@ class UserDeputyServiceTest extends TestCase
 
         $this->mockUserRepository->expects(self::once())->method('save')->with($mockUser);
 
-        $actual = $this->sut->addMissingLayUserDeputies();
+        $actual = $this->sut->addMissingUserDeputies();
 
         self::assertEquals(1, $actual);
     }
@@ -87,13 +84,10 @@ class UserDeputyServiceTest extends TestCase
 
         $mockUser = self::createMock(User::class);
         $mockUser->expects(self::once())->method('getDeputyUid')->willReturn($deputyUid);
-        $mockUser->expects(self::once())->method('getEmail')->willReturn($deputyEmail);
         $mockUser->expects(self::once())->method('setDeputy')->with($mockDeputy);
 
-        $mockPreRegistration = self::createMock(PreRegistration::class);
-
         $this->mockUserRepository->expects(self::once())
-            ->method('findLayUsersWithoutDeputies')
+            ->method('findUsersWithoutDeputies')
             ->willReturnCallback(function () use ($mockUser) {
                 yield $mockUser;
             });
@@ -104,14 +98,9 @@ class UserDeputyServiceTest extends TestCase
             ->expects(self::once())->method('getUidToIdMapping')
             ->willReturn(['53428321' => 1]);
 
-        $this->mockPreRegistrationRepository->expects(self::once())
-            ->method('findOneBy')
-            ->with(['deputyUid' => $deputyUid])
-            ->willReturn($mockPreRegistration);
-
         $this->mockDeputyService->expects(self::once())
-            ->method('createDeputyFromPreRegistration')
-            ->with($mockPreRegistration, ['email' => $deputyEmail])
+            ->method('createDeputyFromUser')
+            ->with($mockUser)
             ->willReturn($mockDeputy);
 
         $this->mockDeputyRepository->expects(self::once())
@@ -122,7 +111,7 @@ class UserDeputyServiceTest extends TestCase
             ->method('save')
             ->with($mockUser);
 
-        $actual = $this->sut->addMissingLayUserDeputies();
+        $actual = $this->sut->addMissingUserDeputies();
 
         self::assertEquals(1, $actual);
     }
@@ -139,7 +128,7 @@ class UserDeputyServiceTest extends TestCase
 
             // expect user repo to provide list of users whose deputy UID is in pre-reg but who have no deputy
             $this->mockUserRepository->expects(self::once())
-                ->method('findLayUsersWithoutDeputies')
+                ->method('findUsersWithoutDeputies')
                 ->willReturnCallback(function () use ($mockUser) {
                     yield $mockUser;
                 });
@@ -168,7 +157,7 @@ class UserDeputyServiceTest extends TestCase
                 )
             );
 
-            $actual = $this->sut->addMissingLayUserDeputies();
+            $actual = $this->sut->addMissingUserDeputies();
 
             self::assertEquals(0, $actual);
         }
