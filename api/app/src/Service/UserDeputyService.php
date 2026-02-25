@@ -35,7 +35,7 @@ class UserDeputyService
      */
     public function addMissingUserDeputies(): int
     {
-        // find users who have no deputy associated with them
+        // find dd_users (active, primary, lay/named) who have no deputy associated with them
         $usersWithoutDeputies = $this->userRepository->findUsersWithoutDeputies();
 
         // get mapping from deputy UIDs to IDs (so we can quickly find the deputy ID from the user's deputy UID);
@@ -48,11 +48,17 @@ class UserDeputyService
         /** @var User $user */
         foreach ($usersWithoutDeputies as $user) {
             $deputyUid = "{$user->getDeputyUid()}";
+
+            if ('' === $deputyUid) {
+                // we don't need to process this user any further as they have no deputy UID
+                continue;
+            }
+
+            /** @var ?Deputy $deputy */
             $deputy = null;
 
             // get or create the deputy
             if (array_key_exists($deputyUid, $deputyUidsToIds)) {
-                /** @var ?Deputy $deputy */
                 $deputy = $this->deputyRepository->find($deputyUidsToIds[$deputyUid]);
 
                 if (!is_null($deputy)) {
@@ -62,26 +68,28 @@ class UserDeputyService
                     if (!is_null($existingUser)) {
                         $this->logger->error(
                             sprintf(
-                                'Deputy with ID:%s already associated with a User under ID:%s',
+                                'Deputy with ID %s already associated with user with ID %s',
                                 $deputy->getId(),
                                 $existingUser->getId()
                             )
                         );
+
+                        // we don't need to process this deputy any further as they already have an associated user
                         continue;
                     }
                 }
-            } elseif ('' !== $deputyUid) {
-                // some users have an empty deputy UID, so we can't do anything with those;
-                // create the deputy from the user data where we do have a deputy UID
+            } else {
                 $deputy = $this->deputyService->createDeputyFromUser($user);
-                $this->deputyRepository->save($deputy);
-                $deputyUidsToIds[$deputyUid] = $deputy->getId();
             }
 
             if (!is_null($deputy)) {
                 $deputy->setUser($user);
+                $this->deputyRepository->save($deputy);
+
                 $user->setDeputy($deputy);
                 $this->userRepository->save($user);
+
+                $deputyUidsToIds[$deputyUid] = $deputy->getId();
 
                 ++$numAssociations;
             }
