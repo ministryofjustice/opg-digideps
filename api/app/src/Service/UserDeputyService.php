@@ -5,25 +5,19 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Deputy;
-use App\Entity\PreRegistration;
 use App\Entity\User;
 use App\Repository\DeputyRepository;
-use App\Repository\PreRegistrationRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Psr\Log\LoggerInterface;
 
 /**
- * Data services for lay user <-> deputy relationships.
- *
- * This requires a dedicated service as we have access to the pre-reg table to find lay deputy data,
- * but we need to take a different tack for PA/PRO deputies.
+ * Data services for user <-> deputy relationships.
  */
-class LayUserDeputyService
+class UserDeputyService
 {
     public function __construct(
-        private readonly PreRegistrationRepository $preRegistrationRepository,
         private readonly DeputyService $deputyService,
         private readonly UserRepository $userRepository,
         private readonly DeputyRepository $deputyRepository,
@@ -32,19 +26,20 @@ class LayUserDeputyService
     }
 
     /**
-     * Create deputy records for deputy UIDs in pre_registration where they don't exist.
-     * Associate lay users with deputy records where they aren't already associated.
+     * Create deputy records for lay and named deputy dd_users where they don't exist.
+     * Associate those users with deputy records where they aren't already associated.
      *
      * @return int Number of associations between deputies and users which were added
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function addMissingLayUserDeputies(): int
+    public function addMissingUserDeputies(): int
     {
-        // find lay users who have no deputy associated with them (but whose deputy UID is in the pre-reg table)
-        $usersWithoutDeputies = $this->userRepository->findLayUsersWithoutDeputies();
+        // find users who have no deputy associated with them
+        $usersWithoutDeputies = $this->userRepository->findUsersWithoutDeputies();
 
-        // get mapping from deputy UIDs to IDs (so we can quickly find the deputy ID from the user's deputy UID)
+        // get mapping from deputy UIDs to IDs (so we can quickly find the deputy ID from the user's deputy UID);
+        // when we create a deputy, it gets added to this mapping
         $deputyUidsToIds = $this->deputyRepository->getUidToIdMapping();
 
         // associate users with deputies
@@ -75,17 +70,12 @@ class LayUserDeputyService
                         continue;
                     }
                 }
-            } else {
-                // get pre-reg row for this deputy UID
-                /** @var ?PreRegistration $preReg */
-                $preReg = $this->preRegistrationRepository->findOneBy(['deputyUid' => $deputyUid]);
-
-                // create the deputy from the pre-reg row and user data; NB if $preReg is null, deputy will remain null
-                $deputy = $this->deputyService->createDeputyFromPreRegistration($preReg, ['email' => $user->getEmail()]);
-
-                if (!is_null($deputy)) {
-                    $this->deputyRepository->save($deputy);
-                }
+            } elseif ('' !== $deputyUid) {
+                // some users have an empty deputy UID, so we can't do anything with those;
+                // create the deputy from the user data where we do have a deputy UID
+                $deputy = $this->deputyService->createDeputyFromUser($user);
+                $this->deputyRepository->save($deputy);
+                $deputyUidsToIds[$deputyUid] = $deputy->getId();
             }
 
             if (!is_null($deputy)) {

@@ -72,23 +72,20 @@ class DeputyService
         return $deputy;
     }
 
-    public function createDeputyFromPreRegistration(?PreRegistration $preReg, array $data = []): ?Deputy
+    public function createDeputyFromUser(User $user): Deputy
     {
-        if (is_null($preReg)) {
-            return null;
-        }
-
-        $data = array_merge($data, [
-            'firstname' => $preReg->getDeputyFirstname(),
-            'lastname' => $preReg->getDeputySurname(),
-            'address1' => $preReg->getDeputyAddress1(),
-            'address2' => $preReg->getDeputyAddress2(),
-            'address3' => $preReg->getDeputyAddress3(),
-            'address4' => $preReg->getDeputyAddress4(),
-            'address5' => $preReg->getDeputyAddress5(),
-            'address_postcode' => $preReg->getDeputyPostcode(),
-            'deputy_uid' => $preReg->getDeputyUid(),
-        ]);
+        $data = [
+            'firstname' => $user->getFirstname(),
+            'lastname' => $user->getLastname(),
+            'address1' => $user->getAddress1(),
+            'address2' => $user->getAddress2(),
+            'address3' => $user->getAddress3(),
+            'address4' => $user->getAddress4(),
+            'address5' => $user->getAddress5(),
+            'address_postcode' => $user->getAddressPostcode(),
+            'deputy_uid' => $user->getDeputyUid(),
+            'email' => $user->getEmail(),
+        ];
 
         return $this->populateDeputy($data);
     }

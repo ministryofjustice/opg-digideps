@@ -470,19 +470,20 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Find lay deputy users whose deputy UID is in the pre_registration table but who are not associated with a deputy.
+     * Find lay, PA named, and PROF named deputy dd_users not associated with a deputy record.
      *
      * @return \Traversable<User>
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function findLayUsersWithoutDeputies(): \Traversable
+    public function findUsersWithoutDeputies(): \Traversable
     {
         $pageQueryBuilder = $this->createQueryBuilder('u')
-            ->innerJoin(PreRegistration::class, 'pr', Join::WITH, "CONCAT(u.deputyUid, '') = pr.deputyUid")
             ->leftJoin(Deputy::class, 'd', Join::WITH, 'u.id = d.user')
             ->where('u.active = true')
+            ->andWhere('u.roleName in (:roles)')
             ->andWhere('d.id IS NULL')
+            ->setParameter('roles', [User::ROLE_LAY_DEPUTY, User::ROLE_PA_NAMED, User::ROLE_PROF_NAMED])
             ->orderBy('u.id', 'ASC');
 
         $queryPager = new QueryPager($pageQueryBuilder);
