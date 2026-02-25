@@ -42,6 +42,9 @@ class DeputyshipsCSVIngester
         // apply manual data fixes before CSV ingested
         $dataFactoryResult = $this->preCSVDataFactory->run();
         $this->deputyshipsIngestResultRecorder->recordPreCSVDataFactoryResult($dataFactoryResult);
+        if (!$dataFactoryResult->success()) {
+            return $this->deputyshipsIngestResultRecorder->result();
+        }
 
         // load the CSV into the staging table in the database
         $loadResult = $this->deputyshipsCSVLoader->load($fileLocation);
@@ -68,6 +71,9 @@ class DeputyshipsCSVIngester
         // apply manual data fixes after CSV ingested
         $dataFactoryResult = $this->postCSVDataFactory->run();
         $this->deputyshipsIngestResultRecorder->recordPostCSVDataFactoryResult($dataFactoryResult);
+        if (!$dataFactoryResult->success()) {
+            return $this->deputyshipsIngestResultRecorder->result();
+        }
 
         $this->deputyshipsIngestResultRecorder->recordEnd();
 
