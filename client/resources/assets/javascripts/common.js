@@ -1,5 +1,4 @@
 import SessionTimeout from './globals/SessionTimeout'
-import CookieBanner from './globals/CookieBanner'
 import ConditionalFieldRevealer from './modules_new/ConditionalFieldRevealer'
 import TextAreaAutoSize from './modules_new/TextAreaAutoSize'
 import PreventDoubleClickButton from './modules_new/PreventDoubleClickButton'
@@ -14,19 +13,12 @@ import ShowHideContent from './modules_new/ShowHideContent'
 import Multitoggle from './modules_new/Multitoggle'
 import { initAll as MOJFrontendAll } from '@ministryofjustice/frontend'
 import { Accordion, Button, CharacterCount, Checkboxes, ErrorSummary, ExitThisPage, Header, NotificationBanner, PasswordInput, Radios, SkipLink, createAll } from 'govuk-frontend'
-import GoogleAnalyticsLinkTracking from './modules_new/GoogleAnalyticsLinkTracking'
-import { GoogleAnalyticsEvents } from './modules_new/googleAnalyticsEvents'
-import GoogleAnalyticsObject from './modules_new/GoogleAnalyticsObject'
-import GoogleAnalyticsGtag from './modules_new/GoogleAnalyticsGtag'
 import EnableJavascript from './modules_new/EnableJavascript'
 import FormSingleSubmit from './modules_new/FormSingleSubmit'
 
 window.addEventListener('DOMContentLoaded', () => {
   // Session Timeout
   SessionTimeout()
-
-  // Cookie Banner
-  CookieBanner()
 
   // Format currency module
   FormatCurrency.init(document)
@@ -55,14 +47,6 @@ window.addEventListener('DOMContentLoaded', () => {
   ShowHideContent.init()
 
   EnableJavascript.init(document)
-
-  GoogleAnalyticsEvents.init()
-
-  GoogleAnalyticsLinkTracking.init(document, 250)
-
-  GoogleAnalyticsObject.init(document)
-
-  GoogleAnalyticsGtag.init(document)
 
   FormSingleSubmit.init(document)
 
