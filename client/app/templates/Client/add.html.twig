@@ -65,13 +65,7 @@
 
         {{ form_known_date(form.courtDate, 'courtDate') }}
 
-        {{ form_submit_ga(
-            form.save,
-            'saveAndContinue',
-            gaCategory,
-            gaAction,
-            gaLabel)
-        }}
+        {{ form_submit(form.save, 'saveAndContinue') }}
 
     {{ form_end(form) }}
 
