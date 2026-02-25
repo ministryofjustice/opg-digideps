@@ -22,6 +22,7 @@ variable "accounts" {
         fault_injection_experiments_enabled = bool
         sleep_mode_enabled                  = bool
         secondary_region_enabled            = bool
+        run_one_off_migrations              = string
       })
       sirius = object({
         environment = string
@@ -106,5 +107,5 @@ locals {
   complete_deputy_dns_enabled = local.account.environment.name == "development" ? 0 : 1
   main_cert                   = local.complete_deputy_dns_enabled == 1 ? aws_acm_certificate_validation.wildcard[0].certificate_arn : ""
   new_cert                    = local.complete_deputy_dns_enabled == 1 ? aws_acm_certificate_validation.complete_deputy_report_wildcard[0].certificate_arn : ""
-  dns_account                 = local.complete_deputy_dns_enabled == 1 ? "515688267891" : local.account["account_id"]
+  dns_account                 = local.complete_deputy_dns_enabled == 1 ? "515688267891" : local.account.environment.account_id
 }

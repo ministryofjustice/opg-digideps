@@ -135,7 +135,7 @@ locals {
     },
     {
       name  = "RUN_ONE_OFF_MIGRATIONS",
-      value = var.account.run_one_off_migrations
+      value = var.account.environment.run_one_off_migrations
     },
   ]
 
@@ -192,8 +192,6 @@ locals {
     { name = "FEATURE_FLAG_PREFIX", value = local.feature_flag_prefix },
     { name = "FILESCANNER_SSLVERIFY", value = "false" },
     { name = "FILESCANNER_URL", value = "http://scan:8080" },
-    { name = "GA_DEFAULT", value = var.account.ga_default },
-    { name = "GA_GDS", value = var.account.ga_gds },
     { name = "HTMLTOPDF_ADDRESS", value = "http://htmltopdf:8080" },
     { name = "OPG_DOCKER_TAG", value = var.docker_tag },
     { name = "PARAMETER_PREFIX", value = local.parameter_prefix },

@@ -128,14 +128,6 @@ locals {
           value = "true"
         },
         {
-          name  = "GA_DEFAULT",
-          value = var.account.ga_default
-        },
-        {
-          name  = "GA_GDS",
-          value = var.account.ga_gds
-        },
-        {
           name  = "FEATURE_FLAG_PREFIX",
           value = local.feature_flag_prefix
         },
