@@ -6,16 +6,14 @@ namespace App\TestHelpers;
 
 use App\Entity\Client;
 use App\Entity\CourtOrder;
-use App\Entity\CourtOrderDeputy;
 use App\Entity\Deputy;
-use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 class CourtOrderTestHelper
 {
     public static function generateCourtOrder(
-        EntityManager $em,
+        EntityManagerInterface $em,
         Client $client,
         string $courtOrderUid,
         string $status = 'ACTIVE',
@@ -25,7 +23,6 @@ class CourtOrderTestHelper
         bool $deputyIsActive = true,
         \DateTime $orderDate = (new \DateTime()),
     ): CourtOrder {
-        /** @var CourtOrder $courtOrder */
         $courtOrder = (new CourtOrder())
             ->setCourtOrderUid($courtOrderUid)
             ->setClient($client)

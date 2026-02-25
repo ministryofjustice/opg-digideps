@@ -170,54 +170,34 @@
 
         {% for typeOfMoneyReceivedOnClientsBehalf in form.typesOfMoneyReceivedOnClientsBehalf %}
             <fieldset class="add-another__item">
-                {{
-                    form_input(
-                        typeOfMoneyReceivedOnClientsBehalf.moneyType,
-                        '',
-                        {
-                            hintText: '',
-                            label: {
-                                text: 'form.moneyDetails.moneyTypeLabel'|trans(transOptions, translationDomain)
-                            }
-                        }
-                    )
-                }}
-
-                {{
-                form_input(
-                    typeOfMoneyReceivedOnClientsBehalf.whoReceivedMoney,
-                    '',
-                    {
+                {{ form_input(typeOfMoneyReceivedOnClientsBehalf.moneyType, '', {
                         hintText: '',
                         label: {
-                        text: 'form.moneyDetails.whoReceivedMoneyLabel'|trans(transOptions, translationDomain)
-                    }
-                    }
-                )
+                            text: 'form.moneyDetails.moneyTypeLabel'|trans(transOptions, translationDomain)
+                        }
+                    })
                 }}
 
-                {{
-                    form_input(
-                        typeOfMoneyReceivedOnClientsBehalf.amount,
-                        '',
-                        {
-                            hintText: '',
-                            label: {
-                                text: 'form.moneyDetails.amountLabel'|trans(transOptions, translationDomain)
-                            },
-                            inputPrefix: '£'
+                {{ form_input(typeOfMoneyReceivedOnClientsBehalf.whoReceivedMoney, '', {
+                        hintText: '',
+                        label: {
+                            text: 'form.moneyDetails.whoReceivedMoneyLabel'|trans(transOptions, translationDomain)
                         }
-                    )
+                    })
                 }}
 
-                {{
-                    form_checkbox(
-                        typeOfMoneyReceivedOnClientsBehalf.amountDontKnow,
-                        'form.moneyDetails',
-                        {
-                            labelText: 'form.moneyDetails.dontKnowCheckboxLabel'|trans(transOptions, translationDomain)
+                {{ form_input(typeOfMoneyReceivedOnClientsBehalf.amount, '', {
+                        inputPrefix: '£',
+                        hintText: '',
+                        label: {
+                            text: 'form.moneyDetails.amountLabel'|trans(transOptions, translationDomain)
                         }
-                    )
+                    })
+                }}
+
+                {{ form_checkbox(typeOfMoneyReceivedOnClientsBehalf.amountDontKnow, 'form.moneyDetails', {
+                        labelText: 'form.moneyDetails.dontKnowCheckboxLabel'|trans(transOptions, translationDomain)
+                    })
                 }}
             </fieldset>
 
