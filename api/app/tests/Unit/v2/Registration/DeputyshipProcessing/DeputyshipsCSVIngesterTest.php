@@ -30,6 +30,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
     private DeputyshipsCandidatesSelector|MockObject $mockDeputyshipsCandidatesSelector;
     private DeputyshipBuilder|MockObject $mockDeputyshipBuilder;
     private DeputyshipsIngestResultRecorder|MockObject $mockDeputyshipsIngestResultRecorder;
+    private DataFactoryInterface|MockObject $mockPreCsvDataFactory;
     private DataFactoryInterface|MockObject $mockPostCsvDataFactory;
     private DeputyshipsCSVIngester $sut;
 
