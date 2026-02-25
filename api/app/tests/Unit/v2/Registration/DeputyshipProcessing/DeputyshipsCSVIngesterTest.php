@@ -53,8 +53,40 @@ final class DeputyshipsCSVIngesterTest extends TestCase
         );
     }
 
+    public function testPreCSVDataFactoryFails(): void
+    {
+        $preCSVDataFactoryResult = new DataFactoryResult();
+        $preCSVDataFactoryResult->addErrorMessages('preCSVDataFactory', ['Failed to apply data fixes']);
+
+        $this->mockPreCsvDataFactory->expects(self::once())
+            ->method('run')
+            ->willReturn($preCSVDataFactoryResult);
+
+        $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
+            ->method('recordPreCSVDataFactoryResult')
+            ->with($preCSVDataFactoryResult);
+
+        $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
+            ->method('result')
+            ->willReturn(new DeputyshipsCSVIngestResult(false, 'pre CSV data fixes failed to apply'));
+
+        $result = $this->sut->processCsv('/tmp/deputyshipsReport.csv');
+
+        self::assertFalse($result->success);
+    }
+
     public function testCsvLoadFailed(): void
     {
+        $preCSVDataFactoryResult = new DataFactoryResult();
+
+        $this->mockPreCsvDataFactory->expects(self::once())
+            ->method('run')
+            ->willReturn($preCSVDataFactoryResult);
+
+        $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
+            ->method('recordPreCSVDataFactoryResult')
+            ->with($preCSVDataFactoryResult);
+
         $mockCsvLoaderResult = self::createMock(DeputyshipsCSVLoaderResult::class);
         $mockCsvLoaderResult->loadedOk = false;
 
@@ -78,6 +110,17 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
     public function testCandidateSelectionFailed(): void
     {
+        // pre CSV data fixes applied OK
+        $preCSVDataFactoryResult = new DataFactoryResult();
+
+        $this->mockPreCsvDataFactory->expects(self::once())
+            ->method('run')
+            ->willReturn($preCSVDataFactoryResult);
+
+        $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
+            ->method('recordPreCSVDataFactoryResult')
+            ->with($preCSVDataFactoryResult);
+
         // CSV load goes OK
         $mockCSVLoaderResult = $this->createMock(DeputyshipsCSVLoaderResult::class);
         $mockCSVLoaderResult->loadedOk = true;
@@ -119,7 +162,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
         $builderResult = new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidatesApplied);
 
         $postCSVDataFactoryResult = new DataFactoryResult();
-        $postCSVDataFactoryResult->addErrorMessages('DataFixes', ['Failed to apply data fix']);
+        $postCSVDataFactoryResult->addErrorMessages('postCSVDataFactory', ['Failed to apply data fix']);
 
         $this->mockPreCsvDataFactory->expects(self::once())
             ->method('run')

@@ -30,11 +30,11 @@ class ChainedDataFactoryTest extends TestCase
         $mockDataFactory2->expects(self::once())->method('run')->willReturn($failure);
 
         // sut
-        $sut = new ChainedDataFactory([$mockDataFactory1, $mockDataFactory2]);
+        $sut = new ChainedDataFactory(dataFactories: [$mockDataFactory1, $mockDataFactory2]);
         $result = $sut->run();
 
         // assertions
-        self::assertFalse($result->getSuccess());
+        self::assertFalse($result->success());
 
         self::assertEquals(
             [
