@@ -48,7 +48,7 @@ class DataFactoryResult
         return $this->errorMessages;
     }
 
-    public function getSuccess(): bool
+    public function success(): bool
     {
         return empty($this->errorMessages);
     }

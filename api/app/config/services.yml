@@ -464,6 +464,7 @@ services:
     class: App\Factory\ChainedDataFactory
     public: true
     arguments:
+      $name: "preCSVDataFactory"
       $dataFactories:
         - '@App\Factory\MissingDeputyDataFactory'
 
@@ -471,6 +472,7 @@ services:
     class: App\Factory\ChainedDataFactory
     public: true
     arguments:
+      $name: "postCSVDataFactory"
       $dataFactories:
         - '@App\Factory\ClientIdFixDataFactory'
 
