@@ -61,17 +61,17 @@ class DeputyshipsIngestResultRecorder
         }
     }
 
-    private function recordDataFactoryResult(DataFactoryResult $dataFactoryResult): void
+    private function recordDataFactoryResult(string $dataFactoryOrigin, DataFactoryResult $dataFactoryResult): void
     {
         if ($dataFactoryResult->success()) {
-            $this->logMessage('data fixes applied successfully');
+            $this->logMessage("$dataFactoryOrigin: data fixes applied successfully");
             foreach ($dataFactoryResult->getMessages() as $source => $messages) {
                 foreach ($messages as $message) {
                     $this->logMessage("[$source] $message");
                 }
             }
         } else {
-            $this->logError('one or more data fixes failed to apply');
+            $this->logError("$dataFactoryOrigin: one or more data fixes failed to apply");
             foreach ($dataFactoryResult->getErrorMessages() as $source => $messages) {
                 foreach ($messages as $message) {
                     $this->logError("[$source] $message");
@@ -128,13 +128,13 @@ class DeputyshipsIngestResultRecorder
     public function recordPreCSVDataFactoryResult(DataFactoryResult $dataFactoryResult): void
     {
         $this->preProcessingDataFixesSuccessful = $dataFactoryResult->success();
-        $this->recordDataFactoryResult($dataFactoryResult);
+        $this->recordDataFactoryResult('pre-CSV data factory', $dataFactoryResult);
     }
 
     public function recordPostCSVDataFactoryResult(DataFactoryResult $dataFactoryResult): void
     {
         $this->postProcessingDataFixesSuccessful = $dataFactoryResult->success();
-        $this->recordDataFactoryResult($dataFactoryResult);
+        $this->recordDataFactoryResult('post-CSV data factory', $dataFactoryResult);
     }
 
     public function recordEnd(\DateTimeInterface $endDateTime = new \DateTimeImmutable()): void
