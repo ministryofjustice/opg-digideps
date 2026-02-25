@@ -471,6 +471,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     /**
      * Find lay, PA named, and PROF named deputy dd_users not associated with a deputy record.
+     * Only consider active primary users.
      *
      * @return \Traversable<User>
      * @throws NoResultException
@@ -481,6 +482,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $pageQueryBuilder = $this->createQueryBuilder('u')
             ->leftJoin(Deputy::class, 'd', Join::WITH, 'u.id = d.user')
             ->where('u.active = true')
+            ->andWhere('u.isPrimary = true')
             ->andWhere('u.roleName in (:roles)')
             ->andWhere('d.id IS NULL')
             ->setParameter('roles', [User::ROLE_LAY_DEPUTY, User::ROLE_PA_NAMED, User::ROLE_PROF_NAMED])
