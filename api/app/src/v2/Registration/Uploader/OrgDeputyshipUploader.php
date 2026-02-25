@@ -158,7 +158,7 @@ class OrgDeputyshipUploader
         $this->deputy = $deputy;
     }
 
-    private function handleOrganisation(OrgDeputyshipDto $dto): Organisation
+    private function handleOrganisation(OrgDeputyshipDto $dto): void
     {
         $this->currentOrganisation = $this->em->getRepository(Organisation::class)->findByEmailIdentifier($dto->getDeputyEmail());
 
@@ -172,8 +172,6 @@ class OrgDeputyshipUploader
 
             $this->added['organisations'][] = $organisation;
         }
-
-        return $this->currentOrganisation;
     }
 
     private function handleClient(OrgDeputyshipDto $dto): void
