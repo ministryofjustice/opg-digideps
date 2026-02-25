@@ -21,6 +21,7 @@ variable "accounts" {
         alarms_active                       = bool
         fault_injection_experiments_enabled = bool
         sleep_mode_enabled                  = bool
+        secondary_region_enabled            = bool
       })
       sirius = object({
         environment = string
