@@ -6,6 +6,7 @@ namespace App\Tests\Unit\Service;
 
 use App\Entity\Report\ReportSubmission;
 use DateTime;
+use PHPUnit\Framework\MockObject\Exception;
 use RuntimeException;
 use Mockery;
 use App\Entity\Ndr\Ndr;
@@ -492,7 +493,7 @@ final class ReportServiceTest extends TestCase
 
     public function testUserStatusIsSetToActiveOnceReportIsSubmitted(): void
     {
-        $user = $this->user->setActive(null);
+        $user = $this->user->setActive(false);
 
         /** @var ReportService|MockInterface $reportService */
         $reportService = Mockery::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
@@ -509,7 +510,7 @@ final class ReportServiceTest extends TestCase
     }
 
     // pre-reg entries for cases which will result in required reports being created
-    private static function preRegEntriesForRequiredReports(): array
+    public static function preRegEntriesForRequiredReports(): array
     {
         $now = (new DateTime())->format('Y-m-d');
 
@@ -552,10 +553,10 @@ final class ReportServiceTest extends TestCase
 
     /**
      * @param PreRegistration[] $preRegRows
-     * @param string[]          $expectedReportTypes
-     *
-     * @dataProvider preRegEntriesForRequiredReports
+     * @param string[] $expectedReportTypes
+     * @throws Exception
      */
+    #[DataProvider('preRegEntriesForRequiredReports')]
     public function testCreateRequiredReports(array $preRegRows, int $reportsCreated, array $expectedReportTypes): void
     {
         $mockClient = self::createMock(Client::class);
@@ -596,6 +597,8 @@ final class ReportServiceTest extends TestCase
         $reports = $this->sut->createRequiredReports($mockClient);
 
         self::assertCount(count($expectedReportTypes), $reports);
-        self::assertEquals($expectedReportTypes, array_map(function (Report $report) { return $report->getType(); }, $reports));
+        self::assertEquals($expectedReportTypes, array_map(function (Report $report) {
+            return $report->getType();
+        }, $reports));
     }
 }
