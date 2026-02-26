@@ -50,7 +50,7 @@ class UserDeputyService
             $deputyUid = "{$user->getDeputyUid()}";
 
             if ('' === $deputyUid) {
-                // we don't need to process this user any further as they have no deputy UID
+                // we can't process this user any further as they have no deputy UID
                 continue;
             }
 
