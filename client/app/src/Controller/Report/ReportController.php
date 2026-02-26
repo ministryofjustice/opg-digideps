@@ -14,6 +14,7 @@ use App\EventDispatcher\ObservableEventDispatcher;
 use App\Exception\DisplayableException;
 use App\Exception\ReportNotSubmittableException;
 use App\Exception\ReportNotSubmittedException;
+use App\Exception\ReportSubmittedException;
 use App\Form\FeedbackReportType;
 use App\Form\Report\ReportDeclarationType;
 use App\Form\Report\ReportType;
@@ -282,12 +283,16 @@ class ReportController extends AbstractController
         $currentUser = $this->getUser();
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $report->setSubmitted(true)->setSubmitDate(new \DateTime());
-            $reportSubmissionService->generateReportDocuments($report);
+            if (is_null($report->getSubmitDate()) || abs($report->getSubmitDate()->getTimestamp() - (new \DateTime())->getTimestamp()) > 300) {
+                $report->setSubmitted(true)->setSubmitDate(new \DateTime());
+                $reportSubmissionService->generateReportDocuments($report);
 
-            $this->reportApi->submit($report, $currentUser);
+                $this->reportApi->submit($report, $currentUser);
+            }
 
-            return $this->redirect($this->generateUrl('report_submit_confirmation', ['reportId' => $report->getId()]));
+            return $this->redirect(
+                $this->generateUrl('report_submit_confirmation', ['reportId' => $report->getId()])
+            );
         }
 
         return [
