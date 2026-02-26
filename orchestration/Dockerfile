@@ -29,10 +29,6 @@ RUN apk add --no-cache --update \
 
 RUN apk add --no-cache --update nodejs npm
 RUN apk add --no-cache --update aws-cli
-RUN apk add --no-cache \
-    udev \
-    ttf-freefont \
-    chromium
 RUN apk update && apk upgrade
 
 # Use 14 as later versions can cause issues with our backup and restore
@@ -60,12 +56,25 @@ COPY tests/run-resilience-tests.sh /tests/run-resilience-tests.sh
 COPY tests/smoke-tests/AdminSmokeTest.js /tests/smoke-tests/AdminSmokeTest.js
 COPY tests/smoke-tests/FrontSmokeTest.js /tests/smoke-tests/FrontSmokeTest.js
 
+COPY tests/smoke-tests-python/smoke_tests.py /tests/smoke-tests-python/smoke_tests.py
+COPY tests/smoke-tests-python/requirements.txt /tests/smoke-tests-python/requirements.txt
+
 COPY tests/resilience-tests/FrontLoadTest.js /tests/resilience-tests/FrontLoadTest.js
 COPY tests/resilience-tests/Analyse.js /tests/resilience-tests/Analyse.js
 COPY tests/resilience-tests/RunExperiments.js /tests/resilience-tests/RunExperiments.js
 
 COPY tests/utility/Utility.js /tests/utility/Utility.js
 COPY tests/utility/DataAnalysis.js /tests/utility/DataAnalysis.js
+
+
+COPY tests/smoke-tests-python/requirements.txt /tests/smoke-tests-python/
+
+RUN python -m pip install \
+    --no-cache-dir \
+    --target /tests/smoke-tests-python \
+    -r /tests/smoke-tests-python/requirements.txt
+
+ENV PYTHONPATH="/tests/smoke-tests-python"
 
 WORKDIR /tests
 RUN npm ci
