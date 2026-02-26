@@ -6,6 +6,10 @@ namespace App\Factory;
 
 use App\Service\UserDeputyService;
 
+/**
+ * Adds deputy records to users where they don't have one.
+ * This requires the dd_user record to have a deputy UID for matching purposes.
+ */
 class MissingDeputyDataFactory implements DataFactoryInterface
 {
     public function __construct(
