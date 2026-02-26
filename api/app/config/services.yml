@@ -1,483 +1,498 @@
 parameters:
-  fixtures:
-    account_password: "%env(FIXTURES_ACCOUNTPASSWORD)%"
-    legacy_password_hash: "%env(FIXTURES_LEGACYPASSWORDHASH)%"
+    fixtures:
+        account_password: "%env(FIXTURES_ACCOUNTPASSWORD)%"
+        legacy_password_hash: "%env(FIXTURES_LEGACYPASSWORDHASH)%"
 
-  # To avoid undefined variable errors at build time during clear-cache, we can define default values for env vars
-  # At runtime Symfony will fetch the actual value from the environment
-  env(AUDIT_LOG_GROUP_NAME): "dummy-build-time-value-overridden-at-runtime"
+    # To avoid undefined variable errors at build time during clear-cache, we can define default values for env vars
+    # At runtime Symfony will fetch the actual value from the environment
+    env(AUDIT_LOG_GROUP_NAME): "dummy-build-time-value-overridden-at-runtime"
 
-  # set this param to a higher value than session_expire_seconds on the client
-  user_provider_timeout_seconds: 3901
-  client_permissions:
-    admin: [ROLE_AD, ROLE_ADMIN]
-    frontend: [ROLE_DEPUTY]
+    # set this param to a higher value than session_expire_seconds on the client
+    user_provider_timeout_seconds: 3901
+    client_permissions:
+        admin: [ROLE_AD, ROLE_ADMIN]
+        frontend: [ROLE_DEPUTY]
 
-  shared_email_domains:
-    - "aol.com"
-    - "aol.co.uk"
-    - "btconnect.com"
-    - "btinternet.com"
-    - "gmail.com"
-    - "googlemail.com"
-    - "hotmail.com"
-    - "hotmail.co.uk"
-    - "icloud.com"
-    - "live.co.uk"
-    - "live.com"
-    - "mac.com"
-    - "me.com"
-    - "msn.com"
-    - "nhs.net"
-    - "ntlworld.com"
-    - "outlook.com"
-    - "sky.com"
-    - "talktalk.net"
-    - "yahoo.com"
-    - "yahoo.co.uk"
-    - "example.com"
+    shared_email_domains:
+        - "aol.com"
+        - "aol.co.uk"
+        - "btconnect.com"
+        - "btinternet.com"
+        - "gmail.com"
+        - "googlemail.com"
+        - "hotmail.com"
+        - "hotmail.co.uk"
+        - "icloud.com"
+        - "live.co.uk"
+        - "live.com"
+        - "mac.com"
+        - "me.com"
+        - "msn.com"
+        - "nhs.net"
+        - "ntlworld.com"
+        - "outlook.com"
+        - "sky.com"
+        - "talktalk.net"
+        - "yahoo.com"
+        - "yahoo.co.uk"
+        - "example.com"
 
 services:
-  em:
-    alias: doctrine.orm.default_entity_manager
-
-  # default configuration for services in *this* file
-  _defaults:
-    autowire: true # Automatically injects dependencies in your services.
-    autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
-    bind:
-      $fixturesEnabled: "%env(bool:FIXTURES_ENABLED)%"
-      $yamlFixtureLocation: "%kernel.project_dir%/src/DataFixtures/"
-      $fixtureParams: "%fixtures%"
-      $symfonyEnvironment: "%kernel.environment%"
-      $projectDir: "%kernel.project_dir%"
-      $redis: "@snc_redis.default"
-      $frontendHost: "%env(JWT_HOST)%"
-      $workspace: "%workspace%"
-      $sessionPrefix: "%env(SESSION_PREFIX)%"
-      Predis\ClientInterface: "@snc_redis.default"
-
-  # makes classes in src/ available to be used as services
-  # this creates a service per class whose id is the fully-qualified class name
-  App\:
-    resource: "../src/*"
-    exclude: "../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}"
-
-  App\Controller\:
-    resource: "../src/Controller/"
-    tags: [controller.service_arguments]
-
-  App\v2\Controller\:
-    resource: "../src/v2/Controller"
-    tags: [controller.service_arguments]
-
-  App\v2\Registration\Controller\:
-    resource: "../src/v2/Registration/Controller"
-    tags: [controller.service_arguments]
-
-  monolog.processor.add_request_id:
-    class: App\Service\RequestIdLoggerProcessor
-    arguments: ["@service_container"]
-    tags:
-      - { name: monolog.processor, method: processRecord }
-
-  gedmo.listener.softdeleteable:
-    class: Gedmo\SoftDeleteable\SoftDeleteableListener
-    tags:
-      - { name: doctrine.event_subscriber, connection: default }
-    calls:
-      - [setAnnotationReader, ["@annotation_reader"]]
-
-  gedmo.listener.timestampable:
-    class: Gedmo\Timestampable\TimestampableListener
-    tags:
-      - { name: doctrine.event_subscriber, connection: default }
-    calls:
-      - [setAnnotationReader, ["@annotation_reader"]]
-
-  App\DataFixtures\:
-    resource: "../src/DataFixtures"
-    tags: ["doctrine.fixture.orm"]
-    autowire: true
-
-  App\Controller\Report\ReportController:
-    class: App\Controller\Report\ReportController
-    arguments:
-      $updateHandlers:
-        [
-          "@rest_handler.report.deputy_costs_estimate_report_update_handler",
-          "@rest_handler.report.deputy_costs_report_update_handler",
-          "@rest_handler.report.pa_fees_expenses_report_update_handler",
-        ]
-
-  App\EventListener\RestInputOuputFormatter:
-    arguments:
-      ["@jms_serializer", "@logger", ["json"], "json", "%kernel.debug%"]
-    tags:
-      - {
-          name: kernel.event_listener,
-          event: kernel.view,
-          method: onKernelView,
-        }
-      - {
-          name: kernel.event_listener,
-          event: kernel.exception,
-          method: onKernelException,
-        }
-      - {
-          name: kernel.event_listener,
-          event: kernel.request,
-          method: onKernelRequest,
-        }
-
-  App\EventListener\DoctrineListener:
-    tags:
-      - { name: doctrine.event_listener, event: prePersist, method: prePersist }
-      - { name: doctrine.event_listener, event: preUpdate, method: preUpdate }
-      - { name: doctrine.event_listener, event: preRemove, method: preRemove }
-
-  App\EventListener\FixDefaultSchemaListener:
-    class: App\EventListener\FixDefaultSchemaListener
-    tags:
-      - {
-          name: doctrine.event_listener,
-          event: postGenerateSchema,
-          method: postGenerateSchema,
-        }
-
-  App\Factory\OrganisationFactory:
-    class: App\Factory\OrganisationFactory
-    arguments: ["%shared_email_domains%"]
-    public: true
-
-  App\Service\RestHandler\OrganisationRestHandler:
-    class: App\Service\RestHandler\OrganisationRestHandler
-    arguments:
-      - "@em"
-      - "@validator"
-      - '@App\Repository\OrganisationRepository'
-      - '@App\Repository\UserRepository'
-      - '@App\Factory\OrganisationFactory'
-      - "%shared_email_domains%"
-
-  App\Security\RedisUserProvider:
-    arguments:
-      [
-        "@snc_redis.default",
-        "@logger",
-        { "timeout_seconds": "%user_provider_timeout_seconds%" },
-        '@App\Repository\UserRepository',
-      ]
-
-  App\Security\OrganisationVoter:
-    class: App\Security\OrganisationVoter
-    arguments: ["@security.helper"]
-    tags:
-      - { name: security.voter }
-
-  App\Security\ClientVoter:
-    class: App\Security\ClientVoter
-    arguments: ["@security.helper"]
-    tags:
-      - { name: security.voter }
-
-  App\Security\UserVoter:
-    class: App\Security\UserVoter
-    tags:
-      - { name: security.voter }
-
-  App\Service\Client\TokenStorage\RedisStorage:
-    arguments:
-      $redis: "@snc_redis.default"
-
-  App\Service\DataImporter\CsvToArray: ~
-
-  # Disable autowiring for these helper classes
-  App\Service\ReportStatusService: ~
-  App\Service\Stats\StatsQueryParameters: ~
-
-  Aws\S3\S3ClientInterface:
-    alias: Aws\S3\S3Client
-
-  Aws\S3\S3Client:
-    arguments: ["%s3_client_params%"]
-
-  App\Service\File\Storage\S3Storage:
-    arguments: ['@Aws\S3\S3Client', "%s3_sirius_bucket%", "@logger"]
-
-  App\Service\File\Storage\S3SatisfactionDataStorage:
-    parent: App\Service\File\Storage\S3Storage
-    arguments:
-      index_1: "%s3_satisfaction_bucket%"
-
-  Symfony\Component\Security\Core\Role\RoleHierarchyInterface: "@security.role_hierarchy"
-
-  App\Repository\PreRegistrationRepository:
-    class: App\Repository\PreRegistrationRepository
-    tags: ["doctrine.repository_service"]
-
-  App\Repository\ClientRepository:
-    class: App\Repository\ClientRepository
-    tags: ["doctrine.repository_service"]
-
-  App\Repository\DocumentRepository:
-    class: App\Repository\DocumentRepository
-    tags: ["doctrine.repository_service"]
-
-  App\Repository\ChecklistRepository:
-    class: App\Repository\ChecklistRepository
-    tags: ["doctrine.repository_service"]
-
-  App\Repository\CourtOrderRepository:
-    class: App\Repository\CourtOrderRepository
-    tags: ["doctrine.repository_service"]
-
-  App\Repository\CourtOrderDeputyRepository:
-    class: App\Repository\CourtOrderDeputyRepository
-    tags: ["doctrine.repository_service"]
-
-  App\Repository\DeputyRepository:
-    class: App\Repository\DeputyRepository
-    tags: ["doctrine.repository_service"]
-
-  App\Repository\NdrRepository:
-    class: App\Repository\NdrRepository
-    tags: ["doctrine.repository_service"]
-
-  App\Repository\NoteRepository:
-    class: App\Repository\NoteRepository
-    tags: ["doctrine.repository_service"]
-
-  App\Repository\OrganisationRepository:
-    class: App\Repository\OrganisationRepository
-    tags: ["doctrine.repository_service"]
-
-  App\Repository\ReportRepository:
-    class: App\Repository\ReportRepository
-    tags: ["doctrine.repository_service"]
-
-  App\Repository\ReportSubmissionRepository:
-    class: App\Repository\ReportSubmissionRepository
-    tags: ["doctrine.repository_service"]
-
-  App\Repository\SatisfactionRepository:
-    class: App\Repository\SatisfactionRepository
-    tags: ["doctrine.repository_service"]
-
-  App\Repository\StagingDeputyshipRepository:
-    class: App\Repository\StagingDeputyshipRepository
-    tags: ["doctrine.repository_service"]
-
-  App\Repository\UserRepository:
-    class: App\Repository\UserRepository
-    tags: ["doctrine.repository_service"]
-
-  App\Repository\UserResearchResponseRepository:
-    class: App\Repository\UserResearchResponseRepository
-    tags: ["doctrine.repository_service"]
-
-  App\Repository\AssetRepository:
-    class: App\Repository\AssetRepository
-    tags: ["doctrine.repository_service"]
-
-  App\Repository\BankAccountRepository:
-    class: App\Repository\BankAccountRepository
-    tags: ["doctrine.repository_service"]
-
-  App\Repository\NdrAssetRepository:
-    class: App\Repository\NdrAssetRepository
-    tags: ["doctrine.repository_service"]
-
-  App\Repository\NdrBankAccountRepository:
-    class: App\Repository\NdrBankAccountRepository
-    tags: ["doctrine.repository_service"]
-
-  App\Service\Auth\AuthService:
-    arguments:
-      $clientPermissions: "%client_permissions%"
-
-  App\Service\BruteForce\AttemptsInTimeChecker:
-    arguments: ["@snc_redis.default"]
-    calls:
-      - [setRedisPrefix, ["ac_ret_code"]]
-      # after 5 attempts in the last 10 minutes, return a different return code (activate captcha)
-      - [addTrigger, [5, 600]]
-
-  App\Service\BruteForce\AttemptsIncrementalWaitingChecker:
-    arguments: ["@snc_redis.default"]
-    calls:
-      - [setRedisPrefix, ["ac_exception"]]
-      # after 10 attempts, freeze for 30 minutes
-      - [addFreezingRule, [10, 1800]]
-      # after further 10 attempts. freeze for 1h
-      - [addFreezingRule, [20, 3600]]
-      # after further 10 attempts. freeze for 2h
-      - [addFreezingRule, [30, 7200]]
-
-  logstash_formatter:
-    class: Monolog\Formatter\LogstashFormatter
-    arguments:
-      - application.api
-      - null
-      - null
-      - ""
-      - 1
-  line_formatter:
-    class: Monolog\Formatter\LineFormatter
-
-  opg_json_formatter:
-    class: App\Logger\OpgJsonFormatter
-
-  opg_line_formatter:
-    class: App\Logger\OpgLineFormatter
-
-  rest_handler.report.deputy_costs_estimate_report_update_handler:
-    class: App\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler
-    arguments: ["@em"]
-
-  rest_handler.report.deputy_costs_report_update_handler:
-    class: App\Service\RestHandler\Report\DeputyCostsReportUpdateHandler
-    arguments: ["@em"]
-
-  rest_handler.report.pa_fees_expenses_report_update_handler:
-    class: App\Service\RestHandler\Report\PaFeesExpensesReportUpdateHandler
-    arguments: ["@em"]
-
-  PlainUserAssembler:
-    class: App\v2\Assembler\UserAssembler
-
-  App\v2\Assembler\Report\ReportSummaryAssembler: ~
-  App\v2\Assembler\Report\ReportAssemblerInterface: '@App\v2\Assembler\Report\ReportSummaryAssembler'
-
-  PlainOrganisationAssembler:
-    class: App\v2\Assembler\OrganisationAssembler
-
-  uuid_normalizer:
-    class: GBProd\UuidNormalizer\UuidNormalizer
-    tags:
-      - { name: serializer.normalizer }
-
-  uuid_denormalizer:
-    class: GBProd\UuidNormalizer\UuidDenormalizer
-    tags:
-      - { name: serializer.denormalizer }
-
-  Aws\Ssm\SsmClient:
-    arguments: ["%ssm_client_params%"]
-
-  App\Service\ParameterStoreService:
-    arguments:
-      [
-        '@Aws\Ssm\SsmClient',
-        "%env(PARAMETER_PREFIX)%",
-        "%env(FEATURE_FLAG_PREFIX)%",
-      ]
-
-  App\Security\HeaderTokenAuthenticator:
-    class: App\Security\HeaderTokenAuthenticator
-    arguments:
-      $redis: "@snc_redis.default"
-
-  Aws\SecretsManager\SecretsManagerClient:
-    arguments: ["%secrets_manager_client_params%"]
-
-  App\Service\SecretManagerService:
-    arguments:
-      ['@Aws\SecretsManager\SecretsManagerClient', "%env(SECRETS_PREFIX)%"]
-
-  Aws\CloudWatchLogs\CloudWatchLogsClient:
-    class: Aws\CloudWatchLogs\CloudWatchLogsClient
-    arguments: ["%cloudwatch_logs_client_params%"]
-
-  App\Service\Audit\AwsAuditLogHandler:
-    class: App\Service\Audit\AwsAuditLogHandler
-    arguments:
-      - '@Aws\CloudWatchLogs\CloudWatchLogsClient'
-      - "%env(AUDIT_LOG_GROUP_NAME)%"
-
-  App\Service\Audit\LocalAuditLogHandler:
-    class: App\Service\Audit\LocalAuditLogHandler
-
-  app.guzzlehttp_clientinterface:
-    class: GuzzleHttp\Client
-    arguments:
-      $config:
-        verify: false
-        headers:
-          Content-Type: application/json
-        timeout: 20
-        allow_redirects: false
-
-  app.response_comparer_cli:
-    class: App\Service\ResponseComparison\ClientsResponseComparer
-
-  app.response_comparer_co:
-    class: App\Service\ResponseComparison\CourtOrderResponseComparer
-
-  App\Command\ApiComparison:
-    arguments:
-      $httpClient: "@app.guzzlehttp_clientinterface"
-      $redis: "@snc_redis.default"
-      $comparers:
-        - "@app.response_comparer_cli"
-        - "@app.response_comparer_co"
-
-  App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader:
-    public: true
-
-  App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector:
-    public: true
-
-  App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory:
-    public: true
-
-  App\Model\DeputyshipProcessingRawDbAccess:
-    arguments:
-      $ingestWriterEm: "@doctrine.orm.ingestwriter_entity_manager"
-    public: true
-
-  App\v2\Service\DeputyshipCandidatesConverter:
-    public: true
-
-  App\Service\DeputyCaseService:
-    public: true
-
-  App\v2\Assembler\ClientAssembler:
-    public: true
-
-  App\v2\Assembler\DeputyAssembler:
-    public: true
-
-  App\v2\Service\CourtOrderService:
-    public: true
-
-  App\Service\LayRegistrationService:
-    public: true
-
-  App\Service\DeputyService:
-    public: true
-
-  App\Service\UserDeputyService:
-    public: true
-
-  preCSVDataFactory:
-    class: App\Factory\ChainedDataFactory
-    public: true
-    arguments:
-      $name: "preCSVDataFactory"
-      $dataFactories:
-        - '@App\Factory\MissingDeputyDataFactory'
-
-  postCSVDataFactory:
-    class: App\Factory\ChainedDataFactory
-    public: true
-    arguments:
-      $name: "postCSVDataFactory"
-      $dataFactories:
-        - '@App\Factory\ClientIdFixDataFactory'
-
-  App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester:
-    public: true
-    arguments:
-      $preCSVDataFactory: "@preCSVDataFactory"
-      $postCSVDataFactory: "@postCSVDataFactory"
+    em:
+        alias: doctrine.orm.default_entity_manager
+
+    # default configuration for services in *this* file
+    _defaults:
+        autowire: true # Automatically injects dependencies in your services.
+        autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            $fixturesEnabled: "%env(bool:FIXTURES_ENABLED)%"
+            $yamlFixtureLocation: "%kernel.project_dir%/src/DataFixtures/"
+            $fixtureParams: "%fixtures%"
+            $symfonyEnvironment: "%kernel.environment%"
+            $projectDir: "%kernel.project_dir%"
+            $redis: "@snc_redis.default"
+            $frontendHost: "%env(JWT_HOST)%"
+            $workspace: "%workspace%"
+            $sessionPrefix: "%env(SESSION_PREFIX)%"
+            Predis\ClientInterface: "@snc_redis.default"
+
+    # makes classes in src/ available to be used as services
+    # this creates a service per class whose id is the fully-qualified class name
+    App\:
+        resource: "../src/*"
+        exclude: "../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}"
+
+    App\Controller\:
+        resource: "../src/Controller/"
+        tags: [controller.service_arguments]
+
+    App\v2\Controller\:
+        resource: "../src/v2/Controller"
+        tags: [controller.service_arguments]
+
+    App\v2\Registration\Controller\:
+        resource: "../src/v2/Registration/Controller"
+        tags: [controller.service_arguments]
+
+    monolog.processor.add_request_id:
+        class: App\Service\RequestIdLoggerProcessor
+        arguments: ["@service_container"]
+        tags:
+            - { name: monolog.processor, method: processRecord }
+
+    gedmo.listener.softdeleteable:
+        class: Gedmo\SoftDeleteable\SoftDeleteableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [setAnnotationReader, ["@annotation_reader"]]
+
+    gedmo.listener.timestampable:
+        class: Gedmo\Timestampable\TimestampableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [setAnnotationReader, ["@annotation_reader"]]
+
+    App\DataFixtures\:
+        resource: "../src/DataFixtures"
+        tags: ["doctrine.fixture.orm"]
+        autowire: true
+
+    App\Controller\Report\ReportController:
+        class: App\Controller\Report\ReportController
+        arguments:
+            $updateHandlers:
+                [
+                    "@rest_handler.report.deputy_costs_estimate_report_update_handler",
+                    "@rest_handler.report.deputy_costs_report_update_handler",
+                    "@rest_handler.report.pa_fees_expenses_report_update_handler",
+                ]
+
+    App\EventListener\RestInputOuputFormatter:
+        arguments:
+            ["@jms_serializer", "@logger", ["json"], "json", "%kernel.debug%"]
+        tags:
+            - {
+                  name: kernel.event_listener,
+                  event: kernel.view,
+                  method: onKernelView,
+              }
+            - {
+                  name: kernel.event_listener,
+                  event: kernel.exception,
+                  method: onKernelException,
+              }
+            - {
+                  name: kernel.event_listener,
+                  event: kernel.request,
+                  method: onKernelRequest,
+              }
+
+    App\EventListener\DoctrineListener:
+        tags:
+            - {
+                  name: doctrine.event_listener,
+                  event: prePersist,
+                  method: prePersist,
+              }
+            - {
+                  name: doctrine.event_listener,
+                  event: preUpdate,
+                  method: preUpdate,
+              }
+            - {
+                  name: doctrine.event_listener,
+                  event: preRemove,
+                  method: preRemove,
+              }
+
+    App\EventListener\FixDefaultSchemaListener:
+        class: App\EventListener\FixDefaultSchemaListener
+        tags:
+            - {
+                  name: doctrine.event_listener,
+                  event: postGenerateSchema,
+                  method: postGenerateSchema,
+              }
+
+    App\Factory\OrganisationFactory:
+        class: App\Factory\OrganisationFactory
+        arguments: ["%shared_email_domains%"]
+        public: true
+
+    App\Service\RestHandler\OrganisationRestHandler:
+        class: App\Service\RestHandler\OrganisationRestHandler
+        arguments:
+            - "@em"
+            - "@validator"
+            - '@App\Repository\OrganisationRepository'
+            - '@App\Repository\UserRepository'
+            - '@App\Factory\OrganisationFactory'
+            - "%shared_email_domains%"
+
+    App\Security\RedisUserProvider:
+        arguments:
+            [
+                "@snc_redis.default",
+                "@logger",
+                { "timeout_seconds": "%user_provider_timeout_seconds%" },
+                '@App\Repository\UserRepository',
+            ]
+
+    App\Security\OrganisationVoter:
+        class: App\Security\OrganisationVoter
+        arguments: ["@security.helper"]
+        tags:
+            - { name: security.voter }
+
+    App\Security\ClientVoter:
+        class: App\Security\ClientVoter
+        arguments: ["@security.helper"]
+        tags:
+            - { name: security.voter }
+
+    App\Security\UserVoter:
+        class: App\Security\UserVoter
+        tags:
+            - { name: security.voter }
+
+    App\Service\Client\TokenStorage\RedisStorage:
+        arguments:
+            $redis: "@snc_redis.default"
+
+    App\Service\DataImporter\CsvToArray: ~
+
+    # Disable autowiring for these helper classes
+    App\Service\ReportStatusService: ~
+    App\Service\Stats\StatsQueryParameters: ~
+
+    Aws\S3\S3ClientInterface:
+        alias: Aws\S3\S3Client
+
+    Aws\S3\S3Client:
+        arguments: ["%s3_client_params%"]
+
+    App\Service\File\Storage\S3Storage:
+        arguments: ['@Aws\S3\S3Client', "%s3_sirius_bucket%", "@logger"]
+
+    App\Service\File\Storage\S3SatisfactionDataStorage:
+        parent: App\Service\File\Storage\S3Storage
+        arguments:
+            index_1: "%s3_satisfaction_bucket%"
+
+    Symfony\Component\Security\Core\Role\RoleHierarchyInterface: "@security.role_hierarchy"
+
+    App\Repository\PreRegistrationRepository:
+        class: App\Repository\PreRegistrationRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\ClientRepository:
+        class: App\Repository\ClientRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\DocumentRepository:
+        class: App\Repository\DocumentRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\ChecklistRepository:
+        class: App\Repository\ChecklistRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\CourtOrderRepository:
+        class: App\Repository\CourtOrderRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\CourtOrderDeputyRepository:
+        class: App\Repository\CourtOrderDeputyRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\DeputyRepository:
+        class: App\Repository\DeputyRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\NdrRepository:
+        class: App\Repository\NdrRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\NoteRepository:
+        class: App\Repository\NoteRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\OrganisationRepository:
+        class: App\Repository\OrganisationRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\ReportRepository:
+        class: App\Repository\ReportRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\ReportSubmissionRepository:
+        class: App\Repository\ReportSubmissionRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\SatisfactionRepository:
+        class: App\Repository\SatisfactionRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\StagingDeputyshipRepository:
+        class: App\Repository\StagingDeputyshipRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\UserRepository:
+        class: App\Repository\UserRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\UserResearchResponseRepository:
+        class: App\Repository\UserResearchResponseRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\AssetRepository:
+        class: App\Repository\AssetRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\BankAccountRepository:
+        class: App\Repository\BankAccountRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\NdrAssetRepository:
+        class: App\Repository\NdrAssetRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Repository\NdrBankAccountRepository:
+        class: App\Repository\NdrBankAccountRepository
+        tags: ["doctrine.repository_service"]
+
+    App\Service\Auth\AuthService:
+        arguments:
+            $clientPermissions: "%client_permissions%"
+
+    App\Service\BruteForce\AttemptsInTimeChecker:
+        arguments: ["@snc_redis.default"]
+        calls:
+            - [setRedisPrefix, ["ac_ret_code"]]
+            # after 5 attempts in the last 10 minutes, return a different return code (activate captcha)
+            - [addTrigger, [5, 600]]
+
+    App\Service\BruteForce\AttemptsIncrementalWaitingChecker:
+        arguments: ["@snc_redis.default"]
+        calls:
+            - [setRedisPrefix, ["ac_exception"]]
+            # after 10 attempts, freeze for 30 minutes
+            - [addFreezingRule, [10, 1800]]
+            # after further 10 attempts. freeze for 1h
+            - [addFreezingRule, [20, 3600]]
+            # after further 10 attempts. freeze for 2h
+            - [addFreezingRule, [30, 7200]]
+
+    logstash_formatter:
+        class: Monolog\Formatter\LogstashFormatter
+        arguments:
+            - application.api
+            - null
+            - null
+            - ""
+            - "1"
+    line_formatter:
+        class: Monolog\Formatter\LineFormatter
+
+    opg_json_formatter:
+        class: App\Logger\OpgJsonFormatter
+
+    opg_line_formatter:
+        class: App\Logger\OpgLineFormatter
+
+    rest_handler.report.deputy_costs_estimate_report_update_handler:
+        class: App\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler
+        arguments: ["@em"]
+
+    rest_handler.report.deputy_costs_report_update_handler:
+        class: App\Service\RestHandler\Report\DeputyCostsReportUpdateHandler
+        arguments: ["@em"]
+
+    rest_handler.report.pa_fees_expenses_report_update_handler:
+        class: App\Service\RestHandler\Report\PaFeesExpensesReportUpdateHandler
+        arguments: ["@em"]
+
+    PlainUserAssembler:
+        class: App\v2\Assembler\UserAssembler
+
+    App\v2\Assembler\Report\ReportSummaryAssembler: ~
+    App\v2\Assembler\Report\ReportAssemblerInterface: '@App\v2\Assembler\Report\ReportSummaryAssembler'
+
+    PlainOrganisationAssembler:
+        class: App\v2\Assembler\OrganisationAssembler
+
+    uuid_normalizer:
+        class: GBProd\UuidNormalizer\UuidNormalizer
+        tags:
+            - { name: serializer.normalizer }
+
+    uuid_denormalizer:
+        class: GBProd\UuidNormalizer\UuidDenormalizer
+        tags:
+            - { name: serializer.denormalizer }
+
+    Aws\Ssm\SsmClient:
+        arguments: ["%ssm_client_params%"]
+
+    App\Service\ParameterStoreService:
+        arguments:
+            [
+                '@Aws\Ssm\SsmClient',
+                "%env(PARAMETER_PREFIX)%",
+                "%env(FEATURE_FLAG_PREFIX)%",
+            ]
+
+    App\Security\HeaderTokenAuthenticator:
+        class: App\Security\HeaderTokenAuthenticator
+        arguments:
+            $redis: "@snc_redis.default"
+
+    Aws\SecretsManager\SecretsManagerClient:
+        arguments: ["%secrets_manager_client_params%"]
+
+    App\Service\SecretManagerService:
+        arguments:
+            [
+                '@Aws\SecretsManager\SecretsManagerClient',
+                "%env(SECRETS_PREFIX)%",
+            ]
+
+    Aws\CloudWatchLogs\CloudWatchLogsClient:
+        class: Aws\CloudWatchLogs\CloudWatchLogsClient
+        arguments: ["%cloudwatch_logs_client_params%"]
+
+    App\Service\Audit\AwsAuditLogHandler:
+        class: App\Service\Audit\AwsAuditLogHandler
+        arguments:
+            - '@Aws\CloudWatchLogs\CloudWatchLogsClient'
+            - "%env(AUDIT_LOG_GROUP_NAME)%"
+
+    App\Service\Audit\LocalAuditLogHandler:
+        class: App\Service\Audit\LocalAuditLogHandler
+
+    app.guzzlehttp_clientinterface:
+        class: GuzzleHttp\Client
+        arguments:
+            $config:
+                verify: false
+                headers:
+                    Content-Type: application/json
+                timeout: 20
+                allow_redirects: false
+
+    app.response_comparer_cli:
+        class: App\Service\ResponseComparison\ClientsResponseComparer
+
+    app.response_comparer_co:
+        class: App\Service\ResponseComparison\CourtOrderResponseComparer
+
+    App\Command\ApiComparison:
+        arguments:
+            $httpClient: "@app.guzzlehttp_clientinterface"
+            $redis: "@snc_redis.default"
+            $comparers:
+                - "@app.response_comparer_cli"
+                - "@app.response_comparer_co"
+
+    App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader:
+        public: true
+
+    App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector:
+        public: true
+
+    App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory:
+        public: true
+
+    App\Model\DeputyshipProcessingRawDbAccess:
+        arguments:
+            $ingestWriterEm: "@doctrine.orm.ingestwriter_entity_manager"
+        public: true
+
+    App\v2\Service\DeputyshipCandidatesConverter:
+        public: true
+
+    App\Service\DeputyCaseService:
+        public: true
+
+    App\v2\Assembler\ClientAssembler:
+        public: true
+
+    App\v2\Assembler\DeputyAssembler:
+        public: true
+
+    App\v2\Service\CourtOrderService:
+        public: true
+
+    App\Service\LayRegistrationService:
+        public: true
+
+    App\Service\DeputyService:
+        public: true
+
+    App\Service\UserDeputyService:
+        public: true
+
+    preCSVDataFactory:
+        class: App\Factory\ChainedDataFactory
+        public: true
+        arguments:
+            $name: "preCSVDataFactory"
+            $dataFactories:
+                - '@App\Factory\MissingDeputyDataFactory'
+
+    postCSVDataFactory:
+        class: App\Factory\ChainedDataFactory
+        public: true
+        arguments:
+            $name: "postCSVDataFactory"
+            $dataFactories:
+                - '@App\Factory\ClientIdFixDataFactory'
+
+    App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester:
+        public: true
+        arguments:
+            $preCSVDataFactory: "@preCSVDataFactory"
+            $postCSVDataFactory: "@postCSVDataFactory"
