@@ -150,6 +150,7 @@ class ReportController extends AbstractController
     #[Template('@App/Report/Report/create.html.twig')]
     public function createAction(Request $request, string $clientId): RedirectResponse|array
     {
+        /** @var Client $client */
         $client = $this->restClient->get('client/' . $clientId, 'Client', ['client', 'client-id', 'client-reports', 'report-id']);
 
         $existingReports = $this->reportApi->getReportsIndexedById($client);
@@ -174,7 +175,10 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->post('report', $form->getData());
+            /** @var array $data */
+            $data = $form->getData();
+
+            $this->restClient->post('report', $data);
 
             $user = $this->userApi->getUserWithData();
             $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::DEPUTY);
@@ -297,6 +301,7 @@ class ReportController extends AbstractController
 
             $report->setSubmitted(true)->setSubmitDate(new \DateTime());
             $reportSubmissionService->generateReportDocuments($report);
+
             $this->reportApi->submit($report, $currentUser);
 
             return $this->redirect(
@@ -323,7 +328,9 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $satisfactionId = $this->satisfactionApi->createPostSubmissionFeedback($form->getData(), $report->getType(), $reportId);
+            /** @var FeedbackReport $t */
+            $t = $form->getData();
+            $satisfactionId = $this->satisfactionApi->createPostSubmissionFeedback($t, $report->getType(), $reportId);
             $postSubmissionUrl = $this->generateUrl('report_post_submission_user_research', ['reportId' => $reportId, 'satisfactionId' => $satisfactionId]);
 
             return $this->redirect($postSubmissionUrl);
@@ -332,7 +339,7 @@ class ReportController extends AbstractController
         return [
             'report' => $report,
             'form' => $form->createView(),
-            'homePageName' => $this->getUser()->isLayDeputy() ? 'courtorders_for_deputy' : 'org_dashboard',
+            'homePageName' => $this->getUser() instanceof User && $this->getUser()->isLayDeputy() ? 'courtorders_for_deputy' : 'org_dashboard',
         ];
     }
 
@@ -387,11 +394,14 @@ class ReportController extends AbstractController
 
         $documentStorageReferences = [];
         foreach ($documentIds as $documentId) {
-            $documentStorageReferences[] = $this->restClient->get(
+            /** @var \App\Entity\Report\Document $document */
+            $document = $this->restClient->get(
                 sprintf('document/%s', $documentId),
                 'Report\Document',
                 ['document-storage-reference']
-            )->getStorageReference();
+            );
+
+            $documentStorageReferences[] = $document->getStorageReference();
         }
 
         // call Document Service and check if documents exist in the S3 bucket
@@ -555,6 +565,7 @@ class ReportController extends AbstractController
         $jms = $this->determineJmsGroups($user);
 
         /* Get client with all other JMS groups required */
+        /** @var Client $client */
         $client = $this->restClient->get("client/$clientId", 'Client', $jms);
 
         if ($user->isDeputyOrg()) {
@@ -562,6 +573,7 @@ class ReportController extends AbstractController
             Separate call to get client Users as query taking too long for some profs with many deputies attached.
             We only need the user id for the add client contact permission check
              */
+            /** @var Client $clientWithUsers */
             $clientWithUsers = $this->restClient->get("client/$clientId", 'Client', ['user-id', 'client-users']);
             $client->setUsers($clientWithUsers->getUsers());
         }
