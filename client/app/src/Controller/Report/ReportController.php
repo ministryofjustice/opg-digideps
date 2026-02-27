@@ -33,6 +33,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -267,7 +268,7 @@ class ReportController extends AbstractController
     #[Template('@App/Report/Report/declaration.html.twig')]
     public function declarationAction(Request $request, int $reportId, ReportSubmissionService $reportSubmissionService): RedirectResponse|array
     {
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$reportGroupsAll);
+        $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
 
         // check status
         $status = $report->getStatus();
@@ -283,12 +284,23 @@ class ReportController extends AbstractController
         $currentUser = $this->getUser();
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if (is_null($report->getSubmitDate()) || abs($report->getSubmitDate()->getTimestamp() - (new \DateTime())->getTimestamp()) > 300) {
-                $report->setSubmitted(true)->setSubmitDate(new \DateTime());
-                $reportSubmissionService->generateReportDocuments($report);
+            if (true === $report->getSubmitted()) {
+                if ($request->getSession() instanceof Session) {
+                    $request->getSession()->getFlashBag()->add(
+                        'error',
+                        'Report has already been submitted'
+                    );
+                }
 
-                $this->reportApi->submit($report, $currentUser);
+                return $this->redirect(
+                    $this->generateUrl('report_declaration', ['reportId' => $report->getId()])
+                );
             }
+
+            $report->setSubmitted(true)->setSubmitDate(new \DateTime());
+            $this->reportApi->submit($report, $currentUser);
+
+            $reportSubmissionService->generateReportDocuments($report);
 
             return $this->redirect(
                 $this->generateUrl('report_submit_confirmation', ['reportId' => $report->getId()])
@@ -309,12 +321,6 @@ class ReportController extends AbstractController
     public function submitConfirmationAction(Request $request, int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReport($reportId, ['status']);
-
-        // check status
-        if (!$report->getSubmitted()) {
-            $message = $this->translator->trans('report.submissionExceptions.submitted', [], 'validators');
-            throw new ReportNotSubmittedException($message);
-        }
 
         $form = $this->createForm(FeedbackReportType::class, new FeedbackReport());
         $form->handleRequest($request);
