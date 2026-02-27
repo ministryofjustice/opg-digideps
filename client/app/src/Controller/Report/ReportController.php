@@ -13,8 +13,6 @@ use App\Event\RegistrationSucceededEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Exception\DisplayableException;
 use App\Exception\ReportNotSubmittableException;
-use App\Exception\ReportNotSubmittedException;
-use App\Exception\ReportSubmittedException;
 use App\Form\FeedbackReportType;
 use App\Form\Report\ReportDeclarationType;
 use App\Form\Report\ReportType;
