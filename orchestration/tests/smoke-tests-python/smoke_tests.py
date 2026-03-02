@@ -65,27 +65,20 @@ def extract_form_inputs(form):
 
 def http(session, method, url, *, retries=3, backoff=1, timeout=10, **kwargs):
     """
-    Wrapper for GET/POST with retries.
-    - method: 'get' or 'post'
-    - retries: number of attempts
-    - backoff: seconds between retries (multiplied each attempt)
-    - timeout: request-level timeout
+    Simple retry wrapper.
+    Retries on ANY exception.
     """
-
     for attempt in range(1, retries + 1):
         try:
-            r = session.request(method, url, timeout=timeout, **kwargs)
-            return r
+            return session.request(method, url, timeout=timeout, **kwargs)
 
-        except (Timeout, ConnectionError, RequestException) as e:
+        except Exception:
             if attempt == retries:
                 error_and_exit(
-                    f"HTTP {method.upper()} to {url} failed after {retries} retries"
+                    f"HTTP {method.upper()} {url} failed after {retries} retries"
                 )
-            time.sleep(backoff * attempt)
 
-    # Should never reach here
-    error_and_exit("Unexpected HTTP wrapper failure")
+            time.sleep(backoff * attempt)
 
 
 # -----------------------------------------------------------
