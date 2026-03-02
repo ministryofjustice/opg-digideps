@@ -93,6 +93,14 @@ def http(session, method, url, *, retries=3, backoff=1, timeout=10, **kwargs):
 # -----------------------------------------------------------
 def get_secret(environment, endpoint):
     print(f"=== Getting secrets for {environment} ===")
+    if environment not in [
+        "staging",
+        "preproduction",
+        "production",
+        "training",
+        "local",
+    ]:
+        environment = "default"
 
     secret_name = f"{environment}/smoke-test-variables"
 
@@ -135,7 +143,7 @@ def login(session, base_url, user, password, expected_page):
     print("=== Logging in ===")
 
     login_url = f"{base_url}/login"
-    r = http(session, "post", login_url)
+    r = http(session, "get", login_url)
 
     soup = BeautifulSoup(r.text, "html.parser")
 
@@ -151,7 +159,6 @@ def login(session, base_url, user, password, expected_page):
 
     session.headers.update({"Referer": login_url, "Origin": base_url})
 
-    # r = session.post(login_url, data=payload, allow_redirects=True)
     r = http(session, "post", login_url, data=payload, allow_redirects=True)
     if expected_page not in r.url:
         error_and_exit(
@@ -165,7 +172,7 @@ def search_for_user(session, base_url, user):
     print("=== Searching for user ===")
 
     users_url = f"{base_url}/admin/"
-    r = http(session, "post", users_url)
+    r = http(session, "get", users_url)
     if r.status_code != 200:
         error_and_exit(f"Failed to load users page ({r.status_code})")
 
@@ -181,7 +188,7 @@ def search_for_user(session, base_url, user):
     action = form.get("action")
     target_url = users_url if not action else (base_url + action)
 
-    r = http(session, "post", target_url, params=params)
+    r = http(session, "get", target_url, params=params)
     if r.status_code != 200:
         error_and_exit(f"Search failed with status {r.status_code}")
 
@@ -202,7 +209,7 @@ def search_for_client(session, base_url, client):
     print("=== Searching for client ===")
 
     url = f"{base_url}/admin/client/search"
-    r = http(session, "post", url)
+    r = http(session, "get", url)
     if r.status_code != 200:
         error_and_exit(f"Failed to load client search page ({r.status_code})")
 
@@ -230,7 +237,7 @@ def search_for_client(session, base_url, client):
     action = form.get("action")
     target = url if not action else base_url + action
 
-    r = http(session, "post", target, params=params)
+    r = http(session, "get", target, params=params)
     if r.status_code != 200:
         error_and_exit(f"Client search failed ({r.status_code})")
 
@@ -249,7 +256,7 @@ def search_for_client(session, base_url, client):
 def check_organisations(session, base_url):
     print("=== Checking organisations ===")
 
-    r = http(session, "post", f"{base_url}/admin/organisations")
+    r = http(session, "get", f"{base_url}/admin/organisations")
     soup = BeautifulSoup(r.text, "html.parser")
 
     rows = soup.select(".govuk-table__body tr")
@@ -259,7 +266,7 @@ def check_organisations(session, base_url):
 def check_submissions(session, base_url):
     print("=== Checking submissions ===")
 
-    r = http(session, "post", f"{base_url}/admin/documents?tab=archived")
+    r = http(session, "get", f"{base_url}/admin/documents?tab=archived")
     soup = BeautifulSoup(r.text, "html.parser")
 
     rows = soup.select(".govuk-table__body tr")
@@ -270,7 +277,7 @@ def check_analytics(session, base_url):
     print("=== Checking analytics ===")
 
     url = f"{base_url}/admin/stats/metrics"
-    r = http(session, "post", url)
+    r = http(session, "get", url)
     if r.status_code != 200:
         error_and_exit(f"Failed to load analytics page ({r.status_code})")
 
@@ -348,7 +355,7 @@ def update_user_details(session, base_url):
         return payload
 
     def update(new_name):
-        r = http(session, "post", edit_url)
+        r = http(session, "get", edit_url)
         if r.status_code != 200:
             error_and_exit("Could not load edit details page")
 
@@ -384,7 +391,7 @@ def update_user_details(session, base_url):
         if r2.status_code != 200:
             error_and_exit(f"Failed to submit details ({r2.status_code})")
 
-        r3 = http(session, "post", view_url)
+        r3 = http(session, "get", view_url)
         if r3.status_code != 200:
             error_and_exit(f"Failed to load profile view page ({r3.status_code})")
         soup3 = BeautifulSoup(r3.text, "html.parser")
@@ -402,7 +409,7 @@ def update_user_details(session, base_url):
 def log_out(session, base_url):
     print("=== Logging out ===")
 
-    r = http(session, "post", f"{base_url}/logout", allow_redirects=True)
+    r = http(session, "get", f"{base_url}/logout", allow_redirects=True)
     if "/login" not in r.url:
         error_and_exit(f"Did not redirect to login on logout.")
     print("✓ Logged out")
@@ -412,7 +419,7 @@ def check_service_health(session, base_url):
     print("=== Checking service health ===")
 
     url = f"{base_url}/health-check/service"
-    r = http(session, "post", url)
+    r = http(session, "get", url)
     if r.status_code != 200:
         error_and_exit(f"Health page failed with status {r.status_code}")
 
@@ -451,7 +458,7 @@ def check_report_sections_visible(session, base_url):
     print("=== Checking report sections visible (frontend) ===")
 
     # Load a page that should contain the "start report" link
-    r = http(session, "post", base_url + "/")
+    r = http(session, "get", base_url + "/")
     if r.status_code != 200:
         error_and_exit(f"Failed to load frontend home ({r.status_code})")
     soup = BeautifulSoup(r.text, "html.parser")
@@ -459,7 +466,7 @@ def check_report_sections_visible(session, base_url):
     start_link = soup.select_one(".behat-link-report-start")
     if not start_link:
         # Try loading deputyship details
-        r = http(session, "post", f"{base_url}/deputyship-details")
+        r = http(session, "get", f"{base_url}/deputyship-details")
         soup = BeautifulSoup(r.text, "html.parser")
         start_link = soup.select_one(".behat-link-report-start")
         if not start_link:
@@ -469,7 +476,7 @@ def check_report_sections_visible(session, base_url):
 
     href = start_link.get("href")
     target = resolve(base_url, href)
-    r = http(session, "post", target)
+    r = http(session, "get", target)
     if r.status_code != 200:
         error_and_exit(f"Failed to open report start/overview page ({r.status_code})")
     soup = BeautifulSoup(r.text, "html.parser")
