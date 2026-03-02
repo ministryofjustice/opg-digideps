@@ -28,15 +28,15 @@ const runSmoke = async () => {
   page.on('request', req => {
     const url = req.url();
 
-    if (
-      url.includes('googletagmanager.com') ||
-      url.includes('google-analytics.com')
-    ) {
-      return req.abort();
+    const googleRegex = /(google|googleapis|gvt1)\.com/i;
+
+    if (googleRegex.test(url)) {
+    return req.abort();
     }
 
     req.continue();
   });
+
   try {
     const { admin_user, admin_password, client, deputy_user, deputy_password } = await getSecret(environment, endpoint);
     const user = deputy_user;

@@ -101,7 +101,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         );
 
         $successResponseBody = ['data' => ['id' => $this->reportPdfSubmissionUuid]];
-        $successResponse = new Response('200', [], json_encode($successResponseBody));
+        $successResponse = new Response(200, [], json_encode($successResponseBody));
 
         $this->siriusApiGatewayClient->sendReportPdfDocument($siriusDocumentUpload, '1234567T')
             ->shouldBeCalled()
@@ -184,7 +184,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         );
 
         $successResponseBody = ['data' => ['id' => $this->reportPdfSubmissionUuid]];
-        $successResponse = new Response('200', [], json_encode($successResponseBody));
+        $successResponse = new Response(200, [], json_encode($successResponseBody));
 
         $this->siriusApiGatewayClient->sendReportPdfDocument($siriusDocumentUpload, '1234567T')
             ->shouldBeCalled()
@@ -256,7 +256,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         );
 
         $failureResponseBody = ['errors' => [0 => ['id' => 'ABC123', 'code' => 'OPGDATA-API-FORBIDDEN']]];
-        $failureResponse = new Response('403', [], json_encode($failureResponseBody));
+        $failureResponse = new Response(403, [], json_encode($failureResponseBody));
 
         $requestException = new RequestException('An error occurred', new Request('POST', '/report-submission/9876/update-uuid'), $failureResponse);
 
@@ -318,7 +318,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setStorageReference($this->s3Reference);
 
         $successResponseBody = ['data' => ['type' => 'supportingDocument', 'id' => 'a-random-uuid']];
-        $successResponse = new Response('200', [], json_encode($successResponseBody));
+        $successResponse = new Response(200, [], json_encode($successResponseBody));
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusSupportingDocumentUpload(
             $expectedSubmissionIdUsedForSync,
@@ -407,7 +407,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setStorageReference($this->s3Reference);
 
         $failureResponseBody = ['errors' => [0 => ['id' => 'ABC123', 'code' => 'OPGDATA-API-FORBIDDEN']]];
-        $failureResponse = new Response('403', [], json_encode($failureResponseBody));
+        $failureResponse = new Response(403, [], json_encode($failureResponseBody));
 
         $requestException = new RequestException('An error occurred', new Request('POST', '/report-submission/9876/update-uuid'), $failureResponse);
 
@@ -449,7 +449,7 @@ class DocumentSyncServiceTest extends KernelTestCase
     /**
      * @dataProvider errorCodeProvider
      */
-    public function testSendDocumentSyncFailureSiriusErrorTypeBasedOnResponseCode(string $errorCode, string $expectedErrorType, int $syncAttempts): void
+    public function testSendDocumentSyncFailureSiriusErrorTypeBasedOnResponseCode(int $errorCode, string $expectedErrorType, int $syncAttempts): void
     {
         $reportPdfReportSubmission =
             (new ReportSubmission())
@@ -523,9 +523,9 @@ class DocumentSyncServiceTest extends KernelTestCase
     public function errorCodeProvider(): array
     {
         return [
-            '4XX error code' => ['400', Document::SYNC_STATUS_PERMANENT_ERROR, 0],
-            '5XX error code' => ['500', Document::SYNC_STATUS_TEMPORARY_ERROR, 0],
-            '5XX error code - 4th attempt' => ['500', Document::SYNC_STATUS_PERMANENT_ERROR, 3],
+            '4XX error code' => [400, Document::SYNC_STATUS_PERMANENT_ERROR, 0],
+            '5XX error code' => [500, Document::SYNC_STATUS_TEMPORARY_ERROR, 0],
+            '5XX error code - 4th attempt' => [500, Document::SYNC_STATUS_PERMANENT_ERROR, 3],
         ];
     }
 
@@ -552,7 +552,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setStorageReference($this->s3Reference);
 
         $successResponseBody = ['data' => ['type' => 'supportingDocument', 'id' => 'a-random-uuid']];
-        $successResponse = new Response('200', [], json_encode($successResponseBody));
+        $successResponse = new Response(200, [], json_encode($successResponseBody));
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusSupportingDocumentUpload(
             $expectedSubmissionIdUsedForSync,

@@ -27,7 +27,7 @@ resource "aws_route53_resolver_query_log_config" "egress" {
 resource "aws_route53_resolver_query_log_config_association" "egress" {
   count                        = var.account.dns_firewall.enabled ? 1 : 0
   resolver_query_log_config_id = aws_route53_resolver_query_log_config.egress[0].id
-  resource_id                  = aws_vpc.main.id
+  resource_id                  = module.network.vpc.id
 }
 
 locals {
@@ -114,17 +114,17 @@ locals {
     "complete-deputy-report.service.gov.uk.",
     "deputy-reporting.api.opg.service.justice.gov.uk.",
     "amazonlinux-2-repos-${data.aws_region.current.name}.s3.dualstack.${data.aws_region.current.name}.amazonaws.com.",
-    "pa-uploads-production02.s3.${data.aws_region.current.name}.amazonaws.com.",
-    "api-production02-0.c15chafpzt4q.${data.aws_region.current.name}.rds.amazonaws.com.",
+    "pa-uploads-production.s3.${data.aws_region.current.name}.amazonaws.com.",
+    "api-production-0.c15chafpzt4q.${data.aws_region.current.name}.rds.amazonaws.com.",
     "postgres.preproduction.internal.",
     "postgres.preproduction.internal.dd.opg.digital.",
-    "postgres.production02.internal.",
-    "frontend-redis.production02.internal.",
-    "api-redis.production02.internal.",
-    "front.production02.private.",
-    "api.production02.private.",
-    "htmltopdf.production02.private.",
-    "scan.production02.private.",
+    "postgres.production.internal.",
+    "frontend-redis.production.internal.",
+    "api-redis.production.internal.",
+    "front.production.private.",
+    "api.production.private.",
+    "htmltopdf.production.private.",
+    "scan.production.private.",
     "secretsmanager.${data.aws_region.current.name}.amazonaws.com."
   ]
 
@@ -184,7 +184,7 @@ resource "aws_route53_resolver_firewall_rule_group_association" "egress" {
   name                   = "egress"
   firewall_rule_group_id = aws_route53_resolver_firewall_rule_group.egress[0].id
   priority               = 500
-  vpc_id                 = aws_vpc.main.id
+  vpc_id                 = module.network.vpc.id
 }
 
 

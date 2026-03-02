@@ -34,86 +34,8 @@
 </head>
 
 <body class="govuk-template__body">
-{% if ga is defined and ga is not null %}
-    <div id="gaCustomElements"
-        data-ga-default="{{ ga.default }}"
-        data-ga-gds="{{ ga.gds }}"
-        {% if app.user is not null %}data-tracking-id="{{ app.user.gaTrackingId() }}"{% endif %}
-        {% if gaCustomUrl is defined %}data-ga-custom-url="{{ gaCustomUrl }}"{% endif %}></d>
-    {% include '@App/Layouts/_google_analytics_events_gtag.html.twig' %}
-{% endif %}
 
 <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
-
-{% if not app.request.cookies.has('cookie_policy') %}
-    <div class="govuk-cookie-banner behat-region-cookie-banner" data-module="opg-cookie-banner" data-nosnippet
-         role="region" aria-label="Cookies on Complete the Deputy Report">
-        <div class="govuk-cookie-banner__message govuk-width-container" data-module="opg-cookie-inner-banner">
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-two-thirds">
-                    <h2 class="govuk-cookie-banner__heading govuk-heading-m">Cookies on Complete the deputy report</h2>
-
-                    <div class="govuk-cookie-banner__content">
-                        <p class="govuk-body">We use some essential cookies to make this service work.</p>
-                        <p class="govuk-body">We’d also like to use analytics cookies so we can understand how you use
-                            the service and make improvements.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="govuk-button-group">
-                <button value="accept" type="button" name="cookies" class="govuk-button opg-cookies-btn"
-                        data-module="govuk-button" data-token="{{ csrf_token('cookie-banner') }}">
-                    Accept analytics cookies
-                </button>
-                <button value="reject" type="button" name="cookies" class="govuk-button opg-cookies-btn"
-                        data-module="govuk-button" data-token="{{ csrf_token('cookie-banner') }}">
-                    Reject analytics cookies
-                </button>
-                <a class="govuk-link" href="/cookies">View cookies</a>
-            </div>
-        </div>
-
-        <div class="govuk-cookie-banner__message govuk-width-container" data-cookie="accept-message" role="alert"
-             hidden>
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-two-thirds">
-                    <div class="govuk-cookie-banner__content">
-                        <p class="govuk-body">You’ve accepted analytics cookies. You can <a class="govuk-link"
-                                                                                            href="/cookies">change your
-                                cookie settings</a> at any time.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="govuk-button-group">
-                <button value="hide" class="govuk-button opg-cookies-btn" data-module="govuk-button"
-                        data-js="cookie-hide-message">
-                    Hide this message
-                </button>
-            </div>
-        </div>
-
-        <div class="govuk-cookie-banner__message govuk-width-container" data-cookie="reject-message" role="alert"
-             hidden>
-            <div class="govuk-grid-row">
-                <div class="govuk-grid-column-two-thirds">
-                    <div class="govuk-cookie-banner__content">
-                        <p class="govuk-body">You’ve rejected analytics cookies. You can <a class="govuk-link"
-                                                                                            href="/cookies">change your
-                                cookie settings</a> at any time.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="govuk-button-group">
-                <button value="hide" class="govuk-button opg-cookies-btn" data-module="govuk-button"
-                        data-js="cookie-hide-message">
-                    Hide this message
-                </button>
-            </div>
-        </div>
-    </div>
-{% endif %}
-
 
 {% block header %}
     <header class="govuk-header govuk-header--full-width-border" data-module="govuk-header">

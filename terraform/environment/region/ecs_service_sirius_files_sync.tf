@@ -18,7 +18,7 @@ resource "aws_ecs_service" "sirius_files_sync" {
   name                    = aws_ecs_task_definition.sirius_files_sync.family
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.sirius_files_sync.arn
-  desired_count           = local.environment == "production02" || local.environment == "production" ? 1 : 0
+  desired_count           = local.environment == "production" ? 1 : 0
   launch_type             = "FARGATE"
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
@@ -33,7 +33,7 @@ resource "aws_ecs_service" "sirius_files_sync" {
 
   network_configuration {
     security_groups  = [module.sirius_files_sync_service_security_group.id]
-    subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
+    subnets          = data.aws_subnet.application[*].id
     assign_public_ip = false
   }
 
@@ -128,14 +128,6 @@ locals {
           value = "true"
         },
         {
-          name  = "GA_DEFAULT",
-          value = var.account.ga_default
-        },
-        {
-          name  = "GA_GDS",
-          value = var.account.ga_gds
-        },
-        {
           name  = "FEATURE_FLAG_PREFIX",
           value = local.feature_flag_prefix
         },
@@ -203,6 +195,6 @@ module "sirius_files_sync_service_security_group" {
   rules       = local.sirius_files_sync_sg_rules
   name        = "sirius-files-sync-service"
   tags        = var.default_tags
-  vpc_id      = var.account.use_new_network ? data.aws_vpc.main[0].id : data.aws_vpc.vpc.id
+  vpc_id      = data.aws_vpc.main.id
   environment = local.environment
 }

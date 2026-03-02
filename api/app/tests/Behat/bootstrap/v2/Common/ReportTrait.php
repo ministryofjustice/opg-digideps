@@ -128,6 +128,21 @@ trait ReportTrait
     }
 
     /**
+     * @Given a Lay Deputy has a completed report with no client details
+     *
+     * @throws Exception
+     */
+    public function aLayDeputyHasCompletedReportWithNoClientDetails(): void
+    {
+        if (empty($this->layDeputyCompletedPfaHighAssetsDetailsNoClientDetails)) {
+            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedPfaHighAssetsDetailsNoClientDetails');
+        }
+
+        $this->loginToFrontendAs($this->layDeputyCompletedPfaHighAssetsDetailsNoClientDetails->getUserEmail());
+        $this->interactingWithUserDetails = $this->layDeputyCompletedPfaHighAssetsDetailsNoClientDetails;
+    }
+
+    /**
      * @Given a Lay Deputy has submitted a report
      * @Given a Lay Deputy has submitted a Pfa High Assets report
      *

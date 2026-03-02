@@ -18,8 +18,6 @@ variable "accounts" {
       admin_allow_list                       = list(string)
       force_destroy_bucket                   = bool
       front_allow_list                       = list(string)
-      ga_default                             = string
-      ga_gds                                 = string
       subdomain_enabled                      = bool
       is_production                          = number
       fixtures_enabled                       = bool
@@ -55,7 +53,6 @@ variable "accounts" {
       sleep_mode_enabled                     = bool
       waf_ip_blocking_enabled                = bool
       run_one_off_migrations                 = string
-      use_new_network                        = bool
     })
   )
 }

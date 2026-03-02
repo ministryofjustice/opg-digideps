@@ -119,11 +119,11 @@ class Client
      *
      * @JMS\Groups({"edit", "client-court-date", "checklist-information"})
      *
-     * @Assert\NotBlank( message="client.courtDate.notBlank", groups={"lay-deputy-client", "lay-deputy-client-edit"})
+     * @Assert\NotBlank( message="client.courtDate.notBlank", groups={"lay-deputy-client"})
      *
-     * @Assert\Type(type="DateTimeInterface", message="client.courtDate.message", groups={"lay-deputy-client", "lay-deputy-client-edit"})
+     * @Assert\Type(type="DateTimeInterface", message="client.courtDate.message", groups={"lay-deputy-client"})
      *
-     * @Assert\LessThan("today", groups={"pa-client"}, message="client.courtDate.lessThan", groups={"lay-deputy-client", "lay-deputy-client-edit"})
+     * @Assert\LessThan("today", groups={"pa-client"}, message="client.courtDate.lessThan", groups={"lay-deputy-client"})
      *
      * @var \DateTime|null
      */
@@ -1050,9 +1050,7 @@ class Client
     public function getSubmittedReports()
     {
         $submittedReports = [];
-        error_log("===================");
         foreach ($this->getReports() as $report) {
-            error_log("++++++++++++++++++++++ REPORT ID: " . $report->getId() . "; SUBMIT DATE: " . $report->getSubmitted());
             if ($report->isSubmitted()) {
                 $submittedReports[] = $report;
             }
