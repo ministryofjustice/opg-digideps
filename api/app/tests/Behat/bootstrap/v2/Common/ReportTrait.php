@@ -13,6 +13,8 @@ trait ReportTrait
 {
     public string $reportUrlPrefix = 'report';
 
+    private string $reportAlreadySubmittedError = 'Report has already been submitted';
+
     /**
      * @Then I should be able to submit my :currentOrPrevious report without completing the client benefits check section
      *
@@ -56,6 +58,7 @@ trait ReportTrait
 
     /**
      * @Given /^I fill in the declaration page and submit the report$/
+     * @Given /^I fill in the declaration page and submit the report for a 2nd time$/
      */
     public function iFillInTheDeclarationPageAndSubmitTheReport(): void
     {
@@ -669,5 +672,42 @@ trait ReportTrait
 
             assert(false, $message);
         }
+    }
+
+    /**
+     * @When I change the current report status to :status
+     *
+     * @throws Exception
+     */
+    public function aLayDeputyHasTheirCurrentReportStatusChanged(string $status): void
+    {
+        $reportId = $this->loggedInUserDetails->getCurrentReportId();
+
+        /** @var Report $report */
+        $report = $this->em->getRepository(Report::class)->find($reportId);
+        if (!$report) {
+            throw new Exception("Report with ID $reportId not found.");
+        }
+
+        if ($status === 'ready to submit') {
+            $report->setSubmitted(false);
+        } elseif ($status === 'submitted') {
+            $report->setSubmitted(true);
+        } else {
+            throw new Exception("Unsupported status: $status. Supported statuses are 'ready to submit' and 'submitted'.");
+        }
+
+        $this->em->persist($report);
+        $this->em->flush();
+    }
+
+    /**
+     * @Then I should see an error message that the report has already been submitted
+     *
+     * @throws Exception
+     */
+    public function aLayDeputySeesAnErrorMessageWhenSubmittingASubmittedReport(): void
+    {
+        $this->assertOnErrorMessage($this->reportAlreadySubmittedError);
     }
 }
