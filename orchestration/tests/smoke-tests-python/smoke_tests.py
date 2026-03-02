@@ -1,6 +1,9 @@
 import os
 import sys
 import json
+import time
+from asyncio import Timeout
+from requests.exceptions import RequestException
 
 import requests
 from bs4 import BeautifulSoup
@@ -60,6 +63,31 @@ def extract_form_inputs(form):
     return params
 
 
+def http(session, method, url, *, retries=3, backoff=1, timeout=10, **kwargs):
+    """
+    Wrapper for GET/POST with retries.
+    - method: 'get' or 'post'
+    - retries: number of attempts
+    - backoff: seconds between retries (multiplied each attempt)
+    - timeout: request-level timeout
+    """
+
+    for attempt in range(1, retries + 1):
+        try:
+            r = session.request(method, url, timeout=timeout, **kwargs)
+            return r
+
+        except (Timeout, ConnectionError, RequestException) as e:
+            if attempt == retries:
+                error_and_exit(
+                    f"HTTP {method.upper()} to {url} failed after {retries} retries"
+                )
+            time.sleep(backoff * attempt)
+
+    # Should never reach here
+    error_and_exit("Unexpected HTTP wrapper failure")
+
+
 # -----------------------------------------------------------
 # AWS Secret Manager
 # -----------------------------------------------------------
@@ -107,7 +135,8 @@ def login(session, base_url, user, password, expected_page):
     print("=== Logging in ===")
 
     login_url = f"{base_url}/login"
-    r = session.get(login_url)
+    r = http(session, "post", login_url)
+
     soup = BeautifulSoup(r.text, "html.parser")
 
     form = soup.find("form", {"name": "login"})
@@ -122,8 +151,8 @@ def login(session, base_url, user, password, expected_page):
 
     session.headers.update({"Referer": login_url, "Origin": base_url})
 
-    r = session.post(login_url, data=payload, allow_redirects=True)
-
+    # r = session.post(login_url, data=payload, allow_redirects=True)
+    r = http(session, "post", login_url, data=payload, allow_redirects=True)
     if expected_page not in r.url:
         error_and_exit(
             f"Login failed. Expected redirect to {expected_page}. Got {r.url}"
@@ -136,7 +165,7 @@ def search_for_user(session, base_url, user):
     print("=== Searching for user ===")
 
     users_url = f"{base_url}/admin/"
-    r = session.get(users_url)
+    r = http(session, "post", users_url)
     if r.status_code != 200:
         error_and_exit(f"Failed to load users page ({r.status_code})")
 
@@ -152,7 +181,7 @@ def search_for_user(session, base_url, user):
     action = form.get("action")
     target_url = users_url if not action else (base_url + action)
 
-    r = session.get(target_url, params=params)
+    r = http(session, "post", target_url, params=params)
     if r.status_code != 200:
         error_and_exit(f"Search failed with status {r.status_code}")
 
@@ -173,7 +202,7 @@ def search_for_client(session, base_url, client):
     print("=== Searching for client ===")
 
     url = f"{base_url}/admin/client/search"
-    r = session.get(url)
+    r = http(session, "post", url)
     if r.status_code != 200:
         error_and_exit(f"Failed to load client search page ({r.status_code})")
 
@@ -201,7 +230,7 @@ def search_for_client(session, base_url, client):
     action = form.get("action")
     target = url if not action else base_url + action
 
-    r = session.get(target, params=params)
+    r = http(session, "post", target, params=params)
     if r.status_code != 200:
         error_and_exit(f"Client search failed ({r.status_code})")
 
@@ -220,7 +249,7 @@ def search_for_client(session, base_url, client):
 def check_organisations(session, base_url):
     print("=== Checking organisations ===")
 
-    r = session.get(f"{base_url}/admin/organisations")
+    r = http(session, "post", f"{base_url}/admin/organisations")
     soup = BeautifulSoup(r.text, "html.parser")
 
     rows = soup.select(".govuk-table__body tr")
@@ -230,7 +259,7 @@ def check_organisations(session, base_url):
 def check_submissions(session, base_url):
     print("=== Checking submissions ===")
 
-    r = session.get(f"{base_url}/admin/documents?tab=archived")
+    r = http(session, "post", f"{base_url}/admin/documents?tab=archived")
     soup = BeautifulSoup(r.text, "html.parser")
 
     rows = soup.select(".govuk-table__body tr")
@@ -241,7 +270,7 @@ def check_analytics(session, base_url):
     print("=== Checking analytics ===")
 
     url = f"{base_url}/admin/stats/metrics"
-    r = session.get(url)
+    r = http(session, "post", url)
     if r.status_code != 200:
         error_and_exit(f"Failed to load analytics page ({r.status_code})")
 
@@ -319,7 +348,7 @@ def update_user_details(session, base_url):
         return payload
 
     def update(new_name):
-        r = session.get(edit_url)
+        r = http(session, "post", edit_url)
         if r.status_code != 200:
             error_and_exit("Could not load edit details page")
 
@@ -351,11 +380,11 @@ def update_user_details(session, base_url):
 
         params[target_key] = new_name
 
-        r2 = session.post(edit_url, data=params, allow_redirects=True)
+        r2 = http(session, "post", edit_url, data=params, allow_redirects=True)
         if r2.status_code != 200:
             error_and_exit(f"Failed to submit details ({r2.status_code})")
 
-        r3 = session.get(view_url)
+        r3 = http(session, "post", view_url)
         if r3.status_code != 200:
             error_and_exit(f"Failed to load profile view page ({r3.status_code})")
         soup3 = BeautifulSoup(r3.text, "html.parser")
@@ -373,7 +402,7 @@ def update_user_details(session, base_url):
 def log_out(session, base_url):
     print("=== Logging out ===")
 
-    r = session.get(f"{base_url}/logout", allow_redirects=True)
+    r = http(session, "post", f"{base_url}/logout", allow_redirects=True)
     if "/login" not in r.url:
         error_and_exit(f"Did not redirect to login on logout.")
     print("✓ Logged out")
@@ -383,7 +412,7 @@ def check_service_health(session, base_url):
     print("=== Checking service health ===")
 
     url = f"{base_url}/health-check/service"
-    r = session.get(url)
+    r = http(session, "post", url)
     if r.status_code != 200:
         error_and_exit(f"Health page failed with status {r.status_code}")
 
@@ -422,7 +451,7 @@ def check_report_sections_visible(session, base_url):
     print("=== Checking report sections visible (frontend) ===")
 
     # Load a page that should contain the "start report" link
-    r = session.get(base_url + "/")
+    r = http(session, "post", base_url + "/")
     if r.status_code != 200:
         error_and_exit(f"Failed to load frontend home ({r.status_code})")
     soup = BeautifulSoup(r.text, "html.parser")
@@ -430,7 +459,7 @@ def check_report_sections_visible(session, base_url):
     start_link = soup.select_one(".behat-link-report-start")
     if not start_link:
         # Try loading deputyship details
-        r = session.get(f"{base_url}/deputyship-details")
+        r = http(session, "post", f"{base_url}/deputyship-details")
         soup = BeautifulSoup(r.text, "html.parser")
         start_link = soup.select_one(".behat-link-report-start")
         if not start_link:
@@ -440,7 +469,7 @@ def check_report_sections_visible(session, base_url):
 
     href = start_link.get("href")
     target = resolve(base_url, href)
-    r = session.get(target)
+    r = http(session, "post", target)
     if r.status_code != 200:
         error_and_exit(f"Failed to open report start/overview page ({r.status_code})")
     soup = BeautifulSoup(r.text, "html.parser")
