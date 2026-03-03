@@ -4,7 +4,7 @@ resource "aws_cloudwatch_event_rule" "anomaly_detection" {
   name                = "check-anomaly-detection-${terraform.workspace}"
   description         = "Execute the anomaly detection check for ${terraform.workspace}"
   schedule_expression = "cron(10 09 * * ? *)"
-  is_enabled          = var.account.is_production == 1 ? true : false
+  is_enabled          = var.account.environment.is_production == 1 ? true : false
 }
 
 resource "aws_cloudwatch_event_target" "anomaly_detection" {

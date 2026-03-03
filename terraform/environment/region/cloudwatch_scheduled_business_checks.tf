@@ -3,7 +3,7 @@ resource "aws_cloudwatch_event_rule" "business_functionality_check" {
   name                = "check-business-functionality-${terraform.workspace}"
   description         = "Execute the business functionality comparison check ${terraform.workspace}"
   schedule_expression = "cron(0 8-22 * * ? *)"
-  is_enabled          = var.account.is_production == 1 ? true : false
+  is_enabled          = var.account.environment.is_production == 1 ? true : false
 }
 
 resource "aws_cloudwatch_event_target" "business_functionality_check" {

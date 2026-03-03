@@ -113,7 +113,7 @@ data "aws_route53_zone" "service" {
 }
 
 resource "aws_route53_record" "service_front" {
-  count   = local.account.is_production == 1 ? 0 : 1
+  count   = local.account.environment.is_production == 1 ? 0 : 1
   name    = local.subdomain
   type    = "A"
   zone_id = data.aws_route53_zone.service.id
