@@ -2,8 +2,6 @@ import os
 import sys
 import json
 import time
-from asyncio import Timeout
-from requests.exceptions import RequestException
 
 import requests
 from bs4 import BeautifulSoup
@@ -68,17 +66,20 @@ def http(session, method, url, *, retries=3, backoff=1, timeout=10, **kwargs):
     Simple retry wrapper.
     Retries on ANY exception.
     """
-    for attempt in range(1, retries + 1):
-        try:
-            return session.request(method, url, timeout=timeout, **kwargs)
-
-        except Exception:
-            if attempt == retries:
-                error_and_exit(
-                    f"HTTP {method.upper()} {url} failed after {retries} retries"
-                )
-
-            time.sleep(backoff * attempt)
+    return session.request(method, url, timeout=timeout, allow_redirects=True, **kwargs)
+    # for attempt in range(1, retries + 1):
+    #     try:
+    #         return session.request(
+    #             method, url, timeout=timeout, allow_redirects=True, **kwargs
+    #         )
+    #
+    #     except Exception:
+    #         if attempt == retries:
+    #             error_and_exit(
+    #                 f"HTTP {method.upper()} {url} failed after {retries} retries"
+    #             )
+    #
+    #         time.sleep(backoff * attempt)
 
 
 # -----------------------------------------------------------
@@ -86,14 +87,6 @@ def http(session, method, url, *, retries=3, backoff=1, timeout=10, **kwargs):
 # -----------------------------------------------------------
 def get_secret(environment, endpoint):
     print(f"=== Getting secrets for {environment} ===")
-    if environment not in [
-        "staging",
-        "preproduction",
-        "production",
-        "training",
-        "local",
-    ]:
-        environment = "default"
 
     secret_name = f"{environment}/smoke-test-variables"
 
@@ -152,7 +145,7 @@ def login(session, base_url, user, password, expected_page):
 
     session.headers.update({"Referer": login_url, "Origin": base_url})
 
-    r = http(session, "post", login_url, data=payload, allow_redirects=True)
+    r = http(session, "post", login_url, data=payload)
     if expected_page not in r.url:
         error_and_exit(
             f"Login failed. Expected redirect to {expected_page}. Got {r.url}"
@@ -246,12 +239,32 @@ def search_for_client(session, base_url, client):
     print("✓ Client search OK")
 
 
+# def check_organisations(session, base_url):
+#     print("=== Checking organisations ===")
+#
+#     r = http(session, "get", f"{base_url}/admin/organisations")
+#     soup = BeautifulSoup(r.text, "html.parser")
+#
+#     rows = soup.select(".govuk-table__body tr")
+#     print(f"✓ Found {len(rows)} organisation rows")
+
+
 def check_organisations(session, base_url):
     print("=== Checking organisations ===")
 
-    r = http(session, "get", f"{base_url}/admin/organisations")
-    soup = BeautifulSoup(r.text, "html.parser")
+    url = f"{base_url.rstrip('/')}/admin/organisations/"  # normalize
+    r = http(session, "get", url)  # confirm if this sets allow_redirects
+    print("Status:", r.status_code)
+    print("URL requested:", url)
+    print("Final URL:", getattr(r, "url", None))
+    print("Location header:", r.headers.get("Location"))
+    if hasattr(r, "history"):
+        print(
+            "Redirect history:",
+            [(h.status_code, h.headers.get("Location")) for h in r.history],
+        )
 
+    soup = BeautifulSoup(r.text, "html.parser")
     rows = soup.select(".govuk-table__body tr")
     print(f"✓ Found {len(rows)} organisation rows")
 
@@ -269,7 +282,7 @@ def check_submissions(session, base_url):
 def check_analytics(session, base_url):
     print("=== Checking analytics ===")
 
-    url = f"{base_url}/admin/stats/metrics"
+    url = f"{base_url}/admin/stats/metrics/"
     r = http(session, "get", url)
     if r.status_code != 200:
         error_and_exit(f"Failed to load analytics page ({r.status_code})")
@@ -294,8 +307,8 @@ def check_analytics(session, base_url):
 def update_user_details(session, base_url):
     print("=== Updating user details ===")
 
-    view_url = f"{base_url}/deputyship-details/your-details"
-    edit_url = f"{base_url}/deputyship-details/your-details/edit"
+    view_url = f"{base_url}/deputyship-details/your-details/"
+    edit_url = f"{base_url}/deputyship-details/your-details/edit/"
 
     def _extract_form_payload(form):
         """
@@ -380,7 +393,7 @@ def update_user_details(session, base_url):
 
         params[target_key] = new_name
 
-        r2 = http(session, "post", edit_url, data=params, allow_redirects=True)
+        r2 = http(session, "post", edit_url, data=params)
         if r2.status_code != 200:
             error_and_exit(f"Failed to submit details ({r2.status_code})")
 
@@ -402,7 +415,7 @@ def update_user_details(session, base_url):
 def log_out(session, base_url):
     print("=== Logging out ===")
 
-    r = http(session, "get", f"{base_url}/logout", allow_redirects=True)
+    r = http(session, "get", f"{base_url}/logout")
     if "/login" not in r.url:
         error_and_exit(f"Did not redirect to login on logout.")
     print("✓ Logged out")
@@ -411,7 +424,7 @@ def log_out(session, base_url):
 def check_service_health(session, base_url):
     print("=== Checking service health ===")
 
-    url = f"{base_url}/health-check/service"
+    url = f"{base_url}/health-check/service/"
     r = http(session, "get", url)
     if r.status_code != 200:
         error_and_exit(f"Health page failed with status {r.status_code}")
