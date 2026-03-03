@@ -8,7 +8,7 @@ resource "aws_lambda_function" "block_ips_lambda" {
   function_name = local.block_ips_lambda_function_name
   role          = aws_iam_role.lambda_block_ips.arn
   handler       = "block_ips.lambda_handler"
-  runtime       = "python3.11"
+  runtime       = "python3.14"
   depends_on    = [aws_cloudwatch_log_group.block_ips_lambda]
   timeout       = 300
   environment {
