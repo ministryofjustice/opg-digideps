@@ -316,6 +316,22 @@ jobs:
       task_name: "reset_database"
       timeout: "500"
 
+  smoke_tests:
+    name: smoke tests
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+      - scale_services_up
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
+      account_name: development
+      task_name: "smoke_tests"
+      timeout: "900"
+
   end_to_end_tests_1:
     name: end to end tests frontend 1
     uses: ./.github/workflows/_run-task.yml
@@ -443,6 +459,7 @@ jobs:
       - scale_services_down
       - codecov
       - workflow_variables
+      - smoke_tests
       - reset_database
       - end_to_end_tests_sequential_1
       - end_to_end_tests_sequential_2
@@ -462,21 +479,6 @@ jobs:
             echo ""
             echo "- Time in Seconds: ${DURATION}"
           } >> "$GITHUB_STEP_SUMMARY"
-
-  smoke_tests:
-    name: smoke tests
-    uses: ./.github/workflows/_run-task.yml
-    needs:
-      - workflow_variables
-      - workflow_summary
-    secrets:
-      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
-    with:
-      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
-      account_name: development
-      task_name: "smoke_tests"
-      timeout: "900"
 
   create_tag_release:
     if: github.event_name == 'merge_group'
