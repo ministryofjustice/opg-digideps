@@ -1,10 +1,10 @@
 locals {
   fis_arn_prefix              = "arn:aws:fis:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}"
   template_arn_prefix         = "${local.fis_arn_prefix}:experiment-template"
-  ecs_stop_frontend_arn       = var.account.fault_injection_experiments_enabled ? "${local.template_arn_prefix}/${module.fault_injection_simulator_experiments[0].ecs_stop_frontend_tasks_template_id}" : ""
-  ecs_stress_cpu_frontend_arn = var.account.fault_injection_experiments_enabled ? "${local.template_arn_prefix}/${module.fault_injection_simulator_experiments[0].ecs_front_cpu_stress_template_id}" : ""
-  ecs_stress_io_frontend_arn  = var.account.fault_injection_experiments_enabled ? "${local.template_arn_prefix}/${module.fault_injection_simulator_experiments[0].front_io_stress_template_id}" : ""
-  experiment_resources = var.account.fault_injection_experiments_enabled ? [
+  ecs_stop_frontend_arn       = var.account.environment.fault_injection_experiments_enabled ? "${local.template_arn_prefix}/${module.fault_injection_simulator_experiments[0].ecs_stop_frontend_tasks_template_id}" : ""
+  ecs_stress_cpu_frontend_arn = var.account.environment.fault_injection_experiments_enabled ? "${local.template_arn_prefix}/${module.fault_injection_simulator_experiments[0].ecs_front_cpu_stress_template_id}" : ""
+  ecs_stress_io_frontend_arn  = var.account.environment.fault_injection_experiments_enabled ? "${local.template_arn_prefix}/${module.fault_injection_simulator_experiments[0].front_io_stress_template_id}" : ""
+  experiment_resources = var.account.environment.fault_injection_experiments_enabled ? [
     local.ecs_stop_frontend_arn,
     local.ecs_stress_cpu_frontend_arn,
     local.ecs_stress_io_frontend_arn,

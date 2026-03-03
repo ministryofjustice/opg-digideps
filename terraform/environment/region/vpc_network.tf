@@ -43,6 +43,6 @@ data "aws_nat_gateway" "nat_gateway" {
 data "aws_vpc" "main" {
   filter {
     name   = "tag:Name"
-    values = ["Digideps-${var.account.name}-vpc"]
+    values = ["Digideps-${var.account.environment.name}-vpc"]
   }
 }
