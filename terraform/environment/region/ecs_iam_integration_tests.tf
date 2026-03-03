@@ -33,8 +33,8 @@ data "aws_iam_policy_document" "integration_tests" {
     ]
     #trivy:ignore:avd-aws-0057 - Not overly permissive
     resources = [
-      "arn:aws:s3:::digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk",
-      "arn:aws:s3:::digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk/*",
+      "arn:aws:s3:::digideps.${var.account.sirius.environment}.eu-west-1.sirius.opg.justice.gov.uk",
+      "arn:aws:s3:::digideps.${var.account.sirius.environment}.eu-west-1.sirius.opg.justice.gov.uk/*",
     ]
   }
 
