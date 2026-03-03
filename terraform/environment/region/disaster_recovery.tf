@@ -1,7 +1,7 @@
 module "disaster_recovery_backup" {
   source                  = "./modules/disaster_recovery"
-  count                   = var.account.dr_backup ? 1 : 0
-  account_id              = var.account.account_id
+  count                   = var.account.db.dr_backup ? 1 : 0
+  account_id              = var.account.environment.account_id
   backup_account_id       = local.backup_account_id
   task_runner_arn         = aws_iam_role.events_task_runner.arn
   execution_role_arn      = aws_iam_role.execution_role_db.arn
