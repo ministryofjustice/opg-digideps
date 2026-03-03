@@ -35,6 +35,7 @@
             <dd class="govuk-summary-list__actions">
                 <a class="govuk-link behat-link-edit" href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">
                     {{ 'edit' | trans({}, 'common' ) }}
+                    <span class="govuk-visually-hidden">{{ ('form.doYouExpectFinancialDecisions.label' ~ append104) | trans(transOptions) }}</span>
                 </a>
             </dd>
         {% endif  %}
@@ -52,6 +53,7 @@
                 <dd class="govuk-summary-list__actions">
                     <a class="govuk-link behat-link-edit" href="{{ path('actions_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}">
                         {{ 'edit' | trans({}, 'common' ) }}
+                        <span class="govuk-visually-hidden">{{ ('form.doYouExpectFinancialDecisionsDetails.label' ~ append104) | trans(transOptions) }}</span>
                     </a>
                 </dd>
             {% endif  %}
@@ -83,6 +85,7 @@
         <dd class="govuk-summary-list__actions">
             <a class="govuk-link behat-link-edit" href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}">
                 {{ 'edit' | trans({}, 'common' ) }}
+                <span class="govuk-visually-hidden">{{ 'form.doYouHaveConcerns.label' | trans(transOptions) }}</span>
             </a>
         </dd>
         {% endif  %}
@@ -97,11 +100,12 @@
                 {{ report.action.doYouHaveConcernsDetails | nl2br }}
             </dd>
             {% if not hideEditLink  %}
-            <dd class="govuk-summary-list__actions">
-                <a class="govuk-link behat-link-edit" href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}">
-                    {{ 'edit' | trans({}, 'common' ) }}
-                </a>
-            </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link behat-link-edit" href="{{ path('actions_step', {'reportId': report.id, 'step': 2, 'from': 'summary'}) }}">
+                        {{ 'edit' | trans({}, 'common' ) }}
+                        <span class="govuk-visually-hidden">{{ 'form.doYouHaveConcernsDetails.label' | trans(transOptions) }}</span>
+                    </a>
+                </dd>
             {% endif  %}
         </div>
     {% endif %}
