@@ -70,7 +70,9 @@ def http(session, method, url, *, retries=3, backoff=1, timeout=10, **kwargs):
     """
     for attempt in range(1, retries + 1):
         try:
-            return session.request(method, url, timeout=timeout, **kwargs)
+            return session.request(
+                method, url, timeout=timeout, allow_redirects=True, **kwargs
+            )
 
         except Exception:
             if attempt == retries:
@@ -86,14 +88,6 @@ def http(session, method, url, *, retries=3, backoff=1, timeout=10, **kwargs):
 # -----------------------------------------------------------
 def get_secret(environment, endpoint):
     print(f"=== Getting secrets for {environment} ===")
-    if environment not in [
-        "staging",
-        "preproduction",
-        "production",
-        "training",
-        "local",
-    ]:
-        environment = "default"
 
     secret_name = f"{environment}/smoke-test-variables"
 
@@ -152,7 +146,7 @@ def login(session, base_url, user, password, expected_page):
 
     session.headers.update({"Referer": login_url, "Origin": base_url})
 
-    r = http(session, "post", login_url, data=payload, allow_redirects=True)
+    r = http(session, "post", login_url, data=payload)
     if expected_page not in r.url:
         error_and_exit(
             f"Login failed. Expected redirect to {expected_page}. Got {r.url}"
@@ -380,7 +374,7 @@ def update_user_details(session, base_url):
 
         params[target_key] = new_name
 
-        r2 = http(session, "post", edit_url, data=params, allow_redirects=True)
+        r2 = http(session, "post", edit_url, data=params)
         if r2.status_code != 200:
             error_and_exit(f"Failed to submit details ({r2.status_code})")
 
@@ -402,7 +396,7 @@ def update_user_details(session, base_url):
 def log_out(session, base_url):
     print("=== Logging out ===")
 
-    r = http(session, "get", f"{base_url}/logout", allow_redirects=True)
+    r = http(session, "get", f"{base_url}/logout")
     if "/login" not in r.url:
         error_and_exit(f"Did not redirect to login on logout.")
     print("✓ Logged out")

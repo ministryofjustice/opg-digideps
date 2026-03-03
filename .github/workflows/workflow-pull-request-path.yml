@@ -468,7 +468,6 @@ jobs:
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
-      - workflow_summary
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:

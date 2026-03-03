@@ -1,5 +1,5 @@
 data "aws_security_group" "lambda_custom_sql_tool" {
-  name   = "${var.account.name}-custom-sql-tool"
+  name   = "${var.account.environment.name}-custom-sql-tool"
   vpc_id = data.aws_vpc.main.id
 }
 

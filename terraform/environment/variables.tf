@@ -12,47 +12,54 @@ variable "OPG_DOCKER_TAG" {
 variable "accounts" {
   type = map(
     object({
-      name                                   = string
-      account_id                             = string
-      sirius_environment                     = string
-      admin_allow_list                       = list(string)
-      force_destroy_bucket                   = bool
-      front_allow_list                       = list(string)
-      subdomain_enabled                      = bool
-      is_production                          = number
-      fixtures_enabled                       = bool
-      task_count                             = number
-      scan_count                             = number
-      app_env                                = string
-      db_subnet_group                        = string
-      ec_subnet_group                        = string
-      sirius_api_account                     = string
-      elasticache_count                      = number
-      cpu_low                                = number
-      cpu_medium                             = number
-      cpu_high                               = number
-      memory_low                             = number
-      memory_medium                          = number
-      memory_high                            = number
-      backup_retention_period                = number
-      psql_engine_version                    = string
-      alarms_active                          = bool
-      dr_backup                              = bool
-      ecs_scale_min                          = number
-      ecs_scale_max                          = number
-      aurora_instance_count                  = number
-      aurora_serverless                      = bool
-      deletion_protection                    = bool
-      aurora_enabled                         = bool
-      s3_backup_replication                  = bool
-      s3_backup_kms_arn                      = string
-      associate_alb_with_waf_web_acl_enabled = bool
-      fargate_spot                           = bool
-      secondary_region_enabled               = bool
-      fault_injection_experiments_enabled    = bool
-      sleep_mode_enabled                     = bool
-      waf_ip_blocking_enabled                = bool
-      run_one_off_migrations                 = string
+      environment = object({
+        name                                = string
+        account_id                          = string
+        app_env                             = string
+        is_production                       = number
+        fixtures_enabled                    = bool
+        alarms_active                       = bool
+        fault_injection_experiments_enabled = bool
+        sleep_mode_enabled                  = bool
+        secondary_region_enabled            = bool
+        run_one_off_migrations              = string
+      })
+      sirius = object({
+        environment = string
+        account     = string
+      })
+      dns = object({
+        subdomain_enabled = bool
+        front_allow_list  = list(string)
+        admin_allow_list  = list(string)
+      })
+      ecs = object({
+        scale_min    = number
+        scale_max    = number
+        task_count   = number
+        scan_count   = number
+        cpu_low      = string
+        memory_low   = string
+        memory_high  = string
+        fargate_spot = bool
+      })
+      db = object({
+        aurora_instance_count   = number
+        aurora_serverless       = bool
+        dr_backup               = bool
+        backup_retention_period = number
+        deletion_protection     = bool
+        psql_engine_version     = string
+      })
+      s3 = object({
+        backup_kms_arn       = string
+        backup_replication   = bool
+        force_destroy_bucket = bool
+      })
+      waf = object({
+        associate_alb_with_waf_web_acl_enabled = bool
+        waf_ip_blocking_enabled                = bool
+      })
     })
   )
 }
@@ -76,7 +83,7 @@ locals {
   primary_region_name = "eu-west-1"
   account             = contains(keys(var.accounts), local.environment) ? var.accounts[local.environment] : var.accounts["default"]
   secrets_prefix      = contains(keys(var.accounts), local.environment) ? local.environment : "default"
-  subdomain           = local.account["subdomain_enabled"] ? local.environment : ""
+  subdomain           = local.account.dns.subdomain_enabled ? local.environment : ""
 
   environment = lower(terraform.workspace)
 
@@ -86,7 +93,7 @@ locals {
     environment-name       = local.environment
     owner                  = "OPG Supervision"
     infrastructure-support = "OPG WebOps: opgteam@digital.justice.gov.uk"
-    is-production          = local.account.is_production
+    is-production          = local.account.environment.is_production
   }
 
   shared_environment_variables = {
@@ -97,8 +104,8 @@ locals {
   }
 
   # DNS Switchover variables
-  complete_deputy_dns_enabled = local.account.name == "development" ? 0 : 1
+  complete_deputy_dns_enabled = local.account.environment.name == "development" ? 0 : 1
   main_cert                   = local.complete_deputy_dns_enabled == 1 ? aws_acm_certificate_validation.wildcard[0].certificate_arn : ""
   new_cert                    = local.complete_deputy_dns_enabled == 1 ? aws_acm_certificate_validation.complete_deputy_report_wildcard[0].certificate_arn : ""
-  dns_account                 = local.complete_deputy_dns_enabled == 1 ? "515688267891" : local.account["account_id"]
+  dns_account                 = local.complete_deputy_dns_enabled == 1 ? "515688267891" : local.account.environment.account_id
 }

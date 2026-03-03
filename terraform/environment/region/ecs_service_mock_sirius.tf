@@ -2,8 +2,8 @@ resource "aws_ecs_task_definition" "mock_sirius_integration" {
   family                   = "mock-sirius-integration-${local.environment}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = var.account.cpu_low
-  memory                   = var.account.memory_low
+  cpu                      = var.account.ecs.cpu_low
+  memory                   = var.account.ecs.memory_low
   container_definitions    = "[${local.mock_sirius_integration_container}]"
   task_role_arn            = aws_iam_role.front.arn
   execution_role_arn       = aws_iam_role.execution_role.arn

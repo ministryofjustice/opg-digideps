@@ -2,8 +2,8 @@ resource "aws_ecs_task_definition" "htmltopdf" {
   family                   = "htmltopdf-${local.environment}"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
-  cpu                      = var.account.cpu_low
-  memory                   = var.account.memory_low
+  cpu                      = var.account.ecs.cpu_low
+  memory                   = var.account.ecs.memory_low
   container_definitions    = "[${local.htmltopdf_container}]"
   task_role_arn            = aws_iam_role.htmltopdf.arn
   execution_role_arn       = aws_iam_role.execution_role.arn
