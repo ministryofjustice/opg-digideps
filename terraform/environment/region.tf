@@ -26,7 +26,7 @@ module "eu_west_1" {
 module "eu_west_2" {
   source = "./region"
 
-  count = local.account.secondary_region_enabled ? 1 : 0
+  count = local.account.environment.secondary_region_enabled ? 1 : 0
 
   account                           = local.account
   default_tags                      = local.default_tags
