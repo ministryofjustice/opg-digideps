@@ -1,11 +1,11 @@
 # INFO - Elasticache set up in account folder as we use shared elasticache
 # Front Elasticache
 data "aws_elasticache_replication_group" "front_redis_cluster" {
-  replication_group_id = "frontend-redis-${var.account.name}"
+  replication_group_id = "frontend-redis-${var.account.environment.name}"
 }
 
 data "aws_security_group" "redis_front_sg" {
-  name = "${var.account.name}-account-redis-front"
+  name = "${var.account.environment.name}-account-redis-front"
 }
 
 resource "aws_security_group_rule" "admin_to_cache" {
@@ -30,11 +30,11 @@ resource "aws_security_group_rule" "front_to_cache" {
 
 # API Elasticache
 data "aws_elasticache_replication_group" "api_redis_cluster" {
-  replication_group_id = "api-redis-${var.account.name}"
+  replication_group_id = "api-redis-${var.account.environment.name}"
 }
 
 data "aws_security_group" "redis_api_sg" {
-  name = "${var.account.name}-account-redis-api"
+  name = "${var.account.environment.name}-account-redis-api"
 }
 
 resource "aws_security_group_rule" "api_to_cache" {
