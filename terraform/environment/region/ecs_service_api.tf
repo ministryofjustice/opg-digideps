@@ -18,7 +18,7 @@ resource "aws_ecs_service" "api" {
   name                    = aws_ecs_task_definition.api.family
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.api.arn
-  desired_count           = var.account.task_count
+  desired_count           = var.account.ecs.task_count
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"

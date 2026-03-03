@@ -1,5 +1,5 @@
 output "Role" {
-  value = "arn:aws:iam::${local.account["account_id"]}:role/${var.DEFAULT_ROLE}"
+  value = "arn:aws:iam::${local.account["environment"]["account_id"]}:role/${var.DEFAULT_ROLE}"
 }
 
 output "Services" {

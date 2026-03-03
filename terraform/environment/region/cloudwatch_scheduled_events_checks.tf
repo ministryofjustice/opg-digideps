@@ -13,7 +13,7 @@ resource "aws_cloudwatch_event_rule" "cross_account_backup_check" {
   name                = "check-backup-cross-account-${terraform.workspace}"
   description         = "Execute the cross account DR backup check for ${terraform.workspace}"
   schedule_expression = "cron(10 09 * * ? *)"
-  is_enabled          = var.account.is_production == 1 ? true : false
+  is_enabled          = var.account.environment.is_production == 1 ? true : false
 }
 
 resource "aws_cloudwatch_event_target" "cross_account_backup_check" {
@@ -42,7 +42,7 @@ resource "aws_cloudwatch_event_rule" "delete_inactive_users_check" {
   name                = "check-delete-inactive-users-${terraform.workspace}"
   description         = "Execute the delete inactive users check for ${terraform.workspace}"
   schedule_expression = "cron(11 09 ? * 1 *)"
-  is_enabled          = var.account.is_production == 1 ? true : false
+  is_enabled          = var.account.environment.is_production == 1 ? true : false
 }
 
 
@@ -72,7 +72,7 @@ resource "aws_cloudwatch_event_rule" "delete_zero_activity_users_check" {
   name                = "check-delete-zero-activity-users-${terraform.workspace}"
   description         = "Execute the delete zero activity users check for ${terraform.workspace}"
   schedule_expression = "cron(12 09 * * ? *)"
-  #  is_enabled          = var.account.is_production == 1 ? true : false
+  #  is_enabled          = var.account.environment.is_production == 1 ? true : false
   is_enabled = false
 }
 
@@ -102,7 +102,7 @@ resource "aws_cloudwatch_event_rule" "resubmit_error_documents_check" {
   name                = "check-resync-resubmittable-error-documents-${terraform.workspace}"
   description         = "Execute the resync resubmittable error documents check for ${terraform.workspace}"
   schedule_expression = "cron(13 09 * * ? *)"
-  is_enabled          = var.account.is_production == 1 ? true : false
+  is_enabled          = var.account.environment.is_production == 1 ? true : false
 }
 
 resource "aws_cloudwatch_event_target" "resubmit_error_documents_check" {
@@ -131,7 +131,7 @@ resource "aws_cloudwatch_event_rule" "db_analyse_command_check" {
   name                = "check-database-analyse-command-${terraform.workspace}"
   description         = "Execute the delete zero activity users check for ${terraform.workspace}"
   schedule_expression = "cron(14 09 * * ? *)"
-  is_enabled          = var.account.is_production == 1 ? true : false
+  is_enabled          = var.account.environment.is_production == 1 ? true : false
 }
 
 resource "aws_cloudwatch_event_target" "db_analyse_command_check" {
@@ -160,7 +160,7 @@ resource "aws_cloudwatch_event_rule" "sync_documents_check" {
   name                = "check-document-sync-${terraform.workspace}"
   description         = "Execute the document sync check for ${terraform.workspace}"
   schedule_expression = local.sync_service_cron_schedule
-  is_enabled          = var.account.is_production == 1 ? true : false
+  is_enabled          = var.account.environment.is_production == 1 ? true : false
 }
 
 resource "aws_cloudwatch_event_target" "sync_documents_check" {
@@ -189,7 +189,7 @@ resource "aws_cloudwatch_event_rule" "sync_checklists_check" {
   name                = "check-checklist-sync-${terraform.workspace}"
   description         = "Execute the checklist sync check for ${terraform.workspace}"
   schedule_expression = local.sync_service_cron_schedule
-  is_enabled          = var.account.is_production == 1 ? true : false
+  is_enabled          = var.account.environment.is_production == 1 ? true : false
 }
 
 resource "aws_cloudwatch_event_target" "sync_checklists_check" {
@@ -218,7 +218,7 @@ resource "aws_cloudwatch_event_rule" "satisfaction_performance_stats_check" {
   name                = "check-satisfaction-performance-stats-${terraform.workspace}"
   description         = "Extract Satisfaction Scores for ${terraform.workspace}"
   schedule_expression = "cron(0 12 1 * ? *)"
-  is_enabled          = var.account.is_production == 1 ? true : false
+  is_enabled          = var.account.environment.is_production == 1 ? true : false
 }
 
 resource "aws_cloudwatch_event_target" "satisfaction_performance_stats_check" {
@@ -247,7 +247,7 @@ resource "aws_cloudwatch_event_rule" "lay_csv_processing_check" {
   name                = "check-lay-csv-processing-${terraform.workspace}"
   description         = "Execute the Lay CSV user processing check for ${terraform.workspace}"
   schedule_expression = "cron(15 09 * * ? *)"
-  is_enabled          = var.account.is_production == 1 ? true : false
+  is_enabled          = var.account.environment.is_production == 1 ? true : false
 }
 
 
@@ -277,7 +277,7 @@ resource "aws_cloudwatch_event_rule" "org_csv_processing_check" {
   name                = "check-org-csv-processing-${terraform.workspace}"
   description         = "Execute the Org CSV user processing check for ${terraform.workspace}"
   schedule_expression = "cron(16 09 * * ? *)"
-  is_enabled          = var.account.is_production == 1 ? true : false
+  is_enabled          = var.account.environment.is_production == 1 ? true : false
 }
 
 
@@ -307,7 +307,7 @@ resource "aws_cloudwatch_event_rule" "resubmit_error_checklists_check" {
   name                = "check-resync-resubmittable-error-checklists-${terraform.workspace}"
   description         = "Execute the resync resubmittable error checklists check for ${terraform.workspace}"
   schedule_expression = "cron(17 09 * * ? *)"
-  is_enabled          = var.account.is_production == 1 ? true : false
+  is_enabled          = var.account.environment.is_production == 1 ? true : false
 }
 
 resource "aws_cloudwatch_event_target" "resubmit_error_checklists_check" {
@@ -336,7 +336,7 @@ resource "aws_cloudwatch_event_rule" "deputyships_csv_processing_check" {
   name                = "check-deputyships-csv-processing-${terraform.workspace}"
   description         = "Execute the Deputyships CSV processing check for ${terraform.workspace}"
   schedule_expression = "cron(18 09 * * ? *)"
-  is_enabled          = var.account.is_production == 1 ? true : false
+  is_enabled          = var.account.environment.is_production == 1 ? true : false
 }
 
 
