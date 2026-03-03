@@ -28,7 +28,7 @@ resource "aws_cloudwatch_metric_alarm" "availability_front" {
   evaluation_periods  = 3
   namespace           = "AWS/Route53"
   alarm_actions       = [data.aws_sns_topic.availability_alert.arn]
-  actions_enabled     = local.account.alarms_active
+  actions_enabled     = local.account.environment.alarms_active
   tags                = local.default_tags
 
   dimensions = {
@@ -59,7 +59,7 @@ resource "aws_cloudwatch_metric_alarm" "availability_admin" {
   evaluation_periods  = 3
   namespace           = "AWS/Route53"
   alarm_actions       = [data.aws_sns_topic.availability_alert.arn]
-  actions_enabled     = local.account.alarms_active
+  actions_enabled     = local.account.environment.alarms_active
   tags                = local.default_tags
 
   dimensions = {
