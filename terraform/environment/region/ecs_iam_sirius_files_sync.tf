@@ -22,7 +22,7 @@ data "aws_iam_policy_document" "sirius_files_task_role_assume_policy" {
     principals {
       type = "AWS"
       identifiers = [
-        "arn:aws:iam::${var.account.sirius_api_account}:role/integrations-ci"
+        "arn:aws:iam::${var.account.sirius.account}:role/integrations-ci"
       ]
     }
     actions = ["sts:AssumeRole"]
@@ -51,7 +51,7 @@ data "aws_iam_policy_document" "sirius_files_sync_invoke_api_gateway" {
       "execute-api:Invoke",
       "execute-api:ManageConnections"
     ]
-    resources = ["arn:aws:execute-api:eu-west-1:${var.account.sirius_api_account}:*"]
+    resources = ["arn:aws:execute-api:eu-west-1:${var.account.sirius.account}:*"]
   }
 }
 

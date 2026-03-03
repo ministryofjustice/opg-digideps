@@ -8,7 +8,7 @@ resource "aws_lambda_function" "monitor_notify_lambda" {
   function_name = local.monitor_notify_lambda_function_name
   role          = aws_iam_role.lambda_monitor_notify.arn
   handler       = "monitor_notify.lambda_handler"
-  runtime       = "python3.11"
+  runtime       = "python3.14"
   layers        = [aws_lambda_layer_version.lambda_layer.arn]
   depends_on    = [aws_cloudwatch_log_group.monitor_notify_lambda]
   timeout       = 300
@@ -163,13 +163,13 @@ resource "aws_lambda_layer_version" "lambda_layer" {
   source_code_hash = data.archive_file.monitor_notify_layer.output_base64sha256
   layer_name       = "monitor_notify_layer"
 
-  compatible_runtimes = ["python3.11"]
+  compatible_runtimes = ["python3.14"]
 
-  lifecycle {
-    ignore_changes = [
-      source_code_hash
-    ]
-  }
+  # lifecycle {
+  #   ignore_changes = [
+  #     source_code_hash
+  #   ]
+  # }
 }
 
 resource "aws_lambda_permission" "sns" {
