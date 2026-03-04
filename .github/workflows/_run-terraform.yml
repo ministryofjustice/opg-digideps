@@ -96,6 +96,60 @@ jobs:
           role-duration-seconds: 7400
           aws-region: eu-west-1
 
+      - name: put the cert for ec2 connection in s3
+        #        if: inputs.terraform_path == 'account'
+        run: |
+          set -euo pipefail
+
+          WORKSPACE="${TF_WORKSPACE}"
+          echo "TF_WORKSPACE=${WORKSPACE}"
+
+          # Map workspace -> bucket
+          case "${WORKSPACE}" in
+            production)
+              BUCKET="pa-uploads-production"
+              ;;
+            preproduction)
+              BUCKET="pa-uploads-preproduction"
+              ;;
+            development)
+              BUCKET="pa-uploads-staging"
+              ;;
+            *)
+              echo "ERROR: Unsupported TF_WORKSPACE '${WORKSPACE}'. Expected one of: production, preproduction, development."
+              # exit 1
+              BUCKET="pa-uploads-staging"
+              ;;
+          esac
+
+          # Where we’ll store locally before upload
+          CERT_PATH="global-bundle.pem"
+          CERT_URL="https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem"
+
+          echo "Downloading RDS trust bundle from: ${CERT_URL}"
+          # Simple retry loop (up to 3 attempts)
+          for i in 1 2 3; do
+            if curl -fsSL "${CERT_URL}" -o "${CERT_PATH}"; then
+              break
+            fi
+            echo "curl attempt ${i} failed; retrying..."
+            sleep $((i*2))
+          done
+
+          # Sanity check: non-empty file
+          if [ ! -s "${CERT_PATH}" ]; then
+            echo "ERROR: Failed to download RDS trust bundle (empty or missing file)."
+            exit 1
+          fi
+
+          echo "Uploading to s3://${BUCKET}/global-bundle.pem"
+          aws s3 cp "${CERT_PATH}" "s3://${BUCKET}/global-bundle.pem" --sse AES256
+
+          echo "Upload complete."
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+        working-directory: terraform/${{ inputs.terraform_path }}
+
       - name: terraform init for account
         if: inputs.terraform_path == 'account'
         run: terraform init -input=false
