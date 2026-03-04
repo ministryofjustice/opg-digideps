@@ -6,8 +6,8 @@
   "license": "ISC",
   "type": "module",
   "dependencies": {
-    "@aws-sdk/client-fis": "^3.893.0",
-    "@aws-sdk/client-secrets-manager": "^3.893.0",
+    "@aws-sdk/client-fis": "^3.1000.0",
+    "@aws-sdk/client-secrets-manager": "^3.1000.0",
     "puppeteer": "^24.37.5",
     "puppeteer-cluster": "^0.24.0"
   }
