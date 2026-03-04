@@ -1,28 +1,30 @@
 <?php
 
-namespace App\Twig;
+namespace App\Tests\Twig;
 
 use App\Entity\User;
 use App\Service\ReportSectionsLinkService;
+use App\Twig\ComponentsExtension;
 use Mockery as m;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Loader\FilesystemLoader;
 
 class ComponentsExtensionTest extends TestCase
 {
     private TranslatorInterface|MockInterface $translator;
     private ReportSectionsLinkService|MockInterface $reportSectionsLinkService;
-    private Environment|MockInterface $twigEnvironment;
     private ComponentsExtension $object;
 
     public function setUp(): void
     {
         $this->translator = m::mock('Symfony\Contracts\Translation\TranslatorInterface');
         $this->reportSectionsLinkService = m::mock('App\Service\ReportSectionsLinkService');
-        $this->twigEnvironment = m::mock('Twig\Environment');
-        $this->object = new ComponentsExtension($this->translator, $this->reportSectionsLinkService, $this->twigEnvironment);
+        $this->object = new ComponentsExtension($this->translator, $this->reportSectionsLinkService);
     }
 
     public static function accordionLinksProvider()
@@ -223,5 +225,41 @@ class ComponentsExtensionTest extends TestCase
         $this->assertEquals('123aBc', $f('123aBc'));
         $this->assertEquals('aBCd', $f('ABCd'));
         $this->assertEquals('assets held outside England and Wales', $f('Assets held outside England and Wales'));
+    }
+
+    /**
+     * @throws LoaderError
+     */
+    public function testProgressBarReportSubmission(): void
+    {
+        $loader = new FilesystemLoader(__DIR__ . '/../../../templates');
+        $loader->addPath(__DIR__ . '/../../../templates/', 'App');
+
+        $env = new Environment($loader);
+        $env->addExtension(new TranslationExtension($this->translator));
+        $env->addExtension($this->object);
+
+        // Add expectations for the trans() calls made by the progress indicator template
+        $this->translator->shouldReceive('trans')
+            ->with('reportSubmissionProgressBar.review_report.label', [], 'common', null)
+            ->once()
+            ->andReturn('Review report');
+
+        $this->translator->shouldReceive('trans')
+            ->with('reportSubmissionProgressBar.report_confirm_details.label', [], 'common', null)
+            ->once()
+            ->andReturn('Confirm details');
+
+        $this->translator->shouldReceive('trans')
+            ->with('reportSubmissionProgressBar.report_declaration.label', [], 'common', null)
+            ->once()
+            ->andReturn('Declaration');
+
+        ob_start();
+        $this->object->progressBarReportSubmission($env, 'report_confirm_details');
+        $html = ob_get_contents();
+        ob_end_clean();
+
+        echo $html;
     }
 }
