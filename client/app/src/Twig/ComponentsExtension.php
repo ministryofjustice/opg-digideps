@@ -253,16 +253,36 @@ class ComponentsExtension extends AbstractExtension
         return 'components_extension';
     }
 
-    private function getProgressSteps(string $selectedStepId, array $availableStepIds): array
+    // $currentStepIdentifier: the identifier of the current step, e.g. 'user_details'; should appear in
+    // $availableStepIdentifiers
+    //
+    // $availableStepIdentifiers: array of step identifiers in the order they appear in the progress bar,
+    // e.g. ['password', 'user_details', 'client_details']
+    private function getProgressSteps(string $currentStepIdentifier, array $availableStepIdentifiers): array
     {
+        // get the number of the step we're currently at in the process
+        $currentStepNumber = array_search($currentStepIdentifier, $availableStepIdentifiers);
+
+        if (!is_numeric($currentStepNumber)) {
+            return [];
+        }
+
         $progressSteps = [];
-        $selectedStepNumber = array_search($selectedStepId, $availableStepIds);
-        // set classes and labels from translation
-        foreach ($availableStepIds as $currentStepNumber => $availableStepId) {
-            $progressSteps[$availableStepId] = [
-                'class' => (($selectedStepNumber == $currentStepNumber) ? ' opg-progress-bar__item--active ' : '')
-                    . (($currentStepNumber < $selectedStepNumber) ? ' opg-progress-bar__item--completed ' : '')
-                    . (($currentStepNumber == intval($selectedStepNumber) - 1) ? ' opg-progress-bar__item--previous ' : ''),
+
+        foreach ($availableStepIdentifiers as $availableStepNumber => $availableStepIdentifier) {
+            $stepStatus = 'not-started';
+
+            if ($availableStepNumber === $currentStepNumber) {
+                $stepStatus = 'active';
+            } elseif ($availableStepNumber === $currentStepNumber - 1) {
+                // this is required to put the correct ending chevron on the progress bar segment before the active one
+                $stepStatus = 'previous';
+            } elseif ($availableStepNumber < $currentStepNumber) {
+                $stepStatus = 'completed';
+            }
+
+            $progressSteps[$availableStepIdentifier] = [
+                'stepStatus' => $stepStatus,
             ];
         }
 
