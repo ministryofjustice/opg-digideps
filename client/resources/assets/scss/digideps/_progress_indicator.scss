@@ -48,11 +48,11 @@
     }
 
     &--completed {
-      color: govuk-colour("turquoise");
+      color: #0f7a52;
 
       &::before {
-        background: govuk-colour("turquoise") url("/images/progress-tick.png")
-          center center no-repeat;
+        background: #0f7a52 url("/images/progress-tick.png") center center
+          no-repeat;
         color: govuk-colour("white");
         content: "";
       }
@@ -67,17 +67,17 @@
     &--active {
       @include govuk-media-query($from: tablet) {
         &:not(:last-child) {
-          background: #2b8cc4 url("/images/progress-chevron.png") right 50%
+          background: #1d70b8 url("/images/progress-chevron.png") right 50%
             no-repeat;
         }
       }
 
-      background-color: #2b8cc4;
+      background-color: #1d70b8;
       color: govuk-colour("white");
 
       &::before {
         background-color: govuk-colour("white");
-        color: #2b8cc4;
+        color: #1d70b8;
       }
     }
   }
