@@ -4,6 +4,9 @@
   "type": "metapackage",
   "license": "MIT",
   "minimum-stability": "stable",
+  "scripts": {
+    "reformat": "./vendor/bin/phpcbf ."
+  },
   "require": {
     "php": "^8.3"
   },
