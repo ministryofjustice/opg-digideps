@@ -234,7 +234,7 @@ class PreRegistration
             self::REALM_LAY => $fullReportType,
             self::REALM_PA => sprintf('%s-6', $fullReportType),
             self::REALM_PROF => sprintf('%s-5', $fullReportType),
-            default => throw new \Exception(__METHOD__.': realm not recognised to determine report type'),
+            default => throw new \Exception(__METHOD__ . ': realm not recognised to determine report type'),
         };
 
         if (!in_array($fullReportType, [...Report::getAllLayTypes(), ...Report::getAllPaTypes(), ...Report::getAllProfTypes()])) {

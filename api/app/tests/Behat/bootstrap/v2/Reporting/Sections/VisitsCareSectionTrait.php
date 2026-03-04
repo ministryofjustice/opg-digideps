@@ -134,7 +134,8 @@ trait VisitsCareSectionTrait
      */
     public function iFillOutWhoIsDoingCaringSection()
     {
-        $this->fillInField('visits_care[whoIsDoingTheCaring]',
+        $this->fillInField(
+            'visits_care[whoIsDoingTheCaring]',
             'Information on who is doing the caring',
             'WhoIsGivingCare'
         );
@@ -199,7 +200,8 @@ trait VisitsCareSectionTrait
     public function iChooseYesOnPlansToMoveClient()
     {
         $this->chooseOption('visits_care[planMoveNewResidence]', 'yes', 'MoveResidence');
-        $this->fillInField('visits_care[planMoveNewResidenceDetails]',
+        $this->fillInField(
+            'visits_care[planMoveNewResidenceDetails]',
             'Information on plans to move the client',
             'MoveResidence'
         );

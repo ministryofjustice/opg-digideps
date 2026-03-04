@@ -37,7 +37,7 @@ class RegistrationSucceededAuditingSubscriber implements EventSubscriberInterfac
                 (new AuditEvents($this->dateTimeProvider))->selfRegistrationSucceeded($event->getRegisteredUser())
             );
         } catch (\Exception $e) {
-            error_log('Failed to create audit log for successful registration: '.$e->getMessage());
+            error_log('Failed to create audit log for successful registration: ' . $e->getMessage());
         }
     }
 

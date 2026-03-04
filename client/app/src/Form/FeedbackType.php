@@ -23,7 +23,7 @@ class FeedbackType extends AbstractType
     {
         $satisfactionScores = range(5, 1);
         $satisfactionLabels = array_map(function ($score) {
-            return $this->translator->trans('form.satisfactionLevel.choices.'.$score, [], 'feedback');
+            return $this->translator->trans('form.satisfactionLevel.choices.' . $score, [], 'feedback');
         }, $satisfactionScores);
 
         $builder

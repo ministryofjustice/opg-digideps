@@ -73,7 +73,7 @@ abstract class Query
     protected function constructQuery(StatsQueryParameters $sq)
     {
         $columns = [
-            $this->getAggregation().' amount',
+            $this->getAggregation() . ' amount',
         ];
 
         if (is_array($sq->getDimensions())) {
@@ -91,7 +91,7 @@ abstract class Query
         }
 
         if (is_array($sq->getDimensions())) {
-            $sql .= ' GROUP BY '.implode(', ', $sq->getDimensions());
+            $sql .= ' GROUP BY ' . implode(', ', $sq->getDimensions());
         }
 
         return $sql;

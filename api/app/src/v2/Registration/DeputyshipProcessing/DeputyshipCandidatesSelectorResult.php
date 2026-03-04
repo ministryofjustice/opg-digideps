@@ -9,7 +9,6 @@ class DeputyshipCandidatesSelectorResult
     public function __construct(
         /** @var \Traversable<array<string, mixed>> */
         public readonly \Traversable $candidates,
-
         public readonly int $numCandidates,
         public readonly ?\Exception $exception = null,
     ) {

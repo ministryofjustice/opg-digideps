@@ -37,7 +37,7 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
 
             throw new \InvalidArgumentException($message);
         }
-        
+
         return $this->buildDto($data);
     }
 
@@ -75,8 +75,8 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
     {
         $this->missingColumns = [];
         foreach ($this->requiredData as $requiredColumn) {
-            $this->missingColumns[] = array_key_exists($requiredColumn, $data) && !empty($data[$requiredColumn]) ? 
-                null : 
+            $this->missingColumns[] = array_key_exists($requiredColumn, $data) && !empty($data[$requiredColumn]) ?
+                null :
                 $requiredColumn;
         }
 

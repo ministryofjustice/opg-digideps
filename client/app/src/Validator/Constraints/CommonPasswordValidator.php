@@ -19,7 +19,7 @@ class CommonPasswordValidator extends ConstraintValidator
      * @param bool $refreshCache Set to true if password cache should be regularly refreshed
      */
     public function __construct(
-        string $filePathCommonPasswords = self::TMP_ROOT_PATH.'commonpasswords.txt',
+        string $filePathCommonPasswords = self::TMP_ROOT_PATH . 'commonpasswords.txt',
         string $pwnedPasswordsUrl = self::PWNED_PW_URL,
         bool $refreshCache = true,
     ) {

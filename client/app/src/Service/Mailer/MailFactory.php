@@ -88,9 +88,9 @@ class MailFactory
     {
         switch ($area) {
             case self::AREA_DEPUTY:
-                return $this->baseURLs['front'].$this->router->generate($routeName, $params);
+                return $this->baseURLs['front'] . $this->router->generate($routeName, $params);
             case self::AREA_ADMIN:
-                return $this->baseURLs['admin'].$this->router->generate($routeName, $params);
+                return $this->baseURLs['admin'] . $this->router->generate($routeName, $params);
             default:
                 throw new \Exception("area $area not found");
         }

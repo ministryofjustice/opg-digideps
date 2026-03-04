@@ -16,8 +16,8 @@ class StringUtils
         $hours = intval(gmdate('H', $seconds));
         $minutes = intval(gmdate('i', $seconds));
 
-        $hoursString = $hours.' '.((1 === $hours) ? 'hour' : 'hours');
-        $minutesString = $minutes.' '.((1 === $minutes) ? 'minute' : 'minutes');
+        $hoursString = $hours . ' ' . ((1 === $hours) ? 'hour' : 'hours');
+        $minutesString = $minutes . ' ' . ((1 === $minutes) ? 'minute' : 'minutes');
 
         // less than a minute
         if (0 === $hours && 0 === $minutes) {
@@ -35,7 +35,7 @@ class StringUtils
         }
 
         // X hours and Y minutes
-        return $hoursString.' and '.$minutesString;
+        return $hoursString . ' and ' . $minutesString;
     }
 
     /**
@@ -46,7 +46,7 @@ class StringUtils
         $last = array_pop($strings);
 
         if ($strings) {
-            return implode($joiner, $strings).$lastJoiner.$last;
+            return implode($joiner, $strings) . $lastJoiner . $last;
         }
 
         return $last;

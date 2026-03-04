@@ -8,7 +8,6 @@ use JMS\Serializer\Annotation as JMS;
 
 trait ReportBankAccountsTrait
 {
-
     /**
      * @JMS\Type("array<App\Entity\Report\BankAccount>")
      *

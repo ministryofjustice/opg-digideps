@@ -7,7 +7,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 trait ReportMoreInfoTrait
 {
-
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"more-info"})

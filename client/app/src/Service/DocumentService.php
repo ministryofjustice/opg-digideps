@@ -65,7 +65,7 @@ class DocumentService
                 //Ensure document is removed from s3 and database
                 $s3Result = $this->deleteFromS3($document);
                 //remove from db
-                $endpointResult = $this->restClient->delete('document/'.$documentId);
+                $endpointResult = $this->restClient->delete('document/' . $documentId);
             }
             if ($endpointResult) {
                 $this->log('notice', "Document $documentId (s3 ref $storageRef) deleted successfully from db");
@@ -75,7 +75,7 @@ class DocumentService
 
             return $s3Result && $endpointResult;
         } catch (Throwable $e) {
-            $message = "cannot delete $documentId, ref $storageRef. Error: ".$e->getMessage();
+            $message = "cannot delete $documentId, ref $storageRef. Error: " . $e->getMessage();
             $this->log('error', $message);
 
             // rethrow exception to be caught by controller
@@ -94,7 +94,7 @@ class DocumentService
     {
         $ref = $document->getStorageReference();
         if (!$ref) {
-            $this->log('notice', 'empty file reference for document '.$document->getId().', cannot delete');
+            $this->log('notice', 'empty file reference for document ' . $document->getId() . ', cannot delete');
             throw new \Exception('Document could not be removed. No Reference.');
         }
 

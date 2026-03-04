@@ -15,7 +15,7 @@ class OpgLineFormatter extends LineFormatter
 
         if (4 === count($matches)) {
             // Format date (light blue)
-            $date = "\033[0;94m".$matches[1]."\033[0m";
+            $date = "\033[0;94m" . $matches[1] . "\033[0m";
 
             // Format log level
             $level = $matches[2];

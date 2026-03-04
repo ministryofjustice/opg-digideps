@@ -38,7 +38,7 @@ class DeputyProvider implements UserProviderInterface
 
             return $user;
         } catch (\Throwable $e) {
-            $this->logger->info(__METHOD__.': '.$e);
+            $this->logger->info(__METHOD__ . ': ' . $e);
 
             // rethrow 423 (brute-force/locked to grab timestamp)
             if (423 == $e->getCode()) {
@@ -55,7 +55,8 @@ class DeputyProvider implements UserProviderInterface
             // the userId needs to be told to the RestClient, as the user is not logged in yet
             ->setLoggedUserId(intval($identifier))
             ->get(
-                'user/'.$identifier, 'User',
+                'user/' . $identifier,
+                'User',
                 ['user', 'role', 'user-login', 'team-names', 'user-teams', 'team', 'user-organisations']
             );
     }

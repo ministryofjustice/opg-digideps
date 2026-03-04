@@ -7,6 +7,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+
 use function dirname;
 
 class Kernel extends BaseKernel implements CompilerPassInterface
@@ -38,11 +39,11 @@ class Kernel extends BaseKernel implements CompilerPassInterface
     {
         $container->setParameter('container.dumper.inline_class_loader', \PHP_VERSION_ID < 70400 || $this->debug);
         $container->setParameter('container.dumper.inline_factories', true);
-        $confDir = $this->getProjectDir().'/config';
+        $confDir = $this->getProjectDir() . '/config';
 
-        $loader->load($confDir.'/{packages}/*'.self::CONFIG_EXTS, 'glob');
-        $loader->load($confDir.'/{packages}/'.$this->environment.'/*'.self::CONFIG_EXTS, 'glob');
-        $loader->load($confDir.'/{services}'.self::CONFIG_EXTS, 'glob');
-        $loader->load($confDir.'/{services}_'.$this->environment.self::CONFIG_EXTS, 'glob');
+        $loader->load($confDir . '/{packages}/*' . self::CONFIG_EXTS, 'glob');
+        $loader->load($confDir . '/{packages}/' . $this->environment . '/*' . self::CONFIG_EXTS, 'glob');
+        $loader->load($confDir . '/{services}' . self::CONFIG_EXTS, 'glob');
+        $loader->load($confDir . '/{services}_' . $this->environment . self::CONFIG_EXTS, 'glob');
     }
 }

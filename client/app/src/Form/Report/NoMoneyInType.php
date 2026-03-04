@@ -24,7 +24,7 @@ class NoMoneyInType extends AbstractType
                         'minMessage' => 'moneyIn.reasonForNoMoneyIn.minLength',
                         'groups' => 'reason-for-no-money',
                     ])
-            ]])
+                ]])
             ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
     }
 

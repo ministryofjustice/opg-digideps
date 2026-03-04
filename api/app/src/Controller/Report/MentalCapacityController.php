@@ -48,7 +48,7 @@ class MentalCapacityController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function getOneById(Request $request, int $id): MentalCapacity
     {
-        $mc = $this->findEntityBy(MentalCapacity::class, $id, 'MentalCapacity with id:'.$id.' not found');
+        $mc = $this->findEntityBy(MentalCapacity::class, $id, 'MentalCapacity with id:' . $id . ' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($mc->getReport());
 
         $serialisedGroups = $request->query->has('groups')

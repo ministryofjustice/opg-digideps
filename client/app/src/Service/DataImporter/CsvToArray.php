@@ -49,12 +49,12 @@ class CsvToArray
         if ($this->normaliseNewLines) {
             // Normalize line endings explicitly
             $content = str_replace(["\r\n", "\r"], "\n", $fileContent);
-            $this->handle = fopen('data://text/plain,'.$content, 'r');
+            $this->handle = fopen('data://text/plain,' . $content, 'r');
         } else {
             // Read in binary mode and normalize line endings manually
             $fileContent = file_get_contents($file);
             $normalizedContent = str_replace(["\r\n", "\r"], "\n", $fileContent);
-            $this->handle = fopen('data://text/plain,'.$normalizedContent, 'r');
+            $this->handle = fopen('data://text/plain,' . $normalizedContent, 'r');
         }
     }
 
@@ -114,12 +114,12 @@ class CsvToArray
         }
         $missingColumns = array_diff($this->expectedColumns, $header);
         if ($missingColumns) {
-            throw new \RuntimeException('Invalid file. Cannot find expected header columns: '.implode(', ', $missingColumns));
+            throw new \RuntimeException('Invalid file. Cannot find expected header columns: ' . implode(', ', $missingColumns));
         }
 
         $rogueColumns = array_intersect($header, $this->unexpectedColumns);
         if (!empty($rogueColumns)) {
-            throw new \RuntimeException('Invalid file. File contains unexpected header columns: '.implode(', ', $rogueColumns));
+            throw new \RuntimeException('Invalid file. File contains unexpected header columns: ' . implode(', ', $rogueColumns));
         }
 
         // read rows
