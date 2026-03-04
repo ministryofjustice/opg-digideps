@@ -264,7 +264,7 @@ class ComponentsExtension extends AbstractExtension
         $progressSteps = [];
 
         foreach ($availableStepIdentifiers as $availableStepNumber => $availableStepIdentifier) {
-            $stepStatus = 'not-started';
+            $stepStatus = 'incomplete';
 
             if ($availableStepNumber === $currentStepNumber) {
                 $stepStatus = 'active';

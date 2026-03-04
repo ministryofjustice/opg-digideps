@@ -5,6 +5,7 @@ namespace App\Tests\Twig;
 use App\Entity\User;
 use App\Service\ReportSectionsLinkService;
 use App\Twig\ComponentsExtension;
+use Dom\HTMLDocument;
 use Mockery as m;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
@@ -13,6 +14,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;
+
+use const Dom\HTML_NO_DEFAULT_NS;
 
 class ComponentsExtensionTest extends TestCase
 {
@@ -260,6 +263,27 @@ class ComponentsExtensionTest extends TestCase
         $html = ob_get_contents();
         ob_end_clean();
 
-        echo $html;
+        $doc = HTMLDocument::createFromString(
+            '<!DOCTYPE html><html lang="en"><head></head><body>' . $html . '</body></html>'
+        );
+
+        $selector = 'li.opg-progress-bar__item';
+        foreach ($doc->querySelectorAll($selector) as $pos => $liNode) {
+            [$expectedStepText, $expectedStatus, $expectedClasses] = match ($pos) {
+                0 => ['Review report', '- completed', ['opg-progress-bar__item--completed', 'opg-progress-bar__item--previous']],
+                1 => ['Confirm details', '- current step', ['opg-progress-bar__item--active']],
+                2 => ['Declaration', '- incomplete', ['opg-progress-bar__item--incomplete']],
+                default => throw new \LogicException('Unexpected list item position'),
+            };
+
+            $this->assertStringContainsString($expectedStepText, $liNode->textContent);
+            foreach ($expectedClasses as $expectedClass) {
+                $this->assertStringContainsString($expectedClass, $liNode->getAttribute('class'));
+            }
+
+            $visuallyHiddenContent = $liNode->querySelector('.govuk-visually-hidden')->textContent;
+
+            $this->assertStringContainsString($expectedStatus, $visuallyHiddenContent);
+        }
     }
 }
