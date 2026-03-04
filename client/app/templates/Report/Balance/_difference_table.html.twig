@@ -42,6 +42,7 @@
                 <td class="numeric width-twentieth">
                     <a href="{{ path('bank_accounts', {'reportId': report.id}) }}" class="govuk-!-font-weight-bold">
                         {{ 'edit' | trans({}, 'common') }}
+                        <span class="govuk-visually-hidden">{{ 'differenceTable.accountsClosingBalance' | trans }}</span>
                     </a>
                 </td>
             {% endif %}
