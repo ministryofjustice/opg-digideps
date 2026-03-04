@@ -664,7 +664,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         $reportingPeriodInDays = $this->calculateReportingPeriod('%a');
         if (!empty($reportingPeriodInDays)) {
             $nextStart = clone $this->getStartDate();
-            $nextStart = $nextStart->modify('+ '.(intval($reportingPeriodInDays) + 1).' days');
+            $nextStart = $nextStart->modify('+ ' . (intval($reportingPeriodInDays) + 1) . ' days');
             $nextStart->setTime(0, 0, 0);
 
             return $nextStart;
@@ -688,7 +688,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         $reportingPeriodInDays = $this->calculateReportingPeriod('%a');
         if (!empty($reportingPeriodInDays)) {
             $nextEnd = clone $this->getEndDate();
-            $nextEnd = $nextEnd->modify('+ '.(intval($reportingPeriodInDays) + 1).' days');
+            $nextEnd = $nextEnd->modify('+ ' . (intval($reportingPeriodInDays) + 1) . ' days');
 
             $nextEnd->setTime(0, 0, 0);
 
@@ -735,7 +735,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         $endDateStr = $this->endDate->format('Y');
 
         if ($startDateStr != $endDateStr) {
-            $this->period = $startDateStr.' to '.$endDateStr;
+            $this->period = $startDateStr . ' to ' . $endDateStr;
 
             return $this->period;
         }

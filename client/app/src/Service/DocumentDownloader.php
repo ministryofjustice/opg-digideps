@@ -84,7 +84,7 @@ class DocumentDownloader
         $response->headers->set('Expires', '0');
         $response->headers->set('Content-type', 'application/octet-stream');
         $response->headers->set('Content-Description', 'File Transfer');
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.basename($fileName).'";');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($fileName) . '";');
         $response->sendHeaders();
         $response->setContent(file_get_contents($fileName));
 

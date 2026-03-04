@@ -46,9 +46,11 @@ class ClientBenefitsCheckFactory
      */
     private function removeMoneysIfUserChangesMind(array $formData, ClientBenefitsCheckInterface $clientBenefitsCheck)
     {
-        if (isset($formData['do_others_receive_money_on_clients_behalf'])
+        if (
+            isset($formData['do_others_receive_money_on_clients_behalf'])
             && 'yes' !== $formData['do_others_receive_money_on_clients_behalf']
-            && !empty($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf())) {
+            && !empty($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf())
+        ) {
             foreach ($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf() as $moneyType) {
                 $this->em->remove($moneyType);
             }

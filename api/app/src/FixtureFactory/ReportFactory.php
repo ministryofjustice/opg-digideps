@@ -23,9 +23,9 @@ class ReportFactory
         if (User::TYPE_LAY === $data['deputyType']) {
             $type = $data['reportType'];
         } elseif (in_array($data['deputyType'], ['PA', 'PA_ADMIN', 'PA_TEAM_MEMBER'])) {
-            $type = $data['reportType'].'-6';
+            $type = $data['reportType'] . '-6';
         } elseif (in_array($data['deputyType'], ['PROF', 'PROF_ADMIN', 'PROF_TEAM_MEMBER'])) {
-            $type = $data['reportType'].'-5';
+            $type = $data['reportType'] . '-5';
         }
 
         $startDate = $client->getExpectedReportStartDate($client->getCourtDate()->format('Y'));

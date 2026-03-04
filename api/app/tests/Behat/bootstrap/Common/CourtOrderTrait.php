@@ -17,7 +17,7 @@ trait CourtOrderTrait
             $queryString = http_build_query([
                 'case-number' => $row['client'],
                 'court-date' => $row['court_date'],
-                'deputy-email' => $row['deputy'].'@behat-test.com',
+                'deputy-email' => $row['deputy'] . '@behat-test.com',
             ]);
 
             $url = sprintf('/admin/fixtures/court-orders?%s', $queryString);

@@ -12,7 +12,7 @@ trait LinksTrait
      */
     public function linkWithTextContains($text, $expectedLink)
     {
-        $linksElementsFound = $this->getSession()->getPage()->findAll('xpath', '//a[text()="'.$text.'"]');
+        $linksElementsFound = $this->getSession()->getPage()->findAll('xpath', '//a[text()="' . $text . '"]');
         $count = count($linksElementsFound);
 
         if (0 === count($linksElementsFound)) {
@@ -68,7 +68,7 @@ trait LinksTrait
 
     private function clickOnHashLink($link)
     {
-        $linksElementsFound = $this->getSession()->getPage()->findAll('css', '#'.$link);
+        $linksElementsFound = $this->getSession()->getPage()->findAll('css', '#' . $link);
         if (count($linksElementsFound) > 1) {
             throw new RuntimeException("Found more than a #$link element in the page. Interrupted");
         }
@@ -77,7 +77,7 @@ trait LinksTrait
         }
 
         // click on the found link
-        $this->scrollTo('#'.$link);
+        $this->scrollTo('#' . $link);
         $linksElementsFound[0]->click();
     }
 
@@ -90,7 +90,7 @@ trait LinksTrait
     {
         $region = $this->findRegion($region);
 
-        $linksElementsFound = $region->findAll('xpath', '//a[normalize-space(text())="'.$text.'"]');
+        $linksElementsFound = $region->findAll('xpath', '//a[normalize-space(text())="' . $text . '"]');
         $count = count($linksElementsFound);
         if (0 === $count) {
             throw new RuntimeException('Element not found');
@@ -107,7 +107,7 @@ trait LinksTrait
     private function findRegion($region)
     {
         // find region
-        $regionSelector = '#'.$region.', '.self::behatElementToCssSelector($region, 'region');
+        $regionSelector = '#' . $region . ', ' . self::behatElementToCssSelector($region, 'region');
         $regionsFound = $this->getSession()->getPage()->findAll('css', $regionSelector);
         if (count($regionsFound) > 1) {
             throw new RuntimeException("Found more than one $regionSelector");
@@ -167,7 +167,7 @@ trait LinksTrait
         $row = $this->getSession()->getPage()->find('css', sprintf('table tr:contains("%s")', $rowText));
 
         if (null === $row) {
-            throw new Exception('Cannot find a table row with text: '.$rowText);
+            throw new Exception('Cannot find a table row with text: ' . $rowText);
         }
 
         return $row;
@@ -181,7 +181,7 @@ trait LinksTrait
     {
         $region = $this->findRegion($region);
 
-        $linksElementsFound = $region->findAll('xpath', '//a[normalize-space(text())="'.$text.'"]');
+        $linksElementsFound = $region->findAll('xpath', '//a[normalize-space(text())="' . $text . '"]');
         $count = count($linksElementsFound);
 
         if (0 === $count) {

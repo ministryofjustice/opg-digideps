@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 /**
  * Get the user from a token (=username) looking at the AuthToken store info
  * throw exception if not found, or the token expired.
- * 
+ *
  * @implements UserProviderInterface<User>
  */
 class RedisUserProvider implements UserProviderInterface, PasswordUpgraderInterface
@@ -36,7 +36,7 @@ class RedisUserProvider implements UserProviderInterface, PasswordUpgraderInterf
      */
     public function generateRandomTokenAndStore(User $user)
     {
-        $token = $this->workspace.'_'.$user->getId().'_'.sha1(microtime().spl_object_hash($user).rand(1, 999));
+        $token = $this->workspace . '_' . $user->getId() . '_' . sha1(microtime() . spl_object_hash($user) . rand(1, 999));
 
         $this->redis->set($token, $user->getId());
         $this->redis->expire($token, $this->timeoutSeconds);

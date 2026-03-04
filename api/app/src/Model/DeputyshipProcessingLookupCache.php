@@ -75,7 +75,7 @@ class DeputyshipProcessingLookupCache
     private function throwIfNotInitialised(): void
     {
         if (!$this->isInitialised) {
-            throw new \RuntimeException($this::class.' is not initialised');
+            throw new \RuntimeException($this::class . ' is not initialised');
         }
     }
 

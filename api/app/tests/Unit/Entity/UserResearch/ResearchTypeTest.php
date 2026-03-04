@@ -12,7 +12,6 @@ use PHPUnit\Framework\TestCase;
 
 final class ResearchTypeTest extends TestCase
 {
-    
     #[DataProvider('propertyProvider')]
     #[Test]
     public function constructSetsPropertiesBasedOnFormResponses(

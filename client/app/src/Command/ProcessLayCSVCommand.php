@@ -138,7 +138,7 @@ class ProcessLayCSVCommand extends Command
 
         $chunks = array_chunk($data, self::CHUNK_SIZE);
 
-        $this->redis->set($this->workspace.'-lay-csv-processing', 'processing');
+        $this->redis->set($this->workspace . '-lay-csv-processing', 'processing');
 
         foreach ($chunks as $index => $chunk) {
             $compressedChunk = CsvUploader::compressData($chunk);

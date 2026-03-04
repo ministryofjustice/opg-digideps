@@ -38,7 +38,8 @@ class BenefitsMetricsFilterType extends AbstractType
             )
             ->add(
                 'deputyType',
-                FormTypes\ChoiceType::class, [
+                FormTypes\ChoiceType::class,
+                [
                     'choices' => [
                         'All' => 'all',
                         'Lay' => 'lay',

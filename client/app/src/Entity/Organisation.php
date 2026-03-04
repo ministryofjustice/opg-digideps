@@ -123,7 +123,7 @@ class Organisation
     public function getEmailIdentifierDisplay()
     {
         if ($this->getIsDomainIdentifier()) {
-            return '*@'.$this->emailIdentifier;
+            return '*@' . $this->emailIdentifier;
         } else {
             return $this->emailIdentifier;
         }

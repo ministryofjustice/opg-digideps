@@ -27,7 +27,7 @@ trait DebugTrait
         $handle = opendir(self::$DEBUG_SNAPSHOT_DIR);
 
         while (false !== ($file = readdir($handle))) {
-            $path = self::$DEBUG_SNAPSHOT_DIR.'/'.$file;
+            $path = self::$DEBUG_SNAPSHOT_DIR . '/' . $file;
             if (is_file($path)) {
                 unlink($path);
             }
@@ -41,7 +41,7 @@ trait DebugTrait
     {
         for ($i = 1; $i < 100; ++$i) {
             $iPadded = str_pad($i, 2, '0', STR_PAD_LEFT);
-            $filename = self::$DEBUG_SNAPSHOT_DIR.'/behat-response-'.$name.'-'.$iPadded.'.html';
+            $filename = self::$DEBUG_SNAPSHOT_DIR . '/behat-response-' . $name . '-' . $iPadded . '.html';
             if (!file_exists($filename)) {
                 break;
             }
@@ -56,7 +56,7 @@ trait DebugTrait
         $file = basename($filename);
 
         echo "** Test failed **\n";
-        echo 'Url: '.$session->getCurrentUrl()."\n";
+        echo 'Url: ' . $session->getCurrentUrl() . "\n";
         echo "Response saved ({$bytes} bytes):\n";
         echo "$file";
     }
@@ -68,7 +68,8 @@ trait DebugTrait
      */
     public function debugOnException(AfterStepScope $scope)
     {
-        if (($result = $scope->getTestResult())
+        if (
+            ($result = $scope->getTestResult())
             && $result instanceof ExecutedStepResult
             && $result->hasException()
         ) {

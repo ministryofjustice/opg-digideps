@@ -13,7 +13,7 @@ class QueryFactory
 
     public function create(StatsQueryParameters $sq): Query
     {
-        $className = 'App\\Service\\Stats\\Query\\'.ucfirst($sq->getMetric()).'Query';
+        $className = 'App\\Service\\Stats\\Query\\' . ucfirst($sq->getMetric()) . 'Query';
 
         if (!class_exists($className)) {
             throw new \InvalidArgumentException('Invalid metric given');

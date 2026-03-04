@@ -47,7 +47,7 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
         $app = new Application($kernel);
 
         // TODO Refactor CSV Process so we can mock this properly
-        copy(dirname(dirname(__DIR__)).'/csv/layDeputyReport.csv', '/tmp/layDeputyReport.csv');
+        copy(dirname(dirname(__DIR__)) . '/csv/layDeputyReport.csv', '/tmp/layDeputyReport.csv');
 
         $this->s3 = self::prophesize(S3Client::class);
         $this->params = self::prophesize(ParameterBagInterface::class);
@@ -148,7 +148,7 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
     public function testExecuteWithMissingCSVCol(): void
     {
         // Required so we can trigger missing column exception with bad file
-        copy(dirname(dirname(__DIR__)).'/csv/layDeputyReport-bad.csv', '/tmp/layDeputyReport.csv');
+        copy(dirname(dirname(__DIR__)) . '/csv/layDeputyReport-bad.csv', '/tmp/layDeputyReport.csv');
 
         $this->s3->getObject(Argument::any())
             ->shouldBeCalled()

@@ -78,7 +78,7 @@ class TestUserFixtures extends AbstractDataFixture
         $user = (new User())
             ->setFirstname('test')
             ->setLastname($data['id'])
-            ->setEmail($data['id'].'@example.org')
+            ->setEmail($data['id'] . '@example.org')
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
             ->setNdrEnabled(false)

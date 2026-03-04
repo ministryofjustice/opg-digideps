@@ -275,7 +275,7 @@ class MoneyTransaction
                 return true;
             }
         }
-        throw new \RuntimeException('Invalid category: '.$category);
+        throw new \RuntimeException('Invalid category: ' . $category);
     }
 
     /**

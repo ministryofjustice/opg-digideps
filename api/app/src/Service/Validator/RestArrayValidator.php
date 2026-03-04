@@ -30,12 +30,12 @@ class RestArrayValidator
                     break;
 
                 default:
-                    throw new \InvalidArgumentException(__METHOD__.": {$validation} not recognised.");
+                    throw new \InvalidArgumentException(__METHOD__ . ": {$validation} not recognised.");
             }
         }
 
         if (!empty($errors)) {
-            throw new \InvalidArgumentException('Errors('.count($errors).'): '.implode(', ', $errors));
+            throw new \InvalidArgumentException('Errors(' . count($errors) . '): ' . implode(', ', $errors));
         }
     }
 }

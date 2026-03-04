@@ -376,7 +376,7 @@ trait AccountsSectionTrait
 
     public function iChooseAccountType(string $account, string $translatedOption)
     {
-        $formSectionName = 'other_no_sortcode' === $account ? null : 'account'.$this->countOfAccountsAdded;
+        $formSectionName = 'other_no_sortcode' === $account ? null : 'account' . $this->countOfAccountsAdded;
 
         $this->chooseOption(
             'account[accountType]',
@@ -390,7 +390,7 @@ trait AccountsSectionTrait
 
     public function iFillInAccountDetails(string $accountNumber, string $sortCode, string $joint, string $name, bool $trackFromEntry = true)
     {
-        $formSectionName = 'account'.$this->countOfAccountsAdded;
+        $formSectionName = 'account' . $this->countOfAccountsAdded;
 
         if ($this->elementExistsOnPage('input', 'name', 'account[bank]')) {
             $this->fillInField('account[bank]', $name, $trackFromEntry ? $formSectionName : null);
@@ -411,7 +411,7 @@ trait AccountsSectionTrait
 
     public function iFillInAccountBalance(string $openingBalance, string $closingBalance, $trackFromEntry = true)
     {
-        $formSectionName = 'account'.$this->countOfAccountsAdded;
+        $formSectionName = 'account' . $this->countOfAccountsAdded;
 
         if ('ndr' == $this->reportUrlPrefix) {
             $this->fillInField('account[balanceOnCourtOrderDate]', $openingBalance, $trackFromEntry ? $formSectionName : null);
@@ -429,7 +429,7 @@ trait AccountsSectionTrait
 
         $this->removeAnswerFromSection(
             'ndr' == $this->reportUrlPrefix ? 'account[balanceOnCourtOrderDate]' : 'account[openingBalance]',
-            'account'.($accountOccurrence + 1),
+            'account' . ($accountOccurrence + 1),
             true,
             'Yes, remove account'
         );

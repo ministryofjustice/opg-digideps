@@ -77,7 +77,7 @@ class DecisionController extends RestController
         $serialisedGroups = $request->query->has('groups') ? $request->query->all('groups') : ['decision'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
-        $decision = $this->findEntityBy(Decision::class, $id, 'Decision with id:'.$id.' not found');
+        $decision = $this->findEntityBy(Decision::class, $id, 'Decision with id:' . $id . ' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($decision->getReport());
 
         return $decision;
@@ -87,7 +87,7 @@ class DecisionController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function deleteDecision(int $id): array
     {
-        $decision = $this->findEntityBy(Decision::class, $id, 'Decision with id:'.$id.' not found');
+        $decision = $this->findEntityBy(Decision::class, $id, 'Decision with id:' . $id . ' not found');
         $report = $decision->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($decision->getReport());
 

@@ -596,6 +596,8 @@ final class ReportServiceTest extends TestCase
         $reports = $this->sut->createRequiredReports($mockClient);
 
         self::assertCount(count($expectedReportTypes), $reports);
-        self::assertEquals($expectedReportTypes, array_map(function (Report $report) { return $report->getType(); }, $reports));
+        self::assertEquals($expectedReportTypes, array_map(function (Report $report) {
+            return $report->getType();
+        }, $reports));
     }
 }

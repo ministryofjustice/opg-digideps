@@ -20,7 +20,7 @@ class ResyncResubmittableErrorChecklists extends Command
     {
         try {
             $updatedChecklists = $this->checklistRepository->getResubmittableErrorChecklistsAndSetToQueued('100');
-            $output->writeln('resync_resubmittable_error_checklists - success - Updated '.count($updatedChecklists).' checklists back to QUEUED status');
+            $output->writeln('resync_resubmittable_error_checklists - success - Updated ' . count($updatedChecklists) . ' checklists back to QUEUED status');
 
             return 0;
         } catch (Exception $e) {

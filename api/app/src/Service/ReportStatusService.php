@@ -31,8 +31,7 @@ class ReportStatusService
          * @JMS\Exclude
          */
         private readonly Report $report
-    )
-    {
+    ) {
     }
 
     /**
@@ -706,7 +705,7 @@ class ReportStatusService
             case Report::SECTION_DOCUMENTS:
                 return $this->getDocumentsState();
             default:
-                throw new \InvalidArgumentException(__METHOD__." $section section not defined");
+                throw new \InvalidArgumentException(__METHOD__ . " $section section not defined");
         }
     }
 
