@@ -213,7 +213,7 @@ class CourtOrder
             return match ($this->getOrderType()) {
                 'hw' => self::HEALTH_AND_WELFARE_REPORT,
                 'pfa' => self::PROPERTY_AND_AFFAIRS_REPORT,
-                default => throw new \UnhandledMatchError('Unknown order type'.$this->getOrderType()),
+                default => throw new \UnhandledMatchError('Unknown order type' . $this->getOrderType()),
             };
         }
 

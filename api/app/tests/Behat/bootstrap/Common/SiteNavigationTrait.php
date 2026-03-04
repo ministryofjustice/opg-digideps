@@ -11,7 +11,7 @@ trait SiteNavigationTrait
     public function visitAdminPath($path)
     {
         $adminUrl = $this->getAdminUrl();
-        $this->visitPath($adminUrl.$path);
+        $this->visitPath($adminUrl . $path);
     }
 
     /**
@@ -20,23 +20,23 @@ trait SiteNavigationTrait
     public function scrollTo($element)
     {
         if ('.' != substr($element, 0, 1) && '#' != substr($element, 0, 1)) {
-            $element = '#'.$element;
+            $element = '#' . $element;
         }
 
         $driver = $this->getSession()->getDriver();
         if ('Behat\Mink\Driver\Selenium2Driver' == get_class($driver)) {
             $javascript =
                 "var el = $('$element');"
-                .'var elOffset = el.offset().top;'
-                .'var elHeight = el.height();'
-                .'var windowHeight = $(window).height();'
-                .'var offset;'
-                .'if (elHeight < windowHeight) {'
-                .'  offset = elOffset - ((windowHeight / 2) - (elHeight / 2));'
-                .'} else {'
-                .'  offset = elOffset;'
-                .'}'
-                .'window.scrollTo(0, offset);';
+                . 'var elOffset = el.offset().top;'
+                . 'var elHeight = el.height();'
+                . 'var windowHeight = $(window).height();'
+                . 'var offset;'
+                . 'if (elHeight < windowHeight) {'
+                . '  offset = elOffset - ((windowHeight / 2) - (elHeight / 2));'
+                . '} else {'
+                . '  offset = elOffset;'
+                . '}'
+                . 'window.scrollTo(0, offset);';
 
             $this->getSession()->executeScript($javascript);
         }
@@ -48,7 +48,7 @@ trait SiteNavigationTrait
     public function iOpenChecklistForClient($period, $caseNumber)
     {
         $this->visitAdminPath("/admin/client/case-number/$caseNumber/details");
-        $this->clickLinkInsideElement('checklist', 'report-'.$period);
+        $this->clickLinkInsideElement('checklist', 'report-' . $period);
     }
 
     /**

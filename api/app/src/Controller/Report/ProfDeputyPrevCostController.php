@@ -72,7 +72,7 @@ class ProfDeputyPrevCostController extends RestController
             ? $request->query->all('groups') : ['prof-deputy-costs-prev'];
         $this->formatter->setJmsSerialiserGroups($serialiseGroups);
 
-        $cost = $this->findEntityBy(ProfDeputyPreviousCost::class, $id, 'Prof Service Fee with id:'.$id.' not found');
+        $cost = $this->findEntityBy(ProfDeputyPreviousCost::class, $id, 'Prof Service Fee with id:' . $id . ' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($cost->getReport());
 
         return $cost;

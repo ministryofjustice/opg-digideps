@@ -228,10 +228,10 @@ class ReportSubmission
 
         if ($report instanceof Ndr) {
             return 'NdrReport-'
-                .$client->getCaseNumber()
-                .'_'.$report->getStartDate()->format('Y')
-                .'_'.$this->getId()
-                .'.zip';
+                . $client->getCaseNumber()
+                . '_' . $report->getStartDate()->format('Y')
+                . '_' . $this->getId()
+                . '.zip';
         } else {
             /** @var DateTime $startDate */
             $startDate = $report->getStartDate();
@@ -239,11 +239,11 @@ class ReportSubmission
             $endDate = $report->getEndDate();
 
             return 'Report_'
-                .$client->getCaseNumber()
-                .'_'.$startDate->format('Y')
-                .'_'.$endDate->format('Y')
-                .'_'.$this->getId()
-                .'.zip';
+                . $client->getCaseNumber()
+                . '_' . $startDate->format('Y')
+                . '_' . $endDate->format('Y')
+                . '_' . $this->getId()
+                . '.zip';
         }
     }
 }

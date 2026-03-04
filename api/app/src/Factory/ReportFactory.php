@@ -20,8 +20,8 @@ class ReportFactory
         string $typeOfReport,
         ?string $orderType,
         \DateTime $orderDate,
-        string $realm = PreRegistration::REALM_LAY): Report
-    {
+        string $realm = PreRegistration::REALM_LAY
+    ): Report {
         if (is_null($orderType)) {
             $orderType = '';
         }

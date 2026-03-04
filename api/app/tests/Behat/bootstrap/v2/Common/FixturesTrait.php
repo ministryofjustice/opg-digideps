@@ -34,7 +34,7 @@ trait FixturesTrait
             $queryString = http_build_query([
                 'case-number' => $row['client'],
                 'court-date' => $row['court_date'],
-                'deputy-email' => $row['deputy'].'@behat-test.com',
+                'deputy-email' => $row['deputy'] . '@behat-test.com',
             ]);
 
             $url = sprintf('/admin/fixtures/court-orders?%s', $queryString);
@@ -91,16 +91,16 @@ trait FixturesTrait
      */
     public function twoClientsExistWithTheSameFirstName(string $whichName)
     {
-        $userDetails1 = $this->createLayCombinedHighSubmitted(null, $this->testRunId.mt_rand(1, 10000));
+        $userDetails1 = $this->createLayCombinedHighSubmitted(null, $this->testRunId . mt_rand(1, 10000));
         $client1 = $this->em->getRepository(Client::class)->find($userDetails1->getClientId());
 
-        $firstName = $client1->getFirstname().time();
-        $lastName = $client1->getLastname().time();
+        $firstName = $client1->getFirstname() . time();
+        $lastName = $client1->getLastname() . time();
 
         $client1->setFirstname($firstName);
         $client1->setLastname($lastName);
 
-        $userDetails2 = $this->createLayCombinedHighSubmitted(null, $this->testRunId.mt_rand(1, 10000));
+        $userDetails2 = $this->createLayCombinedHighSubmitted(null, $this->testRunId . mt_rand(1, 10000));
         $client2 = $this->em->getRepository(Client::class)->find($userDetails2->getClientId());
 
         if ('first' === $whichName) {
@@ -125,7 +125,7 @@ trait FixturesTrait
      */
     public function aClientHasSubmittedTwoReports()
     {
-        $userDetails = $this->twoReportsUserDetails = $this->createLayCombinedHighSubmitted(null, $this->testRunId.'A');
+        $userDetails = $this->twoReportsUserDetails = $this->createLayCombinedHighSubmitted(null, $this->testRunId . 'A');
         $newReport = $this->em->getRepository(Report::class)->find($userDetails->getCurrentReportId());
         $this->reportTestHelper->submitReport($newReport, $this->em);
     }
@@ -135,7 +135,7 @@ trait FixturesTrait
      */
     public function anotherClientHasSubmittedOneReport()
     {
-        $this->oneReportsUserDetails = $this->createLayCombinedHighSubmitted(null, $this->testRunId.'B');
+        $this->oneReportsUserDetails = $this->createLayCombinedHighSubmitted(null, $this->testRunId . 'B');
     }
 
     /**
@@ -216,7 +216,7 @@ trait FixturesTrait
         $users = [];
 
         for ($i = 0; $i < $numberOfUsers; ++$i) {
-            $userDetails = $this->fixtureHelper->createProfNamedHealthWelfareNotStarted($this->testRunId.'-f'.$i);
+            $userDetails = $this->fixtureHelper->createProfNamedHealthWelfareNotStarted($this->testRunId . '-f' . $i);
             $users[] = new UserDetails($userDetails);
         }
 

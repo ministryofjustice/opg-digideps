@@ -92,13 +92,14 @@ class LayDeputyshipProcessor
             $this->em->rollback();
             $this->em->clear();
 
-            $errorMessage = sprintf('Error when creating entities for deputyUID %s for case %s: %s',
+            $errorMessage = sprintf(
+                'Error when creating entities for deputyUID %s for case %s: %s',
                 $layDeputyshipDto->getDeputyUid(),
                 $layDeputyshipDto->getCaseNumber(),
                 str_replace(PHP_EOL, '', $e->getMessage())
             );
             $this->logger->warning($errorMessage);
-            $this->logger->error($e->getFile().' '.$e->getLine());
+            $this->logger->error($e->getFile() . ' ' . $e->getLine());
         }
 
         return [
@@ -119,7 +120,7 @@ class LayDeputyshipProcessor
 
         try {
             $primaryDeputyUser = $userRepo->findPrimaryUserByDeputyUid($deputyUid);
-        } catch (NoResultException|NonUniqueResultException $e) {
+        } catch (NoResultException | NonUniqueResultException $e) {
             throw new \RuntimeException(sprintf('The primary user for deputy UID %s was either missing or not unique', $deputyUid));
         }
 
@@ -158,7 +159,9 @@ class LayDeputyshipProcessor
         LayDeputyshipDto $layDeputyshipDto,
     ): array {
         $deputyUids = array_map(
-            function ($user) { return $user->getDeputyUid(); },
+            function ($user) {
+                return $user->getDeputyUid();
+            },
             iterator_to_array($client->getUsers())
         );
 

@@ -29,7 +29,7 @@ class AuthController extends RestController
         private readonly string $workspace,
         EntityManagerInterface $em,
     ) {
-       parent::__construct($em);
+        parent::__construct($em);
     }
 
     /**
@@ -56,7 +56,7 @@ class AuthController extends RestController
                 $em->flush();
 
                 // Now doing this inline rather than injecting RedisUserProvider
-                $authToken = $this->workspace.'_'.$user->getId().'_'.sha1(microtime().spl_object_hash($user).rand(1, 999));
+                $authToken = $this->workspace . '_' . $user->getId() . '_' . sha1(microtime() . spl_object_hash($user) . rand(1, 999));
                 $redis->set($authToken, serialize($this->tokenStorage->getToken()));
 
                 // add token into response

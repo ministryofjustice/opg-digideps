@@ -58,6 +58,6 @@ class ClientHelpers
             $checkbit = 'T';
         }
 
-        return $ref.$checkbit;
+        return $ref . $checkbit;
     }
 }

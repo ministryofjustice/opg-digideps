@@ -12,7 +12,7 @@ class ReportSubmissionHelper
 {
     public function __construct(
         private readonly EntityManager $entityManager
-    ){
+    ) {
     }
 
     /**

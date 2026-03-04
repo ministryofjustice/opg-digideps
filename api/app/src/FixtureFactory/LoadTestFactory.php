@@ -32,7 +32,7 @@ class LoadTestFactory
                     \DateTime::createFromImmutable($oneYearAgo->modify('+1 day'))
                 );
 
-            $user->setEmail($user->getEmail().rand(1, 100000));
+            $user->setEmail($user->getEmail() . rand(1, 100000));
 
             $client = $clientTestHelper->generateClient($this->em, $user);
             $user->addClient($client);

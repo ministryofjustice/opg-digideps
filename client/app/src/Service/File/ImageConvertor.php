@@ -43,7 +43,7 @@ class ImageConvertor
 
         // Check if the command failed and get the error if needed
         if ($response->hasFailed()) {
-            throw new Exception('An error occurred: '.$response->getError());
+            throw new Exception('An error occurred: ' . $response->getError());
         }
 
         $newBody = file_get_contents($newPath);

@@ -79,7 +79,7 @@ class RestInputOuputFormatter
             if ($this->defaultFormat) {
                 $format = $this->defaultFormat;
             } else {
-                throw new \RuntimeException("format $format not supported and  defaultFormat not defined. Supported formats: ".implode(',', $this->supportedFormats));
+                throw new \RuntimeException("format $format not supported and  defaultFormat not defined. Supported formats: " . implode(',', $this->supportedFormats));
             }
         }
 
@@ -91,12 +91,12 @@ class RestInputOuputFormatter
 
         // if data is defined,
         if ($groupsCheck && !empty($data['data']) && $this->containsEntity($data['data']) && false === $context->hasAttribute('groups')) {
-            throw new \RuntimeException($request->getMethod().' '.$request->getUri().' missing JMS group');
+            throw new \RuntimeException($request->getMethod() . ' ' . $request->getUri() . ' missing JMS group');
         }
 
         $serializedData = $this->serializer->serialize($data, $format, $context);
         $response = new Response($serializedData);
-        $response->headers->set('Content-Type', 'application/'.$format);
+        $response->headers->set('Content-Type', 'application/' . $format);
         // response modifier
         foreach ($this->responseModifiers as $modifier) {
             $modifier($response);

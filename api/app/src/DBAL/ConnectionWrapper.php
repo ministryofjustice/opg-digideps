@@ -94,7 +94,7 @@ class ConnectionWrapper extends Connection
         // Subsequent connections will use new value stored in redis
         $secretValue = $result['SecretString'];
 
-        putenv(self::DATABASE_PASSWORD.'='.$secretValue);
+        putenv(self::DATABASE_PASSWORD . '=' . $secretValue);
         $this->params['password'] = $secretValue;
     }
 

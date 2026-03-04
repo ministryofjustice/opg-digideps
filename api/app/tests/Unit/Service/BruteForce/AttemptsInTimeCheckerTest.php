@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 // create a simple predis Mock to just return keys
 
-require_once __DIR__.'/PredisMock.php';
+require_once __DIR__ . '/PredisMock.php';
 
 final class AttemptsInTimeCheckerTest extends TestCase
 {

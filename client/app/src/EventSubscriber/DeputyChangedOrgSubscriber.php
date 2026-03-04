@@ -12,11 +12,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class DeputyChangedOrgSubscriber implements EventSubscriberInterface
 {
-
     public function __construct(
         private LoggerInterface $logger,
         private DateTimeProvider $dateTimeProvider
-    ){
+    ) {
     }
 
     public static function getSubscribedEvents(): array
@@ -29,7 +28,7 @@ class DeputyChangedOrgSubscriber implements EventSubscriberInterface
     public function auditLog(DeputyChangedOrgEvent $event)
     {
             $deputyChangedOrgEvent = (new AuditEvents($this->dateTimeProvider))
-                ->deputyChangedOrganisationEvent (
+                ->deputyChangedOrganisationEvent(
                     $event->getTrigger(),
                     $event->getDeputyId(),
                     $event->getPreviousOrgId(),
@@ -38,5 +37,5 @@ class DeputyChangedOrgSubscriber implements EventSubscriberInterface
                 );
 
             $this->logger->notice('', $deputyChangedOrgEvent);
-        }
+    }
 }

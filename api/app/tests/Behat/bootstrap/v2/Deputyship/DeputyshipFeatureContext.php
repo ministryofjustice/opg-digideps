@@ -29,7 +29,7 @@ class DeputyshipFeatureContext extends BaseFeatureContext
      */
     public function deputyWithSurnameExists(string $surname): void
     {
-        $email = (new Uuid())->uuid3().'@opg-testing.gov.uk';
+        $email = (new Uuid())->uuid3() . '@opg-testing.gov.uk';
         $this->user = $this->fixtureHelper->createAndPersistUser(
             roleName: User::ROLE_LAY_DEPUTY,
             email: $email,
@@ -121,7 +121,7 @@ class DeputyshipFeatureContext extends BaseFeatureContext
         $clientDivs = $this->findAllCssElements('th.govuk-table__header');
         assert(
             count($clientDivs) === count(self::FIRST_NAMES),
-            'Expected '.count(self::FIRST_NAMES).' clients, but found '.count($clientDivs)
+            'Expected ' . count(self::FIRST_NAMES) . ' clients, but found ' . count($clientDivs)
         );
 
         // extract the first names
@@ -149,7 +149,7 @@ class DeputyshipFeatureContext extends BaseFeatureContext
      */
     public function deputyIsRedirectedToTheirSingleClient()
     {
-        assert(str_contains($this->getCurrentUrl(), '/deputyship-details/client/'.$this->deputyHasASingleClient_id));
+        assert(str_contains($this->getCurrentUrl(), '/deputyship-details/client/' . $this->deputyHasASingleClient_id));
 
         $this->assertPageContainsText($this->deputyHasASingleClient_familyName);
     }

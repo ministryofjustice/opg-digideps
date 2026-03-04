@@ -28,9 +28,9 @@ class UserFactory
         }
 
         $user = (new User())
-            ->setFirstname(isset($data['firstName']) ? $data['firstName'] : ucfirst($data['deputyType']).' Deputy '.$data['id'])
+            ->setFirstname(isset($data['firstName']) ? $data['firstName'] : ucfirst($data['deputyType']) . ' Deputy ' . $data['id'])
             ->setLastname(isset($data['lastName']) ? $data['lastName'] : 'User')
-            ->setEmail(isset($data['email']) ? $data['email'] : 'behat-'.strtolower($data['deputyType']).'-deputy-'.$data['id'].'@publicguardian.gov.uk')
+            ->setEmail(isset($data['email']) ? $data['email'] : 'behat-' . strtolower($data['deputyType']) . '-deputy-' . $data['id'] . '@publicguardian.gov.uk')
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
             ->setNdrEnabled($ndrEnabled)
@@ -70,7 +70,7 @@ class UserFactory
             case 'PROF_ADMIN':
                 return 'ROLE_PROF_ADMIN';
             default:
-                return 'ROLE_'.$roleName.'_NAMED';
+                return 'ROLE_' . $roleName . '_NAMED';
         }
     }
 
@@ -80,7 +80,7 @@ class UserFactory
     public function createAdmin(array $data): User
     {
         $user = (new User())
-            ->setFirstname(isset($data['firstName']) ? $data['firstName'] : ucfirst($data['adminType']).' Admin '.$data['email'])
+            ->setFirstname(isset($data['firstName']) ? $data['firstName'] : ucfirst($data['adminType']) . ' Admin ' . $data['email'])
             ->setLastname(isset($data['lastName']) ? $data['lastName'] : 'User')
             ->setEmail($data['email'])
             ->setRegistrationDate(new \DateTime())
@@ -124,7 +124,7 @@ class UserFactory
     public function createCoDeputy(User $originalDeputy, Client $client, array $data)
     {
         $user2 = clone $originalDeputy;
-        $user2->setLastname($user2->getLastname().'-2')
+        $user2->setLastname($user2->getLastname() . '-2')
             ->setEmail(
                 sprintf(
                     'co-%s-deputy-%d@fixture.com',
@@ -137,7 +137,7 @@ class UserFactory
             ->setRegistrationDate(new \DateTime())
             ->setCoDeputyClientConfirmed(true)
             ->setActive(true)
-            ->setDeputyUid('7'.str_pad((string) rand(1, 99999999), 11, '0', STR_PAD_LEFT));
+            ->setDeputyUid('7' . str_pad((string) rand(1, 99999999), 11, '0', STR_PAD_LEFT));
 
         if ('true' === $data['activated'] || true === $data['activated']) {
             $user2->setPassword($this->passwordHasher->hashPassword($user2, 'DigidepsPass1234'))

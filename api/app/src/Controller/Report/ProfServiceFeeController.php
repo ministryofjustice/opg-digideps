@@ -71,7 +71,7 @@ class ProfServiceFeeController extends RestController
             ? $request->query->all('groups') : ['prof_service_fee'];
         $this->formatter->setJmsSerialiserGroups($serialiseGroups);
 
-        $profServiceFee = $this->findEntityBy(ProfServiceFee::class, $id, 'Prof Service Fee with id:'.$id.' not found');
+        $profServiceFee = $this->findEntityBy(ProfServiceFee::class, $id, 'Prof Service Fee with id:' . $id . ' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($profServiceFee->getReport());
 
         return $profServiceFee;

@@ -32,17 +32,17 @@ class UserResearchResponseType extends AbstractType
         ];
 
         $deputyshipLengthLabels = array_map(function ($length) {
-            return $this->translator->trans('form.deputyshipLength.choices.'.$length, [], 'report-post-submission-user-research');
+            return $this->translator->trans('form.deputyshipLength.choices.' . $length, [], 'report-post-submission-user-research');
         }, $deputyshipLengthTransKeys);
 
         $typesOfResearchTransKeys = ['surveys', 'videoCall', 'phone', 'inPerson'];
         $typesOfResearchLabels = array_map(function ($researchType) {
-            return $this->translator->trans('form.agreedResearchTypes.choices.'.$researchType, [], 'report-post-submission-user-research');
+            return $this->translator->trans('form.agreedResearchTypes.choices.' . $researchType, [], 'report-post-submission-user-research');
         }, $typesOfResearchTransKeys);
 
         $deviceAccessTransKeys = ['yes', 'no'];
         $deviceAccessLabels = array_map(function ($response) {
-            return $this->translator->trans('form.hasAccessToVideoCallDevice.choices.'.$response, [], 'report-post-submission-user-research');
+            return $this->translator->trans('form.hasAccessToVideoCallDevice.choices.' . $response, [], 'report-post-submission-user-research');
         }, $deviceAccessTransKeys);
 
         $builder

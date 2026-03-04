@@ -97,7 +97,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     {
         $baseUrl = $this->getAreaUrl($area);
 
-        $this->visitPath($baseUrl.'/health-check/service');
+        $this->visitPath($baseUrl . '/health-check/service');
         $this->assertResponseStatus(200);
     }
 
@@ -121,7 +121,7 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
         } elseif ('admin' === $area) {
             return $this->getAdminUrl();
         } else {
-            throw new RuntimeException(__METHOD__.': area not valid');
+            throw new RuntimeException(__METHOD__ . ': area not valid');
         }
     }
 }
