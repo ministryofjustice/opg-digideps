@@ -1,6 +1,10 @@
 #!/bin/bash
 exec > >(tee /var/log/user-data.log | logger -t user-data -s 2>/dev/console) 2>&1 #Allow us to see the log if something was to go wrong.
 
+mkdir -p /opt/rds
+curl -s https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem -o /opt/rds/rds-combined-ca-bundle.pem
+chmod 644 /opt/rds/rds-combined-ca-bundle.pem
+
 # This is the Database Script to make connecting to the database easier
 cat << 'EOF' > /usr/local/bin/database
 #!/bin/bash
@@ -108,12 +112,10 @@ connect_to_database() {
     export AWS_SECRET_ACCESS_KEY=$(echo "$CREDS" | jq -r .Credentials.SecretAccessKey)
     export AWS_SESSION_TOKEN=$(echo "$CREDS" | jq -r .Credentials.SessionToken)
 
-    curl -s https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem -o /tmp/rds-combined-ca-bundle.pem
-
     TOKEN=$(aws rds generate-db-auth-token --hostname "$HOST" --port 5432 --username readonly-db-iam-${environment} --region eu-west-1)
 
     echo "Connecting to $HOST as readonly-db-iam-${environment}"
-    PGPASSWORD="$TOKEN" psql "host=$HOST port=5432 dbname=api user=readonly-db-iam-${environment} sslmode=require sslrootcert=/tmp/rds-combined-ca-bundle.pem"
+    PGPASSWORD="$TOKEN" psql "host=$HOST port=5432 dbname=api user=readonly-db-iam-${environment} sslmode=require sslrootcert=/opt/rds/rds-combined-ca-bundle.pem"
 
   else
     echo "Invalid access level: must be 'read' or 'edit'"
