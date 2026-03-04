@@ -13,15 +13,8 @@ use Twig\TwigFunction;
 
 class ComponentsExtension extends AbstractExtension
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var ReportSectionsLinkService
-     */
-    private $reportSectionsLinkService;
+    private TranslatorInterface $translator;
+    private ReportSectionsLinkService $reportSectionsLinkService;
 
     /**
      * ComponentsExtension constructor.
@@ -34,7 +27,7 @@ class ComponentsExtension extends AbstractExtension
         $this->reportSectionsLinkService = $reportSectionsLinkService;
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('progress_bar_registration', [$this, 'progressBarRegistration'], ['needs_environment' => true]),
@@ -49,7 +42,7 @@ class ComponentsExtension extends AbstractExtension
         ];
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             'country_name' => new TwigFilter('country_name', function ($value) {
@@ -65,6 +58,8 @@ class ComponentsExtension extends AbstractExtension
                         'defaultDateFormat' => 'd F Y',
                     ]);
                 }
+
+                return '';
             }),
             'pad_day_month' => new TwigFilter('pad_day_month', function ($value) {
                 if ($value && (int) $value >= 1 && (int) $value <= 9) {
@@ -73,18 +68,17 @@ class ComponentsExtension extends AbstractExtension
 
                 return $value;
             }),
-            // convert 'Very Random "string" !!" into "very-random-string"
+            // convert 'Very Random "string" !!' into 'very-random-string'
             'behat_namify' => new TwigFilter('behat_namify', function ($string) {
-                $string = preg_replace('/[^\s_\-a-zA-Z0-9]/u', '', $string); // remove unneeded chars
-                $string = str_replace('_', ' ', $string);             // treat underscores as spaces
-                $string = preg_replace('/^\s+|\s+$/', '', $string);   // trim leading/trailing spaces
-                $string = preg_replace('/[-\s]+/', '-', $string);     // convert spaces to hyphens
-                $string = is_null($string) ? '' : strtolower($string); // convert to lowercase
+                $string = preg_replace('/[^\s_\-a-zA-Z0-9]/u', '', $string); // remove unnecessary chars
+                $string = str_replace('_', ' ', $string);              // treat underscores as spaces
+                $string = trim($string);                               // trim leading/trailing spaces
+                $string = preg_replace('/[-\s]+/', '-', $string);      // convert spaces to hyphens
 
-                return $string;
+                return is_null($string) ? '' : strtolower($string);
             }),
             'money_format' => new TwigFilter('money_format', function ($string) {
-                return number_format($string, 2, '.', ',');
+                return number_format($string, 2);
             }),
             'class_name' => new TwigFilter('class_name', function ($object) {
                 return is_object($object) ? get_class($object) : null;
