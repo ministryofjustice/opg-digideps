@@ -13,6 +13,19 @@ Feature: Submitting a report
         Then my report should be submitted
 
     @lay-pfa-high-completed
+    Scenario: Trying to submit already submitted report returns error message
+        Given a Lay Deputy has a completed report
+        And I follow the submission process to the declaration page for current report
+        Given I fill in the declaration page and submit the report
+        Then my report should be submitted
+        When I change the current report status to "ready to submit"
+        And I follow the submission process to the declaration page for current report
+        When I change the current report status to "submitted"
+        Given I fill in the declaration page and submit the report for a 2nd time
+        Then I should see an error message that the report has already been submitted
+        And I should be on the report declaration page
+
+    @lay-pfa-high-completed
     Scenario: Deputy is ready to submit report but has a missing document in S3 and is redirected to re-upload page to re-upload document and submit report
         Given a Lay Deputy has a completed report
         When I visit the report overview page
