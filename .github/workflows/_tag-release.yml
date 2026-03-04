@@ -64,5 +64,13 @@ jobs:
           fi
           echo "Retrieved image manifest for digest $DIGEST"
 
-          aws ecr put-image --repository-name "$REPO_NAME" --image-tag "$RELEASE_TAG" --image-manifest "$MANIFEST"
-          echo "Tagged $REPO_NAME:$CURRENT_TAG as $REPO_NAME:$RELEASE_TAG"
+          aws ecr put-image --repository-name "$REPO_NAME" --image-tag "$RELEASE_TAG" --image-manifest "$MANIFEST" \
+            || echo "Tag $REPO_NAME:$RELEASE_TAG already exists, skipping"
+
+          echo "Tagged (or already tagged) $REPO_NAME:$CURRENT_TAG as $REPO_NAME:$RELEASE_TAG"
+
+
+          aws ecr put-image --repository-name "$REPO_NAME" --image-tag "main-$RELEASE_TAG" --image-manifest "$MANIFEST" \
+            || echo "Tag $REPO_NAME:main-$RELEASE_TAG already exists, skipping"
+
+          echo "Tagged (or already tagged) $REPO_NAME:$CURRENT_TAG as $REPO_NAME:main-$RELEASE_TAG"
