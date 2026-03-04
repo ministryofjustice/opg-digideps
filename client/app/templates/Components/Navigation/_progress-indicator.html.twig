@@ -1,8 +1,7 @@
-<!--Component: progress-indicator-->
 <ol class="opg-progress-bar">
     {% for stepId, stepOptions in progressSteps %}
         {% set stepClass = 'opg-progress-bar__item--' ~ stepOptions.stepStatus %}
-        {% if stepOptions.stepStatus === 'previous' %}
+        {% if stepOptions.stepStatus == 'previous' %}
             {% set stepClass = stepClass ~ ' opg-progress-bar__item--completed' %}
         {% endif %}
         <li class="opg-progress-bar__item {{ stepClass }}">
