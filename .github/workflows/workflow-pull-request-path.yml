@@ -481,9 +481,12 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
   create_tag_release:
-    if: github.event_name == 'merge_group'
+    #    if: github.event_name == 'merge_group'
     name: Create release tag from releasable
-    needs: [workflow_variables, workflow_summary]
+    needs:
+      - workflow_variables
+      #      - workflow_summary
+      - docker_build_scan_push
     uses: ./.github/workflows/_tag-release.yml
     with:
       current_tag: ${{ needs.workflow_variables.outputs.version_tag }}
