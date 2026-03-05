@@ -71,7 +71,7 @@ class ComponentsExtension extends AbstractExtension
             // convert 'Very Random "string" !!' into 'very-random-string'
             'behat_namify' => new TwigFilter('behat_namify', function ($string) {
                 $string = preg_replace('/[^\s_\-a-zA-Z0-9]/u', '', $string); // remove unnecessary chars
-                $string = str_replace('_', ' ', $string);              // treat underscores as spaces
+                $string = str_replace('_', ' ', "$string");              // treat underscores as spaces
                 $string = trim($string);                               // trim leading/trailing spaces
                 $string = preg_replace('/[-\s]+/', '-', $string);      // convert spaces to hyphens
 
