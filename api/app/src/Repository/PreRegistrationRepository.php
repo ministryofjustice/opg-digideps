@@ -35,7 +35,8 @@ class PreRegistrationRepository extends ServiceEntityRepository
      * @return PreRegistration[]
      */
     public function findByCaseNumber(?string $caseNumber): array
-    {   // When this method is called it would suggest an issue with data if we're getting a null value at this point.
+    {
+   // When this method is called it would suggest an issue with data if we're getting a null value at this point.
         // Required due to null value possible on base entity.
         if (!is_string($caseNumber)) {
             throw new \InvalidArgumentException('Case number must be a string to be searchable');

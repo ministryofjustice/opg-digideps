@@ -608,7 +608,7 @@ class Report implements ReportInterface
         $this->updateDueDateBasedOnEndDate();
 
         if ($dateChecks && count($client->getUnsubmittedReports()) > 0) {
-            throw new \RuntimeException('Client '.$client->getId().' already has an unsubmitted report. Cannot create another one');
+            throw new \RuntimeException('Client ' . $client->getId() . ' already has an unsubmitted report. Cannot create another one');
         }
 
         // check date interval overlapping other reports
@@ -979,7 +979,7 @@ class Report implements ReportInterface
         $acceptedValues = ['not_deputy', 'only_deputy', 'more_deputies_behalf', 'more_deputies_not_behalf'];
 
         if ($agreeBehalfDeputy && !in_array($agreeBehalfDeputy, $acceptedValues)) {
-            throw new \InvalidArgumentException(__METHOD__." {$agreeBehalfDeputy} given. Expected value: ".implode(' or ', $acceptedValues));
+            throw new \InvalidArgumentException(__METHOD__ . " {$agreeBehalfDeputy} given. Expected value: " . implode(' or ', $acceptedValues));
         }
 
         $this->agreedBehalfDeputy = $agreeBehalfDeputy;

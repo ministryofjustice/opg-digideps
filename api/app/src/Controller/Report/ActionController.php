@@ -47,7 +47,7 @@ class ActionController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function getOneById(Request $request, int $id): Action
     {
-        $action = $this->findEntityBy(Action::class, $id, 'Action with id:'.$id.' not found');
+        $action = $this->findEntityBy(Action::class, $id, 'Action with id:' . $id . ' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($action->getReport());
 
         $serialisedGroups = $request->query->has('groups')

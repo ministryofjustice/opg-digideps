@@ -57,7 +57,7 @@ class NoteType extends AbstractType
         $ret = [];
 
         foreach (NoteEntity::$categories as $categoryId => $cagtegoryTrqnslationKey) {
-            $ret['form.category.entries.'.$cagtegoryTrqnslationKey] = $categoryId;
+            $ret['form.category.entries.' . $cagtegoryTrqnslationKey] = $categoryId;
         }
 
         return $ret;

@@ -24,6 +24,7 @@ class ReportSubmission
     // createdBy is the user who submitted the report
     // createdOn = date where the report (or documents-only) get submitted
     use CreationAudit;
+
     public const REMOVE_FILES_WHEN_OLDER_THAN = '-500 days';
 
     /**

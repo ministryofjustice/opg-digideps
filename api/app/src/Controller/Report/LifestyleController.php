@@ -79,7 +79,7 @@ class LifestyleController extends RestController
             ? $request->query->all('groups') : ['lifestyle'];
         $this->formatter->setJmsSerialiserGroups($serialiseGroups);
 
-        $lifestyle = $this->findEntityBy(Lifestyle::class, $id, 'Lifestyle with id:'.$id.' not found');
+        $lifestyle = $this->findEntityBy(Lifestyle::class, $id, 'Lifestyle with id:' . $id . ' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($lifestyle->getReport());
 
         return $lifestyle;

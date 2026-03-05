@@ -44,7 +44,7 @@ trait UserManagementTrait
      */
     public function viewEditUserPageFor($userEmail)
     {
-        $this->visitAdminPath('/admin/fixtures/getUserIDByEmail/'.strtolower($userEmail));
+        $this->visitAdminPath('/admin/fixtures/getUserIDByEmail/' . strtolower($userEmail));
 
         /** @var Session $session */
         $session = $this->getSession();
@@ -64,7 +64,7 @@ trait UserManagementTrait
      */
     public function userShouldBeDeleted($userEmail)
     {
-        $this->visitAdminPath('/admin/fixtures/getUserIDByEmail/'.strtolower($userEmail));
+        $this->visitAdminPath('/admin/fixtures/getUserIDByEmail/' . strtolower($userEmail));
 
         /** @var Session $session */
         $session = $this->getSession();

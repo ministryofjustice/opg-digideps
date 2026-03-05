@@ -144,7 +144,7 @@ trait ActionsSectionTrait
     {
         // this should be replaced with actual link click but could not identify it properly
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportConcernsUrl = 'report/'.$activeReportId.'/actions/step/2?from=summary';
+        $reportConcernsUrl = 'report/' . $activeReportId . '/actions/step/2?from=summary';
         $this->visitPath($reportConcernsUrl);
     }
 }

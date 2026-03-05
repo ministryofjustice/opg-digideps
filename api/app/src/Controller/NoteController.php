@@ -103,7 +103,7 @@ class NoteController extends RestController
 
             $this->em->flush($note);
         } catch (Throwable $e) {
-            $logger->error('Failed to delete note ID: '.$id.' - '.$e->getMessage());
+            $logger->error('Failed to delete note ID: ' . $id . ' - ' . $e->getMessage());
         }
 
         return [];

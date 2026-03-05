@@ -42,7 +42,7 @@ class ReportUtils
 
         // prefix century if needed
         if (2 === strlen($pieces[2])) {
-            $pieces[2] = ((string) $century).$pieces[2];
+            $pieces[2] = ((string) $century) . $pieces[2];
         }
         // check format is d-M-Y
         if ((int) $pieces[0] < 1 || (int) $pieces[0] > 31 || 3 !== strlen($pieces[1]) || 4 !== strlen($pieces[2])) {

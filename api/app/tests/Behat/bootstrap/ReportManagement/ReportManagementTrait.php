@@ -26,7 +26,7 @@ trait ReportManagementTrait
         $this->selectOption('manage_report[dueDateChoice]', 'keep');
         $this->pressButton('manage_report[save]');
         $this->pressButton('manage_report_confirm[save]');
-        $this->assertPageContainsText('OPG'.$type);
+        $this->assertPageContainsText('OPG' . $type);
     }
 
     /**
@@ -50,7 +50,7 @@ trait ReportManagementTrait
         $this->selectOption('manage_report_confirm[confirm]', 'yes');
         $this->pressButton('manage_report_confirm[save]');
 
-        $this->assertPageContainsText('OPG'.$type);
+        $this->assertPageContainsText('OPG' . $type);
     }
 
     /**

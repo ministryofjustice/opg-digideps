@@ -25,7 +25,7 @@ class DeputyChangedOrgEvent extends Event
         return $this->trigger;
     }
 
-    public function setTrigger(string $trigger) : DeputyChangedOrgEvent
+    public function setTrigger(string $trigger): DeputyChangedOrgEvent
     {
         $this->trigger = $trigger;
 
@@ -79,5 +79,4 @@ class DeputyChangedOrgEvent extends Event
 
         return $this;
     }
-
 }

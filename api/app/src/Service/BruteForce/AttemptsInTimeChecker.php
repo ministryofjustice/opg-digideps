@@ -22,7 +22,7 @@ class AttemptsInTimeChecker
 
     public function setRedisPrefix($redisPrefix)
     {
-        $this->redisPrefix = $this->workspace.'_'.$redisPrefix;
+        $this->redisPrefix = $this->workspace . '_' . $redisPrefix;
 
         return $this;
     }
@@ -80,6 +80,6 @@ class AttemptsInTimeChecker
 
     private function keyToRedisId($key)
     {
-        return $this->redisPrefix.$key;
+        return $this->redisPrefix . $key;
     }
 }

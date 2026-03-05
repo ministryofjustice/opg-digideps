@@ -143,7 +143,7 @@ class ReportSubmissionController extends RestController
     public function getOld(Request $request): array
     {
         if (!$this->authService->isSecretValidForRole(User::ROLE_ADMIN, $request)) {
-            throw new RuntimeException(__METHOD__.' only accessible from ADMIN container.', 403);
+            throw new RuntimeException(__METHOD__ . ' only accessible from ADMIN container.', 403);
         }
 
         /* @var $repo ReportSubmissionRepository */
@@ -164,7 +164,7 @@ class ReportSubmissionController extends RestController
     public function setUndownloadable(int $id, Request $request)
     {
         if (!$this->authService->isSecretValidForRole(User::ROLE_ADMIN, $request)) {
-            throw new RuntimeException(__METHOD__.' only accessible from ADMIN container.', 403);
+            throw new RuntimeException(__METHOD__ . ' only accessible from ADMIN container.', 403);
         }
 
         /* @var $reportSubmission \App\Entity\Report\ReportSubmission */

@@ -170,7 +170,7 @@ class PAUserFixtures extends AbstractDataFixture
         // Create number of users for each user type
         foreach ($data['users'] as $userData) {
             for ($i = 1; $i <= $userData['count']; ++$i) {
-                $fullEmail = $userData['id'].'-'.$i.$userData['email'];
+                $fullEmail = $userData['id'] . '-' . $i . $userData['email'];
 
                 // Set the $deputyData when we are processing the deputy
                 if (null === $deputyData) {
@@ -229,9 +229,9 @@ class PAUserFixtures extends AbstractDataFixture
     private function createUser($userData, $iteration)
     {
         return (new User())
-            ->setFirstname($userData['id'].'-'.$iteration)
+            ->setFirstname($userData['id'] . '-' . $iteration)
             ->setLastname('User')
-            ->setEmail($userData['id'].'-'.$iteration.$userData['email'])
+            ->setEmail($userData['id'] . '-' . $iteration . $userData['email'])
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
             ->setNdrEnabled(false)
@@ -250,8 +250,8 @@ class PAUserFixtures extends AbstractDataFixture
         return (new Client())
             ->setCaseNumber(substr_replace($clientData['caseNumber'], $iteration, -$offset))
             ->setFirstname($clientData['id'])
-            ->setLastname('Client '.$iteration)
-            ->setEmail(strtolower($clientData['id']).'-client-'.$iteration.'@example.com')
+            ->setLastname('Client ' . $iteration)
+            ->setEmail(strtolower($clientData['id']) . '-client-' . $iteration . '@example.com')
             ->setPhone('07811111111111')
             ->setAddress('ABC Road')
             ->setPostcode('AB1 2CD')
@@ -281,7 +281,7 @@ class PAUserFixtures extends AbstractDataFixture
             ->setFirstname($deputyData['id'])
             ->setLastname('Deputy')
             ->setDeputyUid($clientData['deputyUid'])
-            ->setEmail1($deputyData['id'].$deputyData['email'])
+            ->setEmail1($deputyData['id'] . $deputyData['email'])
             ->setAddress1('ABC Road')
             ->setAddressPostcode('AB1 2CD')
             ->setAddressCountry('GB');

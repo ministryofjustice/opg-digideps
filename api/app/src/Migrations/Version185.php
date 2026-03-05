@@ -15,7 +15,7 @@ class Version185 extends AbstractMigration
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf('postgresql' != $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'postgresql\'.');
 
-        $this->addSql("DELETE from migrations where version IN ('".implode("','", range(157, 180))."');");
+        $this->addSql("DELETE from migrations where version IN ('" . implode("','", range(157, 180)) . "');");
     }
 
     public function down(Schema $schema): void

@@ -64,7 +64,11 @@ class S3FileUploader
      * @return Document
      */
     public function uploadFileAndPersistDocument(
-        ReportInterface $report, string $body, string $fileName, bool $isReportPdf, bool $overwrite = false
+        ReportInterface $report,
+        string $body,
+        string $fileName,
+        bool $isReportPdf,
+        bool $overwrite = false
     ) {
         $storageReference = sprintf(
             'dd_doc_%s_%s%s',

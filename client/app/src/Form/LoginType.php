@@ -14,8 +14,8 @@ class LoginType extends AbstractType
     {
         $builder
             ->add(
-            'email',
-            FormTypes\EmailType::class,
+                'email',
+                FormTypes\EmailType::class,
                 ['constraints' => [
                     new Constraints\NotBlank(['message' => 'login.email.notBlank']),
                     new Constraints\Email(['message' => 'login.email.inValid']),

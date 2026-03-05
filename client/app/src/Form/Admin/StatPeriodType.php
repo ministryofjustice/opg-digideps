@@ -22,7 +22,7 @@ class StatPeriodType extends AbstractType
                     'custom' => 'custom',
                 ],
                 'choice_label' => function ($choice) {
-                    return 'form.period.options.'.$choice;
+                    return 'form.period.options.' . $choice;
                 },
                 'expanded' => true,
                 'multiple' => false,

@@ -41,7 +41,8 @@ class ImbalanceMetricsFilterType extends AbstractType
                 FormTypes\SubmitType::class
             )
             ->addEventListener(
-                FormEvents::POST_SUBMIT, [$this, 'onPostSubmit']
+                FormEvents::POST_SUBMIT,
+                [$this, 'onPostSubmit']
             );
     }
 

@@ -89,7 +89,7 @@ class OrgService
     protected function log(string $output)
     {
         if ($this->outputLogging) {
-            echo $output."\n";
+            echo $output . "\n";
         } else {
             echo ' ';
         }

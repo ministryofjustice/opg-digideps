@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 abstract class ProfServiceFee
 {
     use HasReportTrait;
+
     public const TYPE_ASSESSED_FEE = 'assessed';
     public const TYPE_FIXED_FEE = 'fixed';
 
