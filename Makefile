@@ -195,6 +195,9 @@ smoke-tests-local: up-app reset-database reset-fixtures ##@smoke-tests Run smoke
 	docker compose build orchestration
 	docker compose run -e ENVIRONMENT=local --remove-orphans orchestration sh tests/run-smoke-tests.sh
 
+anonymise: ##@anonymise Run anonymise scripts
+	docker compose run orchestration ./anonymisation/anonymise
+
 resilience-tests: ##@resilience-tests Run resilience tests (requires app to be up)
 	docker compose build orchestration
 	docker compose run -e LOG_AND_CONTINUE=true --remove-orphans orchestration sh tests/run-resilience-tests.sh
