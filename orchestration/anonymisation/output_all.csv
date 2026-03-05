@@ -89,7 +89,7 @@ public,client,address3,character varying,200,,Lorem
 public,client,address4,character varying,200,,Lorem
 public,client,address5,character varying,200,,Lorem
 public,client,archived_at,timestamp without time zone,,,NA
-public,client,case_number,character varying,20,,NA
+public,client,case_number,character varying,20,,Lorem
 public,client,country,character varying,10,,Lorem
 public,client,court_date,date,,,NA
 public,client,created_at,timestamp without time zone,,,NA
@@ -142,12 +142,23 @@ public,contact,postcode,character varying,10,,PostCode
 public,contact,relationship,character varying,100,,Lorem
 public,contact,report_id,integer,,FOREIGN KEY,NA
 public,contact,updated_at,timestamp without time zone,,,NA
-public,court_order,active,boolean,,,NA
-public,court_order,court_order_uid,bigint,,,NA
+public,court_order,client_id,integer,,FOREIGN KEY,NA
+public,court_order,court_order_uid,character varying,36,,Lorem
 public,court_order,created_at,timestamp without time zone,,,NA
 public,court_order,id,integer,,PRIMARY KEY,NA
-public,court_order,type,character varying,10,,Lorem
+public,court_order,order_made_date,timestamp without time zone,,,NA
+public,court_order,order_type,character varying,10,,Lorem
+public,court_order,status,character varying,10,,Lorem
 public,court_order,updated_at,timestamp without time zone,,,NA
+public,court_order_deputy,court_order_id,integer,,PRIMARY KEY,NA
+public,court_order_deputy,court_order_id,integer,,FOREIGN KEY,NA
+public,court_order_deputy,deputy_id,integer,,PRIMARY KEY,NA
+public,court_order_deputy,deputy_id,integer,,FOREIGN KEY,NA
+public,court_order_deputy,is_active,boolean,,,NA
+public,court_order_report,court_order_id,integer,,FOREIGN KEY,NA
+public,court_order_report,court_order_id,integer,,PRIMARY KEY,NA
+public,court_order_report,report_id,integer,,FOREIGN KEY,NA
+public,court_order_report,report_id,integer,,PRIMARY KEY,NA
 public,dd_user,active,boolean,,,NA
 public,dd_user,ad_managed,boolean,,,NA
 public,dd_user,address1,character varying,200,,Lorem
@@ -215,8 +226,8 @@ public,deputy,phone_alternative,character varying,20,,PhoneNumber
 public,deputy,phone_main,character varying,20,,PhoneNumber
 public,deputy,updated_at,timestamp without time zone,,,NA
 public,deputy,user_id,integer,,FOREIGN KEY,NA
-public,deputy_case,client_id,integer,,PRIMARY KEY,NA
 public,deputy_case,client_id,integer,,FOREIGN KEY,NA
+public,deputy_case,client_id,integer,,PRIMARY KEY,NA
 public,deputy_case,user_id,integer,,FOREIGN KEY,NA
 public,deputy_case,user_id,integer,,PRIMARY KEY,NA
 public,document,created_by,integer,,FOREIGN KEY,NA
@@ -271,10 +282,10 @@ public,migrations,version,character varying,1024,PRIMARY KEY,NA
 public,money_short_category,id,integer,,PRIMARY KEY,NA
 public,money_short_category,present,boolean,,,NA
 public,money_short_category,report_id,integer,,FOREIGN KEY,NA
-public,money_short_category,type_id,character varying,255,,NA
+public,money_short_category,type_id,character varying,255,,Lorem
 public,money_transaction,amount,numeric,,,NA
 public,money_transaction,bank_account_id,integer,,FOREIGN KEY,NA
-public,money_transaction,category,character varying,255,,NA
+public,money_transaction,category,character varying,255,,Lorem
 public,money_transaction,deleted_at,timestamp without time zone,,,NA
 public,money_transaction,description,text,,,Lorem
 public,money_transaction,id,integer,,PRIMARY KEY,NA
@@ -288,7 +299,7 @@ public,money_transaction_short,id,integer,,PRIMARY KEY,NA
 public,money_transaction_short,report_id,integer,,FOREIGN KEY,NA
 public,money_transaction_short,type,character varying,255,,Lorem
 public,money_transfer,amount,numeric,,,NA
-public,money_transfer,description,character varying,75,,Lorem
+public,money_transfer,description,text,,,Lorem
 public,money_transfer,from_account_id,integer,,FOREIGN KEY,NA
 public,money_transfer,id,integer,,PRIMARY KEY,NA
 public,money_transfer,report_id,integer,,FOREIGN KEY,NA
@@ -302,23 +313,23 @@ public,note,id,integer,,PRIMARY KEY,NA
 public,note,last_modified_by,integer,,FOREIGN KEY,NA
 public,note,last_modified_on,timestamp without time zone,,,NA
 public,note,title,character varying,150,,Lorem
-public,odr,action_give_gifts_to_client,character varying,3,,NA
+public,odr,action_give_gifts_to_client,character varying,3,,Lorem
 public,odr,action_give_gifts_to_client_details,text,,,Lorem
-public,odr,action_more_info,character varying,3,,NA
+public,odr,action_more_info,character varying,3,,Lorem
 public,odr,action_more_info_details,text,,,Lorem
-public,odr,action_property_buy,character varying,3,,NA
-public,odr,action_property_maintenance,character varying,3,,NA
-public,odr,action_property_selling_rent,character varying,3,,NA
+public,odr,action_property_buy,character varying,3,,Lorem
+public,odr,action_property_maintenance,character varying,3,,Lorem
+public,odr,action_property_selling_rent,character varying,3,,Lorem
 public,odr,agreed_behalf_deputy,character varying,50,,Lorem
 public,odr,agreed_behalf_deputy_explanation,text,,,Lorem
 public,odr,client_id,integer,,FOREIGN KEY,NA
 public,odr,debt_management,text,,,Lorem
 public,odr,expect_compensation_damages,text,,,Lorem
 public,odr,expect_compensation_damages_details,text,,,Lorem
-public,odr,has_debts,character varying,5,,NA
+public,odr,has_debts,character varying,5,,Lorem
 public,odr,id,integer,,PRIMARY KEY,NA
 public,odr,no_asset_to_add,boolean,,,NA
-public,odr,paid_for_anything,character varying,3,,NA
+public,odr,paid_for_anything,character varying,3,,Lorem
 public,odr,receive_other_income,text,,,Lorem
 public,odr,receive_other_income_details,text,,,Lorem
 public,odr,receive_state_pension,text,,,Lorem
@@ -332,7 +343,7 @@ public,odr_account,balance_on_cod,numeric,,,NA
 public,odr_account,bank_name,character varying,500,,Lorem
 public,odr_account,created_at,timestamp without time zone,,,NA
 public,odr_account,id,integer,,PRIMARY KEY,NA
-public,odr_account,is_joint_account,character varying,3,,NA
+public,odr_account,is_joint_account,character varying,3,,Lorem
 public,odr_account,odr_id,integer,,FOREIGN KEY,NA
 public,odr_account,sort_code,character varying,6,,Lorem
 public,odr_account,updated_at,timestamp without time zone,,,NA
@@ -407,16 +418,23 @@ public,odr_visits_care,plan_move_residence_details,text,,,Lorem
 public,odr_visits_care,when_was_care_plan_last_reviewed,date,,,NA
 public,odr_visits_care,who_is_doing_the_caring,text,,,Lorem
 public,organisation,deleted_at,timestamp without time zone,,,NA
-public,organisation,email_identifier,character varying,256,,NA
+public,organisation,email_identifier,character varying,256,,Email
 public,organisation,id,integer,,PRIMARY KEY,NA
 public,organisation,is_activated,boolean,,,NA
-public,organisation,name,character varying,256,,Organisation
-public,organisation_user,organisation_id,integer,,FOREIGN KEY,NA
+public,organisation,name,character varying,256,,Lorem
 public,organisation_user,organisation_id,integer,,PRIMARY KEY,NA
-public,organisation_user,user_id,integer,,PRIMARY KEY,NA
+public,organisation_user,organisation_id,integer,,FOREIGN KEY,NA
 public,organisation_user,user_id,integer,,FOREIGN KEY,NA
+public,organisation_user,user_id,integer,,PRIMARY KEY,NA
+public,pre_registration,client_address_1,character varying,255,,Lorem
+public,pre_registration,client_address_2,character varying,255,,Lorem
+public,pre_registration,client_address_3,character varying,255,,Lorem
+public,pre_registration,client_address_4,character varying,255,,Lorem
+public,pre_registration,client_address_5,character varying,255,,Lorem
 public,pre_registration,client_case_number,character varying,20,,NA
+public,pre_registration,client_firstname,character varying,100,,FirstName
 public,pre_registration,client_lastname,character varying,50,,LastName
+public,pre_registration,client_postcode,character varying,20,,PostCode
 public,pre_registration,created_at,timestamp without time zone,,,NA
 public,pre_registration,deputy_address_1,character varying,255,,Lorem
 public,pre_registration,deputy_address_2,character varying,255,,Lorem
@@ -425,15 +443,15 @@ public,pre_registration,deputy_address_4,character varying,255,,Lorem
 public,pre_registration,deputy_address_5,character varying,255,,Lorem
 public,pre_registration,deputy_firstname,character varying,100,,FirstName
 public,pre_registration,deputy_lastname,character varying,100,,LastName
-public,pre_registration,deputy_postcode,character varying,10,,PostCode
+public,pre_registration,deputy_postcode,character varying,20,,PostCode
 public,pre_registration,deputy_uid,character varying,100,,NA
-public,pre_registration,hybrid,character varying,6,,Lorem
+public,pre_registration,hybrid,character varying,12,,Lorem
 public,pre_registration,id,integer,,PRIMARY KEY,NA
 public,pre_registration,is_co_deputy,boolean,,,NA
 public,pre_registration,ndr,boolean,,,NA
 public,pre_registration,order_date,timestamp without time zone,,,NA
-public,pre_registration,order_type,character varying,255,,Lorem
-public,pre_registration,type_of_report,character varying,10,,Lorem
+public,pre_registration,order_type,character varying,255,,NA
+public,pre_registration,type_of_report,character varying,10,,NA
 public,pre_registration,updated_at,timestamp without time zone,,,NA
 public,prof_deputy_estimate_cost,amount,numeric,,,NA
 public,prof_deputy_estimate_cost,has_more_details,boolean,,,NA
@@ -466,7 +484,7 @@ public,prof_service_fee,payment_received,character varying,255,,Lorem
 public,prof_service_fee,payment_received_date,timestamp without time zone,,,NA
 public,prof_service_fee,report_id,integer,,FOREIGN KEY,NA
 public,prof_service_fee,service_type_id,character varying,255,,Lorem
-public,report,action_more_info,character varying,3,,NA
+public,report,action_more_info,character varying,3,,Lorem
 public,report,action_more_info_details,text,,,Lorem
 public,report,agreed_behalf_deputy,character varying,50,,Lorem
 public,report,agreed_behalf_deputy_explanation,text,,,Lorem
@@ -477,24 +495,24 @@ public,report,current_prof_payments_received,character varying,255,,Lorem
 public,report,debt_management,text,,,Lorem
 public,report,due_date,date,,,NA
 public,report,end_date,date,,,NA
-public,report,gifts_exist,character varying,3,,NA
-public,report,has_debts,character varying,5,,NA
+public,report,gifts_exist,character varying,3,,Lorem
+public,report,has_debts,character varying,5,,Lorem
 public,report,id,integer,,PRIMARY KEY,NA
-public,report,money_in_exists,text,,,NA
-public,report,money_out_exists,text,,,NA
-public,report,money_transactions_short_in_exist,character varying,3,,NA
-public,report,money_transactions_short_out_exist,character varying,3,,NA
+public,report,money_in_exists,text,,,Lorem
+public,report,money_out_exists,text,,,Lorem
+public,report,money_transactions_short_in_exist,character varying,3,,Lorem
+public,report,money_transactions_short_out_exist,character varying,3,,Lorem
 public,report,no_asset_to_add,boolean,,,NA
 public,report,no_transfers_to_add,boolean,,,NA
-public,report,paid_for_anything,character varying,3,,NA
-public,report,previous_prof_fees_estimate_given,character varying,3,,NA
+public,report,paid_for_anything,character varying,3,,Lorem
+public,report,previous_prof_fees_estimate_given,character varying,3,,Lorem
 public,report,prof_dc_estimate_hc,character varying,10,,Lorem
 public,report,prof_dc_estimate_management_cost,double precision,,,NA
-public,report,prof_dc_estimate_more_info,character varying,3,,NA
+public,report,prof_dc_estimate_more_info,character varying,3,,Lorem
 public,report,prof_dc_estimate_more_info_details,text,,,Lorem
 public,report,prof_dc_fixed_cost_amount,numeric,,,NA
-public,report,prof_dc_has_interim,character varying,3,,NA
-public,report,prof_dc_has_previous,character varying,3,,NA
+public,report,prof_dc_has_interim,character varying,3,,Lorem
+public,report,prof_dc_has_previous,character varying,3,,Lorem
 public,report,prof_dc_how_charged,character varying,10,,Lorem
 public,report,prof_dc_scco_amount,numeric,,,NA
 public,report,prof_dc_scco_reason_beyond_estimate,text,,,Lorem
@@ -505,16 +523,16 @@ public,report,reason_for_no_fees,text,,,Lorem
 public,report,reason_for_no_money_in,text,,,Lorem
 public,report,reason_for_no_money_out,text,,,Lorem
 public,report,report_seen,boolean,,,NA
-public,report,report_status_cached,character varying,20,,NA
-public,report,significant_decisions_made,text,,,NA
+public,report,report_status_cached,character varying,20,,Lorem
+public,report,significant_decisions_made,text,,,Lorem
 public,report,start_date,date,,,NA
-public,report,status_cached,text,,,NA
+public,report,status_cached,text,,,Lorem
 public,report,submit_date,timestamp without time zone,,,NA
 public,report,submitted,boolean,,,NA
 public,report,submitted_by,integer,,FOREIGN KEY,NA
-public,report,type,character varying,10,,NA
+public,report,type,character varying,10,,Lorem
 public,report,un_submit_date,timestamp without time zone,,,NA
-public,report,unsubmitted_sections_list,text,,,NA
+public,report,unsubmitted_sections_list,text,,,Lorem
 public,report,updated_at,timestamp without time zone,,,NA
 public,report,wish_to_provide_documentation,character varying,255,,Lorem
 public,report_submission,archived,boolean,,,NA
@@ -548,7 +566,7 @@ public,safeguarding,id,integer,,PRIMARY KEY,NA
 public,safeguarding,report_id,integer,,FOREIGN KEY,NA
 public,safeguarding,when_was_care_plan_last_reviewed,date,,,NA
 public,safeguarding,who_is_doing_the_caring,text,,,Lorem
-public,satisfaction,comments,text,,,Lorem
+public,satisfaction,comments,character varying,1200,,Lorem
 public,satisfaction,created_at,timestamp without time zone,,,NA
 public,satisfaction,deputy_role,character varying,50,,Lorem
 public,satisfaction,id,integer,,PRIMARY KEY,NA
