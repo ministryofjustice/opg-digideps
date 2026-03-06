@@ -1,30 +1,29 @@
 const DetailsExpander = {
   init: function (document) {
-    const container = document.querySelectorAll('.js-details-expander')
+    const expanders = document.querySelectorAll('.js-details-expander')
 
-    container.forEach((userItem) => {
-      const inputBox = userItem.querySelector('input[type="text"]')
-
-      inputBox.addEventListener('input', this.expandDetails)
-      inputBox.addEventListener('paste', this.expandDetails)
-      inputBox.addEventListener('change', this.expandDetails)
+    expanders.forEach(expander => {
+      const textInput = expander.querySelector('input[type="text"]')
+      textInput.addEventListener('input', this.expandDetails)
+      textInput.addEventListener('paste', this.expandDetails)
+      textInput.addEventListener('change', this.expandDetails)
     })
   },
 
   expandDetails: function (event) {
-    const container = document.querySelectorAll('.js-details-expander')
+    const expanders = document.querySelectorAll('.js-details-expander')
 
-    container.forEach((userItem) => {
-      const textareaGroup = userItem.querySelector('.js-details-expandable')
-      if (textareaGroup) {
-        if (userItem.contains(event.target)) {
-          const value = parseFloat(event.target.value.replace(/,/g, ''))
-          if (!isNaN(value) && value !== 0) {
-            textareaGroup.classList.remove('js-hidden')
-          } else {
-            textareaGroup.classList.add('js-hidden')
-          }
-        }
+    expanders.forEach(expander => {
+      const expandableElt = expander.querySelector('.js-details-expandable')
+      if (expandableElt && expander.contains(event.target)) {
+        const cleanedValue = event.target.value.replace(/,/g, '')
+        const isNonNumeric = event.target.hasAttribute('data-non-numeric')
+        const numericValue = parseFloat(cleanedValue)
+
+        const shouldExpand = (isNonNumeric && cleanedValue !== '')
+          || (!isNaN(numericValue) && numericValue !== 0)
+
+        expandableElt.classList.toggle('js-hidden', !shouldExpand)
       }
     })
   }
