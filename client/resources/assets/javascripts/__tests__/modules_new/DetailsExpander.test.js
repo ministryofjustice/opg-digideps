@@ -36,11 +36,11 @@ describe('Details expander', () => {
   })
 })
 
-describe('Details expander - non-numeric', () => {
-  it('should toggle js-hidden on a non-empty text value being input', () => {
+describe('Details expander - data-expand-if-zero', () => {
+  it('should toggle js-hidden when input value is zero', () => {
     document.body.innerHTML = `
       <div class="js-details-expander">
-        <input type="text" data-non-numeric="true">
+        <input type="text" data-expand-if-zero="true">
         <div id="detail" class="js-hidden js-details-expandable">
           <textarea></textarea>
         </div>
@@ -53,16 +53,19 @@ describe('Details expander - non-numeric', () => {
 
     expect(detail.classList.contains('js-hidden')).toBe(true)
 
-    input.value = 'hello world'
-    const event = new InputEvent('input')
-    input.dispatchEvent(event)
-
+    input.value = '0.0'
+    const event1 = new InputEvent('input')
+    input.dispatchEvent(event1)
     expect(detail.classList.contains('js-hidden')).toBe(false)
 
-    input.value = ''
-    const newEvent = new InputEvent('input')
-    input.dispatchEvent(newEvent)
+    input.value = '1,000'
+    const event2 = new InputEvent('input')
+    input.dispatchEvent(event2)
+    expect(detail.classList.contains('js-hidden')).toBe(true)
 
+    input.value = ''
+    const event3 = new InputEvent('input')
+    input.dispatchEvent(event3)
     expect(detail.classList.contains('js-hidden')).toBe(true)
   })
 })
