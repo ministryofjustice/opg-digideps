@@ -68,7 +68,7 @@
                 'labelText': 'form.closingBalance.label' | trans({'%endDate%': report.endDate | date("j F Y")}, translationDomain),
                 'inputPrefix' : '£',
                 'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
-                'data-expand-if-zero': 'true'
+                'extraAttrs': {'data-expand-if-zero': 'true'}
             } ) }}
 
             <div class="js-details-expandable">

@@ -77,6 +77,7 @@ class BankAccountType extends AbstractType
                 'choices' => array_flip([true => 'Yes', false => 'No']),
                 'expanded' => true,
                 'placeholder' => 'Please select',
+                'invalid_message' => 'account.isClosed.notBlank',
             ]);
         }
 
@@ -93,18 +94,26 @@ class BankAccountType extends AbstractType
         $resolver->setDefaults([
             'translation_domain' => 'report-bank-accounts',
             'validation_groups' => function (FormInterface $form) {
+                /** @var BankAccount $formData */
+                $formData = $form->getData();
+
                 $step2Options = ['bank-account-number', 'bank-account-is-joint'];
-                if ($form->getData()->requiresSortCode()) {
+                if ($formData->requiresSortCode()) {
                     $step2Options[] = 'bank-account-sortcode';
                 }
-                if ($form->getData()->requiresBankName()) {
+                if ($formData->requiresBankName()) {
                     $step2Options[] = 'bank-account-name';
+                }
+
+                $step3Options = ['bank-account-opening-balance', 'bank-account-closing-balance'];
+                if ($formData->requiresIsClosed()) {
+                    $step3Options[] = 'bank-account-is-closed';
                 }
 
                 return [
                     1 => ['bank-account-type'],
                     2 => $step2Options,
-                    3 => ['bank-account-opening-balance', 'bank-account-closing-balance', 'bank-account-is-closed'],
+                    3 => $step3Options,
                 ][$this->step];
             },
         ])

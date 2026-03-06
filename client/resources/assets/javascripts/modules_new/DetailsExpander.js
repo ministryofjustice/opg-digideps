@@ -3,29 +3,31 @@ const DetailsExpander = {
     const expanders = document.querySelectorAll('.js-details-expander')
 
     expanders.forEach(expander => {
-      const textInput = expander.querySelector('input[type="text"]')
-      textInput.addEventListener('input', this.expandDetails)
-      textInput.addEventListener('paste', this.expandDetails)
-      textInput.addEventListener('change', this.expandDetails)
+      const triggerElement = expander.querySelector('input[type="text"]')
+      const expandableElt = expander.querySelector('.js-details-expandable')
+
+      const handler = this.makeHandler(triggerElement, expandableElt)
+
+      triggerElement.addEventListener('input', handler)
+      triggerElement.addEventListener('paste', handler)
+      triggerElement.addEventListener('change', handler)
+
+      // set starting visibility of expandable element
+      handler()
     })
   },
 
-  expandDetails: function (event) {
-    const expanders = document.querySelectorAll('.js-details-expander')
+  makeHandler: function (triggerElement, expandableElement) {
+    return function () {
+      const numericValue = parseFloat(triggerElement.value.replace(/,/g, ''))
+      const expandIfZero = triggerElement.hasAttribute('data-expand-if-zero')
 
-    expanders.forEach(expander => {
-      const expandableElt = expander.querySelector('.js-details-expandable')
-      if (expandableElt && expander.contains(event.target)) {
-        const numericValue = parseFloat(event.target.value.replace(/,/g, ''))
-        const expandIfZero = event.target.hasAttribute('data-expand-if-zero')
+      const shouldExpand = !isNaN(numericValue) && (
+        (expandIfZero && numericValue === 0.0) || (!expandIfZero && numericValue > 0.0)
+      )
 
-        const shouldExpand = !isNaN(numericValue) && (
-          (expandIfZero && numericValue === 0.0) || (!expandIfZero && numericValue > 0.0)
-        )
-
-        expandableElt.classList.toggle('js-hidden', !shouldExpand)
-      }
-    })
+      expandableElement.classList.toggle('js-hidden', !shouldExpand)
+    }
   }
 }
 
