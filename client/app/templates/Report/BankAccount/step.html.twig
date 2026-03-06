@@ -9,7 +9,6 @@
 {% block htmlTitle %}{{ 'stepPage.htmlTitle' | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ ('stepPage.pageTitle.' ~ (account.id ? 'edit' : 'add')) | trans(transOptions) }}{% endblock %}
 
-
 {% block supportTitleTop %}
     <span class="heading-secondary">{{ 'stepPage.supportTitle' | trans }}</span>
 {% endblock %}
@@ -33,13 +32,11 @@
     {% endif %}
 
     {% if step == 2 %}
-
         {% if account.requiresBankName %}
             {{ form_input(form.bank, 'form.bank') }}
         {% else %}
             {% do form.bank.setRendered %}
         {% endif %}
-
 
         {{ form_input(form.accountNumber, 'form.accountNumber', {
             'inputClass' : 'govuk-input--width-4',
@@ -65,19 +62,21 @@
             'inputPrefix' : '£',
             'inputClass' : 'govuk-!-width-one-quarter js-format-currency'
         } ) }}
+
         {{ form_input(form.closingBalance, 'form.closingBalance', {
             'labelText': 'form.closingBalance.label' | trans({'%endDate%': report.endDate | date("j F Y")}, translationDomain),
             'inputPrefix' : '£',
             'inputClass' : 'govuk-!-width-one-quarter js-format-currency'
         } ) }}
-    {% endif %}
 
-    {% if step == 4 %}
+        {# TODO show conditionally based on whether closing balance is zero #}
         {{ form_checkbox_group(form.isClosed, 'form.isClosed', {
             'fieldSetClass' : 'inline',
             'legendText' : 'form.isClosed.label' | trans({'%endDate%': report.endDate | date("j F Y")}, translationDomain),
             'legendClass' : 'form-label text'
         }) }}
+
+        {# TODO "add another" radio buttons #}
     {% endif %}
 
     {{ macros.saveAndContinueButton(form.save) }}

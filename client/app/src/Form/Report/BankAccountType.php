@@ -15,12 +15,9 @@ use Symfony\Component\Validator\Constraints\Type;
 
 class BankAccountType extends AbstractType
 {
-    private $step;
+    private int $step;
 
-    /**
-     * @return array
-     */
-    private static function getBankAccountChoices()
+    private static function getBankAccountChoices(): array
     {
         $ret = [];
         foreach (BankAccount::$types as $key) {
@@ -30,7 +27,7 @@ class BankAccountType extends AbstractType
         return $ret;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->step = (int) $options['step'];
 
@@ -76,9 +73,6 @@ class BankAccountType extends AbstractType
                 'invalid_message' => 'account.closingBalance.type',
                 'required' => false,
             ]);
-        }
-
-        if (4 === $this->step) {
             $builder->add('isClosed', FormTypes\ChoiceType::class, [
                 'choices' => array_flip([true => 'Yes', false => 'No']),
                 'expanded' => true,
@@ -89,12 +83,12 @@ class BankAccountType extends AbstractType
         $builder->add('save', FormTypes\SubmitType::class);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'account';
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-bank-accounts',
@@ -110,8 +104,7 @@ class BankAccountType extends AbstractType
                 return [
                     1 => ['bank-account-type'],
                     2 => $step2Options,
-                    3 => ['bank-account-opening-balance', 'bank-account-closing-balance'],
-                    4 => 'bank-account-is-closed',
+                    3 => ['bank-account-opening-balance', 'bank-account-closing-balance', 'bank-account-is-closed'],
                 ][$this->step];
             },
         ])

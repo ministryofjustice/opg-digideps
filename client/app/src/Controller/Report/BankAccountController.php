@@ -52,14 +52,16 @@ class BankAccountController extends AbstractController
     #[Template('@App/Report/BankAccount/step.html.twig')]
     public function stepAction(Request $request, int $reportId, int $step, ?int $accountId = null): array|RedirectResponse
     {
-        $totalSteps = 4;
+        $totalSteps = 3;
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
         }
 
         // common vars and data
-        $dataFromUrl = $request->get('data') ?: [];
-        $stepUrlData = $dataFromUrl;
+        /** @var array $dataFromRequest */
+        $dataFromRequest = $request->get('data') ?: [];
+
+        $stepUrlData = $dataFromRequest;
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         /** @var string $fromPage */
@@ -71,7 +73,7 @@ class BankAccountController extends AbstractController
             ->setCurrentStep($step)->setTotalSteps($totalSteps)
             ->setRouteBaseParams(['reportId' => $reportId, 'accountId' => $accountId]);
 
-        // create (add mode) or load account (edit mode)
+        // create (add mode) or load (edit mode) account
         if (is_null($accountId)) {
             $account = new BankAccount();
             $account->setReport($report);
@@ -81,65 +83,56 @@ class BankAccountController extends AbstractController
         }
 
         // add URL-data into model
-        isset($dataFromUrl['type']) && $account->setAccountType($dataFromUrl['type']);
-        isset($dataFromUrl['bank']) && $account->setBank($dataFromUrl['bank']);
-        isset($dataFromUrl['number']) && $account->setAccountNumber($dataFromUrl['number']);
-        isset($dataFromUrl['sort-code']) && $account->setSortCode($dataFromUrl['sort-code']);
-        isset($dataFromUrl['is-joint']) && $account->setIsJointAccount($dataFromUrl['is-joint']);
-        isset($dataFromUrl['closing-balance']) && $account->setOpeningBalance($dataFromUrl['closing-balance']);
-        isset($dataFromUrl['opening-balance']) && $account->setClosingBalance($dataFromUrl['opening-balance']);
-        $stepRedirector->setStepUrlAdditionalParams([
-            'data' => $dataFromUrl,
-        ]);
+        isset($dataFromRequest['type']) && $account->setAccountType($dataFromRequest['type']);
+        isset($dataFromRequest['bank']) && $account->setBank($dataFromRequest['bank']);
+        isset($dataFromRequest['number']) && $account->setAccountNumber($dataFromRequest['number']);
+        isset($dataFromRequest['sort-code']) && $account->setSortCode($dataFromRequest['sort-code']);
+        isset($dataFromRequest['is-joint']) && $account->setIsJointAccount($dataFromRequest['is-joint']);
+        isset($dataFromRequest['closing-balance']) && $account->setOpeningBalance($dataFromRequest['closing-balance']);
+        isset($dataFromRequest['opening-balance']) && $account->setClosingBalance($dataFromRequest['opening-balance']);
+        isset($dataFromRequest['is-closed']) && $account->setIsClosed($dataFromRequest['is-closed']);
+        $stepRedirector->setStepUrlAdditionalParams(['data' => $dataFromRequest]);
 
-        // crete and handle form
+        // create and handle form
         $form = $this->createForm(BankAccountType::class, $account, ['step' => $step]);
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
-            if (1 == $step) {
+            if (1 === $step) {
                 $stepUrlData['type'] = $account->getAccountType();
             }
 
-            if (2 == $step) {
+            if (2 === $step) {
                 $stepUrlData['bank'] = $account->getBank();
                 $stepUrlData['number'] = $account->getAccountNumber();
                 $stepUrlData['sort-code'] = $account->getSortCode();
                 $stepUrlData['is-joint'] = $account->getIsJointAccount();
             }
 
-            if (3 == $step) {
-                $stepUrlData['closing-balance'] = $account->getOpeningBalance();
-                $stepUrlData['opening-balance'] = $account->getClosingBalance();
+            // redirect to next step if not on the last step
+            if ($step !== $totalSteps) {
+                $stepRedirector->setStepUrlAdditionalParams(['data' => $stepUrlData]);
+                return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
             }
 
-            // 4th step only if closing balance is equals to 0
-            $isLastStep = $step == $totalSteps
-                || ($step == ($totalSteps - 1) && !$account->isClosingBalanceZero());
+            // TODO capture add another === true
 
-            // last step: save
-            if ($isLastStep) {
-                if ($accountId) {
-                    $this->restClient->put('/account/' . $accountId, $account, self::$jmsGroups);
-                    $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        'Bank account edited'
-                    );
+            // we're on the last step
+            if ($accountId) {
+                // replace existing account
+                $this->restClient->put('/account/' . $accountId, $account, self::$jmsGroups);
+                $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    'Bank account edited'
+                );
 
-                    return $this->redirect($this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]));
-                } else {
-                    $this->restClient->post('report/' . $reportId . '/account', $account, self::$jmsGroups);
-
-                    return $this->redirectToRoute('bank_accounts_add_another', ['reportId' => $reportId]);
-                }
+                return $this->redirect($this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]));
             }
 
-            $stepRedirector->setStepUrlAdditionalParams([
-                'data' => $stepUrlData,
-            ]);
-
-            return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
+            // create new account
+            $this->restClient->post('report/' . $reportId . '/account', $account, self::$jmsGroups);
+            return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
         }
 
         return [
@@ -152,6 +145,9 @@ class BankAccountController extends AbstractController
         ];
     }
 
+    /*
+     * TODO move redirects into the stepAction method
+     *
     #[Route(path: '/report/{reportId}/bank-accounts/add_another', name: 'bank_accounts_add_another')]
     #[Template('@App/Report/BankAccount/add_another.html.twig')]
     public function addAnotherAction(Request $request, int $reportId): array|RedirectResponse
@@ -174,7 +170,7 @@ class BankAccountController extends AbstractController
             'form' => $form->createView(),
             'report' => $report,
         ];
-    }
+    }*/
 
     #[Route(path: '/report/{reportId}/bank-accounts/summary', name: 'bank_accounts_summary')]
     #[Template('@App/Report/BankAccount/summary.html.twig')]
