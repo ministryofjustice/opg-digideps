@@ -180,6 +180,8 @@ class MoneyInController extends AbstractController
         $dataFromUrl = $request->get('data') ?: [];
         $stepUrlData = $dataFromUrl;
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        /** @var string $fromPage */
         $fromPage = $request->get('from');
 
         $stepRedirector = $this->stepRedirector
@@ -239,7 +241,7 @@ class MoneyInController extends AbstractController
 
         if ($saveButton->isClicked() && $form->isSubmitted() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
-            if (1 == $step) {
+            if (1 === $step) {
                 // unset from page to prevent step redirector skipping step 2
                 $stepRedirector->setFromPage(null);
 

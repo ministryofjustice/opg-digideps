@@ -106,6 +106,8 @@ class MoneyTransferController extends AbstractController
         $dataFromUrl = $request->get('data') ?: [];
         $stepUrlData = $dataFromUrl;
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        /** @var string $fromPage */
         $fromPage = $request->get('from');
 
         $stepRedirector = $this->stepRedirector
