@@ -31,6 +31,7 @@
             <dd class="govuk-summary-list__actions">
                 <a class="govuk-link behat-link-edit" id="moneyOutExistsEdit" href="{{ path('does_money_out_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
                     {{ 'edit' | trans({}, 'common') }}
+                    <span class="govuk-visually-hidden">{{ 'summaryPage.moneyOut.hasMoneyOut.label' | trans(transOptions) }}</span>
                 </a>
             </dd>
         {% endif %}
@@ -48,6 +49,7 @@
                 <dd class="govuk-summary-list__actions">
                     <a class="govuk-link behat-link-edit" href="{{ path('no_money_out_exists', { 'reportId': report.id, 'from': 'summary'}) }}">
                         {{ 'edit' | trans({}, 'common') }}
+                        <span class="govuk-visually-hidden">{{ 'summaryPage.moneyOut.reasonForNoMoneyOut.label' | trans(transOptions) }}</span>
                     </a>
                 </dd>
             {% endif %}
@@ -125,9 +127,11 @@
                         <td class="govuk-table__cell govuk-table__cell--numeric">
                             <a class="behat-link-edit govuk-link" href="{{ path('money_out_step', {'reportId': report.id, 'step': 2, 'transactionId': entry.id, 'from': 'summary'}) }}">
                                 {{ 'edit' | trans({}, 'common' ) }}
+                                <span class="govuk-visually-hidden">{{ ('form.category.entries.' ~ entry.category ~ '.label') | trans}} £{{ entry.amount | money_format }}</span>
                             </a>
                             <a class="behat-link-delete govuk-link govuk-!-margin-left-1" href="{{ path('money_out_delete', {'reportId': report.id, 'transactionId': entry.id}) }}">
                                 {{ 'remove' | trans({}, 'common' ) }}
+                                <span class="govuk-visually-hidden">{{ ('form.category.entries.' ~ entry.category ~ '.label') | trans}} £{{ entry.amount | money_format }}</span>
                             </a>
                         </td>
                     {% endif %}
