@@ -16,12 +16,12 @@ const DetailsExpander = {
     expanders.forEach(expander => {
       const expandableElt = expander.querySelector('.js-details-expandable')
       if (expandableElt && expander.contains(event.target)) {
-        const cleanedValue = event.target.value.replace(/,/g, '')
-        const isNonNumeric = event.target.hasAttribute('data-non-numeric')
-        const numericValue = parseFloat(cleanedValue)
+        const numericValue = parseFloat(event.target.value.replace(/,/g, ''))
+        const expandIfZero = event.target.hasAttribute('data-expand-if-zero')
 
-        const shouldExpand = (isNonNumeric && cleanedValue !== '')
-          || (!isNaN(numericValue) && numericValue !== 0)
+        const shouldExpand = !isNaN(numericValue) && (
+          (expandIfZero && numericValue === 0.0) || (!expandIfZero && numericValue > 0.0)
+        )
 
         expandableElt.classList.toggle('js-hidden', !shouldExpand)
       }

@@ -63,18 +63,22 @@
             'inputClass' : 'govuk-!-width-one-quarter js-format-currency'
         } ) }}
 
-        {{ form_input(form.closingBalance, 'form.closingBalance', {
-            'labelText': 'form.closingBalance.label' | trans({'%endDate%': report.endDate | date("j F Y")}, translationDomain),
-            'inputPrefix' : '£',
-            'inputClass' : 'govuk-!-width-one-quarter js-format-currency'
-        } ) }}
+        <div class="js-details-expander">
+            {{ form_input(form.closingBalance, 'form.closingBalance', {
+                'labelText': 'form.closingBalance.label' | trans({'%endDate%': report.endDate | date("j F Y")}, translationDomain),
+                'inputPrefix' : '£',
+                'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
+                'data-expand-if-zero': 'true'
+            } ) }}
 
-        {# TODO show conditionally based on whether closing balance is zero #}
-        {{ form_checkbox_group(form.isClosed, 'form.isClosed', {
-            'fieldSetClass' : 'inline',
-            'legendText' : 'form.isClosed.label' | trans({'%endDate%': report.endDate | date("j F Y")}, translationDomain),
-            'legendClass' : 'form-label text'
-        }) }}
+            <div class="js-details-expandable">
+                {{ form_checkbox_group(form.isClosed, 'form.isClosed', {
+                    'fieldSetClass' : 'inline',
+                    'legendText' : 'form.isClosed.label' | trans({'%endDate%': report.endDate | date("j F Y")}, translationDomain),
+                    'legendClass' : 'form-label text'
+                }) }}
+            </div>
+        </div>
 
         {% if form.addAnother %}
             {{ form_add_another({
