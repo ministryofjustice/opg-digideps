@@ -8,6 +8,7 @@ use App\Controller\AbstractController;
 use App\Entity\Report\BankAccount;
 use App\Entity\Report\Status;
 use App\Form\AddAnotherRecordType;
+use App\Form\AddAnotherThingType;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\BankAccountType;
 use App\Service\Client\Internal\ReportApi;
@@ -15,6 +16,7 @@ use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
 use App\Service\StringUtils;
 use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -95,6 +97,12 @@ class BankAccountController extends AbstractController
 
         // create and handle form
         $form = $this->createForm(BankAccountType::class, $account, ['step' => $step]);
+
+        // if we are in add mode and on the last step, show radio buttons to give the option to add another account
+        if ($step === $totalSteps && empty($accountId)) {
+            $form->add('addAnother', AddAnotherThingType::class);
+        }
+
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
@@ -116,8 +124,6 @@ class BankAccountController extends AbstractController
                 return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
             }
 
-            // TODO capture add another === true
-
             // we're on the last step
             if ($accountId) {
                 // replace existing account
@@ -132,6 +138,14 @@ class BankAccountController extends AbstractController
 
             // create new account
             $this->restClient->post('report/' . $reportId . '/account', $account, self::$jmsGroups);
+
+            // redirect to add another if requested
+            /** @var Form $addAnother */
+            $addAnother = $form['addAnother'];
+            if ('yes' === $addAnother->getData()) {
+                return $this->redirectToRoute('bank_accounts_step', ['reportId' => $reportId, 'step' => 1]);
+            }
+
             return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
         }
 
@@ -144,33 +158,6 @@ class BankAccountController extends AbstractController
             'backLink' => $stepRedirector->getBackLink(),
         ];
     }
-
-    /*
-     * TODO move redirects into the stepAction method
-     *
-    #[Route(path: '/report/{reportId}/bank-accounts/add_another', name: 'bank_accounts_add_another')]
-    #[Template('@App/Report/BankAccount/add_another.html.twig')]
-    public function addAnotherAction(Request $request, int $reportId): array|RedirectResponse
-    {
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId);
-
-        $form = $this->createForm(AddAnotherRecordType::class, $report, ['translation_domain' => 'report-bank-accounts']);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            switch ($form['addAnother']->getData()) {
-                case 'yes':
-                    return $this->redirectToRoute('bank_accounts_step', ['reportId' => $reportId, 'step' => 1]);
-                case 'no':
-                    return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
-            }
-        }
-
-        return [
-            'form' => $form->createView(),
-            'report' => $report,
-        ];
-    }*/
 
     #[Route(path: '/report/{reportId}/bank-accounts/summary', name: 'bank_accounts_summary')]
     #[Template('@App/Report/BankAccount/summary.html.twig')]

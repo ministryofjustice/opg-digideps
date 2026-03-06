@@ -76,7 +76,13 @@
             'legendClass' : 'form-label text'
         }) }}
 
-        {# TODO "add another" radio buttons #}
+        {% if form.addAnother %}
+            {{ form_add_another({
+                'addAnother': form.addAnother,
+                'thingTranslationKey': 'form.thing',
+                'translationDomain': 'report-bank-accounts'
+            }) }}
+        {% endif %}
     {% endif %}
 
     {{ macros.saveAndContinueButton(form.save) }}
