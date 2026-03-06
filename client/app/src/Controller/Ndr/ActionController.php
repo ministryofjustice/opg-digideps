@@ -53,6 +53,8 @@ class ActionController extends AbstractController
             return $this->redirectToRoute('ndr_actions_summary', ['ndrId' => $ndrId]);
         }
         $ndr = $this->reportApi->getNdrIfNotSubmitted($ndrId, self::$jmsGroups);
+
+        /** @var string $fromPage */
         $fromPage = $request->get('from');
 
         $stepRedirector = $this->stepRedirector
