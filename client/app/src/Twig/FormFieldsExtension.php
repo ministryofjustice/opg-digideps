@@ -386,8 +386,8 @@ class FormFieldsExtension extends AbstractExtension
             'labelClass' => $labelClass,
             'inputClass' => $inputClass,
             'inputPrefix' => $inputPrefix,
-            'useFormGroup' => isset($vars['useFormGroup']) ? $vars['useFormGroup'] : true,
-            'dataModule' => isset($vars['dataModule']) ? $vars['dataModule'] : false,
+            'useFormGroup' => $vars['useFormGroup'] ?? true,
+            'dataModule' => $vars['dataModule'] ?? false,
             'formGroupClass' => $formGroupClass,
             'labelRaw' => !empty($vars['labelRaw']),
             'labelLink' => !empty($vars['labelLink']),
@@ -398,6 +398,7 @@ class FormFieldsExtension extends AbstractExtension
                 'isPageHeading' => false,
                 'caption' => false,
             ], $vars['label'] ?? []),
+            'extraAttrs' => $vars['extraAttrs'] ?? [],
         ];
     }
 
