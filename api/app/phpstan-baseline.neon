@@ -6536,11 +6536,6 @@ parameters:
 			path: src/Service/JWT/JWTService.php
 
 		-
-			message: "#^Property App\\\\Service\\\\OrgService\\:\\:\\$added is never read, only written\\.$#"
-			count: 1
-			path: src/Service/OrgService.php
-
-		-
 			message: "#^Cannot access offset 'Value' on mixed\\.$#"
 			count: 2
 			path: src/Service/ParameterStoreService.php
@@ -7294,11 +7289,6 @@ parameters:
 			message: "#^Parameter \\#4 \\$amount of class App\\\\Entity\\\\Report\\\\Debt constructor expects string\\|null, float given\\.$#"
 			count: 1
 			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$haystack of function str_contains expects string, string\\|null given\\.$#"
-			count: 1
-			path: src/TestHelpers/UserTestHelper.php
 
 		-
 			message: "#^Parameter \\#1 \\$roleName of method App\\\\Entity\\\\User\\:\\:setRoleName\\(\\) expects string, string\\|null given\\.$#"

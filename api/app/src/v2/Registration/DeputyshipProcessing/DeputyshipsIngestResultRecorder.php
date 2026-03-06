@@ -14,7 +14,8 @@ class DeputyshipsIngestResultRecorder
 
     private bool $csvLoadedSuccessfully = false;
     private bool $candidatesSelectedSuccessfully = false;
-    private bool $dataFixesAppliedSuccessfully = false;
+    private bool $preProcessingDataFixesSuccessful = false;
+    private bool $postProcessingDataFixesSuccessful = false;
 
     /** @var string[] */
     private array $errorMessages = [];
@@ -57,6 +58,25 @@ class DeputyshipsIngestResultRecorder
             $this->logger->warning('{ERROR if not dry run} - ' . $this->formatMessage($errorMessage));
         } else {
             $this->logger->error($this->formatMessage($errorMessage));
+        }
+    }
+
+    private function recordDataFactoryResult(string $dataFactoryOrigin, DataFactoryResult $dataFactoryResult): void
+    {
+        if ($dataFactoryResult->success()) {
+            $this->logMessage("$dataFactoryOrigin: data fixes applied successfully");
+            foreach ($dataFactoryResult->getMessages() as $source => $messages) {
+                foreach ($messages as $message) {
+                    $this->logMessage("[$source] $message");
+                }
+            }
+        } else {
+            $this->logError("$dataFactoryOrigin: one or more data fixes failed to apply");
+            foreach ($dataFactoryResult->getErrorMessages() as $source => $messages) {
+                foreach ($messages as $message) {
+                    $this->logError("[$source] $message");
+                }
+            }
         }
     }
 
@@ -105,25 +125,16 @@ class DeputyshipsIngestResultRecorder
         }
     }
 
-    public function recordDataFactoryResult(DataFactoryResult $dataFactoryResult): void
+    public function recordPreCSVDataFactoryResult(DataFactoryResult $dataFactoryResult): void
     {
-        $this->dataFixesAppliedSuccessfully = $dataFactoryResult->getSuccess();
+        $this->preProcessingDataFixesSuccessful = $dataFactoryResult->success();
+        $this->recordDataFactoryResult('pre-CSV data factory', $dataFactoryResult);
+    }
 
-        if ($this->dataFixesAppliedSuccessfully) {
-            $this->logMessage('data fixes applied successfully');
-            foreach ($dataFactoryResult->getMessages() as $source => $messages) {
-                foreach ($messages as $message) {
-                    $this->logMessage("[$source] $message");
-                }
-            }
-        } else {
-            $this->logError('one or more data fixes failed to apply');
-            foreach ($dataFactoryResult->getErrorMessages() as $source => $messages) {
-                foreach ($messages as $message) {
-                    $this->logError("[$source] $message");
-                }
-            }
-        }
+    public function recordPostCSVDataFactoryResult(DataFactoryResult $dataFactoryResult): void
+    {
+        $this->postProcessingDataFixesSuccessful = $dataFactoryResult->success();
+        $this->recordDataFactoryResult('post-CSV data factory', $dataFactoryResult);
     }
 
     public function recordEnd(\DateTimeInterface $endDateTime = new \DateTimeImmutable()): void
@@ -139,11 +150,8 @@ class DeputyshipsIngestResultRecorder
         // note that we don't count builder errors towards the overall success of the ingest
         $success = $this->csvLoadedSuccessfully
             && $this->candidatesSelectedSuccessfully
-            && $this->dataFixesAppliedSuccessfully;
-
-        print("CSV: " . ($this->csvLoadedSuccessfully ? "OK" : "FAIL") . "\n");
-        print("CANDIDATES: " . ($this->candidatesSelectedSuccessfully ? "OK" : "FAIL") . "\n");
-        print("DATA FIXES: " . ($this->dataFixesAppliedSuccessfully ? "OK" : "FAIL") . "\n");
+            && $this->preProcessingDataFixesSuccessful
+            && $this->postProcessingDataFixesSuccessful;
 
         if (is_null($this->startDateTime) || is_null($this->endDateTime)) {
             $message = 'Ingest timings not available - incomplete start/end datetimes';
