@@ -1496,11 +1496,6 @@ parameters:
 			path: src/Controller/Report/BankAccountController.php
 
 		-
-			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/BankAccountController.php
-
-		-
 			message: "#^If condition is always true\\.$#"
 			count: 1
 			path: src/Controller/Report/BankAccountController.php
@@ -7792,11 +7787,6 @@ parameters:
 
 		-
 			message: "#^Cannot cast mixed to int\\.$#"
-			count: 1
-			path: src/Form/Report/BankAccountType.php
-
-		-
-			message: "#^Property App\\\\Form\\\\Report\\\\BankAccountType\\:\\:\\$step has no type specified\\.$#"
 			count: 1
 			path: src/Form/Report/BankAccountType.php
 
