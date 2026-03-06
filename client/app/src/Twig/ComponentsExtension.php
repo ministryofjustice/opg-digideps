@@ -13,15 +13,8 @@ use Twig\TwigFunction;
 
 class ComponentsExtension extends AbstractExtension
 {
-    /**
-     * @var TranslatorInterface
-     */
-    private $translator;
-
-    /**
-     * @var ReportSectionsLinkService
-     */
-    private $reportSectionsLinkService;
+    private TranslatorInterface $translator;
+    private ReportSectionsLinkService $reportSectionsLinkService;
 
     /**
      * ComponentsExtension constructor.
@@ -34,7 +27,7 @@ class ComponentsExtension extends AbstractExtension
         $this->reportSectionsLinkService = $reportSectionsLinkService;
     }
 
-    public function getFunctions()
+    public function getFunctions(): array
     {
         return [
             new TwigFunction('progress_bar_registration', [$this, 'progressBarRegistration'], ['needs_environment' => true]),
@@ -49,7 +42,7 @@ class ComponentsExtension extends AbstractExtension
         ];
     }
 
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             'country_name' => new TwigFilter('country_name', function ($value) {
@@ -65,6 +58,8 @@ class ComponentsExtension extends AbstractExtension
                         'defaultDateFormat' => 'd F Y',
                     ]);
                 }
+
+                return '';
             }),
             'pad_day_month' => new TwigFilter('pad_day_month', function ($value) {
                 if ($value && (int) $value >= 1 && (int) $value <= 9) {
@@ -73,18 +68,17 @@ class ComponentsExtension extends AbstractExtension
 
                 return $value;
             }),
-            // convert 'Very Random "string" !!" into "very-random-string"
+            // convert 'Very Random "string" !!' into 'very-random-string'
             'behat_namify' => new TwigFilter('behat_namify', function ($string) {
-                $string = preg_replace('/[^\s_\-a-zA-Z0-9]/u', '', $string); // remove unneeded chars
-                $string = str_replace('_', ' ', $string);             // treat underscores as spaces
-                $string = preg_replace('/^\s+|\s+$/', '', $string);   // trim leading/trailing spaces
-                $string = preg_replace('/[-\s]+/', '-', $string);     // convert spaces to hyphens
-                $string = is_null($string) ? '' : strtolower($string); // convert to lowercase
+                $string = preg_replace('/[^\s_\-a-zA-Z0-9]/u', '', $string); // remove unnecessary chars
+                $string = str_replace('_', ' ', "$string");              // treat underscores as spaces
+                $string = trim($string);                               // trim leading/trailing spaces
+                $string = preg_replace('/[-\s]+/', '-', $string);      // convert spaces to hyphens
 
-                return $string;
+                return is_null($string) ? '' : strtolower($string);
             }),
             'money_format' => new TwigFilter('money_format', function ($string) {
-                return number_format($string, 2, '.', ',');
+                return number_format($string, 2);
             }),
             'class_name' => new TwigFilter('class_name', function ($object) {
                 return is_object($object) ? get_class($object) : null;
@@ -253,16 +247,36 @@ class ComponentsExtension extends AbstractExtension
         return 'components_extension';
     }
 
-    private function getProgressSteps(string $selectedStepId, array $availableStepIds): array
+    // $currentStepIdentifier: the identifier of the current step, e.g. 'user_details'; should appear in
+    // $availableStepIdentifiers
+    //
+    // $availableStepIdentifiers: array of step identifiers in the order they appear in the progress bar,
+    // e.g. ['password', 'user_details', 'client_details']
+    private function getProgressSteps(string $currentStepIdentifier, array $availableStepIdentifiers): array
     {
+        // get the number of the step we're currently at in the process
+        $currentStepNumber = array_search($currentStepIdentifier, $availableStepIdentifiers);
+
+        if (!is_numeric($currentStepNumber)) {
+            return [];
+        }
+
         $progressSteps = [];
-        $selectedStepNumber = array_search($selectedStepId, $availableStepIds);
-        // set classes and labels from translation
-        foreach ($availableStepIds as $currentStepNumber => $availableStepId) {
-            $progressSteps[$availableStepId] = [
-                'class' => (($selectedStepNumber == $currentStepNumber) ? ' opg-progress-bar__item--active ' : '')
-                    . (($currentStepNumber < $selectedStepNumber) ? ' opg-progress-bar__item--completed ' : '')
-                    . (($currentStepNumber == intval($selectedStepNumber) - 1) ? ' opg-progress-bar__item--previous ' : ''),
+
+        foreach ($availableStepIdentifiers as $availableStepNumber => $availableStepIdentifier) {
+            $stepStatus = 'incomplete';
+
+            if ($availableStepNumber === $currentStepNumber) {
+                $stepStatus = 'active';
+            } elseif ($availableStepNumber === $currentStepNumber - 1) {
+                // this is required to put the correct ending chevron on the progress bar segment before the active one
+                $stepStatus = 'previous';
+            } elseif ($availableStepNumber < $currentStepNumber) {
+                $stepStatus = 'completed';
+            }
+
+            $progressSteps[$availableStepIdentifier] = [
+                'stepStatus' => $stepStatus,
             ];
         }
 

@@ -1,28 +1,33 @@
 <?php
 
-namespace App\Twig;
+namespace App\Tests\Twig;
 
 use App\Entity\User;
 use App\Service\ReportSectionsLinkService;
+use App\Twig\ComponentsExtension;
+use Dom\HTMLDocument;
 use Mockery as m;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
+use Twig\Error\LoaderError;
+use Twig\Loader\FilesystemLoader;
+
+use const Dom\HTML_NO_DEFAULT_NS;
 
 class ComponentsExtensionTest extends TestCase
 {
     private TranslatorInterface|MockInterface $translator;
     private ReportSectionsLinkService|MockInterface $reportSectionsLinkService;
-    private Environment|MockInterface $twigEnvironment;
     private ComponentsExtension $object;
 
     public function setUp(): void
     {
         $this->translator = m::mock('Symfony\Contracts\Translation\TranslatorInterface');
         $this->reportSectionsLinkService = m::mock('App\Service\ReportSectionsLinkService');
-        $this->twigEnvironment = m::mock('Twig\Environment');
-        $this->object = new ComponentsExtension($this->translator, $this->reportSectionsLinkService, $this->twigEnvironment);
+        $this->object = new ComponentsExtension($this->translator, $this->reportSectionsLinkService);
     }
 
     public static function accordionLinksProvider()
@@ -223,5 +228,62 @@ class ComponentsExtensionTest extends TestCase
         $this->assertEquals('123aBc', $f('123aBc'));
         $this->assertEquals('aBCd', $f('ABCd'));
         $this->assertEquals('assets held outside England and Wales', $f('Assets held outside England and Wales'));
+    }
+
+    /**
+     * @throws LoaderError
+     */
+    public function testProgressBarReportSubmission(): void
+    {
+        $loader = new FilesystemLoader(__DIR__ . '/../../../templates');
+        $loader->addPath(__DIR__ . '/../../../templates/', 'App');
+
+        $env = new Environment($loader);
+        $env->addExtension(new TranslationExtension($this->translator));
+        $env->addExtension($this->object);
+
+        // Add expectations for the trans() calls made by the progress indicator template
+        $this->translator->shouldReceive('trans')
+            ->with('reportSubmissionProgressBar.review_report.label', [], 'common', null)
+            ->once()
+            ->andReturn('Review report');
+
+        $this->translator->shouldReceive('trans')
+            ->with('reportSubmissionProgressBar.report_confirm_details.label', [], 'common', null)
+            ->once()
+            ->andReturn('Confirm details');
+
+        $this->translator->shouldReceive('trans')
+            ->with('reportSubmissionProgressBar.report_declaration.label', [], 'common', null)
+            ->once()
+            ->andReturn('Declaration');
+
+        ob_start();
+        $this->object->progressBarReportSubmission($env, 'report_confirm_details');
+        $html = ob_get_contents();
+        ob_end_clean();
+
+        $doc = HTMLDocument::createFromString(
+            '<!DOCTYPE html><html lang="en"><head></head><body>' . $html . '</body></html>'
+        );
+
+        $selector = 'li.opg-progress-bar__item';
+        foreach ($doc->querySelectorAll($selector) as $pos => $liNode) {
+            [$expectedStepText, $expectedStatus, $expectedClasses] = match ($pos) {
+                0 => ['Review report', '- completed', ['opg-progress-bar__item--completed', 'opg-progress-bar__item--previous']],
+                1 => ['Confirm details', '- current step', ['opg-progress-bar__item--active']],
+                2 => ['Declaration', '- incomplete', ['opg-progress-bar__item--incomplete']],
+                default => throw new \LogicException('Unexpected list item position'),
+            };
+
+            $this->assertStringContainsString($expectedStepText, $liNode->textContent);
+            foreach ($expectedClasses as $expectedClass) {
+                $this->assertStringContainsString($expectedClass, $liNode->getAttribute('class'));
+            }
+
+            $visuallyHiddenContent = $liNode->querySelector('.govuk-visually-hidden')->textContent;
+
+            $this->assertStringContainsString($expectedStatus, $visuallyHiddenContent);
+        }
     }
 }
