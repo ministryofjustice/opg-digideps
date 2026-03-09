@@ -10206,16 +10206,6 @@ parameters:
 			path: src/Twig/ComponentsExtension.php
 
 		-
-			message: "#^Parameter \\#1 \\$string of function strtolower expects string, array\\<int, string\\>\\|string given\\.$#"
-			count: 1
-			path: src/Twig/ComponentsExtension.php
-
-		-
-			message: "#^Parameter \\#3 \\$subject of function preg_replace expects array\\|string, array\\<int, string\\>\\|string\\|null given\\.$#"
-			count: 1
-			path: src/Twig/ComponentsExtension.php
-
-		-
 			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderFormDropDown\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Twig/FormFieldsExtension.php
