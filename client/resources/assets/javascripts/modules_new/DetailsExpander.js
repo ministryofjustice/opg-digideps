@@ -35,8 +35,8 @@ const DetailsExpander = {
       // additional information is being requested
       const ariaLiveElement = expandableElement.querySelector('[aria-live]')
       if (ariaLiveElement) {
-        ariaLiveElement.textContent = shouldExpand ?
-          'Additional information is required'
+        ariaLiveElement.textContent = shouldExpand
+          ? 'Additional information is required'
           : 'Additional information is not required'
       }
 
