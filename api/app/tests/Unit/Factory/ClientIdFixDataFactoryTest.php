@@ -24,6 +24,6 @@ class ClientIdFixDataFactoryTest extends TestCase
 
         $dataFactoryResult = $sut->run();
 
-        $this->assertFalse($dataFactoryResult->getSuccess());
+        $this->assertFalse($dataFactoryResult->isSuccessful());
     }
 }
