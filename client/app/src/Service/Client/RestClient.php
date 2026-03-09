@@ -400,13 +400,23 @@ class RestClient implements RestClientInterface
             try {
                 if ($response instanceof ResponseInterface) {
                     $body = strval($response->getBody());
+
+                    error_log(str_repeat('+', 100));
+                    error_log($body);
+                    error_log(str_repeat('+', 100));
+
                     $data = $this->serializer->deserialize($body, 'array', 'json');
                 }
             } catch (\Throwable $e) {
                 $this->logger->warning('RestClient |  ' . $url . ' | ' . $e->getMessage());
             }
 
-            throw new AppException\RestClientException($e->getMessage(), $e->getCode(), $data);
+            $code = $e->getCode();
+            if ($code < 100 || $code >= 600) {
+                $code = Response::HTTP_INTERNAL_SERVER_ERROR;
+            }
+
+            throw new AppException\RestClientException($e->getMessage(), $code, $data);
         } catch (TransferException $e) {
             $this->logger->warning('RestClient | ' . $url . ' | ' . $e->getMessage());
 
