@@ -141,10 +141,9 @@ trait AccountsSectionTrait
             $this->accountList[0]['closingBalance']
         );
 
-        $this->iAmOnAccountsAddAnotherPage();
+        $this->selectOption('account[addAnother]', 'no');
 
-        $this->selectOption('add_another[addAnother]', 'no');
-        $this->pressButton('Continue');
+        $this->pressButton('Save and continue');
     }
 
     /**
@@ -179,6 +178,8 @@ trait AccountsSectionTrait
             $this->accountList[0]['openingBalance'],
             $this->accountList[0]['closingBalance'],
         );
+
+        $this->pressButton('Save and continue');
 
         $this->iAmOnAccountsSummaryPage();
     }
@@ -273,16 +274,15 @@ trait AccountsSectionTrait
                 $account['openingBalance'],
                 $account['closingBalance'],
             );
+
+            $this->selectOption('account[addAnother]', 'no');
+
+            $this->pressButton('Save and continue');
         }
 
         if ('ndr' == $this->reportUrlPrefix) {
             $this->accountList = array_reverse($this->accountList);
         }
-
-        $this->iAmOnAccountsAddAnotherPage();
-
-        $this->selectOption('add_another[addAnother]', 'no');
-        $this->pressButton('Continue');
     }
 
     /**
@@ -333,12 +333,10 @@ trait AccountsSectionTrait
                 $account['openingBalance'],
                 $account['closingBalance'],
             );
+
+            $this->selectOption('account[addAnother]', 'no');
+            $this->pressButton('Save and continue');
         }
-
-        $this->iAmOnAccountsAddAnotherPage();
-
-        $this->selectOption('add_another[addAnother]', 'no');
-        $this->pressButton('Continue');
     }
 
     /**
@@ -419,8 +417,6 @@ trait AccountsSectionTrait
             $this->fillInField('account[openingBalance]', $openingBalance, $trackFromEntry ? $formSectionName : null);
             $this->fillInField('account[closingBalance]', $closingBalance, $trackFromEntry ? $formSectionName : null);
         }
-
-        $this->pressButton('Save and continue');
     }
 
     public function iRemoveAnAccount($accountOccurrence)
