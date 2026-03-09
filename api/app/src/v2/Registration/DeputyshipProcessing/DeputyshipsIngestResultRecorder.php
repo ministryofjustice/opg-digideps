@@ -63,7 +63,7 @@ class DeputyshipsIngestResultRecorder
 
     private function recordDataFactoryResult(string $dataFactoryOrigin, DataFactoryResult $dataFactoryResult): void
     {
-        if ($dataFactoryResult->success()) {
+        if ($dataFactoryResult->isSuccessful()) {
             $this->logMessage("$dataFactoryOrigin: data fixes applied successfully");
             foreach ($dataFactoryResult->getMessages() as $source => $messages) {
                 foreach ($messages as $message) {
@@ -127,13 +127,13 @@ class DeputyshipsIngestResultRecorder
 
     public function recordPreCSVDataFactoryResult(DataFactoryResult $dataFactoryResult): void
     {
-        $this->preProcessingDataFixesSuccessful = $dataFactoryResult->success();
+        $this->preProcessingDataFixesSuccessful = $dataFactoryResult->isSuccessful();
         $this->recordDataFactoryResult('pre-CSV data factory', $dataFactoryResult);
     }
 
     public function recordPostCSVDataFactoryResult(DataFactoryResult $dataFactoryResult): void
     {
-        $this->postProcessingDataFixesSuccessful = $dataFactoryResult->success();
+        $this->postProcessingDataFixesSuccessful = $dataFactoryResult->isSuccessful();
         $this->recordDataFactoryResult('post-CSV data factory', $dataFactoryResult);
     }
 

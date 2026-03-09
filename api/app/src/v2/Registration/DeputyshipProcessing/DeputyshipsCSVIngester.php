@@ -42,7 +42,7 @@ class DeputyshipsCSVIngester
         // apply manual data fixes before CSV ingested
         $dataFactoryResult = $this->preCSVDataFactory->run();
         $this->deputyshipsIngestResultRecorder->recordPreCSVDataFactoryResult($dataFactoryResult);
-        if (!$dataFactoryResult->success()) {
+        if (!$dataFactoryResult->isSuccessful()) {
             return $this->deputyshipsIngestResultRecorder->result();
         }
 
@@ -71,7 +71,7 @@ class DeputyshipsCSVIngester
         // apply manual data fixes after CSV ingested
         $dataFactoryResult = $this->postCSVDataFactory->run();
         $this->deputyshipsIngestResultRecorder->recordPostCSVDataFactoryResult($dataFactoryResult);
-        if (!$dataFactoryResult->success()) {
+        if (!$dataFactoryResult->isSuccessful()) {
             return $this->deputyshipsIngestResultRecorder->result();
         }
 

@@ -34,7 +34,7 @@ class ChainedDataFactoryTest extends TestCase
         $result = $sut->run();
 
         // assertions
-        self::assertFalse($result->success());
+        self::assertFalse($result->isSuccessful());
 
         self::assertEquals(
             [

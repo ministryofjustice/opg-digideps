@@ -77,7 +77,7 @@ class ClientIdFixDataFactoryIntegrationTest extends ApiIntegrationTestCase
         $dataFactoryResult = $sut->run();
 
         // assertions
-        self::assertTrue($dataFactoryResult->success());
+        self::assertTrue($dataFactoryResult->isSuccessful());
 
         // check the court order
         self::$entityManager->refresh($courtOrder);
