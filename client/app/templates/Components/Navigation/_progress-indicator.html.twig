@@ -1,8 +1,19 @@
-<!--Component: progress-indicator-->
 <ol class="opg-progress-bar">
     {% for stepId, stepOptions in progressSteps %}
-        <li class="opg-progress-bar__item {{ stepOptions.class }}">
+        {% set stepClass = 'opg-progress-bar__item--' ~ stepOptions.stepStatus %}
+        {% if stepOptions.stepStatus == 'previous' %}
+            {% set stepClass = stepClass ~ ' opg-progress-bar__item--completed' %}
+        {% endif %}
+        <li class="opg-progress-bar__item {{ stepClass }}">
             {{ (progressBar ~ '.' ~ stepId ~ '.label') | trans({}, 'common') }}
+
+            {% if stepOptions.stepStatus == 'active' %}
+                <span class="govuk-visually-hidden"> - current step</span>
+            {% elseif stepOptions.stepStatus == 'completed' or stepOptions.stepStatus == 'previous' %}
+                <span class="govuk-visually-hidden"> - completed</span>
+            {% else %}
+                <span class="govuk-visually-hidden"> - incomplete</span>
+            {% endif %}
         </li>
     {% endfor %}
 </ol>

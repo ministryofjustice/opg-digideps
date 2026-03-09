@@ -176,7 +176,8 @@ class ClientApi
     {
         return $this->restClient->get(
             sprintf(self::GET_ALL_CLIENTS_BY_DEPUTY_UID, $deputyUid),
-            'Client[]', $groups
+            'Client[]',
+            $groups
         );
     }
 }

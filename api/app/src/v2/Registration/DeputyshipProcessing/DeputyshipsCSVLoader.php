@@ -47,9 +47,9 @@ class DeputyshipsCSVLoader
             $this->em->commit();
 
             return new DeputyshipsCSVLoaderResult(fileLocation: $fileLocation, loadedOk: true, numRecords: $numRecords);
-        } catch (UnavailableStream|CSVException $e) {
+        } catch (UnavailableStream | CSVException $e) {
             $this->logger->error(
-                'Error loading CSV into staging table: exception type = '.get_class($e).'; message = '.$e->getMessage()
+                'Error loading CSV into staging table: exception type = ' . get_class($e) . '; message = ' . $e->getMessage()
             );
             $this->em->rollback();
 

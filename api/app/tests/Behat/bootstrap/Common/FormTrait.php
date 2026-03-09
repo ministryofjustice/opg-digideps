@@ -18,9 +18,11 @@ trait FormTrait
     {
         $this->assertResponseStatus(200);
 
-        if (!$this->getSession()->getPage()->has('css', '.form-group.form-group-error')
+        if (
+            !$this->getSession()->getPage()->has('css', '.form-group.form-group-error')
             && !$this->getSession()->getPage()->has('css', '.govuk-form-group--error')
-            && !$this->getSession()->getPage()->has('css', '#error-summary-heading')) {
+            && !$this->getSession()->getPage()->has('css', '#error-summary-heading')
+        ) {
             throw new RuntimeException('No errors found');
         }
     }
@@ -40,10 +42,12 @@ trait FormTrait
 
         $page = $this->getSession()->getPage();
 
-        if ($page->has('css', '.form-group.form-group-error')
+        if (
+            $page->has('css', '.form-group.form-group-error')
             || $page->has('css', '.govuk-form-group--error')
-            || $page->has('css', '#error-summary-heading')) {
-            throw new RuntimeException('Errors found in elements: '.implode(',', $this->getElementsIdsWithValidationErrors()));
+            || $page->has('css', '#error-summary-heading')
+        ) {
+            throw new RuntimeException('Errors found in elements: ' . implode(',', $this->getElementsIdsWithValidationErrors()));
         }
     }
 
@@ -85,10 +89,10 @@ trait FormTrait
         if ($untriggeredField || $unexpectedFields) {
             $message = '';
             if ($untriggeredField) {
-                $message .= " - Form fields not throwing error as expected: \n      ".implode(', ', $untriggeredField)."\n";
+                $message .= " - Form fields not throwing error as expected: \n      " . implode(', ', $untriggeredField) . "\n";
             }
             if ($unexpectedFields) {
-                $message .= " - Form fields unexpectedly throwing errors: \n      ".implode(', ', $unexpectedFields)."\n";
+                $message .= " - Form fields unexpectedly throwing errors: \n      " . implode(', ', $unexpectedFields) . "\n";
             }
 
             throw new RuntimeException($message);
@@ -112,7 +116,7 @@ trait FormTrait
     {
         foreach ($fields->getRowsHash() as $field => $value) {
             /** @var NodeElement $elementsFound */
-            $elementsFound = $this->getSession()->getPage()->find('css', '#'.$field);
+            $elementsFound = $this->getSession()->getPage()->find('css', '#' . $field);
 
             if (empty($elementsFound)) {
                 throw new RuntimeException("Element $field not found");

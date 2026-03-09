@@ -45,7 +45,7 @@ class AssetTypeTitle extends AbstractType
 
         // translate keys and order by name
         foreach ($this->assetDropdownKeys as $key) {
-            $translation = $this->translator->trans('form.title.choices.'.$key, [], $this->translatorDomain);
+            $translation = $this->translator->trans('form.title.choices.' . $key, [], $this->translatorDomain);
             $ret[$translation] = $translation;
         }
 

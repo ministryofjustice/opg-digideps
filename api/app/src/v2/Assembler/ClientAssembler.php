@@ -120,7 +120,7 @@ class ClientAssembler
 
         return $client;
     }
-    
+
     public function assembleFromLayDeputyshipDto(LayDeputyshipDto $dto)
     {
         $client = (new Client())

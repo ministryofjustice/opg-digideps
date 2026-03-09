@@ -48,7 +48,7 @@ final class ReportTest extends KernelTestCase
     {
         $this->client = m::mock(Client::class, ['getUnsubmittedReports' => new ArrayCollection(), 'getSubmittedReports' => new ArrayCollection()]);
         $this->validReportCtorArgs = [$this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime('2017-06-23'), new DateTime('2018-06-22')];
-        $this->report = m::mock(Report::class.'[has106Flag]', $this->validReportCtorArgs);
+        $this->report = m::mock(Report::class . '[has106Flag]', $this->validReportCtorArgs);
 
         $this->gift1 = m::mock(Gift::class, ['getAmount' => 1]);
         $this->gift2 = m::mock(Gift::class, ['getAmount' => 10]);
@@ -148,7 +148,7 @@ final class ReportTest extends KernelTestCase
     public function testGetCalculatedBalance(): void
     {
         $this->validReportCtorArgs = [$this->client, Report::PROF_PFA_HIGH_ASSETS_TYPE, new DateTime('2017-06-23'), new DateTime('2018-06-22')];
-        $this->report = m::mock(Report::class.'[has106Flag]', $this->validReportCtorArgs);
+        $this->report = m::mock(Report::class . '[has106Flag]', $this->validReportCtorArgs);
 
         $this->report->shouldReceive('has106Flag')->andReturn(false);
 
@@ -173,7 +173,7 @@ final class ReportTest extends KernelTestCase
     public function testGetCalculatedBalanceProfDeputy(): void
     {
         $this->validReportCtorArgs = [$this->client, Report::PROF_PFA_HIGH_ASSETS_TYPE, new DateTime('2017-06-23'), new DateTime('2018-06-22')];
-        $this->report = m::mock(Report::class.'[has106Flag]', $this->validReportCtorArgs);
+        $this->report = m::mock(Report::class . '[has106Flag]', $this->validReportCtorArgs);
 
         $this->report->shouldReceive('has106Flag')->andReturn(false);
 
@@ -236,7 +236,7 @@ final class ReportTest extends KernelTestCase
     {
         $fee1 = m::mock(Fee::class, ['getAmount' => 2]);
         $reportWith = function ($fees) {
-            return m::mock(Report::class.'[getFees]', $this->validReportCtorArgs)
+            return m::mock(Report::class . '[getFees]', $this->validReportCtorArgs)
                 ->shouldReceive('getFees')->andReturn($fees)
                 ->getMock();
         };
@@ -250,7 +250,7 @@ final class ReportTest extends KernelTestCase
         $exp1 = m::mock(Expense::class, ['getAmount' => 1]);
 
         $reportWith = function ($expenses) {
-            return m::mock(Report::class.'[getExpenses]', $this->validReportCtorArgs)
+            return m::mock(Report::class . '[getExpenses]', $this->validReportCtorArgs)
                 ->shouldReceive('getExpenses')->andReturn($expenses)
                 ->getMock();
         };
@@ -508,7 +508,7 @@ final class ReportTest extends KernelTestCase
         $this->assertEquals($startDate, $report->getStartDate());
     }
 
-    
+
     #[DataProvider('benefitsCheckSectionRequiredProvider')]
     #[Test]
     public function requiresBenefitsCheckSection(

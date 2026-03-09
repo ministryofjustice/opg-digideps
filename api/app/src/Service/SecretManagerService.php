@@ -18,7 +18,7 @@ class SecretManagerService
 
     public function getSecret(string $secretName)
     {
-        $secretName = $this->secretPrefix.$secretName;
+        $secretName = $this->secretPrefix . $secretName;
         $secret = $this->secretsManagerClient->getSecretValue(['SecretId' => $secretName]);
 
         return $secret['SecretString'];

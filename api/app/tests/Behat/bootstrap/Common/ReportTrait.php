@@ -37,7 +37,7 @@ trait ReportTrait
     public function iGoToTheReportUrl($url, $reportId)
     {
         $report = self::$reportsCache[$reportId];
-        $fullUrl = '/'.$report['type'].'/'.$report['id'].'/'.$url;
+        $fullUrl = '/' . $report['type'] . '/' . $report['id'] . '/' . $url;
 
         $this->visitPath($fullUrl);
     }
@@ -50,7 +50,7 @@ trait ReportTrait
         $report = self::$reportsCache[$reportId];
 
         foreach ($table->getRowsHash() as $url => $expectedReturnCode) {
-            $fullUrl = '/'.$report['type'].'/'.$report['id'].'/'.$url;
+            $fullUrl = '/' . $report['type'] . '/' . $report['id'] . '/' . $url;
             $this->visitPath($fullUrl);
 
             $actual = $this->getSession()->getStatusCode();
@@ -103,7 +103,7 @@ trait ReportTrait
      */
     public function iHaveTheReportBetweenDeputyAndClient($startDate, $endDate, $deputy, $client)
     {
-        $this->iAmLoggedInAsWithPassword($deputy.'@behat-test.com', 'DigidepsPass1234');
+        $this->iAmLoggedInAsWithPassword($deputy . '@behat-test.com', 'DigidepsPass1234');
         $this->enterReport($client, $startDate, $endDate);
         preg_match('/\/(ndr|report)\/(\d+)\//', $this->getSession()->getCurrentUrl(), $match);
 
@@ -183,7 +183,7 @@ trait ReportTrait
     public function theSectionOnTheReportShouldBeCompleted($section)
     {
         $this->logInAndEnterReport();
-        $this->iShouldSeeTheBehatElement($section.'-state-done', 'region');
+        $this->iShouldSeeTheBehatElement($section . '-state-done', 'region');
     }
 
     /**
@@ -218,7 +218,7 @@ trait ReportTrait
     public function theReportUrlForShouldNotBeAccessible($url, $reportId)
     {
         $report = self::$reportsCache[$reportId];
-        $fullUrl = '/'.$report['type'].'/'.$report['id'].'/'.$url;
+        $fullUrl = '/' . $report['type'] . '/' . $report['id'] . '/' . $url;
 
         $previousUrl = $this->getSession()->getCurrentUrl();
         $this->visit($fullUrl);
@@ -327,24 +327,24 @@ trait ReportTrait
     {
         if ($this->getSession()->getPage()->hasContent('Start now')) {
             $this->clickLink('Start now');
-        } elseif ($this->getSession()->getPage()->hasContent($startDate.' to '.$endDate.' report')) {
-            $this->clickLink($startDate.' to '.$endDate.' report');
+        } elseif ($this->getSession()->getPage()->hasContent($startDate . ' to ' . $endDate . ' report')) {
+            $this->clickLink($startDate . ' to ' . $endDate . ' report');
         } elseif ($this->getSession()->getPage()->hasContent('Submitted reports')) {
             $this->clickLink('View');
         } else {
             try {
-                $this->clickLink($client.'-Client, John');
+                $this->clickLink($client . '-Client, John');
             } catch (Throwable $e) {
                 $this->fillField('search', $client);
                 $this->pressButton('search_submit');
-                $this->clickLink($client.'-Client, John');
+                $this->clickLink($client . '-Client, John');
             }
         }
     }
 
     private function logInAndEnterReport(): void
     {
-        $this->iAmLoggedInAsWithPassword(self::$currentReportCache['deputy'].'@behat-test.com', 'DigidepsPass1234');
+        $this->iAmLoggedInAsWithPassword(self::$currentReportCache['deputy'] . '@behat-test.com', 'DigidepsPass1234');
         $reportId = self::$currentReportCache['reportId'];
         $reportType = self::$currentReportCache['reportType'];
         $this->visit("$reportType/$reportId/overview");

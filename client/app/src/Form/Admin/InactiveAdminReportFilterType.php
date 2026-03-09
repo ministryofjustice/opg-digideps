@@ -14,7 +14,8 @@ class InactiveAdminReportFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('inactivityPeriod',
+            ->add(
+                'inactivityPeriod',
                 FormTypes\TextType::class,
                 [
                     'required' => true,

@@ -7,7 +7,6 @@ use JMS\Serializer\Annotation as JMS;
 
 trait ReportBalanceTrait
 {
-
     /**
      * @JMS\Type("string")
      * @JMS\Groups({"balance", "balance_mismatch_explanation"})

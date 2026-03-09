@@ -30,8 +30,7 @@ class MoneyReceivedOnClientsBehalfType extends AbstractType
                     [],
                     'report-client-benefits-check'
                 ),
-            ]
-        );
+            ]);
 
         $builder->add('amountDontKnow', CheckboxType::class, [
             'required' => false,

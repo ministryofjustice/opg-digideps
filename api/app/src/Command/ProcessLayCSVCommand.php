@@ -172,7 +172,7 @@ class ProcessLayCSVCommand extends Command
             $logMessage = sprintf('Error processing CSV: %s', $e->getMessage());
 
             $this->verboseLogger->error($logMessage);
-            $this->cliOutput->writeln(self::JOB_NAME.' - failure - '.$logMessage);
+            $this->cliOutput->writeln(self::JOB_NAME . ' - failure - ' . $logMessage);
         }
 
         return [];
@@ -204,7 +204,7 @@ class ProcessLayCSVCommand extends Command
 
         if (!$multiclientApplyDbChanges) {
             $this->verboseLogger->notice(
-                'MULTI-CLIENT CHANGES: '.json_encode($result)
+                'MULTI-CLIENT CHANGES: ' . json_encode($result)
             );
         }
 
@@ -219,7 +219,7 @@ class ProcessLayCSVCommand extends Command
             $numReportsAdded = $this->layRegistrationService->addMissingReports();
             $this->verboseLogger->notice("Added $numReportsAdded missing reports to clients");
         } catch (\Throwable $e) {
-            $this->verboseLogger->error('Error encountered while adding missing reports: '.$e->getMessage());
+            $this->verboseLogger->error('Error encountered while adding missing reports: ' . $e->getMessage());
             $this->verboseLogger->error($e->getTraceAsString());
         }
 
@@ -229,7 +229,7 @@ class ProcessLayCSVCommand extends Command
             $numUserDeputyAssociations = $this->userDeputyService->addMissingUserDeputies();
             $this->verboseLogger->notice("Added $numUserDeputyAssociations user <-> deputy associations");
         } catch (\Exception $e) {
-            $this->verboseLogger->error('Error encountered while adding user <-> deputy associations: '.$e->getMessage());
+            $this->verboseLogger->error('Error encountered while adding user <-> deputy associations: ' . $e->getMessage());
         }
 
         // additional deputy_case association patching (see DDLS-907)
@@ -238,7 +238,7 @@ class ProcessLayCSVCommand extends Command
             $numDeputyCaseAssociationsAdded = $this->deputyCaseService->addMissingDeputyCaseAssociations();
             $this->verboseLogger->notice("Added $numDeputyCaseAssociationsAdded deputy_case associations");
         } catch (\Throwable $e) {
-            $this->verboseLogger->error('Error encountered while fixing deputy_case associations: '.$e->getMessage());
+            $this->verboseLogger->error('Error encountered while fixing deputy_case associations: ' . $e->getMessage());
             $this->verboseLogger->error($e->getTraceAsString());
         }
 
@@ -268,7 +268,7 @@ class ProcessLayCSVCommand extends Command
         $processed = '';
         foreach ($this->processingOutput as $reportedHeader => $stats) {
             if (is_array($stats)) {
-                $processed .= $reportedHeader.': ';
+                $processed .= $reportedHeader . ': ';
 
                 foreach ($stats as $statHeader => $statValue) {
                     $statValue = str_replace(PHP_EOL, '', $statValue);

@@ -81,7 +81,7 @@ final class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
                         ['alpha' => 'not-valid-enough-to-create-a-DTO'] => null,
                         ['beta' => 'beta-data'] => new LayDeputyshipDto(),
                         default => throw new Exception('Did not expect input ' . print_r($param, true)),
-                }
+                    }
             );
 
         $this->result = $this->sut->assembleFromArray($input);

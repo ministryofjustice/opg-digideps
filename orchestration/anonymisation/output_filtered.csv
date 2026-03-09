@@ -64,7 +64,10 @@ public,contact,phone1,character varying,20,,PhoneNumber
 public,contact,postcode,character varying,10,,PostCode
 public,contact,relationship,character varying,100,,Lorem
 public,court_order,id,integer,,PRIMARY KEY,NA
-public,court_order,type,character varying,10,,Lorem
+public,court_order_deputy,court_order_id,integer,,PRIMARY KEY,NA
+public,court_order_deputy,deputy_id,integer,,PRIMARY KEY,NA
+public,court_order_report,court_order_id,integer,,PRIMARY KEY,NA
+public,court_order_report,report_id,integer,,PRIMARY KEY,NA
 public,dd_user,address1,character varying,200,,Lorem
 public,dd_user,address2,character varying,200,,Lorem
 public,dd_user,address3,character varying,200,,Lorem
@@ -104,7 +107,6 @@ public,deputy_case,client_id,integer,,PRIMARY KEY,NA
 public,deputy_case,user_id,integer,,PRIMARY KEY,NA
 public,document,filename,character varying,255,,Lorem
 public,document,id,integer,,PRIMARY KEY,NA
-public,document,storage_reference,character varying,512,,Lorem
 public,document,synchronisation_error,text,,,Lorem
 public,document,synchronisation_status,character varying,255,,Lorem
 public,expense,explanation,text,,,Lorem
@@ -132,7 +134,7 @@ public,money_transaction,meta,text,,,Lorem
 public,money_transaction_short,description,text,,,Lorem
 public,money_transaction_short,id,integer,,PRIMARY KEY,NA
 public,money_transaction_short,type,character varying,255,,Lorem
-public,money_transfer,description,character varying,75,,Lorem
+public,money_transfer,description,text,,,Lorem
 public,money_transfer,id,integer,,PRIMARY KEY,NA
 public,note,category,character varying,100,,Lorem
 public,note,content,text,,,Lorem
@@ -194,7 +196,14 @@ public,organisation,id,integer,,PRIMARY KEY,NA
 public,organisation,name,character varying,256,,Organisation
 public,organisation_user,organisation_id,integer,,PRIMARY KEY,NA
 public,organisation_user,user_id,integer,,PRIMARY KEY,NA
+public,pre_registration,client_address_1,character varying,255,,Lorem
+public,pre_registration,client_address_2,character varying,255,,Lorem
+public,pre_registration,client_address_3,character varying,255,,Lorem
+public,pre_registration,client_address_4,character varying,255,,Lorem
+public,pre_registration,client_address_5,character varying,255,,Lorem
+public,pre_registration,client_firstname,character varying,100,,FirstName
 public,pre_registration,client_lastname,character varying,50,,LastName
+public,pre_registration,client_postcode,character varying,20,,PostCode
 public,pre_registration,deputy_address_1,character varying,255,,Lorem
 public,pre_registration,deputy_address_2,character varying,255,,Lorem
 public,pre_registration,deputy_address_3,character varying,255,,Lorem
@@ -202,11 +211,9 @@ public,pre_registration,deputy_address_4,character varying,255,,Lorem
 public,pre_registration,deputy_address_5,character varying,255,,Lorem
 public,pre_registration,deputy_firstname,character varying,100,,FirstName
 public,pre_registration,deputy_lastname,character varying,100,,LastName
-public,pre_registration,deputy_postcode,character varying,10,,PostCode
-public,pre_registration,hybrid,character varying,6,,Lorem
+public,pre_registration,deputy_postcode,character varying,20,,PostCode
+public,pre_registration,hybrid,character varying,12,,Lorem
 public,pre_registration,id,integer,,PRIMARY KEY,NA
-public,pre_registration,order_type,character varying,255,,Lorem
-public,pre_registration,type_of_report,character varying,10,,Lorem
 public,prof_deputy_estimate_cost,id,integer,,PRIMARY KEY,NA
 public,prof_deputy_estimate_cost,more_details,text,,,Lorem
 public,prof_deputy_estimate_cost,prof_deputy_estimate_cost_type_id,character varying,255,,Lorem
@@ -249,7 +256,7 @@ public,safeguarding,how_is_care_funded,character varying,255,,Lorem
 public,safeguarding,how_often_contact_client,text,,,Lorem
 public,safeguarding,id,integer,,PRIMARY KEY,NA
 public,safeguarding,who_is_doing_the_caring,text,,,Lorem
-public,satisfaction,comments,text,,,Lorem
+public,satisfaction,comments,character varying,1200,,Lorem
 public,satisfaction,deputy_role,character varying,50,,Lorem
 public,satisfaction,id,integer,,PRIMARY KEY,NA
 public,satisfaction,report_type,character varying,9,,Lorem

@@ -79,7 +79,7 @@ class ClientContact
      * The following is changed to unique=false, as the migration was missing,
      * and prod data contains duplicate, making it impossible to add the
      * migration now, unless the data is cleaned
-     * 
+     *
      * @ORM\Column(name="email", type="string", length=60, nullable=true, unique=false)
      */
     #[JMS\Type('string')]

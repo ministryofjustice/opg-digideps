@@ -22,9 +22,9 @@ class MoneyTransactionController extends RestController
     ];
 
     public function __construct(
-       private readonly EntityManagerInterface $em,
-       private readonly RestFormatter $formatter,
-       private readonly MoneyTransactionRepository $moneyTransactionRepository
+        private readonly EntityManagerInterface $em,
+        private readonly RestFormatter $formatter,
+        private readonly MoneyTransactionRepository $moneyTransactionRepository
     ) {
         parent::__construct($em);
     }

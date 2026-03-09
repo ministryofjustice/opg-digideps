@@ -31,6 +31,7 @@ class Ndr implements ReportInterface
     use NdrTraits\ExpensesTrait;
     use NdrTraits\ActionTrait;
     use NdrTraits\MoreInfoTrait;
+
     public const TYPE_NDR = 'ndr';
 
     public const PROPERTY_AND_AFFAIRS = 2;
@@ -527,7 +528,7 @@ class Ndr implements ReportInterface
     {
         $acceptedValues = ['only_deputy', 'more_deputies_behalf', 'more_deputies_not_behalf'];
         if ($agreedBehalfDeputy && !in_array($agreedBehalfDeputy, $acceptedValues)) {
-            throw new \InvalidArgumentException(__METHOD__." {$agreedBehalfDeputy} given. Expected value: ".implode(' or ', $acceptedValues));
+            throw new \InvalidArgumentException(__METHOD__ . " {$agreedBehalfDeputy} given. Expected value: " . implode(' or ', $acceptedValues));
         }
 
         $this->agreedBehalfDeputy = $agreedBehalfDeputy;

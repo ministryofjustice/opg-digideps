@@ -178,10 +178,10 @@ class DocumentController extends RestController
             $this->verboseLogger->error('Unsupported number of rows from document sync counts');
         } else {
             $this->verboseLogger->notice(
-                'queued_over_1_hour '.$failedDocuments['queued_over_1_hour'].
-                ' in_progress_over_1_hour '.$failedDocuments['in_progress_over_1_hour'].
-                ' temporary_error_count '.$failedDocuments['temporary_error_count'].
-                ' permanent_error_count '.$failedDocuments['permanent_error_count']
+                'queued_over_1_hour ' . $failedDocuments['queued_over_1_hour'] .
+                ' in_progress_over_1_hour ' . $failedDocuments['in_progress_over_1_hour'] .
+                ' temporary_error_count ' . $failedDocuments['temporary_error_count'] .
+                ' permanent_error_count ' . $failedDocuments['permanent_error_count']
             );
         }
 
