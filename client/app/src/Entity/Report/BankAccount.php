@@ -395,7 +395,7 @@ class BankAccount implements BankAccountInterface
         return $this->getSortCode();
     }
 
-    public function requiresIsClosed()
+    public function requiresIsClosed(): bool
     {
         return $this->hasClosingBalance() && $this->closingBalance == 0.00;
     }

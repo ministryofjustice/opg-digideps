@@ -7776,16 +7776,6 @@ parameters:
 			path: src/Form/Report/Asset/AssetTypeTitle.php
 
 		-
-			message: "#^Cannot call method requiresBankName\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Form/Report/BankAccountType.php
-
-		-
-			message: "#^Cannot call method requiresSortCode\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Form/Report/BankAccountType.php
-
-		-
 			message: "#^Cannot cast mixed to int\\.$#"
 			count: 1
 			path: src/Form/Report/BankAccountType.php
