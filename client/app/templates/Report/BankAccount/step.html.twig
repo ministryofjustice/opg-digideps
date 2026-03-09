@@ -68,14 +68,16 @@
                 'labelText': 'form.closingBalance.label' | trans({'%endDate%': report.endDate | date("j F Y")}, translationDomain),
                 'inputPrefix' : '£',
                 'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
-                'extraAttrs': {'data-expand-if-zero': 'true'}
+                'extraAttrs': {'data-expand-if-zero': 'true', 'aria-controls': 'accountIsClosed'}
             } ) }}
 
-            <div class="js-details-expandable">
+            <div id="accountIsClosed" class="js-details-expandable govuk-inset-text">
+                <div id="accountIsClosedHelpText" class="visually-hidden" aria-live="polite"></div>
                 {{ form_checkbox_group(form.isClosed, 'form.isClosed', {
                     'fieldSetClass' : 'inline',
-                    'legendText' : 'form.isClosed.label' | trans({'%endDate%': report.endDate | date("j F Y")}, translationDomain),
-                    'legendClass' : 'form-label text'
+                    'legendText' : 'form.isClosed.label' | trans({'%endDate%': report.endDate | date("j F Y"), '%closingBalance%': form.closingBalance}, translationDomain),
+                    'legendClass' : 'form-label text',
+                    'extraAttrs': {'aria-describedby': 'accountIsClosedHelpText'}
                 }) }}
             </div>
         </div>
