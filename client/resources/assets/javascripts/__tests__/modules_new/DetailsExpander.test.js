@@ -41,7 +41,8 @@ describe('Details expander - data-expand-if-zero', () => {
     document.body.innerHTML = `
       <div class="js-details-expander">
         <input type="text" data-expand-if-zero="true">
-        <div id="detail" class="js-hidden js-details-expandable">
+        <div id="expandable" class="js-hidden js-details-expandable">
+          <div id="additional-info" aria-live="polite"></div>
           <textarea></textarea>
         </div>
       </div>
@@ -49,24 +50,29 @@ describe('Details expander - data-expand-if-zero', () => {
 
     DetailsExpander.init(document, '.js-details-expander')
     const input = document.querySelector('input[type=text]')
-    const detail = document.getElementById('detail')
+    const expandable = document.getElementById('expandable')
+    const additionalInfo = document.getElementById('additional-info')
 
-    expect(detail.classList.contains('js-hidden')).toBe(true)
+    expect(expandable.classList.contains('js-hidden')).toBe(true)
+    expect(additionalInfo.innerHTML).toBe('Additional information is not required')
 
     input.value = '0.0'
     const event1 = new InputEvent('input')
     input.dispatchEvent(event1)
-    expect(detail.classList.contains('js-hidden')).toBe(false)
+    expect(expandable.classList.contains('js-hidden')).toBe(false)
+    expect(additionalInfo.innerHTML).toBe('Additional information is required')
 
     input.value = '1,000'
     const event2 = new InputEvent('input')
     input.dispatchEvent(event2)
-    expect(detail.classList.contains('js-hidden')).toBe(true)
+    expect(expandable.classList.contains('js-hidden')).toBe(true)
+    expect(additionalInfo.innerHTML).toBe('Additional information is not required')
 
     input.value = ''
     const event3 = new InputEvent('input')
     input.dispatchEvent(event3)
-    expect(detail.classList.contains('js-hidden')).toBe(true)
+    expect(expandable.classList.contains('js-hidden')).toBe(true)
+    expect(additionalInfo.innerHTML).toBe('Additional information is not required')
   })
 })
 
