@@ -80,7 +80,11 @@ class UserTestHelper
             ->setAgreeTermsUse(true)
             ->setIsPrimary($isPrimary);
 
-        $user->setDeputyUid($deputyUid);
+        if (-1 === $deputyUid) {
+            $user->setDeputyUid(null);
+        } else {
+            $user->setDeputyUid($deputyUid);
+        }
 
         if (!is_null($client)) {
             $user->addClient($client);
