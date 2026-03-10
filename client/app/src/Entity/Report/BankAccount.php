@@ -101,20 +101,16 @@ class BankAccount implements BankAccountInterface
      * @Assert\NotBlank(message="account.openingBalance.notBlank", groups={"bank-account-opening-balance"})
      * @Assert\Type(type="numeric", message="account.openingBalance.type", groups={"bank-account-opening-balance"})
      * @Assert\Range(max=100000000000, maxMessage = "account.openingBalance.outOfRange", groups={"bank-account-opening-balance"})
-     *
-     * @var decimal
      */
-    private $openingBalance;
+    private ?float $openingBalance;
 
     /**
      * @JMS\Type("string")
      * @Assert\Type(type="numeric", message="account.closingBalance.type", groups={"bank-account-closing-balance"})
      * @Assert\Range(max=100000000000, maxMessage = "account.closingBalance.outOfRange", groups={"bank-account-closing-balance"})
      * @JMS\Groups({"account"})
-     *
-     * @var decimal
      */
-    private $closingBalance;
+    private ?float $closingBalance;
 
     /**
      * @JMS\Type("boolean")
@@ -232,10 +228,7 @@ class BankAccount implements BankAccountInterface
         return $this;
     }
 
-    /**
-     * @return decimal $closingBalance
-     */
-    public function getClosingBalance()
+    public function getClosingBalance(): ?float
     {
         return $this->closingBalance;
     }
