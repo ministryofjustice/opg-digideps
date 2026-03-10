@@ -107,8 +107,6 @@ class FormFieldsExtension extends AbstractExtension
         $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
         $domain = $element->parent->vars['translation_domain'];
 
-        $extraAttrs = $vars['extraAttrs'] ?? [];
-
         // sort hint text translation
         if (isset($vars['hintText'])) {
             $hintText = $vars['hintText'];
@@ -157,7 +155,7 @@ class FormFieldsExtension extends AbstractExtension
             'items' => empty($vars['items']) ? [] : $vars['items'],
             'translationDomain' => $domain,
             'multitoggle' => empty($vars['multitoggle']) ? [] : $vars['multitoggle'],
-            'extraAttrs' => $extraAttrs,
+            'extraAttrs' => $vars['extraAttrs'] ?? [],
         ]);
     }
 
