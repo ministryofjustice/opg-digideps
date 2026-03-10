@@ -238,7 +238,10 @@ trait IngestTrait
         }
 
         $fileContents = file($csvFilePath);
-        $csvRows = array_map('str_getcsv', $fileContents);
+        $csvRows = [];
+        foreach ($fileContents as $row) {
+            $csvRows[] = str_getcsv($row, ',', '"', '');
+        }
         unset($fileContents);
 
         array_walk($csvRows, function (&$a) use ($csvRows): void {
