@@ -204,7 +204,7 @@ services:
 
     App\Service\DataImporter\CsvToArray: ~
 
-    # Disable autowiring for these helper classes
+    # Disable autowiring for these helper classes
     App\Service\ReportStatusService: ~
     App\Service\Stats\StatsQueryParameters: ~
 
@@ -333,7 +333,7 @@ services:
             - null
             - null
             - ""
-            - 1
+            - "1"
     line_formatter:
         class: Monolog\Formatter\LineFormatter
 
@@ -475,14 +475,24 @@ services:
     App\Service\UserDeputyService:
         public: true
 
-    App\Factory\ChainedDataFactory:
+    preCSVDataFactory:
+        class: App\Factory\ChainedDataFactory
         public: true
         arguments:
+            $name: "preCSVDataFactory"
+            $dataFactories:
+                - '@App\Factory\MissingDeputyDataFactory'
+
+    postCSVDataFactory:
+        class: App\Factory\ChainedDataFactory
+        public: true
+        arguments:
+            $name: "postCSVDataFactory"
             $dataFactories:
                 - '@App\Factory\ClientIdFixDataFactory'
 
-    App\Factory\DataFactoryInterface:
-        alias: App\Factory\ChainedDataFactory
-
     App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester:
         public: true
+        arguments:
+            $preCSVDataFactory: "@preCSVDataFactory"
+            $postCSVDataFactory: "@postCSVDataFactory"

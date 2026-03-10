@@ -10,6 +10,7 @@ namespace App\Factory;
 class ChainedDataFactory implements DataFactoryInterface
 {
     public function __construct(
+        private readonly string $name = 'Chained',
         /** @var array<DataFactoryInterface> $dataFactories */
         private readonly array $dataFactories = [],
     ) {
@@ -17,7 +18,7 @@ class ChainedDataFactory implements DataFactoryInterface
 
     public function getName(): string
     {
-        return 'Chained';
+        return $this->name;
     }
 
     /**

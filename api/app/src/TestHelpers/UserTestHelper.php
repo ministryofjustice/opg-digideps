@@ -82,7 +82,7 @@ class UserTestHelper
 
         if (-1 === $deputyUid) {
             $user->setDeputyUid(null);
-        } elseif (str_contains($roleName, 'LAY')) {
+        } else {
             $user->setDeputyUid($deputyUid);
         }
 
