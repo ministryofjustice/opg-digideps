@@ -4166,11 +4166,6 @@ parameters:
 			path: src/Entity/Report/AssetProperty.php
 
 		-
-			message: "#^Call to function is_null\\(\\) with App\\\\Entity\\\\Report\\\\decimal will always evaluate to false\\.$#"
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\BankAccount\\:\\:getAccountNumber\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/BankAccount.php
@@ -4182,11 +4177,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\BankAccount\\:\\:getBank\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\BankAccount\\:\\:getClosingBalance\\(\\) has invalid return type App\\\\Entity\\\\Report\\\\decimal\\.$#"
 			count: 1
 			path: src/Entity/Report/BankAccount.php
 
@@ -4222,11 +4212,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\BankAccount\\:\\:getSortCode\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\BankAccount\\:\\:isClosingBalanceZero\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/BankAccount.php
 
@@ -4331,27 +4316,7 @@ parameters:
 			path: src/Entity/Report/BankAccount.php
 
 		-
-			message: "#^Parameter \\#1 \\$num of function round expects float\\|int, App\\\\Entity\\\\Report\\\\decimal given\\.$#"
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\BankAccount\\:\\:\\$accountTypeText is never written, only read\\.$#"
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\BankAccount\\:\\:\\$closingBalance \\(App\\\\Entity\\\\Report\\\\decimal\\) does not accept float\\.$#"
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\BankAccount\\:\\:\\$closingBalance has unknown class App\\\\Entity\\\\Report\\\\decimal as its type\\.$#"
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\BankAccount\\:\\:\\$openingBalance has unknown class App\\\\Entity\\\\Report\\\\decimal as its type\\.$#"
 			count: 1
 			path: src/Entity/Report/BankAccount.php
 
@@ -4372,16 +4337,6 @@ parameters:
 
 		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\BankAccount\\:\\:\\$typesNotRequiringSortCode has no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: "#^Result of && is always false\\.$#"
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between 0\\.0 and \\*NEVER\\* will always evaluate to false\\.$#"
 			count: 1
 			path: src/Entity/Report/BankAccount.php
 
@@ -6047,11 +6002,6 @@ parameters:
 
 		-
 			message: "#^Result of && is always false\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between App\\\\Entity\\\\Report\\\\decimal and null will always evaluate to false\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
 
