@@ -109,9 +109,9 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           sync-labels: true
 
-  # trivy_secret_scanning:
-  #   name: trivy secret scanning
-  #   uses: ./.github/workflows/_secret-scan-on-push.yml
+  trivy_secret_scanning:
+    name: trivy secret scanning
+    uses: ./.github/workflows/_secret-scan-on-push.yml
 
   build_web_resources:
     name: build web resources
@@ -122,7 +122,7 @@ jobs:
     uses: ./.github/workflows/_lint-terraform.yml
     needs:
       - workflow_variables
-      # - trivy_secret_scanning
+      - trivy_secret_scanning
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
@@ -133,7 +133,7 @@ jobs:
     uses: ./.github/workflows/_test-js.yml
     needs:
       - workflow_variables
-      # - trivy_secret_scanning
+      - trivy_secret_scanning
 
   php_style:
     name: PHP Style check
@@ -145,7 +145,7 @@ jobs:
     needs:
       - workflow_variables
       - build_web_resources
-      # - trivy_secret_scanning
+      - trivy_secret_scanning
       - php_style
     with:
       tag: ${{ needs.workflow_variables.outputs.version_tag }}
@@ -159,7 +159,7 @@ jobs:
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
     needs:
       - workflow_variables
-      # - trivy_secret_scanning
+      - trivy_secret_scanning
 
   api_unit_tests:
     name: api unit tests
@@ -168,7 +168,7 @@ jobs:
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
     needs:
       - workflow_variables
-      # - trivy_secret_scanning
+      - trivy_secret_scanning
 
   api_integration_tests_1:
     name: api integration tests 1
@@ -178,7 +178,7 @@ jobs:
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
     needs:
       - workflow_variables
-      # - trivy_secret_scanning
+      - trivy_secret_scanning
 
   api_integration_tests_2:
     name: api integration tests 2
@@ -188,7 +188,7 @@ jobs:
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
     needs:
       - workflow_variables
-      # - trivy_secret_scanning
+      - trivy_secret_scanning
 
   api_integration_tests_3:
     name: api integration tests 3
@@ -198,7 +198,7 @@ jobs:
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
     needs:
       - workflow_variables
-      # - trivy_secret_scanning
+      - trivy_secret_scanning
 
   client_phpstan:
     name: client phpstan
@@ -207,7 +207,7 @@ jobs:
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
     needs:
       - workflow_variables
-      # - trivy_secret_scanning
+      - trivy_secret_scanning
 
   client_unit_tests:
     name: client unit tests
@@ -215,14 +215,14 @@ jobs:
     needs:
       - workflow_variables
       - build_web_resources
-      # - trivy_secret_scanning
+      - trivy_secret_scanning
 
   miscellaneous_tests:
     name: miscellaneous tests
     uses: ./.github/workflows/_tests-miscellaneous.yml
     needs:
       - workflow_variables
-      # - trivy_secret_scanning
+      - trivy_secret_scanning
 
   codecov:
     name: upload to codecov
