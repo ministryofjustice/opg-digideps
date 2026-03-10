@@ -106,7 +106,7 @@ class BankAccountType extends AbstractType
                 }
 
                 $step3Options = ['bank-account-opening-balance', 'bank-account-closing-balance'];
-                if ($formData->requiresIsClosed()) {
+                if ($formData->isClosingBalanceZero()) {
                     $step3Options[] = 'bank-account-is-closed';
                 }
 

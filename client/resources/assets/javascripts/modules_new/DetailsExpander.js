@@ -19,15 +19,16 @@ const DetailsExpander = {
 
   makeHandler: function (triggerElement, expandableElement) {
     return function () {
-      const numericValue = parseFloat(triggerElement.value.replace(/,/g, ''))
+      // convert to an integer so we can perform comparisons with 0
+      const numericValue = Math.round(parseFloat(triggerElement.value.replace(/,/g, '')) * 100)
 
-      // if this attribute is present, the expandable element is shown only
+      // if the data-expand-if-zero attribute is present, the expandable element is shown only
       // when the value of the expander text input is zero; otherwise, the
       // expandable element is shown when the text input is *not* zero (default)
       const expandIfZero = triggerElement.hasAttribute('data-expand-if-zero')
 
       const shouldExpand = !isNaN(numericValue) && (
-        (expandIfZero && numericValue === 0.0) || (!expandIfZero && numericValue > 0.0)
+        (expandIfZero && numericValue === 0) || (!expandIfZero && numericValue > 0)
       )
 
       // if the expandable element contains an aria-live element, update

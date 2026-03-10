@@ -240,9 +240,9 @@ class BankAccount implements BankAccountInterface
         return $this->closingBalance;
     }
 
-    public function isClosingBalanceZero()
+    public function isClosingBalanceZero(): bool
     {
-        return null !== $this->closingBalance && 0.00 === round($this->closingBalance, 2);
+        return !is_null($this->closingBalance) && 0.0 === round(floatval($this->closingBalance), 2);
     }
 
     /**
@@ -393,10 +393,5 @@ class BankAccount implements BankAccountInterface
         }
 
         return $this->getSortCode();
-    }
-
-    public function requiresIsClosed(): bool
-    {
-        return $this->hasClosingBalance() && $this->closingBalance == 0.00;
     }
 }
