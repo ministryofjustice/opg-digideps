@@ -401,10 +401,6 @@ class RestClient implements RestClientInterface
                 if ($response instanceof ResponseInterface) {
                     $body = strval($response->getBody());
 
-                    error_log(str_repeat('+', 100));
-                    error_log($body);
-                    error_log(str_repeat('+', 100));
-
                     $data = $this->serializer->deserialize($body, 'array', 'json');
                 }
             } catch (\Throwable $e) {
