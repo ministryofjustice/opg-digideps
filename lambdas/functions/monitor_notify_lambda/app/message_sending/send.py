@@ -1,5 +1,6 @@
 import boto3
-import requests
+import urllib.request
+import urllib.error
 import json
 import logging
 
@@ -40,16 +41,33 @@ def send_message(payload):
     data = {"text": payload["text"]}
     # Send the POST request to the Slack webhook URL
     webhook_url = get_slack_webhook_secret("slack-webhook-url", payload["channel"])
-    response = requests.post(webhook_url, data=json.dumps(data))
+    req = urllib.request.Request(
+        webhook_url,
+        data=json.dumps(data).encode("utf-8"),
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
 
-    if response.status_code == 200:
-        logger.info(f"Slack message sent")
-        response_object["statusCode"] = 200
-        response_object["body"] = "Event processed successfully"
-    else:
-        logger.warning(
-            f"Failed to send slack message: {response.status_code} - {response.text}"
-        )
+    try:
+        with urllib.request.urlopen(req) as response:
+            if response.status == 200:
+                logger.info(f"Slack message sent")
+                response_object["statusCode"] = 200
+                response_object["body"] = "Event processed successfully"
+            else:
+                response_text = response.read().decode("utf-8")
+                logger.warning(
+                    f"Failed to send slack message: {response.status} - {response_text}"
+                )
+                response_object["statusCode"] = 500
+                response_object["body"] = "Event failed to process"
+    except urllib.error.HTTPError as e:
+        response_text = e.read().decode("utf-8")
+        logger.warning(f"Failed to send slack message: {e.code} - {response_text}")
+        response_object["statusCode"] = 500
+        response_object["body"] = "Event failed to process"
+    except urllib.error.URLError as e:
+        logger.warning(f"Failed to send slack message: {str(e)}")
         response_object["statusCode"] = 500
         response_object["body"] = "Event failed to process"
 

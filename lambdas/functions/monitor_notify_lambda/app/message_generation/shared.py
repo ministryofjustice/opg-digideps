@@ -1,5 +1,6 @@
 import boto3
-import requests
+import urllib.request
+import urllib.error
 import logging
 import re
 import time
@@ -92,17 +93,20 @@ def is_bank_holiday():
 
     # Make a GET request to fetch the JSON data
     url = "https://www.gov.uk/bank-holidays.json"
-    response = requests.get(url)
+    try:
+        with urllib.request.urlopen(url) as response:
+            if response.status == 200:
+                data = json.loads(response.read().decode("utf-8"))
+                england_and_wales_holidays = data.get("england-and-wales", [])
 
-    if response.status_code == 200:
-        data = response.json()
-        england_and_wales_holidays = data.get("england-and-wales", [])
-
-        # Check if today's date is in the list of bank holidays
-        for holiday in england_and_wales_holidays.get("events", []):
-            if holiday.get("date") == today_date:
-                return True  # Today is a bank holiday
-        return False  # Today is not a bank holiday
-    else:
+                # Check if today's date is in the list of bank holidays
+                for holiday in england_and_wales_holidays.get("events", []):
+                    if holiday.get("date") == today_date:
+                        return True  # Today is a bank holiday
+                return False  # Today is not a bank holiday
+            else:
+                logger.warning("Failed to fetch bank holiday data.")
+                return False  # Unable to determine if today is a bank holiday
+    except urllib.error.URLError:
         logger.warning("Failed to fetch bank holiday data.")
         return False  # Unable to determine if today is a bank holiday
