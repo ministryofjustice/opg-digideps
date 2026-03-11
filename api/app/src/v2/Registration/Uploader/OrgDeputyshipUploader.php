@@ -14,12 +14,15 @@ use App\Service\OrgService;
 use App\v2\Assembler\ClientAssembler;
 use App\v2\Assembler\DeputyAssembler;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
+use App\v2\Service\NamedDeputyService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
 class OrgDeputyshipUploader
 {
+    public const string DEFAULT_ORG_NAME = 'Your Organisation';
+
     private array $added = ['clients' => [], 'deputies' => [], 'reports' => [], 'organisations' => []];
     private array $updated = ['clients' => [], 'deputies' => [], 'reports' => [], 'organisations' => []];
     private array $changeOrg = [];
@@ -71,7 +74,7 @@ class OrgDeputyshipUploader
                 $this->handleOrganisation($deputyshipDto);
                 $this->handleClient($deputyshipDto);
                 $this->handleReport($deputyshipDto);
-            } catch (ClientIsArchivedException $e) {
+            } catch (ClientIsArchivedException) {
                 ++$uploadResults['skipped'];
                 continue;
             } catch (\Throwable $e) {
@@ -157,10 +160,10 @@ class OrgDeputyshipUploader
 
     private function handleOrganisation(OrgDeputyshipDto $dto): void
     {
-        $this->currentOrganisation = $foundOrganisation = $this->em->getRepository(Organisation::class)->findByEmailIdentifier($dto->getDeputyEmail());
+        $this->currentOrganisation = $this->em->getRepository(Organisation::class)->findByEmailIdentifier($dto->getDeputyEmail());
 
-        if (is_null($foundOrganisation)) {
-            $orgName = empty($dto->getOrganisationName()) ? OrgService::DEFAULT_ORG_NAME : $dto->getOrganisationName();
+        if (is_null($this->currentOrganisation)) {
+            $orgName = empty($dto->getOrganisationName()) ? self::DEFAULT_ORG_NAME : $dto->getOrganisationName();
             $organisation = $this->orgFactory->createFromFullEmail($orgName, $dto->getDeputyEmail());
             $this->em->persist($organisation);
             $this->em->flush();

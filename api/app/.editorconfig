@@ -11,5 +11,5 @@ indent_style = space
 indent_size = 4
 charset = utf-8
 
-[*.{scss,yml,feature}]
+[*.{scss,feature}]
 indent_size = 2

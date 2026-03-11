@@ -47,7 +47,7 @@ jobs:
 
       - name: python layers folder
         if: inputs.terraform_path == 'account'
-        run: pip3 install -r requirements.txt --target ./layers/python/lib/python3.11/site-packages/
+        run: pip3 install -r requirements.txt --target ./layers/python/lib/python3.14/site-packages/
         working-directory: lambdas/functions/monitor_notify_lambda
 
       - id: terraform_version

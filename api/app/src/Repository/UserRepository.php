@@ -9,6 +9,8 @@ use App\Entity\User;
 use App\Model\QueryPager;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
@@ -468,17 +470,22 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * Find lay deputy users whose deputy UID is in the pre_registration table but who are not associated with a deputy.
+     * Find lay, PA named, and PROF named deputy dd_users not associated with a deputy record.
+     * Only consider active primary users.
      *
      * @return \Traversable<User>
+     * @throws NoResultException
+     * @throws NonUniqueResultException
      */
     public function findUsersWithoutDeputies(): \Traversable
     {
         $pageQueryBuilder = $this->createQueryBuilder('u')
-            ->innerJoin(PreRegistration::class, 'pr', Join::WITH, "CONCAT(u.deputyUid, '') = pr.deputyUid")
             ->leftJoin(Deputy::class, 'd', Join::WITH, 'u.id = d.user')
             ->where('u.active = true')
+            ->andWhere('u.isPrimary = true')
+            ->andWhere('u.roleName in (:roles)')
             ->andWhere('d.id IS NULL')
+            ->setParameter('roles', [User::ROLE_LAY_DEPUTY, User::ROLE_PA_NAMED, User::ROLE_PROF_NAMED])
             ->orderBy('u.id', 'ASC');
 
         $queryPager = new QueryPager($pageQueryBuilder);
