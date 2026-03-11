@@ -191,22 +191,6 @@ trait ReportTrait
     }
 
     /**
-     * @Given a Lay Deputy has a completed NDR report
-     *
-     * @throws Exception
-     */
-    public function aNdrLayDeputyHasCompletedReport()
-    {
-        if (empty($this->layNdrDeputyCompletedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layNdrDeputyCompletedDetails');
-        }
-
-        $this->loginToFrontendAs($this->layNdrDeputyCompletedDetails->getUserEmail());
-        $this->interactingWithUserDetails = $this->layNdrDeputyCompletedDetails;
-        $this->reportUrlPrefix = $this->layNdrDeputyCompletedDetails->getCurrentReportNdrOrReport();
-    }
-
-    /**
      * @Given a Professional Admin Deputy has not started a report
      */
     public function aProfessionalAdminDeputyHasNotStartedAReport()
