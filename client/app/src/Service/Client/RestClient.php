@@ -329,15 +329,13 @@ class RestClient implements RestClientInterface
 
     /**
      * Performs HTTP client call
-     * // TODO refactor into  rawSafeCallWithAuthToken and rawSafeCallWithClientSecret.
+     * // TODO refactor into rawSafeCallWithAuthToken and rawSafeCallWithClientSecret.
      *
      * In case of connect/HTTP failure:
-     * - throws DisplayableException using self::ERROR_CONNECT as a message, keeping exception code
-     * - logs the full error message with with warning priority
-     *
-     * @return ResponseInterface
+     * - throws an exception
+     * - logs the full error message with warning priority
      */
-    private function rawSafeCall($method, $url, $options)
+    private function rawSafeCall($method, $url, $options): ?ResponseInterface
     {
         // add AuthToken if user is logged
         if (!empty($options['addAuthToken']) && $loggedUserId = $this->getLoggedUserId()) {
@@ -353,10 +351,8 @@ class RestClient implements RestClientInterface
             $options['headers'][self::HEADER_CLIENT_SECRET] = $this->clientSecret;
         }
 
-        // remove internal options, not recognised by guzzle
+        // remove internal options not recognised by guzzle
         foreach (self::$availableOptions as $ao) {
-            unset($options[$ao]);
-            unset($options[$ao]);
             unset($options[$ao]);
         }
 
@@ -381,43 +377,42 @@ class RestClient implements RestClientInterface
             $options['timeout'] = $this->timeout;
         }
 
+        $exceptions = [];
+        $response = null;
         $start = microtime(true);
+
         try {
             $response = $this->client->$method($url, $options);
-            $this->logRequest($url, $method, $start, $options, $response);
-
-            return $response;
-        } catch (RequestException $e) {
-            // request exception contains a body, that gets decoded and passed to RestClientException
-            $this->logger->warning('RestClient | RequestException | ' . $url . ' | ' . $e->getMessage());
-
-            $response = $e->getResponse();
-
-            $this->logRequest($url, $method, $start, $options, $response);
-
-            $data = [];
-
-            try {
-                if ($response instanceof ResponseInterface) {
-                    $body = strval($response->getBody());
-
-                    $data = $this->serializer->deserialize($body, 'array', 'json');
-                }
-            } catch (\Throwable $e) {
-                $this->logger->warning('RestClient |  ' . $url . ' | ' . $e->getMessage());
-            }
-
-            $code = $e->getCode();
-            if ($code < 100 || $code >= 600) {
-                $code = Response::HTTP_INTERNAL_SERVER_ERROR;
-            }
-
-            throw new AppException\RestClientException($e->getMessage(), $code, $data);
         } catch (TransferException $e) {
-            $this->logger->warning('RestClient | ' . $url . ' | ' . $e->getMessage());
-
-            throw new AppException\RestClientException($e->getMessage(), $e->getCode());
+            if ($e instanceof RequestException) {
+                $response = $e->getResponse();
+            }
+            $exceptions[] = $e;
         }
+
+        $this->logRequest($url, $method, $start, $options, $response);
+
+        if (count($exceptions) > 0) {
+            $data = [];
+            if (!is_null($response)) {
+                try {
+                    // this can throw at least a RuntimeException
+                    $data = $this->serializer->deserialize(strval($response->getBody()), 'array', 'json');
+                } catch (\Throwable $e) {
+                    $exceptions[] = $e;
+                }
+            }
+
+            $messages = [];
+            foreach ($exceptions as $e) {
+                $this->logger->warning('RestClient | ' . get_class($e) . ' | ' . $url . ' | ' . $e->getMessage());
+                $messages[] = $e->getMessage();
+            }
+
+            throw new AppException\RestClientException(implode('; ', $messages), Response::HTTP_INTERNAL_SERVER_ERROR, $data);
+        }
+
+        return $response;
     }
 
     /**
