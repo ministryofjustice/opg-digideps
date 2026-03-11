@@ -108,6 +108,11 @@ class CoDeputyController extends AbstractController
 
                     $this->deputyApi->createDeputyFromUser($user);
 
+                    // Update codeputy flag to true for main deputy user account
+                    if ($mainDeputy !== false) {
+                        $this->userApi->updateUserCodeputyFlagToTrue($mainDeputy->getId());
+                    }
+
                     return $this->redirect($this->generateUrl('homepage'));
                 } catch (\Throwable $e) {
                     $translator = $this->translator;

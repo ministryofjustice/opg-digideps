@@ -557,4 +557,15 @@ class UserController extends RestController
 
         return $this->userRepository->findPrimaryUserByDeputyUid($deputyUid);
     }
+
+    #[Route(path: '/update/codeputyflag/{id}', methods: ['PUT'])]
+    public function updateCodeputyFlagToTrue(int $id): void
+    {
+        /** @var User $requestedUser */
+        $requestedUser = $this->findEntityBy(User::class, $id, 'User not found');
+
+        $requestedUser->setCoDeputyClientConfirmed(true);
+        $this->em->persist($requestedUser);
+        $this->em->flush();
+    }
 }
