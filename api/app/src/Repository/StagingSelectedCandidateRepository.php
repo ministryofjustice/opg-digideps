@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Entity\StagingSelectedCandidate;
 use App\Model\QueryPager;
+use App\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -33,14 +34,42 @@ class StagingSelectedCandidateRepository extends ServiceEntityRepository
      */
     public function getDistinctOrderedCandidates(): \Traversable
     {
-        $em = $this->getEntityManager();
-
         // order by is required for paged queries, to prevent duplicate rows being returned
-        $pageQueryBuilder = $em->createQueryBuilder()
+        $pageQueryBuilder = $this->getEntityManager()->createQueryBuilder()
             ->select('ssc')
             ->from(StagingSelectedCandidate::class, 'ssc')
             ->distinct()
             ->orderBy('ssc.id', 'ASC');
+
+        $queryPager = new QueryPager($pageQueryBuilder);
+
+        /** @var \Traversable<array<string, mixed>> $rows */
+        $rows = $queryPager->getRows();
+
+        return $rows;
+    }
+
+    public function getChangedOrders(): \Traversable
+    {
+       // Actions where a report type could change
+        $actionsNeeded = [
+            DeputyshipCandidateAction::InsertOrderDeputy,
+            DeputyshipCandidateAction::InsertOrderReport,
+            DeputyshipCandidateAction::UpdateDeputyStatus
+        ];
+
+        $sql = <<<SQL
+        SELECT DISTINCT sc.order_uid, d.order_type, d.report_type, d.is_hybrid, d.deputy_type
+        FROM selectedcandidates sc
+        INNER JOIN deputyship d ON sc.order_uid = d.order_uid
+        WHERE action IN (:actionsNeeded)
+        ORDER BY sc.order_uid
+        SQL;
+
+        $pageQueryBuilder = $this->getEntityManager()
+            ->getConnection()
+            ->prepare($sql)
+            ->setParameter('actionsNeeded', $actionsNeeded);
 
         $queryPager = new QueryPager($pageQueryBuilder);
 
