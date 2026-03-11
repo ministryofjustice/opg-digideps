@@ -386,26 +386,6 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @ndr-not-started
-     * @BeforeScenario @lay-pfa-with-ndr-not-started
-     */
-    public function createNdrNotStarted()
-    {
-        $userDetails = $this->fixtureHelper->createLayNdrNotStarted($this->testRunId);
-        $this->fixtureUsers[] = $this->layNdrDeputyNotStartedDetails = new UserDetails($userDetails);
-    }
-
-    /**
-     * @BeforeScenario @ndr-completed
-     * @BeforeScenario @lay-pfa-with-ndr-completed
-     */
-    public function createNdrCompleted()
-    {
-        $userDetails = $this->fixtureHelper->createLayNdrCompleted($this->testRunId);
-        $this->fixtureUsers[] = $this->layNdrDeputyCompletedDetails = new UserDetails($userDetails);
-    }
-
-    /**
      * @BeforeScenario @prof-admin-health-welfare-not-started
      */
     public function createProfAdminNotStarted(?BeforeScenarioScope $scenario = null, ?string $deputyEmail = null, ?string $caseNumber = null, ?string $deputyUid = null)
