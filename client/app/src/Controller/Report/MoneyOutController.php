@@ -7,8 +7,9 @@ namespace App\Controller\Report;
 use App\Controller\AbstractController;
 use App\Entity\Report\BankAccount;
 use App\Entity\Report\MoneyTransaction;
+use App\Entity\Report\Report;
 use App\Entity\Report\Status;
-use App\Form\AddAnotherRecordType;
+use App\Form\AddAnotherThingType;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\DoesMoneyOutExistType;
 use App\Form\Report\MoneyTransactionType;
@@ -17,6 +18,7 @@ use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
 use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,6 +28,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MoneyOutController extends AbstractController
 {
+    private const int TOTAL_STEPS = 2;
+
     private static array $jmsGroups = [
         'transactionsOut',
         'money-out-state',
@@ -36,6 +40,7 @@ class MoneyOutController extends AbstractController
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
         private readonly StepRedirector $stepRedirector,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -62,8 +67,14 @@ class MoneyOutController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /**
+             * @var Report $report
+             */
             $report = $form->getData();
-            $answer = $form['moneyOutExists']->getData();
+            /**
+             * @var null|string $answer
+             */
+            $answer = $form['moneyOutExists']?->getData();
             $fromPage = $request->get('from');
 
             $report->setMoneyOutExists($answer);
@@ -142,8 +153,14 @@ class MoneyOutController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /**
+             * @var Report $report
+             */
             $report = $form->getData();
-            $answer = $form['reasonForNoMoneyOut']->getData();
+            /**
+             * @var null|string $answer
+             */
+            $answer = $form['reasonForNoMoneyOut']?->getData();
 
             $report->setReasonForNoMoneyOut($answer);
             $report->getStatus()->setMoneyOutState(Status::STATE_DONE);
@@ -170,94 +187,17 @@ class MoneyOutController extends AbstractController
         AuthorizationCheckerInterface $authorizationChecker,
         ?int $transactionId = null
     ): RedirectResponse|array {
-        $totalSteps = 2;
-        if ($step < 1 || $step > $totalSteps) {
-            return $this->redirectToRoute('money_out_summary', ['reportId' => $reportId]);
+        $result = match ($step) {
+            1 => $this->step1($request, $reportId, $authorizationChecker, $transactionId),
+            2 => $this->step2($request, $reportId, $authorizationChecker, $transactionId),
+            default => $this->redirectToRoute('money_out_summary', ['reportId' => $reportId]),
+        };
+
+        if ($result instanceof RedirectResponse) {
+            return $result;
         }
 
-        // common vars and data
-        $dataFromUrl = $request->get('data') ?: [];
-        $stepUrlData = $dataFromUrl;
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $fromPage = $request->get('from');
-
-        $stepRedirector = $this->stepRedirector
-            ->setRoutes('does_money_out_exist', 'money_out_step', 'money_out_summary')
-            ->setFromPage($fromPage)
-            ->setCurrentStep($step)->setTotalSteps($totalSteps)
-            ->setRouteBaseParams(['reportId' => $reportId, 'transactionId' => $transactionId]);
-
-        // create (add mode) or load transaction (edit mode)
-        if ($transactionId) {
-            $transaction = array_filter($report->getMoneyTransactionsOut(), function ($t) use ($transactionId): bool {
-                if ($t->getBankAccount() instanceof BankAccount) {
-                    $t->setBankAccountId($t->getBankAccount()->getId());
-                }
-
-                return $t->getId() == $transactionId;
-            });
-            $transaction = array_shift($transaction);
-        } else {
-            $transaction = new MoneyTransaction();
-        }
-
-        if (is_null($transaction)) {
-            throw $this->createNotFoundException();
-        }
-
-        // add URL-data into model
-        isset($dataFromUrl['category']) && $transaction->setCategory($dataFromUrl['category']);
-        $stepRedirector->setStepUrlAdditionalParams([
-            'data' => $dataFromUrl,
-        ]);
-
-        // crete and handle form
-        $form = $this->createForm(
-            MoneyTransactionType::class,
-            $transaction,
-            [
-                'step' => $step,
-                'type' => 'out',
-                'selectedCategory' => $transaction->getCategory(),
-                'authChecker' => $authorizationChecker,
-                'report' => $report,
-            ]
-        );
-        $form->handleRequest($request);
-
-        /** @var SubmitButton $saveBtn */
-        $saveBtn = $form->get('save');
-
-        if ($saveBtn->isClicked() && $form->isSubmitted() && $form->isValid()) {
-            // decide what data in the partial form needs to be passed to next step
-            if (1 == $step) {
-                // unset from page to prevent step redirector skipping step 2
-                $stepRedirector->setFromPage(null);
-
-                $stepUrlData['category'] = $transaction->getCategory();
-            } elseif ($step == $totalSteps) {
-                if ($transactionId) { // edit
-                    $this->addFlash(
-                        'notice',
-                        'Entry edited'
-                    );
-                    $this->restClient->put('/report/' . $reportId . '/money-transaction/' . $transactionId, $transaction, ['transaction', 'account']);
-
-                    return $this->redirectToRoute('money_out_summary', ['reportId' => $reportId]);
-                } else { // add
-                    $this->restClient->post('/report/' . $reportId . '/money-transaction', $transaction, ['transaction', 'account']);
-
-                    return $this->redirectToRoute('money_out_add_another', ['reportId' => $reportId]);
-                }
-            }
-
-            $stepRedirector->setStepUrlAdditionalParams([
-                'data' => $stepUrlData,
-            ]);
-
-            return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
-        }
-
+        [$transaction, $report, $form, $stepRedirector] = $result;
         return [
             'transaction' => $transaction,
             'report' => $report,
@@ -267,30 +207,6 @@ class MoneyOutController extends AbstractController
             'backLink' => $stepRedirector->getBackLink(),
             'skipLink' => null,
             'categoriesGrouped' => MoneyTransaction::getCategoriesGrouped('out'),
-        ];
-    }
-
-    #[Route(path: '/report/{reportId}/money-out/add_another', name: 'money_out_add_another')]
-    #[Template('@App/Report/MoneyOut/addAnother.html.twig')]
-    public function addAnotherAction(Request $request, int $reportId): RedirectResponse|array
-    {
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId);
-
-        $form = $this->createForm(AddAnotherRecordType::class, $report, ['translation_domain' => 'report-money-transaction']);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            switch ($form['addAnother']->getData()) {
-                case 'yes':
-                    return $this->redirectToRoute('money_out_step', ['reportId' => $reportId, 'step' => 1]);
-                case 'no':
-                    return $this->redirectToRoute('money_out_summary', ['reportId' => $reportId]);
-            }
-        }
-
-        return [
-            'form' => $form->createView(),
-            'report' => $report,
         ];
     }
 
@@ -334,10 +250,7 @@ class MoneyOutController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->restClient->delete('/report/' . $reportId . '/money-transaction/' . $transactionId);
 
-            $this->addFlash(
-                'notice',
-                'Entry deleted'
-            );
+            $this->addFlash('notice', $this->translator->trans('notices.entry.deleted', domain: 'report-money-out'));
 
             return $this->redirect($this->generateUrl('money_out_summary', ['reportId' => $reportId]));
         }
@@ -366,5 +279,173 @@ class MoneyOutController extends AbstractController
     protected function getSectionId(): string
     {
         return 'moneyOut';
+    }
+
+
+    /**
+     * @return RedirectResponse|array{MoneyTransaction, Report, FormInterface, StepRedirector}
+     */
+    private function step1(
+        Request $request,
+        int $reportId,
+        AuthorizationCheckerInterface $authorizationChecker,
+        ?int $transactionId = null
+    ): RedirectResponse|array {
+        // common vars and data
+        /**
+         * @var array $dataFromUrl
+         */
+        $dataFromUrl = $request->get('data') ?: [];
+        $stepUrlData = $dataFromUrl;
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $fromPage = $request->get('from');
+
+        $stepRedirector = $this->stepRedirector
+            ->setRoutes('does_money_out_exist', 'money_out_step', 'money_out_summary')
+            ->setFromPage($fromPage)
+            ->setCurrentStep(1)->setTotalSteps(self::TOTAL_STEPS)
+            ->setRouteBaseParams(['reportId' => $reportId, 'transactionId' => $transactionId]);
+
+        $transaction = $this->acquireTransactions($transactionId, $report);
+
+        // add URL-data into model
+        isset($dataFromUrl['category']) && $transaction->setCategory($dataFromUrl['category']);
+        $stepRedirector->setStepUrlAdditionalParams([
+            'data' => $dataFromUrl,
+        ]);
+
+        // create and handle form
+        $form = $this->createForm(
+            MoneyTransactionType::class,
+            $transaction,
+            [
+                'step' => 1,
+                'type' => 'out',
+                'selectedCategory' => $transaction->getCategory(),
+                'authChecker' => $authorizationChecker,
+                'report' => $report,
+            ]
+        );
+        $form->handleRequest($request);
+
+        /** @var SubmitButton $saveBtn */
+        $saveBtn = $form->get('save');
+
+        if ($saveBtn->isClicked() && $form->isSubmitted() && $form->isValid()) {
+            // unset from page to prevent step redirector skipping step 2
+            $stepRedirector->setFromPage(null);
+
+            $stepUrlData['category'] = $transaction->getCategory();
+
+            $stepRedirector->setStepUrlAdditionalParams([
+                'data' => $stepUrlData,
+            ]);
+
+            return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
+        }
+
+        return [
+            $transaction,
+            $report,
+            $form,
+            $stepRedirector
+        ];
+    }
+
+    private function step2(
+        Request $request,
+        int $reportId,
+        AuthorizationCheckerInterface $authorizationChecker,
+        ?int $transactionId = null
+    ): RedirectResponse|array {
+        // common vars and data
+        /**
+         * @var array $dataFromUrl
+         */
+        $dataFromUrl = $request->get('data') ?: [];
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $fromPage = $request->get('from');
+
+        $stepRedirector = $this->stepRedirector
+            ->setRoutes('does_money_out_exist', 'money_out_step', 'money_out_summary')
+            ->setFromPage($fromPage)
+            ->setCurrentStep(2)->setTotalSteps(self::TOTAL_STEPS)
+            ->setRouteBaseParams(['reportId' => $reportId, 'transactionId' => $transactionId]);
+
+        $transaction = $this->acquireTransactions($transactionId, $report);
+
+        // add URL-data into model
+        isset($dataFromUrl['category']) && $transaction->setCategory($dataFromUrl['category']);
+        $stepRedirector->setStepUrlAdditionalParams([
+            'data' => $dataFromUrl,
+        ]);
+
+        // create and handle form
+        $form = $this->createForm(
+            MoneyTransactionType::class,
+            $transaction,
+            [
+                'step' => 2,
+                'type' => 'out',
+                'selectedCategory' => $transaction->getCategory(),
+                'authChecker' => $authorizationChecker,
+                'report' => $report,
+            ]
+        );
+        if ($transactionId === null) {
+            $form->add('addAnother', AddAnotherThingType::class);
+        }
+        $form->handleRequest($request);
+
+        /** @var SubmitButton $saveBtn */
+        $saveBtn = $form->get('save');
+
+        if ($saveBtn->isClicked() && $form->isSubmitted() && $form->isValid()) {
+            // decide what data in the partial form needs to be passed to next step
+
+            if ($transactionId === null) { // add
+                $this->addFlash('notice', $this->translator->trans('notices.entry.added', domain: 'report-money-out'));
+                $this->restClient->post('/report/' . $reportId . '/money-transaction', $transaction, ['transaction', 'account']);
+
+                if ($form['addAnother']?->getData() === 'yes') {
+                    return $this->redirectToRoute('money_out_step', ['reportId' => $reportId, 'step' => 1]);
+                }
+            } else { // edit
+                $this->addFlash('notice', $this->translator->trans('notices.entry.edited', domain: 'report-money-out'));
+                $this->restClient->put('/report/' . $reportId . '/money-transaction/' . $transactionId, $transaction, ['transaction', 'account']);
+            }
+            return $this->redirectToRoute('money_out_summary', ['reportId' => $reportId]);
+        }
+
+        return [
+            $transaction,
+            $report,
+            $form,
+            $stepRedirector
+        ];
+    }
+
+    /**
+     * create (add mode) or load transaction (edit mode)
+     */
+    private function acquireTransactions(?int $transactionId, Report $report): MoneyTransaction
+    {
+        if ($transactionId !== null) {
+            $transaction = array_filter($report->getMoneyTransactionsOut(), function ($t) use ($transactionId): bool {
+                if ($t->getBankAccount() instanceof BankAccount) {
+                    $t->setBankAccountId($t->getBankAccount()->getId());
+                }
+
+                return $t->getId() == $transactionId;
+            });
+            $transaction = array_shift($transaction);
+        } else {
+            $transaction = new MoneyTransaction();
+        }
+
+        if (is_null($transaction)) {
+            throw $this->createNotFoundException();
+        }
+        return $transaction;
     }
 }
