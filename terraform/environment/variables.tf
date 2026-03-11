@@ -4,6 +4,12 @@ variable "DEFAULT_ROLE" {
   default     = "digideps-ci"
 }
 
+variable "MANAGEMENT_ROLE" {
+  type        = string
+  description = "Management role to use for providers"
+  default     = "digideps-ci"
+}
+
 variable "OPG_DOCKER_TAG" {
   description = "docker tag to deploy"
   type        = string
