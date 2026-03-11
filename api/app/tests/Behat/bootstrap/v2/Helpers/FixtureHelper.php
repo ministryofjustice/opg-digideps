@@ -995,21 +995,6 @@ class FixtureHelper
         return self::buildUserDetails($user);
     }
 
-    public function createLayNdrCompleted(string $testRunId): array
-    {
-        $user = $this->createDeputyClientAndReport(
-            $testRunId,
-            User::ROLE_LAY_DEPUTY,
-            'lay-ndr-completed',
-            Report::LAY_PFA_HIGH_ASSETS_TYPE,
-            true,
-            false,
-            true
-        );
-
-        return self::buildUserDetails($user);
-    }
-
     public function createProfAdminNotStarted(
         string $testRunId,
         ?string $deputyEmail = null,
