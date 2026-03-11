@@ -7,6 +7,7 @@ use App\Service\Client\TokenStorage\RedisStorage;
 use App\Service\JWT\JWTService;
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use JMS\Serializer\SerializerInterface;
 use Lcobucci\JWT\Token;
@@ -143,7 +144,7 @@ class RestClientTest extends TestCase
         $this->endpointResponse->shouldReceive('getBody')->andReturn($userJson);
 
         $this->client
-            ->shouldReceive('post')->with('/auth/login', [
+            ->shouldReceive('request')->with('post', '/auth/login', [
                 'body' => $credentialsJson,
                 'headers' => ['ClientSecret' => $this->clientSecret],
             ])->andReturn($this->endpointResponse);
@@ -174,7 +175,7 @@ class RestClientTest extends TestCase
             ->shouldReceive('deserialize')->with($responseJson, 'array', 'json')->andReturn($responseArray);
 
         $this->client
-            ->shouldReceive('post')->with('/auth/logout', [
+            ->shouldReceive('request')->with('post', '/auth/logout', [
                 'headers' => ['AuthToken' => $this->sessionToken],
             ])->andReturn($this->endpointResponse);
 
@@ -196,7 +197,7 @@ class RestClientTest extends TestCase
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
-        $this->client->shouldReceive('get')->with("user/get-by-token/{$token}", [
+        $this->client->shouldReceive('request')->with('get', "user/get-by-token/{$token}", [
             'headers' => ['ClientSecret' => $this->clientSecret],
         ])->andReturn($this->endpointResponse);
 
@@ -224,7 +225,7 @@ class RestClientTest extends TestCase
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_CREATED);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
-        $this->client->shouldReceive('post')->with('selfregister', [
+        $this->client->shouldReceive('request')->with('post', 'selfregister', [
             'headers' => ['ClientSecret' => $this->clientSecret],
             'body' => $selfRegDataJson,
         ])->andReturn($this->endpointResponse);
@@ -251,7 +252,7 @@ class RestClientTest extends TestCase
         $this->redisStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
         $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
-        $this->client->shouldReceive('put')->with($endpointUrl, [
+        $this->client->shouldReceive('request')->with('put', $endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
             'body' => $putDataSerialised,
         ])->andReturn($this->endpointResponse);
@@ -278,7 +279,7 @@ class RestClientTest extends TestCase
         $this->redisStorage->shouldReceive('get')->with('1')->once()->andReturn($this->sessionToken);
         $this->redisStorage->shouldReceive('get')->with('urn:opg:digideps:users:1-jwt')->once()->andReturn(false);
 
-        $this->client->shouldReceive('post')->with($endpointUrl, [
+        $this->client->shouldReceive('request')->with('post', $endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
             'body' => $postDataSerialised,
         ])->andReturn($this->endpointResponse);
@@ -305,7 +306,7 @@ class RestClientTest extends TestCase
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
-        $this->client->shouldReceive('get')->with($endpointUrl, [
+        $this->client->shouldReceive('request')->with('get', $endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
             'query' => ['groups' => $jmsGroups],
         ])->andReturn($this->endpointResponse);
@@ -332,7 +333,7 @@ class RestClientTest extends TestCase
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
-        $this->client->shouldReceive('get')->with($endpointUrl, [
+        $this->client->shouldReceive('request')->with('get', $endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
         ])->andReturn($this->endpointResponse);
 
@@ -366,7 +367,7 @@ class RestClientTest extends TestCase
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
-        $this->client->shouldReceive('get')->with($endpointUrl, [
+        $this->client->shouldReceive('request')->with('get', $endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
         ])->andReturn($this->endpointResponse);
 
@@ -395,7 +396,7 @@ class RestClientTest extends TestCase
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
-        $this->client->shouldReceive('get')->with($endpointUrl, [
+        $this->client->shouldReceive('request')->with('get', $endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
         ])->andReturn($this->endpointResponse);
 
@@ -425,7 +426,7 @@ class RestClientTest extends TestCase
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
-        $this->client->shouldReceive('get')->with($endpointUrl, [
+        $this->client->shouldReceive('request')->with('get', $endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
         ])->andReturn($this->endpointResponse);
 
@@ -450,9 +451,9 @@ class RestClientTest extends TestCase
         $this->logger
             ->shouldReceive('warning')->once();
 
-        $this->client->shouldReceive('get')->with($endpointUrl, [
+        $this->client->shouldReceive('request')->with('get', $endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
-        ])->andThrow(new \GuzzleHttp\Exception\TransferException('network failure'));
+        ])->andThrow(new TransferException('network failure'));
 
         $this->object->get($endpointUrl, 'array');
     }
@@ -473,7 +474,7 @@ class RestClientTest extends TestCase
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
 
-        $this->client->shouldReceive('delete')->with($endpointUrl, [
+        $this->client->shouldReceive('request')->with('delete', $endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
         ])->andReturn($this->endpointResponse);
 
@@ -494,7 +495,7 @@ class RestClientTest extends TestCase
         $this->container->shouldReceive('get')->with('jms_serializer')->andReturn($this->serialiser);
         $this->container->shouldReceive('get')->with('logger')->andReturn($this->logger);
 
-        $requestStackMock = m::mock(\Symfony\Component\HttpFoundation\RequestStack::class);
+        $requestStackMock = m::mock(RequestStack::class);
         $requestStackMock->shouldReceive('getCurrentRequest')->andReturn(null);
         $this->container
             ->shouldReceive('has')->with('request_stack')->andReturn(true);
@@ -530,7 +531,7 @@ class RestClientTest extends TestCase
         $this->endpointResponse->shouldReceive('getBody')->andReturn($responseJson);
         $this->endpointResponse->shouldReceive('getStatusCode')->andReturn(Response::HTTP_OK);
 
-        $this->client->shouldReceive('delete')->with($endpointUrl, [
+        $this->client->shouldReceive('request')->with('delete', $endpointUrl, [
             'headers' => ['AuthToken' => $this->sessionToken],
         ])->andReturn($this->endpointResponse);
 
@@ -555,7 +556,6 @@ class RestClientTest extends TestCase
         $redisStorage = self::prophesize(RedisStorage::class);
         $serializer = self::prophesize(SerializerInterface::class);
         $logger = self::prophesize(LoggerInterface::class);
-        $container = self::prophesize(ContainerInterface::class);
         $jwtService = self::prophesize(JWTService::class);
 
         $clientSecret = 'aSecret';
@@ -612,7 +612,8 @@ class RestClientTest extends TestCase
 
         $loginResponse = new GuzzleResponse(200, ['AuthToken' => $sessionToken, 'JWT' => [0 => $encodedJWT]], $userJson);
 
-        $client->post(
+        $client->request(
+            'post',
             '/auth/login',
             Argument::that(function (array $options) use ($credentialsJson, $clientSecret) {
                 // assert critical values
