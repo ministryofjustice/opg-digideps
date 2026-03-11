@@ -8792,7 +8792,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method App\\\\Service\\\\Client\\\\RestClientInterface\\:\\:put\\(\\)\\.$#"
-			count: 1
+			count: 2
 			path: src/Service/Client/Internal/UserApi.php
 
 		-
