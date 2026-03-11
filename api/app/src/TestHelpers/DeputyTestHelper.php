@@ -11,7 +11,7 @@ use Faker\Factory;
 
 class DeputyTestHelper
 {
-    public static function generateDeputy(?string $email = null, ?string $deputyUid = null, User $user = null): Deputy
+    public static function generateDeputy(?string $email = null, ?string $deputyUid = null, ?User $user = null): Deputy
     {
         $faker = Factory::create('en_GB');
 
