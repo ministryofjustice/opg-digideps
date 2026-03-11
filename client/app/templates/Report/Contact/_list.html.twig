@@ -26,7 +26,7 @@
     {% if report.reasonForNoContacts %}
         <div class="govuk-summary-list__row behat-region-reason-no-contacts">
             <dt class="govuk-summary-list__key">
-                Reason for no contacts
+                {{ 'existPage.form.headingReasonForNoContacts.label' | trans(transOptions)  }}
             </dt>
             <dd class="govuk-summary-list__value">
                 {{ report.reasonForNoContacts | nl2br }}
@@ -35,7 +35,7 @@
                 <dd class="govuk-summary-list__actions">
                     <a href="{{ path('contacts_exist', { 'reportId': report.id, 'from': 'summary'}) }}" class="govuk-link behat-link-edit">
                         {{ 'edit' | trans({}, 'common') }}
-                        <span class="govuk-visually-hidden">Reason for no contacts</span>
+                        <span class="govuk-visually-hidden">{{ 'existPage.form.headingReasonForNoContacts.label' | trans(transOptions)  }}</span>
                     </a>
                 </dd>
             {% endif %}

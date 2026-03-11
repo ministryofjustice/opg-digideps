@@ -200,12 +200,12 @@
                     <a href="{{ path('decisions_edit', { 'reportId': report.id, 'decisionId': decision.id }) }}"
                         class="behat-link-edit govuk-link">
                         {{ 'edit' | trans({}, 'common') }}
-                        <span class="govuk-visually-hidden">{{ decision.description | nl2br }}</span>
+                        <span class="govuk-visually-hidden">{{ decision.description[:100] | nl2br }}</span>
                     </a>
                     <a href="{{ path('decisions_delete', { 'reportId': report.id, 'decisionId': decision.id }) }}"
                         class="govuk-!-margin-left-1 govuk-link behat-link-delete">
                         {{ 'remove' | trans({}, 'common' ) }}
-                        <span class="govuk-visually-hidden">{{ decision.description | nl2br }}</span>
+                        <span class="govuk-visually-hidden">{{ decision.description[:100] | nl2br }}</span>
                     </a>
                 </dd>
                 {% endif %}

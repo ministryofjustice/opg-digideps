@@ -176,12 +176,12 @@
                             <a href="{{ path('money_out_short_edit', { 'reportId': report.id, 'transactionId': tr.id }) }}"
                                class="behat-link-edit govuk-link">
                                 {{ 'edit' | trans({}, 'common') }}
-                                <span class="govuk-visually-hidden">{{ tr.description ~ ' item'}}</span>
+                                <span class="govuk-visually-hidden">{{ tr.description[:100] ~ ' item'}}</span>
                             </a>
                             <a href="{{ path('money_out_short_delete', { 'reportId': report.id, 'transactionId': tr.id }) }}"
                                class="govuk-link govuk-!-margin-left-1 behat-link-delete">
                                 {{ 'remove' | trans({}, 'common') }}
-                                <span class="govuk-visually-hidden">{{ tr.description ~ ' item'}}</span>
+                                <span class="govuk-visually-hidden">{{ tr.description[:100] ~ ' item'}}</span>
                             </a>
                         </td>
                     {% endif %}
