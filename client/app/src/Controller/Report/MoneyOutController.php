@@ -17,6 +17,7 @@ use App\Form\Report\NoMoneyOutType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
+use App\Utility\ValidatingForm;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\SubmitButton;
@@ -67,15 +68,10 @@ class MoneyOutController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /**
-             * @var Report $report
-             */
-            $report = $form->getData();
-            /**
-             * @var null|string $answer
-             */
-            $answer = $form['moneyOutExists']?->getData();
-            $fromPage = $request->get('from');
+            $validatingForm = new ValidatingForm($form);
+            $report = $validatingForm->getObjectOrThrow(null, Report::class);
+            $answer = $validatingForm->getStringOrNull('moneyOutExists');
+            $fromPage = $request->query->getString('from', $request->getPayload()->getString('from'));
 
             $report->setMoneyOutExists($answer);
             $this->restClient->put('report/' . $reportId, $report, ['doesMoneyOutExist']);
@@ -90,7 +86,7 @@ class MoneyOutController extends AbstractController
                 }
             }
 
-            if ('Yes' === $answer && 'summary' != $fromPage) {
+            if ('Yes' === $answer && 'summary' !== $fromPage) {
                 $report->setReasonForNoMoneyOut(null);
                 $this->restClient->put("report/$reportId", $report, ['reasonForNoMoneyOut']);
 
@@ -153,14 +149,9 @@ class MoneyOutController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /**
-             * @var Report $report
-             */
-            $report = $form->getData();
-            /**
-             * @var null|string $answer
-             */
-            $answer = $form['reasonForNoMoneyOut']?->getData();
+            $validatingForm = new ValidatingForm($form);
+            $report = $validatingForm->getObjectOrThrow(null, Report::class);
+            $answer = $validatingForm->getStringOrNull('reasonForNoMoneyOut');
 
             $report->setReasonForNoMoneyOut($answer);
             $report->getStatus()->setMoneyOutState(Status::STATE_DONE);
@@ -214,7 +205,8 @@ class MoneyOutController extends AbstractController
     #[Template('@App/Report/MoneyOut/summary.html.twig')]
     public function summaryAction(Request $request, int $reportId): RedirectResponse|array
     {
-        $fromPage = $request->get('from');
+
+        $fromPage = $request->query->getString('from', $request->getPayload()->getString('from'));
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyOutState()['state'] && 'skip-step' != $fromPage) {
             return $this->redirectToRoute('money_out', ['reportId' => $reportId]);
@@ -364,7 +356,7 @@ class MoneyOutController extends AbstractController
          */
         $dataFromUrl = $request->get('data') ?: [];
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $fromPage = $request->get('from');
+        $fromPage = $request->query->getString('from', $request->getPayload()->getString('from'));
 
         $stepRedirector = $this->stepRedirector
             ->setRoutes('does_money_out_exist', 'money_out_step', 'money_out_summary')
