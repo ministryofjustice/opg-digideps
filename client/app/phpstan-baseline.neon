@@ -1036,6 +1036,11 @@ parameters:
 			path: src/Controller/Ndr/AssetController.php
 
 		-
+			message: "#^Parameter \\#1 \\$fromPage of method App\\\\Service\\\\StepRedirector\\:\\:setFromPage\\(\\) expects string\\|null, mixed given\\.$#"
+			count: 1
+			path: src/Controller/Ndr/AssetController.php
+
+		-
 			message: "#^Parameter \\#1 \\$noAssetToAdd of method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:setNoAssetToAdd\\(\\) expects bool, int given\\.$#"
 			count: 1
 			path: src/Controller/Ndr/AssetController.php
@@ -1107,6 +1112,11 @@ parameters:
 
 		-
 			message: "#^Parameter \\#1 \\$bank of method App\\\\Entity\\\\Ndr\\\\BankAccount\\:\\:setBank\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: src/Controller/Ndr/BankAccountController.php
+
+		-
+			message: "#^Parameter \\#1 \\$fromPage of method App\\\\Service\\\\StepRedirector\\:\\:setFromPage\\(\\) expects string\\|null, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Ndr/BankAccountController.php
 
@@ -1201,6 +1211,11 @@ parameters:
 			path: src/Controller/Ndr/IncomeBenefitController.php
 
 		-
+			message: "#^Parameter \\#1 \\$fromPage of method App\\\\Service\\\\StepRedirector\\:\\:setFromPage\\(\\) expects string\\|null, mixed given\\.$#"
+			count: 1
+			path: src/Controller/Ndr/IncomeBenefitController.php
+
+		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Ndr/IncomeBenefitController.php
@@ -1236,6 +1251,11 @@ parameters:
 			path: src/Controller/Ndr/OtherInfoController.php
 
 		-
+			message: "#^Parameter \\#1 \\$fromPage of method App\\\\Service\\\\StepRedirector\\:\\:setFromPage\\(\\) expects string\\|null, mixed given\\.$#"
+			count: 1
+			path: src/Controller/Ndr/OtherInfoController.php
+
+		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Ndr/OtherInfoController.php
@@ -1263,6 +1283,11 @@ parameters:
 		-
 			message: "#^Offset 'state' does not exist on string\\.$#"
 			count: 2
+			path: src/Controller/Ndr/VisitsCareController.php
+
+		-
+			message: "#^Parameter \\#1 \\$fromPage of method App\\\\Service\\\\StepRedirector\\:\\:setFromPage\\(\\) expects string\\|null, mixed given\\.$#"
+			count: 1
 			path: src/Controller/Ndr/VisitsCareController.php
 
 		-
@@ -1451,38 +1476,8 @@ parameters:
 			path: src/Controller/Report/BankAccountController.php
 
 		-
-			message: "#^Cannot access offset 'bank' on mixed\\.$#"
-			count: 2
-			path: src/Controller/Report/BankAccountController.php
-
-		-
-			message: "#^Cannot access offset 'closing\\-balance' on mixed\\.$#"
-			count: 2
-			path: src/Controller/Report/BankAccountController.php
-
-		-
-			message: "#^Cannot access offset 'is\\-joint' on mixed\\.$#"
-			count: 2
-			path: src/Controller/Report/BankAccountController.php
-
-		-
 			message: "#^Cannot access offset 'moneyTransfers' on mixed\\.$#"
 			count: 1
-			path: src/Controller/Report/BankAccountController.php
-
-		-
-			message: "#^Cannot access offset 'number' on mixed\\.$#"
-			count: 2
-			path: src/Controller/Report/BankAccountController.php
-
-		-
-			message: "#^Cannot access offset 'opening\\-balance' on mixed\\.$#"
-			count: 2
-			path: src/Controller/Report/BankAccountController.php
-
-		-
-			message: "#^Cannot access offset 'sort\\-code' on mixed\\.$#"
-			count: 2
 			path: src/Controller/Report/BankAccountController.php
 
 		-
@@ -1501,27 +1496,7 @@ parameters:
 			path: src/Controller/Report/BankAccountController.php
 
 		-
-			message: "#^Cannot access offset 'type' on mixed\\.$#"
-			count: 2
-			path: src/Controller/Report/BankAccountController.php
-
-		-
-			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/BankAccountController.php
-
-		-
 			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Controller/Report/BankAccountController.php
-
-		-
-			message: "#^Parameter \\#1 \\$accountType of method App\\\\Entity\\\\Report\\\\BankAccount\\:\\:setAccountType\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/BankAccountController.php
-
-		-
-			message: "#^Parameter \\#1 \\$closingBalance of method App\\\\Entity\\\\Report\\\\BankAccount\\:\\:setClosingBalance\\(\\) expects float, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Report/BankAccountController.php
 
@@ -4191,11 +4166,6 @@ parameters:
 			path: src/Entity/Report/AssetProperty.php
 
 		-
-			message: "#^Call to function is_null\\(\\) with App\\\\Entity\\\\Report\\\\decimal will always evaluate to false\\.$#"
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\BankAccount\\:\\:getAccountNumber\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/BankAccount.php
@@ -4207,11 +4177,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\BankAccount\\:\\:getBank\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\BankAccount\\:\\:getClosingBalance\\(\\) has invalid return type App\\\\Entity\\\\Report\\\\decimal\\.$#"
 			count: 1
 			path: src/Entity/Report/BankAccount.php
 
@@ -4247,11 +4212,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\BankAccount\\:\\:getSortCode\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\BankAccount\\:\\:isClosingBalanceZero\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/BankAccount.php
 
@@ -4356,27 +4316,7 @@ parameters:
 			path: src/Entity/Report/BankAccount.php
 
 		-
-			message: "#^Parameter \\#1 \\$num of function round expects float\\|int, App\\\\Entity\\\\Report\\\\decimal given\\.$#"
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\BankAccount\\:\\:\\$accountTypeText is never written, only read\\.$#"
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\BankAccount\\:\\:\\$closingBalance \\(App\\\\Entity\\\\Report\\\\decimal\\) does not accept float\\.$#"
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\BankAccount\\:\\:\\$closingBalance has unknown class App\\\\Entity\\\\Report\\\\decimal as its type\\.$#"
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\BankAccount\\:\\:\\$openingBalance has unknown class App\\\\Entity\\\\Report\\\\decimal as its type\\.$#"
 			count: 1
 			path: src/Entity/Report/BankAccount.php
 
@@ -4397,16 +4337,6 @@ parameters:
 
 		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\BankAccount\\:\\:\\$typesNotRequiringSortCode has no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: "#^Result of && is always false\\.$#"
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between 0\\.0 and \\*NEVER\\* will always evaluate to false\\.$#"
 			count: 1
 			path: src/Entity/Report/BankAccount.php
 
@@ -6072,11 +6002,6 @@ parameters:
 
 		-
 			message: "#^Result of && is always false\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between App\\\\Entity\\\\Report\\\\decimal and null will always evaluate to false\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -7801,22 +7726,7 @@ parameters:
 			path: src/Form/Report/Asset/AssetTypeTitle.php
 
 		-
-			message: "#^Cannot call method requiresBankName\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Form/Report/BankAccountType.php
-
-		-
-			message: "#^Cannot call method requiresSortCode\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Form/Report/BankAccountType.php
-
-		-
 			message: "#^Cannot cast mixed to int\\.$#"
-			count: 1
-			path: src/Form/Report/BankAccountType.php
-
-		-
-			message: "#^Property App\\\\Form\\\\Report\\\\BankAccountType\\:\\:\\$step has no type specified\\.$#"
 			count: 1
 			path: src/Form/Report/BankAccountType.php
 
@@ -9951,88 +9861,8 @@ parameters:
 			path: src/Service/SecretManagerService.php
 
 		-
-			message: "#^Binary operation \"\\+\" between string and 1 results in an error\\.$#"
-			count: 2
-			path: src/Service/StepRedirector.php
-
-		-
-			message: "#^Binary operation \"\\-\" between string and 1 results in an error\\.$#"
-			count: 1
-			path: src/Service/StepRedirector.php
-
-		-
 			message: "#^Cannot cast mixed to int\\.$#"
 			count: 2
-			path: src/Service/StepRedirector.php
-
-		-
-			message: "#^Method App\\\\Service\\\\StepRedirector\\:\\:generateUrl\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/StepRedirector.php
-
-		-
-			message: "#^Method App\\\\Service\\\\StepRedirector\\:\\:generateUrl\\(\\) has parameter \\$route with no type specified\\.$#"
-			count: 1
-			path: src/Service/StepRedirector.php
-
-		-
-			message: "#^Method App\\\\Service\\\\StepRedirector\\:\\:getBackLink\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/StepRedirector.php
-
-		-
-			message: "#^Method App\\\\Service\\\\StepRedirector\\:\\:getRedirectLinkAfterSaving\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/StepRedirector.php
-
-		-
-			message: "#^Method App\\\\Service\\\\StepRedirector\\:\\:getSkipLink\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/StepRedirector.php
-
-		-
-			message: "#^Method App\\\\Service\\\\StepRedirector\\:\\:setFromPage\\(\\) has parameter \\$fromPage with no type specified\\.$#"
-			count: 1
-			path: src/Service/StepRedirector.php
-
-		-
-			message: "#^Method App\\\\Service\\\\StepRedirector\\:\\:setRoutes\\(\\) has parameter \\$routeStep with no type specified\\.$#"
-			count: 1
-			path: src/Service/StepRedirector.php
-
-		-
-			message: "#^Method App\\\\Service\\\\StepRedirector\\:\\:setRoutes\\(\\) has parameter \\$routeSummary with no type specified\\.$#"
-			count: 1
-			path: src/Service/StepRedirector.php
-
-		-
-			message: "#^Method App\\\\Service\\\\StepRedirector\\:\\:setRoutes\\(\\) has parameter \\$step1BackLink with no type specified\\.$#"
-			count: 1
-			path: src/Service/StepRedirector.php
-
-		-
-			message: "#^Method App\\\\Service\\\\StepRedirector\\:\\:setTotalSteps\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/StepRedirector.php
-
-		-
-			message: "#^PHPDoc tag @param for parameter \\$stepUrlAdditionalParams with type mixed is not subtype of native type array\\.$#"
-			count: 1
-			path: src/Service/StepRedirector.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(mixed \\$this \\-\\>fromPage\\)\\: Unexpected token \"\\$this\", expected variable at offset 24$#"
-			count: 1
-			path: src/Service/StepRedirector.php
-
-		-
-			message: "#^Property App\\\\Service\\\\StepRedirector\\:\\:\\$currentStep \\(string\\) does not accept int\\.$#"
-			count: 1
-			path: src/Service/StepRedirector.php
-
-		-
-			message: "#^Property App\\\\Service\\\\StepRedirector\\:\\:\\$totalSteps \\(string\\) does not accept int\\.$#"
-			count: 1
 			path: src/Service/StepRedirector.php
 
 		-

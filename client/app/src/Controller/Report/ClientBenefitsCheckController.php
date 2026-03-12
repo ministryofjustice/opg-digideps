@@ -79,6 +79,7 @@ class ClientBenefitsCheckController extends AbstractController
             );
         }
 
+        /** @var string $fromPage */
         $fromPage = $request->get('from');
 
         $stepRedirector = $this->stepRedirector

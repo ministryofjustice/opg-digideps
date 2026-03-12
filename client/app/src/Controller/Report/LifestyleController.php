@@ -54,6 +54,8 @@ class LifestyleController extends AbstractController
         }
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $lifestyle = $report->getLifestyle() ?: new Lifestyle();
+
+        /** @var string $fromPage */
         $fromPage = $request->get('from');
 
         $stepRedirector = $this->stepRedirector

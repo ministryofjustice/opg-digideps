@@ -85,6 +85,7 @@ class DocumentController extends AbstractController
         $step = 1;
         $totalSteps = 3;
 
+        /** @var string $fromPage */
         $fromPage = $request->get('from');
 
         $stepRedirector = $this->stepRedirector

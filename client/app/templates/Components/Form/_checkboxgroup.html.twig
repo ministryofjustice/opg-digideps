@@ -41,7 +41,7 @@
             {% set hasConditionals = item.conditional is defined ? true : false %}
         {% endfor %}
 
-        <div class="govuk-radios {{ classes ?: '' }}{% if element|length < 3 and hasConditionals == false %}govuk-radios--inline{% endif %}" data-module="govuk-radios">
+        <div {% if extraAttrs != [] %}{% for key, value in extraAttrs %}"{{ key }}"="{{ value }}" {% endfor %}{% endif %}class="govuk-radios {{ classes ?: '' }}{% if element|length < 3 and hasConditionals == false %}govuk-radios--inline{% endif %}" data-module="govuk-radios">
 
         {% for key,choiceElement in element %}
             {% set labelClass = items[key].labelClass is defined ?  items[key].labelClass : '' %}

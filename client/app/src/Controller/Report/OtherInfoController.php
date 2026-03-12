@@ -52,6 +52,8 @@ class OtherInfoController extends AbstractController
             return $this->redirectToRoute('other_info_summary', ['reportId' => $reportId]);
         }
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        /** @var string $fromPage */
         $fromPage = $request->get('from');
 
         $stepRedirector = $this->stepRedirector
