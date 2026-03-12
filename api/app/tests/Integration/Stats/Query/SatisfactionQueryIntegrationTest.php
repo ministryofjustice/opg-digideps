@@ -48,8 +48,8 @@ class SatisfactionQueryIntegrationTest extends ApiIntegrationTestCase
 
     private static function givenSatisfactionScoreForReportOfTypeAndRole(
         int $score,
-        string $reportType = null,
-        string $deputyType = null
+        ?string $reportType = null,
+        ?string $deputyType = null
     ): void {
         $satisfaction = (new Satisfaction())
             ->setScore($score);
