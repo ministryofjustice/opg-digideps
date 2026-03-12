@@ -89,7 +89,7 @@ class FixtureHelper
             'clientArchivedAt' => $client?->getArchivedAt(),
             'currentReportId' => $currentReport?->getId(),
             'currentReportType' => $currentReportType,
-            'currentReportNdrOrReport' => $currentReport instanceof Ndr ? 'ndr' : 'report',
+            'currentReport' => 'report',
             'currentReportDueDate' => $currentReport?->getDueDate(),
             'currentReportStartDate' => $currentReport?->getStartDate(),
             'currentReportEndDate' => $currentReport instanceof Ndr ? null : $currentReport?->getEndDate(),
@@ -103,7 +103,7 @@ class FixtureHelper
                 [
                     'previousReportId' => $previousReport->getId(),
                     'previousReportType' => $previousReport->getType(),
-                    'previousReportNdrOrReport' => $previousReport instanceof Ndr ? 'ndr' : 'report',
+                    'previousReport' => 'report',
                     'previousReportDueDate' => $previousReport->getDueDate(),
                     'previousReportStartDate' => $previousReport->getStartDate(),
                     'previousReportEndDate' => $previousReport->getEndDate(),
