@@ -122,6 +122,10 @@ class UserController extends RestController
             'password' => 'notEmpty',
         ]);
 
+        if ($requestedUser->getPassword() === null) {
+            throw new RuntimeException('The user does not have a password set.');
+        }
+
         return $this->hasherFactory->getPasswordHasher($loggedInUser)->verify($requestedUser->getPassword(), $data['password']);
     }
 
@@ -144,7 +148,7 @@ class UserController extends RestController
                 throw $this->createAccessDeniedException($tokenMismatchMessage);
             }
         } else {
-            /** @var User $loggedInUser */
+            /** @var User|null $loggedInUser */
             $loggedInUser = $this->getUser();
 
             if (is_null($loggedInUser)) {
@@ -170,7 +174,7 @@ class UserController extends RestController
      * change email.
      */
     #[Route(path: '/{id}/update-email', methods: ['PUT'])]
-    public function changeEmail(Request $request, $id): int
+    public function changeEmail(Request $request, int $id): int
     {
         /** @var User $loggedInUser */
         $loggedInUser = $this->getUser();
@@ -196,11 +200,11 @@ class UserController extends RestController
     #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function getOneById(Request $request, int $id): ?User
     {
-        return $this->getOneByFilter($request, 'user_id', $id);
+        return $this->getOneByFilter($request, 'user_id', settype($id, 'string') ? (string)$id : '');
     }
 
     #[Route(path: '/get-one-by/{what}/{filter}', requirements: ['what' => '(user_id|email|case_number)'], methods: ['GET'])]
-    public function getOneByFilter(Request $request, string $what, $filter): ?User
+    public function getOneByFilter(Request $request, string $what, string $filter): ?User
     {
         if ('email' == $what) {
             /** @var ?User $user */
@@ -214,7 +218,7 @@ class UserController extends RestController
             if (!$client) {
                 throw new RuntimeException('Client not found', 404);
             }
-            if (empty($client->getUsers())) {
+            if (count($client->getUsers()) === 0) {
                 throw new RuntimeException('Client has not users', 404);
             }
             /** @var User $user */
@@ -355,7 +359,7 @@ class UserController extends RestController
 
         $user->recreateRegistrationToken();
 
-        $this->em->flush($user);
+        $this->em->flush();
 
         $this->formatter->setJmsSerialiserGroups(['user']);
 
@@ -399,7 +403,7 @@ class UserController extends RestController
         $user->setAgreeTermsUse(true);
 
         $this->em->persist($user);
-        $this->em->flush($user);
+        $this->em->flush();
 
         return $user->getId();
     }
@@ -421,14 +425,14 @@ class UserController extends RestController
         $user->setRegistrationToken(null);
 
         $this->em->persist($user);
-        $this->em->flush($user);
+        $this->em->flush();
 
         return $user->getId();
     }
 
     #[Route(path: '/{id}/team', requirements: ['id' => '\d+'], methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_ORG')]
-    public function getTeamByUserId(Request $request, int $id)
+    public function getTeamByUserId(Request $request, int $id): mixed
     {
         /** @var User $loggedInUser */
         $loggedInUser = $this->getUser();
@@ -542,7 +546,10 @@ class UserController extends RestController
             return null;
         }
 
-        return $users[0]->getEmail();
+        /** @var User $user */
+        $user = $users[0];
+
+        return $user->getEmail();
     }
 
     /**
@@ -551,7 +558,7 @@ class UserController extends RestController
      * @throws Exception
      */
     #[Route(path: '/get-primary-user-account/{deputyUid}', methods: ['GET'])]
-    public function getPrimaryUserAccount(int $deputyUid): ?User
+    public function getPrimaryUserAccount(string $deputyUid): ?User
     {
         $this->formatter->setJmsSerialiserGroups(['user', 'user-list']);
 
