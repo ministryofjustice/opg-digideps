@@ -8,7 +8,6 @@ use DateTime;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
-use App\Entity\Ndr\Ndr;
 use App\Entity\Organisation;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Report;
@@ -39,7 +38,7 @@ class FixtureHelper
     private string $testRunId = '';
     private string $orgName = 'Test Org';
     private string $orgEmailIdentifier = 'test-org.uk';
-    public const S3_BUCKETNAME = 'S3_BUCKETNAME';
+    public const string S3_BUCKETNAME = 'S3_BUCKETNAME';
 
     public function __construct(
         private EntityManagerInterface $em,
@@ -57,14 +56,14 @@ class FixtureHelper
         $this->courtOrderTestHelper = new CourtOrderTestHelper();
     }
 
-    public static function buildUserDetails(User $user)
+    public static function buildUserDetails(User $user): array
     {
         $client = $user->isLayDeputy() ? $user->getFirstClient() : $user?->getOrganisations()[0]?->getClients()[0];
 
         if ($client) {
-            $currentReport = $user->getNdrEnabled() ? $client->getNdr() : $client?->getCurrentReport();
-            $currentReportType = $user->getNdrEnabled() ? null : $currentReport?->getType();
-            $previousReport = $user->getNdrEnabled() ? null : $client?->getReports()[0];
+            $currentReport = $client->getCurrentReport();
+            $currentReportType = $currentReport?->getType();
+            $previousReport = $client->getReports()[0];
         } else {
             $currentReport = null;
             $currentReportType = null;
@@ -92,7 +91,7 @@ class FixtureHelper
             'currentReport' => 'report',
             'currentReportDueDate' => $currentReport?->getDueDate(),
             'currentReportStartDate' => $currentReport?->getStartDate(),
-            'currentReportEndDate' => $currentReport instanceof Ndr ? null : $currentReport?->getEndDate(),
+            'currentReportEndDate' => $currentReport?->getEndDate(),
             'currentReportBankAccountId' => $currentReport?->getBankAccounts()[0]?->getId(),
             'courtDate' => $client ? $client->getCourtDate()?->format('j F Y') : null,
         ];
@@ -115,7 +114,7 @@ class FixtureHelper
         return $userDetails;
     }
 
-    public static function buildOrgUserDetails(User $user)
+    public static function buildOrgUserDetails(User $user): array
     {
         $organisation = $user->getOrganisations()->first();
         $deputy = $organisation?->getClients()[0]->getDeputy();
@@ -140,7 +139,7 @@ class FixtureHelper
         return array_merge(self::buildUserDetails($user), $details);
     }
 
-    public static function buildAdminUserDetails(User $user)
+    public static function buildAdminUserDetails(User $user): array
     {
         return [
             'userId' => $user->getId(),
@@ -212,7 +211,7 @@ class FixtureHelper
         ?int $deputyUid = null,
         ?string $firstName = null,
         ?string $lastName = null,
-    ) {
+    ): User {
         if (is_null($email)) {
             $email = sprintf('%s-%s@t.uk', substr($roleName, 5), $this->testRunId);
         }
@@ -226,7 +225,7 @@ class FixtureHelper
         ?int $deputyUid = null,
         ?string $firstName = null,
         ?string $lastName = null,
-    ) {
+    ): User {
         if (!$this->fixturesEnabled) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
         }
@@ -246,7 +245,7 @@ class FixtureHelper
     }
 
     // also associates Deputy with the provided User
-    private function getOrAddDeputy(User $user): Deputy
+    private function getOrAddDeputy(User $user): void
     {
         $deputyObject = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $user->getDeputyUid()]);
 
@@ -257,8 +256,6 @@ class FixtureHelper
         $deputyObject->setUser($user);
         $this->em->persist($deputyObject);
         $this->em->flush();
-
-        return $deputyObject;
     }
 
     private function addClientsAndReportsToLayDeputy(
@@ -269,7 +266,7 @@ class FixtureHelper
         ?DateTime $startDate = null,
         ?int $satisfactionScore = null,
         ?string $caseNumber = null,
-    ) {
+    ): void {
         $client = $this->clientTestHelper->generateClient($this->em, $user, null, $caseNumber);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $type, $startDate);
 
@@ -301,40 +298,7 @@ class FixtureHelper
         $this->em->flush();
     }
 
-    private function addReportsToClient(
-        Client $client,
-        ?User $user = null,
-        bool $completed = false,
-        bool $submitted = false,
-        ?string $type = null,
-        ?DateTime $startDate = null,
-        ?int $satisfactionScore = null,
-    ) {
-        $report = $this->reportTestHelper->generateReport($this->em, $client, $type, $startDate);
-
-        $client->addReport($report);
-        $report->setClient($client);
-
-        if ($completed) {
-            $this->reportTestHelper->completeLayReport($report, $this->em);
-        }
-
-        if ($submitted) {
-            $this->storeFileInS3(getenv(self::S3_BUCKETNAME), 'dd_doc_1234_9876543219876');
-            $this->storeFileInS3(getenv(self::S3_BUCKETNAME), 'dd_doc_1234_123456789123456');
-            $this->reportTestHelper->submitReport($report, $this->em);
-        }
-
-        $this->em->persist($client);
-        $this->em->persist($report);
-
-        if ($submitted and isset($satisfactionScore) and isset($user)) {
-            $satisfaction = $this->setSatisfaction($report, $user, $satisfactionScore);
-            $this->em->persist($satisfaction);
-        }
-    }
-
-    private function storeFileInS3(string $bucketName, string $key)
+    private function storeFileInS3(string $bucketName, string $key): void
     {
         $filePath = sprintf('%s/fixtures/%s', dirname(__DIR__, 3), 'good.pdf');
         $fileBody = file_get_contents($filePath);
@@ -350,10 +314,10 @@ class FixtureHelper
 
     public function deleteFilesFromS3(string $storageReference): void
     {
-        $this->s3Client->deleteMatchingObjects(getenv(self::S3_BUCKETNAME), $storageReference, '', []);
+        $this->s3Client->deleteMatchingObjects(getenv(self::S3_BUCKETNAME), $storageReference);
     }
 
-    private function setSatisfaction(Report $report, User $deputy, int $satisfactionScore)
+    private function setSatisfaction(Report $report, User $deputy, int $satisfactionScore): Satisfaction
     {
         $submitDate = clone $report->getStartDate();
         $submitDate->modify('+1 year');
@@ -366,21 +330,6 @@ class FixtureHelper
         $satisfaction->setCreated($submitDate);
 
         return $satisfaction;
-    }
-
-    private function addClientsAndReportsToNdrLayDeputy(User $user, bool $completed = false)
-    {
-        $client = $this->clientTestHelper->generateClient($this->em, $user);
-        $ndr = $this->reportTestHelper->generateNdr($this->em, $user, $client);
-
-        if ($completed) {
-            $this->reportTestHelper->completeNdrLayReport($ndr, $this->em);
-        }
-
-        $this->getOrAddDeputy($user);
-
-        $this->em->persist($ndr);
-        $this->em->persist($client);
     }
 
     private function addOrgClientsDeputyAndReportsToOrgDeputy(
@@ -488,28 +437,6 @@ class FixtureHelper
         return self::buildUserDetails($user);
     }
 
-    public function createLayPfaHighAssetsNotStartedWithNdr(string $testRunId, ?string $caseNumber = null, ?int $deputyUid = null): array
-    {
-        $user = $this->createDeputyClientAndReport(
-            $testRunId,
-            User::ROLE_LAY_DEPUTY,
-            'lay-pfa-high-assets-not-started-with-ndr',
-            Report::LAY_PFA_HIGH_ASSETS_TYPE,
-            false,
-            false,
-            null,
-            null,
-            $caseNumber,
-            false,
-            true,
-            $deputyUid
-        );
-
-        $this->addReportsToClient($user->getFirstClient(), $user);
-
-        return self::buildUserDetails($user);
-    }
-
     public function createLayPfaHighAssetsCompleted(string $testRunId): array
     {
         $user = $this->createDeputyClientAndReport(
@@ -594,20 +521,6 @@ class FixtureHelper
         return self::buildUserDetails($user);
     }
 
-    public function createLayPfaLowAssetsSubmitted(string $testRunId): array
-    {
-        $user = $this->createDeputyClientAndReport(
-            $testRunId,
-            User::ROLE_LAY_DEPUTY,
-            'lay-pfa-low-assets-submitted',
-            Report::LAY_PFA_LOW_ASSETS_TYPE,
-            true,
-            true
-        );
-
-        return self::buildUserDetails($user);
-    }
-
     public function createLayHealthWelfareNotStarted(string $testRunId): array
     {
         $user = $this->createDeputyClientAndReport(
@@ -673,20 +586,6 @@ class FixtureHelper
             Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
             true,
             false
-        );
-
-        return self::buildUserDetails($user);
-    }
-
-    public function createLayCombinedHighAssetsInProgress(string $testRunId): array
-    {
-        $user = $this->createDeputyClientAndReport(
-            $testRunId,
-            User::ROLE_LAY_DEPUTY,
-            'lay-combined-high-completed',
-            Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
-            true,
-            false,
         );
 
         return self::buildUserDetails($user);
@@ -874,7 +773,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function createProfNamedPfaHighNotStarted(string $testRunId)
+    public function createProfNamedPfaHighNotStarted(string $testRunId): array
     {
         $user = $this->createOrgUserClientDeputyAndReport(
             $testRunId,
@@ -888,7 +787,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function createProfNamedPfaHighSubmitted(string $testRunId)
+    public function createProfNamedPfaHighSubmitted(string $testRunId): array
     {
         $user = $this->createOrgUserClientDeputyAndReport(
             $testRunId,
@@ -902,7 +801,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function createPaNamedPfaHighNotStarted(string $testRunId)
+    public function createPaNamedPfaHighNotStarted(string $testRunId): array
     {
         $user = $this->createOrgUserClientDeputyAndReport(
             $testRunId,
@@ -916,7 +815,7 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function createPaNamedPfaHighSubmitted(string $testRunId)
+    public function createPaNamedPfaHighSubmitted(string $testRunId): array
     {
         $user = $this->createOrgUserClientDeputyAndReport(
             $testRunId,
@@ -958,20 +857,6 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function createProfTeamHealthWelfareSubmitted(string $testRunId): array
-    {
-        $user = $this->createOrgUserClientDeputyAndReport(
-            $testRunId,
-            User::ROLE_PROF_TEAM_MEMBER,
-            'prof-team-hw-submitted',
-            Report::PROF_HW_TYPE,
-            true,
-            true
-        );
-
-        return self::buildOrgUserDetails($user);
-    }
-
     public function createLayReportNotStarted(string $testRunId, ?string $caseNumber = null, ?int $deputyUid = null): array
     {
         $user = $this->createDeputyClientAndReport(
@@ -997,7 +882,7 @@ class FixtureHelper
         ?string $deputyEmail = null,
         ?string $caseNumber = null,
         ?string $deputyUid = null,
-    ) {
+    ): array {
         $user = $this->createOrgUserClientDeputyAndReport(
             $testRunId,
             User::ROLE_PROF_ADMIN,
@@ -1162,7 +1047,7 @@ class FixtureHelper
         return self::buildAdminUserDetails($user);
     }
 
-    public function createDataForAnalytics(string $testRunId, $timeAgo, $satisfactionScore)
+    public function createDataForAnalytics(string $testRunId, $timeAgo, $satisfactionScore): array
     {
         $startDate = new DateTime($timeAgo);
         $deputies = [];
@@ -1229,7 +1114,7 @@ class FixtureHelper
         return $organisation;
     }
 
-    public function createDataForAdminUserTests(string $testPurpose)
+    public function createDataForAdminUserTests(string $testPurpose): void
     {
         $userRoles = [
             ['typeSuffix' => 'lay', 'role' => User::ROLE_LAY_DEPUTY],
@@ -1252,7 +1137,7 @@ class FixtureHelper
         $this->createDeputyClientAndReport(
             $this->testRunId,
             User::ROLE_LAY_DEPUTY,
-            $testPurpose . '-test-ndr',
+            $testPurpose . '-test-lay-hw',
             Report::LAY_HW_TYPE,
             false,
             false,
@@ -1261,18 +1146,18 @@ class FixtureHelper
 
     private function createDeputyClientAndReport(
         string $testRunId,
-        $userRole,
-        $emailPrefix,
-        $reportType,
-        $completed,
-        $submitted,
+        string $userRole,
+        string $emailPrefix,
+        string $reportType,
+        bool $completed,
+        bool $submitted,
         ?DateTime $startDate = null,
         ?int $satisfactionScore = null,
         ?string $caseNumber = null,
         bool $legacyPasswordHash = false,
         bool $isPrimary = true,
         ?int $deputyUid = null,
-    ) {
+    ): User {
         if (!$this->fixturesEnabled) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
         }
@@ -1312,11 +1197,11 @@ class FixtureHelper
 
     private function createOrgUserClientDeputyAndReport(
         string $testRunId,
-        $userRole,
-        $emailPrefix,
-        $reportType,
-        $completed,
-        $submitted,
+        string $userRole,
+        string $emailPrefix,
+        string $reportType,
+        bool $completed,
+        bool $submitted,
         ?string $deputyEmail = null,
         ?string $caseNumber = null,
         ?string $deputyUid = null,
