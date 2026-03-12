@@ -477,7 +477,6 @@ class FixtureHelper
             Report::LAY_PFA_HIGH_ASSETS_TYPE,
             false,
             false,
-            false,
             null,
             null,
             $caseNumber,
@@ -498,7 +497,6 @@ class FixtureHelper
             Report::LAY_PFA_HIGH_ASSETS_TYPE,
             false,
             false,
-            true,
             null,
             null,
             $caseNumber,
@@ -974,16 +972,15 @@ class FixtureHelper
         return self::buildOrgUserDetails($user);
     }
 
-    public function createLayNdrNotStarted(string $testRunId, ?string $caseNumber = null, ?int $deputyUid = null): array
+    public function createLayReportNotStarted(string $testRunId, ?string $caseNumber = null, ?int $deputyUid = null): array
     {
         $user = $this->createDeputyClientAndReport(
             $testRunId,
             User::ROLE_LAY_DEPUTY,
-            'lay-ndr-not-started',
+            'lay-report-not-started',
             Report::LAY_HW_TYPE,
             false,
             false,
-            true,
             null,
             null,
             $caseNumber,
@@ -1103,7 +1100,6 @@ class FixtureHelper
             Report::LAY_PFA_HIGH_ASSETS_TYPE,
             false,
             false,
-            false,
             null,
             null,
             $caseNumber,
@@ -1120,7 +1116,6 @@ class FixtureHelper
             User::ROLE_LAY_DEPUTY,
             'lay-pfa-high-not-started-non-primary',
             Report::LAY_PFA_HIGH_ASSETS_TYPE,
-            false,
             false,
             false,
             null,
@@ -1207,7 +1202,6 @@ class FixtureHelper
             Report::LAY_HW_TYPE,
             true,
             true,
-            false,
             $startDate,
             $satisfactionScore
         );
@@ -1262,7 +1256,6 @@ class FixtureHelper
             Report::LAY_HW_TYPE,
             false,
             false,
-            true
         );
     }
 
@@ -1273,7 +1266,6 @@ class FixtureHelper
         $reportType,
         $completed,
         $submitted,
-        bool $ndr = false,
         ?DateTime $startDate = null,
         ?int $satisfactionScore = null,
         ?string $caseNumber = null,
@@ -1296,11 +1288,7 @@ class FixtureHelper
             $isPrimary
         );
 
-        if ($ndr) {
-            $this->addClientsAndReportsToNdrLayDeputy($user, $completed);
-        } else {
-            $this->addClientsAndReportsToLayDeputy($user, $completed, $submitted, $reportType, $startDate, $satisfactionScore, $caseNumber);
-        }
+        $this->addClientsAndReportsToLayDeputy($user, $completed, $submitted, $reportType, $startDate, $satisfactionScore, $caseNumber);
 
         $this->setPassword($user, $legacyPasswordHash);
 
