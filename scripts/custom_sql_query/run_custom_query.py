@@ -286,7 +286,7 @@ def main(
     workspace = environment
     account_name = get_account_name(environment)
     function_name = (
-        "function" if environment == "local" else f"custom-sql-query-{account_name}"
+        "function" if environment == "local" else f"custom-sql-tool-{account_name}"
     )
     if action == "insert":
         response = run_insert(

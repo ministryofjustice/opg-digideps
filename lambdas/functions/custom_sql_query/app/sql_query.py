@@ -94,15 +94,18 @@ def authenticate_or_store_token(secret_name, username, user_token, skip_auth):
 
 
 def run_insert_custom_query(event, conn):
+    print("==1==")
     calling_user = event["calling_user"]
     custom_query = event["custom_query"]
     validation_query = event["validation_query"]
     expected_before = event["expected_before"]
     expected_after = event["expected_after"]
     maximum_rows_affected = event["maximum_rows_affected"]
+    print("==2==")
     try:
+        print("==3==")
         cursor = conn.cursor()
-
+        print("==4==")
         procedure_args = [
             custom_query,
             validation_query,
@@ -112,12 +115,18 @@ def run_insert_custom_query(event, conn):
             maximum_rows_affected,
             None,
         ]
+        print("==5==")
         sql = "CALL audit.insert_custom_query(%s, %s, %s, %s, %s, %s, %s);"
+        print(sql)
         cursor.execute(sql, procedure_args)
+        print("==6==")
         result = cursor.fetchall()
+        print("==7==")
+        print(result)
         conn.commit()
         cursor.close()
         conn.close()
+        print("==8==")
         return {"message": "Stored procedure executed successfully", "result": result}
     except Exception as e:
         return {"message": "Stored procedure failed to execute", "result": e}
@@ -274,6 +283,7 @@ def lambda_handler(event, context):
     db_password = ""
 
     if procedure_to_call == "insert_custom_query":
+        print("entering insert")
         response = run_insert_custom_query(event, conn)
     elif procedure_to_call == "sign_off_custom_query":
         response = run_sign_off_custom_query(event, conn)
