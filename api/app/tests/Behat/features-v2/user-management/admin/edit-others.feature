@@ -7,7 +7,7 @@ Feature: Admin - Edit deputy users
         And a Lay Deputy exists
         Then I should be able to update the deputies firstname, lastname, postcode and email address
         When I update the details of the deputy available to me
-        Then the deputies details should be updated
+        Then the deputy's details should be updated
 
     @admin-manager @lay-health-welfare-not-started
     Scenario: An admin manager user edits a deputy users details
@@ -15,16 +15,16 @@ Feature: Admin - Edit deputy users
         And a Lay Deputy exists
         Then I should be able to update the deputies firstname, lastname, postcode and email address
         When I update the details of the deputy available to me
-        Then the deputies details should be updated
+        Then the deputy's details should be updated
 
     @admin @lay-health-welfare-not-started
     Scenario: An admin user edits a deputy users details
         Given an admin user accesses the admin app
         And a Lay Deputy exists
-        Then I should be able to update the deputies firstname, lastname and postcode
-        And I should not be able to update the deputies email address
+        Then I should be able to update the deputy's firstname, lastname and postcode
+        And I should not be able to update the deputy's email address
         When I update the details of the deputy available to me
-        Then the deputies details should be updated
+        Then the deputy's details should be updated
 
     @super-admin @admin-manager @admin
     Scenario: A super admin user updates other admin users details
