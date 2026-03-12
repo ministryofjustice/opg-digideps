@@ -151,20 +151,6 @@ trait UserManagementTrait
         $this->setFixtureUserEmailsAndCount();
     }
 
-    /**
-     * @When I search for one of the NDR test users with the All Roles filter
-     */
-    public function iSearchForTestUsersWithTheNDRFilter()
-    {
-        $this->iAmOnAdminUsersSearchPage();
-        $this->fillField('admin_q', 'search-test-');
-        $this->selectOption('admin[role_name]', '');
-        $this->checkOption('admin[ndr_enabled]');
-        $this->pressButton('Search');
-        $this->userCount = 1;
-        $this->userEmails = ['search-test-ndr-' . $this->testRunId . '@t.uk'];
-    }
-
     private function setFixtureUserEmailsAndCount()
     {
         $this->userCount = 10;
