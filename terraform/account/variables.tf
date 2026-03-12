@@ -4,6 +4,12 @@ variable "DEFAULT_ROLE" {
   default     = "digideps-ci"
 }
 
+variable "MANAGEMENT_ROLE" {
+  type        = string
+  description = "Management role to use for providers"
+  default     = "digideps-ci"
+}
+
 variable "accounts" {
   type = map(
     object({
@@ -13,11 +19,6 @@ variable "accounts" {
       db_subnet_group    = string
       ec_subnet_group    = string
       environments       = set(string)
-      dns_firewall = object({
-        enabled         = bool
-        domains_allowed = list(string)
-        domains_blocked = list(string)
-      })
       network = object({
         enabled        = bool
         cidr_eu_west_1 = string
