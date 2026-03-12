@@ -87,22 +87,6 @@ Feature: Org CSV data ingestion - sirius source data
         Then the new 'org' entities should be added to the database
         And the count of the new 'org' entities added should be in the command output
 
-# Needs further rewrite so we're gracefully handling missing columns & not just stopping the process.
-# Currently throws critical error
-#    @super-admin
-#    Scenario: Uploading a CSV that has missing required columns
-#        Given a super admin user accesses the admin app
-#        When I upload an 'org' CSV that does not have any of the required columns
-#        Then I should see an error showing which columns are missing on the 'org' csv upload page
-#        And the count of the new 'org' entities added should be in the command output
-# As above
-#    @super-admin
-#    Scenario: Uploading a CSV that has an unexpected column
-#        Given a super admin user accesses the admin app
-#        When I upload an org CSV that has an 'NDR' column
-#        Then I should see an error showing the column that was unexpected
-#        And the count of the new 'org' entities added should be in the command output
-
     @super-admin
     Scenario: Uploading a CSV that has an organisation name but missing deputy first and last name
         Given a csv has been uploaded to the sirius bucket with the file 'org-1-row-1-named-deputy-with-org-name-no-first-last-name.csv'
