@@ -7,11 +7,11 @@ Feature: A deputy user edits their details
     Given I am logged in to admin as "super-admin@publicguardian.gov.uk" with password "DigidepsPass1234"
 
     Given the following users exist:
-      | ndr      | deputyType | firstName | lastName       | email                 | postCode | activated |
-      | disabled | LAY        | Winifred  | Sanderson      | w.sanderson@test.com  | HA4      | true      |
-      | disabled | PROF       | Sarah     | Sanderson      | s.sanderson@test.com  | HA4      | true      |
-      | disabled | PA         | Mary      | Sanderson      | m.sanderson@test.com  | HA4      | true      |
-      | disabled | LAY        | Billy     | Butcherson     | b.butcherson@test.com | HA4      | true      |
+      | deputyType | firstName | lastName       | email                 | postCode | activated |
+      | LAY        | Winifred  | Sanderson      | w.sanderson@test.com  | HA4      | true      |
+      | PROF       | Sarah     | Sanderson      | s.sanderson@test.com  | HA4      | true      |
+      | PA         | Mary      | Sanderson      | m.sanderson@test.com  | HA4      | true      |
+      | LAY        | Billy     | Butcherson     | b.butcherson@test.com | HA4      | true      |
 
   Scenario: A lay deputy edits their details
     Given I am logged in as "w.sanderson@test.com" with password "DigidepsPass1234"

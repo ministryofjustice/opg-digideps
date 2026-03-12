@@ -68,7 +68,6 @@ trait UserTrait
         foreach ($table as $inputs) {
             $this->assertValidRole($inputs['deputyType']);
 
-            $ndr = $inputs['ndr'];
             $deputyType = $inputs['deputyType'];
             $firstName = $inputs['firstName'];
             $lastName = $inputs['lastName'];
@@ -76,7 +75,7 @@ trait UserTrait
             $postCode = $inputs['postCode'];
             $activated = $inputs['activated'];
 
-            $query = "ndr=$ndr&deputyType=$deputyType&firstName=$firstName&lastName=$lastName&email=$email&postCode=$postCode&activated=$activated";
+            $query = "deputyType=$deputyType&firstName=$firstName&lastName=$lastName&email=$email&postCode=$postCode&activated=$activated";
 
             $this->visitAdminPath("/admin/fixtures/createUser?$query");
         }
