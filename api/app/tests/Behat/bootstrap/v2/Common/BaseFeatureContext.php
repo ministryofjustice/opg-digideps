@@ -596,21 +596,6 @@ class BaseFeatureContext extends MinkContext
         return $this->fixtureHelper->createDataForAnalytics('a_' . $rndKey . $runNumber, $timeAgo, $satisfactionScore);
     }
 
-    public function createAdditionalDataForUserSearchTests()
-    {
-        $this->fixtureHelper->createDataForAdminUserTests('search');
-    }
-
-    public function createAdditionalDataForUserEditTests()
-    {
-        $this->fixtureHelper->createDataForAdminUserTests('edit');
-    }
-
-    public function expireDocumentFromUnSubmittedDeputyReport(string $storageReference): void
-    {
-        $this->fixtureHelper->deleteFilesFromS3($storageReference);
-    }
-
     /**
      * @BeforeScenario @lay-pfa-high-not-started-multi-client-deputy
      */
