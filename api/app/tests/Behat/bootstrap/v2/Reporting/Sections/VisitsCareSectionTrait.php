@@ -147,11 +147,7 @@ trait VisitsCareSectionTrait
         $this->chooseOption('visits_care[doesClientHaveACarePlan]', 'no', 'HasCarePlan');
         $this->pressButton('Save and continue');
 
-        if ('ndr' == $this->reportUrlPrefix) {
-            $this->iAmOnVisitsCarePage5();
-        } else {
-            $this->iAmOnVisitsCareSummaryPage();
-        }
+        $this->iAmOnVisitsCareSummaryPage();
     }
 
     /**
@@ -170,11 +166,7 @@ trait VisitsCareSectionTrait
 
         $this->pressButton('Save and continue');
 
-        if ('ndr' == $this->reportUrlPrefix) {
-            $this->iAmOnVisitsCarePage5();
-        } else {
-            $this->iAmOnVisitsCareSummaryPage();
-        }
+        $this->iAmOnVisitsCareSummaryPage();
     }
 
     /**

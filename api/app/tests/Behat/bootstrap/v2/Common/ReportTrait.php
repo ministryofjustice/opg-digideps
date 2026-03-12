@@ -29,7 +29,7 @@ trait ReportTrait
     private function getCorrectReport(string $currentOrPrevious): array
     {
         return [
-            'current' === $currentOrPrevious ? $this->loggedInUserDetails->getCurrentReportNdrOrReport() : $this->loggedInUserDetails->getPreviousReportNdrOrReport(),
+            'current' === $currentOrPrevious ? $this->loggedInUserDetails->getCurrentReport() : $this->loggedInUserDetails->getPreviousReport(),
             'current' === $currentOrPrevious ? $this->loggedInUserDetails->getCurrentReportId() : $this->loggedInUserDetails->getPreviousReportId(),
         ];
     }
@@ -549,7 +549,7 @@ trait ReportTrait
     public function iPreviewAndCheckTheReport()
     {
         $this->pressButton('Preview and check report');
-        if ('ndr' === strtolower($this->loggedInUserDetails->getCurrentReportNdrOrReport())) {
+        if ('ndr' === strtolower($this->loggedInUserDetails->getCurrentReport())) {
             $this->iAmOnNdrReviewPage();
         } else {
             $this->iAmOnReportReviewPage();
@@ -561,7 +561,7 @@ trait ReportTrait
      */
     public function iContinueToDeclarationAndSubmission()
     {
-        if ('ndr' === strtolower($this->loggedInUserDetails->getCurrentReportNdrOrReport())) {
+        if ('ndr' === strtolower($this->loggedInUserDetails->getCurrentReport())) {
             $this->clickLink('Continue to declaration and submission');
             $this->iAmOnNdrDeclarationPage();
         } else {
@@ -577,7 +577,7 @@ trait ReportTrait
      */
     public function iConfirmIAgreeToTheDeclaration()
     {
-        if ('ndr' === strtolower($this->loggedInUserDetails->getCurrentReportNdrOrReport())) {
+        if ('ndr' === strtolower($this->loggedInUserDetails->getCurrentReport())) {
             $this->checkOption('ndr_declaration[agree]');
         } else {
             $this->checkOption('report_declaration[agree]');
@@ -589,7 +589,7 @@ trait ReportTrait
      */
     public function iConfirmIAmTheSoleDeputy()
     {
-        if ('ndr' === strtolower($this->loggedInUserDetails->getCurrentReportNdrOrReport())) {
+        if ('ndr' === strtolower($this->loggedInUserDetails->getCurrentReport())) {
             $this->selectOption('ndr_declaration[agreedBehalfDeputy]', 'only_deputy');
         } else {
             $this->selectOption('report_declaration[agreedBehalfDeputy]', 'only_deputy');
@@ -602,7 +602,7 @@ trait ReportTrait
     public function iSubmitMyReport()
     {
         $this->pressButton('Submit report');
-        if ('ndr' === strtolower($this->loggedInUserDetails->getCurrentReportNdrOrReport())) {
+        if ('ndr' === strtolower($this->loggedInUserDetails->getCurrentReport())) {
             $this->iAmOnNdrSubmittedPage();
         } else {
             $this->iAmOnReportSubmittedPage();
