@@ -13,7 +13,6 @@ use App\Tests\Behat\Common\RegionTrait;
 use App\Tests\Behat\Common\ReportTrait;
 use App\Tests\Behat\Common\SiteNavigationTrait;
 use App\Tests\Behat\OrganisationManagement\OrganisationManagementTrait;
-use App\Tests\Behat\UserManagement\UserManagementTrait;
 use Behat\Behat\Context\SnippetAcceptingContext;
 use Behat\MinkExtension\Context\MinkContext;
 
@@ -40,7 +39,6 @@ class FeatureContext extends MinkContext implements SnippetAcceptingContext
     use UserTrait;
     use SearchTrait;
     use OrganisationManagementTrait;
-    use UserManagementTrait;
     use ReportTrait;
     use CourtOrderTrait;
 
