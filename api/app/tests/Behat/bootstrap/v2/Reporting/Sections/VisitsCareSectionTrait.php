@@ -47,14 +47,8 @@ trait VisitsCareSectionTrait
     {
         $info = 'Information on how often there is contact with the client';
 
-        $driver = $this->getSession()->getDriver();
-        if ('Behat\Mink\Driver\Selenium2Driver' == get_class($driver)) {
-            $this->iFillFieldForCrossBrowser('visits_care_doYouLiveWithClient_1', 'no');
-            $this->iFillFieldForCrossBrowser('visits_care_howOftenDoYouContactClient', $info);
-        } else {
-            $this->chooseOption('visits_care[doYouLiveWithClient]', 'no', 'LiveWithClient');
-            $this->fillInField('visits_care[howOftenDoYouContactClient]', $info, 'LiveWithClient');
-        }
+        $this->chooseOption('visits_care[doYouLiveWithClient]', 'no', 'LiveWithClient');
+        $this->fillInField('visits_care[howOftenDoYouContactClient]', $info, 'LiveWithClient');
 
         $this->pressButton('Save and continue');
         $this->iAmOnVisitsCarePage2();
