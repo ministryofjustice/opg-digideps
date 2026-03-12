@@ -98,6 +98,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         self::$entityManager->persist($deputy);
         self::$entityManager->flush();
+        self::$entityManager->clear();
 
         $actualUploadResults = $this->sut->upload($deputyships);
 
@@ -114,6 +115,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         self::$entityManager->persist($deputy);
         self::$entityManager->flush();
+        self::$entityManager->clear();
 
         $actualUploadResults = $this->sut->upload($deputyships);
 
@@ -203,6 +205,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         self::$entityManager->persist($client);
         self::$entityManager->flush();
+        self::$entityManager->clear();
 
         $actualUploadResults = $this->sut->upload($deputyships);
 
@@ -245,6 +248,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         self::$entityManager->persist($originalClient);
         self::$entityManager->flush();
+        self::$entityManager->clear();
 
         $actualUploadResults = $this->sut->upload($deputyships);
 
@@ -292,6 +296,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         self::$entityManager->persist($originalClient);
         self::$entityManager->flush();
+        self::$entityManager->clear();
 
         $actualUploadResults = $this->sut->upload($deputyships);
 
@@ -340,6 +345,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         self::$entityManager->persist($originalClient);
         self::$entityManager->flush();
+        self::$entityManager->clear();
 
         $actualUploadResults = $this->sut->upload($deputyships);
 
@@ -387,6 +393,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         self::$entityManager->persist($originalClient);
         self::$entityManager->flush();
+        self::$entityManager->clear();
 
         $actualUploadResults = $this->sut->upload($deputyships);
 
@@ -594,6 +601,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         self::$entityManager->persist($client);
         self::$entityManager->flush();
+        self::$entityManager->clear();
 
         $uploadResults = $this->sut->upload($deputyships);
 
@@ -623,6 +631,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         self::$entityManager->persist($client);
         self::$entityManager->flush();
+        self::$entityManager->clear();
 
         $deputyships[0]->setDeputyAddress1('New Address');
         $uploadResults = $this->sut->upload($deputyships);
@@ -663,6 +672,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         self::$entityManager->persist($client);
         self::$entityManager->flush();
+        self::$entityManager->clear();
 
         $uploadResults = $this->sut->upload($deputyships);
 
@@ -701,6 +711,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         self::$entityManager->persist($client);
         self::$entityManager->persist($existingDeputy);
         self::$entityManager->flush();
+        self::$entityManager->clear();
 
         $uploadResults = $this->sut->upload($deputyships);
 
@@ -736,6 +747,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         self::$entityManager->persist($client);
         self::$entityManager->persist($existingDeputy);
         self::$entityManager->flush();
+        self::$entityManager->clear();
 
         $uploadResults = $this->sut->upload($deputyships);
 
