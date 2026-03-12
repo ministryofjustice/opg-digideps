@@ -252,18 +252,38 @@ def get_current_user():
 def get_db_endpoint(environment):
     if environment == "local":
         return "http://postgres"
-    else:
-        instance_environment = environment
-        instance_id = f"api-{instance_environment}-0"
-        session = assume_custom_sql_role(environment)
-        rds = session.client("rds", region_name="eu-west-1")
-        try:
-            response = rds.describe_db_instances(DBInstanceIdentifier=instance_id)
-            db_instance = response["DBInstances"][0]
-            endpoint = db_instance["Endpoint"]["Address"]
-            return endpoint
-        except Exception as e:
-            raise Exception(f"Failed to retrieve RDS instance info: {str(e)}")
+
+    session = assume_custom_sql_role(environment)
+    rds = session.client("rds", region_name="eu-west-1")
+
+    cluster_id = f"api-{environment}"
+
+    try:
+        # Get cluster info
+        cluster = rds.describe_db_clusters(DBClusterIdentifier=cluster_id)[
+            "DBClusters"
+        ][0]
+
+        # Find the writer instance
+        writer_instance_id = None
+        for member in cluster["DBClusterMembers"]:
+            if member["IsClusterWriter"]:
+                writer_instance_id = member["DBInstanceIdentifier"]
+                break
+
+        if writer_instance_id is None:
+            raise Exception("No writer instance found in cluster")
+
+        # Now look up the actual instance endpoint
+        instance = rds.describe_db_instances(DBInstanceIdentifier=writer_instance_id)[
+            "DBInstances"
+        ][0]
+        endpoint = instance["Endpoint"]["Address"]
+
+        return endpoint
+
+    except Exception as e:
+        raise Exception(f"Failed to retrieve writer endpoint: {str(e)}")
 
 
 def main(
@@ -286,7 +306,7 @@ def main(
     workspace = environment
     account_name = get_account_name(environment)
     function_name = (
-        "function" if environment == "local" else f"custom-sql-query-{account_name}"
+        "function" if environment == "local" else f"custom-sql-tool-{account_name}"
     )
     if action == "insert":
         response = run_insert(
