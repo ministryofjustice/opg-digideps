@@ -21,9 +21,8 @@ final readonly class ValidatingForm
         return $key === null ? $this->data->getData() : $this->data[$key]->getData() ?? null;
     }
 
-    public function getValidatingFormOrNull(string|int|null $key): ?ValidatingForm
+    public function getValidatingFormOrNull(string $key): ?ValidatingForm
     {
-        $value = $this->getObjectOrNull($key, FormInterface::class);
-        return $value !== null ? new ValidatingForm($value) : null;
+        return $this->data->has($key) ? new ValidatingForm($this->data->get($key)) : null;
     }
 }
