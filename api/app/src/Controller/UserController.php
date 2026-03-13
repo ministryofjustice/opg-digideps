@@ -199,7 +199,7 @@ class UserController extends RestController
     #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function getOneById(Request $request, int $id): ?User
     {
-        return $this->getOneByFilter($request, 'user_id', $id);
+        return $this->getOneByFilter($request, 'user_id', (string)$id);
     }
 
     #[Route(path: '/get-one-by/{what}/{filter}', requirements: ['what' => '(user_id|email|case_number)'], methods: ['GET'])]
@@ -507,7 +507,7 @@ class UserController extends RestController
     #[Route(path: '/get-primary-email/{deputyUid}', methods: ['GET'])]
     public function getPrimaryEmail(int $deputyUid): ?string
     {
-        /** @var array<User> $user */
+        /** @var array<User> $users */
         $users = $this->userRepository->findBy(['deputyUid' => $deputyUid, 'isPrimary' => true]);
         reset($users);
 
