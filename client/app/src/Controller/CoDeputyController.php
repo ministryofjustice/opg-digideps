@@ -45,11 +45,7 @@ class CoDeputyController extends AbstractController
 
         // redirect if user has missing details or is on wrong page
         if ($route = $redirector->getCorrectRouteIfDifferent($user, 'codep_verification')) {
-            if (is_string($route)) {
-                return $this->redirectToRoute($route);
-            } else {
-                throw new \UnexpectedValueException('Expected $route to be a string.');
-            }
+            return $this->redirect($route);
         }
 
         $form = $this->createForm(CoDeputyVerificationType::class, $user);

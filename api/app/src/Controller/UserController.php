@@ -509,14 +509,13 @@ class UserController extends RestController
     {
         /** @var array<User> $users */
         $users = $this->userRepository->findBy(['deputyUid' => $deputyUid, 'isPrimary' => true]);
-        reset($users);
 
         // multiple primary accounts or no primary account
         if (1 !== count($users)) {
             return null;
         }
 
-        $user = $users[0];
+        $user = reset($users);
 
         return $user->getEmail();
     }
