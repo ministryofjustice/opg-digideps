@@ -47,19 +47,15 @@ summaryPage:
       title: Benefits check
       column1Title: Question
       column2Title: Answer
-      edit: Edit
     doOthersReceiveMoney:
       title: Do others receive money on %client%'s behalf
       column1Title: Question
       column2Title: Answer
-      edit: Edit
     moneyOtherPeopleReceive:
       title: Money other people receive
       column1Title: Type of payment
       column2Title: Person or organisation who received the money
       column3Title: Total amount for reporting period
-      edit: Edit
-      remove: Remove
 
 form:
   thing: benefit payment received on %client%'s behalf
