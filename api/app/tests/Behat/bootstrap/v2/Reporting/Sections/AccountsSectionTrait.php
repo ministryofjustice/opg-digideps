@@ -181,8 +181,6 @@ trait AccountsSectionTrait
             $this->accountList[0]['closingBalance'],
         );
 
-        $this->pressButton('Save and continue');
-
         $this->iAmOnAccountsSummaryPage();
     }
 
