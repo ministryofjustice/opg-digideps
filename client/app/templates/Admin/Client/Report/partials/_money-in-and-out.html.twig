@@ -17,9 +17,6 @@
 
                 <h5 class="govuk-heading-m">
                     {{ (page ~ '.closingBalancesPrevReport') | trans }}
-                    {% if report.previousReportData['report-summary']['type'] == 'ndr' %}
-                        ({{ report.previousReportData['report-summary']['type'] | upper }})
-                    {% endif %}
                 </h5>
                 <table class="govuk-table">
                     <thead class="govuk-table__head">
