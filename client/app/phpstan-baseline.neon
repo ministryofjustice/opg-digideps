@@ -2336,11 +2336,6 @@ parameters:
 			path: src/Controller/SettingsController.php
 
 		-
-			message: "#^Parameter \\#1 \\$route of method Symfony\\\\Bundle\\\\FrameworkBundle\\\\Controller\\\\AbstractController\\:\\:redirectToRoute\\(\\) expects string, string\\|true given\\.$#"
-			count: 1
-			path: src/Controller/SettingsController.php
-
-		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, string\\|false given\\.$#"
 			count: 2
 			path: src/Controller/SettingsController.php
