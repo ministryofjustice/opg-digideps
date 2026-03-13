@@ -281,11 +281,6 @@ class UserApi
         );
     }
 
-    /**
-     * @param int $id
-     * @param array $jmsGroups
-     * @return void
-     */
     public function updateUserCodeputyFlagToTrue(int $id, array $jmsGroups = []): void
     {
         $this->restClient->put(

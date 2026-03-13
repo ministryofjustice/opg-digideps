@@ -11,7 +11,6 @@ use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use App\Service\UserService;
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -200,7 +199,7 @@ class UserController extends RestController
     #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function getOneById(Request $request, int $id): ?User
     {
-        return $this->getOneByFilter($request, 'user_id', settype($id, 'string') ? (string)$id : '');
+        return $this->getOneByFilter($request, 'user_id', $id);
     }
 
     #[Route(path: '/get-one-by/{what}/{filter}', requirements: ['what' => '(user_id|email|case_number)'], methods: ['GET'])]
@@ -430,37 +429,6 @@ class UserController extends RestController
         return $user->getId();
     }
 
-    #[Route(path: '/{id}/team', requirements: ['id' => '\d+'], methods: ['GET'])]
-    #[IsGranted(attribute: 'ROLE_ORG')]
-    public function getTeamByUserId(Request $request, int $id): mixed
-    {
-        /** @var User $loggedInUser */
-        $loggedInUser = $this->getUser();
-
-        /** @var User|null $requestedUser */
-        $requestedUser = $this->userRepository->find($id);
-
-        if (!$requestedUser) {
-            throw new RuntimeException('User not found', 419);
-        }
-
-        /** @var ArrayCollection $requestedUserTeams */
-        $requestedUserTeams = $requestedUser->getTeams();
-
-        /** @var ArrayCollection $loggedInUserTeams */
-        $loggedInUserTeams = $loggedInUser->getTeams();
-        if ($requestedUserTeams->first() !== $loggedInUserTeams->first()) {
-            throw $this->createAccessDeniedException('User not part of the same team');
-        }
-
-        $groups = $request->query->has('groups') ?
-            $request->query->all('groups') : ['team', 'team-users', 'user'];
-
-        $this->formatter->setJmsSerialiserGroups($groups);
-
-        return $requestedUserTeams->first();
-    }
-
     /**
      * Endpoint for getting a reg token for user.
      *
@@ -539,14 +507,15 @@ class UserController extends RestController
     #[Route(path: '/get-primary-email/{deputyUid}', methods: ['GET'])]
     public function getPrimaryEmail(int $deputyUid): ?string
     {
+        /** @var array<User> $user */
         $users = $this->userRepository->findBy(['deputyUid' => $deputyUid, 'isPrimary' => true]);
+        reset($users);
 
         // multiple primary accounts or no primary account
         if (1 !== count($users)) {
             return null;
         }
 
-        /** @var User $user */
         $user = $users[0];
 
         return $user->getEmail();

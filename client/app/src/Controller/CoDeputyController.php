@@ -47,9 +47,9 @@ class CoDeputyController extends AbstractController
         if ($route = $redirector->getCorrectRouteIfDifferent($user, 'codep_verification')) {
             if (is_string($route)) {
                 return $this->redirectToRoute($route);
+            } else {
+                throw new \UnexpectedValueException('Expected $route to be a string.');
             }
-
-            throw new \UnexpectedValueException('Expected $route to be a string.');
         }
 
         $form = $this->createForm(CoDeputyVerificationType::class, $user);
