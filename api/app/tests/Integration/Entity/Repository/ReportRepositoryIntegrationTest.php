@@ -144,11 +144,14 @@ class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
         self::$fixtures->addClientToOrganisation($clientDual->getId(), $org[0]->getId());
 
         // create reports for clients
-        $report1 = self::$fixtures->createReport($client1)->setDueDate(new DateTime('2025-08-01'))->setEndDate(new DateTime('2025-07-10'));
-        $report2 = self::$fixtures->createReport($client2)->setDueDate(new DateTime('2025-03-01'))->setEndDate(new DateTime('2025-02-10'));
+        $reportOptions = [
+            'setType' => Report::PROF_PFA_HIGH_ASSETS_TYPE,
+        ];
+        $report1 = self::$fixtures->createReport($client1, $reportOptions)->setDueDate(new DateTime('2025-08-01'))->setEndDate(new DateTime('2025-07-10'));
+        $report2 = self::$fixtures->createReport($client2, $reportOptions)->setDueDate(new DateTime('2025-03-01'))->setEndDate(new DateTime('2025-02-10'));
 
-        $dualReport1 = self::$fixtures->createReport($clientDual)->setDueDate(new DateTime('2025-02-01'))->setEndDate(new DateTime('2025-01-10'));
-        $dualReport2 = self::$fixtures->createReport($clientDual)->setDueDate(new DateTime('2025-06-01'))->setEndDate(new DateTime('2025-05-10'));
+        $dualReport1 = self::$fixtures->createReport($clientDual, $reportOptions)->setDueDate(new DateTime('2025-02-01'))->setEndDate(new DateTime('2025-01-10'));
+        $dualReport2 = self::$fixtures->createReport($clientDual, $reportOptions)->setDueDate(new DateTime('2025-06-01'))->setEndDate(new DateTime('2025-05-10'));
 
         self::$entityManager->flush();
 
