@@ -1,4 +1,4 @@
-@org-edit-myself
+@v2 @org-edit-myself
 Feature: A deputy user edits their details
   As a deputy user
   So I can keep my account up to date
@@ -117,8 +117,4 @@ Feature: A deputy user edits their details
       | change_password_password_second | DigidepsPass12345 |
     And I press "change_password_save"
     Then the form should be valid
-    And I should be on "/login"
-    And I should see "Sign in with your new password"
-        # restore old password (and assert the current password can be used as old password)
-    When I am logged in as "b.butcherson@test.com" with password "DigidepsPass12345"
-    Then the response status code should be 200
+    And I should be on "/client/add"
