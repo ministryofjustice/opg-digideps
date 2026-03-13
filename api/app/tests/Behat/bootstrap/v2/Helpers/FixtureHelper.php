@@ -652,13 +652,13 @@ class FixtureHelper
         return self::buildUserDetails($user);
     }
 
-    public function createLayCombinedHighAssetsNotStarted(string $testRunId): array
+    public function createLayCombinedHighAssetsNotStarted(string $testRunId, string $type = Report::LAY_COMBINED_HIGH_ASSETS_TYPE): array
     {
         $user = $this->createDeputyClientAndReport(
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-combined-high-not-started',
-            Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
+            $type,
             false,
             false
         );
@@ -666,13 +666,13 @@ class FixtureHelper
         return self::buildUserDetails($user);
     }
 
-    public function createLayCombinedHighAssetsCompleted(string $testRunId): array
+    public function createLayCombinedHighAssetsCompleted(string $testRunId, string $type = Report::LAY_COMBINED_HIGH_ASSETS_TYPE): array
     {
         $user = $this->createDeputyClientAndReport(
             $testRunId,
             User::ROLE_LAY_DEPUTY,
             'lay-combined-high-completed',
-            Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
+            $type,
             true,
             false
         );
