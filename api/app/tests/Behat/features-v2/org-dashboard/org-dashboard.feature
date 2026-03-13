@@ -50,3 +50,15 @@ Feature: Organisation dashboard
         And I select "notFinished" from "status"
         And I press the search button
         Then there should be 2 reports on the org dashboard page
+
+  @org-dashboard-no-filter-client-has-lay
+  Scenario: A PA admin views the list of reports without filtering, but the client has a lay deputy too
+    Given the organisation "Follicle Beatitude" with email identifier "great.expectations" exists
+    And a PA admin user with email "bob.scratchit@great.expectations" exists
+    And "bob.scratchit@great.expectations" is in the "Follicle Beatitude" organisation
+    And "bob.scratchit@great.expectations" logs in
+    And there is 1 report which is "notStarted" associated with "Follicle Beatitude"
+    And there is 1 report which is "notFinished" associated with "Follicle Beatitude"
+    And there is a lay deputy with report associated with the same client
+    When they visit the org dashboard page
+    Then there should be 2 reports on the org dashboard page

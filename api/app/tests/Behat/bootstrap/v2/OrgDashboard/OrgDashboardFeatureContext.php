@@ -26,6 +26,7 @@ class OrgDashboardFeatureContext extends BaseFeatureContext
     public array $users = [];
 
     public int $counter = 0;
+    private ?Client $orgClient = null;
 
     /**
      * @Given the organisation :name with email identifier :emailIdentifier exists
@@ -84,12 +85,12 @@ class OrgDashboardFeatureContext extends BaseFeatureContext
 
             if ("notStarted" === $reportStatus) {
                 // NB we don't want to retrieve the report and update its status, as it always updates to "notFinished"
-                $userDetails = $this->fixtureHelper->createLayCombinedHighAssetsNotStarted($id, type: Report::PA_PFA_HIGH_ASSETS_TYPE);
+                $userDetails = $this->fixtureHelper->createNotStarted($id, type: Report::PA_PFA_HIGH_ASSETS_TYPE);
             } elseif ("readyToSubmit" === $reportStatus) {
-                $userDetails = $this->fixtureHelper->createLayCombinedHighAssetsCompleted($id, type: Report::PA_PFA_HIGH_ASSETS_TYPE);
+                $userDetails = $this->fixtureHelper->createCompleted($id, type: Report::PA_PFA_HIGH_ASSETS_TYPE);
                 $report = $reportRepo->find($userDetails['currentReportId']);
             } elseif ("notFinished" === $reportStatus) {
-                $userDetails = $this->fixtureHelper->createLayCombinedHighAssetsNotStarted($id, type: Report::PA_PFA_HIGH_ASSETS_TYPE);
+                $userDetails = $this->fixtureHelper->createNotStarted($id, type: Report::PA_PFA_HIGH_ASSETS_TYPE);
 
                 // we set one section so that the report status is "notFinished" and not "notStarted"
                 $report = $reportRepo->find($userDetails['currentReportId']);
@@ -105,6 +106,7 @@ class OrgDashboardFeatureContext extends BaseFeatureContext
 
             /** @var Client $client */
             $client = $clientRepo->find($clientId);
+            $this->orgClient = $client;
 
             $org->addClient($client);
             $client->setOrganisation($org);
@@ -112,6 +114,24 @@ class OrgDashboardFeatureContext extends BaseFeatureContext
 
         $this->em->persist($org);
         $this->em->persist($client);
+        $this->em->flush();
+    }
+
+    /**
+     * @Given there is a lay deputy with report associated with the same client
+     */
+    public function layDeputyAndReportAssociatedWithSameClient(): void
+    {
+        $userData = $this->fixtureHelper->createNotStarted(
+            "$this->testRunId-999999",
+            type: Report::LAY_HW_TYPE
+        );
+
+        $reportRepo = $this->em->getRepository(Report::class);
+        $report = $reportRepo->find($userData['currentReportId']);
+        $report->setClient($this->orgClient);
+
+        $this->em->persist($report);
         $this->em->flush();
     }
 

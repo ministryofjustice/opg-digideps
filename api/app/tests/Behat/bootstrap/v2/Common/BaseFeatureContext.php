@@ -271,7 +271,7 @@ class BaseFeatureContext extends MinkContext
      */
     public function createLayCombinedHighNotStarted()
     {
-        $userDetails = $this->fixtureHelper->createLayCombinedHighAssetsNotStarted($this->testRunId);
+        $userDetails = $this->fixtureHelper->createNotStarted($this->testRunId);
         $this->fixtureUsers[] = $this->layDeputyNotStartedCombinedHighDetails = new UserDetails($userDetails);
     }
 
@@ -280,7 +280,7 @@ class BaseFeatureContext extends MinkContext
      */
     public function createLayCombinedHighCompleted()
     {
-        $userDetails = $this->fixtureHelper->createLayCombinedHighAssetsCompleted($this->testRunId);
+        $userDetails = $this->fixtureHelper->createCompleted($this->testRunId);
         $this->fixtureUsers[] = $this->layDeputyCompletedCombinedHighDetails = new UserDetails($userDetails);
     }
 
