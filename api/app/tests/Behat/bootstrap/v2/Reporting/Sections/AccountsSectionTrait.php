@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
+use App\Tests\Behat\BehatException;
+
 trait AccountsSectionTrait
 {
     private array $accountList = [];
@@ -141,10 +143,9 @@ trait AccountsSectionTrait
             $this->accountList[0]['closingBalance']
         );
 
-        $this->iAmOnAccountsAddAnotherPage();
+        $this->selectOption('account[addAnother]', 'no');
 
-        $this->selectOption('add_another[addAnother]', 'no');
-        $this->pressButton('Continue');
+        $this->pressButton('Save and continue');
     }
 
     /**
@@ -179,6 +180,8 @@ trait AccountsSectionTrait
             $this->accountList[0]['openingBalance'],
             $this->accountList[0]['closingBalance'],
         );
+
+        $this->pressButton('Save and continue');
 
         $this->iAmOnAccountsSummaryPage();
     }
@@ -273,16 +276,15 @@ trait AccountsSectionTrait
                 $account['openingBalance'],
                 $account['closingBalance'],
             );
+
+            $this->selectOption('account[addAnother]', 'no');
+
+            $this->pressButton('Save and continue');
         }
 
         if ('ndr' == $this->reportUrlPrefix) {
             $this->accountList = array_reverse($this->accountList);
         }
-
-        $this->iAmOnAccountsAddAnotherPage();
-
-        $this->selectOption('add_another[addAnother]', 'no');
-        $this->pressButton('Continue');
     }
 
     /**
@@ -291,6 +293,38 @@ trait AccountsSectionTrait
     public function iShouldSeeTheExpectedAccountsOnSummaryPage()
     {
         $this->expectedResultsDisplayedSimplified(null, true);
+    }
+
+    /**
+     * @Given I add an account with a zero balance
+     */
+    public function iAddAnAccountWithAZeroBalance(): void
+    {
+        $account = [
+            'account' => 'current',
+            'accountType' => 'current account',
+            'name' => 'zero-balance-account',
+            'accountNumber' => '2222',
+            'sortCode' => '01-01-01',
+            'joint' => 'no',
+            'openingBalance' => '100',
+            'closingBalance' => '0',
+        ];
+
+        $this->accountList[] = $account;
+
+        $this->visitPath($this->getAccountsAddAnAccountUrl($this->loggedInUserDetails->getCurrentReportId()));
+
+        $this->iAddAnAccount(
+            account: $account['account'],
+            translatedAccountType: $account['accountType'],
+            name: $account['name'],
+            accountNumber: $account['accountNumber'],
+            sortCode: $account['sortCode'],
+            joint: $account['joint'],
+            openingBalance: $account['openingBalance'],
+            closingBalance: $account['closingBalance'],
+        );
     }
 
     /**
@@ -333,12 +367,10 @@ trait AccountsSectionTrait
                 $account['openingBalance'],
                 $account['closingBalance'],
             );
+
+            $this->selectOption('account[addAnother]', 'no');
+            $this->pressButton('Save and continue');
         }
-
-        $this->iAmOnAccountsAddAnotherPage();
-
-        $this->selectOption('add_another[addAnother]', 'no');
-        $this->pressButton('Continue');
     }
 
     /**
@@ -419,8 +451,6 @@ trait AccountsSectionTrait
             $this->fillInField('account[openingBalance]', $openingBalance, $trackFromEntry ? $formSectionName : null);
             $this->fillInField('account[closingBalance]', $closingBalance, $trackFromEntry ? $formSectionName : null);
         }
-
-        $this->pressButton('Save and continue');
     }
 
     public function iRemoveAnAccount($accountOccurrence)
@@ -433,5 +463,59 @@ trait AccountsSectionTrait
             true,
             'Yes, remove account'
         );
+    }
+
+    /**
+     * @Given I should be prompted to select an answer to the account closed question
+     */
+    public function iShouldBePromptedToSelectAnAnswerToIsAccountClosedQuestion(): void
+    {
+        $this->assertOnErrorMessage("Please select either 'Yes' or 'No'");
+    }
+
+    /**
+     * @Given I select "Yes" for the account closed question
+     */
+    public function iSelectYesForTheAccountClosedQuestion(): void
+    {
+        $this->chooseOption('account[isClosed]', '1');
+        $this->chooseOption('account[addAnother]', 'no');
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     * @Given I should see the account on the summary page marked as closed
+     */
+    public function iShouldSeeTheAccountOnSummaryPageMarkedAsClosed(): void
+    {
+        $this->iAmOnAccountsSummaryPage();
+
+        // Get the most recently added account
+        $lastAccount = end($this->accountList);
+
+        if ($lastAccount === false) {
+            throw new BehatException('No account found in $accountList');
+        }
+
+        $page = $this->getSession()->getPage();
+        $accountElements = $page->findAll('css', '.behat-region-account-' . $lastAccount['accountNumber']);
+        $lastAccountElement = end($accountElements);
+
+        $closedStatusElement = $lastAccountElement->find('xpath', ".//*[contains(text(), 'Closed')]");
+        if (is_null($closedStatusElement)) {
+            throw new BehatException(sprintf(
+                'Account %s not marked as closed on summary page',
+                $lastAccount['accountNumber']
+            ));
+        }
+
+        $closedStatusText = $closedStatusElement->getText();
+        if (!str_contains(strtolower($closedStatusText), 'yes')) {
+            throw new BehatException(sprintf(
+                'Account %s closed status does not show "yes" - found: %s',
+                $lastAccount['accountNumber'],
+                $closedStatusText
+            ));
+        }
     }
 }

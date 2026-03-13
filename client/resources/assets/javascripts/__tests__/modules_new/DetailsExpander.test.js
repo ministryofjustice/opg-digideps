@@ -3,15 +3,18 @@ import DetailsExpander from '../../modules_new/DetailsExpander'
 
 describe('Details expander', () => {
   it('should toggle js-hidden on a numeric value being input', () => {
-    document.body.innerHTML = '<div class="js-details-expander">' +
-        '<div id="group" class="govuk-form-group ">' +
-        '<label for="costs" class="govuk-label ">Other</label>' +
-        '<input type="text" id="costs" name="costs" required="required" class="govuk-input govuk-!-width-one-quarter js-format-currency" rows="5">' +
-        '</div>' +
-        '<div id="detail" class="govuk-form-group opg-indented-block js-hidden js-details-expandable">' +
-        '<label for="detail" class="govuk-label">Details</label>' +
-        '<textarea id="details" name="details" required="required" class="govuk-textarea  govuk-!-width-one-half " rows="5"></textarea>' +
-        '</div></div>'
+    document.body.innerHTML = `
+      <div class="js-details-expander">
+        <div id="group" class="govuk-form-group ">
+          <label for="costs" class="govuk-label ">Other</label>
+          <input type="text" id="costs" name="costs" required="required" class="govuk-input govuk-!-width-one-quarter js-format-currency" rows="5">
+        </div>
+        <div id="detail" class="govuk-form-group opg-indented-block js-hidden js-details-expandable">
+          <label for="detail" class="govuk-label">Details</label>
+          <textarea id="details" name="details" required="required" class="govuk-textarea  govuk-!-width-one-half " rows="5"></textarea>
+        </div>
+      </div>
+    `
 
     DetailsExpander.init(document, '.js-details-expander')
     const input = document.querySelector('input[type=text]')
@@ -33,26 +36,70 @@ describe('Details expander', () => {
   })
 })
 
+describe('Details expander - data-expand-if-zero', () => {
+  it('should toggle js-hidden when input value is zero', () => {
+    document.body.innerHTML = `
+      <div class="js-details-expander">
+        <input type="text" data-expand-if-zero="true">
+        <div id="expandable" class="js-hidden js-details-expandable">
+          <div id="additional-info" aria-live="polite"></div>
+          <textarea></textarea>
+        </div>
+      </div>
+    `
+
+    DetailsExpander.init(document, '.js-details-expander')
+    const input = document.querySelector('input[type=text]')
+    const expandable = document.getElementById('expandable')
+    const additionalInfo = document.getElementById('additional-info')
+
+    expect(expandable.classList.contains('js-hidden')).toBe(true)
+    expect(additionalInfo.innerHTML).toBe('Additional information is not required')
+
+    input.value = '0.0'
+    const event1 = new InputEvent('input')
+    input.dispatchEvent(event1)
+    expect(expandable.classList.contains('js-hidden')).toBe(false)
+    expect(additionalInfo.innerHTML).toBe('Additional information is required')
+
+    input.value = '1,000'
+    const event2 = new InputEvent('input')
+    input.dispatchEvent(event2)
+    expect(expandable.classList.contains('js-hidden')).toBe(true)
+    expect(additionalInfo.innerHTML).toBe('Additional information is not required')
+
+    input.value = ''
+    const event3 = new InputEvent('input')
+    input.dispatchEvent(event3)
+    expect(expandable.classList.contains('js-hidden')).toBe(true)
+    expect(additionalInfo.innerHTML).toBe('Additional information is not required')
+  })
+})
+
 describe('Multiple details expanders', () => {
   it('should toggle js-hidden on numeric values being input into the relevant field', () => {
-    document.body.innerHTML = '<div class="js-details-expander">' +
-      '<div id="form-group-fee_fees_5_amount" class="govuk-form-group ">' +
-      '<label for="fee_fees_5_amount" class="govuk-label ">Travel costs</label>' +
-      '<input type="text" id="fee_fees_5_amount" name="fee[fees][5][amount]" required="required" class="govuk-input govuk-!-width-one-quarter js-format-currency" rows="5">' +
-      '</div>' +
-      '<div id="form-group-fee_fees_5_moreDetails" class="govuk-form-group opg-indented-block hard--top js-hidden js-details-expandable">' +
-      '<label for="fee_fees_5_moreDetails" class="govuk-label">Please provide some detail</label>' +
-      '<textarea id="fee_fees_5_moreDetails" name="fee[fees][5][moreDetails]" required="required" class="govuk-textarea  govuk-!-width-one-half " rows="5"></textarea>' +
-      '</div></div>' +
-      '<div class="js-details-expander">' +
-      '<div id="form-group-fee_fees_6_amount" class="govuk-form-group ">' +
-      '<label for="fee_fees_6_amount" class="govuk-label ">Specialist services</label>' +
-      '<input type="text" id="fee_fees_6_amount" name="fee[fees][6][amount]" required="required" class="govuk-input govuk-!-width-one-quarter js-format-currency" rows="5">' +
-      '</div>' +
-      '<div id="form-group-fee_fees_6_moreDetails" class="govuk-form-group opg-indented-block hard--top js-hidden js-details-expandable">' +
-      '<label for="fee_fees_6_moreDetails" class="govuk-label">Please provide some detail</label>' +
-      '<textarea id="fee_fees_6_moreDetails" name="fee[fees][6][moreDetails]" required="required" class="govuk-textarea  govuk-!-width-one-half " rows="5"></textarea>' +
-      '</div></div>'
+    document.body.innerHTML = `
+      <div class="js-details-expander">
+        <div id="form-group-fee_fees_5_amount" class="govuk-form-group ">
+          <label for="fee_fees_5_amount" class="govuk-label ">Travel costs</label>
+          <input type="text" id="fee_fees_5_amount" name="fee[fees][5][amount]" required="required" class="govuk-input govuk-!-width-one-quarter js-format-currency" rows="5">
+        </div>
+        <div id="form-group-fee_fees_5_moreDetails" class="govuk-form-group opg-indented-block hard--top js-hidden js-details-expandable">
+          <label for="fee_fees_5_moreDetails" class="govuk-label">Please provide some detail</label>
+          <textarea id="fee_fees_5_moreDetails" name="fee[fees][5][moreDetails]" required="required" class="govuk-textarea  govuk-!-width-one-half " rows="5"></textarea>
+        </div>
+      </div>
+      <div class="js-details-expander">
+        <div id="form-group-fee_fees_6_amount" class="govuk-form-group ">
+          <label for="fee_fees_6_amount" class="govuk-label ">Specialist services</label>
+          <input type="text" id="fee_fees_6_amount" name="fee[fees][6][amount]" required="required" class="govuk-input govuk-!-width-one-quarter js-format-currency" rows="5">
+        </div>
+        <div id="form-group-fee_fees_6_moreDetails" class="govuk-form-group opg-indented-block hard--top js-hidden js-details-expandable">
+          <label for="fee_fees_6_moreDetails" class="govuk-label">Please provide some detail</label>
+          <textarea id="fee_fees_6_moreDetails" name="fee[fees][6][moreDetails]" required="required" class="govuk-textarea  govuk-!-width-one-half " rows="5"></textarea>
+        </div>
+      </div>
+    `
 
     DetailsExpander.init(document, '.js-details-expander')
     const firstInput = document.getElementById('fee_fees_5_amount')
