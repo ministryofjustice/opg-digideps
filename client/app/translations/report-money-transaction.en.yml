@@ -160,6 +160,7 @@ summaryPage:
         totalAmount: Total amount
 
 form:
+  thing: payment
   group:
     moneyIn.legend: What category does the item of income come under?
     moneyOut.legend: What category does the payment come under?
