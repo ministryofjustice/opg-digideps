@@ -281,11 +281,6 @@ trait AccountsSectionTrait
 
             $this->pressButton('Save and continue');
         }
-
-        $this->iAmOnAccountsAddAnotherPage();
-
-        $this->selectOption('add_another[addAnother]', 'no');
-        $this->pressButton('Continue');
     }
 
     /**
