@@ -162,6 +162,10 @@ class ReportRepository extends ServiceEntityRepository
                 ->setParameter('status', $status);
         }
 
+        // only include reports that are org-related (i.e. the report type has a -5 or -6 suffix)
+        $qb->andWhere('r.type IN (:includedTypes)')
+            ->setParameter('includedTypes', array_merge(Report::getAllPaTypes(), Report::getAllProfTypes()));
+
         if ('count' === $select) {
             return $qb->getQuery()->getSingleScalarResult();
         }
