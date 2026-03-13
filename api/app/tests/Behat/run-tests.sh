@@ -12,7 +12,7 @@ export APP_ENV=dev
 start=$(date +%s)
 
 echo "==== Starting test run ===="
-./vendor/bin/behat --config=./tests/Behat/behat.yml --rerun --profile v2-tests-browserkit $@
+./vendor/bin/behat --config=./tests/Behat/behat.yml --rerun $@
 if [ $? -ne 0 ]; then
     echo "==== Tests Failed. Exiting with failure ===="
     exit 1
