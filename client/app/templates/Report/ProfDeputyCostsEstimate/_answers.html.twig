@@ -36,6 +36,7 @@
                     href="{{ path('prof_deputy_costs_estimate_how_charged', {'reportId': report.id, 'from': 'summary'}) }}"
                     class="behat-link-edit govuk-link behat-link-edit-how-charged">
                     {{ 'edit' | trans({}, 'common' ) }}
+                    <span class="govuk-visually-hidden">{{ 'howCharged.form.profDeputyCostsEstimateHowCharged.label' | trans }}</span>
                 </a>
             </dd>
         {% endif %}
@@ -57,6 +58,7 @@
                         href="{{ path('prof_deputy_costs_estimate_breakdown', {'reportId': report.id, 'from': 'summary'}) }}"
                         class="behat-link-edit govuk-link behat-link-edit-breakdown-management-cost">
                         {{ 'edit' | trans({}, 'common' ) }}
+                        <span class="govuk-visually-hidden">{{ 'breakdown.form.profDeputyCostsEstimateManagementCost.sectionDescription' | trans(transOptions) }}</span>
                     </a>
                 </dd>
             {% endif %}
@@ -80,6 +82,7 @@
                             href="{{ path('prof_deputy_costs_estimate_more_info', {'reportId': report.id, 'from': 'summary'}) }}"
                             class="behat-link-edit govuk-link behat-link-edit-more-info">
                             {{ 'edit' | trans({}, 'common' ) }}
+                            <span class="govuk-visually-hidden">{{ 'moreInfo.form.profDeputyCostsEstimateHasMoreInfo.label' | trans }}</span>
                         </a>
                     </dd>
                 {% endif %}
@@ -111,6 +114,7 @@
                     class="govuk-link behat-link-edit behat-link-edit-breakdown-{{ estimateCostTypeId.typeId | lower }}"
                     href="{{ path('prof_deputy_costs_estimate_breakdown', {'reportId': report.id, 'from': 'summary'}) }}">
                     {{ 'edit' | trans({}, 'common') }}
+                    <span class="govuk-visually-hidden"> the cost of {{ ('breakdown.form.entries.' ~ estimateCostTypeId.typeId ~ '.label') | trans }}</span>
                 </a>
             </dd>
             {% endif %}

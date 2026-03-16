@@ -22,7 +22,10 @@
         </dd>
         {% if not hideEditLink  %}
             <dd class="govuk-summary-list__actions">
-                <a class="govuk-link behat-link-edit" href="{{ path('prof_deputy_costs_inline_interim_19b_exists', {'reportId': report.id, 'from': 'summary'}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                <a class="govuk-link behat-link-edit" href="{{ path('prof_deputy_costs_inline_interim_19b_exists', {'reportId': report.id, 'from': 'summary'}) }}">
+                    {{ 'edit' | trans({}, 'common' ) }}
+                    <span class="govuk-visually-hidden">{{ 'interimExists.form.profDeputyCostsHasInterim.label' | trans(transOptions) }}</span>
+                </a>
             </dd>
         {% endif %}
     </div>
@@ -38,7 +41,10 @@
             </dd>
             {% if not hideEditLink  %}
                 <dd class="govuk-summary-list__actions">
-                    <a class="govuk-link behat-link-edit" href="{{ path('prof_deputy_costs_inline_interim_19b', {'reportId': report.id, 'from': 'summary'}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    <a class="govuk-link behat-link-edit" href="{{ path('prof_deputy_costs_inline_interim_19b', {'reportId': report.id, 'from': 'summary'}) }}">
+                        {{ 'edit' | trans({}, 'common' ) }}
+                        <span class="govuk-visually-hidden">Costs for interim {{ loop.index }} paid {{  ic.date | date('j F Y')}} £{{ ic.amount | money_format }}</span>
+                    </a>
                 </dd>
             {% endif %}
         </div>
@@ -60,7 +66,10 @@
             </dd>
             {% if not hideEditLink  %}
                 <dd class="govuk-summary-list__actions">
-                    <a class="behat-link-edit govuk-link" href="{{ path('prof_deputy_costs_received', {'reportId': report.id, 'from': 'summary'}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    <a class="behat-link-edit govuk-link" href="{{ path('prof_deputy_costs_received', {'reportId': report.id, 'from': 'summary'}) }}">
+                        {{ 'edit' | trans({}, 'common' ) }}
+                        <span class="govuk-visually-hidden">Amount {{ (page ~ '.questionLabel.paidThisPeriod') | trans(transOptions) }}</span>
+                    </a>
                 </dd>
             {% endif %}
         </div>
@@ -81,7 +90,10 @@
             </dd>
             {% if not hideEditLink  %}
                 <dd class="govuk-summary-list__actions">
-                    <a class="behat-link-edit govuk-link" href="{{ path('prof_deputy_costs_amount_scco', {'reportId': report.id, 'from': 'summary'}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    <a class="behat-link-edit govuk-link" href="{{ path('prof_deputy_costs_amount_scco', {'reportId': report.id, 'from': 'summary'}) }}">
+                        {{ 'edit' | trans({}, 'common' ) }}
+                        <span class="govuk-visually-hidden">{{ 'amountToScco.form.profDeputyCostsAmountToScco.label' | trans }}</span>
+                    </a>
                 </dd>
             {% endif %}
         </div>
