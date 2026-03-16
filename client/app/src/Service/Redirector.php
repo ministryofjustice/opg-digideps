@@ -75,7 +75,7 @@ class Redirector
         return $this->router->generate('access_denied');
     }
 
-    public function getCorrectRouteIfDifferent(User $user, ?string $currentRoute = null): bool|string
+    public function getCorrectRouteIfDifferent(User $user, ?string $currentRoute = null): false|string
     {
         $coDeputySignupRoutes = [User::UNKNOWN_REGISTRATION_ROUTE, User::CO_DEPUTY_INVITE];
 
