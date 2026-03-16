@@ -30,7 +30,7 @@ RUN composer dump-autoload --optimize
 ##############################
 # Stage 2: Base PHP Image
 ##############################
-FROM php:8.3.24-fpm-alpine3.22 AS application
+FROM php:8.4.18-fpm-alpine3.22 AS application
 
 ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
 
@@ -78,6 +78,7 @@ COPY --chown=www-data:www-data api/app/scripts/wait-for-db.sh wait-for-db.sh
 COPY --chown=www-data:www-data api/docker/app/config/www.conf /usr/local/etc/php-fpm.d/www.conf
 COPY --chown=www-data:www-data api/docker/app/config/generate_parameters_yml.sh generate_parameters_yml.sh
 COPY --chown=www-data:www-data api/docker/app/config/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+COPY --chown=www-data:www-data api/docker/app/config/error-handling.ini /usr/local/etc/php/conf.d/error-handling.ini
 #Check processes script
 COPY --chown=www-data:www-data scripts/process_checks/check_processes.sh /var/www/check_processes.sh
 

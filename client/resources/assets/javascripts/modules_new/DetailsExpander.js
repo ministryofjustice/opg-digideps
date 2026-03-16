@@ -1,32 +1,50 @@
 const DetailsExpander = {
   init: function (document) {
-    const container = document.querySelectorAll('.js-details-expander')
+    const expanders = document.querySelectorAll('.js-details-expander')
 
-    container.forEach((userItem) => {
-      const inputBox = userItem.querySelector('input[type="text"]')
+    expanders.forEach(expander => {
+      const triggerElement = expander.querySelector('input[type="text"]')
+      const expandableElt = expander.querySelector('.js-details-expandable')
 
-      inputBox.addEventListener('input', this.expandDetails)
-      inputBox.addEventListener('paste', this.expandDetails)
-      inputBox.addEventListener('change', this.expandDetails)
+      const handler = this.makeHandler(triggerElement, expandableElt)
+
+      triggerElement.addEventListener('input', handler)
+      triggerElement.addEventListener('paste', handler)
+      triggerElement.addEventListener('change', handler)
+
+      // set starting visibility of expandable element
+      handler()
     })
   },
 
-  expandDetails: function (event) {
-    const container = document.querySelectorAll('.js-details-expander')
+  makeHandler: function (triggerElement, expandableElement) {
+    return function () {
+      // convert to an integer so we can perform comparisons with 0
+      const numericValue = Math.round(parseFloat(triggerElement.value.replace(/,/g, '')) * 100)
 
-    container.forEach((userItem) => {
-      const textareaGroup = userItem.querySelector('.js-details-expandable')
-      if (textareaGroup) {
-        if (userItem.contains(event.target)) {
-          const value = parseFloat(event.target.value.replace(/,/g, ''))
-          if (!isNaN(value) && value !== 0) {
-            textareaGroup.classList.remove('js-hidden')
-          } else {
-            textareaGroup.classList.add('js-hidden')
-          }
-        }
+      // if the data-expand-if-zero attribute is present, the expandable element is shown only
+      // when the value of the expander text input is zero; otherwise, the
+      // expandable element is shown when the text input is *not* zero (default)
+      const expandIfZero = triggerElement.hasAttribute('data-expand-if-zero')
+
+      const shouldExpand = !isNaN(numericValue) && (
+        (expandIfZero && numericValue === 0) || (!expandIfZero && numericValue > 0)
+      )
+
+      // if the expandable element contains an aria-live element, update
+      // its content so that users of assistive technologies are aware that
+      // additional information is being requested
+      const ariaLiveElement = expandableElement.querySelector('[aria-live]')
+      if (ariaLiveElement) {
+        ariaLiveElement.textContent = shouldExpand
+          ? 'Additional information is required'
+          : 'Additional information is not required'
       }
-    })
+
+      expandableElement.classList.toggle('js-hidden', !shouldExpand)
+      expandableElement.setAttribute('aria-hidden', !shouldExpand)
+      expandableElement.setAttribute('aria-expanded', shouldExpand)
+    }
   }
 }
 

@@ -1,4 +1,4 @@
-@v2 @v2_reporting_2 @money-in-low-assets
+@v2 @v2_reporting_2 @money-in-low-assets @money-in
 Feature: Money in Low Assets - Lay users
 
     @lay-pfa-low-not-started
