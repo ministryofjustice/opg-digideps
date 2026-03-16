@@ -102,10 +102,16 @@
                         </td>
                         <td class="width-eighth text--right hard--right  behat-region-client-profile-contacts-display-actions">
                             {% if is_granted('edit-client-contact', client) %}
-                            <a href="{{ path('clientcontact_edit'  , {'id': contact.id}) }}" class="behat-link-edit-contact-button">{{ 'edit' | trans({}, 'common') }}</a>
+                                <a href="{{ path('clientcontact_edit'  , {'id': contact.id}) }}" class="behat-link-edit-contact-button">
+                                    {{ 'edit' | trans({}, 'common') }}
+                                    <span class="govuk-visually-hidden">{{ contact.firstName }} {{ contact.lastName }}</span>
+                                </a>
                             {% endif %}
                             {% if is_granted('delete-client-contact', client) %}
-                            <a href="{{ path('clientcontact_delete', {'id': contact.id}) }}" class="behat-link-delete-contact-button">{{ 'remove' | trans({}, 'common') }}</a>
+                                <a href="{{ path('clientcontact_delete', {'id': contact.id}) }}" class="behat-link-delete-contact-button">
+                                    {{ 'remove' | trans({}, 'common') }}
+                                    <span class="govuk-visually-hidden">{{ contact.firstName }} {{ contact.lastName }}</span>
+                                </a>
                             {% endif %}
                         </td>
 

@@ -73,7 +73,6 @@ reportManage:
     confirmation:
       option: Option
       selection: Selection
-      edit: Edit
       submittedGuidance: |
         Please read through and confirm the options you have selected
         before marking this report as incomplete.
