@@ -58,8 +58,7 @@ trait ReportSubmissionTrait
      */
     public function documentsAreSetToQueued()
     {
-        $reportPrefix = 'ndr' === $this->interactingWithUserDetails->getCurrentReportNdrOrReport() ? 'NdrRep-' : 'DigiRep-';
-        $this->assertRowWithStatusAppears($reportPrefix, 'Queued');
+        $this->assertRowWithStatusAppears('DigiRep-', 'Queued');
     }
 
     /**

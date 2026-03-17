@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\CourtOrder;
 
-use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
@@ -15,7 +14,6 @@ use App\Service\Client\Internal\ClientApi;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\DeputyTestHelper;
 use App\Tests\Behat\BehatException;
-use Behat\Mink\Element\NodeElement;
 
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertStringContainsString;
@@ -52,7 +50,7 @@ trait CourtOrderTrait
         // create a court order if we don't already have one, associated with a random user
         // (not the logged in user)
         if (is_null($this->courtOrder)) {
-            $data = $this->fixtureHelper->createLayNdrNotStarted($this->testRunId);
+            $data = $this->fixtureHelper->createLayReportNotStarted($this->testRunId);
 
             $client = $this->em->getRepository(Client::class)->find($data['clientId']);
             $user = $this->em->getRepository(User::class)->find($data['userId']);
@@ -218,37 +216,6 @@ trait CourtOrderTrait
         if (count($orders) !== $arg1) {
             throw new BehatException(sprintf('Expected %d orders, got %d', $arg1, count($orders)));
         }
-    }
-
-    /**
-     * @Given /^I should see an NDR on the court order page with a status of \'([^\']*)\' with standard report status of \'([^\']*)\'$/
-     */
-    public function iShouldSeeAnNDROnTheCourtOrderPageWithAStandardReportStatusOf($arg1, $arg2)
-    {
-        /** @var array<NodeElement> $ndrHeading */
-        $ndrHeading = $this->findAllCssElements('main h2');
-
-        /** @var array<NodeElement> $ndrStatus */
-        $ndrStatus = $this->findAllXpathElements('//div[contains(@class, "behat-region-ndr-card")]/span[contains(@class, "opg-card__tag")]');
-
-        /** @var array<NodeElement> $reportStatus */
-        $reportStatus = $this->findAllXpathElements('//div[contains(@class, "behat-region-report-card")]/span[contains(@class, "opg-card__tag")]');
-
-        // second h2 inside main is the new deputy report; TODO make this not so brittle
-        $text = 'New deputy report';
-        if (!str_contains($ndrHeading[1]->getText(), $text)) {
-            throw new BehatException(sprintf('Expected to find text \'%s\' on page, unable to find on page', $text));
-        }
-
-        if (!str_contains($ndrStatus[0]->getText(), $arg1)) {
-            throw new BehatException(sprintf('Expected to find a New Deputy Report with a status of \'%s\', found a status of \'%s\' instead', $arg1, $ndrStatus[0]->getText()));
-        }
-
-        if (!str_contains($reportStatus[0]->getText(), $arg2)) {
-            throw new BehatException(sprintf('Expected to find a New Deputy Report with a status of \'%s\', found a status of \'%s\' instead', $arg2, $reportStatus[0]->getText()));
-        }
-
-        $this->clickLink('Start Now');
     }
 
     /**
@@ -421,15 +388,10 @@ trait CourtOrderTrait
             );
         }
 
-        // associate the court order with the client's reports, ndr, and deputies
+        // associate the court order with the client's reports and deputies
         $reports = $this->em->getRepository(Report::class)->findBy(['client' => $client]);
         foreach ($reports as $report) {
             $courtOrder->addReport($report);
-        }
-
-        $ndr = $this->em->getRepository(Ndr::class)->findOneBy(['client' => $client]);
-        if (!is_null($ndr)) {
-            $courtOrder->setNdr($ndr);
         }
 
         // associate the client's deputies with the court order

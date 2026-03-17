@@ -1,58 +1,3 @@
-cross-browser-chrome:
-    suites:
-        chrome:
-            description: Coverage of user journeys using the Chrome browser
-            paths: ["%paths.base%/features-v2/cross-browser"]
-            filters:
-                tags: "@chrome"
-            contexts:
-                - App\Tests\Behat\CrossBrowser\CrossBrowserFeatureContext
-    extensions:
-        Behat\MinkExtension:
-            browser_stack:
-                capabilities:
-                    browser: "chrome"
-                    browserVersion: "latest"
-                    os: "Windows"
-                    os_version: "10"
-                    build: "Chrome"
-
-cross-browser-ie11:
-    suites:
-        ie11:
-            description: Coverage of user journeys using the Internet Explorer 11 browser
-            paths: ["%paths.base%/features-v2/cross-browser"]
-            filters:
-                tags: "@ie11"
-            contexts:
-                - App\Tests\Behat\CrossBrowser\CrossBrowserFeatureContext
-    extensions:
-        Behat\MinkExtension:
-            browser_stack:
-                capabilities:
-                    browser: "ie"
-                    browserVersion: "11"
-                    os: "Windows"
-                    os_version: "10"
-                    build: "Internet Explorer"
-
-cross-browser-android-chrome:
-    suites:
-        android-chrome:
-            description: Coverage of user journeys using the Chrome browser on an android device
-            paths: ["%paths.base%/features-v2/cross-browser"]
-            filters:
-                tags: "@android-chrome"
-            contexts:
-                - App\Tests\Behat\CrossBrowser\CrossBrowserFeatureContext
-    extensions:
-        Behat\MinkExtension:
-            browser_stack:
-                capabilities:
-                    os_version: "9.0"
-                    device: "Samsung Galaxy S10"
-                    build: "Android"
-
 v2-tests-browserkit:
     formatters:
         pretty:
@@ -92,6 +37,12 @@ v2-tests-browserkit:
             paths: ["%paths.base%/features-v2/client-management"]
             contexts:
                 - App\Tests\Behat\v2\ClientManagement\ClientManagementFeatureContext
+
+        contacts:
+            description: Covering the 'Contacts' section of the report
+            paths: ["%paths.base%/features-v2/reporting/sections/contacts"]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         contact-details:
             description: Coverage of displaying contact details based on user role
@@ -334,27 +285,3 @@ v2-tests-browserkit:
                 path: "%paths.base%/../../src/Kernel.php"
                 class: App\Kernel
         Liuggio\Fastest\Behat\ListFeaturesExtension\Extension: ~
-
-v2-tests-browserstack:
-    suites:
-        contacts:
-            description: Covering the 'Contacts' section of the report
-            paths: ["%paths.base%/features-v2/reporting/sections/contacts"]
-            contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
-    extensions:
-        Behat\MinkExtension:
-            files_path: "%paths.base%/fixtures/"
-            default_session: browser_stack
-            browser_stack:
-                capabilities:
-                    browserstack-debug: true
-                    browserstack-tunnel: true
-                    acceptSslCerts: true
-                    project: "Digideps Cross Browser Test - Manual"
-                    browser: "chrome"
-                    browserVersion: "latest"
-                    os: "Windows"
-                    os_version: "10"
-                    build: "Chrome"
-                    name: "v2-tests"
