@@ -43,10 +43,11 @@ trait ActivateTrait
 
         $this->newUsers += [$this->testRunId => ['type' => $typeOfUser, 'email' => $this->faker->safeEmail()]];
 
-        $firstName = strtolower($typeOfUser) === 'lay' ? $this->existingPreRegistration->getDeputyFirstname() : $this->faker->firstName();
-        $lastName = strtolower($typeOfUser) == 'lay' ? $this->existingPreRegistration->getDeputySurname() : $this->faker->lastName();
-        $postCode = strtolower($typeOfUser) == 'lay' ? $this->existingPreRegistration->getDeputyPostCode() : $this->faker->postcode();
-        $roleName = strtolower($typeOfUser) == 'lay' ? 'ROLE_LAY_DEPUTY' : 'ROLE_PROF_ADMIN';
+        $isLayUser = strtolower($typeOfUser) === 'lay';
+        $firstName = $isLayUser ? $this->existingPreRegistration->getDeputyFirstname() : $this->faker->firstName();
+        $lastName = $isLayUser ? $this->existingPreRegistration->getDeputySurname() : $this->faker->lastName();
+        $postCode = $isLayUser ? $this->existingPreRegistration->getDeputyPostCode() : $this->faker->postcode();
+        $roleName = $isLayUser ? 'ROLE_LAY_DEPUTY' : 'ROLE_PROF_ADMIN';
 
         $this->fillInField('admin_email', $this->getUserForTestRun()['email']);
         $this->fillInField('admin_firstname', $firstName);
