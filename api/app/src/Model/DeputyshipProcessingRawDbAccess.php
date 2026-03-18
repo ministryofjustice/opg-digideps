@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Model;
 
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
+use App\v2\Registration\Enum\DeputyshipCandidatePostAction;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
 
@@ -229,6 +230,29 @@ class DeputyshipProcessingRawDbAccess
             );
 
             return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::UpdateDeputyStatus, false, null, $message);
+        }
+    }
+
+    public function updateReportType(int $reportId, string $reportType): DeputyshipProcessingRawDbAccessResult
+    {
+        try {
+            $result = $this->ingestWriterEm->getConnection()->createQueryBuilder()
+                ->update('report')
+                ->set('type', ':reportType')
+                ->where('id = :id')
+                ->setParameter('id', $reportId)
+                ->setParameter('reportType', $reportType)
+                ->executeQuery();
+
+            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidatePostAction::UpdateReportType, true, $result);
+        } catch (\Exception $e) {
+            $message = sprintf(
+                'update report type on report not applied for report ID %s; exception was %s',
+                $reportId,
+                $e->getMessage()
+            );
+
+            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidatePostAction::UpdateReportType, false, null, $message);
         }
     }
 }
