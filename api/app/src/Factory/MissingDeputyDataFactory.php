@@ -22,17 +22,22 @@ class MissingDeputyDataFactory implements DataFactoryInterface
         return 'MissingDeputy';
     }
 
-    public function run(): DataFactoryResult
+    /**
+     * @return array<DataFactoryResult, ?BuilderResultInterface>
+     */
+    public function run(): array
     {
         // create deputies where missing, and associate users with deputies where they don't have one
         try {
             $numUserDeputyAssociations = $this->userDeputyService->addMissingUserDeputies();
             $messages = ['Success' => ["Added $numUserDeputyAssociations user <-> deputy associations"]];
+
+            $result = new DataFactoryResult(messages: $messages);
         } catch (\Exception $e) {
             $errors = ['Error' => ['Error encountered while adding user <-> deputy associations: ' . $e->getMessage()]];
-            return new DataFactoryResult(errorMessages: $errors);
+            $result = new DataFactoryResult(errorMessages: $errors);
         }
 
-        return new DataFactoryResult(messages: $messages);
+        return [$result, null];
     }
 }

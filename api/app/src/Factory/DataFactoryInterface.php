@@ -14,5 +14,6 @@ interface DataFactoryInterface
     public function getName(): string;
 
     // run some form of data addition/fix/deletion etc. against the database
-    public function run(): DataFactoryResult;
+    /** array<DataFactoryResult, ?BuilderResultInterface> */
+    public function run(): array;
 }

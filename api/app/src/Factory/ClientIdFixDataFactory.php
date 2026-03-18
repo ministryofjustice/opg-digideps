@@ -19,7 +19,10 @@ class ClientIdFixDataFactory implements DataFactoryInterface
         return 'ClientIdFix';
     }
 
-    public function run(): DataFactoryResult
+    /**
+     * @return array<DataFactoryResult, ?BuilderResultInterface>
+     */
+    public function run(): array
     {
         // while this SQL only queries for court orders where the client ID needs to be updated,
         // we will (for now) also update reports associated with those clients
@@ -68,10 +71,12 @@ class ClientIdFixDataFactory implements DataFactoryInterface
                     [$newClientId, $oldClientId],
                 );
             }
+
+            $dataFactoryResult = new DataFactoryResult(messages: ['Success' => ['Client IDs patched successfully']]);
         } catch (Exception $e) {
-            return new DataFactoryResult(errorMessages: ['Error' => ['Database error: ' . $e->getMessage()]]);
+            $dataFactoryResult = new DataFactoryResult(errorMessages: ['Error' => ['Database error: ' . $e->getMessage()]]);
         }
 
-        return new DataFactoryResult(messages: ['Success' => ['Client IDs patched successfully']]);
+        return [$dataFactoryResult, null];
     }
 }
