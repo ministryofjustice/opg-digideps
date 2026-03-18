@@ -1,0 +1,87 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\v2\Registration\DeputyshipProcessing;
+
+use App\Model\DeputyshipProcessingRawDbAccessResult;
+
+abstract class BuilderResult
+{
+    protected int $numCandidatesApplied = 0;
+
+    protected int $numCandidatesFailed = 0;
+
+    public function __construct(
+        protected readonly \UnitEnum $outcome,
+        /** @var string[] $errors */
+        protected array $errors = [],
+        /** @var array<string, int> $candidatesApplied */
+        protected array $candidatesApplied = []
+    ) {
+    }
+
+    public function hasErrors(): bool
+    {
+        return count($this->errors) > 0;
+    }
+
+    public function getOutcome(): \UnitEnum
+    {
+        return $this->outcome;
+    }
+
+    public function getMessage(): string
+    {
+        $message = 'Builder result: skipped candidates = ' . $this->numCandidatesSkipped .
+            '; applied candidates = ' . $this->numCandidatesApplied;
+
+        $candidateDetails = [];
+        foreach ($this->candidatesApplied as $action => $num) {
+            $candidateDetails[] = $action . ':' . $num;
+        }
+
+        if (count($candidateDetails) > 0) {
+            $message .= '; candidate details = ' . implode('|', $candidateDetails);
+        }
+
+        return $message;
+    }
+
+    public function getErrorMessage(): ?string
+    {
+        if (0 == count($this->errors)) {
+            return null;
+        }
+
+        return 'ERRORS while applying candidates: ' . implode(' / ', $this->errors);
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getErrors(): array
+    {
+        return $this->errors;
+    }
+
+    /**
+     * Record the result of applying a candidate to the database.
+     * If $result->success is true, the insert or update was a success; otherwise, it failed, and exception message is stored.
+     */
+    public function addCandidateResult(DeputyshipProcessingRawDbAccessResult $result): void
+    {
+        if ($result->success) {
+            ++$this->numCandidatesApplied;
+            ++$this->candidatesApplied[$result->action->value];
+        } else {
+            ++$this->numCandidatesFailed;
+
+            if (!is_null($result->error)) {
+                $this->errors[] = $result->error;
+            }
+        }
+    }
+
+    abstract public function addActionResult(\UnitEnum $actionResult): void;
+}
