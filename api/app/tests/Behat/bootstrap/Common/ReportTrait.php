@@ -13,18 +13,13 @@ trait ReportTrait
     private static $currentReportCache = [];
     protected $sections103 = ['Deputy expenses', 'Decisions', 'Contacts', 'Visits and care', 'Accounts', 'Gifts', 'Money in', 'Money out', 'Assets', 'Debts', 'Actions', 'Other information', 'Documents'];
 
-    private function gotoOverview()
-    {
-        $this->clickOnBehatLink('breadcrumbs-report-overview');
-    }
-
     /**
      * @When I save the report as :reportId
      */
-    public function iSaveTheReportAs($reportId)
+    public function iSaveTheReportAs($reportId): void
     {
         $url = $this->getSession()->getCurrentUrl();
-        preg_match('/\/(ndr|report)\/(\d+)\//', $url, $match);
+        preg_match('/\/report\/(\d+)\//', $url, $match);
         self::$reportsCache[$reportId] = [
             'type' => $match[1],
             'id' => $match[2],
@@ -34,7 +29,7 @@ trait ReportTrait
     /**
      * @When I go to the report URL :url for :reportId
      */
-    public function iGoToTheReportUrl($url, $reportId)
+    public function iGoToTheReportUrl($url, $reportId): void
     {
         $report = self::$reportsCache[$reportId];
         $fullUrl = '/' . $report['type'] . '/' . $report['id'] . '/' . $url;
@@ -45,7 +40,7 @@ trait ReportTrait
     /**
      * @Then the following :reportId report pages should return the following status:
      */
-    public function theFollowingReportPagesShouldReturnTheFollowingStatus($reportId, TableNode $table)
+    public function theFollowingReportPagesShouldReturnTheFollowingStatus(int $reportId, TableNode $table): void
     {
         $report = self::$reportsCache[$reportId];
 
@@ -54,7 +49,7 @@ trait ReportTrait
             $this->visitPath($fullUrl);
 
             $actual = $this->getSession()->getStatusCode();
-            if (intval($expectedReturnCode) !== intval($actual)) {
+            if (intval($expectedReturnCode) !== $actual) {
                 throw new RuntimeException("$fullUrl: Current response status code is $actual, but $expectedReturnCode expected.");
             }
         }
@@ -63,7 +58,7 @@ trait ReportTrait
     /**
      * @Given the :usertype report should not be submittable
      */
-    public function theReportShouldNotBeSubmittable($usertype = 'lay')
+    public function theReportShouldNotBeSubmittable($usertype = 'lay'): void
     {
         $usertype = strtolower(trim($usertype));
         $this->assertUrlRegExp('#/overview#');
@@ -105,7 +100,7 @@ trait ReportTrait
     {
         $this->iAmLoggedInAsWithPassword($deputy . '@behat-test.com', 'DigidepsPass1234');
         $this->enterReport($client, $startDate, $endDate);
-        preg_match('/\/(ndr|report)\/(\d+)\//', $this->getSession()->getCurrentUrl(), $match);
+        preg_match('/\/report\/(\d+)\//', $this->getSession()->getCurrentUrl(), $match);
 
         self::$currentReportCache = [
             'deputy' => $deputy,
@@ -124,7 +119,7 @@ trait ReportTrait
     {
         $this->enterReport($client, $startDate, $endDate);
 
-        preg_match('/\/(ndr|report)\/(\d+)\//', $this->getSession()->getCurrentUrl(), $match);
+        preg_match('/\/report\/(\d+)\//', $this->getSession()->getCurrentUrl(), $match);
 
         self::$currentReportCache = [
             'client' => $client,
@@ -260,11 +255,7 @@ trait ReportTrait
     {
         $reportType = self::$currentReportCache['reportType'];
 
-        if ('ndr' === $reportType) {
-            $this->completeNdr();
-        } else {
-            $this->completeReport($reportType);
-        }
+        $this->completeReport($reportType);
     }
 
     /**
@@ -296,22 +287,20 @@ trait ReportTrait
      */
     public function iSubmitTheReport(): void
     {
-        $reportType = self::$currentReportCache['reportType'];
         $reportId = self::$currentReportCache['reportId'];
 
-        $this->visit("$reportType/$reportId/overview");
+        $this->visit("report/$reportId/overview");
 
         try {
             $this->clickLink('Preview and check report');
         } catch (Exception $e) {
-            $link = 'ndr' === $reportType ? 'edit-report-review' : 'edit-report_submit';
-            $this->clickOnBehatLink($link);
+            $this->clickOnBehatLink('edit-report_submit');
         }
 
-        $this->clickOnBehatLink('report' === $reportType ? 'declaration-page' : 'ndr-declaration-page');
-        $this->checkOption(sprintf('%s_declaration[agree]', $reportType));
-        $this->selectOption(sprintf('%s_declaration[agreedBehalfDeputy]', $reportType), 'only_deputy');
-        $this->pressButton(sprintf('%s_declaration[save]', $reportType));
+        $this->clickOnBehatLink('declaration-page');
+        $this->checkOption('report_declaration[agree]');
+        $this->selectOption('report_declaration[agreedBehalfDeputy]', 'only_deputy');
+        $this->pressButton('report_declaration[save]');
     }
 
     private function completeSections(string $sections, string $reportType = 'report')
@@ -368,12 +357,5 @@ trait ReportTrait
         }
 
         $this->completeSections(implode(',', $sectionNames), $reportType);
-    }
-
-    private function completeNdr()
-    {
-        $this->logInAndEnterReport();
-
-        $this->completeSections(implode(',', ['visits_care', 'expenses', 'income_benefits', 'bank_accounts', 'assets', 'debts', 'actions', 'other_info']), 'ndr');
     }
 }

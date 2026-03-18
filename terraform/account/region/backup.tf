@@ -45,14 +45,33 @@ resource "aws_iam_role_policy_attachment" "backup_service_attach" {
 resource "aws_backup_plan" "rds_backup_plan" {
   name = "backup-plan-${var.account.name}"
 
+  # Rule 1 – daily snapshot with cross-account copy
   rule {
-    rule_name                = "daily-rds-snapshots"
+    rule_name                = "continuous-rds-backup"
     target_vault_name        = aws_backup_vault.immutable_vault.name
-    schedule                 = "cron(0 05 * * ? *)"
     enable_continuous_backup = true
 
     lifecycle {
       delete_after = 14
+    }
+  }
+
+  # Rule 2 – daily snapshot with cross-account copy
+  rule {
+    rule_name         = "daily-snapshot-copy"
+    target_vault_name = aws_backup_vault.immutable_vault.name
+    schedule          = "cron(0 05 * * ? *)"
+
+    lifecycle {
+      delete_after = 14
+    }
+
+    copy_action {
+      destination_vault_arn = local.backup_vault
+
+      lifecycle {
+        delete_after = 14
+      }
     }
   }
 }
@@ -70,4 +89,9 @@ resource "aws_backup_selection" "rds_selection" {
     key   = "backup_to_vault"
     value = "true"
   }
+}
+
+locals {
+  backup_account_id = "238302996107"
+  backup_vault      = "arn:aws:backup:${data.aws_region.current.name}:${local.backup_account_id}:backup-vault:digideps-${data.aws_region.current.name}-${var.account.name}-backup"
 }

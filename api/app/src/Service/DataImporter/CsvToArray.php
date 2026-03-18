@@ -35,7 +35,7 @@ class CsvToArray
     public function create(string $filename): array
     {
         try {
-            $reader = Reader::createFromPath($filename);
+            $reader = Reader::from($filename);
             $reader->setHeaderOffset(0);
         } catch (UnavailableStream) {
             throw new \RuntimeException("file {$filename} not found");

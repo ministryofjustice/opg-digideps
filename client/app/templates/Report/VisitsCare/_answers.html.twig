@@ -29,7 +29,10 @@
         {% endif %}
         {% if not hideEditLink  %}
             <dd class="govuk-summary-list__actions">
-                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-live-with-client-edit govuk-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="behat-link-live-with-client-edit govuk-link">
+                    {{ 'edit' | trans({}, 'common' ) }}
+                    <span class="govuk-visually-hidden">{{ 'form.doYouLiveWithClient.label' | trans(transOptions) }}</span>
+                </a>
             </dd>
         {% endif %}
     </div>
@@ -44,7 +47,10 @@
             </dd>
             {% if not hideEditLink  %}
                 <dd class="govuk-summary-list__actions">
-                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="govuk-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}" class="govuk-link">
+                        {{ 'edit' | trans({}, 'common' ) }}
+                        <span class="govuk-visually-hidden">{{ 'form.howOftenDoYouContactClient.labelShort' | trans(transOptions) }}</span>
+                    </a>
                 </dd>
             {% endif %}
         </div>
@@ -69,7 +75,10 @@
         {% endif %}
         {% if not hideEditLink  %}
             <dd class="govuk-summary-list__actions">
-                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}" class="govuk-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}" class="govuk-link">
+                    {{ 'edit' | trans({}, 'common' ) }}
+                    <span class="govuk-visually-hidden">{{ 'form.doesClientReceivePaidCare.label' | trans(transOptions) }}</span>
+                </a>
             </dd>
         {% endif %}
     </div>
@@ -84,7 +93,10 @@
             </dd>
             {% if not hideEditLink  %}
                 <dd class="govuk-summary-list__actions">
-                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}" class="govuk-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                    <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}" class="govuk-link">
+                        {{ 'edit' | trans({}, 'common' ) }}
+                        <span class="govuk-visually-hidden">{{ 'form.howIsCareFunded.label' | trans(transOptions) }}</span>
+                    </a>
                 </dd>
             {% endif %}
         </div>
@@ -111,7 +123,10 @@
         {% endif %}
         {% if not hideEditLink  %}
             <dd class="govuk-summary-list__actions">
-                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':3, 'from': 'summary'}) }}" class="govuk-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':3, 'from': 'summary'}) }}" class="govuk-link">
+                    {{ 'edit' | trans({}, 'common' ) }}
+                    <span class="govuk-visually-hidden">{{ 'form.whoIsDoingTheCaring.label' | trans(transOptions) }}</span>
+                </a>
             </dd>
         {% endif %}
     </div>
@@ -133,10 +148,14 @@
             </dt>
             <dd class="govuk-summary-list__value">
                 {{ report.visitsCare.doesClientHaveACarePlan | capitalize }}
-        </dd>
+            </dd>
         {% endif %}
         {% if not hideEditLink  %}
-            <dd class="govuk-summary-list__actions"><a href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': 'summary'}) }}" class="govuk-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+            <dd class="govuk-summary-list__actions">
+                <a href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': 'summary'}) }}" class="govuk-link">
+                    {{ 'edit' | trans({}, 'common' ) }}
+                    <span class="govuk-visually-hidden">{{ 'form.doesClientHaveACarePlan.label' | trans(transOptions) }}</span>
+                </a>
             </dd>
         {% endif %}
     </div>
@@ -155,6 +174,7 @@
                         href="{{ path('visits_care_step', {'reportId': report.id, 'step':4, 'from': 'summary'}) }}"
                         class="govuk-link">
                         {{ 'edit' | trans({}, 'common' ) }}
+                        <span class="govuk-visually-hidden">{{ 'form.whenWasCarePlanLastReviewed.label' | trans(transOptions) }}</span>
                     </a>
                 </dd>
             {% endif %}

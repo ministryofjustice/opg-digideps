@@ -55,6 +55,8 @@ class ActionController extends AbstractController
         }
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $action = $report->getAction() ?: new Action();
+
+        /** @var string $fromPage */
         $fromPage = $request->get('from');
 
         $stepRedirector = $this->stepRedirector

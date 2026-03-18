@@ -63,8 +63,11 @@
     {% endif %}
 
     {% set attr = { 'class': class, 'rows': '5', 'aria-describedby': describedby } %}
-    {% if dataModule%}
+    {% if dataModule %}
         {% set attr = attr|merge({'data-module': dataModule}) %}
+    {% endif %}
+    {% if extraAttrs | length > 0 %}
+        {% set attr = attr|merge(extraAttrs) %}
     {% endif %}
     {% if element.vars.valid %}
         {{ form_widget(element, {

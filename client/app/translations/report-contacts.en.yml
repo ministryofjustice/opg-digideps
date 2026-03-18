@@ -20,6 +20,9 @@ existPage:
     reasonForNoContacts:
       label: Please explain why you did not need anyone to help you
       hint: ""
+    headingReasonForNoContacts:
+      label: Reason for no contacts
+      hint: ""
     save:
       label: Save and continue
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Registration;
 
-use DateTime;
 use App\Entity\Client;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
@@ -50,8 +49,6 @@ trait IngestTrait
         'sirius_case_numbers' => [],
     ];
 
-    private ?DateTime $expectedClientCourtDate = null;
-
     private string $expectedDeputyName = '';
     private string $expectedDeputyAddress = '';
     private string $expectedReportType = '';
@@ -59,13 +56,13 @@ trait IngestTrait
     private string $expectedUnexpectedColumn = '';
     private string $csvFileName = '';
 
-    private $clientBeforeCsvUpload;
-    private $clientAfterCsvUpload;
+    private Client $clientBeforeCsvUpload;
+    private Client $clientAfterCsvUpload;
 
     /**
      * @Given a csv has been uploaded to the sirius bucket with the file :fileName
      */
-    public function aCsvHasBeenUploadedTheSiriusBucketWithTheFile(string $fileName)
+    public function aCsvHasBeenUploadedTheSiriusBucketWithTheFile(string $fileName): void
     {
         $this->visitFrontendPath($this->getClientLoginPageUrl());
 
@@ -78,12 +75,14 @@ trait IngestTrait
         }
 
         $this->s3->store($this->csvFileName, $fileBody);
+
+        unset($fileBody);
     }
 
     /**
      * @When I run the lay CSV command the file contains the following new entities:
      */
-    public function iUploadAnOrgCsvThatContainsTheFollowingNewEntities(TableNode $table)
+    public function iUploadAnOrgCsvThatContainsTheFollowingNewEntities(TableNode $table): void
     {
         $hash = $table->getHash();
 
@@ -102,10 +101,8 @@ trait IngestTrait
     /**
      * @Then the new :type entities should be added to the database
      */
-    public function theNewEntitiesShouldBeAddedToTheDatabase(string $type)
+    public function theNewEntitiesShouldBeAddedToTheDatabase(string $type): void
     {
-        //        $this->iAmOnCorrectUploadPage($type);
-
         if (in_array(strtolower($type), ['org', 'pa'])) {
             $this->assertIntEqualsInt(
                 $this->clients['added']['expected'],
@@ -139,7 +136,7 @@ trait IngestTrait
     /**
      * @Then the count of the new :type entities added should be in the command output
      */
-    public function theNewEntitiesCountShouldBeInTheCommandOutput(string $type)
+    public function theNewEntitiesCountShouldBeInTheCommandOutput(string $type): void
     {
         $output = $this->output->fetch();
         if (in_array(strtolower($type), ['org', 'pa'])) {
@@ -228,7 +225,7 @@ trait IngestTrait
         );
     }
 
-    private function extractUidsFromCsv($csvFilePath)
+    private function extractUidsFromCsv(string $csvFilePath): void
     {
         if ($this->getMinkParameter('files_path')) {
             $fullPath = rtrim(realpath($this->getMinkParameter('files_path')), DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR . $csvFilePath;
@@ -237,7 +234,12 @@ trait IngestTrait
             }
         }
 
-        $csvRows = array_map('str_getcsv', file($csvFilePath));
+        $fileContents = file($csvFilePath);
+        $csvRows = [];
+        foreach ($fileContents as $row) {
+            $csvRows[] = str_getcsv($row, ',', '"', '');
+        }
+        unset($fileContents);
 
         array_walk($csvRows, function (&$a) use ($csvRows): void {
             $a = array_combine($csvRows[0], $a);
@@ -257,35 +259,44 @@ trait IngestTrait
         $this->entityUids['sirius_case_numbers'] = array_unique($this->entityUids['sirius_case_numbers']);
         $this->entityUids['deputy_uids'] = array_unique($this->entityUids['deputy_uids']);
         $this->entityUids['org_email_identifiers'] = array_unique($this->entityUids['org_email_identifiers']);
+
+        unset($csvRows);
     }
 
-    private function countCreatedEntities()
+    private function countCreatedEntities(): void
     {
         $this->em->clear();
 
         $clients = $this->em->getRepository(Client::class)->findBy(['caseNumber' => $this->entityUids['client_case_numbers']]);
-        $deputies = $this->em->getRepository(Deputy::class)->findBy(['deputyUid' => $this->entityUids['deputy_uids']]);
-        $orgs = $this->em->getRepository(Organisation::class)->findBy(['emailIdentifier' => $this->entityUids['org_email_identifiers']]);
-        $preRegistrations = $this->em->getRepository(PreRegistration::class)->findBy(['caseNumber' => $this->entityUids['sirius_case_numbers']]);
 
-        $reports = [];
+        $numClients = 0;
+        $numReports = 0;
         foreach ($clients as $client) {
-            foreach ($client->getReports() as $report) {
-                $reports[] = $report;
-            }
+            ++$numClients;
+            $numReports += count($client->getReports());
         }
+        $this->clients['added']['found'] = $numClients;
+        $this->reports['added']['found'] = $numReports;
 
-        $this->clients['added']['found'] = count($clients);
+        unset($clients);
+
+        $deputies = $this->em->getRepository(Deputy::class)->findBy(['deputyUid' => $this->entityUids['deputy_uids']]);
         $this->deputies['added']['found'] = count($deputies);
+        unset($deputies);
+
+        $orgs = $this->em->getRepository(Organisation::class)->findBy(['emailIdentifier' => $this->entityUids['org_email_identifiers']]);
         $this->organisations['added']['found'] = count($orgs);
+        unset($orgs);
+
+        $preRegistrations = $this->em->getRepository(PreRegistration::class)->findBy(['caseNumber' => $this->entityUids['sirius_case_numbers']]);
         $this->preRegistration['found'] = count($preRegistrations);
-        $this->reports['added']['found'] = count($reports);
+        unset($preRegistrations);
     }
 
     /**
      * @When I run the lay CSV command the file has a new named deputy :newDeputy within the same org as the clients existing name deputy
      */
-    public function iUploadAnOrgCsvThatHasANewMadeDateAndDeputyWithinTheSameOrgAsTheClientsExistingDeputy(string $newDeputy)
+    public function iUploadAnOrgCsvThatHasANewMadeDateAndDeputyWithinTheSameOrgAsTheClientsExistingDeputy(string $newDeputy): void
     {
         $this->expectedDeputyName = $newDeputy;
 
@@ -298,7 +309,7 @@ trait IngestTrait
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
 
-    private function uploadCsvAndCountCreatedEntities(string $fileName)
+    private function uploadCsvAndCountCreatedEntities(string $fileName): void
     {
         $filePath = sprintf('sirius-csvs/%s', $fileName);
         $this->extractUidsFromCsv($filePath);
@@ -312,7 +323,7 @@ trait IngestTrait
     /**
      * @Then the clients named deputy should be updated
      */
-    public function theClientsDeputyShouldBeUpdated()
+    public function theClientsDeputyShouldBeUpdated(): void
     {
         $this->em->clear();
         $client = $this->em->getRepository(Client::class)->find($this->profAdminDeputyHealthWelfareNotStartedDetails->getClientId());
@@ -327,7 +338,7 @@ trait IngestTrait
     /**
      * @When I run the lay CSV command the file has a new address :address for an existing named deputy
      */
-    public function iUploadACsvThatHasANewAddressAndPhoneDetailsForAnExistingDeputy(string $address)
+    public function iUploadACsvThatHasANewAddressAndPhoneDetailsForAnExistingDeputy(string $address): void
     {
         $this->deputies['added']['expected'] = 1;
         $this->clients['updated']['expected'] = 1;
@@ -343,7 +354,7 @@ trait IngestTrait
     /**
      * @Then the named deputy's address should be updated
      */
-    public function theDeputiesAddressShouldBeUpdated()
+    public function theDeputiesAddressShouldBeUpdated(): void
     {
         $this->em->clear();
 
@@ -372,7 +383,7 @@ trait IngestTrait
     /**
      * @When I run the lay CSV command the file has a new report type :reportTypeNumber for an existing report that has not been submitted or unsubmitted
      */
-    public function iUploadACsvThatHasANewReportType(string $reportTypeNumber)
+    public function iUploadACsvThatHasANewReportType(string $reportTypeNumber): void
     {
         $this->expectedReportType = $reportTypeNumber;
 
@@ -387,7 +398,7 @@ trait IngestTrait
     /**
      * @When I run the lay CSV command the file has a new report type :reportTypeNumber for a dual case
      */
-    public function iUploadACsvThatHasANewReportTypeForDualCase(string $reportTypeNumber)
+    public function iUploadACsvThatHasANewReportTypeForDualCase(string $reportTypeNumber): void
     {
         $this->expectedReportType = $reportTypeNumber;
 
@@ -403,7 +414,7 @@ trait IngestTrait
     /**
      * @Then the report type should be updated
      */
-    public function theReportTypeShouldBeUpdated()
+    public function theReportTypeShouldBeUpdated(): void
     {
         $this->em->clear();
 
@@ -419,16 +430,16 @@ trait IngestTrait
     }
 
     /**
-     * @When I run the lay CSV command the file has 1 row with missing values 'LastReportDay, MadeDate, DeputyEmail' for case number :caseNumber and 1 valid row
+     * @When I run the lay CSV command the file has 1 row with missing values 'LastReportDay, MadeDate, DeputyEmail' for case number ':caseNumber' and 1 valid row
      */
-    public function iUploadACsvThatHasMissingValueAndOneValidRow(string $caseNumber)
+    public function iUploadACsvThatHasMissingValueAndOneValidRow(string $caseNumber): void
     {
         $this->clients['added']['expected'] = 1;
         $this->organisations['added']['expected'] = 1;
         $this->deputies['added']['expected'] = 1;
         $this->reports['added']['expected'] = 1;
         $this->errors['count'] = 1;
-        $this->errors['messages'][] = 'Error for case 70000000: Missing data to upload row: LastReportDay, MadeDate, DeputyEmail';
+        $this->errors['messages'][] = "Error for case $caseNumber: Missing data to upload row: LastReportDay, MadeDate, DeputyEmail";
 
         $this->createProfAdminNotStarted();
 
@@ -436,97 +447,9 @@ trait IngestTrait
     }
 
     /**
-     * @Then I should see an alert showing the row was skipped on the :type csv upload page
-     */
-    public function iShouldSeeAnAlertShowingRowSkipped(string $type)
-    {
-        $this->iAmOnCorrectUploadPage($type);
-
-        $this->assertOnAlertMessage('1 skipped');
-    }
-
-    /**
-     * @When I upload a(n) :userType CSV that does not have any of the required columns
-     */
-    public function iUploadACsvThatHasMissingDeputyUidColumn(string $userType)
-    {
-        if ('org' === $userType) {
-            $fileName = 'org-1-row-missing-all-required-columns.csv';
-        } else {
-            $fileName = 'lay-1-row-missing-all-required-columns.csv';
-        }
-
-        $this->uploadCsvAndCountCreatedEntities($fileName);
-    }
-
-    /**
-     * @Then I should see an error showing which columns are missing on the :userType csv upload page
-     */
-    public function iShouldSeeErrorShowingMissingColumns(string $userType)
-    {
-        if ('org' === strtolower($userType)) {
-            $requiredColumns = [
-                'Case',
-                'ClientForename',
-                'ClientSurname',
-                'ClientDateOfBirth',
-                'ClientPostcode',
-                'DeputyUid',
-                'DeputyType',
-                'DeputyEmail',
-                'DeputyOrganisation',
-                'DeputyForename',
-                'DeputySurname',
-                'DeputyPostcode',
-                'MadeDate',
-                'LastReportDay',
-                'ReportType',
-                'OrderType',
-            ];
-        } else {
-            $requiredColumns = [
-                'Case',
-                'ClientSurname',
-                'DeputyUid',
-                'DeputySurname',
-                'DeputyPostcode',
-                'ReportType',
-                'MadeDate',
-                'OrderType',
-                'CoDeputy',
-            ];
-        }
-
-        foreach ($requiredColumns as $requiredColumn) {
-            $this->assertOnErrorMessage($requiredColumn);
-        }
-    }
-
-    /**
-     * @When I upload an org CSV that has an/a :columnName column
-     */
-    public function iUploadACsvThatHasNdrColumn(string $columnName)
-    {
-        $this->expectedUnexpectedColumn = $columnName;
-
-        $fileName = 'org-1-row-with-ndr-column.csv';
-        $this->uploadCsvAndCountCreatedEntities($fileName);
-    }
-
-    /**
-     * @Then I should see an error showing the column that was unexpected
-     */
-    public function iShouldSeeErrorShowingUnexpectedColumns()
-    {
-        $this->iAmOnAdminOrgCsvUploadPage();
-
-        $this->assertOnErrorMessage($this->expectedUnexpectedColumn);
-    }
-
-    /**
      * @Given I attempt to upload a :deputyRole CSV
      */
-    public function iAttemptToUploadACSV(string $deputyRole)
+    public function iAttemptToUploadACSV(string $deputyRole): void
     {
         $this->selectOption('form[type]', $deputyRole);
         $this->pressButton('Continue');
@@ -535,7 +458,7 @@ trait IngestTrait
     /**
      * @When I run the lay CSV command for :csvFilename
      */
-    public function iRunTheLayCsvCommandFor(string $csvFilename)
+    public function iRunTheLayCsvCommandFor(string $csvFilename): void
     {
         $this->uploadCsvAndCountCreatedEntities($csvFilename);
     }
@@ -543,7 +466,7 @@ trait IngestTrait
     /**
      * @When I run the lay CSV command the file contains :newEntitiesCount new pre-registration entities
      */
-    public function iRunTheLayCsvCommandTheFileContainsNPreRegistrationEntities(int $newEntitiesCount)
+    public function iRunTheLayCsvCommandTheFileContainsNPreRegistrationEntities(int $newEntitiesCount): void
     {
         $this->preRegistration['expected'] = $newEntitiesCount;
 
@@ -553,26 +476,17 @@ trait IngestTrait
     /**
      * @When I run the lay CSV command the file contains a new pre-registration entity with special characters
      */
-    public function iRunTheLayCsvCommandTheFileContainsANewPreRegistrationEntityWithSpecialCharacters()
+    public function iRunTheLayCsvCommandTheFileContainsANewPreRegistrationEntityWithSpecialCharacters(): void
     {
         $this->preRegistration['expected'] = 1;
 
         $this->uploadCsvAndCountCreatedEntities($this->csvFileName);
     }
 
-    private function iAmOnCorrectUploadPage(string $type)
-    {
-        if (!in_array(strtolower($type), ['org', 'lay', 'pa'])) {
-            throw new BehatException('$type can only be lay, pa or org');
-        }
-
-        in_array(strtolower($type), ['org', 'pa']) ? $this->iAmOnAdminOrgCsvUploadPage() : $this->iAmOnAdminLayCsvUploadPage();
-    }
-
     /**
      * @When I run the lay CSV command where a file has a new report type :reportTypeNumber for case number :caseNumber
      */
-    public function iRunTheLayCsvCommandWhereAFileHasANewReportTypeForCase(string $reportTypeNumber, string $caseNumber)
+    public function iRunTheLayCsvCommandWhereAFileHasANewReportTypeForCase(string $reportTypeNumber, string $caseNumber): void
     {
         $this->expectedReportType = $reportTypeNumber;
 
@@ -584,7 +498,7 @@ trait IngestTrait
     /**
      * @Then the clients report type should be updated
      */
-    public function theClientsReportTypeShouldBeUpdated()
+    public function theClientsReportTypeShouldBeUpdated(): void
     {
         $this->em->clear();
         $client = $this->em->getRepository(Client::class)->find($this->layDeputyNotStartedPfaHighAssetsDetails->getClientId());
@@ -599,7 +513,7 @@ trait IngestTrait
     /**
      * @When I run the lay CSV command the file has :entitiesSkipped row with missing values for 'caseNumber, clientLastname, deputyUid and deputySurname' and :newEntitiesCount valid row
      */
-    public function iUploadCsvWith1ValidAnd1InvalidRow(int $entitiesSkipped, int $newEntitiesCount)
+    public function iUploadCsvWith1ValidAnd1InvalidRow(int $entitiesSkipped, int $newEntitiesCount): void
     {
         $this->expectedMissingDTOProperties = ['caseNumber', 'clientLastname', 'deputyUid', 'deputySurname'];
         $this->preRegistration['expected'] = $newEntitiesCount;
@@ -611,7 +525,7 @@ trait IngestTrait
     /**
      * @When I run the lay CSV command the file has :entitiesSkipped row with an invalid report type and :newEntitiesCount valid row
      */
-    public function iUploadCsvWithInvalidReportTypeAndValidRows(int $entitiesSkipped, int $newEntitiesCount)
+    public function iUploadCsvWithInvalidReportTypeAndValidRows(int $entitiesSkipped, int $newEntitiesCount): void
     {
         $this->preRegistration['expected'] = $newEntitiesCount;
         $this->skipped['expected'] = $entitiesSkipped;
@@ -622,7 +536,7 @@ trait IngestTrait
     /**
      * @When I run the lay CSV command the file has a new named deputy in a new organisation for an existing client
      */
-    public function iUploadCsvThatHasNewDeputyAndOrgForExistingClient()
+    public function iUploadCsvThatHasNewDeputyAndOrgForExistingClient(): void
     {
         $this->deputies['added']['expected'] = 1;
         $this->organisations['added']['expected'] = 1;
@@ -658,44 +572,12 @@ trait IngestTrait
         $this->clientAfterCsvUpload = $this->em
             ->getRepository(Client::class)
             ->findOneBy(['caseNumber' => $this->entityUids['client_case_numbers'][0]]);
-
-        if (is_null($this->clientAfterCsvUpload)) {
-            throw new BehatException(sprintf('Client not found with case number "%s"', $this->entityUids['client_case_numbers'][0]));
-        }
-    }
-
-    /**
-     * @Then the named deputy associated with the client should be updated to the new named deputy
-     */
-    public function deputyAssociatedWitClientShouldBeUpdatedToNewDeputy()
-    {
-        $deputyAfterUpload = $this->clientAfterCsvUpload->getDeputy();
-
-        if (is_null($deputyAfterUpload)) {
-            throw new BehatException('A deputy is not associated with client after CSV upload');
-        }
-
-        $deputyUid = $this->entityUids['deputy_uids'][0];
-
-        $deputyWithCsvDeputyUid = $this->em
-            ->getRepository(Deputy::class)
-            ->findOneBy(['deputyUid' => $deputyUid]);
-
-        if (is_null($deputyWithCsvDeputyUid)) {
-            throw new BehatException(sprintf('Deputy with deputy uid "%s" not found', $deputyUid));
-        }
-
-        $this->assertEntitiesAreTheSame(
-            $deputyWithCsvDeputyUid,
-            $deputyAfterUpload,
-            'Comparing deputy with deputy no from CSV against deputy associated with client after CSV upload'
-        );
     }
 
     /**
      * @Then the organisation associated with the client should remain the same
      */
-    public function organisationAssociatedWitClientShouldRemainTheSame()
+    public function organisationAssociatedWitClientShouldRemainTheSame(): void
     {
         $this->em->clear();
 
@@ -715,7 +597,7 @@ trait IngestTrait
     /**
      * @Then the organisation associated with the client should be updated to the new organisation
      */
-    public function organisationAssociatedWitClientShouldBeUpdatedToNewOrganisation()
+    public function organisationAssociatedWitClientShouldBeUpdatedToNewOrganisation(): void
     {
         $newOrganisation = $this->clientAfterCsvUpload->getOrganisation();
 
@@ -731,27 +613,9 @@ trait IngestTrait
     }
 
     /**
-     * @Then a new report should be generated for the client
-     */
-    public function newReportGeneratedForClient()
-    {
-        $reportAfterCsvUpload = $this->clientAfterCsvUpload->getCurrentReport();
-
-        if (is_null($reportAfterCsvUpload)) {
-            throw new BehatException('A report is not associated with client after CSV upload');
-        }
-
-        $this->assertEntitiesAreNotTheSame(
-            $this->clientBeforeCsvUpload->getCurrentReport(),
-            $reportAfterCsvUpload,
-            'Comparing report associated with client before CSV upload against report associated with client after CSV upload'
-        );
-    }
-
-    /**
      * @When I run the lay CSV command the file contains a new org email and street address but the same deputy number for an existing clients named deputy
      */
-    public function iUploadCsvThatHasOrgEmailAndStreetAddressButSameDepNoForExistingClient()
+    public function iUploadCsvThatHasOrgEmailAndStreetAddressButSameDepNoForExistingClient(): void
     {
         $this->organisations['added']['expected'] = 1;
         $this->clients['updated']['expected'] = 1;
@@ -779,49 +643,12 @@ trait IngestTrait
         $this->clientAfterCsvUpload = $this->em
             ->getRepository(Client::class)
             ->findOneBy(['caseNumber' => $this->entityUids['client_case_numbers'][0], 'deletedAt' => null]);
-
-        if (is_null($this->clientAfterCsvUpload)) {
-            throw new BehatException(sprintf('Client not found with case number "%s"', $this->entityUids['client_case_numbers'][0]));
-        }
-    }
-
-    /**
-     * @When I upload an org CSV that has a an existing case number and new made date for an existing client
-     */
-    public function iUploadCsvThatHasExistingCaseNumberNewMadeDateForExistingClient()
-    {
-        $this->createProfAdminNotStarted(null, 'sufjan@stevens.com', '16431643');
-
-        $this->em->clear();
-
-        $existingClient = $this->em
-            ->getRepository(Client::class)
-            ->findOneBy(['caseNumber' => '16431643']);
-
-        if (is_null($existingClient)) {
-            throw new BehatException('Existing Client not found with case number "16431643"');
-        }
-
-        $this->clientBeforeCsvUpload = $existingClient;
-
-        $fileName = 'org-1-updated-row-existing-case-number-new-made-date.csv';
-        $this->uploadCsvAndCountCreatedEntities($fileName);
-
-        $this->em->clear();
-
-        $this->clientAfterCsvUpload = $this->em
-            ->getRepository(Client::class)
-            ->findOneBy(['caseNumber' => $this->entityUids['client_case_numbers'][0], 'deletedAt' => null]);
-
-        if (is_null($this->clientAfterCsvUpload)) {
-            throw new BehatException(sprintf('Client not found with case number "%s"', $this->entityUids['client_case_numbers'][0]));
-        }
     }
 
     /**
      * @Then the named deputy's address should be updated to :address
      */
-    public function theDeputiesAddressShouldBeUpdatedTo(string $address)
+    public function theDeputiesAddressShouldBeUpdatedTo(string $address): void
     {
         $DeputyAfterCsvUpload = $this->clientAfterCsvUpload->getDeputy();
 
@@ -849,7 +676,7 @@ trait IngestTrait
     /**
      * @Then the named deputy associated with the client should remain the same
      */
-    public function deputyAssociatedWitClientShouldRemainTheSame()
+    public function deputyAssociatedWitClientShouldRemainTheSame(): void
     {
         $this->em->clear();
 
@@ -869,7 +696,7 @@ trait IngestTrait
     /**
      * @Then the report associated with the client should remain the same
      */
-    public function reportAssociatedWithClientShouldRemainTheSame()
+    public function reportAssociatedWithClientShouldRemainTheSame(): void
     {
         $reportAfterCsvUpload = $this->clientAfterCsvUpload->getCurrentReport();
 
@@ -887,7 +714,7 @@ trait IngestTrait
     /**
      * @When I run the lay CSV command the file contains two rows with the same named deputy at two different addresses with different deputy uids
      */
-    public function iUploadCsvWithOneDeputyOnTwoLinesWithDifferentAddresses()
+    public function iUploadCsvWithOneDeputyOnTwoLinesWithDifferentAddresses(): void
     {
         $this->clients['added']['expected'] = 2;
         $this->deputies['added']['expected'] = 2;
@@ -902,7 +729,7 @@ trait IngestTrait
     /**
      * @Then there should be two named deputies created
      */
-    public function shouldBeTwoDeputiesWithSeparateAddresses()
+    public function shouldBeTwoDeputiesWithSeparateAddresses(): void
     {
         $client1 = $this->em
             ->getRepository(Client::class)
@@ -930,7 +757,7 @@ trait IngestTrait
     /**
      * @Then the named deputy for case number :caseNumber should have the address :fullAddress
      */
-    public function deputyForCaseNumberShouldHaveAddress(string $caseNumber, string $fullAddress)
+    public function deputyForCaseNumberShouldHaveAddress(string $caseNumber, string $fullAddress): void
     {
         $client = $this->em
             ->getRepository(Client::class)
@@ -958,9 +785,9 @@ trait IngestTrait
     }
 
     /**
-     * @Given I run the lay CSV command the file has an organisation name :name but missing deputy first and last name
+     * @Given I run the lay CSV command the file has an organisation name but is missing deputy first and last names
      */
-    public function iUploadAnOrgCSVThatHasAnOrganisationNameButMissingDeputyFirstAndLastName($name)
+    public function iUploadAnOrgCSVThatHasAnOrganisationNameButMissingDeputyFirstAndLastName(): void
     {
         $this->clients['added']['expected'] = 1;
         $this->deputies['added']['expected'] = 1;
@@ -975,7 +802,7 @@ trait IngestTrait
     /**
      * @Then the named deputy :firstOrLast name should be :expectedName
      */
-    public function theDeputyNameShouldBe($firstOrLast, $expectedName)
+    public function theDeputyNameShouldBe(string $firstOrLast, string $expectedName): void
     {
         $expectedName = 'empty' === $expectedName ? '' : $expectedName;
 
@@ -1010,7 +837,7 @@ trait IngestTrait
     /**
      * @Given I run the lay CSV command the file has one person deputy and one organisation deputy
      */
-    public function iUploadAnOrgCSVThatHasOnePersonDeputyAndOneOrganisationDeputy()
+    public function iUploadAnOrgCSVThatHasOnePersonDeputyAndOneOrganisationDeputy(): void
     {
         $this->organisations['added']['expected'] = 2;
         $this->clients['added']['expected'] = 2;
@@ -1025,7 +852,7 @@ trait IngestTrait
     /**
      * @Given I run the lay CSV command the file has one person deputy and one organisation deputy 2nd run
      */
-    public function iUploadAnOrgCSVThatHasOnePersonDeputyAndOneOrganisationDeputy2ndRun()
+    public function iUploadAnOrgCSVThatHasOnePersonDeputyAndOneOrganisationDeputy2ndRun(): void
     {
         $this->organisations['added']['expected'] = 2;
         $this->clients['added']['expected'] = 2;
@@ -1040,7 +867,7 @@ trait IngestTrait
     /**
      * @Given I run the lay CSV command the file that updates the person deputy with an org name and the org deputy with a person name
      */
-    public function iUploadAnOrgCSVThatUpdatesThePersonDeputyWithAnOrgNameAndTheOrgDeputyWithAPersonName()
+    public function iUploadAnOrgCSVThatUpdatesThePersonDeputyWithAnOrgNameAndTheOrgDeputyWithAPersonName(): void
     {
         $this->deputies['updated']['expected'] = 2;
 
@@ -1052,7 +879,7 @@ trait IngestTrait
     /**
      * @Given I run the lay CSV command the file that updates the deputy's email
      */
-    public function iUploadAnOrgCSVThatUpdatesTheDeputysEmail()
+    public function iUploadAnOrgCSVThatUpdatesTheDeputysEmail(): void
     {
         $this->organisations['added']['expected'] = 3;
         $this->clients['updated']['expected'] = 1;
@@ -1066,7 +893,7 @@ trait IngestTrait
     /**
      * @Then the named deputy with deputy UID :deputyUid should have the full name :fullName
      */
-    public function theDeputyWithDeputyUIDShouldHaveTheFullName($deputyUid, $fullName)
+    public function theDeputyWithDeputyUIDShouldHaveTheFullName(string $deputyUid, string $fullName): void
     {
         $deputy = $this->em
             ->getRepository(Deputy::class)
@@ -1092,7 +919,7 @@ trait IngestTrait
     /**
      * @Then the named deputy with deputy UID :deputyUid should have the email :email
      */
-    public function theDeputyWithDeputyUIDShouldHaveTheEmail($deputyUid, $email)
+    public function theDeputyWithDeputyUIDShouldHaveTheEmail(string $deputyUid, string $email): void
     {
         $deputy = $this->em
             ->getRepository(Deputy::class)
@@ -1114,7 +941,7 @@ trait IngestTrait
     /**
      * @Given I run the lay CSV command the file contains :newEntitiesCount new pre-registration entities for the same case
      */
-    public function iRunTheLayCsvCommandTheFileContainsNewPreRegistrationEntitesForTheSameCase($newEntitiesCount)
+    public function iRunTheLayCsvCommandTheFileContainsNewPreRegistrationEntitesForTheSameCase(int $newEntitiesCount): void
     {
         $this->preRegistration['expected'] = $newEntitiesCount;
 
@@ -1188,7 +1015,7 @@ trait IngestTrait
         );
     }
 
-    protected function runCSVCommand(string $type, string $fileName)
+    protected function runCSVCommand(string $type, string $fileName): void
     {
         $command = ('lay' === $type) ?
             'digideps:api:process-lay-csv' :

@@ -490,7 +490,6 @@ class FixtureController extends AbstractController
             'id' => $fromRequest['deputyEmail'],
             'deputyType' => $fromRequest['deputyType'],
             'email' => $fromRequest['deputyEmail'],
-            'ndr' => $fromRequest['ndr'],
             'firstName' => $fromRequest['firstName'],
             'lastName' => $fromRequest['lastName'],
             'postCode' => $fromRequest['postCode'],

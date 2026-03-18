@@ -63,20 +63,20 @@ trait UserTrait
      *
      * @Given the following users exist:
      */
-    public function usersExist(TableNode $table)
+    public function usersExist(TableNode $table): void
     {
         foreach ($table as $inputs) {
             $this->assertValidRole($inputs['deputyType']);
 
-            $ndr = $inputs['ndr'];
             $deputyType = $inputs['deputyType'];
             $firstName = $inputs['firstName'];
             $lastName = $inputs['lastName'];
             $email = $inputs['email'];
             $postCode = $inputs['postCode'];
             $activated = $inputs['activated'];
+            $deputyUid = $inputs['deputyUid'];
 
-            $query = "ndr=$ndr&deputyType=$deputyType&firstName=$firstName&lastName=$lastName&email=$email&postCode=$postCode&activated=$activated";
+            $query = "deputyType=$deputyType&firstName=$firstName&lastName=$lastName&email=$email&postCode=$postCode&activated=$activated&deputyUid=$deputyUid";
 
             $this->visitAdminPath("/admin/fixtures/createUser?$query");
         }

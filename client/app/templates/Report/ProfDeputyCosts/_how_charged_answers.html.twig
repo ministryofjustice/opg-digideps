@@ -15,7 +15,10 @@
         </dd>
         {% if not hideEditLink  %}
             <dd class="govuk-summary-list__actions">
-                <a href="{{ path('prof_deputy_costs_how_charged', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit govuk-link">{{ 'edit' | trans({}, 'common' ) }}</a>
+                <a href="{{ path('prof_deputy_costs_how_charged', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit govuk-link">
+                    {{ 'edit' | trans({}, 'common' ) }}
+                    <span class="govuk-visually-hidden">{{ 'howCharged.form.profDeputyCostsHow.label' | trans(transOptions) }}</span>
+                </a>
             </dd>
         {% endif %}
     </div>

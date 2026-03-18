@@ -109,7 +109,6 @@ Feature: Section navigation from summary pages - Lay
         And the next section should be "Any other information"
         And the link to the report overview page should display the correct reporting years
 
-
     @lay-pfa-high-completed
     Scenario: Any other information
         Given a Lay Deputy has a completed report
