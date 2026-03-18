@@ -8,6 +8,13 @@ COPY anonymisation /app/anonymisation
 WORKDIR /app/anonymisation
 RUN go build -o anonymise main.go
 
+
+FROM builder AS tests
+WORKDIR /app/anonymisation
+COPY anonymisation /app/anonymisation
+CMD ["go", "test", "./..."]
+
+
 FROM alpine:3.23
 RUN apk update && apk upgrade
 
