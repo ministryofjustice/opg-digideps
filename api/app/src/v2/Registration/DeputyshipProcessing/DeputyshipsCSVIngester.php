@@ -40,10 +40,16 @@ class DeputyshipsCSVIngester
         $this->deputyshipsIngestResultRecorder->recordStart();
 
         // apply manual data fixes before CSV ingested
-        $dataFactoryResult = $this->preCSVDataFactory->run();
+        [$dataFactoryResult, $postBuilderResult]  = $this->preCSVDataFactory->run();
         $this->deputyshipsIngestResultRecorder->recordPreCSVDataFactoryResult($dataFactoryResult);
         if (!$dataFactoryResult->isSuccessful()) {
             return $this->deputyshipsIngestResultRecorder->result();
+        }
+
+        if (!is_null($postBuilderResult)) {
+            foreach ($postBuilderResult as $builderResult) {
+                $this->deputyshipsIngestResultRecorder->recordBuilderResult($builderResult);
+            }
         }
 
         // load the CSV into the staging table in the database
@@ -69,10 +75,16 @@ class DeputyshipsCSVIngester
         }
 
         // apply manual data fixes after CSV ingested
-        $dataFactoryResult = $this->postCSVDataFactory->run();
+        [$dataFactoryResult, $postBuilderResult] = $this->postCSVDataFactory->run();
         $this->deputyshipsIngestResultRecorder->recordPostCSVDataFactoryResult($dataFactoryResult);
         if (!$dataFactoryResult->isSuccessful()) {
             return $this->deputyshipsIngestResultRecorder->result();
+        }
+
+        if (!is_null($postBuilderResult)) {
+            foreach ($postBuilderResult as $builderResult) {
+                $this->deputyshipsIngestResultRecorder->recordBuilderResult($builderResult);
+            }
         }
 
         $this->deputyshipsIngestResultRecorder->recordEnd();
