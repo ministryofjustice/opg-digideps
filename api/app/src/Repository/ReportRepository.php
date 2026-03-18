@@ -412,4 +412,26 @@ END deputy_type";
 
         return $query->fetchAllAssociative();
     }
+
+    public function findCourtOrdersLatestReport(): array
+    {
+        $sql = <<<SQL
+        SELECT co.court_order_uid, r.*
+        FROM court_order co
+        INNER JOIN court_order_report cor ON cor.court_order_id = co.id
+        INNER JOIN report r ON r.id = cor.report_id
+        WHERE r.id NOT IN (
+            SELECT rs.report_id
+            FROM report_submission rs
+            WHERE rs.report_id = r.id
+        );
+        SQL;
+        $query = $this
+            ->getEntityManager()
+            ->getConnection()
+            ->prepare($sql)
+            ->executeQuery();
+
+        return $query->fetchAllAssociative();
+    }
 }
