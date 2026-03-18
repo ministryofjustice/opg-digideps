@@ -89,17 +89,19 @@ jobs:
 
       - name: Trivy Terraform Config Scan
         id: trivy_scan
-        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
-        with:
-          scan-type: "config"
-          target: terraform/${{ matrix.folder }}
-          severity: "MEDIUM,HIGH,CRITICAL"
-          format: "sarif"
-          output: "trivy-results.sarif"
-        env:
-          TRIVY_TIMEOUT: 15m
-          TRIVY_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db
-          TRIVY_JAVA_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-java-db
+        run: |
+          mkdir -p .trivy-cache
+
+          docker run --rm \
+            -v "${PWD}:/work:ro" \
+            -v "${PWD}/.trivy-cache:/root/.cache/" \
+            -w /work \
+            aquasec/trivy:latest \
+            config \
+            --severity MEDIUM,HIGH,CRITICAL \
+            --format sarif \
+            --output "trivy-results-${{ matrix.folder }}.sarif" \
+            "terraform/${{ matrix.folder }}"
 
       - name: Unset AWS variables
         if: always()

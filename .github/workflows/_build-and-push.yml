@@ -207,37 +207,59 @@ jobs:
       - name: trivy image scanning
         if: matrix.svc_name != 'mock-sirius'
         id: trivy_scan
-        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
-        with:
-          image-ref: ${{ matrix.svc_name }}:latest
-          severity: "HIGH,CRITICAL"
-          format: "sarif"
-          scanners: "vuln"
-          output: "trivy-results.sarif"
-          timeout: 15m
-        env:
-          TRIVY_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db
-          TRIVY_JAVA_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-java-db
+        run: |
+          mkdir -p trivy .trivy-cache
+
+          docker save "${{ matrix.svc_name }}:latest" -o "trivy/${{ matrix.svc_name }}.tar"
+
+          docker run --rm \
+            -v "${PWD}:/work" \
+            -v "${PWD}/.trivy-cache:/root/.cache/" \
+            -w /work \
+            aquasec/trivy:latest \
+            image \
+            --input "trivy/${{ matrix.svc_name }}.tar" \
+            --scanners vuln \
+            --severity HIGH,CRITICAL \
+            --timeout 15m \
+            --format sarif \
+            --output "trivy/trivy-results-${{ matrix.svc_name }}.sarif"
+        working-directory: ${{ matrix.sub_folder }}
 
       - name: upload trivy scan results to security tab
         if: matrix.svc_name != 'mock-sirius'
         id: trivy_upload_sarif
-        uses: github/codeql-action/upload-sarif@b8d3b6e8af63cde30bdc382c0bc28114f4346c88 # v2.28.1
+        uses: github/codeql-action/upload-sarif@b1bff81932f5cdfc8695c7752dcee935dcd061c8 # v4.33.0
         with:
-          sarif_file: "trivy-results.sarif"
+          sarif_file: "${{ matrix.sub_folder }}/trivy/trivy-results-${{ matrix.svc_name }}.sarif"
 
       - name: generate SBOM
         if: inputs.branch_name == 'main'
         run: |
-          mkdir -p sboms
-          trivy image --format spdx --output "sboms/sbom-${{ matrix.svc_name }}.spdx.json" "${{ matrix.svc_name }}:latest"
+          mkdir -p sboms .trivy-cache
+
+          docker save "${{ matrix.svc_name }}:latest" -o "sboms/${{ matrix.svc_name }}.tar"
+
+          docker run --rm \
+            -v "${PWD}:/work" \
+            -v "${PWD}/.trivy-cache:/root/.cache/" \
+            -w /work \
+            aquasec/trivy:latest \
+            image \
+            --input "sboms/${{ matrix.svc_name }}.tar" \
+            --timeout 15m \
+            --format spdx-json \
+            --output "sboms/sbom-${{ matrix.svc_name }}.spdx.json"
+
+          rm -f "sboms/${{ matrix.svc_name }}.tar"
+        working-directory: ${{ matrix.sub_folder }}
 
       - name: upload SBOM
         if: inputs.branch_name == 'main'
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: sbom-${{ matrix.svc_name }}
-          path: sboms/sbom-${{ matrix.svc_name }}.spdx.json
+          path: ${{ matrix.sub_folder }}/sboms/sbom-${{ matrix.svc_name }}.spdx.json
 
       - name: show build tag
         env:
