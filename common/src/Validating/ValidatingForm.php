@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Utility;
+namespace OPG\Digideps\Common\Validating;
 
 use Symfony\Component\Form\FormInterface;
 
 final readonly class ValidatingForm
 {
-    use TypeOrZeroTrait;
+    use TypeOrNullTrait;
     use TypeOrDefaultTrait;
     use TypeOrThrowTrait;
 

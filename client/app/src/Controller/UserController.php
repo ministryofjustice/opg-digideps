@@ -16,12 +16,12 @@ use App\Form\User\UpdateTermsType;
 use App\Form\User\UserDetailsBasicType;
 use App\Form\User\UserDetailsFullType;
 use App\Form\User\UserDetailsPaType;
-use App\Model\SelfRegisterData;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\DeputyProvider;
 use App\Service\Redirector;
+use OPG\Digideps\Common\Registration\SelfRegisterData;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;
@@ -288,10 +288,11 @@ class UserController extends AbstractController
             $data = $form->getData();
 
             try {
+                $data->normalise();
                 $this->userApi->selfRegister($data);
 
                 $bodyText = $this->translator->trans('thankyou.body', [], 'register');
-                $email = $data->getEmail();
+                $email = $data->getEmail() ?? '';
                 $bodyText = str_replace('{{ email }}', $email, $bodyText);
 
                 $signInText = $this->translator->trans('signin', [], 'register');

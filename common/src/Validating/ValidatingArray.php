@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Utility;
+namespace OPG\Digideps\Common\Validating;
 
 final readonly class ValidatingArray
 {
-    use TypeOrZeroTrait;
+    use TypeOrNullTrait;
     use TypeOrDefaultTrait;
     use TypeOrThrowTrait;
 
@@ -19,7 +19,7 @@ final readonly class ValidatingArray
         return $key === null ? null : $this->data[$key] ?? null;
     }
 
-    public function getValidatingObjectOrNull(string|int|null $key): ?ValidatingArray
+    public function getValidatingArrayOrNull(string|int|null $key): ?ValidatingArray
     {
         $value = $this->getArrayOrNull($key);
         return $value !== null ? new ValidatingArray($value) : null;

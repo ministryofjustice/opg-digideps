@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a3b87c7f7063cb77a0a130ce8571b234",
+    "content-hash": "4a05f7b950541c8976407972d11711b4",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -335,6 +335,53 @@
                 }
             ],
             "time": "2023-12-20T15:40:13+00:00"
+        },
+        {
+            "name": "digideps/common",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "../../common",
+                "reference": "be475d29b62b238cfb430a126be91c14af7e8bdd"
+            },
+            "require": {
+                "jms/serializer-bundle": "^5.5.2",
+                "php": "^8.4",
+                "symfony/form": "^6.4.32",
+                "symfony/validator": "^6.4.30"
+            },
+            "require-dev": {
+                "dg/bypass-finals": "^1.9",
+                "phpstan/phpstan": "^2.1",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "phpunit/phpunit": "^13.0.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "OPG\\Digideps\\Common\\": "src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "OPG\\Digideps\\Tests\\Common\\": "tests"
+                }
+            },
+            "scripts": {
+                "lint:phpstan": [
+                    "phpstan"
+                ],
+                "tests:unit": [
+                    "phpunit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Code shared between frontend and backend",
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "doctrine/annotations",
@@ -13470,8 +13517,8 @@
     "prefer-lowest": false,
     "platform": {
         "php": "^8.4",
-        "ext-zip": "*",
-        "ext-dom": "*"
+        "ext-dom": "*",
+        "ext-zip": "*"
     },
     "platform-dev": {},
     "plugin-api-version": "2.9.0"

@@ -6,8 +6,8 @@ use App\Entity\Client;
 use App\Entity\Organisation;
 use App\Entity\PreRegistration;
 use App\Entity\User;
-use App\Model\SelfRegisterData;
 use Doctrine\ORM\EntityManagerInterface;
+use OPG\Digideps\Common\Registration\SelfRegisterData;
 
 class UserRegistrationService
 {

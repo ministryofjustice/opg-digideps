@@ -27,6 +27,7 @@
     "require": {
         "php": "^8.4",
         "aws/aws-sdk-php": "^3.368.0",
+        "digideps/common": "^1.0",
         "doctrine/annotations": "^2.0.2",
         "doctrine/doctrine-bundle": "^2.18.1",
         "doctrine/doctrine-migrations-bundle": "^3.7",
@@ -109,6 +110,15 @@
         {
             "url": "https://github.com/ministryofjustice/MinkExtension.git",
             "type": "git"
+        },
+        {
+            "type": "path",
+            "url": "../../common",
+            "options": {
+                "versions": {
+                    "digideps/common": "1.0.0"
+                }
+            }
         }
     ]
 }
