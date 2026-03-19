@@ -10,12 +10,14 @@ COPY api/app/composer.lock .
 COPY api/app/app app
 COPY api/app/config config
 COPY api/app/src src
+COPY common ../common
 
 ##############################
 # Stage 1a: Composer Build with Dev Dependencies
 ##############################
 FROM composer AS composer-runtime
 RUN composer install --no-dev --prefer-dist --no-interaction --no-scripts;
+RUN cp -R ./vendor/digideps/common/ ./vendor/digideps/_ && rm ./vendor/digideps/common && mv ./vendor/digideps/_/ ./vendor/digideps/common
 RUN composer check-platform-reqs
 RUN composer dump-autoload --optimize
 
@@ -24,6 +26,7 @@ RUN composer dump-autoload --optimize
 ##############################
 FROM composer AS composer-devtools
 RUN composer install --prefer-dist --no-interaction --no-scripts;
+RUN cp -R ./vendor/digideps/library/ ./vendor/digideps/_ && rm ./vendor/digideps/library && mv ./vendor/digideps/_/ ./vendor/digideps/library
 RUN composer check-platform-reqs
 RUN composer dump-autoload --optimize
 

@@ -1,13 +1,10 @@
 <?php
 
-namespace App\Model;
+namespace OPG\Digideps\Common\Registration;
 
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * SelfRegisterData.
- */
 class SelfRegisterData
 {
     /**
@@ -50,14 +47,14 @@ class SelfRegisterData
      * @JMS\Type("string")
      */
     #[Assert\NotBlank(message: 'client.firstname.notBlank', groups: ['self_registration'])]
-    #[Assert\Length(min: 2, minMessage: 'client.firstname.minMessage', max: 50, maxMessage: 'client.firstname.maxMessage', groups: ['self_registration'])]
+    #[Assert\Length(min: 2, max: 50, minMessage: 'client.firstname.minMessage', maxMessage: 'client.firstname.maxMessage', groups: ['self_registration'])]
     private ?string $clientFirstname = null;
 
     /**
      * @JMS\Type("string")
      */
     #[Assert\NotBlank(message: 'client.lastname.notBlank', groups: ['self_registration', 'verify_codeputy'])]
-    #[Assert\Length(min: 2, minMessage: 'client.lastname.minMessage', max: 50, maxMessage: 'client.lastname.maxMessage', groups: ['self_registration', 'verify_codeputy'])]
+    #[Assert\Length(min: 2, max: 50, minMessage: 'client.lastname.minMessage', maxMessage: 'client.lastname.maxMessage', groups: ['self_registration', 'verify_codeputy'])]
     private ?string $clientLastname = null;
 
     /**
@@ -72,9 +69,10 @@ class SelfRegisterData
         return $this->firstname;
     }
 
-    public function setFirstname(string $firstname): void
+    public function setFirstname(string $firstname): self
     {
         $this->firstname = $firstname;
+        return $this;
     }
 
     public function getLastname(): ?string
@@ -82,9 +80,10 @@ class SelfRegisterData
         return $this->lastname;
     }
 
-    public function setLastname(string $lastname): void
+    public function setLastname(string $lastname): self
     {
         $this->lastname = $lastname;
+        return $this;
     }
 
     public function getEmail(): ?string
@@ -92,9 +91,10 @@ class SelfRegisterData
         return $this->email;
     }
 
-    public function setEmail(string $email): void
+    public function setEmail(string $email): self
     {
         $this->email = strtolower($email);
+        return $this;
     }
 
     public function getPostcode(): ?string
@@ -102,9 +102,10 @@ class SelfRegisterData
         return $this->postcode;
     }
 
-    public function setPostcode(string $postcode): void
+    public function setPostcode(string $postcode): self
     {
         $this->postcode = $postcode;
+        return $this;
     }
 
     public function getClientFirstname(): ?string
@@ -112,9 +113,10 @@ class SelfRegisterData
         return $this->clientFirstname;
     }
 
-    public function setClientFirstname(?string $clientFirstname): void
+    public function setClientFirstname(?string $clientFirstname): self
     {
         $this->clientFirstname = $clientFirstname;
+        return $this;
     }
 
     public function getClientLastname(): ?string
@@ -122,9 +124,10 @@ class SelfRegisterData
         return $this->clientLastname;
     }
 
-    public function setClientLastname(string $clientLastname): void
+    public function setClientLastname(string $clientLastname): self
     {
         $this->clientLastname = $clientLastname;
+        return $this;
     }
 
     public function getCaseNumber(): ?string
@@ -132,9 +135,10 @@ class SelfRegisterData
         return $this->caseNumber;
     }
 
-    public function setCaseNumber(string $caseNumber): void
+    public function setCaseNumber(string $caseNumber): self
     {
         $this->caseNumber = $caseNumber;
+        return $this;
     }
 
     /**

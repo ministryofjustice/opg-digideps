@@ -1,0 +1,6 @@
+vendor/
+var/
+.idea/
+
+*.cache
+*.local

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "174ec1fadf4ebd13b72b5de98dd04064",
+    "content-hash": "9d2913dadc1276285f59e3e558599404",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
@@ -335,6 +335,49 @@
                 }
             ],
             "time": "2023-12-20T15:40:13+00:00"
+        },
+        {
+            "name": "digideps/common",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "../../common",
+                "reference": "7140a9f8c6c75d6cd45c4572d092a5d8ec61304f"
+            },
+            "require": {
+                "jms/serializer-bundle": "^5.5.2",
+                "php": "^8.4",
+                "symfony/form": "^6.4.32",
+                "symfony/validator": "^6.4.30"
+            },
+            "require-dev": {
+                "dg/bypass-finals": "^1.9",
+                "phpstan/phpstan": "^2.1.42",
+                "phpunit/phpunit": "^13.0.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "OPG\\Digideps\\Common\\": "src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "OPG\\Digideps\\Tests\\Common\\": "tests"
+                }
+            },
+            "scripts": {
+                "tests:unit": [
+                    "phpunit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Code shared between frontend and backend",
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "doctrine/annotations",
@@ -13473,8 +13516,8 @@
     "prefer-lowest": false,
     "platform": {
         "php": "^8.4",
-        "ext-zip": "*",
-        "ext-dom": "*"
+        "ext-dom": "*",
+        "ext-zip": "*"
     },
     "platform-dev": {},
     "plugin-api-version": "2.9.0"
