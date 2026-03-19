@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Utility;
+namespace OPG\Digideps\Common\Validating;
 
-trait TypeOrZeroTrait
+trait TypeOrNullTrait
 {
     abstract protected function getUnvalidated(string|int|null $key): mixed;
 
