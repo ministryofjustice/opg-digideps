@@ -18,10 +18,11 @@
     },
     "require": {
         "php": "^8.4",
-        "ext-zip": "*",
         "ext-dom": "*",
+        "ext-zip": "*",
         "alphagov/notifications-php-client": "^7.0.0",
         "aws/aws-sdk-php": "3.368.0",
+        "digideps/common": "^1.0",
         "doctrine/annotations": "^2.0.2",
         "doctrine/collections": "^2.6.0",
         "egulias/email-validator": "^4.0.4",
@@ -88,6 +89,15 @@
         {
             "type": "composer",
             "url": "https://govuk-frontend-toolkit.appspot.com"
+        },
+        {
+            "type": "path",
+            "url": "../../common",
+            "options": {
+                "versions": {
+                    "digideps/common": "1.0.0"
+                }
+            }
         }
     ],
     "require-dev": {

@@ -409,3 +409,8 @@ services:
     working_dir: /app
     environment:
       NODE_ENV: production
+
+  composer-common:
+    build:
+      context: ./common
+    command: tests:unit
