@@ -16,12 +16,12 @@ use App\Form\User\UpdateTermsType;
 use App\Form\User\UserDetailsBasicType;
 use App\Form\User\UserDetailsFullType;
 use App\Form\User\UserDetailsPaType;
-use App\Model\SelfRegisterData;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\DeputyProvider;
 use App\Service\Redirector;
+use OPG\Digideps\Common\Registration\SelfRegisterData;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;
@@ -33,6 +33,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends AbstractController
 {
@@ -43,6 +44,7 @@ class UserController extends AbstractController
         private readonly TranslatorInterface $translator,
         private readonly LoggerInterface $logger,
         private readonly ObservableEventDispatcher $eventDispatcher,
+        private readonly ValidatorInterface $validator,
     ) {
     }
 
@@ -285,13 +287,14 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var SelfRegisterData $data */
-            $data = $form->getData();
+            $selfRegisterData = $form->getData();
 
             try {
-                $this->userApi->selfRegister($data);
+                $selfRegisterData->normalise();
+                $this->userApi->selfRegister($selfRegisterData);
 
                 $bodyText = $this->translator->trans('thankyou.body', [], 'register');
-                $email = $data->getEmail();
+                $email = $selfRegisterData->getEmail() ?? '';
                 $bodyText = str_replace('{{ email }}', $email, $bodyText);
 
                 $signInText = $this->translator->trans('signin', [], 'register');
@@ -313,7 +316,7 @@ class UserController extends AbstractController
                     }
                 }
 
-                match ($e->getCode()) {
+                $hit = match ($e->getCode()) {
                     403 => $form->addError(new FormError($this->translator->trans('formErrors.coDepCaseAlreadyRegistered', [], 'register'))),
                     422 => $form->addError(new FormError($this->translator->trans('email.first.existingError', [], 'register'))),
                     400 => $form->addError(new FormError($this->translator->trans('formErrors.matching', [], 'register'))),
@@ -336,8 +339,17 @@ class UserController extends AbstractController
                         }
                     })(),
                     462 => $form->addError(new FormError($this->translator->trans('formErrors.deputyNotUniquelyIdentified', [], 'register'))),
-                    default => $form->addError(new FormError($this->translator->trans('formErrors.generic', [], 'register'))),
+                    default => null,
                 };
+                if ($hit === null) {
+                    $validationErrors = $this->validator->validate($selfRegisterData, null, 'self_registration');
+                    if (empty($validationErrors)) {
+                        $form->addError(new FormError($this->translator->trans('formErrors.generic', [], 'register')));
+                    }
+                    foreach ($validationErrors as $validationError) {
+                        $form->addError(new FormError($validationError->getMessage()));
+                    }
+                }
 
                 $event = new RegistrationFailedEvent(['failure_message' => $failureData], $e->getMessage());
                 $this->eventDispatcher->dispatch($event, RegistrationFailedEvent::NAME);
