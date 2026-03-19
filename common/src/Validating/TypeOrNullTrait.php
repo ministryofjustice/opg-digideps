@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Utility;
+namespace OPG\Digideps\Common\Validating;
 
-trait TypeOrZeroTrait
+trait TypeOrNullTrait
 {
     abstract protected function getUnvalidated(string|int|null $key): mixed;
 
@@ -26,6 +26,9 @@ trait TypeOrZeroTrait
         return is_float($value) ? $value : null;
     }
 
+    /**
+     * @return array<mixed>|null
+     */
     public function getArrayOrNull(string|int|null $key): ?array
     {
         $value = $this->getUnvalidated($key);

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utility;
+namespace OPG\Digideps\Common\Validating;
 
 trait TypeOrDefaultTrait
 {
@@ -26,6 +26,10 @@ trait TypeOrDefaultTrait
         return is_float($value) ? $value : $default;
     }
 
+    /**
+     * @param array<mixed> $default
+     * @return array<mixed>
+     */
     public function getArrayOrDefault(string|int|null $key, array $default): array
     {
         $value = $this->getUnvalidated($key);

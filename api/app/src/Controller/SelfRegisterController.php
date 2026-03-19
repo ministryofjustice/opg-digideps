@@ -4,13 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Client;
 use App\Entity\User;
-use App\Model\SelfRegisterData;
 use App\Repository\UserRepository;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use App\Service\UserRegistrationService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use OPG\Digideps\Common\Registration\SelfRegisterData;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;

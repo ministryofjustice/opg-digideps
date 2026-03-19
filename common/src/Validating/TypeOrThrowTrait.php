@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utility;
+namespace OPG\Digideps\Common\Validating;
 
 trait TypeOrThrowTrait
 {
@@ -26,6 +26,9 @@ trait TypeOrThrowTrait
         return is_float($value) ? $value : throw new ValidationException('float', $value);
     }
 
+    /**
+     * @return array<mixed>
+     */
     public function getArrayOrThrow(string|int|null $key): array
     {
         $value = $this->getUnvalidated($key);
