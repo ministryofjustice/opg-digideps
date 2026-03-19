@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- https://docs.phpunit.de/en/13.0/configuration.html -->
+<phpunit
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/13.0/phpunit.xsd"
+    colors="true"
+    bootstrap="vendor/autoload.php"
+    displayDetailsOnPhpunitNotices="true"
+>
+    <source>
+        <include>
+            <directory>src</directory>
+        </include>
+    </source>
+    <testsuites>
+        <testsuite name="unit">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+    <extensions>
+        <bootstrap class="DG\BypassFinals\PHPUnitExtension"/>
+    </extensions>
+    <php>
+        <ini name="error_log" value="/dev/stdout"/>
+        <ini name="memory_limit" value="1024M"/>
+    </php>
+</phpunit>

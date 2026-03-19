@@ -2,7 +2,7 @@
 <ruleset>
     <arg name="basepath" value="."/>
     <arg name="colors"/>
-    <arg name="ignore" value="*/vendor/*,*/node_modules/*"/>
+    <arg name="ignore" value="*/vendor/*,*/node_modules/*,*/var/*"/>
     <arg name="extensions" value="php"/>
     <rule ref="PSR12">
         <exclude name="Generic.Files.LineLength" />
