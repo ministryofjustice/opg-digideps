@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Model;
 
-use App\Entity\CourtOrder;
-use App\Entity\Deputy;
-use App\Model\DeputyshipProcessingRawDbAccess;
+use App\Domain\Deputyship\DeputyshipProcessingRawDbAccess;
 use App\Tests\Integration\ApiIntegrationTestCase;
 use App\Tests\Integration\Fixtures;
 use Doctrine\DBAL\Exception;

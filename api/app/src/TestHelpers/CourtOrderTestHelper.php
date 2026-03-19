@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\TestHelpers;
 
+use App\Domain\CourtOrder\CourtOrderType;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
@@ -26,7 +27,7 @@ class CourtOrderTestHelper
         $courtOrder = (new CourtOrder())
             ->setCourtOrderUid($courtOrderUid)
             ->setClient($client)
-            ->setOrderType($type)
+            ->setOrderType(CourtOrderType::from($type))
             ->setStatus($status)
             ->setOrderMadeDate($orderDate);
 

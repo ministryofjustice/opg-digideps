@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Service;
 
+use App\Domain\CourtOrder\CourtOrderService;
 use App\Entity\CourtOrderDeputy;
 use App\Repository\CourtOrderDeputyRepository;
 use App\Tests\Integration\ApiIntegrationTestCase;
 use App\Tests\Integration\Fixtures;
-use App\v2\Service\CourtOrderService;
 
 class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
 {

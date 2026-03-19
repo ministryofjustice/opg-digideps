@@ -2,6 +2,7 @@
 
 namespace App\Tests\Integration;
 
+use App\Domain\CourtOrder\CourtOrderType;
 use DateTime;
 use InvalidArgumentException;
 use RuntimeException;
@@ -677,7 +678,7 @@ class Fixtures
     {
         $courtOrder = new CourtOrder();
         $courtOrder->setCourtOrderUid($uid);
-        $courtOrder->setOrderType($type);
+        $courtOrder->setOrderType(CourtOrderType::from($type));
         $courtOrder->setStatus($status);
         $courtOrder->setOrderMadeDate($madeDate);
 

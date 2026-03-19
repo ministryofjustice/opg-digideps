@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Service;
 
-use PHPUnit\Framework\Attributes\Test;
-use DateTime;
-use RuntimeException;
 use App\Entity\Client;
 use App\Entity\Organisation;
 use App\Entity\PreRegistration;
@@ -16,9 +13,12 @@ use App\Repository\ClientRepository;
 use App\Repository\UserRepository;
 use App\Service\PreRegistrationVerificationService;
 use App\Service\UserRegistrationService;
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Mockery as m;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
 final class UserRegistrationServiceTest extends TestCase
 {
