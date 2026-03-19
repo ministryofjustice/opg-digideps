@@ -27,6 +27,7 @@
     "require": {
         "php": "^8.4",
         "aws/aws-sdk-php": "^3.368.0",
+        "digideps/common": "^1.0",
         "doctrine/annotations": "^2.0.2",
         "doctrine/doctrine-bundle": "^2.18.1",
         "doctrine/doctrine-migrations-bundle": "^3.7",
@@ -75,6 +76,7 @@
         "behat/mink": "^1.13",
         "behat/mink-browserkit-driver": "^2.3.0",
         "behat/mink-selenium2-driver": "^1.7",
+        "dg/bypass-finals": "^1.9",
         "doctrine/doctrine-fixtures-bundle": "^3.7.3",
         "fakerphp/faker": "^1.24.1",
         "friends-of-behat/symfony-extension": "^2.6.2",
@@ -108,6 +110,15 @@
         {
             "url": "https://github.com/ministryofjustice/MinkExtension.git",
             "type": "git"
+        },
+        {
+            "type": "path",
+            "url": "../../common",
+            "options": {
+                "versions": {
+                    "digideps/common": "1.0.0"
+                }
+            }
         }
     ]
 }
