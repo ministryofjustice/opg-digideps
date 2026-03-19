@@ -6,14 +6,13 @@ use App\Entity\Report\Report;
 use App\Entity\Traits\AddressTrait;
 use App\Entity\Traits\CreateUpdateTimestamps;
 use App\Entity\UserResearch\UserResearchResponse;
-use App\Model\Hydrator;
-use DateTime;
+use App\Utility\Query\Hydrator;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Random\RandomException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Doctrine\ORM\Mapping\Table;
 
 /**
  * Users.

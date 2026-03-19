@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Domain\CourtOrder\CourtOrderKind;
+use App\Domain\CourtOrder\CourtOrderType;
 use App\Entity\Report\Report;
 use App\Entity\Traits\CreateUpdateTimestamps;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -162,14 +163,14 @@ class CourtOrder
         return $this;
     }
 
-    public function getOrderType(): string
+    public function getOrderType(): CourtOrderType
     {
-        return $this->orderType;
+        return CourtOrderType::from($this->orderType);
     }
 
-    public function setOrderType(string $orderType): CourtOrder
+    public function setOrderType(CourtOrderType $orderType): CourtOrder
     {
-        $this->orderType = $orderType;
+        $this->orderType = $orderType->value;
 
         return $this;
     }
