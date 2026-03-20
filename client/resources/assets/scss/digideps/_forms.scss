@@ -73,7 +73,7 @@ input[type="text"]::-ms-clear {
 }
 
 // Horizontally lined up form-groups
-// Currently only used on the admin search (Search, Role, NDR check)
+// Currently only used on the admin search (Search, Role)
 
 .form-groups-inline {
   .form-group {
@@ -139,11 +139,11 @@ input[type="text"]::-ms-clear {
 }
 
 .js-enabled .js-auto-size {
-  overflow: hidden; //only apply if the JS has loaded and is causing the textrea to grow automatically
+  overflow: hidden; //only apply if the JS has loaded and is causing the textarea to grow automatically
 }
 
 .custom-submit {
   clear: both;
   display: inline-block;
-  height: 0px;
+  height: 0;
 }

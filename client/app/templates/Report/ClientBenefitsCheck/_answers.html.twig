@@ -69,7 +69,7 @@
                                     {
                                         reportId: report.id,
                                         step: 1,
-                                        reportOrNdr: reportOrNdr
+                                        'reportOrNdr': 'report'
                                     }
                                 )
                                 }}?from=summary"
@@ -140,7 +140,7 @@
                                     {
                                         reportId: report.id,
                                         step: 2,
-                                        reportOrNdr: reportOrNdr
+                                        reportOrNdr: 'report'
                                     }
                                 )
                                 }}"
@@ -177,7 +177,7 @@
                                         {
                                             reportId: report.id,
                                             step: 3,
-                                            reportOrNdr: reportOrNdr
+                                            reportOrNdr: 'report'
                                         }
                                     )
                                     }}?from=summary"
@@ -227,7 +227,7 @@
                             {% set editPath = path('client_benefits_check_step', {
                                     moneyTypeId: money.id,
                                     reportId: report.id,
-                                    reportOrNdr: reportOrNdr,
+                                    reportOrNdr: 'report',
                                     step: 3,
                                 })
                             %}
@@ -235,7 +235,7 @@
                             {% set removePath = path('client_benefits_check_remove_money_type', {
                                     moneyTypeId: money.id,
                                     reportId: report.id,
-                                    reportOrNdr: reportOrNdr,
+                                    reportOrNdr: 'report',
                                 })
                             %}
 
