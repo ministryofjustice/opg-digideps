@@ -62,9 +62,9 @@ final readonly class CourtOrderRelationshipReader
         ");
         foreach ($result->iterateAssociative() as $row) {
             yield new CourtOrderRelationship(
-                $row['order_id'],
-                $row['sibling_id'],
-                CourtOrderKind::from($row['kind'])
+                (int)$row['order_id'],
+                $row['sibling_id'] !== null ? (int)$row['sibling_id'] : null,
+                CourtOrderKind::from((string)$row['kind'])
             );
         }
     }
