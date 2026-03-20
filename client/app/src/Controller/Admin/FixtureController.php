@@ -150,18 +150,27 @@ class FixtureController extends AbstractController
             $formAndRequestData = $this->retrieveFormData($form, $request);
             $submittedFormData = $formAndRequestData['submitted'];
 
-            $response = $this->restClient->post('v2/fixture/court-order', json_encode([
-                'deputyType' => $submittedFormData['deputyType'],
-                'deputyEmail' => $formAndRequestData['deputyEmail'],
-                'caseNumber' => $formAndRequestData['caseNumber'],
-                'reportType' => $submittedFormData['reportType'],
-                'reportStatus' => $submittedFormData['reportStatus'],
-                'courtDate' => $formAndRequestData['courtDate']->format('Y-m-d'),
-                'activated' => $submittedFormData['activated'],
-                'orgSizeClients' => $submittedFormData['orgSizeClients'],
-                'orgSizeUsers' => $submittedFormData['orgSizeUsers'],
-                'deputyUid' => $formAndRequestData['deputyUid'],
-            ]));
+            $numberOfUsersToCreate = min($submittedFormData['orgSizeUsers'], 10);
+            $remainingUsersToCreate = $submittedFormData['orgSizeUsers'];
+            while ($remainingUsersToCreate > 0) {
+                $response = $this->restClient->post(
+                    'v2/fixture/court-order',
+                    json_encode([
+                        'deputyType' => $submittedFormData['deputyType'],
+                        'deputyEmail' => $formAndRequestData['deputyEmail'],
+                        'caseNumber' => $formAndRequestData['caseNumber'],
+                        'reportType' => $submittedFormData['reportType'],
+                        'reportStatus' => $submittedFormData['reportStatus'],
+                        'courtDate' => $formAndRequestData['courtDate']->format('Y-m-d'),
+                        'activated' => $submittedFormData['activated'],
+                        'orgSizeClients' => $submittedFormData['orgSizeClients'],
+                        'orgSizeUsers' => $numberOfUsersToCreate,
+                        'deputyUid' => $formAndRequestData['deputyUid'],
+                    ]),
+                    ['timeout' => 1000]
+                );
+                $remainingUsersToCreate -= $numberOfUsersToCreate;
+            }
 
             $query = ['query' => ['filter_by_ids' => implode(',', $response['deputyIds'])]];
             $deputiesData = $this->restClient->get('/user/get-all', 'array', [], $query);

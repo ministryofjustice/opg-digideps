@@ -96,11 +96,11 @@ class UserFactory
     /**
      * @return User|void
      */
-    public function createGenericOrgUser(Organisation $organisation)
+    public function createGenericOrgUser(Organisation $organisation, int $number)
     {
         $faker = Factory::create();
 
-        $email = sprintf('%s.%s@%s', $faker->firstName(), $faker->lastName(), $organisation->getEmailIdentifier());
+        $email = sprintf('%s.%s.%s@%s', $faker->firstName(), $faker->lastName(), $number, $organisation->getEmailIdentifier());
         $trimmedEmail = substr($email, 0, 59);
 
         $user = (new User())

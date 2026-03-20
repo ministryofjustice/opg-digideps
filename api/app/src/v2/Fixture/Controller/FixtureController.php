@@ -62,7 +62,13 @@ class FixtureController extends AbstractController
         }
         $fromRequest = (array) json_decode($request->getContent(), true);
         $fromRequest['courtDate'] = (new \DateTime('-366 days'))->format('Y-m-d');
-        $client = $this->generateClient($fromRequest);
+
+        if (!$this->deputyRepository->findOneBy(['email1' => $fromRequest['deputyEmail']])) {
+            $client = $this->generateClient($fromRequest);
+        } else {
+            $client = $this->organisationRepository->findByEmailIdentifier($fromRequest['deputyEmail'])->getClients()->first();
+        }
+
         $user = new User();
 
         $multiClientDeputy = [];
@@ -128,8 +134,11 @@ class FixtureController extends AbstractController
             $this->createNdr($fromRequest, $client);
             $user->setNdrEnabled(true);
         } else {
-            $report = $this->generateReport($fromRequest, $client);
-            $this->em->persist($report);
+            if (!$this->reportRepository->findOneBy(['client' => $client])) {
+                $report = $this->generateReport($fromRequest, $client);
+                $this->em->persist($report);
+            }
+
             if (User::TYPE_LAY === $fromRequest['deputyType']) {
                 $courtOrder->addReport($report);
                 $this->em->persist($courtOrder);
@@ -336,15 +345,19 @@ class FixtureController extends AbstractController
 
         if ($fromRequest['orgSizeUsers'] > 1 && !empty($fromRequest['orgSizeUsers'])) {
             foreach (range(1, $fromRequest['orgSizeUsers']) as $number) {
-                $orgUser = $this->userFactory->createGenericOrgUser($organisation);
+                $orgUser = $this->userFactory->createGenericOrgUser($organisation, $number);
                 $organisation->addUser($orgUser);
                 $this->em->persist($orgUser);
             }
         }
 
-        $deputy = $this->buildDeputy($deputy, $fromRequest);
+        if (!$this->deputyRepository->findOneBy(['email1' => $deputy->getEmail()])) {
+            $deputy = $this->buildDeputy($deputy, $fromRequest);
+            $client->setDeputy($deputy);
+        } else {
+            $deputy = $this->deputyRepository->findOneBy(['email1' => $deputy->getEmail()]);
+        }
 
-        $client->setDeputy($deputy);
         $client->setOrganisation($organisation);
 
         // if the org size is 1 but we want 10 clients still then create the clients but
