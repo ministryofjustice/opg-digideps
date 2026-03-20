@@ -15,7 +15,7 @@ trait ReportDeputyExpenseTrait
      * @JMS\Groups({"expenses-paid-anything"})
      * @Assert\NotBlank(message="ndr.expenses.paidForAnything.notBlank", groups={"expenses-paid-anything"})
      */
-    private $paidForAnything;
+    private string $paidForAnything;
 
     /**
      * @JMS\Type("array<App\Entity\Report\Expense>")
@@ -23,7 +23,7 @@ trait ReportDeputyExpenseTrait
      *
      * @var Expense[]
      */
-    private $expenses = [];
+    private array $expenses = [];
 
     /**
      * @JMS\Type("double")
@@ -31,18 +31,12 @@ trait ReportDeputyExpenseTrait
      */
     private $expensesTotal;
 
-    /**
-     * @return string
-     */
-    public function getPaidForAnything()
+    public function getPaidForAnything(): string
     {
         return $this->paidForAnything;
     }
 
-    /**
-     * @param string $paidForAnything
-     */
-    public function setPaidForAnything($paidForAnything)
+    public function setPaidForAnything(string $paidForAnything): static
     {
         $this->paidForAnything = $paidForAnything;
 
@@ -52,45 +46,31 @@ trait ReportDeputyExpenseTrait
     /**
      * @return Expense[]
      */
-    public function getExpenses()
+    public function getExpenses(): array
     {
         return $this->expenses;
     }
 
-    /**
-     * @param mixed $expenses
-     *
-     * @return NdrExpensesTrait
-     */
-    public function setExpenses($expenses)
+    public function setExpenses(mixed $expenses): static
     {
         $this->expenses = $expenses;
 
         return $this;
     }
 
-    /**
-     * @return NdrExpensesTrait
-     */
-    public function addExpense(Expense $expense)
+    public function addExpense(Expense $expense): static
     {
         $this->expenses[] = $expense;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getExpensesTotal()
+    public function getExpensesTotal(): string
     {
         return $this->expensesTotal;
     }
 
-    /**
-     * @param string $expensesTotal
-     */
-    public function setExpensesTotal($expensesTotal)
+    public function setExpensesTotal(string $expensesTotal): void
     {
         $this->expensesTotal = $expensesTotal;
     }

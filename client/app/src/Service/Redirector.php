@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * getFirstPageAfterLogin() called after authentication
  * getHomepageRedirect() called if returning to base domain
  * Both methods have self-contained logic for prof/pa and admin landing pages
- * This logic is used to determine which page the user should be directed to depending on their status (NDR/Co-Deputy/Multi-client).
+ * This logic is used to determine which page the user should be directed to depending on their status (Co-Deputy/Multi-client).
  */
 class Redirector
 {

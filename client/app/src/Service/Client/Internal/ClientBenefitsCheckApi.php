@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace App\Service\Client\Internal;
 
 use App\Entity\ClientBenefitsCheckInterface;
-use App\Entity\Report\ClientBenefitsCheck;
 use App\Service\Client\RestClient;
 
 class ClientBenefitsCheckApi
 {
-    const CREATE_ENDPOINT = '%s/client-benefits-check';
-    const EXISTING_ENDPOINT = '%s/client-benefits-check/%s';
+    const string CREATE_ENDPOINT = 'report/client-benefits-check';
+    const string EXISTING_ENDPOINT = 'report/client-benefits-check/%s';
 
     private RestClient $restClient;
 
@@ -20,20 +19,15 @@ class ClientBenefitsCheckApi
         $this->restClient = $restClient;
     }
 
-    public function post(ClientBenefitsCheckInterface $clientBenefitsCheck)
+    public function post(ClientBenefitsCheckInterface $clientBenefitsCheck): void
     {
-        $reportOrNdr = $clientBenefitsCheck instanceof ClientBenefitsCheck ? 'report' : 'ndr';
-        $this->restClient->post(
-            sprintf(self::CREATE_ENDPOINT, $reportOrNdr),
-            $clientBenefitsCheck,
-        );
+        $this->restClient->post(self::CREATE_ENDPOINT, $clientBenefitsCheck);
     }
 
-    public function put(ClientBenefitsCheckInterface $clientBenefitsCheck)
+    public function put(ClientBenefitsCheckInterface $clientBenefitsCheck): void
     {
-        $reportOrNdr = $clientBenefitsCheck instanceof ClientBenefitsCheck ? 'report' : 'ndr';
         $this->restClient->put(
-            sprintf(self::EXISTING_ENDPOINT, $reportOrNdr, $clientBenefitsCheck->getId()),
+            sprintf(self::EXISTING_ENDPOINT, $clientBenefitsCheck->getId()),
             $clientBenefitsCheck
         );
     }
