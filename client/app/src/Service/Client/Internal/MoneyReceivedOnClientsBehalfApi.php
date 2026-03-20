@@ -8,7 +8,7 @@ use App\Service\Client\RestClient;
 
 class MoneyReceivedOnClientsBehalfApi
 {
-    const DELETE_ENDPOINT = '%s/money-type/delete/%s';
+    const string DELETE_ENDPOINT = 'report/money-type/delete/%s';
 
     private RestClient $restClient;
 
@@ -17,8 +17,8 @@ class MoneyReceivedOnClientsBehalfApi
         $this->restClient = $restClient;
     }
 
-    public function deleteMoneyType(string $reportOrNdr, string $moneyTypeId)
+    public function deleteMoneyType(string $moneyTypeId): void
     {
-        $this->restClient->delete(sprintf(self::DELETE_ENDPOINT, $reportOrNdr, $moneyTypeId));
+        $this->restClient->delete(sprintf(self::DELETE_ENDPOINT, $moneyTypeId));
     }
 }
