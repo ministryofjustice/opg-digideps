@@ -99,8 +99,8 @@ jobs:
             aquasec/trivy:latest \
             config \
             --severity MEDIUM,HIGH,CRITICAL \
-            --format sarif \
-            --output "trivy-results-${{ matrix.folder }}.sarif" \
+            --exit-code 1 \
+            --timeout 15m \
             "terraform/${{ matrix.folder }}"
 
       - name: Unset AWS variables
