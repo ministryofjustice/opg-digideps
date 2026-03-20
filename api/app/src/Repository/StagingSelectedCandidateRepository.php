@@ -49,7 +49,7 @@ class StagingSelectedCandidateRepository extends ServiceEntityRepository
         return $rows;
     }
 
-    public function getChangedOrders(): \Traversable
+    public function getOrdersWithPossibleReportTypeChange(): \Traversable
     {
        // Actions where a report type could change
         $actionsNeeded = [
@@ -59,7 +59,7 @@ class StagingSelectedCandidateRepository extends ServiceEntityRepository
         ];
 
         $sql = <<<SQL
-        SELECT DISTINCT sc.order_uid, d.order_type, d.report_type, d.is_hybrid, d.deputy_type
+        SELECT DISTINCT sc.order_uid, sc.action, d.order_type, d.report_type, d.is_hybrid, d.deputy_type
         FROM selectedcandidates sc
         INNER JOIN deputyship d ON sc.order_uid = d.order_uid
         WHERE action IN (:actionsNeeded)

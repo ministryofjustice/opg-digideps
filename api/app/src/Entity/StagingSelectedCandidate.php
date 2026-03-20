@@ -19,7 +19,9 @@ use JMS\Serializer\Annotation as JMS;
  * Column names in the database mostly match the column names in the deputyship CSV, as we do no
  * transformation/translation when dumping data into this table.
  *
- * @ORM\Table(name="selectedCandidates", schema="staging")
+ * @ORM\Table(name="selectedCandidates", indexes={
+ *      @ORM\Index(name="order_uid_idx", columns={"order_uid"})
+ *      }, schema="staging")
  *
  * @ORM\Entity
  */

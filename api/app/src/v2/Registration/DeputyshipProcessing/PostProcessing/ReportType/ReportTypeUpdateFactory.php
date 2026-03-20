@@ -28,7 +28,7 @@ class ReportTypeUpdateFactory
      */
     public function run(): array
     {
-        $candidates = $this->staging->getChangedOrders();
+        $candidates = $this->staging->getOrdersWithPossibleReportTypeChange();
         $builderResults = $this->reportTypeBuilder->build($candidates);
         $results = new ReportTypeBuilderResult(ReportTypeBuilderResultOutcome::UpdateSuccess);
 

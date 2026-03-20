@@ -33,7 +33,7 @@ abstract class BuilderResult
 
     public function getMessage(): string
     {
-        $message = 'Builder result: skipped candidates = ' . $this->numCandidatesSkipped .
+        $message = 'Builder result: failed candidates = ' . $this->numCandidatesFailed .
             '; applied candidates = ' . $this->numCandidatesApplied;
 
         $candidateDetails = [];

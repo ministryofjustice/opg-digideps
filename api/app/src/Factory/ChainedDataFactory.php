@@ -22,15 +22,16 @@ class ChainedDataFactory implements DataFactoryInterface
     }
 
     /**
-     * @return DataFactoryResult Aggregated results from all data factories; the messages and error messages are
+     * @return array<DataFactoryResult, ?BuilderResultInterface> Aggregated results from all data factories; the messages and error messages are
      * keyed by the name of the data factory that produced them.
      */
-    public function run(): DataFactoryResult
+    public function run(): array
     {
         $result = new DataFactoryResult();
+        $builderResult = null;
 
         foreach ($this->dataFactories as $dataFactory) {
-            $factoryResult = $dataFactory->run();
+            [$factoryResult, $builderResult] = $dataFactory->run();
 
             $factoryName = $dataFactory->getName();
 
@@ -43,6 +44,6 @@ class ChainedDataFactory implements DataFactoryInterface
             }
         }
 
-        return $result;
+        return [$result, $builderResult];
     }
 }
