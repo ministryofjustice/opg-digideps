@@ -352,15 +352,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     private $deputyUid;
 
     /**
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"admin_add_user", "ad_add_user", "admin_edit_user"})
-     *
-     * @var bool|null
-     */
-    private $ndrEnabled;
-
-    /**
      * @var bool|null
      *
      * @JMS\Type("boolean")
@@ -975,22 +966,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         }
 
         return false;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isNdrEnabled()
-    {
-        return $this->ndrEnabled;
-    }
-
-    /**
-     * @param bool $ndrEnabled
-     */
-    public function setNdrEnabled($ndrEnabled)
-    {
-        $this->ndrEnabled = $ndrEnabled;
     }
 
     /**

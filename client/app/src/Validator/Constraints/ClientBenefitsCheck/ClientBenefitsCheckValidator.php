@@ -6,7 +6,6 @@ namespace App\Validator\Constraints\ClientBenefitsCheck;
 
 use App\Entity\ClientBenefitsCheckInterface;
 use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\Report;
 use App\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheck as ClientBenefitsCheckConstraint;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -26,7 +25,7 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         }
 
         $object = $this->context->getObject();
-        $report = $object->getReport() instanceof Report ? $object->getReport() : $object->getNdr();
+        $report = $object->getReport();
         $this->clientName = $report->getClient()->getFirstName();
         $propertyName = $this->context->getPropertyName();
 

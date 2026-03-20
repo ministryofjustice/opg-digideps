@@ -293,7 +293,6 @@ class FixtureController extends AbstractController
         $this
             ->restClient
             ->post('v2/fixture/createUser', json_encode([
-                'ndr' => $request->query->get('ndr'),
                 'deputyType' => $request->query->get('deputyType'),
                 'deputyEmail' => $request->query->get('email'),
                 'firstName' => $request->query->get('firstName'),

@@ -3806,16 +3806,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:addExpense\\(\\) has invalid return type App\\\\Entity\\\\Report\\\\Traits\\\\NdrExpensesTrait\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:addExpense\\(\\) should return App\\\\Entity\\\\Report\\\\Traits\\\\NdrExpensesTrait but returns \\$this\\(App\\\\Entity\\\\Report\\\\Report\\)\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:addProfDeputyInterimCosts\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -4006,21 +3996,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setExpenses\\(\\) has invalid return type App\\\\Entity\\\\Report\\\\Traits\\\\NdrExpensesTrait\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setExpenses\\(\\) should return App\\\\Entity\\\\Report\\\\Traits\\\\NdrExpensesTrait but returns \\$this\\(App\\\\Entity\\\\Report\\\\Report\\)\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setExpensesTotal\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setFees\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -4107,11 +4082,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setMoneyTransactionsShortOutExist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setPaidForAnything\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -4901,11 +4871,6 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:isNdrEnabled\\(\\) should return bool but returns bool\\|null\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\User\\:\\:setActiveReportId\\(\\) has invalid return type App\\\\Entity\\\\Traits\\\\HasReportTrait\\.$#"
 			count: 1
 			path: src/Entity/User.php
@@ -4997,11 +4962,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Entity\\\\User\\:\\:setLastLoggedIn\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:setNdrEnabled\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/User.php
 
@@ -5507,7 +5467,7 @@ parameters:
 
 		-
 			message: "#^Cannot call method isLayDeputy\\(\\) on mixed\\.$#"
-			count: 2
+			count: 1
 			path: src/Form/Admin/EditUserType.php
 
 		-
@@ -6681,16 +6641,6 @@ parameters:
 			path: src/Service/Client/Internal/ClientBenefitsCheckApi.php
 
 		-
-			message: "#^Method App\\\\Service\\\\Client\\\\Internal\\\\ClientBenefitsCheckApi\\:\\:post\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/Client/Internal/ClientBenefitsCheckApi.php
-
-		-
-			message: "#^Method App\\\\Service\\\\Client\\\\Internal\\\\ClientBenefitsCheckApi\\:\\:put\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Service/Client/Internal/ClientBenefitsCheckApi.php
-
-		-
 			message: "#^Call to an undefined method App\\\\Service\\\\Client\\\\RestClientInterface\\:\\:get\\(\\)\\.$#"
 			count: 1
 			path: src/Service/Client/Internal/DeputyApi.php
@@ -6734,11 +6684,6 @@ parameters:
 			message: "#^Method App\\\\Service\\\\Client\\\\Internal\\\\ReportApi\\:\\:getReport\\(\\) should return App\\\\Entity\\\\Report\\\\Report but returns mixed\\.$#"
 			count: 1
 			path: src/Service/Client/Internal/ReportApi.php
-
-		-
-			message: "#^Property App\\\\Service\\\\Client\\\\Internal\\\\SatisfactionApi\\:\\:\\$restClient \\(App\\\\Service\\\\Client\\\\RestClient\\) does not accept App\\\\Service\\\\Client\\\\RestClientInterface\\.$#"
-			count: 1
-			path: src/Service/Client/Internal/SatisfactionApi.php
 
 		-
 			message: "#^Call to an undefined method App\\\\Service\\\\Client\\\\RestClientInterface\\:\\:get\\(\\)\\.$#"
@@ -8021,13 +7966,8 @@ parameters:
 			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
 
 		-
-			message: "#^Cannot call method getNdr\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
-
-		-
 			message: "#^Cannot call method getReport\\(\\) on object\\|null\\.$#"
-			count: 2
+			count: 1
 			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
 
 		-
