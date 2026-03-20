@@ -9,7 +9,7 @@ parameters:
   # At runtime Symfony will fetch the actual value from the environment
   env(AUDIT_LOG_GROUP_NAME): "dummy-build-time-value-overridden-at-runtime"
 
-  # translation key must be present in report-assets.en.yml, ndr-assets.en.yml, dropdown.<value>
+  # translation key must be present in report-assets.en.yml, dropdown.<value>
   asset_dropdown:
     - antiques
     - artwork
@@ -87,7 +87,6 @@ services:
   # Disable autowiring
   App\Model\EmailAttachment: ~
   App\Service\DataImporter\CsvToArray: ~
-  App\Service\NdrStatusService: ~
 
   guzzle_api_gateway_client:
     class: GuzzleHttp\Client
@@ -259,11 +258,6 @@ services:
 
   App\Form\Report\Asset\AssetTypeTitle:
     arguments: ["%asset_dropdown%", "@translator", "report-assets"]
-    tags:
-      - { name: form.type }
-
-  App\Form\Ndr\Asset\AssetTypeTitle:
-    arguments: ["%asset_dropdown%", "@translator", "ndr-assets"]
     tags:
       - { name: form.type }
 

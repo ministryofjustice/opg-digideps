@@ -4,22 +4,21 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Factory;
 
-use DateTime;
-use PHPUnit\Framework\Attributes\Test;
-use ReflectionClass;
 use App\Entity\Client;
 use App\Entity\Report\ClientBenefitsCheck;
 use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\Entity\Report\Report;
 use App\Factory\ClientBenefitsCheckFactory;
-use App\Repository\NdrRepository;
 use App\Repository\ReportRepository;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
+use ReflectionClass;
 
 final class ClientBenefitsCheckFactoryTest extends TestCase
 {
@@ -67,20 +66,18 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
     #[Test]
     public function createFromFormDataExistingEntity(): void
     {
-        $existingEntity = true;
-        $validData = $this->generateValidFormData($existingEntity);
+        $validData = $this->generateValidFormData(true);
 
         $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime(), new DateTime());
         $this->set($report, $this->reportId);
 
         /** @var ObjectProphecy|ReportRepository $reportRepo */
         $reportRepo = self::prophesize(ReportRepository::class);
-        $ndrRepo = self::prophesize(NdrRepository::class);
         $em = self::prophesize(EntityManagerInterface::class);
 
         $reportRepo->find($this->reportId)->shouldBeCalled()->willReturn($report);
 
-        $sut = new ClientBenefitsCheckFactory($reportRepo->reveal(), $ndrRepo->reveal(), $em->reveal());
+        $sut = new ClientBenefitsCheckFactory($reportRepo->reveal(), $em->reveal());
 
         $existingMoney = (new MoneyReceivedOnClientsBehalf())
             ->setId(Uuid::fromString($this->moneyId));
@@ -91,7 +88,6 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
 
         $processedClientBenefitsCheck = $sut->createFromFormData(
             $validData,
-            'report',
             $existingClientBenefitsCheck
         );
 
@@ -152,8 +148,7 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
     #[Test]
     public function createFromFormDataNewEntity(): void
     {
-        $existingEntity = false;
-        $validData = $this->generateValidFormData($existingEntity);
+        $validData = $this->generateValidFormData(false);
 
         $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime(), new DateTime());
         $this->set($report, $this->reportId);
@@ -162,16 +157,11 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
         $reportRepo = self::prophesize(ReportRepository::class);
         $reportRepo->find($this->reportId)->shouldBeCalled()->willReturn($report);
 
-        $ndrRepo = self::prophesize(NdrRepository::class);
-
         $em = self::prophesize(EntityManagerInterface::class);
 
-        $sut = new ClientBenefitsCheckFactory($reportRepo->reveal(), $ndrRepo->reveal(), $em->reveal());
+        $sut = new ClientBenefitsCheckFactory($reportRepo->reveal(), $em->reveal());
 
-        $processedClientBenefitsCheck = $sut->createFromFormData(
-            $validData,
-            'report'
-        );
+        $processedClientBenefitsCheck = $sut->createFromFormData($validData);
 
         self::assertEquals($this->reportId, $processedClientBenefitsCheck->getReport()->getId());
         self::assertEquals(true, $processedClientBenefitsCheck->getId() instanceof UuidInterface);
@@ -204,8 +194,6 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
         $reportRepo = self::prophesize(ReportRepository::class);
         $reportRepo->find($this->reportId)->shouldBeCalled()->willReturn($report);
 
-        $ndrRepo = self::prophesize(NdrRepository::class);
-
         $existingMoney = (new MoneyReceivedOnClientsBehalf())
             ->setId(Uuid::fromString($this->moneyId))
             ->setCreated(new DateTime($this->moneyCreated))
@@ -223,15 +211,13 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
         $em->remove($existingMoney)->shouldBeCalled();
         $em->flush()->shouldBeCalled();
 
-        $sut = new ClientBenefitsCheckFactory($reportRepo->reveal(), $ndrRepo->reveal(), $em->reveal());
+        $sut = new ClientBenefitsCheckFactory($reportRepo->reveal(), $em->reveal());
 
         $processedClientBenefitsCheck = $sut->createFromFormData(
             $validData,
-            'report',
             $existingClientBenefitsCheck
         );
 
-        self::assertEquals(true, $processedClientBenefitsCheck instanceof ClientBenefitsCheck);
         self::assertEquals(0, $processedClientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->count());
     }
 

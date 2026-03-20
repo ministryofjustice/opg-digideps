@@ -8,11 +8,11 @@ use App\TestHelpers\ReportTestHelper;
 
 class UserResearchControllerTest extends AbstractTestController
 {
-    private static $tokenAdmin;
-    private static $tokenSuperAdmin;
-    private static $tokenDeputy;
-    private static $tokenProf;
-    private static $tokenPa;
+    private static string $tokenAdmin;
+    private static string $tokenSuperAdmin;
+    private static string $tokenDeputy;
+    private static string $tokenProf;
+    private static string $tokenPa;
 
     public function setUp(): void
     {
@@ -34,8 +34,7 @@ class UserResearchControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    /** @test */
-    public function userResearchHasSuitablePermissionsNotAllowedAdmin()
+    public function testUserResearchHasSuitablePermissionsNotAllowedAdmin(): void
     {
         $satisfaction = $this->prepareSatisfaction();
         $url = '/user-research';
@@ -49,8 +48,7 @@ class UserResearchControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin, $validData);
     }
 
-    /** @test */
-    public function userResearchHasSuitablePermissionsNotAllowedSuperAdmin()
+    public function testUserResearchHasSuitablePermissionsNotAllowedSuperAdmin(): void
     {
         $satisfaction = $this->prepareSatisfaction();
         $url = '/user-research';
@@ -64,8 +62,7 @@ class UserResearchControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenSuperAdmin, $validData);
     }
 
-    /** @test */
-    public function userResearchHasSuitablePermissionsAllowedLay()
+    public function testUserResearchHasSuitablePermissionsAllowedLay(): void
     {
         $satisfaction = $this->prepareSatisfaction();
         $url = '/user-research';
@@ -79,8 +76,7 @@ class UserResearchControllerTest extends AbstractTestController
         $this->assertEndpointAllowedFor('POST', $url, self::$tokenDeputy, $validData);
     }
 
-    /** @test */
-    public function userResearchHasSuitablePermissionsAllowedPa()
+    public function testUserResearchHasSuitablePermissionsAllowedPa(): void
     {
         $satisfaction = $this->prepareSatisfaction();
         $url = '/user-research';
@@ -94,8 +90,7 @@ class UserResearchControllerTest extends AbstractTestController
         $this->assertEndpointAllowedFor('POST', $url, self::$tokenPa, $validData);
     }
 
-    /** @test */
-    public function userResearchHasSuitablePermissionsAllowedProf()
+    public function testUserResearchHasSuitablePermissionsAllowedProf(): void
     {
         $satisfaction = $this->prepareSatisfaction();
         $url = '/user-research';
@@ -109,14 +104,13 @@ class UserResearchControllerTest extends AbstractTestController
         $this->assertEndpointAllowedFor('POST', $url, self::$tokenProf, $validData);
     }
 
-    /** @test */
-    public function userResearchHasSuitablePermissionsNeedsAuthNoToken()
+    public function testUserResearchHasSuitablePermissionsNeedsAuthNoToken(): void
     {
         $url = '/user-research';
         $this->assertEndpointNeedsAuth('POST', $url);
     }
 
-    private function prepareSatisfaction()
+    private function prepareSatisfaction(): Satisfaction
     {
         $em = static::getContainer()->get('em');
 
@@ -140,7 +134,7 @@ class UserResearchControllerTest extends AbstractTestController
     /**
      * @dataProvider getInvalidInputs
      */
-    public function testUserResearchFailsOnInvalidData($data)
+    public function testUserResearchFailsOnInvalidData($data): void
     {
         $this->assertJsonRequest('POST', '/user-research', [
             'mustFail' => true,
