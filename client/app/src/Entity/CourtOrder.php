@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
@@ -11,63 +10,36 @@ use JMS\Serializer\Annotation as JMS;
  */
 class CourtOrder
 {
-    public const HEALTH_AND_WELFARE_REPORT = 'Health and Welfare Report';
-    public const PROPERTY_AND_AFFAIRS_REPORT = 'Property & Affairs Report';
-    public const PROPERTY_AND_AFFAIRS_WITH_HEALTH_AND_WELFARE_REPORT = 'Property & Affairs with Health & Welfare Report';
+    public const string HEALTH_AND_WELFARE_REPORT = 'Health and Welfare Report';
+    public const string PROPERTY_AND_AFFAIRS_REPORT = 'Property & Affairs Report';
+    public const string PROPERTY_AND_AFFAIRS_WITH_HEALTH_AND_WELFARE_REPORT = 'Property & Affairs with Health & Welfare Report';
+
+    #[JMS\Type('integer')]
+    private int $id;
+
+    #[JMS\Type('string')]
+    private string $courtOrderUid;
+
+    #[JMS\Type('string')]
+    private string $orderType;
+
+    #[JMS\Type('string')]
+    private string $status;
 
     /**
-     * @var int
-     *
-     * @JMS\Type("integer")
-     */
-    private $id;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     */
-    private $courtOrderUid;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     */
-    private $orderType;
-
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     */
-    private $status;
-
-    /**
-     * @JMS\Type("array<App\Entity\Deputy>")
-     *
      * @var Deputy[]
      */
+    #[JMS\Type('array<App\Entity\Deputy>')]
     private array $activeDeputies = [];
 
     /**
-     * @JMS\Type("array<App\Entity\Report\Report>")
-     *
      * @var Report[]
      */
+    #[JMS\Type('array<App\Entity\Report>')]
     private array $reports = [];
 
-    /**
-     * @JMS\Type("App\Entity\Client")
-     *
-     * @phpstan-ignore property.onlyRead (Deserialized from API response)
-     */
+    #[JMS\Type('App\Entity\Client')]
     private Client $client;
-
-    /**
-     * @JMS\Type("App\Entity\Ndr\Ndr")
-     */
-    private ?Ndr $ndr = null;
 
     public function getId(): int
     {
@@ -218,10 +190,5 @@ class CourtOrder
         }
 
         return self::PROPERTY_AND_AFFAIRS_WITH_HEALTH_AND_WELFARE_REPORT;
-    }
-
-    public function getNdr(): ?Ndr
-    {
-        return $this->ndr;
     }
 }

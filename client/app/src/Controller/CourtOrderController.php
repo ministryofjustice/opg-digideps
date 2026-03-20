@@ -54,12 +54,7 @@ class CourtOrderController extends AbstractController
             'reportType' => $courtOrder->getActiveReportType(),
             'client' => $client,
             'inviteUrl' => $this->generateUrl('courtorder_invite', ['courtOrderUid' => $courtOrder->getCourtOrderUid()]),
-            'ndrEnabled' => true,
         ];
-
-        if (is_null($courtOrder->getNdr())) {
-            $templateValues['ndrEnabled'] = false;
-        }
 
         return $templateValues;
     }

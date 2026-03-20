@@ -185,7 +185,7 @@ class ClientBenefitsCheckController extends AbstractController
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         /** @var ArrayCollection<int,MoneyReceivedOnClientsBehalf> $typesOfMoniesReceived */
-        $typesOfMoniesReceived = $report->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf();
+        $typesOfMoniesReceived = $report->getClientBenefitsCheck()?->getTypesOfMoneyReceivedOnClientsBehalf() ?? [];
         foreach ($typesOfMoniesReceived as $moneyType) {
             if ($moneyType->getId() === $moneyTypeId) {
                 $moneyTypeToDelete = $moneyType;
