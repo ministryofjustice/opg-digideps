@@ -2,49 +2,21 @@
 
 namespace App\Service;
 
-use App\Entity\Ndr\Ndr;
 use App\Entity\ReportInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 class ReportSectionsLinkService
 {
-    /**
-     * @var RouterInterface
-     */
-    protected $router;
+    protected RouterInterface $router;
 
-    /**
-     * ReportSectionsLinkService constructor.
-     */
     public function __construct(RouterInterface $router)
     {
         $this->router = $router;
     }
 
-    /**
-     * @return array
-     */
-    private function getOptions(ReportInterface $report)
+    private function getOptions(ReportInterface $report): array
     {
-        if ($report instanceof Ndr) {
-            $routeParams = ['ndrId' => $report->getId()];
-
-            $clientBenefitsRouteParams = ['reportId' => $report->getId(), 'reportOrNdr' => 'ndr'];
-
-            return [
-                ['section' => 'visitsCare', 'link' => $this->router->generate('ndr_visits_care', $routeParams)],
-                ['section' => 'deputyExpenses', 'link' => $this->router->generate('ndr_deputy_expenses', $routeParams)],
-                ['section' => 'clientBenefitsCheck', 'link' => $this->router->generate('client_benefits_check', $clientBenefitsRouteParams)],
-                ['section' => 'incomeBenefits', 'link' => $this->router->generate('ndr_income_benefits', $routeParams)],
-                ['section' => 'bankAccounts', 'link' => $this->router->generate('ndr_bank_accounts', $routeParams)],
-                ['section' => 'assets', 'link' => $this->router->generate('ndr_assets', $routeParams)],
-                ['section' => 'debts', 'link' => $this->router->generate('ndr_debts', $routeParams)],
-                ['section' => 'actions', 'link' => $this->router->generate('ndr_actions', $routeParams)],
-                ['section' => 'otherInfo', 'link' => $this->router->generate('ndr_other_info', $routeParams)],
-            ];
-        }
-
-        $routeParams = ['reportId' => $report->getId(), 'reportOrNdr' => 'report'];
+        $routeParams = ['reportId' => $report->getId()];
 
         // define sections and links (not following the order with which are presented in the dashboards)
         $allSectionsAvailable = [
@@ -71,8 +43,6 @@ class ReportSectionsLinkService
             'profCurrentFees' => ['section' => 'profCurrentFees', 'link' => $this->router->generate('prof_current_fees', $routeParams)],
             'visitsCare' => ['section' => 'visitsCare', 'link' => $this->router->generate('visits_care', $routeParams)],
         ];
-
-        // TODO ask the business if links can follow a single order
 
         // defined order for Client profile page (PROF or PA)
         if ($report->hasSection('paDeputyExpenses')) { // PAs
@@ -133,17 +103,15 @@ class ReportSectionsLinkService
     }
 
     /**
-     * @param int $offset
-     *
      * @return array empty if it's the last or first section
      */
-    public function getSectionParams(ReportInterface $report, $sectionId, $offset = 0)
+    public function getSectionParams(ReportInterface $report, int $sectionId, int $offset = 0): array
     {
         $config = $this->getOptions($report);
 
         foreach ($config as $index => $currentSectionParams) {
             if ($currentSectionParams['section'] == $sectionId) {
-                return isset($config[$index + $offset]) ? $config[$index + $offset] : [];
+                return $config[$index + $offset] ?? [];
             }
         }
 
