@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Controller\Report;
 
 use App\Controller\AbstractController;
-use App\Entity\Ndr\ClientBenefitsCheck as NdrClientBenefitsCheck;
-use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrMoneyReceivedOnClientsBehalf;
 use App\Entity\Report\ClientBenefitsCheck;
 use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\Entity\Report\Status;
@@ -15,7 +13,6 @@ use App\Form\ConfirmDeleteType;
 use App\Form\Report\ClientBenefitsCheckType;
 use App\Service\Client\Internal\ClientBenefitsCheckApi;
 use App\Service\Client\Internal\MoneyReceivedOnClientsBehalfApi;
-use App\Service\Client\Internal\NdrApi;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\StepRedirector;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -39,43 +36,37 @@ class ClientBenefitsCheckController extends AbstractController
         private readonly ClientBenefitsCheckApi $benefitCheckApi,
         private readonly StepRedirector $stepRedirector,
         private readonly MoneyReceivedOnClientsBehalfApi $moneyTypeApi,
-        private readonly NdrApi $ndrApi,
     ) {
     }
 
-    #[Route(path: '/{reportOrNdr}/{reportId}/client-benefits-check', name: 'client_benefits_check', requirements: ['reportOrNdr' => '(report|ndr)'])]
+    #[Route(path: '/report/{reportId}/client-benefits-check', name: 'client_benefits_check')]
     #[Template('@App/Report/ClientBenefitsCheck/start.html.twig')]
-    public function start(int $reportId, string $reportOrNdr): array|RedirectResponse
+    public function start(int $reportId): array|RedirectResponse
     {
-        $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, array_merge(self::$jmsGroups, ['ndr-client', 'client-id'])) :
-            $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $status = ('ndr' === $reportOrNdr) ? $report->getStatusService()->getClientBenefitsCheckState()['state'] :
-            $report->getStatus()->getClientBenefitsCheckState()['state'];
+        $status = $report->getStatus()->getClientBenefitsCheckState()['state'];
 
         if (Status::STATE_NOT_STARTED != $status) {
             return $this->redirectToRoute(
                 'client_benefits_check_summary',
-                ['reportId' => $reportId, 'reportOrNdr' => $reportOrNdr]
+                ['reportId' => $reportId]
             );
         }
 
-        return [
-            'report' => $report,
-            'reportOrNdr' => $reportOrNdr,
-        ];
+        return ['report' => $report];
     }
 
-    #[Route(path: '/{reportOrNdr}/{reportId}/client-benefits-check/step/{step}/{moneyTypeId}', name: 'client_benefits_check_step')]
+    #[Route(path: '/report/{reportId}/client-benefits-check/step/{step}/{moneyTypeId}', name: 'client_benefits_check_step')]
     #[Template('@App/Report/ClientBenefitsCheck/step.html.twig')]
-    public function step(Request $request, int $reportId, int $step, string $reportOrNdr, ?string $moneyTypeId = null): array|RedirectResponse
+    public function step(Request $request, int $reportId, int $step, ?string $moneyTypeId = null): array|RedirectResponse
     {
         $totalSteps = 3;
 
         if ($step < 1 || $step > $totalSteps) {
             return $this->redirectToRoute(
                 'client_benefits_check_summary',
-                ['reportId' => $reportId, 'reportOrNdr' => $reportOrNdr]
+                ['reportId' => $reportId]
             );
         }
 
@@ -87,26 +78,16 @@ class ClientBenefitsCheckController extends AbstractController
             ->setFromPage($fromPage)
             ->setCurrentStep($step)
             ->setTotalSteps($totalSteps)
-            ->setRouteBaseParams(['reportId' => $reportId, 'reportOrNdr' => $reportOrNdr]);
+            ->setRouteBaseParams(['reportId' => $reportId]);
 
-        $report = ('ndr' === $reportOrNdr) ?
-            $this->ndrApi->getNdr($reportId, array_merge(self::$jmsGroups, ['ndr-client', 'client-id', 'ndr-id', 'ndr'])) :
-            $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if ('ndr' === $reportOrNdr) {
-            $clientBenefitsCheck = $report->getClientBenefitsCheck() ?: new NdrClientBenefitsCheck();
-            $clientBenefitsCheck->setNdr($report);
-        } else {
-            $clientBenefitsCheck = $report->getClientBenefitsCheck() ?: new ClientBenefitsCheck();
-            $clientBenefitsCheck->setReport($report);
-        }
+        $clientBenefitsCheck = $report->getClientBenefitsCheck() ?: new ClientBenefitsCheck();
+        $clientBenefitsCheck->setReport($report);
 
         if (3 === $step) {
             if (is_null($moneyTypeId)) {
-                $income = ('ndr' === $reportOrNdr) ?
-                    new NdrMoneyReceivedOnClientsBehalf() :
-                    new MoneyReceivedOnClientsBehalf();
-
+                $income = new MoneyReceivedOnClientsBehalf();
                 $clientBenefitsCheck->setTypesOfMoneyReceivedOnClientsBehalf(new ArrayCollection([$income]));
             } else {
                 foreach ($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf() as $moneyType) {
@@ -130,7 +111,7 @@ class ClientBenefitsCheckController extends AbstractController
             [
                 'step' => $step,
                 'allow_delete_empty' => $allowDeleteEmpty,
-                'data_class' => 'ndr' === $reportOrNdr ? NdrClientBenefitsCheck::class : ClientBenefitsCheck::class,
+                'data_class' => ClientBenefitsCheck::class,
                 'label_translation_parameters' => ['clientFirstname' => $report->getClient()->getFirstname()],
             ]
         );
@@ -142,9 +123,7 @@ class ClientBenefitsCheckController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $formData = $form->getData();
-            'ndr' === $reportOrNdr ?
-                $formData->setNdr($report) :
-                $formData->setReport($report);
+            $formData->setReport($report);
 
             $addAnother = null;
             if ($form->has('addAnother')) {
@@ -155,11 +134,12 @@ class ClientBenefitsCheckController extends AbstractController
             if ($addAnother !== null && 'yes' === $addAnother->getData()) {
                 $redirectRoute = $this->generateUrl(
                     'client_benefits_check_step',
-                    ['reportId' => $reportId, 'reportOrNdr' => $reportOrNdr, 'step' => 3]
+                    ['reportId' => $reportId, 'step' => 3]
                 );
             } else {
                 $stepToRedirectFrom = $this->incomeNotReceivedByOthers($form) ? $step + 1 : $step;
-                $redirectRoute = $stepRedirector->setCurrentStep($stepToRedirectFrom)->getRedirectLinkAfterSaving(['reportOrNdr' => $reportOrNdr]);
+                $redirectRoute = $stepRedirector->setCurrentStep($stepToRedirectFrom)
+                    ->getRedirectLinkAfterSaving();
             }
 
             is_null($formData->getId()) ?
@@ -186,28 +166,25 @@ class ClientBenefitsCheckController extends AbstractController
             && in_array($form->get('doOthersReceiveMoneyOnClientsBehalf')->getData(), $notYesStatuses);
     }
 
-    #[Route(path: '/{reportOrNdr}/{reportId}/client-benefits-check/summary', name: 'client_benefits_check_summary', requirements: ['reportOrNdr' => '(report|ndr)'])]
+    #[Route(path: '/report/{reportId}/client-benefits-check/summary', name: 'client_benefits_check_summary')]
     #[Template('@App/Report/ClientBenefitsCheck/summary.html.twig')]
-    public function summary(int $reportId, string $reportOrNdr): array|RedirectResponse
+    public function summary(int $reportId): array|RedirectResponse
     {
-        $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, array_merge(self::$jmsGroups, ['ndr-client', 'client-id'])) :
-            $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         return [
             'report' => $report,
-            'reportOrNdr' => $reportOrNdr,
             'showActions' => true,
         ];
     }
 
-    #[Route(path: '/{reportOrNdr}/{reportId}/client-benefits-check/remove/money-type/{moneyTypeId}', name: 'client_benefits_check_remove_money_type', requirements: ['reportOrNdr' => '(report|ndr)'])]
+    #[Route(path: '/report/{reportId}/client-benefits-check/remove/money-type/{moneyTypeId}', name: 'client_benefits_check_remove_money_type')]
     #[Template('@App/Common/confirmDelete.html.twig')]
-    public function removeIncomeType(Request $request, int $reportId, string $moneyTypeId, string $reportOrNdr): array|RedirectResponse
+    public function removeIncomeType(Request $request, int $reportId, string $moneyTypeId): array|RedirectResponse
     {
-        $report = ('ndr' === $reportOrNdr) ? $this->ndrApi->getNdr($reportId, self::$jmsGroups) :
-            $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        /** @var ArrayCollection<int,NdrMoneyReceivedOnClientsBehalf|MoneyReceivedOnClientsBehalf> $typesOfMoniesReceived */
+        /** @var ArrayCollection<int,MoneyReceivedOnClientsBehalf> $typesOfMoniesReceived */
         $typesOfMoniesReceived = $report->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf();
         foreach ($typesOfMoniesReceived as $moneyType) {
             if ($moneyType->getId() === $moneyTypeId) {
@@ -224,7 +201,7 @@ class ClientBenefitsCheckController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->moneyTypeApi->deleteMoneyType($reportOrNdr, $moneyTypeId);
+            $this->moneyTypeApi->deleteMoneyType($moneyTypeId);
 
             $this->addFlash(
                 'notice',
@@ -233,7 +210,7 @@ class ClientBenefitsCheckController extends AbstractController
 
             return $this->redirect($this->generateUrl(
                 'client_benefits_check_summary',
-                ['reportId' => $reportId, 'reportOrNdr' => $reportOrNdr]
+                ['reportId' => $reportId]
             ));
         }
 
@@ -250,7 +227,7 @@ class ClientBenefitsCheckController extends AbstractController
             'summary' => $summary,
             'backLink' => $this->generateUrl(
                 'client_benefits_check_summary',
-                ['reportId' => $reportId, 'reportOrNdr' => $reportOrNdr]
+                ['reportId' => $reportId]
             ),
         ];
     }
