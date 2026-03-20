@@ -71,26 +71,27 @@ class FixtureController extends AbstractController
 
         $user = new User();
 
-        $multiClientDeputy = [];
-        if (!$fromRequest['multiClientEnabled']) {
+//        $multiClientDeputy = [];
+//        if (!$fromRequest['multiClientEnabled']) {
             $user = $this->createSingleClientDeputy($fromRequest, $client);
-            if ($fromRequest['coDeputyEnabled']) {
-                $coDeputy = $this->createCoDeputy($user, $fromRequest, $client);
-            }
-        } else {
-            $multiClientDeputy = $this->createMultiClientDeputy($fromRequest, $client);
-        }
+//            if ($fromRequest['coDeputyEnabled']) {
+//                $coDeputy = $this->createCoDeputy($user, $fromRequest, $client);
+//            }
+//        } else {
+//            $multiClientDeputy = $this->createMultiClientDeputy($fromRequest, $client);
+//        }
 
         $this->em->flush();
-        $deputyIds = !$fromRequest['multiClientEnabled'] ? ['originalDeputy' => $user->getId()] : $multiClientDeputy['deputyIds'];
-        if (!$fromRequest['multiClientEnabled'] && isset($coDeputy)) {
-            $deputyIds['coDeputy'] = $coDeputy->getId();
-        }
-        if (!$fromRequest['multiClientEnabled']) {
+        $deputyIds = ['originalDeputy' => $user->getId()];
+
+//        if (!$fromRequest['multiClientEnabled'] && isset($coDeputy)) {
+//            $deputyIds['coDeputy'] = $coDeputy->getId();
+//        }
+//        if (!$fromRequest['multiClientEnabled']) {
             return $this->buildSuccessResponse(['deputyEmail' => $user->getEmail(), 'deputyIds' => $deputyIds, 'Court order created', Response::HTTP_CREATED]);
-        } else {
-            return $this->buildSuccessResponse(['deputyEmail' => $user->getEmail(), 'deputyIds' => $deputyIds, 'multiClientCaseNumbers' => $multiClientDeputy['multiClientCaseNumbers']], 'Court order created', Response::HTTP_CREATED);
-        }
+//        } else {
+//            return $this->buildSuccessResponse(['deputyEmail' => $user->getEmail(), 'deputyIds' => $deputyIds, 'multiClientCaseNumbers' => $multiClientDeputy['multiClientCaseNumbers']], 'Court order created', Response::HTTP_CREATED);
+//        }
     }
 
     /** * @throws \Exception */
@@ -116,13 +117,13 @@ class FixtureController extends AbstractController
             $this->em->persist($deputyPreRegistration);
         }
 
-        if (User::TYPE_LAY === $fromRequest['deputyType']) {
-            $deputy = $this->generateDeputy($user);
-            $courtOrder = $this->generateCourtOrder($client);
-
-            $deputy->associateWithCourtOrder($courtOrder);
-            $this->em->persist($deputy);
-        }
+//        if (User::TYPE_LAY === $fromRequest['deputyType']) {
+//            $deputy = $this->generateDeputy($user);
+//            $courtOrder = $this->generateCourtOrder($client);
+//
+//            $deputy->associateWithCourtOrder($courtOrder);
+//            $this->em->persist($deputy);
+//        }
 
         if (!isset($fromRequest['reportType']) || !is_string($fromRequest['reportType'])) {
             throw new \InvalidArgumentException('Missing or invalid "reportType" field in request.');
@@ -130,27 +131,27 @@ class FixtureController extends AbstractController
 
         $reportType = strtolower($fromRequest['reportType']);
 
-        if ('ndr' === $reportType) {
-            $this->createNdr($fromRequest, $client);
-            $user->setNdrEnabled(true);
-        } else {
-            if (!$this->reportRepository->findOneBy(['client' => $client])) {
-                $report = $this->generateReport($fromRequest, $client);
-                $this->em->persist($report);
-            }
-
-            if (User::TYPE_LAY === $fromRequest['deputyType']) {
-                $courtOrder->addReport($report);
-                $this->em->persist($courtOrder);
-            }
+//        if ('ndr' === $reportType) {
+//            $this->createNdr($fromRequest, $client);
+//            $user->setNdrEnabled(true);
+//        } else {
+        if (!$this->reportRepository->findOneBy(['client' => $client])) {
+            $report = $this->generateReport($fromRequest, $client);
+            $this->em->persist($report);
         }
 
-        if (User::TYPE_LAY === $fromRequest['deputyType']) {
-            $user->setIsPrimary(true);
-            $user->addClient($client);
-        } else {
+//            if (User::TYPE_LAY === $fromRequest['deputyType']) {
+//                $courtOrder->addReport($report);
+//                $this->em->persist($courtOrder);
+//            }
+//        }
+
+//        if (User::TYPE_LAY === $fromRequest['deputyType']) {
+//            $user->setIsPrimary(true);
+//            $user->addClient($client);
+//        } else {
             $this->createOrgAndAttachParticipants($fromRequest, $user, $client);
-        }
+//        }
 
         return $user;
     }
@@ -360,32 +361,32 @@ class FixtureController extends AbstractController
 
         $client->setOrganisation($organisation);
 
-        // if the org size is 1 but we want 10 clients still then create the clients but
-        // we return so we don't create another 10 clients on top if we have a org size > 1
-        if (1 === $fromRequest['orgSizeUsers'] && $fromRequest['orgSizeClients'] > 1 && !empty($fromRequest['orgSizeClients'])) {
-            foreach (range(1, $fromRequest['orgSizeClients']) as $number) {
-                $orgClient = $this->clientFactory->createGenericOrgClient($deputy, $organisation, $fromRequest['courtDate']);
-                $this->em->persist($orgClient);
-
-                $report = $this->generateReport($fromRequest, $orgClient);
-                $this->em->persist($report);
-            }
-
-            $this->em->persist($client);
-            $this->em->persist($organisation);
-
-            return;
-        }
-
-        if ($fromRequest['orgSizeUsers'] > 1 && !empty($fromRequest['orgSizeUsers'])) {
-            foreach (range(1, $fromRequest['orgSizeClients']) as $number) {
-                $orgClient = $this->clientFactory->createGenericOrgClient($deputy, $organisation, $fromRequest['courtDate']);
-                $this->em->persist($orgClient);
-
-                $report = $this->generateReport($fromRequest, $orgClient);
-                $this->em->persist($report);
-            }
-        }
+//        // if the org size is 1 but we want 10 clients still then create the clients but
+//        // we return so we don't create another 10 clients on top if we have a org size > 1
+//        if (1 === $fromRequest['orgSizeUsers'] && $fromRequest['orgSizeClients'] > 1 && !empty($fromRequest['orgSizeClients'])) {
+//            foreach (range(1, $fromRequest['orgSizeClients']) as $number) {
+//                $orgClient = $this->clientFactory->createGenericOrgClient($deputy, $organisation, $fromRequest['courtDate']);
+//                $this->em->persist($orgClient);
+//
+//                $report = $this->generateReport($fromRequest, $orgClient);
+//                $this->em->persist($report);
+//            }
+//
+//            $this->em->persist($client);
+//            $this->em->persist($organisation);
+//
+//            return;
+//        }
+//
+//        if ($fromRequest['orgSizeUsers'] > 1 && !empty($fromRequest['orgSizeUsers'])) {
+//            foreach (range(1, $fromRequest['orgSizeClients']) as $number) {
+//                $orgClient = $this->clientFactory->createGenericOrgClient($deputy, $organisation, $fromRequest['courtDate']);
+//                $this->em->persist($orgClient);
+//
+//                $report = $this->generateReport($fromRequest, $orgClient);
+//                $this->em->persist($report);
+//            }
+//        }
 
         $this->em->persist($client);
         $this->em->persist($organisation);
