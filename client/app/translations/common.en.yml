@@ -99,7 +99,6 @@ totalAmount: Total amount
 firstNames: First names
 lastName: Last name
 reportType: Report type
-ndr: NDR
 type: Type
 defaultDateHintText: For example, 18 4 2017
 deletedUser: Deleted User
@@ -197,8 +196,6 @@ remindComplete: |
   you log in.
 canYouAnswer: |
   Can you answer the missing questions? You won't be able to submit your annual deputy report until it's complete.
-canYouAnswerNDR: |
-  Can you answer the missing questions? You won't be able to submit your new deputy report until it's complete.
 returnToReport: Return to report overview
 returnToClientProfile: Return to client profile
 

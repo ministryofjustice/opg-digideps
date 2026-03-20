@@ -64,7 +64,7 @@ class SatisfactionApiTest extends TestCase
      *
      * @dataProvider commentsProvider
      */
-    public function createPostSubmissionFeedback(?string $comments, string $expectedCommentsInPostRequest, ?int $reportId, ?int $ndrId)
+    public function createPostSubmissionFeedback(?string $comments, string $expectedCommentsInPostRequest, ?int $reportId)
     {
         $score = $this->faker->randomElement([1, 2, 3, 4, 5]);
         $reportType = $this->faker->randomElement([
@@ -83,7 +83,6 @@ class SatisfactionApiTest extends TestCase
                 'comments' => $expectedCommentsInPostRequest,
                 'reportType' => $reportType,
                 'reportId' => $reportId,
-                'ndrId' => $ndrId,
             ]
         )
             ->shouldBeCalled()
@@ -93,15 +92,14 @@ class SatisfactionApiTest extends TestCase
             ->setComments($comments)
             ->setSatisfactionLevel($score);
 
-        $this->sut->createPostSubmissionFeedback($feedbackReportObject, $reportType, $reportId, $ndrId);
+        $this->sut->createPostSubmissionFeedback($feedbackReportObject, $reportType, $reportId);
     }
 
     public function commentsProvider()
     {
         return [
-            'Comments included - Report' => ['Its greeeeat', 'Its greeeeat', 222, null],
-            'Comments included - NDR' => ['Its greeeeat', 'Its greeeeat', null, 333],
-            'Empty string comments' => ['', 'Not provided', null, 333],
+            'Comments included - Report' => ['Its greeeeat', 'Its greeeeat', 222],
+            'Empty string comments' => ['', 'Not provided', 333],
         ];
     }
 }

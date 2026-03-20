@@ -2,9 +2,6 @@
 
 namespace App\Entity;
 
-/**
- * Common functionalities among Report and NDR.
- */
 interface ReportInterface
 {
     // https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations

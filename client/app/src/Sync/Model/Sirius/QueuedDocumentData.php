@@ -10,7 +10,6 @@ class QueuedDocumentData
 {
     private int $documentId;
     private int $reportSubmissionId;
-    private ?int $ndrId = null;
     private ?int $documentSyncAttempts = null;
     private bool $isReportPdf;
     private string $filename;
@@ -106,18 +105,6 @@ class QueuedDocumentData
     public function setReportSubmissions(array $reportSubmissions): self
     {
         $this->reportSubmissions = $reportSubmissions;
-
-        return $this;
-    }
-
-    public function getNdrId(): ?int
-    {
-        return $this->ndrId;
-    }
-
-    public function setNdrId(?int $ndrId): self
-    {
-        $this->ndrId = $ndrId;
 
         return $this;
     }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Service\Mailer;
 
 use App\Entity\Client;
-use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Service\IntlService;
@@ -349,35 +348,8 @@ class MailFactoryTest extends TestCase
             'newStartDate' => '24 March 2018',
             'newEndDate' => '23 March 2019',
             'EndDatePlus1' => '24 March 2019',
-            'PFA' => '104' === substr($reportType, 0, 3) ? 'no' : 'yes',
+            'PFA' => str_starts_with($reportType, '104') ? 'no' : 'yes',
             'lay' => 'no',
-        ];
-
-        self::assertEquals($expectedTemplateParams, $email->getParameters());
-    }
-
-    public function testCreateNdrSubmissionConfirmationEmailTest()
-    {
-        $this->router->generate('homepage', [])->willReturn('');
-
-        $this->translator->trans('ndrSubmissionConfirmation.fromName', [], 'email')->shouldBeCalled()->willReturn('OPG');
-
-        $ndr = (new Ndr())->setClient($this->client);
-        $email = $this->generateSUT()->createNdrSubmissionConfirmationEmail($this->layDeputy, $ndr, $this->newReport);
-
-        self::assertEquals(MailFactory::NOTIFY_FROM_EMAIL_ID, $email->getFromEmailNotifyID());
-        self::assertEquals(MailFactory::NDR_SUBMITTED_CONFIRMATION_TEMPLATE_ID, $email->getTemplate());
-        self::assertEquals('OPG', $email->getFromName());
-        self::assertEquals('user@digital.justice.gov.uk', $email->getToEmail());
-
-        $expectedTemplateParams = [
-            'clientFullname' => 'Joanne Bloggs',
-            'deputyFullname' => 'Joe Bloggs',
-            'homepageURL' => 'https://front.base.url',
-            'startDate' => '24 March 2018',
-            'endDate' => '23 March 2019',
-            'EndDatePlus1' => '24 March 2019',
-            'PFA' => 'yes',
         ];
 
         self::assertEquals($expectedTemplateParams, $email->getParameters());

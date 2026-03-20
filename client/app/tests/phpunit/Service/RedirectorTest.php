@@ -70,25 +70,22 @@ class RedirectorTest extends TestCase
         // $sessionValue: key => value pairs to set in the session; if not set, any call to Session::has will return false
         // $clients: number of clients to return for lay deputy; 0 for non-lay deputies, as it's not used for redirects
         // $reports: number of reports to return for each client (if there are any clients)
-        // $userIsNdrEnabled: true if the user needs to complete an NDR
         // $routeName: the route name we expect will be passed to the router
         // $routeParams: array of params we expect to be passed to the router
         // $expectedRoute: the route we expect to see coming out of the router (what we're asserting on)
         return [
-            'admin password create' => [User::ROLE_ADMIN, false, false, false, null, true, ['login-context' => 'password-create'], 0, 0, false, 'user_details', [], '/user/details'],
-            'admin homepage' => [User::ROLE_ADMIN, false, false, false, null, true, null, 0, 0, false, 'admin_homepage', [], '/admin/'],
-            'ad homepage' => [User::ROLE_AD, false, false, false, null, true, null, 0, 0, false, 'ad_homepage', [], '/ad/'],
-            'non-admin password create' => [null, true, false, false, null, true, ['login-context' => 'password-create'], 0, 0, false, 'user_details', [], '/user/details'],
-            'non-admin org dashboard' => [null, true, false, false, null, true, null, 0, 0, false, 'org_dashboard', [], '/org/'],
-            'lay with multiple clients' => [User::ROLE_LAY_DEPUTY, false, false, false, null, true, null, 2, 1, false, 'courtorders_for_deputy', [], '/courtorder/choose-a-court-order'],
-            'lay with single client' => [User::ROLE_LAY_DEPUTY, false, false, false, null, true, null, 1, 1, false, 'courtorders_for_deputy', [], '/courtorder/choose-a-court-order'],
-            'co-deputy lay with single client, not confirmed' => [User::ROLE_LAY_DEPUTY, false, true, false, null, true, null, 1, 0, false, 'codep_verification', [], '/codeputy/verification'],
-            'co-deputy lay with single client, confirmed, client has reports' => [User::ROLE_LAY_DEPUTY, false, true, true, null, true, null, 1, 1, false, 'courtorders_for_deputy', [], '/courtorder/choose-a-court-order'],
-            'co-deputy lay with single client, confirmed, client has no reports, ndr enabled' => [User::ROLE_LAY_DEPUTY, false, true, true, null, true, null, 1, 0, true, 'courtorders_for_deputy', [], '/courtorder/choose-a-court-order'],
-            'co-deputy lay with single client, confirmed, client has no reports, not ndr enabled' => [User::ROLE_LAY_DEPUTY, false, true, true, 1111, true, null, 1, 0, false, 'courtorders_for_deputy', [], '/report/create/1111'],
-            'lay with no clients added and address details' => [User::ROLE_LAY_DEPUTY, false, false, false, null, true, null, 0, 0, false, 'client_add', [], '/client/add'],
-            'lay with no clients added and no address details' => [User::ROLE_LAY_DEPUTY, false, false, false, null, false, null, 0, 0, false, 'user_details', [], '/user/details'],
-            'access denied' => [null, false, false, false, null, false, null, 0, 0, false, 'access_denied', [], '/access-denied'],
+            'admin password create' => [User::ROLE_ADMIN, false, false, false, null, true, ['login-context' => 'password-create'], 0, 0, 'user_details', [], '/user/details'],
+            'admin homepage' => [User::ROLE_ADMIN, false, false, false, null, true, null, 0, 0, 'admin_homepage', [], '/admin/'],
+            'ad homepage' => [User::ROLE_AD, false, false, false, null, true, null, 0, 0, 'ad_homepage', [], '/ad/'],
+            'non-admin password create' => [null, true, false, false, null, true, ['login-context' => 'password-create'], 0, 0, 'user_details', [], '/user/details'],
+            'non-admin org dashboard' => [null, true, false, false, null, true, null, 0, 0, 'org_dashboard', [], '/org/'],
+            'lay with multiple clients' => [User::ROLE_LAY_DEPUTY, false, false, false, null, true, null, 2, 1, 'courtorders_for_deputy', [], '/courtorder/choose-a-court-order'],
+            'lay with single client' => [User::ROLE_LAY_DEPUTY, false, false, false, null, true, null, 1, 1, 'courtorders_for_deputy', [], '/courtorder/choose-a-court-order'],
+            'co-deputy lay with single client, not confirmed' => [User::ROLE_LAY_DEPUTY, false, true, false, null, true, null, 1, 0, 'codep_verification', [], '/codeputy/verification'],
+            'co-deputy lay with single client, confirmed, client has reports' => [User::ROLE_LAY_DEPUTY, false, true, true, null, true, null, 1, 1, 'courtorders_for_deputy', [], '/courtorder/choose-a-court-order'],
+            'lay with no clients added and address details' => [User::ROLE_LAY_DEPUTY, false, false, false, null, true, null, 0, 0, 'client_add', [], '/client/add'],
+            'lay with no clients added and no address details' => [User::ROLE_LAY_DEPUTY, false, false, false, null, false, null, 0, 0, 'user_details', [], '/user/details'],
+            'access denied' => [null, false, false, false, null, false, null, 0, 0, 'access_denied', [], '/access-denied'],
         ];
     }
 
@@ -105,7 +102,6 @@ class RedirectorTest extends TestCase
         ?array $sessionValues,
         int $numClients,
         int $numReports,
-        bool $userIsNdrEnabled,
         string $routeName,
         array $routeParams,
         string $expectedRoute,
@@ -123,7 +119,6 @@ class RedirectorTest extends TestCase
         $this->user->method('hasAdminRole')->willReturn(User::ROLE_LAY_DEPUTY !== $grantedRole);
         $this->user->method('getIsCoDeputy')->willReturn($coDeputy);
         $this->user->method('hasAddressDetails')->willReturn($userHasAddress);
-        $this->user->method('isNdrEnabled')->willReturn($userIsNdrEnabled);
         $this->user->method('getIdOfClientWithDetails')->willReturn($clientIdWithDetails);
 
         if ($coDeputy) {
@@ -160,12 +155,10 @@ class RedirectorTest extends TestCase
                 ->willReturn($clients);
         }
 
-        if (!is_null($routeName)) {
-            $this->router->expects($this->once())
-                ->method('generate')
-                ->with($routeName, $routeParams)
-                ->willReturn($expectedRoute);
-        }
+        $this->router->expects($this->once())
+            ->method('generate')
+            ->with($routeName, $routeParams)
+            ->willReturn($expectedRoute);
 
         $actual = $this->sut->getFirstPageAfterLogin($this->session);
 

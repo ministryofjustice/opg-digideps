@@ -216,8 +216,6 @@ class ComponentsExtension extends AbstractExtension
             $availableStepIds = ['password', 'user_details'];
         } elseif ($user->getIsCoDeputy() || User::CO_DEPUTY_INVITE === $user->getRegistrationRoute()) {
             $availableStepIds = ['password', 'codep_verify'];
-        } elseif ($user->isNdrEnabled()) {
-            $availableStepIds = ['password', 'user_details', 'client_details'];
         } else {
             $availableStepIds = ['password', 'user_details', 'client_details'];
         }
