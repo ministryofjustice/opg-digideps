@@ -19,6 +19,5 @@ class UserManagementFeatureContext extends BaseFeatureContext
     use INavigateToAdminTrait;
     use LinksTrait;
     use RegionTrait;
-    use UserManagementTrait;
     use UserTrait;
 }
