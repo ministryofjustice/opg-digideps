@@ -127,7 +127,7 @@ class DocumentServiceTest extends TestCase
         $reportSubmission = self::prophesize(ReportSubmission::class);
         $reportSubmission->getDocuments()
             ->shouldBeCalled()
-            ->willReturn(new ArrayCollection([$this->doc1->reveal(), $this->doc2->reveal()]));
+            ->willReturn([$this->doc1->reveal(), $this->doc2->reveal()]);
 
         [$documents, $missing] = $this->object->retrieveDocumentsFromS3ByReportSubmission($reportSubmission->reveal());
 
@@ -155,7 +155,7 @@ class DocumentServiceTest extends TestCase
         $reportSubmission = self::prophesize(ReportSubmission::class);
         $reportSubmission->getDocuments()
             ->shouldBeCalled()
-            ->willReturn(new ArrayCollection([$this->doc1->reveal(), $this->doc2->reveal()]));
+            ->willReturn([$this->doc1->reveal(), $this->doc2->reveal()]);
 
         [$documents, $missing] = $this->object->retrieveDocumentsFromS3ByReportSubmission($reportSubmission->reveal());
 
@@ -182,13 +182,13 @@ class DocumentServiceTest extends TestCase
         $reportSubmission = self::prophesize(ReportSubmission::class);
         $reportSubmission->getDocuments()
             ->shouldBeCalled()
-            ->willReturn(new ArrayCollection([$this->doc1->reveal(), $this->doc2->reveal()]));
+            ->willReturn([$this->doc1->reveal(), $this->doc2->reveal()]);
 
         /** @var ObjectProphecy|ReportSubmission $reportSubmission2 */
         $reportSubmission2 = self::prophesize(ReportSubmission::class);
         $reportSubmission2->getDocuments()
             ->shouldBeCalled()
-            ->willReturn(new ArrayCollection([$this->doc3->reveal()]));
+            ->willReturn([$this->doc3->reveal()]);
 
         [$documents, $missing] = $this->object->retrieveDocumentsFromS3ByReportSubmissions(
             [$reportSubmission->reveal(), $reportSubmission2->reveal()]
@@ -226,13 +226,13 @@ class DocumentServiceTest extends TestCase
         $reportSubmission = self::prophesize(ReportSubmission::class);
         $reportSubmission->getDocuments()
             ->shouldBeCalled()
-            ->willReturn(new ArrayCollection([$this->doc1->reveal(), $this->doc2->reveal()]));
+            ->willReturn([$this->doc1->reveal(), $this->doc2->reveal()]);
 
         /** @var ObjectProphecy|ReportSubmission $reportSubmission2 */
         $reportSubmission2 = self::prophesize(ReportSubmission::class);
         $reportSubmission2->getDocuments()
             ->shouldBeCalled()
-            ->willReturn(new ArrayCollection([$this->doc3->reveal(), $this->doc4->reveal()]));
+            ->willReturn([$this->doc3->reveal(), $this->doc4->reveal()]);
 
         [$documents, $missing] = $this->object->retrieveDocumentsFromS3ByReportSubmissions(
             [$reportSubmission->reveal(), $reportSubmission2->reveal()]
