@@ -105,7 +105,7 @@ class ReportSectionsLinkService
     /**
      * @return array empty if it's the last or first section
      */
-    public function getSectionParams(ReportInterface $report, int $sectionId, int $offset = 0): array
+    public function getSectionParams(ReportInterface $report, string $sectionId, int $offset = 0): array
     {
         $config = $this->getOptions($report);
 
