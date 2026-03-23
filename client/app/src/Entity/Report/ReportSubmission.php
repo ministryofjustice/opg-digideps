@@ -23,8 +23,8 @@ class ReportSubmission
     #[JMS\Type('array<App\Entity\Report\Document>')]
     private array $documents = [];
 
-    #[JMS\Type('App\Entity\User')]
-    private User $archivedBy;
+    //#[JMS\Type('App\Entity\User')]
+    private ?User $archivedBy = null;
 
     #[JMS\Type("boolean")]
     private bool $downloadable;
@@ -85,12 +85,12 @@ class ReportSubmission
         return false;
     }
 
-    public function getArchivedBy(): User
+    public function getArchivedBy(): ?User
     {
         return $this->archivedBy;
     }
 
-    public function setArchivedBy(User $archivedBy): static
+    public function setArchivedBy(?User $archivedBy): static
     {
         $this->archivedBy = $archivedBy;
 

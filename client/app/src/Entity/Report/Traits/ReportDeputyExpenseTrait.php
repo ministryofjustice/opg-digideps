@@ -9,13 +9,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 trait ReportDeputyExpenseTrait
 {
     /**
-     * @var string yes/no
-     *
      * @JMS\Type("string")
      * @JMS\Groups({"expenses-paid-anything"})
      * @Assert\NotBlank(message="ndr.expenses.paidForAnything.notBlank", groups={"expenses-paid-anything"})
      */
-    private string $paidForAnything;
+    private ?string $paidForAnything;
 
     /**
      * @JMS\Type("array<App\Entity\Report\Expense>")

@@ -35,7 +35,7 @@ class CourtOrder
     /**
      * @var Report[]
      */
-    #[JMS\Type('array<App\Entity\Report>')]
+    #[JMS\Type('array<App\Entity\Report\Report>')]
     private array $reports = [];
 
     #[JMS\Type('App\Entity\Client')]
