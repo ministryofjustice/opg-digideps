@@ -10,7 +10,6 @@ use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\Entity\Report\Report;
 use App\Factory\ClientBenefitsCheckFactory;
 use App\Repository\ReportRepository;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -18,7 +17,6 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
-use ReflectionClass;
 
 final class ClientBenefitsCheckFactoryTest extends TestCase
 {
@@ -47,15 +45,15 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
     {
         $this->reportId = 1436;
         $this->id = '8e3aaf2c-3145-4e07-b64b-37702323c6f9';
-        $this->created = (new DateTime())->format('Y-m-d');
+        $this->created = (new \DateTime())->format('Y-m-d');
         $this->whenLastCheckedEntitlement = 'haveChecked';
-        $this->dateLastCheckedEntitlement = (new DateTime())->format('Y-m-d');
+        $this->dateLastCheckedEntitlement = (new \DateTime())->format('Y-m-d');
         $this->neverCheckedExplanation = null;
         $this->doOthersReceiveMoneyOnClientsBehalf = 'yes';
         $this->dontKnowMoneyExplanation = null;
 
         $this->moneyId = '5d80a2f3-4f2c-4e0f-9709-2d201102cb13';
-        $this->moneyCreated = (new DateTime())->format('Y-m-d');
+        $this->moneyCreated = (new \DateTime())->format('Y-m-d');
         $this->moneyClientBenefitsCheck = null;
         $this->moneyType = 'Universal Credit';
         $this->moneyAmount = 100.5;
@@ -68,7 +66,7 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
     {
         $validData = $this->generateValidFormData(true);
 
-        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime(), new DateTime());
+        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
         $this->set($report, $this->reportId);
 
         /** @var ObjectProphecy|ReportRepository $reportRepo */
@@ -138,7 +136,7 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
 
     private function set(Report $entity, ?int $value, $propertyName = 'id'): void
     {
-        $class = new ReflectionClass($entity);
+        $class = new \ReflectionClass($entity);
         $property = $class->getProperty($propertyName);
         $property->setAccessible(true);
 
@@ -150,7 +148,7 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
     {
         $validData = $this->generateValidFormData(false);
 
-        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime(), new DateTime());
+        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
         $this->set($report, $this->reportId);
 
         /** @var ObjectProphecy|ReportRepository $reportRepo */
@@ -187,7 +185,7 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
     {
         $validData = $this->generateValidFormDataRemoveMoneys();
 
-        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime(), new DateTime());
+        $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
         $this->set($report, $this->reportId);
 
         /** @var ObjectProphecy|ReportRepository $reportRepo */
@@ -196,7 +194,7 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
 
         $existingMoney = (new MoneyReceivedOnClientsBehalf())
             ->setId(Uuid::fromString($this->moneyId))
-            ->setCreated(new DateTime($this->moneyCreated))
+            ->setCreated(new \DateTime($this->moneyCreated))
             ->setAmount($this->moneyAmount)
             ->setMoneyType($this->moneyType);
 
