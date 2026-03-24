@@ -7,6 +7,7 @@ namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
 use App\Entity\StagingSelectedCandidate;
 use App\Factory\DataFactoryInterface;
 use App\Factory\DataFactoryResult;
+use App\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipIngester;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilder;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesSelectorResult;
@@ -36,12 +37,13 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
     public function setUp(): void
     {
-        $this->mockDeputyshipsCSVLoader = self::createMock(DeputyshipsCSVLoader::class);
-        $this->mockDeputyshipsCandidatesSelector = self::createMock(DeputyshipsCandidatesSelector::class);
-        $this->mockDeputyshipBuilder = self::createMock(DeputyshipBuilder::class);
-        $this->mockPreCsvDataFactory = self::createMock(DataFactoryInterface::class);
-        $this->mockPostCsvDataFactory = self::createMock(DataFactoryInterface::class);
-        $this->mockDeputyshipsIngestResultRecorder = self::createMock(DeputyshipsIngestResultRecorder::class);
+        $this->mockDeputyshipsCSVLoader = $this->createMock(DeputyshipsCSVLoader::class);
+        $this->mockDeputyshipsCandidatesSelector = $this->createMock(DeputyshipsCandidatesSelector::class);
+        $this->mockDeputyshipBuilder = $this->createMock(DeputyshipBuilder::class);
+        $this->mockPreCsvDataFactory = $this->createMock(DataFactoryInterface::class);
+        $this->mockPostCsvDataFactory = $this->createMock(DataFactoryInterface::class);
+        $this->mockDeputyshipsIngestResultRecorder = $this->createMock(DeputyshipsIngestResultRecorder::class);
+        $mockCourtOrderRelationshipIngester = $this->createMock(CourtOrderRelationshipIngester::class);
 
         $this->sut = new DeputyshipsCSVIngester(
             $this->mockDeputyshipsCSVLoader,
@@ -49,7 +51,8 @@ final class DeputyshipsCSVIngesterTest extends TestCase
             $this->mockDeputyshipBuilder,
             $this->mockPreCsvDataFactory,
             $this->mockPostCsvDataFactory,
-            $this->mockDeputyshipsIngestResultRecorder
+            $this->mockDeputyshipsIngestResultRecorder,
+            $mockCourtOrderRelationshipIngester
         );
     }
 
