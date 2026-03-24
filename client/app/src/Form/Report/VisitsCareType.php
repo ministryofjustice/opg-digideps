@@ -69,7 +69,8 @@ class VisitsCareType extends AbstractType
                 'expanded' => true,
             ]);
 
-            $builder->add('whenWasCarePlanLastReviewed', FormTypes\DateType::class, ['widget' => 'text',
+            $builder->add('whenWasCarePlanLastReviewed', FormTypes\DateType::class, [
+                'widget' => 'text',
                 'input' => 'datetime',
                 'format' => 'dd-MM-yyyy',
                 'invalid_message' => 'visitsCare.whenWasCarePlanLastReviewed.invalidMessage',
@@ -90,7 +91,6 @@ class VisitsCareType extends AbstractType
                 // whenWasCarePlanLastReviewed: set day=01 if month and year are set
                 if (!empty($data['whenWasCarePlanLastReviewed']['month']) && !empty($data['whenWasCarePlanLastReviewed']['year'])) {
                     $data['whenWasCarePlanLastReviewed']['day'] = '01';
-                    $event->setData($data);
                 }
             }
 
