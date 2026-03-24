@@ -241,7 +241,7 @@ jobs:
         with:
           SNYK_TEST_IMAGE: ${{ steps.login_ecr.outputs.registry }}/digideps/${{ matrix.svc_name }}:${{ inputs.tag }}
           SNYK_TOKEN: ${{ secrets.SNYK_OPG_ORG_TOKEN }}
-          snyk_test_args: "--severity-threshold=high"
+          snyk_test_args: "--severity-threshold=high --policy-path=./.github/.snyk"
           sarif_filepath: "test-results"
           sarif_filename: "snyk.sarif"
 
