@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model;
+namespace App\Domain\Deputyship;
 
 use App\Entity\CourtOrder;
 use App\Repository\ClientRepository;

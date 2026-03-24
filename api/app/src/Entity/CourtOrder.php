@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
+use App\Domain\CourtOrder\CourtOrderKind;
+use App\Domain\CourtOrder\CourtOrderType;
 use App\Entity\Report\Report;
 use App\Entity\Traits\CreateUpdateTimestamps;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -74,6 +78,20 @@ class CourtOrder
     #[JMS\Groups(['court-order-full'])]
     private Client $client;
 
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\CourtOrder")
+     * @ORM\JoinColumn(name="sibling_id", referencedColumnName="id")
+     */
+    private ?CourtOrder $sibling;
+
+    /**
+     * @see CourtOrderKind
+     *
+     * @ORM\Column(name="order_kind", type="string", length=6, nullable=false, options={"default" = ""})
+     */
+    private string $orderKind;
+
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Report\Report", inversedBy="courtOrders", fetch="EXTRA_LAZY", cascade={"persist"})
      *
@@ -82,7 +100,7 @@ class CourtOrder
      *         inverseJoinColumns={@ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")}
      *     )
      *
-     * @var Collection<int, Report>
+     * @var Collection<int, Report> $reports
      */
     #[JMS\Type('ArrayCollection<App\Entity\Report\Report>')]
     #[JMS\Groups(['court-order-full'])]
@@ -145,14 +163,14 @@ class CourtOrder
         return $this;
     }
 
-    public function getOrderType(): string
+    public function getOrderType(): CourtOrderType
     {
-        return $this->orderType;
+        return CourtOrderType::from($this->orderType);
     }
 
-    public function setOrderType(string $orderType): CourtOrder
+    public function setOrderType(CourtOrderType $orderType): CourtOrder
     {
-        $this->orderType = $orderType;
+        $this->orderType = $orderType->value;
 
         return $this;
     }
@@ -189,6 +207,30 @@ class CourtOrder
     public function setOrderMadeDate(\DateTime $orderMadeDate): CourtOrder
     {
         $this->orderMadeDate = $orderMadeDate;
+
+        return $this;
+    }
+
+    public function getSibling(): ?CourtOrder
+    {
+        return $this->sibling;
+    }
+
+    public function setSibling(?CourtOrder $sibling): CourtOrder
+    {
+        $this->sibling = $sibling;
+
+        return $this;
+    }
+
+    public function getOrderKind(): ?CourtOrderKind
+    {
+        return CourtOrderKind::tryFrom($this->orderKind ?? '');
+    }
+
+    public function setOrderKind(CourtOrderKind $kind): CourtOrder
+    {
+        $this->orderKind = $kind->value;
 
         return $this;
     }
@@ -231,5 +273,20 @@ class CourtOrder
         }
 
         return $latest;
+    }
+
+    public function isSingle(): bool
+    {
+        return $this->getOrderKind() === CourtOrderKind::Single;
+    }
+
+    public function isDual(): bool
+    {
+        return $this->getOrderKind() === CourtOrderKind::Dual;
+    }
+
+    public function isHybrid(): bool
+    {
+        return $this->getOrderKind() === CourtOrderKind::Hybrid;
     }
 }
