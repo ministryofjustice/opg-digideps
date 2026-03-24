@@ -31,7 +31,7 @@ class EmailSameDomain extends Constraint
             if (isset($options[$option])) {
                 $this->$option = $options[$option];
             } else {
-                throw new MissingOptionsException("Missing option: '" . $option . "' required for constraint");
+                throw new MissingOptionsException("Missing option: '" . $option . "' required for constraint", []);
             }
         }
 
