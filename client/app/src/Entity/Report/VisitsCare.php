@@ -72,7 +72,7 @@ class VisitsCare
      * @JMS\Groups({"visits-care"})
      *
      * @Assert\NotBlank(message="visitsCare.whenWasCarePlanLastReviewed.notBlank", groups={"visits-care-care-plan-last-review"})
-     * @Assert\Type(type="\DateTime", message="visitsCare.whenWasCarePlanLastReviewed.invalidMessage", groups={"visits-care-care-plan-last-review"} )
+     * @Assert\Type(type="DateTime", message="visitsCare.whenWasCarePlanLastReviewed.invalidMessage", groups={"visits-care-care-plan-last-review"} )
      */
     private ?\DateTimeInterface $whenWasCarePlanLastReviewed = null;
 

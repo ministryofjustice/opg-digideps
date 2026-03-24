@@ -23,13 +23,13 @@ class ReportSubmission
     #[JMS\Type('array<App\Entity\Report\Document>')]
     private array $documents = [];
 
-    //#[JMS\Type('App\Entity\User')]
+    #[JMS\Type('App\Entity\User')]
     private ?User $archivedBy = null;
 
-    #[JMS\Type("boolean")]
+    #[JMS\Type('boolean')]
     private bool $downloadable;
 
-    #[JMS\Type("string")]
+    #[JMS\Type('string')]
     private ?string $uuid;
 
     public function getId(): int

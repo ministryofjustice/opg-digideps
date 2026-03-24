@@ -57,13 +57,13 @@ abstract class Asset
     /**
      * @Assert\NotBlank(message="asset.value.notBlank")
      *
-     * @Assert\Type( type="numeric", message="asset.value.type")
+     * @Assert\Type(type="numeric", message="asset.value.type")
      *
      * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "asset.value.outOfRange")
      *
      * @Assert\NotBlank(message="asset.property.value.notBlank", groups={"property-value"})
      *
-     * @Assert\Type( type="numeric", message="asset.property.value.type", groups={"property-value"})
+     * @Assert\Type(type="numeric", message="asset.property.value.type", groups={"property-value"})
      *
      * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "asset.property.value.outOfRange", groups={"property-value"})
      *
@@ -79,9 +79,9 @@ abstract class Asset
     private $valueTotal;
 
     /**
-     * @Assert\Type(type="?\DateTimeInterface", message="asset.date.date")
+     * @Assert\Type(type="DateTime", message="asset.date.date")
      *
-     * @JMS\Type("?\DateTimeInterface")
+     * @JMS\Type("DateTime")
      */
     protected ?\DateTimeInterface $valuationDate = null;
 
