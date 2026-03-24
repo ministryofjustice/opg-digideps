@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Service;
 
+use App\Domain\CourtOrder\CourtOrderService;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\CourtOrderTestHelper;
 use App\TestHelpers\DeputyTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
 use App\Tests\Integration\ApiIntegrationTestCase;
-use App\v2\Service\CourtOrderService;
 
 class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
 {

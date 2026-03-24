@@ -2,6 +2,8 @@
 
 namespace App\Tests\Integration;
 
+use App\Domain\CourtOrder\CourtOrderKind;
+use App\Domain\CourtOrder\CourtOrderType;
 use DateTime;
 use InvalidArgumentException;
 use RuntimeException;
@@ -673,11 +675,12 @@ class Fixtures
         $this->em->clear();
     }
 
-    public function createCourtOrder(string $uid, string $type, string $status, DateTime $madeDate = new DateTime()): CourtOrder
+    public function createCourtOrder(string $uid, CourtOrderType $type, CourtOrderKind $kind, string $status, DateTime $madeDate = new DateTime()): CourtOrder
     {
         $courtOrder = new CourtOrder();
         $courtOrder->setCourtOrderUid($uid);
         $courtOrder->setOrderType($type);
+        $courtOrder->setOrderKind($kind);
         $courtOrder->setStatus($status);
         $courtOrder->setOrderMadeDate($madeDate);
 

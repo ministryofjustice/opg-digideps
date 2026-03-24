@@ -446,12 +446,12 @@ services:
     App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory:
         public: true
 
-    App\Model\DeputyshipProcessingRawDbAccess:
+    App\Domain\Deputyship\DeputyshipProcessingRawDbAccess:
         arguments:
             $ingestWriterEm: "@doctrine.orm.ingestwriter_entity_manager"
         public: true
 
-    App\v2\Service\DeputyshipCandidatesConverter:
+    App\Domain\Deputyship\DeputyshipCandidatesConverter:
         public: true
 
     App\Service\DeputyCaseService:
@@ -463,7 +463,7 @@ services:
     App\v2\Assembler\DeputyAssembler:
         public: true
 
-    App\v2\Service\CourtOrderService:
+    App\Domain\CourtOrder\CourtOrderService:
         public: true
 
     App\Service\LayRegistrationService:

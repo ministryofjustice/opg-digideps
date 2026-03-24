@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\v2\Controller;
 
+use App\Domain\CourtOrder\CourtOrderInviteService;
+use App\Domain\CourtOrder\CourtOrderService;
 use App\Entity\User;
 use App\Service\Formatter\RestFormatter;
 use App\v2\DTO\InviteeDto;
-use App\v2\Service\CourtOrderInviteService;
-use App\v2\Service\CourtOrderService;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;
