@@ -1,3 +1,9 @@
 version: v1.25.1
-ignore: {}
+ignore:
+  snyk:lic:pip:pyphen:
+    - reason: >
+        Pyphen is tri-licensed (GPL/LGPL/MPL).
+        Project consumes Pyphen under LGPL-2.1+ or MPL-1.1,
+        which is permitted. Confirmed by upstream maintainers.
+      expires: 2027-03-25
 patch: {}
