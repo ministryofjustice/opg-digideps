@@ -7,7 +7,7 @@ use App\Entity\Ndr\Ndr;
 use App\Entity\ReportInterface;
 use App\Entity\User;
 use App\Exception\NotFound;
-use App\Model\Hydrator;
+use App\Utility\Query\Hydrator;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
