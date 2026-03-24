@@ -22,7 +22,7 @@ class ChainedDataFactory implements DataFactoryInterface
     }
 
     /**
-     * @return array<DataFactoryResult, ?BuilderResultInterface> Aggregated results from all data factories; the messages and error messages are
+     * @return array<DataFactoryResult, ?BuilderResult> Aggregated results from all data factories; the messages and error messages are
      * keyed by the name of the data factory that produced them.
      */
     public function run(): array

@@ -10,13 +10,18 @@ use App\v2\Registration\Enum\ReportTypeBuilderResultOutcome;
 
 class ReportTypeBuilderResult extends BuilderResult
 {
-    public function __construct(protected readonly \UnitEnum $outcome)
-    {
+    public function __construct(
+        protected \UnitEnum $outcome,
+        /** @var string[] $errors */
+        protected array $errors = [],
+        /** @var array<string, int> $candidatesApplied */
+        protected array $candidatesApplied = []
+    ) {
         if (!$outcome instanceof ReportTypeBuilderResultOutcome) {
             throw new \TypeError('Incorrect enum type provided. Must provide ReportTypeBuilderResultOutcome');
         }
 
-        parent::__construct($outcome);
+        parent::__construct($outcome, $errors, $candidatesApplied);
         foreach (DeputyshipCandidatePostAction::cases() as $case) {
             match ($case) {
                 DeputyshipCandidatePostAction::UpdateReportType,

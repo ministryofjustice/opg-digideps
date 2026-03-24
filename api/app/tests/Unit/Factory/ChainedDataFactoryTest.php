@@ -20,21 +20,22 @@ class ChainedDataFactoryTest extends TestCase
 
         $mockDataFactory1 = $this->createMock(DataFactoryInterface::class);
         $mockDataFactory1->expects(self::once())->method('getName')->willReturn('DataFactory1');
-        $mockDataFactory1->expects(self::once())->method('run')->willReturn($success);
+        $mockDataFactory1->expects(self::once())->method('run')->willReturn([$success, null]);
 
         $failure = new DataFactoryResult();
         $failure->addErrorMessages('UpdateErrors', ['Update error in factory 2']);
 
         $mockDataFactory2 = $this->createMock(DataFactoryInterface::class);
         $mockDataFactory2->expects(self::once())->method('getName')->willReturn('DataFactory2');
-        $mockDataFactory2->expects(self::once())->method('run')->willReturn($failure);
+        $mockDataFactory2->expects(self::once())->method('run')->willReturn([$failure, null]);
 
         // sut
         $sut = new ChainedDataFactory(dataFactories: [$mockDataFactory1, $mockDataFactory2]);
-        $result = $sut->run();
+        [$result, $builderResult] = $sut->run();
 
         // assertions
         self::assertFalse($result->isSuccessful());
+        self::assertNull($builderResult);
 
         self::assertEquals(
             [

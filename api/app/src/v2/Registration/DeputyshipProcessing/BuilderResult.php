@@ -13,7 +13,7 @@ abstract class BuilderResult
     protected int $numCandidatesFailed = 0;
 
     public function __construct(
-        protected readonly \UnitEnum $outcome,
+        protected \UnitEnum $outcome,
         /** @var string[] $errors */
         protected array $errors = [],
         /** @var array<string, int> $candidatesApplied */

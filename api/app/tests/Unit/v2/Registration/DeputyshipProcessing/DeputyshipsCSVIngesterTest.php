@@ -60,7 +60,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
         $this->mockPreCsvDataFactory->expects(self::once())
             ->method('run')
-            ->willReturn($preCSVDataFactoryResult);
+            ->willReturn([$preCSVDataFactoryResult, null]);
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordPreCSVDataFactoryResult')
@@ -81,7 +81,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
         $this->mockPreCsvDataFactory->expects(self::once())
             ->method('run')
-            ->willReturn($preCSVDataFactoryResult);
+            ->willReturn([$preCSVDataFactoryResult, null]);
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordPreCSVDataFactoryResult')
@@ -115,7 +115,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
         $this->mockPreCsvDataFactory->expects(self::once())
             ->method('run')
-            ->willReturn($preCSVDataFactoryResult);
+            ->willReturn([$preCSVDataFactoryResult, null]);
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordPreCSVDataFactoryResult')
@@ -166,7 +166,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
         $this->mockPreCsvDataFactory->expects(self::once())
             ->method('run')
-            ->willReturn(new DataFactoryResult(messages: ['Success' => []]));
+            ->willReturn([new DataFactoryResult(messages: ['Success' => []]), null]);
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordPreCSVDataFactoryResult')
@@ -200,7 +200,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
         $this->mockPostCsvDataFactory->expects(self::once())
             ->method('run')
-            ->willReturn($postCSVDataFactoryResult);
+            ->willReturn([$postCSVDataFactoryResult, null]);
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordPostCSVDataFactoryResult')
@@ -227,7 +227,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
         $this->mockPreCsvDataFactory->expects(self::once())
             ->method('run')
-            ->willReturn(new DataFactoryResult(messages: ['Success' => []]));
+            ->willReturn([new DataFactoryResult(messages: ['Success' => []]), null]);
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordPreCSVDataFactoryResult')
@@ -261,7 +261,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
         $this->mockPostCsvDataFactory->expects(self::once())
             ->method('run')
-            ->willReturn(new DataFactoryResult(messages: ['Success' => []]));
+            ->willReturn([new DataFactoryResult(messages: ['Success' => []]), null]);
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordPostCSVDataFactoryResult')

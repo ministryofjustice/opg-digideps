@@ -20,7 +20,7 @@ class ClientIdFixDataFactory implements DataFactoryInterface
     }
 
     /**
-     * @return array<DataFactoryResult, ?BuilderResultInterface>
+     * @return array<DataFactoryResult, ?BuilderResult>
      */
     public function run(): array
     {
