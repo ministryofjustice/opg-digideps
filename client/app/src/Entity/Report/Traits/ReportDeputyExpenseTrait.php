@@ -29,7 +29,7 @@ trait ReportDeputyExpenseTrait
      */
     private $expensesTotal;
 
-    public function getPaidForAnything(): string
+    public function getPaidForAnything(): ?string
     {
         return $this->paidForAnything;
     }
