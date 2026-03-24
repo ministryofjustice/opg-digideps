@@ -4,9 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Client;
 use App\Entity\Deputy;
-use App\Entity\PreRegistration;
 use App\Entity\User;
-use App\Model\QueryPager;
+use App\Utility\Query\QueryPager;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\NonUniqueResultException;
