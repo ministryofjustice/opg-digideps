@@ -144,6 +144,8 @@ jobs:
       tag: ${{ needs.workflow_variables.outputs.version_tag }}
       branch_name: ${{ needs.workflow_variables.outputs.build_identifier }}
       push_to_ecr: true
+    secrets:
+      snyk_token: ${{ secrets.SNYK_OPG_ORG_TOKEN }}
 
   api_phpstan:
     name: api phpstan

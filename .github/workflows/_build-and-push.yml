@@ -21,6 +21,9 @@ on:
         required: false
         default: true
         type: boolean
+    secrets:
+      snyk_token:
+        required: true
 
 jobs:
   docker_build_scan_push:
@@ -234,13 +237,14 @@ jobs:
             docker tag "${IMAGE_NAME}:latest" "${ECR_REGISTRY}/${ECR_REGISTRY_ALIAS}/${IMAGE_NAME}:main-${IMAGE_TAG}"
           fi
           docker push --all-tags "${ECR_REGISTRY}/${ECR_REGISTRY_ALIAS}/${IMAGE_NAME}"
+          docker image ls
 
       - name: Run Snyk Scan
         if: matrix.svc_name != 'mock-sirius'
         uses: ministryofjustice/opg-github-actions/actions/snyk-scan@8dea82fc8b8e7ffca431f0fb83848d523147ccd8 # v4.5.0
         with:
-          SNYK_TEST_IMAGE: ${{ steps.login_ecr.outputs.registry }}/digideps/${{ matrix.svc_name }}:${{ inputs.tag }}
-          SNYK_TOKEN: ${{ secrets.SNYK_OPG_ORG_TOKEN }}
+          SNYK_TEST_IMAGE: ${{ matrix.svc_name }}:latest
+          SNYK_TOKEN: ${{ secrets.snyk_token }}
           snyk_test_args: "--severity-threshold=high"
           sarif_filepath: "test-results"
           sarif_filename: "snyk.sarif"
