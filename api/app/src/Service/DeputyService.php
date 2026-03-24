@@ -2,17 +2,12 @@
 
 namespace App\Service;
 
-use App\Entity\CourtOrder;
 use App\Entity\Deputy;
-use App\Entity\PreRegistration;
-use App\Entity\Report\Report;
 use App\Entity\User;
-use App\Model\Hydrator;
 use App\Repository\CourtOrderRepository;
 use App\Repository\DeputyRepository;
-use Doctrine\DBAL\Exception;
+use App\Utility\Query\Hydrator;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
 
 class DeputyService
 {
