@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\TestHelpers;
 
+use App\Domain\CourtOrder\CourtOrderKind;
+use App\Domain\CourtOrder\CourtOrderReportType;
+use App\Domain\CourtOrder\CourtOrderType;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
@@ -17,16 +20,19 @@ class CourtOrderTestHelper
         Client $client,
         string $courtOrderUid,
         string $status = 'ACTIVE',
-        string $type = 'pfa',
+        CourtOrderType $type = CourtOrderType::PFA,
         ?Report $report = null,
         ?Deputy $deputy = null,
         bool $deputyIsActive = true,
         \DateTime $orderDate = (new \DateTime()),
+        CourtOrderKind $courtOrderKind = CourtOrderKind::Single,
     ): CourtOrder {
         $courtOrder = (new CourtOrder())
             ->setCourtOrderUid($courtOrderUid)
             ->setClient($client)
+            ->setOrderKind($courtOrderKind)
             ->setOrderType($type)
+            ->setOrderReportType($type === CourtOrderType::PFA || $courtOrderKind === CourtOrderKind::Hybrid ? CourtOrderReportType::OPG102 : CourtOrderReportType::OPG104)
             ->setStatus($status)
             ->setOrderMadeDate($orderDate);
 

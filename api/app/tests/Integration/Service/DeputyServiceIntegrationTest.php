@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Service;
 
+use App\Domain\CourtOrder\CourtOrderType;
 use App\Service\DeputyService;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\CourtOrderTestHelper;
@@ -181,7 +182,7 @@ class DeputyServiceIntegrationTest extends ApiIntegrationTestCase
             em: self::$entityManager,
             client: $client,
             courtOrderUid: $courtOrderUid2,
-            type: 'hw',
+            type: CourtOrderType::HW,
             deputy: $deputy,
         );
 

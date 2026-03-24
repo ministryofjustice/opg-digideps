@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Service;
+namespace App\Domain\CourtOrder;
 
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
 use App\Entity\User;
-use App\Repository\CourtOrderRepository;
-use App\Repository\UserRepository;
-use App\Repository\ReportRepository;
 use App\Repository\ClientRepository;
+use App\Repository\CourtOrderRepository;
 use App\Repository\DeputyRepository;
+use App\Repository\ReportRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Controller;
 
+use App\Domain\CourtOrder\CourtOrderKind;
+use App\Domain\CourtOrder\CourtOrderType;
 use DateTime;
 use App\Entity\Deputy;
 use App\Entity\PreRegistration;
@@ -50,7 +52,7 @@ class CourtOrderControllerTest extends AbstractTestController
     private function addUserAndCourtOrderAndDeputy($emailAddress): array
     {
         // add a court order, and make the user a deputy on it
-        $courtOrder = self::$fixtures->createCourtOrder(substr('' . hexdec(uniqid()), -8), 'pfa', 'ACTIVE');
+        $courtOrder = self::$fixtures->createCourtOrder(substr('' . hexdec(uniqid()), -8), CourtOrderType::PFA, CourtOrderKind::Single, 'ACTIVE');
 
         $user = self::$fixtures->createUser($emailAddress, User::ROLE_LAY_DEPUTY);
         self::$fixtureHelper->setPassword($user);
@@ -88,7 +90,7 @@ class CourtOrderControllerTest extends AbstractTestController
     public function testGetByUidActionUserIsNotADeputyFail(): void
     {
         // add a court order
-        $courtOrder = self::$fixtures->createCourtOrder('92954529292', 'hw', 'ACTIVE');
+        $courtOrder = self::$fixtures->createCourtOrder('92954529292', CourtOrderType::HW, CourtOrderKind::Single, 'ACTIVE');
         self::$fixtures->persist($courtOrder);
         self::$fixtures->flush();
 
@@ -108,7 +110,7 @@ class CourtOrderControllerTest extends AbstractTestController
     public function testGetByUidActionUserIsNotADeputyOnCourtOrderFail(): void
     {
         // add a court order
-        $courtOrder = self::$fixtures->createCourtOrder('9292929292', 'hw', 'ACTIVE');
+        $courtOrder = self::$fixtures->createCourtOrder('9292929292', CourtOrderType::HW, CourtOrderKind::Single, 'ACTIVE');
         self::$fixtures->persist($courtOrder);
         self::$fixtures->flush();
 
@@ -181,7 +183,7 @@ class CourtOrderControllerTest extends AbstractTestController
     {
         $courtOrderUid = '7747628917';
 
-        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid, 'pfa', 'ACTIVE');
+        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid, CourtOrderType::PFA, CourtOrderKind::Single, 'ACTIVE');
         self::$fixtures->persist($courtOrder)->flush();
 
         self::$client->assertEndpointNeedsAuth('POST', "/v2/courtorder/$courtOrderUid/lay-deputy-invite");
