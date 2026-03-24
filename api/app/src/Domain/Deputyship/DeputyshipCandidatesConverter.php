@@ -2,9 +2,8 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Service;
+namespace App\Domain\Deputyship;
 
-use App\Model\DeputyshipProcessingRawDbAccess;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesGroup;
 use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;

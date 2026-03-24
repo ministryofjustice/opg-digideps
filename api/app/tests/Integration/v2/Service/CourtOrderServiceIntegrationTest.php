@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Service;
 
+use App\Domain\CourtOrder\CourtOrderKind;
+use App\Domain\CourtOrder\CourtOrderService;
+use App\Domain\CourtOrder\CourtOrderType;
 use App\Entity\CourtOrderDeputy;
 use App\Repository\CourtOrderDeputyRepository;
 use App\Tests\Integration\ApiIntegrationTestCase;
 use App\Tests\Integration\Fixtures;
-use App\v2\Service\CourtOrderService;
 
 class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
 {
@@ -32,7 +34,7 @@ class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
     public function testAssociateDeputyWithCourtOrderStatusUpdate(): void
     {
         $deputy = self::$fixtures->createDeputy(['setDeputyUid' => '123456']);
-        $courtOrder = self::$fixtures->createCourtOrder('123567', 'pfa', 'ACTIVE');
+        $courtOrder = self::$fixtures->createCourtOrder('123567', CourtOrderType::PFA, CourtOrderKind::Single, 'ACTIVE');
         $deputy->associateWithCourtOrder($courtOrder);
         self::$entityManager->persist($deputy);
         self::$entityManager->flush();
@@ -52,7 +54,7 @@ class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
     public function testAssociateDeputyWithCourtOrderSuccess(): void
     {
         $deputy = self::$fixtures->createDeputy(['setDeputyUid' => 'x123456']);
-        $courtOrder = self::$fixtures->createCourtOrder('x123567', 'pfa', 'ACTIVE');
+        $courtOrder = self::$fixtures->createCourtOrder('x123567', CourtOrderType::PFA, CourtOrderKind::Single, 'ACTIVE');
         self::$entityManager->persist($courtOrder);
         self::$entityManager->flush();
 

@@ -8,6 +8,7 @@ use App\Entity\Client;
 use App\Entity\Deputy;
 use App\Entity\User;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;
 
 class UserTestHelper
@@ -18,7 +19,7 @@ class UserTestHelper
     }
 
     public static function createAndPersistUser(
-        EntityManager $em,
+        EntityManagerInterface $em,
         ?Client $client = null,
         ?string $roleName = User::ROLE_LAY_DEPUTY,
         ?string $email = null,
@@ -32,7 +33,7 @@ class UserTestHelper
         }
 
         $em->persist($user);
-        $em->flush($user);
+        $em->flush();
 
         return $user;
     }

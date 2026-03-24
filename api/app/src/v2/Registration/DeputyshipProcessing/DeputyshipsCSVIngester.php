@@ -5,20 +5,22 @@ declare(strict_types=1);
 namespace App\v2\Registration\DeputyshipProcessing;
 
 use App\Factory\DataFactoryInterface;
+use App\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipIngester;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 
 /**
  * Ingest the deputyship CSV exported from Sirius.
  */
-class DeputyshipsCSVIngester
+final readonly class DeputyshipsCSVIngester
 {
     public function __construct(
-        private readonly DeputyshipsCSVLoader $deputyshipsCSVLoader,
-        private readonly DeputyshipsCandidatesSelector $deputyshipsCandidatesSelector,
-        private readonly DeputyshipBuilder $deputyshipBuilder,
-        private readonly DataFactoryInterface $preCSVDataFactory,
-        private readonly DataFactoryInterface $postCSVDataFactory,
-        private readonly DeputyshipsIngestResultRecorder $deputyshipsIngestResultRecorder,
+        private DeputyshipsCSVLoader $deputyshipsCSVLoader,
+        private DeputyshipsCandidatesSelector $deputyshipsCandidatesSelector,
+        private DeputyshipBuilder $deputyshipBuilder,
+        private DataFactoryInterface $preCSVDataFactory,
+        private DataFactoryInterface $postCSVDataFactory,
+        private DeputyshipsIngestResultRecorder $deputyshipsIngestResultRecorder,
+        private CourtOrderRelationshipIngester $courtOrderRelationshipIngester,
     ) {
     }
 
@@ -66,6 +68,14 @@ class DeputyshipsCSVIngester
         // each $builderResult contains a group of court order entities and relationships to be persisted
         foreach ($builderResults as $builderResult) {
             $this->deputyshipsIngestResultRecorder->recordBuilderResult($builderResult);
+        }
+
+        // update CourtOrder relationships and kinds
+        if (!$dryRun) {
+            $relationshipResults = $this->courtOrderRelationshipIngester->execute();
+            foreach ($relationshipResults as $relationshipResult) {
+                $this->deputyshipsIngestResultRecorder->recordRelationshipResult($relationshipResult);
+            }
         }
 
         // apply manual data fixes after CSV ingested
