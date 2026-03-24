@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Registration\DeputyshipProcessing;
 
+use App\Domain\CourtOrder\CourtOrderType;
 use App\Tests\Integration\ApiIntegrationTestCase;
 use DateTime;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
-use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\StagingDeputyship;
 use App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
@@ -222,7 +222,7 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
         // but should be ignored as a candidate because a relationship already exists
         $courtOrder = new CourtOrder();
         $courtOrder->setCourtOrderUid($deputyship->orderUid);
-        $courtOrder->setOrderType('pfa');
+        $courtOrder->setOrderType(CourtOrderType::PFA);
         $courtOrder->setStatus('ACTIVE');
         $courtOrder->setOrderMadeDate($orderMadeDate);
         $courtOrder->addReport($report);

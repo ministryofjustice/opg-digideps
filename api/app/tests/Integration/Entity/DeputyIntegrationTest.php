@@ -2,6 +2,8 @@
 
 namespace App\Tests\Integration\Entity;
 
+use App\Domain\CourtOrder\CourtOrderKind;
+use App\Domain\CourtOrder\CourtOrderType;
 use App\Tests\Integration\ApiIntegrationTestCase;
 use DateTime;
 use App\Entity\CourtOrder;
@@ -39,7 +41,8 @@ class DeputyIntegrationTest extends ApiIntegrationTestCase
         $courtOrder = new CourtOrder();
         $courtOrder
             ->setCourtOrderUid($fakeUid)
-            ->setOrderType('hybrid')
+            ->setOrderType(CourtOrderType::PFA)
+            ->setOrderKind(CourtOrderKind::Hybrid)
             ->setStatus('ACTIVE')
             ->setOrderMadeDate(new DateTime('2020-06-14'));
 
@@ -53,16 +56,17 @@ class DeputyIntegrationTest extends ApiIntegrationTestCase
         $retrievedDeputy = self::$deputyRepository->findOneBy(['deputyUid' => $deputy->getDeputyUid()]);
 
         $actual = $retrievedDeputy->getCourtOrdersWithStatus();
-        self::assertArrayHasKey('courtOrder', $actual[0]);
-        self::assertArrayHasKey('isActive', $actual[0]);
+        $this->assertArrayHasKey('courtOrder', $actual[0]);
+        $this->assertArrayHasKey('isActive', $actual[0]);
 
         $isActive = $actual[0]['isActive'];
         $actualCourtOrder = $actual[0]['courtOrder'];
 
-        self::assertEquals(1, count($actual));
-        self::assertEquals(true, $isActive);
-        self::assertEquals($fakeUid, $actualCourtOrder->getCourtOrderUid());
-        self::assertEquals('hybrid', $actualCourtOrder->getOrderType());
+        $this->assertCount(1, $actual);
+        $this->assertTrue($isActive);
+        $this->assertEquals($fakeUid, $actualCourtOrder->getCourtOrderUid());
+        $this->assertEquals(CourtOrderKind::Hybrid, $actualCourtOrder->getOrderKind());
+        self::assertEquals(CourtOrderType::PFA, $actualCourtOrder->getOrderType());
     }
 
     /**
@@ -80,7 +84,8 @@ class DeputyIntegrationTest extends ApiIntegrationTestCase
         $courtOrder = new CourtOrder();
         $courtOrder
             ->setCourtOrderUid($fakeCourtOrderUid)
-            ->setOrderType('hybrid')
+            ->setOrderType(CourtOrderType::PFA)
+            ->setOrderKind(CourtOrderKind::Hybrid)
             ->setStatus('ACTIVE')
             ->setOrderMadeDate(new DateTime('2020-06-14'));
 
