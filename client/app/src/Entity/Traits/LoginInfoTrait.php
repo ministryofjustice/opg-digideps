@@ -32,12 +32,7 @@ trait LoginInfoTrait
         return $this->idOfClientWithDetails;
     }
 
-    /**
-     * @param int $idOfClientWithDetails
-     *
-     * @return HasReportTrait
-     */
-    public function setIdOfClientWithDetails($idOfClientWithDetails)
+    public function setIdOfClientWithDetails(int $idOfClientWithDetails): static
     {
         $this->idOfClientWithDetails = $idOfClientWithDetails;
 
@@ -72,12 +67,7 @@ trait LoginInfoTrait
         return $this->numberOfReports;
     }
 
-    /**
-     * @param int $numberOfReports
-     *
-     * @return HasReportTrait
-     */
-    public function setNumberOfReports($numberOfReports)
+    public function setNumberOfReports(int $numberOfReports): static
     {
         $this->numberOfReports = $numberOfReports;
 

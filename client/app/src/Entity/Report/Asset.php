@@ -79,11 +79,11 @@ abstract class Asset
     private $valueTotal;
 
     /**
-     * @Assert\Type(type="DateTimeInterface",message="asset.date.date")
+     * @Assert\Type(type="?\DateTimeInterface", message="asset.date.date")
      *
-     * @JMS\Type("DateTime")
+     * @JMS\Type("?\DateTimeInterface")
      */
-    private $valuationDate;
+    protected ?\DateTimeInterface $valuationDate = null;
 
     public function getId()
     {
@@ -143,10 +143,7 @@ abstract class Asset
         return $this->valueTotal;
     }
 
-    /**
-     * @return static
-     */
-    public function setValuationDate($valuationDate)
+    public function setValuationDate(?\DateTimeInterface $valuationDate): static
     {
         $this->valuationDate = $valuationDate;
 

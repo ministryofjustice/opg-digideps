@@ -1976,16 +1976,6 @@ parameters:
 			path: src/Entity/ClientContact.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\ClientContact\\:\\:setClient\\(\\) should return string but returns \\$this\\(App\\\\Entity\\\\ClientContact\\)\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\ClientContact\\:\\:setEmail\\(\\) should return string but returns \\$this\\(App\\\\Entity\\\\ClientContact\\)\\.$#"
-			count: 1
-			path: src/Entity/ClientContact.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\ClientContact\\:\\:setFirstName\\(\\) should return string but returns \\$this\\(App\\\\Entity\\\\ClientContact\\)\\.$#"
 			count: 1
 			path: src/Entity/ClientContact.php
@@ -2286,11 +2276,6 @@ parameters:
 			path: src/Entity/Report/Asset.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Asset\\:\\:setValuationDate\\(\\) has parameter \\$valuationDate with no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Asset.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Asset\\:\\:setValue\\(\\) has parameter \\$value with no type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/Asset.php
@@ -2311,11 +2296,6 @@ parameters:
 			path: src/Entity/Report/Asset.php
 
 		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\Asset\\:\\:\\$valuationDate has no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Asset.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\Asset\\:\\:\\$value has no type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/Asset.php
@@ -2331,22 +2311,7 @@ parameters:
 			path: src/Entity/Report/AssetOther.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\AssetOther\\:\\:getValuationDate\\(\\) should return DateTime but returns Date\\.$#"
-			count: 1
-			path: src/Entity/Report/AssetOther.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\AssetOther\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/AssetOther.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\AssetOther\\:\\:\\$valuationDate \\(Date\\) does not accept DateTime\\.$#"
-			count: 1
-			path: src/Entity/Report/AssetOther.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\AssetOther\\:\\:\\$valuationDate has unknown class Date as its type\\.$#"
 			count: 1
 			path: src/Entity/Report/AssetOther.php
 
@@ -2757,11 +2722,6 @@ parameters:
 
 		-
 			message: "#^PHPDoc tag @param references unknown parameter\\: \\$furtherInformation$#"
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Entity\\\\Report\\\\Checklist\\:\\:setReport\\(\\) expects App\\\\Entity\\\\Report\\\\Report, App\\\\Entity\\\\ReportInterface given\\.$#"
 			count: 1
 			path: src/Entity/Report/Checklist.php
 
@@ -4176,11 +4136,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setReportSeen\\(\\) should return App\\\\Entity\\\\Report\\\\Report but return statement is missing\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setReviewChecklist\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -4411,22 +4366,7 @@ parameters:
 			path: src/Entity/Report/ReportSubmissionSummary.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\ReviewChecklist\\:\\:getAnswers\\(\\) should return App\\\\Model\\\\FullReviewChecklist\\|null but returns App\\\\Entity\\\\Report\\\\App\\\\Model\\\\FullReviewChecklist\\.$#"
-			count: 1
-			path: src/Entity/Report/ReviewChecklist.php
-
-		-
 			message: "#^PHPDoc tag @param for parameter \\$answers with type array is incompatible with native type App\\\\Model\\\\FullReviewChecklist\\.$#"
-			count: 1
-			path: src/Entity/Report/ReviewChecklist.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\ReviewChecklist\\:\\:\\$answers \\(App\\\\Entity\\\\Report\\\\App\\\\Model\\\\FullReviewChecklist\\) does not accept App\\\\Model\\\\FullReviewChecklist\\.$#"
-			count: 1
-			path: src/Entity/Report/ReviewChecklist.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\ReviewChecklist\\:\\:\\$answers has unknown class App\\\\Entity\\\\Report\\\\App\\\\Model\\\\FullReviewChecklist as its type\\.$#"
 			count: 1
 			path: src/Entity/Report/ReviewChecklist.php
 
@@ -4716,11 +4656,6 @@ parameters:
 			path: src/Entity/Report/VisitsCare.php
 
 		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:\\$whenWasCarePlanLastReviewed has no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/VisitsCare.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:\\$whoIsDoingTheCaring has no type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/VisitsCare.php
@@ -4951,27 +4886,7 @@ parameters:
 			path: src/Entity/User.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:setIdOfClientWithDetails\\(\\) has invalid return type App\\\\Entity\\\\Traits\\\\HasReportTrait\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:setIdOfClientWithDetails\\(\\) should return App\\\\Entity\\\\Traits\\\\HasReportTrait but returns \\$this\\(App\\\\Entity\\\\User\\)\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\User\\:\\:setLastLoggedIn\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:setNumberOfReports\\(\\) has invalid return type App\\\\Entity\\\\Traits\\\\HasReportTrait\\.$#"
-			count: 1
-			path: src/Entity/User.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\User\\:\\:setNumberOfReports\\(\\) should return App\\\\Entity\\\\Traits\\\\HasReportTrait but returns \\$this\\(App\\\\Entity\\\\User\\)\\.$#"
 			count: 1
 			path: src/Entity/User.php
 
@@ -7696,11 +7611,6 @@ parameters:
 			path: src/Service/OrgService.php
 
 		-
-			message: "#^Parameter \\#2 \\$currentUser of class App\\\\Event\\\\OrgCreatedEvent constructor expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
-			count: 1
-			path: src/Service/OrgService.php
-
-		-
 			message: "#^Cannot access offset 'Value' on mixed\\.$#"
 			count: 2
 			path: src/Service/ParameterStoreService.php
@@ -7966,11 +7876,6 @@ parameters:
 			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
 
 		-
-			message: "#^Cannot call method getReport\\(\\) on object\\|null\\.$#"
-			count: 1
-			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
-
-		-
 			message: "#^Method App\\\\Validator\\\\Constraints\\\\ClientBenefitsCheck\\\\ClientBenefitsCheckValidator\\:\\:dateLastCheckedEntitlementValid\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
@@ -8016,47 +7921,12 @@ parameters:
 			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
 
 		-
-			message: "#^Method App\\\\Validator\\\\Constraints\\\\ClientBenefitsCheck\\\\ClientBenefitsCheckValidator\\:\\:typesOfMoneyReceivedOnClientsBehalfValid\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
-
-		-
 			message: "#^Method App\\\\Validator\\\\Constraints\\\\ClientBenefitsCheck\\\\ClientBenefitsCheckValidator\\:\\:whenLastCheckedEntitlementValid\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
 
 		-
 			message: "#^Method App\\\\Validator\\\\Constraints\\\\ClientBenefitsCheck\\\\ClientBenefitsCheckValidator\\:\\:whenLastCheckedEntitlementValid\\(\\) has parameter \\$value with no type specified\\.$#"
-			count: 1
-			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
-
-		-
-			message: "#^Parameter \\#2 \\$object of method App\\\\Validator\\\\Constraints\\\\ClientBenefitsCheck\\\\ClientBenefitsCheckValidator\\:\\:dateLastCheckedEntitlementValid\\(\\) expects App\\\\Entity\\\\ClientBenefitsCheckInterface, object\\|null given\\.$#"
-			count: 1
-			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
-
-		-
-			message: "#^Parameter \\#2 \\$object of method App\\\\Validator\\\\Constraints\\\\ClientBenefitsCheck\\\\ClientBenefitsCheckValidator\\:\\:dontKnowMoneyExplanationValid\\(\\) expects App\\\\Entity\\\\ClientBenefitsCheckInterface, object\\|null given\\.$#"
-			count: 1
-			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
-
-		-
-			message: "#^Parameter \\#2 \\$object of method App\\\\Validator\\\\Constraints\\\\ClientBenefitsCheck\\\\ClientBenefitsCheckValidator\\:\\:moneyOnClientsBehalfValid\\(\\) expects App\\\\Entity\\\\ClientBenefitsCheckInterface, object\\|null given\\.$#"
-			count: 1
-			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
-
-		-
-			message: "#^Parameter \\#2 \\$object of method App\\\\Validator\\\\Constraints\\\\ClientBenefitsCheck\\\\ClientBenefitsCheckValidator\\:\\:neverCheckedExplanationValid\\(\\) expects App\\\\Entity\\\\ClientBenefitsCheckInterface, object\\|null given\\.$#"
-			count: 1
-			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
-
-		-
-			message: "#^Parameter \\#2 \\$object of method App\\\\Validator\\\\Constraints\\\\ClientBenefitsCheck\\\\ClientBenefitsCheckValidator\\:\\:typesOfMoneyReceivedOnClientsBehalfValid\\(\\) expects App\\\\Entity\\\\ClientBenefitsCheckInterface, object\\|null given\\.$#"
-			count: 1
-			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
-
-		-
-			message: "#^Parameter \\#2 \\$object of method App\\\\Validator\\\\Constraints\\\\ClientBenefitsCheck\\\\ClientBenefitsCheckValidator\\:\\:whenLastCheckedEntitlementValid\\(\\) expects App\\\\Entity\\\\ClientBenefitsCheckInterface, object\\|null given\\.$#"
 			count: 1
 			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
 
@@ -8162,11 +8032,6 @@ parameters:
 
 		-
 			message: "#^Cannot access offset 'groups'\\|'message' on mixed\\.$#"
-			count: 1
-			path: src/Validator/Constraints/EmailSameDomain.php
-
-		-
-			message: "#^Class Symfony\\\\Component\\\\Validator\\\\Exception\\\\MissingOptionsException constructor invoked with 1 parameter, 2 required\\.$#"
 			count: 1
 			path: src/Validator/Constraints/EmailSameDomain.php
 
