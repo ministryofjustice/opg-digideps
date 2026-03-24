@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model;
+namespace App\Domain\Deputyship;
 
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\ORM\EntityManagerInterface;
