@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\v2\Registration\DeputyshipProcessing;
 
 use App\Factory\DataFactoryResult;
+use App\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipResult;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 
@@ -122,6 +123,14 @@ class DeputyshipsIngestResultRecorder
         $errorMessage = $builderResult->getErrorMessage();
         if (!is_null($errorMessage)) {
             $this->logError('!!!!!!! ' . $errorMessage);
+        }
+    }
+
+    public function recordRelationshipResult(CourtOrderRelationshipResult $relationshipResult): void
+    {
+        $this->logMessage($relationshipResult->getMessage());
+        if ($relationshipResult->isError()) {
+            $this->logError($relationshipResult->getErrorMessage());
         }
     }
 

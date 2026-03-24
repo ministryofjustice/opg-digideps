@@ -2,6 +2,8 @@
 
 namespace App\Tests\Integration\Controller;
 
+use App\Domain\CourtOrder\CourtOrderKind;
+use App\Domain\CourtOrder\CourtOrderType;
 use DateTime;
 use App\Entity\User;
 use App\TestHelpers\CourtOrderTestHelper;
@@ -171,7 +173,7 @@ class DeputyControllerTest extends AbstractTestController
         self::$fixtures->flush();
 
         // generate courtOrder and set client and deputy
-        $courtOrder = self::$fixtures->createCourtOrder('7055555550', 'pfa', 'ACTIVE');
+        $courtOrder = self::$fixtures->createCourtOrder('7055555550', CourtOrderType::PFA, CourtOrderKind::Single, 'ACTIVE');
         $courtOrder->setClient($client);
         $deputy->associateWithCourtOrder($courtOrder);
         self::$fixtures->persist($courtOrder);
