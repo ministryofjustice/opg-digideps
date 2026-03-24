@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Model;
 
-use App\Entity\CourtOrder;
-use App\Entity\Deputy;
-use App\Model\DeputyshipProcessingRawDbAccess;
+use App\Domain\CourtOrder\CourtOrderKind;
+use App\Domain\CourtOrder\CourtOrderType;
+use App\Domain\Deputyship\DeputyshipProcessingRawDbAccess;
 use App\Tests\Integration\ApiIntegrationTestCase;
 use App\Tests\Integration\Fixtures;
 use Doctrine\DBAL\Exception;
@@ -84,7 +84,7 @@ class DeputyshipProcessingRawDbAccessIntegrationIntegrationTest extends ApiInteg
         $deputy = self::$fixtures->createDeputy();
 
         $courtOrderUid = uniqid();
-        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid, 'pfa', 'ACTIVE');
+        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid, CourtOrderType::PFA, CourtOrderKind::Single, 'ACTIVE');
 
         self::$fixtures->persist($deputy, $courtOrder)->flush();
 
@@ -122,7 +122,7 @@ class DeputyshipProcessingRawDbAccessIntegrationIntegrationTest extends ApiInteg
         $report = self::$fixtures->createReport($client);
 
         $courtOrderUid = uniqid();
-        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid, 'pfa', 'ACTIVE');
+        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid, CourtOrderType::PFA, CourtOrderKind::Single, 'ACTIVE');
 
         self::$fixtures->persist($client, $report, $courtOrder)->flush();
 
@@ -155,7 +155,7 @@ class DeputyshipProcessingRawDbAccessIntegrationIntegrationTest extends ApiInteg
     public function testUpdateOrderStatus(): void
     {
         $courtOrderUid = uniqid();
-        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid, 'pfa', 'ACTIVE');
+        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid, CourtOrderType::PFA, CourtOrderKind::Single, 'ACTIVE');
         self::$fixtures->persist($courtOrder)->flush();
 
         // use SUT to update order status
@@ -180,7 +180,7 @@ class DeputyshipProcessingRawDbAccessIntegrationIntegrationTest extends ApiInteg
     public function testUpdateDeputyStatus(): void
     {
         $courtOrderUid = uniqid();
-        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid, 'pfa', 'ACTIVE');
+        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid, CourtOrderType::PFA, CourtOrderKind::Single, 'ACTIVE');
         $deputy = self::$fixtures->createDeputy();
         $deputy->associateWithCourtOrder($courtOrder);
         self::$fixtures->persist($courtOrder, $deputy)->flush();
