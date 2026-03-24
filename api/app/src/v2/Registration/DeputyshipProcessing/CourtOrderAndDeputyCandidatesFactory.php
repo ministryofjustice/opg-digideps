@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
+use App\Domain\Deputyship\DeputyshipProcessingLookupCache;
 use App\Entity\StagingDeputyship;
 use App\Entity\StagingSelectedCandidate;
 use App\Factory\StagingSelectedCandidateFactory;
-use App\Model\DeputyshipProcessingLookupCache;
 use App\Repository\CourtOrderDeputyRepository;
 
 /**
