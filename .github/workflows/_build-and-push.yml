@@ -21,6 +21,9 @@ on:
         required: false
         default: true
         type: boolean
+    secrets:
+      snyk_token:
+        required: true
 
 jobs:
   docker_build_scan_push:
@@ -31,16 +34,16 @@ jobs:
           - svc_name: "client-webserver"
             sub_folder: "."
             docker_file: "client/docker/web/Dockerfile"
-            platform: "arm64"
+            platform: "amd64"
             target: ""
-            runs_on: "ubuntu-24.04-arm"
+            runs_on: "ubuntu-latest"
 
           - svc_name: "client"
             sub_folder: "."
             docker_file: "client/docker/app/Dockerfile"
             platform: "arm64"
             target: "--target runtime"
-            runs_on: "ubuntu-24.04-arm"
+            runs_on: "ubuntu-latest"
 
           - svc_name: "client-devtools"
             sub_folder: "."
@@ -240,11 +243,11 @@ jobs:
         uses: ministryofjustice/opg-github-actions/actions/snyk-scan@8dea82fc8b8e7ffca431f0fb83848d523147ccd8 # v4.5.0
         with:
           SNYK_TEST_IMAGE: ${{ steps.login_ecr.outputs.registry }}/digideps/${{ matrix.svc_name }}:${{ inputs.tag }}
-          SNYK_TOKEN: ${{ secrets.SNYK_OPG_ORG_TOKEN }}
-          snyk_test_args: "--severity-threshold=high"
-          sarif_filepath: "test-results"
-          sarif_filename: "snyk.sarif"
-          snyk_policy_path: "./.github/.snyk"
+          SNYK_TOKEN: ${{ secrets.snyk_token }}
+          snyk_test_args: "--severity-threshold=high --platform=linux/${{ matrix.platform }}"
+          sarif_filepath: ./test-results
+          sarif_filename: snyk.sarif
+          snyk_policy_path: ${{ github.workspace }}/.github/.snyk
 
       - name: Upload Snyk scan results to security tab
         if: always() && matrix.svc_name != 'mock-sirius'
