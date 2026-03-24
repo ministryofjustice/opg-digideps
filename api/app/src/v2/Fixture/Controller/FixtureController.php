@@ -2,6 +2,7 @@
 
 namespace App\v2\Fixture\Controller;
 
+use App\Domain\CourtOrder\CourtOrderType;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
@@ -261,7 +262,7 @@ class FixtureController extends AbstractController
         $courtOrder = new CourtOrder();
 
         $courtOrder->setCourtOrderUid(strval(rand(100000000000, 999999999999)));
-        $courtOrder->setOrderType('hw');
+        $courtOrder->setOrderType(CourtOrderType::HW);
         $courtOrder->setStatus('ACTIVE');
         $courtOrder->setOrderMadeDate(new \DateTime('2020-06-14'));
         $courtOrder->setClient($client);

@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace app\tests\Integration\v2\Registration\DeputyshipProcessing;
 
+use App\Domain\CourtOrder\CourtOrderKind;
+use App\Domain\CourtOrder\CourtOrderReportType;
+use App\Domain\CourtOrder\CourtOrderType;
+use App\Domain\Deputyship\DeputyshipCandidatesConverter;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\CourtOrderDeputy;
 use App\Entity\Deputy;
-use App\Entity\Ndr\Ndr;
 use App\Tests\Integration\ApiIntegrationTestCase;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesGroup;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
-use App\v2\Service\DeputyshipCandidatesConverter;
 use Doctrine\ORM\Query\Expr\Join;
 
 class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrationTestCase
@@ -75,6 +77,8 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
             'status' => 'ACTIVE',
             'orderMadeDate' => '2025-06-10',
             'clientId' => $client->getId(),
+            'courtOrderKind' => CourtOrderKind::Single->value,
+            'courtOrderReportType' => CourtOrderReportType::OPG102->value,
         ];
         $candidatesGroup->insertOthers = [
             [
@@ -107,8 +111,10 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
         $courtOrder->setCourtOrderUid($orderUid);
         $courtOrder->setStatus('ACTIVE');
         $courtOrder->setClient($client);
-        $courtOrder->setOrderType('pfa');
+        $courtOrder->setOrderType(CourtOrderType::PFA);
         $courtOrder->setOrderMadeDate(new \DateTime());
+        $courtOrder->setOrderKind(CourtOrderKind::Single);
+        $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
         self::$entityManager->persist($courtOrder);
 
         $deputy = new Deputy();

@@ -104,6 +104,13 @@ class StagingSelectedCandidate
     public ?int $deputyId = null;
 
     /**
+     * @see CourtOrderKind
+     *
+     * @ORM\Column(name="order_kind", type="string", length=6, nullable=true)
+     */
+    public ?string $courtOrderKind = null;
+
+    /**
      * @ORM\Column(name="ndr_id", type="integer", nullable=true)
      */
     public ?int $ndrId = null;
