@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
+use App\Domain\Deputyship\DeputyshipCandidatesConverter;
 use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
-use App\v2\Service\DeputyshipCandidatesConverter;
 
 /**
  * Convert entity candidates into entities, but without saving them to the database.

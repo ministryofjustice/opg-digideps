@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
-use ArrayIterator;
-use stdClass;
+use App\Domain\Deputyship\DeputyshipCandidatesConverter;
 use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
-use App\v2\Service\DeputyshipCandidatesConverter;
+use ArrayIterator;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 final class DeputyshipBuilderTest extends TestCase
 {
