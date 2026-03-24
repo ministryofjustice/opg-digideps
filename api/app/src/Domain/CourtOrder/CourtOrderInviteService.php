@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Service;
+namespace App\Domain\CourtOrder;
 
 use App\Entity\Deputy;
 use App\Entity\User;
