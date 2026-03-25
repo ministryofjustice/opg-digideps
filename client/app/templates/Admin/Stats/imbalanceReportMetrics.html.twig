@@ -25,7 +25,7 @@
             {{ form_submit(form.submitAndDownload, page ~ '.form.submitAndDownload', {
                 'buttonClass': 'behat-link-submit-and-download'
             }) }}
-            <a href="{{ path('report_imbalance_metrics') }}" class="govuk-link button-link">{{ page ~ '.form.clear' | trans }}</a>
+            <a href="{{ path('report_imbalance_metrics') }}" class="govuk-link button-link">{{ (page ~ '.form.clear') | trans }}</a>
         </div>
     {{ form_end(form) }}
 
