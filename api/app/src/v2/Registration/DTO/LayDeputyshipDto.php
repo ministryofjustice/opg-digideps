@@ -25,7 +25,6 @@ class LayDeputyshipDto
     private ?string $deputyAddress5;
     private ?string $deputyPostcode;
     private ?bool $isCoDeputy;
-    private ?bool $isNdrEnabled;
     private ?\DateTime $orderDate;
     private ?string $orderType;
     private ?string $typeOfReport;
@@ -108,21 +107,9 @@ class LayDeputyshipDto
         return $this->typeOfReport;
     }
 
-    public function setTypeOfReport(string $typeOfReport): LayDeputyshipDto
+    public function setTypeOfReport(?string $typeOfReport): LayDeputyshipDto
     {
         $this->typeOfReport = $typeOfReport;
-
-        return $this;
-    }
-
-    public function isNdrEnabled(): bool
-    {
-        return $this->isNdrEnabled;
-    }
-
-    public function setIsNdrEnabled(bool $isNdrEnabled): LayDeputyshipDto
-    {
-        $this->isNdrEnabled = $isNdrEnabled;
 
         return $this;
     }
