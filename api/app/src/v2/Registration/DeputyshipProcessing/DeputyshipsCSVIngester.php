@@ -40,16 +40,16 @@ class DeputyshipsCSVIngester
         $this->deputyshipsIngestResultRecorder->recordStart();
 
         // apply manual data fixes before CSV ingested
-        [$dataFactoryResult, $postBuilderResult]  = $this->preCSVDataFactory->run();
+        [$dataFactoryResult, $preBuilderResults]  = $this->preCSVDataFactory->run();
+        if (count($preBuilderResults) > 0) {
+            foreach ($preBuilderResults as $builderResult) {
+                $this->deputyshipsIngestResultRecorder->recordBuilderResult($builderResult);
+            }
+        }
+
         $this->deputyshipsIngestResultRecorder->recordPreCSVDataFactoryResult($dataFactoryResult);
         if (!$dataFactoryResult->isSuccessful()) {
             return $this->deputyshipsIngestResultRecorder->result();
-        }
-
-        if (!is_null($postBuilderResult)) {
-            foreach ($postBuilderResult as $builderResult) {
-                $this->deputyshipsIngestResultRecorder->recordBuilderResult($builderResult);
-            }
         }
 
         // load the CSV into the staging table in the database
@@ -75,16 +75,16 @@ class DeputyshipsCSVIngester
         }
 
         // apply manual data fixes after CSV ingested
-        [$dataFactoryResult, $postBuilderResult] = $this->postCSVDataFactory->run();
+        [$dataFactoryResult, $postBuilderResults] = $this->postCSVDataFactory->run();
+        if (count($postBuilderResults) > 0) {
+            foreach ($postBuilderResults as $builderResult) {
+                $this->deputyshipsIngestResultRecorder->recordBuilderResult($builderResult);
+            }
+        }
+
         $this->deputyshipsIngestResultRecorder->recordPostCSVDataFactoryResult($dataFactoryResult);
         if (!$dataFactoryResult->isSuccessful()) {
             return $this->deputyshipsIngestResultRecorder->result();
-        }
-
-        if (!is_null($postBuilderResult)) {
-            foreach ($postBuilderResult as $builderResult) {
-                $this->deputyshipsIngestResultRecorder->recordBuilderResult($builderResult);
-            }
         }
 
         $this->deputyshipsIngestResultRecorder->recordEnd();

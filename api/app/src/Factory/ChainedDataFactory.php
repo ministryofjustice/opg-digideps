@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Factory;
 
+use App\v2\Registration\DeputyshipProcessing\BuilderResult;
+
 /**
  * Run multiple data factories in sequence and aggregate their outputs.
  */
@@ -22,16 +24,20 @@ class ChainedDataFactory implements DataFactoryInterface
     }
 
     /**
-     * @return array<DataFactoryResult, ?BuilderResult> Aggregated results from all data factories; the messages and error messages are
+     * @return array<DataFactoryResult, array<BuilderResult>> Aggregated results from all data factories; the messages and error messages are
      * keyed by the name of the data factory that produced them.
      */
     public function run(): array
     {
         $result = new DataFactoryResult();
-        $builderResult = null;
+        $builderResults = [];
 
         foreach ($this->dataFactories as $dataFactory) {
             [$factoryResult, $builderResult] = $dataFactory->run();
+
+            if (!is_null($builderResult)) {
+                $builderResults[] = $builderResult;
+            }
 
             $factoryName = $dataFactory->getName();
 
@@ -44,6 +50,6 @@ class ChainedDataFactory implements DataFactoryInterface
             }
         }
 
-        return [$result, $builderResult];
+        return [$result, $builderResults];
     }
 }

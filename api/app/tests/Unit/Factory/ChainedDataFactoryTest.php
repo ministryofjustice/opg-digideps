@@ -7,6 +7,9 @@ namespace App\Tests\Unit\Factory;
 use App\Factory\ChainedDataFactory;
 use App\Factory\DataFactoryInterface;
 use App\Factory\DataFactoryResult;
+use App\v2\Registration\DeputyshipProcessing\BuilderResult;
+use App\v2\Registration\DeputyshipProcessing\PostProcessing\ReportType\ReportTypeBuilderResult;
+use App\v2\Registration\Enum\ReportTypeBuilderResultOutcome;
 use PHPUnit\Framework\TestCase;
 
 class ChainedDataFactoryTest extends TestCase
@@ -18,9 +21,11 @@ class ChainedDataFactoryTest extends TestCase
         $success->addMessages('Updates', ['Factory 1 updates successful']);
         $success->addMessages('Deletes', ['Deleted record with ID 1', 'Deleted record with ID 2']);
 
+        $builderResult = new ReportTypeBuilderResult(ReportTypeBuilderResultOutcome::UpdateSuccess);
+
         $mockDataFactory1 = $this->createMock(DataFactoryInterface::class);
         $mockDataFactory1->expects(self::once())->method('getName')->willReturn('DataFactory1');
-        $mockDataFactory1->expects(self::once())->method('run')->willReturn([$success, null]);
+        $mockDataFactory1->expects(self::once())->method('run')->willReturn([$success, $builderResult]);
 
         $failure = new DataFactoryResult();
         $failure->addErrorMessages('UpdateErrors', ['Update error in factory 2']);
@@ -31,11 +36,12 @@ class ChainedDataFactoryTest extends TestCase
 
         // sut
         $sut = new ChainedDataFactory(dataFactories: [$mockDataFactory1, $mockDataFactory2]);
-        [$result, $builderResult] = $sut->run();
+        [$result, $builderResults] = $sut->run();
 
         // assertions
         self::assertFalse($result->isSuccessful());
-        self::assertNull($builderResult);
+        self::assertCount(1, $builderResults);
+        self::assertEquals(ReportTypeBuilderResultOutcome::UpdateSuccess, $builderResults[0]->getOutcome());
 
         self::assertEquals(
             [

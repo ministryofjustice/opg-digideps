@@ -7,6 +7,7 @@ namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
 use App\Entity\StagingSelectedCandidate;
 use App\Factory\DataFactoryInterface;
 use App\Factory\DataFactoryResult;
+use App\v2\Registration\DeputyshipProcessing\BuilderResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilder;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesSelectorResult;
@@ -16,7 +17,9 @@ use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngestResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoaderResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
+use App\v2\Registration\DeputyshipProcessing\PostProcessing\ReportType\ReportTypeBuilderResult;
 use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
+use App\v2\Registration\Enum\ReportTypeBuilderResultOutcome;
 use ArrayIterator;
 use Doctrine\DBAL\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -60,7 +63,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
         $this->mockPreCsvDataFactory->expects(self::once())
             ->method('run')
-            ->willReturn([$preCSVDataFactoryResult, null]);
+            ->willReturn([$preCSVDataFactoryResult, []]);
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordPreCSVDataFactoryResult')
@@ -81,7 +84,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
         $this->mockPreCsvDataFactory->expects(self::once())
             ->method('run')
-            ->willReturn([$preCSVDataFactoryResult, null]);
+            ->willReturn([$preCSVDataFactoryResult, []]);
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordPreCSVDataFactoryResult')
@@ -115,7 +118,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
         $this->mockPreCsvDataFactory->expects(self::once())
             ->method('run')
-            ->willReturn([$preCSVDataFactoryResult, null]);
+            ->willReturn([$preCSVDataFactoryResult, []]);
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordPreCSVDataFactoryResult')
@@ -166,7 +169,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
         $this->mockPreCsvDataFactory->expects(self::once())
             ->method('run')
-            ->willReturn([new DataFactoryResult(messages: ['Success' => []]), null]);
+            ->willReturn([new DataFactoryResult(messages: ['Success' => []]), []]);
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordPreCSVDataFactoryResult')
@@ -200,7 +203,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
         $this->mockPostCsvDataFactory->expects(self::once())
             ->method('run')
-            ->willReturn([$postCSVDataFactoryResult, null]);
+            ->willReturn([$postCSVDataFactoryResult, []]);
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordPostCSVDataFactoryResult')
@@ -225,9 +228,12 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
         $builderResult = new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidatesApplied);
 
+        $dataFactoryResult = new DataFactoryResult(messages: ['Success' => []]);
+        $postBuilderResult = new ReportTypeBuilderResult(ReportTypeBuilderResultOutcome::UpdateSuccess);
+
         $this->mockPreCsvDataFactory->expects(self::once())
             ->method('run')
-            ->willReturn([new DataFactoryResult(messages: ['Success' => []]), null]);
+            ->willReturn([$dataFactoryResult, []]);
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordPreCSVDataFactoryResult')
@@ -255,13 +261,18 @@ final class DeputyshipsCSVIngesterTest extends TestCase
             ->with(new ArrayIterator($candidates))
             ->willReturn(new ArrayIterator([$builderResult]));
 
-        $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
+        $this->mockDeputyshipsIngestResultRecorder->expects(self::exactly(2))
             ->method('recordBuilderResult')
-            ->with($builderResult);
+            ->willReturnCallback(function ($result) use ($builderResult, $postBuilderResult) {
+                $this->assertTrue(match ($result) {
+                    $builderResult, $postBuilderResult => true,
+                    default => false
+                });
+            });
 
         $this->mockPostCsvDataFactory->expects(self::once())
             ->method('run')
-            ->willReturn([new DataFactoryResult(messages: ['Success' => []]), null]);
+            ->willReturn([$dataFactoryResult, [$postBuilderResult]]);
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordPostCSVDataFactoryResult')
