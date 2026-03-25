@@ -7906,16 +7906,6 @@ parameters:
 			path: src/v2/Fixture/ReportSection.php
 
 		-
-			message: "#^Method App\\\\v2\\\\Registration\\\\Assembler\\\\SiriusToLayDeputyshipDtoAssembler\\:\\:collectMissingColumns\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Registration/Assembler/SiriusToLayDeputyshipDtoAssembler.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Registration\\\\Assembler\\\\SiriusToLayDeputyshipDtoAssembler\\:\\:determineReportTypeIsSupported\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Registration/Assembler/SiriusToLayDeputyshipDtoAssembler.php
-
-		-
 			message: "#^Method App\\\\v2\\\\Registration\\\\Assembler\\\\SiriusToOrgDeputyshipDtoAssembler\\:\\:assembleMultipleDtosFromArray\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/v2/Registration/Assembler/SiriusToOrgDeputyshipDtoAssembler.php
@@ -7972,11 +7962,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\v2\\\\Registration\\\\DTO\\\\LayDeputyshipDto\\:\\:getTypeOfReport\\(\\) should return string but returns string\\|null\\.$#"
-			count: 1
-			path: src/v2/Registration/DTO/LayDeputyshipDto.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Registration\\\\DTO\\\\LayDeputyshipDto\\:\\:isNdrEnabled\\(\\) should return bool but returns bool\\|null\\.$#"
 			count: 1
 			path: src/v2/Registration/DTO/LayDeputyshipDto.php
 
@@ -8067,11 +8052,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method getDeputyUid\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/v2/Registration/Uploader/LayDeputyshipUploader.php
-
-		-
-			message: "#^PHPDoc tag @throws with type Doctrine\\\\Common\\\\Persistence\\\\Mapping\\\\MappingException\\|Doctrine\\\\ORM\\\\ORMException is not subtype of Throwable$#"
 			count: 1
 			path: src/v2/Registration/Uploader/LayDeputyshipUploader.php
 
