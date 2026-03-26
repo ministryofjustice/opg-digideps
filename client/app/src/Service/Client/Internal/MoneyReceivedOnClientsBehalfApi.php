@@ -8,7 +8,7 @@ use App\Service\Client\RestClient;
 
 class MoneyReceivedOnClientsBehalfApi
 {
-    const string DELETE_ENDPOINT = 'report/money-type/delete/%s';
+    private const string DELETE_ENDPOINT = 'report/money-type/delete/%s';
 
     private RestClient $restClient;
 

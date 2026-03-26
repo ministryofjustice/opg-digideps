@@ -9,8 +9,8 @@ use App\Service\Client\RestClient;
 
 class ClientBenefitsCheckApi
 {
-    const string CREATE_ENDPOINT = 'report/client-benefits-check';
-    const string EXISTING_ENDPOINT = 'report/client-benefits-check/%s';
+    private const string CREATE_ENDPOINT = 'report/client-benefits-check';
+    private const string EXISTING_ENDPOINT = 'report/client-benefits-check/%s';
 
     private RestClient $restClient;
 
