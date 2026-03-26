@@ -49,13 +49,18 @@ class ClientBenefitsCheckController extends RestController
         return $this->clientBenefitsCheckRepository->findBy(['id' => $id], ['created' => 'ASC']);
     }
 
+    /**
+     * @throws \Exception
+     */
     #[Route(path: '/report/client-benefits-check/{id}', name: 'update', methods: ['PUT'])]
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function update(Request $request, string $id): ReportClientBenefitsCheck
     {
         $this->setJmsGroups($request);
 
+        /** @var ?ReportClientBenefitsCheck $existingEntity */
         $existingEntity = $this->clientBenefitsCheckRepository->find($id);
+
         $clientBenefitsCheck = $this->factory->createFromFormData(
             json_decode($request->getContent(), true),
             $existingEntity
