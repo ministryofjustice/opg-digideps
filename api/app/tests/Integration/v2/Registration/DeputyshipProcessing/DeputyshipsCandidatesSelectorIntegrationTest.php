@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Registration\DeputyshipProcessing;
 
+use App\Domain\CourtOrder\CourtOrderKind;
+use App\Domain\CourtOrder\CourtOrderReportType;
 use App\Domain\CourtOrder\CourtOrderType;
 use App\Tests\Integration\ApiTestTrait;
 use DateTime;
@@ -61,6 +63,8 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         $courtOrder->setOrderType(CourtOrderType::PFA);
         $courtOrder->setStatus('OPEN');
         $courtOrder->setOrderMadeDate(new DateTime('2018-01-21'));
+        $courtOrder->setOrderKind(CourtOrderKind::Single);
+        $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
 
         self::$entityManager->persist($courtOrder);
         self::$entityManager->flush();
@@ -79,6 +83,9 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         $courtOrder->setOrderType(CourtOrderType::HW);
         $courtOrder->setStatus('ACTIVE');
         $courtOrder->setOrderMadeDate(new DateTime('2019-01-21'));
+        $courtOrder->setOrderKind(CourtOrderKind::Single);
+        $courtOrder->setOrderReportType(CourtOrderReportType::OPG104);
+
 
         self::$entityManager->persist($courtOrder);
 
@@ -110,6 +117,9 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         $courtOrder->setOrderType(CourtOrderType::HW);
         $courtOrder->setStatus('ACTIVE');
         $courtOrder->setOrderMadeDate(new DateTime('2019-01-21'));
+        $courtOrder->setOrderKind(CourtOrderKind::Single);
+        $courtOrder->setOrderReportType(CourtOrderReportType::OPG104);
+
         self::$entityManager->persist($courtOrder);
 
         $deputy = new Deputy();

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\TestHelpers;
 
+use App\Domain\CourtOrder\CourtOrderReportType;
 use App\Domain\CourtOrder\CourtOrderType;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
@@ -28,6 +29,7 @@ class CourtOrderTestHelper
             ->setCourtOrderUid($courtOrderUid)
             ->setClient($client)
             ->setOrderType(CourtOrderType::from($type))
+            ->setOrderReportType($type === 'pfa' ? CourtOrderReportType::OPG102 : CourtOrderReportType::OPG104)
             ->setStatus($status)
             ->setOrderMadeDate($orderDate);
 

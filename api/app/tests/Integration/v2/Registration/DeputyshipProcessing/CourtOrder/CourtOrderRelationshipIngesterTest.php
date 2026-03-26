@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Integration\v2\Registration\DeputyshipProcessing\CourtOrder;
 
 use App\Domain\CourtOrder\CourtOrderKind;
+use App\Domain\CourtOrder\CourtOrderReportType;
 use App\Domain\CourtOrder\CourtOrderType;
 use App\Entity\CourtOrder;
 use App\Entity\StagingDeputyship;
@@ -31,6 +32,7 @@ class CourtOrderRelationshipIngesterTest extends ApiIntegrationTestCase
         $courtOrder->setOrderType($orderType ?? CourtOrderType::PFA);
         $courtOrder->setStatus($active ? 'ACTIVE' : 'CLOSED');
         $courtOrder->setOrderMadeDate(new \DateTime());
+        $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
         if ($siblingId === null && $kind === CourtOrderKind::Single) {
             $courtOrder->setSibling(null);
         } elseif ($siblingId !== null && $kind !== CourtOrderKind::Single) {
@@ -42,6 +44,7 @@ class CourtOrderRelationshipIngesterTest extends ApiIntegrationTestCase
             $sibling->setSibling($courtOrder);
             $sibling->setStatus($activeSibling === null && $active || $activeSibling ? 'ACTIVE' : 'CLOSED');
             $sibling->setOrderMadeDate(new \DateTime());
+            $sibling->setOrderReportType(CourtOrderReportType::OPG102);
             $courtOrder->setSibling($sibling);
             self::$entityManager->persist($sibling);
         } else {

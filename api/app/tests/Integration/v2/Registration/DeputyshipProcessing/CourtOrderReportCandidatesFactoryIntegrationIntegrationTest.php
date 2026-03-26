@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\v2\Registration\DeputyshipProcessing;
 
+use App\Domain\CourtOrder\CourtOrderKind;
+use App\Domain\CourtOrder\CourtOrderReportType;
 use App\Domain\CourtOrder\CourtOrderType;
 use App\Tests\Integration\ApiIntegrationTestCase;
 use DateTime;
@@ -223,6 +225,8 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
         $courtOrder = new CourtOrder();
         $courtOrder->setCourtOrderUid($deputyship->orderUid);
         $courtOrder->setOrderType(CourtOrderType::PFA);
+        $courtOrder->setOrderKind(CourtOrderKind::Single);
+        $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
         $courtOrder->setStatus('ACTIVE');
         $courtOrder->setOrderMadeDate($orderMadeDate);
         $courtOrder->addReport($report);
