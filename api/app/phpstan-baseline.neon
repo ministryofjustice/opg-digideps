@@ -326,11 +326,6 @@ parameters:
 			path: src/Controller/Report/ClientBenefitsCheckController.php
 
 		-
-			message: "#^Parameter \\#3 \\$existingEntity of method App\\\\Factory\\\\ClientBenefitsCheckFactory\\:\\:createFromFormData\\(\\) expects App\\\\Entity\\\\ClientBenefitsCheckInterface\\|null, object\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Report/ClientBenefitsCheckController.php
-
-		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\Contact\\>\\:\\:findByReport\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/ContactController.php
@@ -5232,21 +5227,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method App\\\\Entity\\\\MoneyReceivedOnClientsBehalfInterface\\:\\:getId\\(\\)\\.$#"
-			count: 1
-			path: src/Factory/ClientBenefitsCheckFactory.php
-
-		-
-			message: "#^Method App\\\\Factory\\\\ClientBenefitsCheckFactory\\:\\:createFromFormData\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Factory/ClientBenefitsCheckFactory.php
-
-		-
-			message: "#^Method App\\\\Factory\\\\ClientBenefitsCheckFactory\\:\\:hydrateMoneyReceivedOnClientsBehalf\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Factory/ClientBenefitsCheckFactory.php
-
-		-
-			message: "#^Method App\\\\Factory\\\\ClientBenefitsCheckFactory\\:\\:removeMoneysIfUserChangesMind\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Factory/ClientBenefitsCheckFactory.php
 
