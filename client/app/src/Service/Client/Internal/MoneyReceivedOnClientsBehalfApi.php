@@ -8,11 +8,7 @@ use App\Service\Client\RestClient;
 
 class MoneyReceivedOnClientsBehalfApi
 {
-    << << << < Updated upstream
     const string DELETE_ENDPOINT = 'report/money-type/delete/%s';
-    === === =
-    const string DELETE_ENDPOINT = '%s/money-type/delete/%s';
-    >> >> >> > Stashed changes
 
     private RestClient $restClient;
 

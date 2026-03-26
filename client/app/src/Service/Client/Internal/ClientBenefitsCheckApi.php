@@ -9,13 +9,8 @@ use App\Service\Client\RestClient;
 
 class ClientBenefitsCheckApi
 {
-    << << << < Updated upstream
     const string CREATE_ENDPOINT = 'report/client-benefits-check';
     const string EXISTING_ENDPOINT = 'report/client-benefits-check/%s';
-    === === =
-    const string CREATE_ENDPOINT = '%s/client-benefits-check';
-    const string EXISTING_ENDPOINT = '%s/client-benefits-check/%s';
-    >> >> >> > Stashed changes
 
     private RestClient $restClient;
 
