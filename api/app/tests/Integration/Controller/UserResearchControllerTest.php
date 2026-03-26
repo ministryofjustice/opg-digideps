@@ -8,7 +8,7 @@ use App\TestHelpers\ReportTestHelper;
 
 class UserResearchControllerTest extends AbstractTestController
 {
-    private static string $tokenAdmin;
+    private static ?string $tokenAdmin = null;
     private static string $tokenSuperAdmin;
     private static string $tokenDeputy;
     private static string $tokenProf;
