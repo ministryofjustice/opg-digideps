@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace app\tests\Integration\v2\Registration\DeputyshipProcessing;
 
+use App\Domain\CourtOrder\CourtOrderKind;
+use App\Domain\CourtOrder\CourtOrderReportType;
 use App\Domain\CourtOrder\CourtOrderType;
 use App\Domain\Deputyship\DeputyshipCandidatesConverter;
 use App\Entity\Client;
@@ -75,6 +77,8 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
             'status' => 'ACTIVE',
             'orderMadeDate' => '2025-06-10',
             'clientId' => $client->getId(),
+            'courtOrderKind' => CourtOrderKind::Single->value,
+            'courtOrderReportType' => CourtOrderReportType::OPG102->value,
         ];
         $candidatesGroup->insertOthers = [
             [
@@ -109,6 +113,8 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
         $courtOrder->setClient($client);
         $courtOrder->setOrderType(CourtOrderType::PFA);
         $courtOrder->setOrderMadeDate(new \DateTime());
+        $courtOrder->setOrderKind(CourtOrderKind::Single);
+        $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
         self::$entityManager->persist($courtOrder);
 
         $deputy = new Deputy();
