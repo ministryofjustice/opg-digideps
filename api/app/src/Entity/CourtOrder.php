@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Domain\CourtOrder\CourtOrderKind;
+use App\Domain\CourtOrder\CourtOrderReportType;
 use App\Domain\CourtOrder\CourtOrderType;
 use App\Entity\Report\Report;
 use App\Entity\Traits\CreateUpdateTimestamps;
@@ -47,13 +48,20 @@ class CourtOrder
     private string $courtOrderUid;
 
     /**
-     * e.g. "pfa" or "hw".
+     * @see CourtOrderType
      *
-     * @ORM\Column(name="order_type", type="string", length=10, nullable=false)
+     * @ORM\Column(name="order_type", type="string", length=3, nullable=false)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['court-order-basic', 'court-order-full'])]
     private string $orderType;
+
+    /**
+     * @see CourtOrderReportType
+     *
+     * @ORM\Column(name="order_report_type", type="string", length=6, nullable=false)
+     */
+    private string $orderReportType;
 
     /**
      * @ORM\Column(name="status", type="string", length=10, nullable=false)
@@ -88,7 +96,7 @@ class CourtOrder
     /**
      * @see CourtOrderKind
      *
-     * @ORM\Column(name="order_kind", type="string", length=6, nullable=false, options={"default" = ""})
+     * @ORM\Column(name="order_kind", type="string", length=6, nullable=false, options={"default" = "single"})
      */
     private string $orderKind;
 
@@ -175,6 +183,18 @@ class CourtOrder
         return $this;
     }
 
+    public function getOrderReportType(): CourtOrderReportType
+    {
+        return CourtOrderReportType::from($this->orderReportType);
+    }
+
+    public function setOrderReportType(CourtOrderReportType $orderReportType): CourtOrder
+    {
+        $this->orderReportType = $orderReportType->value;
+
+        return $this;
+    }
+
     public function getStatus(): string
     {
         return $this->status;
@@ -223,9 +243,9 @@ class CourtOrder
         return $this;
     }
 
-    public function getOrderKind(): ?CourtOrderKind
+    public function getOrderKind(): CourtOrderKind
     {
-        return CourtOrderKind::tryFrom($this->orderKind ?? '');
+        return CourtOrderKind::from($this->orderKind);
     }
 
     public function setOrderKind(CourtOrderKind $kind): CourtOrder

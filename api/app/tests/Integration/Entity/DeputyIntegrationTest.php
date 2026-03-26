@@ -3,6 +3,7 @@
 namespace App\Tests\Integration\Entity;
 
 use App\Domain\CourtOrder\CourtOrderKind;
+use App\Domain\CourtOrder\CourtOrderReportType;
 use App\Domain\CourtOrder\CourtOrderType;
 use App\Tests\Integration\ApiIntegrationTestCase;
 use DateTime;
@@ -43,6 +44,7 @@ class DeputyIntegrationTest extends ApiIntegrationTestCase
             ->setCourtOrderUid($fakeUid)
             ->setOrderType(CourtOrderType::PFA)
             ->setOrderKind(CourtOrderKind::Hybrid)
+            ->setOrderReportType(CourtOrderReportType::OPG102)
             ->setStatus('ACTIVE')
             ->setOrderMadeDate(new DateTime('2020-06-14'));
 
