@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\CourtOrder;
 
+use App\Domain\CourtOrder\CourtOrderType;
 use App\Entity\Report\Report;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
@@ -56,7 +57,7 @@ trait CourtOrderTrait
             $user = $this->em->getRepository(User::class)->find($data['userId']);
             $deputy = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $user->getDeputyUid()]);
 
-            $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder('pfa', $client, $deputy);
+            $this->courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(CourtOrderType::PFA, $client, $deputy);
         }
 
         $this->visitFrontendPath('/courtorder/' . $this->courtOrder->getCourtOrderUid());
@@ -70,6 +71,7 @@ trait CourtOrderTrait
      */
     public function iAmAssociatedWithCourtOrder(int $numOfCourtOrders, string $orderType): void
     {
+        $orderType = CourtOrderType::from($orderType);
         $deputy = $this->getDeputyForLoggedInUser();
 
         for ($i = 0; $i < $numOfCourtOrders; $i++) {
@@ -85,7 +87,7 @@ trait CourtOrderTrait
 
                 // create a new report
                 $type = Report::TYPE_HEALTH_WELFARE;
-                if ('pfa' === $orderType) {
+                if (CourtOrderType::PFA === $orderType) {
                     $type = Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS;
                 }
 
@@ -113,6 +115,7 @@ trait CourtOrderTrait
      */
     public function iAmAssociatedWithCourtOrderOfType($orderType)
     {
+        $orderType = CourtOrderType::from($orderType);
         $clientId = $this->loggedInUserDetails->getClientId();
         $userEmail = $this->loggedInUserDetails->getUserEmail();
 
@@ -162,7 +165,7 @@ trait CourtOrderTrait
             $this->em->persist($deputy);
             $this->em->flush();
 
-            $courtOrderUid = $this->fixtureHelper->createAndPersistCourtOrder('pfa', $client, $deputy, $client->getCurrentReport())
+            $courtOrderUid = $this->fixtureHelper->createAndPersistCourtOrder(CourtOrderType::PFA, $client, $deputy, $client->getCurrentReport())
                 ->getCourtOrderUid();
 
             $this->visitFrontendPath(sprintf('/courtorder/%s', $courtOrderUid));
@@ -367,6 +370,7 @@ trait CourtOrderTrait
      */
     public function clientAssociatedWithCourtOrder(string $caseNumber, string $orderType, string $courtOrderUid): void
     {
+        $orderType = CourtOrderType::from($orderType);
         // get the client
         /** @var ?Client $client */
         $client = $this->em->getRepository(Client::class)->findOneBy(['caseNumber' => $caseNumber]);
@@ -408,6 +412,7 @@ trait CourtOrderTrait
      */
     public function allTheReportsForFirstClientOnCourtOrder(string $orderType): void
     {
+        $orderType = CourtOrderType::from($orderType);
         // get the client
         $clientId = $this->loggedInUserDetails->getClientId();
         $client = $this->em->getRepository(Client::class)->find(['id' => $clientId]);

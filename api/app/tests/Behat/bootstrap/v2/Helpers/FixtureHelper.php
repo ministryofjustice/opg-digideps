@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Helpers;
 
+use App\Domain\CourtOrder\CourtOrderType;
 use DateTime;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
@@ -1281,7 +1282,7 @@ class FixtureHelper
         return $this->fixtureParams['legacy_password_hash'];
     }
 
-    public function createAndPersistCourtOrder(string $orderType, Client $client, Deputy $deputy, ?Report $report = null, ?string $courtOrderUid = null)
+    public function createAndPersistCourtOrder(CourtOrderType $orderType, Client $client, Deputy $deputy, ?Report $report = null, ?string $courtOrderUid = null): CourtOrder
     {
         $faker = Factory::create('en_GB');
         if (is_null($courtOrderUid)) {
