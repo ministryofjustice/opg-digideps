@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Domain\CourtOrder;
 
+use App\Domain\Deputy\DeputyType;
 use App\Entity\Deputy;
 use App\Entity\User;
 use App\Repository\PreRegistrationRepository;
@@ -96,6 +97,7 @@ class CourtOrderInviteService
 
         // candidate deputy: will only be created if a deputy with this UID does not exist
         $invitedLayDeputy = new Deputy();
+        $invitedLayDeputy->setDeputyType(DeputyType::LAY);
         $invitedLayDeputy->setFirstname($invitedDeputyDTO->firstname);
         $invitedLayDeputy->setLastname($invitedDeputyDTO->lastname);
         $invitedLayDeputy->setEmail1($invitedDeputyDTO->email);

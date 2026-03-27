@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\v2\Registration\TestHelpers;
 
+use App\Domain\Deputy\DeputyType;
 use DateTimeImmutable;
 use DateTime;
 use App\Entity\Client;
@@ -182,6 +183,7 @@ class OrgDeputyshipDTOTestHelper
     public static function ensureDeputyInUploadExists(OrgDeputyshipDto $dto, EntityManager $em): Deputy
     {
         $deputy = (new Deputy())
+            ->setDeputyType(DeputyType::LAY)
             ->setEmail1($dto->getDeputyEmail())
             ->setDeputyUid($dto->getDeputyUid())
             ->setFirstname($dto->getDeputyFirstname())
