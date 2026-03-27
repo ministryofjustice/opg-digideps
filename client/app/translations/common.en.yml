@@ -155,7 +155,8 @@ helpline: 0300 456 0300
 
 # Opening Hours
 openingHoursTitle: Opening Hours
-openingHoursText: "Monday to Friday 9am to 5pm"
+openingHoursText1: "Monday, Tuesday, Thursday, Friday 9am to 5pm"
+openingHoursText2: "Wednesday 10am to 5pm"
 
 # Validation and errors
 summaryHeading: There are some problems on this page
