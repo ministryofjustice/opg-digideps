@@ -47,7 +47,7 @@ class PreRegistrationController extends RestController
         $clientData['case_number'] = 10 == strlen($clientData['case_number']) ? substr($clientData['case_number'], 0, -2) : $clientData['case_number'];
 
         $isMultiDeputyCase = $verificationService->isMultiDeputyCase($clientData['case_number']);
-        $existingClient = $this->em->getRepository('App\Entity\Client')->findByCaseNumber($clientData['case_number']);
+        $existingClient = $this->em->getRepository(Client::class)->findByCaseNumber($clientData['case_number']);
 
         // ward off non-fee-paying codeps trying to self-register
         if ($isMultiDeputyCase && ($existingClient instanceof Client) && $existingClient->hasDeputies()) {
