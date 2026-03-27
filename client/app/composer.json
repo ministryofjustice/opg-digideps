@@ -91,6 +91,7 @@
         }
     ],
     "require-dev": {
+        "dg/bypass-finals": "^1.9",
         "jangregor/phpstan-prophecy": "^1.0.2",
         "mockery/mockery": "^1.6.12",
         "pact-foundation/pact-php": "^8.1",
