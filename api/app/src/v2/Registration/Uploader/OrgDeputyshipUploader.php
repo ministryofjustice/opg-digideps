@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\Uploader;
 
+use App\Domain\Deputy\DeputyType;
 use App\Entity\Client;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
@@ -143,6 +144,12 @@ class OrgDeputyshipUploader
 
             if ($deputy->emailHasChanged($dto)) {
                 $deputy->setEmail1($dto->getDeputyEmail());
+
+                $updated = true;
+            }
+
+            if ($deputy->typeHasChanged($dto)) {
+                $deputy->setDeputyType(DeputyType::from(strtoupper($dto->getDeputyType())));
 
                 $updated = true;
             }
@@ -352,6 +359,10 @@ class OrgDeputyshipUploader
 
         if (empty($dto->getDeputyEmail())) {
             $missingData[] = 'DeputyEmail';
+        }
+
+        if (empty($dto->getDeputyType())) {
+            $missingData[] = 'DeputyType';
         }
 
         if (!empty($missingData)) {

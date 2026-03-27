@@ -253,6 +253,7 @@ class FixtureController extends AbstractController
 
         return (new Deputy())
             ->setDeputyUid((string) $uid)
+            ->setDeputyType($user->deriveDeputyType())
             ->setUser($user)
             ->setEmail1($user->getEmail())
             ->setFirstname($user->getFirstname())
@@ -388,6 +389,7 @@ class FixtureController extends AbstractController
         $deputy = (new Deputy())
             ->setFirstname($deputy->getFirstname())
             ->setLastname($deputy->getLastname())
+            ->setDeputyType($deputy->deriveDeputyType())
             ->setEmail1($deputy->getEmail())
             ->setDeputyUid('70' . str_pad($fromRequest['caseNumber'] . mt_rand(1, 100), 10))
             ->setAddress1($deputy->getAddress1())
@@ -621,6 +623,7 @@ class FixtureController extends AbstractController
             if ($user) {
                 $deputy = (new Deputy())
                     ->setDeputyUid(rand(8, 8))
+                    ->setDeputyType($user->deriveDeputyType())
                     ->setEmail1($user->getEmail())
                     ->setFirstname($user->getFirstname())
                     ->setLastname($user->getLastname());
