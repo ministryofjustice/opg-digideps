@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Domain\CourtOrder\CourtOrderType;
+use App\Domain\Deputy\DeputyType;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
@@ -215,6 +216,7 @@ class LayUserFixtures extends AbstractDataFixture
         if (!in_array($deputyUid, $this->deputyUids)) {
             $this->deputyUids[] = $deputyUid;
             $this->deputy = (new Deputy())
+                ->setDeputyType(DeputyType::LAY)
                 ->setFirstname($data['id'])
                 ->setLastname('User ' . $iteration)
                 ->setDeputyUid($deputyUid)

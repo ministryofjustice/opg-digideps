@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\TestHelpers;
 
+use App\Domain\Deputy\DeputyType;
 use App\Entity\Deputy;
 use App\Entity\User;
-use App\Tests\Behat\v2\Common\UserDetails;
 use Faker\Factory;
 
 class DeputyTestHelper
@@ -24,7 +24,8 @@ class DeputyTestHelper
             ->setAddress2(is_null($user) ? $faker->city() : $user->getAddress2())
             ->setAddress3(is_null($user) ? $faker->county : $user->getAddress3())
             ->setAddressPostcode(is_null($user) ? $faker->postcode() : $user->getAddressPostcode())
-            ->setPhoneMain(is_null($user) ? $faker->phoneNumber() : $user->getPhoneMain());
+            ->setPhoneMain(is_null($user) ? $faker->phoneNumber() : $user->getPhoneMain())
+            ->setDeputyType(DeputyType::LAY);
 
         if (!is_null($user)) {
             $deputy->setUser($user);

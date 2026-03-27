@@ -7,6 +7,8 @@ namespace App\Entity;
 use App\Domain\CourtOrder\CourtOrderKind;
 use App\Domain\CourtOrder\CourtOrderReportType;
 use App\Domain\CourtOrder\CourtOrderType;
+use App\Domain\Deputy\DeputyType;
+use App\Domain\Report\ReportType;
 use App\Entity\Report\Report;
 use App\Entity\Traits\CreateUpdateTimestamps;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -119,6 +121,8 @@ class CourtOrder
      */
     #[JMS\Type('ArrayCollection<App\Entity\CourtOrderDeputy>')]
     private Collection $courtOrderDeputyRelationships;
+
+    private ?ReportType $desiredReportType = null;
 
     public function __construct()
     {
@@ -308,5 +312,27 @@ class CourtOrder
     public function isHybrid(): bool
     {
         return $this->getOrderKind() === CourtOrderKind::Hybrid;
+    }
+
+    public function getDesiredReportType(): ReportType
+    {
+        if ($this->desiredReportType === null) {
+            $deputyType = DeputyType::LAY;
+            foreach ($this->getActiveDeputies() as $deputy) {
+                if ($deputy->getDeputyType() !== DeputyType::LAY) {
+                    $deputyType = $deputy->getDeputyType();
+                    //PA and PROF are mutually exclusive in valid data and have higher priority than LAY.
+                    break;
+                }
+            }
+
+            $this->desiredReportType = new ReportType(
+                $this->getOrderReportType(),
+                $this->getOrderType(),
+                $this->getOrderKind(),
+                $deputyType
+            );
+        }
+        return $this->desiredReportType;
     }
 }

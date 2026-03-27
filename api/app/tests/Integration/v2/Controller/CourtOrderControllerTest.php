@@ -6,6 +6,7 @@ namespace App\Tests\Integration\v2\Controller;
 
 use App\Domain\CourtOrder\CourtOrderKind;
 use App\Domain\CourtOrder\CourtOrderType;
+use App\Domain\Deputy\DeputyType;
 use DateTime;
 use App\Entity\Deputy;
 use App\Entity\PreRegistration;
@@ -35,6 +36,7 @@ class CourtOrderControllerTest extends AbstractTestController
     private function createDeputyForUser(User $user): Deputy
     {
         $deputy = new Deputy();
+        $deputy->setDeputyType(DeputyType::LAY);
         $deputy->setEmail1($user->getEmail());
         $deputy->setDeputyUid('748723' . rand(1, 99999));
         $deputy->setFirstname('name' . time());

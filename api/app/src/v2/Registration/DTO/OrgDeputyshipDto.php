@@ -13,6 +13,7 @@ class OrgDeputyshipDto
     private string $clientAddress2;
     private string $clientPostCode;
     private string $deputyUid;
+    private string $deputyType;
     private string $deputyFirstname;
     private string $deputyLastname;
     private ?string $deputyEmail;
@@ -361,6 +362,18 @@ class OrgDeputyshipDto
     public function setHybrid(?string $hybrid): self
     {
         $this->hybrid = $hybrid;
+
+        return $this;
+    }
+
+    public function getDeputyType()
+    {
+        return $this->deputyType;
+    }
+
+    public function setDeputyType(string $deputyType): self
+    {
+        $this->deputyType = $deputyType;
 
         return $this;
     }
