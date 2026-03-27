@@ -138,9 +138,7 @@ class DocumentSyncService
 
         if ($documentData->isReportPdf()) {
             $reportType = 'PF';
-            if ($documentData->getNdrId()) {
-                $reportType = 'NDR';
-            } elseif (in_array($documentData->getReportType(), [Report::TYPE_HEALTH_WELFARE, Report::TYPE_COMBINED_HIGH_ASSETS, Report::TYPE_COMBINED_LOW_ASSETS])) {
+            if (in_array($documentData->getReportType(), [Report::TYPE_HEALTH_WELFARE, Report::TYPE_COMBINED_HIGH_ASSETS, Report::TYPE_COMBINED_LOW_ASSETS])) {
                 $reportType = 'HW';
             }
 
@@ -171,7 +169,7 @@ class DocumentSyncService
 
     public function determineEndDate(QueuedDocumentData $documentData): ?\DateTime
     {
-        return $documentData->getNdrId() ? $documentData->getReportStartDate() : $documentData->getReportEndDate();
+        return $documentData->getReportEndDate();
     }
 
     /**

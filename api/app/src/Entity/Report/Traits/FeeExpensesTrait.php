@@ -164,10 +164,7 @@ trait FeeExpensesTrait
         return $this->getReasonForNoFees() ? 'no' : 'yes';
     }
 
-    /**
-     * @return string
-     */
-    public function getPaidForAnything()
+    public function getPaidForAnything(): ?string
     {
         return $this->paidForAnything;
     }

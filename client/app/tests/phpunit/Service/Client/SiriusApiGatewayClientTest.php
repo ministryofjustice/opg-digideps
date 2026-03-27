@@ -132,7 +132,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
                             'reporting_period_to' => $matcher->dateISO8601('2019-05-13'),
                             'year' => $matcher->integer(2018),
                             'date_submitted' => $matcher->dateTimeISO8601('2019-06-20T00:00:00+01:00'),
-                            'type' => $matcher->regex('PF', 'PF|HW|NDR'),
+                            'type' => $matcher->regex('PF', 'PF|HW'),
                             'submission_id' => $matcher->integer(9876),
                         ],
                         'file' => [
