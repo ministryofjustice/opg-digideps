@@ -7,7 +7,6 @@ namespace App\Controller\Report;
 use App\Controller\AbstractController;
 use App\Entity\Report\Contact;
 use App\Entity\Report\Status;
-use App\Form\AddAnotherRecordType;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\ContactExistType;
 use App\Form\Report\ContactType;
@@ -15,9 +14,9 @@ use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
@@ -40,7 +39,9 @@ class ContactController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (Status::STATE_NOT_STARTED != $report->getStatus()->getContactsState()['state']) {
+        /** @var array $status */
+        $status = $report->getStatus()->getContactsState();
+        if (Status::STATE_NOT_STARTED != $status['state']) {
             return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
         }
 
@@ -97,6 +98,7 @@ class ContactController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Contact $data */
             $data = $form->getData();
             $data->setReport($report);
 
@@ -136,6 +138,8 @@ class ContactController extends AbstractController
     public function editAction(Request $request, int $reportId, int $contactId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        /** @var Contact $contact */
         $contact = $this->restClient->get("report/contact/$contactId", 'Report\\Contact');
         $contact->setReport($report);
 
@@ -143,10 +147,13 @@ class ContactController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Contact $data */
             $data = $form->getData();
             $data->setReport($report);
 
-            $request->getSession()->getFlashBag()->add('notice', 'Contact edited');
+            if ($request->getSession() instanceof Session) {
+                $request->getSession()->getFlashBag()->add('notice', 'Contact edited');
+            }
 
             $this->restClient->put('report/contact', $data);
             /** @var Form $addAnother */
@@ -172,7 +179,9 @@ class ContactController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (Status::STATE_NOT_STARTED == $report->getStatus()->getContactsState()['state']) {
+        /** @var array $status */
+        $status = $report->getStatus()->getContactsState();
+        if (Status::STATE_NOT_STARTED == $status['state']) {
             return $this->redirectToRoute('contacts', ['reportId' => $reportId]);
         }
 
@@ -191,15 +200,19 @@ class ContactController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->restClient->delete("/report/contact/$contactId");
 
-            $request->getSession()->getFlashBag()->add(
-                'notice',
-                'Contact deleted'
-            );
+            if ($request->getSession() instanceof Session) {
+                $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    'Contact deleted'
+                );
+            }
 
             return $this->redirect($this->generateUrl('contacts', ['reportId' => $reportId]));
         }
 
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
+        /** @var Contact $contact */
         $contact = $this->restClient->get("report/contact/$contactId", 'Report\\Contact');
 
         return [

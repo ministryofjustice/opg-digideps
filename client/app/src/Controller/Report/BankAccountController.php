@@ -7,7 +7,6 @@ namespace App\Controller\Report;
 use App\Controller\AbstractController;
 use App\Entity\Report\BankAccount;
 use App\Entity\Report\Status;
-use App\Form\AddAnotherRecordType;
 use App\Form\AddAnotherThingType;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\BankAccountType;
@@ -17,8 +16,10 @@ use App\Service\StepRedirector;
 use App\Service\StringUtils;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\Form;
+use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -41,7 +42,10 @@ class BankAccountController extends AbstractController
     public function startAction(int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED != $report->getStatus()->getBankAccountsState()['state']) {
+
+        /** @var array $status */
+        $status = $report->getStatus()->getBankAccountsState();
+        if (Status::STATE_NOT_STARTED != $status['state']) {
             return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
         }
 
@@ -105,7 +109,9 @@ class BankAccountController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
+        /** @var SubmitButton $submitBtn */
+        $submitBtn = $form->get('save');
+        if ($submitBtn->isClicked() && $form->isSubmitted() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
             if (1 === $step) {
                 $stepUrlData['type'] = $account->getAccountType();
@@ -128,10 +134,12 @@ class BankAccountController extends AbstractController
             if ($accountId) {
                 // replace existing account
                 $this->restClient->put('/account/' . $accountId, $account, self::$jmsGroups);
-                $request->getSession()->getFlashBag()->add(
-                    'notice',
-                    'Bank account edited'
-                );
+                if ($request->getSession() instanceof Session) {
+                    $request->getSession()->getFlashBag()->add(
+                        'notice',
+                        'Bank account edited'
+                    );
+                }
 
                 return $this->redirect($this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]));
             }
@@ -164,7 +172,10 @@ class BankAccountController extends AbstractController
     public function summaryAction(int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED == $report->getStatus()->getBankAccountsState()['state']) {
+
+        /** @var array $status */
+        $status = $report->getStatus()->getBankAccountsState();
+        if (Status::STATE_NOT_STARTED == $status['state']) {
             return $this->redirectToRoute('bank_accounts', ['reportId' => $reportId]);
         }
 
@@ -184,13 +195,17 @@ class BankAccountController extends AbstractController
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $summaryPageUrl = $this->generateUrl('bank_accounts_summary', ['reportId' => $reportId]);
 
+        /** @var array $dependentRecords */
         $dependentRecords = $this->restClient->get("/account/$accountId/dependent-records", 'array');
         $bankAccount = $report->getBankAccountById($accountId);
 
         // if money transfer are added, always go to summary page with the error displayed
         if ($dependentRecords['moneyTransfers'] > 0) {
             $translatedMessage = $translator->trans('deletePage.transferPresentError', [], 'report-bank-accounts');
-            $request->getSession()->getFlashBag()->add('error', $translatedMessage);
+
+            if ($request->getSession() instanceof Session) {
+                $request->getSession()->getFlashBag()->add('error', $translatedMessage);
+            }
 
             return $this->redirect($summaryPageUrl);
         }
@@ -200,14 +215,14 @@ class BankAccountController extends AbstractController
 
         // delete the bank account if the confirm button is pushed, or there are no payments. Then go back to summary page
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($report->getBankAccountById($accountId)) {
-                $this->restClient->delete("/account/$accountId");
-            }
+            $this->restClient->delete("/account/$accountId");
 
-            $request->getSession()->getFlashBag()->add(
-                'notice',
-                'Bank account deleted'
-            );
+            if ($request->getSession() instanceof Session) {
+                $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    'Bank account deleted'
+                );
+            }
 
             return $this->redirect($summaryPageUrl);
         }

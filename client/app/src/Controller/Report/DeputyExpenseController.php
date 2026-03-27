@@ -9,15 +9,17 @@ use App\Entity\Report\BankAccount;
 use App\Entity\Report\Expense;
 use App\Entity\Report\Report;
 use App\Entity\Report\Status;
-use App\Form\AddAnotherRecordType;
+use App\Form\AddAnotherThingType;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\DeputyExpenseType;
 use App\Form\YesNoType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
@@ -41,7 +43,9 @@ class DeputyExpenseController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (Status::STATE_NOT_STARTED != $report->getStatus()->getExpensesState()['state']) {
+        /** @var array $status */
+        $status = $report->getStatus()->getExpensesState();
+        if (Status::STATE_NOT_STARTED != $status['state']) {
             return $this->redirectToRoute('deputy_expenses_summary', ['reportId' => $reportId]);
         }
 
@@ -63,7 +67,7 @@ class DeputyExpenseController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /* @var Report $data */
+            /** @var Report $data */
             $data = $form->getData();
 
             switch ($data->getPaidForAnything()) {
@@ -103,15 +107,24 @@ class DeputyExpenseController extends AbstractController
                 'report' => $report,
             ]
         );
+        $form->add('addAnother', AddAnotherThingType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Expense $data */
             $data = $form->getData();
             $data->setReport($report);
 
             $this->restClient->post('report/' . $report->getId() . '/expense', $data, ['expenses', 'account']);
 
-            return $this->redirect($this->generateUrl('deputy_expenses_add_another', ['reportId' => $reportId]));
+            /** @var Form $addAnother */
+            $addAnother = $form['addAnother'];
+            switch ($addAnother->getData()) {
+                case 'yes':
+                    return $this->redirectToRoute('deputy_expenses_add', ['reportId' => $reportId]);
+                case 'no':
+                    return $this->redirectToRoute('deputy_expenses_summary', ['reportId' => $reportId]);
+            }
         }
 
         try {
@@ -132,35 +145,12 @@ class DeputyExpenseController extends AbstractController
         }
     }
 
-    #[Route(path: '/report/{reportId}/deputy-expenses/add_another', name: 'deputy_expenses_add_another')]
-    #[Template('@App/Report/DeputyExpense/addAnother.html.twig')]
-    public function addAnotherAction(Request $request, int $reportId): array|RedirectResponse
-    {
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-
-        $form = $this->createForm(AddAnotherRecordType::class, $report, ['translation_domain' => 'report-deputy-expenses']);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            switch ($form['addAnother']->getData()) {
-                case 'yes':
-                    return $this->redirectToRoute('deputy_expenses_add', ['reportId' => $reportId, 'from' => 'add_another']);
-                case 'no':
-                    return $this->redirectToRoute('deputy_expenses_summary', ['reportId' => $reportId]);
-            }
-        }
-
-        return [
-            'form' => $form->createView(),
-            'report' => $report,
-        ];
-    }
-
     #[Route(path: '/report/{reportId}/deputy-expenses/edit/{expenseId}', name: 'deputy_expenses_edit')]
     #[Template('@App/Report/DeputyExpense/edit.html.twig')]
     public function editAction(Request $request, int $reportId, int $expenseId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+        /** @var Expense $expense */
         $expense = $this->restClient->get(
             'report/' . $report->getId() . '/expense/' . $expenseId,
             'Report\Expense',
@@ -186,8 +176,11 @@ class DeputyExpenseController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Expense $data */
             $data = $form->getData();
-            $request->getSession()->getFlashBag()->add('notice', 'Expense edited');
+            if ($request->getSession() instanceof Session) {
+                $request->getSession()->getFlashBag()->add('notice', 'Expense edited');
+            }
 
             $this->restClient->put(
                 'report/' . $report->getId() . '/expense/' . $expense->getId(),
@@ -213,7 +206,10 @@ class DeputyExpenseController extends AbstractController
     public function summaryAction(int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED == $report->getStatus()->getExpensesState()['state']) {
+
+        /** @var array $status */
+        $status = $report->getStatus()->getExpensesState();
+        if (Status::STATE_NOT_STARTED == $status['state']) {
             return $this->redirect($this->generateUrl('deputy_expenses', ['reportId' => $reportId]));
         }
 
@@ -234,14 +230,17 @@ class DeputyExpenseController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->restClient->delete('report/' . $report->getId() . '/expense/' . $expenseId);
 
-            $request->getSession()->getFlashBag()->add(
-                'notice',
-                'Expense deleted'
-            );
+            if ($request->getSession() instanceof Session) {
+                $request->getSession()->getFlashBag()->add(
+                    'notice',
+                    'Expense deleted'
+                );
+            }
 
             return $this->redirect($this->generateUrl('deputy_expenses', ['reportId' => $reportId]));
         }
 
+        /** @var Expense $expense */
         $expense = $this->restClient->get('report/' . $reportId . '/expense/' . $expenseId, 'Report\Expense');
 
         return [

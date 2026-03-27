@@ -894,7 +894,7 @@ trait UserManagementTrait
 
     private function getSearchResults()
     {
-        $xpath = '//td';
+        $xpath = '//td[contains(@id, "name")]';
         $tableDataElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
 
         $formattedDataElements = [];

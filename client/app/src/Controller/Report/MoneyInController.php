@@ -7,8 +7,8 @@ namespace App\Controller\Report;
 use App\Controller\AbstractController;
 use App\Entity\Report\BankAccount;
 use App\Entity\Report\MoneyTransaction;
+use App\Entity\Report\Report;
 use App\Entity\Report\Status;
-use App\Form\AddAnotherRecordType;
 use App\Form\AddAnotherThingType;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\DoesMoneyInExistType;
@@ -18,6 +18,8 @@ use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
 use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -45,7 +47,10 @@ class MoneyInController extends AbstractController
     public function startAction(int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED != $report->getStatus()->getMoneyInState()['state']) {
+
+        /** @var array $status */
+        $status = $report->getStatus()->getMoneyInState();
+        if (Status::STATE_NOT_STARTED != $status['state']) {
             return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
         }
 
@@ -63,14 +68,22 @@ class MoneyInController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            /** @var Report $report */
             $report = $form->getData();
-            $answer = $form['moneyInExists']->getData();
+
+            /** @var FormInterface $moneyInExists */
+            $moneyInExists = $form['moneyInExists'];
+
+            /** @var string $answer */
+            $answer = $moneyInExists->getData();
             $fromPage = $request->get('from');
 
             $report->setMoneyInExists($answer);
             $this->restClient->put('report/' . $reportId, $report, ['doesMoneyInExist']);
 
             // retrieve soft deleted transaction ids if present and handle money in ids only
+            /** @var MoneyTransaction[] $softDeletedTransactionIds */
             $softDeletedTransactionIds = $this->restClient->get("/report/$reportId/money-transaction/get-soft-delete", 'Report\MoneyTransaction[]');
 
             $softDeletedMoneyInTransactionIds = [];
@@ -114,7 +127,7 @@ class MoneyInController extends AbstractController
         ];
     }
 
-    private function handleSoftDeletionOfMoneyTransactionItems(string $answer, array $softDeletedTransactionIds, $report): void
+    private function handleSoftDeletionOfMoneyTransactionItems(string $answer, array $softDeletedTransactionIds, Report $report): void
     {
         $reportId = $report->getId();
 
@@ -143,8 +156,15 @@ class MoneyInController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            /** @var Report $report */
             $report = $form->getData();
-            $answer = $form['reasonForNoMoneyIn']->getData();
+
+            /** @var FormInterface $reasonForNoMoneyIn */
+            $reasonForNoMoneyIn = $form['reasonForNoMoneyIn'];
+
+            /** @var string $answer */
+            $answer = $reasonForNoMoneyIn->getData();
 
             $report->setReasonForNoMoneyIn($answer);
             $report->getStatus()->setMoneyInState(Status::STATE_DONE);
@@ -177,6 +197,7 @@ class MoneyInController extends AbstractController
         }
 
         // common vars and data
+        /** @var array $dataFromUrl */
         $dataFromUrl = $request->get('data') ?: [];
         $stepUrlData = $dataFromUrl;
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
@@ -296,7 +317,10 @@ class MoneyInController extends AbstractController
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyInState()['state'] && 'skip-step' != $fromPage) {
+
+        /** @var array $status */
+        $status = $report->getStatus()->getMoneyInState();
+        if (Status::STATE_NOT_STARTED == $status['state'] && 'skip-step' != $fromPage) {
             return $this->redirectToRoute('money_in', ['reportId' => $reportId]);
         }
 
@@ -345,8 +369,10 @@ class MoneyInController extends AbstractController
             ['label' => 'deletePage.summary.amount', 'value' => $transaction->getAmount(), 'format' => 'money'],
         ];
 
+        /** @var BankAccount $bankAccount */
+        $bankAccount = $transaction->getBankAccount();
         if ($report->canLinkToBankAccounts() && $transaction->getBankAccount()) {
-            $summary[] = ['label' => 'deletePage.summary.bankAccount', 'value' => $transaction->getBankAccount()->getNameOneLine()];
+            $summary[] = ['label' => 'deletePage.summary.bankAccount', 'value' => $bankAccount->getNameOneLine()];
         }
 
         return [
