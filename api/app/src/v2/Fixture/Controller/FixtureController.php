@@ -5,6 +5,7 @@ namespace App\v2\Fixture\Controller;
 use App\Domain\CourtOrder\CourtOrderKind;
 use App\Domain\CourtOrder\CourtOrderReportType;
 use App\Domain\CourtOrder\CourtOrderType;
+use App\Domain\Deputy\DeputyType;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
@@ -253,6 +254,7 @@ class FixtureController extends AbstractController
 
         return (new Deputy())
             ->setDeputyUid((string) $uid)
+            ->setDeputyType($user->deriveDeputyType() ?? DeputyType::LAY)
             ->setUser($user)
             ->setEmail1($user->getEmail())
             ->setFirstname($user->getFirstname())
@@ -388,6 +390,7 @@ class FixtureController extends AbstractController
         $deputy = (new Deputy())
             ->setFirstname($deputy->getFirstname())
             ->setLastname($deputy->getLastname())
+            ->setDeputyType($deputy->deriveDeputyType() ?? DeputyType::LAY)
             ->setEmail1($deputy->getEmail())
             ->setDeputyUid('70' . str_pad($fromRequest['caseNumber'] . mt_rand(1, 100), 10))
             ->setAddress1($deputy->getAddress1())
@@ -616,11 +619,15 @@ class FixtureController extends AbstractController
         $deputy = $this->deputyRepository->findOneBy(['email1' => $userEmail]);
 
         if (is_null($deputy)) {
+            /**
+             * @var User|null $user
+             */
             $user = $this->userRepository->findOneBy(['email' => $userEmail]);
 
             if ($user) {
                 $deputy = (new Deputy())
                     ->setDeputyUid(rand(8, 8))
+                    ->setDeputyType($user->deriveDeputyType() ?? DeputyType::LAY)
                     ->setEmail1($user->getEmail())
                     ->setFirstname($user->getFirstname())
                     ->setLastname($user->getLastname());
