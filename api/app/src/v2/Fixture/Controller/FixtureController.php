@@ -285,7 +285,7 @@ class FixtureController extends AbstractController
             'email' => $fromRequest['deputyEmail'],
             'activated' => $fromRequest['activated'],
             'coDeputyEnabled' => $fromRequest['coDeputyEnabled'],
-            'deputyUid' => $fromRequest['deputyUid'],
+            'deputyUid' => $fromRequest['deputyUid'] ?? null,
         ]);
 
         $this->em->persist($user);

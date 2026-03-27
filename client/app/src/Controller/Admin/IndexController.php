@@ -14,7 +14,6 @@ use App\Exception\RestClientException;
 use App\Form\Admin\AddUserType;
 use App\Form\Admin\EditUserType;
 use App\Form\Admin\SearchType;
-use App\Form\NdrType;
 use App\Form\ProcessCSVType;
 use App\Security\UserVoter;
 use App\Service\Audit\AuditEvents;
@@ -74,7 +73,6 @@ class IndexController extends AbstractController
             'offset' => $request->get('offset', 'id'),
             'role_name' => '',
             'q' => '',
-            'ndr_enabled' => '',
             'include_clients' => '',
             'order_by' => 'registrationDate',
             'sort_order' => 'DESC',
@@ -229,28 +227,6 @@ class IndexController extends AbstractController
         return $this->render('@App/Admin/Index/error.html.twig', [
             'error' => 'User not found',
         ]);
-    }
-
-    #[Route(path: '/edit-ndr/{id}', name: 'admin_editNdr', methods: ['POST'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
-    public function editNdrAction(Request $request, string $id): RedirectResponse
-    {
-        $ndr = $this->restClient->get('ndr/' . $id, 'Ndr\Ndr', ['ndr', 'client', 'client-users', 'user']);
-        $ndrForm = $this->createForm(NdrType::class, $ndr);
-        if ('POST' == $request->getMethod()) {
-            $ndrForm->handleRequest($request);
-
-            if ($ndrForm->isSubmitted() && $ndrForm->isValid()) {
-                $updateNdr = $ndrForm->getData();
-                $this->restClient->put('ndr/' . $id, $updateNdr, ['start_date']);
-                $this->addFlash('notice', 'Your changes were saved');
-            }
-        }
-        /** @var Client $client */
-        $client = $ndr->getClient();
-        $users = $client->getUsers();
-
-        return $this->redirect($this->generateUrl('admin_editUser', ['filter' => $users[0]->getId()]));
     }
 
     #[Route(path: '/delete-confirm/{id}', name: 'admin_delete_confirm', methods: ['GET'])]

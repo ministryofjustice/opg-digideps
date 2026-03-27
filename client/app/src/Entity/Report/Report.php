@@ -150,13 +150,11 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     private $dueDate;
 
     /**
-     * @var \DateTime|null
-     *
      * @JMS\Type("DateTime")
      *
      * @JMS\Groups({"submit"})
      */
-    private $submitDate;
+    private ?\DateTimeInterface $submitDate = null;
 
     /**
      * @var \DateTime|null
@@ -586,18 +584,13 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * Get submitDate.
-     *
-     * @return \DateTime|null
      */
-    public function getSubmitDate()
+    public function getSubmitDate(): ?\DateTimeInterface
     {
         return $this->submitDate;
     }
 
-    /**
-     * @return Report
-     */
-    public function setSubmitDate(?\DateTime $submitDate = null)
+    public function setSubmitDate(?\DateTimeInterface $submitDate = null): static
     {
         $this->submitDate = $submitDate;
 
@@ -630,7 +623,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return $this->submittedBy;
     }
 
-    public function setSubmittedBy(?User $submittedBy): self
+    public function setSubmittedBy(?User $submittedBy): static
     {
         $this->submittedBy = $submittedBy;
 
@@ -965,34 +958,26 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return $this;
     }
 
-    /**
-     * @return bool $submitted
-     */
-    public function getSubmitted()
+    public function getSubmitted(): ?bool
     {
         return $this->submitted;
     }
 
     /**
      * @param bool $submitted
-     *
-     * @return Report
      */
-    public function setSubmitted($submitted)
+    public function setSubmitted($submitted): static
     {
         $this->submitted = $submitted;
 
         return $this;
     }
 
-    /**
-     * @param bool $reportSeen
-     *
-     * @return Report
-     */
-    public function setReportSeen($reportSeen)
+    public function setReportSeen(bool $reportSeen): static
     {
         $this->reportSeen = $reportSeen;
+
+        return $this;
     }
 
     /**
@@ -1019,10 +1004,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         $this->agree = $agree;
     }
 
-    /**
-     * @return string
-     */
-    public function getAgreedBehalfDeputy()
+    public function getAgreedBehalfDeputy(): ?string
     {
         return $this->agreedBehalfDeputy;
     }

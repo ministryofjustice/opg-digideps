@@ -1,4 +1,4 @@
-@v2
+@v2 @add-user-org
 Feature: Org - A professional deputy adds admin and non-admin users to org
 
     @prof-admin-combined-high-not-started

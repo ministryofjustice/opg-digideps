@@ -16,13 +16,6 @@ class AssetOther extends Asset
     private $description;
 
     /**
-     * @JMS\Type("DateTime")
-     *
-     * @var \Date
-     */
-    private $valuationDate;
-
-    /**
      * Set description.
      *
      * @param string $description
@@ -48,12 +41,8 @@ class AssetOther extends Asset
 
     /**
      * Set valuationDate.
-     *
-     * @param \DateTime $valuationDate
-     *
-     * @return Asset
      */
-    public function setValuationDate($valuationDate)
+    public function setValuationDate(?\DateTimeInterface $valuationDate): static
     {
         $this->valuationDate = $valuationDate;
 
@@ -62,10 +51,8 @@ class AssetOther extends Asset
 
     /**
      * Get valuationDate.
-     *
-     * @return \DateTime
      */
-    public function getValuationDate()
+    public function getValuationDate(): ?\DateTimeInterface
     {
         return $this->valuationDate;
     }

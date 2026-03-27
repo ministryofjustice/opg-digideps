@@ -126,10 +126,6 @@ class CoDeputyController extends AbstractController
                 try {
                     $coDeputyVerificationData = $this->restClient->apiCall('post', 'selfregister/verifycodeputy', $selfRegisterData, 'array', [], false);
 
-                    if ($mainDeputy !== false && $mainDeputy->isNdrEnabled()) {
-                        $user->setNdrEnabled(true);
-                    }
-
                     $this->restClient->put('user/' . $user->getId(), $user);
 
                     /** @var User $user */
