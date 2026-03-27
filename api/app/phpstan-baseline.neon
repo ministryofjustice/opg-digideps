@@ -7466,21 +7466,6 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:getEmail\\(\\)\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getFirstname\\(\\)\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getLastname\\(\\)\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:updateSectionsStatusCache\\(\\)\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
