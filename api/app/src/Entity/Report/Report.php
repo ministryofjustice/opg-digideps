@@ -896,10 +896,7 @@ class Report implements ReportInterface
         return $this->lifestyle;
     }
 
-    /**
-     * @param Lifestyle $lifestyle
-     */
-    public function setLifestyle($lifestyle)
+    public function setLifestyle(Lifestyle $lifestyle): void
     {
         $this->lifestyle = $lifestyle;
     }
