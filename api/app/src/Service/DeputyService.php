@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Domain\Deputy\DeputyType;
 use App\Entity\Deputy;
 use App\Entity\User;
 use App\Repository\CourtOrderRepository;
@@ -64,11 +65,20 @@ class DeputyService
             $deputy->setDeputyUid($data['deputy_uid']);
         }
 
+        if (array_key_exists('deputy_type', $data) && !empty($data['deputy_type'])) {
+            $deputy->setDeputyType(DeputyType::from($data['deputy_type']));
+        }
+
         return $deputy;
     }
 
-    public function createDeputyFromUser(User $user): Deputy
+    public function createDeputyFromUser(User $user): ?Deputy
     {
+        $deputyType = $user->deriveDeputyType();
+        if ($deputyType === null) {
+            return null;
+        }
+
         $data = [
             'firstname' => $user->getFirstname(),
             'lastname' => $user->getLastname(),
@@ -80,6 +90,7 @@ class DeputyService
             'address_postcode' => $user->getAddressPostcode(),
             'deputy_uid' => $user->getDeputyUid(),
             'email' => $user->getEmail(),
+            'deputy_type' => $deputyType->value,
         ];
 
         return $this->populateDeputy($data);
