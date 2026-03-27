@@ -1,19 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Client;
 use App\Entity\Deputy;
-use App\Entity\Ndr\Ndr;
 use App\Entity\User;
 use App\Event\ClientArchivedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Repository\ClientRepository;
 use App\Service\Audit\AuditEvents;
 use App\Service\Formatter\RestFormatter;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -42,7 +41,8 @@ class ClientController extends RestController
     public function upsert(Request $request): array
     {
         $data = $this->formatter->deserializeBodyContent($request);
-        /** @var User|null $user */
+
+        /** @var ?User $user */
         $user = $this->getUser();
 
         // truncate case number if length is 10 digits long before persisting
@@ -52,7 +52,7 @@ class ClientController extends RestController
             $data['case_number'] = ''; // Set a default value if missing
         }
 
-        if ($user && 'POST' == $request->getMethod()) {
+        if (!is_null($user) && 'POST' == $request->getMethod()) {
             $client = new Client();
             $client->addUser($user);
         } else {
@@ -79,16 +79,8 @@ class ClientController extends RestController
         ]);
 
         if ($user && $user->isLayDeputy()) {
-            // We come to this route from either editing or creating a client - need to support
-            // both routes as an NDR needs to exist for the add client route for Lays
-            $ndrRequired = ((array_key_exists('ndr_enabled', $data) && $data['ndr_enabled']) || $user->getNdrEnabled());
-
-            if ($ndrRequired && !$client->getNdr()) {
-                $ndr = new Ndr($client);
-                $this->em->persist($ndr);
-            }
-
-            $client->setCourtDate(new DateTime($data['court_date']));
+            // We come to this route from either editing or creating a client
+            $client->setCourtDate(new \DateTime($data['court_date']));
             $this->hydrateEntityWithArrayData($client, $data, [
                 'case_number' => 'setCaseNumber',
                 'deputy' => 'setDeputy',
@@ -96,7 +88,7 @@ class ClientController extends RestController
         }
 
         if (array_key_exists('date_of_birth', $data)) {
-            $dob = $data['date_of_birth'] ? new DateTime($data['date_of_birth']) : null;
+            $dob = $data['date_of_birth'] ? new \DateTime($data['date_of_birth']) : null;
             $client->setDateOfBirth($dob);
         }
 
@@ -140,8 +132,6 @@ class ClientController extends RestController
                 'client-users',
                 'user',
                 'client-reports',
-                'client-ndr',
-                'ndr',
                 'report',
                 'status',
                 'client-organisations',
@@ -166,11 +156,14 @@ class ClientController extends RestController
             }
         }
 
-        $client->setArchivedAt(new DateTime());
+        $client->setArchivedAt(new \DateTime());
         $this->em->flush($client);
 
         $trigger = AuditEvents::TRIGGER_USER_ARCHIVED_CLIENT;
+
+        /** @var User $currentUser */
         $currentUser = $this->tokenStorage->getToken()->getUser();
+
         $clientArchivedEvent = new ClientArchivedEvent(
             $client,
             $currentUser,
@@ -202,10 +195,10 @@ class ClientController extends RestController
     #[IsGranted(attribute: 'ROLE_ADMIN_MANAGER')]
     public function delete(int $id): array
     {
-        /* @var $client \App\Entity\Client */
+        /** @var Client $client */
         $client = $this->findEntityBy(Client::class, $id);
 
-        $client->setDeletedAt(new DateTime());
+        $client->setDeletedAt(new \DateTime());
         $this->em->flush($client);
 
         return [];
@@ -242,7 +235,7 @@ class ClientController extends RestController
     /**
      * Endpoint for getting the clients for a deputy uid.
      *
-     * @throws Exception
+     * @throws \Exception
      */
     #[Route(path: '/get-all-clients-by-deputy-uid/{deputyUid}', methods: ['GET'])]
     public function getAllClientsByDeputyUid(Request $request, int $deputyUid): mixed
