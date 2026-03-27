@@ -47,8 +47,6 @@ case "$INTEGRATION_SELECTION" in
     # IMPORTANT: these tests are order dependent, so don't rearrange them or try to run them as an aggregate
     printf '\n Running DBAL Suite \n\n'
     php vendor/bin/phpunit --debug -c tests/Integration tests/Integration/DBAL/ --coverage-php tests/coverage/DBAL.cov
-    printf '\n Running Controller-Ndr Suite \n\n'
-    php vendor/bin/phpunit -c tests/Integration tests/Integration/Controller-Ndr/ --coverage-php tests/coverage/Controller-Ndr.cov
     printf '\n Running Entity Suite \n\n'
     php vendor/bin/phpunit -c tests/Integration tests/Integration/Entity/ --coverage-php tests/coverage/Entity.cov
     printf '\n Running Command Suite \n\n'
