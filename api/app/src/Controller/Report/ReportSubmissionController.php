@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Report;
 
 use App\Controller\RestController;
@@ -10,9 +12,7 @@ use App\Exception\UnauthorisedException;
 use App\Repository\ReportSubmissionRepository;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use InvalidArgumentException;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,7 +22,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route(path: '/report-submission')]
 class ReportSubmissionController extends RestController
 {
-    public const QUEUEABLE_STATUSES = [
+    public const array QUEUEABLE_STATUSES = [
         null,
         Document::SYNC_STATUS_TEMPORARY_ERROR,
         Document::SYNC_STATUS_PERMANENT_ERROR,
@@ -33,8 +33,6 @@ class ReportSubmissionController extends RestController
         'report-submission',
         'report-type',
         'report-client',
-        'ndr-client',
-        'ndr',
         'report-period',
         'client-name',
         'client-case-number',
@@ -149,7 +147,7 @@ class ReportSubmissionController extends RestController
         /* @var $repo ReportSubmissionRepository */
         $repo = $this->em->getRepository(ReportSubmission::class);
 
-        $ret = $repo->findDownloadableOlderThan(new DateTime(ReportSubmission::REMOVE_FILES_WHEN_OLDER_THAN), 100);
+        $ret = $repo->findDownloadableOlderThan(new \DateTime(ReportSubmission::REMOVE_FILES_WHEN_OLDER_THAN), 100);
 
         $this->formatter->setJmsSerialiserGroups(['report-submission-id', 'report-submission-documents', 'document-storage-reference']);
 
@@ -207,17 +205,17 @@ class ReportSubmissionController extends RestController
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     #[Route(path: '/pre-registration-data', name: 'pre_registration_data', methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_ADMIN')]
     public function getPreRegistrationData(Request $request): array
     {
-        /* @var $repo \App\Entity\Repository\ReportSubmissionRepository */
+        /* @var ReportSubmissionRepository $repo */
         $repo = $this->em->getRepository(ReportSubmission::class);
 
-        $fromDate = $request->get('fromDate') ? new DateTime($request->get('fromDate')) : null;
-        $toDate = $request->get('toDate') ? new DateTime($request->get('toDate')) : null;
+        $fromDate = $request->get('fromDate') ? new \DateTime($request->get('fromDate')) : null;
+        $toDate = $request->get('toDate') ? new \DateTime($request->get('toDate')) : null;
 
         $fromDateTime = $fromDate?->setTime(0, 0);
         $toDateTime = $toDate?->setTime(23, 59, 59);

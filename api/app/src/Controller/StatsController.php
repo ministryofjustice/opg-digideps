@@ -4,22 +4,17 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Ndr\AssetOther as NdrAssetOther;
-use App\Entity\Ndr\AssetProperty as NdrAssetProperty;
 use App\Entity\Report\AssetOther;
 use App\Entity\Report\AssetProperty;
 use App\Exception\UnauthorisedException;
 use App\Repository\AssetRepository;
 use App\Repository\BankAccountRepository;
-use App\Repository\NdrAssetRepository;
-use App\Repository\NdrBankAccountRepository;
 use App\Repository\ReportRepository;
 use App\Repository\UserRepository;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use App\Service\Stats\QueryFactory;
 use App\Service\Stats\StatsQueryParameters;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,8 +29,6 @@ class StatsController extends RestController
         private readonly ReportRepository $reportRepository,
         private readonly AssetRepository $assetRepository,
         private readonly BankAccountRepository $bankAccountRepository,
-        private readonly NdrAssetRepository $ndrAssetRepository,
-        private readonly NdrBankAccountRepository $ndrBankAccountRepository,
         private readonly AuthService $authService,
         EntityManagerInterface $em
     ) {
@@ -119,10 +112,9 @@ class StatsController extends RestController
             'lays' => ['liquid' => 0, 'non-liquid' => 0],
             'profs' => ['liquid' => 0, 'non-liquid' => 0],
             'pas' => ['liquid' => 0, 'non-liquid' => 0],
-            'grandTotal' => 0,
         ];
 
-        $oneYearAgo = new DateTime('-1 year');
+        $oneYearAgo = new \DateTime('-1 year');
 
         $ret['lays']['non-liquid'] += $this->assetRepository->getSumOfAssets(AssetOther::class, 'LAY', $oneYearAgo);
         $ret['profs']['non-liquid'] += $this->assetRepository->getSumOfAssets(AssetOther::class, 'PROF', $oneYearAgo);
@@ -135,12 +127,6 @@ class StatsController extends RestController
         $ret['lays']['liquid'] += $this->bankAccountRepository->getSumOfAccounts('LAY', $oneYearAgo);
         $ret['profs']['liquid'] += $this->bankAccountRepository->getSumOfAccounts('PROF', $oneYearAgo);
         $ret['pas']['liquid'] += $this->bankAccountRepository->getSumOfAccounts('PA', $oneYearAgo);
-
-        $clientIdsOfSubmittedReports = $this->reportRepository->getClientIdsByAllSubmittedLayReportsWithin12Months();
-
-        $ret['lays']['non-liquid'] += $this->ndrAssetRepository->getSumOfAssets(NdrAssetOther::class, $oneYearAgo, $clientIdsOfSubmittedReports);
-        $ret['lays']['non-liquid'] += $this->ndrAssetRepository->getSumOfAssets(NdrAssetProperty::class, $oneYearAgo, $clientIdsOfSubmittedReports);
-        $ret['lays']['liquid'] += $this->ndrBankAccountRepository->getSumOfAccounts($oneYearAgo, $clientIdsOfSubmittedReports);
 
         $ret['grandTotal'] =
             $ret['lays']['non-liquid'] +
@@ -169,10 +155,14 @@ class StatsController extends RestController
     public function getImbalanceReport(Request $request): array
     {
         $startDate = $this->convertDateStringToDateTime($request->get('startDate', ''));
-        $startDate instanceof DateTime ? $startDate->setTime(0, 0, 1) : null;
+        if (!is_null($startDate)) {
+            $startDate->setTime(0, 0, 1);
+        }
 
         $endDate = $this->convertDateStringToDateTime($request->get('endDate', ''));
-        $endDate instanceof DateTime ? $endDate->setTime(23, 59, 59) : null;
+        if (!is_null($endDate)) {
+            $endDate->setTime(23, 59, 59);
+        }
 
         return $this->reportRepository->getAllReportedImbalanceMetrics($startDate, $endDate);
     }
