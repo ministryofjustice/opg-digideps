@@ -16,13 +16,6 @@ class AssetOther extends Asset
     private $description;
 
     /**
-     * @JMS\Type("DateTime")
-     *
-     * @var \Date
-     */
-    private $valuationDate;
-
-    /**
      * Set description.
      *
      * @param string $description
@@ -46,30 +39,6 @@ class AssetOther extends Asset
         return $this->description;
     }
 
-    /**
-     * Set valuationDate.
-     *
-     * @param \DateTime $valuationDate
-     *
-     * @return Asset
-     */
-    public function setValuationDate($valuationDate)
-    {
-        $this->valuationDate = $valuationDate;
-
-        return $this;
-    }
-
-    /**
-     * Get valuationDate.
-     *
-     * @return \DateTime
-     */
-    public function getValuationDate()
-    {
-        return $this->valuationDate;
-    }
-
     public function getType()
     {
         return 'other';
@@ -86,8 +55,7 @@ class AssetOther extends Asset
             'Vehicles' => 'vehicle',
         ];
 
-        return isset($titleToTemplateMap[$this->getTitle()])
-            ? $titleToTemplateMap[$this->getTitle()] : 'default';
+        return $titleToTemplateMap[$this->getTitle()] ?? 'default';
     }
 
     public function getBehatIdentifier()
