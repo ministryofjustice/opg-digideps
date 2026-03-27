@@ -13,89 +13,68 @@ use JMS\Serializer\Annotation as JMS;
 class Lifestyle
 {
     /**
-     * @var int
-     *
      * @JMS\Groups({"lifestyle"})
-     *
      * @JMS\Type("integer")
      *
      * @ORM\Column(name="id", type="integer", nullable=false)
-     *
      * @ORM\Id
-     *
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
      * @ORM\SequenceGenerator(sequenceName="lifestyle_id_seq", allocationSize=1, initialValue=1)
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\OneToOne(targetEntity="App\Entity\Report\Report", inversedBy="lifestyle")
-     *
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $report;
+    private ?Report $report = null;
 
     /**
-     * @var string
-     *
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"lifestyle"})
      *
      * @ORM\Column(name="care_appointments", type="text", nullable=true)
      */
-    private $careAppointments;
+    private ?string $careAppointments = null;
 
     /**
-     * @var string yes|no|null
+     * Value is yes|no|null
      *
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"lifestyle"})
      *
      * @ORM\Column( name="does_client_undertake_social_activities", type="string", length=4, nullable=true)
      */
-    private $doesClientUndertakeSocialActivities;
+    private ?string $doesClientUndertakeSocialActivities = null;
 
     /**
-     * @var string
-     *
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"lifestyle"})
      *
      * @ORM\Column( name="activity_details_yes", type="text", nullable=true)
      */
-    private $activityDetailsYes;
+    private ?string $activityDetailsYes = null;
 
     /**
-     * @var string
-     *
      * @JMS\Type("string")
-     *
      * @JMS\Groups({"lifestyle"})
      *
      * @ORM\Column( name="activity_details_no", type="text", nullable=true)
      */
-    private $activityDetailsNo;
+    private ?string $activityDetailsNo = null;
 
     /**
-     * Get id.
-     *
-     * @return int
+     * Get id
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
     /**
-     * Set report.
-     *
-     * @return Contact
+     * Set report
      */
-    public function setReport(?Report $report = null)
+    public function setReport(?Report $report = null): static
     {
         $this->report = $report;
 
@@ -103,81 +82,51 @@ class Lifestyle
     }
 
     /**
-     * Get report.
-     *
-     * @return Report
+     * Get report
      */
-    public function getReport()
+    public function getReport(): ?Report
     {
         return $this->report;
     }
 
-    /**
-     * @return string
-     */
-    public function getDoesClientUndertakeSocialActivities()
+    public function getDoesClientUndertakeSocialActivities(): ?string
     {
         return $this->doesClientUndertakeSocialActivities;
     }
 
-    /**
-     * @param string $doesClientUndertakeSocialActivities
-     */
-    public function setDoesClientUndertakeSocialActivities($doesClientUndertakeSocialActivities)
+    public function setDoesClientUndertakeSocialActivities(?string $doesClientUndertakeSocialActivities): void
     {
         $this->doesClientUndertakeSocialActivities = $doesClientUndertakeSocialActivities;
     }
 
-    /**
-     * @return string
-     */
-    public function getCareAppointments()
+    public function getCareAppointments(): ?string
     {
         return $this->careAppointments;
     }
 
-    /**
-     * @param string $careAppointments
-     */
-    public function setCareAppointments($careAppointments)
+    public function setCareAppointments(?string $careAppointments): void
     {
         $this->careAppointments = $careAppointments;
     }
 
-    /**
-     * @return string
-     */
-    public function getActivityDetailsYes()
+    public function getActivityDetailsYes(): ?string
     {
         return $this->activityDetailsYes;
     }
 
-    /**
-     * @param string $activityDetailsYes
-     *
-     * @return Lifestyle
-     */
-    public function setActivityDetailsYes($activityDetailsYes)
+    public function setActivityDetailsYes(?string $activityDetailsYes): static
     {
         $this->activityDetailsYes = $activityDetailsYes;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getActivityDetailsNo()
+    public function getActivityDetailsNo(): ?string
     {
         return $this->activityDetailsNo;
     }
 
-    /**
-     * @param string $activityDetailsNo
-     *
-     * @return Lifestyle
-     */
-    public function setActivityDetailsNo($activityDetailsNo)
+    public function setActivityDetailsNo(?string $activityDetailsNo): static
     {
         $this->activityDetailsNo = $activityDetailsNo;
 
@@ -185,12 +134,9 @@ class Lifestyle
     }
 
     /**
-     * checks if report is missing lifestyle
-     * information.
-     *
-     * @return bool
+     * checks if report is missing lifestyle information
      */
-    public function missingInfo()
+    public function missingInfo(): bool
     {
         if (
             empty($this->doesClientUndertakeSocialActivities)

@@ -6,71 +6,50 @@ use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
-/**
- * CreationAudit Trait, usable with PHP >= 5.4.
- */
 trait CreationAudit
 {
     /**
-     * Created by.
-     *
-     * @var \App\Entity\User
+     * User who created the entity
      *
      * @JMS\Type("App\Entity\User")
-     *
      * @JMS\Groups({"notes", "documents", "report-submission", "checklist-information"})
      *
      * @ORM\ManyToOne(targetEntity="App\Entity\User", fetch="EAGER", cascade={"persist"})
      *
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
-    protected $createdBy;
+    protected ?User $createdBy = null;
 
     /**
-     * Created on.
-     *
-     * @var \DateTime
+     * The datetime when the entity was created
      *
      * @JMS\Type("DateTime")
-     *
      * @JMS\Groups({"notes", "documents", "checklist-information"})
      *
      * @ORM\Column(type="datetime", name="created_on", nullable=true)
      *
      * @Gedmo\Timestampable(on="create")
      */
-    protected $createdOn;
+    protected ?\DateTime $createdOn = null;
 
-    /**
-     * @return \App\Entity\User
-     */
-    public function getCreatedBy()
+    public function getCreatedBy(): ?User
     {
         return $this->createdBy;
     }
 
-    /**
-     * @return $this
-     */
-    public function setCreatedBy(User $createdBy)
+    public function setCreatedBy(?User $createdBy): static
     {
         $this->createdBy = $createdBy;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedOn()
+    public function getCreatedOn(): ?\DateTime
     {
         return $this->createdOn;
     }
 
-    /**
-     * @return $this
-     */
-    public function setCreatedOn(\DateTime $createdOn)
+    public function setCreatedOn(?\DateTime $createdOn): static
     {
         $this->createdOn = $createdOn;
 
