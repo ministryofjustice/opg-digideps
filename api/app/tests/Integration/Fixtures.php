@@ -5,6 +5,7 @@ namespace App\Tests\Integration;
 use App\Domain\CourtOrder\CourtOrderKind;
 use App\Domain\CourtOrder\CourtOrderReportType;
 use App\Domain\CourtOrder\CourtOrderType;
+use App\Domain\Deputy\DeputyType;
 use DateTime;
 use InvalidArgumentException;
 use RuntimeException;
@@ -124,6 +125,7 @@ class Fixtures
         $deputy->setEmail1('temp' . microtime(true) . rand(100, 99999) . '@temp.com');
         $deputy->setFirstname('name' . time());
         $deputy->setLastname('surname' . time());
+        $deputy->setDeputyType(DeputyType::LAY);
 
         foreach ($settersMap as $k => $v) {
             $deputy->$k($v);
