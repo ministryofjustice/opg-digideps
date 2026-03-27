@@ -13,7 +13,6 @@ home:
     header:
       name: Name
       email: Email
-      ndr: NDR
       active: Active
       regDate: Registration date
     assistedState: Assisted
@@ -69,8 +68,6 @@ addUserForm:
     label: Role
   roleNameStaff:
     label: Role
-  ndrEnabled:
-    label: Enable NDR for this user (Lay deputy only)
   submit:
     label: Save user
 
@@ -119,8 +116,7 @@ editUser:
 editUserForm:
   heading: Edit user
   reportsExist: |
-    Reports already exist for this user. If NDR is enabled, the deputy won't see them
-    until NDR is submitted.
+    Reports already exist for this user.
   email:
     existingError: That email has already been registered with this service.
   submit:

@@ -860,16 +860,13 @@ trait UserManagementTrait
     }
 
     /**
-     * @Then I should see :occurances user details in the user list results with the same :whichName name
+     * @Then I should see :occurrences user details in the user list results with the same :whichName name
+     * @throws BehatException
      */
-    public function iShouldSeeBothUserDetailsInResults(int $occurances, string $whichName)
+    public function iShouldSeeBothUserDetailsInResults(int $occurrences, string $whichName)
     {
-        $this->userCount = $occurances;
-        $this->iShouldSeeNUserWithSameName($whichName);
-    }
+        $this->userCount = $occurrences;
 
-    private function iShouldSeeNUserWithSameName(string $whichName)
-    {
         $this->assertUserCountSet();
 
         $searchResults = $this->getSearchResults();
@@ -894,7 +891,7 @@ trait UserManagementTrait
 
     private function getSearchResults()
     {
-        $xpath = '//td[contains(@id, "user-fullname")]';
+        $xpath = '//tr/td[1]';
         $tableDataElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
 
         $formattedDataElements = [];

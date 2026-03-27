@@ -2,9 +2,6 @@
 
 namespace App\Entity;
 
-/**
- * Common functionalities among Report and NDR.
- */
 interface BankAccountInterface
 {
     public function getNameOneLine();

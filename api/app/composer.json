@@ -75,6 +75,7 @@
         "behat/mink": "^1.13",
         "behat/mink-browserkit-driver": "^2.3.0",
         "behat/mink-selenium2-driver": "^1.7",
+        "dg/bypass-finals": "^1.9",
         "doctrine/doctrine-fixtures-bundle": "^3.7.3",
         "fakerphp/faker": "^1.24.1",
         "friends-of-behat/symfony-extension": "^2.6.2",

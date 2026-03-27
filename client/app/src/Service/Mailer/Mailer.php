@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Service\Mailer;
 
 use App\Entity\Client;
-use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\ReportInterface;
 use App\Entity\User;
@@ -13,10 +12,10 @@ use App\Entity\User;
 class Mailer
 {
     /** @var MailFactory */
-    private $mailFactory;
+    private MailFactory $mailFactory;
 
     /** @var MailSender */
-    private $mailSender;
+    private MailSender $mailSender;
 
     public function __construct(MailFactory $mailFactory, MailSender $mailSender)
     {
@@ -34,6 +33,9 @@ class Mailer
         return $this->mailSender->send($this->mailFactory->createInvitationEmail($invitedUser, $deputyName));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function sendResetPasswordEmail(User $passwordResetUser): bool
     {
         return $this->mailSender->send($this->mailFactory->createResetPasswordEmail($passwordResetUser));
@@ -49,6 +51,9 @@ class Mailer
         return $this->mailSender->send($this->mailFactory->createUpdateDeputyDetailsEmail($updatedDeputy));
     }
 
+    /**
+     * @throws \Exception
+     */
     public function sendReportSubmissionConfirmationEmail(
         User $submittedByDeputy,
         ReportInterface $submittedReport,
@@ -56,16 +61,6 @@ class Mailer
     ): bool {
         return $this->mailSender->send(
             $this->mailFactory->createReportSubmissionConfirmationEmail($submittedByDeputy, $submittedReport, $newReport)
-        );
-    }
-
-    public function sendNdrSubmissionConfirmationEmail(
-        User $submittedByDeputy,
-        Ndr $submittedNdr,
-        Report $newReport,
-    ): bool {
-        return $this->mailSender->send(
-            $this->mailFactory->createNdrSubmissionConfirmationEmail($submittedByDeputy, $submittedNdr, $newReport)
         );
     }
 
