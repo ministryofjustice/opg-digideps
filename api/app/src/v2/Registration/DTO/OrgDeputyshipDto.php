@@ -6,6 +6,10 @@ namespace App\v2\Registration\DTO;
 
 class OrgDeputyshipDto
 {
+    public const SINGLE_TYPE = 'SINGLE';
+    public const HYBRID_TYPE = 'HYBRID';
+    public const DUAL_TYPE = 'DUAL';
+
     private string $caseNumber;
     private string $clientFirstname;
     private string $clientLastname;
@@ -13,6 +17,7 @@ class OrgDeputyshipDto
     private string $clientAddress2;
     private string $clientPostCode;
     private string $deputyUid;
+    private string $deputyType;
     private string $deputyFirstname;
     private string $deputyLastname;
     private ?string $deputyEmail;
@@ -34,10 +39,6 @@ class OrgDeputyshipDto
     private ?\DateTime $courtDate;
     private ?\DateTime $reportStartDate;
     private ?\DateTime $reportEndDate;
-
-    public const SINGLE_TYPE = 'SINGLE';
-    public const HYBRID_TYPE = 'HYBRID';
-    public const DUAL_TYPE = 'DUAL';
 
     public function getDeputyEmail(): ?string
     {
@@ -114,10 +115,7 @@ class OrgDeputyshipDto
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getClientFirstname()
+    public function getClientFirstname(): string
     {
         return $this->clientFirstname;
     }
@@ -129,10 +127,7 @@ class OrgDeputyshipDto
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getClientLastname()
+    public function getClientLastname(): string
     {
         return $this->clientLastname;
     }
@@ -361,6 +356,18 @@ class OrgDeputyshipDto
     public function setHybrid(?string $hybrid): self
     {
         $this->hybrid = $hybrid;
+
+        return $this;
+    }
+
+    public function getDeputyType(): string
+    {
+        return $this->deputyType;
+    }
+
+    public function setDeputyType(string $deputyType): self
+    {
+        $this->deputyType = $deputyType;
 
         return $this;
     }

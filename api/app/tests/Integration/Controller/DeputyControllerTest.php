@@ -4,6 +4,7 @@ namespace App\Tests\Integration\Controller;
 
 use App\Domain\CourtOrder\CourtOrderKind;
 use App\Domain\CourtOrder\CourtOrderType;
+use App\Domain\Deputy\DeputyType;
 use DateTime;
 use App\Entity\User;
 use App\TestHelpers\CourtOrderTestHelper;
@@ -22,7 +23,6 @@ class DeputyControllerTest extends AbstractTestController
 
         self::$client = new JsonHttpTestClient(self::$frameworkBundleClient, self::$jwtService);
         self::$fixtureHelper = static::getContainer()->get(FixtureHelper::class);
-        ;
     }
 
     public function setUp(): void
@@ -58,6 +58,7 @@ class DeputyControllerTest extends AbstractTestController
                 'lastname' => $lastName,
                 'email' => $email,
                 'deputy_uid' => $deputyUid,
+                'deputy_type' => DeputyType::LAY->value,
             ],
             'mustSucceed' => true,
             'AuthToken' => $token,
@@ -85,6 +86,7 @@ class DeputyControllerTest extends AbstractTestController
                 'lastname' => $lastName,
                 'email' => $email,
                 'deputy_uid' => $deputyUid,
+                'deputy_type' => DeputyType::LAY->value
             ],
             'mustSucceed' => true,
             'AuthToken' => $token,
