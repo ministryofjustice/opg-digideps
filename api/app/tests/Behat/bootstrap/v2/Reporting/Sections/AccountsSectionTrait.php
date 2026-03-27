@@ -514,7 +514,7 @@ trait AccountsSectionTrait
     /**
      * @Given /^the account closing balance should be "([^"]*)"$/
      */
-    public function theAccountBalanceShouldBe($arg1)
+    public function theAccountBalanceShouldBe($closingBalance): void
     {
         $this->iAmOnAccountsSummaryPage();
 
@@ -529,8 +529,7 @@ trait AccountsSectionTrait
         $accountElements = $page->findAll('css', '.behat-region-account-' . $lastAccount['accountNumber']);
         $lastAccountElement = end($accountElements);
 
-        var_dump($lastAccountElement->getText());
-        $closedStatusElement = $lastAccountElement->find('xpath', ".//*[contains(text(), '" . $arg1 . "')]");
+        $closedStatusElement = $lastAccountElement->find('xpath', ".//*[contains(text(), '" . $closingBalance . "')]");
         if (is_null($closedStatusElement)) {
             throw new BehatException(sprintf(
                 'Account %s closing balance not correct on summary page',
