@@ -510,4 +510,32 @@ trait AccountsSectionTrait
             ));
         }
     }
+
+    /**
+     * @Given /^the account closing balance should be "([^"]*)"$/
+     */
+    public function theAccountBalanceShouldBe($arg1)
+    {
+        $this->iAmOnAccountsSummaryPage();
+
+        // Get the most recently added account
+        $lastAccount = end($this->accountList);
+
+        if ($lastAccount === false) {
+            throw new BehatException('No account found in $accountList');
+        }
+
+        $page = $this->getSession()->getPage();
+        $accountElements = $page->findAll('css', '.behat-region-account-' . $lastAccount['accountNumber']);
+        $lastAccountElement = end($accountElements);
+
+        var_dump($lastAccountElement->getText());
+        $closedStatusElement = $lastAccountElement->find('xpath', ".//*[contains(text(), '" . $arg1 . "')]");
+        if (is_null($closedStatusElement)) {
+            throw new BehatException(sprintf(
+                'Account %s closing balance not correct on summary page',
+                $lastAccount['accountNumber']
+            ));
+        }
+    }
 }
