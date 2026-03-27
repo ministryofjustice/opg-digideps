@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Domain\Deputy\DeputyType;
 use App\Entity\Report\Report;
 use App\Entity\Traits\AddressTrait;
 use App\Entity\Traits\CreateUpdateTimestamps;
@@ -1411,5 +1412,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function deriveDeputyType(): ?DeputyType
+    {
+        if (str_contains($this->roleName, 'LAY')) {
+            return DeputyType::LAY;
+        } elseif (str_contains($this->roleName, 'PROF')) {
+            return DeputyType::PRO;
+        } elseif (str_contains($this->roleName, 'PA')) {
+            return DeputyType::PA;
+        }
+        return null;
     }
 }
