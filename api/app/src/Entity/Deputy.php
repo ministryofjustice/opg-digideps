@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Domain\Deputy\DeputyType;
 use App\Entity\Traits\CreateUpdateTimestamps;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -54,6 +55,13 @@ class Deputy
     #[JMS\Type('string')]
     #[JMS\Groups(['report-submitted-by', 'deputy'])]
     private string $deputyUid;
+
+    /**
+     * @see DeputyType
+     *
+     * @ORM\Column(name="deputy_type", type="string", length=3, nullable=false)
+     */
+    private string $deputyType;
 
     /**
      * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
@@ -182,6 +190,18 @@ class Deputy
     public function setId(int $id): self
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    public function getDeputyType(): ?DeputyType
+    {
+        return DeputyType::tryFrom($this->deputyType) ?? $this->getUser()->deriveDeputyType();
+    }
+
+    public function setDeputyType(DeputyType $deputyType): self
+    {
+        $this->deputyType = $deputyType->value;
 
         return $this;
     }
@@ -454,6 +474,12 @@ class Deputy
     {
         return $this->email1 !== $dto->getDeputyEmail()
             && null !== $dto->getDeputyEmail();
+    }
+
+    public function typeHasChanged(OrgDeputyshipDto $dto): bool
+    {
+        return $this->deputyType !== $dto->getDeputyType()
+            && null !== $dto->getDeputyType();
     }
 
     /**
