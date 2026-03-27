@@ -56,6 +56,7 @@ class SiriusToOrgDeputyshipDtoAssembler
             ->setDeputyLastname($row['DeputySurname'])
             ->setDeputyPostcode($row['DeputyPostcode'])
             ->setDeputyUid($row['DeputyUid'])
+            ->setDeputyType($row['DeputyType'])
             ->setOrganisationName($row['DeputyOrganisation'])
             ->setReportStartDate($reportStartDate)
             ->setReportEndDate($reportEndDate)

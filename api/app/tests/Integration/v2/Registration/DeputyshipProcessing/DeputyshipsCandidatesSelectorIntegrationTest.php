@@ -7,6 +7,7 @@ namespace App\Tests\Integration\v2\Registration\DeputyshipProcessing;
 use App\Domain\CourtOrder\CourtOrderKind;
 use App\Domain\CourtOrder\CourtOrderReportType;
 use App\Domain\CourtOrder\CourtOrderType;
+use App\Domain\Deputy\DeputyType;
 use App\Tests\Integration\ApiTestTrait;
 use DateTime;
 use App\Entity\CourtOrder;
@@ -90,6 +91,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         self::$entityManager->persist($courtOrder);
 
         $deputy = new Deputy();
+        $deputy->setDeputyType(DeputyType::LAY);
         $deputy->setFirstname('John');
         $deputy->setLastname('Snow');
         $deputy->setEmail1('john.snow@test.co.uk');
@@ -123,6 +125,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         self::$entityManager->persist($courtOrder);
 
         $deputy = new Deputy();
+        $deputy->setDeputyType(DeputyType::LAY);
         $deputy->setFirstname('John');
         $deputy->setLastname('Snow');
         $deputy->setEmail1('john.snow@test.co.uk');
@@ -143,6 +146,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         $stagingDeputyshipObject = self::$entityManager->getRepository(StagingDeputyship::class)->findOneBy(['orderUid' => '700000001104', 'deputyUid' => '700761111004']);
 
         $deputy = new Deputy();
+        $deputy->setDeputyType(DeputyType::LAY);
         $deputy->setFirstname('Stuart');
         $deputy->setLastname('One');
         $deputy->setEmail1('stuart.one@test.co.uk');

@@ -7,6 +7,7 @@ namespace app\tests\Integration\v2\Registration\DeputyshipProcessing;
 use App\Domain\CourtOrder\CourtOrderKind;
 use App\Domain\CourtOrder\CourtOrderReportType;
 use App\Domain\CourtOrder\CourtOrderType;
+use App\Domain\Deputy\DeputyType;
 use App\Domain\Deputyship\DeputyshipCandidatesConverter;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
@@ -60,6 +61,7 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
         self::$entityManager->persist($client);
 
         $deputy = new Deputy();
+        $deputy->setDeputyType(DeputyType::LAY);
         $deputy->setFirstname('Alf');
         $deputy->setLastname('Alf');
         $deputy->setEmail1('alf@notarealemail.com');
@@ -118,6 +120,7 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
         self::$entityManager->persist($courtOrder);
 
         $deputy = new Deputy();
+        $deputy->setDeputyType(DeputyType::LAY);
         $deputy->setFirstname('Vev');
         $deputy->setLastname('Alfome');
         $deputy->setEmail1('vev@notarealemail.com');
