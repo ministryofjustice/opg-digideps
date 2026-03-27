@@ -501,6 +501,7 @@ services:
             $name: "postCSVDataFactory"
             $dataFactories:
                 - '@App\Factory\ClientIdFixDataFactory'
+                - '@App\Factory\MissingReport\MissingReportDataFactory'
 
     App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester:
         public: true
