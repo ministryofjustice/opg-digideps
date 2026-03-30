@@ -131,7 +131,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getBankAccountsState()
+    public function getBankAccountsState(): array
     {
         $bankAccounts = $this->report->getBankAccounts();
         if (0 === count($bankAccounts)) {

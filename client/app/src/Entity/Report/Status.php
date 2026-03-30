@@ -245,9 +245,9 @@ class Status
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getBankAccountsState()
+    public function getBankAccountsState(): array
     {
         return $this->bankAccountsState;
     }
