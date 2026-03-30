@@ -34,6 +34,8 @@ class UserApi
     protected const GET_PRIMARY_USER_ACCOUNT_ENDPOINT = 'user/get-primary-user-account/%s';
     protected const GET_PRIMARY_EMAIL = 'user/get-primary-email/%s';
 
+    protected const UPDATE_USER_CODEPUTY_FLAG_ENDPOINT = 'user/update/codeputyflag/%d';
+
     /** @var RestClientInterface */
     protected $restClient;
 
@@ -276,6 +278,15 @@ class UserApi
             sprintf(self::GET_PRIMARY_USER_ACCOUNT_ENDPOINT, $deputyUid),
             'User',
             []
+        );
+    }
+
+    public function updateUserCodeputyFlagToTrue(int $id, array $jmsGroups = []): void
+    {
+        $this->restClient->put(
+            sprintf(self::UPDATE_USER_CODEPUTY_FLAG_ENDPOINT, $id),
+            'User',
+            $jmsGroups
         );
     }
 }

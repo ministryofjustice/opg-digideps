@@ -23,7 +23,7 @@ class ReviewChecklist
     private $id;
 
     /**
-     * @var App\Model\FullReviewChecklist
+     * @var FullReviewChecklist
      *
      * @JMS\Type("App\Model\FullReviewChecklist")\
      * @Assert\Valid

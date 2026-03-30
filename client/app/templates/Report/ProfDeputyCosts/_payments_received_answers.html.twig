@@ -17,7 +17,10 @@
     </dd>
     {% if not hideEditLink  %}
         <dd class="govuk-summary-list__actions">
-            <a href="{{ path('prof_deputy_costs_previous_received_exists', {'reportId': report.id, 'from': 'summary'}) }}" class="govuk-link behat-link-edit">{{ 'edit' | trans({}, 'common' ) }}</a>
+            <a href="{{ path('prof_deputy_costs_previous_received_exists', {'reportId': report.id, 'from': 'summary'}) }}" class="govuk-link behat-link-edit">
+                {{ 'edit' | trans({}, 'common' ) }}
+                <span class="govuk-visually-hidden">{{ 'previousReceivedExists.form.profDeputyCostsHasPrevious.label' | trans(transOptions) }}</span>
+            </a>
         </dd>
     {% endif %}
 </div>
@@ -35,9 +38,11 @@
             <dd class="govuk-summary-list__actions">
                 <a class="govuk-link behat-link-edit" href="{{ path('prof_deputy_costs_previous_received', {'reportId': report.id, 'previousReceivedId': pc.id, 'from': 'summary'}) }}">
                     {{ 'edit' | trans({}, 'common' ) }}
+                    <span class="govuk-visually-hidden">for previous period {{ pc.startDate | date('j F Y') }} - {{ pc.endDate | date('j F Y') }} £{{ pc.amount | money_format }}</span>
                 </a>
                 <a class="govuk-link govuk-!-margin-left-1 behat-link-delete" href="{{ path('prof_deputy_costs_previous_received_delete', {'reportId': report.id, 'previousReceivedId': pc.id}) }}">
                     {{ 'remove' | trans({}, 'common' ) }}
+                    <span class="govuk-visually-hidden">for previous period {{ pc.startDate | date('j F Y') }} - {{ pc.endDate | date('j F Y') }} £{{ pc.amount | money_format }}</span>
                 </a>
             </dd>
         {% endif %}

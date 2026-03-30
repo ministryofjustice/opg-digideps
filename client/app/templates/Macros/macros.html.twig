@@ -1,39 +1,30 @@
 {% macro breadcrumbs(report) %}
-    {% set isUserNdrEnabled = app.user.isNdrEnabled() %}
     {% set isOrgUser = app.user.isDeputyOrg() %}
 
     <div class="govuk-breadcrumbs">
         <ol class="govuk-breadcrumbs__list">
-                <li class="govuk-breadcrumbs__list-item">
+            <li class="govuk-breadcrumbs__list-item">
+                {% if isOrgUser %}
+                    <a href="{{ path('org_dashboard') }}" class="govuk-breadcrumbs__link">
+                        {{ 'dashboard' | trans({}, 'common' ) }}
+                    </a>
+                {% else  %}
+                    <a href="{{ path('homepage') }}" class="govuk-breadcrumbs__link">
+                        {{ 'yourReports' | trans({'deputyFirstname': app.user.firstname, 'deputyLastname': app.user.lastname}, 'common' ) }}
+                    </a>
+                {% endif %}
+            </li>
+            <li class="govuk-breadcrumbs__list-item">
+                <a href="{{ path('report_overview', {'reportId': report.id}) }}"
+                   class="govuk-breadcrumbs__link behat-link-breadcrumbs-report-overview"
+                   data-action="report.overview">
                     {% if isOrgUser %}
-                        <a href="{{ path('org_dashboard') }}" class="govuk-breadcrumbs__link">
-                            {{ 'dashboard' | trans({}, 'common' ) }}
-                        </a>
-                    {% else  %}
-                        <a href="{{ path('homepage') }}" class="govuk-breadcrumbs__link">
-                            {{ 'yourReports' | trans({'deputyFirstname': app.user.firstname, 'deputyLastname': app.user.lastname}, 'common' ) }}
-                        </a>
-                    {% endif %}
-                </li>
-                <li class="govuk-breadcrumbs__list-item">
-                    {% if report.type == 'ndr' %}
-                        <a href="{{ path('ndr_overview', {'ndrId': report.id}) }}"
-                           class="govuk-breadcrumbs__link behat-link-breadcrumbs-ndr-overview"
-                           data-action="report.overview">
-                            {{ 'newDeputyReportOverview' | trans({}, 'common' ) }}
-                        </a>
+                        {{ 'clientProfile' | trans({}, 'common' ) }}
                     {% else %}
-                        <a href="{{ path('report_overview', {'reportId': report.id}) }}"
-                           class="govuk-breadcrumbs__link behat-link-breadcrumbs-report-overview"
-                           data-action="report.overview">
-                            {% if isOrgUser %}
-                                {{ 'clientProfile' | trans({}, 'common' ) }}
-                            {% else %}
-                                {{ 'deputyReportOverview' | trans({ 'startYear': report.startDate | date('Y'),'endYear': report.endDate | date('Y') }, 'common' ) }}
-                            {% endif %}
-                        </a>
+                        {{ 'deputyReportOverview' | trans({ 'startYear': report.startDate | date('Y'),'endYear': report.endDate | date('Y') }, 'common' ) }}
                     {% endif %}
-                </li>
+                </a>
+            </li>
         </ol>
     </div>
 {% endmacro %}
@@ -394,21 +385,14 @@
         <nav role="navigation">
             <ul class="govuk-list govuk-!-font-size-16">
                 <li>
-                    {% if report.type == 'ndr' %}
-                        <a href="{{ path('ndr_overview', {'ndrId': report.id}) }}"
-                           class="govuk-link" data-action="report.overview">
-                            {{ 'newDeputyReportOverview' | trans({}, 'common' ) }}
-                        </a>
-                    {% else %}
-                        <a href="{{ path('report_overview', {'reportId': report.id}) }}"
-                           class="govuk-link" data-action="report.overview">
-                            {% if isOrgUser %}
-                                {{ 'clientProfile' | trans({}, 'common' ) }}
-                            {% else %}
-                                {{ 'deputyReportOverview' | trans({ 'startYear': report.startDate | date('Y'),'endYear': report.endDate | date('Y') }, 'common' ) }}
-                            {% endif %}
-                        </a>
-                    {% endif %}
+                    <a href="{{ path('report_overview', {'reportId': report.id}) }}"
+                       class="govuk-link" data-action="report.overview">
+                        {% if isOrgUser %}
+                            {{ 'clientProfile' | trans({}, 'common' ) }}
+                        {% else %}
+                            {{ 'deputyReportOverview' | trans({ 'startYear': report.startDate | date('Y'),'endYear': report.endDate | date('Y') }, 'common' ) }}
+                        {% endif %}
+                    </a>
                 </li>
                 {% if (section_link_params(report, section, +1)) %}
                     <li>
@@ -418,15 +402,13 @@
                         </a>
                     </li>
                 {% endif %}
-                {% if report.type != 'ndr' %}
-                    {% if report.hasSection('balance') %}
-                        {% if section in ['gifts','deputyExpenses','paFeeExpense', 'moneyIn','moneyOut','bankAccounts','profDeputyCosts'] %}
-                            <li>
-                                <a href="{{ path('balance', {'reportId': report.id}) }}" class="govuk-link">
-                                    Accounts balance check
-                                </a>
-                            </li>
-                        {% endif %}
+                {% if report.hasSection('balance') %}
+                    {% if section in ['gifts','deputyExpenses','paFeeExpense', 'moneyIn','moneyOut','bankAccounts','profDeputyCosts'] %}
+                        <li>
+                            <a href="{{ path('balance', {'reportId': report.id}) }}" class="govuk-link">
+                                Accounts balance check
+                            </a>
+                        </li>
                     {% endif %}
                 {% endif %}
             </ul>

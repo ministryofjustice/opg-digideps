@@ -33,7 +33,6 @@ class DocumentSyncRunnerTest extends KernelTestCase
             [
                 'document_id' => 6789,
                 'report_submission_id' => 1234,
-                'ndr_id' => 1234,
                 'case_number' => '1234abc',
                 'is_report_pdf' => true,
                 'filename' => 'test.pdf',
@@ -48,7 +47,6 @@ class DocumentSyncRunnerTest extends KernelTestCase
         $queuedDocumentData = (new QueuedDocumentData())
             ->setDocumentId(6789)
             ->setReportSubmissionId(1234)
-            ->setNdrId(1234)
             ->setCaseNumber('1234abc')
             ->setIsReportPdf(true)
             ->setFilename('test.pdf')

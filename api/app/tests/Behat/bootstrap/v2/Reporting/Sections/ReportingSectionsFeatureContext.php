@@ -34,7 +34,6 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     use ReportOverviewTrait;
     use ReportingSectionsTrait;
     use VisitsCareSectionTrait;
-    use IncomeBenefitsSectionTrait;
 
     public const string REPORT_SECTION_ENDPOINT = '/%s/%s/%s';
 

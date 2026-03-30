@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Service\Client\Internal;
 
 use App\Entity\Client;
-use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Event\ReportSubmittedEvent;
@@ -23,7 +22,6 @@ class ReportApi
     private const string REPORT_UNSUBMIT_ENDPOINT = 'report/%s/unsubmit';
     private const string REPORT_REFRESH_CACHE_ENDPOINT = 'report/%s/refresh-cache';
     private const string REPORT_GET_ALL_WITH_QUEUED_CHECKLISTS_ENDPOINT = 'report/all-with-queued-checklists';
-    private const string NDR_ENDPOINT_BY_ID = 'ndr/%s';
 
     public function __construct(
         private readonly RestClient $restClient,
@@ -82,26 +80,6 @@ class ReportApi
     {
         $report = $this->getReport($reportId, $groups);
 
-        if ($report->getSubmitted()) {
-            throw new ReportSubmittedException();
-        }
-
-        return $report;
-    }
-
-    public function getNdr(int $ndrId, array $groups): Ndr
-    {
-        $groups[] = 'ndr';
-        $groups[] = 'ndr-client';
-        $groups[] = 'client';
-        $groups = array_unique($groups);
-
-        return $this->restClient->get(sprintf(self::NDR_ENDPOINT_BY_ID, $ndrId), 'Ndr\Ndr', $groups);
-    }
-
-    public function getNdrIfNotSubmitted(int $reportId, array $groups = []): Ndr
-    {
-        $report = $this->getNdr($reportId, $groups);
         if ($report->getSubmitted()) {
             throw new ReportSubmittedException();
         }

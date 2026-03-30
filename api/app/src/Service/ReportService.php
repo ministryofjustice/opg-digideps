@@ -214,7 +214,7 @@ class ReportService
             $newAsset->setRentIncomeMonth($asset->getRentIncomeMonth());
         } elseif ($asset instanceof NdrAssetOther || $asset instanceof ReportAssetOther) {
             $newAsset = new ReportAssetOther();
-            $newAsset->setTitle($asset->getTitle());
+            $newAsset->setTitle($asset->getTitle() ?? '');
             $newAsset->setDescription($asset->getDescription());
             $newAsset->setValuationDate($asset->getValuationDate());
         } else {

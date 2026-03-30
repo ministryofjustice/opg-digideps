@@ -72,9 +72,9 @@ class VisitsCare
      * @JMS\Groups({"visits-care"})
      *
      * @Assert\NotBlank(message="visitsCare.whenWasCarePlanLastReviewed.notBlank", groups={"visits-care-care-plan-last-review"})
-     * @Assert\Type(type="DateTimeInterface", message="visitsCare.whenWasCarePlanLastReviewed.invalidMessage", groups={"visits-care-care-plan-last-review"} )
+     * @Assert\Type(type="DateTime", message="visitsCare.whenWasCarePlanLastReviewed.invalidMessage", groups={"visits-care-care-plan-last-review"} )
      */
-    private $whenWasCarePlanLastReviewed;
+    private ?\DateTimeInterface $whenWasCarePlanLastReviewed = null;
 
     /**
      * @return int $id
@@ -222,10 +222,8 @@ class VisitsCare
 
     /**
      * Get whenWasCarePlanLastReviewed.
-     *
-     * @return \DateTime
      */
-    public function getWhenWasCarePlanLastReviewed()
+    public function getWhenWasCarePlanLastReviewed(): ?\DateTimeInterface
     {
         return $this->whenWasCarePlanLastReviewed;
     }
@@ -254,13 +252,7 @@ class VisitsCare
         return $this->howIsCareFunded;
     }
 
-    /**
-     * If deputy lives with client then we don't
-     * all this other responses.
-     *
-     * @return bool
-     */
-    public function keepOnlyRelevantVisitsCareData()
+    public function keepOnlyRelevantVisitsCareData(): bool
     {
         if ('yes' == $this->doYouLiveWithClient) {
             $this->howOftenDoYouContactClient = null;

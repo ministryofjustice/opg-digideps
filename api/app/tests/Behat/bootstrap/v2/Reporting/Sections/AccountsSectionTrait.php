@@ -181,8 +181,6 @@ trait AccountsSectionTrait
             $this->accountList[0]['closingBalance'],
         );
 
-        $this->pressButton('Save and continue');
-
         $this->iAmOnAccountsSummaryPage();
     }
 
@@ -280,10 +278,6 @@ trait AccountsSectionTrait
             $this->selectOption('account[addAnother]', 'no');
 
             $this->pressButton('Save and continue');
-        }
-
-        if ('ndr' == $this->reportUrlPrefix) {
-            $this->accountList = array_reverse($this->accountList);
         }
     }
 
@@ -441,16 +435,14 @@ trait AccountsSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    public function iFillInAccountBalance(string $openingBalance, string $closingBalance, $trackFromEntry = true)
+    public function iFillInAccountBalance(string $openingBalance, string $closingBalance, bool $trackFromEntry = true)
     {
         $formSectionName = 'account' . $this->countOfAccountsAdded;
 
-        if ('ndr' == $this->reportUrlPrefix) {
-            $this->fillInField('account[balanceOnCourtOrderDate]', $openingBalance, $trackFromEntry ? $formSectionName : null);
-        } else {
-            $this->fillInField('account[openingBalance]', $openingBalance, $trackFromEntry ? $formSectionName : null);
-            $this->fillInField('account[closingBalance]', $closingBalance, $trackFromEntry ? $formSectionName : null);
-        }
+        $this->fillInField('account[openingBalance]', $openingBalance, $trackFromEntry ? $formSectionName : null);
+        $this->fillInField('account[closingBalance]', $closingBalance, $trackFromEntry ? $formSectionName : null);
+
+        $this->pressButton('Save and continue');
     }
 
     public function iRemoveAnAccount($accountOccurrence)
@@ -458,7 +450,7 @@ trait AccountsSectionTrait
         $this->iAmOnAccountsSummaryPage();
 
         $this->removeAnswerFromSection(
-            'ndr' == $this->reportUrlPrefix ? 'account[balanceOnCourtOrderDate]' : 'account[openingBalance]',
+            'account[openingBalance]',
             'account' . ($accountOccurrence + 1),
             true,
             'Yes, remove account'

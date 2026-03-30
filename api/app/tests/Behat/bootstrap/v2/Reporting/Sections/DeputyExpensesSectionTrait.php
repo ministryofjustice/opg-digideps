@@ -25,7 +25,7 @@ trait DeputyExpensesSectionTrait
         $this->clickLink('edit-deputy_expenses');
 
         $currentUrl = $this->getCurrentUrl();
-        $reportPrefix = $this->loggedInUserDetails->getCurrentReportNdrOrReport();
+        $reportPrefix = $this->loggedInUserDetails->getCurrentReport();
         $onSectionPage = preg_match("/{$reportPrefix}\/.*\/deputy-expenses$/", $currentUrl);
 
         if (!$onSectionPage) {
@@ -46,7 +46,7 @@ trait DeputyExpensesSectionTrait
         $this->visitPath($reportSectionUrl);
 
         $currentUrl = $this->getCurrentUrl();
-        $reportPrefix = $this->loggedInUserDetails->getCurrentReportNdrOrReport();
+        $reportPrefix = $this->loggedInUserDetails->getCurrentReport();
         $onSectionPage = preg_match("/{$reportPrefix}\/.*\/deputy-expenses$/", $currentUrl);
 
         if (!$onSectionPage) {
@@ -197,11 +197,7 @@ trait DeputyExpensesSectionTrait
     {
         $answers = $this->getSectionAnswers('expenseDetails')[0];
 
-        if ('ndr' == $this->reportUrlPrefix) {
-            $rowSelector = sprintf('//div[dt[normalize-space() ="%s"]]', $answers['expenses_single[explanation]']);
-        } else {
-            $rowSelector = sprintf('//tr[td[normalize-space() ="%s"]]', $answers['expenses_single[explanation]']);
-        }
+        $rowSelector = sprintf('//tr[td[normalize-space() ="%s"]]', $answers['expenses_single[explanation]']);
         $descriptionTableRow = $this->getSession()->getPage()->find('xpath', $rowSelector);
 
         $this->editFieldAnswerInSectionTrackTotal($descriptionTableRow, 'expenses_single[amount]', 'expenseDetails');
@@ -237,18 +233,6 @@ trait DeputyExpensesSectionTrait
      */
     public function iChangeMindAnswerNoToExpensesToDeclare()
     {
-        if ('ndr' == $this->reportUrlPrefix) {
-            $id = $this->interactingWithUserDetails->getUserId();
-            $user = $this->em->getRepository(User::class)->find($id);
-
-            $this->sectionStartText = sprintf('Did you pay for anything for %s before you got your court order?', $user->getFirstname());
-        }
-
-        $rowSelector = sprintf(
-            '//div[dt[normalize-space() ="%s"]]',
-            $this->sectionStartText
-        );
-
         $descriptionTableRow = $this->getSession()->getPage()->find('css', '.behat-region-paid-for-anything .behat-link-edit');
         $descriptionTableRow->click();
 

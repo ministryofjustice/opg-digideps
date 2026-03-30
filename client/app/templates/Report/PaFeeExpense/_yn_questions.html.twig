@@ -35,6 +35,7 @@
             <dd class="govuk-summary-list__actions">
                 <a class="govuk-link behat-link-edit" href="{{ url('pa_fee_expense_fee_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
                     {{ 'edit' | trans({}, 'common') }}
+                    <span class="govuk-visually-hidden">{{ 'feeExistPage.form.hasFees.label' | trans(transOptions) }}</span>
                 </a>
             </dd>
         {% endif %}
@@ -51,6 +52,7 @@
                 <dd class="govuk-summary-list__actions">
                     <a class="govuk-link behat-link-edit" href="{{ path('pa_fee_expense_fee_exist', { 'reportId': report.id, 'from': 'summary'}) }}">
                         {{ 'edit' | trans({}, 'common') }}
+                        <span class="govuk-visually-hidden">Reason for not having charged the client any fees for your services during the reporting period</span>
                     </a>
                 </dd>
             {% endif %}
@@ -82,6 +84,7 @@
             <dd class="govuk-summary-list__actions">
                 <a class="govuk-link behat-link-edit" href="{{ path('pa_fee_expense_other_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
                     {{ 'edit' | trans({}, 'common') }}
+                    <span class="govuk-visually-hidden">{{ 'otherExistPage.form.paidForAnything.label' | trans(transOptions)  }}</span>
                 </a>
             </dd>
         {% endif %}

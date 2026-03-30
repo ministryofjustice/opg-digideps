@@ -18,6 +18,7 @@ use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -44,7 +45,7 @@ class CoDeputyController extends AbstractController
 
         // redirect if user has missing details or is on wrong page
         if ($route = $redirector->getCorrectRouteIfDifferent($user, 'codep_verification')) {
-            return $this->redirectToRoute($route);
+            return $this->redirect($route);
         }
 
         $form = $this->createForm(CoDeputyVerificationType::class, $user);
@@ -54,13 +55,17 @@ class CoDeputyController extends AbstractController
             // get client validation errors, if any, and add to the form
             $client = new Client();
 
-            /** @var string $lastName */
-            $lastName = $form['clientLastname']->getData();
-            $client->setLastName($lastName);
+            if ($form->has('clientLastname') && $form->get('clientLastname') !== null) {
+                /** @var string $lastName */
+                $lastName = $form->get('clientLastname')->getData();
+                $client->setLastName($lastName);
+            }
 
-            /** @var string $caseNumber */
-            $caseNumber = $form['clientCaseNumber']->getData();
-            $client->setCaseNumber($caseNumber);
+            if ($form->has('clientCaseNumber') && $form->get('clientCaseNumber') !== null) {
+                /** @var string $caseNumber */
+                $caseNumber = $form->get('clientCaseNumber')->getData();
+                $client->setCaseNumber($caseNumber);
+            }
 
             $errors = $validator->validate($client, null, ['verify-codeputy']);
 
@@ -71,22 +76,46 @@ class CoDeputyController extends AbstractController
 
             if ($form->isValid()) {
                 $selfRegisterData = new SelfRegisterData();
-                $selfRegisterData->setFirstname($form['firstname']->getData());
-                $selfRegisterData->setLastname($form['lastname']->getData());
-                $selfRegisterData->setEmail($form['email']->getData());
-                $selfRegisterData->setPostcode($form['addressPostcode']->getData());
-                $selfRegisterData->setClientLastname($form['clientLastname']->getData());
-
-                // truncate case number if length is 10 digits long before setting
-                /** @var string $caseNumber */
-                $caseNumber = $form['clientCaseNumber']->getData();
-                if (10 == strlen($caseNumber)) {
-                    $selfRegisterData->setCaseNumber(substr($caseNumber, 0, -2));
-                } else {
-                    $selfRegisterData->setCaseNumber($caseNumber);
+                if ($form->has('firstname') && $form->get('firstname') !== null) {
+                    /** @var string $firstName */
+                    $firstName = $form->get('firstname')->getData();
+                    $selfRegisterData->setFirstname($firstName);
+                }
+                if ($form->has('lastname') && $form->get('lastname') !== null) {
+                    /** @var string $lastName */
+                    $lastName = $form->get('lastname')->getData();
+                    $selfRegisterData->setLastname($lastName);
+                }
+                if ($form->has('email') && $form->get('email') !== null) {
+                    /** @var string $email */
+                    $email = $form->get('email')->getData();
+                    $selfRegisterData->setEmail($email);
+                }
+                if ($form->has('addressPostcode') && $form->get('addressPostcode') !== null) {
+                    /** @var string $postcode */
+                    $postcode = $form->get('addressPostcode')->getData();
+                    $selfRegisterData->setPostcode($postcode);
+                }
+                if ($form->has('clientLastname') && $form->get('clientLastname') !== null) {
+                    /** @var string $clientLastName */
+                    $clientLastName = $form->get('clientLastname')->getData();
+                    $selfRegisterData->setClientLastname($clientLastName);
                 }
 
-                $clientId = $this->restClient->get('v2/client/case-number/' . $selfRegisterData->getCaseNumber(), 'Client')->getId();
+                if ($form->has('clientCaseNumber') && $form->get('clientCaseNumber') !== null) {
+                    // truncate case number if length is 10 digits long before setting
+                    /** @var string $caseNumber */
+                    $caseNumber = $form->get('clientCaseNumber')->getData();
+                    if (10 == strlen($caseNumber)) {
+                        $selfRegisterData->setCaseNumber(substr($caseNumber, 0, -2));
+                    } else {
+                        $selfRegisterData->setCaseNumber($caseNumber);
+                    }
+                }
+
+                /** @var Client $client */
+                $client = $this->restClient->get('v2/client/case-number/' . $selfRegisterData->getCaseNumber(), 'Client');
+                $clientId = $client->getId();
 
                 /** @var Client $mainClient */
                 $mainClient = $this->restClient->get('client/' . $clientId, 'Client', ['client', 'client-users', 'report-id', 'current-report', 'user']);
@@ -97,16 +126,17 @@ class CoDeputyController extends AbstractController
                 try {
                     $coDeputyVerificationData = $this->restClient->apiCall('post', 'selfregister/verifycodeputy', $selfRegisterData, 'array', [], false);
 
-                    if ($mainDeputy !== false && $mainDeputy->isNdrEnabled()) {
-                        $user->setNdrEnabled(true);
-                    }
-
                     $this->restClient->put('user/' . $user->getId(), $user);
 
                     /** @var User $user */
                     $user = $this->restClient->apiCall('put', 'selfregister/updatecodeputy/' . $user->getId(), $coDeputyVerificationData, 'User', [], false);
 
                     $this->deputyApi->createDeputyFromUser($user);
+
+                    // Update codeputy flag to true for main deputy user account
+                    if ($mainDeputy !== false) {
+                        $this->userApi->updateUserCodeputyFlagToTrue($mainDeputy->getId());
+                    }
 
                     return $this->redirect($this->generateUrl('homepage'));
                 } catch (\Throwable $e) {
@@ -162,18 +192,22 @@ class CoDeputyController extends AbstractController
                 $firstName = $existingCoDeputy->getFirstName();
                 $lastName = $existingCoDeputy->getLastName();
 
-                $formEmail = $form->getData()->getEmail();
-                $formFirstName = $form->getData()->getFirstName();
-                $formLastName = $form->getData()->getLastName();
+                /** @var User $coDeputy */
+                $coDeputy = $form->getData();
+                $formEmail = $coDeputy->getEmail();
+                $formFirstName = $coDeputy->getFirstName();
+                $formLastName = $coDeputy->getLastName();
 
                 // firstname, lastname or email were updated on the fly
                 if ($formEmail != $email || $formFirstName != $firstName || $formLastName != $lastName) {
-                    $this->restClient->put('codeputy/' . $existingCoDeputy->getId(), $form->getData(), []);
+                    $this->restClient->put('codeputy/' . $existingCoDeputy->getId(), $coDeputy, []);
                 }
 
                 $this->userApi->reInviteCoDeputy($formEmail, $loggedInUser);
 
-                $request->getSession()->getFlashBag()->add('notice', 'Deputy invitation was re-sent');
+                if ($request->getSession() instanceof Session) {
+                    $request->getSession()->getFlashBag()->add('notice', 'Deputy invitation was re-sent');
+                }
 
                 return $this->redirect($backLink);
             } catch (\Throwable $e) {
