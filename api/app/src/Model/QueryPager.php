@@ -40,6 +40,8 @@ class QueryPager
         /** @var int $numRows */
         $numRows = $countQuery->getSingleScalarResult();
 
+        error_log('NUM ROWS COUNT - ' . $numRows);
+
         if ($limit > 0 && $numRows > $limit) {
             $numRows = $limit;
         }
@@ -72,6 +74,9 @@ class QueryPager
             }
 
             foreach ($rows as $row) {
+                error_log('ROW DUMP');
+                var_dump($row);
+                error_log('ROW DUMP END');
                 yield $row;
             }
 

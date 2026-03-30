@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\StagingDeputyship;
 use App\Entity\StagingSelectedCandidate;
 use App\Model\QueryPager;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -58,18 +60,14 @@ class StagingSelectedCandidateRepository extends ServiceEntityRepository
             DeputyshipCandidateAction::UpdateDeputyStatus
         ];
 
-        $sql = <<<SQL
-        SELECT DISTINCT sc.order_uid, sc.action, d.order_type, d.report_type, d.is_hybrid, d.deputy_type
-        FROM selectedcandidates sc
-        INNER JOIN deputyship d ON sc.order_uid = d.order_uid
-        WHERE action IN (:actionsNeeded)
-        ORDER BY sc.order_uid
-        SQL;
-
-        $pageQueryBuilder = $this->getEntityManager()
-            ->getConnection()
-            ->prepare($sql)
-            ->setParameter('actionsNeeded', $actionsNeeded);
+        $pageQueryBuilder = $this->getEntityManager()->createQueryBuilder()
+            ->select('ssc.orderUid', 'ssc.action', 'ssc.orderType', 'ssc.reportType', 'sd.isHybrid', 'ssc.deputyType')
+            ->from(StagingSelectedCandidate::class, 'ssc')
+            ->innerJoin(StagingDeputyship::class, 'sd', Join::WITH, 'ssc.orderUid = sd.orderUid')
+            ->distinct()
+            ->where('ssc.action IN (:actions)')
+            ->setParameter('actions', $actionsNeeded)
+            ->orderBy('ssc.orderUid', 'ASC');
 
         $queryPager = new QueryPager($pageQueryBuilder);
 

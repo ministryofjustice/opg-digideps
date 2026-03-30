@@ -28,26 +28,26 @@ class ReportTypeCandidatesReportMatching
         ];
         foreach ($candidateGroup as $candidate) {
             if (is_null($courtOrderUid)) {
-                $courtOrderUid = $candidate['order_uid'];
+                $courtOrderUid = $candidate['orderUid'];
             }
 
             // store base report type; 102, 103, 104..
-            $baseReportTypeCandidate = substr($candidate['report_type'], 3);
+            $baseReportTypeCandidate = substr($candidate['reportType'], 3);
 
             if (!$reportChanges['nonLayDeputyAdded'] && !$hasNonLayDeputy) {
                 // PA & PRO can not both exist on the same courtOrder
-                $reportChanges['nonLayDeputyAdded'] = match ($candidate['deputy_type']) {
+                $reportChanges['nonLayDeputyAdded'] = match ($candidate['deputyType']) {
                     'PA', 'PRO' => true,
                     default => false,
                 };
 
                 if ($reportChanges['nonLayDeputyAdded']) {
-                    $deputyType = $candidate['deputy_type'];
+                    $deputyType = $candidate['deputyType'];
                 }
             }
 
-            if (!$reportChanges['changedToHybrid'] && !$isHybrid && $candidate['is_hybrid']) {
-                $reportChanges['changedToHybrid'] = $isHybrid = $candidate['is_hybrid'];
+            if (!$reportChanges['changedToHybrid'] && !$isHybrid && $candidate['isHybrid']) {
+                $reportChanges['changedToHybrid'] = $isHybrid = $candidate['isHybrid'];
 
                 // Currently orderType must be set as hw to correctly set hybrid report
                 $orderType = 'hw';
@@ -59,8 +59,8 @@ class ReportTypeCandidatesReportMatching
                 $baseReportType = $baseReportTypeCandidate;
             }
 
-            if (!$reportChanges['changedFromHybrid'] && $isHybrid && !$candidate['is_hybrid']) {
-                $reportChanges['changedToHybrid'] = $isHybrid = $candidate['is_hybrid'];
+            if (!$reportChanges['changedFromHybrid'] && $isHybrid && !$candidate['isHybrid']) {
+                $reportChanges['changedToHybrid'] = $isHybrid = $candidate['isHybrid'];
 
                 $orderType = match ($baseReportType) {
                     '102', '103' => 'pfa',

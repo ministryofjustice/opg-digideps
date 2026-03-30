@@ -14,7 +14,7 @@ class DeputyshipReportProcessingLookupCache
     private array $latestReportIdToCourtOrderUid;
 
     /** @var array<string, string>  */
-    private array $latestReportTypeToCourtOrderUid;
+    private array $latestReportTypeToId;
 
     public function __construct(private readonly ReportRepository $reportRepository)
     {
@@ -28,7 +28,7 @@ class DeputyshipReportProcessingLookupCache
 
         $latestReports = $this->reportRepository->findCourtOrdersLatestReport();
         $this->latestReportIdToCourtOrderUid = array_column($latestReports, 'id', 'court_order_uid');
-        $this->latestReportTypeToCourtOrderUid = array_column($latestReports, 'type', 'id');
+        $this->latestReportTypeToId = array_column($latestReports, 'type', 'id');
 
         $this->isInitialised = true;
 
@@ -53,6 +53,6 @@ class DeputyshipReportProcessingLookupCache
     {
         $this->throwIfNotInitialised();
 
-        return $this->latestReportTypeToCourtOrderUid[$id] ?? null;
+        return $this->latestReportTypeToId[$id] ?? null;
     }
 }

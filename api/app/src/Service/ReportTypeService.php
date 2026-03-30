@@ -18,9 +18,9 @@ class ReportTypeService
 
         $hybridSuffix = $isHybrid ? '-4' . $deputySuffix : $deputySuffix;
 
-        return match ([$opgReport, $orderType, $isHybrid]) {
-            ['opg102','pfa', false], ['opg103','pfa', false], ['opg104','hw', false] => $reportType . $deputySuffix,
-            ['opg102', 'hw', true], ['opg103', 'hw', true] => $reportType . $hybridSuffix,
+        return match ([$reportType, $orderType, $isHybrid]) {
+            ['102','pfa', false], ['103','pfa', false], ['104','hw', false] => $reportType . $deputySuffix,
+            ['102', 'hw', true], ['103', 'hw', true] => $reportType . $hybridSuffix,
         };
     }
 

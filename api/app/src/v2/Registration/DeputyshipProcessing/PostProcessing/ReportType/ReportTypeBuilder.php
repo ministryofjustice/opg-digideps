@@ -7,7 +7,7 @@ namespace App\v2\Registration\DeputyshipProcessing\PostProcessing\ReportType;
 use App\Model\DeputyshipProcessingRawDbAccess;
 use App\Model\DeputyshipProcessingRawDbAccessResult;
 use App\Model\DeputyshipReportProcessingLookupCache;
-use App\v2\Registration\Enum\ReportTypeBuilderResultOutcome;
+use App\v2\Registration\Enum\DeputyshipCandidatePostAction;
 
 class ReportTypeBuilder
 {
@@ -17,10 +17,14 @@ class ReportTypeBuilder
     ) {
     }
 
-    public function processCandidates(?string $orderUid, array $candidatesList): ReportTypeBuilderResultOutcome|DeputyshipProcessingRawDbAccessResult
+    public function processCandidates(?string $orderUid, array $candidatesList): DeputyshipProcessingRawDbAccessResult
     {
         if (is_null($orderUid)) {
-            return ReportTypeBuilderResultOutcome::Skipped;
+            return new DeputyshipProcessingRawDbAccessResult(
+                DeputyshipCandidatePostAction::UpdateReportTypeSkipped,
+                false,
+                null,
+            );
         }
 
         $latestReportId = $this->reportLookupCache->getLatestReportIdForCourtOrderUid($orderUid);
@@ -32,7 +36,11 @@ class ReportTypeBuilder
         );
 
         if (is_null($updatedReportType)) {
-            return ReportTypeBuilderResultOutcome::NoUpdateRequired;
+            return new DeputyshipProcessingRawDbAccessResult(
+                DeputyshipCandidatePostAction::UpdateReportTypeNoAction,
+                true,
+                null
+            );
         }
 
         $result = $this->dbAccess->updateReportType($latestReportId, $updatedReportType);
@@ -49,7 +57,7 @@ class ReportTypeBuilder
         $candidatesList = [];
 
         foreach ($candidates as $candidate) {
-            $orderUid = $candidate['order_uid'];
+            $orderUid = $candidate['orderUid'];
 
             if (is_null($currentOrderUid)) {
                 $currentOrderUid = $orderUid;

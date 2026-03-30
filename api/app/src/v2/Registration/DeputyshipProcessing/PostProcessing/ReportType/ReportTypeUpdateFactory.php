@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\v2\Registration\DeputyshipProcessing\PostProcessing\ReportType;
 
 use App\Factory\DataFactoryResult;
-use App\Model\DeputyshipProcessingRawDbAccessResult;
 use App\Repository\StagingSelectedCandidateRepository;
 use App\v2\Registration\DeputyshipProcessing\BuilderResult;
+use App\v2\Registration\Enum\DeputyshipCandidatePostAction;
 use App\v2\Registration\Enum\ReportTypeBuilderResultOutcome;
 
 class ReportTypeUpdateFactory
@@ -30,20 +30,23 @@ class ReportTypeUpdateFactory
     {
         $candidates = $this->staging->getOrdersWithPossibleReportTypeChange();
         $builderResults = $this->reportTypeBuilder->build($candidates);
-        $results = new ReportTypeBuilderResult(ReportTypeBuilderResultOutcome::UpdateSuccess);
+        $interimResults = new ReportTypeBuilderResult(ReportTypeBuilderResultOutcome::UpdateSuccess);
 
         foreach ($builderResults as $builderResult) {
-            match (true) {
-                $builderResult instanceof ReportTypeBuilderResultOutcome =>
-                    $results->addActionResult($builderResult),
-                $builderResult instanceof DeputyshipProcessingRawDbAccessResult =>
-                    $results->addCandidateResult($builderResult),
-            };
+            $interimResults->addCandidateResult($builderResult);
         }
+
+        $results = match (true) {
+            $interimResults->getActionCount(DeputyshipCandidatePostAction::UpdateReportTypeSkipped) > 0
+                => $interimResults->changeOutcome(ReportTypeBuilderResultOutcome::Skipped),
+            $interimResults->getActionCount(DeputyshipCandidatePostAction::UpdateReportTypeNoAction) > 0
+                => $interimResults->changeOutcome(ReportTypeBuilderResultOutcome::NoUpdateRequired),
+            default => $interimResults
+        };
 
         $dataFactoryResult = new DataFactoryResult(messages: [
             'Success' => [
-                'Updated report post processing ran successfully'
+                'Updated report type post processing ran successfully'
             ]
         ]);
 

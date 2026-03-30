@@ -6,6 +6,7 @@ namespace App\Model;
 
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
 use App\v2\Registration\Enum\DeputyshipCandidatePostAction;
+use Doctrine\DBAL\Result;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
 
@@ -236,6 +237,7 @@ class DeputyshipProcessingRawDbAccess
     public function updateReportType(int $reportId, string $reportType): DeputyshipProcessingRawDbAccessResult
     {
         try {
+            /** @var Result $result */
             $result = $this->ingestWriterEm->getConnection()->createQueryBuilder()
                 ->update('report')
                 ->set('type', ':reportType')
@@ -252,7 +254,7 @@ class DeputyshipProcessingRawDbAccess
                 $e->getMessage()
             );
 
-            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidatePostAction::UpdateReportType, false, null, $message);
+            return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidatePostAction::UpdateReportTypeSkipped, false, null, $message);
         }
     }
 }

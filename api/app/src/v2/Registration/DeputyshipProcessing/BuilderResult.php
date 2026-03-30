@@ -83,5 +83,7 @@ abstract class BuilderResult
         }
     }
 
-    abstract public function addActionResult(\UnitEnum $actionResult): void;
+    abstract public function changeOutcome(\UnitEnum $outcome): self;
+
+    abstract public function getActionCount(\UnitEnum $outcome): ?int;
 }

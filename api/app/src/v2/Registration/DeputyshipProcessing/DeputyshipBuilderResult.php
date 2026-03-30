@@ -14,6 +14,8 @@ use App\v2\Registration\Enum\DeputyshipCandidateAction;
  */
 class DeputyshipBuilderResult extends BuilderResult
 {
+    private bool $isInitialised = false;
+
     public function __construct(
         protected \UnitEnum $outcome,
         /** @var string[] $errors */
@@ -30,12 +32,31 @@ class DeputyshipBuilderResult extends BuilderResult
         foreach (DeputyshipCandidateAction::cases() as $case) {
             $this->candidatesApplied[$case->value] = 0;
         }
+
+        $this->isInitialised = true;
     }
 
-    public function addActionResult(\UnitEnum $actionResult): void
+    public function getActionCount(\UnitEnum $outcome): int
     {
-        if ($actionResult instanceof DeputyshipBuilderResultOutcome) {
-            ++$this->candidatesApplied[$actionResult->value];
+        if (!$outcome instanceof DeputyshipCandidateAction) {
+            throw new \TypeError('Incorrect enum type provided. Must provide DeputyshipBuilderResultOutcome');
         }
+
+        return $this->candidatesApplied[$outcome->value] ?? 0;
+    }
+
+    public function changeOutcome(\UnitEnum $outcome): self
+    {
+        if (!$this->isInitialised) {
+            throw new \RuntimeException($this::class . ' is not initialised, unable to change outcome');
+        }
+
+        if (!$outcome instanceof DeputyshipBuilderResultOutcome) {
+            throw new \TypeError('Incorrect enum type provided. Must provide DeputyshipBuilderResultOutcome');
+        }
+
+        $this->outcome = $outcome;
+
+        return $this;
     }
 }
