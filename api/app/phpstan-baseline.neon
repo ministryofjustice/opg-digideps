@@ -7536,11 +7536,6 @@ parameters:
 			path: src/v2/DTO/UserDto.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:addUser\\(\\)\\.$#"
-			count: 2
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:getAvailableSections\\(\\)\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
@@ -7661,33 +7656,13 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: "#^Parameter \\#1 \\$object of method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:persist\\(\\) expects object, App\\\\Entity\\\\User\\|null given\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: "#^Parameter \\#1 \\$object of method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:remove\\(\\) expects object, object\\|null given\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Parameter \\#1 \\$organisation of method App\\\\Entity\\\\Client\\:\\:setOrganisation\\(\\) expects App\\\\Entity\\\\Organisation\\|null, object given\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Parameter \\#1 \\$organisation of method App\\\\FixtureFactory\\\\UserFactory\\:\\:createGenericOrgUser\\(\\) expects App\\\\Entity\\\\Organisation, object given\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
 			message: "#^Parameter \\#1 \\$report of method App\\\\v2\\\\Fixture\\\\ReportSection\\:\\:completeSection\\(\\) expects App\\\\Entity\\\\ReportInterface, object given\\.$#"
 			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Parameter \\#2 \\$organisation of method App\\\\FixtureFactory\\\\ClientFactory\\:\\:createGenericOrgClient\\(\\) expects App\\\\Entity\\\\Organisation, object given\\.$#"
-			count: 2
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-

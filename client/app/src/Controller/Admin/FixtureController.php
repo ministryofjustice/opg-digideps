@@ -152,7 +152,9 @@ class FixtureController extends AbstractController
 
             $numberOfUsersToCreate = min($submittedFormData['orgSizeUsers'], 10);
             $remainingUsersToCreate = $submittedFormData['orgSizeUsers'];
+            $response = [];
             while ($remainingUsersToCreate > 0) {
+                /** @var array $response */
                 $response = $this->restClient->post(
                     'v2/fixture/court-order',
                     json_encode([
@@ -172,13 +174,23 @@ class FixtureController extends AbstractController
                 $remainingUsersToCreate -= $numberOfUsersToCreate;
             }
 
-            $query = ['query' => ['filter_by_ids' => implode(',', $response['deputyIds'])]];
-            $deputiesData = $this->restClient->get('/user/get-all', 'array', [], $query);
-            $sanitizedDeputyData = $this->removeNullValues($deputiesData);
+            if (array_key_exists('deputyIds', $response)) {
+                $query = ['query' => ['filter_by_ids' => implode(',', $response['deputyIds'])]];
 
-            $deputies = $this->serializer->deserialize(json_encode($sanitizedDeputyData), 'App\Entity\User[]', 'json');
+                $deputiesData = $this->restClient->get('/user/get-all', 'array', [], $query);
+                $sanitizedDeputyData = $this->removeNullValues($deputiesData);
 
-            $this->addFlash('courtOrderFixture', ['deputies' => array_reverse($deputies), 'caseNumber' => [$formAndRequestData['caseNumber']]]);
+                $deputies = $this->serializer->deserialize(
+                    json_encode($sanitizedDeputyData),
+                    'App\Entity\User[]',
+                    'json'
+                );
+
+                $this->addFlash(
+                    'courtOrderFixture',
+                    ['deputies' => array_reverse($deputies), 'caseNumber' => [$formAndRequestData['caseNumber']]]
+                );
+            }
         }
 
         return ['form' => $form->createView()];
