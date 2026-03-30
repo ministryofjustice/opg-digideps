@@ -36,10 +36,6 @@
             'inputClass': 'govuk-!-width-full',
             'formGroupClass': 'govuk-grid-column-one-quarter'}) }}
 
-        {{ form_checkbox(form.ndr_enabled, '', {
-            'labelText': 'NDR enabled',
-            'formGroupClass': 'govuk-grid-column-one-quarter govuk-!-margin-top-6'}) }}
-
         {{ form_checkbox(form.include_clients, '', {
             'labelText': 'Include clients',
             'formGroupClass': 'govuk-grid-column-one-quarter govuk-!-margin-top-6'}) }}
@@ -81,7 +77,6 @@
                 <tr>
                     <th scope="col">{{ (page ~ '.userTable.header.name') | trans }}</th>
                     <th scope="col">{{ (page ~ '.userTable.header.email') | trans }}</th>
-                    <th scope="col">{{ (page ~ '.userTable.header.ndr') | trans }}</th>
                     <th scope="col">{{ (page ~ '.userTable.header.active') | trans }}</th>
                     <th scope="col" class="numeric">{{ (page ~ '.userTable.header.regDate') | trans }}</th>
                 </tr>
@@ -108,9 +103,6 @@
                         {% endif %}
                     </td>
                     <td>{{ user.adManaged ? '-' : user.email }}</td>
-                    <td class="behat-region-{{ user.email | behat_namify }}-ndr-enabled">
-                        {{ user.ndrEnabled ? 'yes' | trans({}, 'common') : 'no' | trans({}, 'common') }}
-                    </td>
                     <td>
                         {% if user.active %}
                             {{ 'yes' | trans({}, 'common') }}

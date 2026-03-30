@@ -25,5 +25,3 @@ Feature: Admin - User Search (same functionality for all admin types)
         Then I should see the correct search results
         When I search for one of the test users with the All Roles filter
         Then I should see the correct search results
-        When I search for one of the NDR test users with the All Roles filter
-        Then I should see the correct search results

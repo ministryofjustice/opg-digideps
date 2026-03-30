@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * getFirstPageAfterLogin() called after authentication
  * getHomepageRedirect() called if returning to base domain
  * Both methods have self-contained logic for prof/pa and admin landing pages
- * This logic is used to determine which page the user should be directed to depending on their status (NDR/Co-Deputy/Multi-client).
+ * This logic is used to determine which page the user should be directed to depending on their status (Co-Deputy/Multi-client).
  */
 class Redirector
 {
@@ -75,7 +75,7 @@ class Redirector
         return $this->router->generate('access_denied');
     }
 
-    public function getCorrectRouteIfDifferent(User $user, ?string $currentRoute = null): bool|string
+    public function getCorrectRouteIfDifferent(User $user, ?string $currentRoute = null): false|string
     {
         $coDeputySignupRoutes = [User::UNKNOWN_REGISTRATION_ROUTE, User::CO_DEPUTY_INVITE];
 

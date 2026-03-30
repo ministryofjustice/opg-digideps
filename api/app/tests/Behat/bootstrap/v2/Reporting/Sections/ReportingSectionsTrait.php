@@ -34,16 +34,6 @@ trait ReportingSectionsTrait
     }
 
     /**
-     * @When I view the NDR overview page
-     */
-    public function iGoToNDROverviewUrl()
-    {
-        $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportOverviewUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'overview');
-        $this->visitPath($reportOverviewUrl);
-    }
-
-    /**
      * @When I should see :section as :status
      */
     public function iShouldSeeSectionAs($section, $status)

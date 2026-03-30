@@ -38,15 +38,6 @@ Feature: Org CSV data ingestion - sirius source data
         Then the report type should be updated
         And the count of the new 'org' entities added should be in the command output
 
-#    @super-admin
-#    Scenario: Uploading a CSV that contains a new named deputy in a new organisation for an existing client - same case number, same made date
-#        Given a super admin user accesses the admin app
-#        When I upload an org CSV that has a new named deputy in a new organisation for an existing client
-#        Then the named deputy associated with the client should be updated to the new named deputy
-#        And the organisation associated with the client should be updated to the new organisation
-#        And the report associated with the client should remain the same
-
-    #Temporary test to ensure that we are not updating the client if the organisation has changed
     @super-admin
     Scenario: Uploading a CSV that contains a new named deputy in a new organisation for an existing client - same case number, same made date
         Given a csv has been uploaded to the sirius bucket with the file 'org-1-row-new-named-deputy-and-org-existing-client.csv'
@@ -65,12 +56,6 @@ Feature: Org CSV data ingestion - sirius source data
         And the report associated with the client should remain the same
         And the count of the new 'org' entities added should be in the command output
 
-#    @super-admin
-#    Scenario: Uploading a CSV that contains a new named deputy in a new organisation for an existing client - same case number, new made date
-#        Given a super admin user accesses the admin app
-#        When I upload an org CSV that has a an existing case number and new made date for an existing client
-#        Then a new report should be generated for the client
-
     @super-admin
     Scenario: Uploading a CSV where the same named deputy appears with two addresses
         Given a csv has been uploaded to the sirius bucket with the file 'org-2-rows-1-named-deputy-with-different-addresses.csv'
@@ -87,26 +72,10 @@ Feature: Org CSV data ingestion - sirius source data
         Then the new 'org' entities should be added to the database
         And the count of the new 'org' entities added should be in the command output
 
-# Needs further rewrite so we're gracefully handling missing columns & not just stopping the process.
-# Currently throws critical error
-#    @super-admin
-#    Scenario: Uploading a CSV that has missing required columns
-#        Given a super admin user accesses the admin app
-#        When I upload an 'org' CSV that does not have any of the required columns
-#        Then I should see an error showing which columns are missing on the 'org' csv upload page
-#        And the count of the new 'org' entities added should be in the command output
-# As above
-#    @super-admin
-#    Scenario: Uploading a CSV that has an unexpected column
-#        Given a super admin user accesses the admin app
-#        When I upload an org CSV that has an 'NDR' column
-#        Then I should see an error showing the column that was unexpected
-#        And the count of the new 'org' entities added should be in the command output
-
     @super-admin
     Scenario: Uploading a CSV that has an organisation name but missing deputy first and last name
         Given a csv has been uploaded to the sirius bucket with the file 'org-1-row-1-named-deputy-with-org-name-no-first-last-name.csv'
-        When I run the lay CSV command the file has an organisation name 'Conglom-O Corporation' but missing deputy first and last name
+        When I run the lay CSV command the file has an organisation name but is missing deputy first and last names
         Then the named deputy 'first' name should be 'Conglom-O Corporation'
         And the named deputy 'last' name should be 'empty'
         And the count of the new 'org' entities added should be in the command output

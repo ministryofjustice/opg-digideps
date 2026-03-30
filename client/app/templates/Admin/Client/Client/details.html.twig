@@ -108,11 +108,10 @@
         {% endif %}
     {% endif %}
 
-    {% set allReports = client.reports|merge([client.ndr])|filter(r => (r is not null)) %}
     {% set reportsByGroup = {
-        active: allReports | filter(r => not r.submitted and (r.unSubmitDate is not defined or not r.unSubmitDate)),
-        submitted: allReports | filter(r => r.submitted),
-        incomplete: allReports | filter(r => (r.unSubmitDate is defined and r.unSubmitDate) and not r.submitted),
+        active: client.reports | filter(r => not r.submitted and (r.unSubmitDate is not defined or not r.unSubmitDate)),
+        submitted: client.reports | filter(r => r.submitted),
+        incomplete: client.reports | filter(r => (r.unSubmitDate is defined and r.unSubmitDate) and not r.submitted),
     } %}
 
     <h2 class="govuk-heading-l">
@@ -143,33 +142,18 @@
                 </thead>
                 <tbody class="govuk-table__body">
                 {% for report in reports %}
-                    {% if report.type == 'ndr' %}
-                        {% set enableManageLink = false %}
-                        {% set enableChecklistLink = false %}
-                        {% set enableDownloadLink = false %}
-                        {% set behatRegionPrefix = 'behat-region-report-ndr' %}
-                    {% else %}
-                        {% set isProfReport = report.hasSection('profCurrentFees') %}
-                        {% set enableManageLink = true %}
-                        {% set enableChecklistLink = (report.submitted or report.submitDate) and not isProfReport %}
-                        {% set enableDownloadLink = (report.submitted or report.submitDate) %}
-                        {% set behatRegionPrefix = 'behat-region-report-' ~ report.getPeriod() | replace({' ': '-'}) %}
-                    {% endif %}
+                    {% set isProfReport = report.hasSection('profCurrentFees') %}
+                    {% set enableManageLink = true %}
+                    {% set enableChecklistLink = (report.submitted or report.submitDate) and not isProfReport %}
+                    {% set enableDownloadLink = (report.submitted or report.submitDate) %}
+                    {% set behatRegionPrefix = 'behat-region-report-' ~ report.getPeriod() | replace({' ': '-'}) %}
 
                     <tr class="govuk-table__row {{ behatRegionPrefix }}">
                         <td class="govuk-table__cell">
-                            {% if report.type == 'ndr' %}
-                                NDR
-                            {% else %}
-                                {{ report.period | replace({' to ': '-'}) }}
-                            {% endif %}
+                            {{ report.period | replace({' to ': '-'}) }}
                         </td>
                         <td class="govuk-table__cell">
-                            {% if report.type == 'ndr' %}
-                                NDR
-                            {% else %}
-                                OPG{{ report.type | upper }}
-                            {% endif %}
+                            OPG{{ report.type | upper }}
                         </td>
                         <td class="govuk-table__cell {{ behatRegionPrefix }}-due-date">
                             {{ report.dueDate | date("j F Y") }}

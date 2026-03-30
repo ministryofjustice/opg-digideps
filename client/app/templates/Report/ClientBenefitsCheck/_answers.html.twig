@@ -68,8 +68,7 @@
                                     'client_benefits_check_step',
                                     {
                                         reportId: report.id,
-                                        step: 1,
-                                        reportOrNdr: reportOrNdr
+                                        step: 1
                                     }
                                 )
                                 }}?from=summary"
@@ -139,8 +138,7 @@
                                     'client_benefits_check_step',
                                     {
                                         reportId: report.id,
-                                        step: 2,
-                                        reportOrNdr: reportOrNdr
+                                        step: 2
                                     }
                                 )
                                 }}"
@@ -176,8 +174,7 @@
                                         'client_benefits_check_step',
                                         {
                                             reportId: report.id,
-                                            step: 3,
-                                            reportOrNdr: reportOrNdr
+                                            step: 3
                                         }
                                     )
                                     }}?from=summary"
@@ -227,7 +224,6 @@
                             {% set editPath = path('client_benefits_check_step', {
                                     moneyTypeId: money.id,
                                     reportId: report.id,
-                                    reportOrNdr: reportOrNdr,
                                     step: 3,
                                 })
                             %}
@@ -235,8 +231,7 @@
                             {% set removePath = path('client_benefits_check_remove_money_type', {
                                     moneyTypeId: money.id,
                                     reportId: report.id,
-                                    reportOrNdr: reportOrNdr,
-                                })
+                            })
                             %}
 
                             <dd class="govuk-summary-list__value govuk-!-text-align-right">

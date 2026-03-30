@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Common;
 
-use Exception;
-use DateTime;
 use App\Entity\Report\Report;
 use App\Tests\Behat\BehatException;
 
@@ -22,38 +20,24 @@ trait ReportTrait
      */
     public function iSubmitCurrentOrPreviousTheReport(string $currentOrPrevious): void
     {
-        [$ndrOrReport, $reportId] = $this->getCorrectReport($currentOrPrevious);
-        $this->submitSteps($ndrOrReport, $reportId);
-    }
+        $reportId = 'current' === $currentOrPrevious
+            ? $this->loggedInUserDetails->getCurrentReportId()
+            : $this->loggedInUserDetails->getPreviousReportId();
 
-    private function getCorrectReport(string $currentOrPrevious): array
-    {
-        return [
-            'current' === $currentOrPrevious ? $this->loggedInUserDetails->getCurrentReportNdrOrReport() : $this->loggedInUserDetails->getPreviousReportNdrOrReport(),
-            'current' === $currentOrPrevious ? $this->loggedInUserDetails->getCurrentReportId() : $this->loggedInUserDetails->getPreviousReportId(),
-        ];
-    }
-
-    private function submitSteps(string $ndrOrReport, int $reportId): void
-    {
-        $this->visit("$ndrOrReport/$reportId/overview");
+        $this->visit("report/$reportId/overview");
 
         try {
             $this->clickLink('Preview and check report');
-        } catch (Exception $e) {
+        } catch (\Exception) {
             try {
                 $this->clickLink('Review and submit');
-            } catch (Exception $e) {
+            } catch (\Exception) {
                 $this->clickLink('Continue');
             }
         }
 
-        if ('ndr' == $ndrOrReport) {
-            $this->clickLink('Continue');
-        } else {
-            $this->clickLink('Confirm contact details');
-            $this->clickLink('Continue to declaration');
-        }
+        $this->clickLink('Confirm contact details');
+        $this->clickLink('Continue to declaration');
     }
 
     /**
@@ -62,17 +46,15 @@ trait ReportTrait
      */
     public function iFillInTheDeclarationPageAndSubmitTheReport(): void
     {
-        [$ndrOrReport] = $this->getCorrectReport('current');
-
-        $this->checkOption(sprintf('%s_declaration[agree]', $ndrOrReport));
-        $this->selectOption(sprintf('%s_declaration[agreedBehalfDeputy]', $ndrOrReport), 'only_deputy');
-        $this->pressButton(sprintf('%s_declaration[save]', $ndrOrReport));
+        $this->checkOption('report_declaration[agree]');
+        $this->selectOption('report_declaration[agreedBehalfDeputy]', 'only_deputy');
+        $this->pressButton('report_declaration[save]');
     }
 
     /**
      * @Then /^I can go back to the contact details page$/
      */
-    public function iCanGoBackToTheContactDetailsPage()
+    public function iCanGoBackToTheContactDetailsPage(): void
     {
         $this->clickLink('Go back');
         $this->iAmOnReportConfirmDetailsPage();
@@ -82,7 +64,7 @@ trait ReportTrait
     /**
      * @Given /^I can go back to the report review page$/
      */
-    public function iCanGoBackToTheReportReviewPage()
+    public function iCanGoBackToTheReportReviewPage(): void
     {
         $this->clickLink('Go back');
         $this->iAmOnReportReviewPage();
@@ -92,7 +74,7 @@ trait ReportTrait
     /**
      * @Given /^I can go back to the report overview page$/
      */
-    public function iCanGoBackToTheReportOverviewPage()
+    public function iCanGoBackToTheReportOverviewPage(): void
     {
         $this->clickLink('Go back');
         $this->iAmOnReportsOverviewPage();
@@ -104,10 +86,10 @@ trait ReportTrait
      * @Given a Lay Deputy has not started a Pfa High Assets report
      * @Given a Lay Deputy logs in again
      */
-    public function aLayDeputyHasNotStartedAReport()
+    public function aLayDeputyHasNotStartedAReport(): void
     {
         if (empty($this->layDeputyNotStartedPfaHighAssetsDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedPfaHighAssetsDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedPfaHighAssetsDetails');
         }
 
         $this->loginToFrontendAs($this->layDeputyNotStartedPfaHighAssetsDetails->getUserEmail());
@@ -118,12 +100,12 @@ trait ReportTrait
      * @Given a Lay Deputy has a completed report
      * @Given a Lay Deputy has completed a Pfa High Assets report
      *
-     * @throws Exception
+     * @throws \Exception
      */
-    public function aLayDeputyHasCompletedReport()
+    public function aLayDeputyHasCompletedReport(): void
     {
         if (empty($this->layDeputyCompletedPfaHighAssetsDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedPfaHighAssetsDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedPfaHighAssetsDetails');
         }
 
         $this->loginToFrontendAs($this->layDeputyCompletedPfaHighAssetsDetails->getUserEmail());
@@ -133,12 +115,12 @@ trait ReportTrait
     /**
      * @Given a Lay Deputy has a completed report with no client details
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function aLayDeputyHasCompletedReportWithNoClientDetails(): void
     {
         if (empty($this->layDeputyCompletedPfaHighAssetsDetailsNoClientDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedPfaHighAssetsDetailsNoClientDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedPfaHighAssetsDetailsNoClientDetails');
         }
 
         $this->loginToFrontendAs($this->layDeputyCompletedPfaHighAssetsDetailsNoClientDetails->getUserEmail());
@@ -149,12 +131,12 @@ trait ReportTrait
      * @Given a Lay Deputy has submitted a report
      * @Given a Lay Deputy has submitted a Pfa High Assets report
      *
-     * @throws Exception
+     * @throws \Exception
      */
-    public function aLayDeputyHasSubmittedAReport()
+    public function aLayDeputyHasSubmittedAReport(): void
     {
         if (empty($this->layDeputySubmittedPfaHighAssetsDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputySubmittedPfaHighAssetsDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $layDeputySubmittedPfaHighAssetsDetails');
         }
 
         $this->loginToFrontendAs($this->layDeputySubmittedPfaHighAssetsDetails->getUserEmail());
@@ -164,12 +146,12 @@ trait ReportTrait
     /**
      * @Given a Lay Deputy has submitted a health and welfare report
      *
-     * @throws Exception
+     * @throws \Exception
      */
-    public function aLayDeputyHasSubmittedAHealthAndWelfareReport()
+    public function aLayDeputyHasSubmittedAHealthAndWelfareReport(): void
     {
         if (empty($this->layDeputySubmittedHealthWelfareDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputySubmittedHealthWelfareDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $layDeputySubmittedHealthWelfareDetails');
         }
 
         $this->loginToFrontendAs($this->layDeputySubmittedHealthWelfareDetails->getUserEmail());
@@ -177,42 +159,12 @@ trait ReportTrait
     }
 
     /**
-     * @Given a Lay Deputy has not started an NDR report
-     */
-    public function aNdrLayDeputyHasNotStartedAReport()
-    {
-        if (empty($this->layNdrDeputyNotStartedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layNdrDeputyNotStartedDetails');
-        }
-
-        $this->loginToFrontendAs($this->layNdrDeputyNotStartedDetails->getUserEmail());
-        $this->interactingWithUserDetails = $this->layNdrDeputyNotStartedDetails;
-        $this->reportUrlPrefix = $this->layNdrDeputyNotStartedDetails->getCurrentReportNdrOrReport();
-    }
-
-    /**
-     * @Given a Lay Deputy has a completed NDR report
-     *
-     * @throws Exception
-     */
-    public function aNdrLayDeputyHasCompletedReport()
-    {
-        if (empty($this->layNdrDeputyCompletedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layNdrDeputyCompletedDetails');
-        }
-
-        $this->loginToFrontendAs($this->layNdrDeputyCompletedDetails->getUserEmail());
-        $this->interactingWithUserDetails = $this->layNdrDeputyCompletedDetails;
-        $this->reportUrlPrefix = $this->layNdrDeputyCompletedDetails->getCurrentReportNdrOrReport();
-    }
-
-    /**
      * @Given a Professional Admin Deputy has not started a report
      */
-    public function aProfessionalAdminDeputyHasNotStartedAReport()
+    public function aProfessionalAdminDeputyHasNotStartedAReport(): void
     {
         if (empty($this->profAdminDeputyHealthWelfareNotStartedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $profAdminDeputyHealthWelfareNotStartedDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $profAdminDeputyHealthWelfareNotStartedDetails');
         }
 
         $this->loginToFrontendAs($this->profAdminDeputyHealthWelfareNotStartedDetails->getUserEmail());
@@ -222,10 +174,10 @@ trait ReportTrait
     /**
      * @Given a Public Authority Admin Deputy has not started a report
      */
-    public function aPublicAuthorityAdminDeputyHasNotStartedAReport()
+    public function aPublicAuthorityAdminDeputyHasNotStartedAReport(): void
     {
         if (empty($this->paAdminDeputyNotStartedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $paAdminDeputyNotStartedDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $paAdminDeputyNotStartedDetails');
         }
 
         $this->loginToFrontendAs($this->paAdminDeputyNotStartedDetails->getUserEmail());
@@ -234,10 +186,10 @@ trait ReportTrait
     /**
      * @Given a Professional Team Deputy has not started a health and welfare report
      */
-    public function aProfessionalHealthWelfareDeputyHasNotStartedAReport()
+    public function aProfessionalHealthWelfareDeputyHasNotStartedAReport(): void
     {
         if (empty($this->profTeamDeputyNotStartedHealthWelfareDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $profTeamDeputyNotStartedHealthWelfareDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $profTeamDeputyNotStartedHealthWelfareDetails');
         }
 
         $this->loginToFrontendAs($this->profTeamDeputyNotStartedHealthWelfareDetails->getUserEmail());
@@ -247,10 +199,10 @@ trait ReportTrait
     /**
      * @Given a Professional Team Deputy has completed a health and welfare report
      */
-    public function aProfessionalHealthWelfareDeputyHasCompletedAReport()
+    public function aProfessionalHealthWelfareDeputyHasCompletedAReport(): void
     {
         if (empty($this->profTeamDeputyCompletedHealthWelfareDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $profTeamDeputyCompletedHealthWelfareDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $profTeamDeputyCompletedHealthWelfareDetails');
         }
 
         $this->loginToFrontendAs($this->profTeamDeputyCompletedHealthWelfareDetails->getUserEmail());
@@ -260,10 +212,10 @@ trait ReportTrait
     /**
      * @Given a Lay Deputy has not started a Pfa Low Assets report
      */
-    public function aLayDeputyHasNotStartedAPfaLowAssetsReport()
+    public function aLayDeputyHasNotStartedAPfaLowAssetsReport(): void
     {
         if (empty($this->layDeputyNotStartedPfaLowAssetsDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedPfaLowAssetsDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedPfaLowAssetsDetails');
         }
 
         $this->loginToFrontendAs($this->layDeputyNotStartedPfaLowAssetsDetails->getUserEmail());
@@ -273,10 +225,10 @@ trait ReportTrait
     /**
      * @Given a Professional Admin has not started a Pfa Low Assets report
      */
-    public function aProfDeputyHasNotStartedAPfaLowAssetsReport()
+    public function aProfDeputyHasNotStartedAPfaLowAssetsReport(): void
     {
         if (empty($this->profAdminDeputyNotStartedPfaLowAssetsDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $profAdminDeputyNotStartedPfaLowAssetsDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $profAdminDeputyNotStartedPfaLowAssetsDetails');
         }
 
         $this->loginToFrontendAs($this->profAdminDeputyNotStartedPfaLowAssetsDetails->getUserEmail());
@@ -286,10 +238,10 @@ trait ReportTrait
     /**
      * @Given a Lay Deputy has completed a Pfa Low Assets report
      */
-    public function aLayDeputyHasCompletedAPfaLowAssetsReport()
+    public function aLayDeputyHasCompletedAPfaLowAssetsReport(): void
     {
         if (empty($this->layDeputyCompletedPfaLowAssetsDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedPfaLowAssetsDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedPfaLowAssetsDetails');
         }
 
         $this->loginToFrontendAs($this->layDeputyCompletedPfaLowAssetsDetails->getUserEmail());
@@ -299,10 +251,10 @@ trait ReportTrait
     /**
      * @Given a Professional Admin has completed a Pfa Low Assets report
      */
-    public function aProfAdminDeputyHasCompletedAPfaLowAssetsReport()
+    public function aProfAdminDeputyHasCompletedAPfaLowAssetsReport(): void
     {
         if (empty($this->profAdminDeputyCompletedPfaLowAssetsDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $profAdminDeputyCompletedPfaLowAssetsDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $profAdminDeputyCompletedPfaLowAssetsDetails');
         }
 
         $this->loginToFrontendAs($this->profAdminDeputyCompletedPfaLowAssetsDetails->getUserEmail());
@@ -312,10 +264,10 @@ trait ReportTrait
     /**
      * @Given a Lay Deputy has not started a Health and Welfare report
      */
-    public function aLayDeputyHasNotStartedAHealthWelfareReport()
+    public function aLayDeputyHasNotStartedAHealthWelfareReport(): void
     {
         if (empty($this->layDeputyNotStartedHealthWelfareDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedHealthWelfareDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedHealthWelfareDetails');
         }
 
         $this->loginToFrontendAs($this->layDeputyNotStartedHealthWelfareDetails->getUserEmail());
@@ -325,10 +277,10 @@ trait ReportTrait
     /**
      * @Given a Lay Deputy has completed a Health and Welfare report
      */
-    public function aLayDeputyHasCompletedAHealthWelfareReport()
+    public function aLayDeputyHasCompletedAHealthWelfareReport(): void
     {
         if (empty($this->layDeputyCompletedHealthWelfareDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedHealthWelfareDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedHealthWelfareDetails');
         }
 
         $this->loginToFrontendAs($this->layDeputyCompletedHealthWelfareDetails->getUserEmail());
@@ -338,10 +290,10 @@ trait ReportTrait
     /**
      * @Given a Lay Deputy has not started a Combined High Assets report
      */
-    public function aLayDeputyHasNotStartedACombinedHighAssetsReport()
+    public function aLayDeputyHasNotStartedACombinedHighAssetsReport(): void
     {
         if (empty($this->layDeputyNotStartedCombinedHighDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedCombinedHighDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $layDeputyNotStartedCombinedHighDetails');
         }
 
         $this->interactingWithUserDetails = $this->layDeputyNotStartedCombinedHighDetails;
@@ -351,10 +303,10 @@ trait ReportTrait
     /**
      * @Given a Lay Deputy has completed a Combined High Assets report
      */
-    public function aLayDeputyHasCompletedACombinedHighAssetsReport()
+    public function aLayDeputyHasCompletedACombinedHighAssetsReport(): void
     {
         if (empty($this->layDeputyCompletedCombinedHighDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedCombinedHighDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $layDeputyCompletedCombinedHighDetails');
         }
 
         $this->interactingWithUserDetails = $this->layDeputyCompletedCombinedHighDetails;
@@ -364,10 +316,10 @@ trait ReportTrait
     /**
      * @Given a Lay Deputy has submitted a Combined High Assets report
      */
-    public function aLayDeputyHasSubmittedACombinedHighAssetsReport()
+    public function aLayDeputyHasSubmittedACombinedHighAssetsReport(): void
     {
         if (empty($this->layDeputySubmittedCombinedHighDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $layDeputySubmittedCombinedHighDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $layDeputySubmittedCombinedHighDetails');
         }
 
         $this->loginToFrontendAs($this->layDeputySubmittedCombinedHighDetails->getUserEmail());
@@ -380,7 +332,7 @@ trait ReportTrait
      *
      * @throws BehatException
      */
-    public function aProfessionalDeputyHasSubmittedAReport()
+    public function aProfessionalDeputyHasSubmittedAReport(): void
     {
         if (empty($this->profAdminDeputyHealthWelfareSubmittedDetails)) {
             throw new BehatException('It looks like fixtures are not loaded - missing $profAdminDeputySubmittedDetails');
@@ -395,7 +347,7 @@ trait ReportTrait
      *
      * @throws BehatException
      */
-    public function aPublicAuthorityDeputyHasSubmittedAReport()
+    public function aPublicAuthorityDeputyHasSubmittedAReport(): void
     {
         if (empty($this->publicAuthorityNamedDeputySubmittedDetails)) {
             throw new BehatException('It looks like fixtures are not loaded - missing $publicAuthorityNamedDeputySubmittedDetails');
@@ -409,10 +361,10 @@ trait ReportTrait
      * @Given a Professional Deputy has completed a Pfa Low Assets report
      * @Given a Professional Deputy has completed a report
      */
-    public function aProfDeputyHasCompletedAPfaLowAssetsReport()
+    public function aProfDeputyHasCompletedAPfaLowAssetsReport(): void
     {
         if (empty($this->profAdminDeputyHealthWelfareCompletedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $profAdminDeputyCompletedDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $profAdminDeputyCompletedDetails');
         }
 
         $this->loginToFrontendAs($this->profAdminDeputyHealthWelfareCompletedDetails->getUserEmail());
@@ -422,10 +374,10 @@ trait ReportTrait
     /**
      * @Given a Professional Deputy has not started a Pfa High Assets report
      */
-    public function aProfDeputyHasNotStartedAPfaHighAssetsReport()
+    public function aProfDeputyHasNotStartedAPfaHighAssetsReport(): void
     {
         if (empty($this->profNamedDeputyNotStartedPfaHighDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $profNamedDeputyNotStartedPfaHighDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $profNamedDeputyNotStartedPfaHighDetails');
         }
 
         $this->loginToFrontendAs($this->profNamedDeputyNotStartedPfaHighDetails->getUserEmail());
@@ -435,10 +387,10 @@ trait ReportTrait
     /**
      * @Given a Professional Deputy has submitted a Pfa High Assets report
      */
-    public function aProfDeputyHasSubmittedAPfaHighAssetsReport()
+    public function aProfDeputyHasSubmittedAPfaHighAssetsReport(): void
     {
         if (empty($this->profNamedDeputySubmittedPfaHighDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $profNamedDeputySubmittedPfaHighDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $profNamedDeputySubmittedPfaHighDetails');
         }
 
         $this->loginToFrontendAs($this->profNamedDeputySubmittedPfaHighDetails->getUserEmail());
@@ -448,10 +400,10 @@ trait ReportTrait
     /**
      * @Given a Public Authority Deputy has not started a Combined High Assets report
      */
-    public function aPublicAuthorityDeputyHasNotStartedACombinedHighAssetsReport()
+    public function aPublicAuthorityDeputyHasNotStartedACombinedHighAssetsReport(): void
     {
         if (empty($this->publicAuthorityAdminCombinedHighNotStartedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $publicAuthorityAdminCombinedHighNotStartedDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $publicAuthorityAdminCombinedHighNotStartedDetails');
         }
 
         $this->loginToFrontendAs($this->publicAuthorityAdminCombinedHighNotStartedDetails->getUserEmail());
@@ -461,10 +413,10 @@ trait ReportTrait
     /**
      * @Given a Public Authority Deputy has submitted a Combined High Assets report
      */
-    public function aPublicAuthorityDeputyHasSubmittedACombinedHighAssetsReport()
+    public function aPublicAuthorityDeputyHasSubmittedACombinedHighAssetsReport(): void
     {
         if (empty($this->publicAuthorityAdminCombinedHighSubmittedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $publicAuthorityAdminCombinedHighSubmittedDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $publicAuthorityAdminCombinedHighSubmittedDetails');
         }
 
         $this->loginToFrontendAs($this->publicAuthorityAdminCombinedHighSubmittedDetails->getUserEmail());
@@ -474,10 +426,10 @@ trait ReportTrait
     /**
      * @Given a Public Authority Named Deputy has not started a Pfa High Assets report
      */
-    public function aPublicAuthorityNamedDeputyHasNotStartedAPfaHighAssetsReport()
+    public function aPublicAuthorityNamedDeputyHasNotStartedAPfaHighAssetsReport(): void
     {
         if (empty($this->publicAuthorityNamedNotStartedPfaHighDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $publicAuthorityNamedNotStartedPfaHighDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $publicAuthorityNamedNotStartedPfaHighDetails');
         }
 
         $this->loginToFrontendAs($this->publicAuthorityNamedNotStartedPfaHighDetails->getUserEmail());
@@ -487,10 +439,10 @@ trait ReportTrait
     /**
      * @Given a Public Authority Named Deputy has submitted a Pfa High Assets report
      */
-    public function aPublicAuthorityNamedDeputyHasSubmittedAPfaHighAssetsReport()
+    public function aPublicAuthorityNamedDeputyHasSubmittedAPfaHighAssetsReport(): void
     {
         if (empty($this->publicAuthorityNamedSubmittedPfaHighDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $publicAuthorityNamedSubmittedPfaHighDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $publicAuthorityNamedSubmittedPfaHighDetails');
         }
 
         $this->loginToFrontendAs($this->publicAuthorityNamedSubmittedPfaHighDetails->getUserEmail());
@@ -500,10 +452,10 @@ trait ReportTrait
     /**
      * @Given a Professional Admin Deputy has not Started a Combined High Assets report
      */
-    public function aProfAdminHasNotStartedACombinedHighAssetsReport()
+    public function aProfAdminHasNotStartedACombinedHighAssetsReport(): void
     {
         if (empty($this->profAdminCombinedHighNotStartedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $profAdminCombinedHighNotStartedDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $profAdminCombinedHighNotStartedDetails');
         }
 
         $this->interactingWithUserDetails = $this->profAdminCombinedHighNotStartedDetails;
@@ -513,10 +465,10 @@ trait ReportTrait
     /**
      * @Given a Professional Admin Deputy has completed a Combined High Assets report
      */
-    public function aProfAdminHasCompletedStartedACombinedHighAssetsReport()
+    public function aProfAdminHasCompletedStartedACombinedHighAssetsReport(): void
     {
         if (empty($this->profAdminCombinedHighCompletedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $profAdminCombinedHighCompletedDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $profAdminCombinedHighCompletedDetails');
         }
 
         $this->interactingWithUserDetails = $this->profAdminCombinedHighCompletedDetails;
@@ -526,10 +478,10 @@ trait ReportTrait
     /**
      * @Given a Professional Admin Deputy has submitted a Combined High Assets report
      */
-    public function aProfAdminHasSubmittedACombinedHighAssetsReport()
+    public function aProfAdminHasSubmittedACombinedHighAssetsReport(): void
     {
         if (empty($this->profAdminCombinedHighSubmittedDetails)) {
-            throw new Exception('It looks like fixtures are not loaded - missing $profAdminCombinedHighSubmittedDetails');
+            throw new \Exception('It looks like fixtures are not loaded - missing $profAdminCombinedHighSubmittedDetails');
         }
 
         $this->interactingWithUserDetails = $this->profAdminCombinedHighSubmittedDetails;
@@ -539,7 +491,7 @@ trait ReportTrait
     /**
      * @Given the end date and due date of the logged in users :currentOrPrevious report is set to :dateString
      */
-    public function endDateAndDueDateLoggedInUsersCurrentReportSetToDate(string $dateString, string $currentOrPrevious)
+    public function endDateAndDueDateLoggedInUsersCurrentReportSetToDate(string $dateString, string $currentOrPrevious): void
     {
         if (
             empty($this->loggedInUserDetails)
@@ -552,7 +504,7 @@ trait ReportTrait
             throw new BehatException('This step only supports "current" and "previous" as arguments for $currentOrPrevious. Either add to the step or use an available option.');
         }
 
-        $newDate = new DateTime($dateString);
+        $newDate = new \DateTime($dateString);
 
         $reportIdToUpdate = 'current' === $currentOrPrevious ? $this->loggedInUserDetails->getCurrentReportId() : $this->loggedInUserDetails->getPreviousReportId();
 
@@ -576,73 +528,52 @@ trait ReportTrait
     /**
      * @When /^I preview and check the report$/
      */
-    public function iPreviewAndCheckTheReport()
+    public function iPreviewAndCheckTheReport(): void
     {
         $this->pressButton('Preview and check report');
-        if ('ndr' === strtolower($this->loggedInUserDetails->getCurrentReportNdrOrReport())) {
-            $this->iAmOnNdrReviewPage();
-        } else {
-            $this->iAmOnReportReviewPage();
-        }
+        $this->iAmOnReportReviewPage();
     }
 
     /**
      * @Given /^I continue to declaration and submission$/
      */
-    public function iContinueToDeclarationAndSubmission()
+    public function iContinueToDeclarationAndSubmission(): void
     {
-        if ('ndr' === strtolower($this->loggedInUserDetails->getCurrentReportNdrOrReport())) {
-            $this->clickLink('Continue to declaration and submission');
-            $this->iAmOnNdrDeclarationPage();
-        } else {
-            $this->clickLink('Confirm contact details');
-            $this->iAmOnReportConfirmDetailsPage();
-            $this->clickLink('Continue to declaration');
-            $this->iAmOnReportDeclarationPage();
-        }
+        $this->clickLink('Confirm contact details');
+        $this->iAmOnReportConfirmDetailsPage();
+        $this->clickLink('Continue to declaration');
+        $this->iAmOnReportDeclarationPage();
     }
 
     /**
      * @Given /^I confirm I agree to the declaration$/
      */
-    public function iConfirmIAgreeToTheDeclaration()
+    public function iConfirmIAgreeToTheDeclaration(): void
     {
-        if ('ndr' === strtolower($this->loggedInUserDetails->getCurrentReportNdrOrReport())) {
-            $this->checkOption('ndr_declaration[agree]');
-        } else {
-            $this->checkOption('report_declaration[agree]');
-        }
+        $this->checkOption('report_declaration[agree]');
     }
 
     /**
      * @Given /^I confirm I am the sole deputy$/
      */
-    public function iConfirmIAmTheSoleDeputy()
+    public function iConfirmIAmTheSoleDeputy(): void
     {
-        if ('ndr' === strtolower($this->loggedInUserDetails->getCurrentReportNdrOrReport())) {
-            $this->selectOption('ndr_declaration[agreedBehalfDeputy]', 'only_deputy');
-        } else {
-            $this->selectOption('report_declaration[agreedBehalfDeputy]', 'only_deputy');
-        }
+        $this->selectOption('report_declaration[agreedBehalfDeputy]', 'only_deputy');
     }
 
     /**
      * @Given /^I submit my report$/
      */
-    public function iSubmitMyReport()
+    public function iSubmitMyReport(): void
     {
         $this->pressButton('Submit report');
-        if ('ndr' === strtolower($this->loggedInUserDetails->getCurrentReportNdrOrReport())) {
-            $this->iAmOnNdrSubmittedPage();
-        } else {
-            $this->iAmOnReportSubmittedPage();
-        }
+        $this->iAmOnReportSubmittedPage();
     }
 
     /**
      * @Then /^my report should be submitted$/
      */
-    public function myReportShouldBeSubmitted()
+    public function myReportShouldBeSubmitted(): void
     {
         $this->assertPageContainsText('Your report has been sent to OPG');
     }
@@ -650,7 +581,7 @@ trait ReportTrait
     /**
      * @Then I should see :numberOfReports report(s)
      */
-    public function iShouldSeeNumberOfReports(int $expectedNumberOfReports)
+    public function iShouldSeeNumberOfReports(int $expectedNumberOfReports): void
     {
         $links = $this->getSession()->getPage()->findAll('css', 'a');
 
@@ -677,7 +608,7 @@ trait ReportTrait
     /**
      * @When I change the current report status to :status
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function aLayDeputyHasTheirCurrentReportStatusChanged(string $status): void
     {
@@ -686,7 +617,7 @@ trait ReportTrait
         /** @var Report $report */
         $report = $this->em->getRepository(Report::class)->find($reportId);
         if (!$report) {
-            throw new Exception("Report with ID $reportId not found.");
+            throw new \Exception("Report with ID $reportId not found.");
         }
 
         if ($status === 'ready to submit') {
@@ -694,7 +625,7 @@ trait ReportTrait
         } elseif ($status === 'submitted') {
             $report->setSubmitted(true);
         } else {
-            throw new Exception("Unsupported status: $status. Supported statuses are 'ready to submit' and 'submitted'.");
+            throw new \Exception("Unsupported status: $status. Supported statuses are 'ready to submit' and 'submitted'.");
         }
 
         $this->em->persist($report);
@@ -704,7 +635,7 @@ trait ReportTrait
     /**
      * @Then I should see an error message that the report has already been submitted
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function aLayDeputySeesAnErrorMessageWhenSubmittingASubmittedReport(): void
     {

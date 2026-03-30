@@ -28,7 +28,6 @@ class SearchType extends AbstractType
                 ]),
                 'required' => false,
             ])
-            ->add('ndr_enabled', FormTypes\CheckboxType::class)
             ->add('include_clients', FormTypes\CheckboxType::class)
             ->add('search', FormTypes\SubmitType::class);
     }
