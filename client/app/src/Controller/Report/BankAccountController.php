@@ -172,7 +172,6 @@ class BankAccountController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        /** @var array $status */
         $status = $report->getStatus()->getBankAccountsState();
         if (Status::STATE_NOT_STARTED == $status['state']) {
             return $this->redirectToRoute('bank_accounts', ['reportId' => $reportId]);
