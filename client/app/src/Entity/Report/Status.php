@@ -197,9 +197,9 @@ class Status
     private $profDeputyCostsEstimateState = [];
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getDecisionsState()
+    public function getDecisionsState(): array
     {
         return $this->decisionsState;
     }
@@ -213,9 +213,9 @@ class Status
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getContactsState()
+    public function getContactsState(): array
     {
         return $this->contactsState;
     }
@@ -229,9 +229,9 @@ class Status
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getVisitsCareState()
+    public function getVisitsCareState(): array
     {
         return $this->visitsCareState;
     }
@@ -261,9 +261,9 @@ class Status
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getMoneyTransferState()
+    public function getMoneyTransferState(): array
     {
         return $this->moneyTransferState;
     }
@@ -277,9 +277,9 @@ class Status
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getMoneyInState()
+    public function getMoneyInState(): array
     {
         return $this->moneyInState;
     }
@@ -293,9 +293,9 @@ class Status
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getMoneyOutState()
+    public function getMoneyOutState(): array
     {
         return $this->moneyOutState;
     }
@@ -309,9 +309,9 @@ class Status
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getMoneyInShortState()
+    public function getMoneyInShortState(): array
     {
         return $this->moneyInShortState;
     }
@@ -325,9 +325,9 @@ class Status
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getMoneyOutShortState()
+    public function getMoneyOutShortState(): array
     {
         return $this->moneyOutShortState;
     }
@@ -357,9 +357,9 @@ class Status
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getAssetsState()
+    public function getAssetsState(): array
     {
         return $this->assetsState;
     }
@@ -373,9 +373,9 @@ class Status
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getDebtsState()
+    public function getDebtsState(): array
     {
         return $this->debtsState;
     }
@@ -405,9 +405,9 @@ class Status
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getActionsState()
+    public function getActionsState(): array
     {
         return $this->actionsState;
     }
@@ -421,9 +421,9 @@ class Status
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getOtherInfoState()
+    public function getOtherInfoState(): array
     {
         return $this->otherInfoState;
     }
@@ -437,9 +437,9 @@ class Status
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getExpensesState()
+    public function getExpensesState(): array
     {
         return $this->expensesState;
     }
@@ -453,9 +453,9 @@ class Status
     }
 
     /**
-     * @return mixed
+     * @return array
      */
-    public function getGiftsState()
+    public function getGiftsState(): array
     {
         return $this->giftsState;
     }

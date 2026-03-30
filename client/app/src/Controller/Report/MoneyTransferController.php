@@ -49,7 +49,6 @@ class MoneyTransferController extends AbstractController
             ]);
         }
 
-        /** @var array $status*/
         $status = $report->getStatus()->getMoneyTransferState();
         if (Status::STATE_NOT_STARTED != $status['state']) {
             return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
@@ -207,7 +206,6 @@ class MoneyTransferController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        /** @var array $status */
         $status = $report->getStatus()->getMoneyTransferState();
         if (Status::STATE_NOT_STARTED == $status['state']) {
             return $this->redirect($this->generateUrl('money_transfers', ['reportId' => $reportId]));

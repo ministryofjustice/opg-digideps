@@ -53,7 +53,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getDecisionsState()
+    public function getDecisionsState(): array
     {
         $hasDecisions = count($this->report->getDecisions()) > 0;
 
@@ -83,7 +83,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getContactsState()
+    public function getContactsState(): array
     {
         $hasContacts = count($this->report->getContacts()) > 0;
         if (!$hasContacts && empty($this->report->getReasonForNoContacts())) {
@@ -102,7 +102,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getVisitsCareState()
+    public function getVisitsCareState(): array
     {
         $visitsCare = $this->report->getVisitsCare();
         $answers = $visitsCare ? [
@@ -154,7 +154,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getMoneyTransferState()
+    public function getMoneyTransferState(): array
     {
         $hasAtLeastOneTransfer = count($this->report->getMoneyTransfers()) >= 1;
         $valid = $hasAtLeastOneTransfer || $this->report->getNoTransfersToAdd();
@@ -175,7 +175,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getMoneyInState()
+    public function getMoneyInState(): array
     {
         if ($this->report->hasMoneyIn()) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getMoneyTransactionsIn())];
@@ -197,7 +197,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getMoneyOutState()
+    public function getMoneyOutState(): array
     {
         if ($this->report->hasMoneyOut()) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getMoneyTransactionsOut())];
@@ -219,7 +219,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getMoneyInShortState()
+    public function getMoneyInShortState(): array
     {
         $categoriesCount = count($this->report->getMoneyShortCategoriesInPresent());
         $transactionsExist = $this->report->getMoneyTransactionsShortInExist();
@@ -257,7 +257,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getMoneyOutShortState()
+    public function getMoneyOutShortState(): array
     {
         $categoriesCount = count($this->report->getMoneyShortCategoriesOutPresent());
         $transactionsExist = $this->report->getMoneyTransactionsShortOutExist();
@@ -374,7 +374,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getDebtsState()
+    public function getDebtsState(): array
     {
         $hasDebts = $this->report->getHasDebts();
         if (empty($hasDebts)) {
@@ -528,7 +528,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getActionsState()
+    public function getActionsState(): array
     {
         $action = $this->report->getAction();
         $answers = $action ? [
@@ -555,7 +555,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getOtherInfoState()
+    public function getOtherInfoState(): array
     {
         if (null === $this->report->getActionMoreInfo()) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
@@ -597,7 +597,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getExpensesState()
+    public function getExpensesState(): array
     {
         // if the section is not relevant for the report, then it's "done"
         if (!$this->report->hasSection(Report::SECTION_DEPUTY_EXPENSES)) {
@@ -620,7 +620,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getGiftsState()
+    public function getGiftsState(): array
     {
         if ($this->report->giftsSectionCompleted()) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getGifts())];

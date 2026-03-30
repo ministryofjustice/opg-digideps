@@ -48,7 +48,6 @@ class MoneyInController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        /** @var array $status */
         $status = $report->getStatus()->getMoneyInState();
         if (Status::STATE_NOT_STARTED != $status['state']) {
             return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
@@ -318,7 +317,6 @@ class MoneyInController extends AbstractController
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        /** @var array $status */
         $status = $report->getStatus()->getMoneyInState();
         if (Status::STATE_NOT_STARTED == $status['state'] && 'skip-step' != $fromPage) {
             return $this->redirectToRoute('money_in', ['reportId' => $reportId]);

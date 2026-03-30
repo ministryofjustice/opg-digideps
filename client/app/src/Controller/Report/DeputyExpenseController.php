@@ -43,7 +43,6 @@ class DeputyExpenseController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        /** @var array $status */
         $status = $report->getStatus()->getExpensesState();
         if (Status::STATE_NOT_STARTED != $status['state']) {
             return $this->redirectToRoute('deputy_expenses_summary', ['reportId' => $reportId]);
@@ -207,7 +206,6 @@ class DeputyExpenseController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        /** @var array $status */
         $status = $report->getStatus()->getExpensesState();
         if (Status::STATE_NOT_STARTED == $status['state']) {
             return $this->redirect($this->generateUrl('deputy_expenses', ['reportId' => $reportId]));
