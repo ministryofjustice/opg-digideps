@@ -13,6 +13,7 @@ use JMS\Serializer\SerializerInterface;
 use Lcobucci\JWT\Token;
 use Mockery as m;
 use Mockery\MockInterface;
+use OPG\Digideps\Common\Registration\SelfRegisterData;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -22,10 +23,10 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Symfony\Component\HttpFoundation\Request;
 
 class RestClientTest extends TestCase
 {
@@ -214,8 +215,8 @@ class RestClientTest extends TestCase
         $data = ['id' => 1];
         $responseArray = ['success' => true, 'data' => $data];
         $responseJson = json_encode($responseArray);
-        /** @var \App\Model\SelfRegisterData $selfRegData */
-        $selfRegData = m::mock('App\Model\SelfRegisterData');
+        /** @var SelfRegisterData $selfRegData */
+        $selfRegData = m::mock('OPG\Digideps\Common\Registration\SelfRegisterData');
         $selfRegDataJson = 'selfRegData.json';
 
         $this->serialiser->shouldReceive('serialize')->with($selfRegData, 'json', m::any())->andReturn($selfRegDataJson);

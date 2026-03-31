@@ -16,9 +16,9 @@ use App\Event\UserDeletedEvent;
 use App\Event\UserPasswordResetEvent;
 use App\Event\UserUpdatedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
-use App\Model\SelfRegisterData;
 use App\Service\Audit\AuditEvents;
 use App\Service\Client\RestClientInterface;
+use OPG\Digideps\Common\Registration\SelfRegisterData;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class UserApi
