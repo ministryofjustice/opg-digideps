@@ -102,7 +102,7 @@ jobs:
           echo "Build Identifier: ${BUILD}"
           echo "Container Tag: ${TAG}"
 
-      - uses: actions/labeler@main
+      - uses: actions/labeler@634933edcd8ababfe52f92936142cc22ac488b1b # v6.0.1
         if: github.event_name == 'pull_request'
         with:
           configuration-path: .github/labeller.yml
