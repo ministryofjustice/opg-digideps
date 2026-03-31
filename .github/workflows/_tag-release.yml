@@ -29,7 +29,7 @@ jobs:
           - svc_name: "custom-sql-lambda"
           - svc_name: "mock-sirius"
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - name: Configure AWS credentials for ECR tagging
         uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4
