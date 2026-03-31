@@ -59,7 +59,7 @@ class VisitsCare
     private $howOftenDoYouContactClient;
 
     /**
-     * @var string yes|no|null
+     * @var ?string yes|no|null
      *
      * @JMS\Type("string")
      *
@@ -70,7 +70,7 @@ class VisitsCare
     private $doesClientReceivePaidCare;
 
     /**
-     * @var string client_pays_for_all | client_gets_financial_help | all_care_is_paid_by_someone_else
+     * @var ?string client_pays_for_all | client_gets_financial_help | all_care_is_paid_by_someone_else
      *
      * @JMS\Type("string")
      *
@@ -81,7 +81,7 @@ class VisitsCare
     private $howIsCareFunded;
 
     /**
-     * @var string
+     * @var ?string
      *
      * @JMS\Type("string")
      *
@@ -92,7 +92,7 @@ class VisitsCare
     private $whoIsDoingTheCaring;
 
     /**
-     * @var string yes|no|null
+     * @var ?string yes|no|null
      *
      * @JMS\Type("string")
      *
@@ -106,7 +106,7 @@ class VisitsCare
     private $doesClientHaveACarePlan;
 
     /**
-     * @var \DateTime
+     * @var ?\DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
      *
@@ -165,7 +165,7 @@ class VisitsCare
     /**
      * Set doesClientReceivePaidCare
      */
-    public function setDoesClientReceivePaidCare(string $doesClientReceivePaidCare): static
+    public function setDoesClientReceivePaidCare(?string $doesClientReceivePaidCare): static
     {
         $this->doesClientReceivePaidCare = $doesClientReceivePaidCare;
 
@@ -175,7 +175,7 @@ class VisitsCare
     /**
      * Get doesClientReceivePaidCare
      */
-    public function getDoesClientReceivePaidCare(): string
+    public function getDoesClientReceivePaidCare(): ?string
     {
         return $this->doesClientReceivePaidCare;
     }
@@ -183,7 +183,7 @@ class VisitsCare
     /**
      * Set whoIsDoingTheCaring
      */
-    public function setWhoIsDoingTheCaring(string $whoIsDoingTheCaring): static
+    public function setWhoIsDoingTheCaring(?string $whoIsDoingTheCaring): static
     {
         $this->whoIsDoingTheCaring = $whoIsDoingTheCaring;
 
@@ -193,7 +193,7 @@ class VisitsCare
     /**
      * Get whoIsDoingTheCaring
      */
-    public function getWhoIsDoingTheCaring(): string
+    public function getWhoIsDoingTheCaring(): ?string
     {
         return $this->whoIsDoingTheCaring;
     }
@@ -201,7 +201,7 @@ class VisitsCare
     /**
      * Set doesClientHaveACarePlan
      */
-    public function setDoesClientHaveACarePlan(string $doesClientHaveACarePlan): static
+    public function setDoesClientHaveACarePlan(?string $doesClientHaveACarePlan): static
     {
         $this->doesClientHaveACarePlan = $doesClientHaveACarePlan;
 
@@ -209,11 +209,9 @@ class VisitsCare
     }
 
     /**
-     * Get doesClientHaveACarePlan.
-     *
-     * @return string
+     * Get doesClientHaveACarePlan
      */
-    public function getDoesClientHaveACarePlan(): string
+    public function getDoesClientHaveACarePlan(): ?string
     {
         return $this->doesClientHaveACarePlan;
     }
@@ -221,7 +219,7 @@ class VisitsCare
     /**
      * Set whenWasCarePlanLastReviewed
      */
-    public function setWhenWasCarePlanLastReviewed(\DateTime $whenWasCarePlanLastReviewed): static
+    public function setWhenWasCarePlanLastReviewed(?\DateTime $whenWasCarePlanLastReviewed): static
     {
         $this->whenWasCarePlanLastReviewed = $whenWasCarePlanLastReviewed;
 
@@ -231,7 +229,7 @@ class VisitsCare
     /**
      * Get whenWasCarePlanLastReviewed
      */
-    public function getWhenWasCarePlanLastReviewed(): \DateTime
+    public function getWhenWasCarePlanLastReviewed(): ?\DateTime
     {
         return $this->whenWasCarePlanLastReviewed;
     }
@@ -239,7 +237,7 @@ class VisitsCare
     /**
      * Set howIsCareFunded
      */
-    public function setHowIsCareFunded(string $howIsCareFunded): static
+    public function setHowIsCareFunded(?string $howIsCareFunded): static
     {
         $this->howIsCareFunded = $howIsCareFunded;
 
@@ -249,17 +247,17 @@ class VisitsCare
     /**
      * Get howIsCareFunded
      */
-    public function getHowIsCareFunded(): string
+    public function getHowIsCareFunded(): ?string
     {
         return $this->howIsCareFunded;
     }
 
-    public function getHowOftenDoYouContactClient(): string
+    public function getHowOftenDoYouContactClient(): ?string
     {
         return $this->howOftenDoYouContactClient;
     }
 
-    public function setHowOftenDoYouContactClient(string $howOftenDoYouContactClient): static
+    public function setHowOftenDoYouContactClient(?string $howOftenDoYouContactClient): static
     {
         $this->howOftenDoYouContactClient = $howOftenDoYouContactClient;
 

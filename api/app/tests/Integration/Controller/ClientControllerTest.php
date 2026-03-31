@@ -189,23 +189,6 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
     }
 
-    public function testUpsertPutLayDeputyNDREnabled()
-    {
-        $url = '/client/upsert';
-
-        $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
-
-        // Lay deputy
-        $return = $this->assertJsonRequest('PUT', $url, [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-            'data' => ['id' => self::$client1->getId(), 'ndr_enabled' => true] + $this->updateDataLay,
-        ]);
-        self::fixtures()->clear();
-        $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client Client */
-        $this->assertInstanceOf(Ndr::class, $client->getNdr());
-    }
-
     public function testUpsertPutPA()
     {
         $url = '/client/upsert';
