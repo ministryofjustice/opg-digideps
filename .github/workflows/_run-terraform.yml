@@ -38,13 +38,6 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - uses: unfor19/install-aws-cli-action@f5b46b7f32cf5e7ebd652656c5036bf83dd1e60c # v1
-
-      - uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # 6.0.0
-        if: inputs.terraform_path == 'shared'
-        with:
-          python-version: "3.11"
-
       - name: python layers folder
         if: inputs.terraform_path == 'account'
         run: pip3 install -r requirements.txt --target ./layers/python/lib/python3.14/site-packages/
@@ -84,9 +77,10 @@ jobs:
           oidc_role: arn:aws:iam::${{ vars.DEVELOPMENT_ACCOUNT }}:role/digideps-gh-actions-workspace-cleanup
           assume_role: false
 
-      - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
+      - id: deploy-key
+        uses: "ministryofjustice/opg-github-actions/actions/github-deploy-key@a2907c7c7be94301c965ace76a2cfa407ad6fc88 # v4.6.0"
         with:
-          ssh-private-key: ${{ secrets.ssh_private_key }}
+          deploy_key: ${{ secrets.ssh_private_key }}
 
       - name: configure OIDC AWS credentials for terraform
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
