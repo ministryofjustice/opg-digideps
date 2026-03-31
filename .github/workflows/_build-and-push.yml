@@ -189,21 +189,22 @@ jobs:
         working-directory: ${{ matrix.sub_folder }}
 
       - name: Run Snyk Scan
-        if: matrix.svc_name != 'mock-sirius'
+        id: snyk_scan
         uses: ministryofjustice/opg-github-actions/actions/snyk-scan@821b6f92327f0f195276860676aa8133d63f39dd # v4.5.1
         with:
-          SNYK_TEST_IMAGE: ${{ steps.login_ecr.outputs.registry }}/digideps/${{ matrix.svc_name }}:${{ inputs.tag }}
+          SNYK_TEST_IMAGE: ${{ matrix.svc_name }}:latest
           SNYK_TOKEN: ${{ secrets.snyk_token }}
           snyk_test_args: "--severity-threshold=high"
           sarif_filepath: ./test-results
-          sarif_filename: ${{ matrix.svc_name }}_snyk.sarif
+          sarif_filename: snyk-results.sarif
           snyk_policy_path: ${{ github.workspace }}/.github/.snyk
 
-      - name: Upload Snyk scan results to security tab
-        if: always() && matrix.svc_name != 'mock-sirius'
-        uses: github/codeql-action/upload-sarif@b8d3b6e8af63cde30bdc382c0bc28114f4346c88 # v2.28.1
+      - name: Upload SNYK scan results to GitHub Security tab
+        if: steps.snyk_scan.outcome == 'success' && hashFiles('test-results/snyk-results.sarif') != ''
+        uses: github/codeql-action/upload-sarif@9e907b5e64f6b83e7804b09294d44122997950d6 # v4.32.3
         with:
-          sarif_file: test-results/${{ matrix.svc_name }}_snyk.sarif
+          sarif_file: test-results/snyk-results.sarif
+          category: ${{ matrix.svc_name }}
 
       - name: Move cache
         run: |
