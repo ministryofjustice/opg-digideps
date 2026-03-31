@@ -52,7 +52,7 @@
                 £{{ account.openingBalance | money_format }}
             </td>
             <td class="govuk-table__cell govuk-table__cell--numeric">
-            {% if account.closingBalance == null %}
+            {% if account.closingBalance === null %}
                 <div class="error-message">
                     {{ 'summaryPage.balanceRequired' | trans({ '%date%': report.endDate | date("j F Y") }) }}
                 </div>
