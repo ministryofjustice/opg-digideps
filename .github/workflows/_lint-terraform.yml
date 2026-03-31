@@ -18,6 +18,7 @@ on:
 jobs:
   lint-terraform:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         include:
@@ -42,9 +43,10 @@ jobs:
         run: terraform fmt -check -recursive
         working-directory: terraform/${{ matrix.folder }}
 
-      - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
+      - id: deploy-key
+        uses: "ministryofjustice/opg-github-actions/actions/github-deploy-key@a2907c7c7be94301c965ace76a2cfa407ad6fc88" # v4.6.0
         with:
-          ssh-private-key: ${{ secrets.ssh_private_key }}
+          deploy_key: ${{ secrets.ssh_private_key }}
 
       - name: configure OIDC AWS credentials for terraform
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
@@ -63,15 +65,6 @@ jobs:
           echo "$TF_WORKSPACE"
           terraform validate
         working-directory: terraform/${{ matrix.folder }}
-
-      - name: Unset AWS variables
-        if: always()
-        run: |
-          {
-            echo "AWS_SECRET_ACCESS_KEY="
-            echo "AWS_ACCESS_KEY_ID="
-            echo "AWS_SESSION_TOKEN="
-          } >> "$GITHUB_ENV"
 
       - name: Unset AWS variables
         if: always()
