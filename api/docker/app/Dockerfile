@@ -30,7 +30,7 @@ RUN composer dump-autoload --optimize
 ##############################
 # Stage 2: Base PHP Image
 ##############################
-FROM php:8.4.18-fpm-alpine3.22 AS application
+FROM php:8.4.18-fpm-alpine3.22@sha256:a8b3d2c3e09c8f4552bc4b3739f0c74bf14c751e8116262efefdc707239d1595 AS application
 
 ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
 
