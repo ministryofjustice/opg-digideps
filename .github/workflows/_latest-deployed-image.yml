@@ -23,7 +23,7 @@ on:
 
 jobs:
   export_image_tag:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     outputs:
       image_tag: ${{ steps.export_tag.outputs.image_tag }}
     steps:

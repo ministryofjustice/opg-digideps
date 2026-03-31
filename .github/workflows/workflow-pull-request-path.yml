@@ -28,7 +28,7 @@ permissions:
 
 jobs:
   workflow_variables:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     name: output workflow variables
     outputs:
       parsed_branch: ${{ steps.variables.outputs.branch_formatted }}
@@ -441,7 +441,7 @@ jobs:
 
   workflow_summary:
     name: workflow summary
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     needs:
       - scale_services_down
       - codecov
@@ -503,7 +503,7 @@ jobs:
 
   end_of_workflow:
     name: end of workflow
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     needs: [workflow_variables, workflow_summary]
     if: always()
     steps:

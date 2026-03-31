@@ -27,7 +27,7 @@ permissions:
 
 jobs:
   workflow_variables:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     name: output workflow variables
     outputs:
       build_identifier: "main"
@@ -183,7 +183,7 @@ jobs:
 
   end_of_workflow:
     name: end of workflow
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     needs:
       - smoke_tests_production
       - workflow_variables
