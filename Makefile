@@ -221,3 +221,9 @@ sql-custom-command-revoke: ##@sql-custom-command Run SQL revoke custom command
 
 set-feature-flag: ##@localstack Set a particular feature flags value e.g. set-feature-flag name=multi-accounts value=1
 	docker compose exec localstack awslocal ssm put-parameter --name "/local/flag/$(name)" --value "$(value)" --type String --overwrite
+
+common-phpunit: ##@unit-tests Run the common unit tests.
+	docker compose run composer-common-phpunit
+
+common-phpstan: ##@static-analysis Runs PHPStan against common.
+	docker compose run composer-common-phpstan
