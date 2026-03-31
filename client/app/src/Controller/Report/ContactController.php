@@ -12,6 +12,7 @@ use App\Form\Report\ContactExistType;
 use App\Form\Report\ContactType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
+use App\Utility\ValidatingForm;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -58,10 +59,10 @@ class ContactController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var Form $hasContacts */
-            $hasContacts = $form->get('hasContacts');
+            $validatedForm = new ValidatingForm($form);
+            $hasContacts = $validatedForm->getStringOrNull('hasContacts');
 
-            switch ($hasContacts->getData()) {
+            switch ($hasContacts) {
                 case 'yes':
                     return $this->redirectToRoute('contacts_add', ['reportId' => $reportId, 'from' => 'exist']);
                 case 'no':
@@ -97,16 +98,15 @@ class ContactController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var Contact $data */
-            $data = $form->getData();
+            $validatedForm = new ValidatingForm($form);
+            $data = $validatedForm->getObjectOrThrow(null, Contact::class);
             $data->setReport($report);
 
             // update contact. The API will also delete reason for no contact
             $this->restClient->post('report/contact', $data, ['contact', 'report-id']);
 
-            /** @var Form $addAnother */
-            $addAnother = $form->get('addAnother');
-            switch ($addAnother->getData()) {
+            $addAnother = $validatedForm->getStringOrNull('addAnother');
+            switch ($addAnother) {
                 case 'yes':
                     return $this->redirectToRoute('contacts_add', ['reportId' => $reportId, 'from' => 'add_another']);
                 case 'no':
@@ -146,8 +146,8 @@ class ContactController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var Contact $data */
-            $data = $form->getData();
+            $validatedForm = new ValidatingForm($form);
+            $data = $validatedForm->getObjectOrThrow(null, Contact::class);
             $data->setReport($report);
 
             if ($request->getSession() instanceof Session) {
@@ -155,9 +155,9 @@ class ContactController extends AbstractController
             }
 
             $this->restClient->put('report/contact', $data);
-            /** @var Form $addAnother */
-            $addAnother = $form->get('addAnother');
-            switch ($addAnother->getData()) {
+
+            $addAnother = $validatedForm->getStringOrNull('addAnother');
+            switch ($addAnother) {
                 case 'yes':
                     return $this->redirectToRoute('contacts_add', ['reportId' => $reportId, 'from' => 'add_another']);
                 case 'no':

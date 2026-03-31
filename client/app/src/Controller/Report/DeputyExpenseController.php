@@ -15,6 +15,7 @@ use App\Form\Report\DeputyExpenseType;
 use App\Form\YesNoType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
+use App\Utility\ValidatingForm;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -66,8 +67,8 @@ class DeputyExpenseController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var Report $data */
-            $data = $form->getData();
+            $validatedForm = new ValidatingForm($form);
+            $data = $validatedForm->getObjectOrThrow(null, Report::class);
 
             switch ($data->getPaidForAnything()) {
                 case 'yes':
@@ -110,15 +111,14 @@ class DeputyExpenseController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var Expense $data */
-            $data = $form->getData();
+            $validatedForm = new ValidatingForm($form);
+            $data = $validatedForm->getObjectOrThrow(null, Expense::class);
             $data->setReport($report);
 
             $this->restClient->post('report/' . $report->getId() . '/expense', $data, ['expenses', 'account']);
 
-            /** @var Form $addAnother */
-            $addAnother = $form['addAnother'];
-            switch ($addAnother->getData()) {
+            $addAnother = $validatedForm->getStringOrNull('addAnother');
+            switch ($addAnother) {
                 case 'yes':
                     return $this->redirectToRoute('deputy_expenses_add', ['reportId' => $reportId]);
                 case 'no':
@@ -175,8 +175,9 @@ class DeputyExpenseController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var Expense $data */
-            $data = $form->getData();
+            $validatedForm = new ValidatingForm($form);
+            $data = $validatedForm->getObjectOrThrow(null, Expense::class);
+
             if ($request->getSession() instanceof Session) {
                 $request->getSession()->getFlashBag()->add('notice', 'Expense edited');
             }
