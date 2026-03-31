@@ -34,16 +34,9 @@ on:
 
 jobs:
   terraform_workflow:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
-      - uses: unfor19/install-aws-cli-action@f5b46b7f32cf5e7ebd652656c5036bf83dd1e60c # v1
-
-      - uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # 6.0.0
-        if: inputs.terraform_path == 'shared'
-        with:
-          python-version: "3.11"
 
       - name: python layers folder
         if: inputs.terraform_path == 'account'
