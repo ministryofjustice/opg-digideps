@@ -76,7 +76,7 @@ class ContactController extends AbstractController
         }
 
         $backLink = $this->generateUrl('contacts', ['reportId' => $reportId]);
-        if ('summary' == $request->get('from')) {
+        if ('summary' == $request->query->getString('from', $request->getPayload()->getString('from'))) {
             $backLink = $this->generateUrl('contacts_summary', ['reportId' => $reportId]);
         }
 
@@ -115,7 +115,7 @@ class ContactController extends AbstractController
         }
 
         try {
-            $backLinkRoute = 'contacts_' . $request->get('from');
+            $backLinkRoute = 'contacts_' . $request->query->getString('from', $request->getPayload()->getString('from'));
             $backLink = $this->generateUrl($backLinkRoute, ['reportId' => $reportId]);
 
             return [

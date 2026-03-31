@@ -81,7 +81,7 @@ class DeputyExpenseController extends AbstractController
         }
 
         $backLink = $this->generateUrl('deputy_expenses', ['reportId' => $reportId]);
-        if ('summary' == $request->get('from')) {
+        if ('summary' == $request->query->getString('from', $request->getPayload()->getString('from'))) {
             $backLink = $this->generateUrl('deputy_expenses_summary', ['reportId' => $reportId]);
         }
 
@@ -127,7 +127,7 @@ class DeputyExpenseController extends AbstractController
         }
 
         try {
-            $backLinkRoute = 'deputy_expenses_' . $request->get('from');
+            $backLinkRoute = 'deputy_expenses_' . $request->query->getString('from', $request->getPayload()->getString('from'));
             $backLink = $this->generateUrl($backLinkRoute, ['reportId' => $reportId]);
 
             return [

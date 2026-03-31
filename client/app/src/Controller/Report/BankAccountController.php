@@ -14,6 +14,7 @@ use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
 use App\Service\StringUtils;
+use App\Utility\ValidatingForm;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\SubmitButton;
@@ -69,8 +70,7 @@ class BankAccountController extends AbstractController
         $stepUrlData = $dataFromRequest;
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        /** @var string $fromPage */
-        $fromPage = $request->get('from');
+        $fromPage = $fromPage = $request->query->getString('from', $request->getPayload()->getString('from'));
 
         $stepRedirector = $this->stepRedirector
             ->setRoutes('bank_accounts', 'bank_accounts_step', 'bank_accounts_summary')
@@ -147,9 +147,9 @@ class BankAccountController extends AbstractController
             $this->restClient->post('report/' . $reportId . '/account', $account, self::$jmsGroups);
 
             // redirect to add another if requested
-            /** @var Form $addAnother */
-            $addAnother = $form['addAnother'];
-            if ('yes' === $addAnother->getData()) {
+            $validatedForm = new ValidatingForm($form);
+            $addAnother = $validatedForm->getStringOrNull('addAnother');
+            if ('yes' === $addAnother) {
                 return $this->redirectToRoute('bank_accounts_step', ['reportId' => $reportId, 'step' => 1]);
             }
 

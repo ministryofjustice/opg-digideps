@@ -75,7 +75,8 @@ class AssetController extends AbstractController
         }
 
         $backLink = $this->generateUrl('assets', ['reportId' => $reportId]);
-        if ('summary' == $request->get('from')) {
+        $fromPage = $request->query->getString('from', $request->getPayload()->getString('from'));
+        if ('summary' == $fromPage) {
             $backLink = $this->generateUrl('assets_summary', ['reportId' => $reportId]);
         }
 

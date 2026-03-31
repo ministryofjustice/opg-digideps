@@ -17,6 +17,7 @@ use App\Form\Report\NoMoneyInType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
+use App\Utility\ValidatingForm;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
@@ -67,16 +68,9 @@ class MoneyInController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            /** @var Report $report */
-            $report = $form->getData();
-
-            /** @var FormInterface $moneyInExists */
-            $moneyInExists = $form['moneyInExists'];
-
-            /** @var string $answer */
-            $answer = $moneyInExists->getData();
-            $fromPage = $request->get('from');
+            $validatedForm = new ValidatingForm($form);
+            $answer = $validatedForm->getStringOrNull('moneyInExists');
+            $fromPage = $request->query->getString('from', $request->getPayload()->getString('from'));
 
             $report->setMoneyInExists($answer);
             $this->restClient->put('report/' . $reportId, $report, ['doesMoneyInExist']);
@@ -155,15 +149,8 @@ class MoneyInController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
-            /** @var Report $report */
-            $report = $form->getData();
-
-            /** @var FormInterface $reasonForNoMoneyIn */
-            $reasonForNoMoneyIn = $form['reasonForNoMoneyIn'];
-
-            /** @var string $answer */
-            $answer = $reasonForNoMoneyIn->getData();
+            $validatedForm = new ValidatingForm($form);
+            $answer = $validatedForm->getStringOrNull('reasonForNoMoneyIn');
 
             $report->setReasonForNoMoneyIn($answer);
             $report->getStatus()->setMoneyInState(Status::STATE_DONE);
@@ -201,8 +188,7 @@ class MoneyInController extends AbstractController
         $stepUrlData = $dataFromUrl;
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        /** @var string $fromPage */
-        $fromPage = $request->get('from');
+        $fromPage = $request->query->getString('from', $request->getPayload()->getString('from'));
 
         $stepRedirector = $this->stepRedirector
             ->setRoutes('does_money_in_exist', 'money_in_step', 'money_in_summary')
@@ -271,8 +257,10 @@ class MoneyInController extends AbstractController
                     // add
                     $this->restClient->post("/report/$reportId/money-transaction", $transaction, ['transaction', 'account']);
 
+                    $validatedForm = new ValidatingForm($form);
+                    $addAnother = $validatedForm->getStringOrNull('addAnother');
                     // check whether we are adding another after this one and redirect appropriately
-                    switch ($form['addAnother']?->getData()) {
+                    switch ($addAnother) {
                         case 'yes':
                             return $this->redirectToRoute('money_in_step', ['step' => 1, 'reportId' => $reportId]);
                         case 'no':
@@ -314,7 +302,7 @@ class MoneyInController extends AbstractController
     #[Template('@App/Report/MoneyIn/summary.html.twig')]
     public function summaryAction(Request $request, int $reportId): RedirectResponse|array
     {
-        $fromPage = $request->get('from');
+        $fromPage = $request->query->getString('from', $request->getPayload()->getString('from'));
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $status = $report->getStatus()->getMoneyInState();
