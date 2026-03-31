@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1956088afc952b42078dae0eaa7fb1d9",
+    "content-hash": "2b824b266ec9af137f846cd95f558f93",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -216,6 +216,53 @@
                 }
             ],
             "time": "2026-02-10T14:33:43+00:00"
+        },
+        {
+            "name": "digideps/common",
+            "version": "1.0.0",
+            "dist": {
+                "type": "path",
+                "url": "../../common",
+                "reference": "be475d29b62b238cfb430a126be91c14af7e8bdd"
+            },
+            "require": {
+                "jms/serializer-bundle": "^5.5.2",
+                "php": "^8.4",
+                "symfony/form": "^6.4.32",
+                "symfony/validator": "^6.4.30"
+            },
+            "require-dev": {
+                "dg/bypass-finals": "^1.9",
+                "phpstan/phpstan": "^2.1",
+                "phpstan/phpstan-phpunit": "^2.0",
+                "phpunit/phpunit": "^13.0.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "OPG\\Digideps\\Common\\": "src"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "OPG\\Digideps\\Tests\\Common\\": "tests"
+                }
+            },
+            "scripts": {
+                "lint:phpstan": [
+                    "phpstan"
+                ],
+                "tests:unit": [
+                    "phpunit"
+                ]
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Code shared between frontend and backend",
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "doctrine/annotations",
