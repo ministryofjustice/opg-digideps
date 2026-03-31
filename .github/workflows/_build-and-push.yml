@@ -188,6 +188,25 @@ jobs:
           fi
         working-directory: ${{ matrix.sub_folder }}
 
+      - name: Run Snyk Scan
+        id: snyk_scan
+        if: matrix.svc_name != 'mock-sirius'
+        uses: ministryofjustice/opg-github-actions/actions/snyk-scan@821b6f92327f0f195276860676aa8133d63f39dd # v4.5.1
+        with:
+          SNYK_TEST_IMAGE: ${{ matrix.svc_name }}:latest
+          SNYK_TOKEN: ${{ secrets.snyk_token }}
+          snyk_test_args: "--severity-threshold=high"
+          sarif_filepath: ./test-results
+          sarif_filename: snyk-results.sarif
+          snyk_policy_path: ${{ github.workspace }}/.github/.snyk
+
+      - name: Upload SNYK scan results to GitHub Security tab
+        if: steps.snyk_scan.outcome == 'success' && hashFiles('test-results/snyk-results.sarif') != ''
+        uses: github/codeql-action/upload-sarif@9e907b5e64f6b83e7804b09294d44122997950d6 # v4.32.3
+        with:
+          sarif_file: test-results/snyk-results.sarif
+          category: ${{ matrix.svc_name }}
+
       - name: Move cache
         run: |
           rm -rf /tmp/.buildx-cache
@@ -201,11 +220,11 @@ jobs:
           role-duration-seconds: 900
           aws-region: eu-west-1
 
-      - name: ecr login
+      - uses: aws-actions/amazon-ecr-login@c75a9a1d9c6f7cf1e4cfb2966839b590c3d46865 # v2.1.0
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076 # v2.0.1
         with:
           registries: ${{ vars.MANAGEMENT_ACCOUNT }}
+          mask-password: "true"
 
       - name: show build tag
         env:
@@ -237,23 +256,6 @@ jobs:
             docker tag "${IMAGE_NAME}:latest" "${ECR_REGISTRY}/${ECR_REGISTRY_ALIAS}/${IMAGE_NAME}:main-${IMAGE_TAG}"
           fi
           docker push --all-tags "${ECR_REGISTRY}/${ECR_REGISTRY_ALIAS}/${IMAGE_NAME}"
-
-      - name: Run Snyk Scan
-        if: matrix.svc_name != 'mock-sirius'
-        uses: ministryofjustice/opg-github-actions/actions/snyk-scan@8dea82fc8b8e7ffca431f0fb83848d523147ccd8 # v4.5.0
-        with:
-          SNYK_TEST_IMAGE: ${{ steps.login_ecr.outputs.registry }}/digideps/${{ matrix.svc_name }}:${{ inputs.tag }}
-          SNYK_TOKEN: ${{ secrets.snyk_token }}
-          snyk_test_args: "--severity-threshold=high"
-          sarif_filepath: ./test-results
-          sarif_filename: ${{ matrix.svc_name }}_snyk.sarif
-          snyk_policy_path: ${{ github.workspace }}/.github/.snyk
-
-      - name: Upload Snyk scan results to security tab
-        if: always() && matrix.svc_name != 'mock-sirius'
-        uses: github/codeql-action/upload-sarif@b8d3b6e8af63cde30bdc382c0bc28114f4346c88 # v2.28.1
-        with:
-          sarif_file: test-results/${{ matrix.svc_name }}_snyk.sarif
 
       - name: Unset AWS variables
         if: always()
