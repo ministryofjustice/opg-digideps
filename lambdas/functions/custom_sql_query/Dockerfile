@@ -1,6 +1,6 @@
 # Define function directory
 ARG FUNCTION_DIR="/function"
-FROM python:3.14-alpine3.23 AS python-alpine
+FROM python:3.14-alpine3.23@sha256:faee120f7885a06fcc9677922331391fa690d911c020abb9e8025ff3d908e510 AS python-alpine
 RUN apk update && apk add --no-cache \
     libstdc++ \
     zstd-libs \
