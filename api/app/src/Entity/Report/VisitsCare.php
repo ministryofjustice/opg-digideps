@@ -59,7 +59,7 @@ class VisitsCare
     private $howOftenDoYouContactClient;
 
     /**
-     * @var string yes|no|null
+     * @var ?string yes|no|null
      *
      * @JMS\Type("string")
      *
@@ -81,7 +81,7 @@ class VisitsCare
     private $howIsCareFunded;
 
     /**
-     * @var string
+     * @var ?string
      *
      * @JMS\Type("string")
      *
@@ -92,7 +92,7 @@ class VisitsCare
     private $whoIsDoingTheCaring;
 
     /**
-     * @var string yes|no|null
+     * @var ?string yes|no|null
      *
      * @JMS\Type("string")
      *
@@ -175,7 +175,7 @@ class VisitsCare
     /**
      * Get doesClientReceivePaidCare
      */
-    public function getDoesClientReceivePaidCare(): string
+    public function getDoesClientReceivePaidCare(): ?string
     {
         return $this->doesClientReceivePaidCare;
     }
@@ -193,7 +193,7 @@ class VisitsCare
     /**
      * Get whoIsDoingTheCaring
      */
-    public function getWhoIsDoingTheCaring(): string
+    public function getWhoIsDoingTheCaring(): ?string
     {
         return $this->whoIsDoingTheCaring;
     }
@@ -213,7 +213,7 @@ class VisitsCare
      *
      * @return string
      */
-    public function getDoesClientHaveACarePlan(): string
+    public function getDoesClientHaveACarePlan(): ?string
     {
         return $this->doesClientHaveACarePlan;
     }
