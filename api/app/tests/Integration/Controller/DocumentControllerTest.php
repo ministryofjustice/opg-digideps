@@ -118,37 +118,6 @@ class DocumentControllerTest extends AbstractTestController
     }
 
     /** @test */
-    public function addDocumentNdr()
-    {
-        $type = 'ndr';
-        $reportId = self::$ndr1->getId();
-        $url = "/document/{$type}/{$reportId}";
-
-        $data = $this->assertJsonRequest('POST', $url, [
-            'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
-            'data' => [
-                'file_name' => 'ndr.pdf',
-                'storage_reference' => 's3NdrStorageKey',
-                'is_report_pdf' => true,
-            ],
-        ])['data'];
-
-        /** @var Document $document */
-        $document = $this->repo->find($data['id']);
-        $this->assertInstanceOf(Ndr::class, $document->getNdr());
-
-        $this->assertEquals($data['id'], $document->getId());
-        $this->assertEquals(self::$deputy1->getId(), $document->getCreatedBy()->getId());
-        $this->assertInstanceof(DateTime::class, $document->getCreatedOn());
-        $this->assertEquals('s3NdrStorageKey', $document->getStorageReference());
-        $this->assertEquals('ndr.pdf', $document->getFilename());
-        $this->assertEquals(true, $document->isReportPdf());
-
-        self::fixtures()->remove($document)->flush();
-    }
-
-    /** @test */
     public function getQueuedDocumentsUsesSecretAuth(): void
     {
         $return = $this->assertJsonRequest('GET', '/document/queued', [

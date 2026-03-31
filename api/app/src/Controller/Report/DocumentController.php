@@ -34,7 +34,7 @@ class DocumentController extends RestController
 
     #[Route(path: '/document/report/{reportId}', requirements: ['reportId' => '\d+'], methods: ['POST'])]
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
-    public function add(Request $request, string $reportType, int $reportId): array
+    public function add(Request $request, int $reportId): array
     {
         $report = $this->findEntityBy(Report::class, $reportId);
 
@@ -68,7 +68,7 @@ class DocumentController extends RestController
 
     #[Route(path: '/document/report/{reportId}/overwrite', requirements: ['reportId' => '\d+'], methods: ['POST'])]
     #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
-    public function overwriteReportPdf(Request $request, string $reportType, int $reportId): array
+    public function overwriteReportPdf(Request $request, int $reportId): array
     {
         /** @var Report $report */
         $report = $this->findEntityBy(Report::class, $reportId);
@@ -184,7 +184,7 @@ class DocumentController extends RestController
             );
         }
 
-        return json_encode($documentRepo->getQueuedDocumentsAndSetToInProgress($data['row_limit']));
+        return json_encode($documentRepo->getQueuedDocumentsAndSetToInProgress((int) $data['row_limit']));
     }
 
     /**
