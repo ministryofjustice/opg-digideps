@@ -6,18 +6,15 @@ on:
 jobs:
   phpcs:
     runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/phpcsstandards/phpcs:4.0.1
+
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
         with:
           fetch-depth: 0
 
-      - name: Install PHP_CodeSniffer
+      - name: Run PHPCS
         run: |
-          curl -OL https://github.com/PHPCSStandards/PHP_CodeSniffer/releases/download/4.0.1/phpcs.phar
-          php phpcs.phar --version
-
-      - uses: thenabeel/action-phpcs@23e2a47a8d16fd6ae7f000ac6d3ff97d02f0758d
-        with:
-          files: "**.php"
-          phpcs_path: php phpcs.phar
-          standard: phpcs.xml
+          phpcs --version
+          phpcs --standard=phpcs.xml "**.php"

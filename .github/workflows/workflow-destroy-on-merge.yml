@@ -26,7 +26,7 @@ on:
 
 jobs:
   workspace_name:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     name: output workflow variables
     outputs:
       build_identifier: ${{ steps.variables.outputs.build_identifier }}
@@ -43,7 +43,7 @@ jobs:
 
   cleanup_workspace:
     if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     needs:
       - workspace_name
     steps:
