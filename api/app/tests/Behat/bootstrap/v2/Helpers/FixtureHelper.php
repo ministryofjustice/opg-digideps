@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Helpers;
 
+use App\Entity\Report\Expense;
 use DateTime;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
@@ -1326,5 +1327,23 @@ class FixtureHelper
         $this->em->flush();
 
         return $organisation;
+    }
+
+    public function createAndPersistExpense(int $reportId, int $amount, string $explanation): Expense
+    {
+        $report = $this->em->getRepository(Report::class)->find($reportId);
+
+        $expense = new Expense($report);
+        $expense->setAmount($amount);
+        $expense->setExplanation($explanation);
+
+        $report->addExpense($expense);
+        $report->setPaidForAnything('yes');
+
+        $this->em->persist($expense);
+        $this->em->persist($report);
+        $this->em->flush();
+
+        return $expense;
     }
 }
