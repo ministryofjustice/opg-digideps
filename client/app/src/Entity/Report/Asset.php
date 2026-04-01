@@ -83,7 +83,7 @@ abstract class Asset
      *
      * @JMS\Type("DateTime")
      */
-    protected ?\DateTimeInterface $valuationDate = null;
+    protected ?\DateTime $valuationDate = null;
 
     public function getId()
     {
@@ -143,14 +143,14 @@ abstract class Asset
         return $this->valueTotal;
     }
 
-    public function setValuationDate(?\DateTimeInterface $valuationDate): static
+    public function setValuationDate(?\DateTime $valuationDate): static
     {
         $this->valuationDate = $valuationDate;
 
         return $this;
     }
 
-    public function getValuationDate()
+    public function getValuationDate(): ?\DateTime
     {
         return $this->valuationDate;
     }

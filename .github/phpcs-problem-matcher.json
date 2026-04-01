@@ -1,0 +1,21 @@
+{
+  "problemMatcher": [
+    {
+      "owner": "phpcs",
+      "severity": "error",
+      "pattern": [
+        {
+          "regexp": "^<file name=\"(.*?)\"(?:.*)>$",
+          "file": 1
+        },
+        {
+          "regexp": "<error line=\"(\\d*)\" column=\"(\\d*)\"(?:.*)>(.*?)<\\/error>$",
+          "line": 1,
+          "column": 2,
+          "message": 3,
+          "loop": true
+        }
+      ]
+    }
+  ]
+}
