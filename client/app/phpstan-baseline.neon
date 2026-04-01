@@ -1986,11 +1986,6 @@ parameters:
 			path: src/Entity/Report/Asset.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Asset\\:\\:getValuationDate\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Asset.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Asset\\:\\:setId\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/Asset.php
@@ -2034,16 +2029,6 @@ parameters:
 			message: "#^Property App\\\\Entity\\\\Report\\\\Asset\\:\\:\\$valueTotal is never written, only read\\.$#"
 			count: 1
 			path: src/Entity/Report/Asset.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\AssetOther\\:\\:getType\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/AssetOther.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\AssetOther\\:\\:\\$description has no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/AssetOther.php
 
 		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\AssetProperty\\:\\:getAddress\\(\\) has no return type specified\\.$#"
