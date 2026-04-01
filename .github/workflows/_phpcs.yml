@@ -16,8 +16,16 @@ jobs:
           curl -OL https://github.com/PHPCSStandards/PHP_CodeSniffer/releases/download/4.0.1/phpcs.phar
           php phpcs.phar --version
 
-      - uses: thenabeel/action-phpcs@23e2a47a8d16fd6ae7f000ac6d3ff97d02f0758d
-        with:
-          files: "**.php"
-          phpcs_path: php phpcs.phar
-          standard: phpcs.xml
+      - name: Detect changed PHP files
+        run: |
+          {
+            echo "CHANGED_PHP_FILES<<EOF"
+            git diff --name-only origin/main... -- '**/*.php'
+            echo "EOF"
+          } >> "$GITHUB_ENV"
+
+      - name: Run phpcs
+        if: env.CHANGED_PHP_FILES != ''
+        run: |
+          echo "::add-matcher::.github/phpcs-problem-matcher.json"
+          phpcs --standard=./phpcs.xml --report-xml --report-full $CHANGED_PHP_FILES
