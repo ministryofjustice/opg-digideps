@@ -8,7 +8,11 @@ use App\Domain\CourtOrder\CourtOrderKind;
 
 final readonly class CourtOrderRelationship
 {
-    public function __construct(public int $courtOrderId, public ?int $siblingId, public CourtOrderKind $kind)
-    {
+    public function __construct(
+        public int $clientId,
+        public int $courtOrderId,
+        public ?int $siblingId,
+        public CourtOrderKind $kind
+    ) {
     }
 }

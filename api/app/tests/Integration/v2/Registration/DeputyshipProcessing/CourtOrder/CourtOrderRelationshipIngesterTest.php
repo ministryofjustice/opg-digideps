@@ -7,6 +7,7 @@ namespace App\Tests\Integration\v2\Registration\DeputyshipProcessing\CourtOrder;
 use App\Domain\CourtOrder\CourtOrderKind;
 use App\Domain\CourtOrder\CourtOrderReportType;
 use App\Domain\CourtOrder\CourtOrderType;
+use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\StagingDeputyship;
 use App\Tests\Integration\ApiIntegrationTestCase;
@@ -25,8 +26,11 @@ class CourtOrderRelationshipIngesterTest extends ApiIntegrationTestCase
 
     private function persistCourtOrder(int $id, CourtOrderKind $kind, ?int $siblingId = null, bool $active = true, ?bool $activeSibling = null, ?CourtOrderType $orderType = null): void
     {
+        $client = new Client();
+        self::$entityManager->persist($client);
         $courtOrder = new CourtOrder();
         $courtOrder->setId($id);
+        $courtOrder->setClient($client);
         $courtOrder->setCourtOrderUid("UID-{$id}");
         $courtOrder->setOrderKind($kind);
         $courtOrder->setOrderType($orderType ?? CourtOrderType::PFA);
@@ -38,6 +42,7 @@ class CourtOrderRelationshipIngesterTest extends ApiIntegrationTestCase
         } elseif ($siblingId !== null && $kind !== CourtOrderKind::Single) {
             $sibling = new CourtOrder();
             $sibling->setId($siblingId);
+            $sibling->setClient($client);
             $sibling->setCourtOrderUid("UID-{$siblingId}");
             $sibling->setOrderKind($kind);
             $sibling->setOrderType($courtOrder->getOrderType() === CourtOrderType::HW ? CourtOrderType::PFA : CourtOrderType::HW);
@@ -183,7 +188,7 @@ class CourtOrderRelationshipIngesterTest extends ApiIntegrationTestCase
             new ReportReassembler(),
             self::$entityManager
         );
-        $results = $ingester->execute();
+        $results = [...$ingester->execute()];
         usort($results, fn(CourtOrderRelationshipResult $left, CourtOrderRelationshipResult $right) => $left->getMessage() <=> $right->getMessage());
 
         $this->assertCount(14, $results);

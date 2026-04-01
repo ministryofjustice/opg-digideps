@@ -72,8 +72,7 @@ final readonly class DeputyshipsCSVIngester
 
         // update CourtOrder relationships and kinds
         if (!$dryRun) {
-            $relationshipResults = $this->courtOrderRelationshipIngester->execute();
-            foreach ($relationshipResults as $relationshipResult) {
+            foreach ($this->courtOrderRelationshipIngester->execute() as $relationshipResult) {
                 $this->deputyshipsIngestResultRecorder->recordRelationshipResult($relationshipResult);
             }
         }
