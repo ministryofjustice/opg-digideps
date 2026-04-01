@@ -108,7 +108,10 @@ class FixtureController extends AbstractController
         $fromRequest = (array) json_decode($request->getContent(), true);
         $fromRequest['courtDate'] = (new \DateTime('-366 days'))->format('Y-m-d');
 
+        /** @var Deputy $deputy */
         $deputy = $this->deputyRepository->findOneBy(['email1' => $fromRequest['deputyEmail']]);
+
+        /** @var Organisation $organisation */
         $organisation = $this->organisationRepository->findByEmailIdentifier($fromRequest['deputyEmail']);
 
         foreach (range(1, $fromRequest['orgSizeClients']) as $ignored) {
