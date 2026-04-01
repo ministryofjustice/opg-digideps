@@ -33,7 +33,8 @@ final readonly class CourtOrderRelationshipReader
                     AND d.deputy_status_on_order = 'ACTIVE'
                 GROUP BY d.case_number, d.order_uid, d.order_type
             ), resolved AS (
-                SELECT d1.order_uid AS hw_order_uid,
+                SELECT
+                    d1.order_uid AS hw_order_uid,
                     d2.order_uid AS pfa_order_uid,
                     CASE
                         WHEN d1.deputy_uids = d2.deputy_uids THEN 'hybrid'
@@ -49,6 +50,7 @@ final readonly class CourtOrderRelationshipReader
                     AND d2.order_type = 'pfa'
             )
             SELECT
+                co.client_id,
                 co.id AS order_id,
                 sco.id AS sibling_id,
                 COALESCE(r.kind, 'single') AS kind
@@ -61,10 +63,12 @@ final readonly class CourtOrderRelationshipReader
                 OR (co.order_type = 'hw' AND sco.court_order_uid = r.pfa_order_uid)
             WHERE
                 co.status = 'ACTIVE'
+            ORDER BY co.client_id
         ");
         foreach ($result->iterateAssociative() as $row) {
             $row = new ValidatingArray($row);
             yield new CourtOrderRelationship(
+                $row->getIntegerOrThrow('client_id'),
                 $row->getIntegerOrThrow('order_id'),
                 $row->getIntegerOrNull('sibling_id'),
                 CourtOrderKind::from($row->getStringOrThrow('kind'))
