@@ -48,7 +48,7 @@ class VisitsCare
     private $doYouLiveWithClient;
 
     /**
-     * @var string
+     * @var ?string
      *
      * @JMS\Type("string")
      *
