@@ -30,6 +30,10 @@ class LifestyleController extends AbstractController
     ) {
     }
 
+
+
+
+    
     #[Route(path: '/report/{reportId}/lifestyle', name: 'lifestyle')]
     #[Template('@App/Report/Lifestyle/start.html.twig')]
     public function startAction(int $reportId): RedirectResponse|array
