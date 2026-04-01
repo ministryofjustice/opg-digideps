@@ -16,7 +16,6 @@ use App\Service\StepRedirector;
 use App\Service\StringUtils;
 use OPG\Digideps\Common\Validating\ValidatingForm;
 use Symfony\Bridge\Twig\Attribute\Template;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -108,8 +107,11 @@ class BankAccountController extends AbstractController
 
         $form->handleRequest($request);
 
-        /** @var SubmitButton $submitBtn */
         $submitBtn = $form->get('save');
+        if (!$submitBtn instanceof SubmitButton) {
+            throw new \UnexpectedValueException('Expected SubmitButton instance.');
+        }
+
         if ($submitBtn->isClicked() && $form->isSubmitted() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
             if (1 === $step) {
