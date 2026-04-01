@@ -45,3 +45,11 @@ jobs:
             done
           ' sh {} +
           echo "==== Dockerfile Linting Success. No errors ===="
+
+      - name: phpunit common
+        id: phpunit-common
+        run: make common-phpunit
+
+      - name: phpstan common
+        id: phpstan-common
+        run: make common-phpstan

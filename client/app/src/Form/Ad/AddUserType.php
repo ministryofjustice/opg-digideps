@@ -23,7 +23,6 @@ class AddUserType extends AbstractType
                     'data'        => $options['roleNameSetTo'],
                 ]
             )
-            ->add('ndrEnabled', FormTypes\HiddenType::class, ['empty_data' => '0'])
             ->add('save', FormTypes\SubmitType::class);
     }
 

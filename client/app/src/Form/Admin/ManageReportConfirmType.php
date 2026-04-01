@@ -5,14 +5,11 @@ namespace App\Form\Admin;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Constraints;
 
 class ManageReportConfirmType extends AbstractType
 {
-    const DUE_DATE_OPTION_CUSTOM = 'custom';
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('save', FormTypes\SubmitType::class);
@@ -31,7 +28,7 @@ class ManageReportConfirmType extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'admin-clients',
-            'name'               => 'report',
+            'name' => 'report',
         ]);
     }
 }

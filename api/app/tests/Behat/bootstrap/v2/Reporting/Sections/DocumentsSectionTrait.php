@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
-use Behat\Mink\Exception\ElementNotFoundException;
-use Throwable;
 use App\Entity\Report\Document;
 use App\Tests\Behat\BehatException;
+use Behat\Mink\Exception\ElementNotFoundException;
 
 trait DocumentsSectionTrait
 {
@@ -36,7 +35,7 @@ trait DocumentsSectionTrait
     /**
      * @Given I view and start the documents report section
      */
-    public function iViewAndStartDocumentsSection()
+    public function iViewAndStartDocumentsSection(): void
     {
         $this->iViewDocumentsSection();
 
@@ -46,7 +45,7 @@ trait DocumentsSectionTrait
     /**
      * @Given I view the documents report section
      */
-    public function iViewDocumentsSection()
+    public function iViewDocumentsSection(): void
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
         $documentsUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'documents');
@@ -57,7 +56,7 @@ trait DocumentsSectionTrait
     /**
      * @Given I have documents to upload
      */
-    public function iHaveDocumentsToUpload()
+    public function iHaveDocumentsToUpload(): void
     {
         if (str_contains($this->getSession()->getCurrentUrl(), 'documents/summary')) {
             $this->clickLink('Edit');
@@ -71,7 +70,7 @@ trait DocumentsSectionTrait
      * @Then the documents summary page should not contain any documents
      * @Then the document upload page should not contain any documents
      */
-    public function theDocumentsSummaryPageShouldNotContainDocuments()
+    public function theDocumentsSummaryPageShouldNotContainDocuments(): void
     {
         $descriptionLists = $this->getSession()->getPage()->findAll('css', 'dl');
 
@@ -84,7 +83,7 @@ trait DocumentsSectionTrait
      * @Then the documents summary page should contain the documents I uploaded
      * @Then the documents uploads page should contain the documents I uploaded
      */
-    public function theDocumentsSummaryPageShouldContainDocumentsIUploaded()
+    public function theDocumentsSummaryPageShouldContainDocumentsIUploaded(): void
     {
         if (empty($this->uploadedDocumentFilenames)) {
             throw new BehatException('$this->uploadedDocumentFilenames is empty. This suggests no documents were uploaded.');
@@ -99,7 +98,7 @@ trait DocumentsSectionTrait
      * @Then the documents summary page should contain the documents I uploaded with converted filenames
      * @Then the documents uploads page should contain the documents I uploaded with converted filenames
      */
-    public function theDocumentsSummaryPageShouldContainDocumentsIUploadedConvertedFilenames()
+    public function theDocumentsSummaryPageShouldContainDocumentsIUploadedConvertedFilenames(): void
     {
         if (empty($this->uploadedDocumentFilenames)) {
             throw new BehatException('$this->uploadedDocumentFilenames is empty. This suggests no documents were uploaded.');
@@ -110,7 +109,7 @@ trait DocumentsSectionTrait
         $this->findFileNamesInDls($descriptionLists, ['good_heic.jpeg', 'good_jfif.jpeg']);
     }
 
-    private function findFileNamesInDls(array $descriptionLists, array $convertedFileNames = [])
+    private function findFileNamesInDls(array $descriptionLists, array $convertedFileNames = []): void
     {
         $missingFilenames = [];
 
@@ -146,7 +145,7 @@ trait DocumentsSectionTrait
      * @When I upload one valid document
      * @When I attempt to upload one valid document
      */
-    public function iUploadOneValidDocument()
+    public function iUploadOneValidDocument(): void
     {
         $this->uploadFiles([$this->validJpegFilename]);
     }
@@ -154,7 +153,7 @@ trait DocumentsSectionTrait
     /**
      * @Given I upload one valid document with the filename :filename
      */
-    public function iUploadOneValidDocumentWithTheFilename(string $filename)
+    public function iUploadOneValidDocumentWithTheFilename(string $filename): void
     {
         $this->uploadFiles([$filename]);
     }
@@ -162,7 +161,7 @@ trait DocumentsSectionTrait
     /**
      * @Given the document uploads page should contain a document with the filename :filename
      */
-    public function theDocumentUploadsPageShouldContainADocumentWithFilename(string $filename)
+    public function theDocumentUploadsPageShouldContainADocumentWithFilename(string $filename): void
     {
         $descriptionLists = $this->findAllCssElements('dl');
         $this->findFileNamesInDls($descriptionLists, [$filename]);
@@ -171,13 +170,13 @@ trait DocumentsSectionTrait
     /**
      * @Given the document uploads page should not contain a document with the filename :filename
      */
-    public function theDocumentUploadsPageShouldNotContainADocumentWithFilename(string $filename)
+    public function theDocumentUploadsPageShouldNotContainADocumentWithFilename(string $filename): void
     {
         // Find all <dt class="govuk-summary-list__value"> elements
         $elements = $this->getSession()->getPage()->findAll('css', 'dt.govuk-summary-list__value');
 
         foreach ($elements as $element) {
-            if (strpos($element->getText(), $filename) !== false) {
+            if (str_contains($element->getText(), $filename)) {
                 throw new \Exception("Filename '{$filename}' was found in a summary list value.");
             }
         }
@@ -185,9 +184,9 @@ trait DocumentsSectionTrait
 
     /**
      * @Given I remove the document with the filename :filename
-     * @throws ElementNotFoundException
+     * @throws ElementNotFoundException|BehatException
      */
-    public function iRemoveOneDocumentWithTheFilename(string $filename)
+    public function iRemoveOneDocumentWithTheFilename(string $filename): void
     {
         $parentOfDtWithTextSelector = "//dt[contains(text(), \"$filename\")]/..";
         $documentRowDiv = $this->getSession()->getPage()->find('xpath', $parentOfDtWithTextSelector);
@@ -199,7 +198,7 @@ trait DocumentsSectionTrait
         $documentRowDiv->clickLink('Remove');
     }
 
-    private function uploadFiles(array $filenames)
+    private function uploadFiles(array $filenames): void
     {
         $this->uploadedDocumentFilenames = $filenames;
 
@@ -212,7 +211,7 @@ trait DocumentsSectionTrait
     /**
      * @When I upload multiple valid documents that do not require conversion
      */
-    public function iUploadMultipleValidDocumentsNoConvesion()
+    public function iUploadMultipleValidDocumentsNoConvesion(): void
     {
         $this->uploadFiles([$this->validJpegFilename, $this->validPdfFilename, $this->validPngFilename]);
     }
@@ -220,7 +219,7 @@ trait DocumentsSectionTrait
     /**
      * @When I upload multiple valid documents that require conversion
      */
-    public function iUploadMultipleValidDocumentsRequireConversion()
+    public function iUploadMultipleValidDocumentsRequireConversion(): void
     {
         $this->uploadFiles([$this->validHeicFilename, $this->validJfifFilename]);
     }
@@ -228,7 +227,7 @@ trait DocumentsSectionTrait
     /**
      * @When I upload one document with an unsupported file type
      */
-    public function iUploadOneDocumentWithUnsupportedFileType()
+    public function iUploadOneDocumentWithUnsupportedFileType(): void
     {
         $this->uploadFiles([$this->txtFilename]);
     }
@@ -236,7 +235,7 @@ trait DocumentsSectionTrait
     /**
      * @When I upload one document that is too large
      */
-    public function iUploadOneDocumentThatIsTooLarge()
+    public function iUploadOneDocumentThatIsTooLarge(): void
     {
         ini_set('memory_limit', '512M');
 
@@ -246,11 +245,11 @@ trait DocumentsSectionTrait
     /**
      * @When I have no further documents to upload
      */
-    public function iHaveNoFurtherDocumentsToUpload()
+    public function iHaveNoFurtherDocumentsToUpload(): void
     {
         try {
             $this->clickLink('Continue');
-        } catch (Throwable $e) {
+        } catch (\Throwable) {
             $this->clickLink('Continue to send documents');
         }
     }
@@ -260,7 +259,7 @@ trait DocumentsSectionTrait
      *
      * @Given /^I remove the "([^"]*)" document I uploaded$/
      */
-    public function iRemoveOneDocumentIUploaded(?string $fileName = null)
+    public function iRemoveOneDocumentIUploaded(?string $fileName = null): void
     {
         if ($fileName) {
             $documentToPop = $fileName;
@@ -294,7 +293,7 @@ trait DocumentsSectionTrait
     /**
      * @Then I should see an 'invalid file type' error
      */
-    public function iShouldSeeInvalidFileTypeError()
+    public function iShouldSeeInvalidFileTypeError(): void
     {
         $this->assertOnErrorMessage($this->invalidFileTypeErrorMessage);
     }
@@ -302,7 +301,7 @@ trait DocumentsSectionTrait
     /**
      * @Then I should see a 'file too large' error
      */
-    public function iShouldSeeFileTooLargeError()
+    public function iShouldSeeFileTooLargeError(): void
     {
         $this->assertOnErrorMessage($this->fileTooBigErrorMessage);
     }
@@ -310,7 +309,7 @@ trait DocumentsSectionTrait
     /**
      * @Then I should see an 'answer could not be updated' error
      */
-    public function iShouldSeeAnswerCouldNotBeUpdatedError()
+    public function iShouldSeeAnswerCouldNotBeUpdatedError(): void
     {
         $this->assertOnErrorMessage($this->answerNotUpdatedErrorMessage);
     }
@@ -318,7 +317,7 @@ trait DocumentsSectionTrait
     /**
      * @When I change my mind and confirm I have no documents to upload
      */
-    public function changeMindNoDocumentsToUpload()
+    public function changeMindNoDocumentsToUpload(): void
     {
         $this->clickLink('Edit');
         $this->iHaveNoDocumentsToUpload();
@@ -327,7 +326,7 @@ trait DocumentsSectionTrait
     /**
      * @Given I have no documents to upload
      */
-    public function iHaveNoDocumentsToUpload()
+    public function iHaveNoDocumentsToUpload(): void
     {
         $this->fillField('document_wishToProvideDocumentation_1', 'no');
 
@@ -337,7 +336,7 @@ trait DocumentsSectionTrait
     /**
      * @Then I should see guidance on providing the final cost certificate for the previous reporting period
      */
-    public function iShouldSeeFeeGuidance()
+    public function iShouldSeeFeeGuidance(): void
     {
         $this->assertOnAlertMessage($this->orgCostCertificateMessage);
     }
@@ -345,7 +344,7 @@ trait DocumentsSectionTrait
     /**
      * @Given I upload a file where the mimetype and file extension do not match
      */
-    public function filesMimetypeAndExtensionDoesNotMatch()
+    public function filesMimetypeAndExtensionDoesNotMatch(): void
     {
         $this->uploadFiles([$this->pngFilenameWithJpegFileExtension]);
     }
@@ -353,7 +352,7 @@ trait DocumentsSectionTrait
     /**
      * @Then I should see a 'mimetype and file type do not match' error
      */
-    public function iShouldSeeAMimetypeAndFileDoNotMatchError()
+    public function iShouldSeeAMimetypeAndFileDoNotMatchError(): void
     {
         $this->assertOnErrorMessage($this->mimeTypeAndFileExtensionDoNotMatchErrorMessage);
     }
@@ -361,7 +360,7 @@ trait DocumentsSectionTrait
     /**
      * @Then I should see a 'duplicate file name' error
      */
-    public function IShouldSeeADuplicateFileNameError()
+    public function IShouldSeeADuplicateFileNameError(): void
     {
         $this->assertOnErrorMessage($this->fileDuplicationMessage);
     }
@@ -369,21 +368,21 @@ trait DocumentsSectionTrait
     /**
      * @Given /^the supporting document has expired and is no longer stored in the S3 bucket$/
      */
-    public function theSupportingDocumentHasExpiredAndIsNoLongerStoredInTheS3bucket()
+    public function theSupportingDocumentHasExpiredAndIsNoLongerStoredInTheS3bucket(): void
     {
         $reportId = $this->loggedInUserDetails->getCurrentReportId();
 
         $docs = $this->em->getRepository(Document::class)->findBy(['report' => $reportId]);
 
         foreach ($docs as $doc) {
-            $this->expireDocumentFromUnSubmittedDeputyReport($doc->getStorageReference());
+            $this->fixtureHelper->deleteFilesFromS3($doc->getStorageReference());
         }
     }
 
     /**
      * @Given /^I try to submit my report with the expired document$/
      */
-    public function iTryToSubmitMyReportWithTheExpiredDocument()
+    public function iTryToSubmitMyReportWithTheExpiredDocument(): void
     {
         $this->visitFrontendPath($this->getReportOverviewUrl($this->loggedInUserDetails->getCurrentReportId()));
         $this->clickLink('Preview and check report');
@@ -400,7 +399,7 @@ trait DocumentsSectionTrait
     /**
      * @Given I delete the missing document and re-upload :document to the report
      */
-    public function iDeleteTheMissingDocumentAndReUploadToTheReport(string $document)
+    public function iDeleteTheMissingDocumentAndReUploadToTheReport(string $document): void
     {
         $fileNameSplit = pathinfo($document);
         $fileName = $fileNameSplit['filename'];
@@ -444,7 +443,7 @@ trait DocumentsSectionTrait
     /**
      * @Given /^a flash message should be displayed to the user confirming the document upload$/
      */
-    public function aFlashMessageShouldBeDisplayedToTheUserConfirmingTheUpload()
+    public function aFlashMessageShouldBeDisplayedToTheUserConfirmingTheUpload(): void
     {
         $alertMessage = 'Your uploaded files are now attached to this report.';
 
@@ -465,7 +464,7 @@ trait DocumentsSectionTrait
     /**
      * @Then I should see :imageName listed as a previously submitted document
      */
-    public function iShouldSeeListedAsAPreviouslySubmittedDocument($submittedDoc)
+    public function iShouldSeeListedAsAPreviouslySubmittedDocument(string $submittedDoc): void
     {
         $xpathSelector = sprintf("//dt[normalize-space() = '%s']", $submittedDoc);
         $fileNameItems = $this->getSession()->getPage()->find('xpath', $xpathSelector)->getHtml();
@@ -478,7 +477,7 @@ trait DocumentsSectionTrait
     /**
      * @Then /^I should see "([^"]*)" and "([^"]*)" as previously submitted documents$/
      */
-    public function iShouldSeeAndAsPreviouslySubmittedDocuments($fileOne, $fileTwo)
+    public function iShouldSeeAndAsPreviouslySubmittedDocuments(string $fileOne, string $fileTwo): void
     {
         $fileNames = [$fileOne, $fileTwo];
 
@@ -493,7 +492,7 @@ trait DocumentsSectionTrait
     /**
      * @Then /^a flash message should be displayed to the user confirming the removal of "([^"]*)"$/
      */
-    public function aFlashMessageShouldBeDisplayedToTheUserConfirmingTheDocumentHasBeenRemoved($fileName)
+    public function aFlashMessageShouldBeDisplayedToTheUserConfirmingTheDocumentHasBeenRemoved(string $fileName): void
     {
         $alertMessage = sprintf('File named %s has been removed', $fileName);
         $xpath = '//div[contains(@class, "moj-banner moj-banner--success")]';

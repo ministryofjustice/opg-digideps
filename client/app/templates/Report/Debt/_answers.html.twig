@@ -20,6 +20,7 @@
             <dd class="govuk-summary-list__actions">
                 <a class="govuk-link behat-link-edit" href="{{ path('debts_exist', {'reportId': report.id, 'from': 'summary'}) }}">
                     {{ 'edit' | trans({}, 'common') }}
+                    <span class="govuk-visually-hidden">{{ 'existPage.form.exist.label' | trans(transOptions) }}</span>
                 </a>
             </dd>
         {% endif %}
@@ -37,6 +38,7 @@
             {% if not hideEditLink  %}
                 <a href="{{ path('debts_edit', {'reportId': report.id, 'from': 'summary'}) }}" class="behat-link-edit">
                     <strong>{{ 'edit' | trans({}, 'common' ) }}</strong>
+                    <span class="govuk-visually-hidden">List of debts</span>
                 </a>
             {% endif %}
         </div>
@@ -89,6 +91,7 @@
                     <dd class="govuk-summary-list__actions">
                         <a class="govuk-link behat-link-edit" href="{{ path('debts_edit', {'reportId': report.id, 'from': 'summary'}) }}">
                             {{ 'edit' | trans({}, 'common') }}
+                            <span class="govuk-visually-hidden">{{ 'Explanation of ' ~'summaryPage.moreAbout' | trans(transOptions | merge({'%amount%': debtOther.amount })) }}</span>
                         </a>
                     </dd>
                 {% endif %}
@@ -116,6 +119,7 @@
                 <dd class="govuk-summary-list__actions">
                     <a class="govuk-link behat-link-edit-debt-management" href="{{ path('debts_management', {'reportId': report.id, 'from': 'summary'}) }}">
                         {{ 'edit' | trans({}, 'common') }}
+                        <span class="govuk-visually-hidden">{{ 'managementPage.form.debtManagement.label' | trans }}</span>
                     </a>
                 </dd>
             {% endif %}

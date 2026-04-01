@@ -88,8 +88,6 @@ class ClientApi
                 'client-users',
                 'user',
                 'client-reports',
-                'client-ndr',
-                'ndr',
                 'report',
                 'status',
                 'client-deputy',
@@ -108,8 +106,6 @@ class ClientApi
             [
                 'client',
                 'client-reports',
-                'client-ndr',
-                'ndr',
                 'report',
                 'status',
                 'client-deputy',

@@ -71,7 +71,6 @@ form:
         label: "Cancel"
 
 reportTitles:
-  ndr: New deputy report
   propertyAffairsGeneral: "Property and affairs: general"
   propertyAffairsMinimal: "Property and affairs: minimal"
   healthWelfare: Health and welfare

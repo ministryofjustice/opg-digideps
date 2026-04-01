@@ -49,9 +49,15 @@
                     {% if not hideEditLink %}
                         <td class="govuk-table__cell govuk-table__cell--numeric">
                             <a href="{{ path('pa_fee_expense_edit', { 'reportId': report.id, 'expenseId': expense.id }) }}#pageBody"
-                            class="govuk-link behat-link-edit">{{ 'edit' | trans({}, 'common') }}</a>
+                            class="govuk-link behat-link-edit">
+                                {{ 'edit' | trans({}, 'common') }}
+                                <span class="govuk-visually-hidden">{{ expense.explanation }}</span>
+                            </a>
                             <a href="{{ path('pa_fee_expense_delete', { 'reportId': report.id, 'expenseId': expense.id }) }}"
-                            class="govuk-link govuk-!-margin-left-1 behat-link-delete">{{ 'remove' | trans({}, 'common' ) }}</a>
+                            class="govuk-link govuk-!-margin-left-1 behat-link-delete">
+                                {{ 'remove' | trans({}, 'common' ) }}
+                                <span class="govuk-visually-hidden">{{ expense.explanation }}</span>
+                            </a>
                         </td>
                     {% endif %}
                 </tr>

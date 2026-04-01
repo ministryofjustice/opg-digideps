@@ -72,7 +72,7 @@ class Client
      *
      * @var array
      */
-    private $reports = [];
+    private array $reports = [];
 
     /**
      * @JMS\Type("App\Entity\Report\Report")
@@ -80,13 +80,6 @@ class Client
      * @var Report
      */
     private $currentReport;
-
-    /**
-     * @var Ndr\Ndr
-     *
-     * @JMS\Type("App\Entity\Ndr\Ndr")
-     */
-    private $ndr;
 
     /**
      * @JMS\Exclude()
@@ -439,24 +432,6 @@ class Client
     public function setCurrentReport($currentReport): self
     {
         $this->currentReport = $currentReport;
-
-        return $this;
-    }
-
-    /**
-     * @return Ndr\Ndr
-     */
-    public function getNdr()
-    {
-        return $this->ndr;
-    }
-
-    /**
-     * @param Ndr\Ndr $ndr
-     */
-    public function setNdr($ndr)
-    {
-        $this->ndr = $ndr;
 
         return $this;
     }

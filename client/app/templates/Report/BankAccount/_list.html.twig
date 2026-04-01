@@ -52,7 +52,7 @@
                 £{{ account.openingBalance | money_format }}
             </td>
             <td class="govuk-table__cell govuk-table__cell--numeric">
-            {% if account.closingBalance == null %}
+            {% if account.closingBalance === null %}
                 <div class="error-message">
                     {{ 'summaryPage.balanceRequired' | trans({ '%date%': report.endDate | date("j F Y") }) }}
                 </div>
@@ -65,9 +65,15 @@
             </td>
             <td class="govuk-table__cell govuk-table__cell--numeric">
                 <a class="behat-link-edit govuk-link"
-                   href="{{ path('bank_accounts_step' , {'reportId': report.id, 'step': 1, 'accountId': account.id}) }}">{{ 'edit' | trans({}, 'common' ) }}</a>
+                   href="{{ path('bank_accounts_step' , {'reportId': report.id, 'step': 1, 'accountId': account.id}) }}">
+                    {{ 'edit' | trans({}, 'common' ) }}
+                    <span class="govuk-visually-hidden">account with number ending in {{ account.accountNumber }}</span>
+                </a>
                 <a class="behat-link-delete govuk-link govuk-!-margin-left-1"
-                   href="{{ path('bank_account_delete' , {'reportId': report.id, 'accountId': account.id}) }}">{{ 'remove' | trans({}, 'common' ) }}</a>
+                   href="{{ path('bank_account_delete' , {'reportId': report.id, 'accountId': account.id}) }}">
+                    {{ 'remove' | trans({}, 'common' ) }}
+                    <span class="govuk-visually-hidden">account with number ending in {{ account.accountNumber }}</span>
+                </a>
             </td>
         </tr>
     {% endfor %}

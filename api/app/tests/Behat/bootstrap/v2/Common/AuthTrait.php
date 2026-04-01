@@ -606,16 +606,4 @@ trait AuthTrait
         $this->fillField('login_password', 'DigidepsPass1234');
         $this->pressButton('login_login');
     }
-
-    /**
-     * @Then /^I \'([^\']*)\' see the NDR report on the reports page$/
-     */
-    public function theyShouldBeOnNDRReportPage($arg1): void
-    {
-        if ('should' == $arg1) {
-            $this->assertPageContainsText('New deputy report');
-        } else {
-            $this->assertPageNotContainsText('New deputy report');
-        }
-    }
 }

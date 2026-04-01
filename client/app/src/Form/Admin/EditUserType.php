@@ -30,10 +30,6 @@ class EditUserType extends AbstractType
             $user = $event->getData();
             $form = $event->getForm();
 
-            if ($user->isLayDeputy()) {
-                $form->add('ndrEnabled', FormTypes\HiddenType::class, ['empty_data' => '0']);
-            }
-
             $adminManagerCanEdit = $operatingUser->isAdminManager() && $user->isLayDeputy();
 
             if ($operatingUser->isSuperAdmin() || $adminManagerCanEdit) {

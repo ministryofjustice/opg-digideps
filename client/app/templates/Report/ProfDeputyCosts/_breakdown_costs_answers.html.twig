@@ -34,6 +34,7 @@
             <dd class="govuk-summary-list__actions">
                 <a class="govuk-link behat-link-edit" href="{{ path('prof_deputy_costs_breakdown', {'reportId': report.id, 'from': 'summary'}) }}">
                     {{ 'edit' | trans({}, 'common') }}
+                    <span class="govuk-visually-hidden">{{ ('breakdown.form.entries.' ~ otherCostTypeId.typeId ~ '.label') | trans }}</span>
                 </a>
             </dd>
         {% endif %}
@@ -51,6 +52,7 @@
                 <dd class="govuk-summary-list__actions">
                     <a class="govuk-link behat-link-edit" href="{{ path('prof_deputy_costs_breakdown', {'reportId': report.id, 'from': 'summary'}) }}">
                         {{ 'edit' | trans({}, 'common') }}
+                        <span class="govuk-visually-hidden">{{ ('breakdown.form.entries.' ~ otherCostTypeId.typeId ~ '.moreInformationLabelSummary') | trans }}</span>
                     </a>
                 </dd>
             {% endif %}

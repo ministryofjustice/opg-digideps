@@ -53,3 +53,4 @@ Feature: Accounts (Lay / PA / Prof share same functionality)
     Then I should be prompted to select an answer to the account closed question
     When I select "Yes" for the account closed question
     Then I should see the account on the summary page marked as closed
+    And the account closing balance should be "£0.00"

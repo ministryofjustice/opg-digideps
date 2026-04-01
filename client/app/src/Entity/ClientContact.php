@@ -246,12 +246,7 @@ class ClientContact
         return $this->client;
     }
 
-    /**
-     * @param string $client
-     *
-     * @return string
-     */
-    public function setClient($client)
+    public function setClient(string $client): static
     {
         $this->client = $client;
         return $this;
@@ -265,12 +260,7 @@ class ClientContact
         return $this->email;
     }
 
-    /**
-     * @param string $email
-     *
-     * @return string
-     */
-    public function setEmail($email)
+    public function setEmail(string $email): static
     {
         $this->email = $email;
         return $this;

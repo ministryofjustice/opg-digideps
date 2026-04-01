@@ -68,20 +68,17 @@ down-app: ##@application Tears down the app
 	docker compose down -v --remove-orphans
 
 tag := "v2"
-end-to-end-tests: up-app reset-database ##@end-to-end-tests Brings the app up using test env vars (see test.env)
-	APP_DEBUG=0 docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run --rm end-to-end-tests sh ./tests/Behat/run-tests.sh --tags @$(tag)
+profile := "v2-tests-browserkit"
+end-to-end-tests: up-app reset-database ##@end-to-end-tests Brings the app up using test env vars (see test.env); optionally pass profile, and suite and tag to run within that profile
+ifdef suite
+	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.override.yml run --rm end-to-end-tests sh ./tests/Behat/run-tests.sh --profile $(profile) --tags @$(tag) --suite $(suite)
+else
+	APP_DEBUG=0 docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run --rm end-to-end-tests sh ./tests/Behat/run-tests.sh --profile $(profile) --tags @$(tag)
+endif
 
 end-to-end-tests-parallel: ##@end-to-end-tests Rerun the end to end tests in parallel (requires you to have run end-to-end-tests previously)
 	APP_DEBUG=0 docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run --rm end-to-end-tests sh ./tests/Behat/run-tests.sh --tags @v2_sequential
 	APP_DEBUG=0 docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run --rm end-to-end-tests sh ./tests/Behat/run-tests-parallel.sh --tags "@v2&&~@v2_sequential"
-
-end-to-end-tests-browserkit: ##@end-to-end-tests Pass in suite name as arg e.g. make behat-tests-v2-browserkit suite=<SUITE NAME>
-
-ifdef suite
-	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.override.yml run -rm end-to-end-tests sh ./tests/Behat/run-tests.sh --profile v2-tests-browserkit --tags @v2 --suite $(suite)
-else
-	APP_DEBUG=0 docker compose -f docker-compose.yml -f docker-compose.override.yml run -rm end-to-end-tests sh ./tests/Behat/run-tests.sh --profile v2-tests-browserkit --tags @v2
-endif
 
 client-unit-tests: ##@unit-tests Run the client unit tests
 	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run -e APP_ENV=test -e APP_DEBUG=0 --rm client-unit-tests sh scripts/client-unit-tests.sh cov-html
@@ -225,8 +222,14 @@ sql-custom-command-revoke: ##@sql-custom-command Run SQL revoke custom command
 set-feature-flag: ##@localstack Set a particular feature flags value e.g. set-feature-flag name=multi-accounts value=1
 	docker compose exec localstack awslocal ssm put-parameter --name "/local/flag/$(name)" --value "$(value)" --type String --overwrite
 
-block-ips-tests:
+block-ips-tests: ##@unit-tests Run the unit tests for IP blocking lambda.
 	docker compose -f docker-compose.commands.yml up block-ips-tests
 
-anonymisation-tests:
+anonymisation-tests: ##@unit-tests Run the unit tests for data anonymisation.
 	docker compose -f docker-compose.commands.yml up anonymisation-tests
+
+common-phpunit: ##@unit-tests Run the common unit tests.
+	docker compose run composer-common-phpunit
+
+common-phpstan: ##@static-analysis Runs PHPStan against common.
+	docker compose run composer-common-phpstan
