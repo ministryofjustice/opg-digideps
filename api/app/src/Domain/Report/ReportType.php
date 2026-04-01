@@ -19,16 +19,6 @@ final readonly class ReportType implements \Stringable
     ) {
     }
 
-    public function isSound(): bool
-    {
-        if ($this->courtOrderKind === CourtOrderKind::Hybrid) {
-            return $this->courtOrderReportType !== CourtOrderReportType::OPG104;
-        } elseif ($this->courtOrderType === CourtOrderType::HW) {
-            return $this->courtOrderReportType === CourtOrderReportType::OPG104;
-        }
-        return true;
-    }
-
     public function __toString(): string
     {
         $parts = [];
