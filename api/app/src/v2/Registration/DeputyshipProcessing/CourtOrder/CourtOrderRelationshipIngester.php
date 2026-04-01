@@ -75,8 +75,8 @@ final readonly class CourtOrderRelationshipIngester
                     $changes[] = $change;
                 }
             }
+            $this->entityManager->flush();
             $results = $this->updateReports($changes);
-
             $this->entityManager->flush();
             $this->entityManager->clear();
 

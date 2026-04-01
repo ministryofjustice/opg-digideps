@@ -68,7 +68,7 @@ final readonly class CourtOrderRelationshipReader
         foreach ($result->iterateAssociative() as $row) {
             $row = new ValidatingArray($row);
             yield new CourtOrderRelationship(
-                $row->getIntegerOrThrow('client_id'),
+                $row->getIntegerOrDefault('client_id', 0),
                 $row->getIntegerOrThrow('order_id'),
                 $row->getIntegerOrNull('sibling_id'),
                 CourtOrderKind::from($row->getStringOrThrow('kind'))
