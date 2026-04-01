@@ -37,7 +37,7 @@ jobs:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: SLSA
-        uses: ministryofjustice/devsecops-actions/sca/slsa@3e9410cef31dd9cec64ad567efc959afd88a591c
+        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
         with:
           requirements-file: lambdas/functions/monitor_notify_lambda/requirements.txt
 
