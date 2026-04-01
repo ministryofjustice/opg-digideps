@@ -11,6 +11,7 @@ use App\Entity\CourtOrder;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
 use App\Entity\PreRegistration;
+use App\Entity\Report\Expense;
 use App\Entity\Report\Report;
 use App\Entity\Satisfaction;
 use App\Entity\User;
@@ -1327,5 +1328,23 @@ class FixtureHelper
         $this->em->flush();
 
         return $organisation;
+    }
+
+    public function createAndPersistExpense(int $reportId, int $amount, string $explanation): Expense
+    {
+        $report = $this->em->getRepository(Report::class)->find($reportId);
+
+        $expense = new Expense($report);
+        $expense->setAmount($amount);
+        $expense->setExplanation($explanation);
+
+        $report->addExpense($expense);
+        $report->setPaidForAnything('yes');
+
+        $this->em->persist($expense);
+        $this->em->persist($report);
+        $this->em->flush();
+
+        return $expense;
     }
 }
