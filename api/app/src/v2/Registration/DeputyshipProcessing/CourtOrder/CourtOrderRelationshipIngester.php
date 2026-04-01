@@ -16,12 +16,12 @@ final readonly class CourtOrderRelationshipIngester
     }
 
     /**
-     * @return array<CourtOrderRelationshipResult>
+     * @return \Generator<never,int,CourtOrderRelationshipResult,void>
      */
-    public function execute(): array
+    public function execute(): \Generator
     {
         $this->purgeInactiveRelations();
-        return $this->updateReports($this->updateCourtOrders());
+        return $this->updateCourtOrders();
     }
 
     private function purgeInactiveRelations(): void
@@ -56,26 +56,55 @@ final readonly class CourtOrderRelationshipIngester
         $current->setSibling($relationship->siblingId === null ? null : $repository->find($relationship->siblingId));
         $current->setOrderKind($relationship->kind);
         $this->entityManager->persist($current);
+        $this->entityManager->flush();
         return new CourtOrderRelationshipChange($current, $oldKind, $oldSiblingId);
     }
 
     /**
-     * @return array<CourtOrderRelationshipChange>
+     * @return \Generator<never,int,CourtOrderRelationshipResult,void>
      */
-    private function updateCourtOrders(): array
+    private function updateCourtOrders(): \Generator
     {
-        $courtOrderRelationshipChanges = [];
-
         $repository = $this->entityManager->getRepository(CourtOrder::class);
-        foreach ($this->relationshipReader->read() as $relationship) {
-            $change = $this->processRelationship($relationship, $repository);
-            if ($change !== null) {
-                $courtOrderRelationshipChanges[] = $change;
+
+        foreach ($this->groupByClientId($this->relationshipReader->read()) as $relationships) {
+            $changes = [];
+            foreach ($relationships as $relationship) {
+                $change = $this->processRelationship($relationship, $repository);
+                if ($change !== null) {
+                    $changes[] = $change;
+                }
+            }
+            $results = $this->updateReports($changes);
+
+            $this->entityManager->flush();
+            $this->entityManager->clear();
+
+            foreach ($results as $result) {
+                yield $result;
             }
         }
-        $this->entityManager->flush();
+    }
 
-        return $courtOrderRelationshipChanges;
+    /**
+     * @param \Generator<never,int,CourtOrderRelationship,void> $relationships
+     * @return \Generator<never,int,array<CourtOrderRelationship>,void>
+     */
+    private function groupByClientId(\Generator $relationships): \Generator
+    {
+        /**
+         * @var array<CourtOrderRelationship> $buffer
+         */
+        $buffer = [];
+        foreach ($relationships as $relationship) {
+            if (empty($buffer) || $buffer[count($buffer) - 1]->clientId  === $relationship->clientId) {
+                $buffer[] = $relationship;
+            } else {
+                yield $buffer;
+                $buffer = [$relationship];
+            }
+        }
+        yield $buffer;
     }
 
     /**
