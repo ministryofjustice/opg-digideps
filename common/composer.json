@@ -1,0 +1,33 @@
+{
+  "name": "digideps/common",
+  "description": "Code shared between frontend and backend",
+  "type": "library",
+  "license": "MIT",
+  "minimum-stability": "stable",
+  "require": {
+    "php": "^8.4",
+    "jms/serializer-bundle": "^5.5.2",
+    "symfony/form": "^6.4.32",
+    "symfony/validator": "^6.4.30"
+  },
+  "require-dev": {
+    "dg/bypass-finals": "^1.9",
+    "phpstan/phpstan": "^2.1",
+    "phpunit/phpunit": "^13.0.5",
+    "phpstan/phpstan-phpunit": "^2.0"
+  },
+  "scripts": {
+    "lint:phpstan": "phpstan",
+    "tests:unit": "phpunit"
+  },
+  "autoload": {
+    "psr-4": {
+      "OPG\\Digideps\\Common\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "OPG\\Digideps\\Tests\\Common\\": "tests"
+    }
+  }
+}

@@ -1,4 +1,4 @@
-FROM muonsoft/openapi-mock:0.3.9
+FROM muonsoft/openapi-mock:0.3.9@sha256:c9afe1295484a9713de49258de94b994af3eb9d4e55ff05bdad1b1d6be12a88b
 
 WORKDIR /app
 
