@@ -596,11 +596,6 @@ parameters:
 			path: src/Controller/Report/VisitsCareController.php
 
 		-
-			message: "#^Parameter \\#1 \\$whenWasCarePlanLastReviewed of method App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:setWhenWasCarePlanLastReviewed\\(\\) expects DateTime, null given\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\User\\>\\:\\:findDeputyUidsForClient\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/RestController.php
