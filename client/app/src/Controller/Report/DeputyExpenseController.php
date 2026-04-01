@@ -66,8 +66,8 @@ class DeputyExpenseController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $validatedForm = new ValidatingForm($form);
-            $data = $validatedForm->getObjectOrThrow(null, Report::class);
+            $validatingForm = new ValidatingForm($form);
+            $data = $validatingForm->getObjectOrThrow(null, Report::class);
 
             switch ($data->getPaidForAnything()) {
                 case 'yes':
@@ -110,13 +110,13 @@ class DeputyExpenseController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $validatedForm = new ValidatingForm($form);
-            $data = $validatedForm->getObjectOrThrow(null, Expense::class);
+            $validatingForm = new ValidatingForm($form);
+            $data = $validatingForm->getObjectOrThrow(null, Expense::class);
             $data->setReport($report);
 
             $this->restClient->post('report/' . $report->getId() . '/expense', $data, ['expenses', 'account']);
 
-            $addAnother = $validatedForm->getStringOrNull('addAnother');
+            $addAnother = $validatingForm->getStringOrNull('addAnother');
             switch ($addAnother) {
                 case 'yes':
                     return $this->redirectToRoute('deputy_expenses_add', ['reportId' => $reportId]);
@@ -174,8 +174,8 @@ class DeputyExpenseController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $validatedForm = new ValidatingForm($form);
-            $data = $validatedForm->getObjectOrThrow(null, Expense::class);
+            $validatingForm = new ValidatingForm($form);
+            $data = $validatingForm->getObjectOrThrow(null, Expense::class);
 
             if ($request->getSession() instanceof Session) {
                 $request->getSession()->getFlashBag()->add('notice', 'Expense edited');

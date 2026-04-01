@@ -66,8 +66,8 @@ class MoneyInController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $validatedForm = new ValidatingForm($form);
-            $answer = $validatedForm->getStringOrNull('moneyInExists');
+            $validatingForm = new ValidatingForm($form);
+            $answer = $validatingForm->getStringOrNull('moneyInExists');
             $fromPage = $request->query->getString('from', $request->getPayload()->getString('from'));
 
             $report->setMoneyInExists($answer);
@@ -147,8 +147,8 @@ class MoneyInController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $validatedForm = new ValidatingForm($form);
-            $answer = $validatedForm->getStringOrNull('reasonForNoMoneyIn');
+            $validatingForm = new ValidatingForm($form);
+            $answer = $validatingForm->getStringOrNull('reasonForNoMoneyIn');
 
             $report->setReasonForNoMoneyIn($answer);
             $report->getStatus()->setMoneyInState(Status::STATE_DONE);
@@ -255,8 +255,8 @@ class MoneyInController extends AbstractController
                     // add
                     $this->restClient->post("/report/$reportId/money-transaction", $transaction, ['transaction', 'account']);
 
-                    $validatedForm = new ValidatingForm($form);
-                    $addAnother = $validatedForm->getStringOrNull('addAnother');
+                    $validatingForm = new ValidatingForm($form);
+                    $addAnother = $validatingForm->getStringOrNull('addAnother');
                     // check whether we are adding another after this one and redirect appropriately
                     switch ($addAnother) {
                         case 'yes':

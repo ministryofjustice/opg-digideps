@@ -70,7 +70,7 @@ class BankAccountController extends AbstractController
         $stepUrlData = $dataFromRequest;
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $fromPage = $fromPage = $request->query->getString('from', $request->getPayload()->getString('from'));
+        $fromPage = $request->query->getString('from', $request->getPayload()->getString('from'));
 
         $stepRedirector = $this->stepRedirector
             ->setRoutes('bank_accounts', 'bank_accounts_step', 'bank_accounts_summary')
@@ -147,8 +147,8 @@ class BankAccountController extends AbstractController
             $this->restClient->post('report/' . $reportId . '/account', $account, self::$jmsGroups);
 
             // redirect to add another if requested
-            $validatedForm = new ValidatingForm($form);
-            $addAnother = $validatedForm->getStringOrNull('addAnother');
+            $validatingForm = new ValidatingForm($form);
+            $addAnother = $validatingForm->getStringOrNull('addAnother');
             if ('yes' === $addAnother) {
                 return $this->redirectToRoute('bank_accounts_step', ['reportId' => $reportId, 'step' => 1]);
             }

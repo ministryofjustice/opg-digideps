@@ -178,8 +178,8 @@ class MoneyTransferController extends AbstractController
             // add
             $this->restClient->post('/report/' . $reportId . '/money-transfers', $transfer, ['money-transfer']);
 
-            $validatedForm = new ValidatingForm($form);
-            $addAnother = $validatedForm->getStringOrNull('addAnother');
+            $validatingForm = new ValidatingForm($form);
+            $addAnother = $validatingForm->getStringOrNull('addAnother');
             if ('yes' === $addAnother) {
                 return $this->redirectToRoute('money_transfers_step', ['reportId' => $reportId, 'from' => 'another', 'step' => 1]);
             }
