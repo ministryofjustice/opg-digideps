@@ -219,8 +219,7 @@ trait MoneyOutSectionTrait
         }
 
         if ($addAnother !== null) {
-            $addAnotherAsInt = $addAnother ? 1 : 0;
-            $this->selectOption("account_addAnother_{$addAnotherAsInt}", $addAnother ? 'yes' : 'no');
+            $this->selectOption('account[addAnother]', $addAnother ? 'yes' : 'no');
         }
 
         $this->pressButton('Save and continue');
