@@ -13,16 +13,16 @@
     "autoload": {
         "psr-4": {
             "App\\": "src/",
-            "DigidepsTests\\": "tests/phpunit",
-            "RectorRules\\": "scripts/RectorRules"
+            "DigidepsTests\\": "tests/phpunit"
         }
     },
     "require": {
         "php": "^8.4",
-        "ext-zip": "*",
         "ext-dom": "*",
+        "ext-zip": "*",
         "alphagov/notifications-php-client": "^7.0.0",
         "aws/aws-sdk-php": "3.368.0",
+        "digideps/common": "^1.0",
         "doctrine/annotations": "^2.0.2",
         "doctrine/collections": "^2.6.0",
         "egulias/email-validator": "^4.0.4",
@@ -89,9 +89,19 @@
         {
             "type": "composer",
             "url": "https://govuk-frontend-toolkit.appspot.com"
+        },
+        {
+            "type": "path",
+            "url": "../../common",
+            "options": {
+                "versions": {
+                    "digideps/common": "1.0.0"
+                }
+            }
         }
     ],
     "require-dev": {
+        "dg/bypass-finals": "^1.9",
         "jangregor/phpstan-prophecy": "^1.0.2",
         "mockery/mockery": "^1.6.12",
         "pact-foundation/pact-php": "^8.1",
@@ -101,7 +111,6 @@
         "phpstan/phpstan-phpunit": "^1.4.2",
         "phpunit/phpcov": "8.2.1",
         "phpunit/phpunit": "^9.6.34",
-        "rector/rector": "^1.2.10",
         "symfony/maker-bundle": "^1.66.0",
         "symfony/phpunit-bridge": "^6.4.26",
         "symfony/var-dumper": "^6.4.32"

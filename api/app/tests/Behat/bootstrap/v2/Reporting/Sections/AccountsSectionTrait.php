@@ -181,8 +181,6 @@ trait AccountsSectionTrait
             $this->accountList[0]['closingBalance'],
         );
 
-        $this->pressButton('Save and continue');
-
         $this->iAmOnAccountsSummaryPage();
     }
 
@@ -280,10 +278,6 @@ trait AccountsSectionTrait
             $this->selectOption('account[addAnother]', 'no');
 
             $this->pressButton('Save and continue');
-        }
-
-        if ('ndr' == $this->reportUrlPrefix) {
-            $this->accountList = array_reverse($this->accountList);
         }
     }
 
@@ -441,16 +435,14 @@ trait AccountsSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    public function iFillInAccountBalance(string $openingBalance, string $closingBalance, $trackFromEntry = true)
+    public function iFillInAccountBalance(string $openingBalance, string $closingBalance, bool $trackFromEntry = true)
     {
         $formSectionName = 'account' . $this->countOfAccountsAdded;
 
-        if ('ndr' == $this->reportUrlPrefix) {
-            $this->fillInField('account[balanceOnCourtOrderDate]', $openingBalance, $trackFromEntry ? $formSectionName : null);
-        } else {
-            $this->fillInField('account[openingBalance]', $openingBalance, $trackFromEntry ? $formSectionName : null);
-            $this->fillInField('account[closingBalance]', $closingBalance, $trackFromEntry ? $formSectionName : null);
-        }
+        $this->fillInField('account[openingBalance]', $openingBalance, $trackFromEntry ? $formSectionName : null);
+        $this->fillInField('account[closingBalance]', $closingBalance, $trackFromEntry ? $formSectionName : null);
+
+        $this->pressButton('Save and continue');
     }
 
     public function iRemoveAnAccount($accountOccurrence)
@@ -458,7 +450,7 @@ trait AccountsSectionTrait
         $this->iAmOnAccountsSummaryPage();
 
         $this->removeAnswerFromSection(
-            'ndr' == $this->reportUrlPrefix ? 'account[balanceOnCourtOrderDate]' : 'account[openingBalance]',
+            'account[openingBalance]',
             'account' . ($accountOccurrence + 1),
             true,
             'Yes, remove account'
@@ -515,6 +507,33 @@ trait AccountsSectionTrait
                 'Account %s closed status does not show "yes" - found: %s',
                 $lastAccount['accountNumber'],
                 $closedStatusText
+            ));
+        }
+    }
+
+    /**
+     * @Given /^the account closing balance should be "([^"]*)"$/
+     */
+    public function theAccountBalanceShouldBe($closingBalance): void
+    {
+        $this->iAmOnAccountsSummaryPage();
+
+        // Get the most recently added account
+        $lastAccount = end($this->accountList);
+
+        if ($lastAccount === false) {
+            throw new BehatException('No account found in $accountList');
+        }
+
+        $page = $this->getSession()->getPage();
+        $accountElements = $page->findAll('css', '.behat-region-account-' . $lastAccount['accountNumber']);
+        $lastAccountElement = end($accountElements);
+
+        $closedStatusElement = $lastAccountElement->find('xpath', ".//*[contains(text(), '" . $closingBalance . "')]");
+        if (is_null($closedStatusElement)) {
+            throw new BehatException(sprintf(
+                'Account %s closing balance not correct on summary page',
+                $lastAccount['accountNumber']
             ));
         }
     }

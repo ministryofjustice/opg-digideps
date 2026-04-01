@@ -6,9 +6,7 @@ namespace App\Validator\Constraints\ClientBenefitsCheck;
 
 use App\Entity\ClientBenefitsCheckInterface;
 use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\Report;
 use App\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheck as ClientBenefitsCheckConstraint;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -25,13 +23,15 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, ClientBenefitsCheckConstraint::class);
         }
 
+        /** @var ClientBenefitsCheck $object */
         $object = $this->context->getObject();
-        $report = $object->getReport() instanceof Report ? $object->getReport() : $object->getNdr();
+
+        $report = $object->getReport();
         $this->clientName = $report->getClient()->getFirstName();
         $propertyName = $this->context->getPropertyName();
 
         if ('whenLastCheckedEntitlement' === $propertyName) {
-            $this->whenLastCheckedEntitlementValid($value, $object, $constraint);
+            $this->whenLastCheckedEntitlementValid($value, $constraint);
         }
 
         if ('dateLastCheckedEntitlement' === $propertyName) {
@@ -43,7 +43,7 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         }
 
         if ('doOthersReceiveMoneyOnClientsBehalf' === $propertyName) {
-            $this->moneyOnClientsBehalfValid($value, $object, $constraint);
+            $this->moneyOnClientsBehalfValid($value, $constraint);
         }
 
         if ('dontKnowMoneyExplanation' === $propertyName) {
@@ -51,11 +51,11 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         }
 
         if ('typesOfMoneyReceivedOnClientsBehalf' === $propertyName) {
-            $this->typesOfMoneyReceivedOnClientsBehalfValid($value, $object, $constraint);
+            $this->typesOfMoneyReceivedOnClientsBehalfValid($object, $constraint);
         }
     }
 
-    private function whenLastCheckedEntitlementValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
+    private function whenLastCheckedEntitlementValid($value, ClientBenefitsCheckConstraint $constraint)
     {
         $expectedValues = [
             ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED,
@@ -82,7 +82,7 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
                 ->addViolation();
         }
 
-        if (!is_null($value) && $value > new DateTime()) {
+        if (!is_null($value) && $value > new \DateTime()) {
             $this->context
                 ->buildViolation($constraint->whenLastCheckedFutureDate)
                 ->setTranslationDomain($this->translationDomain)
@@ -110,7 +110,7 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         }
     }
 
-    private function moneyOnClientsBehalfValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
+    private function moneyOnClientsBehalfValid($value, ClientBenefitsCheckConstraint $constraint)
     {
         if (is_null($value)) {
             $this->context
@@ -140,7 +140,7 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         }
     }
 
-    private function typesOfMoneyReceivedOnClientsBehalfValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
+    private function typesOfMoneyReceivedOnClientsBehalfValid(ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
     {
         if ($object->getTypesOfMoneyReceivedOnClientsBehalf() instanceof ArrayCollection && 1 === $object->getTypesOfMoneyReceivedOnClientsBehalf()->count()) {
             $money = $object->getTypesOfMoneyReceivedOnClientsBehalf()->first();

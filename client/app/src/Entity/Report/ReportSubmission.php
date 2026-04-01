@@ -2,10 +2,8 @@
 
 namespace App\Entity\Report;
 
-use App\Entity\Ndr\Ndr;
 use App\Entity\Traits\CreationAudit;
 use App\Entity\User;
-use DateTime;
 use JMS\Serializer\Annotation as JMS;
 use RuntimeException;
 
@@ -13,88 +11,45 @@ class ReportSubmission
 {
     use CreationAudit;
 
-    /**
-     * @var int
-     *
-     * @JMS\Type("integer")
-     */
-    private $id;
+    #[JMS\Type('integer')]
+    private int $id;
 
-    /**
-     * @var Report
-     *
-     * @JMS\Type("App\Entity\Report\Report")
-     */
-    private $report;
-
-    /**
-     * @var Ndr|null
-     *
-     * @JMS\Type("App\Entity\Ndr\Ndr")
-     */
-    private $ndr;
+    #[JMS\Type('App\Entity\Report\Report')]
+    private Report $report;
 
     /**
      * @var Document[]
-     *
-     * @JMS\Type("array<App\Entity\Report\Document>")
      */
-    private $documents = [];
+    #[JMS\Type('array<App\Entity\Report\Document>')]
+    private array $documents = [];
 
-    /**
-     * @var User
-     *
-     * @JMS\Type("App\Entity\User")
-     */
-    private $archivedBy;
+    #[JMS\Type('App\Entity\User')]
+    private ?User $archivedBy = null;
 
-    /**
-     * @var bool
-     *
-     * @JMS\Type("boolean")
-     */
-    private $downloadable;
+    #[JMS\Type('boolean')]
+    private bool $downloadable;
 
-    /**
-     * @var string|null
-     * @JMS\Type("string")
-     */
-    private $uuid;
+    #[JMS\Type('string')]
+    private ?string $uuid;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return ReportSubmission
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @return Report|null
-     */
-    public function getReport()
+    public function getReport(): ?Report
     {
         return $this->report;
     }
 
-    /**
-     * @param Report $report
-     *
-     * @return ReportSubmission
-     */
-    public function setReport($report)
+    public function setReport(Report $report): static
     {
         $this->report = $report;
 
@@ -102,49 +57,24 @@ class ReportSubmission
     }
 
     /**
-     * @return Ndr|null
-     */
-    public function getNdr()
-    {
-        return $this->ndr;
-    }
-
-    /**
-     * @param Ndr $ndr
-     *
-     * @return ReportSubmission
-     */
-    public function setNdr($ndr)
-    {
-        $this->ndr = $ndr;
-
-        return $this;
-    }
-
-    /**
      * @return Document[]
      */
-    public function getDocuments()
+    public function getDocuments(): array
     {
         return $this->documents;
     }
 
     /**
      * @param Document[] $documents
-     *
-     * @return $this
      */
-    public function setDocuments($documents)
+    public function setDocuments(array $documents): static
     {
         $this->documents = $documents;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasReportPdf()
+    public function hasReportPdf(): bool
     {
         foreach ($this->documents as $document) {
             if ($document->isReportPdf()) {
@@ -155,95 +85,67 @@ class ReportSubmission
         return false;
     }
 
-    /**
-     * @return User
-     */
-    public function getArchivedBy()
+    public function getArchivedBy(): ?User
     {
         return $this->archivedBy;
     }
 
-    /**
-     * @param User $archivedBy
-     *
-     * @return ReportSubmission
-     */
-    public function setArchivedBy($archivedBy)
+    public function setArchivedBy(?User $archivedBy): static
     {
         $this->archivedBy = $archivedBy;
 
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isDownloadable()
+    public function isDownloadable(): bool
     {
         return $this->downloadable;
     }
 
-    /**
-     * @param bool $downloadable
-     *
-     * @return ReportSubmission
-     */
-    public function setDownloadable($downloadable)
+    public function setDownloadable(bool $downloadable): static
     {
         $this->downloadable = $downloadable;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getUuid(): ?string
     {
         return $this->uuid;
     }
 
-    /**
-     * @return $this
-     */
-    public function setUuid(?string $uuid)
+    public function setUuid(?string $uuid): static
     {
         $this->uuid = $uuid;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getZipName()
+    public function getZipName(): string
     {
-        $report = $this->getReport() ? $this->getReport() : $this->getNdr();
+        $report = $this->getReport();
 
         if (is_null($report)) {
             throw new RuntimeException('Report submission has no associated report');
         }
 
+        /** @var ?\DateTime $startDate */
+        $startDate = $report->getStartDate();
+
+        /** @var ?\DateTime $endDate */
+        $endDate = $report->getEndDate();
+
+        if (is_null($startDate) || is_null($endDate)) {
+            throw new RuntimeException('Report submission is missing start or end date');
+        }
+
         $client = $report->getClient();
 
-        if ($report instanceof Ndr) {
-            return 'NdrReport-'
-                . $client->getCaseNumber()
-                . '_' . $report->getStartDate()->format('Y')
-                . '_' . $this->getId()
-                . '.zip';
-        } else {
-            /** @var DateTime $startDate */
-            $startDate = $report->getStartDate();
-            /** @var DateTime $endDate */
-            $endDate = $report->getEndDate();
-
-            return 'Report_'
-                . $client->getCaseNumber()
-                . '_' . $startDate->format('Y')
-                . '_' . $endDate->format('Y')
-                . '_' . $this->getId()
-                . '.zip';
-        }
+        return 'Report_'
+            . $client->getCaseNumber()
+            . '_' . $startDate->format('Y')
+            . '_' . $endDate->format('Y')
+            . '_' . $this->getId()
+            . '.zip';
     }
 }

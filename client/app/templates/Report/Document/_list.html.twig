@@ -40,6 +40,7 @@
             <dd class="govuk-summary-list__actions">
                 <a class="govuk-link behat-link-delete-documents-button" href="{{ path('delete_document', {'reportId':report.id, 'documentId': document.id, 'from': page}) }}">
                     {{ (page ~ '.deleteDocument') | trans }}
+                    <span class="govuk-visually-hidden">{{ document.fileName }}</span>
                 </a>
             </dd>
         </div>

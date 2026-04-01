@@ -16,7 +16,6 @@ clientDetails:
   supportTitle: Clients
   reportsTitle: Reports
   noResults: No reports found
-  ndrTitle: NDR report
   organisation: Organisation
   organisationInactive: (Inactive)
   namedDeputy:
@@ -73,7 +72,6 @@ reportManage:
     confirmation:
       option: Option
       selection: Selection
-      edit: Edit
       submittedGuidance: |
         Please read through and confirm the options you have selected
         before marking this report as incomplete.

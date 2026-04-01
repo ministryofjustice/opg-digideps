@@ -1,0 +1,6 @@
+version: v1.25.0
+ignore:
+  'snyk:lic:pip:pyphen:(GPL-2.0_OR_LGPL-2.0_OR_MPL-1.1)':
+    - '*':
+        reason: 'Accepted after review'
+        expires: '2027-01-01T00:00:00.000Z'

@@ -52,6 +52,7 @@
                 <td class="numeric width-twentieth">
                     <a href="{{ path('bank_accounts', {'reportId': report.id}) }}" class="govuk-!-font-weight-bold">
                         {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
+                        <span class="govuk-visually-hidden">{{ 'balanceTable.accountsOpeningBalance' | trans }}</span>
                     </a>
                 </td>
             {% endif %}
@@ -83,6 +84,7 @@
                     <td class="numeric">
                         <a href="{{ path('deputy_expenses', {'reportId': report.id}) }}" class="govuk-!-font-weight-bold">
                             {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
+                            <span class="govuk-visually-hidden">{{ 'balanceTable.deputyExpenses' | trans }}</span>
                         </a>
                     </td>
                 {% endif %}
@@ -115,6 +117,7 @@
                     <td class="numeric">
                         <a href="{{ path('pa_fee_expense', {'reportId': report.id}) }}" class="govuk-!-font-weight-bold">
                             {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
+                            <span class="govuk-visually-hidden">{{ 'balanceTable.paDeputyExpenses' | trans }}</span>
                         </a>
                     </td>
                 {% endif %}
@@ -145,6 +148,7 @@
                 <td class="numeric">
                     <a href="{{ path('gifts', {'reportId': report.id}) }}" class="govuk-!-font-weight-bold">
                         {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
+                        <span class="govuk-visually-hidden">{{ 'balanceTable.gifts' | trans }}</span>
                     </a>
                 </td>
             {% endif %}
@@ -175,6 +179,7 @@
                     <td class="numeric">
                         <a href="{{ path('prof_deputy_costs', {'reportId': report.id}) }}" class="govuk-!-font-weight-bold">
                             {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
+                            <span class="govuk-visually-hidden">{{ 'balanceTable.profDeputyCosts' | trans }}</span>
                         </a>
                     </td>
                 {% endif %}
@@ -206,6 +211,7 @@
                 <td class="numeric">
                     <a href="{{ path('money_in', {'reportId': report.id}) }}" class="govuk-!-font-weight-bold">
                         {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
+                        <span class="govuk-visually-hidden">{{ 'balanceTable.moneyIn' | trans }}</span>
                     </a>
                 </td>
             {% endif %}
@@ -235,6 +241,7 @@
                 <td class="numeric">
                     <a href="{{ path('money_out', {'reportId': report.id}) }}" class="govuk-!-font-weight-bold">
                         {{ (started ? 'edit' : 'start') | trans({}, 'common') }}
+                        <span class="govuk-visually-hidden">{{ 'balanceTable.moneyOut' | trans }}</span>
                     </a>
                 </td>
             {% endif %}

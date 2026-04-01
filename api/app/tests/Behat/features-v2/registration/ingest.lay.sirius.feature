@@ -28,7 +28,6 @@ Feature: Lay CSV data ingestion - sirius source data
         Then the new 'lay' entities should be added to the database
         And the count of the new 'lay' entities added should be in the command output
 
-#    ToDo Fix this test as it is breaking in our pipeline
     @super-admin
     Scenario: Uploading a Lay CSV that contains details of a new deputyship for an existing Lay deputy with a single active client
         Given a csv has been uploaded to the sirius bucket with the file 'lay-1-valid-row.csv'
@@ -44,12 +43,3 @@ Feature: Lay CSV data ingestion - sirius source data
         When I run the lay CSV command the file contains 2 new pre-registration entities
         And the Lay deputy with deputy UID 700863322001 has 2 associated active clients
         And the client with case number '12345673' should have an active report with type '102'
-
-# Needs further rewrite so we're gracefully handling missing columns & not just stopping the process.
-# Currently throws critical error
-#    @super-admin
-#    Scenario: Uploading a Lay CSV that has missing required columns
-#        Given I save the application status into 'csv-processing'
-#        When I upload a 'lay' CSV that does not have any of the required columns
-#        Then I should see an error showing which columns are missing on the 'lay' csv upload page
-#        Then I load the application status from 'csv-processing'

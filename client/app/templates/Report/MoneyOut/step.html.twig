@@ -71,6 +71,13 @@
             {{ form_select(form.bankAccountId, 'form.bankAccount', {'labelText': form.bankAccountId.vars.label | trans}) }}
         {% endif %}
 
+        {% if form.addAnother %}
+            {{ form_add_another({
+                'addAnother': form.addAnother,
+                'thingTranslationKey': 'form.thing',
+                'translationDomain': translationDomain
+            }) }}
+        {% endif %}
     {% endif %}
 
     {{ macros.saveAndContinueButton(form.save) }}

@@ -11,12 +11,6 @@ Feature: Contact details
         Given an admin user accesses the admin app
         And the support footer should not be visible
 
-    @ndr-not-started
-    Scenario: NDR should see lay email
-        Given a Lay Deputy has not started an NDR report
-        When I visit the report overview page
-        And the support footer should show "laydeputysupport@publicguardian.gov.uk"
-
     @lay-health-welfare-not-started
     Scenario: Lay deputy should see lay email
         Given a Lay Deputy has not started a Health and Welfare report

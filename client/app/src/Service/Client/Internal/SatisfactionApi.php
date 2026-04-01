@@ -5,16 +5,14 @@ declare(strict_types=1);
 namespace App\Service\Client\Internal;
 
 use App\Model\FeedbackReport;
-use App\Service\Client\RestClient;
 use App\Service\Client\RestClientInterface;
 
 class SatisfactionApi
 {
-    private const CREATE_GENERAL_FEEDBACK_ENDPOINT = 'satisfaction/public';
-    private const CREATE_POST_SUBMISSION_FEEDBACK_ENDPOINT = 'satisfaction';
+    private const string CREATE_GENERAL_FEEDBACK_ENDPOINT = 'satisfaction/public';
+    private const string CREATE_POST_SUBMISSION_FEEDBACK_ENDPOINT = 'satisfaction';
 
-    /** @var RestClient */
-    private $restClient;
+    private RestClientInterface $restClient;
 
     public function __construct(RestClientInterface $restClient)
     {
@@ -29,14 +27,13 @@ class SatisfactionApi
         );
     }
 
-    public function createPostSubmissionFeedback(FeedbackReport $formResponse, string $reportType, ?int $reportId = null, ?int $ndrId = null): int
+    public function createPostSubmissionFeedback(FeedbackReport $formResponse, string $reportType, ?int $reportId = null): int
     {
         $feedbackData = [
             'score' => $formResponse->getSatisfactionLevel(),
             'comments' => empty($formResponse->getComments()) ? 'Not provided' : $formResponse->getComments(),
             'reportType' => $reportType,
             'reportId' => $reportId,
-            'ndrId' => $ndrId,
         ];
 
         /** @var int $satisfactionId */

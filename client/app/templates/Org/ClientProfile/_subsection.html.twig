@@ -15,7 +15,7 @@
         id="edit-{{ subSection }}{{ incompleteAppend }}"
         class="opg-overview-section__header behat-link-edit-{{ subSection }}"
         href="{{ linkToSubSection }}"
-        aria-label="{{ (subSection ~ '.edit') | trans }}"
+        aria-label="{{ 'Edit '~ (subSection ~ '.subSectionTitle') | trans }}"
     >
         {{ (subSection ~ '.subSectionTitle') | trans }}
     </a>
