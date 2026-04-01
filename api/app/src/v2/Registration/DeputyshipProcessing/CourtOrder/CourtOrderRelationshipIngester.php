@@ -16,7 +16,7 @@ final readonly class CourtOrderRelationshipIngester
     }
 
     /**
-     * @return \Generator<never,int,CourtOrderRelationshipResult,void>
+     * @return \Generator<int,CourtOrderRelationshipResult,void,void>
      */
     public function execute(): \Generator
     {
@@ -61,7 +61,7 @@ final readonly class CourtOrderRelationshipIngester
     }
 
     /**
-     * @return \Generator<never,int,CourtOrderRelationshipResult,void>
+     * @return \Generator<int,CourtOrderRelationshipResult,void,void>
      */
     private function updateCourtOrders(): \Generator
     {
@@ -75,8 +75,8 @@ final readonly class CourtOrderRelationshipIngester
                     $changes[] = $change;
                 }
             }
+            $this->entityManager->flush();
             $results = $this->updateReports($changes);
-
             $this->entityManager->flush();
             $this->entityManager->clear();
 
@@ -87,8 +87,8 @@ final readonly class CourtOrderRelationshipIngester
     }
 
     /**
-     * @param \Generator<never,int,CourtOrderRelationship,void> $relationships
-     * @return \Generator<never,int,array<CourtOrderRelationship>,void>
+     * @param \Generator<int,CourtOrderRelationship,void,void> $relationships
+     * @return \Generator<int,array<CourtOrderRelationship>,void,void>
      */
     private function groupByClientId(\Generator $relationships): \Generator
     {

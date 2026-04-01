@@ -12,6 +12,7 @@ final readonly class ReportReassembler
     public function reassembleReport(CourtOrderRelationshipChange $change): CourtOrderRelationshipResult
     {
         //TODO IN A FUTURE TICKET - FOR NOW JUST PASS THROUGH THE CHANGE AS RESULT
+        //We could update the report type here. We could also split or merge reports here.
         return new CourtOrderRelationshipResult($change);
     }
 }
