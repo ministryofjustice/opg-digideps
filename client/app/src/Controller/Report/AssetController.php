@@ -11,7 +11,7 @@ use App\Entity\Report\Status;
 use App\Form;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
-use App\Utility\ValidatingForm;
+use OPG\Digideps\Common\Validating\ValidatingForm;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\RedirectResponse;
