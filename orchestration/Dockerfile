@@ -11,6 +11,10 @@ COPY anonymisation /app/anonymisation
 WORKDIR /app/anonymisation
 RUN go build -o anonymise main.go
 
+FROM gobuilder AS tests
+WORKDIR /app/anonymisation
+COPY anonymisation /app/anonymisation
+CMD ["go", "test", "./..."]
 
 # -----------------------------------------
 # 2) Node deps builder: run npm ci
