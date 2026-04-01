@@ -98,6 +98,31 @@ class FixtureController extends AbstractController
     }
 
     /** * @throws \Exception */
+    #[Route(path: '/create-additional-clients', methods: ['POST'])] #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    public function createAdditionalClients(Request $request): void
+    {
+        if (!$this->fixturesEnabled) {
+            throw $this->createNotFoundException();
+        }
+
+        $fromRequest = (array) json_decode($request->getContent(), true);
+        $fromRequest['courtDate'] = (new \DateTime('-366 days'))->format('Y-m-d');
+
+        $deputy = $this->deputyRepository->findOneBy(['email1' => $fromRequest['deputyEmail']]);
+        $organisation = $this->organisationRepository->findByEmailIdentifier($fromRequest['deputyEmail']);
+
+        foreach (range(1, $fromRequest['orgSizeClients']) as $ignored) {
+            $orgClient = $this->clientFactory->createGenericOrgClient($deputy, $organisation, $fromRequest['courtDate']);
+            $this->em->persist($orgClient);
+
+            $report = $this->generateReport($fromRequest, $orgClient);
+            $this->em->persist($report);
+        }
+
+        $this->em->flush();
+    }
+
+    /** * @throws \Exception */
     private function createSingleClientDeputy(mixed $fromRequest, Client $client): User
     {
         if (!is_array($fromRequest)) {
@@ -362,38 +387,9 @@ class FixtureController extends AbstractController
         if (!$this->deputyRepository->findOneBy(['email1' => $deputy->getEmail()])) {
             $deputy = $this->buildDeputy($deputy, $fromRequest);
             $client->setDeputy($deputy);
-        } else {
-            $deputy = $this->deputyRepository->findOneBy(['email1' => $deputy->getEmail()]);
         }
 
         $client->setOrganisation($organisation);
-
-        // if the org size is 1 but we want 10 clients still then create the clients but
-        // we return so we don't create another 10 clients on top if we have a org size > 1
-        if (1 === $fromRequest['orgSizeUsers'] && $fromRequest['orgSizeClients'] > 1 && !empty($fromRequest['orgSizeClients'])) {
-            foreach (range(1, $fromRequest['orgSizeClients']) as $number) {
-                $orgClient = $this->clientFactory->createGenericOrgClient($deputy, $organisation, $fromRequest['courtDate']);
-                $this->em->persist($orgClient);
-
-                $report = $this->generateReport($fromRequest, $orgClient);
-                $this->em->persist($report);
-            }
-
-            $this->em->persist($client);
-            $this->em->persist($organisation);
-
-            return;
-        }
-
-        if ($fromRequest['orgSizeUsers'] > 1 && !empty($fromRequest['orgSizeUsers'])) {
-            foreach (range(1, $fromRequest['orgSizeClients']) as $number) {
-                $orgClient = $this->clientFactory->createGenericOrgClient($deputy, $organisation, $fromRequest['courtDate']);
-                $this->em->persist($orgClient);
-
-                $report = $this->generateReport($fromRequest, $orgClient);
-                $this->em->persist($report);
-            }
-        }
 
         $this->em->persist($client);
         $this->em->persist($organisation);

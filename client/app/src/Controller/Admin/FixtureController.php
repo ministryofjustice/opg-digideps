@@ -165,7 +165,6 @@ class FixtureController extends AbstractController
                         'reportStatus' => $submittedFormData['reportStatus'],
                         'courtDate' => $formAndRequestData['courtDate']->format('Y-m-d'),
                         'activated' => $submittedFormData['activated'],
-                        'orgSizeClients' => $submittedFormData['orgSizeClients'],
                         'orgSizeUsers' => $numberOfUsersToCreate,
                         'deputyUid' => $formAndRequestData['deputyUid'],
                     ]),
@@ -173,6 +172,24 @@ class FixtureController extends AbstractController
                 );
                 $remainingUsersToCreate -= $numberOfUsersToCreate;
             }
+
+            $numberOfAdditionalClientsToCreate = min($submittedFormData['orgSizeClients'] - 1, 9);
+            $remainingAdditionalClientsToCreate = $submittedFormData['orgSizeClients'] === 1 ? 0 : $submittedFormData['orgSizeClients'] - 1;
+            while ($remainingAdditionalClientsToCreate > 0) {
+                $this->restClient->post(
+                    'v2/fixture/create-additional-clients',
+                    json_encode([
+                        'deputyType' => $submittedFormData['deputyType'],
+                        'deputyEmail' => $formAndRequestData['deputyEmail'],
+                        'reportType' => $submittedFormData['reportType'],
+                        'reportStatus' => $submittedFormData['reportStatus'],
+                        'orgSizeClients' => $numberOfAdditionalClientsToCreate,
+                    ]),
+                    ['timeout' => 1000]
+                );
+                $remainingAdditionalClientsToCreate -= $numberOfAdditionalClientsToCreate;
+            }
+
 
             if (array_key_exists('deputyIds', $response)) {
                 $query = ['query' => ['filter_by_ids' => implode(',', $response['deputyIds'])]];
