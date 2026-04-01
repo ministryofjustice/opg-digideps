@@ -85,6 +85,11 @@ jobs:
           ./scripts/workspace_cleanup.sh "${WC_WORKSPACES}"
         working-directory: terraform/environment
 
+      - name: SLSA
+        uses: ministryofjustice/devsecops-actions/sca/slsa@3e9410cef31dd9cec64ad567efc959afd88a591c
+        with:
+          requirements-file: scripts/pipeline/cleanup_task_definitions/requirements.txt
+
       - name: clean up old task definitions
         env:
           REGION: eu-west-1
