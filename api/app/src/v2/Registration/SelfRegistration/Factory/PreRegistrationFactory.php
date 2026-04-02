@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\v2\Registration\SelfRegistration\Factory;
 
 use App\Entity\PreRegistration;
@@ -12,10 +14,7 @@ class PreRegistrationFactory
     {
     }
 
-    /**
-     * @return PreRegistration
-     */
-    public function createFromDto(LayDeputyshipDto $dto)
+    public function createFromDto(LayDeputyshipDto $dto): PreRegistration
     {
         $entity = new PreRegistration($this->convertDtoToArray($dto));
 
@@ -46,7 +45,6 @@ class PreRegistrationFactory
             'DeputyAddress5' => $dto->getDeputyAddress5(),
             'DeputyPostcode' => trim($dto->getDeputyPostcode()),
             'ReportType' => $dto->getTypeOfReport(),
-            'NDR' => $dto->isNdrEnabled() ? 'yes' : 'no',
             'MadeDate' => $dto->getOrderDate()->format('Y-m-d'),
             'OrderType' => $dto->getOrderType(),
             'CoDeputy' => $dto->getIsCoDeputy() ? 'yes' : 'no',

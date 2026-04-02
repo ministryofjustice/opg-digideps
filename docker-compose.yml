@@ -409,3 +409,13 @@ services:
     working_dir: /app
     environment:
       NODE_ENV: production
+
+  composer-common-phpunit:
+    build:
+      context: ./common
+    command: tests:unit
+
+  composer-common-phpstan:
+    build:
+      context: ./common
+    command: lint:phpstan

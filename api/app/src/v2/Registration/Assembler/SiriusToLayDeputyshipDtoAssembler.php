@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\v2\Registration\Assembler;
 
 use App\v2\Registration\DTO\LayDeputyshipDto;
@@ -22,10 +24,7 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
 
     private array $missingColumns = [];
 
-    /**
-     * @return LayDeputyshipDto
-     */
-    public function assembleFromArray(array $data)
+    public function assembleFromArray(array $data): LayDeputyshipDto
     {
         $this->collectMissingColumns($data);
 
@@ -64,14 +63,13 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
                 ->setDeputyAddress5($data['DeputyAddress5'] ?: null)
                 ->setDeputyPostcode($data['DeputyPostcode'])
                 ->setTypeOfReport($this->determineReportTypeIsSupported($data['ReportType']))
-                ->setIsNdrEnabled(false)
                 ->setOrderDate(new \DateTime($data['MadeDate']))
                 ->setOrderType($data['OrderType'])
                 ->setIsCoDeputy('yes' === $data['CoDeputy'])
                 ->setHybrid($data['Hybrid']);
     }
 
-    private function collectMissingColumns(array $data)
+    private function collectMissingColumns(array $data): void
     {
         $this->missingColumns = [];
         foreach ($this->requiredData as $requiredColumn) {
@@ -83,7 +81,7 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
         $this->missingColumns = array_filter($this->missingColumns);
     }
 
-    private function determineReportTypeIsSupported(?string $reportType)
+    private function determineReportTypeIsSupported(?string $reportType): ?string
     {
         $supported = match ($reportType) {
             'OPG102', 'OPG103', 'OPG104' => true,

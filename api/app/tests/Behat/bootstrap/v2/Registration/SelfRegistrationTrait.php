@@ -319,8 +319,8 @@ trait SelfRegistrationTrait
             $actualErrorMessageStripped = strip_tags($actualErrorMessage);
 
             $this->assertStringEqualsString(
-                $actualErrorMessageStripped,
                 $this->incorrectCaseNumberLengthError,
+                $actualErrorMessageStripped,
                 'incorrect case number length error thrown'
             );
         }
