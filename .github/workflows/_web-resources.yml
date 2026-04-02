@@ -26,6 +26,10 @@ jobs:
         with:
           path: client/resources/public
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json', '**/webpack.config.js') }}
+      - name: SLSA
+        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
+        with:
+          working-directory: client/resources
       - name: Build assets
         run: |
           # Install NPM dependencies

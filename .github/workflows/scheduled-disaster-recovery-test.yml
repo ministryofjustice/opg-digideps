@@ -25,6 +25,11 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
+      - name: SLSA
+        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
+        with:
+          requirements-file: disaster-recovery/restore/requirements.txt
+
       - name: install requirements
         id: requirements
         run: pip install -r requirements.txt
@@ -64,6 +69,11 @@ jobs:
       - restore_to_point_in_time
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: SLSA
+        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
+        with:
+          requirements-file: disaster-recovery/restore/requirements.txt
 
       - name: install requirements
         id: requirements
