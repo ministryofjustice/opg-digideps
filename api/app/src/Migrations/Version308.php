@@ -25,7 +25,7 @@ final class Version308 extends AbstractMigration
         $this->addSql('ALTER TABLE court_order ALTER order_kind DROP DEFAULT');
 
         $this->addSql('ALTER TABLE court_order ADD order_report_type VARCHAR(6) NOT NULL DEFAULT \'\'');
-        $this->addSql('UPDATE court_order co SET order_report_type = d.report_type FROM staging.deputyship d where co.court_order_uid = d.order_uid');
+        $this->addSql('UPDATE court_order co SET order_report_type = COALESCE(d.report_type, \'\') FROM staging.deputyship d where co.court_order_uid = d.order_uid');
         $this->addSql('ALTER TABLE court_order ALTER order_report_type DROP DEFAULT');
 
         $this->addSql('ALTER TABLE staging.selectedcandidates ADD order_kind VARCHAR(6) DEFAULT NULL');
