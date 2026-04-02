@@ -1291,11 +1291,6 @@ parameters:
 			path: src/Controller/Report/MoneyInShortController.php
 
 		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
-			count: 3
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
 			message: "#^Cannot access offset 'id' on mixed\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyInShortController.php
@@ -1316,11 +1311,6 @@ parameters:
 			path: src/Controller/Report/MoneyInShortController.php
 
 		-
-			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
-			count: 3
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
 			message: "#^Cannot call method getDate\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyInShortController.php
@@ -1336,43 +1326,8 @@ parameters:
 			path: src/Controller/Report/MoneyInShortController.php
 
 		-
-			message: "#^Cannot call method getMoneyTransactionsShortIn\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
-			message: "#^Cannot call method getMoneyTransactionsShortInExist\\(\\) on mixed\\.$#"
-			count: 3
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
-			message: "#^Cannot call method getStatus\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
-			message: "#^Cannot call method setMoneyInExists\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
-			message: "#^Cannot call method setReasonForNoMoneyIn\\(\\) on mixed\\.$#"
-			count: 2
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInShortController\\:\\:cleanDataIfAnswerIsChangedFromYesToNo\\(\\) has parameter \\$report with no type specified\\.$#"
 			count: 1
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
-			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:post\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
-			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 6
 			path: src/Controller/Report/MoneyInShortController.php
 
 		-
@@ -1416,11 +1371,6 @@ parameters:
 			path: src/Controller/Report/MoneyOutShortController.php
 
 		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
-			count: 3
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
 			message: "#^Cannot access offset 'id' on mixed\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyOutShortController.php
@@ -1441,11 +1391,6 @@ parameters:
 			path: src/Controller/Report/MoneyOutShortController.php
 
 		-
-			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
-			count: 3
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
 			message: "#^Cannot call method getDate\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyOutShortController.php
@@ -1461,43 +1406,8 @@ parameters:
 			path: src/Controller/Report/MoneyOutShortController.php
 
 		-
-			message: "#^Cannot call method getMoneyTransactionsShortOut\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
-			message: "#^Cannot call method getMoneyTransactionsShortOutExist\\(\\) on mixed\\.$#"
-			count: 3
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
-			message: "#^Cannot call method getStatus\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
-			message: "#^Cannot call method setMoneyOutExists\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
-			message: "#^Cannot call method setReasonForNoMoneyOut\\(\\) on mixed\\.$#"
-			count: 2
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutShortController\\:\\:cleanDataIfAnswerIsChangedFromYesToNo\\(\\) has parameter \\$report with no type specified\\.$#"
 			count: 1
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
-			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:post\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
-			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 6
 			path: src/Controller/Report/MoneyOutShortController.php
 
 		-
@@ -1541,18 +1451,8 @@ parameters:
 			path: src/Controller/Report/OtherInfoController.php
 
 		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
-			count: 3
-			path: src/Controller/Report/PaFeeExpenseController.php
-
-		-
 			message: "#^Cannot call method getAmount\\(\\) on mixed\\.$#"
 			count: 1
-			path: src/Controller/Report/PaFeeExpenseController.php
-
-		-
-			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
-			count: 2
 			path: src/Controller/Report/PaFeeExpenseController.php
 
 		-
@@ -1566,28 +1466,8 @@ parameters:
 			path: src/Controller/Report/PaFeeExpenseController.php
 
 		-
-			message: "#^Cannot call method getPaidForAnything\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/PaFeeExpenseController.php
-
-		-
-			message: "#^Cannot call method setReport\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/PaFeeExpenseController.php
-
-		-
 			message: "#^Parameter \\#1 \\$reasonForNoFees of method App\\\\Entity\\\\Report\\\\Report\\:\\:setReasonForNoFees\\(\\) expects string, null given\\.$#"
 			count: 1
-			path: src/Controller/Report/PaFeeExpenseController.php
-
-		-
-			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:post\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/PaFeeExpenseController.php
-
-		-
-			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 3
 			path: src/Controller/Report/PaFeeExpenseController.php
 
 		-
@@ -1613,11 +1493,6 @@ parameters:
 		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\Form\\\\FormInterface\\:\\:isClicked\\(\\)\\.$#"
 			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
-			count: 10
 			path: src/Controller/Report/ProfDeputyCostsController.php
 
 		-

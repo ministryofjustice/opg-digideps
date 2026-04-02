@@ -67,7 +67,7 @@ up-app-xdebug-api-cachegrind: ##@application Brings the app up, rebuilds contain
 down-app: ##@application Tears down the app
 	docker compose down -v --remove-orphans
 
-tag := "v2"
+tag := "add-user-org"
 profile := "v2-tests-browserkit"
 end-to-end-tests: up-app reset-database ##@end-to-end-tests Brings the app up using test env vars (see test.env); optionally pass profile, and suite and tag to run within that profile
 ifdef suite

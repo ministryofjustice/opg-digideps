@@ -31,6 +31,6 @@ noMoneyOut:
 
 notices:
   entry:
-    added: "Entry added"
-    edited: "Entry edited"
-    deleted: "Entry deleted"
+    added: "Payment added"
+    edited: "Payment edited"
+    deleted: "Payment deleted"
