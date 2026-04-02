@@ -9,6 +9,7 @@ use App\Entity\Report\MoneyTransactionShort;
 use App\Entity\Report\Report;
 use App\Entity\Report\Status;
 use App\Form\AddAnotherRecordType;
+use App\Form\AddAnotherThingType;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\DoesMoneyOutExistType;
 use App\Form\Report\MoneyShortTransactionType;
@@ -17,10 +18,12 @@ use App\Form\Report\NoMoneyOutType;
 use App\Form\YesNoType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
+use OPG\Digideps\Common\Validating\ValidatingForm;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MoneyOutShortController extends AbstractController
 {
@@ -33,6 +36,7 @@ class MoneyOutShortController extends AbstractController
     public function __construct(
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -64,8 +68,9 @@ class MoneyOutShortController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $report = $form->getData();
-            $answer = $form['moneyOutExists']->getData();
+            $validatingForm = new ValidatingForm($form);
+            $report = $validatingForm->getObjectOrThrow(null, Report::class);
+            $answer = $validatingForm->getStringOrNull('moneyOutExists');
 
             $report->setMoneyOutExists($answer);
             $this->restClient->put('report/' . $reportId, $report, ['doesMoneyOutExist']);
@@ -120,8 +125,9 @@ class MoneyOutShortController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $report = $form->getData();
-            $answer = $form['reasonForNoMoneyOut']->getData();
+            $validatingForm = new ValidatingForm($form);
+            $report = $validatingForm->getObjectOrThrow(null, Report::class);
+            $answer = $validatingForm->getStringOrNull('reasonForNoMoneyOut');
 
             $report->setReasonForNoMoneyOut($answer);
             $report->getStatus()->setMoneyOutState(Status::STATE_DONE);
@@ -151,8 +157,8 @@ class MoneyOutShortController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
-            /** @var Report $data */
-            $data = $form->getData();
+            $validatingForm = new ValidatingForm($form);
+            $data = $validatingForm->getObjectOrThrow(null, Report::class);
             $categories = $data->getMoneyShortCategoriesOut();
 
             // Count the number of categories where 'present' is true
@@ -169,10 +175,7 @@ class MoneyOutShortController extends AbstractController
                 $this->restClient->put('report/' . $reportId, $data, ['moneyShortCategoriesOut']);
 
                 if ($fromSummaryPage) {
-                    $request->getSession()->getFlashBag()->add(
-                        'notice',
-                        'Answer edited'
-                    );
+                    $this->addFlash('notice', 'Answer edited');
 
                     return $this->redirectToRoute('money_out_short_summary', ['reportId' => $reportId]);
                 }
@@ -212,8 +215,8 @@ class MoneyOutShortController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /* @var Report $data */
-            $data = $form->getData();
+            $validatingForm = new ValidatingForm($form);
+            $data = $validatingForm->getObjectOrThrow(null, Report::class);
 
             $this->restClient->put('report/' . $reportId, $data, ['money-transactions-short-out-exist']);
 
@@ -254,41 +257,24 @@ class MoneyOutShortController extends AbstractController
         $fromSummaryPage = 'summary' == $request->get('from');
 
         $form = $this->createForm(MoneyShortTransactionType::class, $record);
+        $form->add('addAnother', AddAnotherThingType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+            $validatingForm = new ValidatingForm($form);
+            $data = $validatingForm->getObjectOrThrow(null, MoneyTransactionShort::class);
             $this->restClient->post('report/' . $report->getId() . '/money-transaction-short', $data, ['moneyTransactionShort']);
-
-            return $this->redirect($this->generateUrl('money_out_short_add_another', ['reportId' => $reportId]));
+            $this->addFlash('notice', $this->translator->trans('notices.entry.added', domain: 'report-money-short'));
+            $addAnother = $validatingForm->getStringOrNull('addAnother') === 'yes';
+            $parameters = ['reportId' => $reportId];
+            if ($addAnother && $fromSummaryPage) {
+                $parameters['from'] = 'summary';
+            }
+            return $this->redirect($this->generateUrl($addAnother ? 'money_out_short_add' : 'money_out_short_summary', $parameters));
         }
 
         return [
             'backLink' => $this->generateUrl($fromSummaryPage ? 'money_out_short_summary' : 'money_out_short_one_off_payments_exist', ['reportId' => $reportId]),
-            'form' => $form->createView(),
-            'report' => $report,
-        ];
-    }
-
-    #[Route(path: '/report/{reportId}/money-out-short/add_another', name: 'money_out_short_add_another')]
-    #[Template('@App/Report/MoneyOutShort/addAnother.html.twig')]
-    public function addAnotherAction(Request $request, int $reportId): RedirectResponse|array
-    {
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-
-        $form = $this->createForm(AddAnotherRecordType::class, $report, ['translation_domain' => 'report-money-short']);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            switch ($form['addAnother']->getData()) {
-                case 'yes':
-                    return $this->redirectToRoute('money_out_short_add', ['reportId' => $reportId, 'from' => 'add_another']);
-                case 'no':
-                    return $this->redirectToRoute('money_out_short_summary', ['reportId' => $reportId]);
-            }
-        }
-
-        return [
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -305,8 +291,9 @@ class MoneyOutShortController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $request->getSession()->getFlashBag()->add('notice', 'Entry edited');
+            $validatingForm = new ValidatingForm($form);
+            $data = $validatingForm->getObjectOrThrow(null, MoneyTransactionShort::class);
+            $this->addFlash('notice', $this->translator->trans('notices.entry.edited', domain: 'report-money-short'));
 
             $this->restClient->put('report/' . $report->getId() . '/money-transaction-short/' . $transaction->getId(), $data, ['moneyTransactionShort']);
 
@@ -334,10 +321,7 @@ class MoneyOutShortController extends AbstractController
 
             $this->restClient->delete('report/' . $report->getId() . '/money-transaction-short/' . $transactionId);
 
-            $request->getSession()->getFlashBag()->add(
-                'notice',
-                'Entry deleted'
-            );
+            $this->addFlash('notice', $this->translator->trans('notices.entry.deleted', domain: 'report-money-short'));
 
             return $this->redirect($this->generateUrl('money_out_short_summary', ['reportId' => $reportId]));
         }

@@ -270,6 +270,7 @@ trait DeputyCostsSectionTrait
         $this->pressButton('Save and continue');
     }
 
+
     #[When('I declare :numberOfCosts previous cost(s) with valid dates and amounts')]
     public function iDeclarePreviousCostsAndDates(int $numberOfCosts): void
     {
@@ -576,10 +577,8 @@ trait DeputyCostsSectionTrait
         $this->iAmOnDeputyCostsPreviousReceivedPage();
     }
 
-    /**
-     * @When I don't provide any interim cost details
-     */
-    public function iDontProvideAnyInterimCostDetails(): void
+    #[When('I don\'t provide any interim cost details')]
+    public function iDontProvideAnyInterimCostDetails()
     {
         $this->iAmOnDeputyCostsInterimPage();
 

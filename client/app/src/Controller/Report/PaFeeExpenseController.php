@@ -8,7 +8,7 @@ use App\Controller\AbstractController;
 use App\Entity\Report\Expense;
 use App\Entity\Report\Report;
 use App\Entity\Report\Status;
-use App\Form\AddAnotherRecordType;
+use App\Form\AddAnotherThingType;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\DeputyExpenseType;
 use App\Form\Report\FeesType;
@@ -16,10 +16,12 @@ use App\Form\Report\PaFeeExistType;
 use App\Form\YesNoType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
+use OPG\Digideps\Common\Validating\ValidatingForm;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route(path: '/report/{reportId}/pa-fee-expense')]
 class PaFeeExpenseController extends AbstractController
@@ -32,7 +34,8 @@ class PaFeeExpenseController extends AbstractController
 
     public function __construct(
         private readonly RestClient $restClient,
-        private readonly ReportApi $reportApi
+        private readonly ReportApi $reportApi,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -60,18 +63,20 @@ class PaFeeExpenseController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            switch ($form['hasFees']->getData()) {
-                case 'yes':
-                    $report->setReasonForNoFees(null);
-                    $this->restClient->put('report/' . $reportId, $report, ['reasonForNoFees']);
+            $validatingForm = new ValidatingForm($form);
+            $hasFees = $validatingForm->getStringOrNull('hasFees') === 'yes';
 
-                    return $this->redirectToRoute('pa_fee_expense_fee_edit', ['reportId' => $reportId, 'from' => 'fee_exist']);
-                case 'no':
-                    $this->restClient->put('report/' . $reportId, $report, ['reasonForNoFees']);
-                    // if 2nd seciont is complete, go to summary
-                    $nextRoute = $report->isOtherFeesSectionComplete() ? 'pa_fee_expense_summary' : 'pa_fee_expense_other_exist';
+            if ($hasFees) {
+                $report->setReasonForNoFees(null);
+                $this->restClient->put('report/' . $reportId, $report, ['reasonForNoFees']);
 
-                    return $this->redirectToRoute($nextRoute, ['reportId' => $reportId, 'from' => 'fee_exist']);
+                return $this->redirectToRoute('pa_fee_expense_fee_edit', ['reportId' => $reportId, 'from' => 'fee_exist']);
+            } else {
+                $this->restClient->put('report/' . $reportId, $report, ['reasonForNoFees']);
+                // if 2nd section is complete, go to summary
+                $nextRoute = $report->isOtherFeesSectionComplete() ? 'pa_fee_expense_summary' : 'pa_fee_expense_other_exist';
+
+                return $this->redirectToRoute($nextRoute, ['reportId' => $reportId, 'from' => 'fee_exist']);
             }
         }
 
@@ -96,9 +101,12 @@ class PaFeeExpenseController extends AbstractController
         $fromPage = $request->get('from');
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->put('report/' . $report->getId(), $form->getData(), ['fee']);
+            $validatingForm = new ValidatingForm($form);
+            $data = $validatingForm->getObjectOrThrow(null, Report::class);
+
+            $this->restClient->put('report/' . $report->getId(), $data, ['fee']);
             if ('summary' == $fromPage) {
-                $request->getSession()->getFlashBag()->add('notice', 'Fee edited');
+                $this->addFlash('notice', $this->translator->trans('notices.fee.edited', domain: 'report-pa-fee-expense'));
 
                 return $this->redirectToRoute('pa_fee_expense_summary', ['reportId' => $reportId]);
             }
@@ -131,8 +139,8 @@ class PaFeeExpenseController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /* @var Report $data */
-            $data = $form->getData();
+            $validatingForm = new ValidatingForm($form);
+            $data = $validatingForm->getObjectOrThrow(null, Report::class);
 
             switch ($data->getPaidForAnything()) {
                 case 'yes':
@@ -176,51 +184,22 @@ class PaFeeExpenseController extends AbstractController
                 'report' => $report,
             ]
         );
+        $form->add('addAnother', AddAnotherThingType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+            $validatingForm = new ValidatingForm($form);
+            $data = $validatingForm->getObjectOrThrow(null, Expense::class);
             $data->setReport($report);
 
             $this->restClient->post('report/' . $report->getId() . '/expense', $data, ['expenses']);
-
-            return $this->redirect($this->generateUrl('pa_fee_expense_add_another', ['reportId' => $reportId]));
-        }
-
-        $from = $request->get('from');
-        $fromToRoute = [
-            'summary' => 'pa_fee_expense_summary',
-            'add_another' => 'pa_fee_expense_add_another',
-        ];
-        $backRoute = $fromToRoute[$from] ?? 'pa_fee_expense_other_exist';
-        $backLink = $this->generateUrl($backRoute, ['reportId' => $reportId]);
-
-        return [
-            'backLink' => $backLink,
-            'form' => $form->createView(),
-            'report' => $report,
-        ];
-    }
-
-    #[Route(path: '/other/add-another', name: 'pa_fee_expense_add_another')]
-    #[Template('@App/Report/PaFeeExpense/otherAddAnother.html.twig')]
-    public function otherAddAnotherAction(Request $request, int $reportId): RedirectResponse|array
-    {
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-
-        $form = $this->createForm(AddAnotherRecordType::class, $report, ['translation_domain' => 'report-pa-fee-expense']);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            switch ($form['addAnother']->getData()) {
-                case 'yes':
-                    return $this->redirectToRoute('pa_fee_expense_other_add', ['reportId' => $reportId, 'from' => 'add_another']);
-                case 'no':
-                    return $this->redirectToRoute('pa_fee_expense_summary', ['reportId' => $reportId]);
-            }
+            $this->addFlash('notice', $this->translator->trans('notices.entry.added', domain: 'report-pa-fee-expense'));
+            $addAnother = $validatingForm->getStringOrNull('addAnother') === 'yes';
+            return $this->redirect($this->generateUrl($addAnother ? 'pa_fee_expense_other_add' : 'pa_fee_expense_summary', ['reportId' => $reportId]));
         }
 
         return [
+            'backLink' => $this->generateUrl('pa_fee_expense_summary', ['reportId' => $reportId]),
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -245,10 +224,11 @@ class PaFeeExpenseController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $request->getSession()->getFlashBag()->add('notice', 'Expense edited');
+            $validatingForm = new ValidatingForm($form);
+            $data = $validatingForm->getObjectOrThrow(null, Expense::class);
 
             $this->restClient->put('report/' . $report->getId() . '/expense/' . $expense->getId(), $data, ['expenses']);
+            $this->addFlash('notice', $this->translator->trans('notices.entry.edited', domain: 'report-pa-fee-expense'));
 
             return $this->redirect($this->generateUrl('pa_fee_expense', ['reportId' => $reportId]));
         }
@@ -273,11 +253,7 @@ class PaFeeExpenseController extends AbstractController
             $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
             $this->restClient->delete('report/' . $report->getId() . '/expense/' . $expenseId);
-
-            $request->getSession()->getFlashBag()->add(
-                'notice',
-                'Expense deleted'
-            );
+            $this->addFlash('notice', $this->translator->trans('notices.entry.deleted', domain: 'report-pa-fee-expense'));
 
             return $this->redirect($this->generateUrl('pa_fee_expense', ['reportId' => $reportId]));
         }
