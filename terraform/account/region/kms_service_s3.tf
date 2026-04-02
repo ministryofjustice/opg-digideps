@@ -1,6 +1,6 @@
 ##### Shared KMS key for S3 #####
 
-# Account logs encryption
+# Account S3 encryption
 module "s3_kms" {
   source                  = "./modules/kms_key"
   encrypted_resource      = "S3"
