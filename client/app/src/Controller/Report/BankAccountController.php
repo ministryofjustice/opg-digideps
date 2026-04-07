@@ -107,13 +107,8 @@ class BankAccountController extends AbstractController
 
         $form->handleRequest($request);
 
-//        $submitBtn = $form->get('save');
-//        if (!$submitBtn instanceof SubmitButton) {
-//            throw new \UnexpectedValueException('Expected SubmitButton instance.');
-//        }
-
         $validatingForm = new ValidatingForm($form);
-        $submitBtn = $validatingForm->getObjectOrThrow(null, SubmitButton::class);
+        $submitBtn = $validatingForm->getObjectOrThrow('save', SubmitButton::class);
 
         if ($submitBtn->isClicked() && $form->isSubmitted() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
