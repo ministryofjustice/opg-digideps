@@ -10,7 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ProfDeputyCostPreviousType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('startDate', FormTypes\DateType::class, ['widget' => 'text',
@@ -29,18 +29,12 @@ class ProfDeputyCostPreviousType extends AbstractType
                 'error_bubbling' => false,
             ]);
 
-        if (!$options['editMode']) {
-            $builder
-                ->add('saveAndAddAnother', FormTypes\SubmitType::class, ['label' => 'save.label'])
-            ;
-        }
-
         $builder
-            ->add('saveAndContinue', FormTypes\SubmitType::class, ['label' => 'save.label'])
+            ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label'])
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
              'translation_domain' => 'report-prof-deputy-costs',
@@ -49,7 +43,7 @@ class ProfDeputyCostPreviousType extends AbstractType
         ->setRequired(['editMode']);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'deputy_costs_previous';
     }

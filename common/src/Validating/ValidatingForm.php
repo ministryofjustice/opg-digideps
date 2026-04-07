@@ -18,11 +18,17 @@ final readonly class ValidatingForm
 
     protected function getUnvalidated(int|string|null $key): mixed
     {
-        return $key === null ? $this->data->getData() : $this->data[$key]?->getData() ?? null;
+        return $key === null ? $this->data->getData() : $this->getFormOrNull((string)$key)?->getData();
     }
 
     public function getValidatingFormOrNull(string $key): ?ValidatingForm
     {
-        return $this->data->has($key) ? new ValidatingForm($this->data->get($key)) : null;
+        $form = $this->getFormOrNull($key);
+        return $form !== null ? new ValidatingForm($form) : null;
+    }
+
+    private function getFormOrNull(string $key): ?FormInterface
+    {
+        return $this->data->has($key) ? $this->data->get($key) : null;
     }
 }
