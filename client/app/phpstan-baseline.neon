@@ -1611,11 +1611,6 @@ parameters:
 			path: src/Controller/Report/ProfCurrentFeesController.php
 
 		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\Form\\\\FormInterface\\:\\:getClickedButton\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
-
-		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\Form\\\\FormInterface\\:\\:isClicked\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/ProfDeputyCostsController.php

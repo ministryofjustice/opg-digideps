@@ -267,21 +267,9 @@ jobs:
       - terraform_apply_environment
       - workflow_variables
 
-  scale_services_up:
-    name: scale up services
-    uses: ./.github/workflows/_scale-services.yml
-    needs:
-      - workflow_variables
-      - terraform_apply_environment
-    with:
-      replicas: 10
-      acu: 16
-      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
-      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
-
-  reset_database:
-    name: reset database
-    uses: ./.github/workflows/_run-task.yml
+  restart_point:
+    runs-on: ubuntu-latest
+    name: restart point
     needs:
       - workflow_variables
       - terraform_apply_environment
@@ -294,6 +282,29 @@ jobs:
       - api_integration_tests_1
       - api_integration_tests_2
       - api_integration_tests_3
+    steps:
+      - id: restart_point
+        run: |
+          echo "Restart workflow from here if you want to rerun the end to end tests"
+
+  scale_services_up:
+    name: scale up services
+    uses: ./.github/workflows/_scale-services.yml
+    needs:
+      - workflow_variables
+      - restart_point
+    with:
+      replicas: 10
+      acu: 16
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
+      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+
+  reset_database:
+    name: reset database
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - restart_point
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
