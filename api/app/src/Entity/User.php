@@ -2,12 +2,12 @@
 
 namespace App\Entity;
 
+use App\Domain\Deputy\DeputyType;
 use App\Entity\Report\Report;
 use App\Entity\Traits\AddressTrait;
 use App\Entity\Traits\CreateUpdateTimestamps;
 use App\Entity\UserResearch\UserResearchResponse;
-use App\Model\Hydrator;
-use DateTime;
+use App\Utility\Query\Hydrator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -1412,5 +1412,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return $this;
+    }
+
+    public function deriveDeputyType(): ?DeputyType
+    {
+        if (str_contains($this->roleName, 'LAY')) {
+            return DeputyType::LAY;
+        } elseif (str_contains($this->roleName, 'PROF')) {
+            return DeputyType::PRO;
+        } elseif (str_contains($this->roleName, 'PA')) {
+            return DeputyType::PA;
+        }
+        return null;
     }
 }

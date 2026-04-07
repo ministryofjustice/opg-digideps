@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\v2\Assembler;
 
+use App\Domain\Deputy\DeputyType;
 use App\Entity\Deputy;
 use App\v2\DTO\DeputyDto;
 use App\v2\DTO\DtoPropertySetterTrait;
@@ -36,6 +37,7 @@ class DeputyAssembler
         return (new Deputy())
             ->setEmail1($dto->getDeputyEmail())
             ->setDeputyUid($dto->getDeputyUid())
+            ->setDeputyType(DeputyType::from($dto->getDeputyType()))
             ->setFirstname($deputyFirstName)
             ->setLastname($dto->getDeputyLastname())
             ->setAddress1($dto->getDeputyAddress1())
