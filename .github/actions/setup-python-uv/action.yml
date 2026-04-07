@@ -1,5 +1,5 @@
 name: "Setup Python with uv"
-description: "Install uv and pinned Python dependencies"
+description: "Install uv and pinned Python dependencies."
 
 inputs:
   requirements_file:
