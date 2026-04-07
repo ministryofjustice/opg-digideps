@@ -90,12 +90,17 @@ jobs:
         with:
           requirements-file: scripts/pipeline/cleanup_task_definitions/requirements.txt
 
+      - name: Install uv
+        run: python -m pip install uv
+
+      - name: Install requirements with uv
+        run: uv pip install --system -r requirements.txt
+        working-directory: scripts/pipeline/cleanup_task_definitions
+
       - name: clean up old task definitions
         env:
           REGION: eu-west-1
-        run: |
-          pip install -r requirements.txt
-          python cleanup_task_definitions.py
+        run: python cleanup_task_definitions.py
         working-directory: scripts/pipeline/cleanup_task_definitions
 
       - name: Unset AWS variables
