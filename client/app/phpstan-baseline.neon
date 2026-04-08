@@ -961,11 +961,6 @@ parameters:
 			path: src/Controller/Report/DocumentController.php
 
 		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\Form\\\\FormInterface\\:\\:getClickedButton\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
 			count: 2
 			path: src/Controller/Report/GiftController.php
@@ -1001,18 +996,8 @@ parameters:
 			path: src/Controller/Report/GiftController.php
 
 		-
-			message: "#^Cannot call method setReport\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:post\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/GiftController.php
-
-		-
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 2
+			count: 1
 			path: src/Controller/Report/GiftController.php
 
 		-
