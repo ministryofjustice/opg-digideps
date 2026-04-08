@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Common\Validating;
 
+use Symfony\Component\Form\Button;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 
 final readonly class ValidatingForm
@@ -18,7 +20,8 @@ final readonly class ValidatingForm
 
     protected function getUnvalidated(int|string|null $key): mixed
     {
-        return $key === null ? $this->data->getData() : $this->getFormOrNull((string)$key)?->getData();
+        $form = $key === null ? $this->data->getData() : $this->getFormOrNull((string)$key);
+        return $form instanceof Form ? $form->getData() : $form;
     }
 
     public function getValidatingFormOrNull(string $key): ?ValidatingForm

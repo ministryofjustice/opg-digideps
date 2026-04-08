@@ -6,6 +6,7 @@ namespace OPG\Digideps\Tests\Common\Validating;
 
 use OPG\Digideps\Common\Validating\ValidatingForm;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 
 class ValidatingFormTest extends TestCase
@@ -32,7 +33,7 @@ class ValidatingFormTest extends TestCase
 
     private function makeFormStub(mixed $value, array $children = []): FormInterface
     {
-        $form = $this->createStub(FormInterface::class);
+        $form = $this->createStub(Form::class);
         $form->method('getData')->willReturn($value);
         $map = [];
         foreach ($children as $key => $value) {
