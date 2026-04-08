@@ -5,9 +5,6 @@ namespace App\Service;
 use App\Entity\AssetInterface;
 use App\Entity\BankAccountInterface;
 use App\Entity\Client;
-use App\Entity\Ndr\AssetOther as NdrAssetOther;
-use App\Entity\Ndr\AssetProperty as NdrAssetProperty;
-use App\Entity\Ndr\Ndr;
 use App\Entity\PreRegistration;
 use App\Entity\Report\Asset;
 use App\Entity\Report\AssetOther as ReportAssetOther;
@@ -43,7 +40,7 @@ class ReportService
      *
      * @throws \Exception
      */
-    public function submit(ReportInterface $currentReport, User $user, \DateTime $submitDate, ?string $ndrDocumentId = null): ?Report
+    public function submit(ReportInterface $currentReport, User $user, \DateTime $submitDate): ?Report
     {
         if (!$currentReport->getAgreedBehalfDeputy()) {
             throw new \RuntimeException('Report must be agreed for submission');
@@ -56,15 +53,7 @@ class ReportService
 
         // create submission record with NEW documents (= documents not yet attached to a submission)
         $submission = new ReportSubmission($currentReport, $user);
-        if ($currentReport instanceof Ndr && (null !== $ndrDocumentId)) {
-            $document = $this->em->getRepository(Document::class)->find($ndrDocumentId);
-
-            if ($document instanceof Document) {
-                $document->setReportSubmission($submission);
-                $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
-                $document->setSynchronisedBy($user);
-            }
-        } elseif ($currentReport instanceof Report) {
+        if ($currentReport instanceof Report) {
             foreach ($currentReport->getDocuments() as $document) {
                 if (!$document->getReportSubmission()) {
                     $document->setReportSubmission($submission);
@@ -84,25 +73,8 @@ class ReportService
         // Set user to active once they have submitted a report
         $user->setActive(true);
 
-        $newYearReport = null;
-
-        if ($currentReport instanceof Ndr) {
-            // Find the first report and clone assets/accounts across
-            $reports = $client->getReports();
-
-            if (1 === count($reports)) {
-                $this->logger->warning("Populating existing report for client $clientId (NDR submitted, existing report) at $now");
-
-                $newYearReport = $reports[0];
-
-                $this->clonePersistentResources($newYearReport, $currentReport);
-            } elseif (0 === count($reports)) {
-                $this->logger->warning("Creating next year report for client $clientId (NDR submitted, NO existing report) at $now");
-
-                $newYearReport = $this->createNextYearReport($currentReport);
-            }
-        } elseif ($currentReport instanceof Report && $currentReport->getUnSubmitDate()) {
-            $this->logger->warning("Creating next year report for client $clientId (NO NDR, existing unsubmitted report) at $now");
+        if ($currentReport instanceof Report && $currentReport->getUnSubmitDate()) {
+            $this->logger->warning("Creating next year report for client $clientId existing unsubmitted report at $now");
 
             // unsubmitted report
             $currentReport->setUnSubmitDate(null);
@@ -118,7 +90,7 @@ class ReportService
             }
         } else {
             // first-time submission
-            $this->logger->warning("Creating next year report for client $clientId (NO NDR, NO existing report) at $now");
+            $this->logger->warning("Creating next year report for client $clientId (NO existing report) at $now");
 
             $newYearReport = $this->createNextYearReport($currentReport);
         }
@@ -131,7 +103,7 @@ class ReportService
     /**
      * Clone resources which cross report periods from one account to another.
      *
-     * @param Ndr|Report $fromReport
+     * @param Report $fromReport
      */
     public function clonePersistentResources(Report $toReport, $fromReport)
     {
@@ -186,16 +158,13 @@ class ReportService
     }
 
     /**
-     * Convert NDR asset into Report Asset.
+     * Convert asset into Report Asset.
      *
-     * @return ReportAssetOther|NdrAssetOther|ReportAssetProperty
+     * @return ReportAssetOther|ReportAssetProperty
      */
     private function cloneAsset(AssetInterface $asset)
     {
-        if (
-            $asset instanceof NdrAssetProperty
-            || $asset instanceof ReportAssetProperty
-        ) {
+        if ($asset instanceof ReportAssetProperty) {
             $newAsset = new ReportAssetProperty();
 
             $newAsset->setAddress($asset->getAddress());
@@ -212,7 +181,7 @@ class ReportService
             $newAsset->setIsRentedOut($asset->getIsRentedOut());
             $newAsset->setRentAgreementEndDate($asset->getRentAgreementEndDate());
             $newAsset->setRentIncomeMonth($asset->getRentIncomeMonth());
-        } elseif ($asset instanceof NdrAssetOther || $asset instanceof ReportAssetOther) {
+        } elseif ($asset instanceof ReportAssetOther) {
             $newAsset = new ReportAssetOther();
             $newAsset->setTitle($asset->getTitle() ?? '');
             $newAsset->setDescription($asset->getDescription());
@@ -276,19 +245,13 @@ class ReportService
 
         $client = $oldReport->getClient();
 
-        if ($oldReport instanceof Report) {
-            $startDate = clone $oldReport->getEndDate();
-            $newReportType = $oldReport->getType();
-            $startDate->modify('+1 day');
-        } elseif ($oldReport instanceof Ndr) {
-            // when the previous report is NDR we need to work out the new reporting period
-            /** @var \DateTime $startDate */
-            $startDate = $oldReport->getClient()->getExpectedReportStartDate();
-            // set default type as oldReport is ndr
-            $newReportType = $this->getReportTypeBasedOnSirius($client) ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
-        } else {
-            throw new \RuntimeException('createNextYearReport() only supports Report and Ndr');
+        if (!($oldReport instanceof Report)) {
+            throw new \RuntimeException('createNextYearReport() only supports Report');
         }
+
+        $startDate = clone $oldReport->getEndDate();
+        $newReportType = $oldReport->getType();
+        $startDate->modify('+1 day');
 
         $endDate = clone $startDate;
         $endDate->modify('+12 months -1 day');
