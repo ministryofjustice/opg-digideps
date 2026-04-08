@@ -13,8 +13,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class DocumentVoter extends Voter
 {
-    const ADD_DOCUMENT = 'add-note';
-    const DELETE_DOCUMENT = 'delete-document';
+    public const string ADD_DOCUMENT = 'add-note';
+    public const string DELETE_DOCUMENT = 'delete-document';
 
     /**
      * Does this voter support the attribute?

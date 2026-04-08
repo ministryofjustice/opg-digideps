@@ -9,7 +9,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class AdminManagerDeletedEvent extends Event
 {
-    public const NAME = 'admin.manager.deleted';
+    public const string NAME = 'admin.manager.deleted';
 
     private User $deletedAdminManager;
     private User $currentUser;

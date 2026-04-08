@@ -15,12 +15,12 @@ abstract class ProfServiceFee
 {
     use HasReportTrait;
 
-    public const TYPE_ASSESSED_FEE = 'assessed';
-    public const TYPE_FIXED_FEE = 'fixed';
+    public const string TYPE_ASSESSED_FEE = 'assessed';
+    public const string TYPE_FIXED_FEE = 'fixed';
 
-    public const TYPE_PREVIOUS_FEE = 'previous';
-    public const TYPE_CURRENT_FEE = 'current';
-    public const TYPE_ESTIMATED_FEE = 'estimated';
+    public const string TYPE_PREVIOUS_FEE = 'previous';
+    public const string TYPE_CURRENT_FEE = 'current';
+    public const string TYPE_ESTIMATED_FEE = 'estimated';
 
     /**
      * @JMS\Type("integer")

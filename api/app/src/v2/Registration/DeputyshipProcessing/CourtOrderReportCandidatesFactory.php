@@ -24,7 +24,7 @@ use Doctrine\ORM\EntityManagerInterface;
 class CourtOrderReportCandidatesFactory
 {
     /** @var string */
-    private const COMPATIBLE_REPORTS_QUERY = <<<SQL
+    private const string COMPATIBLE_REPORTS_QUERY = <<<SQL
         SELECT * FROM (
             SELECT court_order_uid, report_id FROM (
                 SELECT

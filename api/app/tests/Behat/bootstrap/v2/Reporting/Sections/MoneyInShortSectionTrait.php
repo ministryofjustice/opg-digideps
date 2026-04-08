@@ -107,7 +107,7 @@ trait MoneyInShortSectionTrait
     }
 
     #[Given('/^I answer "([^"]*)" to one off payments over £1k$/')]
-    public function iAnswerToOneOffPaymentsOver£1k($arg1): void
+    public function iAnswerToOneOffPaymentsOver1k($arg1): void
     {
         $this->chooseOption(
             'yes_no[moneyTransactionsShortInExist]',
@@ -135,7 +135,7 @@ trait MoneyInShortSectionTrait
     }
 
     #[Given('/^I add (\d+) one\-off payments over £1k$/')]
-    public function iAddAOneOffPaymentsOver£1k(int $numberOfPayments): void
+    public function iAddAOneOffPaymentsOver1k(int $numberOfPayments): void
     {
         $this->iAmOnMoneyInShortOneOffPaymentsExistsPage();
 

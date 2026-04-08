@@ -10,8 +10,8 @@ class VerificationStatus
     /** @var int */
     private $status;
 
-    const FAILED = 0;
-    const PASSED = 1;
+    public const int FAILED = 0;
+    public const int PASSED = 1;
 
     /**
      * @param $message

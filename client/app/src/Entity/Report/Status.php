@@ -6,9 +6,9 @@ use JMS\Serializer\Annotation as JMS;
 
 class Status
 {
-    const STATE_NOT_STARTED = 'not-started';
-    const STATE_INCOMPLETE = 'incomplete';
-    const STATE_DONE = 'done';
+    public const string STATE_NOT_STARTED = 'not-started';
+    public const string STATE_INCOMPLETE = 'incomplete';
+    public const string STATE_DONE = 'done';
 
     /**
      * @var Report

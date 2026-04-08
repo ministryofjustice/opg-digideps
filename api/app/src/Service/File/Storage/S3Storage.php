@@ -19,7 +19,7 @@ use RuntimeException;
 class S3Storage implements StorageInterface
 {
     // If a file is deleted in S3 it will return an AccessDenied error until its permanently deleted
-    public const MISSING_FILE_AWS_ERROR_CODES = ['NoSuchKey', 'AccessDenied'];
+    public const array MISSING_FILE_AWS_ERROR_CODES = ['NoSuchKey', 'AccessDenied'];
 
     /**
      * S3Storage constructor.
