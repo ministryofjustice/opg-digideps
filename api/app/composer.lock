@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2b824b266ec9af137f846cd95f558f93",
+    "content-hash": "1e4e26030cb11b02cf33fba2f834b3e7",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -8839,6 +8839,72 @@
             "time": "2024-11-21T13:46:39+00:00"
         },
         {
+            "name": "friends-of-behat/mink-extension",
+            "version": "v2.7.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FriendsOfBehat/MinkExtension.git",
+                "reference": "854336030e11983f580f49faad1b49a1238f9846"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FriendsOfBehat/MinkExtension/zipball/854336030e11983f580f49faad1b49a1238f9846",
+                "reference": "854336030e11983f580f49faad1b49a1238f9846",
+                "shasum": ""
+            },
+            "require": {
+                "behat/behat": "^3.0.5",
+                "behat/mink": "^1.5",
+                "php": ">=7.4",
+                "symfony/config": "^4.4 || ^5.0 || ^6.0 || ^7.0"
+            },
+            "replace": {
+                "behat/mink-extension": "self.version"
+            },
+            "require-dev": {
+                "behat/mink-goutte-driver": "^1.1 || ^2.0",
+                "phpspec/phpspec": "^6.0 || ^7.0 || 7.1.x-dev"
+            },
+            "type": "behat-extension",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Behat\\MinkExtension": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Konstantin Kudryashov",
+                    "email": "ever.zet@gmail.com"
+                },
+                {
+                    "name": "Christophe Coevoet",
+                    "email": "stof@notk.org"
+                }
+            ],
+            "description": "Mink extension for Behat",
+            "homepage": "http://extensions.behat.org/mink",
+            "keywords": [
+                "browser",
+                "gui",
+                "test",
+                "web"
+            ],
+            "support": {
+                "issues": "https://github.com/FriendsOfBehat/MinkExtension/issues",
+                "source": "https://github.com/FriendsOfBehat/MinkExtension/tree/v2.7.5"
+            },
+            "time": "2024-01-11T09:12:02+00:00"
+        },
+        {
             "name": "friends-of-behat/symfony-extension",
             "version": "v2.6.2",
             "source": {
@@ -9542,61 +9608,6 @@
                 "source": "https://github.com/Masterminds/html5-php/tree/2.10.0"
             },
             "time": "2025-07-25T09:04:22+00:00"
-        },
-        {
-            "name": "ministryofjustice/mink-extension",
-            "version": "2.7.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ministryofjustice/MinkExtension.git",
-                "reference": "e8f2950518a97142d64b5637ad37cdae27080b34"
-            },
-            "require": {
-                "behat/behat": "^3.0.5",
-                "behat/mink": "^1.5",
-                "php": ">=7.4",
-                "symfony/config": "^4.4 || ^5.0 || ^6.0"
-            },
-            "replace": {
-                "behat/mink-extension": "self.version"
-            },
-            "require-dev": {
-                "behat/mink-goutte-driver": "^1.1 || ^2.0",
-                "phpspec/phpspec": "^6.0 || ^7.0 || 7.1.x-dev"
-            },
-            "type": "behat-extension",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.1.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Behat\\MinkExtension": "src/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Konstantin Kudryashov",
-                    "email": "ever.zet@gmail.com"
-                },
-                {
-                    "name": "Christophe Coevoet",
-                    "email": "stof@notk.org"
-                }
-            ],
-            "description": "Mink extension for Behat",
-            "homepage": "http://extensions.behat.org/mink",
-            "keywords": [
-                "browser",
-                "gui",
-                "test",
-                "web"
-            ],
-            "time": "2022-12-08T13:20:24+00:00"
         },
         {
             "name": "mockery/mockery",
