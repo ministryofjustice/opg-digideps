@@ -30,10 +30,8 @@ jobs:
         with:
           requirements-file: disaster-recovery/restore/requirements.txt
 
-      - name: install requirements
-        id: requirements
-        run: pip install -r requirements.txt
-        working-directory: disaster-recovery/restore
+      - name: Install requirements
+        run: pip install -r disaster-recovery/restore/requirements.txt
 
       - name: configure OIDC AWS credentials for terraform
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
@@ -75,10 +73,8 @@ jobs:
         with:
           requirements-file: disaster-recovery/restore/requirements.txt
 
-      - name: install requirements
-        id: requirements
-        run: pip install -r requirements.txt
-        working-directory: disaster-recovery/restore
+      - name: Install requirements
+        run: pip install -r disaster-recovery/restore/requirements.txt
 
       - name: configure OIDC AWS credentials for terraform
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1

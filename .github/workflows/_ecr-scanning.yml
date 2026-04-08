@@ -23,7 +23,7 @@ jobs:
         with:
           requirements-file: ./scripts/pipeline/ecrscan/requirements.txt
 
-      - name: install requirements
+      - name: Install requirements
         run: pip install -r ./scripts/pipeline/ecrscan/requirements.txt
 
       - name: configure OIDC AWS credentials for ECR scanning
