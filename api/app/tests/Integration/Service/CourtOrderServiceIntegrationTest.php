@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Service;
 
+use App\Domain\CourtOrder\CourtOrderService;
+use App\Domain\CourtOrder\CourtOrderType;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\CourtOrderTestHelper;
 use App\TestHelpers\DeputyTestHelper;
 use App\TestHelpers\ReportTestHelper;
 use App\TestHelpers\UserTestHelper;
 use App\Tests\Integration\ApiIntegrationTestCase;
-use App\v2\Service\CourtOrderService;
 
 class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
 {
@@ -49,7 +50,7 @@ class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
         $report->setSubmittedBy($user); // we set it to prove it changes to null
         $em->persist($report);
 
-        $courtOrder = CourtOrderTestHelper::generateCourtOrder($em, $client, $uid, 'ACTIVE', 'pfa', $report, $deputy);
+        $courtOrder = CourtOrderTestHelper::generateCourtOrder($em, $client, $uid, 'ACTIVE', CourtOrderType::PFA, $report, $deputy);
         $em->persist($courtOrder);
 
         $em->flush();
@@ -148,7 +149,7 @@ class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
         $em->persist($report1);
         $em->persist($report2);
         $em->persist($report3);
-        $courtOrder = CourtOrderTestHelper::generateCourtOrder($em, $client, $uid, 'ACTIVE', 'pfa', $report1, $deputy1);
+        $courtOrder = CourtOrderTestHelper::generateCourtOrder($em, $client, $uid, 'ACTIVE', CourtOrderType::PFA, $report1, $deputy1);
         $courtOrder->addReport($report2);
         $courtOrder->addReport($report3);
         $deputy2->associateWithCourtOrder($courtOrder);
@@ -183,7 +184,7 @@ class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
         $em->persist($client);
         $report = (ReportTestHelper::create())->generateReport($em, $client);
         $em->persist($report);
-        $courtOrder = CourtOrderTestHelper::generateCourtOrder($em, $client, $uid, 'ACTIVE', 'pfa', $report, $deputy);
+        $courtOrder = CourtOrderTestHelper::generateCourtOrder($em, $client, $uid, 'ACTIVE', CourtOrderType::PFA, $report, $deputy);
         $em->persist($courtOrder);
         $em->flush();
 

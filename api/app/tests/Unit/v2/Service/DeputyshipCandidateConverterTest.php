@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\v2\Service;
 
-use App\Model\DeputyshipProcessingRawDbAccess;
-use App\Model\DeputyshipProcessingRawDbAccessResult;
+use App\Domain\Deputyship\DeputyshipCandidatesConverter;
+use App\Domain\Deputyship\DeputyshipProcessingRawDbAccess;
+use App\Domain\Deputyship\DeputyshipProcessingRawDbAccessResult;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesGroup;
 use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
-use App\v2\Service\DeputyshipCandidatesConverter;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
