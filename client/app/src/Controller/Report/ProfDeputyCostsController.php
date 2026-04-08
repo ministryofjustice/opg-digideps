@@ -10,6 +10,7 @@ use App\Entity\Report\ProfDeputyOtherCost;
 use App\Entity\Report\ProfDeputyPreviousCost;
 use App\Entity\Report\Report;
 use App\Entity\Report\Status;
+use App\Form\AddAnotherThingType;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\ProfDeputyCostHowType;
 use App\Form\Report\ProfDeputyCostInterimType;
@@ -21,6 +22,7 @@ use App\Form\YesNoType;
 use App\Resolver\SubSectionRoute\ProfCostsSubSectionRouteResolver;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
+use OPG\Digideps\Common\Validating\ValidatingForm;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -159,13 +161,17 @@ class ProfDeputyCostsController extends AbstractController
             $pr = new ProfDeputyPreviousCost();
         }
 
+        $editMode = !empty($previousReceivedId);
         $form = $this->createForm(ProfDeputyCostPreviousType::class, $pr, [
-            'editMode' => !empty($previousReceivedId),
+            'editMode' => $editMode,
         ]);
+        if (!$editMode) {
+            $form->add('addAnother', AddAnotherThingType::class);
+        }
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($previousReceivedId) { // edit
+            if ($editMode) { // edit
                 $this->restClient->put('/prof-deputy-previous-cost/' . $previousReceivedId, $pr, ['profDeputyPrevCosts']);
                 $request->getSession()->getFlashBag()->add('notice', 'Cost edited');
             } else {
@@ -173,7 +179,9 @@ class ProfDeputyCostsController extends AbstractController
                 $request->getSession()->getFlashBag()->add('notice', 'Cost added');
             }
 
-            if ('saveAndAddAnother' === $form->getClickedButton()->getName()) {
+            $validatingForm = new ValidatingForm($form);
+
+            if ($validatingForm->getStringOrNull('addAnother') === 'yes') {
                 $nextRoute = 'prof_deputy_costs_previous_received';
             } elseif ('summary' === $from) {
                 $nextRoute = 'prof_deputy_costs_summary';

@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Domain\Deputy\DeputyType;
 use App\Entity\Client;
 use App\Entity\Deputy;
 use App\Entity\PreRegistration;
@@ -278,6 +279,7 @@ class PAUserFixtures extends AbstractDataFixture
     private function createDeputy(mixed $deputyData, mixed $clientData)
     {
         return (new Deputy())
+            ->setDeputyType(DeputyType::PA)
             ->setFirstname($deputyData['id'])
             ->setLastname('Deputy')
             ->setDeputyUid($clientData['deputyUid'])

@@ -831,11 +831,6 @@ parameters:
 			path: src/Controller/Report/ActionController.php
 
 		-
-			message: "#^Cannot access offset 'state' on mixed\\.$#"
-			count: 2
-			path: src/Controller/Report/ActionController.php
-
-		-
 			message: "#^Cannot call method setReport\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Controller/Report/ActionController.php
@@ -854,51 +849,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Report/BalanceController.php
-
-		-
-			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Controller/Report/BankAccountController.php
-
-		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\Form\\\\FormInterface\\:\\:isClicked\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/BankAccountController.php
-
-		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
-			count: 3
-			path: src/Controller/Report/BankAccountController.php
-
-		-
-			message: "#^Cannot access offset 'moneyTransfers' on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/BankAccountController.php
-
-		-
-			message: "#^Cannot access offset 'state' on mixed\\.$#"
-			count: 2
-			path: src/Controller/Report/BankAccountController.php
-
-		-
-			message: "#^Cannot access offset 'transactions' on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/BankAccountController.php
-
-		-
-			message: "#^Cannot access offset 'transactionsCount' on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/BankAccountController.php
-
-		-
-			message: "#^If condition is always true\\.$#"
-			count: 1
-			path: src/Controller/Report/BankAccountController.php
-
-		-
-			message: "#^Parameter \\#1 \\$id of method Symfony\\\\Contracts\\\\Translation\\\\TranslatorInterface\\:\\:trans\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/BankAccountController.php
 
 		-
 			message: "#^Argument of an invalid type Doctrine\\\\Common\\\\Collections\\\\ArrayCollection\\|null supplied for foreach, only iterables are supported\\.$#"
@@ -928,51 +878,6 @@ parameters:
 		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
 			count: 2
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Cannot access offset 'state' on mixed\\.$#"
-			count: 2
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Cannot call method getContactName\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Cannot call method getExplanation\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Cannot call method getRelationship\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Cannot call method setReport\\(\\) on mixed\\.$#"
-			count: 3
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:post\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
-			count: 2
-			path: src/Controller/Report/DebtController.php
-
-		-
-			message: "#^Cannot access offset 'state' on mixed\\.$#"
-			count: 2
 			path: src/Controller/Report/DebtController.php
 
 		-
@@ -988,11 +893,6 @@ parameters:
 		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
 			count: 4
-			path: src/Controller/Report/DecisionController.php
-
-		-
-			message: "#^Cannot access offset 'state' on mixed\\.$#"
-			count: 2
 			path: src/Controller/Report/DecisionController.php
 
 		-
@@ -1031,66 +931,6 @@ parameters:
 			path: src/Controller/Report/DecisionController.php
 
 		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
-			count: 2
-			path: src/Controller/Report/DeputyExpenseController.php
-
-		-
-			message: "#^Cannot access offset 'state' on mixed\\.$#"
-			count: 2
-			path: src/Controller/Report/DeputyExpenseController.php
-
-		-
-			message: "#^Cannot call method getAmount\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/DeputyExpenseController.php
-
-		-
-			message: "#^Cannot call method getBankAccount\\(\\) on mixed\\.$#"
-			count: 2
-			path: src/Controller/Report/DeputyExpenseController.php
-
-		-
-			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/DeputyExpenseController.php
-
-		-
-			message: "#^Cannot call method getExplanation\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/DeputyExpenseController.php
-
-		-
-			message: "#^Cannot call method getId\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/DeputyExpenseController.php
-
-		-
-			message: "#^Cannot call method getPaidForAnything\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/DeputyExpenseController.php
-
-		-
-			message: "#^Cannot call method setBankAccountId\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/DeputyExpenseController.php
-
-		-
-			message: "#^Cannot call method setReport\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/DeputyExpenseController.php
-
-		-
-			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:post\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Report/DeputyExpenseController.php
-
-		-
-			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 2
-			path: src/Controller/Report/DeputyExpenseController.php
-
-		-
 			message: "#^Cannot access offset 'files' on mixed\\.$#"
 			count: 2
 			path: src/Controller/Report/DocumentController.php
@@ -1127,11 +967,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
-			count: 2
-			path: src/Controller/Report/GiftController.php
-
-		-
-			message: "#^Cannot access offset 'state' on mixed\\.$#"
 			count: 2
 			path: src/Controller/Report/GiftController.php
 
@@ -1223,66 +1058,6 @@ parameters:
 		-
 			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
 			count: 1
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Cannot access offset 'category' on mixed\\.$#"
-			count: 2
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Cannot access offset 'state' on mixed\\.$#"
-			count: 2
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
-			count: 2
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Cannot call method getId\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Cannot call method getNameOneLine\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Cannot call method getStatus\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Cannot call method getType\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Cannot call method setMoneyInExists\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Cannot call method setReasonForNoMoneyIn\\(\\) on mixed\\.$#"
-			count: 3
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyInController\\:\\:handleSoftDeletionOfMoneyTransactionItems\\(\\) has parameter \\$report with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
-			count: 4
-			path: src/Controller/Report/MoneyInController.php
-
-		-
-			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
-			count: 1
 			path: src/Controller/Report/MoneyInShortController.php
 
 		-
@@ -1298,11 +1073,6 @@ parameters:
 		-
 			message: "#^Cannot access offset 'id' on mixed\\.$#"
 			count: 1
-			path: src/Controller/Report/MoneyInShortController.php
-
-		-
-			message: "#^Cannot access offset 'state' on mixed\\.$#"
-			count: 2
 			path: src/Controller/Report/MoneyInShortController.php
 
 		-
@@ -1381,11 +1151,6 @@ parameters:
 			path: src/Controller/Report/MoneyOutController.php
 
 		-
-			message: "#^Cannot access offset 'state' on mixed\\.$#"
-			count: 2
-			path: src/Controller/Report/MoneyOutController.php
-
-		-
 			message: "#^Cannot call method getId\\(\\) on mixed\\.$#"
 			count: 1
 			path: src/Controller/Report/MoneyOutController.php
@@ -1423,11 +1188,6 @@ parameters:
 		-
 			message: "#^Cannot access offset 'id' on mixed\\.$#"
 			count: 1
-			path: src/Controller/Report/MoneyOutShortController.php
-
-		-
-			message: "#^Cannot access offset 'state' on mixed\\.$#"
-			count: 2
 			path: src/Controller/Report/MoneyOutShortController.php
 
 		-
@@ -1501,26 +1261,6 @@ parameters:
 			path: src/Controller/Report/MoneyOutShortController.php
 
 		-
-			message: "#^Cannot access offset 'from\\-id' on mixed\\.$#"
-			count: 2
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Cannot access offset 'state' on mixed\\.$#"
-			count: 2
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Cannot access offset 'to\\-id' on mixed\\.$#"
-			count: 2
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: "#^Cannot call method getData\\(\\) on Symfony\\\\Component\\\\Form\\\\FormInterface\\|null\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyTransferController.php
-
-		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\Form\\\\FormInterface\\:\\:isClicked\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/OtherInfoController.php
@@ -1528,11 +1268,6 @@ parameters:
 		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
 			count: 1
-			path: src/Controller/Report/OtherInfoController.php
-
-		-
-			message: "#^Cannot access offset 'state' on mixed\\.$#"
-			count: 2
 			path: src/Controller/Report/OtherInfoController.php
 
 		-
@@ -1609,11 +1344,6 @@ parameters:
 			message: "#^Parameter \\#2 \\$mixed of method App\\\\Service\\\\Client\\\\RestClient\\:\\:put\\(\\) expects array\\|object\\|string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/Report/ProfCurrentFeesController.php
-
-		-
-			message: "#^Call to an undefined method Symfony\\\\Component\\\\Form\\\\FormInterface\\:\\:getClickedButton\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/ProfDeputyCostsController.php
 
 		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\Form\\\\FormInterface\\:\\:isClicked\\(\\)\\.$#"
@@ -1708,11 +1438,6 @@ parameters:
 		-
 			message: "#^Call to an undefined method Symfony\\\\Component\\\\HttpFoundation\\\\Session\\\\SessionInterface\\:\\:getFlashBag\\(\\)\\.$#"
 			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
-			message: "#^Cannot access offset 'state' on mixed\\.$#"
-			count: 2
 			path: src/Controller/Report/VisitsCareController.php
 
 		-

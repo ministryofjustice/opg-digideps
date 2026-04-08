@@ -6,6 +6,7 @@ namespace OPG\Digideps\Tests\Common\Validating;
 
 use OPG\Digideps\Common\Validating\ValidatingForm;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 
 class ValidatingFormTest extends TestCase
@@ -19,6 +20,7 @@ class ValidatingFormTest extends TestCase
         $this->assertSame('B', $validatingForm->getStringOrNull('b'));
         $this->assertNull($validatingForm->getStringOrNull('c'));
     }
+
     public function testGetValidatingFormOrNull(): void
     {
         $form = $this->getMockBuilder(FormInterface::class)->getMock();
@@ -29,18 +31,16 @@ class ValidatingFormTest extends TestCase
         $this->assertInstanceOf(ValidatingForm::class, $validatingForm->getValidatingFormOrNull('b'));
     }
 
-    /**
-     * @param array<mixed> $children
-     */
     private function makeFormStub(mixed $value, array $children = []): FormInterface
     {
-        $form = $this->createStub(FormInterface::class);
+        $form = $this->createStub(Form::class);
         $form->method('getData')->willReturn($value);
         $map = [];
         foreach ($children as $key => $value) {
             $map[] = [$key, $this->makeFormStub($value)];
         }
-        $form->method('offsetGet')->willReturnMap($map);
+        $form->method('get')->willReturnMap($map);
+        $form->method('has')->willReturnCallback(fn(string $key) => array_key_exists($key, $children));
         return $form;
     }
 }
