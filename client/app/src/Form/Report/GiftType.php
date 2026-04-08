@@ -10,7 +10,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class GiftType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('explanation', FormTypes\TextareaType::class, [
@@ -32,10 +32,9 @@ class GiftType extends AbstractType
         }
 
         $builder->add('saveAndContinue', FormTypes\SubmitType::class);
-        $builder->add('saveAndAddAnother', FormTypes\SubmitType::class);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Gift::class,
@@ -45,7 +44,7 @@ class GiftType extends AbstractType
         ->setRequired(['user', 'report']);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'gifts_single';
     }
