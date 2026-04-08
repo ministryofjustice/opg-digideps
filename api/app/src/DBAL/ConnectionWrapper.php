@@ -19,11 +19,6 @@ class ConnectionWrapper extends Connection
     public const string SECRETS_PREFIX = 'SECRETS_PREFIX';
     public const string SECRETS_ENDPOINT = 'SECRETS_ENDPOINT';
 
-    private bool $_isConnected = false;
-
-    /**
-     * @var array|mixed[]
-     */
     private array $params;
     private readonly bool $autoCommit;
     private SecretsManagerClient $secretClient;
@@ -42,7 +37,7 @@ class ConnectionWrapper extends Connection
         $this->autoCommit = $config->getAutoCommit();
     }
 
-    public function connect()
+    public function connect(): bool
     {
         if (null !== $this->_conn) {
             return false;
@@ -72,9 +67,7 @@ class ConnectionWrapper extends Connection
             $this->_eventManager->dispatchEvent(Events::postConnect, $eventArgs);
         }
 
-        $this->_isConnected = true;
-
-        return true;
+        return $this->isConnected();
     }
 
     protected function refreshPassword()
@@ -112,19 +105,6 @@ class ConnectionWrapper extends Connection
                 'region' => 'eu-west-1',
                 'version' => '2017-10-17',
             ]);
-        }
-    }
-
-    public function isConnected()
-    {
-        return $this->_isConnected;
-    }
-
-    public function close()
-    {
-        if ($this->isConnected()) {
-            parent::close();
-            $this->_isConnected = false;
         }
     }
 }

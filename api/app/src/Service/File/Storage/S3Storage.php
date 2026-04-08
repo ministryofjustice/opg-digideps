@@ -32,7 +32,7 @@ class S3Storage implements StorageInterface
      * https://github.com/jubos/fake-s3
      * https://github.com/jubos/fake-s3/wiki/Supported-Clients
      */
-    function __construct(
+    public function __construct(
         private readonly S3ClientInterface $s3Client,
         private readonly string $bucketName,
         private readonly LoggerInterface $logger
