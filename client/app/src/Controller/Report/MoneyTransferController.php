@@ -7,7 +7,6 @@ namespace App\Controller\Report;
 use App\Controller\AbstractController;
 use App\Entity\Report\MoneyTransfer;
 use App\Entity\Report\Status;
-use App\Form\AddAnotherRecordType;
 use App\Form\AddAnotherThingType;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\MoneyTransferType;
@@ -15,6 +14,7 @@ use App\Form\YesNoType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
+use OPG\Digideps\Common\Validating\ValidatingForm;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -49,7 +49,8 @@ class MoneyTransferController extends AbstractController
             ]);
         }
 
-        if (Status::STATE_NOT_STARTED != $report->getStatus()->getMoneyTransferState()['state']) {
+        $status = $report->getStatus()->getMoneyTransferState();
+        if (Status::STATE_NOT_STARTED != $status['state']) {
             return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
         }
 
@@ -82,7 +83,7 @@ class MoneyTransferController extends AbstractController
         }
 
         $backLink = $this->generateUrl('money_transfers', ['reportId' => $reportId]);
-        if ('summary' == $request->get('from')) {
+        if ('summary' == $request->query->getString('from', $request->getPayload()->getString('from'))) {
             $backLink = $this->generateUrl('money_transfers_summary', ['reportId' => $reportId]);
         }
 
@@ -103,12 +104,12 @@ class MoneyTransferController extends AbstractController
         }
 
         // common vars and data
+        /** @var array $dataFromUrl */
         $dataFromUrl = $request->get('data') ?: [];
         $stepUrlData = $dataFromUrl;
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        /** @var string $fromPage */
-        $fromPage = $request->get('from');
+        $fromPage = $request->query->getString('from', $request->getPayload()->getString('from'));
 
         $stepRedirector = $this->stepRedirector
             ->setRoutes('money_transfers', 'money_transfers_step', 'money_transfers_summary')
@@ -177,7 +178,9 @@ class MoneyTransferController extends AbstractController
             // add
             $this->restClient->post('/report/' . $reportId . '/money-transfers', $transfer, ['money-transfer']);
 
-            if ('yes' === $form['addAnother']->getData()) {
+            $validatingForm = new ValidatingForm($form);
+            $addAnother = $validatingForm->getStringOrNull('addAnother');
+            if ('yes' === $addAnother) {
                 return $this->redirectToRoute('money_transfers_step', ['reportId' => $reportId, 'from' => 'another', 'step' => 1]);
             }
 
@@ -201,7 +204,9 @@ class MoneyTransferController extends AbstractController
     public function summaryAction(int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyTransferState()['state']) {
+
+        $status = $report->getStatus()->getMoneyTransferState();
+        if (Status::STATE_NOT_STARTED == $status['state']) {
             return $this->redirect($this->generateUrl('money_transfers', ['reportId' => $reportId]));
         }
 

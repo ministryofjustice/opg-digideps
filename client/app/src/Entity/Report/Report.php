@@ -1102,7 +1102,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     /**
      * @return Status
      */
-    public function getStatus()
+    public function getStatus(): Status
     {
         return $this->status;
     }

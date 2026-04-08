@@ -41,7 +41,7 @@ jobs:
         with:
           requirements-file: lambdas/functions/monitor_notify_lambda/requirements.txt
 
-      - name: install requirements
+      - name: Install requirements
         run: pip install -r lambdas/functions/monitor_notify_lambda/requirements.txt
 
       - name: configure OIDC AWS credentials for slack notification
