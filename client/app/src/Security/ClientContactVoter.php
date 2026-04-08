@@ -12,9 +12,9 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class ClientContactVoter extends Voter
 {
-    public const ADD_CLIENT_CONTACT = 'add-client-contact';
-    public const EDIT_CLIENT_CONTACT = 'edit-client-contact';
-    public const DELETE_CLIENT_CONTACT = 'delete-client-contact';
+    public const string ADD_CLIENT_CONTACT = 'add-client-contact';
+    public const string EDIT_CLIENT_CONTACT = 'edit-client-contact';
+    public const string DELETE_CLIENT_CONTACT = 'delete-client-contact';
 
     /**
      * Does this voter support the attribute?

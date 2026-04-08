@@ -13,8 +13,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ReportChecklistType extends AbstractType
 {
-    const SAVE_ACTION = 'save';
-    const SUBMIT_AND_CONTINUE_ACTION = 'submitAndContinue';
+    public const string SAVE_ACTION = 'save';
+    public const string SUBMIT_AND_CONTINUE_ACTION = 'submitAndContinue';
 
     /**
      * @var Report

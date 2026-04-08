@@ -14,10 +14,10 @@ use Symfony\Component\Security\Core\Security;
 class OrganisationVoter extends Voter
 {
     /** @var string */
-    public const VIEW = 'view';
+    public const string VIEW = 'view';
 
     /** @var string */
-    public const EDIT = 'edit';
+    public const string EDIT = 'edit';
 
     public function __construct(private readonly Security $security)
     {

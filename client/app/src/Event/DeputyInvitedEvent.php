@@ -9,7 +9,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class DeputyInvitedEvent extends Event
 {
-    public const NAME = 'deputy.invited';
+    public const string NAME = 'deputy.invited';
 
     public function __construct(private readonly User $invitedDeputy)
     {

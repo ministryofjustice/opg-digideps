@@ -7,9 +7,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class PreRegistration
 {
-    public const REALM_PA = 'REALM_PA';
-    public const REALM_PROF = 'REALM_PROF';
-    public const REALM_LAY = 'REALM_LAY';
+    public const string REALM_PA = 'REALM_PA';
+    public const string REALM_PROF = 'REALM_PROF';
+    public const string REALM_LAY = 'REALM_LAY';
 
     /**
      * @var int

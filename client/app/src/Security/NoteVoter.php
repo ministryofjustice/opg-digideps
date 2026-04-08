@@ -13,9 +13,9 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class NoteVoter extends Voter
 {
-    public const ADD_NOTE = 'add-note';
-    public const EDIT_NOTE = 'edit-note';
-    public const DELETE_NOTE = 'delete-note';
+    public const string ADD_NOTE = 'add-note';
+    public const string EDIT_NOTE = 'edit-note';
+    public const string DELETE_NOTE = 'delete-note';
 
     /**
      * Does this voter support the attribute?

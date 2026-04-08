@@ -25,7 +25,7 @@ use Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken;
  */
 class HeaderTokenAuthenticator extends AbstractAuthenticator
 {
-    public const HEADER_NAME = 'AuthToken';
+    public const string HEADER_NAME = 'AuthToken';
 
     public function __construct(
         private readonly Client $redis,
