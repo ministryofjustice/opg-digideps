@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Model;
 
-use RuntimeException;
-use App\Model\DeputyshipProcessingLookupCache;
+use App\Domain\Deputyship\DeputyshipProcessingLookupCache;
 use App\Repository\ClientRepository;
 use App\Repository\CourtOrderRepository;
 use App\Repository\DeputyRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
+use RuntimeException;
 
 final class DeputyshipProcessingLookupCacheTest extends TestCase
 {
