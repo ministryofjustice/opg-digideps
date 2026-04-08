@@ -64,8 +64,8 @@ class GiftController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /* @var Report $data */
-            $data = $form->getData();
+            $validatingForm = new ValidatingForm($form);
+            $data = $validatingForm->getObjectOrThrow(null, Report::class);
 
             switch ($data->getGiftsExist()) {
                 case 'yes':
