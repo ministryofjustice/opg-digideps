@@ -150,10 +150,9 @@ class FixtureController extends AbstractController
             $formAndRequestData = $this->retrieveFormData($form, $request);
             $submittedFormData = $formAndRequestData['submitted'];
 
-            $numberOfUsersToCreate = min($submittedFormData['orgSizeUsers'], 10);
             $remainingUsersToCreate = $submittedFormData['orgSizeUsers'];
             $response = [];
-            while ($remainingUsersToCreate > 0) {
+            while ($remainingUsersToCreate !== 0) {
                 /** @var array $response */
                 $response = $this->restClient->post(
                     'v2/fixture/court-order',
@@ -165,17 +164,16 @@ class FixtureController extends AbstractController
                         'reportStatus' => $submittedFormData['reportStatus'],
                         'courtDate' => $formAndRequestData['courtDate']->format('Y-m-d'),
                         'activated' => $submittedFormData['activated'],
-                        'orgSizeUsers' => $numberOfUsersToCreate,
+                        'orgSizeUsers' => 1,
                         'deputyUid' => $formAndRequestData['deputyUid'],
                     ]),
                     ['timeout' => 1000]
                 );
-                $remainingUsersToCreate -= $numberOfUsersToCreate;
+                $remainingUsersToCreate -= 1;
             }
 
-            $numberOfAdditionalClientsToCreate = min($submittedFormData['orgSizeClients'] - 1, 9);
             $remainingAdditionalClientsToCreate = $submittedFormData['orgSizeClients'] === 1 ? 0 : $submittedFormData['orgSizeClients'] - 1;
-            while ($remainingAdditionalClientsToCreate > 0) {
+            while ($remainingAdditionalClientsToCreate !== 0) {
                 $this->restClient->post(
                     'v2/fixture/create-additional-clients',
                     json_encode([
@@ -183,11 +181,11 @@ class FixtureController extends AbstractController
                         'deputyEmail' => $formAndRequestData['deputyEmail'],
                         'reportType' => $submittedFormData['reportType'],
                         'reportStatus' => $submittedFormData['reportStatus'],
-                        'orgSizeClients' => $numberOfAdditionalClientsToCreate,
+                        'orgSizeClients' => 1,
                     ]),
                     ['timeout' => 1000]
                 );
-                $remainingAdditionalClientsToCreate -= $numberOfAdditionalClientsToCreate;
+                $remainingAdditionalClientsToCreate -= 1;
             }
 
 
