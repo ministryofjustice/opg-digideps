@@ -8,11 +8,11 @@ use App\Service\Time\DateTimeProvider;
 
 final class AuditEvents
 {
-    public const EVENT_CLIENT_ARCHIVED = 'CLIENT_ARCHIVED';
+    public const string EVENT_CLIENT_ARCHIVED = 'CLIENT_ARCHIVED';
 
-    public const TRIGGER_USER_ARCHIVED_CLIENT = 'USER_ARCHIVED_CLIENT';
+    public const string TRIGGER_USER_ARCHIVED_CLIENT = 'USER_ARCHIVED_CLIENT';
 
-    public const USER_DELETED_AUTOMATION = 'USER_DELETED_AUTOMATION';
+    public const string USER_DELETED_AUTOMATION = 'USER_DELETED_AUTOMATION';
 
     public function __construct(private readonly DateTimeProvider $dateTimeProvider)
     {

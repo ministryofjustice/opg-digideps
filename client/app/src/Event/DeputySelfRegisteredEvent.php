@@ -9,7 +9,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class DeputySelfRegisteredEvent extends Event
 {
-    public const NAME = 'deputy.self.registered';
+    public const string NAME = 'deputy.self.registered';
 
     /** @var User */
     private $registeredDeputy;

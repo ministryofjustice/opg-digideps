@@ -21,8 +21,7 @@ class ClamFileScanner
     /** @var array */
     private $badPdfKeywords;
 
-    /** @var int */
-    public const MAX_SCAN_ATTEMPTS = 90;
+    public const int MAX_SCAN_ATTEMPTS = 90;
 
     public function __construct(ClientInterface $client, LoggerInterface $logger, array $badPdfKeywords)
     {

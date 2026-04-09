@@ -10,7 +10,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class ReportUnsubmittedEvent extends Event
 {
-    public const NAME = 'report.unsubmitted';
+    public const string NAME = 'report.unsubmitted';
 
     /** @var Report */
     private $unsubmittedReport;

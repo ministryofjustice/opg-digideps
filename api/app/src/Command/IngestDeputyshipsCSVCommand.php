@@ -20,7 +20,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 class IngestDeputyshipsCSVCommand extends Command
 {
     public static $defaultName = 'digideps:api:ingest-deputyships-csv';
-    private const JOB_NAME = 'deputyships_csv_processing';
+    private const string JOB_NAME = 'deputyships_csv_processing';
 
     public function __construct(
         private readonly S3Client $s3,

@@ -11,10 +11,10 @@ use JMS\Serializer\Annotation as JMS;
 
 class UserResearchResponse
 {
-    const UNDER_ONE = 'underOne';
-    const ONE_TO_FIVE = 'oneToFive';
-    const SIX_TO_TEN = 'sixToTen';
-    const OVER_TEN = 'overTen';
+    public const string UNDER_ONE = 'underOne';
+    public const string ONE_TO_FIVE = 'oneToFive';
+    public const string SIX_TO_TEN = 'sixToTen';
+    public const string OVER_TEN = 'overTen';
 
     /**
      * @JMS\Type("App\Entity\UserResearch\ResearchType")

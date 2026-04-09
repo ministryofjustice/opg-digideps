@@ -122,28 +122,6 @@ editPage:
     pageTitle: Edit payment
     supportTitle: Money out
 
-addAnotherPage:
-  moneyIn:
-    htmlTitle: "Add another item - Complete the deputy report | GOV.UK"
-    pageTitle: Add another item
-    supportTitle: Money in
-    form:
-      addAnother:
-        label: The item of income has been saved. Would you like to add another item of income over £1,000 now?
-        hint: If you prefer, you can come back to this section later to add more items of income
-      save:
-        label: Continue
-  moneyOut:
-    htmlTitle: "Add another payment - Complete the deputy report | GOV.UK"
-    supportTitle: Money out
-    pageTitle: Add another payment
-    form:
-      addAnother:
-        label: The payment has been saved. Would you like to add another payment of over £1,000 now?
-        hint: If you prefer, you can come back to this section later to add more payments
-      save:
-        label: Continue
-
 summaryPage:
   moneyIn:
     htmlTitle: "Money in - Complete the deputy report | GOV.UK"
@@ -187,6 +165,7 @@ summaryPage:
         totalAmount: Total money out
 
 form:
+  thing: payment
   categoriesIn:
     label: Tell us about the different categories of money paid into %client%'s accounts
     hint: Please tick all that apply
@@ -237,3 +216,9 @@ form:
       label: 12345345646
     save:
       label: Save payment
+
+notices:
+  entry:
+    added: "Payment added"
+    edited: "Payment edited"
+    deleted: "Payment deleted"
