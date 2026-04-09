@@ -492,7 +492,7 @@ services:
                 - '@App\Factory\UpdateCourtOrderReportTypeDataFactory'
                 - '@App\Factory\UpdateDeputyTypeDataFactory'
                 - '@App\Factory\ClientIdFixDataFactory'
-                - '@App\Factory\MissingReportDataFactory'
+                - '@App\Factory\MissingReport\MissingReportDataFactory'
 
     App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester:
         public: true
