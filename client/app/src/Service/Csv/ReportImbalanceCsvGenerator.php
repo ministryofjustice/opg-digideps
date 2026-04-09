@@ -6,7 +6,7 @@ namespace App\Service\Csv;
 
 class ReportImbalanceCsvGenerator
 {
-    public const CSV_HEADERS = [
+    public const array CSV_HEADERS = [
         'Deputy Type',
         'No Imbalance Reported',
         'Imbalance Reported',

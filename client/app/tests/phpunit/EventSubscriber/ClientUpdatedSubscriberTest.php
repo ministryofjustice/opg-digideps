@@ -65,7 +65,7 @@ class ClientUpdatedSubscriberTest extends TestCase
     }
 
     /**
-     * @dataProvider clientProvider_logEvent
+     * @dataProvider clientProviderLogEvent
      * @test
      */
     public function logEvent(Client $postUpdateClient, string $expectedLogMessage)
@@ -95,7 +95,7 @@ class ClientUpdatedSubscriberTest extends TestCase
         $this->sut->logEvent($event);
     }
 
-    public function clientProvider_logEvent()
+    public function clientProviderLogEvent()
     {
         $postUpdateClient = ClientHelpers::createClient();
 
@@ -121,7 +121,7 @@ class ClientUpdatedSubscriberTest extends TestCase
 
     /**
      * @test
-     * @dataProvider clientProvider_sendEmail_details_changed
+     * @dataProvider clientProviderSendEmailDetailsChanged
      */
     public function sendEmail(Client $preUpdateClient, Client $postUpdateClient)
     {
@@ -134,7 +134,7 @@ class ClientUpdatedSubscriberTest extends TestCase
         $this->sut->sendEmail($event);
     }
 
-    public function clientProvider_sendEmail_details_changed()
+    public static function clientProviderSendEmailDetailsChanged(): array
     {
         $faker = Factory::create('GB_en');
 

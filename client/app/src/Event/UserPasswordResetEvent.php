@@ -9,7 +9,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class UserPasswordResetEvent extends Event
 {
-    public const NAME = 'password.reset';
+    public const string NAME = 'password.reset';
 
     /** @var User */
     private $passwordResetUser;

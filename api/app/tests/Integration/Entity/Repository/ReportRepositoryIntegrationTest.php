@@ -21,7 +21,7 @@ class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
 {
     private array $queryResult;
     private Checklist|array $queuedChecklists = [];
-    public const QUERY_LIMIT = 2;
+    public const int QUERY_LIMIT = 2;
     private static Fixtures $fixtures;
     private static ReportRepository $sut;
 

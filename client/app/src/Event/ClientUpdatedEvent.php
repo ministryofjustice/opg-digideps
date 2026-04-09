@@ -11,7 +11,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class ClientUpdatedEvent extends Event
 {
-    public const NAME = 'client.updated';
+    public const string NAME = 'client.updated';
 
     /** @var Client */
     private $preUpdateClient;

@@ -11,7 +11,7 @@ use App\Tests\Behat\BehatException;
 
 class UserDetails
 {
-    public const ADMIN_ROLES = ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER'];
+    public const array ADMIN_ROLES = ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER'];
 
     private ?string $clientCaseNumber = null;
     private ?string $clientEmail = null;

@@ -6,9 +6,9 @@ namespace App\v2\Registration\DTO;
 
 class OrgDeputyshipDto
 {
-    public const SINGLE_TYPE = 'SINGLE';
-    public const HYBRID_TYPE = 'HYBRID';
-    public const DUAL_TYPE = 'DUAL';
+    public const string SINGLE_TYPE = 'SINGLE';
+    public const string HYBRID_TYPE = 'HYBRID';
+    public const string DUAL_TYPE = 'DUAL';
 
     private string $caseNumber;
     private string $clientFirstname;

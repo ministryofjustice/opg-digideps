@@ -19,14 +19,14 @@ use Throwable;
 
 class CheckCSVUploadedCommand extends DaemonableCommand
 {
-    public const CSV_NOT_UPLOADED_SLACK_MESSAGE = ':cat_spin: The %s CSV has not been uploaded within the past 24 hours';
-    public const FAILED_TO_RETRIEVE_BANK_HOLIDAYS_SLACK_MESSAGE = 'Failed to retrieve bank holidays from Gov.uk. Error message: %s';
-    public const FAILED_TO_RETRIEVE_AUDIT_LOG_SLACK_MESSAGE = 'Failed to retrieve audit logs during CSV upload check. Error message: %s';
-    public const LOG_GROUP_NOT_CREATED_SLACK_MESSAGE = 'A log group with the name "%s" could not be found. Unable to determine if CSVs have been uploaded.';
-    public const UNEXPECTED_ERROR_SLACK_MESSAGE = 'An unexpected error occurred during CSV upload check. Error message: %s';
+    public const string CSV_NOT_UPLOADED_SLACK_MESSAGE = ':cat_spin: The %s CSV has not been uploaded within the past 24 hours';
+    public const string FAILED_TO_RETRIEVE_BANK_HOLIDAYS_SLACK_MESSAGE = 'Failed to retrieve bank holidays from Gov.uk. Error message: %s';
+    public const string FAILED_TO_RETRIEVE_AUDIT_LOG_SLACK_MESSAGE = 'Failed to retrieve audit logs during CSV upload check. Error message: %s';
+    public const string LOG_GROUP_NOT_CREATED_SLACK_MESSAGE = 'A log group with the name "%s" could not be found. Unable to determine if CSVs have been uploaded.';
+    public const string UNEXPECTED_ERROR_SLACK_MESSAGE = 'An unexpected error occurred during CSV upload check. Error message: %s';
 
-    public const LAY_CSV = 'LAY';
-    public const ORG_CSV = 'ORG';
+    public const string LAY_CSV = 'LAY';
+    public const string ORG_CSV = 'ORG';
 
     public static $defaultName = 'digideps:check-csv-uploaded';
 

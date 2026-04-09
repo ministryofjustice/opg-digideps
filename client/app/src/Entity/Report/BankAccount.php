@@ -11,9 +11,6 @@ class BankAccount implements BankAccountInterface
 {
     use HasReportTrait;
 
-    const OPENING_DATE_SAME_YES = 'yes';
-    const OPENING_DATE_SAME_NO = 'no';
-
     /**
      * Keep in sync with api.
      */

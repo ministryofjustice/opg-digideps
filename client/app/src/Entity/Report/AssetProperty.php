@@ -7,9 +7,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class AssetProperty extends Asset
 {
-    public const OCCUPANTS_OTHER = 'other';
-    public const OWNED_FULLY = 'fully';
-    public const OWNED_PARTLY = 'partly';
+    public const string OCCUPANTS_OTHER = 'other';
+    public const string OWNED_FULLY = 'fully';
+    public const string OWNED_PARTLY = 'partly';
 
     /**
      * @Assert\NotBlank(message="asset.property.address.notBlank", groups={"property-address"})

@@ -143,3 +143,9 @@ deletePage:
 
 form:
   thing: cost
+
+notices:
+  entry:
+    added: "Cost added"
+    edited: "Cost edited"
+    deleted: "Cost deleted"

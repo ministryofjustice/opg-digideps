@@ -41,7 +41,7 @@ class OrgService
         'skipped' => 0,
     ];
 
-    public const CHUNK_SIZE = 50;
+    public const int CHUNK_SIZE = 50;
 
     public function __construct(
         private RestClient $restClient,

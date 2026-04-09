@@ -13,7 +13,7 @@ class DeputyshipFeatureContext extends BaseFeatureContext
     private User $user;
     private int $deputyHasASingleClient_id;
     private string $deputyHasASingleClient_familyName;
-    private const FIRST_NAMES = ['Zardome', 'Ablent', 'Giga'];
+    private const array FIRST_NAMES = ['Zardome', 'Ablent', 'Giga'];
 
     /**
      * @AfterScenario @deputyship-details-client-list

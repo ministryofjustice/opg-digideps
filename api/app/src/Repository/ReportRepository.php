@@ -22,8 +22,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 class ReportRepository extends ServiceEntityRepository
 {
-    public const USER_DETERMINANT = 1;
-    public const ORG_DETERMINANT = 2;
+    public const int USER_DETERMINANT = 1;
+    public const int ORG_DETERMINANT = 2;
 
     public function __construct(ManagerRegistry $registry, private readonly ClientSearchFilter $filter)
     {

@@ -15,15 +15,15 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class ClientApi
 {
-    private const GET_CLIENT_BY_ID = 'client/%s';
-    private const DELETE_CLIENT_BY_ID = 'client/%s/delete';
-    private const UPDATE_CLIENT = 'client/upsert';
-    private const CREATE_CLIENT = 'client/upsert';
-    private const UNARCHIVE_CLIENT = 'client/%s/unarchive';
-    private const GET_CLIENT_BY_ID_V2 = 'v2/client/%s';
-    private const GET_CLIENT_BY_CASE_NUMBER_V2 = 'v2/client/case-number/%s';
-    private const UPDATE_CLIENT_DEPUTY = 'client/%d/update-deputy/%d';
-    private const GET_ALL_CLIENTS_BY_DEPUTY_UID = 'client/get-all-clients-by-deputy-uid/%s';
+    private const string GET_CLIENT_BY_ID = 'client/%s';
+    private const string DELETE_CLIENT_BY_ID = 'client/%s/delete';
+    private const string UPDATE_CLIENT = 'client/upsert';
+    private const string CREATE_CLIENT = 'client/upsert';
+    private const string UNARCHIVE_CLIENT = 'client/%s/unarchive';
+    private const string GET_CLIENT_BY_ID_V2 = 'v2/client/%s';
+    private const string GET_CLIENT_BY_CASE_NUMBER_V2 = 'v2/client/case-number/%s';
+    private const string UPDATE_CLIENT_DEPUTY = 'client/%d/update-deputy/%d';
+    private const string GET_ALL_CLIENTS_BY_DEPUTY_UID = 'client/get-all-clients-by-deputy-uid/%s';
 
     public function __construct(
         private readonly RestClientInterface $restClient,
