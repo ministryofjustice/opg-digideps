@@ -2,6 +2,7 @@
 
 namespace App\Factory;
 
+use App\Domain\CourtOrder\CourtOrderKind;
 use App\Entity\StagingDeputyship;
 use App\Entity\StagingSelectedCandidate;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
@@ -57,6 +58,8 @@ class StagingSelectedCandidateFactory
         $changes->orderType = $csvDeputyship->orderType;
         $changes->status = $csvDeputyship->orderStatus;
         $changes->orderMadeDate = $csvDeputyship->orderMadeDate;
+        $changes->courtOrderKind = ($csvDeputyship->isHybrid ? CourtOrderKind::Hybrid : CourtOrderKind::Single)->value;
+        $changes->reportType = $csvDeputyship->reportType;
 
         $changes->clientId = $clientId;
 

@@ -40,17 +40,6 @@ existPage:
     save:
       label: Save and continue
 
-addAnotherPage:
-  htmlTitle: "Add another expense - Complete the deputy report | GOV.UK"
-  pageTitle: Add another expense
-  supportTitle: Deputy expenses
-  form:
-    addAnother:
-      label: The expense has been saved. Would you like to add another now?
-      hint: If you prefer, you can come back to this section later to add more expenses
-    save:
-      label: Continue
-
 addPage:
   htmlTitle: "Add an expense - Complete the deputy report | GOV.UK"
   pageTitle: Add an expense
@@ -79,14 +68,13 @@ deletePage:
     amount: Amount
 
 form:
+  thing: expense
   explanation:
     label: Description of expense
     hint: ""
   amount:
     label: Amount
     hint: ""
-  addAnother:
-    label: Add another expense
   bankAccount:
     label: Which bank account was this paid from? (optional)
     hint: ""
