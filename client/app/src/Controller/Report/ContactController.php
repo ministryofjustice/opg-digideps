@@ -7,6 +7,7 @@ namespace App\Controller\Report;
 use App\Controller\AbstractController;
 use App\Entity\Report\Contact;
 use App\Entity\Report\Status;
+use App\Form\AddAnotherThingType;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\ContactExistType;
 use App\Form\Report\ContactType;
@@ -94,6 +95,7 @@ class ContactController extends AbstractController
         $contact = new Contact();
 
         $form = $this->createForm(ContactType::class, $contact);
+        $form->add('addAnother', AddAnotherThingType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
