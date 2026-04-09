@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Client;
-use App\Entity\Report\Report;
+use App\Entity\ReportInterface;
 use App\Entity\User;
 use App\Exception\NotFound;
 use App\Utility\Query\Hydrator;
@@ -22,11 +22,10 @@ abstract class RestController extends AbstractController
      * @template T of object
      *
      * @param class-string<T> $entityClass
-     * @param array|int       $criteriaOrId
+     * @param array|int $criteriaOrId
+     * @param string|null $errorMessage
      *
      * @return T
-     *
-     * @throws NotFound
      */
     protected function findEntityBy(string $entityClass, array|int $criteriaOrId, ?string $errorMessage = null): object
     {
@@ -45,7 +44,7 @@ abstract class RestController extends AbstractController
         Hydrator::hydrateEntityWithArrayData($object, $data, $keySetters);
     }
 
-    protected function denyAccessIfReportDoesNotBelongToUser(Report $report): void
+    protected function denyAccessIfReportDoesNotBelongToUser(ReportInterface $report): void
     {
         if (!$this->isGranted('edit', $report->getClient())) {
             if (!$this->checkIfUserHasAccessViaDeputyUid($report->getClient()->getId())) {
