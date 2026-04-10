@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Report;
+namespace OPG\Digideps\Frontend\Controller\Report;
 
-use App\Controller\AbstractController;
-use App\Entity\Report\BankAccount;
-use App\Entity\Report\MoneyTransaction;
-use App\Entity\Report\Report;
-use App\Entity\Report\Status;
-use App\Form\AddAnotherThingType;
-use App\Form\ConfirmDeleteType;
-use App\Form\Report\DoesMoneyInExistType;
-use App\Form\Report\MoneyTransactionType;
-use App\Form\Report\NoMoneyInType;
-use App\Service\Client\Internal\ReportApi;
-use App\Service\Client\RestClient;
-use App\Service\StepRedirector;
+use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Entity\Report\BankAccount;
+use OPG\Digideps\Frontend\Entity\Report\MoneyTransaction;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\Status;
+use OPG\Digideps\Frontend\Form\AddAnotherThingType;
+use OPG\Digideps\Frontend\Form\ConfirmDeleteType;
+use OPG\Digideps\Frontend\Form\Report\DoesMoneyInExistType;
+use OPG\Digideps\Frontend\Form\Report\MoneyTransactionType;
+use OPG\Digideps\Frontend\Form\Report\NoMoneyInType;
+use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\StepRedirector;
 use OPG\Digideps\Common\Validating\ValidatingForm;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\SubmitButton;

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Mapper;
+namespace OPG\Digideps\Frontend\Mapper;
 
-use App\Validator\Constraints as AppAssert;
-use App\Validator\Constraints\StartEndDateComparableInterface;
+use OPG\Digideps\Frontend\Validator\Constraints as AppAssert;
+use OPG\Digideps\Frontend\Validator\Constraints\StartEndDateComparableInterface;
 use DateTime;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\EventListener;
+namespace OPG\Digideps\Frontend\EventListener;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;

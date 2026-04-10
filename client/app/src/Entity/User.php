@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Entity;
+namespace OPG\Digideps\Frontend\Entity;
 
-use App\Entity\Traits\LoginInfoTrait;
-use App\Validator\Constraints\CommonPassword;
-use App\Validator\Constraints\EmailSameDomain;
+use OPG\Digideps\Frontend\Entity\Traits\LoginInfoTrait;
+use OPG\Digideps\Frontend\Validator\Constraints\CommonPassword;
+use OPG\Digideps\Frontend\Validator\Constraints\EmailSameDomain;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
@@ -188,7 +188,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     private $roleName;
 
     /**
-     * @JMS\Type("array<App\Entity\Client>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Client>")
      *
      * @var Client[]
      */
@@ -397,7 +397,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     private $coDeputyClientConfirmed;
 
     /**
-     * @JMS\Type("array<App\Entity\Organisation>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Organisation>")
      *
      * @JMS\Groups({"user_organisations"})
      *
@@ -422,7 +422,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     private ?string $authToken = null;
 
     /**
-     * @JMS\Type("App\Entity\User")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
      *
      * @JMS\Groups({"user"})
      *

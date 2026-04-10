@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity;
+namespace OPG\Digideps\Frontend\Entity;
 
-use App\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
 /**
@@ -29,16 +29,16 @@ class CourtOrder
     /**
      * @var Deputy[]
      */
-    #[JMS\Type('array<App\Entity\Deputy>')]
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Deputy>')]
     private array $activeDeputies = [];
 
     /**
      * @var Report[]
      */
-    #[JMS\Type('array<App\Entity\Report\Report>')]
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Report>')]
     private array $reports = [];
 
-    #[JMS\Type('App\Entity\Client')]
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Client')]
     private Client $client;
 
     public function getId(): int

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace OPG\Digideps\Frontend\Command;
 
-use App\Service\Client\RestClient;
-use App\Service\CsvUploader;
-use App\Service\DataImporter\CsvToArray;
-use App\Service\File\Storage\S3Storage;
-use App\Service\Mailer\Mailer;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\CsvUploader;
+use OPG\Digideps\Frontend\Service\DataImporter\CsvToArray;
+use OPG\Digideps\Frontend\Service\File\Storage\S3Storage;
+use OPG\Digideps\Frontend\Service\Mailer\Mailer;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Predis\ClientInterface;
@@ -125,7 +125,7 @@ class ProcessLayCSVCommand extends Command
                 ->setOptionalColumns(self::OPTIONAL_COLUMNS)
                 ->setUnexpectedColumns(self::UNEXPECTED_COLUMNS)
                 ->getData();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->verboseLogger->error(sprintf('Error processing CSV file: %s', $e->getMessage()));
         }
 

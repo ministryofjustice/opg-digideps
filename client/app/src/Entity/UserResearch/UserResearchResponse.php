@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\UserResearch;
+namespace OPG\Digideps\Frontend\Entity\UserResearch;
 
-use App\Entity\Report\Satisfaction;
-use App\Entity\User;
+use OPG\Digideps\Frontend\Entity\Report\Satisfaction;
+use OPG\Digideps\Frontend\Entity\User;
 use DateTime;
 use JMS\Serializer\Annotation as JMS;
 
@@ -17,12 +17,12 @@ class UserResearchResponse
     public const string OVER_TEN = 'overTen';
 
     /**
-     * @JMS\Type("App\Entity\UserResearch\ResearchType")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\UserResearch\ResearchType")
      */
     private $researchType;
 
     /**
-     * @JMS\Type("App\Entity\User")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
      */
     private User $user;
 
@@ -47,7 +47,7 @@ class UserResearchResponse
     private $created;
 
     /**
-     * @JMS\Type("App\Entity\Report\Satisfaction")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\Satisfaction")
      */
     private $satisfaction;
 

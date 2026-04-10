@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace OPG\Digideps\Frontend\Service;
 
-use App\Entity\CourtOrder;
-use App\Entity\User;
-use App\Event\CoDeputyCreatedEvent;
-use App\EventDispatcher\ObservableEventDispatcher;
-use App\Model\InviteResult;
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Entity\CourtOrder;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Event\CoDeputyCreatedEvent;
+use OPG\Digideps\Frontend\EventDispatcher\ObservableEventDispatcher;
+use OPG\Digideps\Frontend\Model\InviteResult;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 use Psr\Http\Message\StreamInterface;
 use Psr\Log\LoggerInterface;
 

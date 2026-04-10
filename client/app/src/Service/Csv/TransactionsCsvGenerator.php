@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Csv;
+namespace OPG\Digideps\Frontend\Service\Csv;
 
-use App\Entity\Report\Expense;
-use App\Entity\Report\Gift;
-use App\Entity\Report\MoneyTransaction;
-use App\Entity\ReportInterface;
+use OPG\Digideps\Frontend\Entity\Report\Expense;
+use OPG\Digideps\Frontend\Entity\Report\Gift;
+use OPG\Digideps\Frontend\Entity\Report\MoneyTransaction;
+use OPG\Digideps\Frontend\Entity\ReportInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TransactionsCsvGenerator

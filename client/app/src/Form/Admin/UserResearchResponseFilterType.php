@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Form\Admin;
+namespace OPG\Digideps\Frontend\Form\Admin;
 
 use DateTime;
 use Symfony\Component\Form\AbstractType;

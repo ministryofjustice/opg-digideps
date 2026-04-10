@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Security;
+namespace OPG\Digideps\Frontend\Security;
 
-use App\Entity\Client;
-use App\Entity\Organisation;
-use App\Entity\User;
+use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\Organisation;
+use OPG\Digideps\Frontend\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;

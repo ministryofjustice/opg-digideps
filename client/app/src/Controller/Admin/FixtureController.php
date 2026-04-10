@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Admin;
+namespace OPG\Digideps\Frontend\Controller\Admin;
 
-use App\Controller\AbstractController;
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\Form\Admin\Fixture\LayCourtOrderFixtureType;
-use App\Form\Admin\Fixture\OrgCourtOrderFixtureType;
-use App\Form\Admin\Fixture\PreRegistrationFixtureType;
-use App\Service\Client\Internal\ReportApi;
-use App\Service\Client\Internal\UserApi;
-use App\Service\Client\RestClient;
-use App\TestHelpers\ClientHelpers;
+use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Form\Admin\Fixture\LayCourtOrderFixtureType;
+use OPG\Digideps\Frontend\Form\Admin\Fixture\OrgCourtOrderFixtureType;
+use OPG\Digideps\Frontend\Form\Admin\Fixture\PreRegistrationFixtureType;
+use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
+use OPG\Digideps\Frontend\Service\Client\Internal\UserApi;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
+use OPG\Digideps\Frontend\TestHelpers\ClientHelpers;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Form\FormInterface;
@@ -88,7 +88,7 @@ class FixtureController extends AbstractController
             $deputiesData = $this->restClient->get('/user/get-all', 'array', [], $query);
             $sanitizedDeputyData = $this->removeNullValues($deputiesData);
 
-            $deputies = $this->serializer->deserialize(json_encode($sanitizedDeputyData), 'App\Entity\User[]', 'json');
+            $deputies = $this->serializer->deserialize(json_encode($sanitizedDeputyData), 'OPG\Digideps\Frontend\Entity\User[]', 'json');
             $caseNumber = $response['multiClientCaseNumbers'] ?? [$formAndRequestData['caseNumber']];
 
             $deputyEmails = [];
@@ -167,7 +167,7 @@ class FixtureController extends AbstractController
             $deputiesData = $this->restClient->get('/user/get-all', 'array', [], $query);
             $sanitizedDeputyData = $this->removeNullValues($deputiesData);
 
-            $deputies = $this->serializer->deserialize(json_encode($sanitizedDeputyData), 'App\Entity\User[]', 'json');
+            $deputies = $this->serializer->deserialize(json_encode($sanitizedDeputyData), 'OPG\Digideps\Frontend\Entity\User[]', 'json');
 
             $this->addFlash('courtOrderFixture', ['deputies' => array_reverse($deputies), 'caseNumber' => [$formAndRequestData['caseNumber']]]);
         }

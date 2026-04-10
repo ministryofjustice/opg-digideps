@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Sync\Serializer;
+namespace OPG\Digideps\Frontend\Sync\Serializer;
 
-use App\Sync\Model\Sirius\SiriusDocumentUpload;
+use OPG\Digideps\Frontend\Sync\Model\Sirius\SiriusDocumentUpload;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 

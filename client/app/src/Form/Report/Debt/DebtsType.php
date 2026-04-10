@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\Report\Debt;
+namespace OPG\Digideps\Frontend\Form\Report\Debt;
 
-use App\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\File\Scanner\Exception;
+namespace OPG\Digideps\Frontend\Service\File\Scanner\Exception;
 
 class RiskyFileException extends \RuntimeException
 {

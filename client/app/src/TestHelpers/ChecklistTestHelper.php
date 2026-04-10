@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\TestHelpers;
+namespace OPG\Digideps\Frontend\TestHelpers;
 
-use App\Entity\Client;
-use App\Entity\Report\Checklist;
-use App\Entity\Report\Report;
-use App\Entity\User;
+use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\Report\Checklist;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\User;
 use DateTime;
 
 class ChecklistTestHelper

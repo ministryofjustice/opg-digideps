@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\JWT;
+namespace OPG\Digideps\Frontend\Controller\JWT;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

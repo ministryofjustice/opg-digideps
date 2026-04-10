@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use App\Entity\Report\MoneyTransfer;
+use OPG\Digideps\Frontend\Entity\Report\MoneyTransfer;
 use JMS\Serializer\Annotation as JMS;
 
 trait ReportTransfersTrait
 {
     /**
-     * @JMS\Type("array<App\Entity\Report\MoneyTransfer>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyTransfer>")
      *
      * @var MoneyTransfer[]
      */
