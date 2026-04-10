@@ -3886,11 +3886,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:__construct\\(\\) has parameter \\$type with no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:addDebt\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
