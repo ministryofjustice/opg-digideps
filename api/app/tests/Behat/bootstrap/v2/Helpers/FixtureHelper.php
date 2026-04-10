@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\Helpers;
 
 use App\Domain\CourtOrder\CourtOrderType;
-use DateTime;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
 use App\Entity\PreRegistration;
+use App\Entity\Report\Expense;
 use App\Entity\Report\Report;
 use App\Entity\Satisfaction;
 use App\Entity\User;
@@ -264,7 +264,7 @@ class FixtureHelper
         bool $completed = false,
         bool $submitted = false,
         ?string $type = null,
-        ?DateTime $startDate = null,
+        ?\DateTime $startDate = null,
         ?int $satisfactionScore = null,
         ?string $caseNumber = null,
     ): void {
@@ -339,7 +339,7 @@ class FixtureHelper
         bool $completed = false,
         bool $submitted = false,
         string $reportType = Report::PROF_PFA_HIGH_ASSETS_TYPE,
-        ?DateTime $startDate = null,
+        ?\DateTime $startDate = null,
         ?int $satisfactionScore = null,
         ?string $deputyEmail = null,
         ?string $caseNumber = null,
@@ -1050,7 +1050,7 @@ class FixtureHelper
 
     public function createDataForAnalytics(string $testRunId, $timeAgo, $satisfactionScore): array
     {
-        $startDate = new DateTime($timeAgo);
+        $startDate = new \DateTime($timeAgo);
         $deputies = [];
 
         $deputies[] = $this->createOrgUserClientDeputyAndReport(
@@ -1152,7 +1152,7 @@ class FixtureHelper
         string $reportType,
         bool $completed,
         bool $submitted,
-        ?DateTime $startDate = null,
+        ?\DateTime $startDate = null,
         ?int $satisfactionScore = null,
         ?string $caseNumber = null,
         bool $legacyPasswordHash = false,
@@ -1206,7 +1206,7 @@ class FixtureHelper
         ?string $deputyEmail = null,
         ?string $caseNumber = null,
         ?string $deputyUid = null,
-        ?DateTime $startDate = null,
+        ?\DateTime $startDate = null,
         ?int $satisfactionScore = null,
     ) {
         if (!$this->fixturesEnabled) {
@@ -1292,7 +1292,7 @@ class FixtureHelper
         return $this->courtOrderTestHelper::generateCourtOrder($this->em, $client, $courtOrderUid, 'ACTIVE', $orderType, $report, $deputy);
     }
 
-    public function createDeputyOnOrder(CourtOrder $courtOrder, ?DateTime $lastLoggedIn = null): Deputy
+    public function createDeputyOnOrder(CourtOrder $courtOrder, ?\DateTime $lastLoggedIn = null): Deputy
     {
         $user = $this->userTestHelper::createUser();
 
@@ -1327,5 +1327,23 @@ class FixtureHelper
         $this->em->flush();
 
         return $organisation;
+    }
+
+    public function createAndPersistExpense(int $reportId, int $amount, string $explanation): Expense
+    {
+        $report = $this->em->getRepository(Report::class)->find($reportId);
+
+        $expense = new Expense($report);
+        $expense->setAmount($amount);
+        $expense->setExplanation($explanation);
+
+        $report->addExpense($expense);
+        $report->setPaidForAnything('yes');
+
+        $this->em->persist($expense);
+        $this->em->persist($report);
+        $this->em->flush();
+
+        return $expense;
     }
 }
