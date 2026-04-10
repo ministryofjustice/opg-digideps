@@ -292,7 +292,7 @@ class ReportTestHelper
 
     private static function completeDeputyExpenses(Report $report): void
     {
-        if ($report->isPAreport()) {
+        if ($report->isPAreport() || $report->isLayReport()) {
             $report->setReasonForNoFees('No reason for no fees');
             $report->setPaidForAnything('no');
         } else {
