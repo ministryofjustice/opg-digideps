@@ -9,7 +9,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class AdminUserCreatedEvent extends Event
 {
-    public const NAME = 'admin.user.created';
+    public const string NAME = 'admin.user.created';
 
     /** @var User */
     private $createdUser;

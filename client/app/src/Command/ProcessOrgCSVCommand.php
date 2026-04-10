@@ -23,9 +23,9 @@ class ProcessOrgCSVCommand extends Command
 {
     protected static $defaultName = 'digideps:process-org-csv';
 
-    private const CHUNK_SIZE = 50;
+    private const int CHUNK_SIZE = 50;
 
-    private const EXPECTED_COLUMNS = [
+    private const array EXPECTED_COLUMNS = [
         'Case',
         'ClientForename',
         'ClientSurname',
@@ -45,7 +45,7 @@ class ProcessOrgCSVCommand extends Command
         'Hybrid',
     ];
 
-    private const OPTIONAL_COLUMNS = [
+    private const array OPTIONAL_COLUMNS = [
         'ClientAddress1',
         'ClientAddress2',
         'ClientAddress3',
@@ -59,7 +59,7 @@ class ProcessOrgCSVCommand extends Command
         'CourtOrderUid',
     ];
 
-    private const UNEXPECTED_COLUMNS = [
+    private const array UNEXPECTED_COLUMNS = [
         'NDR',
     ];
 

@@ -11,7 +11,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class ClientDeletedEvent extends Event
 {
-    public const NAME = 'client.deleted';
+    public const string NAME = 'client.deleted';
 
     /** @var User */
     private $currentUser;
