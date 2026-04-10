@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Transformer\ReportSubmission;
+namespace OPG\Digideps\Backend\Transformer\ReportSubmission;
 
-use App\Entity\Report\ReportSubmission;
-use App\Entity\Report\Report;
-use App\Service\DateTimeProvider;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Service\DateTimeProvider;
 
 class ReportSubmissionSummaryTransformer
 {

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\FixtureFactory;
+namespace OPG\Digideps\Backend\FixtureFactory;
 
-use App\Entity\PreRegistration;
-use App\v2\Registration\DTO\LayDeputyshipDto;
-use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory as PreRegistrationDTOFactory;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
+use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory as PreRegistrationDTOFactory;
 
 readonly class PreRegistrationFactory
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Backend\Entity\Report;
 
-use App\Entity\Traits\IsSoftDeleteableEntity;
+use OPG\Digideps\Backend\Entity\Traits\IsSoftDeleteableEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
@@ -14,8 +14,8 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\InheritanceType("SINGLE_TABLE")
  * @ORM\DiscriminatorColumn(name="type", type="string")
  * @ORM\DiscriminatorMap({
- *      "in"   = "App\Entity\Report\MoneyTransactionShortIn",
- *      "out"  = "App\Entity\Report\MoneyTransactionShortOut"
+ *      "in"   = "OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortIn",
+ *      "out"  = "OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortOut"
  * })
  */
 abstract class MoneyTransactionShort implements MoneyTransactionInterface
@@ -36,7 +36,7 @@ abstract class MoneyTransactionShort implements MoneyTransactionInterface
     /**
      * @var Report
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="moneyTransactionsShort")
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="moneyTransactionsShort")
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;

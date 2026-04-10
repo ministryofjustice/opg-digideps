@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Security;
+namespace OPG\Digideps\Backend\Security;
 
-use App\Entity\User;
-use App\Repository\UserRepository;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\UserRepository;
 use Predis\Client;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -54,7 +54,7 @@ class RedisUserProvider implements UserProviderInterface, PasswordUpgraderInterf
 
     public function supportsClass(string $class): bool
     {
-        return 'App\Entity\User' === $class || is_subclass_of($class, 'App\Entity\User');
+        return 'OPG\Digideps\Backend\Entity\User' === $class || is_subclass_of($class, 'OPG\Digideps\Backend\Entity\User');
     }
 
     public function loadUserByUsername(string $username): ?User

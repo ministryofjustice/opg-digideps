@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace OPG\Digideps\Backend\Command;
 
-use App\Repository\PreRegistrationRepository;
-use App\Service\DataImporter\CsvToArray;
-use App\Service\DeputyCaseService;
-use App\Service\File\Storage\S3Storage;
-use App\Service\LayRegistrationService;
-use App\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
+use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
+use OPG\Digideps\Backend\Service\DataImporter\CsvToArray;
+use OPG\Digideps\Backend\Service\DeputyCaseService;
+use OPG\Digideps\Backend\Service\File\Storage\S3Storage;
+use OPG\Digideps\Backend\Service\LayRegistrationService;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Psr\Log\LoggerInterface;

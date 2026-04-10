@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Service\RestHandler;
+namespace OPG\Digideps\Backend\Service\RestHandler;
 
-use App\Entity\Organisation;
-use App\Entity\User;
-use App\Factory\OrganisationFactory;
-use App\Repository\OrganisationRepository;
-use App\Repository\UserRepository;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Factory\OrganisationFactory;
+use OPG\Digideps\Backend\Repository\OrganisationRepository;
+use OPG\Digideps\Backend\Repository\UserRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\OptimisticLockException as OptimisticLockExceptionAlias;
 use Doctrine\ORM\ORMException;

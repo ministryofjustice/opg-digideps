@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Stats;
+namespace OPG\Digideps\Backend\Service\Stats;
 
 class StatsQueryParameters
 {

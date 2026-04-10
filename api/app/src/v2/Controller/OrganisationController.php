@@ -1,16 +1,16 @@
 <?php
 
-namespace App\v2\Controller;
+namespace OPG\Digideps\Backend\v2\Controller;
 
-use App\Entity\Organisation;
-use App\Entity\User;
-use App\Repository\ClientRepository;
-use App\Repository\OrganisationRepository;
-use App\Repository\UserRepository;
-use App\Service\Formatter\RestFormatter;
-use App\Service\RestHandler\OrganisationRestHandler;
-use App\v2\Assembler\OrganisationAssembler;
-use App\v2\Transformer\OrganisationTransformer;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\ClientRepository;
+use OPG\Digideps\Backend\Repository\OrganisationRepository;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\Service\RestHandler\OrganisationRestHandler;
+use OPG\Digideps\Backend\v2\Assembler\OrganisationAssembler;
+use OPG\Digideps\Backend\v2\Transformer\OrganisationTransformer;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\Feedback;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\Feedback;
 
-use App\Tests\Behat\v2\Common\BaseFeatureContext;
+use Tests\OPG\Digideps\Backend\Behat\v2\Common\BaseFeatureContext;
 
 class FeedbackFeatureContext extends BaseFeatureContext
 {

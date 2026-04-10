@@ -1,6 +1,6 @@
 <?php
 
-namespace App\EventListener;
+namespace OPG\Digideps\Backend\EventListener;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;

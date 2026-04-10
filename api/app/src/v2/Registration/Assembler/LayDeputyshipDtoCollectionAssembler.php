@@ -1,9 +1,9 @@
 <?php
 
-namespace App\v2\Registration\Assembler;
+namespace OPG\Digideps\Backend\v2\Registration\Assembler;
 
-use App\v2\Registration\DTO\LayDeputyshipDto;
-use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
+use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
+use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDtoCollection;
 
 class LayDeputyshipDtoCollectionAssembler
 {

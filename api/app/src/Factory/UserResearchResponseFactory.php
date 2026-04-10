@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Factory;
+namespace OPG\Digideps\Backend\Factory;
 
-use App\Entity\UserResearch\ResearchType;
-use App\Entity\UserResearch\UserResearchResponse;
+use OPG\Digideps\Backend\Entity\UserResearch\ResearchType;
+use OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse;
 
 class UserResearchResponseFactory
 {

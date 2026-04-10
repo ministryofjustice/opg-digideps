@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Security;
+namespace Tests\OPG\Digideps\Backend\Unit\Security;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use DateTime;
-use App\Entity\User;
-use App\Exception\UnauthorisedException;
-use App\Exception\UserWrongCredentialsException;
-use App\Repository\UserRepository;
-use App\Security\LoginRequestAuthenticator;
-use App\Service\Auth\AuthService;
-use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
-use App\Service\BruteForce\AttemptsInTimeChecker;
-use App\Service\DateTimeProvider;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Exception\UnauthorisedException;
+use OPG\Digideps\Backend\Exception\UserWrongCredentialsException;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\Security\LoginRequestAuthenticator;
+use OPG\Digideps\Backend\Service\Auth\AuthService;
+use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
+use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
+use OPG\Digideps\Backend\Service\DateTimeProvider;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;

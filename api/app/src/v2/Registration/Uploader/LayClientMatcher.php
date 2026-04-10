@@ -2,30 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\Uploader;
+namespace OPG\Digideps\Backend\v2\Registration\Uploader;
 
-use App\Entity\Client;
-use App\Entity\PreRegistration;
-use App\Entity\Report\Report;
-use App\v2\Registration\DTO\LayDeputyshipDto;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
 use Doctrine\ORM\EntityManagerInterface;
-
-/**
- * If $reportTypeShouldChangeTo is set, this is the proposed new type for the found report.
- * If $activeClientExistsForCase is true, we found at least one active case with the same case number as the DTO,
- * but it had an incompatible report. This is always true if a compatible client and report were found, but not vice
- * versa.
- */
-class ClientMatch
-{
-    public function __construct(
-        public readonly ?Client $client,
-        public readonly ?Report $report,
-        public readonly ?string $reportTypeShouldChangeTo,
-        public readonly bool $activeClientExistsForCase,
-    ) {
-    }
-}
 
 /**
  * Given a Lay Deputy DTO, decide whether there is an existing client already present in the database compatible

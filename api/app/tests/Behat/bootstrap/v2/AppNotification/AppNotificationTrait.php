@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\AppNotification;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\AppNotification;
 
 trait AppNotificationTrait
 {

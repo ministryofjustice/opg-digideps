@@ -2,26 +2,26 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\Helpers;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\Helpers;
 
-use App\Domain\CourtOrder\CourtOrderType;
-use App\Entity\Client;
-use App\Entity\CourtOrder;
-use App\Entity\Deputy;
-use App\Entity\Organisation;
-use App\Entity\PreRegistration;
-use App\Entity\Report\Expense;
-use App\Entity\Report\Report;
-use App\Entity\Satisfaction;
-use App\Entity\User;
-use App\FixtureFactory\PreRegistrationFactory;
-use App\TestHelpers\ClientTestHelper;
-use App\TestHelpers\CourtOrderTestHelper;
-use App\TestHelpers\DeputyTestHelper;
-use App\TestHelpers\OrganisationTestHelper;
-use App\TestHelpers\ReportTestHelper;
-use App\TestHelpers\UserTestHelper;
-use App\Tests\Behat\BehatException;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\Report\Expense;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Satisfaction;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\FixtureFactory\PreRegistrationFactory;
+use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
+use OPG\Digideps\Backend\TestHelpers\CourtOrderTestHelper;
+use OPG\Digideps\Backend\TestHelpers\DeputyTestHelper;
+use OPG\Digideps\Backend\TestHelpers\OrganisationTestHelper;
+use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
+use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
+use Tests\OPG\Digideps\Backend\Behat\BehatException;
 use Aws\S3\S3ClientInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Faker\Factory;

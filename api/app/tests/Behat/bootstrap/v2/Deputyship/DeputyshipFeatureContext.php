@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\Deputyship;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\Deputyship;
 
-use App\Entity\User;
-use App\Tests\Behat\v2\Common\BaseFeatureContext;
+use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Behat\v2\Common\BaseFeatureContext;
 use Faker\Core\Uuid;
 
 class DeputyshipFeatureContext extends BaseFeatureContext

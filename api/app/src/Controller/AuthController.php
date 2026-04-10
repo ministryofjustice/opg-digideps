@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Controller;
+namespace OPG\Digideps\Backend\Controller;
 
-use App\Entity\User;
-use App\EventListener\RestInputOuputFormatter;
-use App\Security\HeaderTokenAuthenticator;
-use App\Security\RedisUserProvider;
-use App\Service\Formatter\RestFormatter;
-use App\Service\JWT\JWTService;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\EventListener\RestInputOuputFormatter;
+use OPG\Digideps\Backend\Security\HeaderTokenAuthenticator;
+use OPG\Digideps\Backend\Security\RedisUserProvider;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\Service\JWT\JWTService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;

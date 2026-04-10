@@ -2,11 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Factory;
+namespace Tests\OPG\Digideps\Backend\Unit\Factory;
 
 use DateTimeZone;
 use DateTime;
-use App\Entity\Client;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Factory\ReportFactory;
 use PHPUnit\Framework\TestCase;
 
 class ReportFactoryTest extends TestCase

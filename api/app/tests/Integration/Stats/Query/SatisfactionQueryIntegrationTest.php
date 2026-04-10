@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Tests\Integration\Service\Stats\Query;
+namespace Tests\OPG\Digideps\Backend\Integration\Stats\Query;
 
-use App\Tests\Integration\ApiIntegrationTestCase;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use DateTime;
-use App\Entity\Client;
-use App\Entity\Report\Report;
-use App\Entity\Satisfaction;
-use App\Service\Stats\Query\SatisfactionQuery;
-use App\Service\Stats\StatsQueryParameters;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Satisfaction;
+use OPG\Digideps\Backend\Service\Stats\Query\SatisfactionQuery;
+use OPG\Digideps\Backend\Service\Stats\StatsQueryParameters;
 
 class SatisfactionQueryIntegrationTest extends ApiIntegrationTestCase
 {

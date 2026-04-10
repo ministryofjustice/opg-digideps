@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace OPG\Digideps\Backend\Command;
 
-use App\Entity\User;
-use App\Service\ResponseComparison\ResponseComparer;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Service\ResponseComparison\ResponseComparer;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\ClientInterface;
 use Predis\Client;

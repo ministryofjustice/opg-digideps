@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Entity\Report;
+namespace Tests\OPG\Digideps\Backend\Unit\Entity\Report;
 
-use App\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
 use PHPUnit\Framework\TestCase;
 
 final class BankAccountTest extends TestCase

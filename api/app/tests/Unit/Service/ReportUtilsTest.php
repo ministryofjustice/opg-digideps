@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use DateTime;
 use PHPUnit\Framework\Attributes\Test;
-use App\Service\ReportUtils;
+use OPG\Digideps\Backend\Service\ReportUtils;
 use PHPUnit\Framework\TestCase;
 
 final class ReportUtilsTest extends TestCase

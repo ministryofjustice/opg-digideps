@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\DeputyshipProcessing;
+namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing;
 
-use App\Factory\DataFactoryInterface;
-use App\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipIngester;
+use OPG\Digideps\Backend\Factory\DataFactoryInterface;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipIngester;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 
 /**

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Factory;
+namespace Tests\OPG\Digideps\Backend\Unit\Factory;
 
-use App\Factory\ClientIdFixDataFactory;
+use OPG\Digideps\Backend\Factory\ClientIdFixDataFactory;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;

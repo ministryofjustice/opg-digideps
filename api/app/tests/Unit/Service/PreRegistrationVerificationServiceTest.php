@@ -2,13 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
+use OPG\Digideps\Backend\Entity\PreRegistration;
 use PHPUnit\Framework\Attributes\Test;
 use RuntimeException;
-use App\Repository\PreRegistrationRepository;
-use App\Repository\UserRepository;
-use App\Service\PreRegistrationVerificationService;
+use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\Service\PreRegistrationVerificationService;
 use Mockery as m;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -27,7 +28,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
 
     public function setUp(): void
     {
-        $crLayHasPC = m::mock('\App\Entity\PreRegistration')
+        $crLayHasPC = m::mock(PreRegistration::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('11111111')
             ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('CSurn')
@@ -37,7 +38,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
             ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('Dep1')
             ->getMock();
 
-        $crLayNoPC = m::mock('\App\Entity\PreRegistration')
+        $crLayNoPC = m::mock(PreRegistration::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('22222222')
             ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('CSurn')
@@ -48,7 +49,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
             ->getMock();
 
         // Group MLD1 has a postcode for each of the three deputies
-        $preRegMLD1A = m::mock('\App\Entity\PreRegistration')
+        $preRegMLD1A = m::mock(PreRegistration::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('33333333')
             ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('CSurn')
@@ -58,7 +59,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
             ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('MLDA')
             ->getMock();
 
-        $preRegMLD1B = m::mock('\App\Entity\PreRegistration')
+        $preRegMLD1B = m::mock(PreRegistration::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('33333333')
             ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('CSurn')
@@ -68,7 +69,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
             ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('MLDB')
             ->getMock();
 
-        $preRegMLD1C = m::mock('\App\Entity\PreRegistration')
+        $preRegMLD1C = m::mock(PreRegistration::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('33333333')
             ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('CSurn')
@@ -79,7 +80,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
             ->getMock();
 
         // Group MLD2 has a missing postcode for one of the two deputies
-        $preRegMLD2A = m::mock('\App\Entity\PreRegistration')
+        $preRegMLD2A = m::mock(PreRegistration::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('44444444')
             ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('CSurn')
@@ -89,7 +90,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
             ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('MLDA')
             ->getMock();
 
-        $preRegMLD2B = m::mock('\App\Entity\PreRegistration')
+        $preRegMLD2B = m::mock(PreRegistration::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('44444444')
             ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('CSurn')
@@ -99,7 +100,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
             ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('MLDB')
             ->getMock();
 
-        $singleLayDeputy = m::mock('\App\Entity\PreRegistration')
+        $singleLayDeputy = m::mock(PreRegistration::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('55555555')
             ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('Smith')

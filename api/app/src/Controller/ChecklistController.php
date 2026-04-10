@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controller;
+namespace OPG\Digideps\Backend\Controller;
 
-use App\Entity\Report\Checklist;
-use App\Exception\UnauthorisedException;
-use App\Service\Auth\AuthService;
-use App\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\Entity\Report\Checklist;
+use OPG\Digideps\Backend\Exception\UnauthorisedException;
+use OPG\Digideps\Backend\Service\Auth\AuthService;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;

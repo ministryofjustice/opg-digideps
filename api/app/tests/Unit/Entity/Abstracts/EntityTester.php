@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Entity\Abstracts;
+namespace Tests\OPG\Digideps\Backend\Unit\Entity\Abstracts;
 
 use Mockery\Adapter\Phpunit\MockeryTestCase;
 
