@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controller;
+namespace OPG\Digideps\Backend\Controller;
 
-use App\Entity\Deputy;
-use App\Entity\User;
-use App\Service\DeputyService;
-use App\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Service\DeputyService;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;

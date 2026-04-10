@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Service;
+namespace OPG\Digideps\Backend\Service;
 
-use App\Domain\Deputy\DeputyType;
-use App\Entity\Deputy;
-use App\Entity\User;
-use App\Repository\CourtOrderRepository;
-use App\Repository\DeputyRepository;
-use App\Utility\Query\Hydrator;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\CourtOrderRepository;
+use OPG\Digideps\Backend\Repository\DeputyRepository;
+use OPG\Digideps\Backend\Utility\Query\Hydrator;
 use Doctrine\ORM\EntityManagerInterface;
 
 class DeputyService

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\Reporting\Sections;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections;
 
-use App\Entity\Report\Report;
-use App\Tests\Behat\BehatException;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use Tests\OPG\Digideps\Backend\Behat\BehatException;
 use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 

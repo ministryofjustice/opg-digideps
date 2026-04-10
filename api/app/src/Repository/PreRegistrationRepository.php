@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace OPG\Digideps\Backend\Repository;
 
-use App\Entity\Deputy;
-use App\Entity\PreRegistration;
-use App\v2\DTO\InviteeDto;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\v2\DTO\InviteeDto;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\QueryBuilder;
@@ -26,7 +26,7 @@ class PreRegistrationRepository extends ServiceEntityRepository
     {
         /** @var QueryBuilder $qb */
         $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->delete('App\Entity\PreRegistration', 'p');
+        $qb->delete('OPG\Digideps\Backend\Entity\PreRegistration', 'p');
 
         return $qb->getQuery()->getOneOrNullResult();
     }

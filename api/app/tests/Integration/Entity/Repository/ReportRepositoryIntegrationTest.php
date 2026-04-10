@@ -1,20 +1,20 @@
 <?php
 
-namespace App\Tests\Integration\Repository;
+namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
-use App\Tests\Integration\ApiIntegrationTestCase;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use DateTime;
 use DateTimeZone;
 use DateInterval;
 use Exception;
-use App\Entity\Client;
-use App\Entity\Report\Checklist;
-use App\Entity\Report\Report;
-use App\Entity\Report\ReportSubmission;
-use App\Entity\SynchronisableInterface;
-use App\Entity\User;
-use App\Repository\ReportRepository;
-use App\Tests\Integration\Fixtures;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\Checklist;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Entity\SynchronisableInterface;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\ReportRepository;
+use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase

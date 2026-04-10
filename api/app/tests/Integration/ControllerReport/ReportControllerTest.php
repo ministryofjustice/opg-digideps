@@ -1,13 +1,16 @@
 <?php
 
-namespace App\Tests\Integration\ControllerReport;
+namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
 use DateTime;
-use App\Entity\PreRegistration;
-use App\Entity\Report\Document;
-use App\Entity\Report\Fee;
-use App\Entity\Report\Report;
-use App\Tests\Integration\Controller\AbstractTestController;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\Report\Checklist;
+use OPG\Digideps\Backend\Entity\Report\ChecklistInformation;
+use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\Fee;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class ReportControllerTest extends AbstractTestController
 {
@@ -51,7 +54,7 @@ class ReportControllerTest extends AbstractTestController
         parent::setUp();
 
         // create deputy 1, with 2 submitted reports
-        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(
             self::$deputy1,
             ['setFirstname' => 'c1', 'setLastname' => 'l1', 'setCaseNumber' => '101010101']
@@ -136,7 +139,7 @@ class ReportControllerTest extends AbstractTestController
         self::$report2 = self::fixtures()->createReport(self::$client2);
 
         // pa 1
-        self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
+        self::$pa1 = self::fixtures()->getRepo(User::class)->findOneByEmail('pa@example.org');
         self::$pa1Client1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client1', 'setCaseNumber' => '11111111']);
         self::$pa1Client1Report1 = self::fixtures()->createReport(self::$pa1Client1, ['setType' => Report::PA_PFA_HIGH_ASSETS_TYPE]);
         self::$pa1Client2 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client2', 'setCaseNumber' => '22222222']);
@@ -145,12 +148,12 @@ class ReportControllerTest extends AbstractTestController
         self::$pa1Client3Report1 = self::fixtures()->createReport(self::$pa1Client3, ['setType' => Report::PA_PFA_HIGH_ASSETS_TYPE]);
 
         // pa 2
-        self::$pa2Admin = self::fixtures()->getRepo('User')->findOneByEmail('pa_admin@example.org');
+        self::$pa2Admin = self::fixtures()->getRepo(User::class)->findOneByEmail('pa_admin@example.org');
         self::$pa2Client1 = self::fixtures()->createClient(self::$pa2Admin, ['setFirstname' => 'pa2Client1']);
         self::$pa2Client1Report1 = self::fixtures()->createReport(self::$pa2Client1);
 
         // pa 3
-        self::$pa3TeamMember = self::fixtures()->getRepo('User')->findOneByEmail('pa_team_member@example.org');
+        self::$pa3TeamMember = self::fixtures()->getRepo(User::class)->findOneByEmail('pa_team_member@example.org');
         self::$pa3Client1 = self::fixtures()->createClient(self::$pa3TeamMember, ['setFirstname' => 'pa3Client1']);
         self::$pa3Client1Report1 = self::fixtures()->createReport(self::$pa3Client1);
 

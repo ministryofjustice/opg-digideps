@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Factory;
+namespace Tests\OPG\Digideps\Backend\Unit\Factory;
 
-use App\Entity\Client;
-use App\Entity\StagingDeputyship;
-use App\Factory\StagingSelectedCandidateFactory;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\StagingDeputyship;
+use OPG\Digideps\Backend\Factory\StagingSelectedCandidateFactory;
 use PHPUnit\Framework\TestCase;
 
 final class StagingSelectedCandidateFactoryTest extends TestCase

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Tests\Behat\v2\Common;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\Common;
 
-use App\Entity\Organisation;
-use App\Tests\Behat\BehatException;
+use OPG\Digideps\Backend\Entity\Organisation;
+use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 trait IVisitAdminTrait
 {

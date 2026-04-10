@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controller\Report;
+namespace OPG\Digideps\Backend\Controller\Report;
 
-use App\Controller\RestController;
-use App\Entity\Report\BankAccount;
-use App\Entity\Report\Report;
-use App\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\Controller\RestController;
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -63,7 +63,7 @@ class AccountController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function editAccount(Request $request, int $id): BankAccount
     {
-        $account = $this->findEntityBy(BankAccount::class, $id, 'Account not found'); /* @var $account \App\Entity\Report\BankAccount */
+        $account = $this->findEntityBy(BankAccount::class, $id, 'Account not found'); /* @var $account \OPG\Digideps\Backend\Entity\Report\BankAccount */
         $report = $account->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
@@ -85,7 +85,7 @@ class AccountController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function accountDependentRecords(int $id): array
     {
-        $account = $this->findEntityBy(BankAccount::class, $id, 'Account not found'); /* @var $account \App\Entity\Report\BankAccount */
+        $account = $this->findEntityBy(BankAccount::class, $id, 'Account not found'); /* @var $account \OPG\Digideps\Backend\Entity\Report\BankAccount */
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
         $report = $account->getReport();
@@ -127,7 +127,7 @@ class AccountController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function accountDelete(int $id): array
     {
-        $account = $this->findEntityBy(BankAccount::class, $id, 'Account not found'); /* @var $account \App\Entity\Report\BankAccount */
+        $account = $this->findEntityBy(BankAccount::class, $id, 'Account not found'); /* @var $account \OPG\Digideps\Backend\Entity\Report\BankAccount */
         $report = $account->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         $this->em->remove($account);

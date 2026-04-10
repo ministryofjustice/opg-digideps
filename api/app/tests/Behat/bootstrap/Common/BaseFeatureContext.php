@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Behat\Common;
+namespace Tests\OPG\Digideps\Backend\Behat\Common;
 
 use Behat\MinkExtension\Context\MinkContext;
 use Symfony\Bundle\FrameworkBundle\Console\Application;

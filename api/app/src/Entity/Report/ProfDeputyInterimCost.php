@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Backend\Entity\Report;
 
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -35,7 +34,7 @@ class ProfDeputyInterimCost
     /**
      * @var Report
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="profDeputyInterimCosts")
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="profDeputyInterimCosts")
      *
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */

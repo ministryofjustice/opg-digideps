@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Tests\Integration\Controller;
+namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
-use App\Entity\Setting;
-use App\Tests\Integration\Fixtures;
+use OPG\Digideps\Backend\Entity\Setting;
+use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 
 class SettingControllerTest extends AbstractTestController
 {
@@ -88,7 +88,7 @@ class SettingControllerTest extends AbstractTestController
                 'enabled' => true,
             ],
         ]);
-        $setting = self::fixtures()->clear()->getRepo('Setting')->find($id);
+        $setting = self::fixtures()->clear()->getRepo(Setting::class)->find($id);
         /* @var $setting Setting */
         $this->assertEquals($id, $setting->getId());
         $this->assertEquals($settingContent, $setting->getContent());
@@ -103,7 +103,7 @@ class SettingControllerTest extends AbstractTestController
                 'enabled' => false,
             ],
         ]);
-        $setting = self::fixtures()->clear()->getRepo('Setting')->find($id);
+        $setting = self::fixtures()->clear()->getRepo(Setting::class)->find($id);
         /* @var $setting Setting */
         $this->assertEquals($id, $setting->getId());
         $this->assertEquals('snc2', $setting->getContent());

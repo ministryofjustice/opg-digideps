@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Command;
+namespace OPG\Digideps\Backend\Command;
 
-use App\Repository\ChecklistRepository;
+use OPG\Digideps\Backend\Repository\ChecklistRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,7 +23,7 @@ class ResyncResubmittableErrorChecklists extends Command
             $output->writeln('resync_resubmittable_error_checklists - success - Updated ' . count($updatedChecklists) . ' checklists back to QUEUED status');
 
             return 0;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $output->writeln('resync_resubmittable_error_checklists - failure - Failed to update checklists back to QUEUED status');
             $output->writeln($e);
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Backend\Entity\Report;
 
 interface MoneyTransactionInterface
 {

@@ -1,21 +1,21 @@
 <?php
 
-namespace App\EventListener;
+namespace OPG\Digideps\Backend\EventListener;
 
-use App\Entity\Report\Asset;
-use App\Entity\Report\Contact;
-use App\Entity\Report\Decision;
-use App\Entity\Report\Document;
-use App\Entity\Report\Expense;
-use App\Entity\Report\Gift;
-use App\Entity\Report\MoneyTransactionShortIn;
-use App\Entity\Report\MoneyTransactionShortOut;
-use App\Entity\Report\MoneyTransfer;
-use App\Entity\Report\ProfServiceFeeCurrent;
-use App\Entity\Report\Report;
-use App\Entity\Report\ReportSubmission;
-use App\Repository\ReportRepository;
-use App\Repository\ReportSubmissionRepository;
+use OPG\Digideps\Backend\Entity\Report\Asset;
+use OPG\Digideps\Backend\Entity\Report\Contact;
+use OPG\Digideps\Backend\Entity\Report\Decision;
+use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\Expense;
+use OPG\Digideps\Backend\Entity\Report\Gift;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortIn;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortOut;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransfer;
+use OPG\Digideps\Backend\Entity\Report\ProfServiceFeeCurrent;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Repository\ReportRepository;
+use OPG\Digideps\Backend\Repository\ReportSubmissionRepository;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
 /**

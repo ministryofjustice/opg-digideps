@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Entity\Report;
+namespace Tests\OPG\Digideps\Backend\Unit\Entity\Report;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use DateTime;
-use App\Entity\Report\ClientBenefitsCheck;
+use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
 use PHPUnit\Framework\TestCase;
 
 final class ClientBenefitsCheckTest extends TestCase

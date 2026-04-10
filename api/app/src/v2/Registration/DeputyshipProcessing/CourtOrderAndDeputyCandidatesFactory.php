@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\DeputyshipProcessing;
+namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing;
 
-use App\Domain\Deputyship\DeputyshipProcessingLookupCache;
-use App\Entity\StagingDeputyship;
-use App\Entity\StagingSelectedCandidate;
-use App\Factory\StagingSelectedCandidateFactory;
-use App\Repository\CourtOrderDeputyRepository;
+use OPG\Digideps\Backend\Domain\Deputyship\DeputyshipProcessingLookupCache;
+use OPG\Digideps\Backend\Entity\StagingDeputyship;
+use OPG\Digideps\Backend\Entity\StagingSelectedCandidate;
+use OPG\Digideps\Backend\Factory\StagingSelectedCandidateFactory;
+use OPG\Digideps\Backend\Repository\CourtOrderDeputyRepository;
 
 /**
  * Create candidate order and court order <-> deputy for a StagingDeputyship (which typically represents a row in the ingested

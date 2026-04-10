@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Tests\Integration\ControllerReport;
+namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
 use DateTime;
-use App\Entity\Report\MoneyTransactionShortIn;
-use App\Entity\Report\MoneyTransactionShortOut;
-use App\Entity\Report\Report;
-use App\Tests\Integration\Controller\AbstractTestController;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShort;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortIn;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortOut;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class MoneyTransactionShortControllerTest extends AbstractTestController
 {
@@ -24,7 +26,7 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
     {
         parent::setUp();
 
-        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
 
         $client1 = self::fixtures()->createClient(self::$deputy1);
         self::fixtures()->flush();
@@ -113,7 +115,7 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
 
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_MONEY_IN_SHORT));
 
-        $t = self::fixtures()->getRepo('Report\MoneyTransactionShortIn')->find($data); /* @var $t MoneyTransactionShortIn */
+        $t = self::fixtures()->getRepo(MoneyTransactionShortIn::class)->find($data); /* @var $t MoneyTransactionShortIn */
         $this->assertEquals(123.45, $t->getAmount());
         $this->assertEquals('d', $t->getDescription());
         $this->assertEquals('2014-04-05', $t->getDate()->format('Y-m-d'));
@@ -140,7 +142,7 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $t = self::fixtures()->getRepo('Report\MoneyTransactionShort')->find($data); /* @var $t MoneyTransactionShort */
+        $t = self::fixtures()->getRepo(MoneyTransactionShort::class)->find($data); /* @var $t MoneyTransactionShort */
         $this->assertEquals(124.46, $t->getAmount());
         $this->assertEquals('d-changed', $t->getDescription());
         $this->assertEquals('2014-04-06', $t->getDate()->format('Y-m-d'));
@@ -165,7 +167,7 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
         self::fixtures()->clear();
         self::$report1 = self::fixtures()->getReportById(self::$report1->getId());
 
-        $t = self::fixtures()->getRepo('Report\MoneyTransactionShort')->find(self::$transaction3->getId());
+        $t = self::fixtures()->getRepo(MoneyTransactionShort::class)->find(self::$transaction3->getId());
         $this->assertTrue(null === $t);
         $this->assertCount(0, self::$report1->getMoneyTransactionsShortOut());
         $this->assertEquals('no', self::$report1->getMoneyTransactionsShortOutExist());

@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Tests\Integration\Service\Stats\Query;
+namespace Tests\OPG\Digideps\Backend\Integration\Stats\Query;
 
-use App\Tests\Integration\ApiIntegrationTestCase;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use DateTime;
-use App\Entity\User;
-use App\Service\Stats\Query\RegisteredDeputiesQuery;
-use App\Service\Stats\StatsQueryParameters;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Service\Stats\Query\RegisteredDeputiesQuery;
+use OPG\Digideps\Backend\Service\Stats\StatsQueryParameters;
 
 class RegisteredDeputiesQueryIntegrationTest extends ApiIntegrationTestCase
 {

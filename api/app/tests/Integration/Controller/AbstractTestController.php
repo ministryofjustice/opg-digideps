@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Tests\Integration\Controller;
+namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
 use ReflectionObject;
 use Exception;
-use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
-use App\Service\BruteForce\AttemptsInTimeChecker;
-use App\Service\JWT\JWTService;
-use App\Tests\Integration\Fixtures;
+use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
+use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
+use OPG\Digideps\Backend\Service\JWT\JWTService;
+use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 use Doctrine\ORM\EntityManager;
 use Osteel\OpenApi\Testing\ValidatorBuilder;
 use Osteel\OpenApi\Testing\ValidatorInterface;

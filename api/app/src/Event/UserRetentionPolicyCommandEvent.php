@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Event;
+namespace OPG\Digideps\Backend\Event;
 
-use App\Entity\User;
+use OPG\Digideps\Backend\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class UserRetentionPolicyCommandEvent extends Event

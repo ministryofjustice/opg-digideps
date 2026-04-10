@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Audit;
+namespace OPG\Digideps\Backend\Service\Audit;
 
 use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\AbstractProcessingHandler;

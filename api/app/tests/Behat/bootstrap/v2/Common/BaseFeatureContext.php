@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\Common;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\Common;
 
 use Behat\Hook\BeforeScenario;
 use Exception;
 use DateTime;
-use App\Entity\Client;
-use App\Service\File\Storage\S3Storage;
-use App\Service\ParameterStoreService;
-use App\TestHelpers\ReportTestHelper;
-use App\Tests\Behat\v2\Analytics\AnalyticsTrait;
-use App\Tests\Behat\v2\Helpers\FixtureHelper;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Service\File\Storage\S3Storage;
+use OPG\Digideps\Backend\Service\ParameterStoreService;
+use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
+use Tests\OPG\Digideps\Backend\Behat\v2\Analytics\AnalyticsTrait;
+use Tests\OPG\Digideps\Backend\Behat\v2\Helpers\FixtureHelper;
 use Aws\S3\S3Client;
 use Behat\Behat\Hook\Scope\BeforeScenarioScope;
 use Behat\Mink\Driver\BrowserKitDriver;

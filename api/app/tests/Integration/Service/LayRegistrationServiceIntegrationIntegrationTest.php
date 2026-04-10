@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Service;
+namespace Tests\OPG\Digideps\Backend\Integration\Service;
 
-use App\Entity\Client;
-use App\Entity\Report\Report;
-use App\Repository\ClientRepository;
-use App\Service\LayRegistrationService;
-use App\Tests\Integration\ApiIntegrationTestCase;
-use App\Tests\Integration\Fixtures;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Repository\ClientRepository;
+use OPG\Digideps\Backend\Service\LayRegistrationService;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 
 class LayRegistrationServiceIntegrationIntegrationTest extends ApiIntegrationTestCase
 {

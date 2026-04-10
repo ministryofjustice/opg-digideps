@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\File\Storage;
+namespace OPG\Digideps\Backend\Service\File\Storage;
 
 use Aws\Result;
 use Aws\ResultInterface;

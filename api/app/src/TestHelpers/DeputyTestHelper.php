@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\TestHelpers;
+namespace OPG\Digideps\Backend\TestHelpers;
 
-use App\Domain\Deputy\DeputyType;
-use App\Entity\Deputy;
-use App\Entity\User;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\User;
 use Faker\Factory;
 
 class DeputyTestHelper

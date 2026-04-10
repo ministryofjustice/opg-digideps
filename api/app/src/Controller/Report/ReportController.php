@@ -1,25 +1,25 @@
 <?php
 
-namespace App\Controller\Report;
+namespace OPG\Digideps\Backend\Controller\Report;
 
-use App\Controller\RestController;
-use App\Entity\Client;
-use App\Entity\PreRegistration;
-use App\Entity\Report\Checklist;
-use App\Entity\Report\ChecklistInformation;
-use App\Entity\Report\Debt;
-use App\Entity\Report\Fee;
-use App\Entity\Report\MoneyShortCategory;
-use App\Entity\Report\ProfDeputyOtherCost;
-use App\Entity\Report\Report;
-use App\Entity\Report\ReviewChecklist;
-use App\Entity\User;
-use App\Exception\UnauthorisedException;
-use App\Repository\PreRegistrationRepository;
-use App\Repository\ReportRepository;
-use App\Service\Auth\AuthService;
-use App\Service\Formatter\RestFormatter;
-use App\Service\ReportService;
+use OPG\Digideps\Backend\Controller\RestController;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\Report\Checklist;
+use OPG\Digideps\Backend\Entity\Report\ChecklistInformation;
+use OPG\Digideps\Backend\Entity\Report\Debt;
+use OPG\Digideps\Backend\Entity\Report\Fee;
+use OPG\Digideps\Backend\Entity\Report\MoneyShortCategory;
+use OPG\Digideps\Backend\Entity\Report\ProfDeputyOtherCost;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\ReviewChecklist;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Exception\UnauthorisedException;
+use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
+use OPG\Digideps\Backend\Repository\ReportRepository;
+use OPG\Digideps\Backend\Service\Auth\AuthService;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\Service\ReportService;
 use DateInterval;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;

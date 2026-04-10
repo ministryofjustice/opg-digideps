@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\DeputyManagement;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\DeputyManagement;
 
-use App\Entity\User;
+use OPG\Digideps\Backend\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
 
 trait DeputyManagementTrait

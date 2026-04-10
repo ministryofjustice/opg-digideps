@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace OPG\Digideps\Backend\Service;
 
 class DataNormaliser
 {

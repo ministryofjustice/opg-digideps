@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Tests\Integration\ControllerReport;
+namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
-use App\Entity\Report\MoneyTransaction;
-use App\Entity\Report\Report;
-use App\Tests\Integration\Controller\AbstractTestController;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransaction;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class MoneyTransactionControllerTest extends AbstractTestController
 {
@@ -21,7 +22,7 @@ class MoneyTransactionControllerTest extends AbstractTestController
     {
         parent::setUp();
 
-        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
 
         $client1 = self::fixtures()->createClient(self::$deputy1);
         self::fixtures()->flush();
@@ -111,7 +112,7 @@ class MoneyTransactionControllerTest extends AbstractTestController
 
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_MONEY_IN));
 
-        $t = self::fixtures()->getRepo('Report\MoneyTransaction')->find($data); /* @var $t MoneyTransaction */
+        $t = self::fixtures()->getRepo(MoneyTransaction::class)->find($data); /* @var $t MoneyTransaction */
         $this->assertEquals(123.45, $t->getAmount());
         $this->assertEquals('d', $t->getDescription());
         $this->assertEquals('dividends', $t->getCategory());
@@ -139,7 +140,7 @@ class MoneyTransactionControllerTest extends AbstractTestController
 
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_MONEY_IN));
 
-        $t = self::fixtures()->getRepo('Report\MoneyTransaction')->find($data); /* @var $t MoneyTransaction */
+        $t = self::fixtures()->getRepo(MoneyTransaction::class)->find($data); /* @var $t MoneyTransaction */
         $this->assertEquals(124.46, $t->getAmount());
         $this->assertEquals('d-changed', $t->getDescription());
         $this->assertEquals('dividends', $t->getCategory());

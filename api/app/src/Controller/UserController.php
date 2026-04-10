@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Controller;
+namespace OPG\Digideps\Backend\Controller;
 
-use App\Entity\Client;
-use App\Entity\User;
-use App\Repository\ClientRepository;
-use App\Repository\UserRepository;
-use App\Security\UserVoter;
-use App\Service\Auth\AuthService;
-use App\Service\Formatter\RestFormatter;
-use App\Service\UserService;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\ClientRepository;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\Security\UserVoter;
+use OPG\Digideps\Backend\Service\Auth\AuthService;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\Service\UserService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\OptimisticLockException;

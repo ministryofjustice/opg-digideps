@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\Common;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\Common;
 
-use App\Entity\Client;
-use App\Entity\Organisation;
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\TestHelpers\UserTestHelper;
-use App\Tests\Behat\BehatException;
-use App\Tests\Behat\v2\Helpers\FixtureHelper;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
+use Tests\OPG\Digideps\Backend\Behat\BehatException;
+use Tests\OPG\Digideps\Backend\Behat\v2\Helpers\FixtureHelper;
 use Behat\Gherkin\Node\TableNode;
 
 trait FixturesTrait

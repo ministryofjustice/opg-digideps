@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
+namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\DeputyshipProcessing;
 
 use ArrayIterator;
-use App\Entity\StagingDeputyship;
-use App\Entity\StagingSelectedCandidate;
-use App\Repository\StagingDeputyshipRepository;
-use App\Repository\StagingSelectedCandidateRepository;
-use App\v2\Registration\DeputyshipProcessing\CourtOrderAndDeputyCandidatesFactory;
-use App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
-use App\v2\Registration\Enum\DeputyshipCandidateAction;
+use OPG\Digideps\Backend\Entity\StagingDeputyship;
+use OPG\Digideps\Backend\Entity\StagingSelectedCandidate;
+use OPG\Digideps\Backend\Repository\StagingDeputyshipRepository;
+use OPG\Digideps\Backend\Repository\StagingSelectedCandidateRepository;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrderAndDeputyCandidatesFactory;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
@@ -79,10 +79,11 @@ final class DeputyshipsCandidatesSelectorTest extends TestCase
         $mockQuery->expects($this->once())
             ->method('execute');
 
+        $qualified = StagingSelectedCandidate::class;
         $this->mockEntityManager
             ->expects($this->once())
             ->method('createQuery')
-            ->with('DELETE FROM App\Entity\StagingSelectedCandidate sc')
+            ->with("DELETE FROM {$qualified} sc")
             ->willReturn($mockQuery);
 
         $this->mockEntityManager
