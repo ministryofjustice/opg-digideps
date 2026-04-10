@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service;
+namespace OPG\Digideps\Frontend\Service;
 
-use App\Entity\Report\ProfServiceFee;
+use OPG\Digideps\Frontend\Entity\Report\ProfServiceFee;
 
 class ReportFeeService
 {

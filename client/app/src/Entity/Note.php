@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Entity;
+namespace OPG\Digideps\Frontend\Entity;
 
-use App\Entity\Traits\CreationAudit;
-use App\Entity\Traits\ModifyAudit;
+use OPG\Digideps\Frontend\Entity\Traits\CreationAudit;
+use OPG\Digideps\Frontend\Entity\Traits\ModifyAudit;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -71,7 +71,7 @@ class Note
     /**
      * @var Client
      *
-     * @JMS\Type("App\Entity\Client")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\Client")
      */
     private $client;
 

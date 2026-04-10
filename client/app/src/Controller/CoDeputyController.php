@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace OPG\Digideps\Frontend\Controller;
 
-use App\Entity\Client;
-use App\Entity\User;
-use App\Form\CoDeputyInviteType;
-use App\Form\CoDeputyVerificationType;
-use App\Service\Client\Internal\DeputyApi;
-use App\Service\Client\Internal\UserApi;
-use App\Service\Client\RestClient;
-use App\Service\Redirector;
+use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Form\CoDeputyInviteType;
+use OPG\Digideps\Frontend\Form\CoDeputyVerificationType;
+use OPG\Digideps\Frontend\Service\Client\Internal\DeputyApi;
+use OPG\Digideps\Frontend\Service\Client\Internal\UserApi;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\Redirector;
 use OPG\Digideps\Common\Registration\SelfRegisterData;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
@@ -129,7 +129,7 @@ class CoDeputyController extends AbstractController
                     $this->restClient->put('user/' . $user->getId(), $user);
 
                     /** @var User $user */
-                    $user = $this->restClient->apiCall('put', 'selfregister/updatecodeputy/' . $user->getId(), $coDeputyVerificationData, 'User', [], false);
+                    $user = $this->restClient->apiCall('put', 'selfregister/updatecodeputy/' . $user->getId(), $coDeputyVerificationData, User::class, [], false);
 
                     $this->deputyApi->createDeputyFromUser($user);
 

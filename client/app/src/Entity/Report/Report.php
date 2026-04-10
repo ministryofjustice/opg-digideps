@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Frontend\Entity\Report;
 
-use App\Entity\Client;
-use App\Entity\Report\Traits as ReportTraits;
-use App\Entity\ReportInterface;
-use App\Entity\User;
-use App\Validator\Constraints as AppAssert;
-use App\Validator\Constraints\StartEndDateComparableInterface;
+use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\Report\Traits as ReportTraits;
+use OPG\Digideps\Frontend\Entity\ReportInterface;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Validator\Constraints as AppAssert;
+use OPG\Digideps\Frontend\Validator\Constraints\StartEndDateComparableInterface;
 use DateTime;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -166,21 +166,21 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     private $unSubmitDate;
 
     /**
-     * @JMS\Type("App\Entity\User")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
      *
      * @var User
      */
     private $submittedBy;
 
     /**
-     * @JMS\Type("array<App\Entity\Report\ReportSubmission>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\ReportSubmission>")
      *
      * @var ReportSubmission[]
      */
     private $reportSubmissions;
 
     /**
-     * @JMS\Type("App\Entity\Client")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\Client")
      *
      * @var Client
      */
@@ -194,49 +194,49 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     private $period;
 
     /**
-     * @JMS\Type("array<App\Entity\Report\Contact>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Contact>")
      *
      * @var Contact[]
      */
     private $contacts = [];
 
     /**
-     * @JMS\Type("array<App\Entity\Report\Decision>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Decision>")
      *
      * @var Decision[]
      */
     private $decisions = [];
 
     /**
-     * @JMS\Type("App\Entity\Report\VisitsCare")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\VisitsCare")
      *
      * @var VisitsCare|null
      */
     private $visitsCare;
 
     /**
-     * @JMS\Type("App\Entity\Report\Lifestyle")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\Lifestyle")
      *
      * @var Lifestyle|null
      */
     private $lifestyle;
 
     /**
-     * @JMS\Type("App\Entity\Report\Action")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\Action")
      *
      * @var Action|null
      */
     private $action;
 
     /**
-     * @JMS\Type("App\Entity\Report\MentalCapacity")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\MentalCapacity")
      *
      * @var MentalCapacity
      */
     private $mentalCapacity;
 
     /**
-     * @JMS\Type("App\Entity\Report\ClientBenefitsCheck")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\ClientBenefitsCheck")
      *
      * @Assert\Valid(groups={"client-benefits-check"})
      *
@@ -336,12 +336,12 @@ class Report implements ReportInterface, StartEndDateComparableInterface
      *
      * @JMS\Groups({"report-documents"})
      *
-     * @JMS\Type("array<App\Entity\Report\Document>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Document>")
      */
     private $documents = [];
 
     /**
-     * @JMS\Type("array<App\Entity\Report\Document>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Document>")
      *
      * @JMS\Groups({"report-documents"})
      *
@@ -350,7 +350,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     private $submittedDocuments = [];
 
     /**
-     * @JMS\Type("array<App\Entity\Report\Document>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Document>")
      *
      * @JMS\Groups({"report-documents"})
      *
@@ -359,7 +359,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     private $unsubmittedDocuments = [];
 
     /**
-     * @JMS\Type("App\Entity\Report\Status")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\Status")
      *
      * @var Status
      */
@@ -384,14 +384,14 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     /**
      * @var Checklist
      *
-     * @JMS\Type("App\Entity\Report\Checklist")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\Checklist")
      **/
     private $checklist;
 
     /**
      * @var ReviewChecklist
      *
-     * @JMS\Type("App\Entity\Report\ReviewChecklist")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\ReviewChecklist")
      **/
     private $reviewChecklist;
 
@@ -1197,7 +1197,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     }
 
     /**
-     * Generates the translation suffic to use depending on report type,.
+     * Generates the translation suffix to use depending on report type.
      *
      * 10x followed by "-104" for HW, "-4" for hybrid report and nothing for PF report
      *

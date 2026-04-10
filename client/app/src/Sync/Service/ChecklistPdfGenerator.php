@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Sync\Service;
+namespace OPG\Digideps\Frontend\Sync\Service;
 
-use App\Entity\Report\Report;
-use App\Service\HtmlToPdfGenerator;
-use App\Sync\Exception\PdfGenerationFailedException;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Service\HtmlToPdfGenerator;
+use OPG\Digideps\Frontend\Sync\Exception\PdfGenerationFailedException;
 use Twig\Environment;
 
 class ChecklistPdfGenerator

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Service;
+namespace OPG\Digideps\Frontend\Service;
 
-use App\Entity\User;
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -64,7 +64,7 @@ class DeputyProvider implements UserProviderInterface
     /**
      * @codeCoverageIgnore
      *
-     * @return \App\Entity\User
+     * @return \OPG\Digideps\Frontend\Entity\User
      *
      *@throws UnsupportedUserException
      */

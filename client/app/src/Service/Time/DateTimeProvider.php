@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Time;
+namespace OPG\Digideps\Frontend\Service\Time;
 
 use DateTime;
 

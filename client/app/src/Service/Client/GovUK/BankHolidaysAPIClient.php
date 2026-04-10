@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Client\GovUK;
+namespace OPG\Digideps\Frontend\Service\Client\GovUK;
 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;

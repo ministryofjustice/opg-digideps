@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Admin;
+namespace OPG\Digideps\Frontend\Form\Admin;
 
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Form\AbstractType;

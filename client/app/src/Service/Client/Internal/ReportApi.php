@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Client\Internal;
+namespace OPG\Digideps\Frontend\Service\Client\Internal;
 
-use App\Entity\Client;
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\Event\ReportSubmittedEvent;
-use App\Event\ReportUnsubmittedEvent;
-use App\EventDispatcher\ObservableEventDispatcher;
-use App\Exception\ReportSubmittedException;
-use App\Exception\RestClientException;
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Event\ReportSubmittedEvent;
+use OPG\Digideps\Frontend\Event\ReportUnsubmittedEvent;
+use OPG\Digideps\Frontend\EventDispatcher\ObservableEventDispatcher;
+use OPG\Digideps\Frontend\Exception\ReportSubmittedException;
+use OPG\Digideps\Frontend\Exception\RestClientException;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ReportApi
@@ -141,7 +141,7 @@ class ReportApi
             'get',
             self::REPORT_GET_ALL_WITH_QUEUED_CHECKLISTS_ENDPOINT,
             ['row_limit' => $rowLimit],
-            'Report\Report[]',
+            Report::class . '[]',
             [],
             false
         );

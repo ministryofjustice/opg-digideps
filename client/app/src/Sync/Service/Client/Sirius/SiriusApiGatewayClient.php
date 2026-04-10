@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Sync\Service\Client\Sirius;
+namespace OPG\Digideps\Frontend\Sync\Service\Client\Sirius;
 
-use App\Service\AWS\RequestSigner;
-use App\Sync\Model\Sirius\SiriusDocumentUpload;
+use OPG\Digideps\Frontend\Service\AWS\RequestSigner;
+use OPG\Digideps\Frontend\Sync\Model\Sirius\SiriusDocumentUpload;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;

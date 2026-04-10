@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace OPG\Digideps\Frontend\Entity;
 
 use DateTime;
 
@@ -29,7 +29,7 @@ trait SynchronisableTrait
 
     /**
      * @var User|null
-     * @JMS\Type("App\Entity\User")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
      * @JMS\Groups({"synchronisation"})
      */
     protected $synchronisedBy;

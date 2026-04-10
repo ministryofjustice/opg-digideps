@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Form\Report;
+namespace OPG\Digideps\Frontend\Form\Report;
 
-use App\Form\AddAnotherThingType;
+use OPG\Digideps\Frontend\Entity\Report\BankAccount;
+use OPG\Digideps\Frontend\Entity\Report\MoneyTransfer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -15,7 +16,7 @@ class MoneyTransferType extends AbstractType
     {
         $banks = [];
         foreach ($options['banks'] as $bank) {
-            /* $var $bank \App\Entity\Report\BankAccount */
+            /** @var BankAccount $bank */
             $banks[$bank->getNameOneLine()] = $bank->getId();
         }
 
@@ -59,7 +60,7 @@ class MoneyTransferType extends AbstractType
             'translation_domain' => 'report-money-transfer',
             'validation_groups' => function (FormInterface $form) {
                 $data = $form->getData();
-                /* @var $data \App\Entity\Report\MoneyTransfer */
+                /* @var $data MoneyTransfer */
 
                 $validationGroups = [];
 

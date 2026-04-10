@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Mapper\ReportSubmission;
+namespace OPG\Digideps\Frontend\Mapper\ReportSubmission;
 
-use App\Mapper\DateRangeQuery;
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Mapper\DateRangeQuery;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 
 class ReportSubmissionSummaryMapper
 {

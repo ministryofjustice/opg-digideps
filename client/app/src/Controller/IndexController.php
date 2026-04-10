@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controller;
+namespace OPG\Digideps\Frontend\Controller;
 
-use App\Form;
-use App\Service\Client\RestClient;
-use App\Service\Redirector;
-use App\Service\StringUtils;
+use OPG\Digideps\Frontend\Form;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\Redirector;
+use OPG\Digideps\Frontend\Service\StringUtils;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Form\FormError;

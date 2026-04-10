@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Audit;
+namespace OPG\Digideps\Frontend\Service\Audit;
 
-use App\Entity\Client;
-use App\Entity\Organisation;
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\Model\Email;
-use App\Service\Mailer\MailFactory;
-use App\Service\Time\DateTimeProvider;
+use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\Organisation;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Model\Email;
+use OPG\Digideps\Frontend\Service\Mailer\MailFactory;
+use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 
 final class AuditEvents
 {

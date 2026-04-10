@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service;
+namespace OPG\Digideps\Frontend\Service;
 
-use App\Entity\ReportInterface;
+use OPG\Digideps\Frontend\Entity\ReportInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 class ReportSectionsLinkService

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Validator\Constraints\ClientBenefitsCheck;
+namespace OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck;
 
-use App\Entity\ClientBenefitsCheckInterface;
-use App\Entity\Report\ClientBenefitsCheck;
-use App\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheck as ClientBenefitsCheckConstraint;
+use OPG\Digideps\Frontend\Entity\ClientBenefitsCheckInterface;
+use OPG\Digideps\Frontend\Entity\Report\ClientBenefitsCheck;
+use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheck as ClientBenefitsCheckConstraint;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;

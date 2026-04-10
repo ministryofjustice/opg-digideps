@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Admin;
+namespace OPG\Digideps\Frontend\Controller\Admin;
 
-use App\Controller\AbstractController;
-use App\Entity\Client;
-use App\Entity\Organisation;
-use App\Entity\User;
-use App\Event\OrgCreatedEvent;
-use App\EventDispatcher\ObservableEventDispatcher;
-use App\Exception\RestClientException;
-use App\Form\Admin\OrganisationAddUserType;
-use App\Form\Admin\OrganisationEditType;
-use App\Form\Admin\OrganisationType;
-use App\Form\ConfirmDeleteType;
-use App\Service\Audit\AuditEvents;
-use App\Service\Client\Internal\OrganisationApi;
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\Organisation;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Event\OrgCreatedEvent;
+use OPG\Digideps\Frontend\EventDispatcher\ObservableEventDispatcher;
+use OPG\Digideps\Frontend\Exception\RestClientException;
+use OPG\Digideps\Frontend\Form\Admin\OrganisationAddUserType;
+use OPG\Digideps\Frontend\Form\Admin\OrganisationEditType;
+use OPG\Digideps\Frontend\Form\Admin\OrganisationType;
+use OPG\Digideps\Frontend\Form\ConfirmDeleteType;
+use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
+use OPG\Digideps\Frontend\Service\Client\Internal\OrganisationApi;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;
@@ -80,9 +80,9 @@ class OrganisationController extends AbstractController
         $result = $this->restClient->get('/v2/organisation/' . $id . '/' . $tab . '?' . http_build_query($currentFilters), 'array');
 
         if ('clients' == $tab) {
-            $tabData = $this->restClient->arrayToEntities(Client::class . '[]', $result['records']);
+            $tabData = $this->restClient->arrayToEntities(Client::class, $result['records']);
         } else {
-            $tabData = $this->restClient->arrayToEntities(User::class . '[]', $result['records']);
+            $tabData = $this->restClient->arrayToEntities(User::class, $result['records']);
         }
 
         return [

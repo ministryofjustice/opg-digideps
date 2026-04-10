@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Frontend\Entity\Report;
 
-use App\Entity\Report\Traits\HasReportTrait;
+use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -16,7 +16,7 @@ class Fee
      */
     private $feeTypeId;
     /**
-     * @var decimal
+     * @var string decimal
      *
      * @JMS\Type("string")
      * @JMS\Groups({"fee"})
@@ -81,7 +81,7 @@ class Fee
     }
 
     /**
-     * @return decimal
+     * @return string decimal
      */
     public function getAmount()
     {
@@ -89,7 +89,7 @@ class Fee
     }
 
     /**
-     * @param decimal $amount
+     * @param string $amount decimal
      */
     public function setAmount($amount)
     {

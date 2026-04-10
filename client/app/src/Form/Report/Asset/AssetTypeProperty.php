@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\Report\Asset;
+namespace OPG\Digideps\Frontend\Form\Report\Asset;
 
-use App\Form\AddAnotherThingType;
+use OPG\Digideps\Frontend\Form\AddAnotherThingType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -95,7 +95,7 @@ class AssetTypeProperty extends AbstractType
     protected function getValidationGroups(): callable
     {
         return function (FormInterface $form) {
-            /** @var \App\Entity\Report\AssetProperty $asset */
+            /** @var \OPG\Digideps\Frontend\Entity\Report\AssetProperty $asset */
             $asset = $form->getData();
             $val = ['property-address', 'property-occupants','property-owned','property-mortgage','property-value','property-subject-equity-release','property-has-charges'];
 

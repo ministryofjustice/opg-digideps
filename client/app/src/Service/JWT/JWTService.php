@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\JWT;
+namespace OPG\Digideps\Frontend\Service\JWT;
 
 use Jose\Component\Core\JWKSet;
 use Jose\Component\Core\Util\RSAKey;

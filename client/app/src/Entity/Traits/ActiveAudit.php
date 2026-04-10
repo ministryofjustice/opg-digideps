@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Traits;
+namespace OPG\Digideps\Frontend\Entity\Traits;
 
 /**
  * ActiveAudit Trait, usable with PHP >= 5.4

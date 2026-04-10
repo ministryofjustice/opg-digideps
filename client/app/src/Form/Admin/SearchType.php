@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\Admin;
+namespace OPG\Digideps\Frontend\Form\Admin;
 
-use App\Entity\User;
+use OPG\Digideps\Frontend\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;

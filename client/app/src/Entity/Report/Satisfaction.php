@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Frontend\Entity\Report;
 
-use App\Entity\UserResearch\UserResearchResponse;
+use OPG\Digideps\Frontend\Entity\UserResearch\UserResearchResponse;
 use JMS\Serializer\Annotation as JMS;
 
 class Satisfaction
@@ -27,10 +27,10 @@ class Satisfaction
     #[JMS\Type('\DateTime')]
     private \DateTime $created;
 
-    #[JMS\Type('App\Entity\UserResearch\UserResearchResponse')]
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\UserResearch\UserResearchResponse')]
     private UserResearchResponse $userResearchResponse;
 
-    #[JMS\Type('App\Entity\Report\Report')]
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\Report')]
     private ?Report $report = null;
 
     public function getId(): int
