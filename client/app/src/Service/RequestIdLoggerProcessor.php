@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace OPG\Digideps\Frontend\Service;
 
 use Monolog\LogRecord;
 use Psr\Container\ContainerInterface;
@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * Usage in services.yml
  * monolog.processor.add_request_id:
- *        class: App\Service\RequestIdLoggerProcessor
+ *        class: OPG\Digideps\Frontend\Service\RequestIdLoggerProcessor
  *        arguments:  [ @service_container ]
  *        tags:
  *            - { name: monolog.processor, method: processRecord }

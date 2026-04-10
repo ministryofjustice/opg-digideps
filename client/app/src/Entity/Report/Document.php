@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Frontend\Entity\Report;
 
-use App\Entity\DocumentInterface;
-use App\Entity\Report\Traits\HasReportTrait;
-use App\Entity\SynchronisableInterface;
-use App\Entity\SynchronisableTrait;
-use App\Entity\Traits\CreationAudit;
-use App\Service\File\FileNameManipulation;
+use OPG\Digideps\Frontend\Entity\DocumentInterface;
+use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
+use OPG\Digideps\Frontend\Entity\SynchronisableInterface;
+use OPG\Digideps\Frontend\Entity\SynchronisableTrait;
+use OPG\Digideps\Frontend\Entity\Traits\CreationAudit;
+use OPG\Digideps\Frontend\Service\File\FileNameManipulation;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -106,7 +106,7 @@ class Document implements DocumentInterface, SynchronisableInterface
     /**
      * @var ReportSubmission
      *
-     * @JMS\Type("App\Entity\Report\ReportSubmission")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\ReportSubmission")
      * @JMS\Groups({"document-report-subnmission"})
      */
     private $reportSubmission;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Client\Sirius;
+namespace OPG\Digideps\Frontend\Service\Client\Sirius;
 
-use App\Service\AWS\RequestSigner;
+use OPG\Digideps\Frontend\Service\AWS\RequestSigner;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Request;

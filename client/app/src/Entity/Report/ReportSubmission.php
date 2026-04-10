@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Frontend\Entity\Report;
 
-use App\Entity\Traits\CreationAudit;
-use App\Entity\User;
+use OPG\Digideps\Frontend\Entity\Traits\CreationAudit;
+use OPG\Digideps\Frontend\Entity\User;
 use JMS\Serializer\Annotation as JMS;
 use RuntimeException;
 
@@ -14,16 +14,16 @@ class ReportSubmission
     #[JMS\Type('integer')]
     private int $id;
 
-    #[JMS\Type('App\Entity\Report\Report')]
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\Report')]
     private Report $report;
 
     /**
      * @var Document[]
      */
-    #[JMS\Type('array<App\Entity\Report\Document>')]
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Document>')]
     private array $documents = [];
 
-    #[JMS\Type('App\Entity\User')]
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
     private ?User $archivedBy = null;
 
     #[JMS\Type('boolean')]

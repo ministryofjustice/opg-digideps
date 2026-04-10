@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Validator\Constraints;
+namespace OPG\Digideps\Frontend\Validator\Constraints;
 
 interface StartEndDateComparableInterface
 {

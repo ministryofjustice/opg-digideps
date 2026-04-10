@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form;
+namespace OPG\Digideps\Frontend\Form;
 
-use App\Validator\Constraints\DUserPassword;
+use OPG\Digideps\Frontend\Validator\Constraints\DUserPassword;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;

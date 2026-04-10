@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service\File\Scanner;
+namespace OPG\Digideps\Frontend\Service\File\Scanner;
 
-use App\Service\File\Scanner\Exception\VirusFoundException;
+use OPG\Digideps\Frontend\Service\File\Scanner\Exception\VirusFoundException;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Response;

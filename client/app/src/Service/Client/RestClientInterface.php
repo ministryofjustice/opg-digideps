@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Client;
+namespace OPG\Digideps\Frontend\Service\Client;
 
 interface RestClientInterface
 {

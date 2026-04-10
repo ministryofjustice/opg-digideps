@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\File;
+namespace OPG\Digideps\Frontend\Service\File;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 

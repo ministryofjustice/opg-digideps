@@ -1,9 +1,9 @@
 services:
   Alphagov\Notifications\Client:
-    alias: App\Service\Mailer\NotifyClientMock
+    alias: OPG\Digideps\Frontend\Service\Mailer\NotifyClientMock
 
-  App\Service\Mailer\NotifyClientMock:
-    class: App\Service\Mailer\NotifyClientMock
+  OPG\Digideps\Frontend\Service\Mailer\NotifyClientMock:
+    class: OPG\Digideps\Frontend\Service\Mailer\NotifyClientMock
     arguments:
       $config:
         httpClient: '@Http\Adapter\Guzzle7\Client'

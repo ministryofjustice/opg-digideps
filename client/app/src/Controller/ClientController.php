@@ -1,22 +1,22 @@
 <?php
 
-namespace App\Controller;
+namespace OPG\Digideps\Frontend\Controller;
 
-use App\Entity\Client;
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\Event\RegistrationFailedEvent;
-use App\Event\RegistrationSucceededEvent;
-use App\EventDispatcher\ObservableEventDispatcher;
-use App\Exception\RestClientException;
-use App\Form\ClientType;
-use App\Service\Audit\AuditEvents;
-use App\Service\Client\Internal\ClientApi;
-use App\Service\Client\Internal\DeputyApi;
-use App\Service\Client\Internal\PreRegistrationApi;
-use App\Service\Client\Internal\UserApi;
-use App\Service\Client\RestClient;
-use App\Service\Redirector;
+use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Event\RegistrationFailedEvent;
+use OPG\Digideps\Frontend\Event\RegistrationSucceededEvent;
+use OPG\Digideps\Frontend\EventDispatcher\ObservableEventDispatcher;
+use OPG\Digideps\Frontend\Exception\RestClientException;
+use OPG\Digideps\Frontend\Form\ClientType;
+use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
+use OPG\Digideps\Frontend\Service\Client\Internal\ClientApi;
+use OPG\Digideps\Frontend\Service\Client\Internal\DeputyApi;
+use OPG\Digideps\Frontend\Service\Client\Internal\PreRegistrationApi;
+use OPG\Digideps\Frontend\Service\Client\Internal\UserApi;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\Redirector;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;

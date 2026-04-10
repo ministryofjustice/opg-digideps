@@ -2,27 +2,27 @@ services:
   # Voter on User, used by PA area
   # http://symfony.com/doc/2.8/security/voters.html
   app.user_voter:
-    class: App\Security\UserVoter
+    class: OPG\Digideps\Frontend\Security\UserVoter
     tags:
       - { name: security.voter }
     # small performance boost
     public: false
   app.note_voter:
-    class: App\Security\NoteVoter
+    class: OPG\Digideps\Frontend\Security\NoteVoter
     arguments: ["@security.access.decision_manager"]
     tags:
       - { name: security.voter }
     # small performance boost
     public: false
   app.client_contact_voter:
-    class: App\Security\ClientContactVoter
+    class: OPG\Digideps\Frontend\Security\ClientContactVoter
     arguments: ["@security.access.decision_manager"]
     tags:
       - { name: security.voter }
     # small performance boost
     public: false
   app.document_voter:
-    class: App\Security\DocumentVoter
+    class: OPG\Digideps\Frontend\Security\DocumentVoter
     arguments: ["@security.access.decision_manager"]
     tags:
       - { name: security.voter }
@@ -49,9 +49,9 @@ security:
 
   providers:
     deputy:
-      id: App\Service\DeputyProvider
+      id: OPG\Digideps\Frontend\Service\DeputyProvider
     client_user_provider:
-      id: App\Security\UserProvider
+      id: OPG\Digideps\Frontend\Security\UserProvider
 
   firewalls:
     dev:
@@ -82,8 +82,8 @@ security:
       lazy: true
       provider: client_user_provider
       custom_authenticators:
-        - App\Security\LoginFormAuthenticator
-        - App\Security\SessionAuthenticator
+        - OPG\Digideps\Frontend\Security\LoginFormAuthenticator
+        - OPG\Digideps\Frontend\Security\SessionAuthenticator
       logout:
         path: app_logout
         # needed to save custom login params

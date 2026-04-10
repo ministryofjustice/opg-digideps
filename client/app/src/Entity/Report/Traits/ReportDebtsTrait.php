@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use App\Entity\Report\Debt;
-use App\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\Debt;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 trait ReportDebtsTrait
 {
     /**
-     * @JMS\Type("array<App\Entity\Report\Debt>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Debt>")
      * @JMS\Groups({"debt"})
      *
      * @var Debt[]

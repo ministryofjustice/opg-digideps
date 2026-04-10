@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Client\Internal;
+namespace OPG\Digideps\Frontend\Service\Client\Internal;
 
-use App\Entity\User;
-use App\Service\Client\RestClientInterface;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Service\Client\RestClientInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
