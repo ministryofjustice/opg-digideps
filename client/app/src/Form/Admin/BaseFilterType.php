@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Admin;
+namespace OPG\Digideps\Frontend\Form\Admin;
 
 class BaseFilterType
 {

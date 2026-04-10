@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Mapper\UserResearchResponse;
+namespace OPG\Digideps\Frontend\Mapper\UserResearchResponse;
 
-use App\Mapper\DateRangeQuery;
-use App\Service\Client\Internal\UserResearchApi;
+use OPG\Digideps\Frontend\Mapper\DateRangeQuery;
+use OPG\Digideps\Frontend\Service\Client\Internal\UserResearchApi;
 use Psr\Http\Message\StreamInterface;
 
 readonly class UserResearchResponseSummaryMapper

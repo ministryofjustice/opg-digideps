@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace OPG\Digideps\Frontend\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -42,7 +42,7 @@ class ValidationCommand extends Command
         $ret = [];
         foreach (glob($this->projectDir . '/src/App/Entity/*.php') as $entity) {
             if (preg_match('/([A-Z][a-z]+)\.php$/', $entity, $matches)) {
-                $className = '\\App\\Entity\\' . $matches[1];
+                $className = 'OPG\\Digideps\\Frontend\\' . $matches[1];
                 if (class_exists($className)) {
                     $ret[$className] = $this->getClassValidationRules(new $className());
                 }

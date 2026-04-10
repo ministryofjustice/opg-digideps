@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Frontend\Entity\Report;
 
-use App\Entity\Traits\CreationAudit;
+use OPG\Digideps\Frontend\Entity\Traits\CreationAudit;
 use JMS\Serializer\Annotation as JMS;
 
 /**
@@ -23,7 +23,7 @@ class ChecklistInformation
     /**
      * @var Checklist
      *
-     * @JMS\Type("App\Entity\Report\Checklist")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\Checklist")
      * @JMS\Groups({"checklist-information-checklist"})
      *
      */

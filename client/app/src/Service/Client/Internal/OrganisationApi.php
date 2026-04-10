@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Client\Internal;
+namespace OPG\Digideps\Frontend\Service\Client\Internal;
 
-use App\Entity\Organisation;
-use App\Entity\User;
-use App\Event\UserAddedToOrganisationEvent;
-use App\Event\UserRemovedFromOrganisationEvent;
-use App\EventDispatcher\ObservableEventDispatcher;
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Entity\Organisation;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Event\UserAddedToOrganisationEvent;
+use OPG\Digideps\Frontend\Event\UserRemovedFromOrganisationEvent;
+use OPG\Digideps\Frontend\EventDispatcher\ObservableEventDispatcher;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 
 class OrganisationApi
 {

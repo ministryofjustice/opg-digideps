@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use App\Entity\Report\ProfDeputyInterimCost;
-use App\Entity\Report\ProfDeputyOtherCost;
-use App\Entity\Report\ProfDeputyPreviousCost;
-use App\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\ProfDeputyInterimCost;
+use OPG\Digideps\Frontend\Entity\Report\ProfDeputyOtherCost;
+use OPG\Digideps\Frontend\Entity\Report\ProfDeputyPreviousCost;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -32,7 +32,7 @@ trait ReportProfDeputyCostsTrait
     /**
      * @var ProfDeputyOtherCost[]
      *
-     * @JMS\Type("array<App\Entity\Report\ProfDeputyOtherCost>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyOtherCost>")
      * @JMS\Groups({"prof-deputy-other-costs"})
      */
     private $profDeputyOtherCosts = [];
@@ -45,7 +45,7 @@ trait ReportProfDeputyCostsTrait
     /**
      * @var ProfDeputyPreviousCost[]
      *
-     * @JMS\Type("array<App\Entity\Report\ProfDeputyPreviousCost>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyPreviousCost>")
      */
     private $profDeputyPreviousCosts = [];
 
@@ -70,7 +70,7 @@ trait ReportProfDeputyCostsTrait
     /**
      * @var ProfDeputyInterimCost[]
      * @JMS\Groups({"profDeputyInterimCosts"})
-     * @JMS\Type("array<App\Entity\Report\ProfDeputyInterimCost>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyInterimCost>")
      */
     private $profDeputyInterimCosts = [];
 

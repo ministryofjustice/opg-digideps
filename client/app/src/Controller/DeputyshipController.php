@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace OPG\Digideps\Frontend\Controller;
 
-use App\Entity\Client;
-use App\Entity\User;
-use App\Service\Client\Internal\ClientApi;
+use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Service\Client\Internal\ClientApi;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Annotation\Route;

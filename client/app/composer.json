@@ -12,8 +12,12 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/",
-            "DigidepsTests\\": "tests/phpunit"
+            "OPG\\Digideps\\Frontend\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\OPG\\Digideps\\Frontend\\": "tests/"
         }
     },
     "require": {

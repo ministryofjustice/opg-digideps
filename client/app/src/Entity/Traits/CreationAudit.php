@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity\Traits;
+namespace OPG\Digideps\Frontend\Entity\Traits;
 
-use App\Entity\User;
+use OPG\Digideps\Frontend\Entity\User;
 
 /**
  * CreationAudit Trait, usable with PHP >= 5.4.
@@ -12,9 +12,9 @@ trait CreationAudit
     /**
      * Created by.
      *
-     * @JMS\Type("App\Entity\User")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
      *
-     * @var \App\Entity\User
+     * @var \OPG\Digideps\Frontend\Entity\User
      */
     protected $createdBy;
 
@@ -28,7 +28,7 @@ trait CreationAudit
     protected $createdOn;
 
     /**
-     * @return \App\Entity\User
+     * @return \OPG\Digideps\Frontend\Entity\User
      */
     public function getCreatedBy()
     {

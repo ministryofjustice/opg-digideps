@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Org;
+namespace OPG\Digideps\Frontend\Controller\Org;
 
-use App\Controller\AbstractController;
-use App\Entity\Client;
-use App\Entity\Note;
-use App\Form\ConfirmDeleteType;
-use App\Form\Org\NoteType;
-use App\Service\Client\Internal\ClientApi;
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\Note;
+use OPG\Digideps\Frontend\Form\ConfirmDeleteType;
+use OPG\Digideps\Frontend\Form\Org\NoteType;
+use OPG\Digideps\Frontend\Service\Client\Internal\ClientApi;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;

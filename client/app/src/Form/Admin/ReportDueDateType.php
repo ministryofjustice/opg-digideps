@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Admin;
+namespace OPG\Digideps\Frontend\Form\Admin;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;

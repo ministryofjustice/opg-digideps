@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\TestHelpers;
+namespace OPG\Digideps\Frontend\TestHelpers;
 
-use App\Entity\User;
+use OPG\Digideps\Frontend\Entity\User;
 use Faker;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Serializer\Serializer;

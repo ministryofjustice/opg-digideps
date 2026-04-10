@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\Type;
+namespace OPG\Digideps\Frontend\Form\Type;
 
-use App\Form\DataTransformer\ArrayToStringTransformer;
+use OPG\Digideps\Frontend\Form\DataTransformer\ArrayToStringTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;

@@ -2,26 +2,26 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Report;
+namespace OPG\Digideps\Frontend\Controller\Report;
 
-use App\Controller\AbstractController;
-use App\Entity\Report\Document;
-use App\Entity\Report\Report;
-use App\Entity\Report\Status;
-use App\Entity\User;
-use App\Exception\MimeTypeAndFileExtensionDoNotMatchException;
-use App\Form\Report\DocumentType;
-use App\Form\Report\UploadType;
-use App\Security\DocumentVoter;
-use App\Service\Client\Internal\ClientApi;
-use App\Service\Client\Internal\ReportApi;
-use App\Service\Client\RestClient;
-use App\Service\DocumentService;
-use App\Service\File\S3FileUploader;
-use App\Service\File\Storage\FileUploadFailedException;
-use App\Service\File\Storage\S3Storage;
-use App\Service\File\Verifier\MultiFileFormUploadVerifier;
-use App\Service\StepRedirector;
+use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Entity\Report\Document;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\Status;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Exception\MimeTypeAndFileExtensionDoNotMatchException;
+use OPG\Digideps\Frontend\Form\Report\DocumentType;
+use OPG\Digideps\Frontend\Form\Report\UploadType;
+use OPG\Digideps\Frontend\Security\DocumentVoter;
+use OPG\Digideps\Frontend\Service\Client\Internal\ClientApi;
+use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\DocumentService;
+use OPG\Digideps\Frontend\Service\File\S3FileUploader;
+use OPG\Digideps\Frontend\Service\File\Storage\FileUploadFailedException;
+use OPG\Digideps\Frontend\Service\File\Storage\S3Storage;
+use OPG\Digideps\Frontend\Service\File\Verifier\MultiFileFormUploadVerifier;
+use OPG\Digideps\Frontend\Service\StepRedirector;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;

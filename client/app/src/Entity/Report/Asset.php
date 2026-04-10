@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Frontend\Entity\Report;
 
-use App\Entity\Report\Traits\HasReportTrait;
+use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @JMS\Discriminator(field = "type", map = {
- *    "other": "App\Entity\Report\AssetOther",
- *    "property": "App\Entity\Report\AssetProperty"
+ *    "other": "OPG\Digideps\Frontend\Entity\Report\AssetOther",
+ *    "property": "OPG\Digideps\Frontend\Entity\Report\AssetProperty"
  * })
  */
 abstract class Asset

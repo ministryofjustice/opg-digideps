@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Validator\Constraints;
+namespace OPG\Digideps\Frontend\Validator\Constraints;
 
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\Validator\Constraints\UserPasswordValidator;

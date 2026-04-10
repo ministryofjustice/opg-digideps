@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Service\File\Verifier;
+namespace OPG\Digideps\Frontend\Service\File\Verifier;
 
-use App\Entity\Report\Document;
-use App\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\Document;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;

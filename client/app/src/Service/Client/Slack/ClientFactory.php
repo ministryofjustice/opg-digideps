@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Client\Slack;
+namespace OPG\Digideps\Frontend\Service\Client\Slack;
 
 use JoliCode\Slack\Api\Client;
 use JoliCode\Slack\ClientFactory as JoliClientFactory;

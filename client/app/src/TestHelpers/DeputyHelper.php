@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\TestHelpers;
+namespace OPG\Digideps\Frontend\TestHelpers;
 
-use App\Entity\Deputy;
+use OPG\Digideps\Frontend\Entity\Deputy;
 use Faker;
 
 class DeputyHelper

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Validator\Constraints\ClientBenefitsCheck;
+namespace OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck;
 
 use Symfony\Component\Validator\Constraint;
 

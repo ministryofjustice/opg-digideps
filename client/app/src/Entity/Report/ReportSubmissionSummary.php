@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Frontend\Entity\Report;
 
 use JMS\Serializer\Annotation as JMS;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace OPG\Digideps\Frontend\Entity;
 
 interface MoneyReceivedOnClientsBehalfInterface
 {

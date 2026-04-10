@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace OPG\Digideps\Frontend\Service;
 
 /**
  * Client to connect to docker-htmltopdf-aas

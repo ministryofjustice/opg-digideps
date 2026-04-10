@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\TestHelpers;
+namespace OPG\Digideps\Frontend\TestHelpers;
 
-use App\Entity\Report\Satisfaction;
+use OPG\Digideps\Frontend\Entity\Report\Satisfaction;
 use Faker\Factory;
 
 class SatisfactionHelpers

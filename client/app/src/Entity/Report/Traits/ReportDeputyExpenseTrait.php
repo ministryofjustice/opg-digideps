@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use App\Entity\Report\Expense;
+use OPG\Digideps\Frontend\Entity\Report\Expense;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -16,7 +16,7 @@ trait ReportDeputyExpenseTrait
     private ?string $paidForAnything;
 
     /**
-     * @JMS\Type("array<App\Entity\Report\Expense>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Expense>")
      * @JMS\Groups({"expenses"})
      *
      * @var Expense[]

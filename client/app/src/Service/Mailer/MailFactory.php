@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Mailer;
+namespace OPG\Digideps\Frontend\Service\Mailer;
 
-use App\Entity as EntityDir;
-use App\Entity\Client;
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\Model\Email;
-use App\Service\IntlService;
+use OPG\Digideps\Frontend\Entity as EntityDir;
+use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Model\Email;
+use OPG\Digideps\Frontend\Service\IntlService;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 

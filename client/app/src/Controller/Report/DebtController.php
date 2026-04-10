@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Report;
+namespace OPG\Digideps\Frontend\Controller\Report;
 
-use App\Controller\AbstractController;
-use App\Entity\Report\Status;
-use App\Form\Report\Debt\DebtManagementType;
-use App\Form\Report\Debt\DebtsType;
-use App\Form\YesNoType;
-use App\Service\Client\Internal\ReportApi;
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Entity\Report\Status;
+use OPG\Digideps\Frontend\Form\Report\Debt\DebtManagementType;
+use OPG\Digideps\Frontend\Form\Report\Debt\DebtsType;
+use OPG\Digideps\Frontend\Form\YesNoType;
+use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;

@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Report;
+namespace OPG\Digideps\Frontend\Controller\Report;
 
-use App\Controller\AbstractController;
-use App\Entity\Report\Decision;
-use App\Entity\Report\MentalCapacity;
-use App\Entity\Report\Status;
-use App\Form\AddAnotherThingType;
-use App\Form\ConfirmDeleteType;
-use App\Form\Report\DecisionExistType;
-use App\Form\Report\DecisionType;
-use App\Form\Report\MentalAssessment;
-use App\Form\Report\MentalCapacityType;
-use App\Service\Client\Internal\ReportApi;
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Entity\Report\Decision;
+use OPG\Digideps\Frontend\Entity\Report\MentalCapacity;
+use OPG\Digideps\Frontend\Entity\Report\Status;
+use OPG\Digideps\Frontend\Form\AddAnotherThingType;
+use OPG\Digideps\Frontend\Form\ConfirmDeleteType;
+use OPG\Digideps\Frontend\Form\Report\DecisionExistType;
+use OPG\Digideps\Frontend\Form\Report\DecisionType;
+use OPG\Digideps\Frontend\Form\Report\MentalAssessment;
+use OPG\Digideps\Frontend\Form\Report\MentalCapacityType;
+use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;

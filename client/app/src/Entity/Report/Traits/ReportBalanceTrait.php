@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use App\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
 trait ReportBalanceTrait

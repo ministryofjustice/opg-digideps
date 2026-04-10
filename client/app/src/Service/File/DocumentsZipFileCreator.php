@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service\File;
+namespace OPG\Digideps\Frontend\Service\File;
 
-use App\Entity\Report\Document;
+use OPG\Digideps\Frontend\Entity\Report\Document;
 use ZipArchive;
 
 class DocumentsZipFileCreator

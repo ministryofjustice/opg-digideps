@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service\Availability;
+namespace OPG\Digideps\Frontend\Service\Availability;
 
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 
 class ApiAvailability extends ServiceAvailabilityAbstract
 {

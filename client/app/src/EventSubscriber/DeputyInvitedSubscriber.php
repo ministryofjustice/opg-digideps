@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\EventSubscriber;
+namespace OPG\Digideps\Frontend\EventSubscriber;
 
-use App\Event\DeputyInvitedEvent;
-use App\Service\Mailer\Mailer;
+use OPG\Digideps\Frontend\Event\DeputyInvitedEvent;
+use OPG\Digideps\Frontend\Service\Mailer\Mailer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class DeputyInvitedSubscriber implements EventSubscriberInterface
