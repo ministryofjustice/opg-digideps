@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Factory;
+namespace OPG\Digideps\Backend\Factory;
 
 /**
  * Interface for components which perform ad hoc data manipulation tasks, typically during ingests.

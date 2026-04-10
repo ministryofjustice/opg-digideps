@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Behat\CourtOrderManagement;
+namespace Tests\OPG\Digideps\Backend\Behat\CourtOrderManagement;
 
 use Exception;
 

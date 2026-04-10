@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controller;
+namespace OPG\Digideps\Backend\Controller;
 
-use App\Entity\Client;
-use App\Entity\Note;
-use App\Entity\User;
-use App\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Note;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +25,7 @@ class NoteController extends RestController
     #[IsGranted(attribute: 'ROLE_ORG')]
     public function add(Request $request, int $clientId): array
     {
-        $client = $this->findEntityBy(Client::class, $clientId); /* @var $report \App\Entity\Client */
+        $client = $this->findEntityBy(Client::class, $clientId); /* @var $report \OPG\Digideps\Backend\Entity\Client */
         $this->denyAccessIfClientDoesNotBelongToUser($client);
 
         // hydrate and persist
@@ -61,7 +61,7 @@ class NoteController extends RestController
             ? $request->query->all('groups') : ['notes', 'user'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
-        $note = $this->findEntityBy(Note::class, $id); /* @var $note \App\Entity\Note */
+        $note = $this->findEntityBy(Note::class, $id); /* @var $note \OPG\Digideps\Backend\Entity\Note */
         $this->denyAccessIfClientDoesNotBelongToUser($note->getClient());
 
         return $note;
@@ -75,7 +75,7 @@ class NoteController extends RestController
     #[IsGranted(attribute: 'ROLE_ORG')]
     public function updateNote(Request $request, int $id): int
     {
-        $note = $this->findEntityBy(Note::class, $id); /* @var $note \App\Entity\Note */
+        $note = $this->findEntityBy(Note::class, $id); /* @var $note \OPG\Digideps\Backend\Entity\Note */
 
         // enable if the check above is removed and the note is available for editing for the whole team
         $this->denyAccessIfClientDoesNotBelongToUser($note->getClient());

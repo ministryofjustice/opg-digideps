@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Command;
+namespace OPG\Digideps\Backend\Command;
 
-use App\Entity\User;
-use App\Repository\UserRepository;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -27,7 +27,7 @@ class UserCleanupCommand extends Command
             $output->writeln("delete_zero_activity_users - success - Deleted $deleteCount lay user(s) that have never had any activity after 30 days of registration");
 
             return Command::SUCCESS;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $output->writeln('delete_zero_activity_users - failure - Failed to delete lay user(s) that have never had any activity after 30 days of registration');
             $output->writeln($e);
 

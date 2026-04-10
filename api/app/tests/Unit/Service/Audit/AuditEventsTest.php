@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Audit;
+namespace Tests\OPG\Digideps\Backend\Unit\Service\Audit;
 
+use OPG\Digideps\Backend\Service\Audit\AuditEvents;
 use PHPUnit\Framework\Attributes\Test;
-use App\Service\Time\DateTimeProvider;
+use OPG\Digideps\Backend\Service\Time\DateTimeProvider;
 use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;

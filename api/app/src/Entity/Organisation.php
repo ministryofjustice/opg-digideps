@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity;
+namespace OPG\Digideps\Backend\Entity;
 
-use App\Entity\Traits\IsSoftDeleteableEntity;
+use OPG\Digideps\Backend\Entity\Traits\IsSoftDeleteableEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  *
- * @ORM\Entity(repositoryClass="App\Repository\OrganisationRepository")
+ * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\OrganisationRepository")
  */
 class Organisation implements OrganisationInterface
 {
@@ -70,7 +70,7 @@ class Organisation implements OrganisationInterface
      *
      * @ORM\ManyToMany(targetEntity="User", inversedBy="organisations")
      */
-    #[JMS\Type('ArrayCollection<App\Entity\User>')]
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\User>')]
     private $users;
 
     /**
@@ -78,7 +78,7 @@ class Organisation implements OrganisationInterface
      *
      * @ORM\OneToMany(targetEntity="Client", mappedBy="organisation")
      */
-    #[JMS\Type('ArrayCollection<App\Entity\Clients>')]
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Clients>')]
     private $clients;
 
     public function __construct()

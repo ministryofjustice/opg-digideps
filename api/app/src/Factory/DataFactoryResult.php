@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Factory;
+namespace OPG\Digideps\Backend\Factory;
 
 class DataFactoryResult
 {

@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Tests\Integration\Controller;
+namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Domain\CourtOrder\CourtOrderType;
-use App\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
 use DateTime;
-use App\Entity\User;
-use App\TestHelpers\CourtOrderTestHelper;
-use App\TestHelpers\DeputyTestHelper;
-use App\TestHelpers\ReportTestHelper;
-use App\Tests\Behat\v2\Helpers\FixtureHelper;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\TestHelpers\CourtOrderTestHelper;
+use OPG\Digideps\Backend\TestHelpers\DeputyTestHelper;
+use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
+use Tests\OPG\Digideps\Backend\Behat\v2\Helpers\FixtureHelper;
 
 class DeputyControllerTest extends AbstractTestController
 {
@@ -64,7 +65,7 @@ class DeputyControllerTest extends AbstractTestController
             'AuthToken' => $token,
         ]);
 
-        $deputy = self::$fixtures->clear()->getRepo('Deputy')->find($return['data']['id']);
+        $deputy = self::$fixtures->clear()->getRepo(Deputy::class)->find($return['data']['id']);
 
         $this->assertEquals($firstName, $deputy->getFirstname());
         $this->assertEquals($lastName, $deputy->getLastname());
@@ -92,7 +93,7 @@ class DeputyControllerTest extends AbstractTestController
             'AuthToken' => $token,
         ]);
 
-        $deputy = self::$fixtures->clear()->getRepo('Deputy')->find($return['data']['id']);
+        $deputy = self::$fixtures->clear()->getRepo(Deputy::class)->find($return['data']['id']);
 
         $this->assertEquals($firstName, $deputy->getFirstname());
         $this->assertEquals($lastName, $deputy->getLastname());

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
-use App\Service\RequestIdLoggerProcessor;
+use OPG\Digideps\Backend\Service\RequestIdLoggerProcessor;
 use Mockery as m;
 use Monolog\Level;
 use Monolog\LogRecord;

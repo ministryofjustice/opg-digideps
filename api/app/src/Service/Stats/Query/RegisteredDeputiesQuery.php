@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Stats\Query;
+namespace OPG\Digideps\Backend\Service\Stats\Query;
 
 class RegisteredDeputiesQuery extends Query
 {

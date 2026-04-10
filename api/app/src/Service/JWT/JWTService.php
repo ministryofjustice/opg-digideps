@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Service\JWT;
+namespace OPG\Digideps\Backend\Service\JWT;
 
-use App\Entity\User;
-use App\Service\SecretManagerService;
-use App\Service\Time\DateTimeProvider;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Service\SecretManagerService;
+use OPG\Digideps\Backend\Service\Time\DateTimeProvider;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Validation\Constraint\IssuedBy;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Client\TokenStorage;
+namespace OPG\Digideps\Backend\Service\Client\TokenStorage;
 
 interface TokenStorageInterface
 {

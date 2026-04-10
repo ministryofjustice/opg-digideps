@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\SelfRegistration\Factory;
+namespace OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory;
 
-use App\v2\Registration\Assembler\LayDeputyshipDtoAssemblerInterface;
-use App\v2\Registration\Assembler\LayDeputyshipDtoCollectionAssembler;
-use App\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
+use OPG\Digideps\Backend\v2\Registration\Assembler\LayDeputyshipDtoAssemblerInterface;
+use OPG\Digideps\Backend\v2\Registration\Assembler\LayDeputyshipDtoCollectionAssembler;
+use OPG\Digideps\Backend\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
 
 class LayDeputyshipDtoCollectionAssemblerFactory
 {

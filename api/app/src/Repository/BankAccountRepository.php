@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace OPG\Digideps\Backend\Repository;
 
-use App\Entity\Report\BankAccount;
-use App\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\Report;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -22,7 +22,7 @@ class BankAccountRepository extends ServiceEntityRepository
             ->getEntityManager()
             ->createQueryBuilder()
             ->select('SUM(a.closingBalance)')
-            ->from('App\Entity\Report\BankAccount', 'a')
+            ->from('OPG\Digideps\Backend\Entity\Report\BankAccount', 'a')
             ->leftJoin('a.report', 'r');
 
         if ($after) {

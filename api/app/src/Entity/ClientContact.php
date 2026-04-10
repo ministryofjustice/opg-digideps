@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Entity;
+namespace OPG\Digideps\Backend\Entity;
 
-use App\Entity\Traits\AddressTrait;
-use App\Entity\Traits\CreationAudit;
+use OPG\Digideps\Backend\Entity\Traits\AddressTrait;
+use OPG\Digideps\Backend\Entity\Traits\CreationAudit;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -15,7 +15,7 @@ use JMS\Serializer\Annotation as JMS;
  *     @ORM\Index(name="ix_clientcontact_created_by", columns={"created_by"})
  *     })
  *
- * @ORM\Entity(repositoryClass="App\Repository\ClientContactRepository")
+ * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\ClientContactRepository")
  */
 class ClientContact
 {
@@ -98,11 +98,11 @@ class ClientContact
     /**
      * @var Client
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="clientContacts")
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Client", inversedBy="clientContacts")
      *
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    #[JMS\Type('App\Entity\Client')]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Client')]
     #[JMS\Groups(['clientcontact-client'])]
     private $client;
 

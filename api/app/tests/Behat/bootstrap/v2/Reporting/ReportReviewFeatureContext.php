@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\Reporting;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\Reporting;
 
-use App\Entity\Report\Expense;
-use App\Tests\Behat\v2\Common\BaseFeatureContext;
+use OPG\Digideps\Backend\Entity\Report\Expense;
+use Tests\OPG\Digideps\Backend\Behat\v2\Common\BaseFeatureContext;
 use Behat\Step\Then;
 use Behat\Step\When;
 

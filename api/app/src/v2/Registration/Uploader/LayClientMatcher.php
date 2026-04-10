@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\Uploader;
+namespace OPG\Digideps\Backend\v2\Registration\Uploader;
 
-use App\Entity\Client;
-use App\Entity\PreRegistration;
-use App\Entity\Report\Report;
-use App\v2\Registration\DTO\LayDeputyshipDto;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**

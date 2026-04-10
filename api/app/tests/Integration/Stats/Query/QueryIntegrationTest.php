@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Service\Stats\Metrics;
+namespace Tests\OPG\Digideps\Backend\Integration\Stats\Query;
 
-use App\Tests\Integration\ApiIntegrationTestCase;
-use App\Tests\Integration\TestHelpers\UsersQuery;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use Tests\OPG\Digideps\Backend\Integration\TestHelpers\UsersQuery;
 use DateTime;
-use App\Entity\User;
-use App\Service\Stats\StatsQueryParameters;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Service\Stats\StatsQueryParameters;
 
 class QueryIntegrationTest extends ApiIntegrationTestCase
 {

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\v2\Registration\Assembler;
+namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\Assembler;
 
 use PHPUnit\Framework\Attributes\Test;
 use DateTime;
-use App\Service\ReportUtils;
-use App\Tests\Unit\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
-use App\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
+use OPG\Digideps\Backend\Service\ReportUtils;
+use Tests\OPG\Digideps\Backend\Unit\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
+use OPG\Digideps\Backend\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 

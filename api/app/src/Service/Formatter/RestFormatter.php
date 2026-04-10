@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Formatter;
+namespace OPG\Digideps\Backend\Service\Formatter;
 
-use App\EventListener\RestInputOuputFormatter;
-use App\Service\Validator\RestArrayValidator;
+use OPG\Digideps\Backend\EventListener\RestInputOuputFormatter;
+use OPG\Digideps\Backend\Service\Validator\RestArrayValidator;
 use Symfony\Component\HttpFoundation\Request;
 
 class RestFormatter

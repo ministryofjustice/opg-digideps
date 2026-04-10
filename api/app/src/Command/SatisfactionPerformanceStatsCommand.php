@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace OPG\Digideps\Backend\Command;
 
-use App\Repository\SatisfactionRepository;
-use App\Service\File\Storage\S3SatisfactionDataStorage;
+use OPG\Digideps\Backend\Repository\SatisfactionRepository;
+use OPG\Digideps\Backend\Service\File\Storage\S3SatisfactionDataStorage;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Service;
+namespace OPG\Digideps\Backend\Service;
 
-use App\Entity\PreRegistration;
-use App\Repository\PreRegistrationRepository;
-use App\Repository\UserRepository;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
+use OPG\Digideps\Backend\Repository\UserRepository;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 

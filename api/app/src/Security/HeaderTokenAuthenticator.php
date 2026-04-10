@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Security;
+namespace OPG\Digideps\Backend\Security;
 
-use App\Entity\User;
-use App\Exception\UserWrongCredentialsException;
-use App\Repository\UserRepository;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Exception\UserWrongCredentialsException;
+use OPG\Digideps\Backend\Repository\UserRepository;
 use Predis\Client;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;

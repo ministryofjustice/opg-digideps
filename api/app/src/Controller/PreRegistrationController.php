@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Controller;
+namespace OPG\Digideps\Backend\Controller;
 
-use App\Entity\Client;
-use App\Entity\Organisation;
-use App\Entity\User;
-use App\Repository\PreRegistrationRepository;
-use App\Service\Formatter\RestFormatter;
-use App\Service\PreRegistrationVerificationService;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\Service\PreRegistrationVerificationService;
 use Doctrine\ORM\EntityManagerInterface;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
@@ -96,7 +96,7 @@ class PreRegistrationController extends RestController
     {
         $qb = $this->em->createQueryBuilder();
         $qb->select('count(p.id)');
-        $qb->from('App\Entity\PreRegistration', 'p');
+        $qb->from('OPG\Digideps\Backend\Entity\PreRegistration', 'p');
 
         /** @var int $result */
         $result = $qb->getQuery()->getSingleScalarResult();

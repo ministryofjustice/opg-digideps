@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Tests\Integration\Entity;
+namespace Tests\OPG\Digideps\Backend\Integration\Entity;
 
-use App\Tests\Integration\ApiIntegrationTestCase;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use DateTime;
-use App\TestHelpers\ReportSubmissionHelper;
+use OPG\Digideps\Backend\TestHelpers\ReportSubmissionHelper;
 
 /**
  * User Entity test.

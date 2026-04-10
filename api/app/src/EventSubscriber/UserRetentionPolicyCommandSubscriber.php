@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\EventSubscriber;
+namespace OPG\Digideps\Backend\EventSubscriber;
 
-use App\Event\UserRetentionPolicyCommandEvent;
-use App\Service\Audit\AuditEvents;
-use App\Service\Time\DateTimeProvider;
+use OPG\Digideps\Backend\Event\UserRetentionPolicyCommandEvent;
+use OPG\Digideps\Backend\Service\Audit\AuditEvents;
+use OPG\Digideps\Backend\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

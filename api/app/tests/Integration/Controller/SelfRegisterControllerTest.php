@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Tests\Integration\Controller;
+namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
 use DateTime;
-use App\Entity\Client;
-use App\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\User;
 
 class SelfRegisterControllerTest extends AbstractTestController
 {
@@ -58,7 +59,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
 
-        $user = self::fixtures()->getRepo('User')->findOneBy(['email' => 'behat-dontsaveme@example.org']);
+        $user = self::fixtures()->getRepo(User::class)->findOneBy(['email' => 'behat-dontsaveme@example.org']);
         $this->assertNull($user);
     }
 
@@ -81,7 +82,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
 
-        $user = self::fixtures()->getRepo('User')->findOneBy(['email' => 'dontsavewithinvalidcasenum@example.org']);
+        $user = self::fixtures()->getRepo(User::class)->findOneBy(['email' => 'dontsavewithinvalidcasenum@example.org']);
 
         $this->assertStringContainsString('Invalid registration data', $response['message']);
         $this->assertNull($user);
@@ -116,7 +117,7 @@ class SelfRegisterControllerTest extends AbstractTestController
 
         $id = $responseArray['data']['id'];
 
-        $user = self::fixtures()->getRepo('User')->findOneBy(['id' => $id]); /* @var $user User */
+        $user = self::fixtures()->getRepo(User::class)->findOneBy(['id' => $id]); /* @var $user User */
         $this->assertEquals('Tolley', $user->getLastname());
         $this->assertEquals('Zac', $user->getFirstname());
         $this->assertEquals('SW1', $user->getAddressPostcode());
@@ -157,7 +158,7 @@ class SelfRegisterControllerTest extends AbstractTestController
 
         $id = $responseArray['data']['id'];
 
-        $user = self::fixtures()->getRepo('User')->findOneBy(['id' => $id]); /* @var $user User */
+        $user = self::fixtures()->getRepo(User::class)->findOneBy(['id' => $id]); /* @var $user User */
         $this->assertEquals('Tolley', $user->getLastname());
         $this->assertEquals('Zac', $user->getFirstname());
         $this->assertEquals('valid10digitcasenum@example.org', $user->getEmail());
@@ -616,7 +617,7 @@ class SelfRegisterControllerTest extends AbstractTestController
 
         $id = $responseArray['data']['id'];
 
-        $user = self::fixtures()->getRepo('User')->findOneBy(['id' => $id]);
+        $user = self::fixtures()->getRepo(User::class)->findOneBy(['id' => $id]);
         $this->assertEquals('700000019965', $user->getDeputyUid());
         $this->assertFalse($user->getIsPrimary());
     }
@@ -647,7 +648,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         ]);
 
         $deputyId = $responseArray['data']['id'];
-        $deputy = self::fixtures()->getRepo('User')->findOneBy(['id' => $deputyId]);
+        $deputy = self::fixtures()->getRepo(User::class)->findOneBy(['id' => $deputyId]);
         $this->assertTrue($deputy->getIsPrimary());
 
         $coDeputy = $this->fixtures()->createUser();
@@ -709,7 +710,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         ]);
 
         $deputyId = $responseArray['data']['id'];
-        $deputy = self::fixtures()->getRepo('User')->findOneBy(['id' => $deputyId]);
+        $deputy = self::fixtures()->getRepo(User::class)->findOneBy(['id' => $deputyId]);
         $this->assertTrue($deputy->getIsPrimary());
 
         $coDeputy = $this->fixtures()->createUser();
@@ -766,7 +767,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         ]);
 
         $deputyId = $responseArray['data']['id'];
-        $deputy = self::fixtures()->getRepo('User')->findOneBy(['id' => $deputyId]);
+        $deputy = self::fixtures()->getRepo(User::class)->findOneBy(['id' => $deputyId]);
 
         $this->assertEquals($deputyPreRegistration->getDeputyUid(), $deputy->getDeputyUid());
         $this->assertTrue($deputy->getIsPrimary());

@@ -17,4 +17,4 @@ monolog:
             channels: ["verbose"]
         audit:
             type: service
-            id: App\Service\Audit\AwsAuditLogHandler
+            id: OPG\Digideps\Backend\Service\Audit\AwsAuditLogHandler

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace OPG\Digideps\Backend\Command;
 
-use App\Entity\User;
-use App\Event\UserRetentionPolicyCommandEvent;
-use App\EventDispatcher\ObservableEventDispatcher;
-use App\Repository\UserRepository;
-use App\Service\Audit\AuditEvents;
-use App\v2\Controller\ControllerTrait;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Event\UserRetentionPolicyCommandEvent;
+use OPG\Digideps\Backend\EventDispatcher\ObservableEventDispatcher;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\Service\Audit\AuditEvents;
+use OPG\Digideps\Backend\v2\Controller\ControllerTrait;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -69,7 +69,7 @@ class UserRetentionPolicyCommand extends Command
             $output->writeln('delete_inactive_users - success - No inactive admin users to delete');
 
             return Command::SUCCESS;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $output->writeln('delete_inactive_users - failure - Failed to delete inactive users');
             $output->writeln($e);
 

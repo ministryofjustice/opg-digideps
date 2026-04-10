@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Service;
+namespace Tests\OPG\Digideps\Backend\Integration\Service;
 
-use App\Domain\CourtOrder\CourtOrderType;
-use App\Service\DeputyService;
-use App\TestHelpers\ClientTestHelper;
-use App\TestHelpers\CourtOrderTestHelper;
-use App\TestHelpers\DeputyTestHelper;
-use App\TestHelpers\ReportTestHelper;
-use App\TestHelpers\UserTestHelper;
-use App\Tests\Integration\ApiIntegrationTestCase;
-use App\Tests\Integration\Fixtures;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Service\DeputyService;
+use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
+use OPG\Digideps\Backend\TestHelpers\CourtOrderTestHelper;
+use OPG\Digideps\Backend\TestHelpers\DeputyTestHelper;
+use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
+use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 
 class DeputyServiceIntegrationTest extends ApiIntegrationTestCase
 {

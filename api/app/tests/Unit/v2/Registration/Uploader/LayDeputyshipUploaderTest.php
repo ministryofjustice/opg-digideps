@@ -2,25 +2,25 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\v2\Registration\Uploader;
+namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\Uploader;
 
 use PHPUnit\Framework\Attributes\Test;
 use RuntimeException;
 use PHPUnit\Framework\Attributes\DataProvider;
 use DateTime;
-use App\Entity\Client;
-use App\Entity\PreRegistration;
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\Repository\PreRegistrationRepository;
-use App\Repository\ReportRepository;
-use App\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
-use App\v2\Registration\DTO\LayDeputyshipDto;
-use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
-use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
-use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
-use App\v2\Registration\Uploader\LayDeputyshipProcessor;
-use App\v2\Registration\Uploader\LayDeputyshipUploader;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
+use OPG\Digideps\Backend\Repository\ReportRepository;
+use OPG\Digideps\Backend\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
+use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
+use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDtoCollection;
+use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
+use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
+use OPG\Digideps\Backend\v2\Registration\Uploader\LayDeputyshipProcessor;
+use OPG\Digideps\Backend\v2\Registration\Uploader\LayDeputyshipUploader;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;

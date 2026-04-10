@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace OPG\Digideps\Backend\Controller;
 
-use App\Factory\UserResearchResponseFactory;
-use App\Repository\SatisfactionRepository;
-use App\Repository\UserResearchResponseRepository;
-use App\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\Factory\UserResearchResponseFactory;
+use OPG\Digideps\Backend\Repository\SatisfactionRepository;
+use OPG\Digideps\Backend\Repository\UserResearchResponseRepository;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use RuntimeException;

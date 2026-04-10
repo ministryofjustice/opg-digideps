@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+namespace Tests\OPG\Digideps\Backend\Unit;
+
+use Mockery;
 use Mockery\MockInterface;
 
 /**
@@ -14,21 +17,23 @@ use Mockery\MockInterface;
 class MockeryStub extends Mockery
 {
     /**
-     * @param string $class        class name
+     * @template T
+     * @param class-string<T> $class        class name
      * @param array  $expectations array of method->result, where method can be method(arg) or a chain of methods get(1)->get(2)-> ...
+     * @return MockInterface&T
      */
     public static function stub(string $class, array $expectations = []): MockInterface
     {
         if (in_array(MockInterface::class, class_implements($class))) {
             $mock = $class; // already a mock
-        } elseif (is_string($class)) {
+        } elseif (class_exists($class) || interface_exists($class)) {
             $mock = self::mock($class);
         } else {
-            throw new InvalidArgumentException(__METHOD__ . ' first arument should be a mock or class fullname');
+            throw new \InvalidArgumentException(__METHOD__ . ' first argument should be a mock or fully qualified class name');
         }
 
         foreach ($expectations as $shouldReceives => $andReturn) {
-            if (false === strpos($shouldReceives, '->')) {
+            if (!str_contains($shouldReceives, '->')) {
                 self::mockShouldReceiveAndReturn($mock, $shouldReceives, $andReturn);
             } else {
                 self::chainMock($mock, explode('->', $shouldReceives), $andReturn);
@@ -69,7 +74,7 @@ class MockeryStub extends Mockery
     {
         preg_match('/^(?P<method>\w+)(\((?P<args>[^\(\)]*)\))?$/i', $shouldReceive, $matches);
         if (empty($matches['method'])) {
-            throw new InvalidArgumentException('Syntax error. Expected "method" or "method()" or "method(arg1,arg2, ..., argN)" in ' . $shouldReceive);
+            throw new \InvalidArgumentException('Syntax error. Expected "method" or "method()" or "method(arg1,arg2, ..., argN)" in ' . $shouldReceive);
         }
         if (!empty($matches['args'])) {
             $args = explode(',', $matches['args']);

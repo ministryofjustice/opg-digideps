@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\DeputyshipProcessing\CourtOrder;
+namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder;
 
-use App\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use Doctrine\DBAL\Connection;
 use OPG\Digideps\Common\Validating\ValidatingArray;
 

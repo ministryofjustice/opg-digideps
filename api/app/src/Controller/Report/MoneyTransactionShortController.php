@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Controller\Report;
+namespace OPG\Digideps\Backend\Controller\Report;
 
-use App\Controller\RestController;
-use App\Entity\Report\MoneyTransactionShort;
-use App\Entity\Report\Report;
-use App\Repository\MoneyTransactionShortRepository;
-use App\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\Controller\RestController;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShort;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Repository\MoneyTransactionShortRepository;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -63,7 +63,7 @@ class MoneyTransactionShortController extends RestController
         $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $t = $this->findEntityBy(MoneyTransactionShort::class, $transactionId, 'transaction not found'); /* @var $t \App\Entity\Report\MoneyTransaction */
+        $t = $this->findEntityBy(MoneyTransactionShort::class, $transactionId, 'transaction not found'); /* @var $t \OPG\Digideps\Backend\Entity\Report\MoneyTransaction */
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
         // set data
@@ -84,7 +84,7 @@ class MoneyTransactionShortController extends RestController
         $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $t = $this->findEntityBy(MoneyTransactionShort::class, $transactionId, 'transaction not found'); /* @var $t \App\Entity\Report\MoneyTransaction */
+        $t = $this->findEntityBy(MoneyTransactionShort::class, $transactionId, 'transaction not found'); /* @var $t \OPG\Digideps\Backend\Entity\Report\MoneyTransaction */
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
         $t->setDeletedAt(new DateTime());
