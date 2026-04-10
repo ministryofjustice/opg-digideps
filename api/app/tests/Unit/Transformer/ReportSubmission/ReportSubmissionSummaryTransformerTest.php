@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Transformer\ReportSubmission;
+namespace Tests\OPG\Digideps\Backend\Unit\Transformer\ReportSubmission;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use DateTime;
-use App\Entity\Client;
-use App\Entity\Report\Document;
-use App\Entity\Report\Report;
-use App\Entity\Report\ReportSubmission;
-use App\Entity\User;
-use App\Service\DateTimeProvider;
-use App\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Service\DateTimeProvider;
+use OPG\Digideps\Backend\Transformer\ReportSubmission\ReportSubmissionSummaryTransformer;
 use PHPUnit\Framework\TestCase;
 
 final class ReportSubmissionSummaryTransformerTest extends TestCase

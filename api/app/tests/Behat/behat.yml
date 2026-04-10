@@ -18,103 +18,103 @@ v2-tests-browserkit:
             description: Coverage of Access Control
             paths: ["%paths.base%/features-v2/acl"]
             contexts:
-                - App\Tests\Behat\v2\ACL\ACLFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\ACL\ACLFeatureContext
 
         admin-management:
             description: Covering the admin user management features of the app
             paths: ["%paths.base%/features-v2/admin-management"]
             contexts:
-                - App\Tests\Behat\v2\AdminManagement\AdminManagementFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\AdminManagement\AdminManagementFeatureContext
 
         analytics:
             description: Covering the admin analytics feature
             paths: ["%paths.base%/features-v2/analytics"]
             contexts:
-                - App\Tests\Behat\v2\Analytics\AnalyticsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Analytics\AnalyticsFeatureContext
 
         client-management:
             description: Covering the client management features of the app (frontend and admin)
             paths: ["%paths.base%/features-v2/client-management"]
             contexts:
-                - App\Tests\Behat\v2\ClientManagement\ClientManagementFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\ClientManagement\ClientManagementFeatureContext
 
         contacts:
             description: Covering the 'Contacts' section of the report
             paths: ["%paths.base%/features-v2/reporting/sections/contacts"]
             contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         contact-details:
             description: Coverage of displaying contact details based on user role
             paths: ["%paths.base%/features-v2/contact-details"]
             contexts:
-                - App\Tests\Behat\v2\ContactDetails\ContactDetailsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\ContactDetails\ContactDetailsFeatureContext
 
         court-order:
             description: Coverage of pages rendered from the context of a court order
             paths: ["%paths.base%/features-v2/court-order"]
             contexts:
-                - App\Tests\Behat\v2\CourtOrder\CourtOrderFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\CourtOrder\CourtOrderFeatureContext
 
         deputy-management:
             description: Coverage of deputy management features - adding, deleting, editing
             paths: ["%paths.base%/features-v2/deputy-management"]
             contexts:
-                - App\Tests\Behat\v2\DeputyManagement\DeputyManagementFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\DeputyManagement\DeputyManagementFeatureContext
 
         deputyship:
             description: Coverage of pages which show deputies details of their clients and reports
             paths: ["%paths.base%/features-v2/deputyship-details"]
             contexts:
-                - App\Tests\Behat\v2\Deputyship\DeputyshipFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Deputyship\DeputyshipFeatureContext
 
         feedback:
             description: Covering features that allow users to give us feedback
             paths: ["%paths.base%/features-v2/feedback"]
             contexts:
-                - App\Tests\Behat\v2\Feedback\FeedbackFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Feedback\FeedbackFeatureContext
 
         organisation-management:
             description: Coverage of organisation management features - adding, deleting, editing
             paths: ["%paths.base%/features-v2/organisation-management"]
             contexts:
-                - App\Tests\Behat\v2\OrganisationManagement\OrganisationManagementFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\OrganisationManagement\OrganisationManagementFeatureContext
 
         org-dashboard:
             description: PA deputies within an organisation
             paths: ["%paths.base%/features-v2/org-dashboard"]
             contexts:
-                - App\Tests\Behat\v2\OrgDashboard\OrgDashboardFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\OrgDashboard\OrgDashboardFeatureContext
 
         registration:
             description: Covering the registration flows (CSV ingest, self-register and activation)
             paths: ["%paths.base%/features-v2/registration"]
             contexts:
-                - App\Tests\Behat\v2\Registration\RegistrationFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Registration\RegistrationFeatureContext
 
         report-overview:
             description: Coverage of the report overview page
             paths: ["%paths.base%/features-v2/reporting/report-overview"]
             contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         app-notification:
             description: Coverage of service notifications of the app
             paths: ["%paths.base%/features-v2/app-notification"]
             contexts:
-                - App\Tests\Behat\v2\AppNotification\AppNotificationFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\AppNotification\AppNotificationFeatureContext
 
         reporting-checklist:
             description: Coverage of report checklist feature
             paths: ["%paths.base%/features-v2/report-checklist"]
             contexts:
-                - App\Tests\Behat\v2\Reporting\Admin\ReportingAdminFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Admin\ReportingAdminFeatureContext
 
         report-management:
             description: Coverage of report management features in the admin side of the app
             paths: ["%paths.base%/features-v2/report-management"]
             contexts:
-                - App\Tests\Behat\v2\ReportManagement\ReportManagementFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\ReportManagement\ReportManagementFeatureContext
 
         report-review:
             description: Coverage of the report review page
@@ -126,25 +126,25 @@ v2-tests-browserkit:
             description: Coverage of next and previous links in report sections
             paths: ["%paths.base%/features-v2/reporting/section-navigation"]
             contexts:
-                - App\Tests\Behat\v2\ReportSectionNavigation\ReportSectionNavigationFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\ReportSectionNavigation\ReportSectionNavigationFeatureContext
 
         report-submission:
             description: Coverage of report submission and document sync features in the admin side of the app
             paths: ["%paths.base%/features-v2/report-submission"]
             contexts:
-                - App\Tests\Behat\v2\ReportSubmission\ReportSubmissionFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\ReportSubmission\ReportSubmissionFeatureContext
 
         section-accounts:
             description: Covering the 'Accounts' section of the report
             paths: ["%paths.base%/features-v2/reporting/sections/accounts"]
             contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-actions:
             description: Covering the 'Actions' section of the report
             paths: ["%paths.base%/features-v2/reporting/sections/actions"]
             contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-additional-information:
             description: Covering the 'Additional Information' section of the report
@@ -153,13 +153,13 @@ v2-tests-browserkit:
                     "%paths.base%/features-v2/reporting/sections/additional-information",
                 ]
             contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-assets:
             description: Covering the 'Assets' section of the report
             paths: ["%paths.base%/features-v2/reporting/sections/assets"]
             contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-client-benefits-check:
             description: Covering the 'Client benefits check' section of the report
@@ -168,19 +168,19 @@ v2-tests-browserkit:
                     "%paths.base%/features-v2/reporting/sections/client-benefits-check",
                 ]
             contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-contacts:
             description: Covering the 'Contacts' section of the report
             paths: ["%paths.base%/features-v2/reporting/sections/contacts"]
             contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-decisions:
             description: Covering the 'Decisions' section of the report
             paths: ["%paths.base%/features-v2/reporting/sections/decisions"]
             contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-deputy-costs-estimate:
             description: Covering the 'Deputy Costs Estimate' section of the report
@@ -189,89 +189,89 @@ v2-tests-browserkit:
                     "%paths.base%/features-v2/reporting/sections/deputy-costs-estimate",
                 ]
             contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-deputy-costs:
             description: Covering the 'Deputy Costs' section of the report
             paths: ["%paths.base%/features-v2/reporting/sections/deputy-costs"]
             contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-deputy-expenses:
             description: Covering the 'Deputy Expenses' section of the report
             paths:
                 ["%paths.base%/features-v2/reporting/sections/deputy-expenses"]
             contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-documents:
             description: Covering the 'Documents' section of the report
             paths: ["%paths.base%/features-v2/reporting/sections/documents"]
             contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-gifts:
             description: Covering the 'Gifts' section of the report
             paths: ["%paths.base%/features-v2/reporting/sections/gifts"]
             contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-health-lifestyle:
             description: Covering the 'Health and Lifestyle' section of the report
             paths:
                 ["%paths.base%/features-v2/reporting/sections/health-lifestyle"]
             contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-money-in:
             description: Covering the 'Money In' section of the report
             paths: ["%paths.base%/features-v2/reporting/sections/money-in"]
             contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-money-out:
             description: Covering the 'Money Out' section of the report
             paths: ["%paths.base%/features-v2/reporting/sections/money-out"]
             contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-money-transfers:
             description: Covering the 'Money Transfers' section of the report
             paths:
                 ["%paths.base%/features-v2/reporting/sections/money-transfers"]
             contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-visit-care:
             description: Covering the 'Visits and Care' section of the report
             paths: ["%paths.base%/features-v2/reporting/sections/visits-care"]
             contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-debts:
             description: Covering the 'Debts' section of the report
             paths: ["%paths.base%/features-v2/reporting/sections/debts"]
             contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         section-income-benefits:
             description: Covering the 'Income Benefits' section of the report
             paths:
                 ["%paths.base%/features-v2/reporting/sections/income-benefits"]
             contexts:
-                - App\Tests\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ReportingSectionsFeatureContext
 
         service-health:
             description: Covering service health monitoring features of the app
             paths: ["%paths.base%/features-v2/service-health"]
             contexts:
-                - App\Tests\Behat\v2\ServiceHealth\ServiceHealthFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\ServiceHealth\ServiceHealthFeatureContext
 
         user-management:
             description: Covering the user management features of the app (admin)
             paths: ["%paths.base%/features-v2/user-management"]
             contexts:
-                - App\Tests\Behat\v2\UserManagement\UserManagementFeatureContext
+                - Tests\OPG\Digideps\Backend\Behat\v2\UserManagement\UserManagementFeatureContext
 
     extensions:
         Behat\MinkExtension:
@@ -289,5 +289,5 @@ v2-tests-browserkit:
         FriendsOfBehat\SymfonyExtension:
             kernel:
                 path: "%paths.base%/../../src/Kernel.php"
-                class: App\Kernel
+                class: OPG\Digideps\Backend\Kernel
         Liuggio\Fastest\Behat\ListFeaturesExtension\Extension: ~

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Factory\MissingReport;
+namespace OPG\Digideps\Backend\Factory\MissingReport;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Entity\CourtOrder;
-use App\Entity\Report\Report;
-use App\Factory\DataFactoryInterface;
-use App\Factory\DataFactoryResult;
-use App\Service\ReportService;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Factory\DataFactoryInterface;
+use OPG\Digideps\Backend\Factory\DataFactoryResult;
+use OPG\Digideps\Backend\Service\ReportService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 

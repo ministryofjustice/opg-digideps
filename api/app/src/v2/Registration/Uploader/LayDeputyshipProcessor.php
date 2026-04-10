@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\Uploader;
+namespace OPG\Digideps\Backend\v2\Registration\Uploader;
 
-use App\Entity\Client;
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\Factory\ReportFactory;
-use App\v2\Assembler\ClientAssembler;
-use App\v2\Registration\DTO\LayDeputyshipDto;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Factory\ReportFactory;
+use OPG\Digideps\Backend\v2\Assembler\ClientAssembler;
+use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;

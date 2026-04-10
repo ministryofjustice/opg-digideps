@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
-use App\Entity\Report\MoneyTransaction;
-use App\Entity\Report\MoneyTransactionInterface;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransaction;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransactionInterface;
 
 trait MoneyTransactionTrait
 {
@@ -12,7 +12,7 @@ trait MoneyTransactionTrait
      *
      * @JMS\Groups({"transaction"})
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\MoneyTransaction", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\MoneyTransaction", mappedBy="report", cascade={"persist", "remove"})
      *
      * @ORM\OrderBy({"id" = "ASC"})
      */
@@ -124,27 +124,6 @@ trait MoneyTransactionTrait
             if ($t instanceof MoneyTransactionInterface && $t->getType() === $type) {
                 $ret += $t->getAmount();
             }
-        }
-
-        return $ret;
-    }
-
-    /**
-     * @param Transaction[] $transactions
-     *
-     * @return array array of [category=>[entries=>[[id=>,type=>]], amountTotal[]]]
-     */
-    public function groupByCategory($transactions)
-    {
-        $ret = [];
-
-        foreach ($transactions as $id => $t) {
-            $cat = $t->getCategoryString();
-            if (!isset($ret[$cat])) {
-                $ret[$cat] = ['entries' => [], 'amountTotal' => 0];
-            }
-            $ret[$cat]['entries'][$id] = $t; // needed to find the corresponding transaction in the form
-            $ret[$cat]['amountTotal'] += $t->getAmountsTotal();
         }
 
         return $ret;

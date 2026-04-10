@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Event;
+namespace Tests\OPG\Digideps\Backend\Unit\Event;
 
 use PHPUnit\Framework\Attributes\Test;
 use DateTime;
-use App\Entity\User;
-use App\Event\UserRetentionPolicyCommandEvent;
-use App\TestHelpers\UserTestHelper;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Event\UserRetentionPolicyCommandEvent;
+use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
 use PHPUnit\Framework\TestCase;
 
 final class UserRetentionPolicyCommandEventTest extends TestCase

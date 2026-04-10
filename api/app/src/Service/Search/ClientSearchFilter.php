@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service\Search;
+namespace OPG\Digideps\Backend\Service\Search;
 
-use App\Entity\Client;
+use OPG\Digideps\Backend\Entity\Client;
 use Doctrine\ORM\QueryBuilder;
 
 class ClientSearchFilter

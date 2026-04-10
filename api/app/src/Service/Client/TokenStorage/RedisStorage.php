@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Client\TokenStorage;
+namespace OPG\Digideps\Backend\Service\Client\TokenStorage;
 
 use Predis\ClientInterface as PredisClientInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;

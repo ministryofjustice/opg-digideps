@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Entity;
+namespace Tests\OPG\Digideps\Backend\Unit\Entity;
 
 use UnexpectedValueException;
 use PHPUnit\Framework\Attributes\DataProvider;
-use App\Entity\PreRegistration;
-use App\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\Report\Report;
 use PHPUnit\Framework\TestCase;
 
 final class PreRegistrationTest extends TestCase

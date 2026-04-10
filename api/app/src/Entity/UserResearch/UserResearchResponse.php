@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\UserResearch;
+namespace OPG\Digideps\Backend\Entity\UserResearch;
 
-use App\Entity\Satisfaction;
-use App\Entity\User;
+use OPG\Digideps\Backend\Entity\Satisfaction;
+use OPG\Digideps\Backend\Entity\User;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -15,7 +15,7 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\UserResearchResponseRepository")
+ * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\UserResearchResponseRepository")
  *
  * @ORM\Table(name="user_research_response")
  */
@@ -28,22 +28,22 @@ class UserResearchResponse
     }
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\ResearchType", inversedBy="userResearchResponse", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\UserResearch\ResearchType", inversedBy="userResearchResponse", cascade={"persist"}, orphanRemoval=true)
      *
      * @ORM\JoinColumn(onDelete="CASCADE")
      *
-     * @JMS\Type("App\Entity\UserResearch\ResearchType")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\UserResearch\ResearchType")
      *
      * @JMS\Groups({"user-research", "satisfaction"})
      */
     private ResearchType $researchType;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="userResearchResponse", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\User", inversedBy="userResearchResponse", cascade={"persist"})
      *
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
      *
-     * @JMS\Type("App\Entity\User")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\User")
      *
      * @JMS\Groups({"user-research", "satisfaction"})
      */
@@ -94,11 +94,11 @@ class UserResearchResponse
     private \DateTime $created;
 
     /**
-     * @JMS\Type("App\Entity\Satisfaction")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\Satisfaction")
      *
      * @JMS\Groups({"user-research", "satisfaction"})
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\Satisfaction", inversedBy="userResearchResponse", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\Satisfaction", inversedBy="userResearchResponse", cascade={"persist", "remove"})
      */
     private Satisfaction $satisfaction;
 

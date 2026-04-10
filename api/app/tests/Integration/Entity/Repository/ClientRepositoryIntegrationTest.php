@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Repository;
+namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
-use App\Entity\Client;
-use App\Repository\ClientRepository;
-use App\TestHelpers\ClientTestHelper;
-use App\TestHelpers\UserTestHelper;
-use App\Tests\Integration\ApiIntegrationTestCase;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Repository\ClientRepository;
+use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
+use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 
 class ClientRepositoryIntegrationTest extends ApiIntegrationTestCase
 {

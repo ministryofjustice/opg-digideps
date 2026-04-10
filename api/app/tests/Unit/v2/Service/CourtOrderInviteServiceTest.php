@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\v2\Service;
+namespace Tests\OPG\Digideps\Backend\Unit\v2\Service;
 
-use App\Domain\CourtOrder\CourtOrderInviteService;
-use App\Domain\CourtOrder\CourtOrderService;
-use App\Entity\Client;
-use App\Entity\CourtOrder;
-use App\Entity\Deputy;
-use App\Entity\PreRegistration;
-use App\Entity\User;
-use App\Repository\PreRegistrationRepository;
-use App\Service\DeputyService;
-use App\Service\UserService;
-use App\v2\DTO\InviteeDto;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderInviteService;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderService;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
+use OPG\Digideps\Backend\Service\DeputyService;
+use OPG\Digideps\Backend\Service\UserService;
+use OPG\Digideps\Backend\v2\DTO\InviteeDto;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Exception\ORMException;
 use PHPUnit\Framework\MockObject\MockObject;

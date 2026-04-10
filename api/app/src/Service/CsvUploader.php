@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace OPG\Digideps\Backend\Service;
 
 /**
  * keep in sync with CLIENT.
@@ -12,7 +12,7 @@ class CsvUploader
      *
      * @return string
      *
-     * @deprecated Use App\Service\DataCompression
+     * @deprecated Use OPG\Digideps\Backend\Service\DataCompression
      */
     public static function compressData($data)
     {
@@ -24,7 +24,7 @@ class CsvUploader
      *
      * @return string|array
      *
-     * @deprecated Use App\Service\DataCompression
+     * @deprecated Use OPG\Digideps\Backend\Service\DataCompression
      */
     public static function decompressData($data)
     {

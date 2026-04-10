@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\Registration;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\Registration;
 
 use DateTime;
 use RuntimeException;
-use App\Entity\PreRegistration;
-use App\Tests\Behat\BehatException;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 trait ActivateTrait
 {

@@ -1,28 +1,28 @@
 <?php
 
-namespace App\v2\Fixture\Controller;
+namespace OPG\Digideps\Backend\v2\Fixture\Controller;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Domain\CourtOrder\CourtOrderReportType;
-use App\Domain\CourtOrder\CourtOrderType;
-use App\Domain\Deputy\DeputyType;
-use App\Entity\Client;
-use App\Entity\CourtOrder;
-use App\Entity\Deputy;
-use App\Entity\Organisation;
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\Factory\OrganisationFactory;
-use App\FixtureFactory\ClientFactory;
-use App\FixtureFactory\PreRegistrationFactory;
-use App\FixtureFactory\ReportFactory;
-use App\FixtureFactory\UserFactory;
-use App\Repository\DeputyRepository;
-use App\Repository\OrganisationRepository;
-use App\Repository\ReportRepository;
-use App\Repository\UserRepository;
-use App\v2\Controller\ControllerTrait;
-use App\v2\Fixture\ReportSection;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Factory\OrganisationFactory;
+use OPG\Digideps\Backend\FixtureFactory\ClientFactory;
+use OPG\Digideps\Backend\FixtureFactory\PreRegistrationFactory;
+use OPG\Digideps\Backend\FixtureFactory\ReportFactory;
+use OPG\Digideps\Backend\FixtureFactory\UserFactory;
+use OPG\Digideps\Backend\Repository\DeputyRepository;
+use OPG\Digideps\Backend\Repository\OrganisationRepository;
+use OPG\Digideps\Backend\Repository\ReportRepository;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\v2\Controller\ControllerTrait;
+use OPG\Digideps\Backend\v2\Fixture\ReportSection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\ExpressionLanguage\Expression;
@@ -220,7 +220,7 @@ class FixtureController extends AbstractController
         return $client;
     }
 
-    private function generatePreRegistration(mixed $fromRequest, Client $client, User $user): \App\Entity\PreRegistration
+    private function generatePreRegistration(mixed $fromRequest, Client $client, User $user): \OPG\Digideps\Backend\Entity\PreRegistration
     {
         if (!is_array($fromRequest)) {
             throw new \InvalidArgumentException('Invalid request payload: expected array.');

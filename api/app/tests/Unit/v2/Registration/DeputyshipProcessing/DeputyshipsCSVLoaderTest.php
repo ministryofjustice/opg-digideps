@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
+namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\DeputyshipProcessing;
 
 use ArrayIterator;
 use stdClass;
-use App\Entity\StagingDeputyship;
-use App\v2\CSV\CSVChunker;
-use App\v2\CSV\CSVChunkerFactory;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
+use OPG\Digideps\Backend\Entity\StagingDeputyship;
+use OPG\Digideps\Backend\v2\CSV\CSVChunker;
+use OPG\Digideps\Backend\v2\CSV\CSVChunkerFactory;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
 use League\Csv\Exception as CSVException;
@@ -98,9 +98,10 @@ final class DeputyshipsCSVLoaderTest extends TestCase
         $mockQuery = $this->createMock(Query::class);
         $mockQuery->expects($this->once())->method('execute');
 
+        $qualified = StagingDeputyship::class;
         $this->mockEm->expects($this->once())
             ->method('createQuery')
-            ->with('DELETE FROM App\Entity\StagingDeputyship sd')
+            ->with("DELETE FROM {$qualified} sd")
             ->willReturn($mockQuery);
 
         $result = $this->sut->load($fileLocation);

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace OPG\Digideps\Backend\Entity;
 
 use DateTime;
 use JMS\Serializer\Annotation as JMS;
@@ -39,11 +39,11 @@ trait SynchronisableTrait
     /**
      * @var User|null
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\User")
      *
      * @ORM\JoinColumn(name="synchronised_by", referencedColumnName="id", onDelete="SET NULL")
      */
-    #[JMS\Type('App\Entity\User')]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
     #[JMS\Groups(['synchronisation'])]
     protected $synchronisedBy;
 

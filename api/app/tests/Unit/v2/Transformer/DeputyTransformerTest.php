@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\v2\Transformer;
+namespace Tests\OPG\Digideps\Backend\Unit\v2\Transformer;
 
 use PHPUnit\Framework\Attributes\Test;
-use App\v2\DTO\DeputyDto;
-use App\v2\Transformer\DeputyTransformer;
+use OPG\Digideps\Backend\v2\DTO\DeputyDto;
+use OPG\Digideps\Backend\v2\Transformer\DeputyTransformer;
 use PHPUnit\Framework\TestCase;
 
 final class DeputyTransformerTest extends TestCase

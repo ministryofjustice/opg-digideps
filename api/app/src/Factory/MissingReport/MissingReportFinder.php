@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Factory\MissingReport;
+namespace OPG\Digideps\Backend\Factory\MissingReport;
 
-use App\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class MissingReportFinder

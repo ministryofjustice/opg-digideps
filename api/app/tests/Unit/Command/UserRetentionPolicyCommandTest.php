@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Command;
+namespace Tests\OPG\Digideps\Backend\Unit\Command;
 
 use DateTime;
-use App\Command\UserRetentionPolicyCommand;
-use App\Entity\User;
-use App\Event\UserRetentionPolicyCommandEvent;
-use App\EventDispatcher\ObservableEventDispatcher;
-use App\Repository\UserRepository;
+use OPG\Digideps\Backend\Command\UserRetentionPolicyCommand;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Event\UserRetentionPolicyCommandEvent;
+use OPG\Digideps\Backend\EventDispatcher\ObservableEventDispatcher;
+use OPG\Digideps\Backend\Repository\UserRepository;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;

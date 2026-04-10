@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\AdminManagement;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\AdminManagement;
 
 use Throwable;
-use App\Entity\User;
-use App\Tests\Behat\BehatException;
+use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 trait AdminManagementTrait
 {

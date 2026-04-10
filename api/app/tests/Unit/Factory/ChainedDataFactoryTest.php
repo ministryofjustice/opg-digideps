@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Factory;
+namespace Tests\OPG\Digideps\Backend\Unit\Factory;
 
-use App\Factory\ChainedDataFactory;
-use App\Factory\DataFactoryInterface;
-use App\Factory\DataFactoryResult;
+use OPG\Digideps\Backend\Factory\ChainedDataFactory;
+use OPG\Digideps\Backend\Factory\DataFactoryInterface;
+use OPG\Digideps\Backend\Factory\DataFactoryResult;
 use PHPUnit\Framework\TestCase;
 
 class ChainedDataFactoryTest extends TestCase

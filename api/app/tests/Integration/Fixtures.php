@@ -1,23 +1,34 @@
 <?php
 
-namespace App\Tests\Integration;
+namespace Tests\OPG\Digideps\Backend\Integration;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Domain\CourtOrder\CourtOrderReportType;
-use App\Domain\CourtOrder\CourtOrderType;
-use App\Domain\Deputy\DeputyType;
+use Doctrine\ORM\EntityRepository;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
 use DateTime;
 use InvalidArgumentException;
+use OPG\Digideps\Backend\Entity\Report\Asset;
+use OPG\Digideps\Backend\Entity\Report\AssetOther;
+use OPG\Digideps\Backend\Entity\Report\AssetProperty;
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\Checklist;
+use OPG\Digideps\Backend\Entity\Report\Contact;
+use OPG\Digideps\Backend\Entity\Report\Decision;
+use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\Expense;
+use OPG\Digideps\Backend\Entity\Report\VisitsCare;
 use RuntimeException;
-use App\Entity as EntityDir;
-use App\Entity\Client;
-use App\Entity\CourtOrder;
-use App\Entity\Deputy;
-use App\Entity\Organisation;
-use App\Entity\PreRegistration;
-use App\Entity\Report\Report;
-use App\Entity\Report\ReportSubmission;
-use App\Entity\User;
+use OPG\Digideps\Backend\Entity as EntityDir;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
 
@@ -158,13 +169,13 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Report\Document
+     * @return Document
      *
      * @throws ORMException
      */
     public function createDocument($report, string $filename, bool $isReportPdf = true)
     {
-        $doc = new EntityDir\Report\Document($report);
+        $doc = new Document($report);
         $doc->setFileName($filename);
         $doc->setIsReportPdf($isReportPdf);
 
@@ -175,7 +186,7 @@ class Fixtures
 
     public function createChecklist(Report $report)
     {
-        $cl = new EntityDir\Report\Checklist($report);
+        $cl = new Checklist($report);
         $this->em->persist($cl);
 
         return $cl;
@@ -201,16 +212,16 @@ class Fixtures
 
             $report = $this->createReport($client);
 
-            $other = (new EntityDir\Report\AssetOther())
+            $other = (new AssetOther())
                 ->setValue(rand(1, 10000))
                 ->setReport($report);
 
-            $property = (new EntityDir\Report\AssetProperty())
+            $property = (new AssetProperty())
                 ->setValue(rand(1, 10000))
                 ->setOwnedPercentage(rand(1, 100) / 100)
                 ->setReport($report);
 
-            $bankAccount = (new EntityDir\Report\BankAccount())
+            $bankAccount = (new BankAccount())
                 ->setClosingBalance(floatval(rand(10, 1000000) / 10))
                 ->setReport($report);
 
@@ -250,11 +261,11 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Report\BankAccount
+     * @return BankAccount
      */
     public function createAccount(Report $report, array $settersMap = [])
     {
-        $ret = new EntityDir\Report\BankAccount();
+        $ret = new BankAccount();
         $ret->setReport($report);
         $ret->setAccountNumber('1234')
             ->setBank('hsbc')
@@ -270,11 +281,11 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Report\Contact
+     * @return Contact
      */
     public function createContact(Report $report, array $settersMap = [])
     {
-        $contact = new EntityDir\Report\Contact();
+        $contact = new Contact();
         $contact->setReport($report);
         $contact->setAddress('address' . time());
 
@@ -287,11 +298,11 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Report\VisitsCare
+     * @return VisitsCare
      */
     public function createVisitsCare(Report $report, array $settersMap = [])
     {
-        $sg = new EntityDir\Report\VisitsCare();
+        $sg = new VisitsCare();
         $sg->setReport($report);
         $sg->setDoYouLiveWithClient('yes');
 
@@ -304,11 +315,11 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Report\Asset
+     * @return Asset
      */
     public function createAsset($type, Report $report, array $settersMap = [])
     {
-        $asset = EntityDir\Report\Asset::factory($type);
+        $asset = Asset::factory($type);
         $asset->setReport($report);
 
         foreach ($settersMap as $k => $v) {
@@ -320,11 +331,11 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Report\Expense
+     * @return Expense
      */
     public function createReportExpense($type, Report $report, array $settersMap = [])
     {
-        $record = new EntityDir\Report\Expense($report);
+        $record = new Expense($report);
         foreach ($settersMap as $k => $v) {
             $record->$k($v);
         }
@@ -334,11 +345,11 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Report\Decision
+     * @return Decision
      */
     public function createDecision(Report $report, array $settersMap = [])
     {
-        $decision = new EntityDir\Report\Decision();
+        $decision = new Decision();
         $decision->setReport($report);
         $decision->setClientInvolvedBoolean(true);
         $decision->setDescription('description' . time());
@@ -475,17 +486,20 @@ class Fixtures
         return $this;
     }
 
-    public function getRepo($entity)
+    /**
+     * @template T
+     * @param class-string<T> $entity
+     * @return EntityRepository<T>
+     */
+
+    public function getRepo(string $entity): EntityRepository
     {
-        return $this->em->getRepository(class_exists($entity) ? $entity : "App\\Entity\\{$entity}");
+        return $this->em->getRepository($entity);
     }
 
-    /**
-     * @return Report
-     */
-    public function getReportById(int $id)
+    public function getReportById(int $id): ?Report
     {
-        return $this->getRepo('Report\Report')->find($id);
+        return $this->getRepo(Report::class)->find($id);
     }
 
     /**
@@ -501,17 +515,15 @@ class Fixtures
      */
     public function findUserByEmail(string $email)
     {
-        return $this->getRepo('User')->findOneBy(['email' => $email]);
+        return $this->getRepo(User::class)->findOneBy(['email' => $email]);
     }
 
     /**
      * @param string $deputyNo
-     *
-     * @return Deputy
      */
-    public function findDeputyByNumber($deputyNo)
+    public function findDeputyByNumber($deputyNo): ?Deputy
     {
-        return $this->getRepo('Deputy')->findOneBy(['deputyNo' => $deputyNo]);
+        return $this->getRepo(Deputy::class)->findOneBy(['deputyNo' => $deputyNo]);
     }
 
     public function getConnection()

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\v2\Assembler\Report;
+namespace OPG\Digideps\Backend\v2\Assembler\Report;
 
-use App\v2\DTO\ReportDto;
+use OPG\Digideps\Backend\v2\DTO\ReportDto;
 
 interface ReportAssemblerInterface
 {

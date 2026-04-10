@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Factory;
+namespace OPG\Digideps\Backend\Factory;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Entity\StagingDeputyship;
-use App\Entity\StagingSelectedCandidate;
-use App\v2\Registration\Enum\DeputyshipCandidateAction;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Entity\StagingDeputyship;
+use OPG\Digideps\Backend\Entity\StagingSelectedCandidate;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 
 class StagingSelectedCandidateFactory
 {

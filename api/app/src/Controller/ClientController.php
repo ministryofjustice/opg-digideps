@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace OPG\Digideps\Backend\Controller;
 
-use App\Entity\Client;
-use App\Entity\Deputy;
-use App\Entity\User;
-use App\Event\ClientArchivedEvent;
-use App\EventDispatcher\ObservableEventDispatcher;
-use App\Repository\ClientRepository;
-use App\Service\Audit\AuditEvents;
-use App\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Event\ClientArchivedEvent;
+use OPG\Digideps\Backend\EventDispatcher\ObservableEventDispatcher;
+use OPG\Digideps\Backend\Repository\ClientRepository;
+use OPG\Digideps\Backend\Service\Audit\AuditEvents;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;

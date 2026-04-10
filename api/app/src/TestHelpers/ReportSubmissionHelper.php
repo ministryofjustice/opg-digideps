@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\TestHelpers;
+namespace OPG\Digideps\Backend\TestHelpers;
 
-use App\Entity\Client;
-use App\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use Doctrine\ORM\EntityManager;
 
 class ReportSubmissionHelper

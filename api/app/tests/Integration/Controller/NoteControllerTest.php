@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Tests\Integration\Controller;
+namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
-use App\Entity\Client;
-use App\Entity\Note;
-use App\Entity\User;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Note;
+use OPG\Digideps\Backend\Entity\User;
 
 class NoteControllerTest extends AbstractTestController
 {
@@ -33,19 +33,19 @@ class NoteControllerTest extends AbstractTestController
         parent::setUpBeforeClass();
 
         // deputy1
-        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
 
         // pa 1
-        self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
+        self::$pa1 = self::fixtures()->getRepo(User::class)->findOneByEmail('pa@example.org');
         self::$pa1Client1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client1']);
         self::$pa1Client1Note1 = self::fixtures()->createNote(self::$pa1Client1, self::$pa1, 'cat', 'title', 'content');
         self::$pa1Client2 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client2']);
         // pa2 (same team as pa1)
-        self::$pa2 = self::fixtures()->getRepo('User')->findOneByEmail('pa_admin@example.org')->addClient(self::$pa1Client1);
+        self::$pa2 = self::fixtures()->getRepo(User::class)->findOneByEmail('pa_admin@example.org')->addClient(self::$pa1Client1);
 
         // pa 3 with other client (other team)
-        self::$pa3 = self::fixtures()->getRepo('User')->findOneByEmail('pa_team_member@example.org');
+        self::$pa3 = self::fixtures()->getRepo(User::class)->findOneByEmail('pa_team_member@example.org');
         self::$pa3Client1 = self::fixtures()->createClient(self::$pa3, ['setFirstname' => 'pa2Client1']);
 
         $org = self::fixtures()->createOrganisation('Example', rand(1, 999999) . 'example.org', true);
@@ -131,7 +131,7 @@ class NoteControllerTest extends AbstractTestController
             ],
         ])['data'];
 
-        $note = self::$pa2 = self::fixtures()->getRepo('Note')->find($data);
+        $note = self::$pa2 = self::fixtures()->getRepo(Note::class)->find($data);
 
         $this->assertEquals($noteId, $note->getId());
         $this->assertEquals('cat-edited', $note->getCategory());

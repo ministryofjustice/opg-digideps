@@ -1,6 +1,6 @@
 <?php
 
-namespace App\v2\Registration\DTO;
+namespace OPG\Digideps\Backend\v2\Registration\DTO;
 
 class LayDeputyshipDtoCollection extends \ArrayObject
 {

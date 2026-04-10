@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\CourtOrder;
+namespace OPG\Digideps\Backend\Domain\CourtOrder;
 
-use App\Entity\CourtOrder;
-use App\Entity\Deputy;
-use App\Entity\User;
-use App\Repository\ClientRepository;
-use App\Repository\CourtOrderRepository;
-use App\Repository\DeputyRepository;
-use App\Repository\ReportRepository;
-use App\Repository\UserRepository;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\ClientRepository;
+use OPG\Digideps\Backend\Repository\CourtOrderRepository;
+use OPG\Digideps\Backend\Repository\DeputyRepository;
+use OPG\Digideps\Backend\Repository\ReportRepository;
+use OPG\Digideps\Backend\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;

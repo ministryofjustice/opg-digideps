@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Tests\Integration\Controller;
+namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
 use DateTime;
 use RuntimeException;
-use App\Entity\PreRegistration;
-use App\Entity\User;
-use App\Tests\Integration\Fixtures;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 
 class PreRegistrationControllerTest extends AbstractTestController
 {
@@ -104,7 +104,7 @@ class PreRegistrationControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenAdmin,
         ]);
 
-        $entitiesRemaining = $this->fixtures()->clear()->getRepo('PreRegistration')->findAll();
+        $entitiesRemaining = $this->fixtures()->clear()->getRepo(PreRegistration::class)->findAll();
         $this->assertCount(0, $entitiesRemaining);
     }
 
@@ -145,7 +145,7 @@ class PreRegistrationControllerTest extends AbstractTestController
 
     public function testVerifyPreRegistrationCoDeputyCannotSignUp()
     {
-        $deputy1 = $this->fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        $deputy1 = $this->fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
         $this->fixtures()->createClient($deputy1, ['setFirstname' => 'deputy1Client1', 'setCaseNumber' => '12345678']);
 
         $this->buildAndPersistPreRegistrationEntity('12345678', 'SINGLE', 'test', 'deputy');
@@ -156,7 +156,7 @@ class PreRegistrationControllerTest extends AbstractTestController
         self::$tokenDeputy = $this->loginAsDeputy();
 
         /** @var User $loggedInUser */
-        $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
+        $loggedInUser = $this->fixtures()->clear()->getRepo(User::class)->find($this->loggedInUserId);
 
         $this->fixtures()->persist($loggedInUser);
         $this->fixtures()->flush();
@@ -204,7 +204,7 @@ class PreRegistrationControllerTest extends AbstractTestController
         self::$tokenDeputy = $this->loginAsDeputy();
 
         /** @var User $loggedInUser */
-        $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
+        $loggedInUser = $this->fixtures()->clear()->getRepo(User::class)->find($this->loggedInUserId);
 
         $loggedInUser->setDeputyUid(0);
         $this->fixtures()->persist($loggedInUser);
@@ -238,7 +238,7 @@ class PreRegistrationControllerTest extends AbstractTestController
         self::$tokenDeputy = $this->loginAsDeputy();
 
         /** @var User $loggedInUser */
-        $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
+        $loggedInUser = $this->fixtures()->clear()->getRepo(User::class)->find($this->loggedInUserId);
 
         $loggedInUser->setDeputyUid(0);
         $this->fixtures()->persist($loggedInUser);
@@ -254,7 +254,7 @@ class PreRegistrationControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
+        $loggedInUser = $this->fixtures()->clear()->getRepo(User::class)->find($this->loggedInUserId);
 
         try {
             $this->assertEquals(0, $loggedInUser->getDeputyUid());
@@ -267,7 +267,7 @@ class PreRegistrationControllerTest extends AbstractTestController
 
     public function testVerifySameDeputyCannotSignUp()
     {
-        $deputy1 = $this->fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        $deputy1 = $this->fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
         $this->fixtures()->createClient($deputy1, ['setFirstname' => 'deputy1Client1', 'setCaseNumber' => '1234567t']);
 
         $this->buildAndPersistPreRegistrationEntity('1234567t', 'SINGLE', 'test', 'deputy');
@@ -277,7 +277,7 @@ class PreRegistrationControllerTest extends AbstractTestController
         self::$tokenDeputy = $this->loginAsDeputy();
 
         /** @var User $loggedInUser */
-        $loggedInUser = $this->fixtures()->clear()->getRepo('User')->find($this->loggedInUserId);
+        $loggedInUser = $this->fixtures()->clear()->getRepo(User::class)->find($this->loggedInUserId);
 
         $this->fixtures()->persist($loggedInUser);
         $this->fixtures()->flush();
