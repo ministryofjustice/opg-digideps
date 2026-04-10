@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\v2\Transformer;
+namespace Tests\OPG\Digideps\Backend\Unit\v2\Transformer;
 
 use PHPUnit\Framework\Attributes\Test;
-use App\v2\DTO\OrganisationDto;
-use App\v2\DTO\UserDto;
-use App\v2\Transformer\ClientTransformer;
-use App\v2\Transformer\OrganisationTransformer;
-use App\v2\Transformer\UserTransformer;
+use OPG\Digideps\Backend\v2\DTO\OrganisationDto;
+use OPG\Digideps\Backend\v2\DTO\UserDto;
+use OPG\Digideps\Backend\v2\Transformer\ClientTransformer;
+use OPG\Digideps\Backend\v2\Transformer\OrganisationTransformer;
+use OPG\Digideps\Backend\v2\Transformer\UserTransformer;
 use PHPUnit\Framework\TestCase;
 
 final class OrganisationTransformerTest extends TestCase

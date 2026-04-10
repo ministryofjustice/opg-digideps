@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service\Stats;
+namespace Tests\OPG\Digideps\Backend\Unit\Stats;
 
 use PHPUnit\Framework\Attributes\Test;
 use DateTime;
 use InvalidArgumentException;
 use DateInterval;
-use App\Service\Stats\StatsQueryParameters;
+use OPG\Digideps\Backend\Service\Stats\StatsQueryParameters;
 use PHPUnit\Framework\TestCase;
 
 final class StatsQueryParametersTest extends TestCase

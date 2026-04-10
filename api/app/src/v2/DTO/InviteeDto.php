@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\v2\DTO;
+namespace OPG\Digideps\Backend\v2\DTO;
 
-use App\Entity\User;
+use OPG\Digideps\Backend\Entity\User;
 
 /**
  * Encapsulate data required to invite someone to something in digideps.

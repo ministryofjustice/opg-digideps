@@ -1,9 +1,9 @@
 <?php
 
-namespace App\v2\Transformer;
+namespace OPG\Digideps\Backend\v2\Transformer;
 
-use App\v2\DTO\ClientDto;
-use App\v2\DTO\UserDto;
+use OPG\Digideps\Backend\v2\DTO\ClientDto;
+use OPG\Digideps\Backend\v2\DTO\UserDto;
 
 class UserTransformer
 {

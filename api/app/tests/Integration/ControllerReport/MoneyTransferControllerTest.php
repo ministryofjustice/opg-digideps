@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Tests\Integration\ControllerReport;
+namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
-use App\Entity\Report\MoneyTransfer;
-use App\Entity\Report\Report;
-use App\Tests\Integration\Controller\AbstractTestController;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransfer;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class MoneyTransferControllerTest extends AbstractTestController
 {
@@ -23,7 +24,7 @@ class MoneyTransferControllerTest extends AbstractTestController
     {
         parent::setUp();
 
-        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
 
         $client1 = self::fixtures()->createClient(self::$deputy1);
         self::fixtures()->flush();
@@ -116,7 +117,7 @@ class MoneyTransferControllerTest extends AbstractTestController
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_MONEY_TRANSFERS));
 
         // assert account created with transactions
-        $report = self::fixtures()->getReportById(self::$report1->getId()); /* @var $report \App\Entity\Report\Report */
+        $report = self::fixtures()->getReportById(self::$report1->getId()); /* @var $report \OPG\Digideps\Backend\Entity\Report\Report */
 
         // test last transaction
         $t = $report->getMoneyTransfers()->get(2);
@@ -150,7 +151,7 @@ class MoneyTransferControllerTest extends AbstractTestController
 
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_MONEY_TRANSFERS));
 
-        $t = self::fixtures()->getRepo('Report\MoneyTransfer')->find(self::$transfer1->getId());
+        $t = self::fixtures()->getRepo(MoneyTransfer::class)->find(self::$transfer1->getId());
         $this->assertEquals(124, $t->getAmount());
         $this->assertEquals(self::$account2->getId(), $t->getFrom()->getId());
         $this->assertEquals(self::$account1->getId(), $t->getTo()->getId());
@@ -179,7 +180,7 @@ class MoneyTransferControllerTest extends AbstractTestController
 
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_MONEY_TRANSFERS));
 
-        $t = self::fixtures()->getRepo('Report\MoneyTransfer')->find(self::$transfer1->getId());
+        $t = self::fixtures()->getRepo(MoneyTransfer::class)->find(self::$transfer1->getId());
         $this->assertTrue(null === $t);
     }
 
@@ -189,7 +190,7 @@ class MoneyTransferControllerTest extends AbstractTestController
     public function testNoTransfers()
     {
         /* @var $report Report */
-        $report = self::fixtures()->getRepo('Report\Report')->find(self::$report1->getId());
+        $report = self::fixtures()->getRepo(Report::class)->find(self::$report1->getId());
         $this->assertTrue(count($report->getMoneyTransfers()) > 0);
         self::fixtures()->clear();
 
@@ -202,7 +203,7 @@ class MoneyTransferControllerTest extends AbstractTestController
             ],
         ]);
 
-        $report = self::fixtures()->getRepo('Report\Report')->find(self::$report1->getId());
+        $report = self::fixtures()->getRepo(Report::class)->find(self::$report1->getId());
         $this->assertCount(0, $report->getMoneyTransfers());
     }
 }

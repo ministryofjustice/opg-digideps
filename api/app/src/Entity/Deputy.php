@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Entity;
+namespace OPG\Digideps\Backend\Entity;
 
-use App\Domain\Deputy\DeputyType;
-use App\Entity\Traits\CreateUpdateTimestamps;
-use App\v2\Registration\DTO\OrgDeputyshipDto;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
+use OPG\Digideps\Backend\v2\Registration\DTO\OrgDeputyshipDto;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -15,7 +15,7 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(name="deputy", indexes={@ORM\Index(name="deputy_uid_idx", columns={"deputy_uid"})})
  *
- * @ORM\Entity(repositoryClass="App\Repository\DeputyRepository")
+ * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\DeputyRepository")
  *
  * @ORM\HasLifecycleCallbacks()
  */
@@ -42,7 +42,7 @@ class Deputy
      *
      * @var ArrayCollection<int, Client>
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Client", mappedBy="deputy")
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Client", mappedBy="deputy")
      *
      * @ORM\JoinColumn(name="id", referencedColumnName="deputy_id", onDelete="CASCADE")
      */
@@ -162,18 +162,18 @@ class Deputy
     private ?string $phoneAlternative = null;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\User", inversedBy="deputy", cascade={"remove", "persist"})
+     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\User", inversedBy="deputy", cascade={"remove", "persist"})
      *
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="cascade")
      */
-    #[JMS\Type('App\Entity\User')]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
     #[JMS\Groups(['deputy-user'])]
     private ?User $user = null;
 
     /**
      * @var ArrayCollection<int, CourtOrderDeputy>
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="deputy", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\CourtOrderDeputy", mappedBy="deputy", cascade={"persist", "remove"})
      */
     private Collection $courtOrderDeputyRelationships;
 

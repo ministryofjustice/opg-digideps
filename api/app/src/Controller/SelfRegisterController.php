@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Controller;
+namespace OPG\Digideps\Backend\Controller;
 
-use App\Entity\Client;
-use App\Entity\User;
-use App\Repository\UserRepository;
-use App\Service\Auth\AuthService;
-use App\Service\Formatter\RestFormatter;
-use App\Service\UserRegistrationService;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\Service\Auth\AuthService;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\Service\UserRegistrationService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Common\Registration\SelfRegisterData;
@@ -135,7 +135,7 @@ class SelfRegisterController extends RestController
     #[Route(path: '/updatecodeputy/{userId}', requirements: ['userId' => '\d+'], methods: ['PUT'])]
     public function updateCoDeputyWithVerificationData(Request $request, int $userId): User
     {
-        $user = $this->em->getRepository('App\Entity\User')->findOneBy(['id' => $userId]);
+        $user = $this->em->getRepository(User::class)->findOneBy(['id' => $userId]);
 
         $coDeputyVerificationData = $this->formatter->deserializeBodyContent($request);
 

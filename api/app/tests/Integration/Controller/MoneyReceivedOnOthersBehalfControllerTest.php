@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Controller;
+namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
-use App\Entity\Report\Report;
-use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\MoneyReceivedOnClientsBehalf;
-use App\TestHelpers\ClientTestHelper;
-use App\TestHelpers\ReportTestHelper;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
+use OPG\Digideps\Backend\Entity\Report\MoneyReceivedOnClientsBehalf;
+use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
+use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
 
 class MoneyReceivedOnOthersBehalfControllerTest extends AbstractTestController
 {

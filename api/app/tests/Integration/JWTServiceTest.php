@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Service;
+namespace Tests\OPG\Digideps\Backend\Integration;
 
 use DateTimeImmutable;
 use Lcobucci\JWT\Signer\Rsa\Sha256;
 use DateTime;
-use App\Entity\User;
-use App\Service\JWT\JWTService;
-use App\Service\SecretManagerService;
-use App\Service\Time\DateTimeProvider;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Service\JWT\JWTService;
+use OPG\Digideps\Backend\Service\SecretManagerService;
+use OPG\Digideps\Backend\Service\Time\DateTimeProvider;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Signer\Key\InMemory;
 use PHPUnit\Framework\TestCase;

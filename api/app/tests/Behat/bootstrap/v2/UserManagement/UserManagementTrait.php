@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\UserManagement;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\UserManagement;
 
-use App\Entity\Organisation;
-use App\Entity\User;
-use App\Tests\Behat\BehatException;
-use App\Tests\Behat\v2\Common\UserDetails;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Behat\BehatException;
+use Tests\OPG\Digideps\Backend\Behat\v2\Common\UserDetails;
 
 trait UserManagementTrait
 {

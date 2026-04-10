@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace OPG\Digideps\Backend\Service;
 
-use App\Entity\Client;
-use App\Entity\User;
-use App\Repository\ClientRepository;
-use App\Repository\UserRepository;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\ClientRepository;
+use OPG\Digideps\Backend\Repository\UserRepository;
 use Doctrine\DBAL\Exception as DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 

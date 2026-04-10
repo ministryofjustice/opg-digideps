@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\ReportSubmission;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\ReportSubmission;
 
-use App\Entity\Client;
-use App\Entity\Ndr\Ndr;
-use App\Entity\Report\Document;
-use App\Entity\Report\Report;
-use App\Entity\Report\ReportSubmission;
-use App\Entity\User;
-use App\Service\ParameterStoreService;
-use App\Tests\Behat\BehatException;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Ndr\Ndr;
+use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Service\ParameterStoreService;
+use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 trait ReportSubmissionTrait
 {

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\v2\Assembler;
+namespace OPG\Digideps\Backend\v2\Assembler;
 
-use App\Entity\Client;
-use App\v2\Assembler\Report\ReportAssemblerInterface;
-use App\v2\DTO\ClientDto;
-use App\v2\DTO\DtoPropertySetterTrait;
-use App\v2\DTO\OrganisationDto;
-use App\v2\DTO\UserDto;
-use App\v2\Registration\DTO\LayDeputyshipDto;
-use App\v2\Registration\DTO\OrgDeputyshipDto;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\v2\Assembler\Report\ReportAssemblerInterface;
+use OPG\Digideps\Backend\v2\DTO\ClientDto;
+use OPG\Digideps\Backend\v2\DTO\DtoPropertySetterTrait;
+use OPG\Digideps\Backend\v2\DTO\OrganisationDto;
+use OPG\Digideps\Backend\v2\DTO\UserDto;
+use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
+use OPG\Digideps\Backend\v2\Registration\DTO\OrgDeputyshipDto;
 
 class ClientAssembler
 {

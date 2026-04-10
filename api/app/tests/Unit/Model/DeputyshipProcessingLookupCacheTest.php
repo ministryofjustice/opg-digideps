@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Model;
+namespace Tests\OPG\Digideps\Backend\Unit\Model;
 
-use App\Domain\Deputyship\DeputyshipProcessingLookupCache;
-use App\Repository\ClientRepository;
-use App\Repository\CourtOrderRepository;
-use App\Repository\DeputyRepository;
+use OPG\Digideps\Backend\Domain\Deputyship\DeputyshipProcessingLookupCache;
+use OPG\Digideps\Backend\Repository\ClientRepository;
+use OPG\Digideps\Backend\Repository\CourtOrderRepository;
+use OPG\Digideps\Backend\Repository\DeputyRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;

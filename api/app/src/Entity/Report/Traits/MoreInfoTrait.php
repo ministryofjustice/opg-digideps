@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\DeputyshipProcessing;
+namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing;
 
-use App\Service\ReportUtils;
-use App\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
-use App\v2\Registration\SelfRegistration\Factory\LayDeputyshipDtoCollectionAssemblerFactory;
-use App\v2\Registration\Uploader\LayDeputyshipUploader;
-use App\v2\Registration\Uploader\OrgDeputyshipUploader;
+use OPG\Digideps\Backend\Service\ReportUtils;
+use OPG\Digideps\Backend\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
+use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\LayDeputyshipDtoCollectionAssemblerFactory;
+use OPG\Digideps\Backend\v2\Registration\Uploader\LayDeputyshipUploader;
+use OPG\Digideps\Backend\v2\Registration\Uploader\OrgDeputyshipUploader;
 use Psr\Log\LoggerInterface;
 
 class CSVDeputyshipProcessing

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\AdminManagement;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\AdminManagement;
 
-use App\Tests\Behat\v2\Common\AdminTrait;
-use App\Tests\Behat\v2\Common\BaseFeatureContext;
+use Tests\OPG\Digideps\Backend\Behat\v2\Common\AdminTrait;
+use Tests\OPG\Digideps\Backend\Behat\v2\Common\BaseFeatureContext;
 
 class AdminManagementFeatureContext extends BaseFeatureContext
 {

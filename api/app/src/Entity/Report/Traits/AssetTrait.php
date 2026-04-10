@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
-use App\Entity\AssetInterface;
-use App\Entity\Report\Asset;
-use App\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\AssetInterface;
+use OPG\Digideps\Backend\Entity\Report\Asset;
+use OPG\Digideps\Backend\Entity\Report\Report;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -16,9 +16,9 @@ trait AssetTrait
      *
      * @JMS\Groups({"asset"})
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Report\Asset>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\Asset>")
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\Asset", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\Asset", mappedBy="report", cascade={"persist", "remove"})
      */
     private $assets;
 

@@ -2,30 +2,31 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service\Auth;
+namespace Tests\OPG\Digideps\Backend\Unit\Service\Auth;
 
 use Mockery;
+use OPG\Digideps\Backend\Entity\User;
+use Psr\Log\LoggerInterface;
 use RuntimeException;
-use App\Repository\UserRepository;
-use App\Security\RedisUserProvider;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\Security\RedisUserProvider;
 use Mockery\MockInterface;
-use MockeryStub as m;
+use Tests\OPG\Digideps\Backend\Unit\MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 use Predis\Client;
-use Symfony\Bridge\Monolog\Logger;
 
 final class UserProviderTest extends TestCase
 {
-    private UserRepository|MockInterface $repo;
-    private Client|MockInterface $redis;
-    private Logger|MockInterface $logger;
+    private UserRepository&MockInterface $repo;
+    private Client&MockInterface $redis;
+    private LoggerInterface&MockInterface $logger;
     private RedisUserProvider $userProvider;
 
     public function setUp(): void
     {
         $this->repo = m::stub(UserRepository::class);
         $this->redis = m::stub(Client::class);
-        $this->logger = m::stub(Logger::class);
+        $this->logger = m::stub(LoggerInterface::class);
         $options = ['timeout_seconds' => 7];
 
         $this->userProvider = new RedisUserProvider($this->redis, $this->logger, $options, $this->repo, 'testing');
@@ -53,7 +54,7 @@ final class UserProviderTest extends TestCase
 
     public function testloadUserByUsernameFound(): void
     {
-        $user = m::mock('App\Entity\User');
+        $user = m::mock(User::class);
 
         $this->redis->shouldReceive('get')->with('token')->andReturn(1);
         $this->redis->shouldReceive('expire')->with('token', 7)->once()->andReturn(1);
@@ -66,16 +67,16 @@ final class UserProviderTest extends TestCase
 
     public function testsupportsClass(): void
     {
-        $user = m::mock('App\Entity\User');
+        $user = m::mock(User::class);
 
         $this->assertFalse($this->userProvider->supportsClass('not a user class'));
         $this->assertTrue($this->userProvider->supportsClass(get_class($user)));
-        $this->assertTrue($this->userProvider->supportsClass('App\Entity\User'));
+        $this->assertTrue($this->userProvider->supportsClass(User::class));
     }
 
     public function testgenerateRandomTokenAndStore(): void
     {
-        $user = m::stub('App\Entity\User', [
+        $user = m::stub(User::class, [
             'getId' => 123,
         ]);
 
@@ -91,7 +92,7 @@ final class UserProviderTest extends TestCase
         $this->assertNotEquals($token, $token2, 'token must generate a new value when called for the 2nd time');
     }
 
-    public function testremoveToken(): void
+    public function testRemoveToken(): void
     {
         $this->redis->shouldReceive('set')->with('token', null)->once();
 

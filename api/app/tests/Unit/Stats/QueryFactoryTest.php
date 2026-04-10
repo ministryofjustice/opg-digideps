@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service\Stats;
+namespace Tests\OPG\Digideps\Backend\Unit\Stats;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use InvalidArgumentException;
-use App\Service\Stats\Query\Query;
-use App\Service\Stats\QueryFactory;
-use App\Service\Stats\StatsQueryParameters;
+use OPG\Digideps\Backend\Service\Stats\Query\Query;
+use OPG\Digideps\Backend\Service\Stats\QueryFactory;
+use OPG\Digideps\Backend\Service\Stats\StatsQueryParameters;
 use Doctrine\ORM\EntityManager;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;

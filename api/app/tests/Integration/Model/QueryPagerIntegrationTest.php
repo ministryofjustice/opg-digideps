@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Model;
+namespace Tests\OPG\Digideps\Backend\Integration\Model;
 
-use App\Entity\StagingSelectedCandidate;
-use App\Tests\Integration\ApiIntegrationTestCase;
-use App\Utility\Query\QueryPager;
-use App\v2\Registration\Enum\DeputyshipCandidateAction;
+use OPG\Digideps\Backend\Entity\StagingSelectedCandidate;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use OPG\Digideps\Backend\Utility\Query\QueryPager;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 
 class QueryPagerIntegrationTest extends ApiIntegrationTestCase
 {

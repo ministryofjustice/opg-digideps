@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Controller;
+namespace OPG\Digideps\Backend\v2\Controller;
 
-use App\Domain\CourtOrder\CourtOrderInviteService;
-use App\Domain\CourtOrder\CourtOrderService;
-use App\Entity\User;
-use App\Service\Formatter\RestFormatter;
-use App\v2\DTO\InviteeDto;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderInviteService;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderService;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\v2\DTO\InviteeDto;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Backend\Entity\Report;
 
-use App\Entity\MoneyReceivedOnClientsBehalfInterface;
+use OPG\Digideps\Backend\Entity\MoneyReceivedOnClientsBehalfInterface;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\JoinColumn;
@@ -53,13 +53,13 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     private \DateTime $created;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\ClientBenefitsCheck", inversedBy="moneyReceivedOnClientsBehalf", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck", inversedBy="moneyReceivedOnClientsBehalf", cascade={"persist"})
      *
      * @JoinColumn(name="client_benefits_check_id", referencedColumnName="id")
      *
      * @JMS\Groups({"client-benefits-check"})
      *
-     * @JMS\Type("App\Entity\Report\ClientBenefitsCheck")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck")
      */
     private ClientBenefitsCheck $clientBenefitsCheck;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Tests\Integration\DBAL;
+namespace Tests\OPG\Digideps\Backend\Integration\DBAL;
 
 use Exception;
-use App\DBAL\ConnectionWrapper;
+use OPG\Digideps\Backend\DBAL\ConnectionWrapper;
 use Aws\SecretsManager\SecretsManagerClient;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;

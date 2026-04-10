@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\v2\Registration\SelfRegistration\Factory;
+namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\SelfRegistration\Factory;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\Attributes\Test;
 use DateTime;
 use Exception;
-use App\Entity\PreRegistration;
-use App\Service\DateTimeProvider;
-use App\v2\Registration\DTO\LayDeputyshipDto;
-use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
-use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Service\DateTimeProvider;
+use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
+use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
+use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\ConstraintViolationList;
@@ -21,19 +21,13 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 final class PreRegistrationFactoryTest extends TestCase
 {
     private PreRegistrationFactory $factory;
-
-    /** @var ValidatorInterface|\PHPUnit_Framework_MockObject_MockObject */
-    private MockObject $validator;
-
-    /** @var DateTimeProvider|\PHPUnit_Framework_MockObject_MockObject */
-    private MockObject $dateTimeProvider;
+    private MockObject&ValidatorInterface $validator;
 
     protected function setUp(): void
     {
         $this->validator = $this->createMock(ValidatorInterface::class);
-        $this->dateTimeProvider = $this->createMock(DateTimeProvider::class);
 
-        $this->factory = new PreRegistrationFactory($this->validator, $this->dateTimeProvider);
+        $this->factory = new PreRegistrationFactory($this->validator);
     }
 
     #[Test]
@@ -61,10 +55,8 @@ final class PreRegistrationFactoryTest extends TestCase
             ->method('validate')
             ->willReturn(new ConstraintViolationList());
 
-        /** @var PreRegistration $result */
         $result = $this->factory->createFromDto($this->buildLayDeputyshipDto());
 
-        $this->assertInstanceOf(PreRegistration::class, $result);
         $this->assertEquals('case', $result->getCaseNumber());
         $this->assertEquals('depnum', $result->getDeputyUid());
         $this->assertEquals('depsurname', $result->getDeputySurname());
@@ -78,7 +70,7 @@ final class PreRegistrationFactoryTest extends TestCase
         $this->assertEquals('type', $result->getTypeOfReport());
         $this->assertEquals('pfa', $result->getOrderType());
         $this->assertEquals('2011-06-14', $result->getOrderDate()->format('Y-m-d'));
-        $this->assertEquals(false, $result->getIsCoDeputy());
+        $this->assertFalse($result->getIsCoDeputy());
     }
 
     /**

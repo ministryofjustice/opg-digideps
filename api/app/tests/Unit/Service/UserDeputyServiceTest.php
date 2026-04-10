@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
-use App\Entity\Deputy;
-use App\Entity\PreRegistration;
-use App\Entity\User;
-use App\Repository\DeputyRepository;
-use App\Repository\PreRegistrationRepository;
-use App\Repository\UserRepository;
-use App\Service\DeputyService;
-use App\Service\UserDeputyService;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\DeputyRepository;
+use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\Service\DeputyService;
+use OPG\Digideps\Backend\Service\UserDeputyService;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 

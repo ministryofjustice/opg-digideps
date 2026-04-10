@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\Reporting\Admin;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Admin;
 
-use App\Tests\Behat\SearchTrait;
-use App\Tests\Behat\v2\AdminManagement\AdminManagementTrait;
-use App\Tests\Behat\v2\ClientManagement\ClientManagementTrait;
-use App\Tests\Behat\v2\Common\BaseFeatureContext;
-use App\Tests\Behat\v2\Reporting\Sections\ClientBenefitsCheckSectionTrait;
+use Tests\OPG\Digideps\Backend\Behat\SearchTrait;
+use Tests\OPG\Digideps\Backend\Behat\v2\AdminManagement\AdminManagementTrait;
+use Tests\OPG\Digideps\Backend\Behat\v2\ClientManagement\ClientManagementTrait;
+use Tests\OPG\Digideps\Backend\Behat\v2\Common\BaseFeatureContext;
+use Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ClientBenefitsCheckSectionTrait;
 
 class ReportingAdminFeatureContext extends BaseFeatureContext
 {

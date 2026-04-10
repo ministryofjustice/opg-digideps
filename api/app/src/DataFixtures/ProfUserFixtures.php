@@ -1,16 +1,16 @@
 <?php
 
-namespace App\DataFixtures;
+namespace OPG\Digideps\Backend\DataFixtures;
 
-use App\Domain\Deputy\DeputyType;
-use App\Entity\Client;
-use App\Entity\Deputy;
-use App\Entity\PreRegistration;
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\Factory\OrganisationFactory;
-use App\Repository\DeputyRepository;
-use App\Repository\OrganisationRepository;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Factory\OrganisationFactory;
+use OPG\Digideps\Backend\Repository\DeputyRepository;
+use OPG\Digideps\Backend\Repository\OrganisationRepository;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpKernel\KernelInterface;
 

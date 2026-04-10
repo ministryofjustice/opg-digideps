@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service\Auth;
+namespace Tests\OPG\Digideps\Backend\Unit\Service\Auth;
 
 use InvalidArgumentException;
 use Mockery\MockInterface;
+use OPG\Digideps\Backend\Entity\User;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use App\Repository\UserRepository;
-use App\Service\Auth\AuthService;
-use App\Service\JWT\JWTService;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\Service\Auth\AuthService;
+use OPG\Digideps\Backend\Service\JWT\JWTService;
 use Mockery;
-use MockeryStub as m;
+use Tests\OPG\Digideps\Backend\Unit\MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -96,7 +97,7 @@ final class AuthServiceTest extends TestCase
         $this->assertEquals($expectedValidity, $this->authService->isSecretValid($request));
     }
 
-    public function testgetUserByEmailAndPasswordUserNotFound(): void
+    public function testGetUserByEmailAndPasswordUserNotFound(): void
     {
         $this->userRepo->shouldReceive('findOneBy')->with(['email' => 'email@example.org'])->andReturn(null);
         $this->logger->shouldReceive('info')->with(Mockery::pattern('/not found/'))->once();
@@ -104,9 +105,9 @@ final class AuthServiceTest extends TestCase
         $this->assertEquals(false, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }
 
-    public function testgetUserByEmailAndPasswordMismatchPassword(): void
+    public function testGetUserByEmailAndPasswordMismatchPassword(): void
     {
-        $user = m::stub('App\Entity\User', [
+        $user = m::stub(User::class, [
                 'getSalt' => 'salt',
                 'getPassword' => 'encodedPassword',
         ]);
@@ -119,9 +120,9 @@ final class AuthServiceTest extends TestCase
         $this->assertEquals(null, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }
 
-    public function testgetUserByEmailAndPasswordCorrect(): void
+    public function testGetUserByEmailAndPasswordCorrect(): void
     {
-        $user = m::stub('App\Entity\User', [
+        $user = m::stub(User::class, [
                 'getSalt' => 'salt',
                 'getPassword' => 'encodedPassword',
         ]);
@@ -132,9 +133,9 @@ final class AuthServiceTest extends TestCase
         $this->assertEquals($user, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }
 
-    public function testgetUserByToken(): void
+    public function testGetUserByToken(): void
     {
-        $user = m::mock('App\Entity\User');
+        $user = m::mock(User::class);
 
         $this->userRepo->shouldReceive('findOneBy')->with(['registrationToken' => 'token'])->andReturn($user);
 
