@@ -10,9 +10,9 @@ use Orbitale\Component\ImageMagick\Command;
 
 class ImageConvertor
 {
-    public const JFIF = 'jfif';
-    public const HEIC = 'heic';
-    public const SUPPORTED_IMAGE_TYPES = [self::JFIF, self::HEIC];
+    public const string JFIF = 'jfif';
+    public const string HEIC = 'heic';
+    public const array SUPPORTED_IMAGE_TYPES = [self::JFIF, self::HEIC];
 
     /**
      * If a supported original file type id provided returns the body and filename of the newly converted file.

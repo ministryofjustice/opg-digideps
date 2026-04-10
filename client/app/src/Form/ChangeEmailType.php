@@ -22,7 +22,7 @@ class ChangeEmailType extends AbstractType
         $this->tokenStorage = $tokenStorage;
     }
 
-    public const VALIDATION_GROUP = 'user_change_email';
+    public const string VALIDATION_GROUP = 'user_change_email';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

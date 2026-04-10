@@ -22,7 +22,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route(path: '/report-submission')]
 class ReportSubmissionController extends RestController
 {
-    public const QUEUEABLE_STATUSES = [
+    public const array QUEUEABLE_STATUSES = [
         null,
         Document::SYNC_STATUS_TEMPORARY_ERROR,
         Document::SYNC_STATUS_PERMANENT_ERROR,
