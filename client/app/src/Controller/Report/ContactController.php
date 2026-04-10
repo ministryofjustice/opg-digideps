@@ -151,19 +151,13 @@ class ContactController extends AbstractController
             $data = $validatingForm->getObjectOrThrow(null, Contact::class);
             $data->setReport($report);
 
+            $this->restClient->put('report/contact', $data);
+
             if ($request->getSession() instanceof Session) {
                 $request->getSession()->getFlashBag()->add('notice', 'Contact edited');
             }
 
-            $this->restClient->put('report/contact', $data);
-
-            $addAnother = $validatingForm->getStringOrNull('addAnother');
-            switch ($addAnother) {
-                case 'yes':
-                    return $this->redirectToRoute('contacts_add', ['reportId' => $reportId, 'from' => 'add_another']);
-                case 'no':
-                    return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
-            }
+            return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
         }
 
         return [
