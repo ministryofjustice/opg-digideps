@@ -2,6 +2,10 @@
 
 namespace App\DataFixtures;
 
+use App\Domain\CourtOrder\CourtOrderKind;
+use App\Domain\CourtOrder\CourtOrderReportType;
+use App\Domain\CourtOrder\CourtOrderType;
+use App\Domain\Deputy\DeputyType;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
@@ -214,6 +218,7 @@ class LayUserFixtures extends AbstractDataFixture
         if (!in_array($deputyUid, $this->deputyUids)) {
             $this->deputyUids[] = $deputyUid;
             $this->deputy = (new Deputy())
+                ->setDeputyType(DeputyType::LAY)
                 ->setFirstname($data['id'])
                 ->setLastname('User ' . $iteration)
                 ->setDeputyUid($deputyUid)
@@ -372,7 +377,9 @@ class LayUserFixtures extends AbstractDataFixture
         $courtOrderUid = substr_replace($data['courtOrderUid'], (string) $iteration, -$offset);
 
         $courtOrder->setCourtOrderUid($courtOrderUid);
-        $courtOrder->setOrderType($data['orderType']);
+        $courtOrder->setOrderType(CourtOrderType::from($data['orderType']));
+        $courtOrder->setOrderKind(CourtOrderKind::Single);
+        $courtOrder->setOrderReportType(CourtOrderReportType::from($data['reportType']));
         $courtOrder->setStatus('ACTIVE');
         $courtOrder->setOrderMadeDate(new \DateTime('2020-06-14'));
         $courtOrder->setClient($client);
@@ -414,7 +421,9 @@ class LayUserFixtures extends AbstractDataFixture
             $courtOrderUidHW = substr_replace($data['courtOrderUid'], $iteration . 102, -$offset);
 
             $courtOrderPfa->setCourtOrderUid($courtOrderUidPfa);
-            $courtOrderPfa->setOrderType($data['orderType']);
+            $courtOrderPfa->setOrderType(CourtOrderType::PFA);
+            $courtOrderPfa->setOrderKind(CourtOrderKind::Hybrid);
+            $courtOrderPfa->setOrderReportType(CourtOrderReportType::from($data['reportType']));
             $courtOrderPfa->setStatus('ACTIVE');
             $courtOrderPfa->setOrderMadeDate(new \DateTime('2020-06-14'));
             $courtOrderPfa->setClient($client);
@@ -422,7 +431,9 @@ class LayUserFixtures extends AbstractDataFixture
             $courtOrderPfa->setUpdatedAt(new \DateTime());
 
             $courtOrderHW->setCourtOrderUid($courtOrderUidHW);
-            $courtOrderHW->setOrderType($data['orderType']);
+            $courtOrderHW->setOrderType(CourtOrderType::HW);
+            $courtOrderHW->setOrderKind(CourtOrderKind::Hybrid);
+            $courtOrderHW->setOrderReportType(CourtOrderReportType::from($data['reportType']));
             $courtOrderHW->setStatus('ACTIVE');
             $courtOrderHW->setOrderMadeDate(new \DateTime('2020-06-14'));
             $courtOrderHW->setClient($client);
@@ -477,7 +488,9 @@ class LayUserFixtures extends AbstractDataFixture
             $courtOrderUid = substr_replace($data['courtOrderUid'], $iteration . 2, -2);
 
             $additionalCourtOrder->setCourtOrderUid($courtOrderUid);
-            $additionalCourtOrder->setOrderType($data['orderType']);
+            $additionalCourtOrder->setOrderType(CourtOrderType::from($data['orderType']));
+            $additionalCourtOrder->setOrderKind(CourtOrderKind::Single);
+            $additionalCourtOrder->setOrderReportType(CourtOrderReportType::from($data['reportType']));
             $additionalCourtOrder->setStatus('ACTIVE');
             $additionalCourtOrder->setOrderMadeDate(new \DateTime('2020-06-14'));
             $additionalCourtOrder->setClient($client2);

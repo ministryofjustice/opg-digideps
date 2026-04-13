@@ -8,10 +8,12 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class MentalCapacity
 {
-    const CAPACITY_CHANGED = 'changed';
-    const CAPACITY_STAYED_SAME = 'stayedSame';
-
     use HasReportTrait;
+
+    public const string CAPACITY_CHANGED = 'changed';
+    public const string CAPACITY_STAYED_SAME = 'stayedSame';
+
+
 
     /**
      * @JMS\Type("integer")

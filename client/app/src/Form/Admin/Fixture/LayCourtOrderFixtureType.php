@@ -22,7 +22,6 @@ class LayCourtOrderFixtureType extends AbstractType
             ])
             ->add('reportType', ChoiceType::class, [
                 'choices' => [
-                    'NDR' => 'ndr',
                     'Health and Welfare' => Report::TYPE_HEALTH_WELFARE,
                     'Property and financial affairs low assets' => Report::TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS,
                     'Property and financial affairs high assets' => Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,

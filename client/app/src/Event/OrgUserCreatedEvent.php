@@ -9,7 +9,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class OrgUserCreatedEvent extends Event
 {
-    public const NAME = 'org.user.created';
+    public const string NAME = 'org.user.created';
 
     /** @var User */
     private $createdUser;

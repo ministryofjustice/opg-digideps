@@ -10,12 +10,14 @@ COPY client/app/composer.lock .
 COPY client/app/app app
 COPY client/app/config config
 COPY client/app/src src
+COPY common ../../common
 
 ##############################
 # Stage 1a: Composer Runtime
 ##############################
 FROM composer AS composer-runtime
 RUN composer install --no-dev --prefer-dist --no-interaction --no-scripts \
+ && cp -R ./vendor/digideps/common/ ./vendor/digideps/_ && rm ./vendor/digideps/common && mv ./vendor/digideps/_/ ./vendor/digideps/common \
  && composer check-platform-reqs \
  && composer dump-autoload --optimize
 
@@ -24,6 +26,7 @@ RUN composer install --no-dev --prefer-dist --no-interaction --no-scripts \
 ##############################
 FROM composer AS composer-devtools
 RUN composer install --prefer-dist --no-interaction --no-scripts \
+ && cp -R ./vendor/digideps/common/ ./vendor/digideps/_ && rm ./vendor/digideps/common && mv ./vendor/digideps/_/ ./vendor/digideps/common \
  && composer check-platform-reqs \
  && composer dump-autoload --optimize
 

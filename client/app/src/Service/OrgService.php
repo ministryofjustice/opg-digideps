@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\User;
 use App\Event\CSVUploadedEvent;
 use App\Event\DeputyChangedOrgEvent;
 use App\Event\OrgCreatedEvent;
@@ -40,7 +41,7 @@ class OrgService
         'skipped' => 0,
     ];
 
-    public const CHUNK_SIZE = 50;
+    public const int CHUNK_SIZE = 50;
 
     public function __construct(
         private RestClient $restClient,
@@ -255,6 +256,8 @@ class OrgService
     private function dispatchOrgCreatedEvent(array $organisation)
     {
         $trigger = AuditEvents::TRIGGER_CSV_UPLOAD;
+
+        /** @var User $currentUser */
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
         $orgCreatedEvent = new OrgCreatedEvent(

@@ -25,7 +25,7 @@ class ReportSubmission
     // createdOn = date where the report (or documents-only) get submitted
     use CreationAudit;
 
-    public const REMOVE_FILES_WHEN_OLDER_THAN = '-500 days';
+    public const string REMOVE_FILES_WHEN_OLDER_THAN = '-500 days';
 
     /**
      * @var int

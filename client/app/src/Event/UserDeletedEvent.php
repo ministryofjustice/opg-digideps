@@ -9,7 +9,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class UserDeletedEvent extends Event
 {
-    public const NAME = 'user.deleted';
+    public const string NAME = 'user.deleted';
 
     /** @var User */
     private $deletedUser;

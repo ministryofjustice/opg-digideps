@@ -217,7 +217,6 @@ class ReportController extends AbstractController
             'checklist' => $checklist,
             'reviewChecklist' => $reviewChecklist,
             'previousReportData' => $report->getPreviousReportData(),
-            'reportOrNdr' => 'report',
             'syncStatus' => $syncStatus,
         ];
     }

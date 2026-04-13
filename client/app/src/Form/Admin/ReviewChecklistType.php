@@ -10,8 +10,8 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ReviewChecklistType extends AbstractType
 {
-    const SAVE_ACTION = 'save';
-    const SUBMIT_ACTION = 'submit';
+    public const string SAVE_ACTION = 'save';
+    public const string SUBMIT_ACTION = 'submit';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

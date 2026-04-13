@@ -10,7 +10,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class UserRemovedFromOrganisationEvent extends Event
 {
-    const NAME = 'user.removed.from.organisation';
+    public const string NAME = 'user.removed.from.organisation';
 
     private Organisation $organisation;
     private User $removedUser;

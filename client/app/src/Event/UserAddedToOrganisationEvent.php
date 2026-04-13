@@ -10,7 +10,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class UserAddedToOrganisationEvent extends Event
 {
-    const NAME = 'user.added.to.organisation';
+    public const string NAME = 'user.added.to.organisation';
 
     private Organisation $organisation;
     private User $addedUser;

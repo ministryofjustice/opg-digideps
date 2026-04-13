@@ -36,13 +36,12 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - name: install python
-        uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # 6.0.0
+      - name: SLSA
+        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
         with:
-          python-version: "3.11"
-          cache: "pip"
+          requirements-file: lambdas/functions/monitor_notify_lambda/requirements.txt
 
-      - name: install requirements
+      - name: Install requirements
         run: pip install -r lambdas/functions/monitor_notify_lambda/requirements.txt
 
       - name: configure OIDC AWS credentials for slack notification

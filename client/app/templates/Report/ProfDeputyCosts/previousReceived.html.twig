@@ -44,11 +44,15 @@
 
     </div>
 
-    {{ macros.saveAndContinueButton(form.saveAndContinue) }}
-
-    {% if form.saveAndAddAnother is defined %}
-        {{ macros.saveAndAddAnotherSaveButton(form.saveAndAddAnother) }}
+    {% if form.addAnother %}
+        {{ form_add_another({
+            'addAnother': form.addAnother,
+            'thingTranslationKey': 'form.thing',
+            'translationDomain': translationDomain
+        }) }}
     {% endif %}
+
+    {{ macros.saveAndContinueButton(form.save) }}
 
     {{ form_end(form) }}
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Factory;
 
+use App\Domain\CourtOrder\CourtOrderKind;
+use App\Domain\CourtOrder\CourtOrderType;
 use App\Factory\ClientIdFixDataFactory;
 use App\Tests\Integration\ApiIntegrationTestCase;
 use App\Tests\Integration\Fixtures;
@@ -62,7 +64,7 @@ class ClientIdFixDataFactoryIntegrationTest extends ApiIntegrationTestCase
         self::$entityManager->flush();
 
         // court order associated with old inactive client
-        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid, 'pfa', 'ACTIVE');
+        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid, CourtOrderType::PFA, CourtOrderKind::Single, 'ACTIVE');
         $courtOrder->setClient($oldClient);
 
         // report also associated with old inactive client

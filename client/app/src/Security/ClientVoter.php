@@ -16,9 +16,9 @@ use Symfony\Component\Security\Core\Security;
  */
 class ClientVoter extends Voter
 {
-    const VIEW = 'view';
-    const EDIT = 'edit';
-    const DELETE = 'delete';
+    public const string VIEW = 'view';
+    public const string EDIT = 'edit';
+    public const string DELETE = 'delete';
 
     public function __construct(private readonly Security $security)
     {

@@ -326,11 +326,6 @@ parameters:
 			path: src/Controller/Report/ClientBenefitsCheckController.php
 
 		-
-			message: "#^Parameter \\#3 \\$existingEntity of method App\\\\Factory\\\\ClientBenefitsCheckFactory\\:\\:createFromFormData\\(\\) expects App\\\\Entity\\\\ClientBenefitsCheckInterface\\|null, object\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Report/ClientBenefitsCheckController.php
-
-		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\Contact\\>\\:\\:findByReport\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/Report/ContactController.php
@@ -5236,21 +5231,6 @@ parameters:
 			path: src/Factory/ClientBenefitsCheckFactory.php
 
 		-
-			message: "#^Method App\\\\Factory\\\\ClientBenefitsCheckFactory\\:\\:createFromFormData\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Factory/ClientBenefitsCheckFactory.php
-
-		-
-			message: "#^Method App\\\\Factory\\\\ClientBenefitsCheckFactory\\:\\:hydrateMoneyReceivedOnClientsBehalf\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Factory/ClientBenefitsCheckFactory.php
-
-		-
-			message: "#^Method App\\\\Factory\\\\ClientBenefitsCheckFactory\\:\\:removeMoneysIfUserChangesMind\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Factory/ClientBenefitsCheckFactory.php
-
-		-
 			message: "#^Parameter \\#1 \\$caseNumber of method App\\\\Entity\\\\Client\\:\\:setCaseNumber\\(\\) expects string\\|null, int given\\.$#"
 			count: 1
 			path: src/FixtureFactory/ClientFactory.php
@@ -7486,21 +7466,6 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: "#^Call to an undefined method object\\:\\:getEmail\\(\\)\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getFirstname\\(\\)\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: "#^Call to an undefined method object\\:\\:getLastname\\(\\)\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: "#^Call to an undefined method object\\:\\:updateSectionsStatusCache\\(\\)\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
@@ -7906,16 +7871,6 @@ parameters:
 			path: src/v2/Fixture/ReportSection.php
 
 		-
-			message: "#^Method App\\\\v2\\\\Registration\\\\Assembler\\\\SiriusToLayDeputyshipDtoAssembler\\:\\:collectMissingColumns\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Registration/Assembler/SiriusToLayDeputyshipDtoAssembler.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Registration\\\\Assembler\\\\SiriusToLayDeputyshipDtoAssembler\\:\\:determineReportTypeIsSupported\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/v2/Registration/Assembler/SiriusToLayDeputyshipDtoAssembler.php
-
-		-
 			message: "#^Method App\\\\v2\\\\Registration\\\\Assembler\\\\SiriusToOrgDeputyshipDtoAssembler\\:\\:assembleMultipleDtosFromArray\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/v2/Registration/Assembler/SiriusToOrgDeputyshipDtoAssembler.php
@@ -7972,11 +7927,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\v2\\\\Registration\\\\DTO\\\\LayDeputyshipDto\\:\\:getTypeOfReport\\(\\) should return string but returns string\\|null\\.$#"
-			count: 1
-			path: src/v2/Registration/DTO/LayDeputyshipDto.php
-
-		-
-			message: "#^Method App\\\\v2\\\\Registration\\\\DTO\\\\LayDeputyshipDto\\:\\:isNdrEnabled\\(\\) should return bool but returns bool\\|null\\.$#"
 			count: 1
 			path: src/v2/Registration/DTO/LayDeputyshipDto.php
 
@@ -8067,11 +8017,6 @@ parameters:
 
 		-
 			message: "#^Cannot call method getDeputyUid\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/v2/Registration/Uploader/LayDeputyshipUploader.php
-
-		-
-			message: "#^PHPDoc tag @throws with type Doctrine\\\\Common\\\\Persistence\\\\Mapping\\\\MappingException\\|Doctrine\\\\ORM\\\\ORMException is not subtype of Throwable$#"
 			count: 1
 			path: src/v2/Registration/Uploader/LayDeputyshipUploader.php
 

@@ -25,16 +25,13 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - name: install python
-        uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # 6.0.0
+      - name: SLSA
+        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
         with:
-          python-version: "3.11"
-          cache: "pip"
+          requirements-file: disaster-recovery/restore/requirements.txt
 
-      - name: install requirements
-        id: requirements
-        run: pip install -r requirements.txt
-        working-directory: disaster-recovery/restore
+      - name: Install requirements
+        run: pip install -r disaster-recovery/restore/requirements.txt
 
       - name: configure OIDC AWS credentials for terraform
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
@@ -71,16 +68,13 @@ jobs:
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - name: install python
-        uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # 6.0.0
+      - name: SLSA
+        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
         with:
-          python-version: "3.11"
-          cache: "pip"
+          requirements-file: disaster-recovery/restore/requirements.txt
 
-      - name: install requirements
-        id: requirements
-        run: pip install -r requirements.txt
-        working-directory: disaster-recovery/restore
+      - name: Install requirements
+        run: pip install -r disaster-recovery/restore/requirements.txt
 
       - name: configure OIDC AWS credentials for terraform
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1

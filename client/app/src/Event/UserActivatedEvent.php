@@ -9,7 +9,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class UserActivatedEvent extends Event
 {
-    public const NAME = 'user.activated';
+    public const string NAME = 'user.activated';
 
     /** @var User */
     private $activatedUser;

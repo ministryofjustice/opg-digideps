@@ -18,8 +18,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class DocumentController extends RestController
 {
-    public const DOCUMENT_SYNC_ERROR_STATUSES = [Document::SYNC_STATUS_TEMPORARY_ERROR, Document::SYNC_STATUS_PERMANENT_ERROR];
-    public const RETRIES_FAILED_MESSAGE = 'Document failed to sync after 4 attempts';
+    public const array DOCUMENT_SYNC_ERROR_STATUSES = [Document::SYNC_STATUS_TEMPORARY_ERROR, Document::SYNC_STATUS_PERMANENT_ERROR];
+    public const string RETRIES_FAILED_MESSAGE = 'Document failed to sync after 4 attempts';
     private array $sectionIds = [Report::SECTION_DOCUMENTS];
 
     public function __construct(

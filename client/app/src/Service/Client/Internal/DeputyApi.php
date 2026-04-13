@@ -11,8 +11,8 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class DeputyApi
 {
-    private const CREATE_DEPUTY_FROM_USER_ENDPOINT = 'deputy/add';
-    private const FIND_ALL_DEPUTY_COURT_ORDERS = 'v2/deputy/%s/courtorders';
+    private const string CREATE_DEPUTY_FROM_USER_ENDPOINT = 'deputy/add';
+    private const string FIND_ALL_DEPUTY_COURT_ORDERS = 'v2/deputy/%s/courtorders';
 
     public function __construct(
         private readonly RestClientInterface $restClient,

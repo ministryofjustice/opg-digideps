@@ -8,11 +8,11 @@ use App\Entity\Client;
 use App\Entity\User;
 use App\Form\CoDeputyInviteType;
 use App\Form\CoDeputyVerificationType;
-use App\Model\SelfRegisterData;
 use App\Service\Client\Internal\DeputyApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\Redirector;
+use OPG\Digideps\Common\Registration\SelfRegisterData;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;
@@ -125,10 +125,6 @@ class CoDeputyController extends AbstractController
                 // validate against pre-registration data
                 try {
                     $coDeputyVerificationData = $this->restClient->apiCall('post', 'selfregister/verifycodeputy', $selfRegisterData, 'array', [], false);
-
-                    if ($mainDeputy !== false && $mainDeputy->isNdrEnabled()) {
-                        $user->setNdrEnabled(true);
-                    }
 
                     $this->restClient->put('user/' . $user->getId(), $user);
 

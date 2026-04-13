@@ -72,7 +72,6 @@ class AddUserType extends AbstractType
                 'placeholder' => 'addUserForm.roleName.defaultOption',
                 'mapped' => false,
             ])
-            ->add('ndrEnabled', FormTypes\HiddenType::class, ['empty_data' => '0'])
             ->add('save', FormTypes\SubmitType::class);
 
         $builder->addEventListener(FormEvents::POST_SET_DATA, function (FormEvent $event) use ($staffRoles) {

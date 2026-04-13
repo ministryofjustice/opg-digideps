@@ -11,11 +11,15 @@ COPY anonymisation /app/anonymisation
 WORKDIR /app/anonymisation
 RUN go build -o anonymise main.go
 
+FROM gobuilder AS tests
+WORKDIR /app/anonymisation
+COPY anonymisation /app/anonymisation
+CMD ["go", "test", "./..."]
 
 # -----------------------------------------
 # 2) Node deps builder: run npm ci
 # -----------------------------------------
-FROM alpine:3.23 AS nodebuilder
+FROM alpine:3.23@sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659 AS nodebuilder
 # Node + npm only needed to produce node_modules
 RUN apk add --no-cache nodejs npm
 WORKDIR /tests
@@ -29,7 +33,7 @@ RUN rm -rf /root/.npm /root/.cache
 # -----------------------------------------
 # 3) Final runtime image: NO npm installed
 # -----------------------------------------
-FROM alpine:3.23
+FROM alpine:3.23@sha256:25109184c71bdad752c8312a8623239686a9a2071e8825f20acb8f2198c3f659
 
 RUN apk update && apk upgrade
 
