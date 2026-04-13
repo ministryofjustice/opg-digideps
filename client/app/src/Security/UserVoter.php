@@ -13,10 +13,10 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
  */
 class UserVoter extends Voter
 {
-    public const DELETE_USER = 'delete-user';
-    public const EDIT_USER = 'edit-user';
-    public const ADD_USER = 'add-user';
-    public const CAN_ADD_USER = 'can-add-user';
+    public const string DELETE_USER = 'delete-user';
+    public const string EDIT_USER = 'edit-user';
+    public const string ADD_USER = 'add-user';
+    public const string CAN_ADD_USER = 'can-add-user';
 
     /**
      * Does this voter support the attribute?

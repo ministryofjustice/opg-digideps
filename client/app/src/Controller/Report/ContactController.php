@@ -7,6 +7,7 @@ namespace App\Controller\Report;
 use App\Controller\AbstractController;
 use App\Entity\Report\Contact;
 use App\Entity\Report\Status;
+use App\Form\AddAnotherThingType;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\ContactExistType;
 use App\Form\Report\ContactType;
@@ -94,6 +95,7 @@ class ContactController extends AbstractController
         $contact = new Contact();
 
         $form = $this->createForm(ContactType::class, $contact);
+        $form->add('addAnother', AddAnotherThingType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -149,19 +151,13 @@ class ContactController extends AbstractController
             $data = $validatingForm->getObjectOrThrow(null, Contact::class);
             $data->setReport($report);
 
+            $this->restClient->put('report/contact', $data);
+
             if ($request->getSession() instanceof Session) {
                 $request->getSession()->getFlashBag()->add('notice', 'Contact edited');
             }
 
-            $this->restClient->put('report/contact', $data);
-
-            $addAnother = $validatingForm->getStringOrNull('addAnother');
-            switch ($addAnother) {
-                case 'yes':
-                    return $this->redirectToRoute('contacts_add', ['reportId' => $reportId, 'from' => 'add_another']);
-                case 'no':
-                    return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
-            }
+            return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
         }
 
         return [

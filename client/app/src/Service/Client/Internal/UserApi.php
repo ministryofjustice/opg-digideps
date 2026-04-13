@@ -23,18 +23,18 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class UserApi
 {
-    protected const USER_ENDPOINT = 'user';
-    protected const GET_USER_BY_EMAIL_ENDPOINT = 'user/get-one-by/email/%s';
-    protected const GET_USER_BY_EMAIL_ORG_ADMINS_ENDPOINT = 'user/get-team-names-by-email/%s';
-    protected const USER_BY_ID_ENDPOINT = 'user/%s';
-    protected const RECREATE_USER_TOKEN_ENDPOINT = 'user/recreate-token/%s';
-    protected const DEPUTY_SELF_REGISTER_ENDPOINT = 'selfregister';
-    protected const CREATE_CODEPUTY_ENDPOINT = 'codeputy/add/%d';
-    protected const CLEAR_REGISTRATION_TOKEN_ENDPOINT = 'user/clear-registration-token/%s';
-    protected const GET_PRIMARY_USER_ACCOUNT_ENDPOINT = 'user/get-primary-user-account/%s';
-    protected const GET_PRIMARY_EMAIL = 'user/get-primary-email/%s';
+    protected const string USER_ENDPOINT = 'user';
+    protected const string GET_USER_BY_EMAIL_ENDPOINT = 'user/get-one-by/email/%s';
+    protected const string GET_USER_BY_EMAIL_ORG_ADMINS_ENDPOINT = 'user/get-team-names-by-email/%s';
+    protected const string USER_BY_ID_ENDPOINT = 'user/%s';
+    protected const string RECREATE_USER_TOKEN_ENDPOINT = 'user/recreate-token/%s';
+    protected const string DEPUTY_SELF_REGISTER_ENDPOINT = 'selfregister';
+    protected const string CREATE_CODEPUTY_ENDPOINT = 'codeputy/add/%d';
+    protected const string CLEAR_REGISTRATION_TOKEN_ENDPOINT = 'user/clear-registration-token/%s';
+    protected const string GET_PRIMARY_USER_ACCOUNT_ENDPOINT = 'user/get-primary-user-account/%s';
+    protected const string GET_PRIMARY_EMAIL = 'user/get-primary-email/%s';
 
-    protected const UPDATE_USER_CODEPUTY_FLAG_ENDPOINT = 'user/update/codeputyflag/%d';
+    protected const string UPDATE_USER_CODEPUTY_FLAG_ENDPOINT = 'user/update/codeputyflag/%d';
 
     /** @var RestClientInterface */
     protected $restClient;

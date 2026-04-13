@@ -6,7 +6,7 @@ use Predis\ClientInterface;
 
 class RedisAvailability extends ServiceAvailabilityAbstract
 {
-    public const TEST_KEY = 'RedisAvailabilityTestKey';
+    public const string TEST_KEY = 'RedisAvailabilityTestKey';
 
     public function __construct(
         private readonly ClientInterface $redis,

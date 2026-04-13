@@ -13,7 +13,7 @@ use App\Service\Client\RestClient;
 
 class OrganisationApi
 {
-    private const MANAGE_USER_IN_ORG_ENDPOINT = 'v2/organisation/%s/user/%s';
+    private const string MANAGE_USER_IN_ORG_ENDPOINT = 'v2/organisation/%s/user/%s';
 
     private RestClient $restClient;
     private ObservableEventDispatcher $eventDispatcher;

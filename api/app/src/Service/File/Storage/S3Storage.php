@@ -19,7 +19,7 @@ use RuntimeException;
 class S3Storage implements StorageInterface
 {
     // If a file is deleted in S3 it will return an AccessDenied error until its permanently deleted
-    public const MISSING_FILE_AWS_ERROR_CODES = ['NoSuchKey', 'AccessDenied'];
+    public const array MISSING_FILE_AWS_ERROR_CODES = ['NoSuchKey', 'AccessDenied'];
 
     /**
      * S3Storage constructor.
@@ -32,7 +32,7 @@ class S3Storage implements StorageInterface
      * https://github.com/jubos/fake-s3
      * https://github.com/jubos/fake-s3/wiki/Supported-Clients
      */
-    function __construct(
+    public function __construct(
         private readonly S3ClientInterface $s3Client,
         private readonly string $bucketName,
         private readonly LoggerInterface $logger

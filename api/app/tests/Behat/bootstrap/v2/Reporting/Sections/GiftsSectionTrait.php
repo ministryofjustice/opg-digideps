@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
+use Behat\Step\Then;
+use Behat\Step\When;
+
 trait GiftsSectionTrait
 {
     private int $giftId = 0;
 
-    /**
-     * @When I view the gifts report section
-     */
+
+    #[When('I view the gifts report section')]
     public function iViewGiftsSection()
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
@@ -18,47 +20,40 @@ trait GiftsSectionTrait
         $this->visitPath($reportSectionUrl);
     }
 
-    /**
-     * @When I view and start the gifts report section
-     */
+
+    #[When('I view and start the gifts report section')]
     public function iViewAndStartGiftsSection()
     {
         $this->iViewGiftsSection();
         $this->clickLink('Start gifts');
     }
 
-    /**
-     * @When I choose no and save on gifts exist section
-     */
+    #[When('I choose no and save on gifts exist section')]
     public function iChooseNoOnGiftsExistSection()
     {
         $this->chooseOption('yes_no[giftsExist]', 'no', 'gifts');
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @When I choose yes and save on gifts exist section
-     */
+    #[When('I choose yes and save on gifts exist section')]
     public function iChooseYesOnGiftsExistSection()
     {
         $this->chooseOption('yes_no[giftsExist]', 'yes', 'gifts');
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @When I fill in gift description and amount
-     */
-    public function iFillGiftDescriptionAndAmount()
+    #[When('I fill in gift description and amount')]
+    public function iFillGiftDescriptionAndAmount(bool $addAnother)
     {
         ++$this->giftId;
 
         $this->fillInField('gifts_single[explanation]', 'random-gift-' . $this->giftId, 'gifts' . $this->giftId);
         $this->fillInFieldTrackTotal('gifts_single[amount]', $this->giftId + 100, 'gifts' . $this->giftId);
+
+        $this->selectOption('gifts_single[addAnother]', $addAnother ? 'yes' : 'no');
     }
 
-    /**
-     * @When I edit first gift description and amount
-     */
+    #[When('I edit first gift description and amount')]
     public function iEditGiftDescriptionAndAmount()
     {
         $locator = "//td[normalize-space()='random-gift-1']/..";
@@ -68,26 +63,20 @@ trait GiftsSectionTrait
         $this->editFieldAnswerInSection($giftRow, 'gifts_single[explanation]', $this->faker->sentence(4), 'gifts1', false);
     }
 
-    /**
-     * @When I follow edit link for gifts section
-     */
+    #[When('I follow edit link for gifts section')]
     public function iFollowEditLinkForGifts()
     {
         $this->iClickBasedOnAttributeTypeAndValue('a', 'id', 'edit-gifts');
     }
 
-    /**
-     * @When I follow the edit link for whether gifts exist
-     */
+    #[When('I follow the edit link for whether gifts exist')]
     public function iFollowEditExistsLink()
     {
         $urlRegex = '/report\/.*\/gifts\/exist\?from\=summary$/';
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
     }
 
-    /**
-     * @When I have not given any gifts
-     */
+    #[When('I have not given any gifts')]
     public function iHaveNotGivenAnyGifts()
     {
         $this->iAmOnGiftsExistPage();
@@ -96,9 +85,7 @@ trait GiftsSectionTrait
         $this->iAmOnGiftsSummaryPage();
     }
 
-    /**
-     * @When I have given multiple gifts
-     */
+    #[When('I have given multiple gifts')]
     public function iHaveGivenMultipleGifts()
     {
         $this->iAmOnGiftsExistPage();
@@ -106,20 +93,18 @@ trait GiftsSectionTrait
 
         // Fill in details for first gift
         $this->iAmOnGiftsAddPage();
-        $this->iFillGiftDescriptionAndAmount();
-        $this->iChooseToSaveAndAddAnother();
+        $this->iFillGiftDescriptionAndAmount(true);
+        $this->iChooseToSaveAndContinue();
 
         // Fill in details for second gift
         $this->iAmOnGiftsAddPage();
-        $this->iFillGiftDescriptionAndAmount();
+        $this->iFillGiftDescriptionAndAmount(false);
         $this->iChooseToSaveAndContinue();
 
         $this->iAmOnGiftsSummaryPage();
     }
 
-    /**
-     * @When I change my mind and declare a gift
-     */
+    #[When('I change my mind and declare a gift')]
     public function iChangeMyMindAndDeclareGift()
     {
         $this->iViewGiftsSection();
@@ -131,21 +116,19 @@ trait GiftsSectionTrait
         $this->iChooseYesOnGiftsExistSection();
         $this->iAmOnGiftsAddPage();
 
-        $this->iFillGiftDescriptionAndAmount();
+        $this->iFillGiftDescriptionAndAmount(false);
         $this->iChooseToSaveAndContinue();
         $this->iAmOnGiftsSummaryPage();
     }
 
-    /**
-     * @When I edit an existing gift
-     */
+    #[When('I edit an existing gift')]
     public function iEditAnExistingGift()
     {
         // add a gift
         $this->iViewGiftsSection();
         $this->iFollowEditExistsLink();
         $this->iChooseYesOnGiftsExistSection();
-        $this->iFillGiftDescriptionAndAmount();
+        $this->iFillGiftDescriptionAndAmount(false);
         $this->iChooseToSaveAndContinue();
 
         // edit the gift
@@ -155,9 +138,7 @@ trait GiftsSectionTrait
         $this->iEditGiftDescriptionAndAmount();
     }
 
-    /**
-     * @When I remove the second gift
-     */
+    #[When('I remove the second gift')]
     public function iRemoveTheSecondGift()
     {
         $this->removeAnswerFromSection('gifts_single[amount]', 'gifts2', true, 'Yes, remove gift');
@@ -165,9 +146,7 @@ trait GiftsSectionTrait
         $this->iAmOnGiftsSummaryPage();
     }
 
-    /**
-     * @When I remove the first gift
-     */
+    #[When('I remove the first gift')]
     public function iRemoveTheFirstGift()
     {
         $this->removeAnswerFromSection('gifts_single[amount]', 'gifts1', true, 'Yes, remove gift');
@@ -175,9 +154,7 @@ trait GiftsSectionTrait
         $this->iAmOnGiftsStartPage();
     }
 
-    /**
-     * @Then I should see the expected gifts report section responses
-     */
+    #[Then('I should see the expected gifts report section responses')]
     public function iSeeExpectedGiftsSectionResponses()
     {
         $this->expectedResultsDisplayedSimplified(null, false, true, false);

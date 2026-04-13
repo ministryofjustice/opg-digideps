@@ -12,8 +12,8 @@ use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
 
 class AuthService
 {
-    public const HEADER_CLIENT_SECRET = 'ClientSecret';
-    public const HEADER_JWT = 'JWT';
+    public const string HEADER_CLIENT_SECRET = 'ClientSecret';
+    public const string HEADER_JWT = 'JWT';
     private array $clientSecrets = [];
 
     public function __construct(

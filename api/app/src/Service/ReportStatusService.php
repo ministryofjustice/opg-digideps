@@ -13,13 +13,13 @@ use JMS\Serializer\Annotation as JMS;
  */
 class ReportStatusService
 {
-    public const STATE_NOT_STARTED = 'not-started';
-    public const STATE_INCOMPLETE = 'incomplete';
-    public const STATE_DONE = 'done';
-    public const STATE_LOW_ASSETS_DONE = 'low-assets-done'; // only used for PFA Low Assets report
-    public const STATE_NOT_MATCHING = 'not-matching'; // only used for balance section
-    public const STATE_EXPLAINED = 'explained'; // only used for balance section
-    public const ENABLE_STATUS_CACHE = true;
+    public const string STATE_NOT_STARTED = 'not-started';
+    public const string STATE_INCOMPLETE = 'incomplete';
+    public const string STATE_DONE = 'done';
+    public const string STATE_LOW_ASSETS_DONE = 'low-assets-done'; // only used for PFA Low Assets report
+    public const string STATE_NOT_MATCHING = 'not-matching'; // only used for balance section
+    public const string STATE_EXPLAINED = 'explained'; // only used for balance section
+    public const bool ENABLE_STATUS_CACHE = true;
 
     /**
      * @var bool set to true to use the report status cached
