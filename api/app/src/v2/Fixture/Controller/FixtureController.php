@@ -114,19 +114,19 @@ class FixtureController extends AbstractController
             $this->em->persist($deputyPreRegistration);
         }
 
-        if (User::TYPE_LAY === $fromRequest['deputyType']) {
-            $deputy = $this->generateDeputy($user);
-            $courtOrder = $this->generateCourtOrder($client);
-
-            $deputy->associateWithCourtOrder($courtOrder);
-            $this->em->persist($deputy);
-        }
-
         if (!isset($fromRequest['reportType']) || !is_string($fromRequest['reportType'])) {
             throw new \InvalidArgumentException('Missing or invalid "reportType" field in request.');
         }
 
         $reportType = strtolower($fromRequest['reportType']);
+
+        if (User::TYPE_LAY === $fromRequest['deputyType']) {
+            $deputy = $this->generateDeputy($user);
+            $courtOrder = $this->generateCourtOrder($client, $reportType);
+
+            $deputy->associateWithCourtOrder($courtOrder);
+            $this->em->persist($deputy);
+        }
 
         if ('ndr' === $reportType) {
             $this->createNdr($fromRequest, $client);
@@ -261,14 +261,31 @@ class FixtureController extends AbstractController
             ->setLastname($user->getLastname());
     }
 
-    private function generateCourtOrder(Client $client): CourtOrder
+    private function generateCourtOrder(Client $client, string $reportType): CourtOrder
     {
         $courtOrder = new CourtOrder();
 
+        switch ($reportType) {
+            case '104':
+                $courtOrder->setOrderType(CourtOrderType::HW);
+                $courtOrder->setOrderReportType(CourtOrderReportType::OPG104);
+                break;
+            case '102':
+            case '102-4':
+                $courtOrder->setOrderType(CourtOrderType::PFA);
+                $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
+                break;
+            case '103':
+            case '103-4':
+                $courtOrder->setOrderType(CourtOrderType::PFA);
+                $courtOrder->setOrderReportType(CourtOrderReportType::OPG103);
+                break;
+            default:
+                throw new \InvalidArgumentException('Invalid report type provided: ' . $reportType);
+        }
+
         $courtOrder->setCourtOrderUid(strval(rand(100000000000, 999999999999)));
-        $courtOrder->setOrderType(CourtOrderType::HW);
         $courtOrder->setOrderKind(CourtOrderKind::Single);
-        $courtOrder->setOrderReportType(CourtOrderReportType::OPG104);
         $courtOrder->setStatus('ACTIVE');
         $courtOrder->setOrderMadeDate(new \DateTime('2020-06-14'));
         $courtOrder->setClient($client);
