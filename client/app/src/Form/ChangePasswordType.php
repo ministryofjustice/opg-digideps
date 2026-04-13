@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class ChangePasswordType extends AbstractType
 {
-    public const VALIDATION_GROUP = 'user_change_password';
+    public const string VALIDATION_GROUP = 'user_change_password';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

@@ -15,13 +15,13 @@ use Symfony\Component\Security\Core\Security;
 class ClientVoter extends Voter
 {
     /** @var string */
-    public const VIEW = 'view';
+    public const string VIEW = 'view';
 
     /** @var string */
-    public const EDIT = 'edit';
+    public const string EDIT = 'edit';
 
     /** @var string */
-    public const DELETE = 'delete';
+    public const string DELETE = 'delete';
 
     public function __construct(private readonly Security $security)
     {

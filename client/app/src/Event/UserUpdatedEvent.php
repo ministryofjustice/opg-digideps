@@ -9,7 +9,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class UserUpdatedEvent extends Event
 {
-    const NAME = 'user.updated';
+    public const string NAME = 'user.updated';
 
     /** @var string */
     private $trigger;

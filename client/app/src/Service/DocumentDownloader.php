@@ -11,8 +11,8 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 
 class DocumentDownloader
 {
-    public const ACTION_DOWNLOAD = 'download';
-    public const MSG_NOT_DOWNLOADABLE = 'This report is not downloadable';
+    public const string ACTION_DOWNLOAD = 'download';
+    public const string MSG_NOT_DOWNLOADABLE = 'This report is not downloadable';
 
     /**
      * @var DocumentService

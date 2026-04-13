@@ -8,7 +8,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class RegistrationFailedEvent extends Event
 {
-    public const NAME = 'registration.failed';
+    public const string NAME = 'registration.failed';
 
     public function __construct(private array $failureData, private string $errorMessage)
     {

@@ -12,8 +12,8 @@ use JMS\Serializer\Annotation as JMS;
  */
 class MentalCapacity
 {
-    public const CAPACITY_CHANGED = 'changed';
-    public const CAPACITY_STAYED_SAME = 'stayedSame';
+    public const string CAPACITY_CHANGED = 'changed';
+    public const string CAPACITY_STAYED_SAME = 'stayedSame';
 
     /**
      * @var int

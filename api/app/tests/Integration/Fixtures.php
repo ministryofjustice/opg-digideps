@@ -26,7 +26,7 @@ use Doctrine\ORM\ORMException;
  */
 class Fixtures
 {
-    public const PG_DUMP_PATH = '/tmp/dd_phpunit.pgdump';
+    public const string PG_DUMP_PATH = '/tmp/dd_phpunit.pgdump';
 
     /**
      * @var EntityManager

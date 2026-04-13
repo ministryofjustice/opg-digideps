@@ -13,7 +13,7 @@ use Psr\Log\LoggerInterface;
 
 class CSVDeputyshipProcessing
 {
-    protected const MAX_UPLOAD_BATCH_SIZE = 10000;
+    protected const int MAX_UPLOAD_BATCH_SIZE = 10000;
 
     public function __construct(
         private readonly LayDeputyshipDtoCollectionAssemblerFactory $layFactory,

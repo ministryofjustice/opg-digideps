@@ -116,7 +116,7 @@ class ComponentsExtensionTest extends TestCase
         m::close();
     }
 
-    public static function pad_day_monthProvider()
+    public static function padDayMonthProvider()
     {
         return [
             ['a', 'a'],
@@ -139,7 +139,7 @@ class ComponentsExtensionTest extends TestCase
     /**
      * @test
      *
-     * @dataProvider pad_day_monthProvider
+     * @dataProvider padDayMonthProvider
      */
     public function padDayMonth($input, $expected)
     {
@@ -148,7 +148,7 @@ class ComponentsExtensionTest extends TestCase
         $this->assertSame($expected, $f($input));
     }
 
-    public static function behat_namifyProvider()
+    public static function behatNamifyProvider()
     {
         return [
             ['a', 'a'],
@@ -161,7 +161,7 @@ class ComponentsExtensionTest extends TestCase
     /**
      * @test
      *
-     * @dataProvider behat_namifyProvider
+     * @dataProvider behatNamifyProvider
      */
     public function behatNamify($input, $expected)
     {
@@ -170,7 +170,7 @@ class ComponentsExtensionTest extends TestCase
         $this->assertSame($expected, $f($input));
     }
 
-    public static function money_formatProvider()
+    public static function moneyFormatProvider()
     {
         return [
             ['0', '0.00'],
@@ -182,7 +182,7 @@ class ComponentsExtensionTest extends TestCase
     /**
      * @test
      *
-     * @dataProvider money_formatProvider
+     * @dataProvider moneyFormatProvider
      */
     public function moneyFormat($input, $expected)
     {
