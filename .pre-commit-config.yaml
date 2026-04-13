@@ -3,7 +3,7 @@
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v6.0.0
+    rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c # frozen: v6.0.0
     hooks:
       - id: check-added-large-files # prevents giant files from being committed.
         args: ["--maxkb=20480"]
@@ -18,7 +18,7 @@ repos:
       - id: trailing-whitespace # trims trailing whitespace.
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.105.0
+    rev: d0e12caebb2ab0ee8bf98181c8bfe9702bca103d # frozen: v1.105.0
     hooks:
       - id: terraform_fmt
       - id: terraform_tflint
@@ -26,12 +26,12 @@ repos:
         exclude: terraform/.*/region/[^/]+$
 
   - repo: https://github.com/awslabs/git-secrets
-    rev: master
+    rev: 7d6b970cbd3c216353cb22b383b70c150140662e # frozen
     hooks:
       - id: git-secrets
 
   - repo: https://github.com/digitalpulp/pre-commit-php.git
-    rev: 1.4.0
+    rev: f9f30f819d34faa2375e7000822efab0ef677200 # frozen: 1.4.0
     hooks:
       - id: php-cbf
         files: \.(php)$
@@ -39,30 +39,27 @@ repos:
         files: \.(php)$
 
   - repo: https://github.com/ministryofjustice/opg-pre-commit-hooks.git
-    rev: v0.2.0
+    rev: 9fdc6ee83ab7a8083dc1e2308be685cc393c0eff # frozen: v0.2.0
     hooks:
       - id: check-for-raw-in-templates
         args: ["-d", "client/app/templates", "-c", "0"]
 
   - repo: https://github.com/dnephin/pre-commit-golang
-    rev: v0.5.1
+    rev: fb24a639f7c938759fe56eeebbb7713b69d60494 # frozen: v0.5.1
     hooks:
       - id: go-fmt
       - id: go-imports
       - id: no-go-testing
 
   - repo: https://github.com/ambv/black
-    rev: 26.3.1
+    rev: c6755bb741b6481d6b3d3bb563c83fa060db96c9 # frozen: 26.3.1
     hooks:
       - id: black
 
   - repo: https://github.com/pre-commit/mirrors-prettier
-    rev: v4.0.0-alpha.8
+    rev: f12edd9c7be1c20cfa42420fd0e6df71e42b51ea # frozen: v4.0.0-alpha.8
     hooks:
       - id: prettier
         args: ["--write"]
         additional_dependencies:
           - prettier@2.5.1
-#          Seems quite buggy at the moment. E.g. https://github.com/trivago/prettier-plugin-twig-melody/issues/37
-#          Look at enabling again in a few months
-#          - "prettier-plugin-twig-melody"
