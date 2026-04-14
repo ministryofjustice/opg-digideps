@@ -146,17 +146,20 @@ public,court_order,client_id,integer,,FOREIGN KEY,NA
 public,court_order,court_order_uid,character varying,36,,NA
 public,court_order,created_at,timestamp without time zone,,,NA
 public,court_order,id,integer,,PRIMARY KEY,NA
+public,court_order,order_kind,character varying,6,,NA
 public,court_order,order_made_date,timestamp without time zone,,,NA
-public,court_order,order_type,character varying,10,,NA
+public,court_order,order_report_type,character varying,6,,NA
+public,court_order,order_type,character varying,3,,NA
+public,court_order,sibling_id,integer,,FOREIGN KEY,NA
 public,court_order,status,character varying,10,,NA
 public,court_order,updated_at,timestamp without time zone,,,NA
-public,court_order_deputy,court_order_id,integer,,PRIMARY KEY,NA
 public,court_order_deputy,court_order_id,integer,,FOREIGN KEY,NA
-public,court_order_deputy,deputy_id,integer,,PRIMARY KEY,NA
+public,court_order_deputy,court_order_id,integer,,PRIMARY KEY,NA
 public,court_order_deputy,deputy_id,integer,,FOREIGN KEY,NA
+public,court_order_deputy,deputy_id,integer,,PRIMARY KEY,NA
 public,court_order_deputy,is_active,boolean,,,NA
-public,court_order_report,court_order_id,integer,,FOREIGN KEY,NA
 public,court_order_report,court_order_id,integer,,PRIMARY KEY,NA
+public,court_order_report,court_order_id,integer,,FOREIGN KEY,NA
 public,court_order_report,report_id,integer,,FOREIGN KEY,NA
 public,court_order_report,report_id,integer,,PRIMARY KEY,NA
 public,dd_user,active,boolean,,,NA
@@ -215,6 +218,7 @@ public,deputy,address5,character varying,200,,Lorem
 public,deputy,address_country,character varying,10,,Lorem
 public,deputy,address_postcode,character varying,10,,PostCode
 public,deputy,created_at,timestamp without time zone,,,NA
+public,deputy,deputy_type,character varying,3,,NA
 public,deputy,deputy_uid,character varying,20,,NA
 public,deputy,email1,character varying,60,,Email
 public,deputy,email2,character varying,60,,Email
@@ -226,8 +230,8 @@ public,deputy,phone_alternative,character varying,20,,PhoneNumber
 public,deputy,phone_main,character varying,20,,PhoneNumber
 public,deputy,updated_at,timestamp without time zone,,,NA
 public,deputy,user_id,integer,,FOREIGN KEY,NA
-public,deputy_case,client_id,integer,,FOREIGN KEY,NA
 public,deputy_case,client_id,integer,,PRIMARY KEY,NA
+public,deputy_case,client_id,integer,,FOREIGN KEY,NA
 public,deputy_case,user_id,integer,,FOREIGN KEY,NA
 public,deputy_case,user_id,integer,,PRIMARY KEY,NA
 public,document,created_by,integer,,FOREIGN KEY,NA
@@ -424,8 +428,8 @@ public,organisation,is_activated,boolean,,,NA
 public,organisation,name,character varying,256,,Organisation
 public,organisation_user,organisation_id,integer,,PRIMARY KEY,NA
 public,organisation_user,organisation_id,integer,,FOREIGN KEY,NA
-public,organisation_user,user_id,integer,,FOREIGN KEY,NA
 public,organisation_user,user_id,integer,,PRIMARY KEY,NA
+public,organisation_user,user_id,integer,,FOREIGN KEY,NA
 public,pre_registration,client_address_1,character varying,255,,Lorem
 public,pre_registration,client_address_2,character varying,255,,Lorem
 public,pre_registration,client_address_3,character varying,255,,Lorem
