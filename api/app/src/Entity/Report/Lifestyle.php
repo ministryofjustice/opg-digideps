@@ -132,20 +132,4 @@ class Lifestyle
 
         return $this;
     }
-
-    /**
-     * checks if report is missing lifestyle information
-     */
-    public function missingInfo(): bool
-    {
-        if (
-            empty($this->doesClientUndertakeSocialActivities)
-            || empty($this->careAppointments)
-            || empty($this->activityDetails)
-        ) {
-            return true;
-        }
-
-        return false;
-    }
 }

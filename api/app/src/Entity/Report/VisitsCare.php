@@ -37,7 +37,7 @@ class VisitsCare
     private $report;
 
     /**
-     * @var string yes|no|null
+     * @var ?string yes|no|null
      *
      * @JMS\Type("string")
      *
@@ -116,17 +116,11 @@ class VisitsCare
      */
     private $whenWasCarePlanLastReviewed;
 
-    /**
-     * Get id
-     */
     public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set report
-     */
     public function setReport(?Report $report = null): static
     {
         $this->report = $report;
@@ -134,37 +128,23 @@ class VisitsCare
         return $this;
     }
 
-    /**
-     * Get report
-     */
     public function getReport(): Report
     {
         return $this->report;
     }
 
-    /**
-     * Set doYouLiveWithClient
-     */
-    public function setDoYouLiveWithClient(string $doYouLiveWithClient): static
+    public function setDoYouLiveWithClient(?string $doYouLiveWithClient): static
     {
         $this->doYouLiveWithClient = $doYouLiveWithClient;
 
         return $this;
     }
 
-    /**
-     * Get doYouLiveWithClient.
-     *
-     * @return string
-     */
-    public function getDoYouLiveWithClient()
+    public function getDoYouLiveWithClient(): ?string
     {
         return $this->doYouLiveWithClient;
     }
 
-    /**
-     * Set doesClientReceivePaidCare
-     */
     public function setDoesClientReceivePaidCare(?string $doesClientReceivePaidCare): static
     {
         $this->doesClientReceivePaidCare = $doesClientReceivePaidCare;
@@ -172,17 +152,11 @@ class VisitsCare
         return $this;
     }
 
-    /**
-     * Get doesClientReceivePaidCare
-     */
     public function getDoesClientReceivePaidCare(): ?string
     {
         return $this->doesClientReceivePaidCare;
     }
 
-    /**
-     * Set whoIsDoingTheCaring
-     */
     public function setWhoIsDoingTheCaring(?string $whoIsDoingTheCaring): static
     {
         $this->whoIsDoingTheCaring = $whoIsDoingTheCaring;
@@ -190,17 +164,11 @@ class VisitsCare
         return $this;
     }
 
-    /**
-     * Get whoIsDoingTheCaring
-     */
     public function getWhoIsDoingTheCaring(): ?string
     {
         return $this->whoIsDoingTheCaring;
     }
 
-    /**
-     * Set doesClientHaveACarePlan
-     */
     public function setDoesClientHaveACarePlan(?string $doesClientHaveACarePlan): static
     {
         $this->doesClientHaveACarePlan = $doesClientHaveACarePlan;
@@ -208,17 +176,11 @@ class VisitsCare
         return $this;
     }
 
-    /**
-     * Get doesClientHaveACarePlan
-     */
     public function getDoesClientHaveACarePlan(): ?string
     {
         return $this->doesClientHaveACarePlan;
     }
 
-    /**
-     * Set whenWasCarePlanLastReviewed
-     */
     public function setWhenWasCarePlanLastReviewed(?\DateTime $whenWasCarePlanLastReviewed): static
     {
         $this->whenWasCarePlanLastReviewed = $whenWasCarePlanLastReviewed;
@@ -226,17 +188,11 @@ class VisitsCare
         return $this;
     }
 
-    /**
-     * Get whenWasCarePlanLastReviewed
-     */
     public function getWhenWasCarePlanLastReviewed(): ?\DateTime
     {
         return $this->whenWasCarePlanLastReviewed;
     }
 
-    /**
-     * Set howIsCareFunded
-     */
     public function setHowIsCareFunded(?string $howIsCareFunded): static
     {
         $this->howIsCareFunded = $howIsCareFunded;
@@ -244,9 +200,6 @@ class VisitsCare
         return $this;
     }
 
-    /**
-     * Get howIsCareFunded
-     */
     public function getHowIsCareFunded(): ?string
     {
         return $this->howIsCareFunded;
@@ -262,17 +215,5 @@ class VisitsCare
         $this->howOftenDoYouContactClient = $howOftenDoYouContactClient;
 
         return $this;
-    }
-
-    /**
-     * checks if report is missing visits care information
-     */
-    public function missingInfo(): bool
-    {
-        if (empty($this->doYouLiveWithClient) || empty($this->doesClientReceivePaidCare) || empty($this->whoIsDoingTheCaring) || empty($this->doesClientHaveACarePlan)) {
-            return true;
-        }
-
-        return false;
     }
 }

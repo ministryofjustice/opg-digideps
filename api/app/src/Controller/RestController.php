@@ -20,19 +20,16 @@ abstract class RestController extends AbstractController
 
     /**
      * @template T of object
-     *
      * @param class-string<T> $entityClass
-     * @param array|int $criteriaOrId
-     * @param string|null $errorMessage
-     *
      * @return T
      */
     protected function findEntityBy(string $entityClass, array|int $criteriaOrId, ?string $errorMessage = null): object
     {
         $repo = $this->em->getRepository($entityClass);
+
         $entity = is_array($criteriaOrId) ? $repo->findOneBy($criteriaOrId) : $repo->find($criteriaOrId);
 
-        if (!$entity) {
+        if (null === $entity) {
             throw new NotFound($errorMessage ?: $entityClass . ' not found');
         }
 

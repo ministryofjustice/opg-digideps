@@ -49,6 +49,7 @@ class DocumentController extends RestController
 
         /** @var ?User $user */
         $user = $this->getUser();
+
         $document->setCreatedBy($user);
 
         $document->setFileName($data['file_name']);
@@ -70,7 +71,6 @@ class DocumentController extends RestController
     #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
     public function overwriteReportPdf(Request $request, int $reportId): array
     {
-        /** @var Report $report */
         $report = $this->findEntityBy(Report::class, $reportId);
 
         $this->denyAccessIfReportDoesNotBelongToUser($report);
@@ -96,6 +96,7 @@ class DocumentController extends RestController
 
         /** @var ?User $user */
         $user = $this->getUser();
+
         $reportPdfDocument->setCreatedBy($user);
 
         $reportPdfDocument->setFileName($data['file_name']);
