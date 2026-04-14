@@ -5,7 +5,6 @@ namespace App\FixtureFactory;
 use App\Entity\Client;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
-use Faker\Factory;
 
 class ClientFactory
 {
@@ -34,18 +33,16 @@ class ClientFactory
     /**
      * @return Client
      */
-    public function createGenericOrgClient(Deputy $deputy, Organisation $organisation, ?string $courtDate)
+    public function createGenericOrgClient(Deputy $deputy, Organisation $organisation, ?string $courtDate): Client
     {
-        $faker = Factory::create();
-
         $client = (new Client())
-            ->setCaseNumber($faker->unique()->randomNumber(8))
-            ->setFirstname($faker->firstName())
-            ->setLastname($faker->lastName())
+            ->setCaseNumber(self::createValidCaseNumber())
+            ->setFirstname('John')
+            ->setLastname('Smith')
             ->setPhone('0212112345')
             ->setAddress('1 Fake road')
-            ->setAddress2($faker->city())
-            ->setPostcode($faker->postcode())
+            ->setAddress2('Birmingham')
+            ->setPostcode('B1 1AA')
             ->setAddress3('West Midlands')
             ->setCountry('GB')
             ->setCourtDate($courtDate ? new \DateTime($courtDate) : new \DateTime());
@@ -54,5 +51,29 @@ class ClientFactory
         $client->setOrganisation($organisation);
 
         return $client;
+    }
+
+    /**
+     * Sirius has a modulus 11 validation check on case references (because casrec.) which we should adhere to
+     * to make sure integration tests create data that is in the correct format.
+     */
+    private static function createValidCaseNumber(): string
+    {
+        $ref = '';
+        $sum = 0;
+
+        foreach ([3, 4, 7, 5, 8, 2, 4] as $constant) {
+            $value = mt_rand(0, 9);
+            $ref .= $value;
+            $sum += $value * $constant;
+        }
+
+        $checkbit = (11 - ($sum % 11)) % 11;
+
+        if (10 === $checkbit) {
+            $checkbit = 'T';
+        }
+
+        return $ref . $checkbit;
     }
 }
