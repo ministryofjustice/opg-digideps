@@ -270,23 +270,33 @@ class FixtureController extends AbstractController
             case '104':
                 $courtOrder->setOrderType(CourtOrderType::HW);
                 $courtOrder->setOrderReportType(CourtOrderReportType::OPG104);
+                $courtOrder->setOrderKind(CourtOrderKind::Single);
                 break;
             case '102':
+                $courtOrder->setOrderType(CourtOrderType::PFA);
+                $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
+                $courtOrder->setOrderKind(CourtOrderKind::Single);
+                break;
             case '102-4':
                 $courtOrder->setOrderType(CourtOrderType::PFA);
                 $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
+                $courtOrder->setOrderKind(CourtOrderKind::Hybrid);
                 break;
             case '103':
+                $courtOrder->setOrderType(CourtOrderType::PFA);
+                $courtOrder->setOrderReportType(CourtOrderReportType::OPG103);
+                $courtOrder->setOrderKind(CourtOrderKind::Single);
+                break;
             case '103-4':
                 $courtOrder->setOrderType(CourtOrderType::PFA);
                 $courtOrder->setOrderReportType(CourtOrderReportType::OPG103);
+                $courtOrder->setOrderKind(CourtOrderKind::Hybrid);
                 break;
             default:
                 throw new \InvalidArgumentException('Invalid report type provided: ' . $reportType);
         }
 
         $courtOrder->setCourtOrderUid(strval(rand(100000000000, 999999999999)));
-        $courtOrder->setOrderKind(CourtOrderKind::Single);
         $courtOrder->setStatus('ACTIVE');
         $courtOrder->setOrderMadeDate(new \DateTime('2020-06-14'));
         $courtOrder->setClient($client);
