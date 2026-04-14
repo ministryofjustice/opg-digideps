@@ -169,15 +169,13 @@ class FixtureController extends AbstractController
         if ('ndr' === $reportType) {
             $this->createNdr($fromRequest, $client);
             $user->setNdrEnabled(true);
-        } else {
-            if (!$this->reportRepository->findOneBy(['client' => $client])) {
+        } elseif (!$this->reportRepository->findOneBy(['client' => $client])) {
                 $report = $this->generateReport($fromRequest, $client);
                 $this->em->persist($report);
 
-                if (User::TYPE_LAY === $fromRequest['deputyType']) {
-                    $courtOrder->addReport($report);
-                    $this->em->persist($courtOrder);
-                }
+            if (User::TYPE_LAY === $fromRequest['deputyType']) {
+                $courtOrder->addReport($report);
+                $this->em->persist($courtOrder);
             }
         }
 
@@ -376,7 +374,7 @@ class FixtureController extends AbstractController
         $uniqueOrgNameSegment = (preg_match('/\d+/', $fromRequest['deputyEmail'], $matches)) ? $matches[0] : rand(0, 9999);
         $orgName = sprintf('Org %s Ltd', $uniqueOrgNameSegment);
 
-        if (null === ($this->organisationRepository->findOneBy(['name' => $orgName]))) {
+        if (null === $this->organisationRepository->findOneBy(['name' => $orgName])) {
             $organisation = $this->organisationFactory->createFromEmailIdentifier($orgName, $fromRequest['deputyEmail'], true);
         } else {
             /** @var Organisation $organisation */
