@@ -5231,11 +5231,6 @@ parameters:
 			path: src/Factory/ClientBenefitsCheckFactory.php
 
 		-
-			message: "#^Parameter \\#1 \\$caseNumber of method App\\\\Entity\\\\Client\\:\\:setCaseNumber\\(\\) expects string\\|null, int given\\.$#"
-			count: 1
-			path: src/FixtureFactory/ClientFactory.php
-
-		-
 			message: "#^Method App\\\\FixtureFactory\\\\LoadTestFactory\\:\\:createUsersClientsReports\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/FixtureFactory/LoadTestFactory.php
