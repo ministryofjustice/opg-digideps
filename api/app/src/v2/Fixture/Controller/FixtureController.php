@@ -168,7 +168,8 @@ class FixtureController extends AbstractController
         $deputy = $this->generateDeputy($user);
 
         $deputyPreRegistration = $this->generatePreRegistration($fromRequest, $client, $user);
-        $courtOrder = $this->generateCourtOrder($client);
+        $reportType = strtolower($fromRequest['reportType']);
+        $courtOrder = $this->generateCourtOrder($client, $reportType);
 
         $deputy->associateWithCourtOrder($courtOrder);
         $this->em->persist($deputy);
@@ -189,7 +190,7 @@ class FixtureController extends AbstractController
         // update case number for second client
         $fromRequest['caseNumber'] = substr($fromRequest['caseNumber'], 0, -3) . rand(100, 999);
         $secondClient = $this->generateClient($fromRequest);
-        $secondCourtOrder = $this->generateCourtOrder($secondClient);
+        $secondCourtOrder = $this->generateCourtOrder($secondClient, $reportType);
         $secondDeputyPreRegistration = $this->generatePreRegistration($fromRequest, $secondClient, $secondUser);
         $secondUser->addClient($secondClient);
 
