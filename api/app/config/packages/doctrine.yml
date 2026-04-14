@@ -15,7 +15,7 @@ doctrine:
                 wrapper_class: App\DBAL\ConnectionWrapper
                 charset: UTF8
                 options:
-                    redis: "@snc_redis.default"
+                    redis: "@predis"
             ingestwriter:
                 driver: pdo_pgsql
                 host: "%database_host%"
@@ -29,7 +29,7 @@ doctrine:
                 wrapper_class: App\DBAL\ConnectionWrapper
                 charset: UTF8
                 options:
-                    redis: "@snc_redis.default"
+                    redis: "@predis"
         types:
             uuid: Ramsey\Uuid\Doctrine\UuidType
 
