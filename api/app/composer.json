@@ -40,7 +40,6 @@
         "predis/predis": "^1.1.10",
         "ramsey/uuid": "^4.9.2",
         "ramsey/uuid-doctrine": "^1.8.2",
-        "snc/redis-bundle": "^3.6.0",
         "stof/doctrine-extensions-bundle": "^1.15.1",
         "symfony/cache": "^6.4.30",
         "symfony/config": "^6.4.28",
