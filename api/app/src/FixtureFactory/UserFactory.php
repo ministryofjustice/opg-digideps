@@ -5,7 +5,6 @@ namespace App\FixtureFactory;
 use App\Entity\Client;
 use App\Entity\Organisation;
 use App\Entity\User;
-use Faker\Factory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFactory
@@ -22,7 +21,7 @@ class UserFactory
         $roleName = $this->convertRoleName($data['deputyType']);
 
         if (isset($data['ndr'])) {
-            $ndrEnabled = 'enabled' === strtolower($data['ndr']) ? true : false;
+            $ndrEnabled = 'enabled' === strtolower($data['ndr']);
         } else {
             $ndrEnabled = false;
         }
@@ -80,8 +79,8 @@ class UserFactory
     public function createAdmin(array $data): User
     {
         $user = (new User())
-            ->setFirstname(isset($data['firstName']) ? $data['firstName'] : ucfirst($data['adminType']) . ' Admin ' . $data['email'])
-            ->setLastname(isset($data['lastName']) ? $data['lastName'] : 'User')
+            ->setFirstname($data['firstName'] ?? ucfirst($data['adminType']) . ' Admin ' . $data['email'])
+            ->setLastname($data['lastName'] ?? 'User')
             ->setEmail($data['email'])
             ->setRegistrationDate(new \DateTime())
             ->setRoleName($data['adminType']);
@@ -98,14 +97,12 @@ class UserFactory
      */
     public function createGenericOrgUser(Organisation $organisation, int $number)
     {
-        $faker = Factory::create();
-
-        $email = sprintf('%s.%s.%s@%s', $faker->firstName(), $faker->lastName(), $number, $organisation->getEmailIdentifier());
+        $email = sprintf('%s.%s.%s.%s@%s', 'Test', 'Org', rand(1, 100000), $number, $organisation->getEmailIdentifier());
         $trimmedEmail = substr($email, 0, 59);
 
         $user = (new User())
-            ->setFirstname($faker->firstName())
-            ->setLastname($faker->lastName())
+            ->setFirstname('Bill')
+            ->setLastname('Bonds')
             ->setEmail($trimmedEmail)
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
