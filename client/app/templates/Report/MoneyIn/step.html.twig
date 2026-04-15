@@ -15,7 +15,11 @@
 {% set categoryString2ndStep = ('form.category.entries.' ~ transaction.category ~ '.label2ndStep') | trans(clientTransOptions) %}
 
 {% block htmlTitle %}
-    {% if step == 2 %}
+    {% if step == 2 and transactionId %}
+        {{ 'stepPage.moneyIn.editHtmlTitle' | trans(transOptions) }}
+    {% else %}
+        {{ 'stepPage.moneyIn.htmlTitle' | trans(transOptions) }}
+    {% endif %}
         {% if transactionId %}
             {{ 'stepPage.moneyIn.editHtmlTitle' | trans(transOptions) }}
         {% else %}
