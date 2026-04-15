@@ -446,6 +446,9 @@ services:
     App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory:
         public: true
 
+    App\v2\Registration\DeputyshipProcessing\Report\ReportTypeUpdate:
+        public: true
+
     App\Domain\Deputyship\DeputyshipProcessingRawDbAccess:
         arguments:
             $ingestWriterEm: "@doctrine.orm.ingestwriter_entity_manager"

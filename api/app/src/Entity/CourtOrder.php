@@ -189,7 +189,11 @@ class CourtOrder
 
     public function getOrderReportType(): CourtOrderReportType
     {
-        return CourtOrderReportType::tryFrom($this->orderReportType) ?? $this->getOrderKind() === CourtOrderKind::Hybrid || $this->getOrderType() === CourtOrderType::PFA ? CourtOrderReportType::OPG102 : CourtOrderReportType::OPG104;
+        $fallBack = $this->getOrderKind() === CourtOrderKind::Hybrid || $this->getOrderType() === CourtOrderType::PFA ?
+            CourtOrderReportType::OPG102 :
+            CourtOrderReportType::OPG104;
+
+        return CourtOrderReportType::tryFrom(strtoupper($this->orderReportType)) ?? $fallBack;
     }
 
     public function setOrderReportType(CourtOrderReportType $orderReportType): CourtOrder

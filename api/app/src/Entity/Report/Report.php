@@ -3,6 +3,7 @@
 namespace App\Entity\Report;
 
 use App\Entity\Client;
+use App\Entity\CourtOrder;
 use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Traits as ReportTraits;
 use App\Entity\ReportInterface;
@@ -14,9 +15,12 @@ use App\Service\ReportStatusService;
 use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use JMS\Serializer\Annotation as JMS;
 use phpDocumentor\Reflection\Types\This;
+use Ramsey\Collection\CollectionInterface;
 
 /**
  * Reports.
@@ -650,6 +654,7 @@ class Report implements ReportInterface
         $this->profDeputyPreviousCosts = new ArrayCollection();
         $this->profDeputyInterimCosts = new ArrayCollection();
         $this->profDeputyEstimateCosts = new ArrayCollection();
+        $this->courtOrders = new ArrayCollection();
 
         // set sections as notStarted when a new report is created
         $statusCached = [];
@@ -1657,5 +1662,10 @@ class Report implements ReportInterface
                 self::PA_HW_TYPE,
             ]
         );
+    }
+
+    public function getCourtOrders(): Collection
+    {
+        return $this->courtOrders;
     }
 }
