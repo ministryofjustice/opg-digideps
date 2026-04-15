@@ -84,6 +84,7 @@ stepPage:
   moneyOut:
     htmlTitle: "Add a payment - Complete the deputy report | GOV.UK"
     pageTitle: Add a payment
+    editPageTitle: Edit payment
     supportTitle: Money out
     pageSectionDescription:
       step1: You can add one or more types of payment and come back to complete the section later.

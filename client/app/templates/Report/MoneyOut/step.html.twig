@@ -18,7 +18,12 @@
     {% if step == 2 %}
         {% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans(clientTransOptions) %}
         {% set categoryString2ndStep = ('form.category.entries.' ~ transaction.category ~ '.label2ndStep') | trans(clientTransOptions) %}
-        {{ 'stepPage.moneyOut.pageTitle' | trans(transOptions) }}: {{ '.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep }}
+
+        {% if transactionId %}
+            {{ 'stepPage.moneyOut.editPageTitle' | trans(transOptions) }}: {{ '.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep }}
+        {% else %}
+            {{ 'stepPage.moneyOut.pageTitle' | trans(transOptions) }}: {{ '.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep }}
+        {% endif %}
     {% else %}
         {{ 'stepPage.moneyOut.pageTitle' | trans(transOptions) }}
     {% endif %}

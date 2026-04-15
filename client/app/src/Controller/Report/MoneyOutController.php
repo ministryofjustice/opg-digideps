@@ -198,6 +198,7 @@ class MoneyOutController extends AbstractController
             'backLink' => $stepRedirector->getBackLink(),
             'skipLink' => null,
             'categoriesGrouped' => MoneyTransaction::getCategoriesGrouped('out'),
+            'transactionId' => $transaction->getId(),
         ];
     }
 
