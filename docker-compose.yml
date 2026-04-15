@@ -167,11 +167,11 @@ services:
     restart: always
 
   redis-frontend:
-    image: redis:6.2.12
+    image: redis:6.2.13@sha256:2762130c9677f5fbf877819b3daeeee1ef124011759e729ba347c96127d7856d
     restart: always
 
   redis-api:
-    image: redis:6.2.12
+    image: redis:6.2.13@sha256:2762130c9677f5fbf877819b3daeeee1ef124011759e729ba347c96127d7856d
     restart: always
 
   file-scanner-rest:
