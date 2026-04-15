@@ -34,7 +34,7 @@ Feature: Money Out
         And I remove an existing money out payment
         Then I should see the expected results on money out summary page
 
-    @lay-pfa-high-completed @iqpal
+    @lay-pfa-high-completed
     Scenario: A user edits an existing payment
         Given a Lay Deputy has completed a Pfa High Assets report
         When I visit the money out summary section
