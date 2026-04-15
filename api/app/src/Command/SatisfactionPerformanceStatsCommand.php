@@ -31,7 +31,7 @@ class SatisfactionPerformanceStatsCommand extends Command
         try {
             $satisfactionScoresQuery = "
                     SELECT
-                        ROUND(AVG(score - 1) * 25) AS user_satisfaction_percent,
+                        ROUND((count(CASE WHEN score = 5 THEN 1 END) + count(CASE WHEN score = 4 THEN 1 END)) / count(*)) AS user_satisfaction_percent,
                         count(CASE WHEN score = 1 THEN 1 END) AS very_dissatisfied,
                         count(CASE WHEN score = 2 THEN 1 END) AS dissatisfied,
                         count(CASE WHEN score = 3 THEN 1 END) AS neither,
