@@ -62,7 +62,7 @@ Feature: Report submissions dashboard
         Then the 'Synchronised' tab 'is' visible
 
     # TODO remove when NDR entities are removed
-    @super-admin @THIS
+    @super-admin
     Scenario: If a case has both standard and NDR report submissions, only the standard report submission should be visible in the 'New' tab
         Given a deputy has submitted one standard report and one NDR report for the same client
         And a super admin user accesses the admin app
