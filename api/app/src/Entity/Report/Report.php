@@ -10,7 +10,9 @@ use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Service\ReportService;
 use OPG\Digideps\Backend\Service\ReportStatusService;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use JMS\Serializer\Annotation as JMS;
 
 /**
@@ -645,6 +647,7 @@ class Report
         $this->profDeputyPreviousCosts = new ArrayCollection();
         $this->profDeputyInterimCosts = new ArrayCollection();
         $this->profDeputyEstimateCosts = new ArrayCollection();
+        $this->courtOrders = new ArrayCollection();
 
         // set sections as notStarted when a new report is created
         $statusCached = [];
@@ -1639,5 +1642,10 @@ class Report
                 self::PA_HW_TYPE,
             ]
         );
+    }
+
+    public function getCourtOrders(): Collection
+    {
+        return $this->courtOrders;
     }
 }
