@@ -441,9 +441,10 @@ trait ReportSubmissionTrait
         $ndr = new Ndr($client);
         $submission = new ReportSubmission($ndr, $user);
 
+        // only submissions with a document are included in the report submissions tabs
         $ndrPdf = new Document($ndr);
-        $ndrPdf->setFileName('DigiRep-2020-2021-12-34_12345678.pdf');
-        $ndrPdf->setStorageReference('dd_doc_1234_9876543219876');
+        $ndrPdf->setFileName('ndr.pdf');
+        $ndrPdf->setStorageReference('dd_doc_2356_92838573');
         $ndrPdf->setIsReportPdf(true);
         $ndrPdf->setCreatedOn(new \DateTime());
         $ndrPdf->setCreatedBy($user);
