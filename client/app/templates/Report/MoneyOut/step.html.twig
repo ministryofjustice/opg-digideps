@@ -13,7 +13,18 @@
     '%giftsPath%': path('gifts', {reportId: report.id})
 }) %}
 
-{% block htmlTitle %}{{ 'stepPage.moneyOut.htmlTitle' | trans(transOptions) }}{% endblock %}
+{% block htmlTitle %}
+    {% if step == 2 %}
+        {% if transactionId %}
+            {{ 'stepPage.moneyOut.editHtmlTitle' | trans(transOptions) }}
+        {% else %}
+            {{ 'stepPage.moneyOut.htmlTitle' | trans(transOptions) }}
+        {% endif %}
+    {% else %}
+        {{ 'stepPage.moneyOut.htmlTitle' | trans(transOptions) }}
+    {% endif %}
+{% endblock %}
+
 {% block pageTitle %}
     {% if step == 2 %}
         {% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans(clientTransOptions) %}
