@@ -47,7 +47,6 @@ Feature: Report submissions dashboard
         And I manually 'synchronise' the client that has one submitted report
         Then the status of the documents for the client with one report submission should be 'Queued'
 
-
     @super-admin
     Scenario: Make 'New' tab visibility toggle based on Document Sync Enabled flag
         And a super admin user accesses the admin app
@@ -61,3 +60,11 @@ Feature: Report submissions dashboard
         Then the 'New' tab 'is not' visible
         Then the 'Pending' tab 'is' visible
         Then the 'Synchronised' tab 'is' visible
+
+    # TODO remove when NDR entities are removed
+    @super-admin @THIS
+    Scenario: If a case has both standard and NDR report submissions, only the standard report submission should be visible in the 'New' tab
+        Given a deputy has submitted one standard report and one NDR report for the same client
+        And a super admin user accesses the admin app
+        When I navigate to the admin report submissions page
+        Then I should only see a row for the standard report in the Pending tab
