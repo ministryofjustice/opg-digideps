@@ -20,25 +20,13 @@
     {% else %}
         {{ 'stepPage.moneyIn.htmlTitle' | trans(transOptions) }}
     {% endif %}
-        {% if transactionId %}
-            {{ 'stepPage.moneyIn.editHtmlTitle' | trans(transOptions) }}
-        {% else %}
-            {{ 'stepPage.moneyIn.htmlTitle' | trans(transOptions) }}
-        {% endif %}
-    {% else %}
-        {{ 'stepPage.moneyIn.htmlTitle' | trans(transOptions) }}
-    {% endif %}
 {% endblock %}
 
 {% block pageTitle %}
-    {% if step == 2 %}
-        {% if transactionId %}
-            {{ 'stepPage.moneyIn.editPageTitle' | trans(transOptions)  ~ ': ' ~ ('.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep) }}
-        {% else %}
-            {{ 'stepPage.moneyIn.pageTitle' | trans(transOptions)  ~ ': ' ~ ('.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep) }}
-        {% endif %}
+    {% if step == 2 and transactionId %}
+        {{ 'stepPage.moneyIn.editPageTitle' | trans(transOptions)  ~ ': ' ~ ('.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep) }}
     {% else %}
-        {{ 'stepPage.moneyIn.pageTitle' | trans(transOptions) }}
+        {{ 'stepPage.moneyIn.pageTitle' | trans(transOptions)  ~ ': ' ~ ('.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep) }}
     {% endif %}
 {% endblock %}
 

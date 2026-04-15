@@ -13,34 +13,22 @@
     '%giftsPath%': path('gifts', {reportId: report.id})
 }) %}
 
+{% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans(clientTransOptions) %}
+{% set categoryString2ndStep = ('form.category.entries.' ~ transaction.category ~ '.label2ndStep') | trans(clientTransOptions) %}
+
 {% block htmlTitle %}
     {% if step == 2 and transactionId %}
         {{ 'stepPage.moneyIn.editHtmlTitle' | trans(transOptions) }}
     {% else %}
         {{ 'stepPage.moneyIn.htmlTitle' | trans(transOptions) }}
     {% endif %}
-        {% if transactionId %}
-            {{ 'stepPage.moneyOut.editHtmlTitle' | trans(transOptions) }}
-        {% else %}
-            {{ 'stepPage.moneyOut.htmlTitle' | trans(transOptions) }}
-        {% endif %}
-    {% else %}
-        {{ 'stepPage.moneyOut.htmlTitle' | trans(transOptions) }}
-    {% endif %}
 {% endblock %}
 
 {% block pageTitle %}
-    {% if step == 2 %}
-        {% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans(clientTransOptions) %}
-        {% set categoryString2ndStep = ('form.category.entries.' ~ transaction.category ~ '.label2ndStep') | trans(clientTransOptions) %}
-
-        {% if transactionId %}
-            {{ 'stepPage.moneyOut.editPageTitle' | trans(transOptions) }}: {{ '.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep }}
-        {% else %}
-            {{ 'stepPage.moneyOut.pageTitle' | trans(transOptions) }}: {{ '.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep }}
-        {% endif %}
+    {% if step == 2 and transactionId %}
+        {{ 'stepPage.moneyOut.editPageTitle' | trans(transOptions) }}: {{ '.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep }}
     {% else %}
-        {{ 'stepPage.moneyOut.pageTitle' | trans(transOptions) }}
+        {{ 'stepPage.moneyOut.pageTitle' | trans(transOptions) }}: {{ '.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep }}
     {% endif %}
 {% endblock %}
 
