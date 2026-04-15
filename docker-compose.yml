@@ -226,7 +226,7 @@ services:
   #            - frontend
 
   pact-mock:
-    image: pactfoundation/pact-cli:0.56.0.7@sha256:681c1829729c4c8516d537ee8dd13333db89d94b8bcf8c8797af26de630ce58c
+    image: pactfoundation/pact-cli:0.56.0.8@sha256:ee390ae508c8e783145f0b818984236846ce5f1826ac0ecdb460b4aefdcb34a1
     ports:
       - 1234:80
     command:
