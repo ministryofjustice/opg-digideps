@@ -8,10 +8,10 @@ use Aws\Ssm\SsmClient;
 
 class ParameterStoreService
 {
-    public const PARAMETER_CHECKLIST_SYNC_ROW_LIMIT = 'checklist-sync-row-limit';
-    public const PARAMETER_DOCUMENT_SYNC_ROW_LIMIT = 'document-sync-row-limit';
-    public const FLAG_CHECKLIST_SYNC = 'checklist-sync';
-    public const FLAG_DOCUMENT_SYNC = 'document-sync';
+    public const string PARAMETER_CHECKLIST_SYNC_ROW_LIMIT = 'checklist-sync-row-limit';
+    public const string PARAMETER_DOCUMENT_SYNC_ROW_LIMIT = 'document-sync-row-limit';
+    public const string FLAG_CHECKLIST_SYNC = 'checklist-sync';
+    public const string FLAG_DOCUMENT_SYNC = 'document-sync';
 
     /** @var SsmClient */
     private $ssmClient;

@@ -8,12 +8,12 @@ use App\Service\Client\RestClientInterface;
 
 class StatsApi
 {
-    protected const GET_ACTIVE_LAY_REPORT_DATA_ENDPOINT = 'stats/deputies/lay/active';
-    protected const GET_ADMIN_USER_ACCOUNT_REPORT_DATA = 'stats/admins/report_data';
-    protected const GET_INACTIVE_ADMIN_USER_REPORT_DATA = 'stats/admins/inactive_admin_users';
-    protected const GET_ASSETS_TOTAL_VALUES = 'stats/assets/total_values';
-    protected const GET_BENEFITS_REPORT_METRICS = 'stats/report/benefits-report-metrics';
-    protected const GET_DEPUTY_IMBALANCE_REPORT_DATA = 'stats/report/imbalance';
+    protected const string GET_ACTIVE_LAY_REPORT_DATA_ENDPOINT = 'stats/deputies/lay/active';
+    protected const string GET_ADMIN_USER_ACCOUNT_REPORT_DATA = 'stats/admins/report_data';
+    protected const string GET_INACTIVE_ADMIN_USER_REPORT_DATA = 'stats/admins/inactive_admin_users';
+    protected const string GET_ASSETS_TOTAL_VALUES = 'stats/assets/total_values';
+    protected const string GET_BENEFITS_REPORT_METRICS = 'stats/report/benefits-report-metrics';
+    protected const string GET_DEPUTY_IMBALANCE_REPORT_DATA = 'stats/report/imbalance';
 
     private RestClientInterface $restClient;
 

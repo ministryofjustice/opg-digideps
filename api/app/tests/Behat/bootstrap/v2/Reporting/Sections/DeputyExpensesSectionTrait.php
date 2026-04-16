@@ -88,7 +88,6 @@ trait DeputyExpensesSectionTrait
     {
         $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails');
         $this->fillInFieldTrackTotal('expenses_single[amount]', 981, 'expenseDetails');
-        $this->pressButton('Save and continue');
     }
 
     /**
@@ -96,8 +95,8 @@ trait DeputyExpensesSectionTrait
      */
     public function iDeclareAnotherExpenses()
     {
-        $this->chooseOption('add_another[addAnother]', 'yes');
-        $this->pressButton('Continue');
+        $this->chooseOption('expenses_single[addAnother]', 'yes');
+        $this->pressButton('Save and continue');
 
         $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails');
         $this->fillInFieldTrackTotal('expenses_single[amount]', 22, 'expenseDetails');
@@ -109,8 +108,8 @@ trait DeputyExpensesSectionTrait
      */
     public function noFurtherExpensesToAdd()
     {
-        $this->fillInField('add_another[addAnother]', 'no');
-        $this->pressButton('Continue');
+        $this->fillInField('expenses_single[addAnother]', 'no');
+        $this->pressButton('Save and continue');
     }
 
     /**

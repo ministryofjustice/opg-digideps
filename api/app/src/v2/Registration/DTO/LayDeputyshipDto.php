@@ -25,7 +25,6 @@ class LayDeputyshipDto
     private ?string $deputyAddress5;
     private ?string $deputyPostcode;
     private ?bool $isCoDeputy;
-    private ?bool $isNdrEnabled;
     private ?\DateTime $orderDate;
     private ?string $orderType;
     private ?string $typeOfReport;
@@ -36,7 +35,7 @@ class LayDeputyshipDto
         return $this->caseNumber;
     }
 
-    public function setCaseNumber(string $caseNumber): LayDeputyshipDto
+    public function setCaseNumber(string $caseNumber): static
     {
         $this->caseNumber = $caseNumber;
 
@@ -48,7 +47,7 @@ class LayDeputyshipDto
         return $this->clientSurname;
     }
 
-    public function setClientSurname($clientSurname): LayDeputyshipDto
+    public function setClientSurname($clientSurname): static
     {
         $this->clientSurname = $clientSurname;
 
@@ -60,7 +59,7 @@ class LayDeputyshipDto
         return $this->deputyUid;
     }
 
-    public function setDeputyUid(string $deputyUid): LayDeputyshipDto
+    public function setDeputyUid(string $deputyUid): static
     {
         $this->deputyUid = $deputyUid;
 
@@ -72,7 +71,7 @@ class LayDeputyshipDto
         return $this->deputyFirstname;
     }
 
-    public function setDeputyFirstname(string $deputyFirstname): LayDeputyshipDto
+    public function setDeputyFirstname(string $deputyFirstname): static
     {
         $this->deputyFirstname = $deputyFirstname;
 
@@ -84,7 +83,7 @@ class LayDeputyshipDto
         return $this->deputySurname;
     }
 
-    public function setDeputySurname(string $deputySurname): LayDeputyshipDto
+    public function setDeputySurname(string $deputySurname): static
     {
         $this->deputySurname = $deputySurname;
 
@@ -96,7 +95,7 @@ class LayDeputyshipDto
         return $this->deputyPostcode;
     }
 
-    public function setDeputyPostcode(string $deputyPostcode): LayDeputyshipDto
+    public function setDeputyPostcode(string $deputyPostcode): static
     {
         $this->deputyPostcode = $deputyPostcode;
 
@@ -108,21 +107,9 @@ class LayDeputyshipDto
         return $this->typeOfReport;
     }
 
-    public function setTypeOfReport(string $typeOfReport): LayDeputyshipDto
+    public function setTypeOfReport(?string $typeOfReport): static
     {
         $this->typeOfReport = $typeOfReport;
-
-        return $this;
-    }
-
-    public function isNdrEnabled(): bool
-    {
-        return $this->isNdrEnabled;
-    }
-
-    public function setIsNdrEnabled(bool $isNdrEnabled): LayDeputyshipDto
-    {
-        $this->isNdrEnabled = $isNdrEnabled;
 
         return $this;
     }
@@ -132,7 +119,7 @@ class LayDeputyshipDto
         return $this->orderDate;
     }
 
-    public function setOrderDate(\DateTime $orderDate): LayDeputyshipDto
+    public function setOrderDate(\DateTime $orderDate): static
     {
         $this->orderDate = $orderDate;
 
@@ -144,7 +131,7 @@ class LayDeputyshipDto
         return $this->deputyAddress1;
     }
 
-    public function setDeputyAddress1(?string $deputyAddress1): LayDeputyshipDto
+    public function setDeputyAddress1(?string $deputyAddress1): static
     {
         $this->deputyAddress1 = $deputyAddress1;
 
@@ -156,7 +143,7 @@ class LayDeputyshipDto
         return $this->deputyAddress2;
     }
 
-    public function setDeputyAddress2(?string $deputyAddress2): LayDeputyshipDto
+    public function setDeputyAddress2(?string $deputyAddress2): static
     {
         $this->deputyAddress2 = $deputyAddress2;
 
@@ -168,7 +155,7 @@ class LayDeputyshipDto
         return $this->deputyAddress3;
     }
 
-    public function setDeputyAddress3(?string $deputyAddress3): LayDeputyshipDto
+    public function setDeputyAddress3(?string $deputyAddress3): static
     {
         $this->deputyAddress3 = $deputyAddress3;
 
@@ -180,7 +167,7 @@ class LayDeputyshipDto
         return $this->deputyAddress4;
     }
 
-    public function setDeputyAddress4(?string $deputyAddress4): LayDeputyshipDto
+    public function setDeputyAddress4(?string $deputyAddress4): static
     {
         $this->deputyAddress4 = $deputyAddress4;
 
@@ -192,7 +179,7 @@ class LayDeputyshipDto
         return $this->deputyAddress5;
     }
 
-    public function setDeputyAddress5(?string $deputyAddress5): LayDeputyshipDto
+    public function setDeputyAddress5(?string $deputyAddress5): static
     {
         $this->deputyAddress5 = $deputyAddress5;
 
@@ -204,7 +191,7 @@ class LayDeputyshipDto
         return $this->isCoDeputy;
     }
 
-    public function setIsCoDeputy(?bool $isCoDeputy): LayDeputyshipDto
+    public function setIsCoDeputy(?bool $isCoDeputy): static
     {
         $this->isCoDeputy = $isCoDeputy;
 
@@ -216,7 +203,7 @@ class LayDeputyshipDto
         return $this->orderType;
     }
 
-    public function setOrderType(?string $orderType): LayDeputyshipDto
+    public function setOrderType(?string $orderType): static
     {
         $this->orderType = $orderType;
 
@@ -228,7 +215,7 @@ class LayDeputyshipDto
         return $this->hybrid;
     }
 
-    public function setHybrid(?string $hybrid): LayDeputyshipDto
+    public function setHybrid(?string $hybrid): static
     {
         $this->hybrid = $hybrid;
 
@@ -240,7 +227,7 @@ class LayDeputyshipDto
         return $this->clientFirstname;
     }
 
-    public function setClientFirstname(?string $clientFirstname): LayDeputyshipDto
+    public function setClientFirstname(?string $clientFirstname): static
     {
         $this->clientFirstname = $clientFirstname;
 
@@ -252,7 +239,7 @@ class LayDeputyshipDto
         return $this->clientAddress1;
     }
 
-    public function setClientAddress1(?string $clientAddress1): LayDeputyshipDto
+    public function setClientAddress1(?string $clientAddress1): static
     {
         $this->clientAddress1 = $clientAddress1;
 
@@ -264,7 +251,7 @@ class LayDeputyshipDto
         return $this->clientAddress2;
     }
 
-    public function setClientAddress2(?string $clientAddress2): LayDeputyshipDto
+    public function setClientAddress2(?string $clientAddress2): static
     {
         $this->clientAddress2 = $clientAddress2;
 
@@ -276,7 +263,7 @@ class LayDeputyshipDto
         return $this->clientAddress3;
     }
 
-    public function setClientAddress3(?string $clientAddress3): LayDeputyshipDto
+    public function setClientAddress3(?string $clientAddress3): static
     {
         $this->clientAddress3 = $clientAddress3;
 
@@ -288,7 +275,7 @@ class LayDeputyshipDto
         return $this->clientAddress4;
     }
 
-    public function setClientAddress4(?string $clientAddress4): LayDeputyshipDto
+    public function setClientAddress4(?string $clientAddress4): static
     {
         $this->clientAddress4 = $clientAddress4;
 
@@ -300,7 +287,7 @@ class LayDeputyshipDto
         return $this->clientAddress5;
     }
 
-    public function setClientAddress5(?string $clientAddress5): LayDeputyshipDto
+    public function setClientAddress5(?string $clientAddress5): static
     {
         $this->clientAddress5 = $clientAddress5;
 
@@ -312,7 +299,7 @@ class LayDeputyshipDto
         return $this->clientPostcode;
     }
 
-    public function setClientPostcode(?string $clientPostcode): LayDeputyshipDto
+    public function setClientPostcode(?string $clientPostcode): static
     {
         $this->clientPostcode = $clientPostcode;
 

@@ -74,18 +74,28 @@ deletePage:
     explanation: Description of expense
     amount: Amount
 
-form.entries:
-  work-up-to-and-including-cot-made.label: Work up to and including date court order made
-  annual-management-fee.label: Annual management fee
-  annual-property-management-fee.label: Annual property management fee
-  preparing-and-lodging-annual-report.label: Preparing and lodging the annual report
-  completition-of-tax-return.label: Completion of tax return
-  travel-costs:
-    label: Travel costs
-    moreInformations: Please provide some detail
-  specialist-service:
-    label: Specialist services
-    moreInformations: Please provide some detail
+form:
+  thing: expense
+  entries:
+    work-up-to-and-including-cot-made.label: Work up to and including date court order made
+    annual-management-fee.label: Annual management fee
+    annual-property-management-fee.label: Annual property management fee
+    preparing-and-lodging-annual-report.label: Preparing and lodging the annual report
+    completition-of-tax-return.label: Completion of tax return
+    travel-costs:
+      label: Travel costs
+      moreInformations: Please provide some detail
+    specialist-service:
+      label: Specialist services
+      moreInformations: Please provide some detail
 
 common:
   supportTitle: Deputy fees and expenses
+
+notices:
+  entry:
+    added: "Expense added"
+    edited: "Expense edited"
+    deleted: "Expense deleted"
+  fee:
+    edited: "Fees edited"

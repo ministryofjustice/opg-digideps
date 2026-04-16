@@ -24,7 +24,6 @@ class ContactType extends AbstractType
                       'preferred_choices' => ['GB'],
                       'placeholder' => 'form.country.defaultOption',
                 ])
-                ->add('addAnother', AddAnotherThingType::class)
                 ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
     }
 

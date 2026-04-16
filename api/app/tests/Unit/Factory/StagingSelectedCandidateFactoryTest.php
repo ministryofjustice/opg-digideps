@@ -25,6 +25,8 @@ final class StagingSelectedCandidateFactoryTest extends TestCase
         $this->csvDeputyShipRow->orderMadeDate = '2018-01-21';
         $this->csvDeputyShipRow->deputyUid = '700761111002';
         $this->csvDeputyShipRow->deputyStatusOnOrder = 'ACTIVE';
+        $this->csvDeputyShipRow->isHybrid = null;
+        $this->csvDeputyShipRow->reportType = 'OPG104';
     }
 
     public function testCreateInsertOrderCandidate(): void

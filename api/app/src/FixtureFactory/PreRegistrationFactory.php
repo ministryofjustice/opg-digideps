@@ -8,9 +8,9 @@ use App\Entity\PreRegistration;
 use App\v2\Registration\DTO\LayDeputyshipDto;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory as PreRegistrationDTOFactory;
 
-class PreRegistrationFactory
+readonly class PreRegistrationFactory
 {
-    public function __construct(private readonly PreRegistrationDTOFactory $preRegistrationFactory)
+    public function __construct(private PreRegistrationDTOFactory $preRegistrationFactory)
     {
     }
 
@@ -19,7 +19,6 @@ class PreRegistrationFactory
         $caseNumber = str_pad((string) rand(1, 99999999), 8, '0', STR_PAD_LEFT);
         $generateDeputyUidIfNotSet = '7' . str_pad((string) rand(1, 99999999), 11, '0', STR_PAD_LEFT);
         $deputyUid = array_key_exists('deputyUid', $data) && strval($data['deputyUid']) ? strval($data['deputyUid']) : $generateDeputyUidIfNotSet;
-        $reportType = 'ndr' == $data['reportType'] ? 'OPG102' : $data['reportType'];
 
         $dto = (new LayDeputyshipDto())
             ->setCaseNumber($data['caseNumber'] ?? $caseNumber)
@@ -40,9 +39,8 @@ class PreRegistrationFactory
             ->setDeputyPostcode($data['deputyPostCode'] ?? 'SW1')
             ->setDeputyFirstname($data['deputyFirstname'] ?? 'Mel')
             ->setDeputySurname($data['deputyLastName'] ?? 'Jones')
-            ->setIsNdrEnabled(false)
             ->setOrderDate(new \DateTime())
-            ->setTypeOfReport($reportType ?? 'OPG102')
+            ->setTypeOfReport('OPG102')
             ->setOrderType($data['orderType'] ?? 'PFA')
             ->setIsCoDeputy($data['createCoDeputy'] ?? false)
             ->setHybrid($data['hybrid'] ?? null);
@@ -74,7 +72,6 @@ class PreRegistrationFactory
             ->setDeputyPostcode('SW1')
             ->setDeputyFirstname('Jamie')
             ->setDeputySurname('Bloggs')
-            ->setIsNdrEnabled(false)
             ->setOrderDate(new \DateTime())
             ->setIsCoDeputy(true)
             ->setOrderType($data['orderType'] ?? 'PFA')

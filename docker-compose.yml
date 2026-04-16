@@ -167,11 +167,11 @@ services:
     restart: always
 
   redis-frontend:
-    image: redis:6.2.12
+    image: redis:6.2.17@sha256:3a2bd6da7a0ad2a1786539c1d340ff9bd8ba6c3214f41d585e29a905e0281909
     restart: always
 
   redis-api:
-    image: redis:6.2.12
+    image: redis:6.2.17@sha256:3a2bd6da7a0ad2a1786539c1d340ff9bd8ba6c3214f41d585e29a905e0281909
     restart: always
 
   file-scanner-rest:
@@ -226,7 +226,7 @@ services:
   #            - frontend
 
   pact-mock:
-    image: pactfoundation/pact-cli:0.56.0.6
+    image: pactfoundation/pact-cli:0.56.0.8@sha256:ee390ae508c8e783145f0b818984236846ce5f1826ac0ecdb460b4aefdcb34a1
     ports:
       - 1234:80
     command:
@@ -258,7 +258,7 @@ services:
       - OPENAPI_MOCK_SPECIFICATION_URL=/app/deputy-reporting-openapi.yml
 
   mock-notify-api:
-    image: stoplight/prism:5.14.3
+    image: stoplight/prism:5.15.5@sha256:d6af886a1d04a77a4261238f69c6d2fb3ed853ea70f37184e2f175211aadbcf2
     ports:
       - 4010:4010
     command:
@@ -409,3 +409,13 @@ services:
     working_dir: /app
     environment:
       NODE_ENV: production
+
+  composer-common-phpunit:
+    build:
+      context: ./common
+    command: tests:unit
+
+  composer-common-phpstan:
+    build:
+      context: ./common
+    command: lint:phpstan

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\v2\Service;
 
+use App\Domain\CourtOrder\CourtOrderInviteService;
+use App\Domain\CourtOrder\CourtOrderService;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
@@ -13,8 +15,6 @@ use App\Repository\PreRegistrationRepository;
 use App\Service\DeputyService;
 use App\Service\UserService;
 use App\v2\DTO\InviteeDto;
-use App\v2\Service\CourtOrderInviteService;
-use App\v2\Service\CourtOrderService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Exception\ORMException;
 use PHPUnit\Framework\MockObject\MockObject;

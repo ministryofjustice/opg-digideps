@@ -6,6 +6,9 @@ namespace App\Tests\Behat\v2\Reporting\Sections;
 
 use App\Tests\Behat\BehatException;
 use Behat\Gherkin\Node\TableNode;
+use Behat\Step\Given;
+use Behat\Step\Then;
+use Behat\Step\When;
 
 trait MoneyInShortSectionTrait
 {
@@ -77,17 +80,16 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @Then I should see a select option validation error
+     *
      * @throws BehatException
      */
+    #[Then('I should see a select option validation error')]
     public function iShouldSeeSelectOptionValidationError(): void
     {
         $this->assertOnErrorMessage("Please select either 'Yes' or 'No'");
     }
 
-    /**
-     * @Given I am reporting on:
-     */
+    #[Given('I am reporting on:')]
     public function iAmReportingOnMoneyInType(TableNode $moneyInTypes): void
     {
         foreach ($moneyInTypes as $moneyInType) {
@@ -104,10 +106,8 @@ trait MoneyInShortSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @Given /^I answer "([^"]*)" to one off payments over £1k$/
-     */
-    public function iAnswerToOneOffPaymentsOver£1k($arg1): void
+    #[Given('/^I answer "([^"]*)" to one off payments over £1k$/')]
+    public function iAnswerToOneOffPaymentsOver1k($arg1): void
     {
         $this->chooseOption(
             'yes_no[moneyTransactionsShortInExist]',
@@ -117,9 +117,7 @@ trait MoneyInShortSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @Given I have a single one-off payments over £1k
-     */
+    #[Given('I have a single one-off payments over £1k')]
     public function iHaveASingleOneOffPaymentOver1k(): void
     {
         $this->chooseOption(
@@ -132,14 +130,12 @@ trait MoneyInShortSectionTrait
 
         $this->addMoneyInPayment('Lorem ipsum', 1500, 1);
 
-        $this->chooseOption('add_another[addAnother]', 'no');
-        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'add_another_save');
+        $this->selectOption('money_short_transaction[addAnother]', 'no');
+        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'money_short_transaction_save');
     }
 
-    /**
-     * @Given /^I add (\d+) one\-off payments over £1k$/
-     */
-    public function iAddAOneOffPaymentsOver£1k(int $numberOfPayments): void
+    #[Given('/^I add (\d+) one\-off payments over £1k$/')]
+    public function iAddAOneOffPaymentsOver1k(int $numberOfPayments): void
     {
         $this->iAmOnMoneyInShortOneOffPaymentsExistsPage();
 
@@ -156,15 +152,14 @@ trait MoneyInShortSectionTrait
         foreach ($paymentsRange as $paymentNumber) {
             $this->addMoneyInPayment(sprintf('lorem ipsum %s', rand(1, 10)), rand(1000, 10000), $paymentNumber);
             $this->paymentNumber[] = $paymentNumber;
-            $this->addAnotherMoneyInPayment($numberOfPayments === $paymentNumber ? 'no' : 'yes');
+            $this->selectOption('money_short_transaction[addAnother]', $numberOfPayments === $paymentNumber ? 'no' : 'yes');
+            $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'money_short_transaction_save');
         }
 
         $this->iAmOnMoneyInShortSummaryPage();
     }
 
-    /**
-     * @When I edit the money in short section and add a payment
-     */
+    #[When('I edit the money in short section and add a payment')]
     public function iEditTheMoneyInShortSectionAndAddAPayment(): void
     {
         $this->iVisitMoneyInShortSummarySection();
@@ -182,16 +177,13 @@ trait MoneyInShortSectionTrait
 
         $this->addMoneyInPayment('Lorem ipsum', 1500, 1, '08/12/2021');
 
-        $this->chooseOption('add_another[addAnother]', 'no');
-        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'add_another_save');
+        $this->selectOption('money_short_transaction[addAnother]', 'no');
+        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'money_short_transaction_save');
 
         $this->iAmOnMoneyInShortSummaryPage();
     }
 
-    /**
-     * @When /^I edit the money in short "([^"]*)" summary section$/
-     * @throws BehatException
-     */
+    #[When('/^I edit the money in short "([^"]*)" summary section$/')]
     public function iEditTheMoneyInShortSummarySection($arg): void
     {
         $this->iAmOnMoneyInShortSummaryPage();
@@ -211,9 +203,10 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @When I add a one off money in payment that is less than £1k
+     *
      * @throws BehatException
      */
+    #[When('I add a one off money in payment that is less than £1k')]
     public function iAddAOneOffMoneyInPaymentThatIsLessThan1k(): void
     {
         $this->iVisitMoneyInShortSummarySection();
@@ -232,9 +225,10 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @Then I should the see correct validation message
+     *
      * @throws BehatException
      */
+    #[Then('I should the see correct validation message')]
     public function iShouldSeeTheCorrectValidationMessage(): void
     {
         $this->assertOnAlertMessage('The amount must be between £1000 and £100,000,000,000');
@@ -269,9 +263,10 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @Then I should see the expected money in section summary
+     *
      * @throws BehatException
      */
+    #[Then('I should see the expected money in section summary')]
     public function iShouldSeeTheExpectedMoneyInSectionSummary(): void
     {
         $this->iAmOnMoneyInShortSummaryPage();
@@ -279,9 +274,7 @@ trait MoneyInShortSectionTrait
         $this->expectedResultsDisplayedSimplified();
     }
 
-    /**
-     * @Then /^I enter a reason for no money in short$/
-     */
+    #[Then('/^I enter a reason for no money in short$/')]
     public function iEnterAReasonForNoMoneyInShort(): void
     {
         $this->iAmOnNoMoneyInShortExistsPage();
@@ -291,9 +284,10 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @Then /^there should be "([^"]*)" one off payments displayed on the money in summary page$/
+     *
      * @throws BehatException
      */
+    #[Then('/^there should be "([^"]*)" one off payments displayed on the money in summary page$/')]
     public function thereShouldBeOneOffPaymentsDisplayedOnTheSummaryPage($arg1): void
     {
         $this->iAmOnMoneyInShortSummaryPage();
@@ -319,9 +313,10 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @Given /^I delete the transaction from the summary page$/
+     *
      * @throws BehatException
      */
+    #[Given('/^I delete the transaction from the summary page$/')]
     public function iDeleteTheTransactionFromTheSummaryPage(): void
     {
         $this->iVisitMoneyInShortSummarySection();
@@ -350,9 +345,10 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @Then /^I edit the answer to the money in one off payment over 1k$/
+     *
      * @throws BehatException
      */
+    #[Then('/^I edit the answer to the money in one off payment over 1k$/')]
     public function iEditTheAnswerToTheOneOffPaymentsOver1K(): void
     {
         $this->removeSection('one-off-payments');
@@ -361,9 +357,7 @@ trait MoneyInShortSectionTrait
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
     }
 
-    /**
-     * @When /^I select the "([^"]*)" category for money in short$/
-     */
+    #[When('/^I select the "([^"]*)" category for money in short$/')]
     public function iSelectTheCategoryForMoneyInShort(string $category): void
     {
         $optionIndex = array_search($category, $this->moneyInShortTypeDictionary);
@@ -383,18 +377,12 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @Then /^I should see the correct validation message for no category selected$/
+     *
      * @throws BehatException
      */
+    #[Then('/^I should see the correct validation message for no category selected$/')]
     public function iShouldSeeTheCorrectValidationMessageForNoCategorySelected(): void
     {
         $this->assertOnErrorMessage($this->missingCategoryError);
-    }
-
-    private function addAnotherMoneyInPayment($selection): void
-    {
-        $this->iAmOnMoneyInShortAddAnotherPage();
-        $this->selectOption('add_another[addAnother]', $selection);
-        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'add_another_save');
     }
 }

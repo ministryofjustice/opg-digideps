@@ -10,7 +10,7 @@
 </div>
 {% endmacro %}
 
-{% macro deputyClientInfo(ndr, submittedBy, client, adLoggedAsDeputy) %}
+{% macro deputyClientInfo(submittedBy, client, adLoggedAsDeputy) %}
     <div id="deputy-details-subsection">
         <div class="box">
             <h3>Deputy details</h3>
@@ -104,15 +104,12 @@
                 <dd class="value">{{client.phone}}</dd>
             </dl>
 
-            {# TODO condition should be removed ? kept until not clarified. To remove after AD is removed #}
-            {% if (ndr and not adLoggedAsDeputy) or not ndr %}
-                <div class="full-width push-half--top">
-                    <dl class="labelvalue">
-                        <dt class="label">{{ 'email' | trans({}, 'common' ) }}</dt>
-                        <dd class="value behat-region-deputy-email">{{deputy.email}}</dd>
-                    </dl>
-                </div>
-            {% endif %}
+            <div class="full-width push-half--top">
+                <dl class="labelvalue">
+                    <dt class="label">{{ 'email' | trans({}, 'common' ) }}</dt>
+                    <dd class="value behat-region-deputy-email">{{deputy.email}}</dd>
+                </dl>
+            </div>
         </div>
     </div>
 {% endmacro %}
@@ -177,15 +174,11 @@
 {# =================================================================== #}
 {# Deputy expenses #}
 
-{% macro deputyExpenses(ndr,report) %}
+{% macro deputyExpenses(report) %}
 <div class="dont-break">
     <div class="box">
         <h3 class="label question bold">
-            {% if ndr %}
-                Did you pay for anything for the client before you were given your court order?
-            {% else %}
-                Have you claimed any deputy expenses during this reporting period?
-            {% endif %}
+            Have you claimed any deputy expenses during this reporting period?
         </h3>
 
         <table class="checkboxes labelvalue inline">
@@ -200,7 +193,7 @@
         {% if report.paidForAnything == 'yes' %}
             <table class="labelvalue money push--top">
                 {% for expense in report.expenses %}
-                    <tr>
+                    <tr data-role="deputy-expense">
                         <td class="label noborder">{{ expense.explanation }}</td>
                         <td class="value text--right width-fifth">&pound;{{ expense.amount | money_format }}</td>
                     </tr>

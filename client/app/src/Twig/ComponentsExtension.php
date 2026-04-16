@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Service\ReportSectionsLinkService;
 use Symfony\Component\Intl\Countries;
@@ -33,7 +34,7 @@ class ComponentsExtension extends AbstractExtension
             new TwigFunction('progress_bar_registration', [$this, 'progressBarRegistration'], ['needs_environment' => true]),
             new TwigFunction('progress_bar_report_submission', [$this, 'progressBarReportSubmission'], ['needs_environment' => true]),
             new TwigFunction('accordionLinks', [$this, 'renderAccordionLinks']),
-            new TwigFunction('section_link_params', function ($report, $sectionId, $offset) {
+            new TwigFunction('section_link_params', function (Report $report, string $sectionId, int $offset) {
                 return $this->reportSectionsLinkService->getSectionParams($report, $sectionId, $offset);
             }),
             new TwigFunction('class_const', function ($className, $constant) {
@@ -216,8 +217,6 @@ class ComponentsExtension extends AbstractExtension
             $availableStepIds = ['password', 'user_details'];
         } elseif ($user->getIsCoDeputy() || User::CO_DEPUTY_INVITE === $user->getRegistrationRoute()) {
             $availableStepIds = ['password', 'codep_verify'];
-        } elseif ($user->isNdrEnabled()) {
-            $availableStepIds = ['password', 'user_details', 'client_details'];
         } else {
             $availableStepIds = ['password', 'user_details', 'client_details'];
         }

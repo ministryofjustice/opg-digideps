@@ -8,7 +8,7 @@ use Aws\Ssm\SsmClient;
 
 class ParameterStoreService
 {
-    public const FLAG_DOCUMENT_SYNC = 'document-sync';
+    public const string FLAG_DOCUMENT_SYNC = 'document-sync';
 
     public function __construct(
         private readonly SsmClient $ssmClient,

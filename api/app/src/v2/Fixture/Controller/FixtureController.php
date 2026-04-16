@@ -2,6 +2,10 @@
 
 namespace App\v2\Fixture\Controller;
 
+use App\Domain\CourtOrder\CourtOrderKind;
+use App\Domain\CourtOrder\CourtOrderReportType;
+use App\Domain\CourtOrder\CourtOrderType;
+use App\Domain\Deputy\DeputyType;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
@@ -110,19 +114,19 @@ class FixtureController extends AbstractController
             $this->em->persist($deputyPreRegistration);
         }
 
-        if (User::TYPE_LAY === $fromRequest['deputyType']) {
-            $deputy = $this->generateDeputy($user);
-            $courtOrder = $this->generateCourtOrder($client);
-
-            $deputy->associateWithCourtOrder($courtOrder);
-            $this->em->persist($deputy);
-        }
-
         if (!isset($fromRequest['reportType']) || !is_string($fromRequest['reportType'])) {
             throw new \InvalidArgumentException('Missing or invalid "reportType" field in request.');
         }
 
         $reportType = strtolower($fromRequest['reportType']);
+
+        if (User::TYPE_LAY === $fromRequest['deputyType']) {
+            $deputy = $this->generateDeputy($user);
+            $courtOrder = $this->generateCourtOrder($client, $reportType);
+
+            $deputy->associateWithCourtOrder($courtOrder);
+            $this->em->persist($deputy);
+        }
 
         if ('ndr' === $reportType) {
             $this->createNdr($fromRequest, $client);
@@ -164,7 +168,8 @@ class FixtureController extends AbstractController
         $deputy = $this->generateDeputy($user);
 
         $deputyPreRegistration = $this->generatePreRegistration($fromRequest, $client, $user);
-        $courtOrder = $this->generateCourtOrder($client);
+        $reportType = strtolower($fromRequest['reportType']);
+        $courtOrder = $this->generateCourtOrder($client, $reportType);
 
         $deputy->associateWithCourtOrder($courtOrder);
         $this->em->persist($deputy);
@@ -185,7 +190,7 @@ class FixtureController extends AbstractController
         // update case number for second client
         $fromRequest['caseNumber'] = substr($fromRequest['caseNumber'], 0, -3) . rand(100, 999);
         $secondClient = $this->generateClient($fromRequest);
-        $secondCourtOrder = $this->generateCourtOrder($secondClient);
+        $secondCourtOrder = $this->generateCourtOrder($secondClient, $reportType);
         $secondDeputyPreRegistration = $this->generatePreRegistration($fromRequest, $secondClient, $secondUser);
         $secondUser->addClient($secondClient);
 
@@ -250,18 +255,48 @@ class FixtureController extends AbstractController
 
         return (new Deputy())
             ->setDeputyUid((string) $uid)
+            ->setDeputyType($user->deriveDeputyType() ?? DeputyType::LAY)
             ->setUser($user)
             ->setEmail1($user->getEmail())
             ->setFirstname($user->getFirstname())
             ->setLastname($user->getLastname());
     }
 
-    private function generateCourtOrder(Client $client): CourtOrder
+    private function generateCourtOrder(Client $client, string $reportType): CourtOrder
     {
         $courtOrder = new CourtOrder();
 
+        switch ($reportType) {
+            case '104':
+                $courtOrder->setOrderType(CourtOrderType::HW);
+                $courtOrder->setOrderReportType(CourtOrderReportType::OPG104);
+                $courtOrder->setOrderKind(CourtOrderKind::Single);
+                break;
+            case '102':
+                $courtOrder->setOrderType(CourtOrderType::PFA);
+                $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
+                $courtOrder->setOrderKind(CourtOrderKind::Single);
+                break;
+            case '102-4':
+                $courtOrder->setOrderType(CourtOrderType::PFA);
+                $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
+                $courtOrder->setOrderKind(CourtOrderKind::Hybrid);
+                break;
+            case '103':
+                $courtOrder->setOrderType(CourtOrderType::PFA);
+                $courtOrder->setOrderReportType(CourtOrderReportType::OPG103);
+                $courtOrder->setOrderKind(CourtOrderKind::Single);
+                break;
+            case '103-4':
+                $courtOrder->setOrderType(CourtOrderType::PFA);
+                $courtOrder->setOrderReportType(CourtOrderReportType::OPG103);
+                $courtOrder->setOrderKind(CourtOrderKind::Hybrid);
+                break;
+            default:
+                throw new \InvalidArgumentException('Invalid report type provided: ' . $reportType);
+        }
+
         $courtOrder->setCourtOrderUid(strval(rand(100000000000, 999999999999)));
-        $courtOrder->setOrderType('hw');
         $courtOrder->setStatus('ACTIVE');
         $courtOrder->setOrderMadeDate(new \DateTime('2020-06-14'));
         $courtOrder->setClient($client);
@@ -285,7 +320,7 @@ class FixtureController extends AbstractController
             'email' => $fromRequest['deputyEmail'],
             'activated' => $fromRequest['activated'],
             'coDeputyEnabled' => $fromRequest['coDeputyEnabled'],
-            'deputyUid' => $fromRequest['deputyUid'],
+            'deputyUid' => $fromRequest['deputyUid'] ?? null,
         ]);
 
         $this->em->persist($user);
@@ -383,6 +418,7 @@ class FixtureController extends AbstractController
         $deputy = (new Deputy())
             ->setFirstname($deputy->getFirstname())
             ->setLastname($deputy->getLastname())
+            ->setDeputyType($deputy->deriveDeputyType() ?? DeputyType::LAY)
             ->setEmail1($deputy->getEmail())
             ->setDeputyUid('70' . str_pad($fromRequest['caseNumber'] . mt_rand(1, 100), 10))
             ->setAddress1($deputy->getAddress1())
@@ -611,11 +647,15 @@ class FixtureController extends AbstractController
         $deputy = $this->deputyRepository->findOneBy(['email1' => $userEmail]);
 
         if (is_null($deputy)) {
+            /**
+             * @var User|null $user
+             */
             $user = $this->userRepository->findOneBy(['email' => $userEmail]);
 
             if ($user) {
                 $deputy = (new Deputy())
                     ->setDeputyUid(rand(8, 8))
+                    ->setDeputyType($user->deriveDeputyType() ?? DeputyType::LAY)
                     ->setEmail1($user->getEmail())
                     ->setFirstname($user->getFirstname())
                     ->setLastname($user->getLastname());

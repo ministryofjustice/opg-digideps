@@ -4,17 +4,16 @@ namespace App\Service\Client;
 
 use App\Entity\User;
 use App\Exception as AppException;
-use App\Model\SelfRegisterData;
 use App\Service\Client\TokenStorage\RedisStorage;
 use App\Service\JWT\JWTService;
 use App\Service\RequestIdLoggerProcessor;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\TransferException;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Lcobucci\JWT\Validation\ConstraintViolation;
+use OPG\Digideps\Common\Registration\SelfRegisterData;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;

@@ -16,7 +16,7 @@ use Psr\Log\LoggerInterface;
 
 class JWTService
 {
-    public const JKU_URL_TEMPLATE = '%s/v2/.well-known/jwks.json';
+    public const string JKU_URL_TEMPLATE = '%s/v2/.well-known/jwks.json';
 
     public function __construct(
         private readonly SecretManagerService $secretManager,

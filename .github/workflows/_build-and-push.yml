@@ -21,6 +21,9 @@ on:
         required: false
         default: true
         type: boolean
+    secrets:
+      snyk_token:
+        required: true
 
 jobs:
   docker_build_scan_push:
@@ -108,7 +111,7 @@ jobs:
             sub_folder: "mock-sirius"
             docker_file: "Dockerfile"
             platform: "amd64"
-            runs_on: "ubuntu-24.04-arm"
+            runs_on: "ubuntu-latest"
 
     runs-on: ${{ matrix.runs_on }}
     steps:
@@ -138,9 +141,6 @@ jobs:
             ${{ matrix.svc_name }}-main-${{ steps.cache-dates.outputs.cache_date_today }}
             ${{ matrix.svc_name }}-${{ inputs.branch_name }}-${{ steps.cache-dates.outputs.cache_date_yesterday }}
             ${{ matrix.svc_name }}-main-${{ steps.cache-dates.outputs.cache_date_yesterday }}
-
-      - name: install aws cli
-        uses: unfor19/install-aws-cli-action@f5b46b7f32cf5e7ebd652656c5036bf83dd1e60c # v1
 
       - name: download resources artifact
         uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
@@ -185,6 +185,39 @@ jobs:
           fi
         working-directory: ${{ matrix.sub_folder }}
 
+      - name: configure OIDC AWS credentials for ECR pull
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.MANAGEMENT_ACCOUNT }}:role/digideps-gh-actions-ecr-pull
+          role-session-name: github-actions-ecr-pull
+          role-duration-seconds: 900
+          aws-region: eu-west-1
+
+      - uses: aws-actions/amazon-ecr-login@c75a9a1d9c6f7cf1e4cfb2966839b590c3d46865 # v2.1.0
+        id: login_ecr_pull
+        with:
+          registries: ${{ vars.MANAGEMENT_ACCOUNT }}
+          mask-password: "true"
+
+      - name: Run Snyk Scan
+        id: snyk_scan
+        if: matrix.svc_name != 'mock-sirius'
+        uses: ministryofjustice/opg-github-actions/actions/snyk-scan@ceeda9d30ec7f6705c819d0b7664b9a79df99a3b # v4.8.0
+        with:
+          SNYK_TEST_IMAGE: ${{ matrix.svc_name }}:latest
+          SNYK_TOKEN: ${{ secrets.snyk_token }}
+          snyk_test_args: "--severity-threshold=high"
+          sarif_filepath: ./test-results
+          sarif_filename: snyk-results.sarif
+          snyk_policy_path: ${{ github.workspace }}/.github/.snyk
+
+      - name: Upload SNYK scan results to GitHub Security tab
+        if: steps.snyk_scan.outcome == 'success' && hashFiles('test-results/snyk-results.sarif') != ''
+        uses: github/codeql-action/upload-sarif@9e907b5e64f6b83e7804b09294d44122997950d6 # v4.32.3
+        with:
+          sarif_file: test-results/snyk-results.sarif
+          category: ${{ matrix.svc_name }}
+
       - name: Move cache
         run: |
           rm -rf /tmp/.buildx-cache
@@ -198,46 +231,11 @@ jobs:
           role-duration-seconds: 900
           aws-region: eu-west-1
 
-      - name: ecr login
+      - uses: aws-actions/amazon-ecr-login@c75a9a1d9c6f7cf1e4cfb2966839b590c3d46865 # v2.1.0
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076 # v2.0.1
         with:
           registries: ${{ vars.MANAGEMENT_ACCOUNT }}
-
-      - name: trivy image scanning
-        if: matrix.svc_name != 'mock-sirius'
-        id: trivy_scan
-        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1 # 0.35.0
-        with:
-          image-ref: ${{ matrix.svc_name }}:latest
-          severity: "HIGH,CRITICAL"
-          format: "sarif"
-          scanners: "vuln"
-          output: "trivy-results.sarif"
-          timeout: 15m
-        env:
-          TRIVY_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db
-          TRIVY_JAVA_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-java-db
-
-      - name: upload trivy scan results to security tab
-        if: matrix.svc_name != 'mock-sirius'
-        id: trivy_upload_sarif
-        uses: github/codeql-action/upload-sarif@b8d3b6e8af63cde30bdc382c0bc28114f4346c88 # v2.28.1
-        with:
-          sarif_file: "trivy-results.sarif"
-
-      - name: generate SBOM
-        if: inputs.branch_name == 'main'
-        run: |
-          mkdir -p sboms
-          trivy image --format spdx --output "sboms/sbom-${{ matrix.svc_name }}.spdx.json" "${{ matrix.svc_name }}:latest"
-
-      - name: upload SBOM
-        if: inputs.branch_name == 'main'
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
-        with:
-          name: sbom-${{ matrix.svc_name }}
-          path: sboms/sbom-${{ matrix.svc_name }}.spdx.json
+          mask-password: "true"
 
       - name: show build tag
         env:

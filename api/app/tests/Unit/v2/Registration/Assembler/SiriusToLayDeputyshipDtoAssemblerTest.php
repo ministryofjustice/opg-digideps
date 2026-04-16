@@ -89,7 +89,6 @@ final class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
         $this->assertEquals('depaddress5', $result->getDeputyAddress5());
         $this->assertEquals($reportType, $result->getTypeOfReport());
         $this->assertEquals('pfa', $result->getOrderType());
-        $this->assertEquals(false, $result->isNdrEnabled());
         $this->assertEquals('2011-06-14', $result->getOrderDate()->format('Y-m-d'));
         $this->assertEquals(true, $result->getIsCoDeputy());
     }

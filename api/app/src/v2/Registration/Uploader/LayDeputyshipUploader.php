@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\v2\Registration\Uploader;
 
 use App\Entity\PreRegistration;
@@ -11,22 +13,15 @@ use App\v2\Registration\DTO\LayDeputyshipDto;
 use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
 use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
-use Doctrine\Common\Persistence\Mapping\MappingException;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Psr\Log\LoggerInterface;
 
 class LayDeputyshipUploader
 {
-    /** @var array */
-    private $reportsUpdated = [];
-
-    /** @var array */
-    private $preRegistrationEntriesByCaseNumber = [];
-
-    /** @var int */
-    public const MAX_UPLOAD = 10000;
+    private array $reportsUpdated = [];
+    private array $preRegistrationEntriesByCaseNumber = [];
+    public const int MAX_UPLOAD = 10000;
 
     public function __construct(
         private readonly EntityManagerInterface $em,
@@ -139,9 +134,6 @@ class LayDeputyshipUploader
         }
     }
 
-    /**
-     * @throws ORMException
-     */
     private function createAndPersistNewPreRegistrationEntity(LayDeputyshipDto $layDeputyshipDto): PreRegistration
     {
         $preRegistrationEntity = $this->preRegistrationFactory->createFromDto($layDeputyshipDto);
@@ -166,8 +158,10 @@ class LayDeputyshipUploader
             foreach ($reports as $currentActiveReport) {
                 $reportCaseNumber = strtolower($currentActiveReport->getClient()->getCaseNumber());
                 $currentActiveReportId = $currentActiveReport->getId();
+
                 /** @var PreRegistration $preRegistration */
                 $preRegistration = $this->preRegistrationEntriesByCaseNumber[$reportCaseNumber];
+
                 $determinedReportType = PreRegistration::getReportTypeByOrderType(
                     $preRegistration->getTypeOfReport(),
                     $preRegistration->getOrderType() ?? '',
@@ -199,11 +193,6 @@ class LayDeputyshipUploader
         return $this;
     }
 
-    /**
-     * @throws MappingException
-     * @throws ORMException
-     * @throws OptimisticLockException
-     */
     private function commitTransactionToDatabase(): void
     {
         $this->em->flush();

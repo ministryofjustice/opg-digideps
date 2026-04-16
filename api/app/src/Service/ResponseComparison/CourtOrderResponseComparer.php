@@ -6,8 +6,8 @@ use Psr\Http\Message\ResponseInterface;
 
 class CourtOrderResponseComparer extends ResponseComparer
 {
-    private const LEGACY_SECONDARY_URL = "/v2/client/%s?groups%%5B0%%5D=client&groups%%5B1%%5D=client-users&groups%%5B2%%5D=user&groups%%5B3%%5D=client-reports&groups%%5B4%%5D=client-ndr&groups%%5B5%%5D=ndr&groups%%5B6%%5D=report&groups%%5B7%%5D=status&groups%%5B8%%5D=client-deputy&groups%%5B9%%5D=deputy&groups%%5B10%%5D=client-organisations&groups%%5B11%%5D=organisation";
-    private const NEW_SECONDARY_URL = "/v2/courtorder/%s?inactive=true";
+    private const string LEGACY_SECONDARY_URL = "/v2/client/%s?groups%%5B0%%5D=client&groups%%5B1%%5D=client-users&groups%%5B2%%5D=user&groups%%5B3%%5D=client-reports&groups%%5B4%%5D=client-ndr&groups%%5B5%%5D=ndr&groups%%5B6%%5D=report&groups%%5B7%%5D=status&groups%%5B8%%5D=client-deputy&groups%%5B9%%5D=deputy&groups%%5B10%%5D=client-organisations&groups%%5B11%%5D=organisation";
+    private const string NEW_SECONDARY_URL = "/v2/courtorder/%s?inactive=true";
 
     public function getSqlStatement(string $userIds): string
     {

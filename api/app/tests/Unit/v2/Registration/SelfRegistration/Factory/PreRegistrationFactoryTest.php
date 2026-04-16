@@ -77,7 +77,7 @@ final class PreRegistrationFactoryTest extends TestCase
         $this->assertEquals('depaddress5', $result->getDeputyAddress5());
         $this->assertEquals('type', $result->getTypeOfReport());
         $this->assertEquals('pfa', $result->getOrderType());
-        $this->assertEquals(true, $result->getNdr());
+        $this->assertNull($result->getNdr());
         $this->assertEquals('2011-06-14', $result->getOrderDate()->format('Y-m-d'));
         $this->assertEquals(false, $result->getIsCoDeputy());
     }
@@ -107,7 +107,6 @@ final class PreRegistrationFactoryTest extends TestCase
             ->setDeputyAddress5('depaddress5')
             ->setDeputyPostcode('postcode')
             ->setTypeOfReport('type')
-            ->setIsNdrEnabled(true)
             ->setOrderType('pfa')
             ->setOrderDate(new DateTime('2011-06-14'))
             ->setIsCoDeputy(false)

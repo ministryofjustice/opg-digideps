@@ -9,7 +9,6 @@ use App\Service\Mailer\MailFactory;
 use App\Service\Mailer\MailSender;
 use App\TestHelpers\ClientHelpers;
 use App\TestHelpers\EmailHelpers;
-use App\TestHelpers\NdrHelpers;
 use App\TestHelpers\ReportHelpers;
 use App\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
@@ -132,23 +131,5 @@ class MailerTest extends TestCase
         $this->mailSender->send($submittedReportConfirmationEmail)->shouldBeCalled();
 
         $this->sut->sendReportSubmissionConfirmationEmail($submittedByDeputy, $submittedReport, $newReport);
-    }
-
-    /** @test */
-    public function sendNdrSubmissionConfirmationEmail()
-    {
-        $submittedByDeputy = UserHelpers::createUser();
-        $submittedNdr = NdrHelpers::createSubmittedNdr();
-        $newReport = ReportHelpers::createReport();
-        $submittedNdrConfirmationEmail = EmailHelpers::createEmail();
-
-        $this->mailFactory
-            ->createNdrSubmissionConfirmationEmail($submittedByDeputy, $submittedNdr, $newReport)
-            ->shouldBeCalled()
-            ->willReturn($submittedNdrConfirmationEmail);
-
-        $this->mailSender->send($submittedNdrConfirmationEmail)->shouldBeCalled();
-
-        $this->sut->sendNdrSubmissionConfirmationEmail($submittedByDeputy, $submittedNdr, $newReport);
     }
 }

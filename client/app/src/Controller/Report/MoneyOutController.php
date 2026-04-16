@@ -17,7 +17,7 @@ use App\Form\Report\NoMoneyOutType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
 use App\Service\StepRedirector;
-use App\Utility\ValidatingForm;
+use OPG\Digideps\Common\Validating\ValidatingForm;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\SubmitButton;
@@ -77,6 +77,7 @@ class MoneyOutController extends AbstractController
             $this->restClient->put('report/' . $reportId, $report, ['doesMoneyOutExist']);
 
             // retrieve soft deleted transaction ids if present and handle money out ids only
+            /** @var MoneyTransaction[] $softDeletedTransactionIds */
             $softDeletedTransactionIds = $this->restClient->get('/report/' . $reportId . '/money-transaction/get-soft-delete', 'Report\MoneyTransaction[]');
 
             $softDeletedMoneyOutTransactionIds = [];
@@ -120,7 +121,7 @@ class MoneyOutController extends AbstractController
         ];
     }
 
-    private function handleSoftDeletionOfMoneyTransactionItems(string $answer, array $softDeletedTransactionIds, $report): void
+    private function handleSoftDeletionOfMoneyTransactionItems(string $answer, array $softDeletedTransactionIds, Report $report): void
     {
         $reportId = $report->getId();
 
@@ -198,6 +199,7 @@ class MoneyOutController extends AbstractController
             'backLink' => $stepRedirector->getBackLink(),
             'skipLink' => null,
             'categoriesGrouped' => MoneyTransaction::getCategoriesGrouped('out'),
+            'transactionId' => $transaction->getId(),
         ];
     }
 
@@ -255,8 +257,10 @@ class MoneyOutController extends AbstractController
             ['label' => 'deletePage.summary.amount', 'value' => $transaction->getAmount(), 'format' => 'money'],
         ];
 
+        /** @var BankAccount $bankAccount */
+        $bankAccount = $transaction->getBankAccount();
         if ($report->canLinkToBankAccounts() && $transaction->getBankAccount()) {
-            $summary[] = ['label' => 'deletePage.summary.bankAccount', 'value' => $transaction->getBankAccount()->getNameOneLine()];
+            $summary[] = ['label' => 'deletePage.summary.bankAccount', 'value' => $bankAccount->getNameOneLine()];
         }
 
         return [

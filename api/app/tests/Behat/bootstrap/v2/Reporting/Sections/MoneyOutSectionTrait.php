@@ -135,6 +135,8 @@ trait MoneyOutSectionTrait
 
         $this->getSession()->getPage()->find('xpath', '//td[contains(., "Care fees")]/..')->clickLink('Edit');
 
+        $this->assertPageContainsText('Edit a payment: Care fees');
+
         $this->fillInPaymentDetails('Care fees', $this->faker->sentence(rand(5, 50)), mt_rand(1, 999));
     }
 
@@ -219,8 +221,7 @@ trait MoneyOutSectionTrait
         }
 
         if ($addAnother !== null) {
-            $addAnotherAsInt = $addAnother ? 1 : 0;
-            $this->selectOption("account_addAnother_{$addAnotherAsInt}", $addAnother ? 'yes' : 'no');
+            $this->selectOption('account[addAnother]', $addAnother ? 'yes' : 'no');
         }
 
         $this->pressButton('Save and continue');
