@@ -5556,11 +5556,6 @@ parameters:
 			path: src/Security/RedisUserProvider.php
 
 		-
-			message: "#^Method App\\\\Security\\\\RedisUserProvider\\:\\:removeToken\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Security/RedisUserProvider.php
-
-		-
 			message: "#^Method App\\\\Security\\\\RedisUserProvider\\:\\:removeToken\\(\\) has parameter \\$token with no type specified\\.$#"
 			count: 1
 			path: src/Security/RedisUserProvider.php
