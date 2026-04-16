@@ -62,87 +62,87 @@ class Report implements ReportInterface
      * Reports with total amount of assets
      * Threshold under which reports should be 103, and not 102.
      */
-    public const ASSETS_TOTAL_VALUE_103_THRESHOLD = 21000;
+    public const int ASSETS_TOTAL_VALUE_103_THRESHOLD = 21000;
 
-    public const HEALTH_WELFARE = 1;
-    public const PROPERTY_AND_AFFAIRS = 2;
+    public const int HEALTH_WELFARE = 1;
+    public const int PROPERTY_AND_AFFAIRS = 2;
 
-    public const STATUS_NOT_STARTED = 'notStarted';
-    public const STATUS_READY_TO_SUBMIT = 'readyToSubmit';
-    public const STATUS_NOT_FINISHED = 'notFinished';
+    public const string STATUS_NOT_STARTED = 'notStarted';
+    public const string STATUS_READY_TO_SUBMIT = 'readyToSubmit';
+    public const string STATUS_NOT_FINISHED = 'notFinished';
 
     // https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
-    public const LAY_PFA_LOW_ASSETS_TYPE = '103';
-    public const LAY_PFA_HIGH_ASSETS_TYPE = '102';
-    public const LAY_HW_TYPE = '104';
-    public const LAY_COMBINED_LOW_ASSETS_TYPE = '103-4';
-    public const LAY_COMBINED_HIGH_ASSETS_TYPE = '102-4';
+    public const string LAY_PFA_LOW_ASSETS_TYPE = '103';
+    public const string LAY_PFA_HIGH_ASSETS_TYPE = '102';
+    public const string LAY_HW_TYPE = '104';
+    public const string LAY_COMBINED_LOW_ASSETS_TYPE = '103-4';
+    public const string LAY_COMBINED_HIGH_ASSETS_TYPE = '102-4';
 
     // PA
-    public const PA_PFA_LOW_ASSETS_TYPE = '103-6';
-    public const PA_PFA_HIGH_ASSETS_TYPE = '102-6';
-    public const PA_HW_TYPE = '104-6';
-    public const PA_COMBINED_LOW_ASSETS_TYPE = '103-4-6';
-    public const PA_COMBINED_HIGH_ASSETS_TYPE = '102-4-6';
+    public const string PA_PFA_LOW_ASSETS_TYPE = '103-6';
+    public const string PA_PFA_HIGH_ASSETS_TYPE = '102-6';
+    public const string PA_HW_TYPE = '104-6';
+    public const string PA_COMBINED_LOW_ASSETS_TYPE = '103-4-6';
+    public const string PA_COMBINED_HIGH_ASSETS_TYPE = '102-4-6';
 
     // PROF
-    public const PROF_PFA_LOW_ASSETS_TYPE = '103-5';
-    public const PROF_PFA_HIGH_ASSETS_TYPE = '102-5';
-    public const PROF_HW_TYPE = '104-5';
-    public const PROF_COMBINED_LOW_ASSETS_TYPE = '103-4-5';
-    public const PROF_COMBINED_HIGH_ASSETS_TYPE = '102-4-5';
+    public const string PROF_PFA_LOW_ASSETS_TYPE = '103-5';
+    public const string PROF_PFA_HIGH_ASSETS_TYPE = '102-5';
+    public const string PROF_HW_TYPE = '104-5';
+    public const string PROF_COMBINED_LOW_ASSETS_TYPE = '103-4-5';
+    public const string PROF_COMBINED_HIGH_ASSETS_TYPE = '102-4-5';
 
-    public const TYPE_HEALTH_WELFARE = '104';
-    public const TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS = '102';
-    public const TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS = '103';
-    public const TYPE_COMBINED_HIGH_ASSETS = '102-4';
-    public const TYPE_COMBINED_LOW_ASSETS = '103-4';
+    public const string TYPE_HEALTH_WELFARE = '104';
+    public const string TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS = '102';
+    public const string TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS = '103';
+    public const string TYPE_COMBINED_HIGH_ASSETS = '102-4';
+    public const string TYPE_COMBINED_LOW_ASSETS = '103-4';
 
-    public const ENABLE_FEE_SECTIONS = false;
+    public const bool ENABLE_FEE_SECTIONS = false;
 
-    public const SECTION_DECISIONS = 'decisions';
-    public const SECTION_CONTACTS = 'contacts';
-    public const SECTION_VISITS_CARE = 'visitsCare';
-    public const SECTION_LIFESTYLE = 'lifestyle';
+    public const string SECTION_DECISIONS = 'decisions';
+    public const string SECTION_CONTACTS = 'contacts';
+    public const string SECTION_VISITS_CARE = 'visitsCare';
+    public const string SECTION_LIFESTYLE = 'lifestyle';
 
     // money
-    public const SECTION_BALANCE = 'balance'; // not a real section, but needed as a flag for the view and the validation
-    public const SECTION_BANK_ACCOUNTS = 'bankAccounts';
-    public const SECTION_MONEY_TRANSFERS = 'moneyTransfers';
-    public const SECTION_MONEY_IN = 'moneyIn';
-    public const SECTION_MONEY_OUT = 'moneyOut';
-    public const SECTION_MONEY_IN_SHORT = 'moneyInShort';
-    public const SECTION_MONEY_OUT_SHORT = 'moneyOutShort';
-    public const SECTION_ASSETS = 'assets';
-    public const SECTION_DEBTS = 'debts';
-    public const SECTION_GIFTS = 'gifts';
-    public const SECTION_CLIENT_BENEFITS_CHECK = 'clientBenefitsCheck';
+    public const string SECTION_BALANCE = 'balance'; // not a real section, but needed as a flag for the view and the validation
+    public const string SECTION_BANK_ACCOUNTS = 'bankAccounts';
+    public const string SECTION_MONEY_TRANSFERS = 'moneyTransfers';
+    public const string SECTION_MONEY_IN = 'moneyIn';
+    public const string SECTION_MONEY_OUT = 'moneyOut';
+    public const string SECTION_MONEY_IN_SHORT = 'moneyInShort';
+    public const string SECTION_MONEY_OUT_SHORT = 'moneyOutShort';
+    public const string SECTION_ASSETS = 'assets';
+    public const string SECTION_DEBTS = 'debts';
+    public const string SECTION_GIFTS = 'gifts';
+    public const string SECTION_CLIENT_BENEFITS_CHECK = 'clientBenefitsCheck';
     // end money
 
-    public const SECTION_ACTIONS = 'actions';
-    public const SECTION_OTHER_INFO = 'otherInfo';
-    public const SECTION_DEPUTY_EXPENSES = 'deputyExpenses';
+    public const string SECTION_ACTIONS = 'actions';
+    public const string SECTION_OTHER_INFO = 'otherInfo';
+    public const string SECTION_DEPUTY_EXPENSES = 'deputyExpenses';
 
     // pa only
-    public const SECTION_PA_DEPUTY_EXPENSES = 'paDeputyExpenses'; // 106, AKA Fee and expenses
+    public const string SECTION_PA_DEPUTY_EXPENSES = 'paDeputyExpenses'; // 106, AKA Fee and expenses
 
     // prof only
-    public const SECTION_PROF_CURRENT_FEES = 'profCurrentFees';
-    public const SECTION_PROF_DEPUTY_COSTS = 'profDeputyCosts';
-    public const SECTION_PROF_DEPUTY_COSTS_ESTIMATE = 'profDeputyCostsEstimate';
+    public const string SECTION_PROF_CURRENT_FEES = 'profCurrentFees';
+    public const string SECTION_PROF_DEPUTY_COSTS = 'profDeputyCosts';
+    public const string SECTION_PROF_DEPUTY_COSTS_ESTIMATE = 'profDeputyCostsEstimate';
 
-    public const SECTION_DOCUMENTS = 'documents';
+    public const string SECTION_DOCUMENTS = 'documents';
 
     // Applies to both costs and estimate costs
-    public const PROF_DEPUTY_COSTS_TYPE_FIXED = 'fixed';
-    public const PROF_DEPUTY_COSTS_TYPE_ASSESSED = 'assessed';
-    public const PROF_DEPUTY_COSTS_TYPE_BOTH = 'both';
+    public const string PROF_DEPUTY_COSTS_TYPE_FIXED = 'fixed';
+    public const string PROF_DEPUTY_COSTS_TYPE_ASSESSED = 'assessed';
+    public const string PROF_DEPUTY_COSTS_TYPE_BOTH = 'both';
 
-    public const BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS = 60;
+    public const int BENEFITS_CHECK_SECTION_REQUIRED_GRACE_PERIOD_DAYS = 60;
 
     // Decisions
-    public const SIGNIFICANT_DECISION_MADE = 'Yes';
-    public const SIGNIFICANT_DECISION_NOT_MADE = 'No';
+    public const string SIGNIFICANT_DECISION_MADE = 'Yes';
+    public const string SIGNIFICANT_DECISION_NOT_MADE = 'No';
 
     /**
      * https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations.
@@ -901,10 +901,7 @@ class Report implements ReportInterface
         return $this->lifestyle;
     }
 
-    /**
-     * @param Lifestyle $lifestyle
-     */
-    public function setLifestyle($lifestyle)
+    public function setLifestyle(Lifestyle $lifestyle): void
     {
         $this->lifestyle = $lifestyle;
     }

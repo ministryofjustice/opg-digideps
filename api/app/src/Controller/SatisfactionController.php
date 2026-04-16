@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Satisfaction;
-use App\Repository\NdrRepository;
 use App\Repository\ReportRepository;
 use App\Repository\SatisfactionRepository;
 use App\Service\Formatter\RestFormatter;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,12 +16,16 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[Route(path: '/satisfaction')]
 class SatisfactionController extends RestController
 {
-    public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter, private readonly ReportRepository $reportRepository, private readonly NdrRepository $ndrRepository, private readonly SatisfactionRepository $satisfactionRepository)
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly RestFormatter $formatter,
+        private readonly ReportRepository $reportRepository,
+        private readonly SatisfactionRepository $satisfactionRepository
+    ) {
         parent::__construct($em);
     }
 
-    private function addSatisfactionScore(string $satisfactionLevel, string $comments): Satisfaction
+    private function addSatisfactionScore(int $satisfactionLevel, string $comments): Satisfaction
     {
         $satisfaction = new Satisfaction();
         $satisfaction->setScore($satisfactionLevel);
@@ -33,7 +37,7 @@ class SatisfactionController extends RestController
         return $satisfaction;
     }
 
-    private function updateSatisfactionScore(Satisfaction $satisfaction, string $satisfactionLevel, string $comments): Satisfaction
+    private function updateSatisfactionScore(Satisfaction $satisfaction, int $satisfactionLevel, string $comments): Satisfaction
     {
         $satisfaction->setScore($satisfactionLevel);
         $satisfaction->setComments($comments);
@@ -54,26 +58,18 @@ class SatisfactionController extends RestController
             'reportType' => 'notEmpty',
         ]);
 
-        if ('ndr' === $data['reportType']) {
-            $ndr = $this->ndrRepository->find($data['ndrId']);
-            $satisfaction = $this->satisfactionRepository->findOneBy(['ndr' => $ndr]);
-        } else {
-            $report = $this->reportRepository->find($data['reportId']);
-            $satisfaction = $this->satisfactionRepository->findOneBy(['report' => $report]);
-        }
+        $report = $this->reportRepository->find($data['reportId']);
 
-        if ($satisfaction) {
-            $satisfaction = $this->updateSatisfactionScore($satisfaction, $data['score'], $data['comments']);
-        } else {
+        /** @var ?Satisfaction $satisfaction */
+        $satisfaction = $this->satisfactionRepository->findOneBy(['report' => $report]);
+
+        if (is_null($satisfaction)) {
             $satisfaction = $this->addSatisfactionScore($data['score'], $data['comments']);
-        }
-
-        if ('ndr' === $data['reportType']) {
-            $satisfaction->setNdr($ndr);
         } else {
-            $satisfaction->setReport($report);
+            $satisfaction = $this->updateSatisfactionScore($satisfaction, intval($data['score']), $data['comments']);
         }
 
+        $satisfaction->setReport($report);
         $satisfaction->setReportType($data['reportType']);
         $satisfaction->setDeputyRole($this->getUser()->getRoleName());
 
@@ -83,6 +79,9 @@ class SatisfactionController extends RestController
         return $satisfaction->getId();
     }
 
+    /**
+     * @throws \Exception
+     */
     #[Route(path: '/satisfaction_data', name: 'satisfaction_data', methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
     public function getSatisfactionData(Request $request): array
@@ -91,10 +90,14 @@ class SatisfactionController extends RestController
         $repo = $this->em->getRepository(Satisfaction::class);
 
         $fromDate = $this->convertDateStringToDateTime($request->get('fromDate', ''));
-        $fromDate instanceof DateTime ? $fromDate->setTime(0, 0, 1) : null;
+        if (!is_null($fromDate)) {
+            $fromDate->setTime(0, 0, 1);
+        }
 
         $toDate = $this->convertDateStringToDateTime($request->get('toDate', ''));
-        $toDate instanceof DateTime ? $toDate->setTime(23, 59, 59) : null;
+        if (!is_null($toDate)) {
+            $toDate->setTime(23, 59, 59);
+        }
 
         return $repo->findAllSatisfactionSubmissions(
             $fromDate,

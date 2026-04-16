@@ -260,6 +260,17 @@ trait MoneyInSectionTrait
     }
 
     /**
+     * @Given /^the edit page should show the correct heading$/
+     */
+    public function theEditPageShouldShowTheCorrectHeading(): void
+    {
+        $moneyTypeRow = $this->getSession()->getPage()->find('xpath', sprintf('//tr[td[text()[contains(.,"%s")]]]', $this->currentMoneyTypeReportingOn));
+        $moneyTypeRow->clickLink('Edit');
+        $this->assertPageContainsText('Edit an item of income: ' . $this->currentMoneyTypeReportingOn);
+        $this->pressButton('Save and continue');
+    }
+
+    /**
      * @Then the money in summary page should contain the edited value
      */
     public function theMoneyInSummaryPageShouldContainTheEditedValue()

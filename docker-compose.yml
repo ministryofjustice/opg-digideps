@@ -159,7 +159,7 @@ services:
 
   postgres:
     container_name: opg-digideps-postgres
-    image: postgres:14.21
+    image: postgres:14.21@sha256:b964c3211689ffe50cc65235ea338717520954dcf6ecd4d76bf887eba3cbc91f
     ports:
       - 5432:5432
     env_file:
@@ -167,11 +167,11 @@ services:
     restart: always
 
   redis-frontend:
-    image: redis:6.2.12
+    image: redis:6.2.18@sha256:a1407ab0d0dd15f4fdaad5d4cdc121830497af4be27027a8423fff823c4fc3e0
     restart: always
 
   redis-api:
-    image: redis:6.2.12
+    image: redis:6.2.18@sha256:a1407ab0d0dd15f4fdaad5d4cdc121830497af4be27027a8423fff823c4fc3e0
     restart: always
 
   file-scanner-rest:
@@ -190,7 +190,7 @@ services:
       - orchestration/orchestration.env
 
   aws:
-    image: infrastructureascode/aws-cli
+    image: infrastructureascode/aws-cli@sha256:891db48126b0f044f06263521acbd611dfa31aa9e549fed23b0b3ef890082b36
     environment:
       - AWS_ACCESS_KEY_ID=foo
       - AWS_SECRET_ACCESS_KEY=bar
@@ -226,7 +226,7 @@ services:
   #            - frontend
 
   pact-mock:
-    image: pactfoundation/pact-cli:0.56.0.6
+    image: pactfoundation/pact-cli:0.56.0.8@sha256:ee390ae508c8e783145f0b818984236846ce5f1826ac0ecdb460b4aefdcb34a1
     ports:
       - 1234:80
     command:
@@ -258,7 +258,7 @@ services:
       - OPENAPI_MOCK_SPECIFICATION_URL=/app/deputy-reporting-openapi.yml
 
   mock-notify-api:
-    image: stoplight/prism:5.14.3
+    image: stoplight/prism:5.15.6@sha256:6640f7d73f18091fc9aaa73647de27ddb8b178615aabfc3ff30c5cb500f387a6
     ports:
       - 4010:4010
     command:
@@ -269,7 +269,7 @@ services:
       - --dynamic
 
   composer:
-    image: composer:2.9.4
+    image: composer:2.9.4@sha256:22a95bd2bc3cf6ff19550a246208138d35f0015602db3d67dc6841945324acc1
     command: ["install"]
 
   custom-sql-query:

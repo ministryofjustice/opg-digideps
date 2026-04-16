@@ -1,15 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller\Report;
 
 use App\Controller\RestController;
-use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
+use App\Entity\User;
 use App\Exception\UnauthorisedException;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,8 +19,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class DocumentController extends RestController
 {
-    public const DOCUMENT_SYNC_ERROR_STATUSES = [Document::SYNC_STATUS_TEMPORARY_ERROR, Document::SYNC_STATUS_PERMANENT_ERROR];
-    public const RETRIES_FAILED_MESSAGE = 'Document failed to sync after 4 attempts';
+    public const array DOCUMENT_SYNC_ERROR_STATUSES = [Document::SYNC_STATUS_TEMPORARY_ERROR, Document::SYNC_STATUS_PERMANENT_ERROR];
+    public const string RETRIES_FAILED_MESSAGE = 'Document failed to sync after 4 attempts';
     private array $sectionIds = [Report::SECTION_DOCUMENTS];
 
     public function __construct(
@@ -31,15 +32,11 @@ class DocumentController extends RestController
         parent::__construct($em);
     }
 
-    #[Route(path: '/document/{reportType}/{reportId}', requirements: ['reportId' => '\d+', 'reportType' => '(report|ndr)'], methods: ['POST'])]
+    #[Route(path: '/document/report/{reportId}', requirements: ['reportId' => '\d+'], methods: ['POST'])]
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
-    public function add(Request $request, string $reportType, int $reportId): array
+    public function add(Request $request, int $reportId): array
     {
-        if ('report' === $reportType) {
-            $report = $this->findEntityBy(Report::class, $reportId);
-        } else {
-            $report = $this->findEntityBy(Ndr::class, $reportId);
-        }
+        $report = $this->findEntityBy(Report::class, $reportId);
 
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
@@ -49,7 +46,12 @@ class DocumentController extends RestController
             'storage_reference' => 'notEmpty',
         ]);
         $document = new Document($report);
-        $document->setCreatedBy($this->getUser());
+
+        /** @var ?User $user */
+        $user = $this->getUser();
+
+        $document->setCreatedBy($user);
+
         $document->setFileName($data['file_name']);
         $document->setStorageReference($data['storage_reference']);
         $document->setIsReportPdf($data['is_report_pdf']);
@@ -65,17 +67,11 @@ class DocumentController extends RestController
         return ['id' => $document->getId()];
     }
 
-    #[Route(path: '/document/{reportType}/{reportId}/overwrite', requirements: ['reportId' => '\d+', 'reportType' => '(report|ndr)'], methods: ['POST'])]
+    #[Route(path: '/document/report/{reportId}/overwrite', requirements: ['reportId' => '\d+'], methods: ['POST'])]
     #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
-    public function overwriteReportPdf(Request $request, string $reportType, int $reportId): array
+    public function overwriteReportPdf(Request $request, int $reportId): array
     {
-        if ('report' === $reportType) {
-            /** @var Report $report */
-            $report = $this->findEntityBy(Report::class, $reportId);
-        } else {
-            /** @var Report $report */
-            $report = $this->findEntityBy(Ndr::class, $reportId);
-        }
+        $report = $this->findEntityBy(Report::class, $reportId);
 
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
@@ -98,7 +94,11 @@ class DocumentController extends RestController
             return [];
         }
 
-        $reportPdfDocument->setCreatedBy($this->getUser());
+        /** @var ?User $user */
+        $user = $this->getUser();
+
+        $reportPdfDocument->setCreatedBy($user);
+
         $reportPdfDocument->setFileName($data['file_name']);
         $reportPdfDocument->setStorageReference($data['storage_reference']);
         $reportPdfDocument->setIsReportPdf($data['is_report_pdf']);
@@ -185,7 +185,7 @@ class DocumentController extends RestController
             );
         }
 
-        return json_encode($documentRepo->getQueuedDocumentsAndSetToInProgress($data['row_limit']));
+        return json_encode($documentRepo->getQueuedDocumentsAndSetToInProgress((int) $data['row_limit']));
     }
 
     /**
@@ -249,7 +249,7 @@ class DocumentController extends RestController
             }
 
             if (Document::SYNC_STATUS_SUCCESS === $data['syncStatus']) {
-                $document->setSynchronisationTime(new DateTime());
+                $document->setSynchronisationTime(new \DateTime());
             }
         }
 

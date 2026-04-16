@@ -4,21 +4,18 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Controller;
 
-use DateTime;
-use App\Entity\Ndr\ClientBenefitsCheck as NdrClientBenefitsCheck;
-use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrMoneyReceivedOnClientsBehalf;
+use App\Entity\Report\Report;
 use App\Entity\Report\ClientBenefitsCheck;
 use App\Entity\Report\MoneyReceivedOnClientsBehalf;
 use App\TestHelpers\ClientTestHelper;
 use App\TestHelpers\ReportTestHelper;
-use App\TestHelpers\UserTestHelper;
 
 class MoneyReceivedOnOthersBehalfControllerTest extends AbstractTestController
 {
-    private static $tokenAdmin;
-    private static $tokenDeputy;
-    private static $tokenProf;
-    private static $tokenPa;
+    private static ?string $tokenAdmin = null;
+    private static ?string $tokenDeputy = null;
+    private static ?string $tokenProf = null;
+    private static ?string $tokenPa = null;
 
     public function setUp(): void
     {
@@ -39,82 +36,60 @@ class MoneyReceivedOnOthersBehalfControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    /** @test */
-    public function deleteHasSuitablePermissionsAllowed()
+    public function testDeleteHasSuitablePermissionsAllowed(): void
     {
-        $deputyTokens = [self::$tokenDeputy, self::$tokenPa, self::$tokenProf];
-
-        foreach ($deputyTokens as $deputyToken) {
-            $report = $this->prepareReport('report', true);
-            $ndr = $this->prepareReport('ndr', true);
+        foreach ([self::$tokenDeputy, self::$tokenPa, self::$tokenProf] as $deputyToken) {
+            $report = $this->prepareReport();
 
             $reportUrl = sprintf(
                 '/report/money-type/delete/%s',
                 $report->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf()->first()->getId()
             );
 
-            $ndrUrl = sprintf(
-                '/ndr/money-type/delete/%s',
-                $ndr->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf()->first()->getId()
-            );
 
             $this->assertEndpointAllowedFor('DELETE', $reportUrl, $deputyToken);
-            $this->assertEndpointAllowedFor('DELETE', $ndrUrl, $deputyToken);
         }
     }
 
-    /** @test */
-    public function deleteHasSuitablePermissionsNotAllowed()
+    public function testDeleteHasSuitablePermissionsNotAllowed(): void
     {
-        $report = $this->prepareReport('report', true);
-        $ndr = $this->prepareReport('ndr', true);
+        $report = $this->prepareReport();
 
         $reportUrl = sprintf(
             '/report/money-type/delete/%s',
             $report->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf()->first()->getId()
         );
 
-        $ndrUrl = sprintf(
-            '/ndr/money-type/delete/%s',
-            $ndr->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf()->first()->getId()
-        );
-
         $this->assertEndpointNotAllowedFor('DELETE', $reportUrl, self::$tokenAdmin);
-        $this->assertEndpointNotAllowedFor('DELETE', $ndrUrl, self::$tokenAdmin);
     }
 
-    private function prepareReport(string $reportOrNdr, bool $withClientBenefitsCheck = false)
+    private function prepareReport(): Report
     {
         $em = static::getContainer()->get('em');
         $reportTestHelper = ReportTestHelper::create();
 
-        $user = (UserTestHelper::create())->createAndPersistUser($em);
         $client = (ClientTestHelper::create())->generateClient($em);
 
-        $report = 'ndr' === $reportOrNdr ? $reportTestHelper->generateNdr($em, $user, $client) : $reportTestHelper->generateReport($em);
+        $report = $reportTestHelper->generateReport($em);
         $report->setClient($client);
 
-        if ($withClientBenefitsCheck) {
-            $typeOfMoney = 'ndr' === $reportOrNdr ? new NdrMoneyReceivedOnClientsBehalf() : new MoneyReceivedOnClientsBehalf();
-            $clientBenefitsCheck = 'ndr' === $reportOrNdr ? new NdrClientBenefitsCheck() : new ClientBenefitsCheck();
+        $typeOfMoney = new MoneyReceivedOnClientsBehalf();
+        $clientBenefitsCheck = new ClientBenefitsCheck();
 
-            $typeOfMoney
-                ->setCreated(new DateTime())
-                ->setAmount(100.50)
-                ->setMoneyType('Universal Credit')
-                ->setWhoReceivedMoney('Some org');
+        $typeOfMoney->setCreated(new \DateTime())
+            ->setAmount(100.50)
+            ->setMoneyType('Universal Credit')
+            ->setWhoReceivedMoney('Some org');
 
-            $clientBenefitsCheck->setReport($report)
-                ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED)
-                ->setDateLastCheckedEntitlement(new DateTime())
-                ->setCreated(new DateTime())
-                ->setDoOthersReceiveMoneyOnClientsBehalf('yes')
-                ->addTypeOfMoneyReceivedOnClientsBehalf($typeOfMoney)
-            ;
+        $clientBenefitsCheck->setReport($report)
+            ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED)
+            ->setDateLastCheckedEntitlement(new \DateTime())
+            ->setCreated(new \DateTime())
+            ->setDoOthersReceiveMoneyOnClientsBehalf('yes')
+            ->addTypeOfMoneyReceivedOnClientsBehalf($typeOfMoney);
 
-            $typeOfMoney->setClientBenefitsCheck($clientBenefitsCheck);
-            $report->setClientBenefitsCheck($clientBenefitsCheck);
-        }
+        $typeOfMoney->setClientBenefitsCheck($clientBenefitsCheck);
+        $report->setClientBenefitsCheck($clientBenefitsCheck);
 
         $em->persist($client);
         $em->persist($report);

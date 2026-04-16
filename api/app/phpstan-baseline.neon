@@ -106,11 +106,6 @@ parameters:
 			path: src/Controller/ClientController.php
 
 		-
-			message: "#^Parameter \\#2 \\$currentUser of class App\\\\Event\\\\ClientArchivedEvent constructor expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
 			message: "#^Parameter \\#2 \\$orderBy of method App\\\\Repository\\\\ClientRepository\\:\\:searchClients\\(\\) expects string, mixed given\\.$#"
 			count: 1
 			path: src/Controller/ClientController.php
@@ -161,118 +156,8 @@ parameters:
 			path: src/Controller/JWTController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\AccountController\\:\\:accountDelete\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AccountController.php
-
-		-
-			message: "#^Parameter \\#1 \\$bank of method App\\\\Entity\\\\Ndr\\\\BankAccount\\:\\:setBank\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AccountController.php
-
-		-
-			message: "#^Parameter \\#1 \\$sortCode of method App\\\\Entity\\\\Ndr\\\\BankAccount\\:\\:setSortCode\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AccountController.php
-
-		-
-			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 1
-			path: src/Controller/Ndr/AssetController.php
-
-		-
-			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 1
-			path: src/Controller/Ndr/ExpenseController.php
-
-		-
-			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to method setMoreDetails\\(\\) on an unknown class App\\\\Entity\\\\Ndr\\\\IncomeBenefit\\.$#"
-			count: 2
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Cannot call method setAmount\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Cannot call method setMoreDetails\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\NdrController\\:\\:submit\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\NdrController\\:\\:update\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 5
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Parameter \\#1 \\$agreedBehalfDeputyExplanation of method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:setAgreedBehalfDeputyExplanation\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Parameter \\#1 \\$expectCompensationDamagesDetails of method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:setExpectCompensationDamagesDetails\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Parameter \\#1 \\$receiveOtherIncomeDetails of method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:setReceiveOtherIncomeDetails\\(\\) expects string, null given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Parameter \\#1 \\$user of method App\\\\Entity\\\\Report\\\\Document\\:\\:setSynchronisedBy\\(\\) expects App\\\\Entity\\\\User\\|null, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Parameter \\#4 \\$ndrDocumentId of method App\\\\Service\\\\ReportService\\:\\:submit\\(\\) expects string\\|null, mixed given\\.$#"
-			count: 1
-			path: src/Controller/Ndr/NdrController.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Ndr\\\\Ndr\\>\\:\\:findByReport\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Ndr\\\\VisitsCareController\\:\\:deleteVisitsCare\\(\\) has parameter \\$id with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
 			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
 			count: 2
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Parameter \\#1 \\$ndr of method App\\\\Controller\\\\RestController\\:\\:denyAccessIfNdrDoesNotBelongToUser\\(\\) expects App\\\\Entity\\\\Ndr\\\\Ndr, mixed given\\.$#"
-			count: 3
-			path: src/Controller/Ndr/VisitsCareController.php
-
-		-
-			message: "#^Method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:flush\\(\\) invoked with 1 parameter, 0 required\\.$#"
-			count: 2
-			path: src/Controller/NoteController.php
-
-		-
-			message: "#^Parameter \\#1 \\$createdBy of method App\\\\Entity\\\\Note\\:\\:setCreatedBy\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
-			count: 1
 			path: src/Controller/NoteController.php
 
 		-
@@ -334,11 +219,6 @@ parameters:
 			message: "#^Parameter \\#1 \\$reasonForNoContacts of method App\\\\Entity\\\\Report\\\\Report\\:\\:setReasonForNoContacts\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/Controller/Report/ContactController.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\Ndr\\\\Ndr\\|App\\\\Entity\\\\Report\\\\Report\\:\\:setWishToProvideDocumentation\\(\\)\\.$#"
-			count: 1
-			path: src/Controller/Report/DocumentController.php
 
 		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Report\\\\Document\\>\\:\\:getQueuedDocumentsAndSetToInProgress\\(\\)\\.$#"
@@ -408,11 +288,6 @@ parameters:
 		-
 			message: "#^Method App\\\\Controller\\\\Report\\\\DocumentController\\:\\:updateRelatedDocumentStatuses\\(\\) should return string but returns string\\|false\\.$#"
 			count: 1
-			path: src/Controller/Report/DocumentController.php
-
-		-
-			message: "#^Parameter \\#1 \\$createdBy of method App\\\\Entity\\\\Report\\\\Document\\:\\:setCreatedBy\\(\\) expects App\\\\Entity\\\\User, Symfony\\\\Component\\\\Security\\\\Core\\\\User\\\\UserInterface\\|null given\\.$#"
-			count: 2
 			path: src/Controller/Report/DocumentController.php
 
 		-
@@ -721,11 +596,6 @@ parameters:
 			path: src/Controller/Report/VisitsCareController.php
 
 		-
-			message: "#^Parameter \\#1 \\$whenWasCarePlanLastReviewed of method App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:setWhenWasCarePlanLastReviewed\\(\\) expects DateTime, null given\\.$#"
-			count: 1
-			path: src/Controller/Report/VisitsCareController.php
-
-		-
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\User\\>\\:\\:findDeputyUidsForClient\\(\\)\\.$#"
 			count: 1
 			path: src/Controller/RestController.php
@@ -741,32 +611,7 @@ parameters:
 			path: src/Controller/RestController.php
 
 		-
-			message: "#^Method App\\\\Controller\\\\RestController\\:\\:denyAccessIfClientDoesNotBelongToUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/RestController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\RestController\\:\\:denyAccessIfNdrDoesNotBelongToUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/RestController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\RestController\\:\\:denyAccessIfReportDoesNotBelongToUser\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Controller/RestController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\RestController\\:\\:findEntityBy\\(\\) has parameter \\$errorMessage with no type specified\\.$#"
-			count: 1
-			path: src/Controller/RestController.php
-
-		-
 			message: "#^Method App\\\\Controller\\\\RestController\\:\\:hydrateEntityWithArrayData\\(\\) has parameter \\$object with no type specified\\.$#"
-			count: 1
-			path: src/Controller/RestController.php
-
-		-
-			message: "#^PHPDoc tag @param for parameter \\$date with type array is incompatible with native type string\\.$#"
 			count: 1
 			path: src/Controller/RestController.php
 
@@ -786,23 +631,8 @@ parameters:
 			path: src/Controller/SatisfactionController.php
 
 		-
-			message: "#^Parameter \\#1 \\$ndr of method App\\\\Entity\\\\Satisfaction\\:\\:setNdr\\(\\) expects App\\\\Entity\\\\Ndr\\\\Ndr\\|null, object\\|null given\\.$#"
-			count: 1
-			path: src/Controller/SatisfactionController.php
-
-		-
 			message: "#^Parameter \\#1 \\$report of method App\\\\Entity\\\\Satisfaction\\:\\:setReport\\(\\) expects App\\\\Entity\\\\Report\\\\Report\\|null, object\\|null given\\.$#"
 			count: 1
-			path: src/Controller/SatisfactionController.php
-
-		-
-			message: "#^Parameter \\#1 \\$satisfaction of method App\\\\Controller\\\\SatisfactionController\\:\\:updateSatisfactionScore\\(\\) expects App\\\\Entity\\\\Satisfaction, object given\\.$#"
-			count: 1
-			path: src/Controller/SatisfactionController.php
-
-		-
-			message: "#^Parameter \\#1 \\$score of method App\\\\Entity\\\\Satisfaction\\:\\:setScore\\(\\) expects int, string given\\.$#"
-			count: 2
 			path: src/Controller/SatisfactionController.php
 
 		-
@@ -3246,27 +3076,7 @@ parameters:
 			path: src/Entity/Report/Gift.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Lifestyle\\:\\:setCareAppointments\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Lifestyle.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Lifestyle\\:\\:setDoesClientUndertakeSocialActivities\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Lifestyle.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Lifestyle\\:\\:setReport\\(\\) should return App\\\\Entity\\\\Report\\\\Contact but returns \\$this\\(App\\\\Entity\\\\Report\\\\Lifestyle\\)\\.$#"
-			count: 1
-			path: src/Entity/Report/Lifestyle.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\Lifestyle\\:\\:\\$id is never written, only read\\.$#"
-			count: 1
-			path: src/Entity/Report/Lifestyle.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\Lifestyle\\:\\:\\$report has no type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/Lifestyle.php
 
@@ -3386,22 +3196,12 @@ parameters:
 			path: src/Entity/Report/MoneyShortCategory.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:getAmount\\(\\) should return array but returns float\\.$#"
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:getGroup\\(\\) should return string but returns null\\.$#"
 			count: 1
 			path: src/Entity/Report/MoneyTransaction.php
 
 		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:getType\\(\\) should return string but returns null\\.$#"
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:setAmount\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/MoneyTransaction.php
 
@@ -3431,11 +3231,6 @@ parameters:
 			path: src/Entity/Report/MoneyTransaction.php
 
 		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:\\$amount \\(float\\) does not accept array\\.$#"
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:\\$categories has no type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/MoneyTransaction.php
@@ -3447,11 +3242,6 @@ parameters:
 
 		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:\\$meta is unused\\.$#"
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: "#^Return type \\(array\\) of method App\\\\Entity\\\\Report\\\\MoneyTransaction\\:\\:getAmount\\(\\) should be compatible with return type \\(float\\) of method App\\\\Entity\\\\Report\\\\MoneyTransactionInterface\\:\\:getAmount\\(\\)$#"
 			count: 1
 			path: src/Entity/Report/MoneyTransaction.php
 
@@ -4206,11 +3996,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setLifestyle\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setMentalCapacity\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -4247,16 +4032,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setNoTransfersToAdd\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyCostsAmountToScco\\(\\) has invalid return type App\\\\Entity\\\\Report\\\\Traits\\\\ReportProfDeputyCostsTrait\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyCostsAmountToScco\\(\\) should return App\\\\Entity\\\\Report\\\\Traits\\\\ReportProfDeputyCostsTrait but returns \\$this\\(App\\\\Entity\\\\Report\\\\Report\\)\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -4301,36 +4076,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyCostsHasPrevious\\(\\) has invalid return type App\\\\Entity\\\\Report\\\\Traits\\\\ReportProfDeputyCostsTrait\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyCostsHasPrevious\\(\\) should return App\\\\Entity\\\\Report\\\\Traits\\\\ReportProfDeputyCostsTrait but returns \\$this\\(App\\\\Entity\\\\Report\\\\Report\\)\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyCostsHowCharged\\(\\) has invalid return type App\\\\Entity\\\\Report\\\\Traits\\\\ReportProfDeputyCostsTrait\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyCostsHowCharged\\(\\) should return App\\\\Entity\\\\Report\\\\Traits\\\\ReportProfDeputyCostsTrait but returns \\$this\\(App\\\\Entity\\\\Report\\\\Report\\)\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyCostsReasonBeyondEstimate\\(\\) has invalid return type App\\\\Entity\\\\Report\\\\Traits\\\\ReportProfDeputyCostsTrait\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyCostsReasonBeyondEstimate\\(\\) should return App\\\\Entity\\\\Report\\\\Traits\\\\ReportProfDeputyCostsTrait but returns \\$this\\(App\\\\Entity\\\\Report\\\\Report\\)\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyEstimateCostTypeIds\\(\\) has parameter \\$profDeputyEstimateCostTypeIds with no type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -4352,26 +4097,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyEstimateCosts\\(\\) should return App\\\\Entity\\\\Report\\\\Traits\\\\ReportProfDeputyCostsEstimateTrait but returns \\$this\\(App\\\\Entity\\\\Report\\\\Report\\)\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyFixedCost\\(\\) has invalid return type App\\\\Entity\\\\Report\\\\Traits\\\\ReportProfDeputyCostsTrait\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyFixedCost\\(\\) should return App\\\\Entity\\\\Report\\\\Traits\\\\ReportProfDeputyCostsTrait but returns \\$this\\(App\\\\Entity\\\\Report\\\\Report\\)\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyInterimCosts\\(\\) has invalid return type App\\\\Entity\\\\Report\\\\Traits\\\\ReportProfDeputyCostsTrait\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyInterimCosts\\(\\) should return App\\\\Entity\\\\Report\\\\Traits\\\\ReportProfDeputyCostsTrait but returns \\$this\\(App\\\\Entity\\\\Report\\\\Report\\)\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -4711,77 +4436,12 @@ parameters:
 			path: src/Entity/Report/ReviewChecklist.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:getHowOftenDoYouContactClient\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/VisitsCare.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:getWhenWasCarePlanLastReviewed\\(\\) should return DateTime but returns App\\\\Entity\\\\Report\\\\DateTime\\.$#"
-			count: 1
-			path: src/Entity/Report/VisitsCare.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:setDoYouLiveWithClient\\(\\) should return App\\\\Entity\\\\Report\\\\Report but returns \\$this\\(App\\\\Entity\\\\Report\\\\VisitsCare\\)\\.$#"
-			count: 1
-			path: src/Entity/Report/VisitsCare.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:setDoesClientHaveACarePlan\\(\\) should return App\\\\Entity\\\\Report\\\\Report but returns \\$this\\(App\\\\Entity\\\\Report\\\\VisitsCare\\)\\.$#"
-			count: 1
-			path: src/Entity/Report/VisitsCare.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:setDoesClientReceivePaidCare\\(\\) should return App\\\\Entity\\\\Report\\\\Report but returns \\$this\\(App\\\\Entity\\\\Report\\\\VisitsCare\\)\\.$#"
-			count: 1
-			path: src/Entity/Report/VisitsCare.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:setHowIsCareFunded\\(\\) should return App\\\\Entity\\\\Report\\\\Report but returns \\$this\\(App\\\\Entity\\\\Report\\\\VisitsCare\\)\\.$#"
-			count: 1
-			path: src/Entity/Report/VisitsCare.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:setHowOftenDoYouContactClient\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/VisitsCare.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:setHowOftenDoYouContactClient\\(\\) has parameter \\$howOftenDoYouContactClient with no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/VisitsCare.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:setReport\\(\\) should return App\\\\Entity\\\\Report\\\\Contact but returns \\$this\\(App\\\\Entity\\\\Report\\\\VisitsCare\\)\\.$#"
-			count: 1
-			path: src/Entity/Report/VisitsCare.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:setWhenWasCarePlanLastReviewed\\(\\) should return App\\\\Entity\\\\Report\\\\Report but returns \\$this\\(App\\\\Entity\\\\Report\\\\VisitsCare\\)\\.$#"
-			count: 1
-			path: src/Entity/Report/VisitsCare.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:setWhoIsDoingTheCaring\\(\\) should return App\\\\Entity\\\\Report\\\\Report but returns \\$this\\(App\\\\Entity\\\\Report\\\\VisitsCare\\)\\.$#"
-			count: 1
-			path: src/Entity/Report/VisitsCare.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:\\$id is never written, only read\\.$#"
 			count: 1
 			path: src/Entity/Report/VisitsCare.php
 
 		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:\\$report has no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/VisitsCare.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:\\$whenWasCarePlanLastReviewed \\(App\\\\Entity\\\\Report\\\\DateTime\\) does not accept DateTime\\.$#"
-			count: 1
-			path: src/Entity/Report/VisitsCare.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:\\$whenWasCarePlanLastReviewed has unknown class App\\\\Entity\\\\Report\\\\DateTime as its type\\.$#"
 			count: 1
 			path: src/Entity/Report/VisitsCare.php
 
@@ -6546,16 +6206,6 @@ parameters:
 			path: src/Service/ReportStatusService.php
 
 		-
-			message: "#^PHPDoc tag @param has invalid value \\(bool\\)\\: Unexpected token \"\\\\n     \\*\", expected variable at offset 128$#"
-			count: 1
-			path: src/Service/ReportStatusService.php
-
-		-
-			message: "#^PHPDoc tag @param has invalid value \\(bool\\)\\: Unexpected token \"\\\\n     \\*\", expected variable at offset 49$#"
-			count: 1
-			path: src/Service/ReportStatusService.php
-
-		-
 			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, mixed given\\.$#"
 			count: 2
 			path: src/Service/ReportStatusService.php
@@ -6936,262 +6586,7 @@ parameters:
 			path: src/TestHelpers/ReportSubmissionHelper.php
 
 		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\Ndr\\\\VisitsCare\\|App\\\\Entity\\\\Report\\\\Contact\\:\\:setDoYouLiveWithClient\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:addAccount\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:addDebt\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:addMoneyTransaction\\(\\)\\.$#"
-			count: 3
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:getEndDate\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:getStartDate\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:getType\\(\\)\\.$#"
-			count: 25
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:isLayReport\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:isPAreport\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setAction\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setActionMoreInfo\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setBalanceMismatchExplanation\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setClientBenefitsCheck\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setCurrentProfPaymentsReceived\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setDebtManagement\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setGiftsExist\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setHasDebts\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setLifestyle\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setMoneyInExists\\(\\)\\.$#"
-			count: 2
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setMoneyOutExists\\(\\)\\.$#"
-			count: 2
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setNoAssetToAdd\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setPaidForAnything\\(\\)\\.$#"
-			count: 2
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setProfDeputyCostsEstimateHowCharged\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setProfDeputyCostsHowCharged\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setReasonForNoContacts\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setReasonForNoDecisions\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setReasonForNoFees\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setReasonForNoMoneyIn\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setReasonForNoMoneyOut\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setVisitsCare\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setWishToProvideDocumentation\\(\\)\\.$#"
-			count: 2
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\Report\\\\Contact\\:\\:setCareAppointments\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\Report\\\\Contact\\:\\:setDoesClientUndertakeSocialActivities\\(\\)\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Call to method setReceiveOtherIncome\\(\\) on an unknown class App\\\\Entity\\\\Ndr\\\\Traits\\\\NdrIncomeBenefitTrait\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Cannot call method setNdr\\(\\) on App\\\\Entity\\\\Client\\|null\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Method App\\\\TestHelpers\\\\ReportTestHelper\\:\\:completeIncomeBenefits\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$client of class App\\\\Entity\\\\Ndr\\\\Ndr constructor expects App\\\\Entity\\\\Client, App\\\\Entity\\\\Client\\|null given\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$client of method App\\\\Entity\\\\User\\:\\:addClient\\(\\) expects App\\\\Entity\\\\Client, App\\\\Entity\\\\Client\\|null given\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
 			message: "#^Parameter \\#1 \\$closingBalance of method App\\\\Entity\\\\Report\\\\BankAccount\\:\\:setClosingBalance\\(\\) expects string, int given\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$createdBy of method App\\\\Entity\\\\Report\\\\Document\\:\\:setCreatedBy\\(\\) expects App\\\\Entity\\\\User, mixed given\\.$#"
-			count: 2
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$createdBy of method App\\\\Entity\\\\Report\\\\ReportSubmission\\:\\:setCreatedBy\\(\\) expects App\\\\Entity\\\\User, mixed given\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of class App\\\\Entity\\\\Report\\\\Action constructor expects App\\\\Entity\\\\Report\\\\Report, App\\\\Entity\\\\ReportInterface given\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of class App\\\\Entity\\\\Report\\\\Debt constructor expects App\\\\Entity\\\\Report\\\\Report, App\\\\Entity\\\\ReportInterface given\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of class App\\\\Entity\\\\Report\\\\MentalCapacity constructor expects App\\\\Entity\\\\Report\\\\Report, App\\\\Entity\\\\ReportInterface given\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of class App\\\\Entity\\\\Report\\\\MoneyTransaction constructor expects App\\\\Entity\\\\Report\\\\Report, App\\\\Entity\\\\ReportInterface given\\.$#"
-			count: 3
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of class App\\\\Entity\\\\Report\\\\ProfDeputyOtherCost constructor expects App\\\\Entity\\\\Report\\\\Report, App\\\\Entity\\\\ReportInterface given\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Entity\\\\Ndr\\\\ClientBenefitsCheck\\:\\:setReport\\(\\) expects App\\\\Entity\\\\Ndr\\\\Ndr\\|App\\\\Entity\\\\Report\\\\Report\\|null, App\\\\Entity\\\\ReportInterface given\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Entity\\\\Report\\\\BankAccount\\:\\:setReport\\(\\) expects App\\\\Entity\\\\Report\\\\Report\\|null, App\\\\Entity\\\\ReportInterface given\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Entity\\\\Report\\\\Lifestyle\\:\\:setReport\\(\\) expects App\\\\Entity\\\\Report\\\\Report\\|null, App\\\\Entity\\\\ReportInterface given\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$report of method App\\\\Entity\\\\Report\\\\VisitsCare\\:\\:setReport\\(\\) expects App\\\\Entity\\\\Report\\\\Report\\|null, App\\\\Entity\\\\ReportInterface given\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Parameter \\#1 \\$submittedBy of method App\\\\Entity\\\\ReportInterface\\:\\:setSubmittedBy\\(\\) expects App\\\\Entity\\\\User\\|null, mixed given\\.$#"
-			count: 1
-			path: src/TestHelpers/ReportTestHelper.php
-
-		-
-			message: "#^Parameter \\#2 \\$createdBy of class App\\\\Entity\\\\Report\\\\ReportSubmission constructor expects App\\\\Entity\\\\User, mixed given\\.$#"
 			count: 1
 			path: src/TestHelpers/ReportTestHelper.php
 
@@ -7616,11 +7011,6 @@ parameters:
 			path: src/v2/Fixture/ReportSection.php
 
 		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\Ndr\\\\VisitsCare\\|App\\\\Entity\\\\Report\\\\Contact\\:\\:setDoYouLiveWithClient\\(\\)\\.$#"
-			count: 1
-			path: src/v2/Fixture/ReportSection.php
-
-		-
 			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:addAccount\\(\\)\\.$#"
 			count: 1
 			path: src/v2/Fixture/ReportSection.php
@@ -7767,16 +7157,6 @@ parameters:
 
 		-
 			message: "#^Call to an undefined method App\\\\Entity\\\\ReportInterface\\:\\:setWishToProvideDocumentation\\(\\)\\.$#"
-			count: 1
-			path: src/v2/Fixture/ReportSection.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\Report\\\\Contact\\:\\:setCareAppointments\\(\\)\\.$#"
-			count: 1
-			path: src/v2/Fixture/ReportSection.php
-
-		-
-			message: "#^Call to an undefined method App\\\\Entity\\\\Report\\\\Contact\\:\\:setDoesClientUndertakeSocialActivities\\(\\)\\.$#"
 			count: 1
 			path: src/v2/Fixture/ReportSection.php
 

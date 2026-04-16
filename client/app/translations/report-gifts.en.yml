@@ -42,17 +42,6 @@ existPage:
     save:
       label: Save and continue
 
-addAnotherPage:
-  htmlTitle: "Add another gift - Complete the deputy report | GOV.UK"
-  pageTitle: Add another gift
-  supportTitle: Gifts
-  form:
-    addAnother:
-      label: The gift has been saved. Would you like to add another now?
-      hint: If you prefer, you can come back to this section later to add more gifts
-    save:
-      label: Continue
-
 addPage:
   htmlTitle: "Add a gift - Complete the deputy report | GOV.UK"
   pageTitle: Add a gift
@@ -83,6 +72,7 @@ deletePage:
     amount: Amount
 
 form:
+  thing: gift
   explanation:
     label: Description of gift
     hint: |

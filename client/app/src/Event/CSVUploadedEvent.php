@@ -9,7 +9,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class CSVUploadedEvent extends Event
 {
-    const NAME = 'csv.uploaded';
+    public const string NAME = 'csv.uploaded';
 
     private string $trigger;
     private string $roleType;

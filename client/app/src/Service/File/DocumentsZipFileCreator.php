@@ -7,7 +7,7 @@ use ZipArchive;
 
 class DocumentsZipFileCreator
 {
-    const TMP_ROOT_PATH = '/tmp/';
+    public const string TMP_ROOT_PATH = '/tmp/';
 
     /**
      * @var array

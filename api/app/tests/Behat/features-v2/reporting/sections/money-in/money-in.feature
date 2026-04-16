@@ -55,6 +55,7 @@ Feature: Money in High Assets
     And I click save and continue
     Then the money in summary page should contain "1" money in values
     When I edit the money in value
+    And the edit page should show the correct heading
     Then the money in summary page should contain the edited value
     When I follow link back to report overview page
     Then I should see "money-in" as "1 item"

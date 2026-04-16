@@ -4,10 +4,10 @@ namespace App\Service\DataImporter;
 
 class CsvToArray
 {
-    public const DELIMITER = ',';
-    public const ENCLOSURE = '"';
-    public const ESCAPE = '\\';
-    public const CHAR_LIMIT_PER_ROW = 2000; // current average is around the 300-400 chars
+    public const string DELIMITER = ',';
+    public const string ENCLOSURE = '"';
+    public const string ESCAPE = '\\';
+    public const int CHAR_LIMIT_PER_ROW = 2000; // current average is around the 300-400 chars
 
     /**
      * @var resource|false
