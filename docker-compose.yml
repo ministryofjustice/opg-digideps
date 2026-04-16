@@ -258,7 +258,7 @@ services:
       - OPENAPI_MOCK_SPECIFICATION_URL=/app/deputy-reporting-openapi.yml
 
   mock-notify-api:
-    image: stoplight/prism:5.15.5@sha256:d6af886a1d04a77a4261238f69c6d2fb3ed853ea70f37184e2f175211aadbcf2
+    image: stoplight/prism:5.15.6@sha256:6640f7d73f18091fc9aaa73647de27ddb8b178615aabfc3ff30c5cb500f387a6
     ports:
       - 4010:4010
     command:
