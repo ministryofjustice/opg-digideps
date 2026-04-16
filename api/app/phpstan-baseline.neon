@@ -7216,37 +7216,12 @@ parameters:
 			path: src/TestHelpers/UserTestHelper.php
 
 		-
-			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
-			count: 1
-			path: src/Transformer/ReportSubmission/ReportSubmissionSummaryTransformer.php
-
-		-
-			message: "#^Method App\\\\Transformer\\\\ReportSubmission\\\\ReportSubmissionSummaryTransformer\\:\\:getCaseNumber\\(\\) should return string but returns string\\|null\\.$#"
-			count: 1
-			path: src/Transformer/ReportSubmission/ReportSubmissionSummaryTransformer.php
-
-		-
 			message: "#^Method App\\\\Transformer\\\\ReportSubmission\\\\ReportSubmissionSummaryTransformer\\:\\:getDocumentId\\(\\) should return string\\|null but return statement is missing\\.$#"
 			count: 1
 			path: src/Transformer/ReportSubmission/ReportSubmissionSummaryTransformer.php
 
 		-
 			message: "#^Method App\\\\Transformer\\\\ReportSubmission\\\\ReportSubmissionSummaryTransformer\\:\\:outputDate\\(\\) has parameter \\$date with no type specified\\.$#"
-			count: 1
-			path: src/Transformer/ReportSubmission/ReportSubmissionSummaryTransformer.php
-
-		-
-			message: "#^Result of && is always false\\.$#"
-			count: 1
-			path: src/Transformer/ReportSubmission/ReportSubmissionSummaryTransformer.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between null and App\\\\Entity\\\\Ndr\\\\Ndr will always evaluate to false\\.$#"
-			count: 1
-			path: src/Transformer/ReportSubmission/ReportSubmissionSummaryTransformer.php
-
-		-
-			message: "#^Strict comparison using \\=\\=\\= between null and App\\\\Entity\\\\Report\\\\Report will always evaluate to false\\.$#"
 			count: 1
 			path: src/Transformer/ReportSubmission/ReportSubmissionSummaryTransformer.php
 
