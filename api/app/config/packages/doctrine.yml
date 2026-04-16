@@ -14,8 +14,6 @@ doctrine:
                 server_version: 14.18
                 wrapper_class: App\DBAL\ConnectionWrapper
                 charset: UTF8
-                options:
-                    redis: "@predis"
             ingestwriter:
                 driver: pdo_pgsql
                 host: "%database_host%"
@@ -28,8 +26,6 @@ doctrine:
                 server_version: 14.18
                 wrapper_class: App\DBAL\ConnectionWrapper
                 charset: UTF8
-                options:
-                    redis: "@predis"
         types:
             uuid: Ramsey\Uuid\Doctrine\UuidType
 
