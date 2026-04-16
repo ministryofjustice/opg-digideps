@@ -11,23 +11,41 @@ use App\Domain\Deputy\DeputyType;
 use App\Domain\Report\ReportType;
 use App\Entity\CourtOrder;
 use App\Service\ReportTypeService;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
+use TypeError;
 
 class ReportTypeServiceTest extends TestCase
 {
+    #[Test]
     public function determineReportTypeReturnsNull(): void
     {
+        $reportType1 = new ReportType(
+            CourtOrderReportType::OPG102,
+            CourtOrderType::PFA,
+            CourtOrderKind::Single,
+            DeputyType::LAY
+        );
+
         $courtOrder1 = $this->createMock(CourtOrder::class);
-        $courtOrder1->method('getDesiredReportType')->willReturn('123');
+        $courtOrder1->method('getDesiredReportType')->willReturn($reportType1);
+
+        $reportType2 = new ReportType(
+            CourtOrderReportType::OPG103,
+            CourtOrderType::PFA,
+            CourtOrderKind::Single,
+            DeputyType::LAY
+        );
 
         $courtOrder2 = $this->createMock(CourtOrder::class);
-        $courtOrder2->method('getDesiredReportType')->willReturn('456');
+        $courtOrder2->method('getDesiredReportType')->willReturn($reportType2);
 
         $sut = ReportTypeService::determineReportType([$courtOrder1, $courtOrder2]);
 
         $this->assertNull($sut);
     }
 
+    #[Test]
     public function determineReportTypeReturnsReportType(): void
     {
         $reportType = new ReportType(
@@ -45,13 +63,16 @@ class ReportTypeServiceTest extends TestCase
 
         $sut = ReportTypeService::determineReportType([$courtOrder1, $courtOrder2]);
 
-        $this->assertObjectEquals($reportType, $sut);
+        $this->assertEquals($reportType, $sut);
     }
 
+    #[Test]
     public function determineReportTypePassedNonCourtOrderObjectArray(): void
     {
-        $sut = ReportTypeService::determineReportType(['123', '456']);
-
-        $this->throwException(new \InvalidArgumentException());
+        try {
+            $sut = ReportTypeService::determineReportType(['123', '456']);
+        } catch (\TypeError $e) {
+            $this->assertInstanceOf(TypeError::class, $e);
+        }
     }
 }
