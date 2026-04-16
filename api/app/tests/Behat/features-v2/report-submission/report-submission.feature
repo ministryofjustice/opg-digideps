@@ -67,4 +67,5 @@ Feature: Report submissions dashboard
         Given a deputy has submitted one standard report and one NDR report for the same client
         And a super admin user accesses the admin app
         When I navigate to the admin report submissions page
+        And I search for submissions using the case number of the deputy who has submitted one standard report and one NDR report for the same client
         Then I should only see a row for the standard report in the Pending tab
