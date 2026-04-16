@@ -12,7 +12,7 @@
 
   "branchPrefix": "renovate/",
   "labels": ["dependencies", "renovate"],
-
+  "rebaseWhen": "conflicted",
   "dependencyDashboard": true,
   "branchConcurrentLimit": 5,
   "prHourlyLimit": 2,
