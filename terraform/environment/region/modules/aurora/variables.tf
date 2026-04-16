@@ -161,3 +161,13 @@ variable "log_group" {
   description = "The name of the CloudWatch Logs log group."
   type        = string
 }
+
+variable "min_acu" {
+  description = "The minimum acu value."
+  type        = number
+}
+
+variable "max_acu" {
+  description = "The maximum acu value."
+  type        = number
+}
