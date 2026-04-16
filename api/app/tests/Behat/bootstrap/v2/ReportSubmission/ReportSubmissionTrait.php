@@ -17,6 +17,8 @@ trait ReportSubmissionTrait
 {
     private array $documentFileNames = [];
 
+    private string $reportSubmissionStandardAndNdr_CaseNumber;
+
     /**
      * @Then I should see the case number of the user I'm interacting with
      */
@@ -455,6 +457,18 @@ trait ReportSubmissionTrait
         $this->em->persist($ndr);
         $this->em->persist($submission);
         $this->em->flush();
+
+        $this->reportSubmissionStandardAndNdr_CaseNumber = $userDetails->getClientCaseNumber();
+    }
+
+    /**
+     * @When /^I search for submissions using the case number of the deputy who has submitted one standard report and one NDR report for the same client$/
+     */
+    public function iSearchForSubmissionsUsingTheCaseNumber()
+    {
+        $this->fillInField('q', $this->reportSubmissionStandardAndNdr_CaseNumber);
+        $this->pressButton('Search');
+        $this->clickLink('Pending');
     }
 
     /**
@@ -463,10 +477,11 @@ trait ReportSubmissionTrait
     public function iShouldOnlySeeARowForTheStandardReportInThePendingTab(): void
     {
         $rows = $this->getSession()->getPage()->findAll('css', 'tr.behat-region-report-submission');
+
         $this->assertIntEqualsInt(
             1,
             count($rows),
-            sprintf('Expected to see only one standard report row, but found %s rows', count($rows))
+            sprintf('Expected to see single standard report row, but found %s rows', count($rows))
         );
     }
 }
