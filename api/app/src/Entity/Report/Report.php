@@ -1644,6 +1644,9 @@ class Report
         );
     }
 
+    /**
+     * @return Collection<int, CourtOrder>
+     */
     public function getCourtOrders(): Collection
     {
         return $this->courtOrders;
