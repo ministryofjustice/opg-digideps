@@ -74,7 +74,9 @@ startPage:
 stepPage:
   moneyIn:
     htmlTitle: "Add an item of income - Complete the deputy report | GOV.UK"
+    editHtmlTitle: "Edit an item of income - Complete the deputy report | GOV.UK"
     pageTitle: Add an item of income
+    editPageTitle: Edit an item of income
     supportTitle: Money in
     pageSectionDescription:
       step1: You can add one or more items and come back to complete the section later.
@@ -83,7 +85,9 @@ stepPage:
         <a href="%moneyTransfersPath%">money transfers</a> section
   moneyOut:
     htmlTitle: "Add a payment - Complete the deputy report | GOV.UK"
+    editHtmlTitle: "Edit a payment - Complete the deputy report | GOV.UK"
     pageTitle: Add a payment
+    editPageTitle: Edit a payment
     supportTitle: Money out
     pageSectionDescription:
       step1: You can add one or more types of payment and come back to complete the section later.

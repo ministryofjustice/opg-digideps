@@ -135,6 +135,8 @@ trait MoneyOutSectionTrait
 
         $this->getSession()->getPage()->find('xpath', '//td[contains(., "Care fees")]/..')->clickLink('Edit');
 
+        $this->assertPageContainsText('Edit a payment: Care fees');
+
         $this->fillInPaymentDetails('Care fees', $this->faker->sentence(rand(5, 50)), mt_rand(1, 999));
     }
 

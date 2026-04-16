@@ -1078,31 +1078,6 @@ parameters:
 		-
 			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
 			count: 1
-			path: src/Controller/Report/MoneyOutController.php
-
-		-
-			message: "#^Cannot call method getId\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutController.php
-
-		-
-			message: "#^Cannot call method getNameOneLine\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutController.php
-
-		-
-			message: "#^Cannot call method getType\\(\\) on mixed\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutController.php
-
-		-
-			message: "#^Method App\\\\Controller\\\\Report\\\\MoneyOutController\\:\\:handleSoftDeletionOfMoneyTransactionItems\\(\\) has parameter \\$report with no type specified\\.$#"
-			count: 1
-			path: src/Controller/Report/MoneyOutController.php
-
-		-
-			message: "#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\\.$#"
-			count: 1
 			path: src/Controller/Report/MoneyOutShortController.php
 
 		-
