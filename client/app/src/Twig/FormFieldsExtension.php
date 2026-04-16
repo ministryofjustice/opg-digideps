@@ -368,9 +368,9 @@ class FormFieldsExtension extends AbstractExtension
      * @param string $translationKey The translation key prefix
      * @param string $domain The translation domain
      * @param string|null $customHint Optional custom hint text to use instead of translation
-     * @return string|null The hint text or default date hint if no translation found
+     * @return string The hint text or default date hint if no translation found
      */
-    private function getDateHintText(string $translationKey, string $domain, ?string $customHint = null): ?string
+    private function getDateHintText(string $translationKey, string $domain, ?string $customHint = null): string
     {
         // Use custom hint if provided
         if (!empty($customHint)) {
