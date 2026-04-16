@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Constraints;
 
 class SetPasswordType extends AbstractType
 {
-    public const VALIDATION_GROUP = 'user_set_password';
+    public const string VALIDATION_GROUP = 'user_set_password';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

@@ -9,11 +9,13 @@ use App\Entity\Report\BankAccount;
 use App\Entity\Report\Gift;
 use App\Entity\Report\Report;
 use App\Entity\Report\Status;
+use App\Form\AddAnotherThingType;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\GiftType;
 use App\Form\YesNoType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
+use OPG\Digideps\Common\Validating\ValidatingForm;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -62,8 +64,8 @@ class GiftController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /* @var Report $data */
-            $data = $form->getData();
+            $validatingForm = new ValidatingForm($form);
+            $data = $validatingForm->getObjectOrThrow(null, Report::class);
 
             switch ($data->getGiftsExist()) {
                 case 'yes':
@@ -92,25 +94,27 @@ class GiftController extends AbstractController
     public function addAction(Request $request, int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $gift = new Gift();
 
         $form = $this->createForm(
             GiftType::class,
-            $gift,
+            new Gift(),
             [
                 'user' => $this->getUser(),
                 'report' => $report,
             ]
         );
+        $form->add('addAnother', AddAnotherThingType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+            $validatingForm = new ValidatingForm($form);
+
+            $data = $validatingForm->getObjectOrThrow(null, Gift::class);
             $data->setReport($report);
 
             $this->restClient->post('report/' . $report->getId() . '/gift', $data, ['gift', 'account']);
 
-            if ('saveAndAddAnother' === $form->getClickedButton()->getName()) {
+            if ($validatingForm->getStringOrNull('addAnother') === 'yes') {
                 return $this->redirect($this->generateUrl('gifts_add', ['reportId' => $reportId, 'from' => $request->get('from')]));
             } else {
                 return $this->redirect($this->generateUrl('gifts_summary', ['reportId' => $reportId]));
@@ -164,7 +168,9 @@ class GiftController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+            $validatingForm = new ValidatingForm($form);
+            $data = $validatingForm->getObjectOrThrow(null, Gift::class);
+
             $request->getSession()->getFlashBag()->add('notice', 'Gift edited');
 
             $this->restClient->put(

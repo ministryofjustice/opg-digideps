@@ -7,9 +7,9 @@ use App\Entity\Report\Status;
 
 class ProfCostsEstimateSubSectionRouteResolver
 {
-    const SUMMARY_ROUTE = 'prof_deputy_costs_estimate_summary';
-    const BREAKDOWN_ROUTE = 'prof_deputy_costs_estimate_breakdown';
-    const MORE_INFO_ROUTE = 'prof_deputy_costs_estimate_more_info';
+    public const string SUMMARY_ROUTE = 'prof_deputy_costs_estimate_summary';
+    public const string BREAKDOWN_ROUTE = 'prof_deputy_costs_estimate_breakdown';
+    public const string MORE_INFO_ROUTE = 'prof_deputy_costs_estimate_more_info';
 
     /**
      * @param $state

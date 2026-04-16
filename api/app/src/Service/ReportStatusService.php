@@ -13,13 +13,13 @@ use JMS\Serializer\Annotation as JMS;
  */
 class ReportStatusService
 {
-    public const STATE_NOT_STARTED = 'not-started';
-    public const STATE_INCOMPLETE = 'incomplete';
-    public const STATE_DONE = 'done';
-    public const STATE_LOW_ASSETS_DONE = 'low-assets-done'; // only used for PFA Low Assets report
-    public const STATE_NOT_MATCHING = 'not-matching'; // only used for balance section
-    public const STATE_EXPLAINED = 'explained'; // only used for balance section
-    public const ENABLE_STATUS_CACHE = true;
+    public const string STATE_NOT_STARTED = 'not-started';
+    public const string STATE_INCOMPLETE = 'incomplete';
+    public const string STATE_DONE = 'done';
+    public const string STATE_LOW_ASSETS_DONE = 'low-assets-done'; // only used for PFA Low Assets report
+    public const string STATE_NOT_MATCHING = 'not-matching'; // only used for balance section
+    public const string STATE_EXPLAINED = 'explained'; // only used for balance section
+    public const bool ENABLE_STATUS_CACHE = true;
 
     /**
      * @var bool set to true to use the report status cached
@@ -590,12 +590,8 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "expenses-state"})
-     *
-     * @return array
      */
     public function getExpensesState(): array
     {
@@ -613,12 +609,8 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "gifts-state"})
-     *
-     * @return array
      */
     public function getGiftsState(): array
     {
@@ -631,16 +623,14 @@ class ReportStatusService
 
     /**
      * @JMS\Exclude
-     *
-     * @param bool
-     *
-     * @return array
      */
-    public function getRemainingSections()
+    public function getRemainingSections(): array
     {
-        return array_filter($this->getSectionStatus(), function ($e) {
-            return (self::STATE_DONE != $e) && (self::STATE_EXPLAINED != $e) && (self::STATE_LOW_ASSETS_DONE != $e);
-        }) ?: [];
+        $doneStatuses = [self::STATE_DONE, self::STATE_EXPLAINED, self::STATE_LOW_ASSETS_DONE];
+
+        return array_filter($this->getSectionStatus(), function ($sectionStatus) use ($doneStatuses) {
+            return !in_array($sectionStatus, $doneStatuses);
+        });
     }
 
     /**
@@ -714,20 +704,16 @@ class ReportStatusService
      *
      * @JMS\Exclude
      *
-     * @param bool
-     *
-     * @return array of section=>state e.g. [ decisions => notStarted ]
+     * @return array of section=>state e.g. ['decisions' => 'notStarted']
      */
-    public function getSectionStatus()
+    public function getSectionStatus(): array
     {
         $statusCached = $this->report->getSectionStatusesCached();
 
         $ret = [];
         foreach ($this->report->getAvailableSections() as $sectionId) {
             if (self::ENABLE_STATUS_CACHE && $this->useStatusCache) { // get cached value if exists
-                $ret[$sectionId] = isset($statusCached[$sectionId]['state'])
-                    ? $statusCached[$sectionId]['state']
-                    : self::STATE_NOT_STARTED; // should never happen, unless cron didn't update when this feature was firstly introduced
+                $ret[$sectionId] = $statusCached[$sectionId]['state'] ?? self::STATE_NOT_STARTED; // should never happen, unless cron didn't update when this feature was firstly introduced
             } else {
                 $ret[$sectionId] = $this->getSectionStateNotCached($sectionId)['state'];
             }

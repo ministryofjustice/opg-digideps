@@ -10,7 +10,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class ClientArchivedEvent extends Event
 {
-    public const NAME = 'client.archived';
+    public const string NAME = 'client.archived';
 
     /** @var User */
     private $currentUser;

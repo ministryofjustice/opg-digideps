@@ -92,7 +92,7 @@ v2-tests-browserkit:
             contexts:
                 - App\Tests\Behat\v2\Registration\RegistrationFeatureContext
 
-        report-overiew:
+        report-overview:
             description: Coverage of the report overview page
             paths: ["%paths.base%/features-v2/reporting/report-overview"]
             contexts:
@@ -115,6 +115,12 @@ v2-tests-browserkit:
             paths: ["%paths.base%/features-v2/report-management"]
             contexts:
                 - App\Tests\Behat\v2\ReportManagement\ReportManagementFeatureContext
+
+        report-review:
+            description: Coverage of the report review page
+            paths: ["%paths.base%/features-v2/reporting/report-review"]
+            contexts:
+                - App\Tests\Behat\v2\Reporting\ReportReviewFeatureContext
 
         report-section-navigation:
             description: Coverage of next and previous links in report sections

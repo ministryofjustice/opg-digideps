@@ -9,7 +9,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class CoDeputyInvitedEvent extends Event implements CoDeputyCreationEventInterface
 {
-    public const NAME = 'codeputy.invited';
+    public const string NAME = 'codeputy.invited';
 
     /** @var User */
     private $invitedCoDeputy;
