@@ -37,7 +37,7 @@ class VisitsCare
     private $report;
 
     /**
-     * @var string yes|no|null
+     * @var ?string yes|no|null
      *
      * @JMS\Type("string")
      *
@@ -48,7 +48,7 @@ class VisitsCare
     private $doYouLiveWithClient;
 
     /**
-     * @var string
+     * @var ?string
      *
      * @JMS\Type("string")
      *
@@ -59,7 +59,7 @@ class VisitsCare
     private $howOftenDoYouContactClient;
 
     /**
-     * @var string yes|no|null
+     * @var ?string yes|no|null
      *
      * @JMS\Type("string")
      *
@@ -70,7 +70,7 @@ class VisitsCare
     private $doesClientReceivePaidCare;
 
     /**
-     * @var string client_pays_for_all | client_gets_financial_help | all_care_is_paid_by_someone_else
+     * @var ?string client_pays_for_all | client_gets_financial_help | all_care_is_paid_by_someone_else
      *
      * @JMS\Type("string")
      *
@@ -81,7 +81,7 @@ class VisitsCare
     private $howIsCareFunded;
 
     /**
-     * @var string
+     * @var ?string
      *
      * @JMS\Type("string")
      *
@@ -92,7 +92,7 @@ class VisitsCare
     private $whoIsDoingTheCaring;
 
     /**
-     * @var string yes|no|null
+     * @var ?string yes|no|null
      *
      * @JMS\Type("string")
      *
@@ -106,7 +106,7 @@ class VisitsCare
     private $doesClientHaveACarePlan;
 
     /**
-     * @var DateTime
+     * @var ?\DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
      *
@@ -116,206 +116,104 @@ class VisitsCare
      */
     private $whenWasCarePlanLastReviewed;
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * Set report.
-     *
-     * @return Contact
-     */
-    public function setReport(?Report $report = null)
+    public function setReport(?Report $report = null): static
     {
         $this->report = $report;
 
         return $this;
     }
 
-    /**
-     * Get report.
-     *
-     * @return Report
-     */
-    public function getReport()
+    public function getReport(): Report
     {
         return $this->report;
     }
 
-    /**
-     * Set doYouLiveWithClient.
-     *
-     * @param string $doYouLiveWithClient
-     *
-     * @return Report
-     */
-    public function setDoYouLiveWithClient($doYouLiveWithClient)
+    public function setDoYouLiveWithClient(?string $doYouLiveWithClient): static
     {
         $this->doYouLiveWithClient = $doYouLiveWithClient;
 
         return $this;
     }
 
-    /**
-     * Get doYouLiveWithClient.
-     *
-     * @return string
-     */
-    public function getDoYouLiveWithClient()
+    public function getDoYouLiveWithClient(): ?string
     {
         return $this->doYouLiveWithClient;
     }
 
-    /**
-     * Set doesClientReceivePaidCare.
-     *
-     * @param string $doesClientReceivePaidCare
-     *
-     * @return Report
-     */
-    public function setDoesClientReceivePaidCare($doesClientReceivePaidCare)
+    public function setDoesClientReceivePaidCare(?string $doesClientReceivePaidCare): static
     {
         $this->doesClientReceivePaidCare = $doesClientReceivePaidCare;
 
         return $this;
     }
 
-    /**
-     * Get doesClientReceivePaidCare.
-     *
-     * @return string
-     */
-    public function getDoesClientReceivePaidCare()
+    public function getDoesClientReceivePaidCare(): ?string
     {
         return $this->doesClientReceivePaidCare;
     }
 
-    /**
-     * Set whoIsDoingTheCaring.
-     *
-     * @param string $whoIsDoingTheCaring
-     *
-     * @return Report
-     */
-    public function setWhoIsDoingTheCaring($whoIsDoingTheCaring)
+    public function setWhoIsDoingTheCaring(?string $whoIsDoingTheCaring): static
     {
         $this->whoIsDoingTheCaring = $whoIsDoingTheCaring;
 
         return $this;
     }
 
-    /**
-     * Get whoIsDoingTheCaring.
-     *
-     * @return string
-     */
-    public function getWhoIsDoingTheCaring()
+    public function getWhoIsDoingTheCaring(): ?string
     {
         return $this->whoIsDoingTheCaring;
     }
 
-    /**
-     * Set doesClientHaveACarePlan.
-     *
-     * @param string $doesClientHaveACarePlan
-     *
-     * @return Report
-     */
-    public function setDoesClientHaveACarePlan($doesClientHaveACarePlan)
+    public function setDoesClientHaveACarePlan(?string $doesClientHaveACarePlan): static
     {
         $this->doesClientHaveACarePlan = $doesClientHaveACarePlan;
 
         return $this;
     }
 
-    /**
-     * Get doesClientHaveACarePlan.
-     *
-     * @return string
-     */
-    public function getDoesClientHaveACarePlan()
+    public function getDoesClientHaveACarePlan(): ?string
     {
         return $this->doesClientHaveACarePlan;
     }
 
-    /**
-     * Set whenWasCarePlanLastReviewed.
-     *
-     * @param \DateTime $whenWasCarePlanLastReviewed
-     *
-     * @return Report
-     */
-    public function setWhenWasCarePlanLastReviewed($whenWasCarePlanLastReviewed)
+    public function setWhenWasCarePlanLastReviewed(?\DateTime $whenWasCarePlanLastReviewed): static
     {
         $this->whenWasCarePlanLastReviewed = $whenWasCarePlanLastReviewed;
 
         return $this;
     }
 
-    /**
-     * Get whenWasCarePlanLastReviewed.
-     *
-     * @return \DateTime
-     */
-    public function getWhenWasCarePlanLastReviewed()
+    public function getWhenWasCarePlanLastReviewed(): ?\DateTime
     {
         return $this->whenWasCarePlanLastReviewed;
     }
 
-    /**
-     * Set howIsCareFunded.
-     *
-     * @param string $howIsCareFunded
-     *
-     * @return Report
-     */
-    public function setHowIsCareFunded($howIsCareFunded)
+    public function setHowIsCareFunded(?string $howIsCareFunded): static
     {
         $this->howIsCareFunded = $howIsCareFunded;
 
         return $this;
     }
 
-    /**
-     * Get howIsCareFunded.
-     *
-     * @return string
-     */
-    public function getHowIsCareFunded()
+    public function getHowIsCareFunded(): ?string
     {
         return $this->howIsCareFunded;
     }
 
-    public function getHowOftenDoYouContactClient()
+    public function getHowOftenDoYouContactClient(): ?string
     {
         return $this->howOftenDoYouContactClient;
     }
 
-    public function setHowOftenDoYouContactClient($howOftenDoYouContactClient)
+    public function setHowOftenDoYouContactClient(?string $howOftenDoYouContactClient): static
     {
         $this->howOftenDoYouContactClient = $howOftenDoYouContactClient;
 
         return $this;
-    }
-
-    /**
-     * checks if report is missing visits care
-     * information.
-     *
-     * @return bool
-     */
-    public function missingInfo()
-    {
-        if (empty($this->doYouLiveWithClient) || empty($this->doesClientReceivePaidCare) || empty($this->whoIsDoingTheCaring) || empty($this->doesClientHaveACarePlan)) {
-            return true;
-        }
-
-        return false;
     }
 }

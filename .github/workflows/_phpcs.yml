@@ -20,7 +20,7 @@ jobs:
         run: |
           {
             echo "CHANGED_PHP_FILES<<EOF"
-            git diff --name-only origin/main... -- '**/*.php'
+            git diff --diff-filter=d --name-only origin/main... -- '**/*.php'
             echo "EOF"
           } >> "$GITHUB_ENV"
 
