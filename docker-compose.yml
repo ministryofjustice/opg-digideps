@@ -167,11 +167,11 @@ services:
     restart: always
 
   redis-frontend:
-    image: redis:6.2.13@sha256:2762130c9677f5fbf877819b3daeeee1ef124011759e729ba347c96127d7856d
+    image: redis:6.2.16@sha256:d74db717c8b8a7be8e3cc949b4ad7cf4b87276ff2a47bb487ef0f5f05430c0f9
     restart: always
 
   redis-api:
-    image: redis:6.2.13@sha256:2762130c9677f5fbf877819b3daeeee1ef124011759e729ba347c96127d7856d
+    image: redis:6.2.16@sha256:d74db717c8b8a7be8e3cc949b4ad7cf4b87276ff2a47bb487ef0f5f05430c0f9
     restart: always
 
   file-scanner-rest:
@@ -258,7 +258,7 @@ services:
       - OPENAPI_MOCK_SPECIFICATION_URL=/app/deputy-reporting-openapi.yml
 
   mock-notify-api:
-    image: stoplight/prism:5.15.0@sha256:bcea4f5dc44a6bccbbe86c2e6e16b6402fdf7a8da748ac4e48583a09f1d72924
+    image: stoplight/prism:5.15.4@sha256:fe50c7e61ad3cba0ea8b8b3ab868d6fa206dcb31518d03fc564771ceb643fd84
     ports:
       - 4010:4010
     command:
