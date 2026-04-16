@@ -167,11 +167,11 @@ services:
     restart: always
 
   redis-frontend:
-    image: redis:6.2.12
+    image: redis:6.2.13@sha256:2762130c9677f5fbf877819b3daeeee1ef124011759e729ba347c96127d7856d
     restart: always
 
   redis-api:
-    image: redis:6.2.12
+    image: redis:6.2.13@sha256:2762130c9677f5fbf877819b3daeeee1ef124011759e729ba347c96127d7856d
     restart: always
 
   file-scanner-rest:
@@ -226,7 +226,7 @@ services:
   #            - frontend
 
   pact-mock:
-    image: pactfoundation/pact-cli:0.56.0.7@sha256:681c1829729c4c8516d537ee8dd13333db89d94b8bcf8c8797af26de630ce58c
+    image: pactfoundation/pact-cli:0.56.0.8@sha256:ee390ae508c8e783145f0b818984236846ce5f1826ac0ecdb460b4aefdcb34a1
     ports:
       - 1234:80
     command:
@@ -258,7 +258,7 @@ services:
       - OPENAPI_MOCK_SPECIFICATION_URL=/app/deputy-reporting-openapi.yml
 
   mock-notify-api:
-    image: stoplight/prism:5.14.3
+    image: stoplight/prism:5.15.0@sha256:bcea4f5dc44a6bccbbe86c2e6e16b6402fdf7a8da748ac4e48583a09f1d72924
     ports:
       - 4010:4010
     command:
