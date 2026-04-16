@@ -168,18 +168,12 @@ class ReportSubmission
         return $this;
     }
 
-    /**
-     * @return Report
-     */
-    public function getReport()
+    public function getReport(): ?Report
     {
         return $this->report;
     }
 
-    /**
-     * @return Ndr
-     */
-    public function getNdr()
+    public function getNdr(): ?Ndr
     {
         return $this->ndr;
     }
