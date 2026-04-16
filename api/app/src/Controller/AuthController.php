@@ -90,7 +90,7 @@ class AuthController extends RestController
     {
         $authToken = $this->tokenStorage->getToken();
 
-        return $userProvider->removeToken($authToken);
+        $userProvider->removeToken($authToken);
     }
 
     /**
