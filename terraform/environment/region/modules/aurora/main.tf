@@ -116,17 +116,18 @@ resource "aws_rds_cluster_instance" "serverless_instances" {
   }
 }
 
-moved {
-  from = aws_rds_cluster.cluster[0]
-  to   = aws_rds_cluster.cluster_serverless[0]
-}
-
-moved {
-  from = aws_rds_cluster_instance.cluster_instances[0]
-  to   = aws_rds_cluster_instance.serverless_instances[0]
-}
-
-moved {
-  from = aws_rds_cluster_instance.cluster_instances[1]
-  to   = aws_rds_cluster_instance.serverless_instances[1]
-}
+# To be used when moving production
+#moved {
+#  from = aws_rds_cluster.cluster[0]
+#  to   = aws_rds_cluster.cluster_serverless[0]
+#}
+#
+#moved {
+#  from = aws_rds_cluster_instance.cluster_instances[0]
+#  to   = aws_rds_cluster_instance.serverless_instances[0]
+#}
+#
+#moved {
+#  from = aws_rds_cluster_instance.cluster_instances[1]
+#  to   = aws_rds_cluster_instance.serverless_instances[1]
+#}
