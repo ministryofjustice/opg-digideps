@@ -56,6 +56,8 @@ variable "accounts" {
         backup_retention_period = number
         deletion_protection     = bool
         psql_engine_version     = string
+        min_acu                 = number
+        max_acu                 = number
       })
       s3 = object({
         backup_kms_arn       = string

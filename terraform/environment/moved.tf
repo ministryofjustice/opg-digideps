@@ -2,6 +2,7 @@ moved {
   from = aws_acm_certificate.wildcard
   to   = aws_acm_certificate.wildcard[0]
 }
+
 moved {
   from = aws_acm_certificate_validation.wildcard
   to   = aws_acm_certificate_validation.wildcard[0]
