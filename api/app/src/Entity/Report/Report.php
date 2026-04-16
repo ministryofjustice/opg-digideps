@@ -1664,6 +1664,9 @@ class Report implements ReportInterface
         );
     }
 
+    /**
+     * @return Collection<int, CourtOrder>
+     */
     public function getCourtOrders(): Collection
     {
         return $this->courtOrders;

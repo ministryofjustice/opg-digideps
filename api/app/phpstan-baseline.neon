@@ -4466,11 +4466,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$courtOrders is unused\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$currentProfPaymentsReceived \\(string\\) does not accept null\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php

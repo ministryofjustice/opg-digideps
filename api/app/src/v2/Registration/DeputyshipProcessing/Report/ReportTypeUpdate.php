@@ -6,6 +6,7 @@ namespace App\v2\Registration\DeputyshipProcessing\Report;
 
 use App\Domain\CourtOrder\CourtOrderKind;
 use App\Domain\Report\ReportType;
+use App\Entity\CourtOrder;
 use App\Entity\Report\Report;
 use App\Factory\DataFactoryResult;
 use App\Repository\ReportRepository;
@@ -60,7 +61,10 @@ class ReportTypeUpdate
             ->setParameters(['actions' => $actionsNeeded]);
 
         foreach ($reportIds->toIterable() as $reportId) {
-            yield $this->reportRepository->find($reportId);
+            /** @var Report $report */
+            $report = $this->reportRepository->find($reportId);
+
+            yield $report;
         }
     }
 
@@ -69,8 +73,11 @@ class ReportTypeUpdate
         $count = 0;
         $errors = [];
         foreach ($this->getChangedReports() as $report) {
+            /** @var CourtOrder[] $courtOrders */
+            $courtOrders = $report->getCourtOrders()->toArray();
+
             $currentReportType = ReportType::tryFrom($report->getType());
-            $possibleReportType = ReportTypeService::determineReportType($report->getCourtOrders()->toArray());
+            $possibleReportType = ReportTypeService::determineReportType($courtOrders);
 
             if ($possibleReportType === null) {
                 $errors[] = 'Unable to determine report type from CourtOrders associated with report: ' . $report->getId();
