@@ -6,7 +6,7 @@
 {% set isLayDeputy = not user.isDeputyOrg %}
 
 {% if report.submitted == false %}
-    {% if not report.isDue or report.isDue and not reportStatus.isReadyToSubmit %}
+    {% if (not report.isDue) or (not reportStatus.isReadyToSubmit) %}
         {% set preview = true %}
         {% set page = 'preview' %}
     {% else %}
@@ -20,7 +20,7 @@
 
 {% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
 {% block supportTitleTop %}{{ ('supportTitleTop') | trans({'startYear': report.startDate | date('Y'),'endYear': report.endDate | date('Y') }) }}{% endblock %}
- {% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
+{% block pageTitle %}{{ (page ~ '.pageTitle') | trans }}{% endblock %}
 
 {% block head %}
     {{ parent() }}

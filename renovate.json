@@ -33,9 +33,9 @@
       "prCreation": "immediate"
     },
     {
-      "groupName": "Docker base image updates",
-      "matchManagers": ["dockerfile"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "Docker image updates",
+      "matchManagers": ["dockerfile", "docker-compose"],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
       "labels": ["dependencies", "docker"],
       "schedule": ["before 9am on Monday"]
     },

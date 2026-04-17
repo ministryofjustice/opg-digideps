@@ -54,6 +54,10 @@ class ReportSubmissionRepository extends ServiceEntityRepository
             ->leftJoin('ndr.client', 'nc')
         ;
 
+        // Only include report submissions which are related to standard reports, not NDRs
+        // TODO remove when NDR entities are removed
+        $qb->andWhere($qb->expr()->isNotNull('rs.report'));
+
         // search filter
         if ($q) {
             $qb->andWhere(implode(' OR ', [

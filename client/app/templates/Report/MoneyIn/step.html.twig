@@ -11,16 +11,22 @@
     '%moneyTransfersPath%': path('money_transfers', {reportId: report.id})
 }) %}
 
-{% block htmlTitle %}{{ 'stepPage.moneyIn.htmlTitle' | trans(transOptions) }}{% endblock %}
-
 {% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans(clientTransOptions) %}
 {% set categoryString2ndStep = ('form.category.entries.' ~ transaction.category ~ '.label2ndStep') | trans(clientTransOptions) %}
 
-{% block pageHeader %}
-    {% if step == 2 %}
-        {{ parent() }}
-        {% block pageTitle %}{% endblock %}
-        {% set pageTitle = 'stepPage.moneyIn.pageTitle' | trans(transOptions)  ~ ': ' ~ ('.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep) %}
+{% block htmlTitle %}
+    {% if step == 2 and transactionId %}
+        {{ 'stepPage.moneyIn.editHtmlTitle' | trans(transOptions) }}
+    {% else %}
+        {{ 'stepPage.moneyIn.htmlTitle' | trans(transOptions) }}
+    {% endif %}
+{% endblock %}
+
+{% block pageTitle %}
+    {% if step == 2 and transactionId %}
+        {{ 'stepPage.moneyIn.editPageTitle' | trans(transOptions)  ~ ': ' ~ ('.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep) }}
+    {% else %}
+        {{ 'stepPage.moneyIn.pageTitle' | trans(transOptions)  ~ ': ' ~ ('.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep) }}
     {% endif %}
 {% endblock %}
 
@@ -40,13 +46,6 @@
     {% if step == 1 %}
         <div id="form-group-account_category" class="govuk-form-group push--top {% if not form.category.vars.valid %}govuk-form-group--error{% endif %}">
             <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl">
-                    <span class="govuk-caption-xl">{{ 'stepPage.moneyIn.supportTitle'|trans }}</span>
-                    <h1 class="govuk-fieldset__heading">
-                        {{ 'stepPage.moneyIn.pageTitle' | trans(transOptions) }}
-                    </h1>
-                </legend>
-
             {% for group, categories in categoriesGrouped %}
                 <div class="govuk-label--s govuk-hint">
                     {{ ('form.group.entries.' ~ group) | trans(clientTransOptions, translationDomain) }}

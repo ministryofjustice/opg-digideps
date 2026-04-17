@@ -29,16 +29,6 @@ We use standard HTTP status codes to help client applications understand respons
 
 We accept standard HTTP methods (`GET`, `POST`, `PUT`, `DELETE`) for API endpoints. Entities have a single-field ID and that should be provided in the URL whenever an entity is being addressed.
 
-We use parent entities where necessary to differentiate between entities which exist in two scopes (e.g. both NDRs and Reports have "accounts").
-
-Example with `account` (entity) and `ndr` (parent entity) entities.
-
-- Get account records (ndr ID=1): `GET /ndr/1/account`
-- Add account to NDR with ID=1: `POST /ndr/1/account`
-- Get account with id=2:  `GET /ndr/account/2`
-- Edit account with id=2: `PUT /ndr/account/2`
-- Delete account with id=2: `DELETE /ndr/account/2`
-
 ## JMS groups
 
 We use JMS Serializer's [Groups functionality][jms-groups] to group entity properties. When querying, we can specify a group to ensure that the smallest set of data possible is retrieved.

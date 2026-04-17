@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Client;
 use App\Entity\Note;
+use App\Entity\User;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -34,7 +35,11 @@ class NoteController extends RestController
             'content' => 'mustExist',
         ]);
         $note = new Note($client, $data['category'], $data['title'], $data['content']);
-        $note->setCreatedBy($this->getUser());
+
+        /** @var ?User $user */
+        $user = $this->getUser();
+
+        $note->setCreatedBy($user);
 
         $this->em->persist($note);
         $this->em->flush();

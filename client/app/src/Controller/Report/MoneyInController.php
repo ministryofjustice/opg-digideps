@@ -240,8 +240,8 @@ class MoneyInController extends AbstractController
 
         $form->handleRequest($request);
 
-        /** @var SubmitButton $saveButton */
-        $saveButton = $form->get('save');
+        $validatingForm = new ValidatingForm($form);
+        $saveButton = $validatingForm->getObjectOrThrow('save', SubmitButton::class);
 
         if ($saveButton->isClicked() && $form->isSubmitted() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
@@ -293,6 +293,7 @@ class MoneyInController extends AbstractController
             'backLink' => $stepRedirector->getBackLink(),
             'skipLink' => null,
             'categoriesGrouped' => MoneyTransaction::getCategoriesGrouped('in'),
+            'transactionId' => $transaction->getId(),
         ];
     }
 
