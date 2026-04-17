@@ -45,7 +45,7 @@ class ReportSubmission
     private $id;
 
     /**
-     * @var Report
+     * @var ?Report
      *
      * @JMS\Type("App\Entity\Report\Report")
      *
@@ -58,7 +58,7 @@ class ReportSubmission
     private $report;
 
     /**
-     * @var Ndr
+     * @var ?Ndr
      *
      * @JMS\Type("App\Entity\Ndr\Ndr")
      *
@@ -168,18 +168,12 @@ class ReportSubmission
         return $this;
     }
 
-    /**
-     * @return Report
-     */
-    public function getReport()
+    public function getReport(): ?Report
     {
         return $this->report;
     }
 
-    /**
-     * @return Ndr
-     */
-    public function getNdr()
+    public function getNdr(): ?Ndr
     {
         return $this->ndr;
     }
