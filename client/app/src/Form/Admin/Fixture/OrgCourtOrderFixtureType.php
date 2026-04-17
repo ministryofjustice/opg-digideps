@@ -48,7 +48,7 @@ class OrgCourtOrderFixtureType extends AbstractType
                 'data' => $options['orgSizeClients'],
             ])
             ->add('orgSizeUsers', ChoiceType::class, [
-                'choices' => ['1 User' => 1, '10 Users' => 10, '50 Users' => 50, '100 Users' => 100],
+                'choices' => ['1 User' => 1, '10 Users' => 10, '50 Users' => 50],
                 'data' => $options['orgSizeUsers'],
             ])
             ->add('submit', SubmitType::class);
