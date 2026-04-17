@@ -30,7 +30,7 @@ final readonly class ReportType implements \Stringable
         $parts[] = '10' . $suffix;
 
         if ($this->courtOrderKind === CourtOrderKind::Hybrid) {
-            $parts[] = substr(CourtOrderReportType::OPG104->getSuffix(), -1);
+            $parts[] = CourtOrderReportType::OPG104->getSuffix();
         }
 
         if ($this->deputyType !== DeputyType::LAY) {
