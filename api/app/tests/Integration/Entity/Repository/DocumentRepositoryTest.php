@@ -252,7 +252,7 @@ class DocumentRepositoryTest extends KernelTestCase
     {
         [$client, $report, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
 
-        $documents = self::$sut->getQueuedDocumentsAndSetToInProgress('100');
+        $documents = self::$sut->getQueuedDocumentsAndSetToInProgress(100);
 
         self::$entityManager->refresh($reportPdfDoc);
         self::$entityManager->refresh($supportingDoc);
@@ -364,7 +364,7 @@ class DocumentRepositoryTest extends KernelTestCase
         [$_, $_, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
         $this->syncDocuments([$reportPdfDoc], $reportSubmission, 'abc-123-abc-123');
 
-        $documents = self::$sut->getQueuedDocumentsAndSetToInProgress('100');
+        $documents = self::$sut->getQueuedDocumentsAndSetToInProgress(100);
 
         self::assertEquals('abc-123-abc-123', $documents[$supportingDoc->getId()]['report_submission_uuid']);
     }
@@ -373,7 +373,7 @@ class DocumentRepositoryTest extends KernelTestCase
     {
         [$client, $ndr, $reportPdfDoc, $reportSubmission] = $this->createAndSubmitNdr();
 
-        $documents = self::$sut->getQueuedDocumentsAndSetToInProgress('100');
+        $documents = self::$sut->getQueuedDocumentsAndSetToInProgress(100);
 
         $this->assertDataMatchesEntity($documents, $reportPdfDoc, $client, $reportSubmission, $ndr);
 
@@ -390,7 +390,7 @@ class DocumentRepositoryTest extends KernelTestCase
 
         self::$entityManager->flush();
 
-        $documents = self::$sut->getQueuedDocumentsAndSetToInProgress('100');
+        $documents = self::$sut->getQueuedDocumentsAndSetToInProgress(100);
 
         self::$entityManager->refresh($additionalSupportingDoc);
 
@@ -405,7 +405,7 @@ class DocumentRepositoryTest extends KernelTestCase
         $this->syncDocuments([$reportPdfDoc, $supportingDoc], $reportSubmission, 'abc-123-abc-123');
         [$resubmissionReportPdfDoc, $resubmissionSupportingDoc, $reportResubmission] = $this->createAndSubmitResubmissionWithSupportingDoc($report, $this->secondJulyAm);
 
-        $documents = self::$sut->getQueuedDocumentsAndSetToInProgress('100');
+        $documents = self::$sut->getQueuedDocumentsAndSetToInProgress(100);
 
         self::$entityManager->refresh($resubmissionReportPdfDoc);
         self::$entityManager->refresh($resubmissionSupportingDoc);
@@ -428,7 +428,7 @@ class DocumentRepositoryTest extends KernelTestCase
 
         self::$entityManager->flush();
 
-        $documents = self::$sut->getQueuedDocumentsAndSetToInProgress('100');
+        $documents = self::$sut->getQueuedDocumentsAndSetToInProgress(100);
 
         $this->syncDocuments([$additionalSupportingDoc], $additionalSubmission, 'def-456-def-456');
 
@@ -473,7 +473,7 @@ class DocumentRepositoryTest extends KernelTestCase
         [$client2, $report2, $reportPdfDoc2, $supportingDoc2, $reportSubmission2] = $this->createAndSubmitReportWithSupportingDoc($this->secondJulyPm);
 
         $documents = self::$sut
-            ->getQueuedDocumentsAndSetToInProgress('100');
+            ->getQueuedDocumentsAndSetToInProgress(100);
 
         self::$entityManager->refresh($reportPdfDoc);
         self::$entityManager->refresh($supportingDoc);
@@ -496,7 +496,7 @@ class DocumentRepositoryTest extends KernelTestCase
         $this->createAndSubmitReportWithSupportingDoc($this->firstJulyPm);
 
         $documents = self::$sut
-            ->getQueuedDocumentsAndSetToInProgress('2');
+            ->getQueuedDocumentsAndSetToInProgress(2);
 
         self::assertEquals(2, count($documents));
     }
@@ -513,7 +513,7 @@ class DocumentRepositoryTest extends KernelTestCase
 
         $this->createAndSubmitAdditionalDocuments($report, $this->secondJulyPm);
 
-        $documents = self::$sut->getQueuedDocumentsAndSetToInProgress('5');
+        $documents = self::$sut->getQueuedDocumentsAndSetToInProgress(5);
 
         $reportPdf1Returned = false;
         $reportPdf2Returned = false;

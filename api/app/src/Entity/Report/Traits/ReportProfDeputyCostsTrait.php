@@ -99,11 +99,9 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @JMS\Type("ArrayCollection<App\Entity\Report\ProfDeputyOtherCost>")
-     *
      * @JMS\Groups({"prof-deputy-other-costs"})
      *
      * @ORM\OneToMany(targetEntity="App\Entity\Report\ProfDeputyOtherCost", mappedBy="report", cascade={"persist", "remove"})
-     *
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $profDeputyOtherCosts;
@@ -160,10 +158,8 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param string $profDeputyCostsHowCharged
-     *
-     * @return ReportProfDeputyCostsTrait
      */
-    public function setProfDeputyCostsHowCharged($profDeputyCostsHowCharged)
+    public function setProfDeputyCostsHowCharged($profDeputyCostsHowCharged): static
     {
         $this->profDeputyCostsHowCharged = $profDeputyCostsHowCharged;
 
@@ -180,10 +176,8 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param string $profDeputyCostsHasPrevious
-     *
-     * @return ReportProfDeputyCostsTrait
      */
-    public function setProfDeputyCostsHasPrevious($profDeputyCostsHasPrevious)
+    public function setProfDeputyCostsHasPrevious($profDeputyCostsHasPrevious): static
     {
         $this->profDeputyCostsHasPrevious = $profDeputyCostsHasPrevious;
 
@@ -214,20 +208,14 @@ trait ReportProfDeputyCostsTrait
         return $this->profDeputyOtherCosts;
     }
 
-    /**
-     * @return $this
-     */
-    public function setProfDeputyOtherCosts($profDeputyOtherCosts)
+    public function setProfDeputyOtherCosts($profDeputyOtherCosts): static
     {
         $this->profDeputyOtherCosts = $profDeputyOtherCosts;
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function addProfDeputyOtherCost(ProfDeputyOtherCost $profDeputyOtherCost)
+    public function addProfDeputyOtherCost(ProfDeputyOtherCost $profDeputyOtherCost): static
     {
         if (!$this->profDeputyOtherCosts->contains($profDeputyOtherCost)) {
             $this->profDeputyOtherCosts->add($profDeputyOtherCost);
@@ -274,10 +262,8 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param mixed $profDeputyInterimCosts
-     *
-     * @return ReportProfDeputyCostsTrait
      */
-    public function setProfDeputyInterimCosts($profDeputyInterimCosts)
+    public function setProfDeputyInterimCosts($profDeputyInterimCosts): static
     {
         $this->profDeputyInterimCosts = $profDeputyInterimCosts;
 
@@ -301,10 +287,8 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param float $profDeputyCostsAmountToScco
-     *
-     * @return ReportProfDeputyCostsTrait
      */
-    public function setProfDeputyCostsAmountToScco($profDeputyCostsAmountToScco)
+    public function setProfDeputyCostsAmountToScco($profDeputyCostsAmountToScco): static
     {
         $this->profDeputyCostsAmountToScco = $profDeputyCostsAmountToScco;
 
@@ -313,10 +297,8 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param string $profDeputyCostsReasonBeyondEstimate
-     *
-     * @return ReportProfDeputyCostsTrait
      */
-    public function setProfDeputyCostsReasonBeyondEstimate($profDeputyCostsReasonBeyondEstimate)
+    public function setProfDeputyCostsReasonBeyondEstimate($profDeputyCostsReasonBeyondEstimate): static
     {
         $this->profDeputyCostsReasonBeyondEstimate = $profDeputyCostsReasonBeyondEstimate;
 
@@ -341,10 +323,8 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @param float $profDeputyFixedCost
-     *
-     * @return ReportProfDeputyCostsTrait
      */
-    public function setProfDeputyFixedCost($profDeputyFixedCost)
+    public function setProfDeputyFixedCost($profDeputyFixedCost): static
     {
         $this->profDeputyFixedCost = $profDeputyFixedCost;
 

@@ -17,7 +17,7 @@ class DocumentRepository extends ServiceEntityRepository
         parent::__construct($registry, Document::class);
     }
 
-    public function getQueuedDocumentsAndSetToInProgress(string $limit)
+    public function getQueuedDocumentsAndSetToInProgress(int $limit)
     {
         $queuedDocumentsQuery = "
         SELECT d.id as document_id,
