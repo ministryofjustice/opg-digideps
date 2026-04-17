@@ -13,12 +13,10 @@ use PHPUnit\Framework\TestCase;
 class ReportTypeTest extends TestCase
 {
     #[Test]
-    public function unexpectedReportTypeHasCorrectFallback()
+    public function unexpectedReportTypeReturnsNull()
     {
         $reportType = ReportType::tryFrom('107-01');
-
-        $this->assertInstanceOf(ReportType::class, $reportType);
-        $this->assertEquals('102', (string) $reportType);
+        $this->assertNull($reportType);
     }
 
     #[DataProvider('layReportTypeProvider')]

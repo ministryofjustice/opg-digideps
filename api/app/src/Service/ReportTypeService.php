@@ -14,6 +14,10 @@ class ReportTypeService
      */
     public static function determineReportType(array $courtOrders): ?ReportType
     {
+        if (count($courtOrders) === 0) {
+            return null;
+        }
+
         $reportTypes = array_unique(
             array_map(function (CourtOrder $courtOrder) {
                 return $courtOrder->getDesiredReportType();
