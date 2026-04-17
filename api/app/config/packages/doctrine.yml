@@ -47,12 +47,6 @@ doctrine:
                     softdeleteable:
                         class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
                         enabled: true
-                metadata_cache_driver:
-                    type: pool
-                    pool: doctrine.system_cache_pool
-                query_cache_driver:
-                    type: pool
-                    pool: doctrine.system_cache_pool
             # separate entity manager for use during ingest, to prevent transactions interfering with queries
             ingestwriter:
                 connection: ingestwriter
@@ -66,9 +60,3 @@ doctrine:
                     softdeleteable:
                         class: Gedmo\SoftDeleteable\Filter\SoftDeleteableFilter
                         enabled: true
-                metadata_cache_driver:
-                    type: pool
-                    pool: doctrine.system_cache_pool
-                query_cache_driver:
-                    type: pool
-                    pool: doctrine.system_cache_pool
