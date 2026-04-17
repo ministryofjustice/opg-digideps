@@ -30,7 +30,7 @@ class SatisfactionPerformanceStatsCommand extends Command
     {
         try {
             $statsStartDate = new \DateTime('FIRST DAY OF PREVIOUS MONTH');
-            $statsEndDate = new \DateTime('FIRST DAY OF THIS MONTH')->sub(new \DateInterval('PT1S'));
+            $statsEndDate = (new \DateTime('FIRST DAY OF THIS MONTH'))->sub(new \DateInterval('PT1S'));
             $satisfactionScores = $this->satisfactionRepository->getSatisfactionDataForPeriod($statsStartDate, $statsEndDate);
 
             if (empty($satisfactionScores)) {
@@ -50,7 +50,7 @@ class SatisfactionPerformanceStatsCommand extends Command
             return 0;
         } catch (\Exception $e) {
             $output->writeln('satisfaction_performance_stats - failure - Failed to extract the satisfaction scores for Digideps');
-            $output->writeln($e);
+            $output->writeln($e->getMessage());
 
             return 1;
         }
