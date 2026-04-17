@@ -62,9 +62,9 @@ class ReportSubmissionSummaryTransformer
     /**
      * @return string
      */
-    private function getCaseNumber(ReportInterface $report)
+    private function getCaseNumber(?ReportInterface $report)
     {
-        return $report->getClient()->getCaseNumber();
+        return $report?->getClient()->getCaseNumber() ?? '';
     }
 
     /**

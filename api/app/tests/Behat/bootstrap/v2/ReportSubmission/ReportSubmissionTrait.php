@@ -4,15 +4,20 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\ReportSubmission;
 
+use App\Entity\Client;
+use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
+use App\Entity\User;
 use App\Service\ParameterStoreService;
 use App\Tests\Behat\BehatException;
 
 trait ReportSubmissionTrait
 {
     private array $documentFileNames = [];
+
+    private string $reportSubmissionStandardAndNdr_CaseNumber;
 
     /**
      * @Then I should see the case number of the user I'm interacting with
@@ -420,5 +425,63 @@ trait ReportSubmissionTrait
         $this->em->flush();
 
         $this->iSubmitCurrentOrPreviousTheReport('current');
+    }
+
+    /**
+     * @Given /^a deputy has submitted one standard report and one NDR report for the same client$/
+     */
+    public function aDeputyHasSubmittedAStandardReportAndNdrForSameClient(): void
+    {
+        // this creates a standard report
+        $userDetails = $this->createLayCombinedHighSubmitted(null, $this->testRunId);
+
+        // because we've removed a lot of NDR stuff, we have to manually construct an NDR here
+        // TODO remove when NDR entities are removed
+        $client = $this->em->getRepository(Client::class)->find($userDetails->getClientId());
+        $user = $this->em->getRepository(User::class)->find($userDetails->getUserId());
+
+        $ndr = new Ndr($client);
+        $submission = new ReportSubmission($ndr, $user);
+
+        // only submissions with a document are included in the report submissions tabs
+        $ndrPdf = new Document($ndr);
+        $ndrPdf->setFileName('ndr.pdf');
+        $ndrPdf->setStorageReference('dd_doc_2356_92838573');
+        $ndrPdf->setIsReportPdf(true);
+        $ndrPdf->setCreatedOn(new \DateTime());
+        $ndrPdf->setCreatedBy($user);
+        $ndrPdf->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
+        $ndrPdf->setReportSubmission($submission);
+
+        $this->em->persist($ndrPdf);
+        $this->em->persist($ndr);
+        $this->em->persist($submission);
+        $this->em->flush();
+
+        $this->reportSubmissionStandardAndNdr_CaseNumber = $userDetails->getClientCaseNumber();
+    }
+
+    /**
+     * @When /^I search for submissions using the case number of the deputy who has submitted one standard report and one NDR report for the same client$/
+     */
+    public function iSearchForSubmissionsUsingTheCaseNumber()
+    {
+        $this->fillInField('q', $this->reportSubmissionStandardAndNdr_CaseNumber);
+        $this->pressButton('Search');
+        $this->clickLink('Pending');
+    }
+
+    /**
+     * @Then /^I should only see a row for the standard report in the Pending tab$/
+     */
+    public function iShouldOnlySeeARowForTheStandardReportInThePendingTab(): void
+    {
+        $rows = $this->getSession()->getPage()->findAll('css', 'tr.behat-region-report-submission');
+
+        $this->assertIntEqualsInt(
+            1,
+            count($rows),
+            sprintf('Expected to see single standard report row, but found %s rows', count($rows))
+        );
     }
 }
