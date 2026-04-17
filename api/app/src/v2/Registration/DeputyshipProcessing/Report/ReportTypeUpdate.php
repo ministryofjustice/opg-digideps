@@ -76,6 +76,7 @@ class ReportTypeUpdate
             /** @var CourtOrder[] $courtOrders */
             $courtOrders = $report->getCourtOrders()->toArray();
 
+            /** @var ReportType $currentReportType */
             $currentReportType = ReportType::tryFrom($report->getType());
             $possibleReportType = ReportTypeService::determineReportType($courtOrders);
 
