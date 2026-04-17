@@ -76,7 +76,6 @@ class ReportTypeUpdate
             /** @var CourtOrder[] $courtOrders */
             $courtOrders = $report->getCourtOrders()->toArray();
 
-            /** @var ReportType $currentReportType */
             $currentReportType = ReportType::tryFrom($report->getType());
             $possibleReportType = ReportTypeService::determineReportType($courtOrders);
 
@@ -90,7 +89,7 @@ class ReportTypeUpdate
             }
 
             if (
-                $currentReportType->courtOrderKind === CourtOrderKind::Hybrid ||
+                $currentReportType !== null && $currentReportType->courtOrderKind === CourtOrderKind::Hybrid ||
                 $possibleReportType->courtOrderKind === CourtOrderKind::Hybrid
             ) {
                 $errors[] = 'Possible dangerous change to or from Hybrid on report: ' . $report->getId();
