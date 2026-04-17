@@ -12,15 +12,12 @@ use App\Entity\Traits\CreateUpdateTimestamps;
 use App\Entity\User;
 use App\Service\ReportService;
 use App\Service\ReportStatusService;
-use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\PersistentCollection;
 use JMS\Serializer\Annotation as JMS;
-use phpDocumentor\Reflection\Types\This;
-use Ramsey\Collection\CollectionInterface;
 
 /**
  * Reports.

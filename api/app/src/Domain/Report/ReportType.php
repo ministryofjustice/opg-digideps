@@ -40,10 +40,13 @@ final readonly class ReportType implements \Stringable
         return implode('-', $parts);
     }
 
-    public static function tryFrom(string $value): ReportType
+    public static function tryFrom(string $value): ?ReportType
     {
-        $courtOrderReportType = CourtOrderReportType::tryFrom('OPG' . substr($value, 0, 3)) ??
-            CourtOrderReportType::OPG102;
+        $courtOrderReportType = CourtOrderReportType::tryFrom('OPG' . substr($value, 0, 3));
+
+        if ($courtOrderReportType === null) {
+            return null;
+        }
 
         $courtOrderType = match ($courtOrderReportType) {
             CourtOrderReportType::OPG102, CourtOrderReportType::OPG103 => CourtOrderType::PFA,

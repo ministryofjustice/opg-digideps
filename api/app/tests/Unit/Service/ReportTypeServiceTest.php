@@ -18,7 +18,7 @@ use TypeError;
 class ReportTypeServiceTest extends TestCase
 {
     #[Test]
-    public function determineReportTypeReturnsNull(): void
+    public function determineReportTypeReturnsNullWhenPassedMultipleReportTypes(): void
     {
         $reportType1 = new ReportType(
             CourtOrderReportType::OPG102,
@@ -74,5 +74,13 @@ class ReportTypeServiceTest extends TestCase
         } catch (\TypeError $e) {
             $this->assertInstanceOf(TypeError::class, $e);
         }
+    }
+
+    #[Test]
+    public function determineReportTypePassedEmptyArray(): void
+    {
+        $sut = ReportTypeService::determineReportType([]);
+
+        $this->assertNull($sut);
     }
 }
