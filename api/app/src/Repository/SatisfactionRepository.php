@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Satisfaction;
@@ -20,19 +22,18 @@ class SatisfactionRepository extends ServiceEntityRepository
         $entityManager = $this->getEntityManager();
         $query = $entityManager->createQuery(
             'SELECT s.id, s.score, s.comments, s.deputyrole, s.reporttype, s.created
-             FROM App:Satisfaction s
+             FROM App\Entity\Satisfaction s
              WHERE (s.report IS NOT NULL OR s.ndr IS NOT NULL)
              AND s.created > :fromDate
              AND s.created < :toDate'
-        )
-            ->setParameters(['fromDate' => $fromDate, 'toDate' => $toDate]);
+        )->setParameters(['fromDate' => $fromDate, 'toDate' => $toDate]);
 
         return $query->getResult();
     }
 
     public function getSatisfactionDataForPeriod(\DateTime $statsStartDate, \DateTime $statsEndDate): array
     {
-        $satisfactionScoresQuery = "
+        $satisfactionScoresQuery = '
             SELECT
                 count(CASE WHEN score = 1 THEN 1 END) AS very_dissatisfied,
                 count(CASE WHEN score = 2 THEN 1 END) AS dissatisfied,
@@ -43,7 +44,7 @@ class SatisfactionRepository extends ServiceEntityRepository
             WHERE (report_id IS NOT NULL OR ndr_id IS NOT NULL)
             AND created_at >= :fromDate
             AND created_at <= :toDate
-        ";
+        ';
 
         $conn = $this->getEntityManager()->getConnection();
         $statsStmt = $conn->prepare($satisfactionScoresQuery);
