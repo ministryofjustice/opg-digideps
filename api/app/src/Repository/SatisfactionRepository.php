@@ -56,6 +56,7 @@ class SatisfactionRepository extends ServiceEntityRepository
             return [];
         }
 
+        /** @var array<string, int> $satisfactionScoresResults */
         $satisfactionScoresResults = $result[0];
 
         // calculate percentage from satisfied and very satisfied counts
@@ -75,7 +76,7 @@ class SatisfactionRepository extends ServiceEntityRepository
                 '_timestamp' => $statsStartDateStr . 'T00:00:00+00:00',
                 'service' => 'deputy-reporting',
                 'channel' => 'digital',
-                'count' => intval($satisfactionScoreRow),
+                'count' => (int) $satisfactionScoreRow,
                 'dataType' => str_replace('_', '-', $satisfactionScoreKey),
                 'period' => 'month',
             ];
