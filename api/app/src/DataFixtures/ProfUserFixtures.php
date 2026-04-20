@@ -235,7 +235,6 @@ class ProfUserFixtures extends AbstractDataFixture
             ->setEmail($userData['id'] . '-' . $iteration . $userData['email'])
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
-            ->setNdrEnabled(false)
             ->setPhoneMain('07911111111111')
             ->setAddress1('ABC Road')
             ->setAddressPostcode('AB1 2CD')
