@@ -90,8 +90,6 @@ class UserRegistrationService
             $user->setIsPrimary(true);
         }
 
-        $user->setNdrEnabled(true === $preregMatches[0]->getNdr());
-
         $this->saveUserAndClient($user, $client);
 
         return $user;
