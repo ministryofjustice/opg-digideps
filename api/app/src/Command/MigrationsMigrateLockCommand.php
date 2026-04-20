@@ -91,7 +91,7 @@ class MigrationsMigrateLockCommand extends Command
 
     private function getRedis(): Client
     {
-        return $this->getService('snc_redis.default');
+        return $this->getService('predis');
     }
 
     private function getService(string $id): mixed
