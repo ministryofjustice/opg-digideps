@@ -80,7 +80,7 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
             'orderMadeDate' => '2025-06-10',
             'clientId' => $client->getId(),
             'courtOrderKind' => CourtOrderKind::Single->value,
-            'courtOrderReportType' => CourtOrderReportType::OPG102->value,
+            'reportType' => CourtOrderReportType::OPG102->value,
         ];
         $candidatesGroup->insertOthers = [
             [
