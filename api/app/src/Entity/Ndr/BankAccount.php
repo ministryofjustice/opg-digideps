@@ -12,8 +12,6 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(name="odr_account")
  *
- * @ORM\Entity(repositoryClass="App\Repository\NdrBankAccountRepository")
- *
  * @ORM\HasLifecycleCallbacks()
  */
 class BankAccount implements BankAccountInterface
