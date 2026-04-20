@@ -81,7 +81,6 @@ class TestUserFixtures extends AbstractDataFixture
             ->setEmail($data['id'] . '@example.org')
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
-            ->setNdrEnabled(false)
             ->setPhoneMain('07911111111111')
             ->setAddress1('Victoria Road')
             ->setAddressPostcode('SW1')
