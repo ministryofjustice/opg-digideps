@@ -26,6 +26,6 @@ class ClientsQuery extends Query
             END deputyType,
             r.type reportType
         FROM client c
-        LEFT JOIN (SELECT client_id, type FROM report r UNION SELECT client_id, 'ndr' FROM odr o) r ON r.client_id = c.id";
+        LEFT JOIN (SELECT client_id, type FROM report r) r ON r.client_id = c.id";
     }
 }

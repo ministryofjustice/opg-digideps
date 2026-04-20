@@ -23,10 +23,7 @@ class ReportsSubmittedQuery extends Query
                 WHEN u.role_name LIKE '%_PA_%' THEN 'pa'
                 ELSE 'lay'
             END deputyType,
-            CASE
-                WHEN rs.ndr_id IS NOT NULL THEN 'ndr'
-                ELSE r.type
-            END reportType
+            r.type AS reportType
         FROM report_submission rs
         INNER JOIN dd_user u ON u.id = rs.created_by
         LEFT JOIN report r ON r.id = rs.report_id";
