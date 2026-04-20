@@ -83,7 +83,7 @@ class ProfDeputyPrevCostController extends RestController
     public function deleteProfDeputyPreviousCost(int $id): array
     {
         $cost = $this->findEntityBy(ProfDeputyPreviousCost::class, $id, 'Prof Service fee not found');
-        $report = $cost->getReport(); /* @var $report \App\Entity\Report\Report */
+        $report = $cost->getReport(); /* @var $report Report */
         $this->denyAccessIfReportDoesNotBelongToUser($cost->getReport());
 
         $this->em->remove($cost);

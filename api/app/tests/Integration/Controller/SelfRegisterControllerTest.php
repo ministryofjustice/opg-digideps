@@ -320,7 +320,6 @@ class SelfRegisterControllerTest extends AbstractTestController
                     'updated_at' => null,
                     'order_date' => '2010-03-30T00:00:00+01:00',
                     'is_co_deputy' => null,
-                    'ndr' => null, // TODO Remove NDR reference once entity has been removed.
                     'hybrid' => null,
                     'created_at' => $now->format('c'),
                 ],
@@ -399,7 +398,6 @@ class SelfRegisterControllerTest extends AbstractTestController
                     'updated_at' => null,
                     'order_date' => '2010-03-30T00:00:00+01:00',
                     'is_co_deputy' => null,
-                    'ndr' => null, // TODO Remove NDR reference once entity has been removed.
                     'hybrid' => null,
                     'created_at' => $now->format('c'),
                 ],
@@ -478,7 +476,6 @@ class SelfRegisterControllerTest extends AbstractTestController
                     'updated_at' => null,
                     'order_date' => '2010-03-30T00:00:00+01:00',
                     'is_co_deputy' => null,
-                    'ndr' => null, // TODO Remove NDR reference once entity has been removed.
                     'hybrid' => null,
                     'created_at' => $now->format('c'),
                 ],
@@ -557,7 +554,6 @@ class SelfRegisterControllerTest extends AbstractTestController
                     'updated_at' => null,
                     'order_date' => '2010-03-30T00:00:00+01:00',
                     'is_co_deputy' => null,
-                    'ndr' => null,
                     'hybrid' => null,
                     'created_at' => $now->format('c'),
                 ],

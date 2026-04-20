@@ -9,7 +9,6 @@ use App\Domain\Deputy\DeputyType;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
-use App\Entity\Ndr\Ndr;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\User;
@@ -319,21 +318,6 @@ class FixtureController extends AbstractController
         $this->em->persist($user);
 
         return $user;
-    }
-
-    private function createNdr(array $fromRequest, Client $client): void
-    {
-        $ndr = new Ndr($client);
-        $client->setNdr($ndr);
-
-        $this->em->persist($ndr);
-        $this->em->persist($client);
-
-        if (isset($fromRequest['reportStatus']) && Report::STATUS_READY_TO_SUBMIT === $fromRequest['reportStatus']) {
-            foreach (['visits_care', 'expenses', 'income_benefits', 'bank_accounts', 'assets', 'debts', 'actions', 'other_info', 'client_benefits_check'] as $section) {
-                $this->reportSection->completeSection($ndr, $section);
-            }
-        }
     }
 
     /**

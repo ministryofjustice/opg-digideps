@@ -267,7 +267,7 @@ AND is_report_pdf=false";
 
     private function groupSubmissionsByReportId(array $reportSubmissions)
     {
-        $groupedReportSubmissions = ['reports' => [], 'ndrs' => []];
+        $groupedReportSubmissions = ['reports' => []];
 
         foreach ($reportSubmissions as $row) {
             if (!is_null($row['report_id'])) {

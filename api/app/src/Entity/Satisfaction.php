@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\UserResearch\UserResearchResponse;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
@@ -95,13 +93,6 @@ class Satisfaction
     #[JMS\Type('App\Entity\Report\Report')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
     private ?Report $report = null;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Ndr\Ndr", inversedBy="satisfaction", cascade={"persist"})
-     */
-    #[JMS\Type('App\Entity\Ndr\Ndr')]
-    #[JMS\Groups(['user-research', 'satisfaction'])]
-    private ?Ndr $ndr = null;
 
     public function getId(): int
     {
@@ -204,21 +195,6 @@ class Satisfaction
     public function setReport(?Report $report): Satisfaction
     {
         $this->report = $report;
-
-        return $this;
-    }
-
-    /**
-     * @return Ndr
-     */
-    public function getNdr(): ?Ndr
-    {
-        return $this->ndr;
-    }
-
-    public function setNdr(?Ndr $ndr): Satisfaction
-    {
-        $this->ndr = $ndr;
 
         return $this;
     }

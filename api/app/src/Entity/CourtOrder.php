@@ -98,7 +98,7 @@ class CourtOrder
     /**
      * @see CourtOrderKind
      *
-     * @ORM\Column(name="order_kind", type="string", length=6, nullable=false, options={"default" = "single"})
+     * @ORM\Column(name="order_kind", type="string", length=6, nullable=false)
      */
     private string $orderKind;
 

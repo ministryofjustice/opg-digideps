@@ -2,11 +2,9 @@
 
 namespace App\Entity\Report;
 
-use App\Entity\Ndr\Ndr;
 use App\Entity\SynchronisableInterface;
 use App\Entity\SynchronisableTrait;
 use App\Entity\Traits\CreationAudit;
-use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -93,19 +91,6 @@ class Document implements SynchronisableInterface
     private $report;
 
     /**
-     * @var Ndr
-     *
-     * @JMS\Groups({"document-report"})
-     *
-     * @JMS\Type("App\Entity\Ndr\Ndr")
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr")
-     *
-     * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="CASCADE")
-     */
-    private $ndr;
-
-    /**
      * @var ReportSubmission
      *
      * @JMS\Type("App\Entity\Report\ReportSubmission")
@@ -137,11 +122,9 @@ class Document implements SynchronisableInterface
      */
     public function __construct($report)
     {
-        // TODO create ReportInterface class and use as type hinting
+        // TODO create Report class and use as type hinting
         if ($report instanceof Report) {
             $this->report = $report;
-        } elseif ($report instanceof Ndr) {
-            $this->ndr = $report;
         }
         $this->isReportPdf = true;
     }
@@ -212,14 +195,6 @@ class Document implements SynchronisableInterface
     public function getReport()
     {
         return $this->report;
-    }
-
-    /**
-     * @return Ndr
-     */
-    public function getNdr()
-    {
-        return $this->ndr;
     }
 
     /**

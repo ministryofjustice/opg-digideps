@@ -119,7 +119,7 @@ class ReportSubmissionController extends RestController
             throw new UnauthorisedException('client secret not accepted.');
         }
 
-        /* @var $reportSubmission \App\Entity\Report\ReportSubmission */
+        /* @var $reportSubmission ReportSubmission */
         $reportSubmission = $this->findEntityBy(ReportSubmission::class, $reportSubmissionId);
 
         $data = $this->formatter->deserializeBodyContent($request);
@@ -165,7 +165,7 @@ class ReportSubmissionController extends RestController
             throw new RuntimeException(__METHOD__ . ' only accessible from ADMIN container.', 403);
         }
 
-        /* @var $reportSubmission \App\Entity\Report\ReportSubmission */
+        /* @var $reportSubmission ReportSubmission */
         $reportSubmission = $this->em->getRepository(ReportSubmission::class)->find($id);
         $reportSubmission->setDownloadable(false);
         foreach ($reportSubmission->getDocuments() as $document) {

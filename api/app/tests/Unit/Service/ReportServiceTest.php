@@ -46,12 +46,10 @@ final class ReportServiceTest extends TestCase
     private AssetProperty $asset1;
     private Report $report;
     private Document $document1;
-    private Ndr $ndr;
     private EntityRepository|MockInterface $casrecRepo;
     private MockInterface $assetRepo;
     private MockInterface $bankAccount;
     private MockInterface|EntityManager $em;
-    private Document $mockNdrDocument;
     private LoggerInterface&MockObject $mockLogger;
     private ReportFactory&MockObject $mockReportFactory;
     private PreRegistrationRepository|MockInterface $mockPreRegistrationRepository;
@@ -78,7 +76,6 @@ final class ReportServiceTest extends TestCase
 
         $this->document1 = (new Document($this->report))->setFileName('file1.pdf');
         $this->report->addDocument($this->document1);
-        $this->ndr = new Ndr($client);
 
         // mock em
         $this->casrecRepo = m::mock(EntityRepository::class);
@@ -86,7 +83,6 @@ final class ReportServiceTest extends TestCase
         $this->bankAccount = m::mock();
 
         $this->em = m::mock(EntityManager::class);
-        $this->mockNdrDocument = (new Document($this->ndr))->setFileName('NdrRep-file2.pdf')->setId(999);
 
         $this->em->shouldReceive('getRepository')->andReturnUsing(function ($arg) {
             switch ($arg) {
@@ -201,45 +197,6 @@ final class ReportServiceTest extends TestCase
 
         // assert new year report
         $this->assertEquals($newYearReport, $nextReport);
-    }
-
-    public function testSubmitNotAgreedNdrThrowsException(): void
-    {
-        $this->expectException(RuntimeException::class);
-
-        $this->ndr->setAgreedBehalfDeputy(null);
-        $submitDate = new DateTime('2018-04-05');
-
-        $ndrDoccumentId = '999';
-
-        $this->sut->submit($this->ndr, $this->user, $submitDate, $ndrDoccumentId);
-    }
-
-    private function getFilledInNdr(): Ndr
-    {
-        $client = new Client();
-        $client->addUser($this->user);
-        $client->setCaseNumber('12345678');
-        $client->setCourtDate(new DateTime('2014-06-06'));
-
-        $ndr = new Ndr($client);
-
-        $ndrBank = new NdrBankAccount();
-        $ndrBank->setAccountNumber('4321')
-            ->setNdr($ndr);
-
-        $ndrAsset = new NdrAssetProperty();
-        $ndrAsset->setAddress('SW1')
-            ->setOwned(AssetProperty::OWNED_FULLY)
-            ->setNdr($ndr);
-
-        $ndr->setNoAssetToAdd(false);
-        $ndr->addAsset($ndrAsset);
-        $ndr->setBankAccounts([$ndrBank]);
-        $ndr->setAgreedBehalfDeputy(true);
-        $ndr->setClient($client);
-
-        return $ndr;
     }
 
     #[DoesNotPerformAssertions]

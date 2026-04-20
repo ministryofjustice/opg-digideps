@@ -15,12 +15,8 @@ class ClientAssembler
 {
     use DtoPropertySetterTrait;
 
-    /**
-     * ClientAssembler constructor.
-     */
     public function __construct(
         private readonly ReportAssemblerInterface $reportDtoAssembler,
-        private readonly NdrAssembler $ndrDtoAssembler,
         private readonly DeputyAssembler $deputyAssembler
     ) {
     }
@@ -32,12 +28,8 @@ class ClientAssembler
     {
         $dto = new ClientDto();
 
-        $exclude = ['ndr', 'reports', 'deputy'];
+        $exclude = ['reports', 'deputy'];
         $this->setPropertiesFromData($dto, $data, $exclude);
-
-        if (isset($data['ndr']) && is_array($data['ndr'])) {
-            $dto->setNdr($this->assembleClientNdr($data['ndr']));
-        }
 
         if (isset($data['reports']) && is_array($data['reports'])) {
             $dto->setReports($this->assembleClientReports($data['reports']));
@@ -87,11 +79,6 @@ class ClientAssembler
         }
 
         return $dtos;
-    }
-
-    private function assembleClientNdr(array $ndr)
-    {
-        return $this->ndrDtoAssembler->assembleFromArray($ndr);
     }
 
     private function assembleClientDeputy(array $deputy)

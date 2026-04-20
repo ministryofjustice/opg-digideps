@@ -13,7 +13,6 @@ use App\Entity\Report\BankAccount as ReportBankAccount;
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
-use App\Entity\ReportInterface;
 use App\Entity\User;
 use App\Factory\ReportFactory;
 use App\Repository\PreRegistrationRepository;
@@ -40,7 +39,7 @@ class ReportService
      *
      * @throws \Exception
      */
-    public function submit(ReportInterface $currentReport, User $user, \DateTime $submitDate): ?Report
+    public function submit(Report $currentReport, User $user, \DateTime $submitDate): ?Report
     {
         if (!$currentReport->getAgreedBehalfDeputy()) {
             throw new \RuntimeException('Report must be agreed for submission');
@@ -53,13 +52,12 @@ class ReportService
 
         // create submission record with NEW documents (= documents not yet attached to a submission)
         $submission = new ReportSubmission($currentReport, $user);
-        if ($currentReport instanceof Report) {
-            foreach ($currentReport->getDocuments() as $document) {
-                if (!$document->getReportSubmission()) {
-                    $document->setReportSubmission($submission);
-                    $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
-                    $document->setSynchronisedBy($user);
-                }
+
+        foreach ($currentReport->getDocuments() as $document) {
+            if (!$document->getReportSubmission()) {
+                $document->setReportSubmission($submission);
+                $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
+                $document->setSynchronisedBy($user);
             }
         }
 
@@ -73,8 +71,10 @@ class ReportService
         // Set user to active once they have submitted a report
         $user->setActive(true);
 
+        $newYearReport = null;
+
         if ($currentReport instanceof Report && $currentReport->getUnSubmitDate()) {
-            $this->logger->warning("Creating next year report for client $clientId existing unsubmitted report at $now");
+            $this->logger->warning("Creating next year report for client $clientId (existing unsubmitted report) at $now");
 
             // unsubmitted report
             $currentReport->setUnSubmitDate(null);
@@ -142,7 +142,7 @@ class ReportService
     /**
      * @return bool
      */
-    private function checkAssetExists(ReportInterface $toReport, AssetInterface $asset)
+    private function checkAssetExists(Report $toReport, AssetInterface $asset)
     {
         $toAssets = $toReport->getAssets();
 
@@ -198,7 +198,7 @@ class ReportService
     /**
      * @return bool
      */
-    private function checkBankAccountExists(ReportInterface $toReport, BankAccountInterface $account)
+    private function checkBankAccountExists(Report $toReport, BankAccountInterface $account)
     {
         foreach ($toReport->getBankAccounts() as $toAccount) {
             if (
@@ -216,7 +216,7 @@ class ReportService
     }
 
     /**
-     * Clones instance of ReportInterface and returns new Report Bank Account.
+     * Clones instance of Report and returns new Report Bank Account.
      *
      * @return ReportBankAccount
      */
@@ -241,18 +241,13 @@ class ReportService
      *
      * @throws \Exception
      */
-    private function createNextYearReport(ReportInterface $oldReport)
+    private function createNextYearReport(Report $oldReport)
     {
         if (!$oldReport->getSubmitted()) {
             throw new \RuntimeException("Can't create a new year report based on an unsubmitted report");
         }
 
         $client = $oldReport->getClient();
-
-        if (!($oldReport instanceof Report)) {
-            throw new \RuntimeException('createNextYearReport() only supports Report');
-        }
-
         $startDate = clone $oldReport->getEndDate();
         $newReportType = $oldReport->getType();
         $startDate->modify('+1 day');

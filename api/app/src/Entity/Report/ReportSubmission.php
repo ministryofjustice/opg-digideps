@@ -2,8 +2,6 @@
 
 namespace App\Entity\Report;
 
-use App\Entity\Ndr\Ndr;
-use App\Entity\ReportInterface;
 use App\Entity\Traits\CreationAudit;
 use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -45,8 +43,6 @@ class ReportSubmission
     private $id;
 
     /**
-     * @var ?Report
-     *
      * @JMS\Type("App\Entity\Report\Report")
      *
      * @JMS\Groups({"report-submission"})
@@ -55,20 +51,7 @@ class ReportSubmission
      *
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $report;
-
-    /**
-     * @var ?Ndr
-     *
-     * @JMS\Type("App\Entity\Ndr\Ndr")
-     *
-     * @JMS\Groups({"report-submission"})
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr")
-     *
-     * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="CASCADE")
-     */
-    private $ndr;
+    private ?Report $report;
 
     /**
      * @var ArrayCollection<int, Document>
@@ -134,34 +117,21 @@ class ReportSubmission
     /**
      * ReportSubmission constructor.
      */
-    public function __construct(ReportInterface $report, User $createdBy)
+    public function __construct(Report $report, User $createdBy)
     {
-        if ($report instanceof Report) {
-            $this->report = $report;
-            $this->report->addReportSubmission($this); // double-link for UNIT test purposes
-        } elseif ($report instanceof Ndr) {
-            $this->ndr = $report;
-        }
-
+        $this->report = $report;
+        $this->report->addReportSubmission($this); // double-link for UNIT test purposes
         $this->documents = new ArrayCollection();
         $this->createdBy = $createdBy;
         $this->downloadable = true;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return ReportSubmission
-     */
-    public function setId($id)
+    public function setId(int $id): ReportSubmission
     {
         $this->id = $id;
 
@@ -173,15 +143,7 @@ class ReportSubmission
         return $this->report;
     }
 
-    public function getNdr(): ?Ndr
-    {
-        return $this->ndr;
-    }
-
-    /**
-     * @return ReportSubmission
-     */
-    public function setReport(Report $report)
+    public function setReport(Report $report): ReportSubmission
     {
         $this->report = $report;
 
@@ -196,10 +158,7 @@ class ReportSubmission
         return $this->documents;
     }
 
-    /**
-     * @return $this
-     */
-    public function addDocument(Document $document)
+    public function addDocument(Document $document): ReportSubmission
     {
         if (!$this->documents->contains($document)) {
             $this->documents->add($document);
