@@ -118,12 +118,15 @@ class FixtureController extends AbstractController
         /** @var Organisation $organisation */
         $organisation = $this->organisationRepository->findByEmailIdentifier($fromRequest['deputyEmail']);
 
-        foreach (range(1, $fromRequest['orgSizeClients']) as $ignored) {
+        foreach (range(1, $fromRequest['orgSizeClients']) as $number) {
             $orgClient = $this->clientFactory->createGenericOrgClient($deputy, $organisation, $fromRequest['courtDate']);
             $this->em->persist($orgClient);
 
             $report = $this->generateReport($fromRequest, $orgClient);
             $this->em->persist($report);
+            if ($number % 10 === 0) {
+                $this->em->flush();
+            }
         }
 
         $this->em->flush();
@@ -417,8 +420,13 @@ class FixtureController extends AbstractController
                 $orgUser = $this->userFactory->createGenericOrgUser($organisation, $number);
                 $organisation->addUser($orgUser);
                 $this->em->persist($orgUser);
+                if ($number % 10 === 0) {
+                    $this->em->flush();
+                }
             }
         }
+
+        $this->em->flush();
 
         if (!$this->deputyRepository->findOneBy(['email1' => $deputy->getEmail()])) {
             $deputy = $this->buildDeputy($deputy, $fromRequest);
@@ -429,6 +437,7 @@ class FixtureController extends AbstractController
 
         $this->em->persist($client);
         $this->em->persist($organisation);
+        $this->em->flush();
     }
 
     private function buildDeputy(User $deputy, array $fromRequest): Deputy
