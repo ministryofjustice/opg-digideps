@@ -44,7 +44,7 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
         $authTokenKey = $request->headers->get(self::HEADER_NAME);
 
         if (null === $authTokenKey) {
-            $this->verboseLogger->warning(sprintf('Auth token not found request header'));
+            $this->verboseLogger->warning('Auth token not found in request header');
             throw new UserNotFoundException('User not found');
         }
 
