@@ -80,6 +80,11 @@
       "matchUpdateTypes": ["minor", "patch"],
       "labels": ["dependencies", "golang"],
       "schedule": ["before 9am on Monday"]
+    },
+    {
+      "matchManagers": ["composer"],
+      "matchPackageNames": ["php"],
+      "enabled": false
     }
   ]
 }
