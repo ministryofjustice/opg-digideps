@@ -11,8 +11,6 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(name="odr_asset")
  *
- * @ORM\Entity(repositoryClass="App\Repository\NdrAssetRepository")
- *
  * @ORM\InheritanceType("SINGLE_TABLE")
  *
  * @ORM\DiscriminatorColumn(name="type", type="string")
