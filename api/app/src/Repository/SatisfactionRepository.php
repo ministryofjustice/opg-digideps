@@ -16,18 +16,19 @@ class SatisfactionRepository extends ServiceEntityRepository
     /**
      * @return array
      */
-    public function findAllSatisfactionSubmissions(
-        ?\DateTime $fromDate = null,
-        ?\DateTime $toDate = null
-    ) {
+    public function findAllSatisfactionSubmissions(?\DateTime $fromDate = null, ?\DateTime $toDate = null)
+    {
         $entityManager = $this->getEntityManager();
-        $query = $entityManager->createQuery(
-            'SELECT s.id, s.score, s.comments, s.deputyrole, s.reporttype, s.created
-             FROM App:Satisfaction s
-             WHERE (s.report IS NOT NULL OR s.ndr IS NOT NULL)
-             AND s.created > :fromDate
-             AND s.created < :toDate'
-        )
+
+        $dql = <<<DQL
+        SELECT s.id, s.score, s.comments, s.deputyrole, s.reporttype, s.created
+        FROM App:Satisfaction s
+        WHERE s.report IS NOT NULL
+        AND s.created > :fromDate
+        AND s.created < :toDate
+        DQL;
+
+        $query = $entityManager->createQuery($dql)
             ->setParameters(['fromDate' => $fromDate, 'toDate' => $toDate]);
 
         return $query->getResult();
