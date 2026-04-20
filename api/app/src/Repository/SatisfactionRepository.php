@@ -20,12 +20,15 @@ class SatisfactionRepository extends ServiceEntityRepository
         ?\DateTime $toDate = null
     ): array {
         $entityManager = $this->getEntityManager();
+
+        $table = Satisfaction::class;
+
         $query = $entityManager->createQuery(
-            'SELECT s.id, s.score, s.comments, s.deputyrole, s.reporttype, s.created
-             FROM App\Entity\Satisfaction s
+            "SELECT s.id, s.score, s.comments, s.deputyrole, s.reporttype, s.created
+             FROM $table s
              WHERE (s.report IS NOT NULL OR s.ndr IS NOT NULL)
              AND s.created > :fromDate
-             AND s.created < :toDate'
+             AND s.created < :toDate"
         )->setParameters(['fromDate' => $fromDate, 'toDate' => $toDate]);
 
         return $query->getResult();
