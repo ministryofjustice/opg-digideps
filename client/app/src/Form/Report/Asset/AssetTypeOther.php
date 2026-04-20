@@ -28,7 +28,9 @@ class AssetTypeOther extends AbstractType
                 ->add('valuationDate', FormTypes\DateType::class, ['widget' => 'text',
                     'input' => 'datetime',
                     'format' => 'dd-MM-yyyy',
-                    'invalid_message' => 'Enter a valid date',])
+                    'invalid_message' => 'Enter a valid date',
+                    'required' => false,
+                ])
                 ->add('addAnother', AddAnotherThingType::class);
 
 
