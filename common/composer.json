@@ -13,7 +13,7 @@
   "require-dev": {
     "dg/bypass-finals": "^1.9",
     "phpstan/phpstan": "^2.1",
-    "phpunit/phpunit": "^13.0.5",
+    "phpunit/phpunit": "^13.1.6",
     "phpstan/phpstan-phpunit": "^2.0"
   },
   "scripts": {
