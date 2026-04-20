@@ -70,7 +70,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this
             ->handleRoleNameFilter($request)
             ->handleAdManagedFilter($request)
-            ->handleNdrEnabledFilter($request)
             ->handleSearchTermFilter($request);
 
         $order_by = $request->get('order_by', 'id');
@@ -109,15 +108,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         if ($request->get('ad_managed')) {
             $this->qb->andWhere('u.adManaged = true');
-        }
-
-        return $this;
-    }
-
-    private function handleNdrEnabledFilter(Request $request): UserRepository
-    {
-        if ($request->get('ndr_enabled')) {
-            $this->qb->andWhere('u.ndrEnabled = true');
         }
 
         return $this;
@@ -190,7 +180,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = <<<sql
+        $sql = <<<SQL
         SELECT u.id
         FROM dd_user u
         LEFT JOIN deputy_case dc ON dc.user_id = u.id
@@ -214,13 +204,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ) AND NOT EXISTS (
             SELECT TRUE FROM report r WHERE r.client_id = c.id
         ) AND NOT EXISTS (
-            SELECT TRUE FROM odr n WHERE n.client_id = c.id
-        ) AND NOT EXISTS (
             SELECT TRUE FROM dd_user du WHERE du.created_by_id = u.id
         ) AND NOT EXISTS (
             SELECT TRUE FROM deputy d WHERE d.user_id = u.id
         )
-        sql;
+        SQL;
 
         $stmt = $conn->prepare($sql);
         $result = $stmt->executeQuery(['role' => $role]);
