@@ -31,17 +31,13 @@ class ReportSubmissionSummaryTransformer
      */
     private function generateDataRow(ReportSubmission $reportSubmission)
     {
-        if (null === $reportSubmission->getReport() && null === $reportSubmission->getNdr()) {
+        if (null === $reportSubmission->getReport()) {
             return null;
         }
 
-        $report = (null !== $reportSubmission->getReport()) ?
-            $reportSubmission->getReport() :
-            $reportSubmission->getNdr();
-
         $data = [];
         $data['id'] = $this->getId($reportSubmission);
-        $data['case_number'] = $this->getCaseNumber($report);
+        $data['case_number'] = $this->getCaseNumber($reportSubmission->getReport());
         $data['date_received'] = $this->getDateReceived($reportSubmission);
         $data['scan_date'] = $this->getScanDate();
         $data['document_id'] = $this->getDocumentId($reportSubmission);
