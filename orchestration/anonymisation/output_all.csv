@@ -185,7 +185,6 @@ public,dd_user,is_primary,boolean,,,NA
 public,dd_user,job_title,character varying,150,,Lorem
 public,dd_user,last_logged_in,timestamp without time zone,,,NA
 public,dd_user,lastname,character varying,100,,LastName
-public,dd_user,odr_enabled,boolean,,,NA
 public,dd_user,password,character varying,100,,Lorem
 public,dd_user,phone_alternative,character varying,20,,PhoneNumber
 public,dd_user,phone_main,character varying,20,,PhoneNumber
@@ -239,7 +238,6 @@ public,document,created_on,timestamp without time zone,,,NA
 public,document,filename,character varying,255,,Lorem
 public,document,id,integer,,PRIMARY KEY,NA
 public,document,is_report_pdf,boolean,,,NA
-public,document,ndr_id,integer,,FOREIGN KEY,NA
 public,document,report_id,integer,,FOREIGN KEY,NA
 public,document,report_submission_id,integer,,FOREIGN KEY,NA
 public,document,storage_reference,character varying,512,,NA
@@ -317,110 +315,6 @@ public,note,id,integer,,PRIMARY KEY,NA
 public,note,last_modified_by,integer,,FOREIGN KEY,NA
 public,note,last_modified_on,timestamp without time zone,,,NA
 public,note,title,character varying,150,,Lorem
-public,odr,action_give_gifts_to_client,character varying,3,,NA
-public,odr,action_give_gifts_to_client_details,text,,,Lorem
-public,odr,action_more_info,character varying,3,,NA
-public,odr,action_more_info_details,text,,,Lorem
-public,odr,action_property_buy,character varying,3,,NA
-public,odr,action_property_maintenance,character varying,3,,NA
-public,odr,action_property_selling_rent,character varying,3,,NA
-public,odr,agreed_behalf_deputy,character varying,50,,Lorem
-public,odr,agreed_behalf_deputy_explanation,text,,,Lorem
-public,odr,client_id,integer,,FOREIGN KEY,NA
-public,odr,debt_management,text,,,Lorem
-public,odr,expect_compensation_damages,text,,,Lorem
-public,odr,expect_compensation_damages_details,text,,,Lorem
-public,odr,has_debts,character varying,5,,NA
-public,odr,id,integer,,PRIMARY KEY,NA
-public,odr,no_asset_to_add,boolean,,,NA
-public,odr,paid_for_anything,character varying,3,,NA
-public,odr,receive_other_income,text,,,Lorem
-public,odr,receive_other_income_details,text,,,Lorem
-public,odr,receive_state_pension,text,,,Lorem
-public,odr,start_date,timestamp without time zone,,,NA
-public,odr,submit_date,timestamp without time zone,,,NA
-public,odr,submitted,boolean,,,NA
-public,odr,submitted_by,integer,,FOREIGN KEY,NA
-public,odr_account,account_number,character varying,4,,NA
-public,odr_account,account_type,character varying,125,,Lorem
-public,odr_account,balance_on_cod,numeric,,,NA
-public,odr_account,bank_name,character varying,500,,Lorem
-public,odr_account,created_at,timestamp without time zone,,,NA
-public,odr_account,id,integer,,PRIMARY KEY,NA
-public,odr_account,is_joint_account,character varying,3,,NA
-public,odr_account,odr_id,integer,,FOREIGN KEY,NA
-public,odr_account,sort_code,character varying,6,,Lorem
-public,odr_account,updated_at,timestamp without time zone,,,NA
-public,odr_asset,address,character varying,200,,Lorem
-public,odr_asset,address2,character varying,200,,Lorem
-public,odr_asset,asset_value,numeric,,,NA
-public,odr_asset,county,character varying,75,,Lorem
-public,odr_asset,created_at,timestamp without time zone,,,NA
-public,odr_asset,description,text,,,Lorem
-public,odr_asset,has_charges,character varying,4,,NA
-public,odr_asset,has_mortgage,character varying,4,,NA
-public,odr_asset,id,integer,,PRIMARY KEY,NA
-public,odr_asset,is_rented_out,character varying,4,,NA
-public,odr_asset,is_subject_equity_rel,character varying,4,,NA
-public,odr_asset,mortgage_outstanding,numeric,,,NA
-public,odr_asset,occupants,character varying,550,,Lorem
-public,odr_asset,odr_id,integer,,FOREIGN KEY,NA
-public,odr_asset,owned,character varying,15,,Lorem
-public,odr_asset,owned_percentage,numeric,,,NA
-public,odr_asset,postcode,character varying,10,,PostCode
-public,odr_asset,rent_agreement_end_date,timestamp without time zone,,,NA
-public,odr_asset,rent_income_month,numeric,,,NA
-public,odr_asset,title,character varying,100,,Lorem
-public,odr_asset,type,character varying,255,,Lorem
-public,odr_asset,updated_at,timestamp without time zone,,,NA
-public,odr_asset,valuation_date,date,,,NA
-public,odr_client_benefits_check,created_at,timestamp without time zone,,,NA
-public,odr_client_benefits_check,date_last_checked_entitlement,timestamp without time zone,,,NA
-public,odr_client_benefits_check,do_others_receive_money_on_clients_behalf,character varying,255,,Lorem
-public,odr_client_benefits_check,dont_know_money_explanation,text,,,Lorem
-public,odr_client_benefits_check,id,uuid,,PRIMARY KEY,NA
-public,odr_client_benefits_check,ndr_id,integer,,FOREIGN KEY,NA
-public,odr_client_benefits_check,never_checked_explanation,text,,,Lorem
-public,odr_client_benefits_check,when_last_checked_entitlement,character varying,255,,Lorem
-public,odr_debt,amount,numeric,,,NA
-public,odr_debt,debt_type_id,character varying,255,,Lorem
-public,odr_debt,has_more_details,boolean,,,NA
-public,odr_debt,id,integer,,PRIMARY KEY,NA
-public,odr_debt,more_details,text,,,Lorem
-public,odr_debt,odr_id,integer,,FOREIGN KEY,NA
-public,odr_expense,amount,numeric,,,NA
-public,odr_expense,explanation,text,,,Lorem
-public,odr_expense,id,integer,,PRIMARY KEY,NA
-public,odr_expense,odr_id,integer,,FOREIGN KEY,NA
-public,odr_income_one_off,has_more_details,character varying,255,,Lorem
-public,odr_income_one_off,id,integer,,PRIMARY KEY,NA
-public,odr_income_one_off,more_details,character varying,255,,Lorem
-public,odr_income_one_off,odr_id,integer,,FOREIGN KEY,NA
-public,odr_income_one_off,present,boolean,,,NA
-public,odr_income_one_off,type_id,character varying,255,,Lorem
-public,odr_income_received_on_clients_behalf,amount,numeric,,,NA
-public,odr_income_received_on_clients_behalf,client_benefits_check_id,uuid,,FOREIGN KEY,NA
-public,odr_income_received_on_clients_behalf,created_at,timestamp without time zone,,,NA
-public,odr_income_received_on_clients_behalf,id,uuid,,PRIMARY KEY,NA
-public,odr_income_received_on_clients_behalf,money_type,character varying,255,,Lorem
-public,odr_income_received_on_clients_behalf,who_received_money,character varying,255,,Lorem
-public,odr_income_state_benefit,has_more_details,character varying,255,,Lorem
-public,odr_income_state_benefit,id,integer,,PRIMARY KEY,NA
-public,odr_income_state_benefit,more_details,character varying,255,,Lorem
-public,odr_income_state_benefit,odr_id,integer,,FOREIGN KEY,NA
-public,odr_income_state_benefit,present,boolean,,,NA
-public,odr_income_state_benefit,type_id,character varying,255,,Lorem
-public,odr_visits_care,do_you_live_with_client,character varying,4,,NA
-public,odr_visits_care,does_client_have_a_care_plan,character varying,4,,NA
-public,odr_visits_care,does_client_receive_paid_care,text,,,Lorem
-public,odr_visits_care,how_is_care_funded,character varying,255,,Lorem
-public,odr_visits_care,how_often_contact_client,text,,,Lorem
-public,odr_visits_care,id,integer,,PRIMARY KEY,NA
-public,odr_visits_care,odr_id,integer,,FOREIGN KEY,NA
-public,odr_visits_care,plan_move_residence,character varying,4,,NA
-public,odr_visits_care,plan_move_residence_details,text,,,Lorem
-public,odr_visits_care,when_was_care_plan_last_reviewed,date,,,NA
-public,odr_visits_care,who_is_doing_the_caring,text,,,Lorem
 public,organisation,deleted_at,timestamp without time zone,,,NA
 public,organisation,email_identifier,character varying,256,,NA
 public,organisation,id,integer,,PRIMARY KEY,NA
@@ -452,7 +346,6 @@ public,pre_registration,deputy_uid,character varying,100,,NA
 public,pre_registration,hybrid,character varying,12,,Lorem
 public,pre_registration,id,integer,,PRIMARY KEY,NA
 public,pre_registration,is_co_deputy,boolean,,,NA
-public,pre_registration,ndr,boolean,,,NA
 public,pre_registration,order_date,timestamp without time zone,,,NA
 public,pre_registration,order_type,character varying,255,,NA
 public,pre_registration,type_of_report,character varying,10,,NA
@@ -545,7 +438,6 @@ public,report_submission,created_by,integer,,FOREIGN KEY,NA
 public,report_submission,created_on,timestamp without time zone,,,NA
 public,report_submission,downloadable,boolean,,,NA
 public,report_submission,id,integer,,PRIMARY KEY,NA
-public,report_submission,ndr_id,integer,,FOREIGN KEY,NA
 public,report_submission,opg_uuid,character varying,36,,Lorem
 public,report_submission,report_id,integer,,FOREIGN KEY,NA
 public,research_type,id,uuid,,PRIMARY KEY,NA
@@ -574,7 +466,6 @@ public,satisfaction,comments,character varying,1200,,Lorem
 public,satisfaction,created_at,timestamp without time zone,,,NA
 public,satisfaction,deputy_role,character varying,50,,Lorem
 public,satisfaction,id,integer,,PRIMARY KEY,NA
-public,satisfaction,ndr_id,integer,,FOREIGN KEY,NA
 public,satisfaction,report_id,integer,,FOREIGN KEY,NA
 public,satisfaction,report_type,character varying,9,,Lorem
 public,satisfaction,score,integer,,,NA
