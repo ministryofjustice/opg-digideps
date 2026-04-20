@@ -84,8 +84,8 @@ resource "aws_rds_cluster" "cluster_serverless" {
   iam_database_authentication_enabled = var.iam_database_authentication_enabled
 
   serverlessv2_scaling_configuration {
-    min_capacity = 0.5
-    max_capacity = 4
+    min_capacity = var.min_acu
+    max_capacity = var.max_acu
   }
   depends_on = [var.log_group]
 }
@@ -115,3 +115,19 @@ resource "aws_rds_cluster_instance" "serverless_instances" {
     delete = var.timeout_delete
   }
 }
+
+# To be used when moving production
+#moved {
+#  from = aws_rds_cluster.cluster[0]
+#  to   = aws_rds_cluster.cluster_serverless[0]
+#}
+#
+#moved {
+#  from = aws_rds_cluster_instance.cluster_instances[0]
+#  to   = aws_rds_cluster_instance.serverless_instances[0]
+#}
+#
+#moved {
+#  from = aws_rds_cluster_instance.cluster_instances[1]
+#  to   = aws_rds_cluster_instance.serverless_instances[1]
+#}

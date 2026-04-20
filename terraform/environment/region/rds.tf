@@ -21,6 +21,8 @@ module "api_aurora" {
   tags                                = local.environment == "preproduction" ? merge(var.default_tags, { backup_to_vault = "true" }, ) : merge(var.default_tags, { backup_to_vault = "false" }, )
   log_group                           = aws_cloudwatch_log_group.api_cluster.name
   iam_database_authentication_enabled = true
+  min_acu                             = var.account.db.min_acu
+  max_acu                             = var.account.db.max_acu
 }
 
 module "database" {
@@ -46,6 +48,8 @@ module "database" {
   tags                                = local.environment == "preproduction" ? merge(var.default_tags, { backup_to_vault = "true" }, ) : merge(var.default_tags, { backup_to_vault = "false" }, )
   log_group                           = aws_cloudwatch_log_group.api_cluster.name
   iam_database_authentication_enabled = true
+  min_acu                             = var.account.db.min_acu
+  max_acu                             = var.account.db.max_acu
 }
 
 locals {
