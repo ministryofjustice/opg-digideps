@@ -4,7 +4,6 @@ namespace App\EventListener;
 
 use App\Entity as EntityDir;
 use App\Entity\Report\Report;
-use App\Repository\NdrRepository;
 use App\Repository\ReportRepository;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 
@@ -25,13 +24,6 @@ class DoctrineListener
             $reportRepo->addDebtsToReportIfMissing($entity);
             $reportRepo->addMoneyShortCategoriesIfMissing($entity);
             $reportRepo->addFeesToReportIfMissing($entity);
-        }
-
-        if ($entity instanceof EntityDir\Ndr\Ndr && !$entity->getId()) {
-            $ndrRepo = $entityManager->getRepository('App\Entity\Ndr\Ndr');
-            /* @var $ndrRepo NdrRepository */
-            $ndrRepo->addDebtsToNdrIfMissing($entity);
-            $ndrRepo->addIncomeBenefitsToNdrIfMissing($entity);
         }
 
         if ($entity instanceof EntityDir\Report\MoneyTransactionShortIn && !$entity->getId()) {
@@ -128,21 +120,6 @@ class DoctrineListener
                 $report->setCurrentProfPaymentsReceived(null);
                 $report->setPreviousProfFeesEstimateGiven(null);
                 $report->setProfFeesEstimateSccoReason(null);
-            }
-        }
-
-        // NDR
-        if ($entity instanceof EntityDir\Ndr\Expense) {
-            $ndr = $entity->getNdr();
-            if (1 === count($ndr->getExpenses())) {
-                $ndr->setPaidForAnything(null);
-            }
-        }
-
-        if ($entity instanceof EntityDir\Ndr\Asset) {
-            $ndr = $entity->getNdr();
-            if (1 === count($ndr->getAssets())) {
-                $ndr->setNoAssetToAdd(null);
             }
         }
     }
