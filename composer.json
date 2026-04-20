@@ -9,10 +9,10 @@
     "reformat:check": "./vendor/bin/phpcs -p ."
   },
   "require": {
-    "php": "^8.4"
+    "php": "^8.4.2"
   },
   "require-dev": {
-    "phpstan/phpstan": "^2.1.46",
+    "phpstan/phpstan": "^2.1.47",
     "squizlabs/php_codesniffer": "^3.13.5"
   }
 }
