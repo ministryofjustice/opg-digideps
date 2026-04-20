@@ -53,6 +53,7 @@ services:
             $projectDir: "%kernel.project_dir%"
             $frontendHost: "%env(JWT_HOST)%"
             $workspace: "%workspace%"
+            $sessionPrefix: "%env(SESSION_PREFIX)%"
             Predis\ClientInterface: "@predis"
             $redis: "@predis"
 
@@ -65,7 +66,7 @@ services:
         arguments:
             $redis: "@predis"
             $options:
-                prefix: "%workspace%_%env(SESSION_PREFIX)%"
+                prefix: "%workspace%_%sessionPrefix%"
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
