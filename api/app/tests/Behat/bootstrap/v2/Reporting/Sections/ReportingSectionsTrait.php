@@ -3,29 +3,25 @@
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
 use App\Tests\Behat\BehatException;
+use Behat\Step\Then;
+use Behat\Step\When;
 
 trait ReportingSectionsTrait
 {
-    /**
-     * @When I follow link back to report overview page
-     */
+    #[When('I follow link back to report overview page')]
     public function iNavigateBackToReportSection()
     {
         $this->iClickBasedOnAttributeTypeAndValue('a', 'data-action', 'report.overview');
         $this->iAmOnReportsOverviewPage();
     }
 
-    /**
-     * @When I press report sub section back button
-     */
+    #[When('I press report sub section back button')]
     public function iPressReportSubSectionBackButton()
     {
         $this->clickLink('Back');
     }
 
-    /**
-     * @When I view the report overview page
-     */
+    #[When('I view the report overview page')]
     public function iGoToReportOverviewUrl()
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
@@ -33,19 +29,7 @@ trait ReportingSectionsTrait
         $this->visitPath($reportOverviewUrl);
     }
 
-    /**
-     * @When I view the NDR overview page
-     */
-    public function iGoToNDROverviewUrl()
-    {
-        $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportOverviewUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'overview');
-        $this->visitPath($reportOverviewUrl);
-    }
-
-    /**
-     * @When I should see :section as :status
-     */
+    #[When('I should see :section as :status')]
     public function iShouldSeeSectionAs($section, $status)
     {
         $this->iAmOnReportsOverviewPage();
@@ -78,9 +62,7 @@ trait ReportingSectionsTrait
         }
     }
 
-    /**
-     * @When I should not see :sectionName report section
-     */
+    #[When('I should not see :sectionName report section')]
     public function iShouldNotSeeSection(string $sectionName)
     {
         $this->iAmOnReportsOverviewPage();
@@ -107,9 +89,7 @@ trait ReportingSectionsTrait
         return $this->findAllXpathElements($xpath);
     }
 
-    /**
-     * @Then I should see text asking to answer the question
-     */
+    #[Then('I should see text asking to answer the question')]
     public function iSeeTextRequestingToAnswerQuestion()
     {
         $table = $this->getSession()->getPage()->find('css', 'dl');
@@ -138,17 +118,13 @@ trait ReportingSectionsTrait
         );
     }
 
-    /**
-     * @When I choose to save and add another
-     */
+    #[When('I choose to save and add another')]
     public function iChooseToSaveAndAddAnother()
     {
         $this->pressButton('Save and add another');
     }
 
-    /**
-     * @When I choose to save and continue
-     */
+    #[When('I choose to save and continue')]
     public function iChooseToSaveAndContinue()
     {
         $this->pressButton('Save and continue');

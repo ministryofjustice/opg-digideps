@@ -27,11 +27,12 @@ jobs:
           - svc_name: "file-scanner"
           - svc_name: "dr-backup"
           - svc_name: "custom-sql-lambda"
+          - svc_name: "mock-sirius"
 
     runs-on: ubuntu-latest
     steps:
-      - name: Configure AWS credentials for ECR tagging
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Configure AWS OIDC credentials for ECR tagging
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4
         with:
           aws-region: eu-west-1
           role-to-assume: arn:aws:iam::${{ vars.MANAGEMENT_ACCOUNT }}:role/digideps-gh-actions-ecr-push
@@ -63,5 +64,14 @@ jobs:
           fi
           echo "Retrieved image manifest for digest $DIGEST"
 
-          aws ecr put-image --repository-name "$REPO_NAME" --image-tag "$RELEASE_TAG" --image-manifest "$MANIFEST"
-          echo "Tagged $REPO_NAME:$CURRENT_TAG as $REPO_NAME:$RELEASE_TAG"
+          aws ecr put-image --repository-name "$REPO_NAME" --image-tag "$RELEASE_TAG" --image-manifest "$MANIFEST" \
+            || echo "Tag $REPO_NAME:$RELEASE_TAG already exists, skipping"
+
+          echo "Tagged (or already tagged) $REPO_NAME:$CURRENT_TAG as $REPO_NAME:$RELEASE_TAG"
+
+          if [ "$RELEASE_TAG" != "releasable" ]; then
+            aws ecr put-image --repository-name "$REPO_NAME" --image-tag "main-$RELEASE_TAG" --image-manifest "$MANIFEST" \
+              || echo "Tag $REPO_NAME:main-$RELEASE_TAG already exists, skipping"
+
+            echo "Tagged (or already tagged) $REPO_NAME:$CURRENT_TAG as $REPO_NAME:main-$RELEASE_TAG"
+          fi

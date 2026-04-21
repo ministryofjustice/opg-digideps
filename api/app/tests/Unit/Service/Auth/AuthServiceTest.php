@@ -66,7 +66,8 @@ final class AuthServiceTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        $this->authService = new AuthService($this->logger,
+        $this->authService = new AuthService(
+            $this->logger,
             $this->userRepo,
             $this->roleHierarchy,
             [],

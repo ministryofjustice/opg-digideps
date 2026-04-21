@@ -24,7 +24,7 @@ trait UserManagementTrait
      */
     public function iHaveCreatedAppropriateSearchTestUsers()
     {
-        $this->createAdditionalDataForUserSearchTests();
+        $this->fixtureHelper->createDataForAdminUserTests('search');
     }
 
     /**
@@ -53,17 +53,18 @@ trait UserManagementTrait
     /**
      * @When I should see the correct search results
      */
-    public function iShouldSeeTheCorrectSearchResult()
+    public function iShouldSeeTheCorrectSearchResult(): void
     {
         $xpath = '//h2[@id="users-list-title"]/parent::div/p[@class="govuk-body"]';
         $userText = $this->getSession()->getPage()->find('xpath', $xpath)->getHtml();
+
         $pluralUsers = 1 === $this->userCount ? 'user' : 'users';
-        $userMessage = sprintf('found %s %s', strval($this->userCount), $pluralUsers);
+        $userMessage = sprintf('found %d %s', $this->userCount, $pluralUsers);
         $this->assertStringEqualsString($userMessage, $userText, 'Users Found');
+
         $xpath = '//table[@class="table-govuk-body-s"]/tbody/tr';
         $userElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
-        $userRowCount = count($userElements);
-        $this->assertIntEqualsInt($userRowCount, $this->userCount, 'User rows visible');
+        $this->assertIntEqualsInt($this->userCount, count($userElements), 'User rows visible');
 
         foreach ($this->userEmails as $userEmail) {
             $xpath = '//table[@class="table-govuk-body-s"]/tbody';
@@ -79,7 +80,7 @@ trait UserManagementTrait
     {
         $this->searchUserWithFilter('ROLE_LAY_DEPUTY', 'search-test-');
         $this->userCount = 2;
-        $this->userEmails = ['search-test-lay-' . $this->testRunId . '@t.uk', 'search-test-ndr-' . $this->testRunId . '@t.uk'];
+        $this->userEmails = ['search-test-lay-' . $this->testRunId . '@t.uk', 'search-test-lay-hw-' . $this->testRunId . '@t.uk'];
     }
 
     /**
@@ -151,20 +152,6 @@ trait UserManagementTrait
         $this->setFixtureUserEmailsAndCount();
     }
 
-    /**
-     * @When I search for one of the NDR test users with the All Roles filter
-     */
-    public function iSearchForTestUsersWithTheNDRFilter()
-    {
-        $this->iAmOnAdminUsersSearchPage();
-        $this->fillField('admin_q', 'search-test-');
-        $this->selectOption('admin[role_name]', '');
-        $this->checkOption('admin[ndr_enabled]');
-        $this->pressButton('Search');
-        $this->userCount = 1;
-        $this->userEmails = ['search-test-ndr-' . $this->testRunId . '@t.uk'];
-    }
-
     private function setFixtureUserEmailsAndCount()
     {
         $this->userCount = 10;
@@ -178,7 +165,6 @@ trait UserManagementTrait
             'search-test-manager-' . $this->testRunId . '@t.uk',
             'search-test-super-' . $this->testRunId . '@t.uk',
             'search-test-ad-' . $this->testRunId . '@t.uk',
-            'search-test-ndr-' . $this->testRunId . '@t.uk',
         ];
     }
 
@@ -430,7 +416,7 @@ trait UserManagementTrait
      */
     public function iHaveCreatedTheAppropriateTestUsersToEdit()
     {
-        $this->createAdditionalDataForUserEditTests();
+        $this->fixtureHelper->createDataForAdminUserTests('edit');
     }
 
     private function fillInAndSubmitUsers($email, $firstName, $lastName, $postcode, $roleType, $role)
@@ -874,16 +860,13 @@ trait UserManagementTrait
     }
 
     /**
-     * @Then I should see :occurances user details in the user list results with the same :whichName name
+     * @Then I should see :occurrences user details in the user list results with the same :whichName name
+     * @throws BehatException
      */
-    public function iShouldSeeBothUserDetailsInResults(int $occurances, string $whichName)
+    public function iShouldSeeBothUserDetailsInResults(int $occurrences, string $whichName)
     {
-        $this->userCount = $occurances;
-        $this->iShouldSeeNUserWithSameName($whichName);
-    }
+        $this->userCount = $occurrences;
 
-    private function iShouldSeeNUserWithSameName(string $whichName)
-    {
         $this->assertUserCountSet();
 
         $searchResults = $this->getSearchResults();
@@ -896,7 +879,7 @@ trait UserManagementTrait
             throw new BehatException(sprintf('The user search results list did not contain the required occurrences of the users full name. Expected: "%s" (at least %s times), got (full HTML): %s', $searchName, $this->userCount, $userNamesFoundCount));
         }
 
-        $this->assertIntEqualsInt($userNamesFoundCount, $this->userCount, 'User rows visible');
+        $this->assertIntEqualsInt($this->userCount, $userNamesFoundCount, 'User rows visible');
     }
 
     private function assertUserCountSet()
@@ -908,7 +891,7 @@ trait UserManagementTrait
 
     private function getSearchResults()
     {
-        $xpath = '//td';
+        $xpath = '//tr/td[1]';
         $tableDataElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
 
         $formattedDataElements = [];

@@ -17,13 +17,13 @@ class FeedbackType extends AbstractType
         $this->translator = $translator;
     }
 
-    public const HONEYPOT_FIELD_NAME = 'current_address';
+    public const string HONEYPOT_FIELD_NAME = 'current_address';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $satisfactionScores = range(5, 1);
         $satisfactionLabels = array_map(function ($score) {
-            return $this->translator->trans('form.satisfactionLevel.choices.'.$score, [], 'feedback');
+            return $this->translator->trans('form.satisfactionLevel.choices.' . $score, [], 'feedback');
         }, $satisfactionScores);
 
         $builder

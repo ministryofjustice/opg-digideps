@@ -42,6 +42,7 @@
             <dd class="govuk-summary-list__actions">
                 <a class="govuk-link behat-link-edit" href="{{ path('documents_step', { 'reportId': report.id, 'from': 'summary' }) }}">
                     {{ 'edit' | trans(transOptions, 'common') }}
+                    <span class="govuk-visually-hidden">{{ 'stepPage.form.wishToUploadDocumentation.label' | trans(transOptions)  }}</span>
                 </a>
             </dd>
         </div>

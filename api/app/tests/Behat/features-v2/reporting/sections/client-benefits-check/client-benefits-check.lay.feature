@@ -2,6 +2,16 @@
 Feature: Client benefits check - Lay users
 
     @lay-combined-high-not-started
+    Scenario: A deputy has completed some of the client benefits section check
+        Given a Lay Deputy has not started a Combined High Assets report
+        When I visit the report overview page
+        Then I should see "client-benefits-check" as "not started"
+        When I navigate to and start the client benefits check report section
+        And I confirm I checked the clients benefit entitlement on '01/01/2021'
+        When I visit the report overview page
+        Then I should see "client-benefits-check" as "not finished"
+
+    @lay-combined-high-not-started
     Scenario: A deputy has checked the clients benefit entitlement on a specific date
         Given a Lay Deputy has not started a Combined High Assets report
         And the deputies 'current' report ends and is due 'more' than 60 days after the client benefits check feature flag date
@@ -9,8 +19,9 @@ Feature: Client benefits check - Lay users
         Then I should see "client-benefits-check" as "not started"
         When I navigate to and start the client benefits check report section
         And I confirm I checked the clients benefit entitlement on '01/01/2021'
-        And I confirm others receive money on the clients behalf
+        When I confirm others receive money on the clients behalf
         And I add 2 types of money with values
+        Then I want to add another money recieved on the clients behalf
         And I add a type of money where I don't know the value
         And I have no further types of money to add
         Then the client benefits check summary page should contain the details I entered
@@ -77,7 +88,6 @@ Feature: Client benefits check - Lay users
         And I confirm I have never checked the benefits the client is entitled to and provide a reason
         And I confirm others receive money on the clients behalf
         And I add 1 type of money with values
-        And I have no further types of money to add
         And I 'edit' the last type of money I added
         Then the client benefits check summary page should contain the details I entered
         Given I edit my response to do others receive money on a clients behalf to 'no'
@@ -93,7 +103,6 @@ Feature: Client benefits check - Lay users
         And I confirm I checked the clients benefit entitlement on '01/01/2021'
         And I confirm others receive money on the clients behalf
         And I add 2 types of money with values
-        And I have no further types of money to add
         And I 'remove' the last type of money I added
         Then the client benefits check summary page should contain the details I entered
 

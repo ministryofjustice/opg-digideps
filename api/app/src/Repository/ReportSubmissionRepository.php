@@ -54,6 +54,10 @@ class ReportSubmissionRepository extends ServiceEntityRepository
             ->leftJoin('ndr.client', 'nc')
         ;
 
+        // Only include report submissions which are related to standard reports, not NDRs
+        // TODO remove when NDR entities are removed
+        $qb->andWhere($qb->expr()->isNotNull('rs.report'));
+
         // search filter
         if ($q) {
             $qb->andWhere(implode(' OR ', [
@@ -72,14 +76,14 @@ class ReportSubmissionRepository extends ServiceEntityRepository
                 'LOWER(nc.caseNumber) = LOWER(:q)',
             ]));
 
-            $qb->setParameter('qLike', '%'.strtolower($q).'%');
+            $qb->setParameter('qLike', '%' . strtolower($q) . '%');
             $qb->setParameter('q', strtolower($q));
         }
 
         // role filter
         if ($createdByRole) {
             $qb->andWhere('cb.roleName LIKE :roleNameLikePrefix');
-            $qb->setParameter('roleNameLikePrefix', strtoupper($createdByRole).'%');
+            $qb->setParameter('roleNameLikePrefix', strtoupper($createdByRole) . '%');
         }
 
         // get results (base query + ordered + pagination + status filter)
@@ -89,7 +93,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
             $qbSelect->andWhere($statusFilters[$status]);
         }
         $qbSelect
-            ->orderBy('rs.'.$orderBy, $order)
+            ->orderBy('rs.' . $orderBy, $order)
             ->setFirstResult($offset)
             ->setMaxResults($limit);
         $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(User::class); // disable softdelete for createdBy, needed from admin area
@@ -138,8 +142,8 @@ class ReportSubmissionRepository extends ServiceEntityRepository
         ?\DateTime $toDate = null
     ): array {
         $now = new \DateTime();
-        $fromDateStrFormatted = ($fromDate ?? $now)->format('Ymd').' 000000';
-        $toDateStrFormatted = ($toDate ?? $now)->format('Ymd').' 235959';
+        $fromDateStrFormatted = ($fromDate ?? $now)->format('Ymd') . ' 000000';
+        $toDateStrFormatted = ($toDate ?? $now)->format('Ymd') . ' 235959';
 
         $submittedReportsQuery = "
 SELECT
@@ -232,7 +236,7 @@ ORDER BY d6_.is_report_pdf ASC, r0_.id DESC;";
             ->andWhere('r.submitDate IS NOT NULL OR ndr.submitDate IS NOT NULL')
             ->setParameter(':fromDate', $this->determineCreatedFromDate($fromDate))
             ->setParameter(':toDate', $this->determineCreatedToDate($toDate))
-            ->orderBy('rs.'.$orderBy, $order);
+            ->orderBy('rs.' . $orderBy, $order);
 
         $this->_em->getFilters()->enable('softdeleteable');
 

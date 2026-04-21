@@ -19,31 +19,31 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 {
     use LoginInfoTrait;
 
-    public const ROLE_ADMIN = 'ROLE_ADMIN';
-    public const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
-    public const ROLE_ADMIN_MANAGER = 'ROLE_ADMIN_MANAGER';
+    public const string ROLE_ADMIN = 'ROLE_ADMIN';
+    public const string ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
+    public const string ROLE_ADMIN_MANAGER = 'ROLE_ADMIN_MANAGER';
 
-    public const ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
-    public const ROLE_AD = 'ROLE_AD';
+    public const string ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
+    public const string ROLE_AD = 'ROLE_AD';
 
-    public const ROLE_PA = 'ROLE_PA';
-    public const ROLE_PA_NAMED = 'ROLE_PA_NAMED';
-    public const ROLE_PA_ADMIN = 'ROLE_PA_ADMIN';
-    public const ROLE_PA_TEAM_MEMBER = 'ROLE_PA_TEAM_MEMBER';
+    public const string ROLE_PA = 'ROLE_PA';
+    public const string ROLE_PA_NAMED = 'ROLE_PA_NAMED';
+    public const string ROLE_PA_ADMIN = 'ROLE_PA_ADMIN';
+    public const string ROLE_PA_TEAM_MEMBER = 'ROLE_PA_TEAM_MEMBER';
 
-    public const ROLE_PROF = 'ROLE_PROF';
-    public const ROLE_PROF_NAMED = 'ROLE_PROF_NAMED';
-    public const ROLE_PROF_ADMIN = 'ROLE_PROF_ADMIN';
-    public const ROLE_PROF_TEAM_MEMBER = 'ROLE_PROF_TEAM_MEMBER';
+    public const string ROLE_PROF = 'ROLE_PROF';
+    public const string ROLE_PROF_NAMED = 'ROLE_PROF_NAMED';
+    public const string ROLE_PROF_ADMIN = 'ROLE_PROF_ADMIN';
+    public const string ROLE_PROF_TEAM_MEMBER = 'ROLE_PROF_TEAM_MEMBER';
 
-    public const ROLE_ORG_NAMED = 'ROLE_ORG_NAMED';
-    public const ROLE_ORG_ADMIN = 'ROLE_ORG_ADMIN';
+    public const string ROLE_ORG_NAMED = 'ROLE_ORG_NAMED';
+    public const string ROLE_ORG_ADMIN = 'ROLE_ORG_ADMIN';
 
-    public const ROLE_ORG = 'ROLE_ORG';
+    public const string ROLE_ORG = 'ROLE_ORG';
 
-    public const TYPE_LAY = 'LAY';
-    public const TYPE_PA = 'PA';
-    public const TYPE_PROF = 'PROF';
+    public const string TYPE_LAY = 'LAY';
+    public const string TYPE_PA = 'PA';
+    public const string TYPE_PROF = 'PROF';
 
     public static array $adminRoles = [
         self::ROLE_ADMIN,
@@ -75,14 +75,14 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         self::ROLE_PROF_TEAM_MEMBER => 'Professional Deputy team member',
     ];
 
-    public const ACTIVATE_TOKEN_EXPIRE_HOURS = 48;
-    public const PASSWORD_TOKEN_EXPIRE_HOURS = 1;
+    public const int ACTIVATE_TOKEN_EXPIRE_HOURS = 48;
+    public const int PASSWORD_TOKEN_EXPIRE_HOURS = 1;
 
-    public const SELF_REGISTER = 'SELF_REGISTER';
-    public const ADMIN_INVITE = 'ADMIN_INVITE';
-    public const ORG_ADMIN_INVITE = 'ORG_ADMIN_INVITE';
-    public const CO_DEPUTY_INVITE = 'CO_DEPUTY_INVITE';
-    public const UNKNOWN_REGISTRATION_ROUTE = 'UNKNOWN';
+    public const string SELF_REGISTER = 'SELF_REGISTER';
+    public const string ADMIN_INVITE = 'ADMIN_INVITE';
+    public const string ORG_ADMIN_INVITE = 'ORG_ADMIN_INVITE';
+    public const string CO_DEPUTY_INVITE = 'CO_DEPUTY_INVITE';
+    public const string UNKNOWN_REGISTRATION_ROUTE = 'UNKNOWN';
 
     /**
      * @JMS\Type("integer")
@@ -350,15 +350,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      * @JMS\Groups({"user"})
      */
     private $deputyUid;
-
-    /**
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"admin_add_user", "ad_add_user", "admin_edit_user"})
-     *
-     * @var bool|null
-     */
-    private $ndrEnabled;
 
     /**
      * @var bool|null
@@ -975,22 +966,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         }
 
         return false;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isNdrEnabled()
-    {
-        return $this->ndrEnabled;
-    }
-
-    /**
-     * @param bool $ndrEnabled
-     */
-    public function setNdrEnabled($ndrEnabled)
-    {
-        $this->ndrEnabled = $ndrEnabled;
     }
 
     /**

@@ -6,7 +6,6 @@ namespace App\Entity;
 
 use App\Entity\Report\Report;
 use App\Entity\Traits\CreateUpdateTimestamps;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -22,13 +21,10 @@ class PreRegistration
 {
     use CreateUpdateTimestamps;
 
-    public const REALM_PA = 'REALM_PA';
-    public const REALM_PROF = 'REALM_PROF';
-    public const REALM_LAY = 'REALM_LAY';
-
-    public const SINGLE_TYPE = 'SINGLE';
-    public const HYBRID_TYPE = 'HYBRID';
-    public const DUAL_TYPE = 'DUAL';
+    public const string REALM_PA = 'REALM_PA';
+    public const string REALM_PROF = 'REALM_PROF';
+    public const string REALM_LAY = 'REALM_LAY';
+    public const string DUAL_TYPE = 'DUAL';
 
     public function __construct(array $row)
     {
@@ -51,7 +47,7 @@ class PreRegistration
         $this->deputyAddress5 = $row['DeputyAddress5'] ?? null;
         $this->deputyPostCode = $row['DeputyPostcode'] ?? null;
         $this->typeOfReport = $row['ReportType'] ?? null;
-        $this->ndr = isset($row['NDR']) ? 'yes' === $row['NDR'] : null;
+        $this->ndr = null;
         $this->orderDate = isset($row['MadeDate']) ? new \DateTime($row['MadeDate']) : null;
         $this->orderType = $row['OrderType'] ?? null;
         $this->isCoDeputy = isset($row['CoDeputy']) ? 'yes' === $row['CoDeputy'] : null;
@@ -218,6 +214,9 @@ class PreRegistration
      */
     private ?bool $isCoDeputy;
 
+    /**
+     * @throws \Exception
+     */
     public static function getReportTypeByOrderType(string $reportType, string $orderType, string $realm): string
     {
         // drop opg from string
@@ -234,7 +233,7 @@ class PreRegistration
             self::REALM_LAY => $fullReportType,
             self::REALM_PA => sprintf('%s-6', $fullReportType),
             self::REALM_PROF => sprintf('%s-5', $fullReportType),
-            default => throw new \Exception(__METHOD__.': realm not recognised to determine report type'),
+            default => throw new \Exception(__METHOD__ . ': realm not recognised to determine report type'),
         };
 
         if (!in_array($fullReportType, [...Report::getAllLayTypes(), ...Report::getAllPaTypes(), ...Report::getAllProfTypes()])) {

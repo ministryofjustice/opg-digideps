@@ -6,7 +6,7 @@ use Predis\ClientInterface;
 
 class RedisAvailability extends ServiceAvailabilityAbstract
 {
-    public const TEST_KEY = 'RedisAvailabilityTestKey';
+    public const string TEST_KEY = 'RedisAvailabilityTestKey';
 
     public function __construct(
         private readonly ClientInterface $redis,
@@ -18,13 +18,13 @@ class RedisAvailability extends ServiceAvailabilityAbstract
     public function ping(): void
     {
         try {
-            $this->redis->set($this->workspace.'_'.self::TEST_KEY, 'valueSaved');
+            $this->redis->set($this->workspace . '_' . self::TEST_KEY, 'valueSaved');
 
-            if ('valueSaved' == $this->redis->get($this->workspace.'_'.self::TEST_KEY)) {
+            if ('valueSaved' == $this->redis->get($this->workspace . '_' . self::TEST_KEY)) {
                 $this->isHealthy = true;
             }
         } catch (\Throwable $e) {
-            $this->errors = 'Redis Error: '.$e->getMessage();
+            $this->errors = 'Redis Error: ' . $e->getMessage();
         }
     }
 

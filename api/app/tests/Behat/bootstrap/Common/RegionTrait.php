@@ -122,6 +122,6 @@ trait RegionTrait
 
     public static function behatElementToCssSelector($element, $type)
     {
-        return '.behat-'.$type.'-'.preg_replace('/\s+/', '-', $element);
+        return '.behat-' . $type . '-' . preg_replace('/\s+/', '-', $element);
     }
 }

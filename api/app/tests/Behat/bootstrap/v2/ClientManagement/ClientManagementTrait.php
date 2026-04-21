@@ -508,6 +508,31 @@ MESSAGE;
     }
 
     /**
+     * @Then I click the save button
+     */
+    public function iClickSaveButton(): void
+    {
+        $this->pressButton('Save');
+    }
+
+    /**
+     * @Then I should see validation errors for address and postcode fields
+     */
+    public function iSeeValidationErrorsForClientEditPage(): void
+    {
+        $this->assertPageContainsText('Enter the client\'s address');
+        $this->assertPageContainsText('Enter the client\'s postcode');
+    }
+
+    /**
+     * @Then I should not see the validation error for the court order date
+     */
+    public function iShouldNotSeeValidationErrorsForCourtOrderDate(): void
+    {
+        $this->assertPageNotContainsText('Enter the date of your court order');
+    }
+
+    /**
      * @Given /^I can see a count of active and discharged clients on the organisations page$/
      */
     public function iCanSeeTheActiveAndDishargedClientCountOnTheOrganisationsPage()

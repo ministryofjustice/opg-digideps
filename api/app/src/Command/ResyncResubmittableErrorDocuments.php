@@ -20,7 +20,7 @@ class ResyncResubmittableErrorDocuments extends Command
     {
         try {
             $updatedDocuments = $this->documentRepository->getResubmittableErrorDocumentsAndSetToQueued('100');
-            $output->writeln('resync_resubmittable_error_documents - success - Updated '.count($updatedDocuments).' documents back to QUEUED status');
+            $output->writeln('resync_resubmittable_error_documents - success - Updated ' . count($updatedDocuments) . ' documents back to QUEUED status');
 
             return 0;
         } catch (Exception $e) {

@@ -25,7 +25,7 @@ use Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken;
  */
 class HeaderTokenAuthenticator extends AbstractAuthenticator
 {
-    public const HEADER_NAME = 'AuthToken';
+    public const string HEADER_NAME = 'AuthToken';
 
     public function __construct(
         private readonly Client $redis,
@@ -42,6 +42,11 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
     public function authenticate(Request $request): Passport
     {
         $authTokenKey = $request->headers->get(self::HEADER_NAME);
+
+        if (null === $authTokenKey) {
+            $this->verboseLogger->warning('Auth token not found in request header');
+            throw new UserNotFoundException('User not found');
+        }
 
         $redisToken = $this->redis->get($authTokenKey);
         if (!$redisToken) {

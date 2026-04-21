@@ -11,7 +11,7 @@ use Psr\Log\LoggerInterface;
 
 class BankHolidaysAPIClient
 {
-    public const BANK_HOLIDAYS_ENDPOINT = 'https://www.gov.uk/bank-holidays.json';
+    public const string BANK_HOLIDAYS_ENDPOINT = 'https://www.gov.uk/bank-holidays.json';
 
     /** @var ClientInterface */
     private $httpClient;

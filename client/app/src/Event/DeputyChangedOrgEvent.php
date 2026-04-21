@@ -8,7 +8,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class DeputyChangedOrgEvent extends Event
 {
-    const NAME = 'deputy.changedOrg';
+    public const string NAME = 'deputy.changedOrg';
 
     public function __construct(private string $trigger, private int $deputyId, private int $previousOrgId, private int $newOrgId, private int $clientId)
     {
@@ -25,7 +25,7 @@ class DeputyChangedOrgEvent extends Event
         return $this->trigger;
     }
 
-    public function setTrigger(string $trigger) : DeputyChangedOrgEvent
+    public function setTrigger(string $trigger): DeputyChangedOrgEvent
     {
         $this->trigger = $trigger;
 
@@ -79,5 +79,4 @@ class DeputyChangedOrgEvent extends Event
 
         return $this;
     }
-
 }

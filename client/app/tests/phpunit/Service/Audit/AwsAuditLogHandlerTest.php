@@ -23,8 +23,8 @@ class AwsAuditLogHandlerTest extends TestCase
     /** @var MockObject|CloudWatchLogsClient */
     private $cloudWatchClient;
 
-    public const LOG_GROUP_NAME = 'audit-local';
-    public const STREAM_NAME = 'DELETED_CLIENTS';
+    public const string LOG_GROUP_NAME = 'audit-local';
+    public const string STREAM_NAME = 'DELETED_CLIENTS';
     private LoggerInterface|MockObject $logger;
 
     public function setUp(): void

@@ -43,10 +43,11 @@ trait ActivateTrait
 
         $this->newUsers += [$this->testRunId => ['type' => $typeOfUser, 'email' => $this->faker->safeEmail()]];
 
-        $firstName = in_array(strtolower($typeOfUser), ['lay', 'ndr']) ? $this->existingPreRegistration->getDeputyFirstname() : $this->faker->firstName();
-        $lastName = in_array(strtolower($typeOfUser), ['lay', 'ndr']) ? $this->existingPreRegistration->getDeputySurname() : $this->faker->lastName();
-        $postCode = in_array(strtolower($typeOfUser), ['lay', 'ndr']) ? $this->existingPreRegistration->getDeputyPostCode() : $this->faker->postcode();
-        $roleName = in_array(strtolower($typeOfUser), ['lay', 'ndr']) ? 'ROLE_LAY_DEPUTY' : 'ROLE_PROF_ADMIN';
+        $isLayUser = strtolower($typeOfUser) === 'lay';
+        $firstName = $isLayUser ? $this->existingPreRegistration->getDeputyFirstname() : $this->faker->firstName();
+        $lastName = $isLayUser ? $this->existingPreRegistration->getDeputySurname() : $this->faker->lastName();
+        $postCode = $isLayUser ? $this->existingPreRegistration->getDeputyPostCode() : $this->faker->postcode();
+        $roleName = $isLayUser ? 'ROLE_LAY_DEPUTY' : 'ROLE_PROF_ADMIN';
 
         $this->fillInField('admin_email', $this->getUserForTestRun()['email']);
         $this->fillInField('admin_firstname', $firstName);
@@ -81,7 +82,7 @@ trait ActivateTrait
     {
         $this->completeSetPasswordStep();
 
-        if (in_array(strtolower($this->getUserForTestRun()['type']), ['lay', 'ndr'])) {
+        if (strtolower($this->getUserForTestRun()['type']) == 'lay') {
             $this->loginToFrontendAs($this->getUserForTestRun()['email']);
             $this->completeUserDetailsSection();
         }
@@ -206,11 +207,10 @@ trait ActivateTrait
                 $this->completeOrgUserDetailsSection();
                 break;
             case 'lay':
-            case 'ndr':
                 $this->completeClientDetailsSection();
                 break;
             default:
-                throw new BehatException('Only supported userTypes for this step are "lay", "org" or "ndr". Use an available type or add a new one.');
+                throw new BehatException('Only supported userTypes for this step are "lay" or "org". Use an available type or add a new one.');
         }
     }
 

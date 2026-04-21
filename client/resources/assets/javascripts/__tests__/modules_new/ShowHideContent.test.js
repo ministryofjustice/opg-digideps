@@ -3,7 +3,6 @@ import ShowHideContent from '../../modules_new/ShowHideContent'
 
 describe('Show Hide Toggles', () => {
   it('Should toggle textarea on checkbox state change', () => {
-    // this is used in the ndr
     document.body.innerHTML = '<div class="govuk-checkboxes__item" data-target="more-details">' +
                               '<input type="checkbox" id="income" name="name" ' +
                               ' required="required" class="govuk-checkboxes__input" value="1" >' +

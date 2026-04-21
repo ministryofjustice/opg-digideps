@@ -12,7 +12,7 @@ class ReportSubmissionHelper
 {
     public function __construct(
         private readonly EntityManager $entityManager
-    ){
+    ) {
     }
 
     /**
@@ -42,8 +42,13 @@ class ReportSubmissionHelper
     public function generateAndPersistSubmittedReportSubmission(\DateTime $submitDate)
     {
         $rs = $this->generateAndPersistReportSubmission();
-        $report = $rs->getReport()
-            ->setSubmitDate($submitDate)
+        $report = $rs->getReport();
+
+        if (null === $report) {
+            throw new \LogicException('Generated ReportSubmission was created without a report');
+        }
+
+        $report->setSubmitDate($submitDate)
             ->setSubmitted(true);
         $rs->setCreatedOn($submitDate);
 
@@ -56,19 +61,25 @@ class ReportSubmissionHelper
 
     public function submitAndPersistAdditionalSubmissions(ReportSubmission $lastSubmission)
     {
-        $client = $lastSubmission->getReport()->getClient();
+        $existingReport = $lastSubmission->getReport();
+
+        if (null === $existingReport) {
+            throw new \LogicException('Report submission was created without a report');
+        }
+
+        $client = $existingReport->getClient();
 
         $report = (new ReportTestHelper())->generateReport(
             $this->entityManager,
             $client,
-            $lastSubmission->getReport()->getType(),
-            $lastSubmission->getReport()->getSubmitDate()->modify('+366 days')
+            $existingReport->getType(),
+            $existingReport->getSubmitDate()->modify('+366 days')
         );
 
         $client->addReport($report);
 
-        $reportSubmission = (new ReportSubmission($report, $lastSubmission->getReport()->getClient()->getUsers()[0]))
-        ->setCreatedOn(new \DateTime('+366 days'));
+        $reportSubmission = (new ReportSubmission($report, $client->getUsers()[0]))
+            ->setCreatedOn(new \DateTime('+366 days'));
 
         $report
             ->setSubmitDate(new \DateTime('+366 days'))

@@ -63,8 +63,8 @@ data "aws_iam_policy_document" "api_permissions" {
       "s3:GetObject",
     ]
     resources = [
-      "arn:aws:s3:::digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk",
-      "arn:aws:s3:::digideps.${var.account.sirius_environment}.eu-west-1.sirius.opg.justice.gov.uk/*"
+      "arn:aws:s3:::digideps.${var.account.sirius.environment}.eu-west-1.sirius.opg.justice.gov.uk",
+      "arn:aws:s3:::digideps.${var.account.sirius.environment}.eu-west-1.sirius.opg.justice.gov.uk/*"
     ]
   }
 
@@ -75,7 +75,7 @@ data "aws_iam_policy_document" "api_permissions" {
       "kms:Decrypt",
     ]
     resources = [
-      "arn:aws:kms:eu-west-1:${var.account.sirius_api_account}:key/*"
+      "arn:aws:kms:eu-west-1:${var.account.sirius.account}:key/*"
     ]
   }
 }

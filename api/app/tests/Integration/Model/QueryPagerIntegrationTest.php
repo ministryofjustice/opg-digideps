@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace app\tests\Integration\Model;
+namespace App\Tests\Integration\Model;
 
 use App\Entity\StagingSelectedCandidate;
-use App\Model\QueryPager;
 use App\Tests\Integration\ApiIntegrationTestCase;
+use App\Utility\Query\QueryPager;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
 
 class QueryPagerIntegrationTest extends ApiIntegrationTestCase

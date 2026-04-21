@@ -4,7 +4,7 @@ resource "aws_cloudwatch_event_rule" "csv_automation_court_order_processing" {
   name                = "csv-automation-court-order-processing-${local.environment}"
   description         = "Process Sirus Court Orders CSV for all Users ${terraform.workspace}"
   schedule_expression = "cron(59 4 * * ? *)"
-  is_enabled          = var.account.is_production == 1 ? true : false
+  is_enabled          = var.account.environment.is_production == 1 ? true : false
   tags                = var.default_tags
 }
 
@@ -20,7 +20,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_court_order_processing" {
     platform_version    = "1.4.0"
     network_configuration {
       security_groups  = [module.api_service_security_group.id]
-      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
+      subnets          = data.aws_subnet.application[*].id
       assign_public_ip = false
     }
   }
@@ -42,7 +42,7 @@ resource "aws_cloudwatch_event_rule" "csv_automation_lay_processing" {
   name                = "csv-automation-lay-processing-${local.environment}"
   description         = "Process Sirus Lay CSV for Lay Users ${terraform.workspace}"
   schedule_expression = "cron(0 2 * * ? *)"
-  is_enabled          = var.account.is_production == 1 ? true : false
+  is_enabled          = var.account.environment.is_production == 1 ? true : false
   tags                = var.default_tags
 }
 
@@ -59,7 +59,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_lay_processing" {
 
     network_configuration {
       security_groups  = [module.api_service_security_group.id]
-      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
+      subnets          = data.aws_subnet.application[*].id
       assign_public_ip = false
     }
   }
@@ -81,7 +81,7 @@ resource "aws_cloudwatch_event_rule" "csv_automation_org_processing" {
   name                = "csv-automation-org-processing-${local.environment}"
   description         = "Process Sirus Org CSV for Org Users  ${terraform.workspace}"
   schedule_expression = "cron(30 2 * * ? *)"
-  is_enabled          = var.account.is_production == 1 ? true : false
+  is_enabled          = var.account.environment.is_production == 1 ? true : false
   tags                = var.default_tags
 }
 
@@ -98,7 +98,7 @@ resource "aws_cloudwatch_event_target" "csv_automation_org_processing" {
 
     network_configuration {
       security_groups  = [module.api_service_security_group.id]
-      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
+      subnets          = data.aws_subnet.application[*].id
       assign_public_ip = false
     }
   }
@@ -136,7 +136,7 @@ resource "aws_cloudwatch_event_target" "delete_inactive_users" {
 
     network_configuration {
       security_groups  = [module.api_service_security_group.id]
-      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
+      subnets          = data.aws_subnet.application[*].id
       assign_public_ip = false
     }
   }
@@ -176,7 +176,7 @@ resource "aws_cloudwatch_event_target" "delete_zero_activity_users" {
 
     network_configuration {
       security_groups  = [module.api_service_security_group.id]
-      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
+      subnets          = data.aws_subnet.application[*].id
       assign_public_ip = false
     }
   }
@@ -214,7 +214,7 @@ resource "aws_cloudwatch_event_target" "resubmit_error_documents" {
 
     network_configuration {
       security_groups  = [module.api_service_security_group.id]
-      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
+      subnets          = data.aws_subnet.application[*].id
       assign_public_ip = false
     }
   }
@@ -252,7 +252,7 @@ resource "aws_cloudwatch_event_target" "resubmit_error_checklists" {
 
     network_configuration {
       security_groups  = [module.api_service_security_group.id]
-      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
+      subnets          = data.aws_subnet.application[*].id
       assign_public_ip = false
     }
   }
@@ -321,7 +321,7 @@ resource "aws_cloudwatch_event_target" "db_analyse_command" {
 
     network_configuration {
       security_groups  = [module.db_access_task_security_group.id]
-      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
+      subnets          = data.aws_subnet.application[*].id
       assign_public_ip = false
     }
   }
@@ -334,7 +334,7 @@ resource "aws_cloudwatch_event_rule" "satisfaction_performance_stats" {
   description         = "Extract Satisfaction Scores in ${terraform.workspace}"
   schedule_expression = "cron(0 10 1 * ? *)"
   tags                = var.default_tags
-  is_enabled          = var.account.is_production == 1 ? true : false
+  is_enabled          = var.account.environment.is_production == 1 ? true : false
 }
 
 resource "aws_cloudwatch_event_target" "satisfaction_performance_stats" {
@@ -350,7 +350,7 @@ resource "aws_cloudwatch_event_target" "satisfaction_performance_stats" {
 
     network_configuration {
       security_groups  = [module.api_service_security_group.id]
-      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
+      subnets          = data.aws_subnet.application[*].id
       assign_public_ip = false
     }
   }
@@ -373,7 +373,7 @@ resource "aws_cloudwatch_event_rule" "sleep_mode_on" {
   description         = "Sleep mode - turn on environment ${terraform.workspace}"
   schedule_expression = "cron(0 07,23 * * ? *)"
   tags                = var.default_tags
-  is_enabled          = var.account.sleep_mode_enabled ? true : false
+  is_enabled          = var.account.environment.sleep_mode_enabled ? true : false
 }
 
 resource "aws_cloudwatch_event_target" "sleep_mode_on" {
@@ -389,7 +389,7 @@ resource "aws_cloudwatch_event_target" "sleep_mode_on" {
 
     network_configuration {
       security_groups  = [module.sleep_mode_security_group.id]
-      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
+      subnets          = data.aws_subnet.application[*].id
       assign_public_ip = false
     }
   }
@@ -412,7 +412,7 @@ resource "aws_cloudwatch_event_rule" "sleep_mode_off" {
   description         = "Sleep mode - turn off environment ${terraform.workspace}"
   schedule_expression = "cron(15 03,20 ? * 1,3,4,5,6,7 *)"
   tags                = var.default_tags
-  is_enabled          = var.account.sleep_mode_enabled ? true : false
+  is_enabled          = var.account.environment.sleep_mode_enabled ? true : false
 }
 
 resource "aws_cloudwatch_event_target" "sleep_mode_off" {
@@ -428,7 +428,7 @@ resource "aws_cloudwatch_event_target" "sleep_mode_off" {
 
     network_configuration {
       security_groups  = [module.sleep_mode_security_group.id]
-      subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
+      subnets          = data.aws_subnet.application[*].id
       assign_public_ip = false
     }
   }
@@ -453,7 +453,7 @@ resource "aws_cloudwatch_event_rule" "block_ips" {
   name                = "block-ips-${terraform.workspace}"
   description         = "Execute the blocking of malicious IPs for ${terraform.workspace}"
   schedule_expression = "rate(5 minutes)"
-  is_enabled          = var.account.waf_ip_blocking_enabled
+  is_enabled          = var.account.waf.waf_ip_blocking_enabled
 }
 
 resource "aws_cloudwatch_event_target" "block_ips" {

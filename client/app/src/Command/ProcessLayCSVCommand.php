@@ -23,9 +23,9 @@ class ProcessLayCSVCommand extends Command
 {
     protected static $defaultName = 'digideps:process-lay-csv';
 
-    private const CHUNK_SIZE = 50;
+    private const int CHUNK_SIZE = 50;
 
-    protected const EXPECTED_COLUMNS = [
+    protected const array EXPECTED_COLUMNS = [
         'Case',
         'ClientSurname',
         'DeputyUid',
@@ -44,11 +44,11 @@ class ProcessLayCSVCommand extends Command
         'Hybrid',
     ];
 
-    private const OPTIONAL_COLUMNS = [
+    private const array OPTIONAL_COLUMNS = [
         'CourtOrderUid'
     ];
 
-    protected const UNEXPECTED_COLUMNS = [
+    protected const array UNEXPECTED_COLUMNS = [
         'LastReportDay',
         'DeputyOrganisation',
     ];
@@ -138,7 +138,7 @@ class ProcessLayCSVCommand extends Command
 
         $chunks = array_chunk($data, self::CHUNK_SIZE);
 
-        $this->redis->set($this->workspace.'-lay-csv-processing', 'processing');
+        $this->redis->set($this->workspace . '-lay-csv-processing', 'processing');
 
         foreach ($chunks as $index => $chunk) {
             $compressedChunk = CsvUploader::compressData($chunk);

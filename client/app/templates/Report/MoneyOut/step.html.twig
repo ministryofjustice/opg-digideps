@@ -13,14 +13,22 @@
     '%giftsPath%': path('gifts', {reportId: report.id})
 }) %}
 
-{% block htmlTitle %}{{ 'stepPage.moneyOut.htmlTitle' | trans(transOptions) }}{% endblock %}
-{% block pageTitle %}
-    {% if step == 2 %}
-        {% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans(clientTransOptions) %}
-        {% set categoryString2ndStep = ('form.category.entries.' ~ transaction.category ~ '.label2ndStep') | trans(clientTransOptions) %}
-        {{ 'stepPage.moneyOut.pageTitle' | trans(transOptions) }}: {{ '.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep }}
+{% set categoryString = ('form.category.entries.' ~ transaction.category ~ '.label') | trans(clientTransOptions) %}
+{% set categoryString2ndStep = ('form.category.entries.' ~ transaction.category ~ '.label2ndStep') | trans(clientTransOptions) %}
+
+{% block htmlTitle %}
+    {% if step == 2 and transactionId %}
+        {{ 'stepPage.moneyIn.editHtmlTitle' | trans(transOptions) }}
     {% else %}
-        {{ 'stepPage.moneyOut.pageTitle' | trans(transOptions) }}
+        {{ 'stepPage.moneyIn.htmlTitle' | trans(transOptions) }}
+    {% endif %}
+{% endblock %}
+
+{% block pageTitle %}
+    {% if step == 2 and transactionId %}
+        {{ 'stepPage.moneyOut.editPageTitle' | trans(transOptions) }}: {{ '.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep }}
+    {% else %}
+        {{ 'stepPage.moneyOut.pageTitle' | trans(transOptions) }}: {{ '.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep }}
     {% endif %}
 {% endblock %}
 
@@ -71,6 +79,13 @@
             {{ form_select(form.bankAccountId, 'form.bankAccount', {'labelText': form.bankAccountId.vars.label | trans}) }}
         {% endif %}
 
+        {% if form.addAnother %}
+            {{ form_add_another({
+                'addAnother': form.addAnother,
+                'thingTranslationKey': 'form.thing',
+                'translationDomain': translationDomain
+            }) }}
+        {% endif %}
     {% endif %}
 
     {{ macros.saveAndContinueButton(form.save) }}

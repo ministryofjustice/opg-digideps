@@ -1,39 +1,30 @@
 {% macro breadcrumbs(report) %}
-    {% set isUserNdrEnabled = app.user.isNdrEnabled() %}
     {% set isOrgUser = app.user.isDeputyOrg() %}
 
     <div class="govuk-breadcrumbs">
         <ol class="govuk-breadcrumbs__list">
-                <li class="govuk-breadcrumbs__list-item">
+            <li class="govuk-breadcrumbs__list-item">
+                {% if isOrgUser %}
+                    <a href="{{ path('org_dashboard') }}" class="govuk-breadcrumbs__link">
+                        {{ 'dashboard' | trans({}, 'common' ) }}
+                    </a>
+                {% else  %}
+                    <a href="{{ path('homepage') }}" class="govuk-breadcrumbs__link">
+                        {{ 'yourReports' | trans({'deputyFirstname': app.user.firstname, 'deputyLastname': app.user.lastname}, 'common' ) }}
+                    </a>
+                {% endif %}
+            </li>
+            <li class="govuk-breadcrumbs__list-item">
+                <a href="{{ path('report_overview', {'reportId': report.id}) }}"
+                   class="govuk-breadcrumbs__link behat-link-breadcrumbs-report-overview"
+                   data-action="report.overview">
                     {% if isOrgUser %}
-                        <a href="{{ path('org_dashboard') }}" class="govuk-breadcrumbs__link">
-                            {{ 'dashboard' | trans({}, 'common' ) }}
-                        </a>
-                    {% else  %}
-                        <a href="{{ path('homepage') }}" class="govuk-breadcrumbs__link">
-                            {{ 'yourReports' | trans({'deputyFirstname': app.user.firstname, 'deputyLastname': app.user.lastname}, 'common' ) }}
-                        </a>
-                    {% endif %}
-                </li>
-                <li class="govuk-breadcrumbs__list-item">
-                    {% if report.type == 'ndr' %}
-                        <a href="{{ path('ndr_overview', {'ndrId': report.id}) }}"
-                           class="govuk-breadcrumbs__link behat-link-breadcrumbs-ndr-overview"
-                           data-action="report.overview">
-                            {{ 'newDeputyReportOverview' | trans({}, 'common' ) }}
-                        </a>
+                        {{ 'clientProfile' | trans({}, 'common' ) }}
                     {% else %}
-                        <a href="{{ path('report_overview', {'reportId': report.id}) }}"
-                           class="govuk-breadcrumbs__link behat-link-breadcrumbs-report-overview"
-                           data-action="report.overview">
-                            {% if isOrgUser %}
-                                {{ 'clientProfile' | trans({}, 'common' ) }}
-                            {% else %}
-                                {{ 'deputyReportOverview' | trans({ 'startYear': report.startDate | date('Y'),'endYear': report.endDate | date('Y') }, 'common' ) }}
-                            {% endif %}
-                        </a>
+                        {{ 'deputyReportOverview' | trans({ 'startYear': report.startDate | date('Y'),'endYear': report.endDate | date('Y') }, 'common' ) }}
                     {% endif %}
-                </li>
+                </a>
+            </li>
         </ol>
     </div>
 {% endmacro %}
@@ -394,21 +385,14 @@
         <nav role="navigation">
             <ul class="govuk-list govuk-!-font-size-16">
                 <li>
-                    {% if report.type == 'ndr' %}
-                        <a href="{{ path('ndr_overview', {'ndrId': report.id}) }}"
-                           class="govuk-link" data-action="report.overview">
-                            {{ 'newDeputyReportOverview' | trans({}, 'common' ) }}
-                        </a>
-                    {% else %}
-                        <a href="{{ path('report_overview', {'reportId': report.id}) }}"
-                           class="govuk-link" data-action="report.overview">
-                            {% if isOrgUser %}
-                                {{ 'clientProfile' | trans({}, 'common' ) }}
-                            {% else %}
-                                {{ 'deputyReportOverview' | trans({ 'startYear': report.startDate | date('Y'),'endYear': report.endDate | date('Y') }, 'common' ) }}
-                            {% endif %}
-                        </a>
-                    {% endif %}
+                    <a href="{{ path('report_overview', {'reportId': report.id}) }}"
+                       class="govuk-link" data-action="report.overview">
+                        {% if isOrgUser %}
+                            {{ 'clientProfile' | trans({}, 'common' ) }}
+                        {% else %}
+                            {{ 'deputyReportOverview' | trans({ 'startYear': report.startDate | date('Y'),'endYear': report.endDate | date('Y') }, 'common' ) }}
+                        {% endif %}
+                    </a>
                 </li>
                 {% if (section_link_params(report, section, +1)) %}
                     <li>
@@ -418,15 +402,13 @@
                         </a>
                     </li>
                 {% endif %}
-                {% if report.type != 'ndr' %}
-                    {% if report.hasSection('balance') %}
-                        {% if section in ['gifts','deputyExpenses','paFeeExpense', 'moneyIn','moneyOut','bankAccounts','profDeputyCosts'] %}
-                            <li>
-                                <a href="{{ path('balance', {'reportId': report.id}) }}" class="govuk-link">
-                                    Accounts balance check
-                                </a>
-                            </li>
-                        {% endif %}
+                {% if report.hasSection('balance') %}
+                    {% if section in ['gifts','deputyExpenses','paFeeExpense', 'moneyIn','moneyOut','bankAccounts','profDeputyCosts'] %}
+                        <li>
+                            <a href="{{ path('balance', {'reportId': report.id}) }}" class="govuk-link">
+                                Accounts balance check
+                            </a>
+                        </li>
                     {% endif %}
                 {% endif %}
             </ul>
@@ -760,25 +742,4 @@ C13.7,13.2,13.2,13.7,12.5,13.7z M12.5,0.5c-6.6,0-12,5.4-12,12s5.4,12,12,12s12-5.
             </div>
         </fieldset>
     </div>
-{%- endmacro -%}
-
-{%- macro edit_remove_links_dd(editPathName, editOptions, removePathName, removeOptions, editLinkContextText, removeLinkContextText) -%}
-    <dd class="govuk-summary-list__value govuk-!-text-align-right">
-        <span>
-            <a
-                href="{{ path('client_benefits_check_step', editOptions) }}"
-                class="govuk-link"
-            >
-                {{ 'edit' | trans({}, 'common' ) }} <span class="govuk-visually-hidden">{{ editLinkContextText }}</span>
-            </a>
-        </span>
-        <span>
-            <a
-                href="{{ path(removePathName, removeOptions) }}"
-                class="govuk-link govuk-!-margin-left-1"
-            >
-                {{ 'remove' | trans({}, 'common' ) }} <span class="govuk-visually-hidden">{{ removeLinkContextText }}</span>
-            </a>
-        </span>
-    </dd>
 {%- endmacro -%}

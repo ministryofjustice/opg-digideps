@@ -18,9 +18,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class MigrationsMigrateLockCommand extends Command
 {
-    public const LOCK_KEY = 'migration_status';
-    public const LOCK_VALUE = 'locked';
-    public const LOCK_EXPIRES_SECONDS = 300;
+    public const string LOCK_KEY = 'migration_status';
+    public const string LOCK_VALUE = 'locked';
+    public const int LOCK_EXPIRES_SECONDS = 300;
 
     protected function configure(): void
     {
@@ -91,7 +91,7 @@ class MigrationsMigrateLockCommand extends Command
 
     private function getRedis(): Client
     {
-        return $this->getService('snc_redis.default');
+        return $this->getService('predis');
     }
 
     private function getService(string $id): mixed

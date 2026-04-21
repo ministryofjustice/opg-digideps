@@ -84,40 +84,6 @@ trait ActionsSectionTrait
         );
     }
 
-    /**
-     * @Given I choose yes and fill in details about the gifts and then save on gifts actions section
-     */
-    public function iChooseYesAndSaveOnGiftsActionsSection()
-    {
-        $this->chooseOption(
-            'actions[actionGiveGiftsToClient]',
-            'yes'
-        );
-
-        $this->fillField(
-            'actions[actionGiveGiftsToClientDetails]',
-            'Lorem Ipsum'
-        );
-
-        $this->pressButton('Save and continue');
-    }
-
-    /**
-     * @Given I choose :yesNo and save on the :ndrActionsPage page
-     */
-    public function iChooseYesNoAndSaveOnTheNDRActionsPage(string $yesNo, string $ndrActionsPage)
-    {
-        // Make ndrActionPage value the form field name
-        $value = str_replace('-', ' ', $ndrActionsPage);
-        $value = ucwords($value);
-        $value = str_replace(' ', '', $value);
-
-        $this->fillInActionsForm(
-            $yesNo,
-            "actions[action$value]"
-        );
-    }
-
     public function fillInActionsForm($answer, $actionName, $comment = null, $commentName = null)
     {
         $this->chooseOption($actionName, $answer, 'actions');
@@ -144,7 +110,7 @@ trait ActionsSectionTrait
     {
         // this should be replaced with actual link click but could not identify it properly
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
-        $reportConcernsUrl = 'report/'.$activeReportId.'/actions/step/2?from=summary';
+        $reportConcernsUrl = 'report/' . $activeReportId . '/actions/step/2?from=summary';
         $this->visitPath($reportConcernsUrl);
     }
 }

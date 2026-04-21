@@ -8,6 +8,12 @@
 } ) }}
 {{ form_input(form.description, 'form.description') }}
 {{ form_known_date(form.valuationDate, 'form.valuationDate') }}
+{{ form_add_another({
+    'addAnother': form.addAnother,
+    'thingTranslationKey': 'form.thing'|trans(transOptions, translationDomain),
+    translationDomain: translationDomain,
+}) }}
+
 {{ macros.saveAndContinueButton(form.save) }}
 
 {{ form_end(form) }}

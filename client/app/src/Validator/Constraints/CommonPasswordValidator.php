@@ -7,9 +7,9 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class CommonPasswordValidator extends ConstraintValidator
 {
-    public const TMP_ROOT_PATH = '/tmp/';
-    public const PWNED_PW_URL = 'https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt';
-    private const CACHE_PASSWORDS_SECS = 24 * 3600;
+    public const string TMP_ROOT_PATH = '/tmp/';
+    public const string PWNED_PW_URL = 'https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt';
+    private const int CACHE_PASSWORDS_SECS = 24 * 3600;
 
     private string $filePathCommonPasswords;
     private string $pwnedPasswordsUrl = '';
@@ -19,7 +19,7 @@ class CommonPasswordValidator extends ConstraintValidator
      * @param bool $refreshCache Set to true if password cache should be regularly refreshed
      */
     public function __construct(
-        string $filePathCommonPasswords = self::TMP_ROOT_PATH.'commonpasswords.txt',
+        string $filePathCommonPasswords = self::TMP_ROOT_PATH . 'commonpasswords.txt',
         string $pwnedPasswordsUrl = self::PWNED_PW_URL,
         bool $refreshCache = true,
     ) {

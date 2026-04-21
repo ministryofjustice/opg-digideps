@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\v2\Registration\TestHelpers;
 
+use App\Domain\Deputy\DeputyType;
 use DateTimeImmutable;
 use DateTime;
 use App\Entity\Client;
@@ -54,8 +55,8 @@ class OrgDeputyshipDTOTestHelper
             'ClientForename' => $faker->firstName(),
             'ClientSurname' => $faker->lastName(),
             'ClientDateOfBirth' => $faker->dateTime()->format('Y-m-d'),
-            'ClientAddress1' => $faker->buildingNumber().' '.$faker->streetName(),
-            'ClientAddress2' => Address::cityPrefix().' '.$faker->city(),
+            'ClientAddress1' => $faker->buildingNumber() . ' ' . $faker->streetName(),
+            'ClientAddress2' => Address::cityPrefix() . ' ' . $faker->city(),
             'ClientAddress3' => Address::county(),
             'ClientAddress4' => null,
             'ClientAddress5' => null,
@@ -67,7 +68,7 @@ class OrgDeputyshipDTOTestHelper
             'DeputyForename' => $faker->firstName(),
             'DeputySurname' => $faker->lastName(),
             'DeputyAddress1' => $faker->streetName(),
-            'DeputyAddress2' => Address::cityPrefix().' '.$faker->city(),
+            'DeputyAddress2' => Address::cityPrefix() . ' ' . $faker->city(),
             'DeputyAddress3' => $faker->city(),
             'DeputyAddress4' => Address::county(),
             'DeputyAddress5' => 'UK',
@@ -182,6 +183,7 @@ class OrgDeputyshipDTOTestHelper
     public static function ensureDeputyInUploadExists(OrgDeputyshipDto $dto, EntityManager $em): Deputy
     {
         $deputy = (new Deputy())
+            ->setDeputyType(DeputyType::LAY)
             ->setEmail1($dto->getDeputyEmail())
             ->setDeputyUid($dto->getDeputyUid())
             ->setFirstname($dto->getDeputyFirstname())

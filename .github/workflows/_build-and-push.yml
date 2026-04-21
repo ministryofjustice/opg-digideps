@@ -21,6 +21,9 @@ on:
         required: false
         default: true
         type: boolean
+    secrets:
+      snyk_token:
+        required: true
 
 jobs:
   docker_build_scan_push:
@@ -104,12 +107,18 @@ jobs:
             platform: "amd64"
             runs_on: "ubuntu-latest"
 
+          - svc_name: "mock-sirius"
+            sub_folder: "mock-sirius"
+            docker_file: "Dockerfile"
+            platform: "amd64"
+            runs_on: "ubuntu-latest"
+
     runs-on: ${{ matrix.runs_on }}
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: set up docker buildx
-        uses: docker/setup-buildx-action@b5ca514318bd6ebac0fb2aedd5d36ec1b5c232a2 # v3.10.0
+        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
         id: buildx_setup
         with:
           version: v0.15.1
@@ -123,7 +132,7 @@ jobs:
 
       - name: cache docker layers
         id: cache-docker
-        uses: actions/cache@9255dc7a253b0ccc959486e2bca901246202afeb # v5.0.1
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         with:
           path: /tmp/.buildx-cache
           key: ${{ matrix.svc_name }}-${{ inputs.branch_name }}-${{ steps.cache-dates.outputs.cache_date_today }}-${{ github.sha }}
@@ -132,9 +141,6 @@ jobs:
             ${{ matrix.svc_name }}-main-${{ steps.cache-dates.outputs.cache_date_today }}
             ${{ matrix.svc_name }}-${{ inputs.branch_name }}-${{ steps.cache-dates.outputs.cache_date_yesterday }}
             ${{ matrix.svc_name }}-main-${{ steps.cache-dates.outputs.cache_date_yesterday }}
-
-      - name: install aws cli
-        uses: unfor19/install-aws-cli-action@f5b46b7f32cf5e7ebd652656c5036bf83dd1e60c # v1
 
       - name: download resources artifact
         uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v7.0.0
@@ -179,57 +185,57 @@ jobs:
           fi
         working-directory: ${{ matrix.sub_folder }}
 
+      - name: configure OIDC AWS credentials for ECR pull
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.MANAGEMENT_ACCOUNT }}:role/digideps-gh-actions-ecr-pull
+          role-session-name: github-actions-ecr-pull
+          role-duration-seconds: 900
+          aws-region: eu-west-1
+
+      - uses: aws-actions/amazon-ecr-login@183a1442edf41672e66566b7fc560e297a290896 # v2.1.1
+        id: login_ecr_pull
+        with:
+          registries: ${{ vars.MANAGEMENT_ACCOUNT }}
+          mask-password: "true"
+
+      - name: Run Snyk Scan
+        id: snyk_scan
+        if: matrix.svc_name != 'mock-sirius'
+        uses: ministryofjustice/opg-github-actions/actions/snyk-scan@ceeda9d30ec7f6705c819d0b7664b9a79df99a3b # v4.8.0
+        with:
+          SNYK_TEST_IMAGE: ${{ matrix.svc_name }}:latest
+          SNYK_TOKEN: ${{ secrets.snyk_token }}
+          snyk_test_args: "--severity-threshold=high"
+          sarif_filepath: ./test-results
+          sarif_filename: snyk-results.sarif
+          snyk_policy_path: ${{ github.workspace }}/.github/.snyk
+
+      - name: Upload SNYK scan results to GitHub Security tab
+        if: steps.snyk_scan.outcome == 'success' && hashFiles('test-results/snyk-results.sarif') != ''
+        uses: github/codeql-action/upload-sarif@89a39a4e59826350b863aa6b6252a07ad50cf83e # v4.32.4
+        with:
+          sarif_file: test-results/snyk-results.sarif
+          category: ${{ matrix.svc_name }}
+
       - name: Move cache
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
 
       - name: configure OIDC AWS credentials for ECR push
-        uses: aws-actions/configure-aws-credentials@00943011d9042930efac3dcd3a170e4273319bc8 # v5.1.0
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
         with:
           role-to-assume: arn:aws:iam::${{ vars.MANAGEMENT_ACCOUNT }}:role/digideps-gh-actions-ecr-push
           role-session-name: github-actions-ecr-push
           role-duration-seconds: 900
           aws-region: eu-west-1
 
-      - name: ecr login
+      - uses: aws-actions/amazon-ecr-login@183a1442edf41672e66566b7fc560e297a290896 # v2.1.1
         id: login_ecr
-        uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076 # v2.0.1
         with:
           registries: ${{ vars.MANAGEMENT_ACCOUNT }}
-
-      - name: trivy image scanning
-        id: trivy_scan
-        uses: aquasecurity/trivy-action@6c175e9c4083a92bbca2f9724c8a5e33bc2d97a5 # v0.30.0
-        with:
-          image-ref: ${{ matrix.svc_name }}:latest
-          severity: "HIGH,CRITICAL"
-          format: "sarif"
-          scanners: "vuln"
-          output: "trivy-results.sarif"
-          timeout: 15m
-        env:
-          TRIVY_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db
-          TRIVY_JAVA_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-java-db
-
-      - name: upload trivy scan results to security tab
-        id: trivy_upload_sarif
-        uses: github/codeql-action/upload-sarif@70df9def86d22bf0ea4e7f8b956e7b92e7c1ea22 # v2.20.7
-        with:
-          sarif_file: "trivy-results.sarif"
-
-      - name: generate SBOM
-        if: inputs.branch_name == 'main'
-        run: |
-          mkdir -p sboms
-          trivy image --format spdx --output "sboms/sbom-${{ matrix.svc_name }}.spdx.json" "${{ matrix.svc_name }}:latest"
-
-      - name: upload SBOM
-        if: inputs.branch_name == 'main'
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
-        with:
-          name: sbom-${{ matrix.svc_name }}
-          path: sboms/sbom-${{ matrix.svc_name }}.spdx.json
+          mask-password: "true"
 
       - name: show build tag
         env:

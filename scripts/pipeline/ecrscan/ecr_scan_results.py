@@ -54,12 +54,25 @@ class ECRScanChecker:
         )
         return client
 
-    def get_ecr_image_repositories(self, search_term):
+    def get_ecr_image_repositories(self, search_term: str, ignore: str = ""):
         ecr_image_repositories = []
-        response = self.aws_ecr_client.describe_repositories()
-        for repository in response["repositories"]:
-            if search_term in repository["repositoryName"]:
-                ecr_image_repositories.append(repository["repositoryName"])
+        try:
+            paginator = self.aws_ecr_client.get_paginator("describe_repositories")
+
+            for page in paginator.paginate():
+                for repository in page.get("repositories", []):
+                    name = repository["repositoryName"]
+
+                    if search_term not in name:
+                        continue
+
+                    if ignore and ignore in name:
+                        continue
+
+                    ecr_image_repositories.append(name)
+
+        except Exception as e:
+            raise RuntimeError(f"Failed to list ECR repositories: {e}")
 
         return ecr_image_repositories
 
@@ -207,6 +220,11 @@ def main():
         help="The root part of the ECR repository path, for example online-lpa",
     )
     parser.add_argument(
+        "--ignore",
+        default="",
+        help="Terms to ignore",
+    )
+    parser.add_argument(
         "--tag", default="latest", help="Image tag to check scan results for."
     )
     parser.add_argument(
@@ -251,7 +269,7 @@ def main():
 
     args = parser.parse_args()
     work = ECRScanChecker()
-    ecr_repositories = work.get_ecr_image_repositories(args.search)
+    ecr_repositories = work.get_ecr_image_repositories(args.search, args.ignore)
     report = work.list_findings_for_each_repository(
         ecr_repositories,
         args.tag,

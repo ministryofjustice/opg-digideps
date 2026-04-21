@@ -72,7 +72,7 @@ class Client
      *
      * @var array
      */
-    private $reports = [];
+    private array $reports = [];
 
     /**
      * @JMS\Type("App\Entity\Report\Report")
@@ -80,13 +80,6 @@ class Client
      * @var Report
      */
     private $currentReport;
-
-    /**
-     * @var Ndr\Ndr
-     *
-     * @JMS\Type("App\Entity\Ndr\Ndr")
-     */
-    private $ndr;
 
     /**
      * @JMS\Exclude()
@@ -119,11 +112,11 @@ class Client
      *
      * @JMS\Groups({"edit", "client-court-date", "checklist-information"})
      *
-     * @Assert\NotBlank( message="client.courtDate.notBlank", groups={"lay-deputy-client", "lay-deputy-client-edit"})
+     * @Assert\NotBlank( message="client.courtDate.notBlank", groups={"lay-deputy-client"})
      *
-     * @Assert\Type(type="DateTimeInterface", message="client.courtDate.message", groups={"lay-deputy-client", "lay-deputy-client-edit"})
+     * @Assert\Type(type="DateTimeInterface", message="client.courtDate.message", groups={"lay-deputy-client"})
      *
-     * @Assert\LessThan("today", groups={"pa-client"}, message="client.courtDate.lessThan", groups={"lay-deputy-client", "lay-deputy-client-edit"})
+     * @Assert\LessThan("today", groups={"pa-client"}, message="client.courtDate.lessThan", groups={"lay-deputy-client"})
      *
      * @var \DateTime|null
      */
@@ -368,9 +361,9 @@ class Client
     }
 
     /**
-     * @return array $reports
+     * @return Report[] $reports
      */
-    public function getReports()
+    public function getReports(): array
     {
         return $this->reports;
     }
@@ -443,24 +436,6 @@ class Client
         return $this;
     }
 
-    /**
-     * @return Ndr\Ndr
-     */
-    public function getNdr()
-    {
-        return $this->ndr;
-    }
-
-    /**
-     * @param Ndr\Ndr $ndr
-     */
-    public function setNdr($ndr)
-    {
-        $this->ndr = $ndr;
-
-        return $this;
-    }
-
     public function removeReport($report)
     {
         if (!empty($this->reports)) {
@@ -497,7 +472,7 @@ class Client
 
     public function getFullname()
     {
-        $this->fullname = $this->firstname.' '.$this->lastname;
+        $this->fullname = $this->firstname . ' ' . $this->lastname;
 
         return $this->fullname;
     }
@@ -831,47 +806,6 @@ class Client
     }
 
     /**
-     * @return array $coDeps an array of users sorted by firstname, or email if no firstname
-     */
-    public function getCoDeputies()
-    {
-        $coDeps = [];
-        if (is_array($this->users) && count($this->users) > 0) {
-            foreach ($this->users as $user) {
-                if (!$user->getFirstname()) {
-                    $matches = [];
-                    preg_match('(^\w+)', $user->getEmail(), $matches);
-                    if (!empty($matches[0])) {
-                        $coDeps[strtolower($matches[0]).$user->getId()] = $user;
-                    }
-                } else {
-                    if (!is_null($user->getFirstname())) {
-                        $coDeps[strtolower($user->getFirstname()).$user->getId()] = $user;
-                    }
-                }
-            }
-            ksort($coDeps);
-        }
-
-        return array_values($coDeps);
-    }
-
-    /**
-     * @return array $submittedReports an array of submitted reports
-     */
-    public function getSubmittedReports()
-    {
-        $submittedReports = [];
-        foreach ($this->getReports() as $report) {
-            if ($report->isSubmitted()) {
-                $submittedReports[] = $report;
-            }
-        }
-
-        return $submittedReports;
-    }
-
-    /**
      * @return Report|null
      */
     public function getActiveReport()
@@ -1059,5 +993,44 @@ class Client
         }
 
         return $reportIds;
+    }
+
+    /**
+     * @return array $coDeps an array of users sorted by firstname, or email if no firstname
+     */
+    public function getCoDeputies()
+    {
+        $coDeps = [];
+        if (is_array($this->users) && count($this->users) > 0) {
+            foreach ($this->users as $user) {
+                if (!$user->getFirstname()) {
+                    $matches = [];
+                    preg_match('(^\w+)', $user->getEmail(), $matches);
+                    if (!empty($matches[0])) {
+                        $coDeps[strtolower($matches[0]) . $user->getId()] = $user;
+                    }
+                } else {
+                    $coDeps[strtolower($user->getFirstname()) . $user->getId()] = $user;
+                }
+            }
+            ksort($coDeps);
+        }
+
+        return array_values($coDeps);
+    }
+
+    /**
+     * @return array $submittedReports an array of submitted reports
+     */
+    public function getSubmittedReports()
+    {
+        $submittedReports = [];
+        foreach ($this->getReports() as $report) {
+            if ($report->isSubmitted()) {
+                $submittedReports[] = $report;
+            }
+        }
+
+        return $submittedReports;
     }
 }

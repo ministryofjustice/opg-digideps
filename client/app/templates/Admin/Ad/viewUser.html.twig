@@ -14,7 +14,6 @@
     <ul>
         <li>Name: {{ user.firstname }}</li>
         <li>Lastname: {{ user.lastname }}</li>
-        <li>NDR enabled: {{ user.ndrEnabled ? 'yes':'no' }}</li>
         <li>Assisted: {{ user.adManaged ? 'yes':'no' }}</li>
     </ul>
 
@@ -27,15 +26,6 @@
         </ul>
     {% else %}
         You must create the client from the deputy area
-    {% endif %}
-
-    <h2 class="govuk-heading-s">NDR</h2>
-    {% if firstClient.ndr is defined and firstClient.ndr %}
-        <ul>
-            <li>Status: {{ firstClient.ndr.submitted ? 'Submitted' : 'Not submitted' }}</li>
-        </ul>
-    {% else %}
-        You must create the client first from the deputy area
     {% endif %}
 
     {% if is_granted('ROLE_AD') and  user.roleName == 'ROLE_LAY_DEPUTY' %}

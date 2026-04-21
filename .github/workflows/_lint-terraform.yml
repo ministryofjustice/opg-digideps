@@ -18,6 +18,7 @@ on:
 jobs:
   lint-terraform:
     runs-on: ubuntu-latest
+
     strategy:
       matrix:
         include:
@@ -25,11 +26,11 @@ jobs:
           - folder: "account"
 
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/actions/terraform-version@4f345be3f706950d1fdc05bc86383967a149bd99 # v4.3.4
+        uses: ministryofjustice/opg-github-actions/actions/terraform-version@4daa651011e6595c5b9689c4ff634cd15221a206 # v4.3.11
         with:
           terraform_directory: terraform/${{ matrix.folder }}
 
@@ -42,12 +43,13 @@ jobs:
         run: terraform fmt -check -recursive
         working-directory: terraform/${{ matrix.folder }}
 
-      - uses: webfactory/ssh-agent@a6f90b1f127823b31d4d4a8d96047790581349bd # v0.9.1
+      - id: deploy-key
+        uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@3a15a16fcc221821c2869eecd8822c5d62af2984 # v4.7.0
         with:
-          ssh-private-key: ${{ secrets.ssh_private_key }}
+          deploy_key: ${{ secrets.ssh_private_key }}
 
       - name: configure OIDC AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@00943011d9042930efac3dcd3a170e4273319bc8 # v5.1.0
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
         with:
           role-to-assume: arn:aws:iam::${{ vars.IDENTITY_ACCOUNT }}:role/oidc-digideps-development
           role-session-name: github-actions-terraform
@@ -63,43 +65,6 @@ jobs:
           echo "$TF_WORKSPACE"
           terraform validate
         working-directory: terraform/${{ matrix.folder }}
-
-      - name: Unset AWS variables
-        if: always()
-        run: |
-          {
-            echo "AWS_SECRET_ACCESS_KEY="
-            echo "AWS_ACCESS_KEY_ID="
-            echo "AWS_SESSION_TOKEN="
-          } >> "$GITHUB_ENV"
-
-      - name: configure OIDC AWS credentials for Trivy DB Ecr
-        uses: aws-actions/configure-aws-credentials@00943011d9042930efac3dcd3a170e4273319bc8 # v5.1.0
-        with:
-          role-to-assume: arn:aws:iam::${{ vars.MANAGEMENT_ACCOUNT }}:role/digideps-gh-actions-ecr-push
-          role-session-name: github-actions-ecr-trivy-db
-          role-duration-seconds: 900
-          aws-region: eu-west-1
-
-      - name: ecr login for trivy db
-        id: login_ecr
-        uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076 # v2.0.1
-        with:
-          registries: ${{ vars.MANAGEMENT_ACCOUNT }}
-
-      - name: Trivy Terraform Config Scan
-        id: trivy_scan
-        uses: aquasecurity/trivy-action@b6643a29fecd7f34b3597bc6acb0a98b03d33ff8 # v0.33.1
-        with:
-          scan-type: "config"
-          target: terraform/${{ matrix.folder }}
-          severity: "MEDIUM,HIGH,CRITICAL"
-          format: "sarif"
-          output: "trivy-results.sarif"
-        env:
-          TRIVY_TIMEOUT: 15m
-          TRIVY_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-db
-          TRIVY_JAVA_DB_REPOSITORY: ${{ steps.login_ecr.outputs.registry }}/trivy-db-public-ecr/aquasecurity/trivy-java-db
 
       - name: Unset AWS variables
         if: always()

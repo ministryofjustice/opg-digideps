@@ -19,7 +19,7 @@ class ClientFactory
         $client
             ->setCaseNumber(isset($data['firstName']) ? $data['firstName'] : $data['id'])
             ->setFirstname(isset($data['firstName']) ? $data['firstName'] : 'John')
-            ->setLastname(isset($data['lastName']) ? $data['lastName'] : $data['id'].'-client')
+            ->setLastname(isset($data['lastName']) ? $data['lastName'] : $data['id'] . '-client')
             ->setPhone(isset($data['phone']) ? $data['phone'] : '022222222222222')
             ->setAddress(isset($data['address']) ? $data['address'] : 'Victoria road')
             ->setAddress2(isset($data['address2']) ? $data['address2'] : 'Birmingham')

@@ -25,5 +25,5 @@ If any debt may lead to larger risks, it should be transferred to the risk board
    testSubmitValidNdr() test needs different CASREC properties to properly test correct report type is generated from NDR
 
 ## Design
-- Status label texts are variously defined in `common.en.yml`, `ndr-overview.en.yml` and `report-overview.en.yml`
+- Status label texts are variously defined in `common.en.yml` and `report-overview.en.yml`
 - Many templates are duplicated (e.g. start, yes/no questions, add another)

@@ -8,7 +8,7 @@ use App\Controller\AbstractController;
 use App\Entity\Report\MoneyTransactionShort;
 use App\Entity\Report\Report;
 use App\Entity\Report\Status;
-use App\Form\AddAnotherRecordType;
+use App\Form\AddAnotherThingType;
 use App\Form\ConfirmDeleteType;
 use App\Form\Report\DoesMoneyInExistType;
 use App\Form\Report\MoneyShortTransactionType;
@@ -17,10 +17,12 @@ use App\Form\Report\NoMoneyInType;
 use App\Form\YesNoType;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
+use OPG\Digideps\Common\Validating\ValidatingForm;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MoneyInShortController extends AbstractController
 {
@@ -33,6 +35,7 @@ class MoneyInShortController extends AbstractController
     public function __construct(
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -64,8 +67,9 @@ class MoneyInShortController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $report = $form->getData();
-            $answer = $form['moneyInExists']->getData();
+            $validatingForm = new ValidatingForm($form);
+            $report = $validatingForm->getObjectOrThrow(null, Report::class);
+            $answer = $validatingForm->getStringOrNull('moneyInExists');
 
             $report->setMoneyInExists($answer);
             $this->restClient->put('report/' . $reportId, $report, ['doesMoneyInExist']);
@@ -121,8 +125,9 @@ class MoneyInShortController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $report = $form->getData();
-            $answer = $form['reasonForNoMoneyIn']->getData();
+            $validatingForm = new ValidatingForm($form);
+            $report = $validatingForm->getObjectOrThrow(null, Report::class);
+            $answer = $validatingForm->getStringOrNull('reasonForNoMoneyIn');
 
             $report->setReasonForNoMoneyIn($answer);
             $report->getStatus()->setMoneyInShortState(Status::STATE_DONE);
@@ -151,20 +156,32 @@ class MoneyInShortController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
+            /** @var Report $data */
             $data = $form->getData();
+            $categories = $data->getMoneyShortCategoriesIn();
 
-            $this->restClient->put('report/' . $reportId, $data, ['moneyShortCategoriesIn']);
-
-            if ($fromSummaryPage) {
-                $request->getSession()->getFlashBag()->add(
-                    'notice',
-                    'Answer edited'
-                );
-
-                return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId]);
+            // Count the number of categories where 'present' is true
+            $presentCount = 0;
+            foreach ($categories as $category) {
+                if ($category->isPresent()) {
+                    $presentCount++;
+                }
             }
 
-            return $this->redirectToRoute('money_in_short_one_off_payments_exist', ['reportId' => $reportId]);
+            if ($presentCount === 0) {
+                $this->addFlash('error', 'Select at least one category of money');
+            } else {
+                $this->restClient->put('report/' . $reportId, $data, ['moneyShortCategoriesIn']);
+                if ($fromSummaryPage) {
+                    $this->addFlash(
+                        'notice',
+                        'Answer edited'
+                    );
+
+                    return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId]);
+                }
+                return $this->redirectToRoute('money_in_short_one_off_payments_exist', ['reportId' => $reportId]);
+            }
         }
 
         return [
@@ -198,24 +215,24 @@ class MoneyInShortController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /* @var Report $data */
-            $data = $form->getData();
+            $validatingForm = new ValidatingForm($form);
+            $report = $validatingForm->getObjectOrThrow(null, Report::class);
 
-            $this->restClient->put("report/$reportId", $data, ['money-transactions-short-in-exist']);
+            $this->restClient->put("report/$reportId", $report, ['money-transactions-short-in-exist']);
 
-            if ('yes' === $data->getMoneyTransactionsShortInExist() && !empty($softDeletedMoneyInShortTransactionIds)) {
+            if ('yes' === $report->getMoneyTransactionsShortInExist() && !empty($softDeletedMoneyInShortTransactionIds)) {
                 // undelete items if they exist
                 foreach ($softDeletedMoneyInShortTransactionIds as $transactionId) {
                     $this->restClient->put('/report/' . $reportId . '/money-transaction-short/soft-delete/' . $transactionId, ['transactionSoftDelete']);
                 }
 
                 return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId, 'from' => 'money_in_short_one_off_payments_exist']);
-            } elseif ('yes' === $data->getMoneyTransactionsShortInExist() && !empty($data->getMoneyTransactionsShortIn()) && 'summary' == $fromSummaryPage) {
+            } elseif ('yes' === $report->getMoneyTransactionsShortInExist() && !empty($report->getMoneyTransactionsShortIn()) && 'summary' == $fromSummaryPage) {
                 // covers scenarios where deputy clicks edit link from summary change but chooses not to change answer
                 return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId, 'from' => 'money_in_short_one_off_payments_exist']);
             }
 
-            switch ($data->getMoneyTransactionsShortInExist()) {
+            switch ($report->getMoneyTransactionsShortInExist()) {
                 case 'yes':
                     return $this->redirectToRoute('money_in_short_add', ['reportId' => $reportId]);
                 case 'no':
@@ -240,41 +257,24 @@ class MoneyInShortController extends AbstractController
         $fromSummaryPage = 'summary' == $request->get('from');
 
         $form = $this->createForm(MoneyShortTransactionType::class, $record);
+        $form->add('addAnother', AddAnotherThingType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+            $validatingForm = new ValidatingForm($form);
+            $data = $validatingForm->getObjectOrThrow(null, MoneyTransactionShort::class);
             $this->restClient->post('report/' . $report->getId() . '/money-transaction-short', $data, ['moneyTransactionShort']);
-
-            return $this->redirect($this->generateUrl('money_in_short_add_another', ['reportId' => $reportId]));
+            $this->addFlash('notice', $this->translator->trans('notices.entry.added', domain: 'report-money-short'));
+            $addAnother = $validatingForm->getStringOrNull('addAnother') === 'yes';
+            $parameters = ['reportId' => $reportId];
+            if ($addAnother && $fromSummaryPage) {
+                $parameters['from'] = 'summary';
+            }
+            return $this->redirect($this->generateUrl($addAnother ? 'money_in_short_add' : 'money_in_short_summary', $parameters));
         }
 
         return [
             'backLink' => $this->generateUrl($fromSummaryPage ? 'money_in_short_summary' : 'money_in_short_one_off_payments_exist', ['reportId' => $reportId]),
-            'form' => $form->createView(),
-            'report' => $report,
-        ];
-    }
-
-    #[Route(path: '/report/{reportId}/money-in-short/add_another', name: 'money_in_short_add_another')]
-    #[Template('@App/Report/MoneyInShort/addAnother.html.twig')]
-    public function addAnotherAction(Request $request, int $reportId): RedirectResponse|array
-    {
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-
-        $form = $this->createForm(AddAnotherRecordType::class, $report, ['translation_domain' => 'report-money-short']);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            switch ($form['addAnother']->getData()) {
-                case 'yes':
-                    return $this->redirectToRoute('money_in_short_add', ['reportId' => $reportId, 'from' => 'add_another']);
-                case 'no':
-                    return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId]);
-            }
-        }
-
-        return [
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -291,8 +291,9 @@ class MoneyInShortController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
-            $request->getSession()->getFlashBag()->add('notice', 'Entry edited');
+            $validatingForm = new ValidatingForm($form);
+            $data = $validatingForm->getObjectOrThrow(null, MoneyTransactionShort::class);
+            $this->addFlash('notice', $this->translator->trans('notices.entry.edited', domain: 'report-money-short'));
 
             $this->restClient->put('report/' . $report->getId() . '/money-transaction-short/' . $transaction->getId(), $data, ['moneyTransactionShort']);
 
@@ -318,10 +319,7 @@ class MoneyInShortController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->restClient->delete('report/' . $report->getId() . '/money-transaction-short/' . $transactionId);
 
-            $request->getSession()->getFlashBag()->add(
-                'notice',
-                'Entry deleted'
-            );
+            $this->addFlash('notice', $this->translator->trans('notices.entry.deleted', domain: 'report-money-short'));
 
             return $this->redirect($this->generateUrl('money_in_short_summary', ['reportId' => $reportId]));
         }
@@ -351,11 +349,8 @@ class MoneyInShortController extends AbstractController
         if (Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyInShortState()['state'] && 'skip-step' != $fromPage) {
             return $this->redirectToRoute('money_in_short', ['reportId' => $reportId]);
         }
-
         return [
-            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
             'report' => $report,
-            'status' => $report->getStatus(),
         ];
     }
 

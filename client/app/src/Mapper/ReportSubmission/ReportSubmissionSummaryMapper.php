@@ -7,11 +7,8 @@ use App\Service\Client\RestClient;
 
 class ReportSubmissionSummaryMapper
 {
-    /** @var RestClient */
-    private $restClient;
-
-    /** @var string */
-    const API_ENDPOINT = '/report-submission/pre-registration-data';
+    private RestClient $restClient;
+    private const string API_ENDPOINT = '/report-submission/pre-registration-data';
 
     public function __construct(RestClient $restClient)
     {

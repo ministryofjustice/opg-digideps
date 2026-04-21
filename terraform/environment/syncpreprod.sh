@@ -6,7 +6,7 @@
 # depends on secretsmanager for, well, secrets
 
 # set environments
-SOURCE=production02
+SOURCE=production
 TARGET=preprod
 
 # check for prereqs

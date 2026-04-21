@@ -7,7 +7,7 @@ use ZipArchive;
 
 class DocumentsZipFileCreator
 {
-    const TMP_ROOT_PATH = '/tmp/';
+    public const string TMP_ROOT_PATH = '/tmp/';
 
     /**
      * @var array
@@ -104,7 +104,7 @@ class DocumentsZipFileCreator
      */
     private static function createDocumentTmpFilePath(string $fileName)
     {
-        return self::TMP_ROOT_PATH.'dd_temp_zip_'.$fileName.microtime(1);
+        return self::TMP_ROOT_PATH . 'dd_temp_zip_' . $fileName . microtime(1);
     }
 
     /**
@@ -112,7 +112,7 @@ class DocumentsZipFileCreator
      */
     private static function createZipFilePath(string $zipFileName)
     {
-        return self::TMP_ROOT_PATH.$zipFileName;
+        return self::TMP_ROOT_PATH . $zipFileName;
     }
 
     /**
@@ -120,7 +120,7 @@ class DocumentsZipFileCreator
      */
     private static function createMultiZipFilePath()
     {
-        return self::TMP_ROOT_PATH.'multidownload-'.microtime(1).'.zip';
+        return self::TMP_ROOT_PATH . 'multidownload-' . microtime(1) . '.zip';
     }
 
     public function __destruct()

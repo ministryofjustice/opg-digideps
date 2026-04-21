@@ -169,18 +169,6 @@ trait MoneyInSectionTrait
         );
 
         $this->moneyInTransaction[] = [$this->currentMoneyTypeReportingOn => $value];
-
-        $this->pressButton('Save and continue');
-    }
-
-    /**
-     * @Given I dont add another item
-     */
-    public function iDontAddAnotherItem()
-    {
-        $this->chooseOption('add_another[addAnother]', 'no');
-        $this->pressButton('Save and continue');
-        $this->moneyTypeCategoriesCompleted[] = $this->currentMoneyTypeReportingOn;
     }
 
     /**
@@ -189,16 +177,6 @@ trait MoneyInSectionTrait
     public function iShouldSeeTheMoneyInSummary(): bool
     {
         return $this->iAmOnPage('/report\/.*\/money-in\/summary.*$/');
-    }
-
-    /**
-     * @When I add another item
-     */
-    public function iAddAnotherItem()
-    {
-        $this->chooseOption('add_another[addAnother]', 'yes');
-        $this->pressButton('Save and continue');
-        $this->moneyTypeCategoriesCompleted[] = $this->currentMoneyTypeReportingOn;
     }
 
     /**
@@ -275,10 +253,21 @@ trait MoneyInSectionTrait
             $newValue
         );
 
-        foreach ($this->moneyInTransaction[0] as $moneyType => $value) {
+        foreach ($this->moneyInTransaction[0] as $value) {
             $this->subtractFromSectionTotal($this->currentMoneyTypeReportingOn, $value);
             $this->moneyInTransaction[0][$this->currentMoneyTypeReportingOn] = $newValue;
         }
+    }
+
+    /**
+     * @Given /^the edit page should show the correct heading$/
+     */
+    public function theEditPageShouldShowTheCorrectHeading(): void
+    {
+        $moneyTypeRow = $this->getSession()->getPage()->find('xpath', sprintf('//tr[td[text()[contains(.,"%s")]]]', $this->currentMoneyTypeReportingOn));
+        $moneyTypeRow->clickLink('Edit');
+        $this->assertPageContainsText('Edit an item of income: ' . $this->currentMoneyTypeReportingOn);
+        $this->pressButton('Save and continue');
     }
 
     /**
@@ -362,7 +351,21 @@ trait MoneyInSectionTrait
         $this->clickLink('Add item of income');
         $this->iHaveMoneyTypeToReportOn('Income Support');
         $this->fillField('account[amount]', '200');
+    }
 
-        $this->pressButton('Save and continue');
+    /**
+     * @Given /^I choose to add another$/
+     */
+    public function iChooseToAddAnother()
+    {
+        $this->chooseOption('account[addAnother]', 'yes');
+    }
+
+    /**
+     * @Given /^I don't choose to add another$/
+     */
+    public function iDontChooseToAddAnother()
+    {
+        $this->chooseOption('account[addAnother]', 'no');
     }
 }

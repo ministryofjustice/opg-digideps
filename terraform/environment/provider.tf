@@ -17,7 +17,7 @@ provider "aws" {
     tags = local.default_tags
   }
   assume_role {
-    role_arn     = "arn:aws:iam::${local.account["account_id"]}:role/${var.DEFAULT_ROLE}"
+    role_arn     = "arn:aws:iam::${local.account["environment"]["account_id"]}:role/${var.DEFAULT_ROLE}"
     session_name = "terraform-session"
   }
 }
@@ -29,7 +29,7 @@ provider "aws" {
     tags = local.default_tags
   }
   assume_role {
-    role_arn     = "arn:aws:iam::311462405659:role/${var.DEFAULT_ROLE}"
+    role_arn     = "arn:aws:iam::311462405659:role/${var.MANAGEMENT_ROLE}"
     session_name = "terraform-session"
   }
 }
@@ -42,7 +42,7 @@ provider "aws" {
     tags = local.default_tags
   }
   assume_role {
-    role_arn     = "arn:aws:iam::${local.account["account_id"]}:role/${var.DEFAULT_ROLE}"
+    role_arn     = "arn:aws:iam::${local.account["environment"]["account_id"]}:role/${var.DEFAULT_ROLE}"
     session_name = "terraform-session"
   }
 }
@@ -54,7 +54,7 @@ provider "aws" {
     tags = local.default_tags
   }
   assume_role {
-    role_arn     = "arn:aws:iam::311462405659:role/${var.DEFAULT_ROLE}"
+    role_arn     = "arn:aws:iam::311462405659:role/${var.MANAGEMENT_ROLE}"
     session_name = "terraform-session"
   }
 }
@@ -66,7 +66,7 @@ provider "aws" {
     tags = local.default_tags
   }
   assume_role {
-    role_arn     = "arn:aws:iam::${local.account["account_id"]}:role/${var.DEFAULT_ROLE}"
+    role_arn     = "arn:aws:iam::${local.account["environment"]["account_id"]}:role/${var.DEFAULT_ROLE}"
     session_name = "terraform-session"
   }
 }
@@ -78,7 +78,7 @@ provider "aws" {
     tags = local.default_tags
   }
   assume_role {
-    role_arn     = "arn:aws:iam::311462405659:role/${var.DEFAULT_ROLE}"
+    role_arn     = "arn:aws:iam::311462405659:role/${var.MANAGEMENT_ROLE}"
     session_name = "terraform-session"
   }
 }
@@ -103,7 +103,7 @@ provider "aws" {
     tags = local.default_tags
   }
   assume_role {
-    role_arn     = "arn:aws:iam::${local.account["account_id"]}:role/${var.DEFAULT_ROLE}"
+    role_arn     = "arn:aws:iam::${local.account["environment"]["account_id"]}:role/${var.DEFAULT_ROLE}"
     session_name = "terraform-session"
   }
 }

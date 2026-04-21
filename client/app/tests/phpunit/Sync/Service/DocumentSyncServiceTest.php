@@ -86,7 +86,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setFilename($this->fileName)
             ->setIsReportPdf(true)
             ->setCaseNumber('1234567t')
-            ->setNdrId(null)
             ->setStorageReference($this->s3Reference);
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusReportPdfDocumentUpload(
@@ -101,7 +100,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         );
 
         $successResponseBody = ['data' => ['id' => $this->reportPdfSubmissionUuid]];
-        $successResponse = new Response('200', [], json_encode($successResponseBody));
+        $successResponse = new Response(200, [], json_encode($successResponseBody));
 
         $this->siriusApiGatewayClient->sendReportPdfDocument($siriusDocumentUpload, '1234567T')
             ->shouldBeCalled()
@@ -151,78 +150,6 @@ class DocumentSyncServiceTest extends KernelTestCase
         ];
     }
 
-    public function testSyncDocumentReportPdfNdrSyncSuccess(): void
-    {
-        $reportPdfReportSubmission =
-            (new ReportSubmission())
-                ->setId($this->reportSubmissionId)
-                ->setUuid($this->reportPdfSubmissionUuid);
-
-        $queuedDocumentData = (new QueuedDocumentData())
-            ->setReportType(null)
-            ->setDocumentId(6789)
-            ->setReportSubmissionId($this->reportSubmissionId)
-            ->setReportSubmissions([$reportPdfReportSubmission])
-            ->setReportStartDate($this->reportStartDate)
-            ->setReportEndDate($this->reportEndDate)
-            ->setReportSubmitDate($this->reportSubmittedDate)
-            ->setFilename($this->fileName)
-            ->setIsReportPdf(true)
-            ->setCaseNumber('1234567t')
-            ->setNdrId(123)
-            ->setStorageReference($this->s3Reference);
-
-        $siriusDocumentUpload = SiriusHelpers::generateSiriusReportPdfDocumentUpload(
-            $this->reportStartDate,
-            $this->reportStartDate,
-            $this->reportSubmittedDate,
-            'NDR',
-            $this->reportSubmissionId,
-            $this->fileName,
-            null,
-            $this->s3Reference
-        );
-
-        $successResponseBody = ['data' => ['id' => $this->reportPdfSubmissionUuid]];
-        $successResponse = new Response('200', [], json_encode($successResponseBody));
-
-        $this->siriusApiGatewayClient->sendReportPdfDocument($siriusDocumentUpload, '1234567T')
-            ->shouldBeCalled()
-            ->willReturn($successResponse);
-
-        $this->restClient
-            ->apiCall(
-                'put',
-                'report-submission/9876/update-uuid',
-                json_encode(['uuid' => $this->reportPdfSubmissionUuid]),
-                'raw',
-                [],
-                false
-            )
-            ->shouldBeCalled()
-            ->willReturn(new SymfonyResponse('9876'));
-
-        $this->restClient
-            ->apiCall(
-                'put',
-                'document/6789',
-                json_encode(['syncStatus' => Document::SYNC_STATUS_SUCCESS]),
-                'Report\\Document',
-                [],
-                false
-            )
-            ->shouldBeCalled()
-            ->willReturn(new Document());
-
-        $sut = new DocumentSyncService(
-            $this->siriusApiGatewayClient->reveal(),
-            $this->restClient->reveal(),
-            $this->errorTranslator->reveal(),
-        );
-
-        $sut->syncDocument($queuedDocumentData);
-    }
-
     public function testSendDocumentSyncFailureSiriusReportPdf(): void
     {
         $reportPdfReportSubmission =
@@ -241,7 +168,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setFilename($this->fileName)
             ->setIsReportPdf(true)
             ->setCaseNumber('1234567t')
-            ->setNdrId(null)
             ->setStorageReference($this->s3Reference);
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusReportPdfDocumentUpload(
@@ -256,7 +182,7 @@ class DocumentSyncServiceTest extends KernelTestCase
         );
 
         $failureResponseBody = ['errors' => [0 => ['id' => 'ABC123', 'code' => 'OPGDATA-API-FORBIDDEN']]];
-        $failureResponse = new Response('403', [], json_encode($failureResponseBody));
+        $failureResponse = new Response(403, [], json_encode($failureResponseBody));
 
         $requestException = new RequestException('An error occurred', new Request('POST', '/report-submission/9876/update-uuid'), $failureResponse);
 
@@ -314,11 +240,10 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setFilename($this->fileName)
             ->setIsReportPdf(false)
             ->setCaseNumber('1234567t')
-            ->setNdrId(null)
             ->setStorageReference($this->s3Reference);
 
         $successResponseBody = ['data' => ['type' => 'supportingDocument', 'id' => 'a-random-uuid']];
-        $successResponse = new Response('200', [], json_encode($successResponseBody));
+        $successResponse = new Response(200, [], json_encode($successResponseBody));
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusSupportingDocumentUpload(
             $expectedSubmissionIdUsedForSync,
@@ -366,7 +291,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setFilename($this->fileName)
             ->setIsReportPdf(false)
             ->setCaseNumber('1234567t')
-            ->setNdrId(null)
             ->setStorageReference($this->s3Reference);
 
         $this->restClient
@@ -403,11 +327,10 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setFilename($this->fileName)
             ->setIsReportPdf(false)
             ->setCaseNumber('1234567t')
-            ->setNdrId(null)
             ->setStorageReference($this->s3Reference);
 
         $failureResponseBody = ['errors' => [0 => ['id' => 'ABC123', 'code' => 'OPGDATA-API-FORBIDDEN']]];
-        $failureResponse = new Response('403', [], json_encode($failureResponseBody));
+        $failureResponse = new Response(403, [], json_encode($failureResponseBody));
 
         $requestException = new RequestException('An error occurred', new Request('POST', '/report-submission/9876/update-uuid'), $failureResponse);
 
@@ -449,7 +372,7 @@ class DocumentSyncServiceTest extends KernelTestCase
     /**
      * @dataProvider errorCodeProvider
      */
-    public function testSendDocumentSyncFailureSiriusErrorTypeBasedOnResponseCode(string $errorCode, string $expectedErrorType, int $syncAttempts): void
+    public function testSendDocumentSyncFailureSiriusErrorTypeBasedOnResponseCode(int $errorCode, string $expectedErrorType, int $syncAttempts): void
     {
         $reportPdfReportSubmission =
             (new ReportSubmission())
@@ -468,7 +391,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setFilename($this->fileName)
             ->setIsReportPdf(true)
             ->setCaseNumber('1234567t')
-            ->setNdrId(null)
             ->setDocumentSyncAttempts($syncAttempts);
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusReportPdfDocumentUpload(
@@ -523,9 +445,9 @@ class DocumentSyncServiceTest extends KernelTestCase
     public function errorCodeProvider(): array
     {
         return [
-            '4XX error code' => ['400', Document::SYNC_STATUS_PERMANENT_ERROR, 0],
-            '5XX error code' => ['500', Document::SYNC_STATUS_TEMPORARY_ERROR, 0],
-            '5XX error code - 4th attempt' => ['500', Document::SYNC_STATUS_PERMANENT_ERROR, 3],
+            '4XX error code' => [400, Document::SYNC_STATUS_PERMANENT_ERROR, 0],
+            '5XX error code' => [500, Document::SYNC_STATUS_TEMPORARY_ERROR, 0],
+            '5XX error code - 4th attempt' => [500, Document::SYNC_STATUS_PERMANENT_ERROR, 3],
         ];
     }
 
@@ -548,11 +470,10 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setFilename('test .pdf')
             ->setIsReportPdf(false)
             ->setCaseNumber('1234567t')
-            ->setNdrId(null)
             ->setStorageReference($this->s3Reference);
 
         $successResponseBody = ['data' => ['type' => 'supportingDocument', 'id' => 'a-random-uuid']];
-        $successResponse = new Response('200', [], json_encode($successResponseBody));
+        $successResponse = new Response(200, [], json_encode($successResponseBody));
 
         $siriusDocumentUpload = SiriusHelpers::generateSiriusSupportingDocumentUpload(
             $expectedSubmissionIdUsedForSync,
@@ -605,7 +526,6 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->setFilename('filename-with-no-extension')
             ->setIsReportPdf(false)
             ->setCaseNumber('1234567t')
-            ->setNdrId(null)
             ->setStorageReference($this->s3Reference);
 
         $this->siriusApiGatewayClient

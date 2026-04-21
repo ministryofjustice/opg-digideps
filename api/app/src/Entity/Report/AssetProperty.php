@@ -15,9 +15,9 @@ use JMS\Serializer\Annotation as JMS;
  */
 class AssetProperty extends Asset implements AssetInterface
 {
-    public const OCCUPANTS_OTHER = 'other';
-    public const OWNED_FULLY = 'fully';
-    public const OWNED_PARTLY = 'partly';
+    public const string OCCUPANTS_OTHER = 'other';
+    public const string OWNED_FULLY = 'fully';
+    public const string OWNED_PARTLY = 'partly';
 
     /**
      * @var string
@@ -315,7 +315,7 @@ class AssetProperty extends Asset implements AssetInterface
     public function setOwned($owned)
     {
         if (!in_array($owned, [self::OWNED_FULLY, self::OWNED_PARTLY])) {
-            throw new \InvalidArgumentException(__METHOD__."Invalid owned type [$owned]");
+            throw new \InvalidArgumentException(__METHOD__ . "Invalid owned type [$owned]");
         }
 
         $this->owned = $owned;

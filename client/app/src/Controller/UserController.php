@@ -2,18 +2,27 @@
 
 namespace App\Controller;
 
-use App\Entity as EntityDir;
+use App\Entity\Client;
+use App\Entity\User;
 use App\Event\RegistrationFailedEvent;
 use App\Event\RegistrationSucceededEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
 use App\Exception\RestClientException;
-use App\Form;
-use App\Model\SelfRegisterData;
+use App\Form\PasswordForgottenType;
+use App\Form\ResetPasswordType;
+use App\Form\SelfRegisterDataType;
+use App\Form\SetPasswordType;
+use App\Form\User\UpdateTermsType;
+use App\Form\User\UserDetailsBasicType;
+use App\Form\User\UserDetailsFullType;
+use App\Form\User\UserDetailsPaType;
 use App\Service\Client\Internal\ClientApi;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\Service\DeputyProvider;
 use App\Service\Redirector;
+use OPG\Digideps\Common\Registration\SelfRegisterData;
+use OPG\Digideps\Common\Validating\ValidatingForm;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;
@@ -25,6 +34,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends AbstractController
 {
@@ -35,6 +45,7 @@ class UserController extends AbstractController
         private readonly TranslatorInterface $translator,
         private readonly LoggerInterface $logger,
         private readonly ObservableEventDispatcher $eventDispatcher,
+        private readonly ValidatorInterface $validator,
     ) {
     }
 
@@ -57,7 +68,7 @@ class UserController extends AbstractController
 
         // rate limiting applied to track unsuccessful and successful requests
         $limiter = $anonymousApiLimiter->create($userId);
-        $limit = $limiter->consume(1);
+        $limit = $limiter->consume();
 
         if (!$limit->isAccepted() && !$isActivatePage) {
             return $this->renderError(sprintf('You have tried to reset your password too many times. Please try again in %s minutes.', ceil(($limit->getRetryAfter()->getTimestamp() - time()) / 60)), 429, 'There is a problem');
@@ -67,26 +78,26 @@ class UserController extends AbstractController
 
         // check $token is correct
         try {
-            /* @var $user EntityDir\User */
+            /** @var User $user */
             $user = $this->restClient->loadUserByToken($token);
         } catch (\Throwable $throwable) {
             return $this->renderError('This link is not working or has already been used.', $throwable->getCode(), 'There is a problem');
         }
 
         // token expired
-        if (!$user->isTokenSentInTheLastHours(EntityDir\User::ACTIVATE_TOKEN_EXPIRE_HOURS) && $isActivatePage) {
+        if (!$user->isTokenSentInTheLastHours(User::ACTIVATE_TOKEN_EXPIRE_HOURS) && $isActivatePage) {
             $template = '@App/User/activateTokenExpired.html.twig';
 
             return $this->render($template, [
                 'token' => $token,
-                'tokenExpireHours' => EntityDir\User::ACTIVATE_TOKEN_EXPIRE_HOURS,
+                'tokenExpireHours' => User::ACTIVATE_TOKEN_EXPIRE_HOURS,
             ]);
-        } elseif (!$user->isTokenSentInTheLastHours(EntityDir\User::PASSWORD_TOKEN_EXPIRE_HOURS) && !$isActivatePage) {
+        } elseif (!$user->isTokenSentInTheLastHours(User::PASSWORD_TOKEN_EXPIRE_HOURS) && !$isActivatePage) {
             $template = '@App/User/passwordResetTokenExpired.html.twig';
 
             return $this->render($template, [
                 'token' => $token,
-                'tokenExpireHours' => EntityDir\User::PASSWORD_TOKEN_EXPIRE_HOURS,
+                'tokenExpireHours' => User::PASSWORD_TOKEN_EXPIRE_HOURS,
             ]);
         }
 
@@ -94,14 +105,14 @@ class UserController extends AbstractController
         if ($isActivatePage) {
             $passwordMismatchMessage = $this->translator->trans('password.validation.passwordMismatch', [], 'user-activate');
             $form = $this->createForm(
-                Form\SetPasswordType::class,
+                SetPasswordType::class,
                 $user,
                 ['passwordMismatchMessage' => $passwordMismatchMessage, 'showTermsAndConditions' => $user->isDeputy()]
             );
             $template = '@App/User/activate.html.twig';
         } else { // 'password-reset'
             $passwordMismatchMessage = $this->translator->trans('form.password.validation.passwordMismatch', [], 'password-reset');
-            $form = $this->createForm(Form\ResetPasswordType::class, $user, ['passwordMismatchMessage' => $passwordMismatchMessage]);
+            $form = $this->createForm(ResetPasswordType::class, $user, ['passwordMismatchMessage' => $passwordMismatchMessage]);
             $template = '@App/User/passwordReset.html.twig';
         }
 
@@ -111,10 +122,10 @@ class UserController extends AbstractController
             try {
                 $deputyProvider->login(['token' => $token]);
             } catch (UserNotFoundException) {
-                return $this->renderError('This activation link is not working or has already been used', 'There is a problem');
+                return $this->renderError('This activation link is not working or has already been used', 403);
             }
 
-            /** @var string */
+            /** @var string $data */
             $data = json_encode([
                 'password' => $user->getPassword(),
                 'token' => $token,
@@ -168,7 +179,7 @@ class UserController extends AbstractController
     {
         return [
             'token' => $token,
-            'tokenExpireHours' => EntityDir\User::ACTIVATE_TOKEN_EXPIRE_HOURS,
+            'tokenExpireHours' => User::ACTIVATE_TOKEN_EXPIRE_HOURS,
         ];
     }
 
@@ -186,22 +197,35 @@ class UserController extends AbstractController
     {
         $user = $this->userApi->getUserWithData();
 
-        $client_validated = $this->clientApi->getFirstClient() instanceof EntityDir\Client
+        $client_validated = $this->clientApi->getFirstClient() instanceof Client
             && !$user->isDeputyOrg();
 
-        [$formType, $jmsPutGroups] = $this->getFormAndJmsGroupBasedOnUserRole($user);
-        $form = $this->createForm($formType, $user);
+        [$formType, $jmsPutGroups] = match ($user->getRoleName()) {
+            User::ROLE_LAY_DEPUTY => [UserDetailsFullType::class, ['user_details_full']],
+            User::ROLE_PA_NAMED,
+            User::ROLE_PA_ADMIN,
+            User::ROLE_PA_TEAM_MEMBER,
+            User::ROLE_PROF_NAMED,
+            User::ROLE_PROF_ADMIN,
+            User::ROLE_PROF_TEAM_MEMBER => [UserDetailsPaType::class, ['user_details_org']],
+            default => [UserDetailsBasicType::class, ['user_details_basic']],
+        };
 
+        $form = $this->createForm($formType, $user);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->restClient->put('user/' . $user->getId(), $form->getData(), $jmsPutGroups);
+            /** @var array $data */
+            $data = $form->getData();
+
+            $this->restClient->put('user/' . $user->getId(), $data, $jmsPutGroups);
 
             // lay deputies are redirected to adding a client (Step.3)
             if ($user->isLayDeputy()) {
                 return $this->redirectToRoute('client_add');
             }
 
-            //            this is the final step for Org users so registration has succeeded
+            // this is the final step for Org users so registration has succeeded
             if ($user->isDeputyOrg()) {
                 $user->setPreRegisterValidatedDate(new \DateTime());
                 $this->eventDispatcher->dispatch(new RegistrationSucceededEvent($user), RegistrationSucceededEvent::DEPUTY);
@@ -224,8 +248,8 @@ class UserController extends AbstractController
     #[Template('@App/User/passwordForgotten.html.twig')]
     public function passwordForgottenAction(Request $request): RedirectResponse|array
     {
-        $user = new EntityDir\User();
-        $form = $this->createForm(Form\PasswordForgottenType::class, $user);
+        $user = new User();
+        $form = $this->createForm(PasswordForgottenType::class, $user);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -256,20 +280,22 @@ class UserController extends AbstractController
     public function registerAction(Request $request): Response|array
     {
         $selfRegisterData = new SelfRegisterData();
-        $form = $this->createForm(Form\SelfRegisterDataType::class, $selfRegisterData);
+        $form = $this->createForm(SelfRegisterDataType::class, $selfRegisterData);
 
         $vars = [];
 
         $form->handleRequest($request);
+        $validatingForm = new ValidatingForm($form);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $data = $form->getData();
+            $selfRegisterData = $validatingForm->getObjectOrThrow(null, SelfRegisterData::class);
 
             try {
-                $this->userApi->selfRegister($data);
+                $selfRegisterData->normalise();
+                $this->userApi->selfRegister($selfRegisterData);
 
                 $bodyText = $this->translator->trans('thankyou.body', [], 'register');
-                $email = $data->getEmail();
+                $email = $selfRegisterData->getEmail() ?? '';
                 $bodyText = str_replace('{{ email }}', $email, $bodyText);
 
                 $signInText = $this->translator->trans('signin', [], 'register');
@@ -281,75 +307,54 @@ class UserController extends AbstractController
                     'email' => $email,
                 ]);
             } catch (\Throwable $e) {
-                switch ((int) $e->getCode()) {
-                    case 403:
-                        $form->addError(new FormError($this->translator->trans('formErrors.coDepCaseAlreadyRegistered', [], 'register')));
-                        break;
+                $failureData = [];
 
-                    case 422:
-                        $form->addError(new FormError(
-                            $this->translator->trans('email.first.existingError', [], 'register')
-                        ));
-                        break;
-
-                    case 400:
-                        $form->addError(new FormError($this->translator->trans('formErrors.matching', [], 'register')));
-                        break;
-
-                    case 424:
-                        $form->get('postcode')->addError(new FormError($this->translator->trans('postcode.matchingError', [], 'register')));
-                        break;
-
-                    case 425:
-                        $form->addError(new FormError($this->translator->trans('formErrors.caseNumberAlreadyUsed', [], 'register')));
-                        break;
-
-                    case 460:
-                        $form->get('caseNumber')->addError(new FormError($this->translator->trans('matchingErrors.caseNumber', [], 'register')));
-                        break;
-
-                    case 461:
-                        $decodedError = json_decode((string) $e->getData()['message'], true);
-
-                        if ($decodedError['matching_errors']['client_lastname']) {
-                            $form->get('clientLastname')->addError(new FormError($this->translator->trans('matchingErrors.clientLastname', [], 'register')));
-                        }
-
-                        if ($decodedError['matching_errors']['deputy_lastname']) {
-                            $form->get('lastname')->addError(new FormError($this->translator->trans('matchingErrors.deputyLastname', [], 'register')));
-                        }
-
-                        if ($decodedError['matching_errors']['deputy_firstname']) {
-                            $form->get('firstname')->addError(new FormError($this->translator->trans('matchingErrors.deputyFirstname', [], 'register')));
-                        }
-
-                        if ($decodedError['matching_errors']['deputy_postcode']) {
-                            $form->get('postcode')->addError(new FormError($this->translator->trans('matchingErrors.deputyPostcode', [], 'register')));
-                        }
-
-                        break;
-
-                    case 462:
-                        $form->addError(new FormError($this->translator->trans('formErrors.deputyNotUniquelyIdentified', [], 'register')));
-                        break;
-
-                    default:
-                        $form->addError(new FormError($this->translator->trans('formErrors.generic', [], 'register')));
+                if (method_exists($e, 'getData')) {
+                    $data = $e->getData();
+                    if (is_array($data) && isset($data['message'])) {
+                        /** @var array $failureData */
+                        $failureData = json_decode((string) $data['message'], true) ?? [];
+                    }
                 }
 
-                $failureData = json_decode((string) $e->getData()['message'], true);
+                $hit = match ($e->getCode()) {
+                    403 => $form->addError(new FormError($this->translator->trans('formErrors.coDepCaseAlreadyRegistered', [], 'register'))),
+                    422 => $form->addError(new FormError($this->translator->trans('email.first.existingError', [], 'register'))),
+                    400 => $form->addError(new FormError($this->translator->trans('formErrors.matching', [], 'register'))),
+                    424 => $form->get('postcode')->addError(new FormError($this->translator->trans('postcode.matchingError', [], 'register'))),
+                    425 => $form->addError(new FormError($this->translator->trans('formErrors.caseNumberAlreadyUsed', [], 'register'))),
+                    460 => $form->get('caseNumber')->addError(new FormError($this->translator->trans('matchingErrors.caseNumber', [], 'register'))),
+                    461 => (function () use ($form, $failureData) {
+                        $matchingErrors = $failureData['matching_errors'] ?? [];
+                        if (isset($matchingErrors['client_lastname'])) {
+                            $form->get('clientLastname')->addError(new FormError($this->translator->trans('matchingErrors.clientLastname', [], 'register')));
+                        }
+                        if (isset($matchingErrors['deputy_lastname'])) {
+                            $form->get('lastname')->addError(new FormError($this->translator->trans('matchingErrors.deputyLastname', [], 'register')));
+                        }
+                        if (isset($matchingErrors['deputy_firstname'])) {
+                            $form->get('firstname')->addError(new FormError($this->translator->trans('matchingErrors.deputyFirstname', [], 'register')));
+                        }
+                        if (isset($matchingErrors['deputy_postcode'])) {
+                            $form->get('postcode')->addError(new FormError($this->translator->trans('matchingErrors.deputyPostcode', [], 'register')));
+                        }
+                    })(),
+                    462 => $form->addError(new FormError($this->translator->trans('formErrors.deputyNotUniquelyIdentified', [], 'register'))),
+                    default => null,
+                };
+                if ($hit === null) {
+                    $validationErrors = $this->validator->validate($selfRegisterData, null, 'self_registration');
+                    if ($validationErrors->count() === 0) {
+                        $form->addError(new FormError($this->translator->trans('formErrors.generic', [], 'register')));
+                    }
+                    foreach ($validationErrors as $validationError) {
+                        $form->addError(new FormError($validationError->getMessage()));
+                    }
+                }
 
-                // If response from API is not valid json just log the message
-                $failureData = is_array($failureData) ? $failureData : ['failure_message' => $failureData];
-
-                $event = new RegistrationFailedEvent($failureData, $e->getMessage());
+                $event = new RegistrationFailedEvent(['failure_message' => $failureData], $e->getMessage());
                 $this->eventDispatcher->dispatch($event, RegistrationFailedEvent::NAME);
             }
-        }
-
-        // send different URL to google analytics
-        if (count($form->getErrors()) > 0) {
-            $vars['gaCustomUrl'] = '/register/form-errors';
         }
 
         return $vars + [
@@ -363,7 +368,7 @@ class UserController extends AbstractController
     {
         $user = $this->restClient->loadUserByToken($token);
 
-        $form = $this->createForm(Form\User\UpdateTermsType::class, $user);
+        $form = $this->createForm(UpdateTermsType::class, $user);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $this->userApi->agreeTermsUse($token);
@@ -376,23 +381,5 @@ class UserController extends AbstractController
             'user' => $user,
             'form' => $form->createView(),
         ]);
-    }
-
-    /**
-     * @return array [string FormType, array of JMS groups]
-     */
-    private function getFormAndJmsGroupBasedOnUserRole(EntityDir\User $user): array
-    {
-        // define form, route, JMS groups
-        return match ($user->getRoleName()) {
-            EntityDir\User::ROLE_LAY_DEPUTY => [Form\User\UserDetailsFullType::class, ['user_details_full']],
-            EntityDir\User::ROLE_PA_NAMED,
-                EntityDir\User::ROLE_PA_ADMIN,
-                EntityDir\User::ROLE_PA_TEAM_MEMBER,
-                EntityDir\User::ROLE_PROF_NAMED,
-                EntityDir\User::ROLE_PROF_ADMIN,
-                EntityDir\User::ROLE_PROF_TEAM_MEMBER => [Form\User\UserDetailsPaType::class, ['user_details_org']],
-            default => [Form\User\UserDetailsBasicType::class, ['user_details_basic']],
-        };
     }
 }

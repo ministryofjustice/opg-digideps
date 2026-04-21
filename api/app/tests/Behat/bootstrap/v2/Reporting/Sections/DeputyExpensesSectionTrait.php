@@ -25,7 +25,7 @@ trait DeputyExpensesSectionTrait
         $this->clickLink('edit-deputy_expenses');
 
         $currentUrl = $this->getCurrentUrl();
-        $reportPrefix = $this->loggedInUserDetails->getCurrentReportNdrOrReport();
+        $reportPrefix = $this->loggedInUserDetails->getCurrentReport();
         $onSectionPage = preg_match("/{$reportPrefix}\/.*\/deputy-expenses$/", $currentUrl);
 
         if (!$onSectionPage) {
@@ -46,7 +46,7 @@ trait DeputyExpensesSectionTrait
         $this->visitPath($reportSectionUrl);
 
         $currentUrl = $this->getCurrentUrl();
-        $reportPrefix = $this->loggedInUserDetails->getCurrentReportNdrOrReport();
+        $reportPrefix = $this->loggedInUserDetails->getCurrentReport();
         $onSectionPage = preg_match("/{$reportPrefix}\/.*\/deputy-expenses$/", $currentUrl);
 
         if (!$onSectionPage) {
@@ -88,7 +88,6 @@ trait DeputyExpensesSectionTrait
     {
         $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails');
         $this->fillInFieldTrackTotal('expenses_single[amount]', 981, 'expenseDetails');
-        $this->pressButton('Save and continue');
     }
 
     /**
@@ -96,8 +95,8 @@ trait DeputyExpensesSectionTrait
      */
     public function iDeclareAnotherExpenses()
     {
-        $this->chooseOption('add_another[addAnother]', 'yes');
-        $this->pressButton('Continue');
+        $this->chooseOption('expenses_single[addAnother]', 'yes');
+        $this->pressButton('Save and continue');
 
         $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails');
         $this->fillInFieldTrackTotal('expenses_single[amount]', 22, 'expenseDetails');
@@ -109,8 +108,8 @@ trait DeputyExpensesSectionTrait
      */
     public function noFurtherExpensesToAdd()
     {
-        $this->fillInField('add_another[addAnother]', 'no');
-        $this->pressButton('Continue');
+        $this->fillInField('expenses_single[addAnother]', 'no');
+        $this->pressButton('Save and continue');
     }
 
     /**
@@ -197,11 +196,7 @@ trait DeputyExpensesSectionTrait
     {
         $answers = $this->getSectionAnswers('expenseDetails')[0];
 
-        if ('ndr' == $this->reportUrlPrefix) {
-            $rowSelector = sprintf('//div[dt[normalize-space() ="%s"]]', $answers['expenses_single[explanation]']);
-        } else {
-            $rowSelector = sprintf('//tr[td[normalize-space() ="%s"]]', $answers['expenses_single[explanation]']);
-        }
+        $rowSelector = sprintf('//tr[td[normalize-space() ="%s"]]', $answers['expenses_single[explanation]']);
         $descriptionTableRow = $this->getSession()->getPage()->find('xpath', $rowSelector);
 
         $this->editFieldAnswerInSectionTrackTotal($descriptionTableRow, 'expenses_single[amount]', 'expenseDetails');
@@ -237,18 +232,6 @@ trait DeputyExpensesSectionTrait
      */
     public function iChangeMindAnswerNoToExpensesToDeclare()
     {
-        if ('ndr' == $this->reportUrlPrefix) {
-            $id = $this->interactingWithUserDetails->getUserId();
-            $user = $this->em->getRepository(User::class)->find($id);
-
-            $this->sectionStartText = sprintf('Did you pay for anything for %s before you got your court order?', $user->getFirstname());
-        }
-
-        $rowSelector = sprintf(
-            '//div[dt[normalize-space() ="%s"]]',
-            $this->sectionStartText
-        );
-
         $descriptionTableRow = $this->getSession()->getPage()->find('css', '.behat-region-paid-for-anything .behat-link-edit');
         $descriptionTableRow->click();
 

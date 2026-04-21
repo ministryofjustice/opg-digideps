@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ResetPasswordType extends AbstractType
 {
-    public const VALIDATION_GROUP = 'user_set_password';
+    public const string VALIDATION_GROUP = 'user_set_password';
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

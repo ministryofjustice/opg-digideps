@@ -4,7 +4,7 @@ startPage:
   pageSectionDescription1: |
     Use this section to tell us how much %client% paid for your professional deputy services
      in this reporting period (%periodStartDate% to %periodEndDate%).
-  pageSectionDescription2: This includes money %client% paid you in this reporting period:
+  pageSectionDescription2: "This includes money %client% paid you in this reporting period:"
   listItem01: for work carried out in previous reporting periods
   listItem02: for work carried out in this reporting period
   pageSectionDescription3: Please include both fixed and assessed costs.
@@ -120,12 +120,12 @@ breakdown:
 
 summaryPage:
   htmlTitle: "Deputy costs - Complete the deputy report | GOV.UK"
-  pageTitle:  Deputy costs
+  pageTitle: Deputy costs
   returnToClientProfile: Return to client profile
   weveListedYourAnswers: We've listed your saved answers below
   checkTheyreCorrect: Check they're correct and edit them where necessary.
   breakdownOfAdditionalCosts: |
-      Breakdown of additional professional deputy costs (including VAT) %client% has paid you for in this reporting period
+    Breakdown of additional professional deputy costs (including VAT) %client% has paid you for in this reporting period
   item: Item
   amount: Amount
   questionLabel:
@@ -140,3 +140,12 @@ deletePage:
     startDate: Reporting period start date
     endDate: Reporting period end date
     amount: Amount
+
+form:
+  thing: cost
+
+notices:
+  entry:
+    added: "Cost added"
+    edited: "Cost edited"
+    deleted: "Cost deleted"

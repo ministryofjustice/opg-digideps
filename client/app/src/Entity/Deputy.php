@@ -203,7 +203,7 @@ class Deputy implements DeputyInterface
      */
     public function getFullName()
     {
-        return $this->firstname.' '.$this->lastname;
+        return $this->firstname . ' ' . $this->lastname;
     }
 
     /**

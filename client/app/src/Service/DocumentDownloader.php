@@ -11,8 +11,8 @@ use Symfony\Component\HttpFoundation\Session\Flash\FlashBag;
 
 class DocumentDownloader
 {
-    public const ACTION_DOWNLOAD = 'download';
-    public const MSG_NOT_DOWNLOADABLE = 'This report is not downloadable';
+    public const string ACTION_DOWNLOAD = 'download';
+    public const string MSG_NOT_DOWNLOADABLE = 'This report is not downloadable';
 
     /**
      * @var DocumentService
@@ -84,7 +84,7 @@ class DocumentDownloader
         $response->headers->set('Expires', '0');
         $response->headers->set('Content-type', 'application/octet-stream');
         $response->headers->set('Content-Description', 'File Transfer');
-        $response->headers->set('Content-Disposition', 'attachment; filename="'.basename($fileName).'";');
+        $response->headers->set('Content-Disposition', 'attachment; filename="' . basename($fileName) . '";');
         $response->sendHeaders();
         $response->setContent(file_get_contents($fileName));
 

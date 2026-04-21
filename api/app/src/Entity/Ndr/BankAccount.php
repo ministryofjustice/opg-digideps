@@ -390,8 +390,8 @@ class BankAccount implements BankAccountInterface
      */
     public function getNameOneLine()
     {
-        return (!empty($this->getBank()) ? $this->getBank().' - ' : '')
-            .$this->getAccountTypeText()
-            .' (****'.$this->getAccountNumber().')';
+        return (!empty($this->getBank()) ? $this->getBank() . ' - ' : '')
+            . $this->getAccountTypeText()
+            . ' (****' . $this->getAccountNumber() . ')';
     }
 }

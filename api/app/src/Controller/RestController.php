@@ -1,16 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Client;
-use App\Entity\Ndr\Ndr;
 use App\Entity\ReportInterface;
 use App\Entity\User;
 use App\Exception\NotFound;
-use App\Model\Hydrator;
-use DateTime;
+use App\Utility\Query\Hydrator;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 abstract class RestController extends AbstractController
@@ -21,21 +20,17 @@ abstract class RestController extends AbstractController
 
     /**
      * @template T of object
-     *
      * @param class-string<T> $entityClass
-     * @param array|int       $criteriaOrId
-     *
      * @return T
-     *
-     * @throws NotFound
      */
-    protected function findEntityBy(string $entityClass, $criteriaOrId, $errorMessage = null): object
+    protected function findEntityBy(string $entityClass, array|int $criteriaOrId, ?string $errorMessage = null): object
     {
         $repo = $this->em->getRepository($entityClass);
+
         $entity = is_array($criteriaOrId) ? $repo->findOneBy($criteriaOrId) : $repo->find($criteriaOrId);
 
-        if (!$entity) {
-            throw new NotFound($errorMessage ?: $entityClass.' not found');
+        if (null === $entity) {
+            throw new NotFound($errorMessage ?: $entityClass . ' not found');
         }
 
         return $entity;
@@ -46,7 +41,7 @@ abstract class RestController extends AbstractController
         Hydrator::hydrateEntityWithArrayData($object, $data, $keySetters);
     }
 
-    protected function denyAccessIfReportDoesNotBelongToUser(ReportInterface $report)
+    protected function denyAccessIfReportDoesNotBelongToUser(ReportInterface $report): void
     {
         if (!$this->isGranted('edit', $report->getClient())) {
             if (!$this->checkIfUserHasAccessViaDeputyUid($report->getClient()->getId())) {
@@ -55,19 +50,7 @@ abstract class RestController extends AbstractController
         }
     }
 
-    protected function denyAccessIfNdrDoesNotBelongToUser(Ndr $ndr)
-    {
-        if (!$this->isGranted('edit', $ndr->getClient())) {
-            if (!$this->checkIfUserHasAccessViaDeputyUid($ndr->getClient()->getId())) {
-                throw $this->createAccessDeniedException('NDR does not belong to user');
-            }
-        }
-    }
-
-    /**
-     * @param Client $client
-     */
-    protected function denyAccessIfClientDoesNotBelongToUser(Client $client)
+    protected function denyAccessIfClientDoesNotBelongToUser(Client $client): void
     {
         if (!$this->isGranted('edit', $client)) {
             if (!$this->checkIfUserHasAccessViaDeputyUid($client->getId())) {
@@ -77,15 +60,11 @@ abstract class RestController extends AbstractController
     }
 
     /**
-     * @param array $date
-     *
-     * @return DateTime|null
-     *
-     * @throws Exception
+     * @throws \Exception
      */
-    protected function convertDateStringToDateTime(string $date)
+    protected function convertDateStringToDateTime(string $date): ?\DateTime
     {
-        return empty($date) ? null : new DateTime($date);
+        return empty($date) ? null : new \DateTime($date);
     }
 
     protected function checkIfUserHasAccessViaDeputyUid(int $clientId): bool

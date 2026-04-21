@@ -1,4 +1,4 @@
-@v2 @v2_reporting_2 @money-in-low-assets
+@v2 @v2_reporting_2 @money-in-low-assets @money-in
 Feature: Money in Low Assets - Org users
 
     @prof-pfa-low-not-started
@@ -96,6 +96,7 @@ Feature: Money in Low Assets - Org users
         And I answer "Yes" to adding money in on the clients behalf
         And I am reporting on:
             | Benefit Type    |
+            | Salary or wages |
         And I add 3 one-off payments over £1k
         Then I should see the expected money in section summary
         And I edit the money in short "oneOffPaymentsExist" summary section

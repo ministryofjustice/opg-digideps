@@ -22,7 +22,7 @@ class DeputyCaseService
     // ignore archived and deleted clients: we don't need to associate them with deputies.
     // Also ignore inactive and non-primary users.
     /** @var string */
-    private const DEPUTY_CASE_CANDIDATES_QUERY = <<<SQL
+    private const string DEPUTY_CASE_CANDIDATES_QUERY = <<<SQL
         SELECT DISTINCT c.id AS client_id, ddu.id AS user_id
         FROM pre_registration p
         INNER JOIN client c

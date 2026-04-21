@@ -88,7 +88,7 @@ class DocumentZipFileCreatorTest extends TestCase
         $zipFiles = [];
 
         foreach ($zipFileContent as $fileName => $content) {
-            $zipFile = "/tmp/${fileName}";
+            $zipFile = "/tmp/$fileName";
             file_put_contents($zipFile, $content);
 
             $zip->open($zipFile, ZipArchive::CREATE | ZipArchive::OVERWRITE | ZipArchive::CHECKCONS);

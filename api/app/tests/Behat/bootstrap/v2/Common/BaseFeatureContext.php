@@ -108,8 +108,7 @@ class BaseFeatureContext extends MinkContext
     public UserDetails $paAdminDeputyCompletedDetails;
     public UserDetails $paAdminDeputySubmittedDetails;
 
-    public UserDetails $layNdrDeputyNotStartedDetails;
-    public UserDetails $layNdrDeputyCompletedDetails;
+    public UserDetails $layDeputyCompletedPfaHighAssetsDetailsNoClientDetails;
 
     public ?UserDetails $loggedInUserDetails = null;
     public ?UserDetails $interactingWithUserDetails = null;
@@ -384,26 +383,6 @@ class BaseFeatureContext extends MinkContext
     }
 
     /**
-     * @BeforeScenario @ndr-not-started
-     * @BeforeScenario @lay-pfa-with-ndr-not-started
-     */
-    public function createNdrNotStarted()
-    {
-        $userDetails = $this->fixtureHelper->createLayNdrNotStarted($this->testRunId);
-        $this->fixtureUsers[] = $this->layNdrDeputyNotStartedDetails = new UserDetails($userDetails);
-    }
-
-    /**
-     * @BeforeScenario @ndr-completed
-     * @BeforeScenario @lay-pfa-with-ndr-completed
-     */
-    public function createNdrCompleted()
-    {
-        $userDetails = $this->fixtureHelper->createLayNdrCompleted($this->testRunId);
-        $this->fixtureUsers[] = $this->layNdrDeputyCompletedDetails = new UserDetails($userDetails);
-    }
-
-    /**
      * @BeforeScenario @prof-admin-health-welfare-not-started
      */
     public function createProfAdminNotStarted(?BeforeScenarioScope $scenario = null, ?string $deputyEmail = null, ?string $caseNumber = null, ?string $deputyUid = null)
@@ -617,21 +596,6 @@ class BaseFeatureContext extends MinkContext
         return $this->fixtureHelper->createDataForAnalytics('a_' . $rndKey . $runNumber, $timeAgo, $satisfactionScore);
     }
 
-    public function createAdditionalDataForUserSearchTests()
-    {
-        $this->fixtureHelper->createDataForAdminUserTests('search');
-    }
-
-    public function createAdditionalDataForUserEditTests()
-    {
-        $this->fixtureHelper->createDataForAdminUserTests('edit');
-    }
-
-    public function expireDocumentFromUnSubmittedDeputyReport(string $storageReference): void
-    {
-        $this->fixtureHelper->deleteFilesFromS3($storageReference);
-    }
-
     /**
      * @BeforeScenario @lay-pfa-high-not-started-multi-client-deputy
      */
@@ -654,19 +618,6 @@ class BaseFeatureContext extends MinkContext
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetails;
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUserWithNoDeputyUid = $nonPrimaryUserWithNoDeputyUidDetails;
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUserNoCourtOrders = $primaryUserNoCourtOrders;
-    }
-
-    /**
-     * @BeforeScenario @lay-pfa-high-not-started-multi-client-deputy-with-ndr
-     */
-    public function createLayPfaHighNotStartedMultiClientDeputyWithNdr()
-    {
-        $deputyUid = 123456788000 + rand(1, 999);
-        $primaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStartedWithNdr($this->testRunId, null, $deputyUid));
-        $nonPrimaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNonPrimaryUser($this->testRunId, null, $deputyUid));
-
-        $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
-        $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetails;
     }
 
     /**
@@ -713,5 +664,22 @@ class BaseFeatureContext extends MinkContext
 
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetails;
+    }
+
+    /**
+     * @BeforeScenario @lay-pfa-high-completed-no-client-details
+     */
+    public function createPfaHighCompletedWithNoClientDetails(): void
+    {
+        $userDetails = $this->fixtureHelper->createLayPfaHighAssetsCompleted($this->testRunId);
+        $this->fixtureUsers[] = $this->layDeputyCompletedPfaHighAssetsDetailsNoClientDetails = new UserDetails($userDetails);
+
+        $clientId = $this->layDeputyCompletedPfaHighAssetsDetailsNoClientDetails->getClientId();
+        $client = $this->em->getRepository(Client::class)->find($clientId);
+        $client->setAddress(null);
+        $client->setPostcode(null);
+        $client->setCourtDate(null);
+        $this->em->persist($client);
+        $this->em->flush();
     }
 }

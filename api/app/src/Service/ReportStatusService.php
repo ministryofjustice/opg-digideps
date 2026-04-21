@@ -13,13 +13,13 @@ use JMS\Serializer\Annotation as JMS;
  */
 class ReportStatusService
 {
-    public const STATE_NOT_STARTED = 'not-started';
-    public const STATE_INCOMPLETE = 'incomplete';
-    public const STATE_DONE = 'done';
-    public const STATE_LOW_ASSETS_DONE = 'low-assets-done'; // only used for PFA Low Assets report
-    public const STATE_NOT_MATCHING = 'not-matching'; // only used for balance section
-    public const STATE_EXPLAINED = 'explained'; // only used for balance section
-    public const ENABLE_STATUS_CACHE = true;
+    public const string STATE_NOT_STARTED = 'not-started';
+    public const string STATE_INCOMPLETE = 'incomplete';
+    public const string STATE_DONE = 'done';
+    public const string STATE_LOW_ASSETS_DONE = 'low-assets-done'; // only used for PFA Low Assets report
+    public const string STATE_NOT_MATCHING = 'not-matching'; // only used for balance section
+    public const string STATE_EXPLAINED = 'explained'; // only used for balance section
+    public const bool ENABLE_STATUS_CACHE = true;
 
     /**
      * @var bool set to true to use the report status cached
@@ -31,8 +31,7 @@ class ReportStatusService
          * @JMS\Exclude
          */
         private readonly Report $report
-    )
-    {
+    ) {
     }
 
     /**
@@ -54,7 +53,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getDecisionsState()
+    public function getDecisionsState(): array
     {
         $hasDecisions = count($this->report->getDecisions()) > 0;
 
@@ -84,7 +83,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getContactsState()
+    public function getContactsState(): array
     {
         $hasContacts = count($this->report->getContacts()) > 0;
         if (!$hasContacts && empty($this->report->getReasonForNoContacts())) {
@@ -103,7 +102,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getVisitsCareState()
+    public function getVisitsCareState(): array
     {
         $visitsCare = $this->report->getVisitsCare();
         $answers = $visitsCare ? [
@@ -132,7 +131,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getBankAccountsState()
+    public function getBankAccountsState(): array
     {
         $bankAccounts = $this->report->getBankAccounts();
         if (0 === count($bankAccounts)) {
@@ -155,7 +154,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getMoneyTransferState()
+    public function getMoneyTransferState(): array
     {
         $hasAtLeastOneTransfer = count($this->report->getMoneyTransfers()) >= 1;
         $valid = $hasAtLeastOneTransfer || $this->report->getNoTransfersToAdd();
@@ -176,7 +175,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getMoneyInState()
+    public function getMoneyInState(): array
     {
         if ($this->report->hasMoneyIn()) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getMoneyTransactionsIn())];
@@ -198,7 +197,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getMoneyOutState()
+    public function getMoneyOutState(): array
     {
         if ($this->report->hasMoneyOut()) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getMoneyTransactionsOut())];
@@ -220,7 +219,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getMoneyInShortState()
+    public function getMoneyInShortState(): array
     {
         $categoriesCount = count($this->report->getMoneyShortCategoriesInPresent());
         $transactionsExist = $this->report->getMoneyTransactionsShortInExist();
@@ -258,7 +257,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getMoneyOutShortState()
+    public function getMoneyOutShortState(): array
     {
         $categoriesCount = count($this->report->getMoneyShortCategoriesOutPresent());
         $transactionsExist = $this->report->getMoneyTransactionsShortOutExist();
@@ -375,7 +374,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getDebtsState()
+    public function getDebtsState(): array
     {
         $hasDebts = $this->report->getHasDebts();
         if (empty($hasDebts)) {
@@ -529,7 +528,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getActionsState()
+    public function getActionsState(): array
     {
         $action = $this->report->getAction();
         $answers = $action ? [
@@ -556,7 +555,7 @@ class ReportStatusService
      *
      * @return array
      */
-    public function getOtherInfoState()
+    public function getOtherInfoState(): array
     {
         if (null === $this->report->getActionMoreInfo()) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
@@ -591,14 +590,10 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "expenses-state"})
-     *
-     * @return array
      */
-    public function getExpensesState()
+    public function getExpensesState(): array
     {
         // if the section is not relevant for the report, then it's "done"
         if (!$this->report->hasSection(Report::SECTION_DEPUTY_EXPENSES)) {
@@ -614,14 +609,10 @@ class ReportStatusService
 
     /**
      * @JMS\VirtualProperty
-     *
      * @JMS\Type("array")
-     *
      * @JMS\Groups({"status", "gifts-state"})
-     *
-     * @return array
      */
-    public function getGiftsState()
+    public function getGiftsState(): array
     {
         if ($this->report->giftsSectionCompleted()) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => count($this->report->getGifts())];
@@ -632,16 +623,14 @@ class ReportStatusService
 
     /**
      * @JMS\Exclude
-     *
-     * @param bool
-     *
-     * @return array
      */
-    public function getRemainingSections()
+    public function getRemainingSections(): array
     {
-        return array_filter($this->getSectionStatus(), function ($e) {
-            return (self::STATE_DONE != $e) && (self::STATE_EXPLAINED != $e) && (self::STATE_LOW_ASSETS_DONE != $e);
-        }) ?: [];
+        $doneStatuses = [self::STATE_DONE, self::STATE_EXPLAINED, self::STATE_LOW_ASSETS_DONE];
+
+        return array_filter($this->getSectionStatus(), function ($sectionStatus) use ($doneStatuses) {
+            return !in_array($sectionStatus, $doneStatuses);
+        });
     }
 
     /**
@@ -706,7 +695,7 @@ class ReportStatusService
             case Report::SECTION_DOCUMENTS:
                 return $this->getDocumentsState();
             default:
-                throw new \InvalidArgumentException(__METHOD__." $section section not defined");
+                throw new \InvalidArgumentException(__METHOD__ . " $section section not defined");
         }
     }
 
@@ -715,20 +704,16 @@ class ReportStatusService
      *
      * @JMS\Exclude
      *
-     * @param bool
-     *
-     * @return array of section=>state e.g. [ decisions => notStarted ]
+     * @return array of section=>state e.g. ['decisions' => 'notStarted']
      */
-    public function getSectionStatus()
+    public function getSectionStatus(): array
     {
         $statusCached = $this->report->getSectionStatusesCached();
 
         $ret = [];
         foreach ($this->report->getAvailableSections() as $sectionId) {
             if (self::ENABLE_STATUS_CACHE && $this->useStatusCache) { // get cached value if exists
-                $ret[$sectionId] = isset($statusCached[$sectionId]['state'])
-                    ? $statusCached[$sectionId]['state']
-                    : self::STATE_NOT_STARTED; // should never happen, unless cron didn't update when this feature was firstly introduced
+                $ret[$sectionId] = $statusCached[$sectionId]['state'] ?? self::STATE_NOT_STARTED; // should never happen, unless cron didn't update when this feature was firstly introduced
             } else {
                 $ret[$sectionId] = $this->getSectionStateNotCached($sectionId)['state'];
             }

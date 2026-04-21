@@ -93,12 +93,12 @@ data "aws_iam_policy_document" "replication_policy" {
       test     = "StringLikeIfExists"
       variable = "s3:x-amz-server-side-encryption-aws-kms-key-id"
       values = [
-        "arn:aws:kms:eu-west-1:${local.backup_account_id}:key/${var.account.s3_backup_kms_arn}"
+        "arn:aws:kms:eu-west-1:${local.backup_account_id}:key/${var.account.s3.backup_kms_arn}"
       ]
     }
     #trivy:ignore:avd-aws-0057 - Not overly permissive
     resources = [
-      "arn:aws:s3:::${var.account.name}.backup.digideps.opg.service.justice.gov.uk/*",
+      "arn:aws:s3:::${var.account.environment.name}.backup.digideps.opg.service.justice.gov.uk/*",
       "${local.replication_bucket}/*"
     ]
   }
@@ -155,10 +155,10 @@ data "aws_iam_policy_document" "replication_policy" {
       variable = "kms:EncryptionContext:aws:s3:arn"
 
       values = [
-        "arn:aws:s3:::${var.account.name}.backup.digideps.opg.service.justice.gov.uk/*",
+        "arn:aws:s3:::${var.account.environment.name}.backup.digideps.opg.service.justice.gov.uk/*",
       ]
     }
 
-    resources = ["arn:aws:kms:eu-west-1:${local.backup_account_id}:key/${var.account.s3_backup_kms_arn}"]
+    resources = ["arn:aws:kms:eu-west-1:${local.backup_account_id}:key/${var.account.s3.backup_kms_arn}"]
   }
 }

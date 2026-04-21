@@ -82,25 +82,30 @@ const getSecret = async (environment, endpoint) => {
   return { admin_user, admin_password, client, deputy_user, deputy_password };
 };
 
+
 const loginAsUser = async (page, url, user, password, expectedPage) => {
-  console.log('=== Logging in to application as ' + expectedPage + ' smoke user ===');
-  await page.goto(url + '/login')
+  console.log(`=== Logging in as ${expectedPage} ===`);
+
+  await page.goto(url + '/login', { waitUntil: 'domcontentloaded' });
+
+  await page.waitForSelector('#login_email', { timeout: 10000 });
+
   await page.type('#login_email', user);
   await page.type('#login_password', password);
-  await Promise.all([
-      page.waitForNavigation(),
-      page.click('#login_login')
-    ]);
 
-  const actualUrl = page.url();
-  checkUrl(actualUrl, url, expectedPage);
+  await Promise.all([
+    page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
+    page.click('#login_login')
+  ]);
+
+  checkUrl(page.url(), url, expectedPage);
 };
 
 const searchForUser = async (page, user) => {
     console.log('=== Check searching for a user functionality ===');
     await page.type('#admin_q', user);
     await Promise.all([
-        page.waitForNavigation(),
+        page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
         page.click('#admin_search')
       ]);
     await page.waitForSelector('.behat-region-users');
@@ -117,7 +122,7 @@ const searchForClient = async (page, clientToFind) => {
     await page.click('.behat-link-admin-client-search')
     await page.type('#search_clients_q', clientToFind);
     await Promise.all([
-        page.waitForNavigation(),
+        page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
         page.click('#search_clients_search')
       ]);
     await page.waitForSelector('.behat-region-client-search-count');
@@ -142,7 +147,7 @@ const checkSubmissions = async (page) => {
   await page.click('.behat-link-admin-documents');
   await page.waitForSelector('.behat-link-tab-archived');
       await Promise.all([
-        page.waitForNavigation(),
+        page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
         page.click('.behat-link-tab-archived')
       ]);
   const rowCount = await page.$$eval('.govuk-table__body tr', rows => rows.length);
@@ -156,7 +161,7 @@ const checkSubmissions = async (page) => {
 const checkAnalytics = async (page) => {
   console.log('=== Check analytics statistics show up as expected ===');
   await Promise.all([
-    page.waitForNavigation(),
+    page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
     page.click('.behat-link-admin-analytics'),
   ]);
   const textContent = await page.$eval('.govuk-heading-xl[aria-labelledby="metric-registeredDeputies-total-label"]', element => element.textContent.trim());
@@ -184,11 +189,11 @@ const updateFirstName = async (page, name, firstNameFieldSelector, saveSelector)
 const updateUserDetails = async (page, firstNameFieldSelector, saveSelector) => {
   console.log('=== Update current users details ===');
   await Promise.all([
-    page.waitForNavigation(),
+    page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
     page.click('.behat-link-user-account'),
   ]);
   await Promise.all([
-    page.waitForNavigation(),
+    page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
     page.click('.behat-link-profile-show'),
   ]);
   await page.waitForSelector('.behat-link-profile-edit');
@@ -199,11 +204,11 @@ const updateUserDetails = async (page, firstNameFieldSelector, saveSelector) => 
 const updateUserDetailsConcurrent = async (page, firstNameFieldSelector, saveSelector) => {
   console.log('=== Update current users details ===');
   await Promise.all([
-    page.waitForNavigation(),
+    page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
     page.click('.behat-link-user-account'),
   ]);
   await Promise.all([
-    page.waitForNavigation(),
+    page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
     page.click('.behat-link-profile-show'),
   ]);
   await page.waitForSelector('.behat-link-profile-edit');
@@ -235,7 +240,7 @@ const checkForReportLinkText = async (page, expectedText) => {
 const checkReportSectionsVisible = async (page) => {
   console.log('=== Check report sections visible ===');
   await Promise.all([
-    page.waitForNavigation(),
+    page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
     page.click('.behat-link-report-start'),
   ]);
   // Check one from each section
@@ -250,7 +255,7 @@ const checkReportSectionsVisible = async (page) => {
 const logOutUser = async (page, url) => {
   console.log('=== Check we can log out ===');
   await Promise.all([
-    page.waitForNavigation(),
+    page.waitForNavigation({ waitUntil: 'domcontentloaded' }),
     page.click('.behat-link-logout'),
   ]);
   const actualUrl = page.url();
@@ -259,7 +264,7 @@ const logOutUser = async (page, url) => {
 
 const checkServiceHealthAdmin = async (page, url) => {
     console.log('=== Check service health admin ===');
-    await page.goto(url + '/health-check/service');
+    await page.goto(url + '/health-check/service', { waitUntil: 'domcontentloaded' });
     const healthText = await page.$eval('body', body => body.textContent.replace(/\s+/g, '').trim());
     checkTextInElement('Api:OK', healthText);
     checkTextInElement('Redis:OK', healthText);
@@ -267,7 +272,7 @@ const checkServiceHealthAdmin = async (page, url) => {
 
 const checkServiceHealthFront = async (page, url) => {
     console.log('=== Check service health frontend ===');
-    await page.goto(url + '/health-check/service')
+    await page.goto(url + '/health-check/service', { waitUntil: 'domcontentloaded' });
     const healthText = await page.$eval('body', body => body.textContent.replace(/\s+/g, '').trim());
     checkTextInElement('Api:OK', healthText);
     checkTextInElement('Redis:OK', healthText);

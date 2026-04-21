@@ -1,0 +1,74 @@
+name: "[Manual] Destroy Specific PR environment"
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_identifier:
+        description: "PR environment to destroy"
+        required: true
+
+permissions:
+  id-token: write
+  contents: read
+  security-events: none
+  pull-requests: none
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  cleanup_workspace:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - id: terraform_version
+        name: get terraform version
+        uses: ministryofjustice/opg-github-actions/actions/terraform-version@4daa651011e6595c5b9689c4ff634cd15221a206 # v4.3.11
+        with:
+          terraform_directory: terraform/environment
+
+      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+        with:
+          terraform_version: ${{ steps.terraform_version.outputs.version }}
+          terraform_wrapper: false
+
+      - id: deploy-key
+        uses: "ministryofjustice/opg-github-actions/actions/github-deploy-key@3a15a16fcc221821c2869eecd8822c5d62af2984" # v4.7.0
+        with:
+          deploy_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+
+      - name: configure OIDC AWS credentials for terraform
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.IDENTITY_ACCOUNT }}:role/oidc-digideps-development
+          role-session-name: github-actions-terraform
+          role-duration-seconds: 3600
+          aws-region: eu-west-1
+
+      - name: clean up environment
+        working-directory: ./terraform/environment
+        env:
+          WORKSPACE: ${{ inputs.build_identifier }}
+          TF_VAR_OPG_DOCKER_TAG: foo
+        run: |
+          echo "Running script against ${WORKSPACE}"
+          ./scripts/destroy_workspace.sh "${WORKSPACE}"
+
+      - name: Unset AWS variables
+        if: always()
+        run: |
+          {
+            echo "AWS_SECRET_ACCESS_KEY="
+            echo "AWS_ACCESS_KEY_ID="
+            echo "AWS_SESSION_TOKEN="
+          } >> "$GITHUB_ENV"

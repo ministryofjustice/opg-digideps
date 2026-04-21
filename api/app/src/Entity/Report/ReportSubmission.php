@@ -24,7 +24,8 @@ class ReportSubmission
     // createdBy is the user who submitted the report
     // createdOn = date where the report (or documents-only) get submitted
     use CreationAudit;
-    public const REMOVE_FILES_WHEN_OLDER_THAN = '-500 days';
+
+    public const string REMOVE_FILES_WHEN_OLDER_THAN = '-500 days';
 
     /**
      * @var int
@@ -44,7 +45,7 @@ class ReportSubmission
     private $id;
 
     /**
-     * @var Report
+     * @var ?Report
      *
      * @JMS\Type("App\Entity\Report\Report")
      *
@@ -57,7 +58,7 @@ class ReportSubmission
     private $report;
 
     /**
-     * @var Ndr
+     * @var ?Ndr
      *
      * @JMS\Type("App\Entity\Ndr\Ndr")
      *
@@ -167,18 +168,12 @@ class ReportSubmission
         return $this;
     }
 
-    /**
-     * @return Report
-     */
-    public function getReport()
+    public function getReport(): ?Report
     {
         return $this->report;
     }
 
-    /**
-     * @return Ndr
-     */
-    public function getNdr()
+    public function getNdr(): ?Ndr
     {
         return $this->ndr;
     }

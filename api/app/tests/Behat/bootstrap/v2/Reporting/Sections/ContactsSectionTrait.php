@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
 use App\Tests\Behat\BehatException;
+use Behat\Behat\Tester\Exception\PendingException;
+use Behat\Gherkin\Node\TableNode;
 
 trait ContactsSectionTrait
 {
@@ -62,24 +64,9 @@ trait ContactsSectionTrait
     }
 
     /**
-     * @When I enter another contacts details
+     * @When /^I enter valid contact details "(without|while)" wanting to add another$/
      */
-    public function iEnterAnotherContactsDetails()
-    {
-        $this->chooseOption('add_another[addAnother]', 'yes');
-        $this->pressButton('Continue');
-
-        $this->iAmOnAddAContactPage();
-
-        $this->iEnterValidContactDetails();
-
-        $this->iAmOnContactsAddAnotherPage();
-    }
-
-    /**
-     * @When I enter valid contact details
-     */
-    public function iEnterValidContactDetails()
+    public function iEnterValidContactDetails($addAnother)
     {
         $this->fillInField('contact_contactName', $this->faker->name(), 'contactDetails');
         $this->fillInField('contact_relationship', $this->faker->text(50), 'contactDetails');
@@ -90,20 +77,10 @@ trait ContactsSectionTrait
         $this->fillInField('contact_postcode', $this->faker->postcode(), 'contactDetails');
         $this->chooseOption('contact_country', 'United Kingdom', 'contactDetails');
 
+        $selection = 'while' == $addAnother ? 'yes' : 'no';
+        $this->selectOption('contact[addAnother]', $selection);
+
         $this->pressButton('Save and continue');
-
-        $this->iAmOnContactsAddAnotherPage();
-    }
-
-    /**
-     * @When there are no further contacts to add
-     */
-    public function thereAreNoFurtherContactsToAdd()
-    {
-        $this->selectOption('add_another[addAnother]', 'no');
-        $this->pressButton('Continue');
-
-        $this->iAmOnContactsSummaryPage();
     }
 
     /**

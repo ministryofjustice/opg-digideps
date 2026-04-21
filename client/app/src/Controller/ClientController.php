@@ -37,13 +37,6 @@ class ClientController extends AbstractController
     ) {
     }
 
-    #[Route(path: '/deputyship-details/your-client', name: 'client_show_deprecated')]
-    #[Template('@App/Client/show.html.twig')]
-    public function showAction(): array|RedirectResponse
-    {
-        return $this->redirectToRoute('homepage');
-    }
-
     #[Route(path: '/deputyship-details/client/{clientId}', name: 'client_show')]
     #[Template('@App/Client/show.html.twig')]
     public function showClientDetailsAction(Redirector $redirector, int $clientId): array|RedirectResponse
@@ -62,13 +55,6 @@ class ClientController extends AbstractController
         return [
             'client' => $client,
         ];
-    }
-
-    #[Route(path: '/deputyship-details/your-client/edit', name: 'client_edit_deprecated')]
-    #[Template('@App/Client/edit.html.twig')]
-    public function editAction(): RedirectResponse
-    {
-        return $this->redirectToRoute('homepage');
     }
 
     #[Route(path: '/deputyship-details/client/{clientId}/edit', name: 'client_edit')]

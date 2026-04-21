@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
+use Behat\Step\Given;
+use Behat\Step\Then;
+use Behat\Step\When;
+
 trait MoneyOutSectionTrait
 {
     private array $paymentTypeDictionary = [
@@ -52,28 +56,22 @@ trait MoneyOutSectionTrait
     private array $moneyTypeCategoriesCompleted = [];
     private array $moneyOutTransaction = [];
 
-    /**
-     * @When I view and start the money out report section
-     */
-    public function iViewAndStartMoneyOutSection()
+    #[When('I view and start the money out report section')]
+    public function iViewAndStartMoneyOutSection(): void
     {
         $this->iVisitMoneyOutSection();
         $this->clickLink('Start money out');
     }
 
-    /**
-     * @Given /^I confirm "([^"]*)" to taking money out on the clients behalf$/
-     */
-    public function iConfirmToTakingMoneyOutOnTheClientsBehalf($arg1)
+    #[Given('/^I confirm "([^"]*)" to taking money out on the clients behalf$/')]
+    public function iConfirmToTakingMoneyOutOnTheClientsBehalf($arg1): void
     {
         $this->chooseOption('does_money_out_exist[moneyOutExists]', $arg1, 'moneyOutExists');
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @Then /^I select from the money out payment options$/
-     */
-    public function iSelectFromTheMoneyOutPaymentOptions()
+    #[Then('/^I select from the money out payment options$/')]
+    public function iSelectFromTheMoneyOutPaymentOptions(): void
     {
         $this->paymentTypeDictionary['cash-withdrawn'] = sprintf(
             $this->paymentTypeDictionary['cash-withdrawn'],
@@ -86,86 +84,64 @@ trait MoneyOutSectionTrait
         );
     }
 
-    /**
-     * @When I try to save and continue without adding a payment
-     */
-    public function iSaveAndContinueWithoutAddingPayment()
+    #[When('I try to save and continue without adding a payment')]
+    public function iSaveAndContinueWithoutAddingPayment(): void
     {
         $this->iAmOnMoneyOutAddPaymentPage();
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @Then I should see correct money out validation message
-     */
-    public function iShouldSeeCorrectMoneyOutValidation()
+    #[Then('I should see correct money out validation message')]
+    public function iShouldSeeCorrectMoneyOutValidation(): void
     {
         $this->assertOnAlertMessage('Please choose an option');
     }
 
-    /**
-     * @When I add one money out payment
-     */
-    public function iAddOneMoneyOutPayment()
+    #[When('I add one money out payment')]
+    public function iAddOneMoneyOutPayment(): void
     {
         $this->iAmOnMoneyOutAddPaymentPage();
-        $this->addPayment('care-fees', 'Care fees');
-        $this->addAnother('no');
+        $this->addPayment('care-fees', 'Care fees', false);
     }
 
-    /**
-     * @When I add one type of money out payment from each category
-     */
-    public function iAddOneTypeOfMoneyOutPaymentFromEachCategory()
+    #[When('I add one type of money out payment from each category')]
+    public function iAddOneTypeOfMoneyOutPaymentFromEachCategory(): void
     {
         $this->iAmOnMoneyOutAddPaymentPage();
 
-        $this->addPayment('care-fees', $this->paymentTypeDictionary['care-fees']);
-        $this->addAnother('yes');
-        $this->addPayment('property-maintenance-improvement', $this->paymentTypeDictionary['property-maintenance-improvement']);
-        $this->addAnother('yes');
-        $this->addPayment('mortgage', $this->paymentTypeDictionary['mortgage']);
-        $this->addAnother('yes');
-        $this->addPayment('personal-allowance-pocket-money', $this->paymentTypeDictionary['personal-allowance-pocket-money']);
-        $this->addAnother('yes');
-        $this->addPayment('opg-fees', $this->paymentTypeDictionary['opg-fees']);
-        $this->addAnother('yes');
-        $this->addPayment('purchase-over-1000', $this->paymentTypeDictionary['purchase-over-1000']);
-        $this->addAnother('yes');
-        $this->addPayment('unpaid-care-fees', $this->paymentTypeDictionary['unpaid-care-fees']);
-        $this->addAnother('yes');
-        $this->addPayment('cash-withdrawn', $this->paymentTypeDictionary['cash-withdrawn']);
-        $this->addAnother('yes');
-        $this->addPayment('anything-else-paid-out', $this->paymentTypeDictionary['anything-else-paid-out']);
-        $this->addAnother('no');
+        $this->addPayment('care-fees', $this->paymentTypeDictionary['care-fees'], true);
+        $this->addPayment('property-maintenance-improvement', $this->paymentTypeDictionary['property-maintenance-improvement'], true);
+        $this->addPayment('mortgage', $this->paymentTypeDictionary['mortgage'], true);
+        $this->addPayment('personal-allowance-pocket-money', $this->paymentTypeDictionary['personal-allowance-pocket-money'], true);
+        $this->addPayment('opg-fees', $this->paymentTypeDictionary['opg-fees'], true);
+        $this->addPayment('purchase-over-1000', $this->paymentTypeDictionary['purchase-over-1000'], true);
+        $this->addPayment('unpaid-care-fees', $this->paymentTypeDictionary['unpaid-care-fees'], true);
+        $this->addPayment('cash-withdrawn', $this->paymentTypeDictionary['cash-withdrawn'], true);
+        $this->addPayment('anything-else-paid-out', $this->paymentTypeDictionary['anything-else-paid-out'], false);
     }
 
-    /**
-     * @When I remove an existing money out payment
-     */
-    public function iRemoveAnExistingMoneyOutPayment()
+    #[When('I remove an existing money out payment')]
+    public function iRemoveAnExistingMoneyOutPayment(): void
     {
         $this->iAmOnMoneyOutSummaryPage();
 
         $this->removeAnswerFromSection('account[amount]', 'addPayment-Care fees', true, 'Yes, remove payment');
     }
 
-    /**
-     * @When I edit an existing money out payment
-     */
-    public function iEditExistingMoneyOutPayment()
+    #[When('I edit an existing money out payment')]
+    public function iEditExistingMoneyOutPayment(): void
     {
         $this->iAmOnMoneyOutSummaryPage();
 
         $this->getSession()->getPage()->find('xpath', '//td[contains(., "Care fees")]/..')->clickLink('Edit');
 
+        $this->assertPageContainsText('Edit a payment: Care fees');
+
         $this->fillInPaymentDetails('Care fees', $this->faker->sentence(rand(5, 50)), mt_rand(1, 999));
     }
 
-    /**
-     * @When I add another money out payment from an existing account
-     */
-    public function iAddAnotherMoneyOutPaymentExistingAccount()
+    #[When('I add another money out payment from an existing account')]
+    public function iAddAnotherMoneyOutPaymentExistingAccount(): void
     {
         $this->iAmOnMoneyOutSummaryPage();
 
@@ -176,34 +152,26 @@ trait MoneyOutSectionTrait
         $translatedPaymentValue = 'Water';
         $radioPaymentValue = array_search($translatedPaymentValue, $this->paymentTypeDictionary);
 
-        $this->addPayment($radioPaymentValue, $translatedPaymentValue);
-
-        $this->addAnother('no');
+        $this->addPayment($radioPaymentValue, $translatedPaymentValue, false);
     }
 
-    /**
-     * @When I add a payment without filling in description and amount
-     */
-    public function iAddPaymentWithoutFillingInDescriptionAndAmount()
+    #[When('I add a payment without filling in description and amount')]
+    public function iAddPaymentWithoutFillingInDescriptionAndAmount(?bool $addAnother = null): void
     {
         $this->chooseOption('account[category]', 'purchase-over-1000', 'addPayment');
         $this->pressButton('Save and continue');
-        $this->fillInPaymentDetails('Other purchase over £1,000', null, null);
+        $this->fillInPaymentDetails('Other purchase over £1,000', null, null, $addAnother);
     }
 
-    /**
-     * @When I should see correct money out description and amount validation message
-     */
-    public function iSeeMoneyOutDescriptionValidationMessage()
+    #[When('I should see correct money out description and amount validation message')]
+    public function iSeeMoneyOutDescriptionValidationMessage(): void
     {
         $this->assertOnAlertMessage('Please give us some more information about this amount');
         $this->assertOnAlertMessage('Please enter an amount');
     }
 
-    /**
-     * @Then I should see the expected results on money out summary page
-     */
-    public function iShouldSeeExpectedResultsOnMoneyOutSummaryPage()
+    #[Then('I should see the expected results on money out summary page')]
+    public function iShouldSeeExpectedResultsOnMoneyOutSummaryPage(): void
     {
         $this->iAmOnMoneyOutSummaryPage();
 
@@ -220,18 +188,18 @@ trait MoneyOutSectionTrait
         }
     }
 
-    private function addPayment(string $radioPaymentValue, string $translatedPaymentValue)
+    private function addPayment(string $radioPaymentValue, string $translatedPaymentValue, ?bool $addAnother = null): void
     {
         $this->chooseOption('account[category]', $radioPaymentValue, 'addPayment-' . $translatedPaymentValue, $translatedPaymentValue);
         $this->pressButton('Save and continue');
 
         $paymentAmount = mt_rand(0, 999);
-        $this->fillInPaymentDetails($translatedPaymentValue, $this->faker->sentence(rand(5, 50)), $paymentAmount);
+        $this->fillInPaymentDetails($translatedPaymentValue, $this->faker->sentence(rand(5, 50)), $paymentAmount, $addAnother);
 
         $this->moneyOutTransaction[] = [$this->paymentTypeDictionary['professional-fees-eg-solicitor-accountant'] => $paymentAmount];
     }
 
-    private function fillInPaymentDetails(string $translatedPaymentValue, ?string $paymentDescription = null, ?int $paymentAmount = null)
+    private function fillInPaymentDetails(string $translatedPaymentValue, ?string $paymentDescription = null, ?int $paymentAmount = null, ?bool $addAnother = null): void
     {
         $this->iAmOnMoneyOutAddPaymentDetailsPage();
 
@@ -252,43 +220,31 @@ trait MoneyOutSectionTrait
             );
         }
 
+        if ($addAnother !== null) {
+            $this->selectOption('account[addAnother]', $addAnother ? 'yes' : 'no');
+        }
+
         $this->pressButton('Save and continue');
     }
 
-    private function addAnother($anotherFlag)
-    {
-        $this->iAmOnMoneyOutAddAnotherPaymentPage();
-
-        $this->chooseOption('add_another[addAnother]', $anotherFlag);
-        $this->pressButton('Save and continue');
-    }
-
-    /**
-     * @When I add the Fees charged by a solicitor, accountant or other professional payment
-     */
-    public function iAddTheFeesChargedByASolicitorAccountantOrOtherProfessionalPayment()
+    #[When('I add the Fees charged by a solicitor, accountant or other professional payment')]
+    public function iAddTheFeesChargedByASolicitorAccountantOrOtherProfessionalPayment(): void
     {
         $this->iAmOnMoneyOutAddPaymentPage();
 
-        $this->addPayment('professional-fees-eg-solicitor-accountant', $this->paymentTypeDictionary['professional-fees-eg-solicitor-accountant']);
-        $this->addAnother('no');
+        $this->addPayment('professional-fees-eg-solicitor-accountant', $this->paymentTypeDictionary['professional-fees-eg-solicitor-accountant'], false);
     }
 
-    /**
-     * @When I add the Fees charged by a solicitor, accountant or other professional payment not including deputy costs
-     */
-    public function iAddTheFeesChargedByASolicitorAccountantOrOtherProfessionalPaymentNotIncludingDeputyCosts()
+    #[When('I add the Fees charged by a solicitor, accountant or other professional payment not including deputy costs')]
+    public function iAddTheFeesChargedByASolicitorAccountantOrOtherProfessionalPaymentNotIncludingDeputyCosts(): void
     {
         $this->iAmOnMoneyOutAddPaymentPage();
 
-        $this->addPayment('professional-fees-eg-solicitor-accountant-non-lay', $this->paymentTypeDictionary['professional-fees-eg-solicitor-accountant-non-lay']);
-        $this->addAnother('no');
+        $this->addPayment('professional-fees-eg-solicitor-accountant-non-lay', $this->paymentTypeDictionary['professional-fees-eg-solicitor-accountant-non-lay'], false);
     }
 
-    /**
-     * @Then /^I enter a reason for no money out$/
-     */
-    public function iEnterAReasonForNoMoneyOut()
+    #[Then('/^I enter a reason for no money out$/')]
+    public function iEnterAReasonForNoMoneyOut(): void
     {
         $this->iAmOnNoMoneyOutExistsPage();
 
@@ -296,10 +252,8 @@ trait MoneyOutSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @Then /^the money out summary page should contain "([^"]*)" money in values$/
-     */
-    public function theMoneyOutSummaryPageShouldContainMoneyInValues($arg1)
+    #[Then('/^the money out summary page should contain "([^"]*)" money in values$/')]
+    public function theMoneyOutSummaryPageShouldContainMoneyInValues($arg1): void
     {
         $this->iAmOnMoneyOutSummaryPage();
 
@@ -322,10 +276,8 @@ trait MoneyOutSectionTrait
         }
     }
 
-    /**
-     * @When /^I edit the money out exist summary section$/
-     */
-    public function iEditTheMoneyOutExistSummarySection()
+    #[When('/^I edit the money out exist summary section$/')]
+    public function iEditTheMoneyOutExistSummarySection(): void
     {
         $this->iAmOnMoneyOutSummaryPage();
 
@@ -338,10 +290,8 @@ trait MoneyOutSectionTrait
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
     }
 
-    /**
-     * @When /^I delete the money out transaction item from the summary page$/
-     */
-    public function iDeleteTheMoneyOutTransactionItemFromTheSummaryPage()
+    #[When('/^I delete the money out transaction item from the summary page$/')]
+    public function iDeleteTheMoneyOutTransactionItemFromTheSummaryPage(): void
     {
         $this->iAmOnMoneyOutSummaryPage();
 
@@ -354,17 +304,15 @@ trait MoneyOutSectionTrait
             'Yes, remove payment'
         );
 
-        foreach ($this->moneyOutTransaction[0] as $moneyType => $value) {
+        foreach ($this->moneyOutTransaction[0] as $value) {
             $this->subtractFromGrandTotal($value);
         }
 
         $this->moneyOutTransaction = [];
     }
 
-    /**
-     * @When /^I add a new money out payment$/
-     */
-    public function iAddANewMoneyOutPayment()
+    #[When('/^I add a new money out payment$/')]
+    public function iAddANewMoneyOutPayment(): void
     {
         $this->clickLink('Add a payment');
 

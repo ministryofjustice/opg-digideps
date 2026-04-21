@@ -4,22 +4,23 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\Uploader;
 
+use App\Domain\Deputy\DeputyType;
 use App\Entity\Client;
 use App\Entity\Deputy;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Exception\ClientIsArchivedException;
 use App\Factory\OrganisationFactory;
-use App\Service\OrgService;
 use App\v2\Assembler\ClientAssembler;
 use App\v2\Assembler\DeputyAssembler;
 use App\v2\Registration\DTO\OrgDeputyshipDto;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
 class OrgDeputyshipUploader
 {
+    public const string DEFAULT_ORG_NAME = 'Your Organisation';
+
     private array $added = ['clients' => [], 'deputies' => [], 'reports' => [], 'organisations' => []];
     private array $updated = ['clients' => [], 'deputies' => [], 'reports' => [], 'organisations' => []];
     private array $changeOrg = [];
@@ -44,7 +45,7 @@ class OrgDeputyshipUploader
      *
      * @throws \Exception
      */
-    public function upload(array $deputyshipDtos)
+    public function upload(array $deputyshipDtos): array
     {
         $this->resetDeputyshipUploaderObjects();
         $this->em->clear();
@@ -71,7 +72,7 @@ class OrgDeputyshipUploader
                 $this->handleOrganisation($deputyshipDto);
                 $this->handleClient($deputyshipDto);
                 $this->handleReport($deputyshipDto);
-            } catch (ClientIsArchivedException $e) {
+            } catch (ClientIsArchivedException) {
                 ++$uploadResults['skipped'];
                 continue;
             } catch (\Throwable $e) {
@@ -95,7 +96,7 @@ class OrgDeputyshipUploader
         return $uploadResults;
     }
 
-    private function handleDeputy(OrgDeputyshipDto $dto)
+    private function handleDeputy(OrgDeputyshipDto $dto): void
     {
         /** @var Deputy $deputy */
         $deputy = $this->em->getRepository(Deputy::class)->findOneBy(
@@ -144,6 +145,12 @@ class OrgDeputyshipUploader
                 $updated = true;
             }
 
+            if ($deputy->typeHasChanged($dto)) {
+                $deputy->setDeputyType(DeputyType::from(strtoupper($dto->getDeputyType())));
+
+                $updated = true;
+            }
+
             if ($updated) {
                 $this->em->persist($deputy);
                 $this->em->flush();
@@ -155,12 +162,12 @@ class OrgDeputyshipUploader
         $this->deputy = $deputy;
     }
 
-    private function handleOrganisation(OrgDeputyshipDto $dto)
+    private function handleOrganisation(OrgDeputyshipDto $dto): void
     {
-        $this->currentOrganisation = $foundOrganisation = $this->em->getRepository(Organisation::class)->findByEmailIdentifier($dto->getDeputyEmail());
+        $this->currentOrganisation = $this->em->getRepository(Organisation::class)->findByEmailIdentifier($dto->getDeputyEmail());
 
-        if (is_null($foundOrganisation)) {
-            $orgName = empty($dto->getOrganisationName()) ? OrgService::DEFAULT_ORG_NAME : $dto->getOrganisationName();
+        if (is_null($this->currentOrganisation)) {
+            $orgName = empty($dto->getOrganisationName()) ? self::DEFAULT_ORG_NAME : $dto->getOrganisationName();
             $organisation = $this->orgFactory->createFromFullEmail($orgName, $dto->getDeputyEmail());
             $this->em->persist($organisation);
             $this->em->flush();
@@ -171,7 +178,7 @@ class OrgDeputyshipUploader
         }
     }
 
-    private function handleClient(OrgDeputyshipDto $dto)
+    private function handleClient(OrgDeputyshipDto $dto): void
     {
         if ($this->client instanceof Client && $this->client->hasLayDeputy()) {
             throw new \RuntimeException('case number already used');
@@ -186,33 +193,6 @@ class OrgDeputyshipUploader
                 $this->client->setCourtDate($dto->getCourtDate());
                 $this->updated['clients'][] = $this->client->getId();
             }
-
-            // TODO - Implement fix for https://opgtransform.atlassian.net/browse/DDPB-4350
-            // TODO - Remove temporary fixes/workarounds after the above issue is fixed
-            //            //Temp disabling until we can rely on Sirius data
-            //            if ($this->clientHasNewCourtOrder($this->client, $dto)) {
-            //                // Discharge clients with a new court order
-            //                // Look at adding audit logging for discharge to API side of app
-            //                $this->client->setDeletedAt(new DateTime());
-            //                $this->em->persist($this->client);
-            //                $this->em->flush();
-            //
-            //                $this->client = $this->buildClientAndAssociateWithDeputyAndOrg($dto);
-            //                $this->added['clients'][] = $dto->getCaseNumber();
-            //            }
-            //
-            //            if ($this->clientHasSwitchedOrganisation($this->client)) {
-            //                $this->currentOrganisation->addClient($this->client);
-            //                $this->client->setOrganisation($this->currentOrganisation);
-            //
-            //                $this->updated['clients'][] = $this->client->getId();
-            //            }
-            //
-            //            if ($this->clientHasNewDeputy($this->client, $this->deputy)) {
-            //                $this->client->setDeputy($this->deputy);
-            //
-            //                $this->updated['clients'][] = $this->client->getId();
-            //            }
 
             // Temp fix for deputies that have switched organisation and taken the client with them
             if (!$this->clientHasNewCourtOrder($this->client, $dto)) {
@@ -299,7 +279,7 @@ class OrgDeputyshipUploader
             || $client->getDeputy()->getDeputyUid() !== $deputy->getDeputyUid();
     }
 
-    private function handleReport(OrgDeputyshipDto $dto)
+    private function handleReport(OrgDeputyshipDto $dto): void
     {
         $report = $this->client->getCurrentReport();
 
@@ -345,14 +325,14 @@ class OrgDeputyshipUploader
 
             $this->client->addReport($report);
 
-            $this->added['reports'][] = $this->client->getCaseNumber().'-'.$dto->getReportEndDate()->format('Y-m-d');
+            $this->added['reports'][] = $this->client->getCaseNumber() . '-' . $dto->getReportEndDate()->format('Y-m-d');
         }
 
         $this->em->persist($report);
         $this->em->flush();
     }
 
-    private function resetDeputyshipUploaderObjects()
+    private function resetDeputyshipUploaderObjects(): void
     {
         $this->added = ['clients' => [], 'deputies' => [], 'reports' => [], 'organisations' => []];
         $this->updated = ['clients' => [], 'deputies' => [], 'reports' => [], 'organisations' => []];
@@ -362,7 +342,7 @@ class OrgDeputyshipUploader
         $this->client = null;
     }
 
-    private function handleDtoErrors(OrgDeputyshipDto $dto)
+    private function handleDtoErrors(OrgDeputyshipDto $dto): void
     {
         $missingData = [];
 
@@ -378,13 +358,17 @@ class OrgDeputyshipUploader
             $missingData[] = 'DeputyEmail';
         }
 
+        if (empty($dto->getDeputyType())) {
+            $missingData[] = 'DeputyType';
+        }
+
         if (!empty($missingData)) {
             $errorMessage = sprintf('Missing data to upload row: %s', implode(', ', $missingData));
             throw new \RuntimeException($errorMessage);
         }
     }
 
-    private function removeDuplicateIds()
+    private function removeDuplicateIds(): void
     {
         $this->added['deputies'] = array_unique($this->added['deputies']);
         $this->added['organisations'] = array_unique($this->added['organisations'], SORT_REGULAR);
@@ -397,7 +381,7 @@ class OrgDeputyshipUploader
         $this->updated['reports'] = array_unique($this->updated['reports']);
     }
 
-    private function skipArchivedClients()
+    private function skipArchivedClients(): void
     {
         if (!is_null($this->client) && !is_null($this->client->getArchivedAt())) {
             $message = sprintf(

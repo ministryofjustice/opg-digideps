@@ -2,17 +2,13 @@
 
 namespace App\Service;
 
-use App\Entity\CourtOrder;
+use App\Domain\Deputy\DeputyType;
 use App\Entity\Deputy;
-use App\Entity\PreRegistration;
-use App\Entity\Report\Report;
 use App\Entity\User;
-use App\Model\Hydrator;
 use App\Repository\CourtOrderRepository;
 use App\Repository\DeputyRepository;
-use Doctrine\DBAL\Exception;
+use App\Utility\Query\Hydrator;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
 
 class DeputyService
 {
@@ -69,26 +65,34 @@ class DeputyService
             $deputy->setDeputyUid($data['deputy_uid']);
         }
 
+        if (array_key_exists('role_name', $data) && !empty($data['role_name'])) {
+            if (str_contains($data['role_name'], 'LAY')) {
+                $deputy->setDeputyType(DeputyType::LAY);
+            } elseif (str_contains($data['role_name'], 'PROF')) {
+                $deputy->setDeputyType(DeputyType::PRO);
+            } elseif (str_contains($data['role_name'], 'PA')) {
+                $deputy->setDeputyType(DeputyType::PA);
+            }
+        }
+
         return $deputy;
     }
 
-    public function createDeputyFromPreRegistration(?PreRegistration $preReg, array $data = []): ?Deputy
+    public function createDeputyFromUser(User $user): Deputy
     {
-        if (is_null($preReg)) {
-            return null;
-        }
-
-        $data = array_merge($data, [
-            'firstname' => $preReg->getDeputyFirstname(),
-            'lastname' => $preReg->getDeputySurname(),
-            'address1' => $preReg->getDeputyAddress1(),
-            'address2' => $preReg->getDeputyAddress2(),
-            'address3' => $preReg->getDeputyAddress3(),
-            'address4' => $preReg->getDeputyAddress4(),
-            'address5' => $preReg->getDeputyAddress5(),
-            'address_postcode' => $preReg->getDeputyPostcode(),
-            'deputy_uid' => $preReg->getDeputyUid(),
-        ]);
+        $data = [
+            'firstname' => $user->getFirstname(),
+            'lastname' => $user->getLastname(),
+            'address1' => $user->getAddress1(),
+            'address2' => $user->getAddress2(),
+            'address3' => $user->getAddress3(),
+            'address4' => $user->getAddress4(),
+            'address5' => $user->getAddress5(),
+            'address_postcode' => $user->getAddressPostcode(),
+            'deputy_uid' => $user->getDeputyUid(),
+            'email' => $user->getEmail(),
+            'role_name' => $user->getRoleName(),
+        ];
 
         return $this->populateDeputy($data);
     }

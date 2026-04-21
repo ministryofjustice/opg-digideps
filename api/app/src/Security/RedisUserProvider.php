@@ -14,12 +14,12 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 /**
  * Get the user from a token (=username) looking at the AuthToken store info
  * throw exception if not found, or the token expired.
- * 
+ *
  * @implements UserProviderInterface<User>
  */
 class RedisUserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
-    private readonly mixed $timeoutSeconds;
+    private readonly int $timeoutSeconds;
 
     public function __construct(
         private readonly Client $redis,
@@ -28,15 +28,12 @@ class RedisUserProvider implements UserProviderInterface, PasswordUpgraderInterf
         private readonly UserRepository $userRepository,
         private readonly string $workspace
     ) {
-        $this->timeoutSeconds = $options['timeout_seconds'];
+        $this->timeoutSeconds = (int) ($options['timeout_seconds'] ?? 30);
     }
 
-    /**
-     * @return string
-     */
-    public function generateRandomTokenAndStore(User $user)
+    public function generateRandomTokenAndStore(User $user): string
     {
-        $token = $this->workspace.'_'.$user->getId().'_'.sha1(microtime().spl_object_hash($user).rand(1, 999));
+        $token = $this->workspace . '_' . $user->getId() . '_' . sha1(microtime() . spl_object_hash($user) . rand(1, 999));
 
         $this->redis->set($token, $user->getId());
         $this->redis->expire($token, $this->timeoutSeconds);
@@ -44,9 +41,9 @@ class RedisUserProvider implements UserProviderInterface, PasswordUpgraderInterf
         return $token;
     }
 
-    public function removeToken($token)
+    public function removeToken($token): void
     {
-        return $this->redis->set($token, null);
+        $this->redis->set($token, null);
     }
 
     public function refreshUser(UserInterface $user)

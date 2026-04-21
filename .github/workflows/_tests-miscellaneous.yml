@@ -11,26 +11,15 @@ jobs:
   miscellaneous-unit-tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # 6.0.0
-        with:
-          python-version: "3.11"
-
-      - name: install python requirements
-        id: python-requirements
-        run: pip3 install -r requirements.txt
-        working-directory: lambdas/functions/block_ips_lambda
-
-      - name: run unit tests for block ips
-        id: unit-tests-block-ips
-        run: python -m unittest tests/*_tests.py
-        working-directory: lambdas/functions/block_ips_lambda
+      - name: block ips tests
+        id: block-ips-tests
+        run: make block-ips-tests
 
       - name: run unit tests for anonymisation
-        id: unit-tests-anonymisation
-        run: go test ./...
-        working-directory: orchestration/anonymisation
+        id: anonymisation-tests
+        run: make anonymisation-tests
 
       - name: run additional composer package checks on client
         id: package-checks-client
@@ -56,3 +45,11 @@ jobs:
             done
           ' sh {} +
           echo "==== Dockerfile Linting Success. No errors ===="
+
+      - name: phpunit common
+        id: phpunit-common
+        run: make common-phpunit
+
+      - name: phpstan common
+        id: phpstan-common
+        run: make common-phpstan

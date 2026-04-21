@@ -64,7 +64,7 @@ class ReportSubmissionBurFixedWidthTransformer
         $fileContents[] = "00000000\r\n";
 
         foreach ($data as $dataLine) {
-            $fileContents[] = implode('', $dataLine)."\r\n";
+            $fileContents[] = implode('', $dataLine) . "\r\n";
         }
 
         $fileContents[] = "99999999\r\n";

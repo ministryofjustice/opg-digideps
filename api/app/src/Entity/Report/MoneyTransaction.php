@@ -236,28 +236,19 @@ class MoneyTransaction implements MoneyTransactionInterface
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getAmount()
+    public function getAmount(): float
     {
         return $this->amount;
     }
 
-    /**
-     * @param array $amount
-     */
-    public function setAmount($amount)
+    public function setAmount(float $amount): static
     {
         $this->amount = $amount;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }

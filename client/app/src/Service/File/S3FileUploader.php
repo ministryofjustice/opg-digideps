@@ -64,7 +64,11 @@ class S3FileUploader
      * @return Document
      */
     public function uploadFileAndPersistDocument(
-        ReportInterface $report, string $body, string $fileName, bool $isReportPdf, bool $overwrite = false
+        ReportInterface $report,
+        string $body,
+        string $fileName,
+        bool $isReportPdf,
+        bool $overwrite = false
     ) {
         $storageReference = sprintf(
             'dd_doc_%s_%s%s',
@@ -81,12 +85,10 @@ class S3FileUploader
             ->setFileName($fileName)
             ->setIsReportPdf($isReportPdf);
 
-        $reportType = $report instanceof Report ? 'report' : 'ndr';
-
         if ($overwrite) {
-            $response = $this->persistDocumentOverwrite($reportType, intval($report->getId()), $document);
+            $response = $this->persistDocumentOverwrite(intval($report->getId()), $document);
         } else {
-            $response = $this->persistDocument($reportType, intval($report->getId()), $document);
+            $response = $this->persistDocument(intval($report->getId()), $document);
         }
 
         $document->setId($response['id'] ?? null);
@@ -94,14 +96,14 @@ class S3FileUploader
         return $document;
     }
 
-    private function persistDocument(string $reportType, int $reportId, Document $document)
+    private function persistDocument(int $reportId, Document $document)
     {
-        return $this->restClient->post("/document/{$reportType}/{$reportId}", $document, ['document']);
+        return $this->restClient->post("/document/report/$reportId", $document, ['document']);
     }
 
-    private function persistDocumentOverwrite(string $reportType, int $reportId, Document $document)
+    private function persistDocumentOverwrite(int $reportId, Document $document)
     {
-        return $this->restClient->post("/document/{$reportType}/{$reportId}/overwrite", $document, ['document']);
+        return $this->restClient->post("/document/report/$reportId/overwrite", $document, ['document']);
     }
 
     /**

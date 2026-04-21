@@ -4,13 +4,13 @@ namespace App\Controller;
 
 use App\Entity\Client;
 use App\Entity\User;
-use App\Model\SelfRegisterData;
 use App\Repository\UserRepository;
 use App\Service\Auth\AuthService;
 use App\Service\Formatter\RestFormatter;
 use App\Service\UserRegistrationService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use OPG\Digideps\Common\Registration\SelfRegisterData;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,13 +46,8 @@ class SelfRegisterController extends RestController
         ]);
 
         $selfRegisterData->replaceUnicodeChars();
-
-        $caseNumber = $selfRegisterData->getCaseNumber();
-
         // truncate case number if length is 10
-        if (!is_null($caseNumber) && 10 == strlen($caseNumber)) {
-            $selfRegisterData->setCaseNumber(substr($caseNumber, 0, -2));
-        }
+        $selfRegisterData->normalise();
 
         $errors = $this->validator->validate($selfRegisterData, null, 'self_registration');
 

@@ -51,11 +51,22 @@ services:
             $fixtureParams: "%fixtures%"
             $symfonyEnvironment: "%kernel.environment%"
             $projectDir: "%kernel.project_dir%"
-            $redis: "@snc_redis.default"
             $frontendHost: "%env(JWT_HOST)%"
             $workspace: "%workspace%"
             $sessionPrefix: "%env(SESSION_PREFIX)%"
-            Predis\ClientInterface: "@snc_redis.default"
+            Predis\ClientInterface: "@predis"
+            $redis: "@predis"
+
+    predis:
+        class: Predis\Client
+        arguments:
+            - "%redis_dsn%"
+
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
+        arguments:
+            $redis: "@predis"
+            $options:
+                prefix: "%workspace%_%sessionPrefix%"
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -175,7 +186,7 @@ services:
     App\Security\RedisUserProvider:
         arguments:
             [
-                "@snc_redis.default",
+                "@predis",
                 "@logger",
                 { "timeout_seconds": "%user_provider_timeout_seconds%" },
                 '@App\Repository\UserRepository',
@@ -200,11 +211,11 @@ services:
 
     App\Service\Client\TokenStorage\RedisStorage:
         arguments:
-            $redis: "@snc_redis.default"
+            $redis: "@predis"
 
     App\Service\DataImporter\CsvToArray: ~
 
-    # Disable autowiring for these helper classes
+    # Disable autowiring for these helper classes
     App\Service\ReportStatusService: ~
     App\Service\Stats\StatsQueryParameters: ~
 
@@ -309,14 +320,14 @@ services:
             $clientPermissions: "%client_permissions%"
 
     App\Service\BruteForce\AttemptsInTimeChecker:
-        arguments: ["@snc_redis.default"]
+        arguments: ["@predis"]
         calls:
             - [setRedisPrefix, ["ac_ret_code"]]
             # after 5 attempts in the last 10 minutes, return a different return code (activate captcha)
             - [addTrigger, [5, 600]]
 
     App\Service\BruteForce\AttemptsIncrementalWaitingChecker:
-        arguments: ["@snc_redis.default"]
+        arguments: ["@predis"]
         calls:
             - [setRedisPrefix, ["ac_exception"]]
             # after 10 attempts, freeze for 30 minutes
@@ -333,7 +344,7 @@ services:
             - null
             - null
             - ""
-            - 1
+            - "1"
     line_formatter:
         class: Monolog\Formatter\LineFormatter
 
@@ -388,7 +399,7 @@ services:
     App\Security\HeaderTokenAuthenticator:
         class: App\Security\HeaderTokenAuthenticator
         arguments:
-            $redis: "@snc_redis.default"
+            $redis: "@predis"
 
     Aws\SecretsManager\SecretsManagerClient:
         arguments: ["%secrets_manager_client_params%"]
@@ -432,7 +443,7 @@ services:
     App\Command\ApiComparison:
         arguments:
             $httpClient: "@app.guzzlehttp_clientinterface"
-            $redis: "@snc_redis.default"
+            $redis: "@predis"
             $comparers:
                 - "@app.response_comparer_cli"
                 - "@app.response_comparer_co"
@@ -446,12 +457,12 @@ services:
     App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory:
         public: true
 
-    App\Model\DeputyshipProcessingRawDbAccess:
+    App\Domain\Deputyship\DeputyshipProcessingRawDbAccess:
         arguments:
             $ingestWriterEm: "@doctrine.orm.ingestwriter_entity_manager"
         public: true
 
-    App\v2\Service\DeputyshipCandidatesConverter:
+    App\Domain\Deputyship\DeputyshipCandidatesConverter:
         public: true
 
     App\Service\DeputyCaseService:
@@ -463,7 +474,7 @@ services:
     App\v2\Assembler\DeputyAssembler:
         public: true
 
-    App\v2\Service\CourtOrderService:
+    App\Domain\CourtOrder\CourtOrderService:
         public: true
 
     App\Service\LayRegistrationService:
@@ -474,3 +485,25 @@ services:
 
     App\Service\UserDeputyService:
         public: true
+
+    preCSVDataFactory:
+        class: App\Factory\ChainedDataFactory
+        public: true
+        arguments:
+            $name: "preCSVDataFactory"
+            $dataFactories:
+                - '@App\Factory\MissingDeputyDataFactory'
+
+    postCSVDataFactory:
+        class: App\Factory\ChainedDataFactory
+        public: true
+        arguments:
+            $name: "postCSVDataFactory"
+            $dataFactories:
+                - '@App\Factory\ClientIdFixDataFactory'
+
+    App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester:
+        public: true
+        arguments:
+            $preCSVDataFactory: "@preCSVDataFactory"
+            $postCSVDataFactory: "@postCSVDataFactory"

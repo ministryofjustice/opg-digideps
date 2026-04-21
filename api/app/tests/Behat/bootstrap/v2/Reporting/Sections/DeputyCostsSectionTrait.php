@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
 use App\Tests\Behat\BehatException;
+use Behat\Step\Given;
+use Behat\Step\Then;
+use Behat\Step\When;
 
 trait DeputyCostsSectionTrait
 {
@@ -24,10 +27,8 @@ trait DeputyCostsSectionTrait
     private string $additionalCostMissingOtherDescriptionError = 'Please give us some more information';
     private string $missingInterimCostError = 'Add at least one interim cost';
 
-    /**
-     * @When I navigate to and start the deputy costs report section for an existing client
-     */
-    public function iNavigateToAndStartDeputyCostsExistingClient()
+    #[When('I navigate to and start the deputy costs report section for an existing client')]
+    public function iNavigateToAndStartDeputyCostsExistingClient(): void
     {
         if (is_null($this->loggedInUserDetails->getClientId())) {
             throw new BehatException('The logged in user does not have a client associated with them. Try again with a user that has a client.');
@@ -49,10 +50,8 @@ trait DeputyCostsSectionTrait
         $this->clickLink('Start');
     }
 
-    /**
-     * @When I have fixed deputy costs to declare
-     */
-    public function iHaveFixedDeputyCosts()
+    #[When('I have fixed deputy costs to declare')]
+    public function iHaveFixedDeputyCosts(): void
     {
         $this->iAmOnDeputyCostsHowChargedPage();
 
@@ -66,10 +65,8 @@ trait DeputyCostsSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @When my client has not paid me in the current reporting period for work from a previous period
-     */
-    public function clientHasNotPaidPreviousCostsInCurrentPeriod()
+    #[When('my client has not paid me in the current reporting period for work from a previous period')]
+    public function clientHasNotPaidPreviousCostsInCurrentPeriod(): void
     {
         $this->iAmOnDeputyCostsPreviousReceivedExistsPage();
 
@@ -82,10 +79,8 @@ trait DeputyCostsSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @When my client has paid me in the current reporting period for work from a previous period
-     */
-    public function clientHasPaidPreviousCostsInCurrentPeriod()
+    #[When('my client has paid me in the current reporting period for work from a previous period')]
+    public function clientHasPaidPreviousCostsInCurrentPeriod(): void
     {
         $this->iAmOnDeputyCostsPreviousReceivedExistsPage();
 
@@ -98,10 +93,8 @@ trait DeputyCostsSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @When I enter a valid amount for the current reporting period costs
-     */
-    public function iEnterValidCurrentCosts()
+    #[When('I enter a valid amount for the current reporting period costs')]
+    public function iEnterValidCurrentCosts(): void
     {
         $this->iAmOnDeputyCostsCostsReceievedPage();
 
@@ -114,39 +107,31 @@ trait DeputyCostsSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @When I have no additional costs to declare for the current reporting period
-     */
-    public function iHaveNoAdditionalCosts()
+    #[When('I have no additional costs to declare for the current reporting period')]
+    public function iHaveNoAdditionalCosts(): void
     {
         $this->iAmOnDeputyCostsBreakdownPage();
 
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @Then I should see the expected responses on the deputy costs summary page
-     */
-    public function iShouldSeeExpectedDeputyCostsOnSummary()
+    #[Then('I should see the expected responses on the deputy costs summary page')]
+    public function iShouldSeeExpectedDeputyCostsOnSummary(): void
     {
         $this->iAmOnDeputyCostsSummaryPage();
 
         $this->expectedResultsDisplayedSimplified(null, true);
     }
 
-    /**
-     * @When I visit and start the deputy costs report section for an existing client
-     */
-    public function visitAndStartDeputyCosts()
+    #[When('I visit and start the deputy costs report section for an existing client')]
+    public function visitAndStartDeputyCosts(): void
     {
         $this->iVisitDeputyCostsSection();
         $this->clickLink('Start');
     }
 
-    /**
-     * @When I have assessed deputy costs to declare
-     */
-    public function iHaveAssessedDeputyCosts()
+    #[When('I have assessed deputy costs to declare')]
+    public function iHaveAssessedDeputyCosts(): void
     {
         $this->chooseOption(
             'deputy_costs[profDeputyCostsHowCharged]',
@@ -158,10 +143,8 @@ trait DeputyCostsSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @When I do not have interim deputy costs to declare
-     */
-    public function iDoNotHaveInterimDeputyCosts()
+    #[When('I do not have interim deputy costs to declare')]
+    public function iDoNotHaveInterimDeputyCosts(): void
     {
         $this->iAmOnDeputyCostsInterimExistsPage();
 
@@ -174,10 +157,8 @@ trait DeputyCostsSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @When I enter a valid amount and description that I am submitting to SCCO for assessment
-     */
-    public function iEnterValidSCCOAssessmentAmountAndDescription()
+    #[When('I enter a valid amount and description that I am submitting to SCCO for assessment')]
+    public function iEnterValidSCCOAssessmentAmountAndDescription(): void
     {
         $this->iAmOnDeputyCostsAmountSccoPage();
 
@@ -196,10 +177,8 @@ trait DeputyCostsSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @When I have charged in line with interim billing under Practice Direction 19B
-     */
-    public function iHaveChargedInterimCostsInlineWith19B()
+    #[When('I have charged in line with interim billing under Practice Direction 19B')]
+    public function iHaveChargedInterimCostsInlineWith19B(): void
     {
         $this->iAmOnDeputyCostsInterimExistsPage();
 
@@ -212,10 +191,8 @@ trait DeputyCostsSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @When I have not charged in line with interim billing under Practice Direction 19B
-     */
-    public function iHaveNotChargedInterimCostsInlineWith19B()
+    #[When('I have not charged in line with interim billing under Practice Direction 19B')]
+    public function iHaveNotChargedInterimCostsInlineWith19B(): void
     {
         $this->iAmOnDeputyCostsInterimExistsPage();
 
@@ -228,10 +205,8 @@ trait DeputyCostsSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @When I have provided valid interim costs and dates for all three periods
-     */
-    public function iProvideValidInterimCosts()
+    #[When('I have provided valid interim costs and dates for all three periods')]
+    public function iProvideValidInterimCosts(): void
     {
         $this->iAmOnDeputyCostsInterimPage();
 
@@ -280,10 +255,8 @@ trait DeputyCostsSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @When I have fixed and assessed deputy costs to declare
-     */
-    public function iHaveFixedAndAssessedDeputyCosts()
+    #[When('I have fixed and assessed deputy costs to declare')]
+    public function iHaveFixedAndAssessedDeputyCosts(): void
     {
         $this->iAmOnDeputyCostsHowChargedPage();
 
@@ -297,10 +270,9 @@ trait DeputyCostsSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @When I declare :numberOfCosts previous cost(s) with valid dates and amounts
-     */
-    public function iDeclarePreviousCostsAndDates(int $numberOfCosts)
+
+    #[When('I declare :numberOfCosts previous cost(s) with valid dates and amounts')]
+    public function iDeclarePreviousCostsAndDates(int $numberOfCosts): void
     {
         $this->iAmOnDeputyCostsPreviousReceivedPage();
 
@@ -310,8 +282,8 @@ trait DeputyCostsSectionTrait
             $this->fillInPreviousReceivedFields($year);
             $allCostsAdded = $index === $numberOfCosts;
 
-            $buttonText = $allCostsAdded ? 'Save and continue' : 'Save and add another';
-            $this->pressButton($buttonText);
+            $this->selectOption('deputy_costs_previous[addAnother]', $allCostsAdded ? 'no' : 'yes');
+            $this->pressButton('Save and continue');
 
             if (!$allCostsAdded) {
                 $this->assertOnAlertMessage('Cost added');
@@ -320,7 +292,7 @@ trait DeputyCostsSectionTrait
         }
     }
 
-    private function fillInPreviousReceivedFields(int $year)
+    private function fillInPreviousReceivedFields(int $year): void
     {
         $this->fillInDateFields(
             'deputy_costs_previous[startDate]',
@@ -345,10 +317,8 @@ trait DeputyCostsSectionTrait
         );
     }
 
-    /**
-     * @When I have additional costs in all seven categories to declare for the current reporting period
-     */
-    public function iHaveAllAdditionalCostsToDeclare()
+    #[When('I have additional costs in all seven categories to declare for the current reporting period')]
+    public function iHaveAllAdditionalCostsToDeclare(): void
     {
         $this->iAmOnDeputyCostsBreakdownPage();
 
@@ -369,10 +339,8 @@ trait DeputyCostsSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @When I provide all required information for fixed costs with previous period and additional costs
-     */
-    public function iProvideAllRequiredInfoForFixedCosts()
+    #[When('I provide all required information for fixed costs with previous period and additional costs')]
+    public function iProvideAllRequiredInfoForFixedCosts(): void
     {
         $this->iHaveFixedDeputyCosts();
         $this->clientHasPaidPreviousCostsInCurrentPeriod();
@@ -381,10 +349,8 @@ trait DeputyCostsSectionTrait
         $this->iHaveAllAdditionalCostsToDeclare();
     }
 
-    /**
-     * @When I provide all required information for assessed costs without previous period and additional costs
-     */
-    public function iProvideAllRequiredInfoForAssessedCosts()
+    #[When('I provide all required information for assessed costs without previous period and additional costs')]
+    public function iProvideAllRequiredInfoForAssessedCosts(): void
     {
         $this->iHaveAssessedDeputyCosts();
         $this->clientHasNotPaidPreviousCostsInCurrentPeriod();
@@ -394,10 +360,8 @@ trait DeputyCostsSectionTrait
         $this->iHaveNoAdditionalCosts();
     }
 
-    /**
-     * @When I edit the details of a cost incurred in a previous period
-     */
-    public function iEditTheDetailsOfPreviousPeriodCost()
+    #[When('I edit the details of a cost incurred in a previous period')]
+    public function iEditTheDetailsOfPreviousPeriodCost(): void
     {
         $locator = '//dt[contains(., "Received for")]/..';
         $previousPeriodCostRow = $this->getSession()->getPage()->find('xpath', $locator);
@@ -411,10 +375,8 @@ trait DeputyCostsSectionTrait
         $this->iAmOnDeputyCostsSummaryPage();
     }
 
-    /**
-     * @When I edit the amount of costs incurred in the current period
-     */
-    public function iEditTheDetailsOfCurrentPeriodCost()
+    #[When('I edit the amount of costs incurred in the current period')]
+    public function iEditTheDetailsOfCurrentPeriodCost(): void
     {
         $locator = '//dt[contains(., "Paid for this reporting period")]/..';
         $currentPeriodCostRow = $this->getSession()->getPage()->find('xpath', $locator);
@@ -428,10 +390,8 @@ trait DeputyCostsSectionTrait
         $this->iAmOnDeputyCostsSummaryPage();
     }
 
-    /**
-     * @When I edit the amount of an additional cost incurred in the current period
-     */
-    public function iEditTheDetailsOfAdditionalCostCurrentPeriod()
+    #[When('I edit the amount of an additional cost incurred in the current period')]
+    public function iEditTheDetailsOfAdditionalCostCurrentPeriod(): void
     {
         $locator = '//dt[contains(., "Appointment")]/..';
         $additionalCostRow = $this->getSession()->getPage()->find('xpath', $locator);
@@ -445,10 +405,8 @@ trait DeputyCostsSectionTrait
         $this->iAmOnDeputyCostsSummaryPage();
     }
 
-    /**
-     * @When I change the type of costs incurred to :typeOfCost costs
-     */
-    public function iChangeTypeOfCostsIncurredToAssessed(string $typeOfCost)
+    #[When('I change the type of costs incurred to :typeOfCost costs')]
+    public function iChangeTypeOfCostsIncurredToAssessed(string $typeOfCost): void
     {
         $locator = '//dt[contains(., "How did you charge for the services")]/..';
         $additionalCostRow = $this->getSession()->getPage()->find('xpath', $locator);
@@ -464,10 +422,8 @@ trait DeputyCostsSectionTrait
         $this->iAmOnDeputyCostsSummaryPage();
     }
 
-    /**
-     * @When there should be :numberOfQuestions new question(s) to answer
-     */
-    public function thereShouldBeTwoNewQuestionsToAnswer(int $numberOfQuestions)
+    #[When('there should be :numberOfQuestions new question(s) to answer')]
+    public function thereShouldBeTwoNewQuestionsToAnswer(int $numberOfQuestions): void
     {
         $locator = '//dd[contains(., "Please answer this question")]/..';
         $additionalCostRow = $this->getSession()->getPage()->findAll('xpath', $locator);
@@ -479,10 +435,8 @@ trait DeputyCostsSectionTrait
         );
     }
 
-    /**
-     * @When I edit the amount of one of the interim interim billing under Practice Direction 19B
-     */
-    public function iEditOne19BInterimCost()
+    #[When('I edit the amount of one of the interim interim billing under Practice Direction 19B')]
+    public function iEditOne19BInterimCost(): void
     {
         $locator = '//dt[contains(., "Costs for interim 1")]/..';
         $interim19BCostsRow = $this->getSession()->getPage()->find('xpath', $locator);
@@ -496,10 +450,8 @@ trait DeputyCostsSectionTrait
         $this->iAmOnDeputyCostsSummaryPage();
     }
 
-    /**
-     * @When I edit the amount being submitted to SCCO for assessment
-     */
-    public function iEditAmountBeingSubmittedToSCCO()
+    #[When('I edit the amount being submitted to SCCO for assessment')]
+    public function iEditAmountBeingSubmittedToSCCO(): void
     {
         $locator = '//dt[contains(., "What amount is being submitted to SCCO")]/..';
         $sccoEstimateRow = $this->getSession()->getPage()->find('xpath', $locator);
@@ -514,10 +466,8 @@ trait DeputyCostsSectionTrait
         $this->iAmOnDeputyCostsSummaryPage();
     }
 
-    /**
-     * @When I change my response to charged in line with interim billing under Practice Direction 19B to no
-     */
-    public function iChangeDirection19BInterimCostsToNo()
+    #[When('I change my response to charged in line with interim billing under Practice Direction 19B to no')]
+    public function iChangeDirection19BInterimCostsToNo(): void
     {
         $locator = '//dt[contains(., "Practice Direction 19B")]/..';
         $additionalCostRow = $this->getSession()->getPage()->find('xpath', $locator);
@@ -532,25 +482,23 @@ trait DeputyCostsSectionTrait
         $this->iAmOnDeputyCostsSummaryPage();
     }
 
-    /**
-     * @When I add an additional cost for a previous period from the summary page
-     */
-    public function iAddPreviousCostFromSummaryPage()
+    #[When('I add an additional cost for a previous period from the summary page')]
+    public function iAddPreviousCostFromSummaryPage(): void
     {
         $this->clickLink('Add another');
 
         $this->iAmOnDeputyCostsPreviousReceivedPage();
 
         $this->fillInPreviousReceivedFields(2017);
+
+        $this->selectOption('deputy_costs_previous[addAnother]', 'no');
         $this->pressButton('Save and continue');
 
         $this->iAmOnDeputyCostsSummaryPage();
     }
 
-    /**
-     * @When I remove an additional cost for a previous period from the summary page
-     */
-    public function iRemovePreviousCostFromSummaryPage()
+    #[When('I remove an additional cost for a previous period from the summary page')]
+    public function iRemovePreviousCostFromSummaryPage(): void
     {
         $this->removeAnswerFromSection(
             'deputy_costs_previous[amount]',
@@ -562,50 +510,40 @@ trait DeputyCostsSectionTrait
         $this->iAmOnDeputyCostsSummaryPage();
     }
 
-    /**
-     * @When I don't provide details of the costs I've incurred
-     */
-    public function iDontProvideFixedCosts()
+    #[When('I don\'t provide details of the costs I\'ve incurred')]
+    public function iDontProvideFixedCosts(): void
     {
         $this->iAmOnDeputyCostsHowChargedPage();
         $this->pressButton('Save and continue');
         $this->iAmOnDeputyCostsHowChargedPage();
     }
 
-    /**
-     * @When I don't provide a value for current reporting period fixed costs
-     */
-    public function iDontProvideFixedCostValue()
+    #[When('I don\'t provide a value for current reporting period fixed costs')]
+    public function iDontProvideFixedCostValue(): void
     {
         $this->iAmOnDeputyCostsCostsReceievedPage();
         $this->pressButton('Save and continue');
         $this->iAmOnDeputyCostsCostsReceievedPage();
     }
 
-    /**
-     * @When I don't choose a response for previous costs
-     */
-    public function iDontChoosePreviousCostsResponse()
+    #[When('I don\'t choose a response for previous costs')]
+    public function iDontChoosePreviousCostsResponse(): void
     {
         $this->iAmOnDeputyCostsPreviousReceivedExistsPage();
         $this->pressButton('Save and continue');
         $this->iAmOnDeputyCostsPreviousReceivedExistsPage();
     }
 
-    /**
-     * @When I don't provide any details on the previous costs
-     */
-    public function iProvideNoPreviousCostDetails()
+    #[When('I don\'t provide any details on the previous costs')]
+    public function iProvideNoPreviousCostDetails(): void
     {
         $this->iAmOnDeputyCostsPreviousReceivedPage();
         $this->pressButton('Save and continue');
         $this->iAmOnDeputyCostsPreviousReceivedPage();
     }
 
-    /**
-     * @When I provide an end date that is before the start date
-     */
-    public function iProvideEndDateBeforeStartDate()
+    #[When('I provide an end date that is before the start date')]
+    public function iProvideEndDateBeforeStartDate(): void
     {
         $this->iAmOnDeputyCostsPreviousReceivedPage();
 
@@ -628,10 +566,8 @@ trait DeputyCostsSectionTrait
         $this->iAmOnDeputyCostsPreviousReceivedPage();
     }
 
-    /**
-     * @When I provide a negative amount value
-     */
-    public function iProvideNegativeAmount()
+    #[When('I provide a negative amount value')]
+    public function iProvideNegativeAmount(): void
     {
         $this->iAmOnDeputyCostsPreviousReceivedPage();
 
@@ -641,9 +577,7 @@ trait DeputyCostsSectionTrait
         $this->iAmOnDeputyCostsPreviousReceivedPage();
     }
 
-    /**
-     * @When I don't provide any interim cost details
-     */
+    #[When('I don\'t provide any interim cost details')]
     public function iDontProvideAnyInterimCostDetails()
     {
         $this->iAmOnDeputyCostsInterimPage();
@@ -653,10 +587,8 @@ trait DeputyCostsSectionTrait
         $this->iAmOnDeputyCostsInterimPage();
     }
 
-    /**
-     * @When I provide a valid interim cost amount with a missing date
-     */
-    public function iProvideAValidAmountAndAMissingDate()
+    #[When('I provide a valid interim cost amount with a missing date')]
+    public function iProvideAValidAmountAndAMissingDate(): void
     {
         $this->iAmOnDeputyCostsInterimPage();
 
@@ -671,10 +603,8 @@ trait DeputyCostsSectionTrait
         $this->iAmOnDeputyCostsInterimPage();
     }
 
-    /**
-     * @When I provide a valid interim cost date and a missing amount
-     */
-    public function iProvideAValidDateAndAMissingAmount()
+    #[When('I provide a valid interim cost date and a missing amount')]
+    public function iProvideAValidDateAndAMissingAmount(): void
     {
         $this->iAmOnDeputyCostsInterimPage();
 
@@ -697,10 +627,8 @@ trait DeputyCostsSectionTrait
         $this->iAmOnDeputyCostsInterimPage();
     }
 
-    /**
-     * @When I provide a valid interim cost date and an amount outside the amount limit
-     */
-    public function iProvideAValidDateAndAnAmountOutsideTheAmountLimit()
+    #[When('I provide a valid interim cost date and an amount outside the amount limit')]
+    public function iProvideAValidDateAndAnAmountOutsideTheAmountLimit(): void
     {
         $this->iAmOnDeputyCostsInterimPage();
 
@@ -722,10 +650,9 @@ trait DeputyCostsSectionTrait
         $this->iAmOnDeputyCostsInterimPage();
     }
 
-    /**
-     * @When I don't enter an SCCO assessed cost amount
-     */
-    public function iDontEnterAnSccoAssessedCostAmount()
+
+    #[When('I don\'t enter an SCCO assessed cost amount')]
+    public function iDontEnterAnSccoAssessedCostAmount(): void
     {
         $this->iAmOnDeputyCostsAmountSccoPage();
 
@@ -734,10 +661,8 @@ trait DeputyCostsSectionTrait
         $this->iAmOnDeputyCostsAmountSccoPage();
     }
 
-    /**
-     * @When I enter a negative SCCO assessed cost amount
-     */
-    public function iEnterANegativeSccoAssessedCostAmount()
+    #[When('I enter a negative SCCO assessed cost amount')]
+    public function iEnterANegativeSccoAssessedCostAmount(): void
     {
         $this->iAmOnDeputyCostsAmountSccoPage();
 
@@ -752,10 +677,8 @@ trait DeputyCostsSectionTrait
         $this->iAmOnDeputyCostsAmountSccoPage();
     }
 
-    /**
-     * @When I provide 6 negative and 1 too large amounts for all seven additional cost types
-     */
-    public function iProvideNegativeAndTooLargeAmountsForAllSevenAdditionalCostTypes()
+    #[When('I provide 6 negative and 1 too large amounts for all seven additional cost types')]
+    public function iProvideNegativeAndTooLargeAmountsForAllSevenAdditionalCostTypes(): void
     {
         $this->iAmOnDeputyCostsBreakdownPage();
 
@@ -776,10 +699,8 @@ trait DeputyCostsSectionTrait
         $this->iAmOnDeputyCostsBreakdownPage();
     }
 
-    /**
-     * @Then I provide a valid 'Other' cost but no description
-     */
-    public function iProvideAValidCostButNoDescription()
+    #[Then('I provide a valid \'Other\' cost but no description')]
+    public function iProvideAValidCostButNoDescription(): void
     {
         $this->iAmOnDeputyCostsBreakdownPage();
 
@@ -793,11 +714,9 @@ trait DeputyCostsSectionTrait
         $this->iAmOnDeputyCostsBreakdownPage();
     }
 
-    /**
-     * @Then I should see a(n) :errorType deputy costs error
-     * @Then I should see :errorType deputy costs errors
-     */
-    public function iShouldSeeADeputyCostsError(string $errorType)
+    #[Then('I should see a(n) :errorType deputy costs error')]
+    #[Then('I should see :errorType deputy costs errors')]
+    public function iShouldSeeADeputyCostsError(string $errorType): void
     {
         switch (strtolower($errorType)) {
             case 'amount limit':

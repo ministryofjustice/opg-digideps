@@ -3,12 +3,8 @@
 set -e
 set -o pipefail
 
-echo "===== Running smoke test against Admin ====="
-node tests/smoke-tests/AdminSmokeTest.js
-echo ""
-echo ""
-echo "===== Running smoke test against Frontend ====="
-node tests/smoke-tests/FrontSmokeTest.js
+echo "===== Running smoke tests ====="
+python3 tests/smoke-tests-python/smoke_tests.py
 echo ""
 echo ""
 echo "===== Smoke tests completed without any issues ====="

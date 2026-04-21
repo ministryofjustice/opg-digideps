@@ -107,6 +107,6 @@ data "aws_iam_policy_document" "front_invoke_api_gateway" {
       "execute-api:Invoke",
       "execute-api:ManageConnections"
     ]
-    resources = ["arn:aws:execute-api:eu-west-1:${var.account.sirius_api_account}:*"]
+    resources = ["arn:aws:execute-api:eu-west-1:${var.account.sirius.account}:*"]
   }
 }

@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
+use Behat\Step\Given;
+use Behat\Step\Then;
+use Behat\Step\When;
+
 trait MoneyOutShortSectionTrait
 {
     private array $moneyTypesDictionary = [
@@ -20,10 +24,8 @@ trait MoneyOutShortSectionTrait
     private array $moneyOutShortOneOff = [];
     private array $paymentNumber = [];
 
-    /**
-     * @When I view and start the money out short report section
-     */
-    public function iViewAndStartMoneyOutShortSection()
+    #[When('I view and start the money out short report section')]
+    public function iViewAndStartMoneyOutShortSection(): void
     {
         $this->iVisitMoneyOutShortSection();
         $this->clickLink('Start money out');
@@ -34,19 +36,15 @@ trait MoneyOutShortSectionTrait
         );
     }
 
-    /**
-     * @Given /^I answer "([^"]*)" to taking money out on the clients behalf$/
-     */
-    public function iAnswerToTakingMoneyOutOnTheClientsBehalf($arg1)
+    #[Given('/^I answer "([^"]*)" to taking money out on the clients behalf$/')]
+    public function iAnswerToTakingMoneyOutOnTheClientsBehalf($arg1): void
     {
         $this->chooseOption('does_money_out_exist[moneyOutExists]', $arg1, 'moneyOutExists');
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @When I have made no payments out
-     */
-    public function iHaveMadeNoPaymentsOut()
+    #[When('I have made no payments out')]
+    public function iHaveMadeNoPaymentsOut(): void
     {
         $this->iAmOnMoneyOutShortCategoryPage();
 
@@ -55,18 +53,14 @@ trait MoneyOutShortSectionTrait
         $this->iAnswerNoOneOffPaymentsOver1k();
     }
 
-    /**
-     * @When I answer that there are not any one-off payments over £1k
-     */
-    public function iAnswerNoOneOffPaymentsOver1k()
+    #[When('I answer that there are not any one-off payments over £1k')]
+    public function iAnswerNoOneOffPaymentsOver1k(): void
     {
         $this->oneOffPaymentOver1kExists('no');
     }
 
-    /**
-     * @When I add one category of money paid out
-     */
-    public function iAddOneCategoryOfMoneyPaidOut()
+    #[When('I add one category of money paid out')]
+    public function iAddOneCategoryOfMoneyPaidOut(): void
     {
         $this->iAmOnMoneyOutShortCategoryPage();
 
@@ -80,10 +74,8 @@ trait MoneyOutShortSectionTrait
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'money_short_save');
     }
 
-    /**
-     * @When I add all the categories of money paid out
-     */
-    public function iAddAllTheCategoriesOfMoneyPaidOut()
+    #[When('I add all the categories of money paid out')]
+    public function iAddAllTheCategoriesOfMoneyPaidOut(): void
     {
         $this->iAmOnMoneyOutShortCategoryPage();
 
@@ -99,10 +91,8 @@ trait MoneyOutShortSectionTrait
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'money_short_save');
     }
 
-    /**
-     * @When I answer that there are :numberOfPayments one-off payments over £1k
-     */
-    public function iAnswerNumberOneOffPaymentsOver1k(int $numberOfPayments)
+    #[When('I answer that there are :numberOfPayments one-off payments over £1k')]
+    public function iAnswerNumberOneOffPaymentsOver1k(int $numberOfPayments): void
     {
         $this->oneOffPaymentOver1kExists('yes');
 
@@ -113,16 +103,15 @@ trait MoneyOutShortSectionTrait
 
             $this->paymentNumber[] = $paymentNumber;
 
-            $this->addAnotherMoneyOutPayment($numberOfPayments === $paymentNumber ? 'no' : 'yes');
+            $this->selectOption('money_short_transaction[addAnother]', $numberOfPayments === $paymentNumber ? 'no' : 'yes');
+            $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'money_short_transaction_save');
         }
 
         $this->iAmOnMoneyOutShortSummaryPage();
     }
 
-    /**
-     * @When I remove an existing money out short payment
-     */
-    public function iRemoveOneOffPayment()
+    #[When('I remove an existing money out short payment')]
+    public function iRemoveOneOffPayment(): void
     {
         $this->iVisitMoneyOutShortSummarySection();
 
@@ -147,10 +136,8 @@ trait MoneyOutShortSectionTrait
         $this->iAmOnMoneyOutShortSummaryPage();
     }
 
-    /**
-     * @When I edit an existing money out short payment
-     */
-    public function iEditOneOffShortPayment()
+    #[When('I edit an existing money out short payment')]
+    public function iEditOneOffShortPayment(): void
     {
         $this->iVisitMoneyOutShortSummarySection();
         $this->iAmOnMoneyOutShortSummaryPage();
@@ -165,30 +152,26 @@ trait MoneyOutShortSectionTrait
         $this->iAmOnMoneyOutShortSummaryPage();
     }
 
-    /**
-     * @When I add a payment and state no further payments
-     */
-    public function iAddAPaymentAndStateNoFurtherPayments()
+    #[When('I add a payment and state no further payments')]
+    public function iAddAPaymentAndStateNoFurtherPayments(): void
     {
         $this->iAddOneCategoryOfMoneyPaidOut();
 
         $this->iAnswerNumberOneOffPaymentsOver1k(1);
     }
 
-    /**
-     * @When I change my mind and add another payment
-     */
-    public function iChangeMindADdAnotherPayment()
+    #[When('I change my mind and add another payment')]
+    public function iChangeMindADdAnotherPayment(): void
     {
         $this->clickLink('Add an payment over £1,000');
         $this->addAMoneyOutPayment($this->faker->sentence(mt_rand(4, 20)), mt_rand(1000, 2000), 1, 2, 2019, 2);
-        $this->addAnotherMoneyOutPayment('no');
+
+        $this->selectOption('money_short_transaction[addAnother]', 'no');
+        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'money_short_transaction_save');
     }
 
-    /**
-     * @When I answer that there are 1 one-off payments over £1k but add a payment of less than £1K
-     */
-    public function iAnswerNumberOneOffPaymentsOver1kButAddTooLowPayment()
+    #[When('I answer that there are 1 one-off payments over £1k but add a payment of less than £1K')]
+    public function iAnswerNumberOneOffPaymentsOver1kButAddTooLowPayment(): void
     {
         $this->iAddOneCategoryOfMoneyPaidOut();
 
@@ -197,28 +180,22 @@ trait MoneyOutShortSectionTrait
         $this->addAMoneyOutPayment($this->faker->sentence(mt_rand(4, 20)), mt_rand(1, 999), 1, 2, 2019, 1);
     }
 
-    /**
-     * @Then I should see correct validation message
-     */
-    public function iShouldSeeCorrectValidationMessage()
+    #[Then('I should see correct validation message')]
+    public function iShouldSeeCorrectValidationMessage(): void
     {
         $this->assertOnAlertMessage('The amount must be between £1000 and £100,000,000,000');
     }
 
-    /**
-     * @Then I should see the expected money out section summary
-     */
-    public function iShouldSeeTheExpectedMoneyOutSummary()
+    #[Then('I should see the expected money out section summary')]
+    public function iShouldSeeTheExpectedMoneyOutSummary(): void
     {
         $this->iAmOnMoneyOutShortSummaryPage();
 
         $this->expectedResultsDisplayedSimplified();
     }
 
-    /**
-     * @Given /^I answer "([^"]*)" to one off payments over £1k for money out$/
-     */
-    public function oneOffPaymentOver1kExists($selection)
+    #[Given('/^I answer "([^"]*)" to one off payments over £1k for money out$/')]
+    public function oneOffPaymentOver1kExists($selection): void
     {
         $this->iAmOnMoneyOutShortOneOffPaymentsExistsPage();
 
@@ -226,7 +203,7 @@ trait MoneyOutShortSectionTrait
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
     }
 
-    private function addAMoneyOutPayment(string $description, int $amount, int $day, int $month, int $year, int $paymentCount)
+    private function addAMoneyOutPayment(string $description, int $amount, int $day, int $month, int $year, int $paymentCount): void
     {
         $this->iAmOnMoneyOutShortAddPage();
 
@@ -239,17 +216,8 @@ trait MoneyOutShortSectionTrait
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'money_short_transaction_save');
     }
 
-    private function addAnotherMoneyOutPayment($selection)
-    {
-        $this->iAmOnMoneyOutShortAddAnotherPage();
-        $this->selectOption('add_another[addAnother]', $selection);
-        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'add_another_save');
-    }
-
-    /**
-     * @Given /^I enter a reason for no money out short$/
-     */
-    public function iEnterAReasonForNoMoneyOutShort()
+    #[Given('/^I enter a reason for no money out short$/')]
+    public function iEnterAReasonForNoMoneyOutShort(): void
     {
         $this->iAmOnNoMoneyOutShortExistsPage();
 
@@ -257,10 +225,8 @@ trait MoneyOutShortSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @When /^I edit the money out short section and add a payment$/
-     */
-    public function iEditTheMoneyOutShortSectionAndAddAPayment()
+    #[When('/^I edit the money out short section and add a payment$/')]
+    public function iEditTheMoneyOutShortSectionAndAddAPayment(): void
     {
         $this->iVisitMoneyOutShortSummarySection();
         $this->iAmOnMoneyOutShortSummaryPage();
@@ -271,15 +237,15 @@ trait MoneyOutShortSectionTrait
         $this->iAnswerToTakingMoneyOutOnTheClientsBehalf('Yes');
         $this->iClickSaveAndContinue();
 
+        $this->iAddOneCategoryOfMoneyPaidOut();
+
         $this->iAnswerNumberOneOffPaymentsOver1k(1);
 
         $this->iAmOnMoneyOutShortSummaryPage();
     }
 
-    /**
-     * @When /^I edit the money out short "([^"]*)" summary section$/
-     */
-    public function iEditTheMoneyOutShortSummarySection($arg)
+    #[When('/^I edit the money out short "([^"]*)" summary section$/')]
+    public function iEditTheMoneyOutShortSummarySection($arg): void
     {
         $this->iVisitMoneyOutShortSummarySection();
         $this->iAmOnMoneyOutShortSummaryPage();
@@ -298,10 +264,8 @@ trait MoneyOutShortSectionTrait
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
     }
 
-    /**
-     * @Then /^there should be "([^"]*)" one off payments displayed on the money out summary page$/
-     */
-    public function thereShouldBeOneOffPaymentsDisplayedOnTheMoneyOutSummaryPage($arg1)
+    #[Then('/^there should be "([^"]*)" one off payments displayed on the money out summary page$/')]
+    public function thereShouldBeOneOffPaymentsDisplayedOnTheMoneyOutSummaryPage($arg1): void
     {
         $this->iAmOnMoneyOutShortSummaryPage();
 
@@ -325,10 +289,8 @@ trait MoneyOutShortSectionTrait
         }
     }
 
-    /**
-     * @When /^I delete the transaction from the money out summary page$/
-     */
-    public function iDeleteTheTransactionFromTheMoneyOutSummaryPage()
+    #[When('/^I delete the transaction from the money out summary page$/')]
+    public function iDeleteTheTransactionFromTheMoneyOutSummaryPage(): void
     {
         $this->clickLink('Remove');
         assert($this->iShouldBeOnTheMoneyOutShortDeletePage());
@@ -337,18 +299,14 @@ trait MoneyOutShortSectionTrait
         $this->moneyOutShortOneOff = [];
     }
 
-    /**
-     * @Then I should be on the delete page
-     */
+    #[Then('I should be on the delete page')]
     private function iShouldBeOnTheMoneyOutShortDeletePage(): bool
     {
         return $this->iAmOnPage(sprintf('/report\/.*\/money-out-short\/.*\/delete$/'));
     }
 
-    /**
-     * @Then /^I edit the answer to the money out one off payment over 1k$/
-     */
-    public function iEditTheAnswerToTheMoneyOutOneOffPaymentOver1K()
+    #[Then('/^I edit the answer to the money out one off payment over 1k$/')]
+    public function iEditTheAnswerToTheMoneyOutOneOffPaymentOver1K(): void
     {
         $this->removeSection('over1K');
 

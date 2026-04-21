@@ -17,7 +17,7 @@ trait CourtOrderTrait
             $queryString = http_build_query([
                 'case-number' => $row['client'],
                 'court-date' => $row['court_date'],
-                'deputy-email' => $row['deputy'].'@behat-test.com',
+                'deputy-email' => $row['deputy'] . '@behat-test.com',
             ]);
 
             $url = sprintf('/admin/fixtures/court-orders?%s', $queryString);
@@ -50,8 +50,6 @@ trait CourtOrderTrait
                 return '102-4';
             case 'low assets with health and welfare':
                 return '103-4';
-            case 'ndr':
-                return 'ndr';
             default:
                 return '102';
         }

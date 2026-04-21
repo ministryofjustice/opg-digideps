@@ -29,14 +29,6 @@ trait IShouldBeOnFrontendTrait
     }
 
     /**
-     * @Then I should be on the ndr review page
-     */
-    public function iAmOnNdrReviewPage(): bool
-    {
-        return $this->iAmOnPage('/ndr\/.*\/review$/');
-    }
-
-    /**
      * @Then I should be on the confirm your details page
      */
     public function iAmOnReportConfirmDetailsPage(): bool
@@ -53,27 +45,11 @@ trait IShouldBeOnFrontendTrait
     }
 
     /**
-     * @Then I should be on the ndr declaration page
-     */
-    public function iAmOnNdrDeclarationPage(): bool
-    {
-        return $this->iAmOnPage('/ndr\/.*\/declaration$/');
-    }
-
-    /**
      * @Then I should be on the report submitted page
      */
     public function iAmOnReportSubmittedPage(): bool
     {
         return $this->iAmOnPage('/report\/.*\/submitted$/');
-    }
-
-    /**
-     * @Then I should be on the ndr submitted page
-     */
-    public function iAmOnNdrSubmittedPage(): bool
-    {
-        return $this->iAmOnPage('/ndr\/.*\/submitted$/');
     }
 
     /**
@@ -106,14 +82,6 @@ trait IShouldBeOnFrontendTrait
     public function iAmOnAddAContactPage(): bool
     {
         return $this->iAmOnPage('/report\/.*\/contacts\/add/');
-    }
-
-    /**
-     * @Then I should be on the contacts add another page
-     */
-    public function iAmOnContactsAddAnotherPage(): bool
-    {
-        return $this->iAmOnPage('/report\/.*\/contacts\/add_another$/');
     }
 
     /**
@@ -640,14 +608,6 @@ trait IShouldBeOnFrontendTrait
     }
 
     /**
-     * @Then I should be on the add another asset page
-     */
-    public function iAmOnAddAnotherAssetPage(): bool
-    {
-        return $this->iAmOnPage(sprintf('/%s\/.*\/assets\/add_another/', $this->reportUrlPrefix));
-    }
-
-    /**
      * @Then I should be on the assets summary page
      */
     public function iAmOnAssetsSummaryPage(): bool
@@ -692,7 +652,7 @@ trait IShouldBeOnFrontendTrait
      */
     public function iAmOnClientLoginPage()
     {
-        return $this->iAmOnPage('/login$/');
+        return $this->iAmOnPage('/login.*$/');
     }
 
     /**
@@ -860,16 +820,6 @@ trait IShouldBeOnFrontendTrait
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/oneOffPaymentsExist.*$/', $this->reportUrlPrefix));
     }
 
-    /**
-     * @Then I/they should be on the Choose a Client homepage
-     */
-    public function iAmOnChooseAClientMainPage(): bool
-    {
-        $this->assertPageContainsText('Select which client you want to manage a report for.');
-
-        return $this->iAmOnPage('/choose-a-client$/');
-    }
-
     public function iAmOnYourDetailsPage()
     {
         return $this->iAmOnPage('/deputyship-details/');
@@ -893,6 +843,6 @@ trait IShouldBeOnFrontendTrait
      */
     public function iShouldBeOnTheCourtOrderPage()
     {
-        return $this->iAmOnPage('/courtorder\/.*/');
+        return $this->iAmOnPage('|/courtorder/\d+$|');
     }
 }

@@ -45,40 +45,40 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     use ReportTraits\ReportUnsubmittedSections;
 
     // Applies to both costs and estimate costs
-    public const PROF_DEPUTY_COSTS_TYPE_FIXED = 'fixed';
-    public const PROF_DEPUTY_COSTS_TYPE_ASSESSED = 'assessed';
-    public const PROF_DEPUTY_COSTS_TYPE_BOTH = 'both';
+    public const string PROF_DEPUTY_COSTS_TYPE_FIXED = 'fixed';
+    public const string PROF_DEPUTY_COSTS_TYPE_ASSESSED = 'assessed';
+    public const string PROF_DEPUTY_COSTS_TYPE_BOTH = 'both';
 
-    public const STATUS_NOT_STARTED = 'notStarted';
-    public const STATUS_READY_TO_SUBMIT = 'readyToSubmit';
-    public const STATUS_NOT_FINISHED = 'notFinished';
+    public const string STATUS_NOT_STARTED = 'notStarted';
+    public const string STATUS_READY_TO_SUBMIT = 'readyToSubmit';
+    public const string STATUS_NOT_FINISHED = 'notFinished';
 
-    public const TYPE_HEALTH_WELFARE = '104';
-    public const TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS = '102';
-    public const TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS = '103';
-    public const TYPE_COMBINED_HIGH_ASSETS = '102-4';
-    public const TYPE_COMBINED_LOW_ASSETS = '103-4';
+    public const string TYPE_HEALTH_WELFARE = '104';
+    public const string TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS = '102';
+    public const string TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS = '103';
+    public const string TYPE_COMBINED_HIGH_ASSETS = '102-4';
+    public const string TYPE_COMBINED_LOW_ASSETS = '103-4';
 
-    public const TYPE_ABBREVIATION_HW = 'HW';
-    public const TYPE_ABBREVIATION_PF = 'PF';
-    public const TYPE_ABBREVIATION_COMBINED = 'COMBINED';
+    public const string TYPE_ABBREVIATION_HW = 'HW';
+    public const string TYPE_ABBREVIATION_PF = 'PF';
+    public const string TYPE_ABBREVIATION_COMBINED = 'COMBINED';
 
-    public const HIGH_ASSETS_REPORT_TYPES = [
+    public const array HIGH_ASSETS_REPORT_TYPES = [
         self::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,
         self::TYPE_COMBINED_HIGH_ASSETS,
     ];
 
-    public const HEALTH_AND_WELFARE_REPORT = 'Health and Welfare Report';
-    public const PROPERTY_AND_AFFAIRS_REPORT = 'Property & Affairs Report';
-    public const PROPERTY_AND_AFFAIRS_WITH_HEALTH_AND_WELFARE_REPORT = 'Property & Affairs with Health & Welfare Report';
+    public const string HEALTH_AND_WELFARE_REPORT = 'Health and Welfare Report';
+    public const string PROPERTY_AND_AFFAIRS_REPORT = 'Property & Affairs Report';
+    public const string PROPERTY_AND_AFFAIRS_WITH_HEALTH_AND_WELFARE_REPORT = 'Property & Affairs with Health & Welfare Report';
 
     // Decisions
-    public const SIGNIFICANT_DECISION_MADE = 'Yes';
-    public const SIGNIFICANT_DECISION_NOT_MADE = 'No';
+    public const string SIGNIFICANT_DECISION_MADE = 'Yes';
+    public const string SIGNIFICANT_DECISION_NOT_MADE = 'No';
 
     // Money in and out exists
-    public const YES_MONEY_EXISTS = 'Yes';
-    public const NO_MONEY_EXISTS = 'No';
+    public const string YES_MONEY_EXISTS = 'Yes';
+    public const string NO_MONEY_EXISTS = 'No';
 
     /**
      * @JMS\Type("integer")
@@ -150,13 +150,11 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     private $dueDate;
 
     /**
-     * @var \DateTime|null
-     *
      * @JMS\Type("DateTime")
      *
      * @JMS\Groups({"submit"})
      */
-    private $submitDate;
+    private ?\DateTimeInterface $submitDate = null;
 
     /**
      * @var \DateTime|null
@@ -586,18 +584,13 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     /**
      * Get submitDate.
-     *
-     * @return \DateTime|null
      */
-    public function getSubmitDate()
+    public function getSubmitDate(): ?\DateTimeInterface
     {
         return $this->submitDate;
     }
 
-    /**
-     * @return Report
-     */
-    public function setSubmitDate(?\DateTime $submitDate = null)
+    public function setSubmitDate(?\DateTimeInterface $submitDate = null): static
     {
         $this->submitDate = $submitDate;
 
@@ -630,7 +623,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return $this->submittedBy;
     }
 
-    public function setSubmittedBy(?User $submittedBy): self
+    public function setSubmittedBy(?User $submittedBy): static
     {
         $this->submittedBy = $submittedBy;
 
@@ -664,7 +657,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         $reportingPeriodInDays = $this->calculateReportingPeriod('%a');
         if (!empty($reportingPeriodInDays)) {
             $nextStart = clone $this->getStartDate();
-            $nextStart = $nextStart->modify('+ '.(intval($reportingPeriodInDays) + 1).' days');
+            $nextStart = $nextStart->modify('+ ' . (intval($reportingPeriodInDays) + 1) . ' days');
             $nextStart->setTime(0, 0, 0);
 
             return $nextStart;
@@ -688,7 +681,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         $reportingPeriodInDays = $this->calculateReportingPeriod('%a');
         if (!empty($reportingPeriodInDays)) {
             $nextEnd = clone $this->getEndDate();
-            $nextEnd = $nextEnd->modify('+ '.(intval($reportingPeriodInDays) + 1).' days');
+            $nextEnd = $nextEnd->modify('+ ' . (intval($reportingPeriodInDays) + 1) . ' days');
 
             $nextEnd->setTime(0, 0, 0);
 
@@ -735,7 +728,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         $endDateStr = $this->endDate->format('Y');
 
         if ($startDateStr != $endDateStr) {
-            $this->period = $startDateStr.' to '.$endDateStr;
+            $this->period = $startDateStr . ' to ' . $endDateStr;
 
             return $this->period;
         }
@@ -965,34 +958,26 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return $this;
     }
 
-    /**
-     * @return bool $submitted
-     */
-    public function getSubmitted()
+    public function getSubmitted(): ?bool
     {
         return $this->submitted;
     }
 
     /**
      * @param bool $submitted
-     *
-     * @return Report
      */
-    public function setSubmitted($submitted)
+    public function setSubmitted($submitted): static
     {
         $this->submitted = $submitted;
 
         return $this;
     }
 
-    /**
-     * @param bool $reportSeen
-     *
-     * @return Report
-     */
-    public function setReportSeen($reportSeen)
+    public function setReportSeen(bool $reportSeen): static
     {
         $this->reportSeen = $reportSeen;
+
+        return $this;
     }
 
     /**
@@ -1019,10 +1004,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         $this->agree = $agree;
     }
 
-    /**
-     * @return string
-     */
-    public function getAgreedBehalfDeputy()
+    public function getAgreedBehalfDeputy(): ?string
     {
         return $this->agreedBehalfDeputy;
     }
@@ -1120,7 +1102,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     /**
      * @return Status
      */
-    public function getStatus()
+    public function getStatus(): Status
     {
         return $this->status;
     }

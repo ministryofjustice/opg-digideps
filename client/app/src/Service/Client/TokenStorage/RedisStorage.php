@@ -16,17 +16,17 @@ class RedisStorage extends TokenStorage
 
     public function get($id)
     {
-        return $this->redis->get($this->workspace.'_'.$this->sessionPrefix.$id);
+        return $this->redis->get($this->workspace . '_' . $this->sessionPrefix . $id);
     }
 
     public function set($id, $value)
     {
-        return $this->redis->set($this->workspace.'_'.$this->sessionPrefix.$id, $value);
+        return $this->redis->set($this->workspace . '_' . $this->sessionPrefix . $id, $value);
     }
 
     public function remove($id)
     {
-        $this->redis->set($this->workspace.'_'.$this->sessionPrefix.$id, null);
-        $this->redis->expire($this->workspace.'_'.$this->sessionPrefix.$id, 0);
+        $this->redis->set($this->workspace . '_' . $this->sessionPrefix . $id, null);
+        $this->redis->expire($this->workspace . '_' . $this->sessionPrefix . $id, 0);
     }
 }

@@ -11,7 +11,7 @@ use App\Service\JWT\JWTService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
-use Predis\Client;
+use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -37,11 +37,11 @@ class AuthController extends RestController
      *
      * @throws Throwable
      */
-    #[Route(path: '/login', methods: ['POST'], name: 'api_login')]
+    #[Route(path: '/login', name: 'api_login', methods: ['POST'])]
     public function login(
         RestInputOuputFormatter $restInputOutputFormatter,
         EntityManagerInterface $em,
-        Client $redis,
+        ClientInterface $redis,
     ) {
         try {
             // See LoginRequestAuthenticator and RegistrationTokenAuthenticator for checks. User is set in token storage on successful authentication via Symfony event
@@ -56,7 +56,7 @@ class AuthController extends RestController
                 $em->flush();
 
                 // Now doing this inline rather than injecting RedisUserProvider
-                $authToken = $this->workspace.'_'.$user->getId().'_'.sha1(microtime().spl_object_hash($user).rand(1, 999));
+                $authToken = $this->workspace . '_' . $user->getId() . '_' . sha1(microtime() . spl_object_hash($user) . rand(1, 999));
                 $redis->set($authToken, serialize($this->tokenStorage->getToken()));
 
                 // add token into response
@@ -90,7 +90,7 @@ class AuthController extends RestController
     {
         $authToken = $this->tokenStorage->getToken();
 
-        return $userProvider->removeToken($authToken);
+        $userProvider->removeToken($authToken);
     }
 
     /**

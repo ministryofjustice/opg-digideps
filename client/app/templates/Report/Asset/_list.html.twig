@@ -20,6 +20,7 @@
             {% if not hideEditLink  %}
                 <a class="govuk-link behat-link-edit" href="{{ url('assets_exist', { 'reportId': report.id, 'from': 'summary' }) }}">
                     {{ 'edit' | trans({}, 'common') }}
+                    <span class="govuk-visually-hidden">{{ 'existPage.form.noAssetToAdd.label' | trans(transOptions)  }}</span>
                 </a>
             {% endif %}
         </dd>

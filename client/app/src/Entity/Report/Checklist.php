@@ -212,7 +212,7 @@ class Checklist implements SynchronisableInterface
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @AppAssert\YesNoNa(groups={"submit-profDeputyCosts-checklist"})
+     * @Assert\NotBlank(message="checklist.paymentsMatchCostCertificate.notBlank", groups={"submit-profDeputyCosts-checklist"})
      */
     private $paymentsMatchCostCertificate;
 
@@ -221,7 +221,7 @@ class Checklist implements SynchronisableInterface
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @AppAssert\YesNoNa(groups={"submit-profDeputyCosts-checklist"})
+     * @Assert\NotBlank(message="checklist.profCostsReasonableAndProportionate.notBlank", groups={"submit-profDeputyCosts-checklist"})
      */
     private $profCostsReasonableAndProportionate;
 
@@ -230,7 +230,7 @@ class Checklist implements SynchronisableInterface
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @AppAssert\YesNoNa(groups={"submit-profDeputyCosts-checklist"})
+     * @Assert\NotBlank(message="checklist.hasDeputyOverchargedFromPreviousEstimates.notBlank", groups={"submit-profDeputyCosts-checklist"})
      */
     private $hasDeputyOverchargedFromPreviousEstimates;
 
@@ -314,19 +314,17 @@ class Checklist implements SynchronisableInterface
     /**
      * Checklist constructor.
      */
-    public function __construct(ReportInterface $report)
+    public function __construct(Report $report)
     {
         $this->setReport($report);
 
         // DDPB-2272: prefill answers based on report content
-        if ($report instanceof Report) {
-            $action = $report->getAction();
-            if ($answer = $action->getDoYouExpectFinancialDecisions()) {
-                $this->setFutureSignificantDecisions($answer);
-            }
-            if ($answer = $action->getDoYouHaveConcerns()) {
-                $this->setHasDeputyRaisedConcerns($answer);
-            }
+        $action = $report->getAction();
+        if ($answer = $action->getDoYouExpectFinancialDecisions()) {
+            $this->setFutureSignificantDecisions($answer);
+        }
+        if ($answer = $action->getDoYouHaveConcerns()) {
+            $this->setHasDeputyRaisedConcerns($answer);
         }
     }
 

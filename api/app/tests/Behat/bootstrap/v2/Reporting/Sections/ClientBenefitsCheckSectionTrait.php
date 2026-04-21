@@ -6,6 +6,8 @@ namespace App\Tests\Behat\v2\Reporting\Sections;
 
 use App\Entity\Report\Report;
 use App\Tests\Behat\BehatException;
+use Behat\Behat\Tester\Exception\PendingException;
+use Behat\Gherkin\Node\TableNode;
 
 trait ClientBenefitsCheckSectionTrait
 {
@@ -19,7 +21,7 @@ trait ClientBenefitsCheckSectionTrait
     /**
      * @When I navigate to and start the client benefits check report section
      */
-    public function iNavigateToAndStartBenefitsCheckSection()
+    public function iNavigateToAndStartBenefitsCheckSection(): void
     {
         $this->iVisitReportOverviewPage();
         $this->iNavigateToBenefitsCheckSection();
@@ -29,7 +31,7 @@ trait ClientBenefitsCheckSectionTrait
     /**
      * @When I navigate to the client benefits check report section
      */
-    public function iNavigateToBenefitsCheckSection()
+    public function iNavigateToBenefitsCheckSection(): void
     {
         $this->clickLink('Benefits check and money others received');
     }
@@ -37,7 +39,7 @@ trait ClientBenefitsCheckSectionTrait
     /**
      * @When I confirm I checked the clients benefit entitlement on :dateString
      */
-    public function iConfirmCheckedBenefitsOnDate(string $dateString)
+    public function iConfirmCheckedBenefitsOnDate(string $dateString): void
     {
         $this->iAmOnClientBenefitsCheckStep1Page();
 
@@ -60,7 +62,7 @@ trait ClientBenefitsCheckSectionTrait
     /**
      * @When I confirm I am currently checking the benefits the client is entitled to
      */
-    public function iConfirmCurrentlyCheckingBenefits()
+    public function iConfirmCurrentlyCheckingBenefits(): void
     {
         $this->iAmOnClientBenefitsCheckStep1Page();
 
@@ -79,7 +81,7 @@ trait ClientBenefitsCheckSectionTrait
     /**
      * @When I confirm I have never checked the benefits the client is entitled to and provide a reason
      */
-    public function iConfirmHaveNeverCheckedBenefits()
+    public function iConfirmHaveNeverCheckedBenefits(): void
     {
         $this->iAmOnClientBenefitsCheckStep1Page();
 
@@ -102,7 +104,7 @@ trait ClientBenefitsCheckSectionTrait
     /**
      * @When I confirm others receive money on the clients behalf
      */
-    public function iConfirmOthersReceiveMoneyOnClientsBehalf()
+    public function iConfirmOthersReceiveMoneyOnClientsBehalf(): void
     {
         $this->iAmOnClientBenefitsCheckStep2Page();
 
@@ -118,7 +120,7 @@ trait ClientBenefitsCheckSectionTrait
     /**
      * @When I confirm others do not receive money on the clients behalf
      */
-    public function iConfirmOthersDoNotReceiveMoneyOnClientsBehalf()
+    public function iConfirmOthersDoNotReceiveMoneyOnClientsBehalf(): void
     {
         $this->iAmOnClientBenefitsCheckStep2Page();
 
@@ -134,7 +136,7 @@ trait ClientBenefitsCheckSectionTrait
     /**
      * @Given /^I confirm I do not know if others receive money on the clients behalf and provide an explanation$/
      */
-    public function iConfirmIDoNotKnowIfOthersReceiveMoneyOnTheClientsBehalfAndProvideAnExplanation()
+    public function iConfirmIDoNotKnowIfOthersReceiveMoneyOnTheClientsBehalfAndProvideAnExplanation(): void
     {
         $this->iAmOnClientBenefitsCheckStep2Page();
 
@@ -157,7 +159,7 @@ trait ClientBenefitsCheckSectionTrait
     /**
      * @When I add a type of money where I don't know the value
      */
-    public function iAddMoneyTypeWithNoValue()
+    public function iAddMoneyTypeWithNoValue(): void
     {
         $this->iAmOnClientBenefitsCheckStep3Page();
 
@@ -190,69 +192,71 @@ trait ClientBenefitsCheckSectionTrait
             'moneyType',
             'I don\'t know'
         );
-
-        $this->pressButton('Add another');
     }
 
     /**
      * @When I add :numOfMoneyTypes money types from the summary page
      */
-    public function iAddMoneyTypesFromSummaryPage(int $numOfMoneyTypes)
+    public function iAddMoneyTypesFromSummaryPage(int $numOfMoneyTypes): void
     {
         $this->iAmOnClientBenefitsCheckSummaryPage();
 
         $this->pressButton('Add money');
 
-        $this->iAddNumberOfMoneyTypes($numOfMoneyTypes);
-        $this->iHaveNoFurtherTypesOfMoneyToAdd();
+        $this->iAddNumberOfMoneyTypesWithAddAnother($numOfMoneyTypes);
     }
 
     /**
      * @When I add :numOfMoneyTypes type(s) of money with values
      */
-    public function iAddNumberOfMoneyTypes(int $numOfMoneyTypes)
+    public function iAddNumberOfMoneyTypesWithAddAnother(int $numOfMoneyTypes): void
     {
         $this->iAmOnClientBenefitsCheckStep3Page();
 
         $numOfMoneyTypes = $numOfMoneyTypes - 1;
 
-        foreach (range(0, $numOfMoneyTypes) as $index) {
+        for ($i = 0; $i <= $numOfMoneyTypes; $i++) {
             $this->fillInField(
-                "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][$index][moneyType]",
+                "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][0][moneyType]",
                 $this->faker->sentence(3),
                 'moneyType'
             );
 
             $this->fillInField(
-                "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][$index][whoReceivedMoney]",
+                "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][0][whoReceivedMoney]",
                 $this->faker->sentence(2),
                 'moneyType'
             );
 
             $this->fillInField(
-                "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][$index][amount]",
+                "report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][0][amount]",
                 $this->faker->numberBetween(10, 2000),
                 'moneyType'
             );
 
-            $this->pressButton('Add another');
+            $addAnother = $i != $numOfMoneyTypes ? 'yes' : 'no';
+
+            $this->addAnotherClientBenefit($addAnother);
+            $this->pressButton('Save and continue');
         }
     }
 
     /**
      * @When I have no further types of money to add
+     * @Given /^I attempt to submit an empty money type$/
      */
-    public function iHaveNoFurtherTypesOfMoneyToAdd()
+    public function iHaveNoFurtherTypesOfMoneyToAdd(): void
     {
         $this->iAmOnClientBenefitsCheckStep3Page();
 
+        $this->addAnotherClientBenefit('no');
         $this->pressButton('Save and continue');
     }
 
     /**
      * @When I :action the last type of money I added
      */
-    public function iActionMoneyTypeIAdded(string $action)
+    public function iActionMoneyTypeIAdded(string $action): void
     {
         $this->iAmOnClientBenefitsCheckSummaryPage();
 
@@ -269,6 +273,8 @@ trait ClientBenefitsCheckSectionTrait
                 $this->faker->sentence(3),
                 'moneyType'
             );
+            $this->addAnotherClientBenefit('no');
+            $this->pressButton('Save and continue');
         } elseif ('remove' === strtolower($action)) {
             $this->removeAnswerFromSection(
                 array_key_first($moneyTypeAnswers),
@@ -285,7 +291,7 @@ trait ClientBenefitsCheckSectionTrait
      * @Then the client benefits check summary page should contain the details I entered
      * @Then the client benefits check summary page should contain my updated response and no money types
      */
-    public function benefitCheckSummaryPageContainsEnteredDetails()
+    public function benefitCheckSummaryPageContainsEnteredDetails(): void
     {
         $this->iAmOnClientBenefitsCheckSummaryPage();
 
@@ -305,7 +311,7 @@ trait ClientBenefitsCheckSectionTrait
     /**
      * @Given the deputies :currentOrPrevious report ends and is due :moreOrLess than 60 days after the client benefits check feature flag date
      */
-    public function reportIsDueAfterClientBenefitCheckFeatureFlagDate(string $currentOrPrevious, string $moreOrLess)
+    public function reportIsDueAfterClientBenefitCheckFeatureFlagDate(string $currentOrPrevious, string $moreOrLess): void
     {
         $moreOrLess = strtolower($moreOrLess);
 
@@ -325,7 +331,7 @@ trait ClientBenefitsCheckSectionTrait
     /**
      * @Given they have not completed the client benefits section for their :currentOrPrevious report
      */
-    public function haveNotCompletedBenefitsSection(string $currentOrPrevious)
+    public function haveNotCompletedBenefitsSection(string $currentOrPrevious): void
     {
         $reportId = 'current' === $currentOrPrevious ? $this->loggedInUserDetails->getCurrentReportId() : $this->loggedInUserDetails->getPreviousReportId();
 
@@ -355,7 +361,7 @@ trait ClientBenefitsCheckSectionTrait
     /**
      * @Given /^I should not see an empty section for money types$/
      */
-    public function iShouldNotSeeAnEmptySectionForMoneyTypes()
+    public function iShouldNotSeeAnEmptySectionForMoneyTypes(): void
     {
         $this->iAmOnClientBenefitsCheckSummaryPage();
 
@@ -370,7 +376,7 @@ trait ClientBenefitsCheckSectionTrait
     /**
      * @Given /^I confirm I checked the clients benefit entitlement but dont provide a date$/
      */
-    public function iConfirmICheckedTheClientsBenefitEntitlementButDontProvideADate()
+    public function iConfirmICheckedTheClientsBenefitEntitlementButDontProvideADate(): void
     {
         $this->iAmOnClientBenefitsCheckStep1Page();
 
@@ -381,7 +387,7 @@ trait ClientBenefitsCheckSectionTrait
     /**
      * @Then I should see a :typeOfError error on client benefits check summary page
      */
-    public function iShouldSeeAError(string $errorType)
+    public function iShouldSeeAError(string $errorType): void
     {
         switch ($errorType) {
             case 'missing date':
@@ -407,7 +413,7 @@ trait ClientBenefitsCheckSectionTrait
     /**
      * @Given /^I confirm I dont know if anyone else receives money on the clients behalf and dont provide an explanation$/
      */
-    public function iConfirmIDontKnowIfAnyoneElseReceivesMoneyOnTheClientsBehalfButDontProvideAnExplanation()
+    public function iConfirmIDontKnowIfAnyoneElseReceivesMoneyOnTheClientsBehalfButDontProvideAnExplanation(): void
     {
         $this->iAmOnClientBenefitsCheckStep2Page();
 
@@ -423,7 +429,7 @@ trait ClientBenefitsCheckSectionTrait
     /**
      * @Given /^I confirm the amount but don't provide a money type$/
      */
-    public function iConfirmTheTypeOfAnAmountButDonTProvideAMoneyType()
+    public function iConfirmTheTypeOfAnAmountButDonTProvideAMoneyType(): void
     {
         $this->iAmOnClientBenefitsCheckStep3Page();
 
@@ -432,14 +438,14 @@ trait ClientBenefitsCheckSectionTrait
             $this->faker->numberBetween(10, 2000),
             'moneyType'
         );
-
-        $this->pressButton('Add another');
+        $this->addAnotherClientBenefit('no');
+        $this->pressButton('Save and continue');
     }
 
     /**
      * @Given /^I change my mind and go back to the previous page$/
      */
-    public function iChangeMyMindAndGoBackToThePreviousPage()
+    public function iChangeMyMindAndGoBackToThePreviousPage(): void
     {
         $this->iAmOnClientBenefitsCheckStep3Page();
 
@@ -452,19 +458,9 @@ trait ClientBenefitsCheckSectionTrait
     }
 
     /**
-     * @Given /^I attempt to submit an empty money type$/
-     */
-    public function iAttemptToSubmitAnEmptyMoneyType()
-    {
-        $this->iAmOnClientBenefitsCheckStep3Page();
-
-        $this->pressButton('Add another');
-    }
-
-    /**
      * @Given I edit my response to do others receive money on a clients behalf to :response
      */
-    public function iEditMyResponseToDoOthersReceiveMoneyOnAClientsBehalf(string $response)
+    public function iEditMyResponseToDoOthersReceiveMoneyOnAClientsBehalf(string $response): void
     {
         $this->iAmOnClientBenefitsCheckSummaryPage();
 
@@ -494,7 +490,7 @@ trait ClientBenefitsCheckSectionTrait
     /**
      * @Given I edit my response to when I last checked the clients benefit entitlement to currently checking
      */
-    public function iEditMyResponseToWhenILastCheckedTheClientsBenefitEntitlement()
+    public function iEditMyResponseToWhenILastCheckedTheClientsBenefitEntitlement(): void
     {
         $this->iAmOnClientBenefitsCheckSummaryPage();
 
@@ -520,7 +516,7 @@ trait ClientBenefitsCheckSectionTrait
     /**
      * @Given /^I fill in amount and description but dont provide details on who received the money$/
      */
-    public function iDontProvideDetailsOnWhoReceivedTheMoney()
+    public function iDontProvideDetailsOnWhoReceivedTheMoney(): void
     {
         $this->fillInField(
             'report-client-benefits-check[typesOfMoneyReceivedOnClientsBehalf][0][moneyType]',
@@ -533,7 +529,22 @@ trait ClientBenefitsCheckSectionTrait
             $this->faker->numberBetween(10, 2000),
             'moneyType'
         );
+    }
 
-        $this->pressButton('Add another');
+    private function addAnotherClientBenefit($anotherFlag): void
+    {
+        $this->chooseOption('report-client-benefits-check[addAnother]', $anotherFlag);
+    }
+
+    /**
+     * @Then /^I want to add another money recieved on the clients behalf$/
+     */
+    public function iWantToAddAnotherMoneyRecievedOnTheClientsBehalf()
+    {
+        if (!$this->iAmOnPage('/\/client-benefits-check\/summary/')) {
+            throw new BehatException('Not on Benefits Summary page');
+        }
+
+        $this->pressButton('Add money');
     }
 }

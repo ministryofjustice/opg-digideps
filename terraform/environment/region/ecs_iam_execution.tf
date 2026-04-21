@@ -70,13 +70,17 @@ data "aws_iam_policy_document" "execution_role" {
       data.aws_ecr_repository.images["client-webserver"].arn,
       data.aws_ecr_repository.images["sync"].arn,
       data.aws_ecr_repository.images["htmltopdf"].arn,
+      data.aws_ecr_repository.images["mock-sirius"].arn,
       data.aws_ecr_repository.images["dr-backup"].arn,
-      data.aws_ecr_repository.images["file-scanner"].arn
+      data.aws_ecr_repository.images["file-scanner"].arn,
     ]
     actions = [
       "ecr:BatchCheckLayerAvailability",
       "ecr:GetDownloadUrlForLayer",
-      "ecr:BatchGetImage"
+      "ecr:BatchGetImage",
+      "ecr:GetAuthorizationToken",
+      "ecr:BatchGetImage",
+      "ecr:DescribeRepositories",
     ]
   }
 

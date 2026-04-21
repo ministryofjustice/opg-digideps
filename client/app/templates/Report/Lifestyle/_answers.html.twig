@@ -30,6 +30,7 @@
                 href="{{ path('lifestyle_step', {'reportId': report.id, 'step': 1, 'from': 'summary'}) }}"
                 class="behat-link-care-appointments-edit govuk-link">
                     {{ 'edit' | trans({}, 'common')}}
+                    <span class="govuk-visually-hidden">{{ 'form.careAppointments.label' | trans(transOptions) }}</span>
                 </a>
             </dd>
         {% endif %}
@@ -54,6 +55,7 @@
             <dd class="govuk-summary-list__actions">
                 <a class="govuk-link" href="{{ path('lifestyle_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}">
                     {{ 'edit' | trans({}, 'common')}}
+                    <span class="govuk-visually-hidden">{{ 'form.doesClientUndertakeSocialActivities.label' | trans(transOptions) }}</span>
                 </a>
             </dd>
         {% endif %}
@@ -79,6 +81,11 @@
                 <dd class="govuk-summary-list__actions">
                     <a class="govuk-link" href="{{ path('lifestyle_step', {'reportId': report.id, 'step':2, 'from': 'summary'}) }}">
                         {{ 'edit' | trans({}, 'common')}}
+                        {% if report.lifestyle.doesClientUndertakeSocialActivities == 'yes' %}
+                            <span class="govuk-visually-hidden">{{ 'form.activityDetailsYes.label' | trans(transOptions) }}</span>
+                        {% else %}
+                            <span class="govuk-visually-hidden">{{ 'form.activityDetailsNo.label' | trans(transOptions) }}</span>
+                        {% endif %}
                     </a>
                 </dd>
             {% endif %}

@@ -26,8 +26,9 @@ class LayDeputyshipUploadController
         ini_set('memory_limit', '1024M');
 
         $this->logger->notice(
-            sprintf('Uploading chunk with Id: %s',
-            $request->headers->get('chunkId')
+            sprintf(
+                'Uploading chunk with Id: %s',
+                $request->headers->get('chunkId')
             )
         );
 

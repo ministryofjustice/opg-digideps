@@ -29,7 +29,7 @@ resource "aws_cloudwatch_metric_alarm" "php_critical_errors" {
   period              = 60
   namespace           = aws_cloudwatch_log_metric_filter.php_critical_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  actions_enabled     = var.account.alarms_active
+  actions_enabled     = var.account.environment.alarms_active
   tags                = var.default_tags
 }
 
@@ -57,7 +57,7 @@ resource "aws_cloudwatch_metric_alarm" "php_errors" {
   period              = 60
   namespace           = aws_cloudwatch_log_metric_filter.php_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  actions_enabled     = var.account.alarms_active
+  actions_enabled     = var.account.environment.alarms_active
   tags                = var.default_tags
 }
 
@@ -88,7 +88,7 @@ resource "aws_cloudwatch_metric_alarm" "frontend_5xx_errors" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.frontend_5xx_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  actions_enabled     = var.account.alarms_active
+  actions_enabled     = var.account.environment.alarms_active
   tags                = var.default_tags
 }
 
@@ -117,7 +117,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_5xx_errors" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.admin_5xx_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  actions_enabled     = var.account.alarms_active
+  actions_enabled     = var.account.environment.alarms_active
   tags                = var.default_tags
 }
 
@@ -146,7 +146,7 @@ resource "aws_cloudwatch_metric_alarm" "api_5xx_errors" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.api_5xx_errors.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  actions_enabled     = var.account.alarms_active
+  actions_enabled     = var.account.environment.alarms_active
   tags                = var.default_tags
 }
 
@@ -155,7 +155,7 @@ resource "aws_cloudwatch_metric_alarm" "api_5xx_errors" {
 resource "aws_cloudwatch_metric_alarm" "frontend_alb_5xx_errors" {
   alarm_name          = "${local.environment}-frontend-alb-5xx-errors"
   alarm_description   = "Number of 5XX Errors returned to Public Users from the ${local.environment} Frontend ALB."
-  actions_enabled     = var.account.alarms_active
+  actions_enabled     = var.account.environment.alarms_active
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
   comparison_operator = "GreaterThanThreshold"
   dimensions = {
@@ -175,7 +175,7 @@ resource "aws_cloudwatch_metric_alarm" "frontend_alb_5xx_errors" {
 resource "aws_cloudwatch_metric_alarm" "admin_alb_5xx_errors" {
   alarm_name          = "${local.environment}-admin-alb-5xx-errors"
   alarm_description   = "Number of 5XX Errors returned to Internal Users from the ${local.environment} Admin ALB."
-  actions_enabled     = var.account.alarms_active
+  actions_enabled     = var.account.environment.alarms_active
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
   comparison_operator = "GreaterThanThreshold"
   dimensions = {
@@ -196,7 +196,7 @@ resource "aws_cloudwatch_metric_alarm" "admin_alb_5xx_errors" {
 resource "aws_cloudwatch_metric_alarm" "frontend_alb_average_response_time" {
   alarm_name          = "${local.environment}-frontend-alb-response-time"
   alarm_description   = "Response Time for Frontend ALB in ${local.environment}"
-  actions_enabled     = var.account.alarms_active
+  actions_enabled     = var.account.environment.alarms_active
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
   comparison_operator = "GreaterThanThreshold"
   dimensions = {
@@ -374,7 +374,7 @@ resource "aws_cloudwatch_metric_alarm" "document_queued_more_than_hour" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.document_queued_more_than_hour.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  actions_enabled     = var.account.alarms_active
+  actions_enabled     = var.account.environment.alarms_active
   tags                = var.default_tags
 }
 
@@ -389,7 +389,7 @@ resource "aws_cloudwatch_metric_alarm" "document_progress_more_than_hour" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.document_in_progress_more_than_hour.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  actions_enabled     = var.account.alarms_active
+  actions_enabled     = var.account.environment.alarms_active
   tags                = var.default_tags
 }
 
@@ -404,7 +404,7 @@ resource "aws_cloudwatch_metric_alarm" "document_temporary_error" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.document_temporary_error.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  actions_enabled     = var.account.alarms_active
+  actions_enabled     = var.account.environment.alarms_active
   tags                = var.default_tags
 }
 
@@ -419,6 +419,6 @@ resource "aws_cloudwatch_metric_alarm" "document_permanent_error" {
   treat_missing_data  = "notBreaching"
   namespace           = aws_cloudwatch_log_metric_filter.document_permanent_error.metric_transformation[0].namespace
   alarm_actions       = [data.aws_sns_topic.alerts.arn]
-  actions_enabled     = var.account.alarms_active
+  actions_enabled     = var.account.environment.alarms_active
   tags                = var.default_tags
 }

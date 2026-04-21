@@ -214,7 +214,7 @@ class ReportService
             $newAsset->setRentIncomeMonth($asset->getRentIncomeMonth());
         } elseif ($asset instanceof NdrAssetOther || $asset instanceof ReportAssetOther) {
             $newAsset = new ReportAssetOther();
-            $newAsset->setTitle($asset->getTitle());
+            $newAsset->setTitle($asset->getTitle() ?? '');
             $newAsset->setDescription($asset->getDescription());
             $newAsset->setValuationDate($asset->getValuationDate());
         } else {
@@ -317,9 +317,9 @@ class ReportService
         }
 
         $this->logger->warning(
-            "Created next year report for client ID {$client->getId()} ".
-            "; created at = {$createdAtStr} ".
-            "; start date = {$startDate->format('Y-m-d')} ".
+            "Created next year report for client ID {$client->getId()} " .
+            "; created at = {$createdAtStr} " .
+            "; start date = {$startDate->format('Y-m-d')} " .
             "; end date = {$endDate->format('Y-m-d')}"
         );
 

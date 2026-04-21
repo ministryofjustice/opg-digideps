@@ -1,4 +1,7 @@
-FROM golang:1.25.5-alpine3.23@sha256:ac09a5f469f307e5da71e766b0bd59c9c49ea460a528cc3e6686513d64a6f1fb AS builder
+# -------------------------
+# 1) Go builder
+# -------------------------
+FROM golang:1.26.0-alpine3.23@sha256:d4c4845f5d60c6a974c6000ce58ae079328d03ab7f721a0734277e69905473e5 AS gobuilder
 
 COPY sleep_mode /app/sleep_mode
 WORKDIR /app/sleep_mode
@@ -8,7 +11,30 @@ COPY anonymisation /app/anonymisation
 WORKDIR /app/anonymisation
 RUN go build -o anonymise main.go
 
-FROM alpine:3.22
+FROM gobuilder AS tests
+WORKDIR /app/anonymisation
+COPY anonymisation /app/anonymisation
+CMD ["go", "test", "./..."]
+
+# -----------------------------------------
+# 2) Node deps builder: run npm ci
+# -----------------------------------------
+FROM alpine:3.23@sha256:5b10f432ef3da1b8d4c7eb6c487f2f5a8f096bc91145e68878dd4a5019afde11 AS nodebuilder
+# Node + npm only needed to produce node_modules
+RUN apk add --no-cache nodejs npm
+WORKDIR /tests
+COPY tests/package.json tests/package-lock.json ./
+
+# Install production/dev deps exactly as locked
+RUN npm ci
+RUN rm -rf /root/.npm /root/.cache
+
+
+# -----------------------------------------
+# 3) Final runtime image: NO npm installed
+# -----------------------------------------
+FROM alpine:3.23@sha256:5b10f432ef3da1b8d4c7eb6c487f2f5a8f096bc91145e68878dd4a5019afde11
+
 RUN apk update && apk upgrade
 
 ENV POSTGRES_DATABASE=**None**
@@ -22,38 +48,37 @@ ENV S3_ENDPOINT=**None**
 ENV S3_PREFIX=**None**
 ENV S3_S3V4=yes
 
-# install DB and JS tooling
+# Install DB, Python tooling, AWS CLI
 RUN apk add --no-cache --update \
     python3 \
-    py3-pip
+    py3-pip \
+    aws-cli \
+    wget
 
-RUN apk add --no-cache --update nodejs npm
-RUN apk add --no-cache --update aws-cli
-RUN apk add --no-cache \
-    udev \
-    ttf-freefont \
-    chromium
-RUN apk update && apk upgrade
+# Install node runtime ONLY (no npm)
+RUN apk add --no-cache --update nodejs
 
 # Use 14 as later versions can cause issues with our backup and restore
 RUN apk add --no-cache \
     --repository http://dl-cdn.alpinelinux.org/alpine/v3.17/main \
     postgresql14-client=14.15-r0
-RUN mkdir certs && chmod 755 certs && wget -O certs/eu-west-1-bundle.pem https://truststore.pki.rds.amazonaws.com/eu-west-1/eu-west-1-bundle.pem
+
+RUN mkdir certs && chmod 755 certs \
+ && wget -O certs/eu-west-1-bundle.pem https://truststore.pki.rds.amazonaws.com/eu-west-1/eu-west-1-bundle.pem
 
 COPY backup.sh /backup.sh
 COPY restore.sh /restore.sh
 COPY common.sh /common.sh
 COPY analyse-database.sh /analyse-database.sh
 
-COPY --from=builder /app/sleep_mode/environment_status /
-RUN chmod +x environment_status
+# Go binaries
+COPY --from=gobuilder /app/sleep_mode/environment_status /
+RUN chmod +x /environment_status
 
-COPY --from=builder /app/anonymisation /anonymisation/.
+COPY --from=gobuilder /app/anonymisation /anonymisation/.
 RUN chmod +x /anonymisation/anonymise
 
-COPY tests/package.json /tests/package.json
-COPY tests/package-lock.json /tests/package-lock.json
+# Test scripts + sources
 COPY tests/run-smoke-tests.sh /tests/run-smoke-tests.sh
 COPY tests/run-resilience-tests.sh /tests/run-resilience-tests.sh
 
@@ -67,6 +92,20 @@ COPY tests/resilience-tests/RunExperiments.js /tests/resilience-tests/RunExperim
 COPY tests/utility/Utility.js /tests/utility/Utility.js
 COPY tests/utility/DataAnalysis.js /tests/utility/DataAnalysis.js
 
-WORKDIR /tests
-RUN npm ci
+# Bring in node_modules produced by npm ci
+COPY --from=nodebuilder /tests/node_modules /tests/node_modules
+COPY --from=nodebuilder /tests/package.json /tests/package.json
+COPY --from=nodebuilder /tests/package-lock.json /tests/package-lock.json
+
+# Python smoke tests
+COPY tests/smoke-tests-python/smoke_tests.py /tests/smoke-tests-python/smoke_tests.py
+COPY tests/smoke-tests-python/requirements.txt /tests/smoke-tests-python/requirements.txt
+
+RUN python -m pip install \
+    --no-cache-dir \
+    --target /tests/smoke-tests-python \
+    -r /tests/smoke-tests-python/requirements.txt
+
+ENV PYTHONPATH="/tests/smoke-tests-python"
+
 WORKDIR /

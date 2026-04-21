@@ -43,3 +43,14 @@ Feature: Accounts (Lay / PA / Prof share same functionality)
         Then I should be on the accounts summary page
         When I follow link back to report overview page
         Then I should see "bank-accounts" as "1 account"
+
+  @lay-pfa-high-not-started
+  Scenario: A user adds an account with zero balance and sees the "is account closed?" question
+    Given a Lay Deputy has not started a report
+    And I visit the accounts report section
+    And I add an account with a zero balance
+    When I click save and continue
+    Then I should be prompted to select an answer to the account closed question
+    When I select "Yes" for the account closed question
+    Then I should see the account on the summary page marked as closed
+    And the account closing balance should be "£0.00"

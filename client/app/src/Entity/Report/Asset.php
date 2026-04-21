@@ -57,13 +57,13 @@ abstract class Asset
     /**
      * @Assert\NotBlank(message="asset.value.notBlank")
      *
-     * @Assert\Type( type="numeric", message="asset.value.type")
+     * @Assert\Type(type="numeric", message="asset.value.type")
      *
      * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "asset.value.outOfRange")
      *
      * @Assert\NotBlank(message="asset.property.value.notBlank", groups={"property-value"})
      *
-     * @Assert\Type( type="numeric", message="asset.property.value.type", groups={"property-value"})
+     * @Assert\Type(type="numeric", message="asset.property.value.type", groups={"property-value"})
      *
      * @Assert\Range(min=0, max=100000000000, notInRangeMessage = "asset.property.value.outOfRange", groups={"property-value"})
      *
@@ -79,11 +79,11 @@ abstract class Asset
     private $valueTotal;
 
     /**
-     * @Assert\Type(type="DateTimeInterface",message="asset.date.date")
+     * @Assert\Type(type="DateTime", message="asset.date.date")
      *
      * @JMS\Type("DateTime")
      */
-    private $valuationDate;
+    protected ?\DateTime $valuationDate = null;
 
     public function getId()
     {
@@ -143,17 +143,14 @@ abstract class Asset
         return $this->valueTotal;
     }
 
-    /**
-     * @return static
-     */
-    public function setValuationDate($valuationDate)
+    public function setValuationDate(?\DateTime $valuationDate): static
     {
         $this->valuationDate = $valuationDate;
 
         return $this;
     }
 
-    public function getValuationDate()
+    public function getValuationDate(): ?\DateTime
     {
         return $this->valuationDate;
     }

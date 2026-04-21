@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Controller;
 
+use App\Domain\CourtOrder\CourtOrderKind;
+use App\Domain\CourtOrder\CourtOrderType;
 use DateTime;
 use App\Entity\User;
 
@@ -377,9 +379,10 @@ class UserControllerTest extends AbstractTestController
         ]);
 
         $courtOrder = self::fixtures()->createCourtOrder(
-            uid: '9944938281',
-            type: 'pfa',
-            status: 'ACTIVE',
+            '9944938281',
+            CourtOrderType::PFA,
+            CourtOrderKind::Single,
+            'ACTIVE',
         );
 
         $deputy->associateWithCourtOrder($courtOrder);

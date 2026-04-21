@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Behat\v2\Reporting\Sections;
 
+use App\Tests\Behat\BehatException;
 use Behat\Gherkin\Node\TableNode;
+use Behat\Step\Given;
+use Behat\Step\Then;
+use Behat\Step\When;
 
 trait MoneyInShortSectionTrait
 {
@@ -20,10 +24,11 @@ trait MoneyInShortSectionTrait
     private array $moneyInShortOneOff = [];
     private array $paymentNumber = [];
 
+    private string $missingCategoryError = "Select at least one category of money";
     /**
      * @When I view and start the money in short report section
      */
-    public function iViewAndStartMoneyInShortSection()
+    public function iViewAndStartMoneyInShortSection(): void
     {
         $this->iVisitMoneyInShortSection();
         $this->pressButton('Start money in');
@@ -32,7 +37,7 @@ trait MoneyInShortSectionTrait
     /**
      * @Given /^I answer "([^"]*)" to adding money in on the clients behalf$/
      */
-    public function iAnswerToAddingMoneyInOnTheClientsBehalf($arg1)
+    public function iAnswerToAddingMoneyInOnTheClientsBehalf($arg1): void
     {
         $this->chooseOption('does_money_in_exist[moneyInExists]', $arg1, 'moneyInExists');
         $this->pressButton('Save and continue');
@@ -41,7 +46,7 @@ trait MoneyInShortSectionTrait
     /**
      * @Given /^I answer "([^"]*)" to having one off payments over 1k$/
      */
-    public function iAnswerToHavingOneOffPaymentsOver1k($arg1)
+    public function iAnswerToHavingOneOffPaymentsOver1k($arg1): void
     {
         $this->chooseOption('yes_no[moneyTransactionsShortInExist]', $arg1, 'one-off-payments');
         $this->pressButton('Save and continue');
@@ -50,7 +55,7 @@ trait MoneyInShortSectionTrait
     /**
      * @Given I have no payments going out
      */
-    public function iHaveNoPaymentsGoingOut()
+    public function iHaveNoPaymentsGoingOut(): void
     {
         $this->iAmOnMoneyInShortCategoryPage();
         $this->pressButton('Save and continue');
@@ -60,31 +65,32 @@ trait MoneyInShortSectionTrait
     /**
      * @When I select no categories for money in
      */
-    public function iSelectNoCategoriesForMoneyIn()
+    public function iSelectNoCategoriesForMoneyIn(): void
     {
         $this->pressButton('Save and continue');
     }
 
     /**
      * @When I don't select a one off payment option
+     * @When I don't select a category for money in
      */
-    public function iDontSelectOneOffPayment()
+    public function iDontSelectOneOffPayment(): void
     {
         $this->pressButton('Save and continue');
     }
 
     /**
-     * @Then I should see a select option validation error
+     *
+     * @throws BehatException
      */
-    public function iShouldSeeSelectOptionValidationError()
+    #[Then('I should see a select option validation error')]
+    public function iShouldSeeSelectOptionValidationError(): void
     {
         $this->assertOnErrorMessage("Please select either 'Yes' or 'No'");
     }
 
-    /**
-     * @Given I am reporting on:
-     */
-    public function iAmReportingOnMoneyInType(TableNode $moneyInTypes)
+    #[Given('I am reporting on:')]
+    public function iAmReportingOnMoneyInType(TableNode $moneyInTypes): void
     {
         foreach ($moneyInTypes as $moneyInType) {
             $optionIndex = array_search($moneyInType['Benefit Type'], $this->moneyInShortTypeDictionary);
@@ -100,10 +106,8 @@ trait MoneyInShortSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @Given /^I answer "([^"]*)" to one off payments over £1k$/
-     */
-    public function iAnswerToOneOffPaymentsOver£1k($arg1)
+    #[Given('/^I answer "([^"]*)" to one off payments over £1k$/')]
+    public function iAnswerToOneOffPaymentsOver1k($arg1): void
     {
         $this->chooseOption(
             'yes_no[moneyTransactionsShortInExist]',
@@ -113,10 +117,8 @@ trait MoneyInShortSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    /**
-     * @Given I have a single one-off payments over £1k
-     */
-    public function iHaveASingleOneOffPaymentOver1k()
+    #[Given('I have a single one-off payments over £1k')]
+    public function iHaveASingleOneOffPaymentOver1k(): void
     {
         $this->chooseOption(
             'yes_no[moneyTransactionsShortInExist]',
@@ -126,16 +128,14 @@ trait MoneyInShortSectionTrait
 
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
 
-        $this->addMoneyInPayment('Lorem ipsum', 1500);
+        $this->addMoneyInPayment('Lorem ipsum', 1500, 1);
 
-        $this->chooseOption('add_another[addAnother]', 'no');
-        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'add_another_save');
+        $this->selectOption('money_short_transaction[addAnother]', 'no');
+        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'money_short_transaction_save');
     }
 
-    /**
-     * @Given /^I add (\d+) one\-off payments over £1k$/
-     */
-    public function iAddAOneOffPaymentsOver£1k(int $numberOfPayments)
+    #[Given('/^I add (\d+) one\-off payments over £1k$/')]
+    public function iAddAOneOffPaymentsOver1k(int $numberOfPayments): void
     {
         $this->iAmOnMoneyInShortOneOffPaymentsExistsPage();
 
@@ -152,16 +152,15 @@ trait MoneyInShortSectionTrait
         foreach ($paymentsRange as $paymentNumber) {
             $this->addMoneyInPayment(sprintf('lorem ipsum %s', rand(1, 10)), rand(1000, 10000), $paymentNumber);
             $this->paymentNumber[] = $paymentNumber;
-            $this->addAnotherMoneyInPayment($numberOfPayments === $paymentNumber ? 'no' : 'yes');
+            $this->selectOption('money_short_transaction[addAnother]', $numberOfPayments === $paymentNumber ? 'no' : 'yes');
+            $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'money_short_transaction_save');
         }
 
         $this->iAmOnMoneyInShortSummaryPage();
     }
 
-    /**
-     * @When I edit the money in short section and add a payment
-     */
-    public function iEditTheMoneyInShortSectionAndAddAPayment()
+    #[When('I edit the money in short section and add a payment')]
+    public function iEditTheMoneyInShortSectionAndAddAPayment(): void
     {
         $this->iVisitMoneyInShortSummarySection();
         $this->iAmOnMoneyInShortSummaryPage();
@@ -171,21 +170,21 @@ trait MoneyInShortSectionTrait
         $this->iAnswerToAddingMoneyInOnTheClientsBehalf('Yes');
         $this->iClickSaveAndContinue();
 
+        $this->iSelectTheCategoryForMoneyInShort('Salary or wages');
+
         $this->chooseOption('yes_no[moneyTransactionsShortInExist]', 'yes', 'one-off-payments');
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
 
         $this->addMoneyInPayment('Lorem ipsum', 1500, 1, '08/12/2021');
 
-        $this->chooseOption('add_another[addAnother]', 'no');
-        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'add_another_save');
+        $this->selectOption('money_short_transaction[addAnother]', 'no');
+        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'money_short_transaction_save');
 
         $this->iAmOnMoneyInShortSummaryPage();
     }
 
-    /**
-     * @When /^I edit the money in short "([^"]*)" summary section$/
-     */
-    public function iEditTheMoneyInShortSummarySection($arg)
+    #[When('/^I edit the money in short "([^"]*)" summary section$/')]
+    public function iEditTheMoneyInShortSummarySection($arg): void
     {
         $this->iAmOnMoneyInShortSummaryPage();
 
@@ -204,9 +203,11 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @When I add a one off money in payment that is less than £1k
+     *
+     * @throws BehatException
      */
-    public function iAddAOneOffMoneyInPaymentThatIsLessThan1k()
+    #[When('I add a one off money in payment that is less than £1k')]
+    public function iAddAOneOffMoneyInPaymentThatIsLessThan1k(): void
     {
         $this->iVisitMoneyInShortSummarySection();
         $urlRegex = sprintf('/%s\/.*\/money-in-short\/exist\?from\=summary$/', $this->reportUrlPrefix);
@@ -215,6 +216,8 @@ trait MoneyInShortSectionTrait
         $this->iAnswerToAddingMoneyInOnTheClientsBehalf('Yes');
         $this->iClickSaveAndContinue();
 
+        $this->iSelectTheCategoryForMoneyInShort('Salary or wages');
+
         $this->chooseOption('yes_no[moneyTransactionsShortInExist]', 'yes', 'one-off-payments');
         $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'yes_no_save');
 
@@ -222,9 +225,11 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @Then I should the see correct validation message
+     *
+     * @throws BehatException
      */
-    public function iShouldSeeTheCorrectValidationMessage()
+    #[Then('I should the see correct validation message')]
+    public function iShouldSeeTheCorrectValidationMessage(): void
     {
         $this->assertOnAlertMessage('The amount must be between £1000 and £100,000,000,000');
     }
@@ -234,7 +239,7 @@ trait MoneyInShortSectionTrait
      * @param int         $amount      amount for the one off payment
      * @param string|null $date        date the money came in (optional) format: DD/MM/YYYY
      */
-    private function addMoneyInPayment(string $description, int $amount, int $paymentCount, ?string $date = null)
+    private function addMoneyInPayment(string $description, int $amount, int $paymentCount, ?string $date = null): void
     {
         $this->iAmOnMoneyInShortAddPage();
 
@@ -258,19 +263,19 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @Then I should see the expected money in section summary
+     *
+     * @throws BehatException
      */
-    public function iShouldSeeTheExpectedMoneyInSectionSummary()
+    #[Then('I should see the expected money in section summary')]
+    public function iShouldSeeTheExpectedMoneyInSectionSummary(): void
     {
         $this->iAmOnMoneyInShortSummaryPage();
 
         $this->expectedResultsDisplayedSimplified();
     }
 
-    /**
-     * @Then /^I enter a reason for no money in short$/
-     */
-    public function iEnterAReasonForNoMoneyInShort()
+    #[Then('/^I enter a reason for no money in short$/')]
+    public function iEnterAReasonForNoMoneyInShort(): void
     {
         $this->iAmOnNoMoneyInShortExistsPage();
 
@@ -279,9 +284,11 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @Then /^there should be "([^"]*)" one off payments displayed on the money in summary page$/
+     *
+     * @throws BehatException
      */
-    public function thereShouldBeOneOffPaymentsDisplayedOnTheSummaryPage($arg1)
+    #[Then('/^there should be "([^"]*)" one off payments displayed on the money in summary page$/')]
+    public function thereShouldBeOneOffPaymentsDisplayedOnTheSummaryPage($arg1): void
     {
         $this->iAmOnMoneyInShortSummaryPage();
 
@@ -291,7 +298,7 @@ trait MoneyInShortSectionTrait
             $this->assertPageNotContainsText('List of items of income over £1000');
             $this->assertIsNull($oneOffPaymentTableRows, 'One off payment rows are not rendered');
 
-            $this->expectedResultsDisplayedSimplified(null, true, false, false, false);
+            $this->expectedResultsDisplayedSimplified(null, true, false, false);
         } else {
             $this->assertPageContainsText('List of items of income over £1000');
 
@@ -306,9 +313,11 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @Given /^I delete the transaction from the summary page$/
+     *
+     * @throws BehatException
      */
-    public function iDeleteTheTransactionFromTheSummaryPage()
+    #[Given('/^I delete the transaction from the summary page$/')]
+    public function iDeleteTheTransactionFromTheSummaryPage(): void
     {
         $this->iVisitMoneyInShortSummarySection();
 
@@ -321,7 +330,9 @@ trait MoneyInShortSectionTrait
 
         $count = 0;
         foreach ($this->paymentNumber as $payment) {
-            $this->getSectionAnswers('moneyInDetails' . $payment) ? $count++ : $count;
+            if ($this->getSectionAnswers('moneyInDetails' . $payment)) {
+                $count++;
+            }
         }
         if (0 == $count) {
             $this->removeSection('one-off-payments');
@@ -334,17 +345,11 @@ trait MoneyInShortSectionTrait
     }
 
     /**
-     * @Then I should be on the delete page
+     *
+     * @throws BehatException
      */
-    private function iShouldBeOnTheMoneyInShortDeletePage(): bool
-    {
-        return $this->iAmOnPage(sprintf('/report\/.*\/money-in-short\/.*\/delete$/'));
-    }
-
-    /**
-     * @Then /^I edit the answer to the money in one off payment over 1k$/
-     */
-    public function iEditTheAnswerToTheOneOffPaymentsOver1K()
+    #[Then('/^I edit the answer to the money in one off payment over 1k$/')]
+    public function iEditTheAnswerToTheOneOffPaymentsOver1K(): void
     {
         $this->removeSection('one-off-payments');
 
@@ -352,10 +357,32 @@ trait MoneyInShortSectionTrait
         $this->iClickOnNthElementBasedOnRegex($urlRegex, 0);
     }
 
-    private function addAnotherMoneyInPayment($selection)
+    #[When('/^I select the "([^"]*)" category for money in short$/')]
+    public function iSelectTheCategoryForMoneyInShort(string $category): void
     {
-        $this->iAmOnMoneyInShortAddAnotherPage();
-        $this->selectOption('add_another[addAnother]', $selection);
-        $this->iClickBasedOnAttributeTypeAndValue('button', 'id', 'add_another_save');
+        $optionIndex = array_search($category, $this->moneyInShortTypeDictionary);
+
+        if ($optionIndex === false) {
+            throw new \InvalidArgumentException(sprintf('The category "%s" does not exist in the money-in type dictionary.', $category));
+        }
+
+        $this->tickCheckbox(
+            'money-types',
+            $this->moneyInShortTypeDictionary[$optionIndex],
+            'money-types',
+            $this->moneyInShortTypeDictionary[$optionIndex]
+        );
+
+        $this->pressButton('Save and continue');
+    }
+
+    /**
+     *
+     * @throws BehatException
+     */
+    #[Then('/^I should see the correct validation message for no category selected$/')]
+    public function iShouldSeeTheCorrectValidationMessageForNoCategorySelected(): void
+    {
+        $this->assertOnErrorMessage($this->missingCategoryError);
     }
 }

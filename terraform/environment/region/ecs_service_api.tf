@@ -18,7 +18,7 @@ resource "aws_ecs_service" "api" {
   name                    = aws_ecs_task_definition.api.family
   cluster                 = aws_ecs_cluster.main.id
   task_definition         = aws_ecs_task_definition.api.arn
-  desired_count           = var.account.task_count
+  desired_count           = var.account.ecs.task_count
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
@@ -27,7 +27,7 @@ resource "aws_ecs_service" "api" {
 
   network_configuration {
     security_groups  = [module.api_service_security_group.id]
-    subnets          = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
+    subnets          = data.aws_subnet.application[*].id
     assign_public_ip = false
   }
 
@@ -173,7 +173,7 @@ module "api_task_override" {
   tags                  = var.default_tags
   environment           = local.environment
   execution_role_arn    = aws_iam_role.execution_role_db.arn
-  subnet_ids            = var.account.use_new_network ? data.aws_subnet.application[*].id : data.aws_subnet.private[*].id
+  subnet_ids            = data.aws_subnet.application[*].id
   task_role_arn         = aws_iam_role.integration_tests.arn
   security_group_id     = module.api_service_security_group.id
   cpu                   = 1024

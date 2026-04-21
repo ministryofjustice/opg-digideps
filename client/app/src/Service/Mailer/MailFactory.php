@@ -15,54 +15,29 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MailFactory
 {
-    public const AREA_DEPUTY = 'deputy';
-    public const AREA_ADMIN = 'admin';
+    public const string AREA_DEPUTY = 'deputy';
+    public const string AREA_ADMIN = 'admin';
 
     // Maintained in GOVUK Notify
-    public const ACTIVATION_TEMPLATE_ID = '07e7fdb3-ad81-4105-b6b6-c3854e0c6caa';
-    public const REPORT_SUBMITTED_CONFIRMATION_TEMPLATE_ID = '2f8fff09-5a71-446a-a220-d8a3dc78fa42';
-    public const NDR_SUBMITTED_CONFIRMATION_TEMPLATE_ID = '96fcb7e1-d80f-4e0e-80c8-2c1237af8b10';
-    public const CLIENT_DETAILS_CHANGE_TEMPLATE_ID = '258aaf2d-076b-4b5c-a386-f3551c5f3945';
-    public const DEPUTY_DETAILS_CHANGE_TEMPLATE_ID = '6469b39b-6ace-4f93-9e80-6152627e0d36';
-    public const INVITATION_LAY_TEMPLATE_ID = 'b8afb0d0-c8e5-4191-bce7-74ba91c74cad';
-    public const INVITATION_ORG_TEMPLATE_ID = 'd410fce7-ce00-46eb-824d-82f998a437a4';
-    public const RESET_PASSWORD_TEMPLATE_ID = '827555cc-498a-43ef-957a-63fa387065e3';
-    public const PROCESS_ORG_CSV_TEMPLATE_ID = 'ce20ca97-a954-4d34-8a21-8b4f156188a8';
-    public const PROCESS_LAY_CSV_TEMPLATE_ID = '1e6fddc4-999d-4c44-8038-1853ea0e8511';
+    public const string ACTIVATION_TEMPLATE_ID = '07e7fdb3-ad81-4105-b6b6-c3854e0c6caa';
+    public const string REPORT_SUBMITTED_CONFIRMATION_TEMPLATE_ID = '2f8fff09-5a71-446a-a220-d8a3dc78fa42';
+    public const string CLIENT_DETAILS_CHANGE_TEMPLATE_ID = '258aaf2d-076b-4b5c-a386-f3551c5f3945';
+    public const string DEPUTY_DETAILS_CHANGE_TEMPLATE_ID = '6469b39b-6ace-4f93-9e80-6152627e0d36';
+    public const string INVITATION_LAY_TEMPLATE_ID = 'b8afb0d0-c8e5-4191-bce7-74ba91c74cad';
+    public const string INVITATION_ORG_TEMPLATE_ID = 'd410fce7-ce00-46eb-824d-82f998a437a4';
+    public const string RESET_PASSWORD_TEMPLATE_ID = '827555cc-498a-43ef-957a-63fa387065e3';
+    public const string PROCESS_ORG_CSV_TEMPLATE_ID = 'ce20ca97-a954-4d34-8a21-8b4f156188a8';
+    public const string PROCESS_LAY_CSV_TEMPLATE_ID = '1e6fddc4-999d-4c44-8038-1853ea0e8511';
 
-    public const NOTIFY_FROM_EMAIL_ID = 'db930cb2-2153-4e2a-b3d0-06f7c7f92f37';
+    public const string NOTIFY_FROM_EMAIL_ID = 'db930cb2-2153-4e2a-b3d0-06f7c7f92f37';
 
-    public const DATE_FORMAT = 'j F Y';
+    public const string DATE_FORMAT = 'j F Y';
 
-    /**
-     * @var TranslatorInterface
-     */
-    protected $translator;
-
-    /**
-     * @var RouterInterface
-     */
-    protected $router;
-
-    /**
-     * @var EngineInterface
-     */
-    private $templating;
-
-    /**
-     * @var array
-     */
-    private $emailParams;
-
-    /**
-     * @var array
-     */
-    private $baseURLs;
-
-    /**
-     * @var IntlService
-     */
-    private $intlService;
+    protected TranslatorInterface $translator;
+    protected RouterInterface $router;
+    private array $emailParams;
+    private array $baseURLs;
+    private IntlService $intlService;
 
     public function __construct(
         TranslatorInterface $translator,
@@ -79,21 +54,19 @@ class MailFactory
     }
 
     /**
-     * @param string $area      deputy|admin
+     * @param string $area deputy|admin
      * @param string $routeName must be in YML config under email.routes
      *
      * @return string calculated route
+     * @throws \Exception
      */
-    private function generateAbsoluteLink(string $area, string $routeName, array $params = [])
+    private function generateAbsoluteLink(string $area, string $routeName, array $params = []): string
     {
-        switch ($area) {
-            case self::AREA_DEPUTY:
-                return $this->baseURLs['front'].$this->router->generate($routeName, $params);
-            case self::AREA_ADMIN:
-                return $this->baseURLs['admin'].$this->router->generate($routeName, $params);
-            default:
-                throw new \Exception("area $area not found");
-        }
+        return match ($area) {
+            self::AREA_DEPUTY => $this->baseURLs['front'] . $this->router->generate($routeName, $params),
+            self::AREA_ADMIN => $this->baseURLs['admin'] . $this->router->generate($routeName, $params),
+            default => throw new \Exception("area $area not found"),
+        };
     }
 
     private function getContactParameters(User $user): array
@@ -115,9 +88,9 @@ class MailFactory
     }
 
     /**
-     * @return Email
+     * @throws \Exception
      */
-    public function createActivationEmail(User $user)
+    public function createActivationEmail(User $user): Email
     {
         $area = $this->getUserArea($user);
 
@@ -128,20 +101,18 @@ class MailFactory
             ]),
         ]);
 
-        $email = (new Email())
+        return (new Email())
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('activation.fromName'))
             ->setToEmail($user->getEmail())
             ->setTemplate(self::ACTIVATION_TEMPLATE_ID)
             ->setParameters($parameters);
-
-        return $email;
     }
 
     /**
-     * @return Email
+     * @throws \Exception
      */
-    public function createInvitationEmail(User $user, ?string $deputyName = null)
+    public function createInvitationEmail(User $user, ?string $deputyName = null): Email
     {
         $area = $this->getUserArea($user);
 
@@ -156,14 +127,12 @@ class MailFactory
             $parameters['deputyName'] = $deputyName;
         }
 
-        $email = (new Email())
+        return (new Email())
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('activation.fromName'))
             ->setToEmail($user->getEmail())
             ->setTemplate($user->isLayDeputy() ? self::INVITATION_LAY_TEMPLATE_ID : self::INVITATION_ORG_TEMPLATE_ID)
             ->setParameters($parameters);
-
-        return $email;
     }
 
     /**
@@ -171,10 +140,8 @@ class MailFactory
      * This maps to the translation file.
      *
      * Called from BehatController to allow email-viewer to function
-     *
-     * @return string
      */
-    public static function getRecipientRole(User $user)
+    public static function getRecipientRole(User $user): string
     {
         switch ($user->getRoleName()) {
             case User::ROLE_PA_NAMED:
@@ -190,6 +157,9 @@ class MailFactory
         }
     }
 
+    /**
+     * @throws \Exception
+     */
     public function createResetPasswordEmail(User $user): Email
     {
         $area = $this->getUserArea($user);
@@ -212,10 +182,8 @@ class MailFactory
 
     /**
      * Get user area depending on the role.
-     *
-     * @return string
      */
-    private function getUserArea(User $user)
+    private function getUserArea(User $user): string
     {
         return $user->isDeputy() ? self::AREA_DEPUTY : self::AREA_ADMIN;
     }
@@ -278,13 +246,10 @@ class MailFactory
     }
 
     /**
-     * @return Email
-     *
      * @throws \Exception
      */
-    public function createReportSubmissionConfirmationEmail(User $user, EntityDir\ReportInterface $submittedReport, Report $newReport)
+    public function createReportSubmissionConfirmationEmail(User $user, EntityDir\ReportInterface $submittedReport, Report $newReport): Email
     {
-        /** @var Email $email */
         $email = (new Email())
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translator->trans('reportSubmissionConfirmation.fromName', [], 'email'))
@@ -295,7 +260,6 @@ class MailFactory
         $dateSubmittableFrom = clone $newReport->getEndDate();
         $dateSubmittableFrom->add(new \DateInterval('P1D'));
 
-        /** @var array $notifyParams */
         $notifyParams = [
             'clientFullname' => $submittedReport->getClient()->getFullname(),
             'deputyFullname' => $user->getFullName(),
@@ -306,7 +270,7 @@ class MailFactory
             'newStartDate' => $newReport->getStartDate()->format(self::DATE_FORMAT),
             'newEndDate' => $newReport->getEndDate()->format(self::DATE_FORMAT),
             'EndDatePlus1' => $dateSubmittableFrom->format(self::DATE_FORMAT),
-            'PFA' => '104' === substr($submittedReport->getType(), 0, 3) ? 'no' : 'yes',
+            'PFA' => str_starts_with($submittedReport->getType(), '104') ? 'no' : 'yes',
             'lay' => $user->isLayDeputy() ? 'yes' : 'no',
         ];
 
@@ -322,40 +286,6 @@ class MailFactory
             ['%fullClientName%' => $client->getFullname(), '%caseNumber%' => $client->getCaseNumber()],
             'email-report-submission-confirm'
         );
-    }
-
-    /**
-     * @return Email
-     *
-     * @throws \Exception
-     */
-    public function createNdrSubmissionConfirmationEmail(User $user, EntityDir\Ndr\Ndr $ndr, Report $report)
-    {
-        /** @var Email $email */
-        $email = (new Email())
-            ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
-            ->setFromName($this->translator->trans('ndrSubmissionConfirmation.fromName', [], 'email'))
-            ->setToEmail($user->getEmail())
-            ->setTemplate(self::NDR_SUBMITTED_CONFIRMATION_TEMPLATE_ID);
-
-        /** @var \DateTime $dateSubmittableFrom */
-        $dateSubmittableFrom = clone $report->getEndDate();
-        $dateSubmittableFrom->add(new \DateInterval('P1D'));
-
-        /** @var array $notifyParams */
-        $notifyParams = [
-            'clientFullname' => $ndr->getClient()->getFullname(),
-            'deputyFullname' => $user->getFullName(),
-            'homepageURL' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
-            'startDate' => $report->getStartDate()->format(self::DATE_FORMAT),
-            'endDate' => $report->getEndDate()->format(self::DATE_FORMAT),
-            'EndDatePlus1' => $dateSubmittableFrom->format(self::DATE_FORMAT),
-            'PFA' => 'yes',
-        ];
-
-        $email->setParameters($notifyParams);
-
-        return $email;
     }
 
     public function createProcessOrgCSVEmail(string $adminEmail, array $output): Email
@@ -409,14 +339,8 @@ class MailFactory
         return $email;
     }
 
-    /**
-     * @param string $key
-     * @param array  $params
-     *
-     * @return string
-     */
-    private function translate($key, $params = [])
+    private function translate(string $key): string
     {
-        return $this->translator->trans($key, $params, 'email');
+        return $this->translator->trans($key, [], 'email');
     }
 }

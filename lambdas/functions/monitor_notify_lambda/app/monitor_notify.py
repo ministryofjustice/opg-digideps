@@ -35,10 +35,19 @@ def valid_alarm_name(topic, subject):
     for alarm_type, rules in alarm_filters.items():
         if alarm_type in topic:
             for rule in rules:
-                if all(keyword in subject for keyword in rule.get("must_include", [])):
-                    return True
+                must = rule.get("must_include", [])
 
-                return False
+                if alarm_type == "custom_cloudwatch_alarms":
+                    if ("ALARM:" in subject) and (
+                        ("breakglass console login check" in subject)
+                        or ("data-access console login check" in subject)
+                    ):
+                        return True
+                else:
+                    if all(keyword in subject for keyword in must):
+                        return True
+
+            return False
 
     # If unknown alarm_type alarm on it anyway.
     # This is in case alarm type names change to avoid scenario where our alarms aren't going off.

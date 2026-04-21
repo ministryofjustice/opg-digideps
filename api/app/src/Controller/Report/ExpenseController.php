@@ -107,7 +107,8 @@ class ExpenseController extends RestController
 
     private function updateEntityWithData(
         Report $report,
-        Expense $expense, array $data
+        Expense $expense,
+        array $data
     ): void {
         // common props
         $this->hydrateEntityWithArrayData($expense, $data, [

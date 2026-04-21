@@ -41,15 +41,17 @@
         {% if not hideEditLink  %}
             <dd class="govuk-summary-list__actions">
                 <a
-                    class="govuk-link behat-link-edit"
+                    class="govuk-link behat-link-edit govuk-!-static-padding-right-1"
                     href="{{ path('asset_other_edit', {'reportId': report.id, 'assetId': asset.id}) }}">
                     {{ 'edit' | trans({}, 'common' ) }}
+                    <span class="govuk-visually-hidden">{{ asset.description[:100] | nl2br }}</span>
                 </a>
                 &nbsp;
                 <a
                     class="govuk-link behat-link-delete"
                     href="{{ path('asset_delete', {'reportId': report.id, 'assetId': asset.id}) }}">
                     {{ 'remove' | trans({}, 'common' ) }}
+                    <span class="govuk-visually-hidden">{{ asset.description[:100] | nl2br }}</span>
                 </a>
             </dd>
         {% endif %}

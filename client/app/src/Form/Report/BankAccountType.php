@@ -15,22 +15,19 @@ use Symfony\Component\Validator\Constraints\Type;
 
 class BankAccountType extends AbstractType
 {
-    private $step;
+    private int $step;
 
-    /**
-     * @return array
-     */
-    private static function getBankAccountChoices()
+    private static function getBankAccountChoices(): array
     {
         $ret = [];
         foreach (BankAccount::$types as $key) {
-            $ret['form.accountType.choices.'.$key] = $key;
+            $ret['form.accountType.choices.' . $key] = $key;
         }
 
         return $ret;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $this->step = (int) $options['step'];
 
@@ -76,42 +73,47 @@ class BankAccountType extends AbstractType
                 'invalid_message' => 'account.closingBalance.type',
                 'required' => false,
             ]);
-        }
-
-        if (4 === $this->step) {
             $builder->add('isClosed', FormTypes\ChoiceType::class, [
                 'choices' => array_flip([true => 'Yes', false => 'No']),
                 'expanded' => true,
                 'placeholder' => 'Please select',
+                'invalid_message' => 'account.isClosed.notBlank',
             ]);
         }
 
         $builder->add('save', FormTypes\SubmitType::class);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'account';
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-bank-accounts',
             'validation_groups' => function (FormInterface $form) {
+                /** @var BankAccount $formData */
+                $formData = $form->getData();
+
                 $step2Options = ['bank-account-number', 'bank-account-is-joint'];
-                if ($form->getData()->requiresSortCode()) {
+                if ($formData->requiresSortCode()) {
                     $step2Options[] = 'bank-account-sortcode';
                 }
-                if ($form->getData()->requiresBankName()) {
+                if ($formData->requiresBankName()) {
                     $step2Options[] = 'bank-account-name';
+                }
+
+                $step3Options = ['bank-account-opening-balance', 'bank-account-closing-balance'];
+                if ($formData->isClosingBalanceZero()) {
+                    $step3Options[] = 'bank-account-is-closed';
                 }
 
                 return [
                     1 => ['bank-account-type'],
                     2 => $step2Options,
-                    3 => ['bank-account-opening-balance', 'bank-account-closing-balance'],
-                    4 => 'bank-account-is-closed',
+                    3 => $step3Options,
                 ][$this->step];
             },
         ])

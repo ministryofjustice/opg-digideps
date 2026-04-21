@@ -20,18 +20,11 @@ existPage:
     reasonForNoContacts:
       label: Please explain why you did not need anyone to help you
       hint: ""
+    headingReasonForNoContacts:
+      label: Reason for no contacts
+      hint: ""
     save:
       label: Save and continue
-
-addAnotherPage:
-  htmlTitle: "Add another contact - Complete the deputy report | GOV.UK"
-  pageTitle: Add another contact
-  form:
-    addAnother:
-      label: The person has been saved. Would you like to add another now?
-      hint: If you prefer, you can come back to this section later to add more people
-    save:
-      label: Continue
 
 addPage:
   htmlTitle: "Add a contact - Complete the deputy report | GOV.UK"
@@ -66,6 +59,7 @@ deletePage:
     explanation: Reason for contact
 
 form:
+  thing: contact
   contactName:
     label: Contact name
     hint: ""

@@ -85,7 +85,7 @@ trait ReportProfServiceFeesTrait
                 $fees = $this->getProfServiceFeesByType(ProfServiceFee::TYPE_PREVIOUS_FEE);
                 break;
             default:
-                throw new \Exception('Invalid Fee type Id:'.$feeTypeId);
+                throw new \Exception('Invalid Fee type Id:' . $feeTypeId);
         }
 
         return array_filter($fees, function ($profServiceFee) use ($fixedOrAssessed) {
@@ -113,7 +113,7 @@ trait ReportProfServiceFeesTrait
                 ]
             )
         ) {
-            throw new \Exception('Invalid feeTypeId: '.$feeTypeId);
+            throw new \Exception('Invalid feeTypeId: ' . $feeTypeId);
         }
 
         return array_filter($this->getProfServiceFees(), function ($profServiceFee) use ($feeTypeId) {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Event\AdminManagerCreatedEvent;
 use App\Event\AdminUserCreatedEvent;
-use App\Event\CoDeputyCreatedEvent;
 use App\Event\CoDeputyInvitedEvent;
 use App\Event\DeputyInvitedEvent;
 use App\Event\DeputySelfRegisteredEvent;
@@ -13,11 +12,11 @@ use App\Event\UserDeletedEvent;
 use App\Event\UserPasswordResetEvent;
 use App\Event\UserUpdatedEvent;
 use App\EventDispatcher\ObservableEventDispatcher;
-use App\Model\SelfRegisterData;
 use App\Service\Client\Internal\UserApi;
 use App\Service\Client\RestClient;
 use App\TestHelpers\UserHelpers;
 use Faker\Factory;
+use OPG\Digideps\Common\Registration\SelfRegisterData;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -219,26 +218,6 @@ class UserApiTest extends TestCase
         $this->eventDispatcher->dispatch($deputySelfRegisteredEvent, 'deputy.self.registered')->shouldBeCalled();
 
         $this->sut->selfRegister($selfRegisterData);
-    }
-
-    /** @test */
-    public function createCoDeputy()
-    {
-        $invitedCoDeputy = UserHelpers::createInvitedCoDeputy();
-        $createdCoDeputy = $invitedCoDeputy->setRegistrationDate(new DateTime());
-        $invitedByDeputy = UserHelpers::createInvitedCoDeputy();
-
-        $clientId = 100;
-
-        $this->restClient
-            ->post(sprintf('codeputy/add/%s', $clientId), $invitedCoDeputy, ['codeputy'], 'User')
-            ->shouldBeCalled()
-            ->willReturn($createdCoDeputy);
-
-        $coDeputyCreatedEvent = new CoDeputyCreatedEvent($createdCoDeputy, $invitedByDeputy);
-        $this->eventDispatcher->dispatch($coDeputyCreatedEvent, 'codeputy.created')->shouldBeCalled();
-
-        $this->sut->createCoDeputy($invitedCoDeputy, $invitedByDeputy, $clientId);
     }
 
     /** @test */

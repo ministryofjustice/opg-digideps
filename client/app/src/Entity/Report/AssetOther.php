@@ -13,23 +13,12 @@ class AssetOther extends Asset
      *
      * @JMS\Type("string")
      */
-    private $description;
+    private string $description;
 
     /**
-     * @JMS\Type("DateTime")
-     *
-     * @var \Date
+     * Set description
      */
-    private $valuationDate;
-
-    /**
-     * Set description.
-     *
-     * @param string $description
-     *
-     * @return Asset
-     */
-    public function setDescription($description)
+    public function setDescription(string $description): static
     {
         $this->description = $description;
 
@@ -37,48 +26,19 @@ class AssetOther extends Asset
     }
 
     /**
-     * Get description.
-     *
-     * @return string
+     * Get description
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * Set valuationDate.
-     *
-     * @param \DateTime $valuationDate
-     *
-     * @return Asset
-     */
-    public function setValuationDate($valuationDate)
-    {
-        $this->valuationDate = $valuationDate;
-
-        return $this;
-    }
-
-    /**
-     * Get valuationDate.
-     *
-     * @return \DateTime
-     */
-    public function getValuationDate()
-    {
-        return $this->valuationDate;
-    }
-
-    public function getType()
+    public function getType(): string
     {
         return 'other';
     }
 
-    /**
-     * @return mixed|string
-     */
-    public function getListTemplateName()
+    public function getListTemplateName(): string
     {
         $titleToTemplateMap = [
             'Stocks and shares' => 'stock_share',
@@ -86,11 +46,10 @@ class AssetOther extends Asset
             'Vehicles' => 'vehicle',
         ];
 
-        return isset($titleToTemplateMap[$this->getTitle()])
-            ? $titleToTemplateMap[$this->getTitle()] : 'default';
+        return $titleToTemplateMap[$this->getTitle()] ?? 'default';
     }
 
-    public function getBehatIdentifier()
+    public function getBehatIdentifier(): string
     {
         return $this->getDescription();
     }

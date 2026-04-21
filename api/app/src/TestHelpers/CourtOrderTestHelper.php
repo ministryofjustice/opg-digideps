@@ -4,32 +4,35 @@ declare(strict_types=1);
 
 namespace App\TestHelpers;
 
+use App\Domain\CourtOrder\CourtOrderKind;
+use App\Domain\CourtOrder\CourtOrderReportType;
+use App\Domain\CourtOrder\CourtOrderType;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
-use App\Entity\CourtOrderDeputy;
 use App\Entity\Deputy;
-use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 
 class CourtOrderTestHelper
 {
     public static function generateCourtOrder(
-        EntityManager $em,
+        EntityManagerInterface $em,
         Client $client,
         string $courtOrderUid,
         string $status = 'ACTIVE',
-        string $type = 'pfa',
+        CourtOrderType $type = CourtOrderType::PFA,
         ?Report $report = null,
         ?Deputy $deputy = null,
         bool $deputyIsActive = true,
         \DateTime $orderDate = (new \DateTime()),
+        CourtOrderKind $courtOrderKind = CourtOrderKind::Single,
     ): CourtOrder {
-        /** @var CourtOrder $courtOrder */
         $courtOrder = (new CourtOrder())
             ->setCourtOrderUid($courtOrderUid)
             ->setClient($client)
+            ->setOrderKind($courtOrderKind)
             ->setOrderType($type)
+            ->setOrderReportType($type === CourtOrderType::PFA || $courtOrderKind === CourtOrderKind::Hybrid ? CourtOrderReportType::OPG102 : CourtOrderReportType::OPG104)
             ->setStatus($status)
             ->setOrderMadeDate($orderDate);
 

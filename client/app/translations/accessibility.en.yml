@@ -35,7 +35,7 @@ reportProblems:
       link: "mailto:digideps@digital.justice.gov.uk"
       linkText: digideps@digital.justice.gov.uk
       beforeMarkupText: "Email: "
-  para02: We’re available Monday, Tuesday, Thursday, Friday 9:30am to 5pm. Wednesday 10am to 5pm
+  para02: We’re available Monday, Tuesday, Thursday, Friday 9:30am to 5pm, and Wednesday 10am to 5pm.
 
 enforcementProcedure:
   heading: Enforcement procedure

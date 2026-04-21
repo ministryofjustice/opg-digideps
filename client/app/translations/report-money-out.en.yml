@@ -28,3 +28,9 @@ noMoneyOut:
       hintText: Please provide a reason
     save:
       label: Save and continue
+
+notices:
+  entry:
+    added: "Payment added"
+    edited: "Payment edited"
+    deleted: "Payment deleted"

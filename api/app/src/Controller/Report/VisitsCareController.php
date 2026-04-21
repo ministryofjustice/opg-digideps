@@ -82,7 +82,7 @@ class VisitsCareController extends RestController
             ? $request->query->all('groups') : ['visits-care'];
         $this->formatter->setJmsSerialiserGroups($serialiseGroups);
 
-        $visitsCare = $this->findEntityBy(VisitsCare::class, $id, 'VisitsCare with id:'.$id.' not found');
+        $visitsCare = $this->findEntityBy(VisitsCare::class, $id, 'VisitsCare with id:' . $id . ' not found');
         $this->denyAccessIfReportDoesNotBelongToUser($visitsCare->getReport());
 
         return $visitsCare;

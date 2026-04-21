@@ -37,3 +37,13 @@ services:
       AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
       AWS_SESSION_TOKEN: $AWS_SESSION_TOKEN
       WORKSPACE: $WORKSPACE
+
+  block-ips-tests:
+    build:
+      context: ./lambdas/functions/block_ips_lambda
+      dockerfile: Dockerfile
+
+  anonymisation-tests:
+    build:
+      context: ./orchestration
+      target: tests

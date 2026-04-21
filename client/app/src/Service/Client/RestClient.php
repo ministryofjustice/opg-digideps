@@ -4,16 +4,16 @@ namespace App\Service\Client;
 
 use App\Entity\User;
 use App\Exception as AppException;
-use App\Model\SelfRegisterData;
 use App\Service\Client\TokenStorage\RedisStorage;
 use App\Service\JWT\JWTService;
 use App\Service\RequestIdLoggerProcessor;
 use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
-use GuzzleHttp\Exception\TransferException;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Lcobucci\JWT\Validation\ConstraintViolation;
+use OPG\Digideps\Common\Registration\SelfRegisterData;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -91,9 +91,9 @@ class RestClient implements RestClientInterface
      *
      * @param array $credentials with keys "token" or "email" and "password"
      *
-     * @return User
+     * @return array [$user, $authToken]
      */
-    public function login(array $credentials)
+    public function login(array $credentials): array
     {
         try {
             $response = $this->apiCall('post', '/auth/login', $credentials, 'response', [], false);
@@ -105,7 +105,7 @@ class RestClient implements RestClientInterface
             }
         }
 
-        /** @var User */
+        /** @var User $user */
         $user = $this->arrayToEntity('User', $this->extractDataArray($response));
         $authToken = $response->getHeader(RestClient::HEADER_AUTH_TOKEN)[0];
 
@@ -297,9 +297,10 @@ class RestClient implements RestClientInterface
         }
 
         $response = $this->rawSafeCall($method, $endpoint, $options + [
-                'addClientSecret' => !$authenticated,
-                'addAuthToken' => $authenticated,
-            ]);
+            'addClientSecret' => !$authenticated,
+            'addAuthToken' => $authenticated,
+        ]);
+
         if ('raw' == $expectedResponseType) {
             return $response->getBody();
         }
@@ -329,15 +330,13 @@ class RestClient implements RestClientInterface
 
     /**
      * Performs HTTP client call
-     * // TODO refactor into  rawSafeCallWithAuthToken and rawSafeCallWithClientSecret.
+     * // TODO refactor into rawSafeCallWithAuthToken and rawSafeCallWithClientSecret.
      *
      * In case of connect/HTTP failure:
-     * - throws DisplayableException using self::ERROR_CONNECT as a message, keeping exception code
-     * - logs the full error message with with warning priority
-     *
-     * @return ResponseInterface
+     * - throws an exception
+     * - logs the full error message with warning priority
      */
-    private function rawSafeCall($method, $url, $options)
+    private function rawSafeCall($method, $url, $options): ResponseInterface
     {
         // add AuthToken if user is logged
         if (!empty($options['addAuthToken']) && $loggedUserId = $this->getLoggedUserId()) {
@@ -353,10 +352,8 @@ class RestClient implements RestClientInterface
             $options['headers'][self::HEADER_CLIENT_SECRET] = $this->clientSecret;
         }
 
-        // remove internal options, not recognised by guzzle
+        // remove internal options not recognised by guzzle
         foreach (self::$availableOptions as $ao) {
-            unset($options[$ao]);
-            unset($options[$ao]);
             unset($options[$ao]);
         }
 
@@ -381,37 +378,50 @@ class RestClient implements RestClientInterface
             $options['timeout'] = $this->timeout;
         }
 
+        $exceptions = [];
         $start = microtime(true);
+        $code = Response::HTTP_INTERNAL_SERVER_ERROR;
+        $response = null;
+
         try {
-            $response = $this->client->$method($url, $options);
-            $this->logRequest($url, $method, $start, $options, $response);
+            $response = $this->client->request($method, $url, $options);
+        } catch (GuzzleException $e) {
+            if ($e instanceof RequestException) {
+                $response = $e->getResponse();
 
-            return $response;
-        } catch (RequestException $e) {
-            // request exception contains a body, that gets decoded and passed to RestClientException
-            $this->logger->warning('RestClient | RequestException | ' . $url . ' | ' . $e->getMessage());
+                // if the exception has a status code, use that for the response from this method
+                $code = $response?->getStatusCode() ?? $code;
+            }
+            $exceptions[] = $e;
+        }
 
-            $response = $e->getResponse();
+        $this->logRequest($url, $method, $start, $options, $response);
 
-            $this->logRequest($url, $method, $start, $options, $response);
-
+        if (count($exceptions) > 0) {
             $data = [];
-
-            try {
-                if ($response instanceof ResponseInterface) {
-                    $body = strval($response->getBody());
-                    $data = $this->serializer->deserialize($body, 'array', 'json');
+            if (!is_null($response)) {
+                try {
+                    // this can throw at least a RuntimeException
+                    $data = $this->serializer->deserialize(strval($response->getBody()), 'array', 'json');
+                } catch (\Throwable $e) {
+                    $exceptions[] = $e;
                 }
-            } catch (\Throwable $e) {
-                $this->logger->warning('RestClient |  ' . $url . ' | ' . $e->getMessage());
             }
 
-            throw new AppException\RestClientException($e->getMessage(), $e->getCode(), $data);
-        } catch (TransferException $e) {
-            $this->logger->warning('RestClient | ' . $url . ' | ' . $e->getMessage());
+            $messages = [];
+            foreach ($exceptions as $e) {
+                $this->logger->warning('RestClient | ' . get_class($e) . ' | ' . $url . ' | ' . $e->getMessage());
+                $messages[] = $e->getMessage();
+            }
 
-            throw new AppException\RestClientException($e->getMessage(), $e->getCode());
+            throw new AppException\RestClientException(implode('; ', $messages), $code, $data);
         }
+
+        if (is_null($response)) {
+            throw new AppException\RestClientException('No response data available', $code);
+        }
+
+        return $response;
     }
 
     /**
@@ -508,13 +518,7 @@ class RestClient implements RestClientInterface
         return $ret;
     }
 
-    /**
-     * @param string            $url
-     * @param string            $method
-     * @param float             $start
-     * @param array             $options
-     */
-    private function logRequest($url, $method, $start, $options, ?ResponseInterface $response = null)
+    private function logRequest(string $url, string $method, float $start, array $options, ?ResponseInterface $response = null)
     {
         if (!$this->saveHistory) {
             return;
@@ -525,7 +529,7 @@ class RestClient implements RestClientInterface
             'method' => $method,
             'time' => microtime(true) - $start,
             'options' => print_r($options, true),
-            'responseCode' => $response ? $response->getStatusCode() : null,
+            'responseCode' => $response?->getStatusCode(),
             'responseBody' => $response ? print_r(json_decode((string) $response->getBody(), true), true) : $response,
             'responseRaw' => $response ? (string) $response->getBody() : 'n.a.',
         ];
@@ -579,10 +583,5 @@ class RestClient implements RestClientInterface
         }
 
         return false;
-    }
-
-    private function debugJsonString($jsonString)
-    {
-        echo '<pre>' . json_encode(json_decode($jsonString), JSON_PRETTY_PRINT) . '</pre>';
     }
 }

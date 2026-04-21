@@ -4,18 +4,23 @@ declare(strict_types=1);
 
 namespace App\v2\Registration\DeputyshipProcessing;
 
+use App\Factory\DataFactoryInterface;
+use App\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipIngester;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 
 /**
  * Ingest the deputyship CSV exported from Sirius.
  */
-class DeputyshipsCSVIngester
+final readonly class DeputyshipsCSVIngester
 {
     public function __construct(
-        private readonly DeputyshipsCSVLoader $deputyshipsCSVLoader,
-        private readonly DeputyshipsCandidatesSelector $deputyshipsCandidatesSelector,
-        private readonly DeputyshipBuilder $deputyshipBuilder,
-        private readonly DeputyshipsIngestResultRecorder $deputyshipsIngestResultRecorder,
+        private DeputyshipsCSVLoader $deputyshipsCSVLoader,
+        private DeputyshipsCandidatesSelector $deputyshipsCandidatesSelector,
+        private DeputyshipBuilder $deputyshipBuilder,
+        private DataFactoryInterface $preCSVDataFactory,
+        private DataFactoryInterface $postCSVDataFactory,
+        private DeputyshipsIngestResultRecorder $deputyshipsIngestResultRecorder,
+        private CourtOrderRelationshipIngester $courtOrderRelationshipIngester,
     ) {
     }
 
@@ -35,6 +40,13 @@ class DeputyshipsCSVIngester
     {
         $this->deputyshipsIngestResultRecorder->setDryRun($dryRun);
         $this->deputyshipsIngestResultRecorder->recordStart();
+
+        // apply manual data fixes before CSV ingested
+        $dataFactoryResult = $this->preCSVDataFactory->run();
+        $this->deputyshipsIngestResultRecorder->recordPreCSVDataFactoryResult($dataFactoryResult);
+        if (!$dataFactoryResult->isSuccessful()) {
+            return $this->deputyshipsIngestResultRecorder->result();
+        }
 
         // load the CSV into the staging table in the database
         $loadResult = $this->deputyshipsCSVLoader->load($fileLocation);
@@ -56,6 +68,20 @@ class DeputyshipsCSVIngester
         // each $builderResult contains a group of court order entities and relationships to be persisted
         foreach ($builderResults as $builderResult) {
             $this->deputyshipsIngestResultRecorder->recordBuilderResult($builderResult);
+        }
+
+        // update CourtOrder relationships and kinds
+        if (!$dryRun) {
+            foreach ($this->courtOrderRelationshipIngester->execute() as $relationshipResult) {
+                $this->deputyshipsIngestResultRecorder->recordRelationshipResult($relationshipResult);
+            }
+        }
+
+        // apply manual data fixes after CSV ingested
+        $dataFactoryResult = $this->postCSVDataFactory->run();
+        $this->deputyshipsIngestResultRecorder->recordPostCSVDataFactoryResult($dataFactoryResult);
+        if (!$dataFactoryResult->isSuccessful()) {
+            return $this->deputyshipsIngestResultRecorder->result();
         }
 
         $this->deputyshipsIngestResultRecorder->recordEnd();

@@ -11,9 +11,6 @@ class BankAccount implements BankAccountInterface
 {
     use HasReportTrait;
 
-    const OPENING_DATE_SAME_YES = 'yes';
-    const OPENING_DATE_SAME_NO = 'no';
-
     /**
      * Keep in sync with api.
      */
@@ -101,20 +98,16 @@ class BankAccount implements BankAccountInterface
      * @Assert\NotBlank(message="account.openingBalance.notBlank", groups={"bank-account-opening-balance"})
      * @Assert\Type(type="numeric", message="account.openingBalance.type", groups={"bank-account-opening-balance"})
      * @Assert\Range(max=100000000000, maxMessage = "account.openingBalance.outOfRange", groups={"bank-account-opening-balance"})
-     *
-     * @var decimal
      */
-    private $openingBalance;
+    private mixed $openingBalance = null;
 
     /**
      * @JMS\Type("string")
      * @Assert\Type(type="numeric", message="account.closingBalance.type", groups={"bank-account-closing-balance"})
      * @Assert\Range(max=100000000000, maxMessage = "account.closingBalance.outOfRange", groups={"bank-account-closing-balance"})
      * @JMS\Groups({"account"})
-     *
-     * @var decimal
      */
-    private $closingBalance;
+    private mixed $closingBalance = null;
 
     /**
      * @JMS\Type("boolean")
@@ -216,12 +209,7 @@ class BankAccount implements BankAccountInterface
         return $this->openingBalance;
     }
 
-    /**
-     * @param float $closingBalance
-     *
-     * @return self
-     */
-    public function setClosingBalance($closingBalance)
+    public function setClosingBalance(mixed $closingBalance): static
     {
         $this->closingBalance = $closingBalance;
 
@@ -232,17 +220,18 @@ class BankAccount implements BankAccountInterface
         return $this;
     }
 
-    /**
-     * @return decimal $closingBalance
-     */
-    public function getClosingBalance()
+    public function getClosingBalance(): ?float
     {
-        return $this->closingBalance;
+        if (!is_numeric($this->closingBalance)) {
+            return null;
+        }
+
+        return round(floatval($this->closingBalance), 2);
     }
 
-    public function isClosingBalanceZero()
+    public function isClosingBalanceZero(): bool
     {
-        return null !== $this->closingBalance && 0.00 === round($this->closingBalance, 2);
+        return !is_null($this->closingBalance) && 0.0 === $this->getClosingBalance();
     }
 
     /**
@@ -363,19 +352,19 @@ class BankAccount implements BankAccountInterface
     {
         switch ($this->getAccountType()) {
             case 'current':
-                return ($this->getIsJointAccount() ? 'Joint current ' : 'Current').' account (****'.$this->getAccountNumber().' / '.$this->getDisplaySortCode().')';
+                return ($this->getIsJointAccount() ? 'Joint current ' : 'Current') . ' account (****' . $this->getAccountNumber() . ' / ' . $this->getDisplaySortCode() . ')';
             case 'savings':
-                return ($this->getIsJointAccount() ? 'Joint savings ' : 'Savings').' account (****'.$this->getAccountNumber().' / '.$this->getDisplaySortCode().')';
+                return ($this->getIsJointAccount() ? 'Joint savings ' : 'Savings') . ' account (****' . $this->getAccountNumber() . ' / ' . $this->getDisplaySortCode() . ')';
             case 'isa':
-                return ($this->getIsJointAccount() ? 'Joint ISA ' : 'ISA').' (****'.$this->getAccountNumber().' / '.$this->getDisplaySortCode().')';
+                return ($this->getIsJointAccount() ? 'Joint ISA ' : 'ISA') . ' (****' . $this->getAccountNumber() . ' / ' . $this->getDisplaySortCode() . ')';
             case 'postoffice':
-                return ($this->getIsJointAccount() ? 'Joint Post office ' : 'Post office').' account (****'.$this->getAccountNumber().')';
+                return ($this->getIsJointAccount() ? 'Joint Post office ' : 'Post office') . ' account (****' . $this->getAccountNumber() . ')';
             case 'cfo':
-                return ($this->getIsJointAccount() ? 'Joint Court funds ' : 'Court funds').' account (****'.$this->getAccountNumber().')';
+                return ($this->getIsJointAccount() ? 'Joint Court funds ' : 'Court funds') . ' account (****' . $this->getAccountNumber() . ')';
             case 'other':
-                return ($this->getIsJointAccount() ? 'Joint other ' : 'Other').' account '.' (****'.$this->getAccountNumber().' / '.$this->getDisplaySortCode().')';
+                return ($this->getIsJointAccount() ? 'Joint other ' : 'Other') . ' account ' . ' (****' . $this->getAccountNumber() . ' / ' . $this->getDisplaySortCode() . ')';
             case 'other_no_sortcode':
-                return ($this->getIsJointAccount() ? 'Joint other ' : 'Other').' account '.' (****'.$this->getAccountNumber().')';
+                return ($this->getIsJointAccount() ? 'Joint other ' : 'Other') . ' account ' . ' (****' . $this->getAccountNumber() . ')';
         }
     }
 
@@ -389,7 +378,7 @@ class BankAccount implements BankAccountInterface
         if (6 == strlen($this->getSortCode())) {
             $sc = str_split($this->getSortCode());
 
-            return $sc[0].$sc[1].'-'.$sc[2].$sc[3].'-'.$sc[4].$sc[5];
+            return $sc[0] . $sc[1] . '-' . $sc[2] . $sc[3] . '-' . $sc[4] . $sc[5];
         }
 
         return $this->getSortCode();

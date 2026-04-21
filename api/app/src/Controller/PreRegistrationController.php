@@ -8,7 +8,6 @@ use App\Entity\User;
 use App\Repository\PreRegistrationRepository;
 use App\Service\Formatter\RestFormatter;
 use App\Service\PreRegistrationVerificationService;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +18,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class PreRegistrationController extends RestController
 {
     public function __construct(
-        private readonly PreRegistrationVerificationService $preRegistrationVerificationService,
         private readonly RestFormatter $formatter,
         private readonly EntityManagerInterface $em,
     ) {
@@ -49,7 +47,7 @@ class PreRegistrationController extends RestController
         $clientData['case_number'] = 10 == strlen($clientData['case_number']) ? substr($clientData['case_number'], 0, -2) : $clientData['case_number'];
 
         $isMultiDeputyCase = $verificationService->isMultiDeputyCase($clientData['case_number']);
-        $existingClient = $this->em->getRepository('App\Entity\Client')->findByCaseNumber($clientData['case_number']);
+        $existingClient = $this->em->getRepository(Client::class)->findByCaseNumber($clientData['case_number']);
 
         // ward off non-fee-paying codeps trying to self-register
         if ($isMultiDeputyCase && ($existingClient instanceof Client) && $existingClient->hasDeputies()) {
@@ -84,7 +82,7 @@ class PreRegistrationController extends RestController
         }
 
         $user->setDeputyUid(intval($preregMatches[0]->getDeputyUid()));
-        $user->setPreRegisterValidatedDate(new DateTime());
+        $user->setPreRegisterValidatedDate(new \DateTime());
         $user->setIsPrimary(true);
         $this->em->persist($user);
         $this->em->flush();
@@ -104,11 +102,5 @@ class PreRegistrationController extends RestController
         $result = $qb->getQuery()->getSingleScalarResult();
 
         return $result;
-    }
-
-    #[Route(path: '/clientHasCoDeputies/{caseNumber}', methods: ['GET'])]
-    public function clientHasCoDeputies(string $caseNumber): bool
-    {
-        return $this->preRegistrationVerificationService->isMultiDeputyCase($caseNumber);
     }
 }

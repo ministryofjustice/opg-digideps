@@ -10,9 +10,9 @@ use Orbitale\Component\ImageMagick\Command;
 
 class ImageConvertor
 {
-    public const JFIF = 'jfif';
-    public const HEIC = 'heic';
-    public const SUPPORTED_IMAGE_TYPES = [self::JFIF, self::HEIC];
+    public const string JFIF = 'jfif';
+    public const string HEIC = 'heic';
+    public const array SUPPORTED_IMAGE_TYPES = [self::JFIF, self::HEIC];
 
     /**
      * If a supported original file type id provided returns the body and filename of the newly converted file.
@@ -43,7 +43,7 @@ class ImageConvertor
 
         // Check if the command failed and get the error if needed
         if ($response->hasFailed()) {
-            throw new Exception('An error occurred: '.$response->getError());
+            throw new Exception('An error occurred: ' . $response->getError());
         }
 
         $newBody = file_get_contents($newPath);

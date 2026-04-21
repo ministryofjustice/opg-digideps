@@ -48,8 +48,8 @@ class ChecklistTest extends KernelTestCase
     public function submit_profDeputyCosts_checklist_valuesProvider()
     {
         return [
-            'valid values' => [null, 'yes', 'no', 0],
-            'invalid values' => ['definitely', 'negative', 'nope', 3],
+            'one missing value' => [null, 'yes', 'no', 1],
+            'all missing values' => [null, null, null, 3],
         ];
     }
 }

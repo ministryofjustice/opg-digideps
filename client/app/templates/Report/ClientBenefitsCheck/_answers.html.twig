@@ -68,8 +68,7 @@
                                     'client_benefits_check_step',
                                     {
                                         reportId: report.id,
-                                        step: 1,
-                                        reportOrNdr: reportOrNdr
+                                        step: 1
                                     }
                                 )
                                 }}?from=summary"
@@ -139,8 +138,7 @@
                                     'client_benefits_check_step',
                                     {
                                         reportId: report.id,
-                                        step: 2,
-                                        reportOrNdr: reportOrNdr
+                                        step: 2
                                     }
                                 )
                                 }}"
@@ -176,8 +174,7 @@
                                         'client_benefits_check_step',
                                         {
                                             reportId: report.id,
-                                            step: 3,
-                                            reportOrNdr: reportOrNdr
+                                            step: 3
                                         }
                                     )
                                     }}?from=summary"
@@ -224,27 +221,33 @@
                             {% endif %}
                         </dd>
                         {% if showActions %}
-                            {% set editLinkContextText = 'money type with description ' ~ money.moneyType %}
-                            {% set removeLinkContextText = 'money type with description ' ~ money.moneyType %}
+                            {% set editPath = path('client_benefits_check_step', {
+                                    moneyTypeId: money.id,
+                                    reportId: report.id,
+                                    step: 3,
+                                })
+                            %}
 
-                            {{
-                                macros.edit_remove_links_dd(
-                                    'client_benefits_check_step',
-                                    {
-                                        reportId: report.id,
-                                        step: 3,
-                                        reportOrNdr: reportOrNdr
-                                    },
-                                    'client_benefits_check_remove_money_type',
-                                    {
-                                        reportId: report.id,
-                                        moneyTypeId: money.id,
-                                        reportOrNdr: reportOrNdr
-                                    },
-                                    editLinkContextText,
-                                    removeLinkContextText
-                                )
-                            }}
+                            {% set removePath = path('client_benefits_check_remove_money_type', {
+                                    moneyTypeId: money.id,
+                                    reportId: report.id,
+                            })
+                            %}
+
+                            <dd class="govuk-summary-list__value govuk-!-text-align-right">
+                                <span>
+                                    <a href="{{ editPath }}" class="govuk-link">
+                                        {{ 'edit' | trans({}, 'common' ) }}
+                                        <span class="govuk-visually-hidden">{{ 'money type with description ' ~ money.moneyType }}</span>
+                                    </a>
+                                </span>
+                                <span>
+                                    <a href="{{ removePath }}" class="govuk-link govuk-!-margin-left-1">
+                                        {{ 'remove' | trans({}, 'common' ) }}
+                                        <span class="govuk-visually-hidden">{{ 'money type with description ' ~ money.moneyType }}</span>
+                                    </a>
+                                </span>
+                            </dd>
                         {% endif %}
                     </div>
                 {% endfor %}

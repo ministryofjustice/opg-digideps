@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace app\tests\Integration\v2\Registration\DeputyshipProcessing;
 
+use App\Domain\CourtOrder\CourtOrderKind;
+use App\Domain\CourtOrder\CourtOrderReportType;
+use App\Domain\CourtOrder\CourtOrderType;
+use App\Domain\Deputy\DeputyType;
+use App\Domain\Deputyship\DeputyshipCandidatesConverter;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\CourtOrderDeputy;
 use App\Entity\Deputy;
-use App\Entity\Ndr\Ndr;
 use App\Tests\Integration\ApiIntegrationTestCase;
 use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesGroup;
 use App\v2\Registration\Enum\DeputyshipCandidateAction;
-use App\v2\Service\DeputyshipCandidatesConverter;
 use Doctrine\ORM\Query\Expr\Join;
 
 class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrationTestCase
@@ -58,6 +61,7 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
         self::$entityManager->persist($client);
 
         $deputy = new Deputy();
+        $deputy->setDeputyType(DeputyType::LAY);
         $deputy->setFirstname('Alf');
         $deputy->setLastname('Alf');
         $deputy->setEmail1('alf@notarealemail.com');
@@ -75,6 +79,8 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
             'status' => 'ACTIVE',
             'orderMadeDate' => '2025-06-10',
             'clientId' => $client->getId(),
+            'courtOrderKind' => CourtOrderKind::Single->value,
+            'reportType' => CourtOrderReportType::OPG102->value,
         ];
         $candidatesGroup->insertOthers = [
             [
@@ -87,8 +93,9 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
 
         $result = self::$sut->convert($candidatesGroup, dryRun: false);
 
-        self::assertEquals(2, $result->getNumCandidatesApplied(), 'two candidates should be applied');
         self::assertCount(0, $result->getErrors(), 'candidate group should have no errors');
+        self::assertStringContainsString('failed candidates = 0', $result->getMessage());
+        self::assertStringContainsString('applied candidates = 2', $result->getMessage());
         self::assertTrue($this->hasCourtOrderDeputyAssociationBeenAdded($deputy, $orderUid));
     }
 
@@ -106,11 +113,14 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
         $courtOrder->setCourtOrderUid($orderUid);
         $courtOrder->setStatus('ACTIVE');
         $courtOrder->setClient($client);
-        $courtOrder->setOrderType('pfa');
+        $courtOrder->setOrderType(CourtOrderType::PFA);
         $courtOrder->setOrderMadeDate(new \DateTime());
+        $courtOrder->setOrderKind(CourtOrderKind::Single);
+        $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
         self::$entityManager->persist($courtOrder);
 
         $deputy = new Deputy();
+        $deputy->setDeputyType(DeputyType::LAY);
         $deputy->setFirstname('Vev');
         $deputy->setLastname('Alfome');
         $deputy->setEmail1('vev@notarealemail.com');
@@ -133,8 +143,9 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
 
         $result = self::$sut->convert($candidatesGroup, dryRun: false);
 
-        self::assertEquals(1, $result->getNumCandidatesApplied(), 'one candidate should be applied');
         self::assertCount(0, $result->getErrors(), 'candidate group should have no errors');
+        self::assertStringContainsString('failed candidates = 0', $result->getMessage());
+        self::assertStringContainsString('applied candidates = 1', $result->getMessage());
         self::assertTrue($this->hasCourtOrderDeputyAssociationBeenAdded($deputy, $orderUid));
     }
 }

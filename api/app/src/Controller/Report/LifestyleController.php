@@ -8,6 +8,7 @@ use App\Entity\Report\Report;
 use App\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -48,8 +49,13 @@ class LifestyleController extends RestController
     public function update(Request $request, int $id): array
     {
         $lifestyle = $this->findEntityBy(Lifestyle::class, $id);
+
         $report = $lifestyle->getReport();
-        $this->denyAccessIfReportDoesNotBelongToUser($lifestyle->getReport());
+        if (is_null($report)) {
+            throw new NotFoundHttpException('report for lifestyle not found');
+        }
+
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->formatter->deserializeBodyContent($request);
         $this->updateInfo($data, $lifestyle);
@@ -66,6 +72,7 @@ class LifestyleController extends RestController
     public function findByReportId(int $reportId): array
     {
         $report = $this->findEntityBy(Report::class, $reportId);
+
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         return $this->em->getRepository(Lifestyle::class)->findByReport($report);
@@ -77,10 +84,17 @@ class LifestyleController extends RestController
     {
         $serialiseGroups = $request->query->has('groups')
             ? $request->query->all('groups') : ['lifestyle'];
+
         $this->formatter->setJmsSerialiserGroups($serialiseGroups);
 
-        $lifestyle = $this->findEntityBy(Lifestyle::class, $id, 'Lifestyle with id:'.$id.' not found');
-        $this->denyAccessIfReportDoesNotBelongToUser($lifestyle->getReport());
+        $lifestyle = $this->findEntityBy(Lifestyle::class, $id, 'Lifestyle with id:' . $id . ' not found');
+
+        $report = $lifestyle->getReport();
+        if (is_null($report)) {
+            throw new NotFoundHttpException('report for lifestyle not found');
+        }
+
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         return $lifestyle;
     }
@@ -90,9 +104,13 @@ class LifestyleController extends RestController
     public function deleteLifestyle(int $id): array
     {
         $lifestyle = $this->findEntityBy(Lifestyle::class, $id, 'VisitsCare not found');
-        $report = $lifestyle->getReport();
 
-        $this->denyAccessIfReportDoesNotBelongToUser($lifestyle->getReport());
+        $report = $lifestyle->getReport();
+        if (is_null($report)) {
+            throw new NotFoundHttpException('report for lifestyle not found');
+        }
+
+        $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $this->em->remove($lifestyle);
         $this->em->flush();

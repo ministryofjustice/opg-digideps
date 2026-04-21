@@ -11,10 +11,12 @@ use App\Entity\Report\Status;
 use App\Form;
 use App\Service\Client\Internal\ReportApi;
 use App\Service\Client\RestClient;
-use App\Service\StepRedirector;
+use OPG\Digideps\Common\Validating\ValidatingForm;
 use Symfony\Bridge\Twig\Attribute\Template;
+use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
 class AssetController extends AbstractController
@@ -27,7 +29,6 @@ class AssetController extends AbstractController
     public function __construct(
         private readonly RestClient $restClient,
         private readonly ReportApi $reportApi,
-        private readonly StepRedirector $stepRedirector,
     ) {
     }
 
@@ -51,7 +52,7 @@ class AssetController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if ('GET' == $request->getMethod() && $report->getAssets()) { // if assets are added, set form default to "Yes"
-            $report->setNoAssetToAdd(0);
+            $report->setNoAssetToAdd(false);
         }
         $form = $this->createForm(Form\YesNoType::class, $report, [
             'field' => 'noAssetToAdd',
@@ -73,7 +74,8 @@ class AssetController extends AbstractController
         }
 
         $backLink = $this->generateUrl('assets', ['reportId' => $reportId]);
-        if ('summary' == $request->get('from')) {
+        $fromPage = $request->query->getString('from', $request->getPayload()->getString('from'));
+        if ('summary' == $fromPage) {
             $backLink = $this->generateUrl('assets_summary', ['reportId' => $reportId]);
         }
 
@@ -89,13 +91,14 @@ class AssetController extends AbstractController
     public function typeAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
+
         $form = $this->createForm(Form\Report\Asset\AssetTypeTitle::class, new AssetOther());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $title = $form->getData()->getTitle();
+            $title = ($form->getData() instanceof AssetOther ? $form->getData() : new AssetOther())->getTitle();
             return match ($title) {
-                'Property' => $this->redirect($this->generateUrl('assets_property_step', ['reportId' => $reportId, 'step' => 1])),
+                'Property' => $this->redirect($this->generateUrl('assets_property_step', ['reportId' => $reportId])),
                 default => $this->redirect($this->generateUrl('asset_other_add', ['reportId' => $reportId, 'title' => $title])),
             };
         }
@@ -122,10 +125,17 @@ class AssetController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $asset = $form->getData();
+            $validatingForm = new ValidatingForm($form);
+            $asset = $validatingForm->getObjectOrThrow(null, AssetOther::class);
             $this->restClient->post("report/$reportId/asset", $asset);
 
-            return $this->redirect($this->generateUrl('assets_add_another', ['reportId' => $reportId]));
+            $addAnother = $validatingForm->getStringOrNull('addAnother');
+            switch ($addAnother) {
+                case 'yes':
+                    return $this->redirectToRoute('assets_type', ['reportId' => $reportId, 'from' => 'another']);
+                case 'no':
+                    return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
+            }
         }
 
         return [
@@ -133,8 +143,6 @@ class AssetController extends AbstractController
             'backLink' => $this->generateUrl('assets_type', ['reportId' => $reportId]),
             'form' => $form->createView(),
             'report' => $report,
-            // avoid sending query string to GA containing user's data
-            'gaCustomUrl' => $this->generateUrl('asset_other_add', ['reportId' => $reportId, 'title' => 'type']),
         ];
     }
 
@@ -154,9 +162,12 @@ class AssetController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $asset = $form->getData();
+            $validatingForm = new ValidatingForm($form);
+            $asset = $validatingForm->getObjectOrThrow(null, AssetOther::class);
             $this->restClient->put("report/$reportId/asset/$assetId", $asset);
-            $request->getSession()->getFlashBag()->add('notice', 'Asset edited');
+            if ($request->getSession() instanceof Session) {
+                $request->getSession()->getFlashBag()->add('notice', 'Asset edited');
+            }
 
             return $this->redirect($this->generateUrl('assets', ['reportId' => $reportId]));
         }
@@ -169,17 +180,50 @@ class AssetController extends AbstractController
         ];
     }
 
-    #[Route(path: '/report/{reportId}/assets/add_another', name: 'assets_add_another')]
-    #[Template('@App/Report/Asset/addAnother.html.twig')]
-    public function addAnotherAction(Request $request, int $reportId): array|RedirectResponse
+    #[Route(path: '/report/{reportId}/assets/property/{assetId}', name: 'assets_property_step')]
+    #[Template('@App/Report/Asset/Property/step.html.twig')]
+    public function propertyStepAction(Request $request, int $reportId, ?int $assetId = null): RedirectResponse|array
     {
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId);
+        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(Form\AddAnotherRecordType::class, $report, ['translation_domain' => 'report-assets']);
+        if ($assetId) { // edit asset
+            $asset = $this->restClient->get("report/$reportId/asset/$assetId", 'Report\\AssetProperty');
+        } else { // add new asset
+            $asset = new AssetProperty();
+        }
+
+        $form = $this->createForm(Form\Report\Asset\AssetTypeProperty::class, $asset);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            switch ($form['addAnother']->getData()) {
+
+        if ($form->isSubmitted() && $form->isValid() && $form->get('save') instanceof SubmitButton && $form->get('save')->isClicked()) {
+            $validatingForm = new ValidatingForm($form);
+            $asset = $validatingForm->getObjectOrThrow(null, AssetProperty::class);
+
+            // edit mode: save immediately and go back to summary page
+            if ($assetId) {
+                if ($asset instanceof AssetProperty) {
+                    $this->restClient->put("report/$reportId/asset/$assetId", $asset);
+                    if ($request->getSession() instanceof Session) {
+                        $request->getSession()->getFlashBag()->add('notice', 'Asset edited');
+                    }
+                }
+
+                $addAnother = $validatingForm->getStringOrNull('addAnother');
+                switch ($addAnother) {
+                    case 'yes':
+                        return $this->redirectToRoute('assets_type', ['reportId' => $reportId, 'from' => 'another']);
+                    case 'no':
+                        return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
+                }
+            }
+
+            if ($asset instanceof AssetProperty) {
+                $this->restClient->post("report/$reportId/asset", $asset);
+            }
+
+            $addAnother = $validatingForm->getStringOrNull('addAnother');
+            switch ($addAnother) {
                 case 'yes':
                     return $this->redirectToRoute('assets_type', ['reportId' => $reportId, 'from' => 'another']);
                 case 'no':
@@ -188,123 +232,11 @@ class AssetController extends AbstractController
         }
 
         return [
-            'form' => $form->createView(),
-            'report' => $report,
-        ];
-    }
-
-    #[Route(path: '/report/{reportId}/assets/property/step{step}/{assetId}', name: 'assets_property_step', requirements: ['step' => '\d+'])]
-    #[Template('@App/Report/Asset/Property/step.html.twig')]
-    public function propertyStepAction(Request $request, int $reportId, int $step, ?int $assetId = null): RedirectResponse|array
-    {
-        $totalSteps = 7;
-        if ($step < 1 || $step > $totalSteps) {
-            return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
-        }
-
-        // common vars and data
-        $dataFromUrl = $request->get('data') ?: [];
-        $stepUrlData = $dataFromUrl;
-        $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $fromPage = $request->get('from');
-
-        $stepRedirector = $this->stepRedirector
-            ->setRoutes('assets_type', 'assets_property_step', 'assets_summary')
-            ->setFromPage($fromPage)
-            ->setCurrentStep($step)->setTotalSteps($totalSteps)
-            ->setRouteBaseParams(['reportId' => $reportId, 'assetId' => $assetId]);
-
-        if ($assetId) { // edit asset
-            $assets = array_filter($report->getAssets(), fn($t): bool => $t->getId() == $assetId);
-            $asset = array_shift($assets);
-            $stepRedirector->setFromPage('summary');
-        } else { // add new asset
-            $asset = new AssetProperty();
-        }
-
-        // add URL-data into model
-        isset($dataFromUrl['address']) && $asset->setAddress($dataFromUrl['address']);
-        isset($dataFromUrl['address2']) && $asset->setAddress2($dataFromUrl['address2']);
-        isset($dataFromUrl['postcode']) && $asset->setPostcode($dataFromUrl['postcode']);
-        isset($dataFromUrl['county']) && $asset->setCounty($dataFromUrl['county']);
-        isset($dataFromUrl['occupants']) && $asset->setOccupants($dataFromUrl['occupants']);
-        isset($dataFromUrl['owned']) && $asset->setOwned($dataFromUrl['owned']);
-        isset($dataFromUrl['owned_p']) && $asset->setOwnedPercentage($dataFromUrl['owned_p']);
-        isset($dataFromUrl['has_mg']) && $asset->setHasMortgage($dataFromUrl['has_mg']);
-        isset($dataFromUrl['mg_oa']) && $asset->setMortgageOutstandingAmount($dataFromUrl['mg_oa']);
-        isset($dataFromUrl['value']) && $asset->setValue($dataFromUrl['value']);
-        isset($dataFromUrl['ser']) && $asset->setIsSubjectToEquityRelease($dataFromUrl['ser']);
-        isset($dataFromUrl['hc']) && $asset->setHasCharges($dataFromUrl['hc']);
-        $stepRedirector->setStepUrlAdditionalParams([
-            'data' => $dataFromUrl,
-        ]);
-
-        // crete and handle form
-        $form = $this->createForm(Form\Report\Asset\AssetTypeProperty::class, $asset, ['step' => $step]);
-        $form->handleRequest($request);
-
-        if ($form->get('save')->isClicked() && $form->isSubmitted() && $form->isValid()) {
-            /* @var AssetProperty $asset */
-            $asset = $form->getData();
-
-            // edit mode: save immediately and go back to summary page
-            if ($assetId) {
-                $this->restClient->put("report/$reportId/asset/$assetId", $asset);
-                $request->getSession()->getFlashBag()->add('notice', 'Asset edited');
-
-                return $this->redirect($this->generateUrl('assets_summary', ['reportId' => $reportId]));
-            }
-
-            if (1 == $step) {
-                $stepUrlData['address'] = $asset->getAddress();
-                $stepUrlData['address2'] = $asset->getAddress2();
-                $stepUrlData['postcode'] = $asset->getPostcode();
-                $stepUrlData['county'] = $asset->getCounty();
-            }
-
-            if (2 == $step) {
-                $stepUrlData['occupants'] = $asset->getOccupants();
-            }
-
-            if (3 == $step) {
-                $stepUrlData['owned'] = $asset->getOwned();
-                $stepUrlData['owned_p'] = $asset->getOwnedPercentage();
-                $stepUrlData['has_mg'] = $asset->getHasMortgage();
-                $stepUrlData['mg_oa'] = $asset->getMortgageOutstandingAmount();
-            }
-
-            if (4 == $step) {
-                $stepUrlData['value'] = $asset->getValue();
-            }
-            if (5 == $step) {
-                $stepUrlData['ser'] = $asset->getIsSubjectToEquityRelease();
-            }
-            if (6 == $step) {
-                $stepUrlData['hc'] = $asset->getHasCharges();
-            }
-
-            // last step: save
-            if ($step == $totalSteps) {
-                $this->restClient->post("report/$reportId/asset", $asset);
-
-                return $this->redirect($this->generateUrl('assets_add_another', ['reportId' => $reportId]));
-            }
-
-            $stepRedirector->setStepUrlAdditionalParams([
-                'data' => $stepUrlData,
-            ]);
-
-            return $this->redirect($stepRedirector->getRedirectLinkAfterSaving());
-        }
-
-        return [
             'asset' => $asset,
             'report' => $report,
-            'step' => $step,
             'form' => $form->createView(),
-            'backLink' => $stepRedirector->getBackLink(),
+            'backLink' => $this->generateUrl('assets_summary', ['reportId' => $reportId]),
             'skipLink' => null,
-            'gaCustomUrl' => $request->getPathInfo(), // avoid sending query string to GA containing user's data
         ];
     }
 
@@ -333,13 +265,16 @@ class AssetController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($report->hasAssetWithId($assetId)) {
                 $this->restClient->delete("/report/$reportId/asset/$assetId");
-                $request->getSession()->getFlashBag()->add('notice', 'Asset removed');
+                if ($request->getSession() instanceof Session) {
+                    $request->getSession()->getFlashBag()->add('notice', 'Asset removed');
+                }
             }
 
             return $this->redirect($this->generateUrl('assets_summary', ['reportId' => $reportId]));
         }
 
         $asset = $this->restClient->get("report/$reportId/asset/$assetId", 'Report\\Asset');
+        $summary = [];
 
         if ($asset instanceof AssetProperty) {
             $summary = [
@@ -347,7 +282,7 @@ class AssetController extends AbstractController
                 ['label' => 'deletePage.summary.address', 'value' => implode(', ', $asset->getAddressValidLines())],
                 ['label' => 'deletePage.summary.value', 'value' => $asset->getValue(), 'format' => 'money'],
             ];
-        } else {
+        } elseif ($asset instanceof AssetOther) {
             $summary = [
                 ['label' => 'deletePage.summary.type', 'value' => $asset->getTitle()],
                 ['label' => 'deletePage.summary.description', 'value' => $asset->getDescription()],

@@ -55,6 +55,8 @@ class VisitsCareController extends AbstractController
         }
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $visitsCare = $report->getVisitsCare() ?: new VisitsCare();
+
+        /** @var string $fromPage */
         $fromPage = $request->get('from');
 
         $stepRedirector = $this->stepRedirector
@@ -113,7 +115,9 @@ class VisitsCareController extends AbstractController
     #[Template('@App/Report/VisitsCare/summary.html.twig')]
     public function summaryAction(Request $request, int $reportId): RedirectResponse|array
     {
+        /** @var string $fromPage */
         $fromPage = $request->get('from');
+
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         if (Status::STATE_NOT_STARTED == $report->getStatus()->getVisitsCareState()['state'] && 'skip-step' != $fromPage) {
             return $this->redirectToRoute('visits_care', ['reportId' => $reportId]);
