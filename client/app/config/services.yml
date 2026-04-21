@@ -399,10 +399,10 @@ services:
     arguments: ["application.client", null, null, "", 1]
 
   opg_json_formatter:
-    class: App\Logger\OpgJsonFormatter
+    class: OPG\Digideps\Common\Logger\OpgJsonFormatter
 
   opg_line_formatter:
-    class: App\Logger\OpgLineFormatter
+    class: OPG\Digideps\Common\Logger\OpgLineFormatter
 
   line_formatter:
     class: Monolog\Formatter\LineFormatter

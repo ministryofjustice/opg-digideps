@@ -349,10 +349,10 @@ services:
         class: Monolog\Formatter\LineFormatter
 
     opg_json_formatter:
-        class: App\Logger\OpgJsonFormatter
+        class: OPG\Digideps\Common\Logger\OpgJsonFormatter
 
     opg_line_formatter:
-        class: App\Logger\OpgLineFormatter
+        class: OPG\Digideps\Common\Logger\OpgLineFormatter
 
     rest_handler.report.deputy_costs_estimate_report_update_handler:
         class: App\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler
