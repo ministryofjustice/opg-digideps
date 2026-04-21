@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
+use App\Repository\SatisfactionRepository;
 use App\Service\File\Storage\S3SatisfactionDataStorage;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -13,61 +15,33 @@ class SatisfactionPerformanceStatsCommand extends Command
     public static $defaultName = 'digideps:satisfaction-performance-stats';
 
     public function __construct(
-        private readonly EntityManagerInterface $em,
+        private readonly SatisfactionRepository $satisfactionRepository,
         private readonly S3SatisfactionDataStorage $s3SatisfactionDataStorage,
     ) {
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
-        $this
-            ->setDescription('Fetches the satisfaction scores for Digideps and prepares the json data for update on the Opg Services Performance Data repo')
-        ;
+        $this->setDescription('Fetches the satisfaction scores for Digideps and prepares the json data for update on the Opg Services Performance Data repo');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
-            $satisfactionScoresQuery = "
-                    SELECT
-                        ROUND(AVG(score - 1) * 25) AS user_satisfaction_percent,
-                        count(CASE WHEN score = 1 THEN 1 END) AS very_dissatisfied,
-                        count(CASE WHEN score = 2 THEN 1 END) AS dissatisfied,
-                        count(CASE WHEN score = 3 THEN 1 END) AS neither,
-                        count(CASE WHEN score = 4 THEN 1 END) AS satisfied,
-                        count(CASE WHEN score = 5 THEN 1 END) AS very_satisfied
-                    FROM satisfaction
-                    WHERE (report_id IS NOT NULL OR ndr_id IS NOT NULL)
-                    AND created_at >= date_trunc('month', CURRENT_DATE - INTERVAL '1' month)
-                    AND created_at <= date_trunc('month', CURRENT_DATE) - INTERVAL '1' second
-            ";
+            $statsStartDate = new \DateTime('FIRST DAY OF PREVIOUS MONTH');
+            $statsEndDate = (new \DateTime('FIRST DAY OF THIS MONTH'))->sub(new \DateInterval('PT1S'));
+            $satisfactionScores = $this->satisfactionRepository->getSatisfactionDataForPeriod($statsStartDate, $statsEndDate);
 
-            $conn = $this->em->getConnection();
-            $statsStmt = $conn->prepare($satisfactionScoresQuery);
-            $result = $statsStmt->executeQuery();
-            $satisfactionScoresResults = $result->fetchAllAssociative();
-
-            $satisfactionScores = [];
-            $statsStartDate = (new \DateTime('FIRST DAY OF PREVIOUS MONTH'))->format('Y-m-d');
-
-            $statsYear = (new \DateTime('FIRST DAY OF PREVIOUS MONTH'))->format('y');
-            $statsMonth = (new \DateTime('FIRST DAY OF PREVIOUS MONTH'))->format('m');
-
-            foreach ($satisfactionScoresResults[0] as $satisfactionScoreKey => $satisfactionScoreRow) {
-                $satisfactionScores[] = [
-                    '_timestamp' => $statsStartDate . 'T00:00:00+00:00',
-                    'service' => 'deputy-reporting',
-                    'channel' => 'digital',
-                    'count' => intval($satisfactionScoreRow),
-                    'dataType' => str_replace('_', '-', $satisfactionScoreKey),
-                    'period' => 'month',
-                ];
+            if (empty($satisfactionScores)) {
+                $output->writeln('satisfaction_performance_stats - possible error - No satisfaction scores found for Digideps');
             }
 
             $satisfactionScoresJson = json_encode($satisfactionScores, JSON_PRETTY_PRINT);
 
-            $s3FileName = 'complete_the_deputy_report_' . $statsYear . '_' . $statsMonth . '.json';
+            $s3FileName = 'complete_the_deputy_report_' .
+                $statsStartDate->format('y') . '_' .
+                $statsStartDate->format('m') . '.json';
 
             $this->s3SatisfactionDataStorage->store($s3FileName, $satisfactionScoresJson);
 
@@ -76,7 +50,7 @@ class SatisfactionPerformanceStatsCommand extends Command
             return 0;
         } catch (\Exception $e) {
             $output->writeln('satisfaction_performance_stats - failure - Failed to extract the satisfaction scores for Digideps');
-            $output->writeln($e);
+            $output->writeln($e->getMessage());
 
             return 1;
         }

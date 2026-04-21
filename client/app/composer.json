@@ -36,7 +36,7 @@
         "monolog/monolog": "^1.27.1",
         "orbitale/imagemagick-php": "^3.3.5",
         "php-http/guzzle7-adapter": "^1.1",
-        "predis/predis": "^2.4.1",
+        "predis/predis": "^3.4.1",
         "ramsey/uuid": "^4.9.2",
         "symfony/asset": "^6.4.32",
         "symfony/cache": "^6.4.33",
