@@ -9,6 +9,8 @@ use JMS\Serializer\Annotation as JMS;
 /**
  * Asset.
  *
+ * @ORM\Entity
+ *
  * @ORM\Table(name="odr_asset")
  *
  * @ORM\InheritanceType("SINGLE_TABLE")
