@@ -446,9 +446,7 @@ class FixtureController extends AbstractController
             $this->reportSection->completeSection($report, $section);
         }
 
-        if ('report' === $reportType) {
-            $report->updateSectionsStatusCache($report->getAvailableSections());
-        }
+        $report->updateSectionsStatusCache($report->getAvailableSections());
 
         $this->em->flush();
 
