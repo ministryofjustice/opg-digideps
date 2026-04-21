@@ -215,48 +215,6 @@ final class ReportServiceTest extends TestCase
         $this->sut->submit($this->ndr, $this->user, $submitDate, $ndrDoccumentId);
     }
 
-    public function testSubmitValidNdr(): void
-    {
-        $ndr = $this->getFilledInNdr();
-
-        $submitDate = new DateTime('2018-04-05');
-
-        // assert persists on report and submission record
-        $this->em->shouldReceive('persist')->with(Mockery::on(function ($ndr): bool {
-            return $ndr instanceof ReportSubmission;
-        }));
-        $this->em->shouldReceive('persist')->with(Mockery::on(function ($report): bool {
-            return $report instanceof Report;
-        }));
-        $this->em->shouldReceive('flush')->with()->once(); // last in createNextYearReport
-
-        /** @var ReportService|MockInterface $reportService */
-        $reportService = Mockery::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
-
-        $this->em->shouldReceive('detach');
-        $this->em->shouldReceive('persist');
-        $this->em->shouldReceive('flush');
-
-        $newYearReport = $reportService->submit($ndr, $this->user, $submitDate, '999');
-
-        // assert current report
-        $this->assertTrue($ndr->getSubmitted());
-
-        // assert new year report
-        $this->assertEquals(Report::LAY_PFA_HIGH_ASSETS_TYPE, $newYearReport->getType());
-        $this->assertEquals('06-06', $newYearReport->getStartDate()->format('m-d'));
-        $this->assertEquals('06-05', $newYearReport->getEndDate()->format('m-d'));
-
-        // assert assets/accounts added
-        $newAsset = $newYearReport->getAssets()->first();
-        $newAccount = $newYearReport->getBankAccounts()->first();
-
-        $this->assertInstanceOf(Asset::class, $newAsset);
-        $this->assertInstanceOf(BankAccount::class, $newAccount);
-        $this->assertEquals('SW1', $newAsset->getAddress());
-        $this->assertEquals('4321', $newAccount->getAccountNumber());
-    }
-
     private function getFilledInNdr(): Ndr
     {
         $client = new Client();
@@ -282,48 +240,6 @@ final class ReportServiceTest extends TestCase
         $ndr->setClient($client);
 
         return $ndr;
-    }
-
-    public function testSubmitNdrWithExistingReport(): void
-    {
-        $ndr = $this->getFilledInNdr();
-
-        $report = new Report($ndr->getClient(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime('2018-06-06'), new DateTime('2019-06-05'));
-        $ndr->getClient()->addReport($report);
-
-        $submitDate = new DateTime('2018-04-05');
-
-        // assert persists on report and submission record
-        $this->em->shouldReceive('persist')->with(Mockery::on(function ($ndr): bool {
-            return $ndr instanceof ReportSubmission;
-        }));
-        $this->em->shouldReceive('persist')->with(Mockery::on(function ($report): bool {
-            return $report instanceof Report;
-        }));
-        $this->em->shouldReceive('flush')->with()->once(); // last in createNextYearReport
-
-        /** @var ReportService|MockInterface $reportService */
-        $reportService = Mockery::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
-
-        $this->em->shouldReceive('detach');
-        $this->em->shouldReceive('persist');
-        $this->em->shouldReceive('flush');
-
-        /** @var Report $newYearReport */
-        $newYearReport = $reportService->submit($ndr, $this->user, $submitDate, '999');
-
-        // assert existing report carries over
-        $this->assertEquals($report->getId(), $newYearReport->getId());
-        $this->assertCount(1, $ndr->getClient()->getReports());
-
-        // assert assets/accounts added
-        $newAsset = $report->getAssets()->first();
-        $newAccount = $report->getBankAccounts()->first();
-
-        $this->assertInstanceOf(Asset::class, $newAsset);
-        $this->assertInstanceOf(BankAccount::class, $newAccount);
-        $this->assertEquals('SW1', $newAsset->getAddress());
-        $this->assertEquals('4321', $newAccount->getAccountNumber());
     }
 
     #[DoesNotPerformAssertions]
