@@ -6,6 +6,10 @@ data "aws_secretsmanager_secret" "database_password" {
   name = join("/", compact([var.secrets_prefix, "database-password"]))
 }
 
+data "aws_secretsmanager_secret" "application_db_password" {
+  name = join("/", compact([var.secrets_prefix, "application-db-password"]))
+}
+
 data "aws_secretsmanager_secret_version" "database_password" {
   secret_id = data.aws_secretsmanager_secret.database_password.id
 }
@@ -54,7 +58,7 @@ data "aws_secretsmanager_secret" "anonymise-default-pw" {
   name = "anonymisation-default-user-pw"
 }
 
-##### Shared Application KMS key for logs #####
+##### Shared Application KMS key for secrets #####
 data "aws_kms_alias" "cloudwatch_application_secret_encryption" {
   name = "alias/digideps_secret_encryption_key"
 }

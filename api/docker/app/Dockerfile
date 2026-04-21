@@ -117,6 +117,7 @@ USER www-data
 
 CMD ["sh", "-c", "/var/www/check_processes.sh & \
     /var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
+    && /var/www/scripts/setup_application_sql_query.sh \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
     && echo 'Image Target: runtime' \
@@ -157,6 +158,7 @@ USER www-data
 
 CMD ["sh", "-c", "/var/www/check_processes.sh & \
     /var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
+    && /var/www/scripts/setup_application_sql_query.sh \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
     && echo 'Image Target: devtools' \
@@ -171,6 +173,7 @@ USER root
 
 CMD ["sh", "-c", "/var/www/check_processes.sh & \
     /var/www/wait-for-db.sh -h $DATABASE_HOSTNAME -p $DATABASE_PORT -t $TIMEOUT \
+    && /var/www/scripts/setup_application_sql_query.sh \
     && php app/console doctrine:migrations:migrate --allow-no-migration --no-interaction \
     && php app/console doctrine:migrations:up-to-date \
     && echo 'Image Target: devtools-admin' \

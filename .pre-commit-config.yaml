@@ -18,7 +18,11 @@ repos:
       - id: trailing-whitespace # trims trailing whitespace.
 
   - repo: https://github.com/antonbabenko/pre-commit-terraform
+<<<<<<< DDLS-666
+    rev: v1.105.0
+=======
     rev: d0e12caebb2ab0ee8bf98181c8bfe9702bca103d # frozen: v1.105.0
+>>>>>>> main
     hooks:
       - id: terraform_fmt
       - id: terraform_tflint
@@ -52,7 +56,11 @@ repos:
       - id: no-go-testing
 
   - repo: https://github.com/ambv/black
+<<<<<<< DDLS-666
+    rev: 25.12.0
+=======
     rev: c6755bb741b6481d6b3d3bb563c83fa060db96c9 # frozen: 26.3.1
+>>>>>>> main
     hooks:
       - id: black
 
