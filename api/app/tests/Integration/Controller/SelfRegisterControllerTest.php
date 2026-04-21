@@ -121,7 +121,6 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertEquals('Zac', $user->getFirstname());
         $this->assertEquals('SW1', $user->getAddressPostcode());
         $this->assertEquals('gooduser@example.com', $user->getEmail());
-        $this->assertEquals(null, $user->getNdrEnabled());
 
         /** @var Client $theClient */
         $theClient = $user->getClients()->first();
@@ -321,7 +320,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                     'updated_at' => null,
                     'order_date' => '2010-03-30T00:00:00+01:00',
                     'is_co_deputy' => null,
-                    'ndr' => null,
+                    'ndr' => null, // TODO Remove NDR reference once entity has been removed.
                     'hybrid' => null,
                     'created_at' => $now->format('c'),
                 ],
@@ -400,7 +399,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                     'updated_at' => null,
                     'order_date' => '2010-03-30T00:00:00+01:00',
                     'is_co_deputy' => null,
-                    'ndr' => null,
+                    'ndr' => null, // TODO Remove NDR reference once entity has been removed.
                     'hybrid' => null,
                     'created_at' => $now->format('c'),
                 ],
@@ -479,7 +478,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                     'updated_at' => null,
                     'order_date' => '2010-03-30T00:00:00+01:00',
                     'is_co_deputy' => null,
-                    'ndr' => null,
+                    'ndr' => null, // TODO Remove NDR reference once entity has been removed.
                     'hybrid' => null,
                     'created_at' => $now->format('c'),
                 ],

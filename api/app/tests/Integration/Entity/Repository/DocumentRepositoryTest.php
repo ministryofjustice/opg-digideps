@@ -9,7 +9,6 @@ use DateTime;
 use DateInterval;
 use DateTimeZone;
 use App\Entity\Client;
-use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
@@ -54,7 +53,7 @@ class DocumentRepositoryTest extends KernelTestCase
     private function createAndSubmitReportWithSupportingDoc(DateTime $submittedOn): array
     {
         $client = $this->generateAndPersistClient('abc-123');
-        $report = $this->generateAndPersistReport($client, false);
+        $report = $this->generateAndPersistReport($client);
         $reportPdfDoc = $this->generateAndPersistDocument($report, true, 'QUEUED', $this->firstJulyPm, false);
         $supportingDoc = $this->generateAndPersistDocument($report, false, 'QUEUED', $this->firstJulyAm, false);
 
@@ -74,19 +73,14 @@ class DocumentRepositoryTest extends KernelTestCase
         return $client;
     }
 
-    private function generateAndPersistReport(Client $client, bool $isNdr): Report|Ndr
+    private function generateAndPersistReport(Client $client): Report
     {
-        if ($isNdr) {
-            $report = (new Ndr($client))->setStartDate($this->firstJulyAm);
-        } else {
-            $report = (new Report(
-                $client,
-                Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,
-                $this->firstJulyAm,
-                $this->firstJulyAm->add(new DateInterval('P364D'))
-            )
-            );
-        }
+        $report = (new Report(
+            $client,
+            Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,
+            $this->firstJulyAm,
+            $this->firstJulyAm->add(new DateInterval('P364D'))
+        ));
 
         self::$entityManager->persist($report);
 
@@ -163,7 +157,7 @@ class DocumentRepositoryTest extends KernelTestCase
         Document $document,
         Client $client,
         ReportSubmission $submission,
-        Report|Ndr $report,
+        Report $report,
     ): void {
         $docId = $document->getId();
 
@@ -185,7 +179,7 @@ class DocumentRepositoryTest extends KernelTestCase
     private function createFailedDocumentSubmission($status, $createdOn, $caseNumber, $archived): void
     {
         $client = $this->generateAndPersistClient('abc-123-' . $caseNumber);
-        $report = $this->generateAndPersistReport($client, false);
+        $report = $this->generateAndPersistReport($client);
         $reportPdfDoc = $this->generateAndPersistDocument($report, true, $status, $this->firstJulyAm, false);
         $supportingDoc = $this->generateAndPersistDocument($report, false, $status, $this->firstJulyAm, false);
         $reportSubmission = $this->submitReport($report, $this->firstJulyPm, $reportPdfDoc, $supportingDoc);
@@ -207,19 +201,6 @@ class DocumentRepositoryTest extends KernelTestCase
         }
 
         self::$entityManager->flush();
-    }
-
-    private function createAndSubmitNdr(): array
-    {
-        $client = $this->generateAndPersistClient('abc-123');
-        $ndr = $this->generateAndPersistReport($client, true);
-        $reportPdfDoc = $this->generateAndPersistDocument($ndr, true, 'QUEUED', $this->firstJulyAm, false);
-
-        $reportSubmission = $this->submitReport($ndr, $this->secondJulyPm, $reportPdfDoc, null);
-
-        self::$entityManager->flush();
-
-        return [$client, $ndr, $reportPdfDoc, $reportSubmission];
     }
 
     private function createAndSubmitAdditionalDocuments(ReportInterface $report, DateTime $submittedOn)
@@ -367,19 +348,6 @@ class DocumentRepositoryTest extends KernelTestCase
         $documents = self::$sut->getQueuedDocumentsAndSetToInProgress(100);
 
         self::assertEquals('abc-123-abc-123', $documents[$supportingDoc->getId()]['report_submission_uuid']);
-    }
-
-    public function testGetQueuedDocumentsAndSetToInProgressSupportsNdrs()
-    {
-        [$client, $ndr, $reportPdfDoc, $reportSubmission] = $this->createAndSubmitNdr();
-
-        $documents = self::$sut->getQueuedDocumentsAndSetToInProgress(100);
-
-        $this->assertDataMatchesEntity($documents, $reportPdfDoc, $client, $reportSubmission, $ndr);
-
-        self::$entityManager->refresh($reportPdfDoc);
-
-        self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $reportPdfDoc->getSynchronisationStatus());
     }
 
     public function testAdditionalDocumentsSubmissionsUseOriginalSubmissionUUID(): void

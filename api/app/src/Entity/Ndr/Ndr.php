@@ -16,6 +16,8 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 /**
+ * @ORM\Entity
+ *
  * @ORM\Table(name="odr",
  *     indexes={
  *
