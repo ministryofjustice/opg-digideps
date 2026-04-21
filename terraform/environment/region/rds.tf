@@ -25,32 +25,32 @@ module "api_aurora" {
   max_acu                             = var.account.db.max_acu
 }
 
-module "database" {
-  source = "./modules/aurora"
-  #  count                               = local.environment == "preproduction" ? 1 : 0
-  aurora_serverless                   = true
-  account_id                          = data.aws_caller_identity.current.account_id
-  apply_immediately                   = var.account.db.deletion_protection ? false : true
-  cluster_identifier                  = "digideps"
-  ca_cert_identifier                  = "rds-ca-rsa2048-g1"
-  db_subnet_group_name                = "data-subnet-group-${var.account.environment.name}"
-  database_name                       = "api"
-  engine_version                      = var.account.db.psql_engine_version
-  master_username                     = "digidepsmaster"
-  master_password                     = data.aws_secretsmanager_secret_version.database_password.secret_string
-  instance_count                      = var.account.db.aurora_instance_count
-  instance_class                      = "db.t3.medium"
-  preferred_backup_window             = var.account.environment.name == "preproduction" ? "22:00-00:00" : "23:00-23:30"
-  kms_key_id                          = data.aws_kms_alias.rds_encryption_key.arn
-  skip_final_snapshot                 = var.account.db.deletion_protection ? false : true
-  vpc_security_group_ids              = [module.api_rds_security_group.id]
-  deletion_protection                 = var.account.db.deletion_protection ? true : false
-  tags                                = local.environment == "preproduction" ? merge(var.default_tags, { backup_to_vault = "true" }, ) : merge(var.default_tags, { backup_to_vault = "false" }, )
-  log_group                           = aws_cloudwatch_log_group.api_cluster.name
-  iam_database_authentication_enabled = true
-  min_acu                             = var.account.db.min_acu
-  max_acu                             = var.account.db.max_acu
-}
+#module "database" {
+#  source = "./modules/aurora"
+#  #  count                               = local.environment == "preproduction" ? 1 : 0
+#  aurora_serverless                   = true
+#  account_id                          = data.aws_caller_identity.current.account_id
+#  apply_immediately                   = var.account.db.deletion_protection ? false : true
+#  cluster_identifier                  = "digideps"
+#  ca_cert_identifier                  = "rds-ca-rsa2048-g1"
+#  db_subnet_group_name                = "data-subnet-group-${var.account.environment.name}"
+#  database_name                       = "api"
+#  engine_version                      = var.account.db.psql_engine_version
+#  master_username                     = "digidepsmaster"
+#  master_password                     = data.aws_secretsmanager_secret_version.database_password.secret_string
+#  instance_count                      = var.account.db.aurora_instance_count
+#  instance_class                      = "db.t3.medium"
+#  preferred_backup_window             = var.account.environment.name == "preproduction" ? "22:00-00:00" : "23:00-23:30"
+#  kms_key_id                          = data.aws_kms_alias.rds_encryption_key.arn
+#  skip_final_snapshot                 = var.account.db.deletion_protection ? false : true
+#  vpc_security_group_ids              = [module.api_rds_security_group.id]
+#  deletion_protection                 = var.account.db.deletion_protection ? true : false
+#  tags                                = local.environment == "preproduction" ? merge(var.default_tags, { backup_to_vault = "true" }, ) : merge(var.default_tags, { backup_to_vault = "false" }, )
+#  log_group                           = aws_cloudwatch_log_group.api_cluster.name
+#  iam_database_authentication_enabled = true
+#  min_acu                             = var.account.db.min_acu
+#  max_acu                             = var.account.db.max_acu
+#}
 
 locals {
   db = {
@@ -73,9 +73,9 @@ data "aws_kms_key" "rds" {
 }
 
 ##### Shared KMS key for RDS #####
-data "aws_kms_alias" "rds_encryption_key" {
-  name = "alias/digideps_rds_encryption_key"
-}
+#data "aws_kms_alias" "rds_encryption_key" {
+#  name = "alias/digideps_rds_encryption_key"
+#}
 
 resource "aws_cloudwatch_log_group" "api_cluster" {
   name              = "/aws/rds/cluster/api-${local.environment}/postgresql"
