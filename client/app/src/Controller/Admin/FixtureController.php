@@ -174,17 +174,22 @@ class FixtureController extends AbstractController
             }
 
             if ($submittedFormData['orgSizeClients'] > 1) {
-                $this->restClient->post(
-                    'v2/fixture/create-additional-clients',
-                    json_encode([
-                        'deputyType' => $submittedFormData['deputyType'],
-                        'deputyEmail' => $formAndRequestData['deputyEmail'],
-                        'reportType' => $submittedFormData['reportType'],
-                        'reportStatus' => $submittedFormData['reportStatus'],
-                        'orgSizeClients' => $submittedFormData['orgSizeClients'] - 1,
-                    ]),
-                    ['timeout' => 1000]
-                );
+                $numberOfAdditionalClientsToCreate = min($submittedFormData['orgSizeClients'] - 1, 9);
+                $remainingAdditionalClientsToCreate = $submittedFormData['orgSizeClients'] - 1;
+                while ($remainingAdditionalClientsToCreate > 0) {
+                    $this->restClient->post(
+                        'v2/fixture/create-additional-clients',
+                        json_encode([
+                            'deputyType' => $submittedFormData['deputyType'],
+                            'deputyEmail' => $formAndRequestData['deputyEmail'],
+                            'reportType' => $submittedFormData['reportType'],
+                            'reportStatus' => $submittedFormData['reportStatus'],
+                            'orgSizeClients' => $numberOfAdditionalClientsToCreate,
+                        ]),
+                        ['timeout' => 1000]
+                    );
+                    $remainingAdditionalClientsToCreate -= $numberOfAdditionalClientsToCreate;
+                }
             }
 
             if (array_key_exists('deputyIds', $response)) {
