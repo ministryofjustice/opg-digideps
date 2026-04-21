@@ -263,10 +263,6 @@ services:
         class: App\Repository\DeputyRepository
         tags: ["doctrine.repository_service"]
 
-    App\Repository\NdrRepository:
-        class: App\Repository\NdrRepository
-        tags: ["doctrine.repository_service"]
-
     App\Repository\NoteRepository:
         class: App\Repository\NoteRepository
         tags: ["doctrine.repository_service"]
@@ -305,14 +301,6 @@ services:
 
     App\Repository\BankAccountRepository:
         class: App\Repository\BankAccountRepository
-        tags: ["doctrine.repository_service"]
-
-    App\Repository\NdrAssetRepository:
-        class: App\Repository\NdrAssetRepository
-        tags: ["doctrine.repository_service"]
-
-    App\Repository\NdrBankAccountRepository:
-        class: App\Repository\NdrBankAccountRepository
         tags: ["doctrine.repository_service"]
 
     App\Service\Auth\AuthService:

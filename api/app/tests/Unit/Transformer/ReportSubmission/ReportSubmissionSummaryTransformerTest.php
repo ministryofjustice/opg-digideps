@@ -64,62 +64,6 @@ final class ReportSubmissionSummaryTransformerTest extends TestCase
         $this->assertCount(0, $this->result);
     }
 
-    public function testTransformsAReportSubmission(): void
-    {
-        $scanDate = new DateTime('2013-01-01');
-        $this->dateTimeProvider->method('getDateTime')->willReturn($scanDate);
-
-        $ndrReportSubmission = $this->buildReportSubmissionWith([
-            'id' => 1,
-            'report_type' => Ndr::class,
-            'created_on' => new DateTime('2012-01-01'),
-            'report' => [
-                'client' => ['case_number' => '132'],
-            ],
-            'documents' => [
-                ['filename' => 'NDR-report.pdf', 'is_report_pdf' => true],
-            ],
-        ]);
-
-        $reportSubmission = $this->buildReportSubmissionWith([
-            'id' => 2,
-            'report_type' => Report::class,
-            'created_on' => new DateTime('2012-01-02'),
-            'report' => [
-                'client' => ['case_number' => '133'],
-            ],
-            'documents' => [
-                ['filename' => 'full-report-transactions.pdf.csv', 'is_report_pdf' => true],
-                ['filename' => 'full-report.pdf', 'is_report_pdf' => true],
-                ['filename' => 'supporting-document.pdf', 'is_report_pdf' => false],
-            ],
-        ]);
-
-        $expectedRows = [
-            [
-                'id' => 1,
-                'case_number' => 132,
-                'date_received' => '2012-01-01',
-                'scan_date' => '2013-01-01',
-                'document_id' => 'NDR-report.pdf',
-                'document_type' => 'Reports',
-                'form_type' => 'Reports General',
-            ],
-            [
-                'id' => 2,
-                'case_number' => 133,
-                'date_received' => '2012-01-02',
-                'scan_date' => '2013-01-01',
-                'document_id' => 'full-report.pdf',
-                'document_type' => 'Reports',
-                'form_type' => 'Reports General',
-            ],
-        ];
-
-        $this->result = $this->sut->transform([$ndrReportSubmission, $reportSubmission]);
-        $this->assertRowsContain($expectedRows);
-    }
-
     public function testReturnsNullDocumentIdIfReportDocumentNotFound(): void
     {
         $scanDate = new DateTime('2013-01-01');
