@@ -4631,16 +4631,6 @@ parameters:
 			path: src/EventDispatcher/ObservableEventDispatcher.php
 
 		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Ndr\\\\Ndr\\>\\:\\:addDebtsToNdrIfMissing\\(\\)\\.$#"
-			count: 1
-			path: src/EventListener/DoctrineListener.php
-
-		-
-			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\EntityRepository\\<App\\\\Entity\\\\Ndr\\\\Ndr\\>\\:\\:addIncomeBenefitsToNdrIfMissing\\(\\)\\.$#"
-			count: 1
-			path: src/EventListener/DoctrineListener.php
-
-		-
 			message: "#^Call to method updateArchivedStatus\\(\\) on an unknown class App\\\\Entity\\\\Repository\\\\ReportSubmissionRepository\\.$#"
 			count: 1
 			path: src/EventListener/DoctrineListener.php
@@ -4676,17 +4666,7 @@ parameters:
 			path: src/EventListener/DoctrineListener.php
 
 		-
-			message: "#^Parameter \\#1 \\$noAssetToAdd of method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:setNoAssetToAdd\\(\\) expects bool, null given\\.$#"
-			count: 1
-			path: src/EventListener/DoctrineListener.php
-
-		-
 			message: "#^Parameter \\#1 \\$noAssetToAdd of method App\\\\Entity\\\\Report\\\\Report\\:\\:setNoAssetToAdd\\(\\) expects bool, null given\\.$#"
-			count: 1
-			path: src/EventListener/DoctrineListener.php
-
-		-
-			message: "#^Parameter \\#1 \\$paidForAnything of method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:setPaidForAnything\\(\\) expects string, null given\\.$#"
 			count: 1
 			path: src/EventListener/DoctrineListener.php
 
@@ -5036,11 +5016,6 @@ parameters:
 			path: src/Repository/DocumentRepository.php
 
 		-
-			message: "#^Method App\\\\Repository\\\\DocumentRepository\\:\\:buildReportSubmissionsQuery\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/DocumentRepository.php
-
-		-
 			message: "#^Method App\\\\Repository\\\\DocumentRepository\\:\\:flagSubmissionsContainingReportPdfs\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Repository/DocumentRepository.php
@@ -5068,11 +5043,6 @@ parameters:
 		-
 			message: "#^Method App\\\\Repository\\\\DocumentRepository\\:\\:updateSupportingDocumentStatusByReportSubmissionIds\\(\\) has no return type specified\\.$#"
 			count: 1
-			path: src/Repository/DocumentRepository.php
-
-		-
-			message: "#^Parameter \\#1 \\$datetime of class DateTime constructor expects string, mixed given\\.$#"
-			count: 2
 			path: src/Repository/DocumentRepository.php
 
 		-
@@ -5124,66 +5094,6 @@ parameters:
 			message: "#^Method App\\\\Repository\\\\MoneyTransactionShortRepository\\:\\:retrieveSoftDeleted\\(\\) has parameter \\$reportId with no type specified\\.$#"
 			count: 1
 			path: src/Repository/MoneyTransactionShortRepository.php
-
-		-
-			message: "#^Class App\\\\Repository\\\\NdrAssetRepository extends generic class Doctrine\\\\Bundle\\\\DoctrineBundle\\\\Repository\\\\ServiceEntityRepository but does not specify its types\\: T$#"
-			count: 1
-			path: src/Repository/NdrAssetRepository.php
-
-		-
-			message: "#^Class App\\\\Repository\\\\NdrBankAccountRepository extends generic class Doctrine\\\\Bundle\\\\DoctrineBundle\\\\Repository\\\\ServiceEntityRepository but does not specify its types\\: T$#"
-			count: 1
-			path: src/Repository/NdrBankAccountRepository.php
-
-		-
-			message: "#^Class App\\\\Repository\\\\NdrClientBenefitsCheckRepository extends generic class Doctrine\\\\Bundle\\\\DoctrineBundle\\\\Repository\\\\ServiceEntityRepository but does not specify its types\\: T$#"
-			count: 1
-			path: src/Repository/NdrClientBenefitsCheckRepository.php
-
-		-
-			message: "#^Method App\\\\Repository\\\\NdrClientBenefitsCheckRepository\\:\\:persistAndFlush\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/NdrClientBenefitsCheckRepository.php
-
-		-
-			message: "#^Class App\\\\Repository\\\\NdrMoneyReceivedOnClientsBehalfRepository extends generic class Doctrine\\\\Bundle\\\\DoctrineBundle\\\\Repository\\\\ServiceEntityRepository but does not specify its types\\: T$#"
-			count: 1
-			path: src/Repository/NdrMoneyReceivedOnClientsBehalfRepository.php
-
-		-
-			message: "#^Method App\\\\Repository\\\\NdrMoneyReceivedOnClientsBehalfRepository\\:\\:delete\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Repository/NdrMoneyReceivedOnClientsBehalfRepository.php
-
-		-
-			message: "#^Parameter \\#1 \\$object of method Doctrine\\\\Persistence\\\\ObjectManager\\:\\:remove\\(\\) expects object, App\\\\Entity\\\\Ndr\\\\MoneyReceivedOnClientsBehalf\\|null given\\.$#"
-			count: 1
-			path: src/Repository/NdrMoneyReceivedOnClientsBehalfRepository.php
-
-		-
-			message: "#^Class App\\\\Repository\\\\NdrRepository extends generic class Doctrine\\\\Bundle\\\\DoctrineBundle\\\\Repository\\\\ServiceEntityRepository but does not specify its types\\: T$#"
-			count: 1
-			path: src/Repository/NdrRepository.php
-
-		-
-			message: "#^Parameter \\#1 \\$oneOff of method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:addOneOff\\(\\) expects array\\<App\\\\Entity\\\\Ndr\\\\Traits\\\\IncomeBenefit\\>, App\\\\Entity\\\\Ndr\\\\OneOff given\\.$#"
-			count: 1
-			path: src/Repository/NdrRepository.php
-
-		-
-			message: "#^Parameter \\#1 \\$stateBenefits of method App\\\\Entity\\\\Ndr\\\\Ndr\\:\\:addStateBenefits\\(\\) expects array\\<App\\\\Entity\\\\Ndr\\\\Traits\\\\IncomeBenefit\\>, App\\\\Entity\\\\Ndr\\\\StateBenefit given\\.$#"
-			count: 1
-			path: src/Repository/NdrRepository.php
-
-		-
-			message: "#^Parameter \\#1 \\$value of function count expects array\\|Countable, mixed given\\.$#"
-			count: 1
-			path: src/Repository/NdrRepository.php
-
-		-
-			message: "#^Parameter \\#4 \\$amount of class App\\\\Entity\\\\Ndr\\\\Debt constructor expects float, null given\\.$#"
-			count: 1
-			path: src/Repository/NdrRepository.php
 
 		-
 			message: "#^Class App\\\\Repository\\\\NoteRepository extends generic class Doctrine\\\\Bundle\\\\DoctrineBundle\\\\Repository\\\\ServiceEntityRepository but does not specify its types\\: T$#"
@@ -6136,11 +6046,6 @@ parameters:
 			path: src/Service/ReportService.php
 
 		-
-			message: "#^Method App\\\\Service\\\\ReportService\\:\\:cloneAsset\\(\\) never returns App\\\\Entity\\\\Ndr\\\\AssetOther so it can be removed from the return type\\.$#"
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
 			message: "#^Method App\\\\Service\\\\ReportService\\:\\:clonePersistentResources\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Service/ReportService.php
@@ -6871,11 +6776,6 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: "#^Cannot access offset 'ndr' on mixed\\.$#"
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: "#^Cannot access offset 'phone' on mixed\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
@@ -6887,6 +6787,11 @@ parameters:
 
 		-
 			message: "#^Cannot call method first\\(\\) on array\\<App\\\\Entity\\\\Organisation\\>\\.$#"
+			count: 1
+			path: src/v2/Fixture/Controller/FixtureController.php
+
+		-
+			message: "#^Method App\\\\v2\\\\Fixture\\\\Controller\\\\FixtureController\\:\\:createNdr\\(\\) is unused\\.$#"
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
