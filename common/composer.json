@@ -5,7 +5,7 @@
   "license": "MIT",
   "minimum-stability": "stable",
   "require": {
-    "php": "^8.4",
+    "php": "^8.4.2",
     "jms/serializer-bundle": "^5.5.2",
     "symfony/form": "^6.4.32",
     "symfony/validator": "^6.4.30"
