@@ -158,22 +158,6 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Ndr\Ndr
-     */
-    public function createNdr(Client $client, array $settersMap = [])
-    {
-        $ndr = new EntityDir\Ndr\Ndr($client);
-
-        foreach ($settersMap as $k => $v) {
-            $ndr->$k($v);
-        }
-
-        $this->em->persist($ndr);
-
-        return $ndr;
-    }
-
-    /**
      * @return EntityDir\Report\Document
      *
      * @throws ORMException
@@ -288,26 +272,6 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Ndr\BankAccount
-     */
-    public function createNdrAccount(EntityDir\Ndr\Ndr $ndr, array $settersMap = [])
-    {
-        $ret = new EntityDir\Ndr\BankAccount();
-        $ret->setNdr($ndr);
-        $ret->setAccountNumber('1234')
-            ->setBank('hsbc')
-            ->setSortCode('101010');
-
-        foreach ($settersMap as $k => $v) {
-            $ret->$k($v);
-        }
-
-        $this->em->persist($ret);
-
-        return $ret;
-    }
-
-    /**
      * @return EntityDir\Report\Contact
      */
     public function createContact(Report $report, array $settersMap = [])
@@ -342,23 +306,6 @@ class Fixtures
     }
 
     /**
-     * @return EntityDir\Ndr\VisitsCare
-     */
-    public function createNdrVisitsCare(EntityDir\Ndr\Ndr $ndr, array $settersMap = [])
-    {
-        $vc = new EntityDir\Ndr\VisitsCare();
-        $vc->setNdr($ndr);
-        $vc->setDoYouLiveWithClient('yes');
-
-        foreach ($settersMap as $k => $v) {
-            $vc->$k($v);
-        }
-        $this->em->persist($vc);
-
-        return $vc;
-    }
-
-    /**
      * @return EntityDir\Report\Asset
      */
     public function createAsset($type, Report $report, array $settersMap = [])
@@ -372,36 +319,6 @@ class Fixtures
         $this->em->persist($asset);
 
         return $asset;
-    }
-
-    /**
-     * @return EntityDir\Ndr\Asset
-     */
-    public function createNdrAsset($type, EntityDir\Ndr\Ndr $ndr, array $settersMap = [])
-    {
-        $asset = EntityDir\Ndr\Asset::factory($type);
-        $asset->setNdr($ndr);
-
-        foreach ($settersMap as $k => $v) {
-            $asset->$k($v);
-        }
-        $this->em->persist($asset);
-
-        return $asset;
-    }
-
-    /**
-     * @return EntityDir\Ndr\Expense
-     */
-    public function createNdrExpense($type, EntityDir\Ndr\Ndr $ndr, array $settersMap = [])
-    {
-        $record = new EntityDir\Ndr\Expense($ndr);
-        foreach ($settersMap as $k => $v) {
-            $record->$k($v);
-        }
-        $this->em->persist($record);
-
-        return $record;
     }
 
     /**

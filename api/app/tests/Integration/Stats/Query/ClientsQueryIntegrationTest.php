@@ -5,7 +5,6 @@ namespace App\Tests\Integration\Service\Stats\Query;
 use App\Tests\Integration\ApiIntegrationTestCase;
 use DateTime;
 use App\Entity\Client;
-use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Service\Stats\Query\ClientsQuery;
 use App\Service\Stats\StatsQueryParameters;
@@ -16,8 +15,6 @@ class ClientsQueryIntegrationTest extends ApiIntegrationTestCase
     {
         parent::setUpBeforeClass();
 
-        static::givenClientWithReportsOfType(['NDR', '102']);
-        static::givenClientWithReportsOfType(['NDR', '102']);
         static::givenClientWithReportsOfType(['102', '102']);
         static::givenClientWithReportsOfType(['103']);
         static::givenClientWithReportsOfType(['103']);
@@ -35,16 +32,12 @@ class ClientsQueryIntegrationTest extends ApiIntegrationTestCase
     {
         $client = new Client();
         foreach ($reportTypes as $reportType) {
-            if ('NDR' === $reportType) {
-                $report = new Ndr($client);
-            } else {
-                $report = new Report(
-                    $client,
-                    $reportType,
-                    new DateTime('2019-08-01'),
-                    new DateTime('2020-08-01')
-                );
-            }
+            $report = new Report(
+                $client,
+                $reportType,
+                new DateTime('2019-08-01'),
+                new DateTime('2020-08-01')
+            );
 
             self::$entityManager->persist($report);
         }
@@ -68,7 +61,7 @@ class ClientsQueryIntegrationTest extends ApiIntegrationTestCase
         foreach ($result as $metric) {
             switch ($metric['deputyType']) {
                 case 'lay':
-                    $this->assertEquals(5, $metric['amount']);
+                    $this->assertEquals(3, $metric['amount']);
                     break;
                 case 'pa':
                 case 'prof':
@@ -87,13 +80,13 @@ class ClientsQueryIntegrationTest extends ApiIntegrationTestCase
         ]));
 
         // Assert an array result for each report type submitted
-        $this->assertCount(7, $result);
+        $this->assertCount(6, $result);
 
         // Assert correct amount is returned for each report type
         foreach ($result as $metric) {
             switch ($metric['reportType']) {
                 case '102':
-                    $this->assertEquals(3, $metric['amount']);
+                    $this->assertEquals(1, $metric['amount']);
                     break;
                 case '103':
                 case '102-6':
