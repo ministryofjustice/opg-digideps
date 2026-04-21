@@ -26,9 +26,9 @@ module "api_aurora" {
 }
 
 module "database" {
-  source                              = "./modules/aurora"
-  count                               = local.environment == "preproduction" ? 1 : 0
-  aurora_serverless                   = var.account.db.aurora_serverless
+  source = "./modules/aurora"
+  #  count                               = local.environment == "preproduction" ? 1 : 0
+  aurora_serverless                   = true
   account_id                          = data.aws_caller_identity.current.account_id
   apply_immediately                   = var.account.db.deletion_protection ? false : true
   cluster_identifier                  = "digideps"
