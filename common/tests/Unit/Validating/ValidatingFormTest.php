@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OPG\Digideps\Tests\Common\Validating;
+namespace Tests\OPG\Digideps\Common\Unit\Validating;
 
 use OPG\Digideps\Common\Validating\ValidatingForm;
 use PHPUnit\Framework\TestCase;

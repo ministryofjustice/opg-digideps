@@ -1,22 +1,23 @@
 <?php
 
-namespace App\Logger;
+namespace OPG\Digideps\Common\Logger;
 
-use Monolog\Formatter\JsonFormatter as MonologJsonFormatter;
+use Monolog\Formatter\JsonFormatter;
+use Monolog\LogRecord;
 
-class OpgJsonFormatter extends MonologJsonFormatter
+class OpgJsonFormatter extends JsonFormatter
 {
-    public function format(array $record): string
+    public function format(LogRecord $record): string
     {
         $caller = $this->getCallerInfo();
         $file = $caller['file'] ?? 'unknown file';
         $line = $caller['line'] ?? 'unknown line';
 
         $formattedRecord = [
-            'time' => $record['datetime']->format('Y-m-d\TH:i:s\Z'),
-            'level' => strtoupper($record['level_name']),
-            'msg' => $record['message'],
-            'service_name' => 'client',
+            'time' => $record->datetime->format('Y-m-d\TH:i:s\Z'),
+            'level' => strtoupper($record->level->name),
+            'msg' => $record->message,
+            'service_name' => $record->channel,
             'request' => [
                 'method' => $_SERVER['REQUEST_METHOD'] ?? 'UNKNOWN',
                 'path' => $_SERVER['REQUEST_URI'] ?? 'UNKNOWN',
@@ -45,7 +46,7 @@ class OpgJsonFormatter extends MonologJsonFormatter
             ) {
                 return [
                     'file' => $trace['file'],
-                    'line' => $trace['line'],
+                    'line' => $trace['line'] ?? '?',
                 ];
             }
         }
