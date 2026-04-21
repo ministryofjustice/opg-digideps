@@ -9,6 +9,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
+use PDO;
 
 class DocumentRepository extends ServiceEntityRepository
 {
@@ -34,12 +35,11 @@ class DocumentRepository extends ServiceEntityRepository
         r.type as report_type,
         rs.opg_uuid as opg_uuid,
         rs.created_on as report_submission_created_on,
-        coalesce(c1.case_number, c2.case_number) AS case_number
+        c1.case_number AS case_number
         FROM document as d
         LEFT JOIN report as r on d.report_id = r.id
         LEFT JOIN report_submission as rs on d.report_submission_id  = rs.id
         LEFT JOIN client as c1 on r.client_id = c1.id
-        LEFT JOIN client as c2 on o.client_id = c2.id
         WHERE synchronisation_status='QUEUED'
         ORDER BY is_report_pdf DESC, report_submission_id ASC
         LIMIT $limit;";
@@ -78,11 +78,12 @@ class DocumentRepository extends ServiceEntityRepository
         }
 
         if (count($documents) > 0) {
-            $getReportSubmissionsQuery = $this->buildReportSubmissionsQuery(
-                array_values(array_filter(array_unique($reportIds)))
-            );
+            $reportIdsFilter = array_values(array_filter(array_unique($reportIds)));
+            $reportIdsString = implode(",", $reportIdsFilter);
 
-            $submissionStmt = $conn->prepare($getReportSubmissionsQuery);
+            $sql = "SELECT * FROM report_submission WHERE report_id IN ({$reportIdsString}) ORDER BY created_on";
+
+            $submissionStmt = $conn->prepare($sql);
             $result = $submissionStmt->executeQuery();
             $submissions = $result->fetchAllAssociative();
 
@@ -116,12 +117,11 @@ class DocumentRepository extends ServiceEntityRepository
         r.type AS report_type,
         rs.opg_uuid AS opg_uuid,
         rs.created_on AS report_submission_created_on,
-        COALESCE(c1.case_number, c2.case_number) AS case_number
+        c1.case_number AS case_number
         FROM document AS d
         LEFT JOIN report AS r on d.report_id = r.id
         LEFT JOIN report_submission AS rs on d.report_submission_id  = rs.id
         LEFT JOIN client AS c1 on r.client_id = c1.id
-        LEFT JOIN client AS c2 on o.client_id = c2.id
         WHERE
             (
                 d.synchronisation_status='PERMANENT_ERROR'
@@ -339,13 +339,6 @@ AND is_report_pdf=false";
         }
 
         return $documents;
-    }
-
-    private function buildReportSubmissionsQuery(array $reportIds)
-    {
-        $reportIdsString = implode(',', $reportIds);
-
-        return "SELECT * FROM report_submission WHERE (report_id IN ($reportIdsString)) ORDER BY created_on ASC;";
     }
 
     /**
