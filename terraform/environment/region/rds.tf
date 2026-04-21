@@ -41,7 +41,7 @@ module "database" {
   instance_count                      = var.account.db.aurora_instance_count
   instance_class                      = "db.t3.medium"
   preferred_backup_window             = var.account.environment.name == "preproduction" ? "22:00-00:00" : "23:00-23:30"
-  kms_key_id                          = data.aws_kms_alias.rds_encryption_key.arn
+  kms_key_id                          = data.aws_kms_alias.rds_encryption_key.target_key_arn
   skip_final_snapshot                 = var.account.db.deletion_protection ? false : true
   vpc_security_group_ids              = [module.api_rds_security_group.id]
   deletion_protection                 = var.account.db.deletion_protection ? true : false
@@ -60,12 +60,12 @@ locals {
     username = module.api_aurora[0].master_username
   }
 
-  #  database = {
-  #    endpoint = module.database[0].endpoint
-  #    port     = module.database[0].port
-  #    name     = module.database[0].name
-  #    username = module.database[0].master_username
-  #  }
+  database = {
+    endpoint = module.database.endpoint
+    port     = module.database.port
+    name     = module.database.name
+    username = module.database.master_username
+  }
 }
 
 data "aws_kms_key" "rds" {
@@ -105,7 +105,7 @@ resource "aws_route53_record" "api_postgres" {
   name    = "postgres"
   type    = "CNAME"
   zone_id = aws_route53_zone.internal.id
-  records = [local.db.endpoint]
+  records = local.use_new_db ? [local.database.endpoint] : [local.db.endpoint]
   ttl     = 300
 }
 
