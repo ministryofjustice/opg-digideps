@@ -1,12 +1,18 @@
 <?php
 
-namespace App\Logger;
+namespace OPG\Digideps\Common\Logger;
 
 use Monolog\Formatter\LineFormatter;
+use Monolog\LogRecord;
 
 class OpgLineFormatter extends LineFormatter
 {
-    public function format(array $record): string
+    public function __construct()
+    {
+        parent::__construct(dateFormat: "Y-m-d H:i:s");
+    }
+
+    public function format(LogRecord $record): string
     {
         $output = parent::format($record);
 

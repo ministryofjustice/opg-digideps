@@ -4,6 +4,8 @@ namespace App\Service;
 
 use Mockery as m;
 use Mockery\MockInterface;
+use Monolog\Level;
+use Monolog\LogRecord;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -14,16 +16,16 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 class RequestIdLoggerProcessorTest extends TestCase
 {
-    private array $record = ['key1' => 'abc', 'key2' => 2];
-    private Container|MockInterface $container;
-    private RequestStack|MockInterface $reqStack;
+    private LogRecord $record;
+    private Container&MockInterface $container;
+    private RequestStack&MockInterface $reqStack;
     private RequestIdLoggerProcessor $object;
 
     public function setUp(): void
     {
         $this->container = m::mock(Container::class);
         $this->reqStack = m::mock(RequestStack::class);
-
+        $this->record = new LogRecord(new \DateTimeImmutable(), '', Level::Emergency, '', ['key1' => 'abc', 'key2' => 2]);
         $this->object = new RequestIdLoggerProcessor($this->container);
     }
 
@@ -68,7 +70,9 @@ class RequestIdLoggerProcessorTest extends TestCase
         $this->container->shouldReceive('get')->with('request_stack')->andReturn($this->reqStack);
         $this->container->shouldReceive('has')->with('request_stack')->andReturn(true);
 
-        $this->assertEquals($this->record + ['extra' => ['aws_request_id' => 'THIS_IS_THE_REQUEST_ID']], $this->object->processRecord($this->record));
+        $record = $this->object->processRecord($this->record);
+        $this->assertSame($this->record->context, $record->context);
+        $this->assertSame(['aws_request_id' => 'THIS_IS_THE_REQUEST_ID'], $record->extra);
     }
 
     public function testProcessRecordHasRequestIdAndSessionSafeId()
@@ -88,17 +92,13 @@ class RequestIdLoggerProcessorTest extends TestCase
         $this->container->shouldReceive('get')->with('request_stack')->andReturn($this->reqStack);
         $this->container->shouldReceive('has')->with('request_stack')->andReturn(true);
 
-        // Run
-        $result = $this->object->processRecord($this->record);
-
+        $record = $this->object->processRecord($this->record);
+        $this->assertSame($this->record->context, $record->context);
         // Expected record with both values added
-        $expected = $this->record;
-        $expected['extra'] = [
+        $this->assertSame([
             'aws_request_id' => 'THIS_IS_THE_REQUEST_ID',
             'session_safe_id' => 'THIS_IS_THE_SESSION_SAFE_ID',
-        ];
-
-        $this->assertEquals($expected, $result);
+        ], $record->extra);
     }
 
     public function tearDown(): void

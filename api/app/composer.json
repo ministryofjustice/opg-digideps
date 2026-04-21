@@ -36,7 +36,7 @@
         "jms/serializer-bundle": "^5.5.2",
         "lcobucci/jwt": "^4.3",
         "league/csv": "^9.27.1",
-        "monolog/monolog": "^1.27.1",
+        "monolog/monolog": "^3.10.0",
         "predis/predis": "^3.4.1",
         "ramsey/uuid": "^4.9.2",
         "ramsey/uuid-doctrine": "^1.8.2",
