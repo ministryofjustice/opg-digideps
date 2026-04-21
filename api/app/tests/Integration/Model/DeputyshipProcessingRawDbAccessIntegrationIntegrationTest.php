@@ -52,7 +52,7 @@ class DeputyshipProcessingRawDbAccessIntegrationIntegrationTest extends ApiInteg
             'orderMadeDate' => '2025-05-23 10:10:10',
             'clientId' => $client->getId(),
             'courtOrderKind' => 'single',
-            'courtOrderReportType' => 'OPG102',
+            'reportType' => 'OPG102',
         ];
 
         // use SUT to insert the order
