@@ -26,9 +26,9 @@ module "api_aurora" {
 }
 
 module "database" {
-  source                              = "./modules/aurora"
-  count                               = local.environment == "preproduction" ? 1 : 0
-  aurora_serverless                   = var.account.db.aurora_serverless
+  source = "./modules/aurora"
+  #  count                               = local.environment == "preproduction" ? 1 : 0
+  aurora_serverless                   = true
   account_id                          = data.aws_caller_identity.current.account_id
   apply_immediately                   = var.account.db.deletion_protection ? false : true
   cluster_identifier                  = "digideps"
@@ -138,10 +138,10 @@ resource "aws_iam_role" "database_readonly_access" {
 }
 
 locals {
-  rds_resources_pre = [
-    "arn:aws:rds-db:eu-west-1:${data.aws_caller_identity.current.account_id}:dbuser:${module.api_aurora[0].cluster_resource_id}/readonly-db-iam-${local.environment}",
-    "arn:aws:rds-db:eu-west-1:${data.aws_caller_identity.current.account_id}:dbuser:${module.database[0].cluster_resource_id}/readonly-db-iam-${local.environment}"
-  ]
+  #  rds_resources_pre = [
+  #    "arn:aws:rds-db:eu-west-1:${data.aws_caller_identity.current.account_id}:dbuser:${module.api_aurora[0].cluster_resource_id}/readonly-db-iam-${local.environment}",
+  ##    "arn:aws:rds-db:eu-west-1:${data.aws_caller_identity.current.account_id}:dbuser:${module.database[0].cluster_resource_id}/readonly-db-iam-${local.environment}"
+  #  ]
   rds_resources = ["arn:aws:rds-db:eu-west-1:${data.aws_caller_identity.current.account_id}:dbuser:${module.api_aurora[0].cluster_resource_id}/readonly-db-iam-${local.environment}"]
 }
 
@@ -151,7 +151,7 @@ data "aws_iam_policy_document" "database_readonly_connect" {
     effect  = "Allow"
     actions = ["rds-db:connect"]
 
-    resources = local.environment == "preproduction" ? local.rds_resources_pre : local.rds_resources
+    resources = local.rds_resources
   }
 }
 
