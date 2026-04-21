@@ -26,8 +26,8 @@ module "api_aurora" {
 }
 
 module "database" {
-  source = "./modules/aurora"
-  #  count                               = local.environment == "preproduction" ? 1 : 0
+  source                              = "./modules/aurora"
+  count                               = local.create_new_db ? 1 : 0
   aurora_serverless                   = true
   account_id                          = data.aws_caller_identity.current.account_id
   apply_immediately                   = var.account.db.deletion_protection ? false : true
@@ -41,7 +41,7 @@ module "database" {
   instance_count                      = var.account.db.aurora_instance_count
   instance_class                      = "db.t3.medium"
   preferred_backup_window             = var.account.environment.name == "preproduction" ? "22:00-00:00" : "23:00-23:30"
-  kms_key_id                          = data.aws_kms_alias.rds_encryption_key.arn
+  kms_key_id                          = data.aws_kms_alias.rds_encryption_key.target_key_arn
   skip_final_snapshot                 = var.account.db.deletion_protection ? false : true
   vpc_security_group_ids              = [module.api_rds_security_group.id]
   deletion_protection                 = var.account.db.deletion_protection ? true : false
@@ -60,12 +60,13 @@ locals {
     username = module.api_aurora[0].master_username
   }
 
-  #  database = {
-  #    endpoint = module.database[0].endpoint
-  #    port     = module.database[0].port
-  #    name     = module.database[0].name
-  #    username = module.database[0].master_username
-  #  }
+  database = {
+    endpoint            = local.create_new_db ? module.database[0].endpoint : ""
+    port                = local.create_new_db ? module.database[0].port : ""
+    name                = local.create_new_db ? module.database[0].name : ""
+    username            = local.create_new_db ? module.database[0].master_username : ""
+    cluster_resource_id = local.create_new_db ? module.database[0].cluster_resource_id : ""
+  }
 }
 
 data "aws_kms_key" "rds" {
@@ -105,7 +106,7 @@ resource "aws_route53_record" "api_postgres" {
   name    = "postgres"
   type    = "CNAME"
   zone_id = aws_route53_zone.internal.id
-  records = [local.db.endpoint]
+  records = local.use_new_db ? [local.database.endpoint] : [local.db.endpoint]
   ttl     = 300
 }
 
@@ -138,10 +139,11 @@ resource "aws_iam_role" "database_readonly_access" {
 }
 
 locals {
-  #  rds_resources_pre = [
-  #    "arn:aws:rds-db:eu-west-1:${data.aws_caller_identity.current.account_id}:dbuser:${module.api_aurora[0].cluster_resource_id}/readonly-db-iam-${local.environment}",
-  ##    "arn:aws:rds-db:eu-west-1:${data.aws_caller_identity.current.account_id}:dbuser:${module.database[0].cluster_resource_id}/readonly-db-iam-${local.environment}"
-  #  ]
+
+  rds_resources_new = [
+    "arn:aws:rds-db:eu-west-1:${data.aws_caller_identity.current.account_id}:dbuser:${module.api_aurora[0].cluster_resource_id}/readonly-db-iam-${local.environment}",
+    "arn:aws:rds-db:eu-west-1:${data.aws_caller_identity.current.account_id}:dbuser:${local.database.cluster_resource_id}/readonly-db-iam-${local.environment}"
+  ]
   rds_resources = ["arn:aws:rds-db:eu-west-1:${data.aws_caller_identity.current.account_id}:dbuser:${module.api_aurora[0].cluster_resource_id}/readonly-db-iam-${local.environment}"]
 }
 
@@ -151,7 +153,7 @@ data "aws_iam_policy_document" "database_readonly_connect" {
     effect  = "Allow"
     actions = ["rds-db:connect"]
 
-    resources = local.rds_resources
+    resources = local.create_new_db ? local.rds_resources : local.rds_resources_new
   }
 }
 
