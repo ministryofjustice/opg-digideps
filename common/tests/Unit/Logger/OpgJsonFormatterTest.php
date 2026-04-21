@@ -1,13 +1,17 @@
 <?php
 
-namespace DigidepsTests\Logger;
+declare(strict_types=1);
 
-use App\Logger\OpgJsonFormatter;
+namespace Tests\OPG\Digideps\Common\Unit\Logger;
+
+use Monolog\Level;
+use Monolog\LogRecord;
+use OPG\Digideps\Common\Logger\OpgJsonFormatter;
 use PHPUnit\Framework\TestCase;
 
-class OpgJsonFormatterTest extends TestCase
+final class OpgJsonFormatterTest extends TestCase
 {
-    public function testFormat()
+    public function testFormat(): void
     {
         $formatter = new OpgJsonFormatter();
 
@@ -18,17 +22,18 @@ class OpgJsonFormatterTest extends TestCase
         $_SERVER['HTTP_X_SESSION_SAFE_ID'] = '98765';
 
         // Create a sample log record
-        $record = [
-            'datetime' => new \DateTime('2024-06-10 12:00:00'),
-            'level_name' => 'INFO',
-            'message' => 'This is a test message',
-        ];
+        $record = new LogRecord(
+            new \DateTimeImmutable('2024-06-10 12:00:00'),
+            'api',
+            Level::Info,
+            'This is a test message',
+        );
 
         $expectedOutput = '{
             "time": "2024-06-10T12:00:00Z",
             "level": "INFO",
             "msg": "This is a test message",
-            "service_name": "client",
+            "service_name": "api",
             "request": { "method": "GET", "path": "/test", "aws_request_id": "12345", "session_safe_id": "98765" },
             "location": { "file": "' . __FILE__ . '", "line": ' . (__LINE__ + 3) . '}
         }';
