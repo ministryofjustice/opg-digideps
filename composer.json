@@ -6,13 +6,18 @@
   "minimum-stability": "stable",
   "scripts": {
     "reformat": "./vendor/bin/phpcbf -p .",
-    "reformat:check": "./vendor/bin/phpcs -p ."
+    "reformat:check": "./vendor/bin/phpcs -p .",
+    "lint:phpstan": "phpstan",
+    "lint:phpstan:baseline": "phpstan && phpstan --generate-baseline"
   },
   "require": {
     "php": "^8.4"
   },
   "require-dev": {
-    "phpstan/phpstan": "^2.1.46",
-    "squizlabs/php_codesniffer": "^3.13.5"
+    "phpstan/phpstan": "^2.1",
+    "squizlabs/php_codesniffer": "^3.13.5",
+    "phpstan/phpstan-mockery": "^2.0",
+    "phpstan/phpstan-phpunit": "^2.0",
+    "jangregor/phpstan-prophecy": "^2.3"
   }
 }
