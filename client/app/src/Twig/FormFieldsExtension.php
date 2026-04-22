@@ -376,19 +376,6 @@ class FormFieldsExtension extends AbstractExtension
     }
 
     /**
-     * Extract hint text from translation, returning null if translation key not found.
-     *
-     * @param string $translationKey The translation key prefix
-     * @param string $domain The translation domain
-     * @return string|null The translated hint text or null if hint key does not exist
-     */
-    private function getHintText(string $translationKey, string $domain): ?string
-    {
-        $hintTextTrans = $this->translator->trans($translationKey . '.hint', [], $domain);
-        return ($hintTextTrans !== $translationKey . '.hint') ? $hintTextTrans : null;
-    }
-
-    /**
      * Extract hint text for date fields with optional override and default fallback.
      * Tries custom hint first, then translates from hint key, then falls back to default hint text.
      *
