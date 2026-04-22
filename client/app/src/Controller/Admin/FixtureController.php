@@ -153,6 +153,7 @@ class FixtureController extends AbstractController
             // Do not move this loop to below the other loop as there is a dependency on the court order being created before creating additional clients
             $batchSize = 25;
             $remainingUsersToCreate = $submittedFormData['orgSizeUsers'];
+            $response = [];
             while ($remainingUsersToCreate > 0) {
                 /** @var array $response */
                 $response = $this->restClient->post(
