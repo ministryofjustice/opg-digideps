@@ -49,7 +49,7 @@ jobs:
       - name: configure OIDC AWS credentials for ecs wait
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708
         with:
-          role-to-assume: "arn:aws:iam::${{ inputs.account_id }}:role/digideps-gh-actions-run-task"
+          role-to-assume: "arn:aws:iam::${{ vars.IDENTITY_ACCOUNT }}:role/oidc-digideps-${{ inputs.account_name }}"
           role-session-name: github-actions-wait-for-ecs-services
           role-duration-seconds: ${{ inputs.oidc_timeout }}
           aws-region: eu-west-1
