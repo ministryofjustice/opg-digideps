@@ -150,22 +150,29 @@ class FixtureController extends AbstractController
             $formAndRequestData = $this->retrieveFormData($form, $request);
             $submittedFormData = $formAndRequestData['submitted'];
 
-            /** @var array $response */
-            $response = $this->restClient->post(
-                'v2/fixture/court-order',
-                json_encode([
-                    'deputyType' => $submittedFormData['deputyType'],
-                    'deputyEmail' => $formAndRequestData['deputyEmail'],
-                    'caseNumber' => $formAndRequestData['caseNumber'],
-                    'reportType' => $submittedFormData['reportType'],
-                    'reportStatus' => $submittedFormData['reportStatus'],
-                    'courtDate' => $formAndRequestData['courtDate']->format('Y-m-d'),
-                    'activated' => $submittedFormData['activated'],
-                    'orgSizeUsers' => $submittedFormData['orgSizeUsers'],
-                    'deputyUid' => $formAndRequestData['deputyUid'],
-                ]),
-                options: ['timeout' => 1000]
-            );
+            // Do not move this loop to below the other loop as there is a dependency on the court order being created before creating additional clients
+            $batchSize = 25;
+            $remainingUsersToCreate = $submittedFormData['orgSizeUsers'];
+            while ($remainingUsersToCreate > 0) {
+                /** @var array $response */
+                $response = $this->restClient->post(
+                    'v2/fixture/court-order',
+                    json_encode([
+                        'deputyType' => $submittedFormData['deputyType'],
+                        'deputyEmail' => $formAndRequestData['deputyEmail'],
+                        'caseNumber' => $formAndRequestData['caseNumber'],
+                        'reportType' => $submittedFormData['reportType'],
+                        'reportStatus' => $submittedFormData['reportStatus'],
+                        'courtDate' => $formAndRequestData['courtDate']->format('Y-m-d'),
+                        'activated' => $submittedFormData['activated'],
+                        'orgSizeUsers' => min($remainingUsersToCreate, $batchSize),
+                        'deputyUid' => $formAndRequestData['deputyUid'],
+                    ]),
+                    options: ['timeout' => 1000]
+                );
+
+                $remainingUsersToCreate -= $batchSize;
+            }
 
             if ($submittedFormData['orgSizeClients'] > 1) {
                 $batchSize = 100;
@@ -178,10 +185,11 @@ class FixtureController extends AbstractController
                             'deputyEmail' => $formAndRequestData['deputyEmail'],
                             'reportType' => $submittedFormData['reportType'],
                             'reportStatus' => $submittedFormData['reportStatus'],
-                            'orgSizeClients' => min($remainingAdditionalClientsToCreate, $batchSize), // minus 1 to account for client created with court order
+                            'orgSizeClients' => min($remainingAdditionalClientsToCreate, $batchSize),
                         ]),
                         options: ['timeout' => 1000]
                     );
+
                     $remainingAdditionalClientsToCreate -= $batchSize;
                 }
             }
