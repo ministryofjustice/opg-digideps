@@ -12,10 +12,10 @@
     "monolog/monolog": "^3.10.0"
   },
   "require-dev": {
-    "dg/bypass-finals": "^1.9",
-    "phpstan/phpstan": "^2.1",
+    "dg/bypass-finals": "^1.9.0",
+    "phpstan/phpstan": "^2.1.49",
     "phpunit/phpunit": "^13.1.6",
-    "phpstan/phpstan-phpunit": "^2.0"
+    "phpstan/phpstan-phpunit": "^2.0.16"
   },
   "scripts": {
     "lint:phpstan": "phpstan",
