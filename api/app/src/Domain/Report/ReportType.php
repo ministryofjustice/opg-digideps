@@ -23,11 +23,11 @@ final readonly class ReportType implements \Stringable
     {
         $parts = [];
 
-        if ($this->courtOrderType !== CourtOrderType::HW || $this->courtOrderKind === CourtOrderKind::Hybrid) {
-            $parts[] = $this->courtOrderReportType->getSuffix();
-        } else {
-            $parts[] = CourtOrderReportType::OPG104->getSuffix();
-        }
+        $suffix = ($this->courtOrderType !== CourtOrderType::HW || $this->courtOrderKind === CourtOrderKind::Hybrid) ?
+            $this->courtOrderReportType->getSuffix() :
+            CourtOrderReportType::OPG104->getSuffix();
+
+        $parts[] = '10' . $suffix;
 
         if ($this->courtOrderKind === CourtOrderKind::Hybrid) {
             $parts[] = CourtOrderReportType::OPG104->getSuffix();

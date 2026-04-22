@@ -592,7 +592,7 @@ class Report
      *
      * @param bool $dateChecks if true, perform checks around multiple reports and dates. Useful for PA upload
      */
-    public function __construct(Client $client, $type, \DateTime $startDate, \DateTime $endDate, $dateChecks = true)
+    public function __construct(Client $client, string $type, \DateTime $startDate, \DateTime $endDate, $dateChecks = true)
     {
         if (!in_array($type, self::allRolesAllReportTypes())) {
             throw new \InvalidArgumentException("$type not a valid report type");
