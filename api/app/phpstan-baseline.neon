@@ -2056,11 +2056,6 @@ parameters:
 			path: src/Entity/Report/Decision.php
 
 		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Document\\:\\:__construct\\(\\) has parameter \\$report with no type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Document.php
-
-		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Document\\:\\:isTransactionDocument\\(\\) never returns int so it can be removed from the return type\\.$#"
 			count: 1
 			path: src/Entity/Report/Document.php
@@ -3454,11 +3449,6 @@ parameters:
 			message: "#^Ternary operator condition is always false\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\ReportSubmission\\:\\:\\$downloadable \\(bool\\) does not accept mixed\\.$#"
-			count: 1
-			path: src/Entity/Report/ReportSubmission.php
 
 		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\ReviewChecklist\\:\\:getSubmittedOn\\(\\) should return DateTime\\|null but returns App\\\\Entity\\\\Report\\\\DateTime\\.$#"

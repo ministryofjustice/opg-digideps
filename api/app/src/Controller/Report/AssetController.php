@@ -46,7 +46,7 @@ class AssetController extends RestController
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy(Report::class, $reportId); /* @var $report Report */
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         $this->formatter->validateArray($data, [
             'type' => 'mustExist',

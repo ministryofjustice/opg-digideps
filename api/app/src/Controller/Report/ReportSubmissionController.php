@@ -165,7 +165,6 @@ class ReportSubmissionController extends RestController
             throw new RuntimeException(__METHOD__ . ' only accessible from ADMIN container.', 403);
         }
 
-        /* @var $reportSubmission ReportSubmission */
         $reportSubmission = $this->em->getRepository(ReportSubmission::class)->find($id);
         $reportSubmission->setDownloadable(false);
         foreach ($reportSubmission->getDocuments() as $document) {

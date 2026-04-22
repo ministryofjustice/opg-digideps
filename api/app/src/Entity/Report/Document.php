@@ -120,12 +120,9 @@ class Document implements SynchronisableInterface
      * Report is initially required, but will be set to null at submission time,
      * and associated to a specific ReportSubmission instead
      */
-    public function __construct($report)
+    public function __construct(Report $report)
     {
-        // TODO create Report class and use as type hinting
-        if ($report instanceof Report) {
-            $this->report = $report;
-        }
+        $this->report = $report;
         $this->isReportPdf = true;
     }
 
