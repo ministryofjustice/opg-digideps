@@ -691,30 +691,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     }
 
     /**
-     * @return string $gaTrackingId
-     */
-    public function getGaTrackingId()
-    {
-        if (empty($this->gaTrackingId)) {
-            $this->gaTrackingId = md5(strval($this->id));
-        }
-
-        return $this->gaTrackingId;
-    }
-
-    /**
-     * @param string $gaTrackingId
-     *
-     * @return User
-     */
-    public function setGaTrackingId($gaTrackingId)
-    {
-        $this->gaTrackingId = $gaTrackingId;
-
-        return $this;
-    }
-
-    /**
      * @return bool
      */
     public function getIsCoDeputy()
