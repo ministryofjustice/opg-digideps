@@ -1,0 +1,10 @@
+parameters:
+  bootstrapFiles:
+    - vendor/autoload.php
+  paths:
+    - src
+    - tests
+  level: max
+  treatPhpDocTypesAsCertain: false
+  ignoreErrors:
+    - identifier: missingType.iterableValue

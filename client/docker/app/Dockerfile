@@ -120,6 +120,7 @@ COPY --chown=www-data:www-data --from=composer-devtools /app/composer.lock compo
 
 COPY --chown=www-data:www-data client/app/tests tests
 COPY --chown=www-data:www-data client/app/phpstan.neon .
+COPY --chown=www-data:www-data api/app/phpstan-fragment.neon .
 COPY --chown=www-data:www-data client/app/phpstan-baseline.neon .
 
 RUN sed "s|TAG|${TAG:-latest}|" public/meta.json.tmpl > public/meta.json \
