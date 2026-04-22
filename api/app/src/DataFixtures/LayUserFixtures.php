@@ -272,7 +272,6 @@ class LayUserFixtures extends AbstractDataFixture
             $manager->persist($duplicateUser);
         }
 
-        $report = null;
         $multiClientSecondReport = null;
 
         $realm = PreRegistration::REALM_LAY;
@@ -344,7 +343,7 @@ class LayUserFixtures extends AbstractDataFixture
         // Associate deputy with court order
         $this->deputy->associateWithCourtOrder($courtOrder);
 
-        // Associate court order with reports
+        // Associate court order with reports if it's not null
         if (!is_null($report)) {
             $courtOrder->addReport($report);
         }

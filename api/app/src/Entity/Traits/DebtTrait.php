@@ -2,9 +2,6 @@
 
 namespace App\Entity\Traits;
 
-/**
- * Shared among Report\Debt and Ndr\Debt.
- */
 trait DebtTrait
 {
     public function setAmountAndDetails($amount, $details)

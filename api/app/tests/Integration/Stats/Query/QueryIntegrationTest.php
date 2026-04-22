@@ -36,15 +36,14 @@ class QueryIntegrationTest extends ApiIntegrationTestCase
 
         $result = $query->execute(new StatsQueryParameters([
             'metric' => 'users',
-            'dimension' => ['roleName', 'ndrEnabled'],
+            'dimension' => ['roleName'],
         ]));
 
         $this->assertContainsOnly('array', $result);
 
-        $this->assertCount(3, $result[0]);
+        $this->assertCount(2, $result[0]);
         $this->assertArrayHasKey('amount', $result[0]);
         $this->assertArrayHasKey('roleName', $result[0]);
-        $this->assertArrayHasKey('ndrEnabled', $result[0]);
     }
 
     public function testReturnsValueIfNoDimension(): void

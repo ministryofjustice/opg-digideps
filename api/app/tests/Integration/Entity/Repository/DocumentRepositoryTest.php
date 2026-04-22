@@ -12,7 +12,6 @@ use App\Entity\Client;
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
-use App\Entity\ReportInterface;
 use App\Entity\User;
 use App\Repository\DocumentRepository;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -87,7 +86,7 @@ class DocumentRepositoryTest extends KernelTestCase
         return $report;
     }
 
-    private function generateAndPersistDocument(ReportInterface $report, bool $isReportPdf, string $syncStatus, DateTime $createdOn, bool $isResubmission): Document
+    private function generateAndPersistDocument(Report $report, bool $isReportPdf, string $syncStatus, DateTime $createdOn, bool $isResubmission): Document
     {
         $fileName = $isReportPdf ? 'report' : 'supporting-document';
         $storageRef = $isReportPdf ? 'storage-ref-report' : 'storage-ref-supporting-document';
@@ -107,7 +106,7 @@ class DocumentRepositoryTest extends KernelTestCase
         return $doc;
     }
 
-    private function submitReport(ReportInterface $report, DateTime $submittedOn, Document $reportPdf, ?Document $supportingDocument): ReportSubmission
+    private function submitReport(Report $report, DateTime $submittedOn, Document $reportPdf, ?Document $supportingDocument): ReportSubmission
     {
         $report->setSubmitDate($submittedOn);
         $reportSubmission = $this->generateAndPersistReportSubmission($report, $submittedOn);
@@ -128,7 +127,7 @@ class DocumentRepositoryTest extends KernelTestCase
         return $reportSubmission;
     }
 
-    private function generateAndPersistReportSubmission(ReportInterface $report, DateTime $createdOn): ReportSubmission
+    private function generateAndPersistReportSubmission(Report $report, DateTime $createdOn): ReportSubmission
     {
         $submission = (new ReportSubmission($report, $this->generateAndPersistUser()))->setCreatedOn($createdOn);
 
@@ -203,7 +202,7 @@ class DocumentRepositoryTest extends KernelTestCase
         self::$entityManager->flush();
     }
 
-    private function createAndSubmitAdditionalDocuments(ReportInterface $report, DateTime $submittedOn)
+    private function createAndSubmitAdditionalDocuments(Report $report, DateTime $submittedOn)
     {
         $additionalSubmission = $this->generateAndPersistReportSubmission($report, $submittedOn);
         $additionalSupportingDoc = $this->generateAndPersistDocument($report, false, 'QUEUED', $submittedOn, false);
@@ -217,7 +216,7 @@ class DocumentRepositoryTest extends KernelTestCase
         return [$additionalSubmission, $additionalSupportingDoc];
     }
 
-    private function createAndSubmitResubmissionWithSupportingDoc(ReportInterface $report, DateTime $submittedOn): array
+    private function createAndSubmitResubmissionWithSupportingDoc(Report $report, DateTime $submittedOn): array
     {
         $resubmissionReportPdfDoc = $this->generateAndPersistDocument($report, true, 'QUEUED', $this->secondJulyAm, true);
         $resubmissionSupportingDoc = $this->generateAndPersistDocument($report, false, 'QUEUED', $this->secondJulyAm, true);
