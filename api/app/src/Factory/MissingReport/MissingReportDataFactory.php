@@ -28,7 +28,7 @@ final readonly class MissingReportDataFactory implements DataFactoryInterface
         return 'MissingReport';
     }
 
-    public function run(bool $dryRun = false): DataFactoryResult
+    public function run(bool $dryRun = true): DataFactoryResult
     {
         $errors = [];
         $created = 0;
