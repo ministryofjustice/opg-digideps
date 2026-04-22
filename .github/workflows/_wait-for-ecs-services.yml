@@ -35,15 +35,19 @@ jobs:
     name: wait for ecs services to stabilise
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
 
       - id: deploy-key
-        uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@3a15a16fcc221821c2869eecd8822c5d62af2984 # v4.7.0
+        uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@3a15a16fcc221821c2869eecd8822c5d62af2984
         with:
           deploy_key: ${{ secrets.ssh_private_key }}
 
+      - name: install requirements
+        working-directory: scripts/pipeline/wait_until_ready
+        run: pip3 install -r requirements.txt
+
       - name: configure OIDC AWS credentials for ecs wait
-        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708
         with:
           role-to-assume: "arn:aws:iam::${{ inputs.account_id }}:role/digideps-gh-actions-run-task"
           role-session-name: github-actions-wait-for-ecs-services
@@ -54,17 +58,18 @@ jobs:
         env:
           WORKSPACE: ${{ inputs.workspace }}
           TIMEOUT: ${{ inputs.timeout }}
+          AWS_REGION: eu-west-1
+        working-directory: scripts/pipeline/wait_until_ready
         run: |
-          chmod +x scripts/pipeline/wait_until_ready/wait_until_ready.sh
-          ./scripts/pipeline/wait_until_ready/wait_until_ready.sh \
+          python3 wait_until_ready.py \
             "${WORKSPACE}" \
             "${TIMEOUT}" \
             "admin-${WORKSPACE}" \
             "api-${WORKSPACE}" \
             "front-${WORKSPACE}" \
             "htmltopdf-${WORKSPACE}" \
-            "mock-sirius-integration${WORKSPACE}" \
-            "scan-ecs2508" \
+            "mock-sirius-integration-${WORKSPACE}" \
+            "scan-${WORKSPACE}" \
             "sirius-files-sync-${WORKSPACE}"
 
       - name: Unset AWS variables
