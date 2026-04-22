@@ -269,33 +269,17 @@ jobs:
 
   wait_for_ecs_services:
     name: wait for all ecs services to stabilise
-    runs-on: ubuntu-latest
+    uses: ./.github/workflows/_wait-for-ecs-services.yml
     needs:
       - workflow_variables
       - terraform_apply_environment
-    steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
-      - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::${{ vars.DEVELOPMENT_ACCOUNT }}:role/digideps-ci
-          aws-region: eu-west-1
-
-      - name: wait for all services to be stable
-        env:
-          WORKSPACE: ${{ needs.workflow_variables.outputs.build_identifier }}
-        run: |
-          chmod +x scripts/pipeline/wait_until_ready/wait_until_ready.sh
-          ./scripts/pipeline/wait_until_ready/wait_until_ready.sh \
-            "${WORKSPACE}" \
-            15 \
-            "admin-${WORKSPACE}" \
-            "api-${WORKSPACE}" \
-            "front-${WORKSPACE}" \
-            "scan-${WORKSPACE}" \
-            "htmltopdf-${WORKSPACE}" \
-            "sirius-files-sync-${WORKSPACE}"
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
+      account_name: development
+      timeout: "15"
 
   restart_point:
     runs-on: ubuntu-latest
