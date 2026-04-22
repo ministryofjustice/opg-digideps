@@ -58,7 +58,8 @@ class FixtureController extends AbstractController
     }
 
     /** * @throws \Exception */
-    #[Route(path: '/court-order', methods: ['POST'])] #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    #[Route(path: '/court-order', methods: ['POST'])]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
     public function createCourtOrder(Request $request): JsonResponse
     {
         if (!$this->fixturesEnabled) {
@@ -102,7 +103,8 @@ class FixtureController extends AbstractController
     }
 
     /** * @throws \Exception */
-    #[Route(path: '/create-additional-clients', methods: ['POST'])] #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    #[Route(path: '/create-additional-clients', methods: ['POST'])]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
     public function createAdditionalClients(Request $request): void
     {
         if (!$this->fixturesEnabled) {
@@ -124,12 +126,13 @@ class FixtureController extends AbstractController
 
             $report = $this->generateReport($fromRequest, $orgClient);
             $this->em->persist($report);
-            if ($number % 10 === 0) {
+            if ($number % 100 === 0) {
                 $this->em->flush();
             }
         }
 
         $this->em->flush();
+        $this->em->clear();
     }
 
     /** * @throws \Exception */
@@ -420,7 +423,7 @@ class FixtureController extends AbstractController
                 $orgUser = $this->userFactory->createGenericOrgUser($organisation, $number);
                 $organisation->addUser($orgUser);
                 $this->em->persist($orgUser);
-                if ($number % 10 === 0) {
+                if ($number % 100 === 0) {
                     $this->em->flush();
                 }
             }
@@ -438,6 +441,7 @@ class FixtureController extends AbstractController
         $this->em->persist($client);
         $this->em->persist($organisation);
         $this->em->flush();
+        $this->em->clear();
     }
 
     private function buildDeputy(User $deputy, array $fromRequest): Deputy
