@@ -18,7 +18,7 @@ resource "aws_ecs_service" "mock_sirius_integration" {
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
-  wait_for_steady_state   = true
+  wait_for_steady_state   = false
   tags                    = var.default_tags
 
   network_configuration {
