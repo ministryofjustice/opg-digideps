@@ -217,8 +217,6 @@ class Fixtures
             $report->addAsset($other);
             $report->addAsset($property);
             $report->addAccount($bankAccount);
-
-            $ndr = $this->createNdr($client);
         }
 
         $submission = new ReportSubmission($report, $user);
@@ -545,7 +543,7 @@ class Fixtures
 
     public static function deleteReportsData($additionalTables = [])
     {
-        $tables = array_merge(['document', 'pre_registration', 'deputy_case', 'report_submission', 'report', 'odr', 'satisfaction'], $additionalTables);
+        $tables = array_merge(['document', 'pre_registration', 'deputy_case', 'report_submission', 'report', 'satisfaction'], $additionalTables);
         self::pgCommand('PGOPTIONS=\'--client-min-messages=warning\' psql -c "truncate table ' . implode(',', $tables) . '  RESTART IDENTITY cascade";');
     }
 

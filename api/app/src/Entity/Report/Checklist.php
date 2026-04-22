@@ -2,7 +2,7 @@
 
 namespace App\Entity\Report;
 
-use App\Entity\ReportInterface;
+use App\Entity\Report\Report;
 use App\Entity\SynchronisableInterface;
 use App\Entity\SynchronisableTrait;
 use App\Entity\Traits\ModifyAudit;
@@ -384,7 +384,7 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @return ReportInterface
+     * @return Report
      */
     public function getReport()
     {
