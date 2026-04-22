@@ -1,146 +1,127 @@
 import sys
 import time
-from typing import Any
-
 import boto3
-from botocore.exceptions import BotoCoreError, ClientError
+from botocore.exceptions import ClientError, BotoCoreError
 
 POLL_INTERVAL_SECONDS = 15
 
 
-def print_header(cluster: str, timeout_mins: int, services: list[str]) -> None:
-    print("========================================")
-    print(f"Cluster:  {cluster}")
-    print(f"Services: {' '.join(services)}")
-    print(f"Timeout:  {timeout_mins} minutes")
-    print("========================================")
-    print("")
+def get_service_data(ecs, cluster, services):
+    try:
+        response = ecs.describe_services(cluster=cluster, services=services)
+    except (ClientError, BotoCoreError) as exc:
+        print(f"Failed to query ECS: {exc}")
+        return None
 
+    service_map = {}
+    for service in response.get("services", []):
+        service_map[service["serviceName"]] = service
 
-def get_service_map(
-    ecs: Any, cluster: str, services: list[str]
-) -> tuple[dict[str, Any], list[dict[str, Any]]]:
-    response = ecs.describe_services(cluster=cluster, services=services)
-    service_map = {
-        service["serviceName"]: service for service in response.get("services", [])
+    failed_names = set()
+    for failure in response.get("failures", []):
+        arn = failure.get("arn", "")
+        failed_names.add(arn.split("/")[-1])
+
+    return {
+        "service_map": service_map,
+        "failed_names": failed_names,
     }
-    failures = response.get("failures", [])
-    return service_map, failures
 
 
-def print_recent_events(service: dict[str, Any]) -> None:
+def print_recent_events(service):
+    print("Last 5 events:")
     events = service.get("events", [])[:5]
+
     if not events:
         print("No recent events available")
         return
-    print("Last 5 events:")
+
     for event in events:
-        created_at = event.get("createdAt")
-        message = event.get("message", "")
-        print(f"- {created_at}: {message}")
+        print(f"- {event.get('createdAt')}: {event.get('message')}")
 
 
-def evaluate_service(
-    service_name: str, service: dict[str, Any] | None
-) -> tuple[bool, bool]:
-    if service is None:
+def check_service(service_name, service, failed_names):
+    if service_name in failed_names and service is None:
         print(f"{service_name}: not found yet")
-        return False, False
+        return False
 
-    status = service.get("status", "")
+    if service is None:
+        print(f"{service_name}: missing service data")
+        return False
+
+    status = service.get("status")
     desired = service.get("desiredCount")
     running = service.get("runningCount")
     deployments = service.get("deployments", [])
 
     if status != "ACTIVE":
         print(f"{service_name}: status={status}, waiting")
-        return False, False
-
-    for deployment in deployments:
-        if deployment.get("rolloutState") == "FAILED":
-            print(f"{service_name}: deployment entered FAILED state")
-            print("")
-            print_recent_events(service)
-            return False, True
+        return False
 
     primary_rollout = ""
     in_progress = False
+
     for deployment in deployments:
+        rollout = deployment.get("rolloutState")
+
+        if rollout == "FAILED":
+            print(f"{service_name}: deployment entered FAILED state")
+            print("")
+            print_recent_events(service)
+            sys.exit(1)
+
         if deployment.get("status") == "PRIMARY":
-            primary_rollout = deployment.get("rolloutState", "")
-        if deployment.get("rolloutState") == "IN_PROGRESS":
+            primary_rollout = rollout
+
+        if rollout == "IN_PROGRESS":
             in_progress = True
 
     if desired is None or running is None:
         print(f"{service_name}: missing desired or running count")
-        return False, False
+        return False
 
     if running != desired or primary_rollout != "COMPLETED" or in_progress:
         rollout = primary_rollout if primary_rollout else "UNKNOWN"
         print(
             f"{service_name}: running={running}/{desired}, primary={rollout}, waiting"
         )
-        return False, False
+        return False
 
     print(f"{service_name}: running={running}/{desired}, stable")
-    return True, False
+    return True
 
 
-def main() -> int:
-    if len(sys.argv) < 4:
-        print(
-            "Usage: wait_until_ready.py <cluster> <timeout_mins> <service1> [<service2> ...]"
-        )
-        return 1
-
-    cluster = sys.argv[1]
-    try:
-        timeout_mins = int(sys.argv[2])
-    except ValueError:
-        print("Timeout must be an integer")
-        return 1
-
-    services = sys.argv[3:]
+def wait_for_services(ecs, cluster, timeout_mins, services):
     deadline = time.time() + (timeout_mins * 60)
-
-    ecs = boto3.client("ecs")
-
-    print_header(cluster, timeout_mins, services)
 
     while True:
         if time.time() >= deadline:
             print(
                 f"Timed out after {timeout_mins} minutes waiting for services to stabilise."
             )
-            return 1
+            sys.exit(1)
 
-        try:
-            service_map, failures = get_service_map(ecs, cluster, services)
-        except (ClientError, BotoCoreError) as exc:
-            print(f"Failed to query ECS: {exc}")
+        data = get_service_data(ecs, cluster, services)
+
+        if data is None:
             time.sleep(POLL_INTERVAL_SECONDS)
             continue
 
-        failed_names = {failure.get("arn", "").split("/")[-1] for failure in failures}
+        service_map = data["service_map"]
+        failed_names = data["failed_names"]
         all_stable = True
 
         for service_name in services:
             service = service_map.get(service_name)
-            if service_name in failed_names and service is None:
-                print(f"{service_name}: not found yet")
-                all_stable = False
-                continue
+            stable = check_service(service_name, service, failed_names)
 
-            stable, hard_fail = evaluate_service(service_name, service)
-            if hard_fail:
-                return 1
             if not stable:
                 all_stable = False
 
         if all_stable:
             print("")
             print("All services stable")
-            return 0
+            sys.exit(0)
 
         remaining = max(0, int((deadline - time.time()) // 60))
         print(
@@ -150,5 +131,17 @@ def main() -> int:
         time.sleep(POLL_INTERVAL_SECONDS)
 
 
-if __name__ == "__main__":
-    raise SystemExit(main())
+cluster = sys.argv[1]
+timeout_mins = int(sys.argv[2])
+services = sys.argv[3:]
+
+ecs = boto3.client("ecs")
+
+print("========================================")
+print(f"Cluster:  {cluster}")
+print(f"Services: {' '.join(services)}")
+print(f"Timeout:  {timeout_mins} minutes")
+print("========================================")
+print("")
+
+wait_for_services(ecs, cluster, timeout_mins, services)
