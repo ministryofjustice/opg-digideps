@@ -403,19 +403,22 @@ class FixtureController extends AbstractController
         ], $client);
     }
 
-    private function createOrgAndAttachParticipants($fromRequest, User $deputy, Client $client): void
+    private function createOrgAndAttachParticipants($fromRequest, User $user, Client $client): void
     {
         $uniqueOrgNameSegment = (preg_match('/\d+/', $fromRequest['deputyEmail'], $matches)) ? $matches[0] : rand(0, 9999);
         $orgName = sprintf('Org %s Ltd', $uniqueOrgNameSegment);
 
-        if (null === $this->organisationRepository->findOneBy(['name' => $orgName])) {
-            $organisation = $this->organisationFactory->createFromEmailIdentifier($orgName, $fromRequest['deputyEmail'], true);
-        } else {
-            /** @var Organisation $organisation */
-            $organisation = $this->organisationRepository->findOneBy(['name' => $orgName]);
+        /** @var Organisation $organisation */
+        $organisation = $this->organisationRepository->findOneBy(['name' => $orgName]);
+        if (null === $organisation) {
+            $organisation = $this->organisationFactory->createFromEmailIdentifier(
+                $orgName,
+                $fromRequest['deputyEmail'],
+                true
+            );
         }
 
-        $organisation->addUser($deputy);
+        $organisation->addUser($user);
 
         if ($fromRequest['orgSizeUsers'] > 1 && !empty($fromRequest['orgSizeUsers'])) {
             foreach (range(1, $fromRequest['orgSizeUsers']) as $number) {
@@ -431,8 +434,8 @@ class FixtureController extends AbstractController
 
         $this->em->flush();
 
-        if (!$this->deputyRepository->findOneBy(['email1' => $deputy->getEmail()])) {
-            $deputy = $this->buildDeputy($deputy, $fromRequest);
+        if (!$this->deputyRepository->findOneBy(['email1' => $user->getEmail()])) {
+            $deputy = $this->buildDeputy($user, $fromRequest);
             $client->setDeputy($deputy);
         }
 
