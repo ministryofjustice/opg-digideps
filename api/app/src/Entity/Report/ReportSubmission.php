@@ -112,6 +112,7 @@ class ReportSubmission
         $this->documents = new ArrayCollection();
         $this->createdBy = $createdBy;
         $this->downloadable = true;
+        $this->uuid = null;
     }
 
     public function getId(): int

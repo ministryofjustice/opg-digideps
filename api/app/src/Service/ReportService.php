@@ -237,7 +237,7 @@ class ReportService
     /**
      * Create new year's report copying data over (and set start/endDate accordingly).
      */
-    private function createNextYearReport(Report $oldReport, bool $log = true): Report
+    public function createNextYearReport(Report $oldReport, bool $log = true): Report
     {
         if (!$oldReport->getSubmitted()) {
             throw new \RuntimeException("Can't create a new year report based on an unsubmitted report");
