@@ -43,7 +43,6 @@ class UserAssembler
         $dto->setEmail($user->getEmail());
         $dto->setRoleName($user->getRoleName());
         $dto->setAddressPostcode($user->getAddressPostcode());
-        $dto->setNdrEnabled($user->getNdrEnabled());
         $dto->setActive((bool) $user->getActive());
         $dto->setJobTitle($user->getJobTitle());
         $dto->setPhoneMain($user->getPhoneMain());

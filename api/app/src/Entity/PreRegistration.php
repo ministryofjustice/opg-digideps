@@ -47,7 +47,6 @@ class PreRegistration
         $this->deputyAddress5 = $row['DeputyAddress5'] ?? null;
         $this->deputyPostCode = $row['DeputyPostcode'] ?? null;
         $this->typeOfReport = $row['ReportType'] ?? null;
-        $this->ndr = null;
         $this->orderDate = isset($row['MadeDate']) ? new \DateTime($row['MadeDate']) : null;
         $this->orderType = $row['OrderType'] ?? null;
         $this->isCoDeputy = isset($row['CoDeputy']) ? 'yes' === $row['CoDeputy'] : null;
@@ -187,12 +186,6 @@ class PreRegistration
      */
     #[JMS\Type('string')]
     private ?string $typeOfReport;
-
-    /**
-     * @ORM\Column(name="ndr", type="boolean", nullable=true)
-     */
-    #[JMS\Type('bool')]
-    private ?bool $ndr;
 
     /**
      * @ORM\Column(name="order_date", type="datetime", nullable=true)
@@ -457,18 +450,6 @@ class PreRegistration
     public function setDeputyAddress5(?string $deputyAddress5): self
     {
         $this->deputyAddress5 = $deputyAddress5;
-
-        return $this;
-    }
-
-    public function getNdr(): ?bool
-    {
-        return $this->ndr;
-    }
-
-    public function setNdr(?bool $ndr): self
-    {
-        $this->ndr = $ndr;
 
         return $this;
     }
