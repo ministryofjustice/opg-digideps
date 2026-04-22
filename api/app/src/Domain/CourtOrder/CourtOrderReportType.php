@@ -21,6 +21,6 @@ enum CourtOrderReportType: string
 
     public function getSuffix(): string
     {
-        return substr($this->value, 3);
+        return substr($this->value, -1);
     }
 }
