@@ -165,7 +165,7 @@ class FormFieldsExtension extends AbstractExtension
     /**
      * Renders form select element.
      */
-    public function renderFormDropDown(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null)
+    public function renderFormDropDown(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null): void
     {
         // generate input field html using variables supplied
         echo $this->environment->render(

@@ -5196,11 +5196,6 @@ parameters:
 			path: src/Form/Report/ActionType.php
 
 		-
-			message: "#^Method App\\\\Form\\\\Report\\\\Asset\\\\AssetTypeOther\\:\\:getValidationGroups\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Form/Report/Asset/AssetTypeOther.php
-
-		-
 			message: "#^Call to method trans\\(\\) on an unknown class App\\\\Form\\\\Report\\\\Asset\\\\Translator\\.$#"
 			count: 1
 			path: src/Form/Report/Asset/AssetTypeTitle.php
@@ -7359,11 +7354,6 @@ parameters:
 			message: "#^PHPDoc tag @param has invalid value \\(string translationPrefix\\)\\: Unexpected token \"translationPrefix\", expected variable at offset 81$#"
 			count: 1
 			path: src/Twig/ComponentsExtension.php
-
-		-
-			message: "#^Method App\\\\Twig\\\\FormFieldsExtension\\:\\:renderFormDropDown\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
 
 		-
 			message: "#^Property App\\\\Validator\\\\Constraints\\\\Chain\\:\\:\\$constraints has no type specified\\.$#"
