@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace DigidepsTests\Logger;
+namespace Tests\OPG\Digideps\Common\Unit\Logger;
 
 use DateTime;
-use App\Logger\OpgLineFormatter;
+use Monolog\Level;
+use Monolog\LogRecord;
+use OPG\Digideps\Common\Logger\OpgLineFormatter;
 use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 
@@ -15,15 +17,14 @@ final class OpgLineFormatterTest extends TestCase
     {
         $formatter = new OpgLineFormatter();
 
-        $record = [
-            'datetime' => new DateTime('2024-06-10 12:00:00'),
-            'level' => Logger::INFO,
-            'level_name' => 'INFO',
-            'message' => 'This is a test message',
-            'channel' => 'app',
-            'extra' => ['foo' => 123],
-            'context' => [],
-        ];
+        $record = new LogRecord(
+            new \DateTimeImmutable('2024-06-10 12:00:00'),
+            'app',
+            Level::Info,
+            'This is a test message',
+            [],
+            ['foo' => 123],
+        );
 
         $expectedOutput = "[\033[0;94m2024-06-10 12:00:00\033[0m] \033[0;32mapp.INFO\033[0m: This is a test message [] {\"foo\":123}";
 

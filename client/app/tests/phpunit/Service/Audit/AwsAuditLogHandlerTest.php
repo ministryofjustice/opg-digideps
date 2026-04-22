@@ -10,7 +10,9 @@ use DateTime;
 use DateTimeZone;
 use Exception;
 use Monolog\Handler\AbstractProcessingHandler;
+use Monolog\Level;
 use Monolog\Logger;
+use Monolog\LogRecord;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -20,7 +22,7 @@ class AwsAuditLogHandlerTest extends TestCase
     /** @var AwsAuditLogHandler */
     private $sut;
 
-    /** @var MockObject|CloudWatchLogsClient */
+    /** @var MockObject&CloudWatchLogsClient */
     private $cloudWatchClient;
 
     public const string LOG_GROUP_NAME = 'audit-local';
@@ -53,12 +55,13 @@ class AwsAuditLogHandlerTest extends TestCase
      */
     public function ignoresRecordsWithoutEventName(): void
     {
-        $record = [
-            'level' => Logger::NOTICE,
-            'message' => 'Client Deleted',
-            'datetime' => new DateTime('2018-09-02 13:42:23'),
-            'context' => ['type' => 'audit'],
-        ];
+        $record = new LogRecord(
+            new \DateTimeImmutable('2018-09-02 13:42:23'),
+            'client',
+            Level::Notice,
+            'Client Deleted',
+            ['type' => 'audit'],
+        );
 
         $this
             ->assertLogStreamWillNotBeCreated()
@@ -74,12 +77,13 @@ class AwsAuditLogHandlerTest extends TestCase
      */
     public function ignoresRecordsWithoutEventType(): void
     {
-        $record = [
-            'level' => Logger::NOTICE,
-            'message' => 'Client Deleted',
-            'datetime' => new DateTime('2018-09-02 13:42:23'),
-            'context' => ['event' => self::STREAM_NAME],
-        ];
+        $record = new LogRecord(
+            new \DateTimeImmutable('2018-09-02 13:42:23'),
+            'client',
+            Level::Notice,
+            'Client Deleted',
+            ['event' => self::STREAM_NAME],
+        );
 
         $this
             ->assertLogStreamWillNotBeCreated()
@@ -230,20 +234,16 @@ class AwsAuditLogHandlerTest extends TestCase
     /**
      * @throws Exception
      */
-    private function getLogMessageInput(): array
+    private function getLogMessageInput(): LogRecord
     {
-        $dateTime = new DateTime('2018-09-02 13:42:23');
-        $timezone = new DateTimeZone(date_default_timezone_get());
+        $dateTime = new \DateTimeImmutable('2018-09-02 13:42:23');
+        $timezone = new \DateTimeZone(date_default_timezone_get());
         $dateTime->setTimezone($timezone);
 
-        return [
-            'level' => Logger::NOTICE,
-            'datetime' => $dateTime,
-            'context' => [
-                'event' => self::STREAM_NAME,
-                'type' => 'audit',
-            ],
-        ];
+        return new LogRecord($dateTime, 'client', Level::Notice, '', [
+            'event' => self::STREAM_NAME,
+            'type' => 'audit',
+        ]);
     }
 
     private function ensureLogStreamWillExist(): AwsAuditLogHandlerTest

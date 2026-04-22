@@ -7,8 +7,9 @@
   "require": {
     "php": "^8.4",
     "jms/serializer-bundle": "^5.5.2",
-    "symfony/form": "^6.4.32",
-    "symfony/validator": "^6.4.30"
+    "symfony/form": "^6.4.35",
+    "symfony/validator": "^6.4.35",
+    "monolog/monolog": "^3.10.0"
   },
   "require-dev": {
     "dg/bypass-finals": "^1.9",
@@ -27,7 +28,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "OPG\\Digideps\\Tests\\Common\\": "tests"
+      "Tests\\OPG\\Digideps\\Common\\": "tests"
     }
   }
 }

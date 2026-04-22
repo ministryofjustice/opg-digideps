@@ -4926,21 +4926,6 @@ parameters:
 			path: src/Kernel.php
 
 		-
-			message: "#^Offset 'line' does not exist on array\\{function\\: string, line\\?\\: int, file\\: string, class\\?\\: class\\-string, type\\?\\: '\\-\\>'\\|'\\:\\:', args\\?\\: array, object\\?\\: object\\}\\.$#"
-			count: 1
-			path: src/Logger/OpgJsonFormatter.php
-
-		-
-			message: "#^Method App\\\\Logger\\\\OpgLineFormatter\\:\\:format\\(\\) should return string but returns mixed\\.$#"
-			count: 1
-			path: src/Logger/OpgLineFormatter.php
-
-		-
-			message: "#^Parameter \\#2 \\$subject of function preg_match expects string, mixed given\\.$#"
-			count: 1
-			path: src/Logger/OpgLineFormatter.php
-
-		-
 			message: "#^Class App\\\\Repository\\\\AssetRepository extends generic class Doctrine\\\\Bundle\\\\DoctrineBundle\\\\Repository\\\\ServiceEntityRepository but does not specify its types\\: T$#"
 			count: 1
 			path: src/Repository/AssetRepository.php
