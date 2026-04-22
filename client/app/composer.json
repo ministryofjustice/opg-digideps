@@ -10,6 +10,10 @@
             "pact-foundation/composer-downloads-plugin": false
         }
     },
+    "scripts": {
+        "lint:phpstan": "phpstan",
+        "lint:phpstan:baseline": "phpstan && phpstan --generate-baseline"
+    },
     "autoload": {
         "psr-4": {
             "OPG\\Digideps\\Frontend\\": "src/"
@@ -106,13 +110,13 @@
     ],
     "require-dev": {
         "dg/bypass-finals": "^1.9",
-        "jangregor/phpstan-prophecy": "^1.0.2",
+        "jangregor/phpstan-prophecy": "^2.3.0",
         "mockery/mockery": "^1.6.12",
         "pact-foundation/pact-php": "^8.1",
         "phpspec/prophecy-phpunit": "^2.5",
-        "phpstan/phpstan": "^1.12.32",
-        "phpstan/phpstan-mockery": "^1.1.3",
-        "phpstan/phpstan-phpunit": "^1.4.2",
+        "phpstan/phpstan": "^2.1.49",
+        "phpstan/phpstan-mockery": "^2.0.0",
+        "phpstan/phpstan-phpunit": "^2.0.16",
         "phpunit/phpcov": "8.2.1",
         "phpunit/phpunit": "^9.6.34",
         "symfony/maker-bundle": "^1.66.0",

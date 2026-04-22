@@ -234,6 +234,11 @@ common-phpunit: ##@unit-tests Run the common unit tests.
 common-phpstan: ##@static-analysis Runs PHPStan against common.
 	docker compose run composer-common-phpstan
 
+phpstan-regenerate:
+	(cd ./common && composer run lint:phpstan)
+	(cd ./api/app && composer run lint:phpstan:baseline)
+	(cd ./client/app && composer run lint:phpstan:baseline)
+
 composer-install:
 	(cd ./common && composer install)
 	(cd ./api/app && composer install)
