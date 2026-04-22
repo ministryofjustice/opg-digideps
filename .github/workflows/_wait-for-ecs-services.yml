@@ -62,8 +62,9 @@ jobs:
             "admin-${WORKSPACE}" \
             "api-${WORKSPACE}" \
             "front-${WORKSPACE}" \
-            "scan-${WORKSPACE}" \
             "htmltopdf-${WORKSPACE}" \
+            "mock-sirius-integration${WORKSPACE}" \
+            "scan-ecs2508" \
             "sirius-files-sync-${WORKSPACE}"
 
       - name: Unset AWS variables
