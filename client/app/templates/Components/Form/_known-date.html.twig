@@ -1,6 +1,7 @@
-{%- set optionalLabel = '' -%}
 {%- if not required -%}
-    {%- set optionalLabel = 'optional' | trans({}, 'common') -%}
+    {%-  set amendedLegendText = legend.text ~ ' ' ~ 'optional' | trans({}, 'common') -%}
+{% else %}
+    {%-  set amendedLegendText = legend.text -%}
 {%- endif -%}
 
 <div id="form-group-{{ element.vars.id }}" class="govuk-form-group {% if not element.vars.valid %}govuk-form-group--error{% endif %}">
@@ -10,10 +11,10 @@
                 {% if legend.caption %}
                     <span class="govuk-caption-xl">{{ legend.caption }}</span>
                 {% endif %}
-                <h1 class="govuk-fieldset__heading">{{ legend.text }}{% if not required %} {{ optionalLabel }}{% endif %}</h1>
+                <h1 class="govuk-fieldset__heading">{{ amendedLegendText }}</h1>
             {% else %}
                 <h3 class="govuk-fieldset__heading">
-                    {{ legend.text }}{% if not required %} {{ optionalLabel }}{% endif %}
+                    {{ amendedLegendText }}
                 </h3>
             {% endif %}
         </legend>

@@ -176,7 +176,7 @@ class FormFieldsExtension extends AbstractExtension
 
     public function renderFormKnownDate(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null): void
     {
-        list($translationKey,$domain) = $this->getTranslationKeyAndDomain($element, $elementName, $transIndex);
+        ['translationKey' => $translationKey, 'domain' => $domain] = $this->getTranslationKeyAndDomain($element, $elementName, $transIndex);
         $showDay = $vars['showDay'] ?? 'true';
 
         // sort hint text translation with default fallback
@@ -387,7 +387,7 @@ class FormFieldsExtension extends AbstractExtension
     private function getDateHintText(string $translationKey, string $domain, ?string $customHint = null): string
     {
         // Use custom hint if provided
-        if (!empty($customHint)) {
+        if (null !== ($customHint)) {
             return $customHint;
         }
 
@@ -451,13 +451,13 @@ class FormFieldsExtension extends AbstractExtension
      * @param FormView $element The form element
      * @param string $elementName The element name
      * @param int|null $transIndex Optional transaction index for nested translations
-     * @return array Array containing [translationKey, domain]
+     * @return array{'translationKey':string, 'domain':string} containing [translationKey, domain]
      */
     private function getTranslationKeyAndDomain(FormView $element, string $elementName, ?int $transIndex = null): array
     {
         $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
         $domain = $element->parent->vars['translation_domain'];
-        return [$translationKey, $domain];
+        return ['translationKey' => $translationKey, 'domain' => $domain];
     }
 
     public function getName(): string
