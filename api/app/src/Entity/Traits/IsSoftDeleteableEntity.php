@@ -3,6 +3,7 @@
 namespace OPG\Digideps\Backend\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 
 /**
  * SoftDeletable Trait, usable with PHP >= 5.4.
@@ -11,11 +12,10 @@ trait IsSoftDeleteableEntity
 {
     /**
      * @var \DateTime
-     *
-     * @JMS\Groups({"client", "transactionSoftDelete"})
-     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
-     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
      */
+    #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
+    #[JMS\Groups(['client', 'transactionSoftDelete'])]
+    #[ORM\Column(name: 'deleted_at', type: 'datetime', nullable: true)]
     protected $deletedAt;
 
     /**

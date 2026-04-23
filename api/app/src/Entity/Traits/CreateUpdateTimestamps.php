@@ -2,19 +2,14 @@
 
 namespace OPG\Digideps\Backend\Entity\Traits;
 
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 trait CreateUpdateTimestamps
 {
-    /**
-     * @ORM\Column(name="created_at", type="datetime", nullable=true)
-     */
+    #[ORM\Column(name: 'created_at', type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $createdAt = null;
 
-    /**
-     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
-     */
+    #[ORM\Column(name: 'updated_at', type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
     public function getCreatedAt(): ?\DateTimeInterface
@@ -41,9 +36,7 @@ trait CreateUpdateTimestamps
         return $this;
     }
 
-    /**
-     * @ORM\PrePersist
-     */
+    #[ORM\PrePersist]
     public function setCreatedAtAutomatically()
     {
         if (null === $this->getCreatedAt()) {
@@ -51,9 +44,7 @@ trait CreateUpdateTimestamps
         }
     }
 
-    /**
-     * @ORM\PreUpdate
-     */
+    #[ORM\PreUpdate]
     public function setUpdatedAtAutomatically()
     {
         $this->setUpdatedAt(new \DateTime());
