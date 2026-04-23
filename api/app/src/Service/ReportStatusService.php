@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Service;
 
 use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
@@ -27,9 +29,7 @@ class ReportStatusService
     private $useStatusCache = false;
 
     public function __construct(
-        /**
-         * @JMS\Exclude
-         */
+        #[JMS\Exclude]
         private readonly Report $report
     ) {
     }
@@ -44,15 +44,9 @@ class ReportStatusService
         return $this;
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"status", "decision-status"})
-     *
-     * @return array
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'decision-status'])]
     public function getDecisionsState(): array
     {
         $hasDecisions = count($this->report->getDecisions()) > 0;
@@ -74,15 +68,9 @@ class ReportStatusService
         return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"status", "contact-status"})
-     *
-     * @return array
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'contact-status'])]
     public function getContactsState(): array
     {
         $hasContacts = count($this->report->getContacts()) > 0;
@@ -93,15 +81,9 @@ class ReportStatusService
         }
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"status", "visits-care-state"})
-     *
-     * @return array
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'visits-care-state'])]
     public function getVisitsCareState(): array
     {
         $visitsCare = $this->report->getVisitsCare();
@@ -112,25 +94,16 @@ class ReportStatusService
             $visitsCare->getDoesClientHaveACarePlan(),
         ] : [];
 
-        switch (count(array_filter($answers))) {
-            case 0:
-                return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
-            case count($answers):
-                return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
-            default:
-                return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
-        }
+        return match (count(array_filter($answers))) {
+            0 => ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0],
+            count($answers) => ['state' => self::STATE_DONE, 'nOfRecords' => 0],
+            default => ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0],
+        };
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"status", "account-state"})
-     *
-     * @return array
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'account-state'])]
     public function getBankAccountsState(): array
     {
         $bankAccounts = $this->report->getBankAccounts();
@@ -145,15 +118,9 @@ class ReportStatusService
         return ['state' => self::STATE_DONE, 'nOfRecords' => count($bankAccounts)];
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"status", "money-transfer-state"})
-     *
-     * @return array
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'money-transfer-state'])]
     public function getMoneyTransferState(): array
     {
         $hasAtLeastOneTransfer = count($this->report->getMoneyTransfers()) >= 1;
@@ -166,15 +133,9 @@ class ReportStatusService
         return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"status", "money-in-state"})
-     *
-     * @return array
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'money-in-state'])]
     public function getMoneyInState(): array
     {
         if ($this->report->hasMoneyIn()) {
@@ -188,15 +149,9 @@ class ReportStatusService
         return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"status", "money-out-state"})
-     *
-     * @return array
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'money-out-state'])]
     public function getMoneyOutState(): array
     {
         if ($this->report->hasMoneyOut()) {
@@ -210,15 +165,9 @@ class ReportStatusService
         return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"status", "money-in-short-state"})
-     *
-     * @return array
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'money-in-short-state'])]
     public function getMoneyInShortState(): array
     {
         $categoriesCount = count($this->report->getMoneyShortCategoriesInPresent());
@@ -248,15 +197,9 @@ class ReportStatusService
         return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"status", "money-out-short-state"})
-     *
-     * @return array
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'money-out-short-state'])]
     public function getMoneyOutShortState(): array
     {
         $categoriesCount = count($this->report->getMoneyShortCategoriesOutPresent());
@@ -286,18 +229,10 @@ class ReportStatusService
         return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"status", "balance-state"})
-     *
-     * see https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/152502291
-     *
-     * @return array
-     */
-    public function getBalanceState()
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'balance-state'])] // see https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/152502291
+    public function getBalanceState(): array
     {
         // if the section does not exist, "done" is returned. Although in that case this method shouldn't be called/needed
         if (!$this->report->hasSection(Report::SECTION_BALANCE)) {
@@ -326,30 +261,18 @@ class ReportStatusService
         return ['state' => self::STATE_NOT_MATCHING, 'nOfRecords' => 0];
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"status"})
-     *
-     * @return bool
-     */
-    public function isReadyToSubmit()
+    #[JMS\VirtualProperty]
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['status'])]
+    public function isReadyToSubmit(): bool
     {
         return 0 === count($this->getRemainingSections());
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"status", "asset-state"})
-     *
-     * @return array
-     */
-    public function getAssetsState()
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'asset-state'])]
+    public function getAssetsState(): array
     {
         $hasAtLeastOneAsset = count($this->report->getAssets()) > 0;
         $noAssetsToAdd = $this->report->getNoAssetToAdd();
@@ -365,15 +288,9 @@ class ReportStatusService
         return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"status", "debt-state"})
-     *
-     * @return array
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'debt-state'])]
     public function getDebtsState(): array
     {
         $hasDebts = $this->report->getHasDebts();
@@ -391,16 +308,10 @@ class ReportStatusService
         }
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"status", "fee-state"})
-     *
-     * @return array
-     */
-    public function getPaFeesExpensesState()
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'fee-state'])]
+    public function getPaFeesExpensesState(): array
     {
         // if the section is not relevant for the report, then it's done
         if (!$this->report->hasSection(Report::SECTION_PA_DEPUTY_EXPENSES)) {
@@ -418,16 +329,10 @@ class ReportStatusService
         return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"status", "fee-state"})
-     *
-     * @return array
-     */
-    public function getProfCurrentFeesState()
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'fee-state'])]
+    public function getProfCurrentFeesState(): array
     {
         if (!$this->report->hasSection(Report::SECTION_PROF_CURRENT_FEES)) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
@@ -444,16 +349,10 @@ class ReportStatusService
         return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"status", "prof-deputy-costs-state"})
-     *
-     * @return array
-     */
-    public function getProfDeputyCostsState()
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'prof-deputy-costs-state'])]
+    public function getProfDeputyCostsState(): array
     {
         if (!$this->report->hasSection(Report::SECTION_PROF_DEPUTY_COSTS)) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
@@ -491,16 +390,10 @@ class ReportStatusService
         return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"status", "prof-deputy-costs-state"})
-     *
-     * @return array
-     */
-    public function getProfDeputyCostsEstimateState()
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'prof-deputy-costs-state'])]
+    public function getProfDeputyCostsEstimateState(): array
     {
         if (!$this->report->hasSection(Report::SECTION_PROF_DEPUTY_COSTS_ESTIMATE)) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
@@ -519,15 +412,9 @@ class ReportStatusService
             ['state' => self::STATE_DONE, 'nOfRecords' => 0];
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"status", "action-state"})
-     *
-     * @return array
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'action-state'])]
     public function getActionsState(): array
     {
         $action = $this->report->getAction();
@@ -546,15 +433,9 @@ class ReportStatusService
         }
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"status", "more-info-state"})
-     *
-     * @return array
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'more-info-state'])]
     public function getOtherInfoState(): array
     {
         if (null === $this->report->getActionMoreInfo()) {
@@ -564,16 +445,10 @@ class ReportStatusService
         return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"status", "documents-state"})
-     *
-     * @return array
-     */
-    public function getDocumentsState()
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'documents-state'])]
+    public function getDocumentsState(): array
     {
         $numRecords = count($this->report->getDeputyDocuments());
 
@@ -588,11 +463,9 @@ class ReportStatusService
         return array_merge($status, ['nOfRecords' => $numRecords]);
     }
 
-    /**
-     * @JMS\VirtualProperty
-     * @JMS\Type("array")
-     * @JMS\Groups({"status", "expenses-state"})
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'expenses-state'])]
     public function getExpensesState(): array
     {
         // if the section is not relevant for the report, then it's "done"
@@ -607,11 +480,9 @@ class ReportStatusService
         return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
     }
 
-    /**
-     * @JMS\VirtualProperty
-     * @JMS\Type("array")
-     * @JMS\Groups({"status", "gifts-state"})
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'gifts-state'])]
     public function getGiftsState(): array
     {
         if ($this->report->giftsSectionCompleted()) {
@@ -621,9 +492,7 @@ class ReportStatusService
         return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
     }
 
-    /**
-     * @JMS\Exclude
-     */
+    #[JMS\Exclude]
     public function getRemainingSections(): array
     {
         $doneStatuses = [self::STATE_DONE, self::STATE_EXPLAINED, self::STATE_LOW_ASSETS_DONE];
@@ -634,12 +503,10 @@ class ReportStatusService
     }
 
     /**
-     * @JMS\Exclude
-     *
-     * @param $section string SECTION_*
-     *
+     * @param string $section SECTION_*
      * @return array [ state=>STATE_NOT_STARTED/DONE/INCOMPLETE, nOfRecords=> ]
      */
+    #[JMS\Exclude]
     public function getSectionStateNotCached($section)
     {
         switch ($section) {
@@ -702,10 +569,9 @@ class ReportStatusService
     /**
      * Get section for the specific report type, along with the status.
      *
-     * @JMS\Exclude
-     *
      * @return array of section=>state e.g. ['decisions' => 'notStarted']
      */
+    #[JMS\Exclude]
     public function getSectionStatus(): array
     {
         $statusCached = $this->report->getSectionStatusesCached();
@@ -723,14 +589,11 @@ class ReportStatusService
     }
 
     /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"status", "lifestyle-state"})
-     *
      * @return array
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'lifestyle-state'])]
     public function getLifestyleState()
     {
         $lifestyle = $this->report->getLifestyle();
@@ -749,13 +612,9 @@ class ReportStatusService
         }
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"status", "client-benefits-check-state"})
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['status', 'client-benefits-check-state'])]
     public function getClientBenefitsCheckState(): array
     {
         $benefitsCheck = $this->report->getClientBenefitsCheck();
@@ -783,12 +642,8 @@ class ReportStatusService
         }
     }
 
-    /**
-     * @JMS\Exclude
-     *
-     * @return array
-     */
-    public function getSubmitState()
+    #[JMS\Exclude]
+    public function getSubmitState(): array
     {
         return [
             'state' => $this->isReadyToSubmit() && $this->report->isDue()
@@ -798,10 +653,7 @@ class ReportStatusService
         ];
     }
 
-    /**
-     * @return bool
-     */
-    public function hasStarted()
+    public function hasStarted(): bool
     {
         $sectionStatus = $this->getSectionStatus();
         // exclude balance, and money transfers, that depend on other section therefore not required
@@ -823,15 +675,12 @@ class ReportStatusService
      * Also, it makes more sense to decouple the date from the report status that could be renamed into
      * e.g. "filled"
      *
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"status", "report-status"})
-     *
      * @return string notStarted|readyToSubmit|notFinished
      */
-    public function getStatus()
+    #[JMS\VirtualProperty]
+    #[JMS\Type('string')]
+    #[JMS\Groups(['status', 'report-status'])]
+    public function getStatus(): string
     {
         if (!$this->hasStarted()) {
             return Report::STATUS_NOT_STARTED;
@@ -846,7 +695,7 @@ class ReportStatusService
      *
      * @return string notStarted|readyToSubmit|notFinished
      */
-    public function getStatusIgnoringDueDate()
+    public function getStatusIgnoringDueDate(): string
     {
         if (!$this->hasStarted()) {
             return Report::STATUS_NOT_STARTED;
