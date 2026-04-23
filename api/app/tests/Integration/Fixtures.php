@@ -16,14 +16,15 @@ use OPG\Digideps\Backend\Entity\Report\Contact;
 use OPG\Digideps\Backend\Entity\Report\Decision;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Expense;
+use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\VisitsCare;
+use OPG\Digideps\Common\Validating\ValidatingArray;
 use OPG\Digideps\Backend\Entity as EntityDir;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Entity\PreRegistration;
-use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\User;
 use Doctrine\ORM\EntityManager;
@@ -210,11 +211,11 @@ class Fixtures
             $report = $this->createReport($client);
 
             $other = new AssetOther()
-                ->setValue(rand(1, 10000))
+                ->setValue((string)rand(1, 10000))
                 ->setReport($report);
 
             $property = new AssetProperty()
-                ->setValue(rand(1, 10000))
+                ->setValue((string)rand(1, 10000))
                 ->setOwnedPercentage(rand(1, 100) / 100)
                 ->setReport($report);
 
@@ -239,13 +240,14 @@ class Fixtures
     public function createReport(
         Client $client,
         array $settersMap = [],
-    ) {
+    ): Report {
+        $validatedSettersMap = new ValidatingArray($settersMap);
         // should be created via ReportService, but this is a fixture, so better to keep it simple
         $report = new Report(
             $client,
-            empty($settersMap['setType']) ? Report::LAY_PFA_HIGH_ASSETS_TYPE : $settersMap['setType'],
-            empty($settersMap['setStartDate']) ? new \DateTime('now') : $settersMap['setStartDate'],
-            empty($settersMap['setEndDate']) ? new \DateTime('+12 months -1 day') : $settersMap['setEndDate']
+            $validatedSettersMap->getStringOrDefault('setType', Report::LAY_PFA_HIGH_ASSETS_TYPE),
+            $validatedSettersMap->getObjectOrNull('setStartDate', \DateTime::class) ?? new \DateTime('now'),
+            $validatedSettersMap->getObjectOrNull('setEndDate', \DateTime::class) ?? new \DateTime('+12 months -1 day'),
         );
 
         foreach ($settersMap as $k => $v) {

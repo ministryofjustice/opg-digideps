@@ -108,10 +108,8 @@ abstract class Asset
      * Set value.
      *
      * @param string $value
-     *
-     * @return Asset
      */
-    public function setValue($value)
+    public function setValue($value): static
     {
         $this->value = $value;
 
@@ -146,10 +144,8 @@ abstract class Asset
 
     /**
      * Set report and set to false the report.noAssetToAdd status.
-     *
-     * @return Asset
      */
-    public function setReport(?Report $report = null)
+    public function setReport(?Report $report = null): static
     {
         $this->report = $report;
 
