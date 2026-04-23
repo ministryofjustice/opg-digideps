@@ -4,6 +4,7 @@ namespace OPG\Digideps\Backend\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Entity\User;
 
 /**
@@ -15,30 +16,22 @@ trait ModifyAudit
      * Last modified by.
      *
      * @var User
-     *
-     * @JMS\Type("OPG\Digideps\Backend\Entity\User")
-     *
-     * @JMS\Groups({"last-modified"})
-     *
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\User", fetch="EAGER")
-     *
-     * @ORM\JoinColumn(name="last_modified_by", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
+    #[JMS\Type(User::class)]
+    #[JMS\Groups(['last-modified'])]
+    #[ORM\JoinColumn(name: 'last_modified_by', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EAGER')]
     protected $lastModifiedBy;
 
     /**
      * Last modified on.
      *
      * @var \DateTime
-     *
-     * @JMS\Type("DateTime")
-     *
-     * @JMS\Groups({"last-modified"})
-     *
-     * @ORM\Column(type="datetime", name="last_modified_on", nullable=true)
-     *
-     * @Gedmo\Timestampable(on="update")
      */
+    #[JMS\Type('DateTime')]
+    #[JMS\Groups(['last-modified'])]
+    #[ORM\Column(name: 'last_modified_on', type: 'datetime', nullable: true)]
+    #[Gedmo\Timestampable(on: 'update')]
     protected $lastModifiedOn;
 
     /**
