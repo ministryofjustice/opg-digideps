@@ -18,11 +18,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * Client.
  */
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false)]
 #[ORM\Table(name: 'client', options: ['collate' => 'utf8_general_ci', 'charset' => 'utf8'])]
 #[ORM\Index(columns: ['case_number'], name: 'case_number_idx')]
 #[ORM\Index(columns: ['archived_at'], name: 'archived_at_idx')]
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
-#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false)]
 #[ORM\HasLifecycleCallbacks]
 class Client
 {
@@ -152,7 +152,7 @@ class Client
     private $dateOfBirth;
 
     /**
-     * @var Collection<Note>
+     * @var Collection<int, Note>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Note>')]
     #[JMS\Groups(['client-notes'])]
@@ -161,7 +161,7 @@ class Client
     private $notes;
 
     /**
-     * @var Collection<ClientContact>
+     * @var Collection<int, ClientContact>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\ClientContact>')]
     #[JMS\Groups(['client-clientcontacts'])]
@@ -182,7 +182,7 @@ class Client
     private $deputy;
 
     /**
-     * @var Collection<CourtOrder>
+     * @var Collection<int, CourtOrder>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\CourtOrder>')]
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: CourtOrder::class, cascade: ['persist', 'remove'])]
@@ -414,7 +414,7 @@ class Client
     /**
      * Get users.
      *
-     * @return Collection
+     * @return Collection<int, User>
      */
     public function getUsers()
     {
@@ -483,7 +483,7 @@ class Client
     }
 
     /**
-     * @param Report[] $reports
+     * @param ArrayCollection<int, Report> $reports
      *
      * @return Client
      */
@@ -515,7 +515,7 @@ class Client
      *
      *  //TODO refactor using OrderBy({"submitDate"="DESC"}) on client.reports
      *
-     * @return Collection
+     * @return Collection<int, Report>
      */
     public function getSubmittedReports(): Collection
     {
@@ -677,7 +677,7 @@ class Client
     }
 
     /**
-     * @param ArrayCollection $notes
+     * @param ArrayCollection<int, Note> $notes
      *
      * @return $this
      */
@@ -694,7 +694,7 @@ class Client
     }
 
     /**
-     * @param ArrayCollection $clientContacts
+     * @param ArrayCollection<int, ClientContact> $clientContacts
      *
      * @return $this
      */
@@ -756,7 +756,7 @@ class Client
     }
 
     /**
-     * @return Collection<Report>
+     * @return ArrayCollection<int, Report>
      */
     #[JMS\Exclude]
     public function getUnsubmittedReports()
@@ -911,12 +911,17 @@ class Client
         return false;
     }
 
+    /**
+     * @return Collection<int, CourtOrder>
+     */
     public function getCourtOrders(): Collection
     {
         return $this->courtOrders;
     }
 
     /**
+     * @param Collection<int, CourtOrder> $courtOrders
+     *
      * @return $this
      */
     public function setCourtOrders(Collection $courtOrders)

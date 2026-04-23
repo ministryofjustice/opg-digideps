@@ -782,16 +782,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[JMS\SerializedName('active_report_id')]
     public function getActiveReportId()
     {
-        $client = $this->getFirstClient() ? $this->getFirstClient() : null;
-        if (!$client) {
+        $firstClient = $this->getFirstClient();
+        if ($firstClient === null) {
             return null;
         }
 
-        if (1 === $client->getUnsubmittedReports()->count()) {
-            return $client->getUnsubmittedReports()->first()->getId();
+        $firstUnsubmittedReport = $firstClient->getUnsubmittedReports()->first();
+        if (!$firstUnsubmittedReport instanceof Report) {
+            return null;
         }
 
-        return null;
+        return $firstUnsubmittedReport->getId();
     }
 
     #[JMS\VirtualProperty]

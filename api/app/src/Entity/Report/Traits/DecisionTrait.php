@@ -22,7 +22,7 @@ trait DecisionTrait
 
     /**
      * @var string deputy reason for not having decision. Required if no decisions are added
-     **/
+     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'decision'])]
     #[ORM\Column(name: 'reason_for_no_decisions', type: 'text', nullable: true)]
@@ -64,7 +64,7 @@ trait DecisionTrait
      * @param string $reasonForNoDecisions
      *
      * @return Report
-     **/
+     */
     public function setReasonForNoDecisions($reasonForNoDecisions)
     {
         if (is_string($reasonForNoDecisions)) {
