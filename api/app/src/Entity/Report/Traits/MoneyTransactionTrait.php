@@ -13,59 +13,59 @@ use OPG\Digideps\Backend\Entity\Report\MoneyTransactionInterface;
 trait MoneyTransactionTrait
 {
     /**
-     * @var MoneyTransaction[]
+     * @var Collection<int, MoneyTransaction>
      */
     #[JMS\Groups(['transaction'])]
     #[ORM\OneToMany(mappedBy: 'report', targetEntity: MoneyTransaction::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['id' => 'ASC'])]
-    private $moneyTransactions = [];
+    private Collection $moneyTransactions;
 
     /**
-     * @return MoneyTransaction[]
+     * @return Collection<int, MoneyTransaction>
      */
     #[JMS\VirtualProperty]
     #[JMS\SerializedName('money_transactions_in')]
     #[JMS\Groups(['transactionsIn'])]
-    public function getMoneyTransactionsIn(): array
+    public function getMoneyTransactionsIn()
     {
-        return array_filter($this->moneyTransactions, function ($t) {
+        return $this->moneyTransactions->filter(function ($t) {
             return 'in' == $t->getType();
         });
     }
 
     /**
-     * @return MoneyTransaction[]
+     * @return Collection<int, MoneyTransaction>
      */
     #[JMS\VirtualProperty]
     #[JMS\SerializedName('money_transactions_out')]
     #[JMS\Groups(['transactionsOut'])]
-    public function getMoneyTransactionsOut(): array
+    public function getMoneyTransactionsOut(): Collection
     {
-        return array_filter($this->moneyTransactions, function ($t) {
+        return $this->moneyTransactions->filter(function ($t) {
             return 'out' == $t->getType();
         });
     }
 
     /**
-     * @return Collection<MoneyTransaction>
+     * @return Collection<int, MoneyTransaction>
      */
-    public function getMoneyTransactions()
+    public function getMoneyTransactions(): Collection
     {
         return $this->moneyTransactions;
     }
 
     /**
-     * @param mixed $moneyTransactions
+     * @param Collection<int, MoneyTransaction> $moneyTransactions
      */
-    public function setMoneyTransactions($moneyTransactions)
+    public function setMoneyTransactions(Collection $moneyTransactions)
     {
         $this->moneyTransactions = $moneyTransactions;
     }
 
     public function addMoneyTransaction(MoneyTransaction $t)
     {
-        if (!in_array($t, $this->moneyTransactions)) {
-            $this->moneyTransactions[] = $t;
+        if (!$this->moneyTransactions->contains($t)) {
+            $this->moneyTransactions->add($t);
         }
     }
 
