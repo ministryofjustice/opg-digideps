@@ -1,147 +1,108 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report;
 
-use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
 
-/**
- * Contacts.
- *
- * @ORM\Table(name="contact")
- *
- * @ORM\Entity
- *
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Table(name: 'contact')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Contact
 {
     use CreateUpdateTimestamps;
 
     /**
      * @var int
-     *
-     * @JMS\Type("integer")
-     *
-     * @JMS\Groups({"contact"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="contact_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['contact'])]
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'contact_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"contact"})
-     *
-     * @ORM\Column(name="contact_name", type="string", length=255, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
+    #[ORM\Column(name: 'contact_name', type: 'string', length: 255, nullable: true)]
     private $contactName;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"contact"})
-     *
-     * @ORM\Column(name="address", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
+    #[ORM\Column(name: 'address', type: 'string', length: 200, nullable: true)]
     private $address;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"contact"})
-     *
-     * @ORM\Column(name="address2", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
+    #[ORM\Column(name: 'address2', type: 'string', length: 200, nullable: true)]
     private $address2;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"contact"})
-     *
-     * @ORM\Column(name="county", type="string", length=200, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
+    #[ORM\Column(name: 'county', type: 'string', length: 200, nullable: true)]
     private $county;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"contact"})
-     *
-     * @ORM\Column(name="postcode", type="string", length=10, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
+    #[ORM\Column(name: 'postcode', type: 'string', length: 10, nullable: true)]
     private $postcode;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"contact"})
-     *
-     * @ORM\Column(name="country", type="string", length=10, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
+    #[ORM\Column(name: 'country', type: 'string', length: 10, nullable: true)]
     private $country;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"contact"})
-     *
-     * @ORM\Column(name="explanation", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
+    #[ORM\Column(name: 'explanation', type: 'text', nullable: true)]
     private $explanation;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"contact"})
-     *
-     * @ORM\Column(name="relationship", type="string", length=100, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
+    #[ORM\Column(name: 'relationship', type: 'string', length: 100, nullable: true)]
     private $relationship;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"contact"})
-     *
-     * @ORM\Column(name="phone1", type="string", length=20, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['contact'])]
+    #[ORM\Column(name: 'phone1', type: 'string', length: 20, nullable: true)]
     private $phone1;
 
     /**
      * @var Report
-     *
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="contacts")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'contacts')]
     private $report;
 
     /**

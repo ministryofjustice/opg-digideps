@@ -1,14 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
+use Doctrine\Common\Collections\Collection;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransaction;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransactionInterface;
 
 trait MoneyTransactionTrait
 {
     /**
-     * @var MoneyTransaction[]
+     * @var Collection<MoneyTransaction>
      *
      * @JMS\Groups({"transaction"})
      *
@@ -25,7 +28,7 @@ trait MoneyTransactionTrait
      *
      * @JMS\Groups({"transactionsIn"})
      *
-     * @return MoneyTransaction[]
+     * @return Collection<MoneyTransaction>
      */
     public function getMoneyTransactionsIn()
     {
@@ -41,7 +44,7 @@ trait MoneyTransactionTrait
      *
      * @JMS\Groups({"transactionsOut"})
      *
-     * @return MoneyTransaction[]
+     * @return Collection<MoneyTransaction>
      */
     public function getMoneyTransactionsOut()
     {
@@ -51,7 +54,7 @@ trait MoneyTransactionTrait
     }
 
     /**
-     * @return MoneyTransaction[]
+     * @return Collection<MoneyTransaction>
      */
     public function getMoneyTransactions()
     {
@@ -130,7 +133,7 @@ trait MoneyTransactionTrait
     }
 
     /**
-     ** @return bool
+     * @return bool
      */
     public function hasMoneyIn()
     {
@@ -138,7 +141,7 @@ trait MoneyTransactionTrait
     }
 
     /**
-     ** @return bool
+     * @return bool
      */
     public function hasMoneyOut()
     {

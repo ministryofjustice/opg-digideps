@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,7 +24,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false)]
 #[ORM\HasLifecycleCallbacks]
-class Client implements ClientInterface
+class Client
 {
     use CreateUpdateTimestamps;
     use IsSoftDeleteableEntity;

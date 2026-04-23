@@ -4,21 +4,18 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Entity\UserResearch;
 
-use OPG\Digideps\Backend\Entity\Satisfaction;
-use OPG\Digideps\Backend\Entity\User;
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\Entity\Satisfaction;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\UserResearchResponseRepository;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\UserResearchResponseRepository")
- *
- * @ORM\Table(name="user_research_response")
- */
+#[ORM\Table(name: 'user_research_response')]
+#[ORM\Entity(repositoryClass: UserResearchResponseRepository::class)]
 class UserResearchResponse
 {
     public function __construct(?UuidInterface $id = null)
@@ -27,79 +24,45 @@ class UserResearchResponse
         $this->created = new \DateTime();
     }
 
-    /**
-     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\UserResearch\ResearchType", inversedBy="userResearchResponse", cascade={"persist"}, orphanRemoval=true)
-     *
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     *
-     * @JMS\Type("OPG\Digideps\Backend\Entity\UserResearch\ResearchType")
-     *
-     * @JMS\Groups({"user-research", "satisfaction"})
-     */
+    #[JMS\Type('App\Entity\UserResearch\ResearchType')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
+    #[ORM\OneToOne(inversedBy: 'userResearchResponse', targetEntity: ResearchType::class, cascade: ['persist'], orphanRemoval: true)]
     private ResearchType $researchType;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\User", inversedBy="userResearchResponse", cascade={"persist"})
-     *
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")
-     *
-     * @JMS\Type("OPG\Digideps\Backend\Entity\User")
-     *
-     * @JMS\Groups({"user-research", "satisfaction"})
-     */
+    #[JMS\Type('App\Entity\User')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], inversedBy: 'userResearchResponse')]
     private User $user;
 
-    /**
-     * @ORM\Id
-     *
-     * @ORM\Column(name="id", type="uuid")
-     *
-     * @ORM\GeneratedValue(strategy="NONE")
-     *
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user-research", "satisfaction"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
+    #[ORM\Id]
+    #[ORM\Column(name: 'id', type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface $id;
 
-    /**
-     * @ORM\Column(name="deputyship_length", type="string")
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user-research", "satisfaction"})
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
+    #[ORM\Column(name: 'deputyship_length', type: 'string')]
     private string $deputyshipLength;
 
-    /**
-     * @ORM\Column(name="has_access_to_video_call_device", type="boolean")
-     *
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"user-research", "satisfaction"})
-     */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
+    #[ORM\Column(name: 'has_access_to_video_call_device', type: 'boolean')]
     private bool $hasAccessToVideoCallDevice;
 
-    /**
-     * @JMS\Type("DateTime")
-     *
-     * @JMS\Groups({"user-research", "satisfaction"})
-     *
-     * @ORM\Column(name="created_at", type="datetime",nullable=true)
-     *
-     * @Gedmo\Timestampable(on="create")
-     */
+    #[JMS\Type('DateTime')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
+    #[ORM\Column(name: 'created_at', type: 'datetime', nullable: true)]
+    #[Gedmo\Timestampable(on: 'create')]
     private \DateTime $created;
 
-    /**
-     * @JMS\Type("OPG\Digideps\Backend\Entity\Satisfaction")
-     *
-     * @JMS\Groups({"user-research", "satisfaction"})
-     *
-     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\Satisfaction", inversedBy="userResearchResponse", cascade={"persist", "remove"})
-     */
+    #[JMS\Type(Satisfaction::class)]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
+    #[ORM\OneToOne(inversedBy: 'userResearchResponse', targetEntity: Satisfaction::class, cascade: ['persist', 'remove'])]
     private Satisfaction $satisfaction;
 
     public function getDeputyshipLength(): string

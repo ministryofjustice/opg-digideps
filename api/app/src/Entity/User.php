@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -105,15 +107,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @var int
-     *
-     *
-     *
-     *
      */
+
     #[JMS\Type('integer')]
     #[JMS\Groups(['user', 'report-submitted-by', 'user-id', 'user-list'])]
-    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'user_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;

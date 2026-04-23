@@ -1,34 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
-use OPG\Digideps\Backend\Entity\Report\Gift;
-use OPG\Digideps\Backend\Entity\Report\Report;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\Entity\Report\Gift;
+use OPG\Digideps\Backend\Entity\Report\Report;
 
 trait GiftsTrait
 {
     /**
-     * @var string yes|no|null
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"gifts"})
-     *
-     * @ORM\Column(name="gifts_exist", type="string", length=3, nullable=true)
+     * @var ?string yes|no|null
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['gifts'])]
+    #[ORM\Column(name: 'gifts_exist', type: 'string', length: 3, nullable: true)]
     private $giftsExist;
 
     /**
-     * @var Gift[]
-     *
-     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\Gift>")
-     *
-     * @JMS\Groups({"gifts"})
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\Gift", mappedBy="report", cascade={"persist", "remove"})
+     * @var Collection<Gift>
      */
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Gift>')]
+    #[JMS\Groups(['gifts'])]
+    #[ORM\OneToMany(mappedBy: 'report', targetEntity: Gift::class, cascade: ['persist', 'remove'])]
     private $gifts;
 
     /**
@@ -48,7 +45,7 @@ trait GiftsTrait
     }
 
     /**
-     * @return Gift[]
+     * @return Collection<Gift>
      */
     public function getGifts()
     {
@@ -56,7 +53,7 @@ trait GiftsTrait
     }
 
     /**
-     * @param Gift[]|null $gifts
+     * @param ?Collection<Gift> $gifts
      *
      * @return Report
      */
