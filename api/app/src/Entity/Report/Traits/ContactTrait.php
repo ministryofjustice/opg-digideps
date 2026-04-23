@@ -1,33 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
-use OPG\Digideps\Backend\Entity\Report\Contact;
-use OPG\Digideps\Backend\Entity\Report\Report;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use Doctrine\Common\Collections\Collection;
+use OPG\Digideps\Backend\Entity\Report\Contact;
+use OPG\Digideps\Backend\Entity\Report\Report;
 
 trait ContactTrait
 {
-    /**
-     * @JMS\Groups({"contact"})
-     *
-     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\Contact>")
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\Contact", mappedBy="report", cascade={"persist", "remove"})
-     */
+    #[JMS\Groups(['contact'])]
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Contact>')]
+    #[ORM\OneToMany(mappedBy: 'report', targetEntity: Contact::class, cascade: ['persist', 'remove'])]
     private $contacts;
 
     /**
      * @var string deputy reason for not having contacts. Required if no contacts are added
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report"})
-     *
-     * @ORM\Column(name="reason_for_no_contacts", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report'])]
+    #[ORM\Column(name: 'reason_for_no_contacts', type: 'text', nullable: true)]
     private $reasonForNoContacts;
 
     /**

@@ -1,66 +1,57 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report;
 
 use OPG\Digideps\Backend\Entity\Report\Traits\HasBankAccountTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @ORM\Entity()
- *
- * @ORM\Table(name="gift")
- */
+#[ORM\Table(name: 'gift')]
+#[ORM\Entity]
 class Gift
 {
     use HasBankAccountTrait;
 
     /**
      * @var int
-     *
-     * @JMS\Groups({"gifts"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="gift_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Groups(['gifts'])]
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'gift_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"gifts"})
-     *
-     * @ORM\Column(name="explanation", type="text", nullable=false)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['gifts'])]
+    #[ORM\Column(name: 'explanation', type: 'text', nullable: false)]
     private $explanation;
 
     /**
      * @var float
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"gifts"})
      *
-     * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      *
      * @var string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['gifts'])]
+    #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $amount;
 
     /**
      * @var Report
-     *
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="gifts")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'gifts')]
     private $report;
 
     /**

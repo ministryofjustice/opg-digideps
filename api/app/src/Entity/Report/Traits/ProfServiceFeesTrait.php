@@ -1,24 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
-use OPG\Digideps\Backend\Entity\Report\ProfServiceFee;
-use OPG\Digideps\Backend\Entity\Report\ProfServiceFeeCurrent;
-use OPG\Digideps\Backend\Entity\Report\Report;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\Entity\Report\ProfServiceFee;
+use OPG\Digideps\Backend\Entity\Report\ProfServiceFeeCurrent;
 
 trait ProfServiceFeesTrait
 {
     /**
-     * @var ProfServiceFee[]
-     *
-     * @JMS\Groups({"report-prof-service-fees"})
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\ProfServiceFee", mappedBy="report", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"id" = "ASC"})
+     * @var Collection<ProfServiceFee>
      */
+    #[JMS\Groups(['report-prof-service-fees'])]
+    #[ORM\OneToMany(mappedBy: 'report', targetEntity: ProfServiceFee::class, cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     private $profServiceFees;
 
     public function addProfServiceFee(ProfServiceFee $profServiceFee)
@@ -31,7 +30,7 @@ trait ProfServiceFeesTrait
     }
 
     /**
-     * @return ProfServiceFee[]
+     * @return Collection<ProfServiceFee>
      */
     public function getCurrentProfServiceFees()
     {
@@ -57,7 +56,7 @@ trait ProfServiceFeesTrait
     }
 
     /**
-     * @return ProfServiceFee[]
+     * @return Collection<ProfServiceFee>
      */
     public function getProfServiceFees()
     {
@@ -65,7 +64,7 @@ trait ProfServiceFeesTrait
     }
 
     /**
-     * @param ProfServiceFee[] $profServiceFees
+     * @param Collection<ProfServiceFee> $profServiceFees
      */
     public function setProfServiceFees($profServiceFees)
     {

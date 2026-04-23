@@ -1,16 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report;
 
-use OPG\Digideps\Backend\Entity\Traits\DebtTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\Entity\Traits\DebtTrait;
 
-/**
- * @ORM\Table(name="debt")
- *
- * @ORM\Entity
- */
+#[ORM\Table(name: 'debt')]
+#[ORM\Entity]
 class Debt
 {
     use DebtTrait;
@@ -30,66 +29,49 @@ class Debt
 
     /**
      * @var int
-     *
-     * @JMS\Groups({"debt"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="debt_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Groups(['debt'])]
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'debt_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var Report
-     *
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="debts")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'debts')]
     private $report;
 
     /**
      * @var string a value in self:$debtTypeIds
-     *
-     * @JMS\Groups({"debt"})
-     *
-     * @ORM\Column(name="debt_type_id", type="string", nullable=false)
      */
+    #[JMS\Groups(['debt'])]
+    #[ORM\Column(name: 'debt_type_id', type: 'string', nullable: false)]
     private $debtTypeId;
 
     /**
-     * @var string|null
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"debt"})
-     *
-     * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
+     * @var ?string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['debt'])]
+    #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $amount;
 
     /**
      * @var bool
-     *
-     * @JMS\Groups({"debt"})
-     *
-     * @JMS\Type("boolean")
-     *
-     * @ORM\Column(name="has_more_details", type="boolean", nullable=false)
      */
+    #[JMS\Groups(['debt'])]
+    #[JMS\Type('boolean')]
+    #[ORM\Column(name: 'has_more_details', type: 'boolean', nullable: false)]
     private $hasMoreDetails;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"debt"})
-     *
-     * @ORM\Column(name="more_details", type="text", nullable=true)
      */
+    #[JMS\Groups(['debt'])]
+    #[ORM\Column(name: 'more_details', type: 'text', nullable: true)]
     private $moreDetails;
 
     /**

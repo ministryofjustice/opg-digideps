@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Traits;
 
 use OPG\Digideps\Backend\Entity\User;
