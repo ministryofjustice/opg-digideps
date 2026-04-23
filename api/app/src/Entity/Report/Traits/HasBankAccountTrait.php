@@ -15,9 +15,9 @@ trait HasBankAccountTrait
      */
     #[JMS\Groups(['account'])]
     #[JMS\SerializedName('bankAccount')]
+    #[ORM\JoinColumn(name: 'bank_account_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     #[JMS\Type(BankAccount::class)]
     #[ORM\ManyToOne(targetEntity: BankAccount::class)]
-    #[ORM\JoinColumn(name: 'bank_account_id', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     private $bankAccount;
 
     /**

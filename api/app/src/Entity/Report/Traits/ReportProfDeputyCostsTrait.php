@@ -29,7 +29,6 @@ trait ReportProfDeputyCostsTrait
     #[ORM\Column(name: 'prof_dc_has_previous', type: 'string', length: 3, nullable: true)]
     private $profDeputyCostsHasPrevious;
 
-
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\ProfDeputyPreviousCost>')]
     #[JMS\Groups(['report-prof-deputy-costs-prev'])]
     #[ORM\OneToMany(mappedBy: 'report', targetEntity: ProfDeputyPreviousCost::class, cascade: ['persist', 'remove'])]
@@ -43,7 +42,6 @@ trait ReportProfDeputyCostsTrait
     #[JMS\Groups(['report-prof-deputy-costs-interim'])]
     #[ORM\Column(name: 'prof_dc_has_interim', type: 'string', length: 3, nullable: true)]
     private $profDeputyCostsHasInterim;
-
 
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\ProfDeputyInterimCost>')]
     #[JMS\Groups(['report-prof-deputy-costs-interim'])]
@@ -61,8 +59,6 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @var float
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report-prof-deputy-costs-scco'])]
@@ -71,8 +67,6 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @var string
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report-prof-deputy-costs-scco'])]
@@ -88,7 +82,6 @@ trait ReportProfDeputyCostsTrait
     /**
      * Hold prof deputy other costs type
      * 1st value = id, 2nd value = hasMoreInformation.
-     *
      *
      * @var array
      */
@@ -110,7 +103,7 @@ trait ReportProfDeputyCostsTrait
     #[JMS\SerializedName('prof_deputy_other_cost_type_ids')]
     #[JMS\Type('array')]
     #[JMS\Groups(['prof-deputy-other-costs'])]
-    public static function getProfDeputyOtherCostTypeIds()
+    public static function getProfDeputyOtherCostTypeIds(): array
     {
         return self::$profDeputyOtherCostTypeIds;
     }
@@ -192,8 +185,8 @@ trait ReportProfDeputyCostsTrait
 
     public function addProfDeputyOtherCost(ProfDeputyOtherCost $profDeputyOtherCost): static
     {
-        if (!$this->profDeputyOtherCosts->contains($profDeputyOtherCost)) {
-            $this->profDeputyOtherCosts->add($profDeputyOtherCost);
+        if (!in_array($profDeputyOtherCost, $this->profDeputyOtherCosts)) {
+            $this->profDeputyOtherCosts[] = $profDeputyOtherCost;
         }
 
         return $this;
@@ -202,13 +195,15 @@ trait ReportProfDeputyCostsTrait
     /**
      * @param string $typeId
      *
-     * @return ProfDeputyOtherCost
+     * @return ?ProfDeputyOtherCost
      */
     public function getProfDeputyOtherCostByTypeId($typeId)
     {
-        return $this->getProfDeputyOtherCosts()->filter(function (ProfDeputyOtherCost $profDeputyOtherCost) use ($typeId) {
+        $costs = array_filter($this->profDeputyOtherCosts, function (ProfDeputyOtherCost $profDeputyOtherCost) use ($typeId) {
             return $profDeputyOtherCost->getProfDeputyOtherCostTypeId() == $typeId;
-        })->first();
+        });
+
+        return $costs[0] ?? null;
     }
 
     /**
@@ -308,8 +303,6 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @return float
-     *
-     *
      */
     #[JMS\VirtualProperty]
     #[JMS\Groups(['report-prof-deputy-costs'])]
@@ -334,7 +327,7 @@ trait ReportProfDeputyCostsTrait
 
         // include fixed costs if interim answer is not a "no"
         if ('yes' !== $this->getProfDeputyCostsHasInterim()) {
-            $total += (float) $this->getProfDeputyFixedCost();
+            $total += $this->getProfDeputyFixedCost();
         }
 
         if ('yes' === $this->getProfDeputyCostsHasInterim()) {
