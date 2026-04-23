@@ -7,52 +7,48 @@ namespace OPG\Digideps\Backend\Entity\Report\Traits;
 use OPG\Digideps\Backend\Entity\Report\ProfDeputyEstimateCost;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
+use Doctrine\ORM\Mapping as ORM;
 
 trait ReportProfDeputyCostsEstimateTrait
 {
     /**
      * @var string
-     *
-     * @ORM\Column(name="prof_dc_estimate_hc", type="string", length=10, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-deputy-costs-estimate-how-charged'])]
+    #[ORM\Column(name: 'prof_dc_estimate_hc', type: 'string', length: 10, nullable: true)]
     private $profDeputyCostsEstimateHowCharged;
 
     /**
      * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\ProfDeputyEstimateCost", mappedBy="report", cascade={"persist", "remove"})
-     * @ORM\OrderBy({"id" = "ASC"})
      */
     #[JMS\Type('ArrayCollection<App\Entity\Report\ProfDeputyEstimateCost>')]
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
+    #[ORM\OneToMany(targetEntity: ProfDeputyEstimateCost::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     private $profDeputyEstimateCosts;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="prof_dc_estimate_more_info", type="string", length=3, nullable=true)
      */
     #[JMS\Groups(['prof-deputy-costs-estimate-more-info'])]
+    #[ORM\Column(name: 'prof_dc_estimate_more_info', type: 'string', length: 3, nullable: true)]
     private $profDeputyCostsEstimateHasMoreInfo;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="prof_dc_estimate_more_info_details", type="text", nullable=true)
      */
     #[JMS\Groups(['prof-deputy-costs-estimate-more-info'])]
+    #[ORM\Column(name: 'prof_dc_estimate_more_info_details', type: 'text', nullable: true)]
     private $profDeputyCostsEstimateMoreInfoDetails;
 
     /**
      * @var float
-     *
-     * @ORM\Column(name="prof_dc_estimate_management_cost", type="float", precision=14, scale=2, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-deputy-estimate-management-costs'])]
     #[JMS\SerializedName('prof_deputy_management_cost_amount')]
+    #[ORM\Column(name: 'prof_dc_estimate_management_cost', type: 'float', precision: 14, scale: 2, nullable: true)]
     private $profDeputyCostsEstimateManagementCostAmount;
 
     /**

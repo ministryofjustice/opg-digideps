@@ -5,50 +5,43 @@ declare(strict_types=1);
 namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
 use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransaction;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransactionInterface;
 
 trait MoneyTransactionTrait
 {
     /**
-     * @var Collection<MoneyTransaction>
-     *
-     * @JMS\Groups({"transaction"})
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\MoneyTransaction", mappedBy="report", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"id" = "ASC"})
+     * @var MoneyTransaction[]
      */
-    private $moneyTransactions;
+    #[JMS\Groups(['transaction'])]
+    #[ORM\OneToMany(mappedBy: 'report', targetEntity: MoneyTransaction::class, cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
+    private $moneyTransactions = [];
 
     /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\SerializedName("money_transactions_in")
-     *
-     * @JMS\Groups({"transactionsIn"})
-     *
-     * @return Collection<MoneyTransaction>
+     * @return MoneyTransaction[]
      */
-    public function getMoneyTransactionsIn()
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('money_transactions_in')]
+    #[JMS\Groups(['transactionsIn'])]
+    public function getMoneyTransactionsIn(): array
     {
-        return $this->moneyTransactions->filter(function ($t) {
+        return array_filter($this->moneyTransactions, function ($t) {
             return 'in' == $t->getType();
         });
     }
 
     /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\SerializedName("money_transactions_out")
-     *
-     * @JMS\Groups({"transactionsOut"})
-     *
-     * @return Collection<MoneyTransaction>
+     * @return MoneyTransaction[]
      */
-    public function getMoneyTransactionsOut()
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('money_transactions_out')]
+    #[JMS\Groups(['transactionsOut'])]
+    public function getMoneyTransactionsOut(): array
     {
-        return $this->moneyTransactions->filter(function ($t) {
+        return array_filter($this->moneyTransactions, function ($t) {
             return 'out' == $t->getType();
         });
     }
@@ -71,34 +64,24 @@ trait MoneyTransactionTrait
 
     public function addMoneyTransaction(MoneyTransaction $t)
     {
-        if (!$this->moneyTransactions->contains($t)) {
-            $this->moneyTransactions->add($t);
+        if (!in_array($t, $this->moneyTransactions)) {
+            $this->moneyTransactions[] = $t;
         }
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Groups({"transactionsIn"})
-     *
-     * @JMS\Type("double")
-     *
-     * @JMS\SerializedName("money_in_total")
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\Groups(['transactionsIn'])]
+    #[JMS\Type('double')]
+    #[JMS\SerializedName('money_in_total')]
     public function getMoneyInTotal()
     {
         return $this->getMoneyTransactionsTotal('in');
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Groups({"transactionsOut"})
-     *
-     * @JMS\Type("double")
-     *
-     * @JMS\SerializedName("money_out_total")
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\Groups(['transactionsOut'])]
+    #[JMS\Type('double')]
+    #[JMS\SerializedName('money_out_total')]
     public function getMoneyOutTotal()
     {
         return $this->getMoneyTransactionsTotal('out');
