@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
@@ -11,115 +15,86 @@ use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
 use OPG\Digideps\Backend\Domain\Report\ReportType;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\Repository\CourtOrderRepository;
 
 /**
  * Court Orders for clients.
- *
- * @ORM\Table(name="court_order")
- *
- * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\CourtOrderRepository")
- *
- * @ORM\HasLifecycleCallbacks()
  */
+#[ORM\Table(name: 'court_order')]
+#[ORM\Entity(repositoryClass: CourtOrderRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class CourtOrder
 {
     use CreateUpdateTimestamps;
 
-    /**
-     * @ORM\Id
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="court_order_id_seq", allocationSize=1, initialValue=1)
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['court-order-basic', 'court-order-full'])]
+    #[ORM\Id]
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'court_order_id_seq', allocationSize: 1, initialValue: 1)]
     private int $id;
 
-    /**
-     * @ORM\Column(name="court_order_uid", type="string", length=36, nullable=false, unique=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['court-order-basic', 'court-order-full', 'deputy-court-order-basic'])]
+    #[ORM\Column(name: 'court_order_uid', type: 'string', length: 36, unique: true, nullable: false)]
     private string $courtOrderUid;
 
     /**
      * @see CourtOrderType
-     *
-     * @ORM\Column(name="order_type", type="string", length=3, nullable=false)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['court-order-basic', 'court-order-full'])]
+    #[ORM\Column(name: 'order_type', type: 'string', length: 3, nullable: false)]
     private string $orderType;
 
     /**
      * @see CourtOrderReportType
-     *
-     * @ORM\Column(name="order_report_type", type="string", length=6, nullable=false)
      */
+    #[ORM\Column(name: 'order_report_type', type: 'string', length: 6, nullable: false)]
     private string $orderReportType;
 
-    /**
-     * @ORM\Column(name="status", type="string", length=10, nullable=false)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['court-order-basic', 'court-order-full'])]
+    #[ORM\Column(name: 'status', type: 'string', length: 10, nullable: false)]
     private string $status;
 
-    /**
-     * @ORM\Column(name="order_made_date", type="datetime", nullable=false)
-     */
     #[JMS\Type('datetime')]
     #[JMS\Groups(['court-order-basic', 'court-order-full'])]
+    #[ORM\Column(name: 'order_made_date', type: 'datetime', nullable: false)]
     private \DateTime $orderMadeDate;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Client", inversedBy="courtOrders")
-     *
-     * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
-     */
+
     #[JMS\Type(Client::class)]
     #[JMS\Groups(['court-order-full'])]
+    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'courtOrders')]
     private Client $client;
 
 
-    /**
-     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\CourtOrder")
-     * @ORM\JoinColumn(name="sibling_id", referencedColumnName="id")
-     */
+    #[ORM\JoinColumn(name: 'sibling_id', referencedColumnName: 'id')]
+    #[ORM\OneToOne(targetEntity: CourtOrder::class)]
     private ?CourtOrder $sibling;
 
     /**
      * @see CourtOrderKind
-     *
-     * @ORM\Column(name="order_kind", type="string", length=6, nullable=false)
      */
+    #[ORM\Column(name: 'order_kind', type: 'string', length: 6, nullable: false)]
     private string $orderKind;
 
     /**
-     * @ORM\ManyToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="courtOrders", fetch="EXTRA_LAZY", cascade={"persist"})
-     *
-     * @ORM\JoinTable(name="court_order_report",
-     *         joinColumns={@ORM\JoinColumn(name="court_order_id", referencedColumnName="id", onDelete="CASCADE")},
-     *         inverseJoinColumns={@ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")}
-     *     )
-     *
      * @var Collection<int, Report> $reports
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Report>')]
     #[JMS\Groups(['court-order-full'])]
+    #[ORM\JoinTable(name: 'court_order_report')]
+    #[ORM\JoinColumn(name: 'court_order_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: Report::class, inversedBy: 'courtOrders', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     private Collection $reports;
 
-    /**
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\CourtOrderDeputy", mappedBy="courtOrder", fetch="EXTRA_LAZY", cascade={"persist"})
-     */
-    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\CourtOrderDeputy>')]
+    #[JMS\Type('ArrayCollection<App\Entity\CourtOrderDeputy>')]
+    #[ORM\OneToMany(mappedBy: 'courtOrder', targetEntity: CourtOrderDeputy::class, cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     private Collection $courtOrderDeputyRelationships;
 
     private ?ReportType $desiredReportType = null;
