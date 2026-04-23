@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Integration\Controller;
 
 use DateTime;
-use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
@@ -32,9 +31,6 @@ class DocumentControllerTest extends AbstractTestController
     private static $deputy1;
     private static $client1;
 
-    /** @var Ndr */
-    private static $ndr1;
-
     /** @var ReportSubmission */
     private static $reportSubmission1;
     private static $reportSubmission2;
@@ -56,8 +52,6 @@ class DocumentControllerTest extends AbstractTestController
 
         self::$report1 = self::fixtures()->createReport(self::$client1);
         self::$report2 = self::fixtures()->createReport(self::$client1);
-
-        self::$ndr1 = self::fixtures()->createNdr(self::$client1);
 
         self::$document1 = self::fixtures()->createDocument(self::$report1, 'file_name.pdf');
         self::$document2 = self::fixtures()->createDocument(self::$report1, 'another_file_name.pdf', false);

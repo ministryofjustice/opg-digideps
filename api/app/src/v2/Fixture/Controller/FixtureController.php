@@ -9,7 +9,6 @@ use App\Domain\Deputy\DeputyType;
 use App\Entity\Client;
 use App\Entity\CourtOrder;
 use App\Entity\Deputy;
-use App\Entity\Ndr\Ndr;
 use App\Entity\Organisation;
 use App\Entity\Report\Report;
 use App\Entity\User;
@@ -19,7 +18,6 @@ use App\FixtureFactory\PreRegistrationFactory;
 use App\FixtureFactory\ReportFactory;
 use App\FixtureFactory\UserFactory;
 use App\Repository\DeputyRepository;
-use App\Repository\NdrRepository;
 use App\Repository\OrganisationRepository;
 use App\Repository\ReportRepository;
 use App\Repository\UserRepository;
@@ -50,7 +48,6 @@ class FixtureController extends AbstractController
         private readonly ReportSection $reportSection,
         private readonly OrganisationRepository $organisationRepository,
         private readonly UserRepository $userRepository,
-        private readonly NdrRepository $ndrRepository,
         private readonly PreRegistrationFactory $preRegistrationFactory,
         private readonly DeputyRepository $deputyRepository,
         private readonly bool $fixturesEnabled,
@@ -128,16 +125,11 @@ class FixtureController extends AbstractController
             $this->em->persist($deputy);
         }
 
-        if ('ndr' === $reportType) {
-            $this->createNdr($fromRequest, $client);
-            $user->setNdrEnabled(true);
-        } else {
-            $report = $this->generateReport($fromRequest, $client);
-            $this->em->persist($report);
-            if (User::TYPE_LAY === $fromRequest['deputyType']) {
-                $courtOrder->addReport($report);
-                $this->em->persist($courtOrder);
-            }
+        $report = $this->generateReport($fromRequest, $client);
+        $this->em->persist($report);
+        if (User::TYPE_LAY === $fromRequest['deputyType']) {
+            $courtOrder->addReport($report);
+            $this->em->persist($courtOrder);
         }
 
         if (User::TYPE_LAY === $fromRequest['deputyType']) {
@@ -328,21 +320,6 @@ class FixtureController extends AbstractController
         return $user;
     }
 
-    private function createNdr(array $fromRequest, Client $client): void
-    {
-        $ndr = new Ndr($client);
-        $client->setNdr($ndr);
-
-        $this->em->persist($ndr);
-        $this->em->persist($client);
-
-        if (isset($fromRequest['reportStatus']) && Report::STATUS_READY_TO_SUBMIT === $fromRequest['reportStatus']) {
-            foreach (['visits_care', 'expenses', 'income_benefits', 'bank_accounts', 'assets', 'debts', 'actions', 'other_info', 'client_benefits_check'] as $section) {
-                $this->reportSection->completeSection($ndr, $section);
-            }
-        }
-    }
-
     /**
      * @throws \Exception
      */
@@ -433,17 +410,15 @@ class FixtureController extends AbstractController
     /**
      * @throws \Exception
      */
-    #[Route(path: '/complete-sections/{reportType}/{reportId}', requirements: ['id' => '\d+'], methods: ['PUT'])]
+    #[Route(path: '/complete-sections/report/{reportId}', requirements: ['id' => '\d+'], methods: ['PUT'])]
     #[IsGranted(attribute: 'ROLE_ADMIN')]
-    public function completeReportSections(Request $request, string $reportType, int $reportId): JsonResponse
+    public function completeReportSections(Request $request, int $reportId): JsonResponse
     {
         if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
-        $repository = 'ndr' === $reportType ? $this->ndrRepository : $this->reportRepository;
-
-        if (null === $report = $repository->find($reportId)) {
+        if (null === $report = $this->reportRepository->find($reportId)) {
             throw new NotFoundHttpException(sprintf('Report id %s not found', $reportId));
         }
 
@@ -455,9 +430,7 @@ class FixtureController extends AbstractController
             $this->reportSection->completeSection($report, $section);
         }
 
-        if ('report' === $reportType) {
-            $report->updateSectionsStatusCache($report->getAvailableSections());
-        }
+        $report->updateSectionsStatusCache($report->getAvailableSections());
 
         $this->em->flush();
 
@@ -477,7 +450,6 @@ class FixtureController extends AbstractController
         $deputy = $this->userFactory->createAdmin([
             'adminType' => $fromRequest['adminType'],
             'email' => $fromRequest['email'],
-            'ndr' => $fromRequest['ndr'],
             'firstName' => $fromRequest['firstName'],
             'lastName' => $fromRequest['lastName'],
             'activated' => $fromRequest['activated'],

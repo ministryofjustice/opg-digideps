@@ -140,58 +140,6 @@ public,note,category,character varying,100,,Lorem
 public,note,content,text,,,Lorem
 public,note,id,integer,,PRIMARY KEY,NA
 public,note,title,character varying,150,,Lorem
-public,odr,action_give_gifts_to_client_details,text,,,Lorem
-public,odr,action_more_info_details,text,,,Lorem
-public,odr,agreed_behalf_deputy,character varying,50,,Lorem
-public,odr,agreed_behalf_deputy_explanation,text,,,Lorem
-public,odr,debt_management,text,,,Lorem
-public,odr,expect_compensation_damages,text,,,Lorem
-public,odr,expect_compensation_damages_details,text,,,Lorem
-public,odr,id,integer,,PRIMARY KEY,NA
-public,odr,receive_other_income,text,,,Lorem
-public,odr,receive_other_income_details,text,,,Lorem
-public,odr,receive_state_pension,text,,,Lorem
-public,odr_account,account_type,character varying,125,,Lorem
-public,odr_account,bank_name,character varying,500,,Lorem
-public,odr_account,id,integer,,PRIMARY KEY,NA
-public,odr_account,sort_code,character varying,6,,Lorem
-public,odr_asset,address,character varying,200,,Lorem
-public,odr_asset,address2,character varying,200,,Lorem
-public,odr_asset,county,character varying,75,,Lorem
-public,odr_asset,description,text,,,Lorem
-public,odr_asset,id,integer,,PRIMARY KEY,NA
-public,odr_asset,occupants,character varying,550,,Lorem
-public,odr_asset,owned,character varying,15,,Lorem
-public,odr_asset,postcode,character varying,10,,PostCode
-public,odr_asset,title,character varying,100,,Lorem
-public,odr_asset,type,character varying,255,,Lorem
-public,odr_client_benefits_check,do_others_receive_money_on_clients_behalf,character varying,255,,Lorem
-public,odr_client_benefits_check,dont_know_money_explanation,text,,,Lorem
-public,odr_client_benefits_check,id,uuid,,PRIMARY KEY,NA
-public,odr_client_benefits_check,never_checked_explanation,text,,,Lorem
-public,odr_client_benefits_check,when_last_checked_entitlement,character varying,255,,Lorem
-public,odr_debt,debt_type_id,character varying,255,,Lorem
-public,odr_debt,id,integer,,PRIMARY KEY,NA
-public,odr_debt,more_details,text,,,Lorem
-public,odr_expense,explanation,text,,,Lorem
-public,odr_expense,id,integer,,PRIMARY KEY,NA
-public,odr_income_one_off,has_more_details,character varying,255,,Lorem
-public,odr_income_one_off,id,integer,,PRIMARY KEY,NA
-public,odr_income_one_off,more_details,character varying,255,,Lorem
-public,odr_income_one_off,type_id,character varying,255,,Lorem
-public,odr_income_received_on_clients_behalf,id,uuid,,PRIMARY KEY,NA
-public,odr_income_received_on_clients_behalf,money_type,character varying,255,,Lorem
-public,odr_income_received_on_clients_behalf,who_received_money,character varying,255,,Lorem
-public,odr_income_state_benefit,has_more_details,character varying,255,,Lorem
-public,odr_income_state_benefit,id,integer,,PRIMARY KEY,NA
-public,odr_income_state_benefit,more_details,character varying,255,,Lorem
-public,odr_income_state_benefit,type_id,character varying,255,,Lorem
-public,odr_visits_care,does_client_receive_paid_care,text,,,Lorem
-public,odr_visits_care,how_is_care_funded,character varying,255,,Lorem
-public,odr_visits_care,how_often_contact_client,text,,,Lorem
-public,odr_visits_care,id,integer,,PRIMARY KEY,NA
-public,odr_visits_care,plan_move_residence_details,text,,,Lorem
-public,odr_visits_care,who_is_doing_the_caring,text,,,Lorem
 public,organisation,id,integer,,PRIMARY KEY,NA
 public,organisation,name,character varying,256,,Organisation
 public,organisation_user,organisation_id,integer,,PRIMARY KEY,NA

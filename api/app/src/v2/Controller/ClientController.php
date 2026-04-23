@@ -73,7 +73,7 @@ class ClientController extends RestController
 
         $dto = $this->clientAssembler->assembleFromArray($data);
 
-        $transformedDto = $this->clientTransformer->transform($dto, ['reports', 'ndr', 'organisation', 'deputy']);
+        $transformedDto = $this->clientTransformer->transform($dto, ['reports', 'organisation', 'deputy']);
 
         if ($transformedDto['archived_at']) {
             throw $this->createAccessDeniedException('Cannot access archived reports');

@@ -7,7 +7,6 @@ namespace App\Tests\Unit\Transformer\ReportSubmission;
 use PHPUnit\Framework\MockObject\MockObject;
 use DateTime;
 use App\Entity\Client;
-use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Document;
 use App\Entity\Report\Report;
 use App\Entity\Report\ReportSubmission;
@@ -32,54 +31,10 @@ final class ReportSubmissionSummaryTransformerTest extends TestCase
         $this->dateTimeProvider->method('getDateTime')->willReturn(new DateTime('2013-01-01'));
     }
 
-    public function testIgnoresRowsWithoutAreportOrNdr(): void
-    {
-        $this->ensureReportSubmissionIsMissingReportAndNdr();
-
-        $this->result = $this->sut->transform([$this->reportSubmission]);
-
-        $this->assertResultDoesNotContainDataRows();
-    }
-
-    private function ensureReportSubmissionIsMissingReportAndNdr(): void
-    {
-        $this->reportSubmission = $this
-            ->getMockBuilder(ReportSubmission::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $this
-            ->reportSubmission
-            ->method('getReport')
-            ->willReturn(null);
-
-        $this
-            ->reportSubmission
-            ->method('getNdr')
-            ->willReturn(null);
-    }
-
-    private function assertResultDoesNotContainDataRows(): void
-    {
-        $this->assertCount(0, $this->result);
-    }
-
     public function testTransformsAReportSubmission(): void
     {
         $scanDate = new DateTime('2013-01-01');
         $this->dateTimeProvider->method('getDateTime')->willReturn($scanDate);
-
-        $ndrReportSubmission = $this->buildReportSubmissionWith([
-            'id' => 1,
-            'report_type' => Ndr::class,
-            'created_on' => new DateTime('2012-01-01'),
-            'report' => [
-                'client' => ['case_number' => '132'],
-            ],
-            'documents' => [
-                ['filename' => 'NDR-report.pdf', 'is_report_pdf' => true],
-            ],
-        ]);
 
         $reportSubmission = $this->buildReportSubmissionWith([
             'id' => 2,
@@ -97,15 +52,6 @@ final class ReportSubmissionSummaryTransformerTest extends TestCase
 
         $expectedRows = [
             [
-                'id' => 1,
-                'case_number' => 132,
-                'date_received' => '2012-01-01',
-                'scan_date' => '2013-01-01',
-                'document_id' => 'NDR-report.pdf',
-                'document_type' => 'Reports',
-                'form_type' => 'Reports General',
-            ],
-            [
                 'id' => 2,
                 'case_number' => 133,
                 'date_received' => '2012-01-02',
@@ -116,7 +62,7 @@ final class ReportSubmissionSummaryTransformerTest extends TestCase
             ],
         ];
 
-        $this->result = $this->sut->transform([$ndrReportSubmission, $reportSubmission]);
+        $this->result = $this->sut->transform([$reportSubmission]);
         $this->assertRowsContain($expectedRows);
     }
 

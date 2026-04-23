@@ -60,12 +60,3 @@ Feature: Report submissions dashboard
         Then the 'New' tab 'is not' visible
         Then the 'Pending' tab 'is' visible
         Then the 'Synchronised' tab 'is' visible
-
-    # TODO remove when NDR entities are removed
-    @super-admin @report-submission-standard-and-ndr
-    Scenario: If a case has both standard and NDR report submissions, only the standard report submission should be visible in the pending tab
-        Given a deputy has submitted one standard report and one NDR report for the same client
-        And a super admin user accesses the admin app
-        When I navigate to the admin report submissions page
-        And I search for submissions using the case number of the deputy who has submitted one standard report and one NDR report for the same client
-        Then I should only see a row for the standard report in the Pending tab
