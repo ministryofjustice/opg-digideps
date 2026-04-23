@@ -48,7 +48,6 @@ class BankAccountType extends AbstractType
             $builder->add('accountNumber', FormTypes\TextType::class, ['attr' => ['maxlength' => 4]]);
             $builder->add('sortCode', SortCodeType::class, [
                 'error_bubbling' => false,
-                'required' => false,
                 'constraints' => [
                     new NotBlank(['message' => 'account.sortCode.notBlank', 'groups' => ['bank-account-sortcode']]),
                     new Type(['type' => 'numeric', 'message' => 'account.sortCode.type', 'groups' => ['bank-account-sortcode']]),

@@ -200,29 +200,21 @@ class FormFieldsExtension extends AbstractExtension
     public function renderFormSortCode(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null): void
     {
         // lets get the translation for class and labelText
-        $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
-        // read domain from Form ption 'translation_domain'
-        $domain = $element->parent->vars['translation_domain'];
+        ['translationKey' => $translationKey, 'domain' => $domain] = $this->getTranslationKeyAndDomain($element, $elementName, $transIndex);
 
         // sort hint text translation
-        $hintTextTrans = $this->translator->trans($translationKey . '.hint', [], $domain);
-        $hintText = ($hintTextTrans != $translationKey . '.hint') ? $hintTextTrans : null;
+        $hintText = $this->getHintText($translationKey, $domain);
 
         // get legendText translation
-        $legendTextTrans = $this->translator->trans($translationKey . '.legend', [], $domain);
+        $labelParams = [];
+        $legendText = $this->getLegendText($translationKey, $labelParams, $domain);
 
-        $legendText = ($legendTextTrans != $translationKey . '.legend') ? $legendTextTrans : null;
-
-        $html = $this->environment->render('@App/Components/Form/_sort-code.html.twig', [
-            'legend' => array_merge([
-                'text' => $legendText,
-                'isPageHeading' => false,
-                'caption' => false,
-            ], $vars['legend'] ?? []),
+        echo $this->environment->render('@App/Components/Form/_sort-code.html.twig', [
+            'legend' => $this->buildLegendArray($legendText, $vars['legend'] ?? []),
             'hintText' => $hintText,
             'element' => $element,
+            'required' => $vars['required'] ?? true,
         ]);
-        echo $html;
     }
 
     /**
@@ -373,6 +365,19 @@ class FormFieldsExtension extends AbstractExtension
             ], $vars['label'] ?? []),
             'extraAttrs' => $vars['extraAttrs'] ?? [],
         ];
+    }
+
+    /**
+     * Extract hint text from translation, returning null if translation key not found.
+     *
+     * @param string $translationKey The translation key prefix
+     * @param string $domain The translation domain
+     * @return string|null The translated hint text or null if hint key does not exist
+     */
+    private function getHintText(string $translationKey, string $domain): ?string
+    {
+        $hintTextTrans = $this->translator->trans($translationKey . '.hint', [], $domain);
+        return ($hintTextTrans !== $translationKey . '.hint') ? $hintTextTrans : null;
     }
 
     /**
