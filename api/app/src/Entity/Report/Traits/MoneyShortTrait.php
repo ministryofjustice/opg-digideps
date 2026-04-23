@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use OPG\Digideps\Backend\Entity\Report\MoneyShortCategory;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShort;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortIn;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortOut;
-use Doctrine\Common\Collections\ArrayCollection;
 
 trait MoneyShortTrait
 {

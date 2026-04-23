@@ -1,15 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @ORM\Entity
- *
- * @ORM\Table(name="money_short_category")
- */
+#[ORM\Table(name: 'money_short_category')]
+#[ORM\Entity]
 class MoneyShortCategory
 {
     /**
@@ -45,48 +44,35 @@ class MoneyShortCategory
 
     /**
      * @var int
-     *
-     * @JMS\Type("integer")
-     *
-     * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="money_short_category_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['moneyShortCategoriesIn', 'moneyShortCategoriesOut'])]
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'money_short_category_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var Report
-     *
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="moneyShortCategories")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'moneyShortCategories')]
     private $report;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
-     *
-     * @ORM\Column(name="type_id", type="string", nullable=false)
      */
+    #[JMS\Groups(['moneyShortCategoriesIn', 'moneyShortCategoriesOut'])]
+    #[ORM\Column(name: 'type_id', type: 'string', nullable: false)]
     private $typeId;
 
     /**
      * @var bool
-     *
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"moneyShortCategoriesIn", "moneyShortCategoriesOut"})
-     *
-     * @ORM\Column(name="present", type="boolean", nullable=true)
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['moneyShortCategoriesIn', 'moneyShortCategoriesOut'])]
+    #[ORM\Column(name: 'present', type: 'boolean', nullable: true)]
     private $present;
 
     /**

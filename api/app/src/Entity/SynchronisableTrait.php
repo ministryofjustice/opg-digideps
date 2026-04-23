@@ -4,47 +4,42 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Entity;
 
-use DateTime;
+use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 trait SynchronisableTrait
 {
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="synchronisation_status", type="string", options={"default": null}, nullable=true)
+     * @var ?string
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['synchronisation'])]
+    #[ORM\Column(name: 'synchronisation_status', type: 'string', nullable: true, options: ['default' => null])]
     protected $synchronisationStatus;
 
     /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="synchronisation_time", type="datetime", options={"default": null}, nullable=true)
+     * @var ?\DateTime
      */
-    #[JMS\Type('DateTime')]
+    #[JMS\Type(\DateTime::class)]
     #[JMS\Groups(['synchronisation'])]
+    #[ORM\Column(name: 'synchronisation_time', type: 'datetime', nullable: true, options: ['default' => null])]
     protected $synchronisationTime;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="synchronisation_error", type="text", length=65535, options={"default": null}, nullable=true)
+     * @var ?string
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['synchronisation'])]
+    #[ORM\Column(name: 'synchronisation_error', type: 'text', length: 65535, nullable: true, options: ['default' => null])]
     protected $synchronisationError;
 
     /**
-     * @var User|null
-     *
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\User")
-     *
-     * @ORM\JoinColumn(name="synchronised_by", referencedColumnName="id", onDelete="SET NULL")
+     * @var ?User
      */
     #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
     #[JMS\Groups(['synchronisation'])]
+    #[ORM\JoinColumn(name: 'synchronised_by', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: User::class)]
     protected $synchronisedBy;
 
     public function getSynchronisationStatus(): ?string

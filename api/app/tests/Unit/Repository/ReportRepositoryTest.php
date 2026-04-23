@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Repository;
 
-use OPG\Digideps\Backend\Entity\ClientInterface;
+use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Fee;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\ReportRepository;
@@ -36,7 +36,7 @@ final class ReportRepositoryTest extends TestCase
 
         $clientSearchFilter = m::mock(ClientSearchFilter::class);
         $this->mockReport = m::mock(Report::class);
-        $mockClient = m::mock(ClientInterface::class);
+        $mockClient = m::mock(Client::class);
 
         $this->mockReport->shouldReceive('getClient')
             ->zeroOrMoreTimes()
