@@ -5216,11 +5216,6 @@ parameters:
 			path: src/Form/Report/Asset/AssetTypeTitle.php
 
 		-
-			message: "#^Cannot cast mixed to int\\.$#"
-			count: 1
-			path: src/Form/Report/BankAccountType.php
-
-		-
 			message: "#^Call to an undefined method App\\\\Entity\\\\MoneyReceivedOnClientsBehalfInterface\\:\\:getAmount\\(\\)\\.$#"
 			count: 1
 			path: src/Form/Report/ClientBenefitsCheckType.php
