@@ -9,7 +9,7 @@ use OPG\Digideps\Backend\Entity\Traits\CreationAudit;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Repository\DocumentRepository;
-use OPG\Digideps\Frontend\Entity\SynchronisableInterface;
+use OPG\Digideps\Backend\Entity\SynchronisableInterface;
 
 /**
  * Documents

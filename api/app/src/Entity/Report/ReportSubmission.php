@@ -37,7 +37,7 @@ class ReportSubmission
     private ?Report $report;
 
     /**
-     * @var Collection<Document>
+     * @var Collection<int, Document>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Document>')]
     #[JMS\Groups(['report-submission', 'report-submission-documents'])]
