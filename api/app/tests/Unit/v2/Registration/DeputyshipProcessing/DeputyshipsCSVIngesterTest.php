@@ -27,12 +27,12 @@ use function PHPUnit\Framework\isInstanceOf;
 
 final class DeputyshipsCSVIngesterTest extends TestCase
 {
-    private DeputyshipsCSVLoader|MockObject $mockDeputyshipsCSVLoader;
-    private DeputyshipsCandidatesSelector|MockObject $mockDeputyshipsCandidatesSelector;
-    private DeputyshipBuilder|MockObject $mockDeputyshipBuilder;
-    private DeputyshipsIngestResultRecorder|MockObject $mockDeputyshipsIngestResultRecorder;
-    private DataFactoryInterface|MockObject $mockPreCsvDataFactory;
-    private DataFactoryInterface|MockObject $mockPostCsvDataFactory;
+    private DeputyshipsCSVLoader&MockObject $mockDeputyshipsCSVLoader;
+    private DeputyshipsCandidatesSelector&MockObject $mockDeputyshipsCandidatesSelector;
+    private DeputyshipBuilder&MockObject $mockDeputyshipBuilder;
+    private DeputyshipsIngestResultRecorder&MockObject $mockDeputyshipsIngestResultRecorder;
+    private DataFactoryInterface&MockObject $mockPreCsvDataFactory;
+    private DataFactoryInterface&MockObject $mockPostCsvDataFactory;
     private DeputyshipsCSVIngester $sut;
 
     public function setUp(): void
@@ -62,7 +62,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
         $preCSVDataFactoryResult->addErrorMessages('preCSVDataFactory', ['Failed to apply data fixes']);
 
         $this->mockPreCsvDataFactory->expects(self::once())
-            ->method('run')
+            ->method('run')->with(false)
             ->willReturn($preCSVDataFactoryResult);
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
@@ -83,7 +83,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
         $preCSVDataFactoryResult = new DataFactoryResult();
 
         $this->mockPreCsvDataFactory->expects(self::once())
-            ->method('run')
+            ->method('run')->with(false)
             ->willReturn($preCSVDataFactoryResult);
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
@@ -117,7 +117,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
         $preCSVDataFactoryResult = new DataFactoryResult();
 
         $this->mockPreCsvDataFactory->expects(self::once())
-            ->method('run')
+            ->method('run')->with(false)
             ->willReturn($preCSVDataFactoryResult);
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
@@ -168,7 +168,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
         $postCSVDataFactoryResult->addErrorMessages('postCSVDataFactory', ['Failed to apply data fix']);
 
         $this->mockPreCsvDataFactory->expects(self::once())
-            ->method('run')
+            ->method('run')->with(false)
             ->willReturn(new DataFactoryResult(messages: ['Success' => []]));
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
@@ -202,7 +202,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
             ->with($builderResult);
 
         $this->mockPostCsvDataFactory->expects(self::once())
-            ->method('run')
+            ->method('run')->with(false)
             ->willReturn($postCSVDataFactoryResult);
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
@@ -229,7 +229,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
         $builderResult = new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidatesApplied);
 
         $this->mockPreCsvDataFactory->expects(self::once())
-            ->method('run')
+            ->method('run')->with(false)
             ->willReturn(new DataFactoryResult(messages: ['Success' => []]));
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
@@ -263,7 +263,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
             ->with($builderResult);
 
         $this->mockPostCsvDataFactory->expects(self::once())
-            ->method('run')
+            ->method('run')->with(false)
             ->willReturn(new DataFactoryResult(messages: ['Success' => []]));
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())

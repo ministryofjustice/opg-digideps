@@ -33,7 +33,7 @@ class UserDeputyService
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function addMissingUserDeputies(): int
+    public function addMissingUserDeputies(bool $dryRun = false): int
     {
         // find dd_users (active, primary, lay/named) who have no deputy associated with them
         $usersWithoutDeputies = $this->userRepository->findUsersWithoutDeputies();
@@ -83,11 +83,13 @@ class UserDeputyService
             }
 
             if (!is_null($deputy)) {
-                $deputy->setUser($user);
-                $this->deputyRepository->save($deputy);
+                if (!$dryRun) {
+                    $deputy->setUser($user);
+                    $this->deputyRepository->save($deputy);
 
-                $user->setDeputy($deputy);
-                $this->userRepository->save($user);
+                    $user->setDeputy($deputy);
+                    $this->userRepository->save($user);
+                }
 
                 $deputyUidsToIds[$deputyUid] = $deputy->getId();
 
