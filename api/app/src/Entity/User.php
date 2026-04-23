@@ -2,30 +2,28 @@
 
 namespace OPG\Digideps\Backend\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Traits\AddressTrait;
 use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
 use OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse;
+use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Utility\Query\Hydrator;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as JMS;
 use Random\RandomException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Users.
- *
- * @ORM\Table(name="dd_user", indexes={
- *     @ORM\Index(name="created_by_idx", columns={"created_by_id"})
- * })
- *
- * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\UserRepository")
- *
- * @ORM\HasLifecycleCallbacks()
  */
+#[ORM\Table(name: 'dd_user')]
+#[ORM\Index(columns: ['created_by_id'], name: 'created_by_idx')]
+#[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use CreateUpdateTimestamps;
@@ -108,120 +106,105 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var int
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
      *
-     * @ORM\Id
      *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
      *
-     * @ORM\SequenceGenerator(sequenceName="user_id_seq", allocationSize=1, initialValue=1)
      */
     #[JMS\Type('integer')]
     #[JMS\Groups(['user', 'report-submitted-by', 'user-id', 'user-list'])]
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'user_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="OPG\Digideps\Backend\Entity\Client", mappedBy="users", cascade={"persist"}, fetch="EXTRA_LAZY")
-     */
     #[JMS\Groups(['user-clients'])]
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Client>')]
+    #[ORM\ManyToMany(targetEntity: Client::class, mappedBy: 'users', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     private $clients;
 
     /**
-     * @ORM\ManyToMany(targetEntity="OPG\Digideps\Backend\Entity\Organisation", mappedBy="users", fetch="EXTRA_LAZY")
-     *
-     * @var ArrayCollection
+     * @var Collection<Organisation>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Organisation>')]
     #[JMS\Groups(['user-organisations'])]
     #[JMS\Accessor(getter: 'getOrganisations')]
+    #[ORM\ManyToMany(targetEntity: Organisation::class, mappedBy: 'users', fetch: 'EXTRA_LAZY')]
     private $organisations;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['user', 'report-submitted-by', 'user-name', 'user-list'])]
+    #[ORM\Column(name: 'firstname', type: 'string', length: 100, nullable: false)]
     private $firstname;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="lastname", type="string", length=100, nullable=false)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['user', 'report-submitted-by', 'user-name', 'user-list'])]
+    #[ORM\Column(name: 'lastname', type: 'string', length: 100, nullable: false)]
     private $lastname;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="password", type="string", length=100, nullable=false)
      */
     #[JMS\Groups(['user-login'])]
     #[JMS\Exclude]
+    #[ORM\Column(name: 'password', type: 'string', length: 100, nullable: false)]
     private $password;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="email", type="string", length=60, nullable=false, unique=true)
      */
     #[JMS\Groups(['user', 'report-submitted-by', 'user-email', 'user-list'])]
     #[JMS\Type('string')]
+    #[ORM\Column(name: 'email', type: 'string', length: 60, unique: true, nullable: false)]
     private $email;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="active", type="boolean", nullable=true, options = { "default": false })
      */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['user', 'user-list'])]
+    #[ORM\Column(name: 'active', type: 'boolean', nullable: true, options: ['default' => false])]
     private $active;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="salt", type="string", length=100, nullable=true)
      */
+    #[ORM\Column(name: 'salt', type: 'string', length: 100, nullable: true)]
     private $salt;
 
     /**
      * @var \DateTime
-     *
-     * @ORM\Column(name="registration_date", type="datetime", nullable=true)
      */
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
     #[JMS\Groups(['user'])]
+    #[ORM\Column(name: 'registration_date', type: 'datetime', nullable: true)]
     private $registrationDate;
 
-    /**
-     * @ORM\Column(name="registration_token", type="string", length=100, nullable=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['user'])]
+    #[ORM\Column(name: 'registration_token', type: 'string', length: 100, nullable: true)]
     private ?string $registrationToken;
 
     /**
      * @var \DateTime
-     *
-     * @ORM\Column(name="token_date", type="datetime", nullable=true)
      */
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
     #[JMS\Groups(['user'])]
+    #[ORM\Column(name: 'token_date', type: 'datetime', nullable: true)]
     private $tokenDate;
 
     /**
-     * @var string ROLE_
-     *             see roles in Role class
-     *
-     * @ORM\Column(name="role_name", type="string", length=50, nullable=true)
+     * @var string ROLE_: see roles in Role class
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['user', 'report-submitted-by', 'user-rolename', 'user-list', 'team-users'])]
+    #[ORM\Column(name: 'role_name', type: 'string', length: 50, nullable: true)]
     private $roleName;
 
     /**
@@ -236,144 +219,125 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="phone_main", type="string", length=20, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['user', 'report-submitted-by', 'user-list', 'user-phone-main'])]
+    #[ORM\Column(name: 'phone_main', type: 'string', length: 20, nullable: true)]
     private $phoneMain;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="phone_alternative", type="string", length=20, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['user', 'report-submitted-by'])]
+    #[ORM\Column(name: 'phone_alternative', type: 'string', length: 20, nullable: true)]
     private $phoneAlternative;
 
     /**
      * @var \DateTime
-     *
-     * @ORM\Column(name="last_logged_in", type="datetime", nullable=true)
      */
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
     #[JMS\Groups(['user'])]
+    #[ORM\Column(name: 'last_logged_in', type: 'datetime', nullable: true)]
     private $lastLoggedIn;
 
-    /**
-     * @ORM\Column(name="deputy_uid", type="bigint", nullable=true)
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['user'])]
+    #[ORM\Column(name: 'deputy_uid', type: 'bigint', nullable: true)]
     private ?int $deputyUid = null;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="ad_managed", type="boolean", nullable=true, options = { "default": false })
      */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['user'])]
+    #[ORM\Column(name: 'ad_managed', type: 'boolean', nullable: true, options: ['default' => false])]
     private $adManaged;
 
     /**
-     * @ORM\Column(name="job_title", type="string", length=150, nullable=true)
-     *
      * @var string
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['user', 'user-list'])]
+    #[ORM\Column(name: 'job_title', type: 'string', length: 150, nullable: true)]
     private $jobTitle;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="agree_terms_use", type="boolean", nullable=true, options = { "default": false })
      */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['user'])]
+    #[ORM\Column(name: 'agree_terms_use', type: 'boolean', nullable: true, options: ['default' => false])]
     private $agreeTermsUse;
 
     /**
      * @var \DateTime
-     *
-     * @ORM\Column(name="agree_terms_use_date", type="datetime", nullable=true)
      */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['user'])]
+    #[ORM\Column(name: 'agree_terms_use_date', type: 'datetime', nullable: true)]
     private $agreeTermsUseDate;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="codeputy_client_confirmed", type="boolean", nullable=false, options = { "default": false })
      */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['user'])]
+    #[ORM\Column(name: 'codeputy_client_confirmed', type: 'boolean', nullable: false, options: ['default' => false])]
     private $coDeputyClientConfirmed;
 
     /**
      * @var UserResearchResponse|null
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse", mappedBy="user", cascade={"persist"})
      */
-    #[JMS\Type('OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse')]
+    #[JMS\Type(UserResearchResponse::class)]
     #[JMS\Groups(['user', 'satisfaction', 'user-research'])]
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserResearchResponse::class, cascade: ['persist'])]
     private $userResearchResponse;
 
     /**
-     * @var User|null
-     *
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\User", inversedBy="user")
-     *
-     * @ORM\JoinColumn(name="created_by_id", referencedColumnName="id", onDelete="SET NULL")
+     * @var ?User
      */
-    #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
+    #[JMS\Type(User::class)]
     #[JMS\Groups(['user', 'created-by'])]
     #[JMS\MaxDepth(3)]
+    #[ORM\JoinColumn(name: 'created_by_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'user')]
     private $createdBy;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="deletion_protection", type="boolean", nullable=true, options = { "default": null })
      */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['user'])]
+    #[ORM\Column(name: 'deletion_protection', type: 'boolean', nullable: true, options: ['default' => null])]
     private $deletionProtection;
 
-    /**
-     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\Deputy", mappedBy="user", cascade={"persist"})
-     */
-    #[JMS\Type('OPG\Digideps\Backend\Entity\Deputy')]
+    #[JMS\Type(Deputy::class)]
+    #[ORM\OneToOne(mappedBy: 'user', targetEntity: Deputy::class, cascade: ['persist'])]
     private ?Deputy $deputy;
 
     /**
      * @var \DateTime
-     *
-     * @ORM\Column(name="pre_register_validated", type="datetime", nullable=true)
      */
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
     #[JMS\Groups(['user'])]
+    #[ORM\Column(name: 'pre_register_validated', type: 'datetime', nullable: true)]
     private $preRegisterValidatedDate;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="registration_route", type="string", length=30, nullable=false, options = { "default": "UNKNOWN" })
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['user'])]
+    #[ORM\Column(name: 'registration_route', type: 'string', length: 30, nullable: false, options: ['default' => 'UNKNOWN'])]
     private $registrationRoute = self::UNKNOWN_REGISTRATION_ROUTE;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="is_primary", type="boolean", nullable=false, options = { "default": false })
      */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['user'])]
+    #[ORM\Column(name: 'is_primary', type: 'boolean', nullable: false, options: ['default' => false])]
     private $isPrimary = false;
 
     public function __construct($coDeputyClientConfirmed = false)
@@ -628,7 +592,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Get clients.
      *
-     * @return Client[]
+     * @return Collection<Client>
      */
     public function getClients()
     {
@@ -636,7 +600,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Organisation[]
+     * @return Collection<Organisation>
      */
     public function getOrganisations()
     {
