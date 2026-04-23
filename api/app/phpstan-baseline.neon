@@ -511,6 +511,7 @@ parameters:
 			path: src/Controller/Report/AccountController.php
 
 		-
+<<<<<<< HEAD
 			message: '#^Cannot call method filter\(\) on array\<OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\>\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -519,6 +520,9 @@ parameters:
 		-
 			message: '#^Cannot call method getBankAccount\(\) on mixed\.$#'
 			identifier: method.nonObject
+=======
+			message: "#^Parameter \\#1 \\$bank of method App\\\\Entity\\\\Report\\\\BankAccount\\:\\:setBank\\(\\) expects string, null given\\.$#"
+>>>>>>> b52657d900 (Fix unit test errors (though still failing) and phpstan issues)
 			count: 1
 			path: src/Controller/Report/AccountController.php
 
@@ -5773,8 +5777,677 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
+<<<<<<< HEAD
 			message: '#^Binary operation "\+\=" between mixed and string\|null results in an error\.$#'
 			identifier: assignOp.invalid
+=======
+			message: "#^Cannot call method getFinancialSummary\\(\\) on mixed\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Cannot call method getReportSummary\\(\\) on mixed\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Cannot call method isEmpty\\(\\) on array\\<App\\\\Entity\\\\Report\\\\ProfDeputyOtherCost\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Cannot call method removeElement\\(\\) on array\\<App\\\\Entity\\\\AssetInterface\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Cannot call method removeElement\\(\\) on array\\<App\\\\Entity\\\\Report\\\\Decision\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Else branch is unreachable because previous condition is always true\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:addDebt\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:addDocument\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:addFee\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:addMoneyTransaction\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:addMoneyTransfers\\(\\) has invalid return type Report\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:addMoneyTransfers\\(\\) should return Report but returns \\$this\\(App\\\\Entity\\\\Report\\\\Report\\)\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:addProfDeputyInterimCosts\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:addProfServiceFee\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:addReportSubmission\\(\\) should return App\\\\Entity\\\\Report\\\\Report but return statement is missing\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getAccountsClosingBalanceTotal\\(\\) should return float but empty return statement found\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getAccountsOpeningBalanceTotal\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getAgreedBehalfDeputyExplanation\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getAvailableSections\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getCalculatedBalance\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getClientId\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getContacts\\(\\) return type with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getDecisions\\(\\) return type with generic interface Doctrine\\\\Common\\\\Collections\\\\Collection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getDecisions\\(\\) should return Doctrine\\\\Common\\\\Collections\\\\Collection but returns array\\<App\\\\Entity\\\\Report\\\\Decision\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getHasFees\\(\\) should return float but returns null\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getHasFees\\(\\) should return float but returns string\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getMoneyInTotal\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getMoneyOutTotal\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getMoneyShortCategoriesOut\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getMoneyTransfers\\(\\) return type with generic class Doctrine\\\\Common\\\\Collections\\\\ArrayCollection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getProfDeputyCostsEstimateHasMoreInfo\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getProfDeputyTotalCosts\\(\\) should return float but returns null\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getReportSubmissions\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getSectionStatusesCached\\(\\) should return array but returns mixed\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getSubmittedBy\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getTotalsMatch\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getTotalsOffset\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:has106Flag\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:hasSamePeriodAs\\(\\) should return string but returns bool\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:isDue\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:isMissingMoneyOrAccountsOrClosingBalance\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:isPAreport\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:isProfReport\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:removeAccount\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:removeAsset\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:removeContact\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:removeDecision\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setAgreedBehalfDeputy\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setAgreedBehalfDeputy\\(\\) has parameter \\$agreeBehalfDeputy with no type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setAgreedBehalfDeputyExplanation\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setAgreedBehalfDeputyExplanation\\(\\) has parameter \\$agreedBehalfDeputyExplanation with no type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setBalanceMismatchExplanation\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setChecklist\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setCreatedAtAutomatically\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setCurrentProfPaymentsReceived\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setDebtManagement\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setDebts\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setGiftsExist\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setHasDebts\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setMentalCapacity\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setMoneyShortCategories\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setMoneyTransactions\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setMoneyTransactionsShort\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setMoneyTransactionsShort\\(\\) has parameter \\$moneyTransactionsShort with generic class Doctrine\\\\Common\\\\Collections\\\\ArrayCollection but does not specify its types\\: TKey, T$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setMoneyTransactionsShortInExist\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setMoneyTransactionsShortOutExist\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setNoTransfersToAdd\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyCostsEstimateHasMoreInfo\\(\\) has invalid return type App\\\\Entity\\\\Report\\\\Traits\\\\ReportProfDeputyCostsEstimateTrait\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyCostsEstimateHasMoreInfo\\(\\) should return App\\\\Entity\\\\Report\\\\Traits\\\\ReportProfDeputyCostsEstimateTrait but returns \\$this\\(App\\\\Entity\\\\Report\\\\Report\\)\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyCostsEstimateHowCharged\\(\\) has parameter \\$profDeputyCostsEstimateHowCharged with no type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyCostsEstimateManagementCostAmount\\(\\) has invalid return type App\\\\Entity\\\\Report\\\\Traits\\\\ReportProfDeputyCostsEstimateTrait\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyCostsEstimateManagementCostAmount\\(\\) should return App\\\\Entity\\\\Report\\\\Traits\\\\ReportProfDeputyCostsEstimateTrait but returns \\$this\\(App\\\\Entity\\\\Report\\\\Report\\)\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyCostsEstimateMoreInfoDetails\\(\\) has invalid return type App\\\\Entity\\\\Report\\\\Traits\\\\ReportProfDeputyCostsEstimateTrait\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyCostsEstimateMoreInfoDetails\\(\\) should return App\\\\Entity\\\\Report\\\\Traits\\\\ReportProfDeputyCostsEstimateTrait but returns \\$this\\(App\\\\Entity\\\\Report\\\\Report\\)\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyCostsHasInterim\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyEstimateCostTypeIds\\(\\) has parameter \\$profDeputyEstimateCostTypeIds with no type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyEstimateCostTypeIds\\(\\) should return \\$this\\(App\\\\Entity\\\\Report\\\\Report\\) but return statement is missing\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyEstimateCosts\\(\\) has invalid return type App\\\\Entity\\\\Report\\\\Traits\\\\ReportProfDeputyCostsEstimateTrait\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyEstimateCosts\\(\\) has parameter \\$collection with generic class Doctrine\\\\Common\\\\Collections\\\\ArrayCollection but does not specify its types\\: TKey, T$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyEstimateCosts\\(\\) should return App\\\\Entity\\\\Report\\\\Traits\\\\ReportProfDeputyCostsEstimateTrait but returns \\$this\\(App\\\\Entity\\\\Report\\\\Report\\)\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyOtherCostTypeIds\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyOtherCosts\\(\\) has parameter \\$profDeputyOtherCosts with no type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfDeputyPreviousCosts\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setProfServiceFees\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setReasonForNoFees\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setReviewChecklist\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setSectionStatusesCached\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setUpdatedAtAutomatically\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setWishToProvideDocumentation\\(\\) has parameter \\$wishToProvideDocumentation with no type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:updateDueDateBasedOnEndDate\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:updateSectionsStatusCache\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$assets \\(array\\<App\\\\Entity\\\\AssetInterface\\>\\) does not accept Doctrine\\\\Common\\\\Collections\\\\ArrayCollection\\<\\*NEVER\\*, \\*NEVER\\*\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$assets \\(array\\<App\\\\Entity\\\\AssetInterface\\>\\) does not accept array\\<App\\\\Entity\\\\AssetInterface\\|App\\\\Entity\\\\Report\\\\Asset\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$checklist \\(App\\\\Entity\\\\Report\\\\Checklist\\) does not accept null\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$contacts has no type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$courtOrders has no type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$courtOrders is unused\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$currentProfPaymentsReceived \\(string\\) does not accept null\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$debts \\(array\\<App\\\\Entity\\\\Report\\\\Debt\\>\\) does not accept Doctrine\\\\Common\\\\Collections\\\\ArrayCollection\\<\\*NEVER\\*, \\*NEVER\\*\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$debts \\(array\\<App\\\\Entity\\\\Report\\\\Debt\\>\\) does not accept mixed\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$decisions \\(array\\<App\\\\Entity\\\\Report\\\\Decision\\>\\) does not accept Doctrine\\\\Common\\\\Collections\\\\ArrayCollection\\<\\*NEVER\\*, \\*NEVER\\*\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$documents with generic class Doctrine\\\\Common\\\\Collections\\\\ArrayCollection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$expenses has no type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$fees \\(array\\<App\\\\Entity\\\\Report\\\\Fee\\>\\) does not accept Doctrine\\\\Common\\\\Collections\\\\ArrayCollection\\<\\*NEVER\\*, \\*NEVER\\*\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$gifts \\(array\\<App\\\\Entity\\\\Report\\\\Gift\\>\\) does not accept Doctrine\\\\Common\\\\Collections\\\\ArrayCollection\\<\\*NEVER\\*, \\*NEVER\\*\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$gifts \\(array\\<App\\\\Entity\\\\Report\\\\Gift\\>\\) does not accept array\\<App\\\\Entity\\\\Report\\\\Gift\\>\\|null\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$hasDebts has no type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$id is never written, only read\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$moneyInExists \\(string\\) does not accept string\\|null\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$moneyOutExists \\(string\\) does not accept string\\|null\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$moneyShortCategories \\(array\\<App\\\\Entity\\\\Report\\\\MoneyShortCategory\\>\\) does not accept Doctrine\\\\Common\\\\Collections\\\\ArrayCollection\\<\\*NEVER\\*, \\*NEVER\\*\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$moneyTransactionsShort \\(array\\<App\\\\Entity\\\\Report\\\\MoneyTransactionShort\\>\\) does not accept Doctrine\\\\Common\\\\Collections\\\\ArrayCollection\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$moneyTransactionsShort \\(array\\<App\\\\Entity\\\\Report\\\\MoneyTransactionShort\\>\\) does not accept Doctrine\\\\Common\\\\Collections\\\\ArrayCollection\\<\\*NEVER\\*, \\*NEVER\\*\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$moneyTransfers has no type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$noAssetToAdd \\(bool\\) does not accept null\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$noTransfersToAdd \\(bool\\) does not accept null\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$profDeputyCostsEstimateMoreInfoDetails \\(string\\) does not accept mixed\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$profDeputyEstimateCosts with generic class Doctrine\\\\Common\\\\Collections\\\\ArrayCollection does not specify its types\\: TKey, T$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$profDeputyInterimCosts has no type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$profDeputyOtherCosts has no type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$profDeputyPreviousCosts has no type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$profServiceFees \\(array\\<App\\\\Entity\\\\Report\\\\ProfServiceFee\\>\\) does not accept Doctrine\\\\Common\\\\Collections\\\\ArrayCollection\\<\\*NEVER\\*, \\*NEVER\\*\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$reasonForNoDecisions \\(string\\) does not accept null\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$reasonForNoFees \\(string\\) does not accept mixed\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$reasonForNoMoneyIn \\(string\\) does not accept string\\|null\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$reasonForNoMoneyOut \\(string\\) does not accept string\\|null\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$reportSubmissions has no type specified\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$sectionStatusesCached \\(string\\) does not accept string\\|false\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$significantDecisionsMade \\(string\\) does not accept string\\|null\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$unSubmitDate \\(DateTime\\) does not accept DateTime\\|null\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$visitsCare \\(App\\\\Entity\\\\Report\\\\VisitsCare\\) does not accept App\\\\Entity\\\\Report\\\\VisitsCare\\|null\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$wishToProvideDocumentation \\(string\\) does not accept null\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Result of && is always false\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Strict comparison using \\=\\=\\= between null and float will always evaluate to false\\.$#"
+>>>>>>> b52657d900 (Fix unit test errors (though still failing) and phpstan issues)
 			count: 2
 			path: src/Entity/Report/Report.php
 
