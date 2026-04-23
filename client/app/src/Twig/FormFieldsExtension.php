@@ -387,7 +387,7 @@ class FormFieldsExtension extends AbstractExtension
     private function getDateHintText(string $translationKey, string $domain, ?string $customHint = null): string
     {
         // Use custom hint if provided
-        if (null !== ($customHint)) {
+        if (null !== $customHint) {
             return $customHint;
         }
 
