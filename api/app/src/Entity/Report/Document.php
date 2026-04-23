@@ -1,25 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report;
 
-use OPG\Digideps\Backend\Entity\SynchronisableInterface;
 use OPG\Digideps\Backend\Entity\SynchronisableTrait;
 use OPG\Digideps\Backend\Entity\Traits\CreationAudit;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\Repository\DocumentRepository;
+use OPG\Digideps\Frontend\Entity\SynchronisableInterface;
 
 /**
- * Documents.
- *
- * @ORM\Table(name="document",
- *     indexes={
- *
- *     @ORM\Index(name="ix_document_report_id", columns={"report_id"}),
- *     @ORM\Index(name="ix_document_created_by", columns={"created_by"})
- *     })
- *
- * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\DocumentRepository")
+ * Documents
  */
+#[ORM\Table(name: 'document')]
+#[ORM\Index(columns: ['report_id'], name: 'ix_document_report_id')]
+#[ORM\Index(columns: ['created_by'], name: 'ix_document_created_by')]
+#[ORM\Entity(repositoryClass: DocumentRepository::class)]
+#[ORM\Index(columns: ['report_id'], name: 'ix_document_report_id')]
+#[ORM\Index(columns: ['created_by'], name: 'ix_document_created_by')]
 class Document implements SynchronisableInterface
 {
     use CreationAudit;
@@ -27,91 +27,67 @@ class Document implements SynchronisableInterface
 
     /**
      * @var int
-     *
-     * @JMS\Type("integer")
-     *
-     * @JMS\Groups({"documents", "document-id"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="user_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['documents', 'document-id'])]
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'user_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"documents"})
-     *
-     * @ORM\Column(name="filename", type="string", length=255, nullable=false)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['documents'])]
+    #[ORM\Column(name: 'filename', type: 'string', length: 255, nullable: false)]
     private $fileName;
 
     /**
      * Set to null when documents belong to a reportSubmission and documentsAvailable is set to false.
      *
      * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"document-storage-reference", "documents"})
-     *
-     * @ORM\Column(name="storage_reference", type="string", length=512, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['document-storage-reference', 'documents'])]
+    #[ORM\Column(name: 'storage_reference', type: 'string', length: 512, nullable: true)]
     private $storageReference;
 
     /**
      * @var bool
-     *
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"documents"})
-     *
-     * @ORM\Column(name="is_report_pdf", type="boolean", options={ "default": false}, nullable=false)
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['documents'])]
+    #[ORM\Column(name: 'is_report_pdf', type: 'boolean', nullable: false, options: ['default' => false])]
     private $isReportPdf;
 
     /**
      * @var Report
-     *
-     * @JMS\Groups({"document-report"})
-     *
-     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\Report")
-     *
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="documents")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[JMS\Groups(['document-report'])]
+    #[JMS\Type(Report::class)]
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'documents')]
     private $report;
 
     /**
      * @var ReportSubmission
-     *
-     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\ReportSubmission")
-     *
-     * @JMS\Groups({"document-report-submission"})
-     *
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\ReportSubmission", inversedBy="documents", cascade={"persist"})
-     *
-     * @ORM\JoinColumn(name="report_submission_id", referencedColumnName="id", onDelete="SET NULL")
      */
+    #[JMS\Type(ReportSubmission::class)]
+    #[JMS\Groups(['document-report-submission'])]
+    #[ORM\JoinColumn(name: 'report_submission_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: ReportSubmission::class, cascade: ['persist'], inversedBy: 'documents')]
     private $reportSubmission;
 
     /**
      * @var int|null
      *
-     * @JMS\Type("integer")
      *
-     * @JMS\Groups({"synchronisation"})
-     *
-     * @ORM\Column(name="sync_attempts", type="integer", nullable=false, options={"default": 0})
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['synchronisation'])]
+    #[ORM\Column(name: 'sync_attempts', type: 'integer', nullable: false, options: ['default' => 0])]
     protected $syncAttempts = 0;
 
     /**

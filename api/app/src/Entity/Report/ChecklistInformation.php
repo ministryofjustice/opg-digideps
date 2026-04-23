@@ -1,64 +1,48 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report;
 
-use OPG\Digideps\Backend\Entity\Traits\CreationAudit;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\Entity\Traits\CreationAudit;
 
-/**
- * Checklist.
- *
- * @ORM\Table(name="checklist_information",
- *     indexes={
- *
- *     @ORM\Index(name="ix_checklist_information_checklist_id", columns={"checklist_id"}),
- *     @ORM\Index(name="ix_checklist_information_created_by", columns={"created_by"})
- *     })
- *
- * @ORM\Entity()
- */
+#[ORM\Table(name: 'checklist_information')]
+#[ORM\Index(columns: ['checklist_id'], name: 'ix_checklist_information_checklist_id')]
+#[ORM\Index(columns: ['created_by'], name: 'ix_checklist_information_created_by')]
+#[ORM\Entity]
+#[ORM\Index(columns: ['checklist_id'], name: 'ix_checklist_information_checklist_id')]
+#[ORM\Index(columns: ['created_by'], name: 'ix_checklist_information_created_by')]
 class ChecklistInformation
 {
     use CreationAudit;
 
     /**
      * @var int
-     *
-     * @JMS\Type("integer")
-     *
-     * @JMS\Groups({"checklist-information"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="checklist_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['checklist-information'])]
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'checklist_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var Checklist
-     *
-     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\Checklist")
-     *
-     * @JMS\Groups({"checklist-information-checklist"})
-     *
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Checklist", inversedBy="checklistInformation", cascade={"persist"})
-     *
-     * @ORM\JoinColumn(name="checklist_id", referencedColumnName="id", onDelete="CASCADE", nullable=false   )
      */
+    #[JMS\Type(Checklist::class)]
+    #[JMS\Groups(['checklist-information-checklist'])]
+    #[ORM\JoinColumn(name: 'checklist_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Checklist::class, cascade: ['persist'], inversedBy: 'checklistInformation')]
     private $checklist;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"checklist-information"})
-     *
-     * @ORM\Column(name="information", type="text", nullable=false)
      */
+    #[JMS\Groups(['checklist-information'])]
+    #[ORM\Column(name: 'information', type: 'text', nullable: false)]
     private $information;
 
     public function __construct(Checklist $checklist, $information)

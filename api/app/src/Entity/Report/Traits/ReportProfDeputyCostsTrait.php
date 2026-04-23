@@ -1,119 +1,98 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Entity\Report\ProfDeputyInterimCost;
 use OPG\Digideps\Backend\Entity\Report\ProfDeputyOtherCost;
+use OPG\Digideps\Backend\Entity\Report\ProfDeputyPreviousCost;
 use OPG\Digideps\Backend\Entity\Report\Report;
-use JMS\Serializer\Annotation as JMS;
 
 trait ReportProfDeputyCostsTrait
 {
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"prof-deputy-costs-how-charged"})
-     *
-     * @ORM\Column(name="prof_dc_how_charged", type="string", length=10, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-deputy-costs-how-charged'])]
+    #[ORM\Column(name: 'prof_dc_how_charged', type: 'string', length: 10, nullable: true)]
     private $profDeputyCostsHowCharged;
 
     /**
      * @var string yes/no
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report-prof-deputy-costs-prev"})
-     *
-     * @ORM\Column(name="prof_dc_has_previous", type="string", length=3, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-prof-deputy-costs-prev'])]
+    #[ORM\Column(name: 'prof_dc_has_previous', type: 'string', length: 3, nullable: true)]
     private $profDeputyCostsHasPrevious;
 
-    /**
-     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\ProfDeputyPreviousCost>")
-     *
-     * @JMS\Groups({"report-prof-deputy-costs-prev"})
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\ProfDeputyPreviousCost", mappedBy="report", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"id" = "ASC"})
-     */
+
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\ProfDeputyPreviousCost>')]
+    #[JMS\Groups(['report-prof-deputy-costs-prev'])]
+    #[ORM\OneToMany(mappedBy: 'report', targetEntity: ProfDeputyPreviousCost::class, cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     private $profDeputyPreviousCosts;
 
     /**
      * @var string yes/no
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report-prof-deputy-costs-interim"})
-     *
-     * @ORM\Column(name="prof_dc_has_interim", type="string", length=3, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-prof-deputy-costs-interim'])]
+    #[ORM\Column(name: 'prof_dc_has_interim', type: 'string', length: 3, nullable: true)]
     private $profDeputyCostsHasInterim;
 
-    /**
-     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\ProfDeputyInterimCost>")
-     *
-     * @JMS\Groups({"report-prof-deputy-costs-interim"})
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\ProfDeputyInterimCost", mappedBy="report", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"id" = "ASC"})
-     */
+
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\ProfDeputyInterimCost>')]
+    #[JMS\Groups(['report-prof-deputy-costs-interim'])]
+    #[ORM\OneToMany(mappedBy: 'report', targetEntity: ProfDeputyInterimCost::class, cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     private $profDeputyInterimCosts;
 
     /**
      * @var float
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report-prof-deputy-fixed-cost"})
-     *
-     * @ORM\Column(name="prof_dc_fixed_cost_amount", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-prof-deputy-fixed-cost'])]
+    #[ORM\Column(name: 'prof_dc_fixed_cost_amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $profDeputyFixedCost;
 
     /**
      * @var float
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"report-prof-deputy-costs-scco"})
-     *
-     * @ORM\Column(name="prof_dc_scco_amount", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-prof-deputy-costs-scco'])]
+    #[ORM\Column(name: 'prof_dc_scco_amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $profDeputyCostsAmountToScco;
 
     /**
      * @var string
      *
-     * @JMS\Type("string")
      *
-     * @JMS\Groups({"report-prof-deputy-costs-scco"})
-     *
-     * @ORM\Column(name="prof_dc_scco_reason_beyond_estimate", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-prof-deputy-costs-scco'])]
+    #[ORM\Column(name: 'prof_dc_scco_reason_beyond_estimate', type: 'text', nullable: true)]
     private $profDeputyCostsReasonBeyondEstimate;
 
-    /**
-     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\ProfDeputyOtherCost>")
-     * @JMS\Groups({"prof-deputy-other-costs"})
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\ProfDeputyOtherCost", mappedBy="report", cascade={"persist", "remove"})
-     * @ORM\OrderBy({"id" = "ASC"})
-     */
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\ProfDeputyOtherCost>')]
+    #[JMS\Groups(['prof-deputy-other-costs'])]
+    #[ORM\OneToMany(mappedBy: 'report', targetEntity: ProfDeputyOtherCost::class, cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     private $profDeputyOtherCosts;
 
     /**
      * Hold prof deputy other costs type
      * 1st value = id, 2nd value = hasMoreInformation.
      *
-     * @JMS\Groups({"prof-deputy-other-costs"})
      *
      * @var array
      */
+    #[JMS\Groups(['prof-deputy-other-costs'])]
     public static $profDeputyOtherCostTypeIds = [
         ['typeId' => 'appointments', 'hasMoreDetails' => false],
         ['typeId' => 'annual-reporting', 'hasMoreDetails' => false],
@@ -125,16 +104,12 @@ trait ReportProfDeputyCostsTrait
     ];
 
     /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\SerializedName("prof_deputy_other_cost_type_ids")
-     *
-     * @JMS\Type("array")
-     *
-     * @JMS\Groups({"prof-deputy-other-costs"})
-     *
      * @return array
      */
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('prof_deputy_other_cost_type_ids')]
+    #[JMS\Type('array')]
+    #[JMS\Groups(['prof-deputy-other-costs'])]
     public static function getProfDeputyOtherCostTypeIds()
     {
         return self::$profDeputyOtherCostTypeIds;
@@ -334,10 +309,10 @@ trait ReportProfDeputyCostsTrait
     /**
      * @return float
      *
-     * @JMS\VirtualProperty()
      *
-     * @JMS\Groups({"report-prof-deputy-costs"})
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Groups(['report-prof-deputy-costs'])]
     public function getProfDeputyTotalCosts()
     {
         $total = 0;
@@ -378,10 +353,10 @@ trait ReportProfDeputyCostsTrait
     /**
      * @return float
      *
-     * @JMS\VirtualProperty()
      *
-     * @JMS\Groups({"report-prof-deputy-costs"})
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Groups(['report-prof-deputy-costs'])]
     public function getProfDeputyTotalCostsTakenFromClient()
     {
         $total = $this->getProfDeputyTotalCosts();

@@ -4,23 +4,19 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Entity\Report;
 
-use OPG\Digideps\Backend\Entity\ClientBenefitsCheckInterface;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\OrderBy;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\Entity\ClientBenefitsCheckInterface;
 use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Table(name="client_benefits_check")
- *
- * @ORM\Entity
- */
+#[ORM\Table(name: 'client_benefits_check')]
+#[ORM\Entity]
 class ClientBenefitsCheck implements ClientBenefitsCheckInterface
 {
     public function __construct(?UuidInterface $id = null)
@@ -30,107 +26,70 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
         $this->typesOfMoneyReceivedOnClientsBehalf = new ArrayCollection();
     }
 
-    /**
-     * @ORM\Id
-     *
-     * @ORM\Column(name="id", type="uuid")
-     *
-     * @ORM\GeneratedValue(strategy="NONE")
-     *
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     *
-     * @JMS\Groups({"client-benefits-check"})
-     *
-     * @JMS\Type("string")
-     */
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type('string')]
+    #[ORM\Id]
+    #[ORM\Column(name: 'id', type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface $id;
 
-    /**
-     * @ORM\Column(name="created_at", type="datetime",nullable=true)
-     *
-     * @Gedmo\Timestampable(on="create")
-     *
-     * @JMS\Groups({"client-benefits-check"})
-     *
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     */
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[ORM\Column(name: 'created_at', type: 'datetime', nullable: true)]
+    #[Gedmo\Timestampable(on: 'create')]
     private \DateTime $created;
 
-    /**
-     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="clientBenefitsCheck")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE",nullable=true)
-     *
-     * @JMS\Groups({"client-benefits-check-report"})
-     *
-     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\Report")
-     */
+    #[JMS\Groups(['client-benefits-check-report'])]
+    #[JMS\Type(Report::class)]
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
+    #[ORM\OneToOne(inversedBy: 'clientBenefitsCheck', targetEntity: Report::class)]
     private ?Report $report;
 
     /**
      * @var string one of either [haveChecked, currentlyChecking, neverChecked]
-     *
-     * @ORM\Column(name="when_last_checked_entitlement", type="string", nullable=false)
-     *
-     * @JMS\Groups({"client-benefits-check"})
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type('string')]
+    #[ORM\Column(name: 'when_last_checked_entitlement', type: 'string', nullable: false)]
     private $whenLastCheckedEntitlement;
 
     /**
      * @var \DateTime
-     *
-     * @ORM\Column(name="date_last_checked_entitlement", type="datetime", nullable=true)
-     *
-     * @JMS\Groups({"client-benefits-check"})
-     *
-     * @JMS\Type("DateTime<'Y-m-d'>")
      */
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[ORM\Column(name: 'date_last_checked_entitlement', type: 'datetime', nullable: true)]
     private $dateLastCheckedEntitlement;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="never_checked_explanation", type="text", nullable=true)
-     *
-     * @JMS\Groups({"client-benefits-check"})
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type('string')]
+    #[ORM\Column(name: 'never_checked_explanation', type: 'text', nullable: true)]
     private $neverCheckedExplanation;
 
     /**
      * @var string one of either [yes, no, doNotKnow]
-     *
-     * @ORM\Column(name="do_others_receive_money_on_clients_behalf", type="string", nullable=true)
-     *
-     * @JMS\Groups({"client-benefits-check"})
-     *
-     * @JMS\Type("string")
      */
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type('string')]
+    #[ORM\Column(name: 'do_others_receive_money_on_clients_behalf', type: 'string', nullable: true)]
     private $doOthersReceiveMoneyOnClientsBehalf;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(name="dont_know_money_explanation", type="text", nullable=true)
-     *
-     * @JMS\Groups({"client-benefits-check"})
-     *
-     * @JMS\Type("string")
+     * @var ?string
      */
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type('string')]
+    #[ORM\Column(name: 'dont_know_money_explanation', type: 'text', nullable: true)]
     private $dontKnowMoneyExplanation;
 
-    /**
-     * @ORM\OneToMany(targetEntity="MoneyReceivedOnClientsBehalf", mappedBy="clientBenefitsCheck", cascade={"persist", "remove"}, fetch="EXTRA_LAZY" )
-     *
-     * @JMS\Groups({"client-benefits-check"})
-     *
-     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\MoneyReceivedOnClientsBehalf>")
-     *
-     * @OrderBy({"created" = "ASC"})
-     */
+    #[JMS\Groups(['client-benefits-check'])]
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\MoneyReceivedOnClientsBehalf>')]
+    #[ORM\OneToMany(mappedBy: 'clientBenefitsCheck', targetEntity: MoneyReceivedOnClientsBehalf::class, cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY')]
+    #[OrderBy(['created' => 'ASC'])]
     private $typesOfMoneyReceivedOnClientsBehalf;
 
     public function getId(): UuidInterface
