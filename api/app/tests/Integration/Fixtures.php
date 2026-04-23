@@ -59,7 +59,7 @@ class Fixtures
 
     /**
      * @return string
-     **/
+     */
     private static function getPGExportCommand()
     {
         $pgHost = getenv('PGHOST') ?: 'postgres';

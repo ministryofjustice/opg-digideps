@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Entity;
 
-use OPG\Digideps\Backend\Entity\Traits\AddressTrait;
-use OPG\Digideps\Backend\Entity\Traits\CreationAudit;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\Entity\Traits\AddressTrait;
+use OPG\Digideps\Backend\Entity\Traits\CreationAudit;
 
 #[ORM\Table(name: 'client_contact')]
 #[ORM\Index(columns: ['client_id'], name: 'ix_clientcontact_client_id')]
 #[ORM\Index(columns: ['created_by'], name: 'ix_clientcontact_created_by')]
+#[ORM\Entity]
 class ClientContact
 {
     use CreationAudit;
@@ -69,7 +70,7 @@ class ClientContact
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['clientcontact'])]
-    #[ORM\Column(name: 'email', type: 'string', length: 60, nullable: true, unique: false)]
+    #[ORM\Column(name: 'email', type: 'string', length: 60, unique: false, nullable: true)]
     private $email;
 
     /**
