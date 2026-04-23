@@ -471,7 +471,7 @@ class Report
      * @var string captures reason for no money out. Required if no money has gone out
      *
      *
-     **/
+     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'reasonForNoMoneyOut'])]
     #[ORM\Column(name: 'reason_for_no_money_out', type: 'text', nullable: true)]
@@ -947,7 +947,7 @@ class Report
     }
 
     /**
-     * @return Collection<Document>
+     * @return Collection<int, Document>
      */
     public function getDocuments()
     {
@@ -957,7 +957,7 @@ class Report
     /**
      * Unsubmitted Reports.
      *
-     * @return Collection<Document>
+     * @return Collection<int, Document>
      */
     #[JMS\VirtualProperty]
     #[JMS\SerializedName('unsubmitted_documents')]
@@ -972,7 +972,7 @@ class Report
     /**
      * Submitted reports.
      *
-     * @return Collection<Document>
+     * @return Collection<int, Document>
      */
     #[JMS\VirtualProperty('submittedDocuments')]
     #[JMS\SerializedName('submitted_documents')]
@@ -1110,9 +1110,9 @@ class Report
      * Returns a list of deputy only documents. Those that should be visible to deputies only.
      * Excludes Report PDF and transactions PDF.
      *
-     * @return Collection<Document>
+     * @return Collection<int, Document>
      */
-    public function getDeputyDocuments()
+    public function getDeputyDocuments(): Collection
     {
         return $this->getDocuments()->filter(function ($document) {
             /* @var $document Document */
@@ -1183,11 +1183,16 @@ class Report
         $clientReports = $this->getClient()->getReports();
 
         // ensure order is correct most recent first
-        $iterator = $clientReports->getIterator();
-        $iterator->uasort(function ($a, $b) {
-            return ($a->getId() > $b->getId()) ? -1 : 1;
-        });
-        $orderedClientReports = new ArrayCollection(iterator_to_array($iterator));
+        $values = $clientReports->getValues();
+
+        uasort(
+            $values,
+            function ($a, $b) {
+                return ($a->getId() > $b->getId()) ? -1 : 1;
+            }
+        );
+
+        $orderedClientReports = new ArrayCollection($values);
 
         // try previous reports
         foreach ($orderedClientReports as $clientReport) {
