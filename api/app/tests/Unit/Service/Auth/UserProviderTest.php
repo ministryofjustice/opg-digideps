@@ -93,9 +93,9 @@ final class UserProviderTest extends TestCase
 
     public function testremoveToken(): void
     {
-        $this->redis->shouldReceive('set')->with('token', null)->once()->andReturn('redisReturn');
+        $this->redis->shouldReceive('set')->with('token', null)->once();
 
-        $this->assertEquals('redisReturn', $this->userProvider->removeToken('token'));
+        $this->userProvider->removeToken('token');
     }
 
     public function tearDown(): void

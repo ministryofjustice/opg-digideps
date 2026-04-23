@@ -40,19 +40,19 @@ locals {
   api_base_variables = [
     {
       name  = "DATABASE_HOSTNAME",
-      value = local.db.endpoint
+      value = local.use_new_db ? local.database.endpoint : local.db.endpoint
     },
     {
       name  = "DATABASE_NAME",
-      value = local.db.name
+      value = local.use_new_db ? local.database.name : local.db.name
     },
     {
       name  = "DATABASE_PORT",
-      value = tostring(local.db.port)
+      value = local.use_new_db ? tostring(local.database.port) : tostring(local.db.port)
     },
     {
       name  = "DATABASE_USERNAME",
-      value = local.db.username
+      value = local.use_new_db ? local.database.username : local.db.username
     },
     {
       name  = "DATABASE_SSL",
@@ -142,15 +142,15 @@ locals {
   api_integration_test_variables = [
     {
       name  = "PGHOST",
-      value = local.db.endpoint
+      value = local.use_new_db ? local.database.endpoint : local.db.endpoint
     },
     {
       name  = "PGDATABASE",
-      value = local.db.name
+      value = local.use_new_db ? local.database.name : local.db.name
     },
     {
       name  = "PGUSER",
-      value = local.db.username
+      value = local.use_new_db ? local.database.username : local.db.username
     },
     {
       name  = "NONADMIN_HOST",
@@ -161,19 +161,19 @@ locals {
   api_single_db_tasks_base_variables = [
     {
       name  = "POSTGRES_DATABASE",
-      value = local.db.name
+      value = local.use_new_db ? local.database.name : local.db.name
     },
     {
       name  = "POSTGRES_HOST",
-      value = local.db.endpoint
+      value = local.use_new_db ? local.database.endpoint : local.db.endpoint
     },
     {
       name  = "POSTGRES_PORT",
-      value = tostring(local.db.port)
+      value = local.use_new_db ? tostring(local.database.port) : tostring(local.db.port)
     },
     {
       name  = "POSTGRES_USER",
-      value = local.db.username
+      value = local.use_new_db ? local.database.username : local.db.username
     }
   ]
 

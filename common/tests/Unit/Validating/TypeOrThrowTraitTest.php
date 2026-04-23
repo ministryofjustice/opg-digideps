@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OPG\Digideps\Tests\Common\Validating;
+namespace Tests\OPG\Digideps\Common\Unit\Validating;
 
 use OPG\Digideps\Common\Validating\ValidatingArray;
 use OPG\Digideps\Common\Validating\ValidationException;
@@ -57,7 +57,7 @@ class TypeOrThrowTraitTest extends TestCase
         $validatingArray = new ValidatingArray($array);
         $this->assertInstanceOf(\DateTime::class, $validatingArray->getObjectOrThrow('a', \DateTime::class));
         $this->expectException(ValidationException::class);
-        $this->expectExceptionMessage('Expected value of type OPG\Digideps\Tests\Common\Validating\TypeOrThrowTraitTest. Got: \'OPG\\\\Digideps\\\\Tests\\\\Common\\\\Validating\\\\TypeOrThrowTraitTest\'');
+        $this->expectExceptionMessage('Expected value of type Tests\OPG\Digideps\Common\Unit\Validating\TypeOrThrowTraitTest. Got: \'Tests\\\\OPG\\\\Digideps\\\\Common\\\\Unit\\\\Validating\\\\TypeOrThrowTraitTest\'');
         $validatingArray->getObjectOrThrow('b', TypeOrThrowTraitTest::class);
     }
 }

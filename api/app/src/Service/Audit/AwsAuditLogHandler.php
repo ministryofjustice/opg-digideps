@@ -5,27 +5,28 @@ namespace App\Service\Audit;
 use Aws\CloudWatchLogs\CloudWatchLogsClient;
 use Aws\CloudWatchLogs\Exception\CloudWatchLogsException;
 use Aws\Result;
-use Monolog\Logger;
+use Monolog\Level;
+use Monolog\LogRecord;
+use OPG\Digideps\Common\Validating\ValidatingArray;
 
 class AwsAuditLogHandler extends AbstractAuditLogHandler
 {
-    /**
-     * @param int    $level
-     * @param bool   $bubble
-     * @param string $group
-     */
-    public function __construct(private readonly CloudWatchLogsClient $client, private $group, $level = Logger::NOTICE, $bubble = true)
-    {
-        parent::__construct($level, $bubble);
+    public function __construct(
+        private readonly CloudWatchLogsClient $client,
+        private readonly string $group,
+        int $level = Level::Notice->value,
+        bool $bubble = true
+    ) {
+        parent::__construct(Level::from($level), $bubble);
     }
 
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         if (!$this->shallHandle($record)) {
             return;
         }
 
-        $stream = $record['context']['event'];
+        $stream = (new ValidatingArray($record->context))->getStringOrDefault('event', 'unknown');
         $sequenceToken = $this->initialize($stream);
         $record = $this->formatEntry($record);
 
@@ -41,12 +42,12 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         }
     }
 
-    private function formatEntry(array $entry): array
+    private function formatEntry(LogRecord $entry): array
     {
         return [
             [
-                'message' => $entry['formatted'],
-                'timestamp' => $entry['datetime']->format('U.u') * 1000,
+                'message' => $entry->formatted,
+                'timestamp' => $entry->datetime->format('U.u') * 1000,
             ],
         ];
     }

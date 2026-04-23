@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use Monolog\LogRecord;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Request;
@@ -37,9 +38,9 @@ class RequestIdLoggerProcessor
      * Add request header 'x-aws-request-id' into ['extra']['aws_request_id']
      * Does not change the record if the scope is not active, or the request is not found or doesn't contain the header.
      *
-     * @return array same record with extra info
+     * @return LogRecord same record with extra info
      */
-    public function processRecord(array $record)
+    public function processRecord(LogRecord $record): LogRecord
     {
         if (!$this->container->has('request_stack')) {
             return $record;
@@ -55,11 +56,11 @@ class RequestIdLoggerProcessor
         $sessId = self::getSessionSafeIdFromContainer($request);
 
         if (!empty($reqId)) {
-            $record['extra']['aws_request_id'] = $reqId;
+            $record->extra['aws_request_id'] = $reqId;
         }
 
         if (!empty($sessId)) {
-            $record['extra']['session_safe_id'] = $sessId;
+            $record->extra['session_safe_id'] = $sessId;
         }
 
         return $record;

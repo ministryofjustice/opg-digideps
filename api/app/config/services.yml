@@ -51,11 +51,22 @@ services:
             $fixtureParams: "%fixtures%"
             $symfonyEnvironment: "%kernel.environment%"
             $projectDir: "%kernel.project_dir%"
-            $redis: "@snc_redis.default"
             $frontendHost: "%env(JWT_HOST)%"
             $workspace: "%workspace%"
             $sessionPrefix: "%env(SESSION_PREFIX)%"
-            Predis\ClientInterface: "@snc_redis.default"
+            Predis\ClientInterface: "@predis"
+            $redis: "@predis"
+
+    predis:
+        class: Predis\Client
+        arguments:
+            - "%redis_dsn%"
+
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
+        arguments:
+            $redis: "@predis"
+            $options:
+                prefix: "%workspace%_%sessionPrefix%"
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -175,7 +186,7 @@ services:
     App\Security\RedisUserProvider:
         arguments:
             [
-                "@snc_redis.default",
+                "@predis",
                 "@logger",
                 { "timeout_seconds": "%user_provider_timeout_seconds%" },
                 '@App\Repository\UserRepository',
@@ -200,7 +211,7 @@ services:
 
     App\Service\Client\TokenStorage\RedisStorage:
         arguments:
-            $redis: "@snc_redis.default"
+            $redis: "@predis"
 
     App\Service\DataImporter\CsvToArray: ~
 
@@ -309,14 +320,14 @@ services:
             $clientPermissions: "%client_permissions%"
 
     App\Service\BruteForce\AttemptsInTimeChecker:
-        arguments: ["@snc_redis.default"]
+        arguments: ["@predis"]
         calls:
             - [setRedisPrefix, ["ac_ret_code"]]
             # after 5 attempts in the last 10 minutes, return a different return code (activate captcha)
             - [addTrigger, [5, 600]]
 
     App\Service\BruteForce\AttemptsIncrementalWaitingChecker:
-        arguments: ["@snc_redis.default"]
+        arguments: ["@predis"]
         calls:
             - [setRedisPrefix, ["ac_exception"]]
             # after 10 attempts, freeze for 30 minutes
@@ -338,10 +349,10 @@ services:
         class: Monolog\Formatter\LineFormatter
 
     opg_json_formatter:
-        class: App\Logger\OpgJsonFormatter
+        class: OPG\Digideps\Common\Logger\OpgJsonFormatter
 
     opg_line_formatter:
-        class: App\Logger\OpgLineFormatter
+        class: OPG\Digideps\Common\Logger\OpgLineFormatter
 
     rest_handler.report.deputy_costs_estimate_report_update_handler:
         class: App\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler
@@ -388,7 +399,7 @@ services:
     App\Security\HeaderTokenAuthenticator:
         class: App\Security\HeaderTokenAuthenticator
         arguments:
-            $redis: "@snc_redis.default"
+            $redis: "@predis"
 
     Aws\SecretsManager\SecretsManagerClient:
         arguments: ["%secrets_manager_client_params%"]
@@ -432,7 +443,7 @@ services:
     App\Command\ApiComparison:
         arguments:
             $httpClient: "@app.guzzlehttp_clientinterface"
-            $redis: "@snc_redis.default"
+            $redis: "@predis"
             $comparers:
                 - "@app.response_comparer_cli"
                 - "@app.response_comparer_co"
@@ -489,7 +500,10 @@ services:
         arguments:
             $name: "postCSVDataFactory"
             $dataFactories:
+                - '@App\Factory\UpdateCourtOrderReportTypeDataFactory'
+                - '@App\Factory\UpdateDeputyTypeDataFactory'
                 - '@App\Factory\ClientIdFixDataFactory'
+                - '@App\Factory\MissingReport\MissingReportDataFactory'
 
     App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester:
         public: true
