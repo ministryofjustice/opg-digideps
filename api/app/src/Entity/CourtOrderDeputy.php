@@ -1,44 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\Repository\CourtOrderDeputyRepository;
 
 /**
  * Link table between court orders and deputies.
- *
- * @ORM\Table(name="court_order_deputy")
- *
- * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\CourtOrderDeputyRepository")
- *
- * @ORM\HasLifecycleCallbacks()
  */
+#[ORM\Table(name: 'court_order_deputy')]
+#[ORM\Entity(repositoryClass: CourtOrderDeputyRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class CourtOrderDeputy
 {
-    /**
-     * @ORM\Id
-     *
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\CourtOrder", inversedBy="courtOrderDeputyRelationships", cascade={"persist"})
-     *
-     * @ORM\JoinColumn(name="court_order_id", referencedColumnName="id", nullable=false)
-     */
+    #[ORM\JoinColumn(name: 'court_order_id', referencedColumnName: 'id', nullable: false)]
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: CourtOrder::class, cascade: ['persist'], inversedBy: 'courtOrderDeputyRelationships')]
     private CourtOrder $courtOrder;
 
-    /**
-     * @JMS\Groups({"deputy"})
-     *
-     * @ORM\Id
-     *
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Deputy", cascade={"persist"})
-     *
-     * @ORM\JoinColumn(name="deputy_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
-     */
+
+    #[JMS\Groups(['deputy'])]
+    #[ORM\JoinColumn(name: 'deputy_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\Id]
+    #[ORM\ManyToOne(targetEntity: Deputy::class, cascade: ['persist'])]
     private Deputy $deputy;
 
-    /**
-     * @ORM\Column(name="is_active", type="boolean", nullable=false)
-     */
+    #[ORM\Column(name: 'is_active', type: 'boolean', nullable: false)]
     private bool $isActive;
 
     public function __construct()

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -7,9 +9,6 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Entity\User;
 
-/**
- * ModifyAudit Trait, usable with PHP >= 5.4.
- */
 trait ModifyAudit
 {
     /**
@@ -28,7 +27,7 @@ trait ModifyAudit
      *
      * @var \DateTime
      */
-    #[JMS\Type('DateTime')]
+    #[JMS\Type(\DateTime::class)]
     #[JMS\Groups(['last-modified'])]
     #[ORM\Column(name: 'last_modified_on', type: 'datetime', nullable: true)]
     #[Gedmo\Timestampable(on: 'update')]

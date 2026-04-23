@@ -1,15 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * @ORM\Table(name="mental_capacity")
- *
- * @ORM\Entity
- */
+#[ORM\Table(name: 'mental_capacity')]
+#[ORM\Entity]
 class MentalCapacity
 {
     public const string CAPACITY_CHANGED = 'changed';
@@ -17,59 +16,43 @@ class MentalCapacity
 
     /**
      * @var int
-     *
-     * @JMS\Type("integer")
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="mental_capacity_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'mental_capacity_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var Report
-     *
-     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="mentalCapacity")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\OneToOne(inversedBy: 'mentalCapacity', targetEntity: Report::class)]
     private $report;
 
     /**
      * @var string changed | stayedSame (see constants)
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"mental-capacity"})
-     *
-     * @ORM\Column(name="has_capacity_changed", type="string", length=25, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['mental-capacity'])]
+    #[ORM\Column(name: 'has_capacity_changed', type: 'string', length: 25, nullable: true)]
     private $hasCapacityChanged;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"mental-capacity"})
-     *
-     * @ORM\Column(name="has_capacity_changed_details", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['mental-capacity'])]
+    #[ORM\Column(name: 'has_capacity_changed_details', type: 'text', nullable: true)]
     private $hasCapacityChangedDetails;
 
     /**
      * @var \DateTime
-     *
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     *
-     * @JMS\Groups({"mental-capacity"})
-     *
-     * @ORM\Column(name="mental_assessment_date", type="date", nullable=true)
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['mental-capacity'])]
+    #[ORM\Column(name: 'mental_assessment_date', type: 'date', nullable: true)]
     private $mentalAssessmentDate;
 
     public function __construct(Report $report)
@@ -91,8 +74,6 @@ class MentalCapacity
 
     /**
      * Set report.
-     *
-     * @return Contact
      */
     public function setReport(?Report $report = null)
     {
