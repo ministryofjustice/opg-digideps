@@ -4555,12 +4555,6 @@ parameters:
 			path: api/app/src/Entity/Report/AssetProperty.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setOwnedPercentage\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/AssetProperty.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\:\:setOwnedPercentage\(\) has parameter \$ownedPercentage with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -33139,12 +33133,6 @@ parameters:
 			path: api/app/tests/Integration/Controller/ChecklistControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createChecklist\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Controller/ChecklistControllerTest.php
-
-		-
 			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -33955,12 +33943,6 @@ parameters:
 			path: api/app/tests/Integration/Controller/DocumentControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createReportSubmission\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/tests/Integration/Controller/DocumentControllerTest.php
-
-		-
 			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -34023,12 +34005,6 @@ parameters:
 		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\DocumentControllerTest\:\:\$tokenDeputy has no type specified\.$#'
 			identifier: missingType.property
-			count: 1
-			path: api/app/tests/Integration/Controller/DocumentControllerTest.php
-
-		-
-			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\DocumentControllerTest\:\:\$report1 \(OPG\\Digideps\\Backend\\Entity\\Report\\Report\) does not accept mixed\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: api/app/tests/Integration/Controller/DocumentControllerTest.php
 
@@ -35863,12 +35839,6 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/AccountControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createAccount\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: api/app/tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
 			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportFreshSectionStatus\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
 			identifier: argument.type
 			count: 3
@@ -35888,12 +35858,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Parameter \#2 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createReportExpense\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/ControllerReport/AccountControllerTest.php
@@ -36271,12 +36235,6 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/AssetControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createAsset\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: api/app/tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
 			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -36508,12 +36466,6 @@ parameters:
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:testupsertContactPut\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
-			path: api/app/tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createContact\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: api/app/tests/Integration/ControllerReport/ContactControllerTest.php
 
 		-
@@ -36754,12 +36706,6 @@ parameters:
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:testupsertDecisionPut\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
-			path: api/app/tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createDecision\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: api/app/tests/Integration/ControllerReport/DecisionControllerTest.php
 
 		-
@@ -37051,12 +36997,6 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/ExpenseControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createReportExpense\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ExpenseControllerTest\:\:\$client1 has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -37268,12 +37208,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$id of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportById\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of class OPG\\Digideps\\Backend\\Entity\\Report\\Gift constructor expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: api/app/tests/Integration/ControllerReport/GiftControllerTest.php
@@ -37585,12 +37519,6 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$report of class OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction constructor expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 4
-			path: api/app/tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
 			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportFreshSectionStatus\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -37816,18 +37744,6 @@ parameters:
 			message: '#^Parameter \#1 \$id of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportById\(\) expects int, mixed given\.$#'
 			identifier: argument.type
 			count: 3
-			path: api/app/tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of class OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransactionShortIn constructor expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: api/app/tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of class OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransactionShortOut constructor expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: api/app/tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
 
 		-
@@ -38080,18 +37996,6 @@ parameters:
 			message: '#^Parameter \#1 \$id of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportById\(\) expects int, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: api/app/tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransfer\:\:setReport\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createAccount\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 3
 			path: api/app/tests/Integration/ControllerReport/MoneyTransferControllerTest.php
 
 		-
@@ -38793,7 +38697,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$report of class OPG\\Digideps\\Backend\\Entity\\Report\\Document constructor expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: api/app/tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
@@ -39313,18 +39217,6 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$report of class OPG\\Digideps\\Backend\\Entity\\Report\\Document constructor expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of class OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission constructor expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: api/app/tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
-
-		-
 			message: '#^Parameter \#1 \$submissions of method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportSubmissionControllerTest\:\:getSubmissionByCaseNumber\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -39568,12 +39460,6 @@ parameters:
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:testgetVisitsCaresAuth\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
-			path: api/app/tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createVisitsCare\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: api/app/tests/Integration/ControllerReport/VisitsCareControllerTest.php
 
 		-
@@ -40425,7 +40311,7 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 10
+			count: 6
 			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
 
 		-
@@ -40450,18 +40336,6 @@ parameters:
 			message: '#^Cannot call method refresh\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
 			identifier: method.nonObject
 			count: 3
-			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method setDueDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method setEndDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
 			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
 
 		-
@@ -40815,48 +40689,6 @@ parameters:
 		-
 			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
 			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Integration/Factory/ClientIdFixDataFactoryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getClient\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Factory/ClientIdFixDataFactoryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 5
-			path: api/app/tests/Integration/Factory/ClientIdFixDataFactoryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method refresh\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Integration/Factory/ClientIdFixDataFactoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of class OPG\\Digideps\\Backend\\Factory\\ClientIdFixDataFactory constructor expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Factory/ClientIdFixDataFactoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of class Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures constructor expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Factory/ClientIdFixDataFactoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method OPG\\Digideps\\Backend\\Entity\\CourtOrder\:\:addReport\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Factory/ClientIdFixDataFactoryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
 			count: 1
 			path: api/app/tests/Integration/Factory/MissingReport/MissingReportFinderTest.php
 
@@ -40897,24 +40729,6 @@ parameters:
 			path: api/app/tests/Integration/Fixtures.php
 
 		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Entity\\Report\\Asset\:\:setOwnedPercentage\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: api/app/tests/Integration/Fixtures.php
-
-		-
-			message: '#^Cannot call method addAccount\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Fixtures.php
-
-		-
-			message: '#^Cannot call method addAsset\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Integration/Fixtures.php
-
-		-
 			message: '#^Cannot call method addClient\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -40922,18 +40736,6 @@ parameters:
 
 		-
 			message: '#^Cannot call method getStatus\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Fixtures.php
-
-		-
-			message: '#^Cannot call method setReport\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Fixtures.php
-
-		-
-			message: '#^Cannot call method setSubmitDate\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: api/app/tests/Integration/Fixtures.php
@@ -40995,12 +40797,6 @@ parameters:
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createNote\(\) has parameter \$title with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: api/app/tests/Integration/Fixtures.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: api/app/tests/Integration/Fixtures.php
 
@@ -41139,7 +40935,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:persist\(\) expects object, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: api/app/tests/Integration/Fixtures.php
 
 		-
@@ -41173,24 +40969,6 @@ parameters:
 			path: api/app/tests/Integration/Fixtures.php
 
 		-
-			message: '#^Parameter \#1 \$report of class OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission constructor expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Fixtures.php
-
-		-
-			message: '#^Parameter \#1 \$report of method OPG\\Digideps\\Backend\\Entity\\Report\\Asset\:\:setReport\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Fixtures.php
-
-		-
-			message: '#^Parameter \#1 \$report of method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setReport\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Fixtures.php
-
-		-
 			message: '#^Parameter \#1 \$type of static method OPG\\Digideps\\Backend\\Entity\\Report\\Asset\:\:factory\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -41203,37 +40981,13 @@ parameters:
 			path: api/app/tests/Integration/Fixtures.php
 
 		-
-			message: '#^Parameter \#1 \$value of method OPG\\Digideps\\Backend\\Entity\\Report\\Asset\:\:setValue\(\) expects string, int\<1, 10000\> given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/tests/Integration/Fixtures.php
-
-		-
 			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/Fixtures.php
 
 		-
-			message: '#^Parameter \#2 \$type of class OPG\\Digideps\\Backend\\Entity\\Report\\Report constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Fixtures.php
-
-		-
 			message: '#^Parameter \#2 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Fixtures.php
-
-		-
-			message: '#^Parameter \#3 \$startDate of class OPG\\Digideps\\Backend\\Entity\\Report\\Report constructor expects DateTime, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Fixtures.php
-
-		-
-			message: '#^Parameter \#4 \$endDate of class OPG\\Digideps\\Backend\\Entity\\Report\\Report constructor expects DateTime, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/Fixtures.php
@@ -41434,12 +41188,6 @@ parameters:
 			message: '#^Cannot call method getConnection\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
 			identifier: method.nonObject
 			count: 1
-			path: api/app/tests/Integration/Model/DeputyshipProcessingRawDbAccessIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
 			path: api/app/tests/Integration/Model/DeputyshipProcessingRawDbAccessIntegrationIntegrationTest.php
 
 		-
@@ -46277,48 +46025,6 @@ parameters:
 			identifier: offsetAccess.notFound
 			count: 1
 			path: api/app/tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipCandidatesGroupTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Factory\\DataFactoryInterface\|PHPUnit\\Framework\\MockObject\\MockObject\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 7
-			path: api/app/tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipsCSVIngesterTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\DeputyshipBuilder\|PHPUnit\\Framework\\MockObject\\MockObject\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: api/app/tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipsCSVIngesterTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\DeputyshipsCSVLoader\|PHPUnit\\Framework\\MockObject\\MockObject\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: api/app/tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipsCSVIngesterTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\DeputyshipsCSVLoader\|PHPUnit\\Framework\\MockObject\\MockObject\:\:method\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: api/app/tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipsCSVIngesterTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\DeputyshipsCandidatesSelector\|PHPUnit\\Framework\\MockObject\\MockObject\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: api/app/tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipsCSVIngesterTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\DeputyshipsIngestResultRecorder\|PHPUnit\\Framework\\MockObject\\MockObject\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 20
-			path: api/app/tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipsCSVIngesterTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\DeputyshipsIngestResultRecorder\|PHPUnit\\Framework\\MockObject\\MockObject\:\:method\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: api/app/tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipsCSVIngesterTest.php
 
 		-
 			message: '#^Parameter \#1 \$candidates of class OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\DeputyshipCandidatesSelectorResult constructor expects Traversable\<mixed, array\<string, mixed\>\>, ArrayIterator\<int, OPG\\Digideps\\Backend\\Entity\\StagingSelectedCandidate&PHPUnit\\Framework\\MockObject\\MockObject\> given\.$#'
