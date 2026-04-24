@@ -29,7 +29,7 @@ class BankAccountType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $this->step = isset($options['step']) && is_numeric($options['step']) ? (int) $options['step'] : 1;
+        $this->step = isset($options['step']) && is_numeric($options['step']) ? (int) $options['step'] : throw new \InvalidArgumentException('The "step" option must be a numeric value.');
 
         $builder->add('id', FormTypes\HiddenType::class);
 
