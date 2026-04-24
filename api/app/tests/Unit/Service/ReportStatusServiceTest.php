@@ -5,24 +5,24 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use OPG\Digideps\Backend\Service\ReportStatusService;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
-use OPG\Digideps\Backend\Entity\Report\Asset;
+use Mockery as m;
 use OPG\Digideps\Backend\Entity\Client;
-use OPG\Digideps\Backend\Entity\Report\Contact;
-use OPG\Digideps\Backend\Entity\Report\Decision;
-use OPG\Digideps\Backend\Entity\Report\MentalCapacity;
-use OPG\Digideps\Backend\Entity\Report\BankAccount;
 use OPG\Digideps\Backend\Entity\Report\Action;
+use OPG\Digideps\Backend\Entity\Report\Asset;
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\Contact;
 use OPG\Digideps\Backend\Entity\Report\Debt;
+use OPG\Digideps\Backend\Entity\Report\Decision;
 use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\MentalCapacity;
 use OPG\Digideps\Backend\Entity\Report\MoneyShortCategory;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShort;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransfer;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\VisitsCare;
-use Mockery as m;
+use OPG\Digideps\Backend\Service\ReportStatusService;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -95,13 +95,13 @@ final class ReportStatusServiceTest extends TestCase
                 'getWishToProvideDocumentation' => null,
                 // 103
                 'getMoneyShortCategoriesIn' => [],
-                'getMoneyShortCategoriesInPresent' => [],
+                'getMoneyShortCategoriesInPresent' => new ArrayCollection([]),
                 'getMoneyTransactionsShortInExist' => null,
-                'getMoneyTransactionsShortIn' => [],
-                'getMoneyShortCategoriesOut' => [],
-                'getMoneyShortCategoriesOutPresent' => [],
+                'getMoneyTransactionsShortIn' => new ArrayCollection([]),
+                'getMoneyShortCategoriesOut' => new ArrayCollection([]),
+                'getMoneyShortCategoriesOutPresent' => new ArrayCollection([]),
                 'getMoneyTransactionsShortOutExist' => null,
-                'getMoneyTransactionsShortOut' => [],
+                'getMoneyTransactionsShortOut' => new ArrayCollection([]),
                 'getType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
                 // 106
                 'has106Flag' => false,
@@ -209,13 +209,17 @@ final class ReportStatusServiceTest extends TestCase
         $cat = m::mock(MoneyShortCategory::class);
         $t = m::mock(MoneyTransactionShort::class);
 
+        $oneCategory = new ArrayCollection([$cat]);
+        $emptyCategories = new ArrayCollection([]);
+        $oneTransaction = new ArrayCollection([$t]);
+
         return [
             [['getMoneyInExists' => null], ReportStatusService::STATE_NOT_STARTED],
-            [['getMoneyInExists' => 'No','getReasonForNoMoneyIn' => null], ReportStatusService::STATE_INCOMPLETE],
-            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => [],'getMoneyTransactionsShortInExist' => 'no'], ReportStatusService::STATE_INCOMPLETE],
-            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => [],'getMoneyTransactionsShortInExist' => 'yes'], ReportStatusService::STATE_INCOMPLETE],
-            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => [[$cat]],'getMoneyTransactionsShortInExist' => 'no'], ReportStatusService::STATE_LOW_ASSETS_DONE],
-            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => [[$cat]],'getMoneyTransactionsShortInExist' => 'yes', 'getMoneyTransactionsShortIn' => [$t]], ReportStatusService::STATE_DONE],
+            [['getMoneyInExists' => 'No','getReasonForNoMoneyIn' => null], StatusService::STATE_INCOMPLETE],
+            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => $emptyCategories,'getMoneyTransactionsShortInExist' => 'no'], StatusService::STATE_INCOMPLETE],
+            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => $emptyCategories,'getMoneyTransactionsShortInExist' => 'yes'], StatusService::STATE_INCOMPLETE],
+            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => $oneCategory,'getMoneyTransactionsShortInExist' => 'no'], StatusService::STATE_LOW_ASSETS_DONE],
+            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => $oneCategory,'getMoneyTransactionsShortInExist' => 'yes', 'getMoneyTransactionsShortIn' => $oneTransaction], StatusService::STATE_DONE],
         ];
     }
 
@@ -232,13 +236,17 @@ final class ReportStatusServiceTest extends TestCase
         $cat = m::mock(MoneyShortCategory::class);
         $t = m::mock(MoneyTransactionShort::class);
 
+        $emptyCategories = new ArrayCollection([]);
+        $oneCategory = new ArrayCollection([$cat]);
+        $oneTransaction = new ArrayCollection([$t]);
+
         return [
             [['getMoneyOutExists' => null], ReportStatusService::STATE_NOT_STARTED],
-            [['getMoneyOutExists' => 'No','getReasonForNoMoneyOut' => null], ReportStatusService::STATE_INCOMPLETE],
-            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => [],'getMoneyTransactionsShortOutExist' => 'no'], ReportStatusService::STATE_INCOMPLETE],
-            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => [],'getMoneyTransactionsShortOutExist' => 'yes'], ReportStatusService::STATE_INCOMPLETE],
-            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => [$cat],'getMoneyTransactionsShortOutExist' => 'no'], ReportStatusService::STATE_LOW_ASSETS_DONE],
-            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => [[$cat]],'getMoneyTransactionsShortOutExist' => 'yes', 'getMoneyTransactionsShortOut' => [$t]], ReportStatusService::STATE_DONE],
+            [['getMoneyOutExists' => 'No','getReasonForNoMoneyOut' => null], StatusService::STATE_INCOMPLETE],
+            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => $emptyCategories,'getMoneyTransactionsShortOutExist' => 'no'], StatusService::STATE_INCOMPLETE],
+            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => $emptyCategories,'getMoneyTransactionsShortOutExist' => 'yes'], StatusService::STATE_INCOMPLETE],
+            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => $oneCategory,'getMoneyTransactionsShortOutExist' => 'no'], StatusService::STATE_LOW_ASSETS_DONE],
+            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => $oneCategory,'getMoneyTransactionsShortOutExist' => 'yes', 'getMoneyTransactionsShortOut' => $oneTransaction], StatusService::STATE_DONE],
         ];
     }
 
