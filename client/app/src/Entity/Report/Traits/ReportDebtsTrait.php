@@ -42,7 +42,7 @@ trait ReportDebtsTrait
      * @JMS\Type("string")
      * @JMS\Groups({"debt"})
      *
-     * @var decimal
+     * @var string $debtsTotalAmount
      */
     private $debtsTotalAmount;
 
@@ -98,7 +98,7 @@ trait ReportDebtsTrait
     }
 
     /**
-     * @return decimal
+     * @return string
      */
     public function getDebtsTotalAmount()
     {
@@ -106,7 +106,7 @@ trait ReportDebtsTrait
     }
 
     /**
-     * @param decimal $debtsTotalAmount
+     * @param string $debtsTotalAmount
      */
     public function setDebtsTotalAmount($debtsTotalAmount)
     {

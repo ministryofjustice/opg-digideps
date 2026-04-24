@@ -31,14 +31,14 @@ trait ReportPaFeeExpensesTrait
      * @JMS\Type("string")
      * @JMS\Groups({"fee"})
      *
-     * @var string
+     * @var string $hasFees
      */
     private $hasFees;
 
     /**
      * @JMS\Type("double")
      *
-     * @var decimal
+     * @var string $feesTotal
      */
     private $feesTotal;
 
@@ -75,7 +75,7 @@ trait ReportPaFeeExpensesTrait
     }
 
     /**
-     * @return decimal
+     * @return string
      */
     public function getFeesTotal()
     {
@@ -83,7 +83,7 @@ trait ReportPaFeeExpensesTrait
     }
 
     /**
-     * @param decimal $feesTotal
+     * @param string $feesTotal
      */
     public function setFeesTotal($feesTotal)
     {

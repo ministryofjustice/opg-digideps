@@ -27387,7 +27387,7 @@ parameters:
 		-
 			message: '#^Cannot call method getClientCaseNumber\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 5
+			count: 4
 			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
@@ -27400,12 +27400,6 @@ parameters:
 			message: '#^Cannot call method getClientId\(\) on Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\UserDetails\|null\.$#'
 			identifier: method.nonObject
 			count: 3
-			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Cannot call method getClientId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
@@ -27529,12 +27523,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
-			message: '#^Cannot call method getUserId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
 			message: '#^Cannot call method getUsers\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -27555,12 +27543,6 @@ parameters:
 		-
 			message: '#^Cannot call method setUser\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Instantiated class OPG\\Digideps\\Backend\\Entity\\Ndr\\Ndr not found\.$#'
-			identifier: class.notFound
 			count: 1
 			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
@@ -27943,18 +27925,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$report of class OPG\\Digideps\\Backend\\Entity\\Report\\Document constructor expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, OPG\\Digideps\\Backend\\Entity\\Ndr\\Ndr given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Parameter \#1 \$report of class OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission constructor expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, OPG\\Digideps\\Backend\\Entity\\Ndr\\Ndr given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
 			message: '#^Parameter \#1 \$reportId of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\BaseFeatureContext\:\:getReportOverviewUrl\(\) expects int, int\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -27988,12 +27958,6 @@ parameters:
 			message: '#^Parameter \#2 \$client of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
 			identifier: argument.type
 			count: 4
-			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Parameter \#2 \$createdBy of class OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission constructor expects OPG\\Digideps\\Backend\\Entity\\User, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
-			identifier: argument.type
-			count: 1
 			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
@@ -28064,12 +28028,6 @@ parameters:
 
 		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\ReportSubmission\\ReportSubmissionFeatureContext\:\:\$courtOrder \(OPG\\Digideps\\Backend\\Entity\\CourtOrder\|null\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\ReportSubmission\\ReportSubmissionFeatureContext\:\:\$reportSubmissionStandardAndNdr_CaseNumber \(string\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
@@ -45763,12 +45721,6 @@ parameters:
 			path: tests/Unit/Service/PreRegistrationVerificationServiceTest.php
 
 		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\ReportServiceTest\:\:\$mockNdrDocument\.$#'
-			identifier: property.notFound
-			count: 1
-			path: tests/Unit/Service/ReportServiceTest.php
-
-		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityManager\|Mockery\\MockInterface\:\:shouldNotReceive\(\)\.$#'
 			identifier: method.notFound
 			count: 3
@@ -45915,30 +45867,6 @@ parameters:
 		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\ReportServiceTest\:\:\$asset1 \(OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\) does not accept mixed\.$#'
 			identifier: assign.propertyType
-			count: 1
-			path: tests/Unit/Service/ReportServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\ReportServiceTest\:\:\$assetRepo is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: tests/Unit/Service/ReportServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\ReportServiceTest\:\:\$bankAccount is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: tests/Unit/Service/ReportServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\ReportServiceTest\:\:\$casrecRepo is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: tests/Unit/Service/ReportServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\ReportServiceTest\:\:\$casrecRepo with generic class Doctrine\\ORM\\EntityRepository does not specify its types\: T$#'
-			identifier: missingType.generics
 			count: 1
 			path: tests/Unit/Service/ReportServiceTest.php
 

@@ -27381,7 +27381,7 @@ parameters:
 		-
 			message: '#^Cannot call method getClientCaseNumber\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 5
+			count: 4
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
@@ -27394,12 +27394,6 @@ parameters:
 			message: '#^Cannot call method getClientId\(\) on Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\UserDetails\|null\.$#'
 			identifier: method.nonObject
 			count: 3
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Cannot call method getClientId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
@@ -27523,12 +27517,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
-			message: '#^Cannot call method getUserId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
 			message: '#^Cannot call method getUsers\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -27549,12 +27537,6 @@ parameters:
 		-
 			message: '#^Cannot call method setUser\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Instantiated class OPG\\Digideps\\Backend\\Entity\\Ndr\\Ndr not found\.$#'
-			identifier: class.notFound
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
@@ -27937,18 +27919,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$report of class OPG\\Digideps\\Backend\\Entity\\Report\\Document constructor expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, OPG\\Digideps\\Backend\\Entity\\Ndr\\Ndr given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Parameter \#1 \$report of class OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission constructor expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, OPG\\Digideps\\Backend\\Entity\\Ndr\\Ndr given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
 			message: '#^Parameter \#1 \$reportId of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\BaseFeatureContext\:\:getReportOverviewUrl\(\) expects int, int\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -27982,12 +27952,6 @@ parameters:
 			message: '#^Parameter \#2 \$client of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
 			identifier: argument.type
 			count: 4
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Parameter \#2 \$createdBy of class OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission constructor expects OPG\\Digideps\\Backend\\Entity\\User, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
-			identifier: argument.type
-			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
@@ -28058,12 +28022,6 @@ parameters:
 
 		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\ReportSubmission\\ReportSubmissionFeatureContext\:\:\$courtOrder \(OPG\\Digideps\\Backend\\Entity\\CourtOrder\|null\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\ReportSubmission\\ReportSubmissionFeatureContext\:\:\$reportSubmissionStandardAndNdr_CaseNumber \(string\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
@@ -45571,12 +45529,6 @@ parameters:
 			path: api/app/tests/Unit/Service/PreRegistrationVerificationServiceTest.php
 
 		-
-			message: '#^Access to an undefined property Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\ReportServiceTest\:\:\$mockNdrDocument\.$#'
-			identifier: property.notFound
-			count: 1
-			path: api/app/tests/Unit/Service/ReportServiceTest.php
-
-		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityManager\|Mockery\\MockInterface\:\:shouldNotReceive\(\)\.$#'
 			identifier: method.notFound
 			count: 3
@@ -45711,30 +45663,6 @@ parameters:
 		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\ReportServiceTest\:\:\$asset1 \(OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\) does not accept mixed\.$#'
 			identifier: assign.propertyType
-			count: 1
-			path: api/app/tests/Unit/Service/ReportServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\ReportServiceTest\:\:\$assetRepo is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: api/app/tests/Unit/Service/ReportServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\ReportServiceTest\:\:\$bankAccount is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: api/app/tests/Unit/Service/ReportServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\ReportServiceTest\:\:\$casrecRepo is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: api/app/tests/Unit/Service/ReportServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\ReportServiceTest\:\:\$casrecRepo with generic class Doctrine\\ORM\\EntityRepository does not specify its types\: T$#'
-			identifier: missingType.generics
 			count: 1
 			path: api/app/tests/Unit/Service/ReportServiceTest.php
 
@@ -47069,66 +46997,6 @@ parameters:
 			identifier: property.onlyWritten
 			count: 1
 			path: client/app/src/Command/ProcessOrgCSVCommand.php
-
-		-
-			message: '#^Argument of an invalid type list\<string\>\|false supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: client/app/src/Command/ValidationCommand.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: client/app/src/Command/ValidationCommand.php
-
-		-
-			message: '#^Call to an undefined method Symfony\\Component\\Validator\\Mapping\\MetadataInterface\:\:getConstrainedProperties\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/src/Command/ValidationCommand.php
-
-		-
-			message: '#^Call to an undefined method Symfony\\Component\\Validator\\Mapping\\MetadataInterface\:\:getMemberMetadatas\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/src/Command/ValidationCommand.php
-
-		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: client/app/src/Command/ValidationCommand.php
-
-		-
-			message: '#^Cannot call method getConstraints\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Command/ValidationCommand.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Command\\ValidationCommand\:\:execute\(\) should return int but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
-			path: client/app/src/Command/ValidationCommand.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Command\\ValidationCommand\:\:getClassValidationRules\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Command/ValidationCommand.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Command\\ValidationCommand\:\:getClassValidationRules\(\) has parameter \$entity with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/src/Command/ValidationCommand.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 1
-			path: client/app/src/Command/ValidationCommand.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Controller\\AbstractController\:\:renderError\(\) has parameter \$message with no type specified\.$#'
@@ -52375,12 +52243,6 @@ parameters:
 			path: client/app/src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getDebtsTotalAmount\(\) has invalid return type OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\decimal\.$#'
-			identifier: class.notFound
-			count: 1
-			path: client/app/src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getDebtsTotalValue\(\) should return float but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -52401,12 +52263,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getFeeTotals\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getFeesTotal\(\) has invalid return type OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\decimal\.$#'
-			identifier: class.notFound
 			count: 1
 			path: client/app/src/Entity/Report/Report.php
 
@@ -52867,18 +52723,6 @@ parameters:
 			path: client/app/src/Entity/Report/Report.php
 
 		-
-			message: '#^Parameter \$debtsTotalAmount of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setDebtsTotalAmount\(\) has invalid type OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\decimal\.$#'
-			identifier: class.notFound
-			count: 1
-			path: client/app/src/Entity/Report/Report.php
-
-		-
-			message: '#^Parameter \$feesTotal of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setFeesTotal\(\) has invalid type OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\decimal\.$#'
-			identifier: class.notFound
-			count: 1
-			path: client/app/src/Entity/Report/Report.php
-
-		-
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
 			count: 13
@@ -52939,12 +52783,6 @@ parameters:
 			path: client/app/src/Entity/Report/Report.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$debtsTotalAmount has unknown class OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\decimal as its type\.$#'
-			identifier: class.notFound
-			count: 1
-			path: client/app/src/Entity/Report/Report.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$expenses \(array\<OPG\\Digideps\\Frontend\\Entity\\Report\\Expense\>\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -52953,12 +52791,6 @@ parameters:
 		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$expensesTotal has no type specified\.$#'
 			identifier: missingType.property
-			count: 1
-			path: client/app/src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$feesTotal has unknown class OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\decimal as its type\.$#'
-			identifier: class.notFound
 			count: 1
 			path: client/app/src/Entity/Report/Report.php
 

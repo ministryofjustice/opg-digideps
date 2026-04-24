@@ -31,7 +31,7 @@ class TransactionSingleType extends AbstractType
                  ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $transaction = $event->getData(); /* @var $accountTransaction Transaction */
+            $transaction = $event->getData();
             $form = $event->getForm();
 
             if ($transaction->getHasMoreDetails()) {

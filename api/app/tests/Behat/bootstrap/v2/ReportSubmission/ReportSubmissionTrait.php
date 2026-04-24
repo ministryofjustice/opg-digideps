@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\ReportSubmission;
 
-use OPG\Digideps\Backend\Entity\Client;
-use OPG\Digideps\Backend\Entity\Ndr\Ndr;
+use Behat\Step\Given;
+use Behat\Step\Then;
+use Behat\Step\When;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
-use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Service\ParameterStoreService;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
@@ -35,9 +35,7 @@ trait ReportSubmissionTrait
         }
     }
 
-    /**
-     * @When I attach a supporting document :imageName to the report
-     */
+    #[When('I attach a supporting document :imageName to the report')]
     public function iAttachedASupportingDocumentToTheCompletedReport(string $imageName)
     {
         $this->iAmOnUploadDocumentPage();
@@ -50,33 +48,25 @@ trait ReportSubmissionTrait
         $this->pressButton('Upload');
     }
 
-    /**
-     * @When I view the pending submissions
-     */
+    #[When('I view the pending submissions')]
     public function iViewPendingSubmissions()
     {
         $this->clickLink('Pending');
     }
 
-    /**
-     * @Then the report PDF document should be queued
-     */
+    #[Then('the report PDF document should be queued')]
     public function documentsAreSetToQueued()
     {
         $this->assertRowWithStatusAppears('DigiRep-', 'Queued');
     }
 
-    /**
-     * @Then the document :filename should be queued
-     */
+    #[Then('the document :filename should be queued')]
     public function documentShouldBeQueued(string $fileName)
     {
         $this->assertRowWithStatusAppears($fileName, 'Queued');
     }
 
-    /**
-     * @Then the document :filename should be synced
-     */
+    #[Then('the document :filename should be synced')]
     public function documentShouldBeSynced(string $fileName)
     {
         $this->clickLink('Synchronised');
@@ -84,9 +74,7 @@ trait ReportSubmissionTrait
         $this->assertRowWithStatusAppears($fileName, 'Success');
     }
 
-    /**
-     * @Given /^I run the document\-sync command$/
-     */
+    #[Given('/^I run the document\-sync command$/')]
     public function iRunTheDocumentSyncCommand()
     {
         $this->visitAdminPath('/admin/behat/run-document-sync-command');
@@ -98,18 +86,14 @@ trait ReportSubmissionTrait
         sleep(1);
     }
 
-    /**
-     * @Given /^the report PDF document should be synced$/
-     */
+    #[Given('/^the report PDF document should be synced$/')]
     public function theReportPDFDocumentShouldBeSynced()
     {
         $this->assertRowWithStatusAppears('DigiRep-', 'Success');
     }
 
-    /**
-     * @When I attach a "second" supporting document :imageName to the submitted report
-     * @When I attach a supporting document :imageName to the submitted report
-     */
+    #[When('I attach a "second" supporting document :imageName to the submitted report')]
+    #[When('I attach a supporting document :imageName to the submitted report')]
     public function attachSupportingDocumentToSubmittedReport(string $imageName)
     {
         $this->iVisitTheDocumentsStep2Page();
@@ -117,9 +101,7 @@ trait ReportSubmissionTrait
         $this->attachDocument($imageName);
     }
 
-    /**
-     * @Given /^I send the documents to complete the upload process on the "([^"]*)" report$/
-     */
+    #[Given('/^I send the documents to complete the upload process on the "([^"]*)" report$/')]
     public function iSendTheDocumentsToCompleteTheUploadProcess($reportStatus)
     {
         if ('submitted' != $reportStatus) {
@@ -129,9 +111,7 @@ trait ReportSubmissionTrait
         $this->clickLink('Send documents');
     }
 
-    /**
-     * @When I search for submissions using the :whichNameSearched name of the clients with the same :whichNamesAreSame name
-     */
+    #[When('I search for submissions using the :whichNameSearched name of the clients with the same :whichNamesAreSame name')]
     public function iSearchForSubmissionsUsingTheFirstNameOfTheClientsWithTheSameFirstName(
         string $whichNameSearched,
         string $whichNamesAreSame,
@@ -144,9 +124,7 @@ trait ReportSubmissionTrait
         $this->clickLink('Pending');
     }
 
-    /**
-     * @Then I should see the clients with the same :whichName names in the search results
-     */
+    #[Then('I should see the clients with the same :whichName names in the search results')]
     public function iShouldSeeBothClientsInTheSearchResults(string $whichName)
     {
         $usersToSearchOn = 'first' === $whichName ? $this->sameFirstNameUserDetails : $this->sameLastNameUserDetails;
@@ -165,9 +143,7 @@ trait ReportSubmissionTrait
         );
     }
 
-    /**
-     * @Then I should not see the two clients with different :whichName names
-     */
+    #[Then('I should not see the two clients with different :whichName names')]
     public function iShouldNotSeeTheOtherTwoClientsWithDifferentNames(string $whichName)
     {
         $usersToSearchOn = 'first' === $whichName ? $this->sameFirstNameUserDetails : $this->sameLastNameUserDetails;
@@ -186,9 +162,7 @@ trait ReportSubmissionTrait
         );
     }
 
-    /**
-     * @When I search for submissions using the court order number of the client with :numberReports report(s)
-     */
+    #[When('I search for submissions using the court order number of the client with :numberReports report(s)')]
     public function iSearchForSubmissionsUsingTheCourtOrderNumberOfTheClientWithNumberReports(string $numberReports)
     {
         $userToSearchOn = 'one' === $numberReports ? $this->oneReportsUserDetails : $this->twoReportsUserDetails;
@@ -197,9 +171,7 @@ trait ReportSubmissionTrait
         $this->clickLink('Pending');
     }
 
-    /**
-     * @Then I should see :numberRows rows for the client with :numberReports report submission(s) in the search results
-     */
+    #[Then('I should see :numberRows rows for the client with :numberReports report submission(s) in the search results')]
     public function iShouldSeeNumberRowsForClientWithNumberReports(string $numberRows, string $numberReports)
     {
         $userToSearchOn = 'one' === $numberReports ? $this->oneReportsUserDetails : $this->twoReportsUserDetails;
@@ -218,9 +190,7 @@ trait ReportSubmissionTrait
         );
     }
 
-    /**
-     * @Then I should not see the client with :numberReports report submission(s) in the search results
-     */
+    #[Then('I should not see the client with :numberReports report submission(s) in the search results')]
     public function iShouldNotSeeTheClientWithSubmissionsInResults(string $numberReports)
     {
         $userToSearchOn = 'one' === $numberReports ? $this->oneReportsUserDetails : $this->twoReportsUserDetails;
@@ -239,9 +209,7 @@ trait ReportSubmissionTrait
         );
     }
 
-    /**
-     * @When I manually :action the client that has one submitted report
-     */
+    #[When('I manually :action the client that has one submitted report')]
     public function iManuallyArchiveTheClientThatHasOneSubmittedReport(string $action)
     {
         $locator = sprintf(
@@ -254,18 +222,14 @@ trait ReportSubmissionTrait
         $this->pressButton('archive' === $action ? 'Archive' : 'Synchronise');
     }
 
-    /**
-     * @Then I should see the client row under the Synchronised tab
-     */
+    #[Then('I should see the client row under the Synchronised tab')]
     public function iShouldSeeTheClientRowUnderTheSynchronisedTab()
     {
         $this->clickLink('Synchronised');
         $this->iShouldSeeNumberRowsForClientWithNumberReports('one', 'one');
     }
 
-    /**
-     * @Given there was an error during synchronisation
-     */
+    #[Given('there was an error during synchronisation')]
     public function thereWasAnErrorDuringSync()
     {
         $submittedReportId = $this->oneReportsUserDetails->getPreviousReportId();
@@ -280,9 +244,7 @@ trait ReportSubmissionTrait
         $this->em->flush();
     }
 
-    /**
-     * @Then the status of the documents for the client with one report submission should be :status
-     */
+    #[Then('the status of the documents for the client with one report submission should be :status')]
     public function statusOfSubmissionDocumentsShouldBe(string $status)
     {
         $locator = sprintf(
@@ -319,17 +281,13 @@ trait ReportSubmissionTrait
         }
     }
 
-    /**
-     * @Given /^the document sync enabled flag is set to \'([^\']*)\'$/
-     */
+    #[Given('/^the document sync enabled flag is set to \'([^\']*)\'$/')]
     public function theDocumentSyncEnabledFlagIsSetTo($documentFeatureFlagValue)
     {
         $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC, $documentFeatureFlagValue);
     }
 
-    /**
-     * @Then /^the \'([^\']*)\' tab \'([^\']*)\' visible$/
-     */
+    #[Then('/^the \'([^\']*)\' tab \'([^\']*)\' visible$/')]
     public function tabVisibilityCheck($tabName, $visibility)
     {
         $shouldBeVisible = 'is' === $visibility;
@@ -346,9 +304,7 @@ trait ReportSubmissionTrait
         }
     }
 
-    /**
-     * @When I search for submissions using the court order number of the client I am interacting with and check the :status column
-     */
+    #[When('I search for submissions using the court order number of the client I am interacting with and check the :status column')]
     public function iSearchForSubmissionsUsingTheCourtOrderNumberOfTheClientIAmInteractingWithForTheStatusColumn(string $status)
     {
         $this->fillInField('q', $this->interactingWithUserDetails->getClientCaseNumber());
@@ -356,10 +312,8 @@ trait ReportSubmissionTrait
         $this->clickLink($status);
     }
 
-    /**
-     * @Then I should not see the submission under the :status tab with the court order number of the user I am interacting with
-     * @Then I should see the submission under the :status tab with the court order number of the user I am interacting with
-     */
+    #[Then('I should not see the submission under the :status tab with the court order number of the user I am interacting with')]
+    #[Then('I should see the submission under the :status tab with the court order number of the user I am interacting with')]
     public function submissionBehaviourBasedOnStatus(string $status)
     {
         $caseNumber = $this->interactingWithUserDetails->getClientCaseNumber();
@@ -392,9 +346,7 @@ trait ReportSubmissionTrait
         }
     }
 
-    /**
-     * @Then I should see Lay High Assets report for the next reporting period
-     */
+    #[Then('I should see Lay High Assets report for the next reporting period')]
     public function iShouldSeeLayHighAssetsReportForTheNextReportingPeriod()
     {
         $this->clickLink('Continue');
@@ -405,9 +357,7 @@ trait ReportSubmissionTrait
         );
     }
 
-    /**
-     * @Given /^the user uploaded a document with a file type that can be converted before the document conversion feature was released$/
-     */
+    #[Given('/^the user uploaded a document with a file type that can be converted before the document conversion feature was released$/')]
     public function theUserUploadedADocumentWithAFileTypeThatCanBeConvertedBeforeTheDocumentConversionFeatureWasReleased()
     {
         $this->iViewDocumentsSection();
@@ -427,43 +377,7 @@ trait ReportSubmissionTrait
         $this->iSubmitCurrentOrPreviousTheReport('current');
     }
 
-    /**
-     * @Given /^a deputy has submitted one standard report and one NDR report for the same client$/
-     */
-    public function aDeputyHasSubmittedAStandardReportAndNdrForSameClient(): void
-    {
-        // this creates a standard report
-        $userDetails = $this->createLayCombinedHighSubmitted(null, $this->testRunId);
-
-        // because we've removed a lot of NDR stuff, we have to manually construct an NDR here
-        // TODO remove when NDR entities are removed
-        $client = $this->em->getRepository(Client::class)->find($userDetails->getClientId());
-        $user = $this->em->getRepository(User::class)->find($userDetails->getUserId());
-
-        $ndr = new Ndr($client);
-        $submission = new ReportSubmission($ndr, $user);
-
-        // only submissions with a document are included in the report submissions tabs
-        $ndrPdf = new Document($ndr);
-        $ndrPdf->setFileName('ndr.pdf');
-        $ndrPdf->setStorageReference('dd_doc_2356_92838573');
-        $ndrPdf->setIsReportPdf(true);
-        $ndrPdf->setCreatedOn(new \DateTime());
-        $ndrPdf->setCreatedBy($user);
-        $ndrPdf->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
-        $ndrPdf->setReportSubmission($submission);
-
-        $this->em->persist($ndrPdf);
-        $this->em->persist($ndr);
-        $this->em->persist($submission);
-        $this->em->flush();
-
-        $this->reportSubmissionStandardAndNdr_CaseNumber = $userDetails->getClientCaseNumber();
-    }
-
-    /**
-     * @When /^I search for submissions using the case number of the deputy who has submitted one standard report and one NDR report for the same client$/
-     */
+    #[When('/^I search for submissions using the case number of the deputy who has submitted one standard report and one NDR report for the same client$/')]
     public function iSearchForSubmissionsUsingTheCaseNumber()
     {
         $this->fillInField('q', $this->reportSubmissionStandardAndNdr_CaseNumber);
@@ -471,9 +385,7 @@ trait ReportSubmissionTrait
         $this->clickLink('Pending');
     }
 
-    /**
-     * @Then /^I should only see a row for the standard report in the Pending tab$/
-     */
+    #[Then('/^I should only see a row for the standard report in the Pending tab$/')]
     public function iShouldOnlySeeARowForTheStandardReportInThePendingTab(): void
     {
         $rows = $this->getSession()->getPage()->findAll('css', 'tr.behat-region-report-submission');

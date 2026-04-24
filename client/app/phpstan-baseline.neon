@@ -277,66 +277,6 @@ parameters:
 			path: src/Command/ProcessOrgCSVCommand.php
 
 		-
-			message: '#^Argument of an invalid type list\<string\>\|false supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Command/ValidationCommand.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Command/ValidationCommand.php
-
-		-
-			message: '#^Call to an undefined method Symfony\\Component\\Validator\\Mapping\\MetadataInterface\:\:getConstrainedProperties\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Command/ValidationCommand.php
-
-		-
-			message: '#^Call to an undefined method Symfony\\Component\\Validator\\Mapping\\MetadataInterface\:\:getMemberMetadatas\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Command/ValidationCommand.php
-
-		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Command/ValidationCommand.php
-
-		-
-			message: '#^Cannot call method getConstraints\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Command/ValidationCommand.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Command\\ValidationCommand\:\:execute\(\) should return int but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
-			path: src/Command/ValidationCommand.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Command\\ValidationCommand\:\:getClassValidationRules\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Command/ValidationCommand.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Command\\ValidationCommand\:\:getClassValidationRules\(\) has parameter \$entity with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Command/ValidationCommand.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 1
-			path: src/Command/ValidationCommand.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Controller\\AbstractController\:\:renderError\(\) has parameter \$message with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -5587,12 +5527,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getDebtsTotalAmount\(\) has invalid return type OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\decimal\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getDebtsTotalValue\(\) should return float but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -5613,12 +5547,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getFeeTotals\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getFeesTotal\(\) has invalid return type OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\decimal\.$#'
-			identifier: class.notFound
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -6079,18 +6007,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Parameter \$debtsTotalAmount of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setDebtsTotalAmount\(\) has invalid type OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\decimal\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Parameter \$feesTotal of method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:setFeesTotal\(\) has invalid type OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\decimal\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
 			count: 13
@@ -6151,12 +6067,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$debtsTotalAmount has unknown class OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\decimal as its type\.$#'
-			identifier: class.notFound
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$expenses \(array\<OPG\\Digideps\\Frontend\\Entity\\Report\\Expense\>\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -6165,12 +6075,6 @@ parameters:
 		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$expensesTotal has no type specified\.$#'
 			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:\$feesTotal has unknown class OPG\\Digideps\\Frontend\\Entity\\Report\\Traits\\decimal as its type\.$#'
-			identifier: class.notFound
 			count: 1
 			path: src/Entity/Report/Report.php
 
