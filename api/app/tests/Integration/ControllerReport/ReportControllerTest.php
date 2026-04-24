@@ -185,7 +185,7 @@ class ReportControllerTest extends AbstractTestController
     {
         parent::tearDownAfterClass();
 
-        self::fixtures()->clear();
+        //self::fixtures()->clear();
     }
 
     public function testAddAuth()
@@ -647,6 +647,10 @@ class ReportControllerTest extends AbstractTestController
         $this->assertCount(count(Fee::$feeTypeIds), $data['fees']);
         $this->assertEquals(0, $data['fees_total']);
         $this->assertEquals('no', $data['has_fees']);
+    }
+
+    public static function setUpBeforeClass(): void
+    {
     }
 
     public function testActions()

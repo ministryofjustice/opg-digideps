@@ -4,14 +4,15 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Service\Auth;
 
+use Mockery\MockInterface;
 use OPG\Digideps\Backend\Entity\User;
-use Psr\Log\LoggerInterface;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Security\RedisUserProvider;
-use Mockery\MockInterface;
-use Tests\OPG\Digideps\Backend\Unit\MockeryStub as m;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\TestCase;
 use Predis\Client;
+use Psr\Log\LoggerInterface;
+use Tests\OPG\Digideps\Backend\Unit\MockeryStub as m;
 
 final class UserProviderTest extends TestCase
 {
@@ -90,7 +91,8 @@ final class UserProviderTest extends TestCase
         $this->assertNotEquals($token, $token2, 'token must generate a new value when called for the 2nd time');
     }
 
-    public function testRemoveToken(): void
+    #[DoesNotPerformAssertions]
+    public function testremoveToken(): void
     {
         $this->redis->shouldReceive('set')->with('token', null)->once();
 
