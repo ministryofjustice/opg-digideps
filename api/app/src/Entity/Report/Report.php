@@ -887,7 +887,6 @@ class Report
         return $this;
     }
 
-
     #[JMS\VirtualProperty]
     #[JMS\SerializedName('is_due')]
     #[JMS\Groups(['report'])]

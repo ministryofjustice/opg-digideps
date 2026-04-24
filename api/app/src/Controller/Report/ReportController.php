@@ -396,11 +396,10 @@ class ReportController extends RestController
 
         if (array_key_exists('action_more_info', $data)) {
             $report->setActionMoreInfo($data['action_more_info']);
-            if (array_key_exists('action_more_info_details', $data)) {
-                $report->setActionMoreInfoDetails(
-                    'yes' == $data['action_more_info'] ? $data['action_more_info_details'] : null
-                );
+            if ($data['action_more_info'] === 'yes' && array_key_exists('action_more_info_details', $data)) {
+                $report->setActionMoreInfoDetails($data['action_more_info_details']);
             }
+
             $report->updateSectionsStatusCache([
                 Report::SECTION_OTHER_INFO,
             ]);

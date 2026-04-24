@@ -5765,6 +5765,7 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
+<<<<<<< HEAD
 			message: '#^Binary operation "\+\=" between \(float\|int\) and mixed results in an error\.$#'
 			identifier: assignOp.invalid
 			count: 3
@@ -5773,6 +5774,79 @@ parameters:
 		-
 			message: '#^Binary operation "\+\=" between mixed and string results in an error\.$#'
 			identifier: assignOp.invalid
+=======
+			message: "#^Cannot call method add\\(\\) on array\\<App\\\\Entity\\\\Report\\\\Fee\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Cannot call method add\\(\\) on array\\<App\\\\Entity\\\\Report\\\\Gift\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Cannot call method add\\(\\) on array\\<App\\\\Entity\\\\Report\\\\ProfServiceFee\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Cannot call method add\\(\\) on mixed\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Cannot call method contains\\(\\) on array\\<App\\\\Entity\\\\Report\\\\Debt\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Cannot call method contains\\(\\) on array\\<App\\\\Entity\\\\Report\\\\Fee\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Cannot call method contains\\(\\) on array\\<App\\\\Entity\\\\Report\\\\Gift\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Cannot call method contains\\(\\) on array\\<App\\\\Entity\\\\Report\\\\ProfServiceFee\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Cannot call method contains\\(\\) on mixed\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Cannot call method diff\\(\\) on DateTime\\|null\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Cannot call method filter\\(\\) on array\\<App\\\\Entity\\\\Report\\\\Debt\\>\\.$#"
+			count: 2
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Cannot call method filter\\(\\) on array\\<App\\\\Entity\\\\Report\\\\Fee\\>\\.$#"
+			count: 2
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Cannot call method filter\\(\\) on array\\<App\\\\Entity\\\\Report\\\\ProfServiceFee\\>\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Cannot call method filter\\(\\) on mixed\\.$#"
+			count: 1
+			path: src/Entity/Report/Report.php
+
+		-
+			message: "#^Cannot call method getAmount\\(\\) on mixed\\.$#"
+>>>>>>> 29af392cce (Continue type clean up in pursuit of passing tests)
 			count: 3
 			path: src/Entity/Report/Report.php
 
@@ -5917,11 +5991,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getMoneyOutTotal\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:getMoneyShortCategoriesOut\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -6087,26 +6156,6 @@ parameters:
 
 		-
 			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setMoneyTransactions\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setMoneyTransactionsShort\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setMoneyTransactionsShort\\(\\) has parameter \\$moneyTransactionsShort with generic class Doctrine\\\\Common\\\\Collections\\\\ArrayCollection but does not specify its types\\: TKey, T$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setMoneyTransactionsShortInExist\\(\\) has no return type specified\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Method App\\\\Entity\\\\Report\\\\Report\\:\\:setMoneyTransactionsShortOutExist\\(\\) has no return type specified\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -6327,21 +6376,6 @@ parameters:
 
 		-
 			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$moneyOutExists \\(string\\) does not accept string\\|null\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$moneyShortCategories \\(array\\<App\\\\Entity\\\\Report\\\\MoneyShortCategory\\>\\) does not accept Doctrine\\\\Common\\\\Collections\\\\ArrayCollection\\<\\*NEVER\\*, \\*NEVER\\*\\>\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$moneyTransactionsShort \\(array\\<App\\\\Entity\\\\Report\\\\MoneyTransactionShort\\>\\) does not accept Doctrine\\\\Common\\\\Collections\\\\ArrayCollection\\.$#"
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: "#^Property App\\\\Entity\\\\Report\\\\Report\\:\\:\\$moneyTransactionsShort \\(array\\<App\\\\Entity\\\\Report\\\\MoneyTransactionShort\\>\\) does not accept Doctrine\\\\Common\\\\Collections\\\\ArrayCollection\\<\\*NEVER\\*, \\*NEVER\\*\\>\\.$#"
 			count: 1
 			path: src/Entity/Report/Report.php
 
