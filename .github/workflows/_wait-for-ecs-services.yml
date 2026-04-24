@@ -59,7 +59,6 @@ jobs:
           WORKSPACE: ${{ inputs.workspace }}
           TIMEOUT: ${{ inputs.timeout }}
           AWS_REGION: eu-west-1
-          PYTHONUNBUFFERED: "1"
         working-directory: scripts/pipeline/wait_until_ready
         run: |
           python3 -u wait_until_ready.py \
