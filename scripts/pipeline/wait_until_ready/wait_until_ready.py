@@ -3,14 +3,18 @@ import time
 import boto3
 from botocore.exceptions import ClientError, BotoCoreError
 
-POLL_INTERVAL_SECONDS = 15
+POLL_INTERVAL_SECONDS = 5
+
+
+def log(message=""):
+    print(message, flush=True)
 
 
 def get_service_data(ecs, cluster, services):
     try:
         response = ecs.describe_services(cluster=cluster, services=services)
     except (ClientError, BotoCoreError) as exc:
-        print(f"Failed to query ECS: {exc}")
+        log(f"Failed to query ECS: {exc}")
         return None
 
     service_map = {}
@@ -20,7 +24,10 @@ def get_service_data(ecs, cluster, services):
     failed_names = set()
     for failure in response.get("failures", []):
         arn = failure.get("arn", "")
-        failed_names.add(arn.split("/")[-1])
+        reason = failure.get("reason", "UNKNOWN")
+        name = arn.split("/")[-1]
+        failed_names.add(name)
+        log(f"{name}: ECS describe failure: {reason}")
 
     return {
         "service_map": service_map,
@@ -29,24 +36,31 @@ def get_service_data(ecs, cluster, services):
 
 
 def print_recent_events(service):
-    print("Last 5 events:")
+    log("Last 5 events:")
     events = service.get("events", [])[:5]
 
     if not events:
-        print("No recent events available")
+        log("No recent events available")
         return
 
     for event in events:
-        print(f"- {event.get('createdAt')}: {event.get('message')}")
+        log(f"- {event.get('createdAt')}: {event.get('message')}")
+
+
+def get_primary_deployment(deployments):
+    for deployment in deployments:
+        if deployment.get("status") == "PRIMARY":
+            return deployment
+    return None
 
 
 def check_service(service_name, service, failed_names):
     if service_name in failed_names and service is None:
-        print(f"{service_name}: not found yet")
+        log(f"{service_name}: not found yet")
         return False
 
     if service is None:
-        print(f"{service_name}: missing service data")
+        log(f"{service_name}: missing service data")
         return False
 
     status = service.get("status")
@@ -55,40 +69,47 @@ def check_service(service_name, service, failed_names):
     deployments = service.get("deployments", [])
 
     if status != "ACTIVE":
-        print(f"{service_name}: status={status}, waiting")
+        log(f"{service_name}: status={status}, waiting")
         return False
 
-    primary_rollout = ""
-    in_progress = False
-
     for deployment in deployments:
-        rollout = deployment.get("rolloutState")
-
-        if rollout == "FAILED":
-            print(f"{service_name}: deployment entered FAILED state")
-            print("")
+        if deployment.get("rolloutState") == "FAILED":
+            log(f"{service_name}: deployment entered FAILED state")
+            log("")
             print_recent_events(service)
             sys.exit(1)
 
-        if deployment.get("status") == "PRIMARY":
-            primary_rollout = rollout
-
-        if rollout == "IN_PROGRESS":
-            in_progress = True
-
     if desired is None or running is None:
-        print(f"{service_name}: missing desired or running count")
+        log(f"{service_name}: missing desired or running count")
         return False
 
-    if running != desired or primary_rollout != "COMPLETED" or in_progress:
-        rollout = primary_rollout if primary_rollout else "UNKNOWN"
-        print(
-            f"{service_name}: running={running}/{desired}, primary={rollout}, waiting"
+    if desired == 0:
+        log(f"{service_name}: desired=0, ready")
+        return True
+
+    primary = get_primary_deployment(deployments)
+
+    if primary is None:
+        log(f"{service_name}: no primary deployment found, waiting")
+        return False
+
+    primary_running = primary.get("runningCount", 0)
+    primary_desired = primary.get("desiredCount", 0)
+    primary_rollout = primary.get("rolloutState", "UNKNOWN")
+    task_definition = primary.get("taskDefinition", "").split("/")[-1]
+
+    if primary_running >= 1:
+        log(
+            f"{service_name}: ready, primary_running={primary_running}/{primary_desired}, "
+            f"service_running={running}/{desired}, rollout={primary_rollout}, task={task_definition}"
         )
-        return False
+        return True
 
-    print(f"{service_name}: running={running}/{desired}, stable")
-    return True
+    log(
+        f"{service_name}: waiting, primary_running={primary_running}/{primary_desired}, "
+        f"service_running={running}/{desired}, rollout={primary_rollout}, task={task_definition}"
+    )
+    return False
 
 
 def wait_for_services(ecs, cluster, timeout_mins, services):
@@ -96,8 +117,8 @@ def wait_for_services(ecs, cluster, timeout_mins, services):
 
     while True:
         if time.time() >= deadline:
-            print(
-                f"Timed out after {timeout_mins} minutes waiting for services to stabilise."
+            log(
+                f"Timed out after {timeout_mins} minutes waiting for services to become ready."
             )
             sys.exit(1)
 
@@ -109,25 +130,23 @@ def wait_for_services(ecs, cluster, timeout_mins, services):
 
         service_map = data["service_map"]
         failed_names = data["failed_names"]
-        all_stable = True
+        all_ready = True
 
         for service_name in services:
             service = service_map.get(service_name)
-            stable = check_service(service_name, service, failed_names)
+            ready = check_service(service_name, service, failed_names)
 
-            if not stable:
-                all_stable = False
+            if not ready:
+                all_ready = False
 
-        if all_stable:
-            print("")
-            print("All services stable")
+        if all_ready:
+            log("")
+            log("All services ready")
             sys.exit(0)
 
         remaining = max(0, int((deadline - time.time()) // 60))
-        print(
-            f"--- {remaining} minutes remaining, sleeping {POLL_INTERVAL_SECONDS}s ---"
-        )
-        print("")
+        log(f"--- {remaining} minutes remaining, sleeping {POLL_INTERVAL_SECONDS}s ---")
+        log("")
         time.sleep(POLL_INTERVAL_SECONDS)
 
 
@@ -137,11 +156,11 @@ services = sys.argv[3:]
 
 ecs = boto3.client("ecs")
 
-print("========================================")
-print(f"Cluster:  {cluster}")
-print(f"Services: {' '.join(services)}")
-print(f"Timeout:  {timeout_mins} minutes")
-print("========================================")
-print("")
+log("========================================")
+log(f"Cluster:  {cluster}")
+log(f"Services: {' '.join(services)}")
+log(f"Timeout:  {timeout_mins} minutes")
+log("========================================")
+log("")
 
 wait_for_services(ecs, cluster, timeout_mins, services)

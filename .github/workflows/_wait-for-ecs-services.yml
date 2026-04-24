@@ -54,14 +54,15 @@ jobs:
           role-duration-seconds: ${{ inputs.oidc_timeout }}
           aws-region: eu-west-1
 
-      - name: wait for all services to be stable
+      - name: wait for all services to be ready
         env:
           WORKSPACE: ${{ inputs.workspace }}
           TIMEOUT: ${{ inputs.timeout }}
           AWS_REGION: eu-west-1
+          PYTHONUNBUFFERED: "1"
         working-directory: scripts/pipeline/wait_until_ready
         run: |
-          python3 wait_until_ready.py \
+          python3 -u wait_until_ready.py \
             "${WORKSPACE}" \
             "${TIMEOUT}" \
             "admin-${WORKSPACE}" \
