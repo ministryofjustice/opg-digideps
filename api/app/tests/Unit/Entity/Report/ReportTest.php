@@ -11,7 +11,6 @@ use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Test;
 use DateTimeImmutable;
 use App\Entity\Client;
-use App\Entity\Ndr\Ndr;
 use App\Entity\Report\AssetOther;
 use App\Entity\Report\AssetProperty;
 use App\Entity\Report\BankAccount;
@@ -307,28 +306,29 @@ final class ReportTest extends KernelTestCase
         $reportCurrent->shouldReceive('getId')->andReturn(10);
         $reportCurrent->shouldReceive('getClient')->andReturn($mockClient);
 
-        $ndrBankAccount1 = new \App\Entity\Ndr\BankAccount();
-        $ndrBankAccount1->setId(1);
-        $ndrBankAccount1->setBank('ndrBank1');
-        $ndrBankAccount1->setAccountNumber('1111');
-        $ndrBankAccount1->setSortCode('111111');
-        $ndrBankAccount1->setBalanceOnCourtOrderDate(600);
+        $bankAccount0 = new BankAccount();
+        $bankAccount0->setId(1);
+        $bankAccount0->setBank('bank0');
+        $bankAccount0->setAccountNumber('1111');
+        $bankAccount0->setSortCode('111111');
+        $bankAccount0->setOpeningBalance('600');
+        $bankAccount0->setClosingBalance('600');
 
         $bankAccount1 = new BankAccount();
         $bankAccount1->setId(2);
         $bankAccount1->setBank('bank1');
         $bankAccount1->setAccountNumber('2222');
         $bankAccount1->setSortCode('222222');
-        $bankAccount1->setOpeningBalance(200);
-        $bankAccount1->setClosingBalance(300);
+        $bankAccount1->setOpeningBalance('200');
+        $bankAccount1->setClosingBalance('300');
 
         $bankAccount2 = new BankAccount();
         $bankAccount2->setId(3);
         $bankAccount2->setBank('bank2');
         $bankAccount2->setAccountNumber('3333');
         $bankAccount2->setSortCode('333333');
-        $bankAccount2->setOpeningBalance(700);
-        $bankAccount2->setClosingBalance(500);
+        $bankAccount2->setOpeningBalance('700');
+        $bankAccount2->setClosingBalance('500');
 
         $mockReport1 = m::mock(Report::class)->makePartial();
         $mockReport1->shouldReceive('getId')->andReturn(9);
@@ -336,16 +336,17 @@ final class ReportTest extends KernelTestCase
         $mockReport1->shouldReceive('getType')->andReturn('102');
         $mockReport1->shouldReceive('getBankAccounts')->andReturn(new ArrayCollection([$bankAccount1, $bankAccount2]));
 
-        $mockNdr1 = m::mock(Ndr::class)->makePartial();
-        $mockNdr1->shouldReceive('getId')->andReturn(8);
-        $mockNdr1->shouldReceive('getClient')->andReturn($mockClient);
-        $mockNdr1->shouldReceive('getBankAccounts')->andReturn(new ArrayCollection([$ndrBankAccount1]));
+        $mockReport2 = m::mock(Report::class)->makePartial();
+        $mockReport2->shouldReceive('getId')->andReturn(8);
+        $mockReport2->shouldReceive('getClient')->andReturn($mockClient);
+        $mockReport2->shouldReceive('getBankAccounts')->andReturn(new ArrayCollection([$bankAccount0]));
+        $mockReport2->shouldReceive('getType')->andReturn('103-4-5');
 
-        $clientReports = new ArrayCollection([$reportCurrent, $mockReport1, $mockNdr1]);
+        $clientReports = new ArrayCollection([$reportCurrent, $mockReport1, $mockReport2]);
         $mockClient->shouldReceive('getReports')->andReturn($clientReports);
 
-        // assert false as no previous reports set yet
-        $this->assertFalse($mockNdr1->getPreviousReportData());
+        // assert empty as no previous reports set yet
+        $this->assertEmpty($mockReport2->getPreviousReportData());
 
         // assert report 1 contains NDR data
         $report1PreviousData = $mockReport1->getPreviousReportData();
@@ -353,8 +354,9 @@ final class ReportTest extends KernelTestCase
         $this->assertArrayHasKey('report-summary', $report1PreviousData);
         $this->assertEquals(
             $report1PreviousData['report-summary']['type'],
-            'ndr'
+            '103-4-5'
         );
+
         $this->assertCount(1, $report1PreviousData['financial-summary']['accounts']);
         $this->assertArrayHasKey('opening-balance-total', $report1PreviousData['financial-summary']);
         $this->assertArrayHasKey('closing-balance-total', $report1PreviousData['financial-summary']);
@@ -364,11 +366,11 @@ final class ReportTest extends KernelTestCase
         );
 
         $this->assertEquals(
-            'ndrBank1',
-            $report1PreviousData['financial-summary']['accounts'][$ndrBankAccount1->getId()]['bank']
+            'bank0',
+            $report1PreviousData['financial-summary']['accounts'][$bankAccount0->getId()]['bank']
         );
-        $this->assertArrayHasKey('nameOneLine', $report1PreviousData['financial-summary']['accounts'][$ndrBankAccount1->getId()]);
-        $this->assertEquals($report1PreviousData['financial-summary']['closing-balance-total'], $ndrBankAccount1->getBalanceOnCourtOrderDate());
+        $this->assertArrayHasKey('nameOneLine', $report1PreviousData['financial-summary']['accounts'][$bankAccount0->getId()]);
+        $this->assertEquals($report1PreviousData['financial-summary']['closing-balance-total'], $bankAccount0->getClosingBalance());
 
         // assert current report contains report1 data
         $currentReportPreviousData = $reportCurrent->getPreviousReportData();

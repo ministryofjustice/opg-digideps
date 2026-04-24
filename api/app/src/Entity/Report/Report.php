@@ -3,20 +3,16 @@
 namespace App\Entity\Report;
 
 use App\Entity\Client;
-use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Traits as ReportTraits;
-use App\Entity\ReportInterface;
 use App\Entity\Satisfaction;
 use App\Entity\Traits\CreateUpdateTimestamps;
 use App\Entity\User;
 use App\Service\ReportService;
 use App\Service\ReportStatusService;
-use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use phpDocumentor\Reflection\Types\This;
 
 /**
  * Reports.
@@ -34,7 +30,7 @@ use phpDocumentor\Reflection\Types\This;
  *
  * @ORM\HasLifecycleCallbacks()
  */
-class Report implements ReportInterface
+class Report
 {
     use CreateUpdateTimestamps;
     use ReportTraits\AssetTrait;
@@ -670,7 +666,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param $type see TYPE_ constants
+     * @param string $type see TYPE_ constants
      *
      * @return $this
      */
@@ -1280,10 +1276,8 @@ class Report implements ReportInterface
      * @JMS\Groups({"previous-report-data"})
      *
      * @JMS\Type("array")
-     *
-     * @return array
      */
-    public function getPreviousReportData()
+    public function getPreviousReportData(): array
     {
         $previousReport = $this->getPreviousReport();
 
@@ -1300,7 +1294,7 @@ class Report implements ReportInterface
     /**
      * Method to identify and return previous report.
      *
-     * @return Ndr|Report|bool|mixed
+     * @return Report|bool|mixed
      */
     private function getPreviousReport()
     {
@@ -1319,14 +1313,6 @@ class Report implements ReportInterface
                 // less than should imply their previous report
                 return $clientReport;
             }
-        }
-
-        // try NDR
-        /** @var Ndr $ndr */
-        $ndr = $this->getClient()->getNdr();
-
-        if (!empty($ndr)) {
-            return $ndr;
         }
 
         return false;

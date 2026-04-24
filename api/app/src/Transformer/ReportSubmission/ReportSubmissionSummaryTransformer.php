@@ -3,7 +3,7 @@
 namespace App\Transformer\ReportSubmission;
 
 use App\Entity\Report\ReportSubmission;
-use App\Entity\ReportInterface;
+use App\Entity\Report\Report;
 use App\Service\DateTimeProvider;
 
 class ReportSubmissionSummaryTransformer
@@ -26,29 +26,17 @@ class ReportSubmissionSummaryTransformer
         return array_filter($ret);
     }
 
-    /**
-     * @return array|null
-     */
-    private function generateDataRow(ReportSubmission $reportSubmission)
+    private function generateDataRow(ReportSubmission $reportSubmission): array
     {
-        if (null === $reportSubmission->getReport() && null === $reportSubmission->getNdr()) {
-            return null;
-        }
-
-        $report = (null !== $reportSubmission->getReport()) ?
-            $reportSubmission->getReport() :
-            $reportSubmission->getNdr();
-
-        $data = [];
-        $data['id'] = $this->getId($reportSubmission);
-        $data['case_number'] = $this->getCaseNumber($report);
-        $data['date_received'] = $this->getDateReceived($reportSubmission);
-        $data['scan_date'] = $this->getScanDate();
-        $data['document_id'] = $this->getDocumentId($reportSubmission);
-        $data['document_type'] = $this->getReportType();
-        $data['form_type'] = $this->getFormType();
-
-        return $data;
+        return [
+            'id' => $this->getId($reportSubmission),
+            'case_number' => $this->getCaseNumber($reportSubmission->getReport()),
+            'date_received' => $this->getDateReceived($reportSubmission),
+            'scan_date' => $this->getScanDate(),
+            'document_id' => $this->getDocumentId($reportSubmission),
+            'document_type' => $this->getReportType(),
+            'form_type' => $this->getFormType(),
+        ];
     }
 
     /**
@@ -59,10 +47,7 @@ class ReportSubmissionSummaryTransformer
         return $reportSubmission->getId();
     }
 
-    /**
-     * @return string
-     */
-    private function getCaseNumber(?ReportInterface $report)
+    private function getCaseNumber(?Report $report): string
     {
         return $report?->getClient()->getCaseNumber() ?? '';
     }

@@ -45,14 +45,10 @@ class ReportSubmissionRepository extends ServiceEntityRepository
 
         // BASE QUERY BUILDER with filters (for both count and results)
         $qb = $this->createQueryBuilder('rs');
-        $qb
-            ->leftJoin('rs.report', 'r')
-            ->leftJoin('rs.ndr', 'ndr')
+        $qb->leftJoin('rs.report', 'r')
             ->leftJoin('rs.archivedBy', 'ab')
             ->leftJoin('rs.createdBy', 'cb')
-            ->leftJoin('r.client', 'c')
-            ->leftJoin('ndr.client', 'nc')
-        ;
+            ->leftJoin('r.client', 'c');
 
         // Only include report submissions which are related to standard reports, not NDRs
         // TODO remove when NDR entities are removed
@@ -67,13 +63,8 @@ class ReportSubmissionRepository extends ServiceEntityRepository
                 // client names and case number (exact match)
                 'lower(c.firstname) LIKE :qLike',
                 'lower(c.lastname) LIKE :qLike',
-                // separate clause to check ndrs
-                'lower(nc.firstname) LIKE :qLike',
-                'lower(nc.lastname) LIKE :qLike',
                 // case number
                 'LOWER(c.caseNumber) = LOWER(:q)',
-                // separate clause to check ndrs
-                'LOWER(nc.caseNumber) = LOWER(:q)',
             ]));
 
             $qb->setParameter('qLike', '%' . strtolower($q) . '%');
@@ -145,30 +136,30 @@ class ReportSubmissionRepository extends ServiceEntityRepository
         $fromDateStrFormatted = ($fromDate ?? $now)->format('Ymd') . ' 000000';
         $toDateStrFormatted = ($toDate ?? $now)->format('Ymd') . ' 235959';
 
-        $submittedReportsQuery = "
-SELECT
-    r0_.id AS report_submission_id,
-    COALESCE(c3_.case_number, c5_.case_number) AS case_number,
-    r0_.created_on AS created_on,
-    now() AS scan_date,
-    d1_.id AS user_id,
-    CASE
-        WHEN d6_.is_report_pdf = true AND d6_.filename LIKE '%.pdf'
-        THEN d6_.filename
-        ELSE NULL
-    END AS filename
-FROM report_submission r0_
-LEFT JOIN dd_user d1_ ON r0_.created_by = d1_.id
-LEFT JOIN report r2_ ON r0_.report_id = r2_.id
-LEFT JOIN client c3_ ON r2_.client_id = c3_.id
-LEFT JOIN odr o4_ ON r0_.ndr_id = o4_.id
-LEFT JOIN client c5_ ON o4_.client_id = c5_.id
-LEFT JOIN document d6_ ON r0_.id = d6_.report_submission_id
-WHERE r0_.created_on >= '$fromDateStrFormatted' AND r0_.created_on <= '$toDateStrFormatted'
-  AND (r0_.created_on >= r2_.submit_date OR r0_.created_on >= o4_.submit_date)
-  AND (r2_.submitted = true OR o4_.submitted = true)
-  AND (r2_.submit_date IS NOT NULL OR o4_.submit_date IS NOT NULL)
-ORDER BY d6_.is_report_pdf ASC, r0_.id DESC;";
+        $submittedReportsQuery = <<<SQL
+        SELECT
+            r0_.id AS report_submission_id,
+            c3_.case_number AS case_number,
+            r0_.created_on AS created_on,
+            now() AS scan_date,
+            d1_.id AS user_id,
+            CASE
+                WHEN d6_.is_report_pdf = true AND d6_.filename LIKE '%.pdf'
+                THEN d6_.filename
+                ELSE NULL
+            END AS filename
+        FROM report_submission r0_
+        LEFT JOIN dd_user d1_ ON r0_.created_by = d1_.id
+        LEFT JOIN report r2_ ON r0_.report_id = r2_.id
+        LEFT JOIN client c3_ ON r2_.client_id = c3_.id
+        LEFT JOIN document d6_ ON r0_.id = d6_.report_submission_id
+        WHERE r0_.created_on >= '$fromDateStrFormatted'
+            AND r0_.created_on <= '$toDateStrFormatted'
+            AND r0_.created_on >= r2_.submit_date
+            AND r2_.submitted = true
+            AND r2_.submit_date IS NOT NULL
+        ORDER BY d6_.is_report_pdf, r0_.id DESC;
+        SQL;
 
         $conn = $this->getEntityManager()->getConnection();
 
@@ -218,22 +209,19 @@ ORDER BY d6_.is_report_pdf ASC, r0_.id DESC;";
         $filter->disableForEntity(Client::class);
 
         $qb = $this->createQueryBuilder('rs');
-        $qb
-            ->leftJoin('rs.createdBy', 'cb')
+        $qb->leftJoin('rs.createdBy', 'cb')
             ->leftJoin('rs.report', 'r')
             ->leftJoin('r.client', 'c')
-            ->leftJoin('rs.ndr', 'ndr')
-            ->leftJoin('ndr.client', 'ndrClient')
             ->leftJoin('rs.documents', 'documents');
 
         $qbSelect = clone $qb;
         $qbSelect
-            ->select('rs,r,ndr,cb,c,ndrClient')
+            ->select('rs,r,cb,c')
             ->andWhere('rs.createdOn >= :fromDate')
             ->andWhere('rs.createdOn <= :toDate')
-            ->andWhere('rs.createdOn >= r.submitDate OR rs.createdOn >= ndr.submitDate')
-            ->andWhere('r.submitted = true OR ndr.submitted = true')
-            ->andWhere('r.submitDate IS NOT NULL OR ndr.submitDate IS NOT NULL')
+            ->andWhere('rs.createdOn >= r.submitDate')
+            ->andWhere('r.submitted = true')
+            ->andWhere('r.submitDate IS NOT NULL')
             ->setParameter(':fromDate', $this->determineCreatedFromDate($fromDate))
             ->setParameter(':toDate', $this->determineCreatedToDate($toDate))
             ->orderBy('rs.' . $orderBy, $order);
