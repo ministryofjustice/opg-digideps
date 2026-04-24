@@ -146,13 +146,10 @@ class MoneyTransaction implements MoneyTransactionInterface
     #[ORM\Column(name: 'category', type: 'string', length: 255, nullable: false)]
     private $category;
 
-    /**
-     * @var float
-     */
-    #[JMS\Type('string')]
+    #[JMS\Type('float')]
     #[JMS\Groups(['transaction', 'transactionsIn', 'transactionsOut'])]
     #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: false)]
-    private $amount;
+    private float $amount = 0.0;
 
     /**
      * @var string
