@@ -98,7 +98,7 @@ class ReportTestHelper
         $reportPdf->setCreatedBy($submittedBy);
         $reportPdf->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
 
-        $submission = (new ReportSubmission($report, $submittedBy))
+        $submission = new ReportSubmission($report, $submittedBy)
             ->setCreatedBy($submittedBy)
             ->setCreatedOn($submitDate)
             ->addDocument($reportPdf);
@@ -150,7 +150,7 @@ class ReportTestHelper
     private static function completeDecisions(Report $report): void
     {
         $report->setReasonForNoDecisions('No need for decisions');
-        (new MentalCapacity($report))->setHasCapacityChanged('no')->setMentalAssessmentDate(new \DateTime());
+        new MentalCapacity($report)->setHasCapacityChanged('no')->setMentalAssessmentDate(new \DateTime());
     }
 
     private static function completeContacts(Report $report): void
@@ -160,7 +160,7 @@ class ReportTestHelper
 
     private static function completeVisitsCare(Report $report): void
     {
-        $vc = (new VisitsCare())->setReport($report);
+        $vc = new VisitsCare()->setReport($report);
 
         $vc->setDoYouLiveWithClient('yes')
             ->setDoesClientReceivePaidCare('no')
@@ -172,7 +172,7 @@ class ReportTestHelper
 
     private static function completeActions(Report $report): void
     {
-        $action = (new Action($report))
+        $action = new Action($report)
             ->setDoYouExpectFinancialDecisions('no')
             ->setDoYouHaveConcerns('no');
         $report->setAction($action);
@@ -185,7 +185,7 @@ class ReportTestHelper
 
     private static function completeLifestyle(Report $report): void
     {
-        $ls = (new Lifestyle())->setReport($report);
+        $ls = new Lifestyle()->setReport($report);
         $ls->setCareAppointments('no');
         $ls->setDoesClientUndertakeSocialActivities('no');
 
@@ -204,7 +204,7 @@ class ReportTestHelper
 
     private static function completeBankAccounts(Report $report): void
     {
-        $ba = (new BankAccount())
+        $ba = new BankAccount()
             ->setReport($report)
             ->setClosingBalance(1000)
             ->setAccountNumber('1234');
@@ -223,7 +223,7 @@ class ReportTestHelper
             $report->setMoneyInExists('Yes');
         }
 
-        $mt = (new MoneyTransaction($report))->setCategory('salary-or-wages')->setAmount(200);
+        $mt = new MoneyTransaction($report)->setCategory('salary-or-wages')->setAmount(200);
         $report->addMoneyTransaction($mt);
     }
 
@@ -237,9 +237,9 @@ class ReportTestHelper
             $report->setMoneyOutExists('Yes');
         }
 
-        $mt = (new MoneyTransaction($report))->setCategory('care-fees')->setAmount(200);
+        $mt = new MoneyTransaction($report)->setCategory('care-fees')->setAmount(200);
         $report->addMoneyTransaction($mt);
-        $mt2 = (new MoneyTransaction($report))->setCategory('electricity')->setAmount(100);
+        $mt2 = new MoneyTransaction($report)->setCategory('electricity')->setAmount(100);
         $report->addMoneyTransaction($mt2);
     }
 

@@ -20,7 +20,7 @@ class LoadTestFactory
      */
     public function createUsersClientsReports(int $recordsToMake)
     {
-        $oneYearAgo = (new \DateTimeImmutable())->modify('-1 Year');
+        $oneYearAgo = new \DateTimeImmutable()->modify('-1 Year');
 
         $userTestHelper = UserTestHelper::create();
         $reportTestHelper = new ReportTestHelper();

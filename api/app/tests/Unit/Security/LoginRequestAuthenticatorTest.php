@@ -179,7 +179,7 @@ final class LoginRequestAuthenticatorTest extends TestCase
             json_encode(['email' => 'a@b.com', 'password' => 'password123']),
         );
 
-        $user = (new User())
+        $user = new User()
             ->setPassword('password123')
             ->setRoleName('ROLE_USER');
 
@@ -253,7 +253,7 @@ final class LoginRequestAuthenticatorTest extends TestCase
     public function authenticateDoesNotAuthenticateIfUserIsFrozenOut(): void
     {
         $now = new DateTime();
-        $nowPlusOneHour = (new DateTime($now->format('Y-m-d')))->modify('+1 hour');
+        $nowPlusOneHour = new DateTime($now->format('Y-m-d'))->modify('+1 hour');
 
         $nowTime = intval($now->format('U'));
         $nowPlusOneHourTime = intval($nowPlusOneHour->format('U'));
@@ -345,7 +345,7 @@ final class LoginRequestAuthenticatorTest extends TestCase
 
         $this->incrementalWaitingTimechecker->isFrozen('emaila@b.com')->willReturn(false);
 
-        $user = (new User())
+        $user = new User()
             ->setPassword('password123')
             ->setRoleName('ROLE_USER');
         $this->userRepo->findOneBy(['email' => 'a@b.com'])->willReturn($user);

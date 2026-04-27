@@ -24,7 +24,7 @@ class ReportSubmissionHelper
     public function generateAndPersistReportSubmission()
     {
         $client = new Client();
-        $report = (new ReportTestHelper())->generateReport($this->entityManager, $client, null, new \DateTime());
+        $report = new ReportTestHelper()->generateReport($this->entityManager, $client, null, new \DateTime());
         $client->addReport($report);
         $user = (UserTestHelper::create())->createAndPersistUser($this->entityManager, $client);
         $reportSubmission = new ReportSubmission($report, $user);
@@ -69,7 +69,7 @@ class ReportSubmissionHelper
 
         $client = $existingReport->getClient();
 
-        $report = (new ReportTestHelper())->generateReport(
+        $report = new ReportTestHelper()->generateReport(
             $this->entityManager,
             $client,
             $existingReport->getType(),
@@ -78,7 +78,7 @@ class ReportSubmissionHelper
 
         $client->addReport($report);
 
-        $reportSubmission = (new ReportSubmission($report, $client->getUsers()[0]))
+        $reportSubmission = new ReportSubmission($report, $client->getUsers()[0])
             ->setCreatedOn(new \DateTime('+366 days'));
 
         $report

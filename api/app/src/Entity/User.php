@@ -1216,7 +1216,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function regBeforeToday(User $user): bool
     {
-        return $user->getRegistrationDate() < (new \DateTime())->setTime(00, 00, 00);
+        return $user->getRegistrationDate() < new \DateTime()->setTime(00, 00, 00);
     }
 
     public function getCreatedBy(): ?User

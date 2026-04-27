@@ -35,7 +35,7 @@ class MailSender implements MailSenderInterface
 
             $this->logger->notice(
                 '',
-                (new AuditEvents($this->dateTimeProvider))->emailSent($email, $currentUser)
+                new AuditEvents($this->dateTimeProvider)->emailSent($email, $currentUser)
             );
         } catch (Throwable $exception) {
             $this->logger->error(sprintf('Error sending email: %s', $exception->getMessage()));
@@ -44,7 +44,7 @@ class MailSender implements MailSenderInterface
 
             $this->logger->notice(
                 '',
-                (new AuditEvents($this->dateTimeProvider))->emailNotSent($email, $currentUser, $exception)
+                new AuditEvents($this->dateTimeProvider)->emailNotSent($email, $currentUser, $exception)
             );
 
             return false;

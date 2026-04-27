@@ -16,7 +16,7 @@ class ReportHelpers
         $startDate = new DateTime('now');
         $endDate = new DateTime('+1 year');
 
-        return (new Report())
+        return new Report()
             ->setType(Report::TYPE_COMBINED_HIGH_ASSETS)
             ->setSubmittedBy(null)
             ->setSubmitted(false)

@@ -12,12 +12,12 @@ class UserResearchResponseFactory
      */
     public function generateFromFormData(array $formData)
     {
-        $userResearchResponse = (new UserResearchResponse())
+        $userResearchResponse = new UserResearchResponse()
             ->setDeputyshipLength($formData['deputyshipLength'])
             ->setHasAccessToVideoCallDevice($formData['hasAccessToVideoCallDevice'])
             ->setSatisfaction($formData['satisfaction']);
 
-        $researchType = (new ResearchType($formData['agreedResearchTypes']))
+        $researchType = new ResearchType($formData['agreedResearchTypes'])
             ->setUserResearchResponse($userResearchResponse);
 
         $userResearchResponse->setResearchType($researchType);

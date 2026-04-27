@@ -366,7 +366,7 @@ MESSAGE;
         }
 
         $clientDtHtml = $clientDt->getHtml();
-        $todayString = (new DateTime())->format('j M Y');
+        $todayString = new DateTime()->format('j M Y');
 
         $clientIsDischarged = str_contains($clientDtHtml, $todayString);
         ++$this->dischargedClient;

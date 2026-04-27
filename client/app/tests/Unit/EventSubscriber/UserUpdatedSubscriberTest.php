@@ -153,7 +153,7 @@ class UserUpdatedSubscriberTest extends TestCase
 
     public function deputyProvider()
     {
-        $preUpdateUser = (new User())
+        $preUpdateUser = new User()
             ->setId(1)
             ->setFirstname('Sufjan')
             ->setLastname('Stevens')

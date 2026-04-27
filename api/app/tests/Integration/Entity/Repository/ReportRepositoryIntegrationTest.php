@@ -42,7 +42,7 @@ class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
      */
     private function ensureChecklistsExistInDatabase(): ReportRepositoryIntegrationTest
     {
-        $client = (new Client())->setCaseNumber('49329657');
+        $client = new Client()->setCaseNumber('49329657');
         self::$entityManager->persist($client);
 
         $this->queuedChecklists[] = $this->buildChecklistWithStatus($client, SynchronisableInterface::SYNC_STATUS_QUEUED);
@@ -105,7 +105,7 @@ class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
         $endDate = $startDate->add(new DateInterval('P1D'));
         $report = new Report($client, Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS, $startDate, $endDate);
 
-        $user = (new User())
+        $user = new User()
             ->setFirstname('firstname')
             ->setLastname('lastname')
             ->setEmail(sprintf('email%s@test.com', rand(1, 100000)))
@@ -172,7 +172,7 @@ class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
 
     public function testFindAllActiveReportsByCaseNumbersAndRoleIsCaseInsensitive(): void
     {
-        $client = (new Client())->setCaseNumber('4932965t');
+        $client = new Client()->setCaseNumber('4932965t');
         self::$entityManager->persist($client);
 
         $existingReport = $this->buildReport($client);

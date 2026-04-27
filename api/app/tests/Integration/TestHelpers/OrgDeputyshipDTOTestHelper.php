@@ -188,7 +188,7 @@ class OrgDeputyshipDTOTestHelper
      */
     public static function ensureDeputyInUploadExists(OrgDeputyshipDto $dto, EntityManager $em)
     {
-        $deputy = (new Deputy())
+        $deputy = new Deputy()
             ->setDeputyType(DeputyType::from($dto->getDeputyType()))
             ->setEmail1($dto->getDeputyEmail())
             ->setDeputyUid($dto->getDeputyUid())
@@ -212,7 +212,7 @@ class OrgDeputyshipDTOTestHelper
      */
     public static function ensureOrgInUploadExists(string $orgIdentifier, EntityManager $em)
     {
-        $organisation = (new Organisation())
+        $organisation = new Organisation()
             ->setName('Your Organisation')
             ->setEmailIdentifier($orgIdentifier)
             ->setIsActivated(false);
@@ -225,7 +225,7 @@ class OrgDeputyshipDTOTestHelper
 
     public static function ensureClientInUploadExists(OrgDeputyshipDto $dto, EntityManager $em)
     {
-        $client = (new Client())
+        $client = new Client()
             ->setCaseNumber($dto->getCaseNumber())
             ->setFirstname($dto->getClientFirstname())
             ->setLastname($dto->getClientLastname())
@@ -241,14 +241,14 @@ class OrgDeputyshipDTOTestHelper
     {
         $faker = Factory::create();
 
-        $layDeputy = (new User())
+        $layDeputy = new User()
             ->setRoleName(User::ROLE_LAY_DEPUTY)
             ->setFirstname($faker->firstName())
             ->setLastname($faker->lastName())
             ->setEmail($faker->email())
             ->setCoDeputyClientConfirmed(false);
 
-        $client = (new Client())
+        $client = new Client()
             ->setCaseNumber($dto->getCaseNumber())
             ->setFirstname($dto->getClientFirstname())
             ->setLastname($dto->getClientLastname())

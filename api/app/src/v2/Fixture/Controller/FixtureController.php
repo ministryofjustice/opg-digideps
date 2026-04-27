@@ -62,7 +62,7 @@ class FixtureController extends AbstractController
             throw $this->createNotFoundException();
         }
         $fromRequest = (array) json_decode($request->getContent(), true);
-        $fromRequest['courtDate'] = (new \DateTime('-366 days'))->format('Y-m-d');
+        $fromRequest['courtDate'] = new \DateTime('-366 days')->format('Y-m-d');
         $client = $this->generateClient($fromRequest);
         $user = new User();
 
@@ -245,7 +245,7 @@ class FixtureController extends AbstractController
             throw new \InvalidArgumentException('Deputy UID is missing for user ' . $user->getId());
         }
 
-        return (new Deputy())
+        return new Deputy()
             ->setDeputyUid((string) $uid)
             ->setDeputyType($user->deriveDeputyType() ?? DeputyType::LAY)
             ->setUser($user)
@@ -392,7 +392,7 @@ class FixtureController extends AbstractController
 
     private function buildDeputy(User $deputy, array $fromRequest): Deputy
     {
-        $deputy = (new Deputy())
+        $deputy = new Deputy()
             ->setFirstname($deputy->getFirstname())
             ->setLastname($deputy->getLastname())
             ->setDeputyType($deputy->deriveDeputyType() ?? DeputyType::LAY)
@@ -625,7 +625,7 @@ class FixtureController extends AbstractController
             $user = $this->userRepository->findOneBy(['email' => $userEmail]);
 
             if ($user) {
-                $deputy = (new Deputy())
+                $deputy = new Deputy()
                     ->setDeputyUid(rand(8, 8))
                     ->setDeputyType($user->deriveDeputyType() ?? DeputyType::LAY)
                     ->setEmail1($user->getEmail())

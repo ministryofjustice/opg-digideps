@@ -218,7 +218,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function findActiveLaysInLastYear(): array
     {
-        $oneYearAgo = (new \DateTime())->modify('-1 Year')->format('Y-m-d');
+        $oneYearAgo = new \DateTime()->modify('-1 Year')->format('Y-m-d');
 
         $conn = $this->getEntityManager()->getConnection();
 
@@ -260,7 +260,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function getAllAdminAccountsCreatedButNotActivatedWithin(string $timeframe)
     {
-        $date = (new \DateTime())->modify($timeframe);
+        $date = new \DateTime()->modify($timeframe);
 
         $dql = "SELECT u FROM OPG\Digideps\Backend\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')
                 AND u.lastLoggedIn IS NULL
@@ -288,7 +288,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function getAllAdminAccountsUsedWithin(string $timeframe)
     {
-        $date = (new \DateTime())->modify($timeframe);
+        $date = new \DateTime()->modify($timeframe);
 
         $dql = "SELECT u FROM OPG\Digideps\Backend\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')
                 AND u.lastLoggedIn > :date ";
@@ -308,7 +308,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     private function getAllRoleBasedUsers(array $roles, string $timeframe)
     {
-        $date = (new \DateTime())->modify($timeframe);
+        $date = new \DateTime()->modify($timeframe);
 
         $dql = 'SELECT u FROM OPG\Digideps\Backend\Entity\User u WHERE u.roleName IN(:roles) AND u.lastLoggedIn < :date ';
 

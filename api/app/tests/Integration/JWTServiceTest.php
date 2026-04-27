@@ -90,7 +90,7 @@ class JWTServiceTest extends TestCase
         $this->dateTimeProvider->getDateTimeImmutable('+1 hour')->willReturn($plus1Hour);
         $this->dateTimeProvider->getDateTimeImmutable('-10 seconds')->willReturn($sub10Seconds);
 
-        $user = (new User())
+        $user = new User()
             ->setId(22)
             ->setRoleName('A_ROLE');
 

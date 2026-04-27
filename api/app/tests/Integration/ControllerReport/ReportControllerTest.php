@@ -75,7 +75,7 @@ class ReportControllerTest extends AbstractTestController
             'DeputySurname' => self::$deputy1->getLastname(),
             'DeputyPostcode' => self::$deputy1->getAddressPostcode(),
             'ReportType' => 'OPG102',
-            'MadeDate' => (new DateTime('2016-01-01'))->format('Y-m-d'),
+            'MadeDate' => new DateTime('2016-01-01')->format('Y-m-d'),
             'OrderType' => 'pfa',
             'CoDeputy' => false,
             'Hybrid' => 'SINGLE',
@@ -90,7 +90,7 @@ class ReportControllerTest extends AbstractTestController
             'DeputySurname' => self::$deputy1->getLastname(),
             'DeputyPostcode' => self::$deputy1->getAddressPostcode(),
             'ReportType' => 'OPG102',
-            'MadeDate' => (new DateTime('2017-01-01'))->format('Y-m-d'),
+            'MadeDate' => new DateTime('2017-01-01')->format('Y-m-d'),
             'OrderType' => 'pfa',
             'CoDeputy' => false,
             'Hybrid' => 'SINGLE',
@@ -112,7 +112,7 @@ class ReportControllerTest extends AbstractTestController
             'setWishToProvideDocumentation' => true,
         ]);
 
-        $document = (new Document(self::$report1))
+        $document = new Document(self::$report1)
             ->setFileName('test.pdf')
             ->setIsReportPdf(false);
 

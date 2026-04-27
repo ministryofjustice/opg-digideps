@@ -65,7 +65,7 @@ class DocumentRepositoryTest extends KernelTestCase
 
     private function generateAndPersistClient(string $caseNumber): Client
     {
-        $client = (new Client())->setCaseNumber($caseNumber);
+        $client = new Client()->setCaseNumber($caseNumber);
 
         self::$entityManager->persist($client);
 
@@ -94,7 +94,7 @@ class DocumentRepositoryTest extends KernelTestCase
         $fileName .= $isResubmission ? '-resubmission.pdf' : '.pdf';
         $storageRef .= $isResubmission ? '-resubmission.pdf' : '.pdf';
 
-        $doc = (new Document($report))
+        $doc = new Document($report)
             ->setFileName($fileName)
             ->setStorageReference($storageRef)
             ->setIsReportPdf($isReportPdf)
@@ -129,7 +129,7 @@ class DocumentRepositoryTest extends KernelTestCase
 
     private function generateAndPersistReportSubmission(Report $report, DateTime $createdOn): ReportSubmission
     {
-        $submission = (new ReportSubmission($report, $this->generateAndPersistUser()))->setCreatedOn($createdOn);
+        $submission = new ReportSubmission($report, $this->generateAndPersistUser())->setCreatedOn($createdOn);
 
         self::$entityManager->persist($submission);
 
@@ -138,12 +138,12 @@ class DocumentRepositoryTest extends KernelTestCase
 
     private function generateAndPersistUser(): User
     {
-        $user = (new User())
+        $user = new User()
             ->setFirstname('Test')
             ->setLastname('User')
             ->setPassword('password123');
 
-        $datePostFix = (string) (new DateTime())->getTimestamp();
+        $datePostFix = (string) new DateTime()->getTimestamp();
         $user->setEmail(sprintf('test-user%s%s@test.com', $datePostFix, rand(0, 100000)));
 
         self::$entityManager->persist($user);

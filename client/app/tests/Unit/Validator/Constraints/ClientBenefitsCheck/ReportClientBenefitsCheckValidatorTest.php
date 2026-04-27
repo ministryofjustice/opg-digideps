@@ -36,7 +36,7 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
     public function setUp(): void
     {
         $report = ReportHelpers::createReport();
-        $this->reportClientBenefitsCheck = (new ClientBenefitsCheck())
+        $this->reportClientBenefitsCheck = new ClientBenefitsCheck()
             ->setReport($report)
             ->setTypesOfMoneyReceivedOnClientsBehalf(new ArrayCollection());
 

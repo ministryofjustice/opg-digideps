@@ -33,7 +33,7 @@ class UserDeletedSubscriber implements EventSubscriberInterface
 
     public function logEvent(UserDeletedEvent $event)
     {
-        $event = (new AuditEvents($this->dateTimeProvider))->userDeleted(
+        $event = new AuditEvents($this->dateTimeProvider)->userDeleted(
             $event->getTrigger(),
             $event->getDeletedBy()->getEmail(),
             $event->getDeletedUser()->getFullName(),

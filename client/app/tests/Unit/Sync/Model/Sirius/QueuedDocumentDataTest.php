@@ -15,7 +15,7 @@ class QueuedDocumentDataTest extends TestCase
      */
     public function supportingDocumentCanBeSynced(?string $uuid, bool $expectedResult)
     {
-        $supportingDocument = (new QueuedDocumentData())
+        $supportingDocument = new QueuedDocumentData()
             ->setIsReportPdf(false)
             ->setReportSubmissionUuid($uuid);
 

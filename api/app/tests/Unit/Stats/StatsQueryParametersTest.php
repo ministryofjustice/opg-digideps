@@ -78,7 +78,7 @@ final class StatsQueryParametersTest extends TestCase
             'dimension' => ['dimension'],
         ]);
 
-        $expectedStartDate = (new DateTime())->sub(new DateInterval('P30D'));
+        $expectedStartDate = new DateTime()->sub(new DateInterval('P30D'));
         $expectedEndDate = new DateTime();
 
         $this->assertEquals($expectedStartDate->format('d-m-Y'), $params->getStartDate()->format('d-m-Y'));

@@ -166,7 +166,7 @@ class ProcessOrgCSVCommand extends Command
     private function csvToArray(string $fileName): array
     {
         try {
-            return (new CsvToArray(self::EXPECTED_COLUMNS, self::OPTIONAL_COLUMNS))->create($fileName);
+            return new CsvToArray(self::EXPECTED_COLUMNS, self::OPTIONAL_COLUMNS)->create($fileName);
         } catch (\Throwable $e) {
             $logMessage = sprintf('Error processing CSV: %s', $e->getMessage());
 

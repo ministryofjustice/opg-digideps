@@ -119,7 +119,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
     {
         $matcher = new Matcher();
         // Create your expected request from the consumer.
-        $request = (new ConsumerRequest())
+        $request = new ConsumerRequest()
             ->setMethod('POST')
             ->setPath(sprintf('/v2/clients/%s/reports', $caseRef))
             ->addHeader('Content-Type', 'application/json')
@@ -206,7 +206,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
         $matcher = new Matcher();
 
         // Create your expected request from the consumer.
-        $request = (new ConsumerRequest())
+        $request = new ConsumerRequest()
             ->setMethod('POST')
             ->setPath(sprintf('/v2/clients/%s/reports/%s/supportingdocuments', $caseRef, $reportPdfDocumentUuid))
             ->addHeader('Content-Type', 'application/json')
@@ -277,7 +277,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
         $matcher = new Matcher();
 
         // Create your expected request from the consumer.
-        $request = (new ConsumerRequest())
+        $request = new ConsumerRequest()
             ->setMethod('POST')
             ->setPath(sprintf('/v2/clients/%s/reports/%s/checklists', $caseRef, $reportPdfDocumentUuid))
             ->addHeader('Content-Type', 'application/json')
@@ -349,7 +349,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
         $matcher = new Matcher();
 
         // Create your expected request from the consumer.
-        $request = (new ConsumerRequest())
+        $request = new ConsumerRequest()
             ->setMethod('PUT')
             ->setPath(sprintf('/v2/clients/%s/reports/%s/checklists/%s', $caseRef, $reportPdfDocumentUuid, $checklistUuid))
             ->addHeader('Content-Type', 'application/json')

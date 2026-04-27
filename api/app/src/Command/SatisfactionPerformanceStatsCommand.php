@@ -31,7 +31,7 @@ class SatisfactionPerformanceStatsCommand extends Command
     {
         try {
             $statsStartDate = new \DateTime('FIRST DAY OF PREVIOUS MONTH');
-            $statsEndDate = (new \DateTime('FIRST DAY OF THIS MONTH'))->sub(new \DateInterval('PT1S'));
+            $statsEndDate = new \DateTime('FIRST DAY OF THIS MONTH')->sub(new \DateInterval('PT1S'));
             $satisfactionScores = $this->satisfactionRepository->getSatisfactionDataForPeriod($statsStartDate, $statsEndDate);
 
             if (empty($satisfactionScores)) {

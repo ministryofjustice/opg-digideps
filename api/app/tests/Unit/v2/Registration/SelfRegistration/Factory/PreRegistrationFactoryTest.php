@@ -78,7 +78,7 @@ final class PreRegistrationFactoryTest extends TestCase
      */
     private function buildLayDeputyshipDto(): LayDeputyshipDto
     {
-        return (new LayDeputyshipDto())
+        return new LayDeputyshipDto()
             ->setCaseNumber('case')
             ->setDeputyUid('depnum')
             ->setDeputyFirstname('depfirstname')

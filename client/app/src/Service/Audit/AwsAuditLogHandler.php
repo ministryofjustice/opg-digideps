@@ -31,7 +31,7 @@ class AwsAuditLogHandler extends AbstractProcessingHandler
             return;
         }
 
-        $stream = (new ValidatingArray($record->context))->getStringOrDefault('event', 'unknown');
+        $stream = new ValidatingArray($record->context)->getStringOrDefault('event', 'unknown');
         $sequenceToken = $this->initialize($stream);
         $record = $this->formatEntry($record);
 

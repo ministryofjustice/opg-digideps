@@ -66,7 +66,7 @@ class UserTestHelper
             $deputyUid = intval('7' . str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT));
         }
 
-        $user = (new User())
+        $user = new User()
             ->setFirstname($firstName)
             ->setLastname($lastName)
             ->setEmail($email)

@@ -22,8 +22,8 @@ class CourtOrderTest extends TestCase
     {
         return [
             'No reports' => [],
-            'Submitted report' => [(new Report())->setSubmitted(true)],
-            'Unsubmitted report' => [(new Report())->setSubmitted(true)->setUnSubmitDate(new \DateTime())],
+            'Submitted report' => [new Report()->setSubmitted(true)],
+            'Unsubmitted report' => [new Report()->setSubmitted(true)->setUnSubmitDate(new \DateTime())],
         ];
     }
 
@@ -51,7 +51,7 @@ class CourtOrderTest extends TestCase
 
     public function testGetFirstActiveReport(): void
     {
-        $inactiveReport = (new Report())->setSubmitted(true);
+        $inactiveReport = new Report()->setSubmitted(true);
         $activeReport1 = new Report();
         $activeReport2 = new Report();
 
@@ -70,8 +70,8 @@ class CourtOrderTest extends TestCase
     {
         return [
             'No reports' => [],
-            'Submitted report' => [(new Report())->setSubmitted(true)],
-            'Report submitted and unsubmitted date set' => [(new Report())->setSubmitted(true)->setUnSubmitDate(new \DateTime())],
+            'Submitted report' => [new Report()->setSubmitted(true)],
+            'Report submitted and unsubmitted date set' => [new Report()->setSubmitted(true)->setUnSubmitDate(new \DateTime())],
         ];
     }
 
@@ -89,7 +89,7 @@ class CourtOrderTest extends TestCase
 
     public function testGetUnsubmittedReportOneUnsubmittedReport(): void
     {
-        $report = (new Report())->setSubmitted(false)->setUnSubmitDate(new \DateTime());
+        $report = new Report()->setSubmitted(false)->setUnSubmitDate(new \DateTime());
         $this->courtOrder->setReports([$report]);
 
         $result = $this->courtOrder->getUnsubmittedReport();
@@ -100,8 +100,8 @@ class CourtOrderTest extends TestCase
     public function testGetFirstUnsubmittedReport(): void
     {
         $activeReport = new Report();
-        $unsubmittedReport1 = (new Report())->setSubmitted(false)->setUnSubmitDate(new \DateTime());
-        $unsubmittedReport2 = (new Report())->setSubmitted(false)->setUnSubmitDate(new \DateTime());
+        $unsubmittedReport1 = new Report()->setSubmitted(false)->setUnSubmitDate(new \DateTime());
+        $unsubmittedReport2 = new Report()->setSubmitted(false)->setUnSubmitDate(new \DateTime());
 
         $this->courtOrder->setReports([
             $activeReport,
@@ -124,9 +124,9 @@ class CourtOrderTest extends TestCase
     public function testGetSubmittedReportsOnlySubmittedReportsReturned(): void
     {
         $activeReport = new Report();
-        $submittedReport1 = (new Report())->setSubmitted(true);
-        $unsubmittedReport = (new Report())->setSubmitted(false)->setUnSubmitDate(new \DateTime());
-        $submittedReport2 = (new Report())->setSubmitted(true);
+        $submittedReport1 = new Report()->setSubmitted(true);
+        $unsubmittedReport = new Report()->setSubmitted(false)->setUnSubmitDate(new \DateTime());
+        $submittedReport2 = new Report()->setSubmitted(true);
 
         $this->courtOrder->setReports([
             $activeReport,
@@ -174,9 +174,9 @@ class CourtOrderTest extends TestCase
 
     public function testGetCoDeputiesExcludesLoggedInDeputyAndIsOrderedByFirstname()
     {
-        $loggedInDeputy = (new Deputy())->setFirstname('Bill')->setDeputyUid('1234');
-        $coDeputy1 = (new Deputy())->setFirstname('Zoé')->setDeputyUid('5678');
-        $coDeputy2 = (new Deputy())->setFirstname('Floyd')->setDeputyUid('4321');
+        $loggedInDeputy = new Deputy()->setFirstname('Bill')->setDeputyUid('1234');
+        $coDeputy1 = new Deputy()->setFirstname('Zoé')->setDeputyUid('5678');
+        $coDeputy2 = new Deputy()->setFirstname('Floyd')->setDeputyUid('4321');
 
         $this->courtOrder->setActiveDeputies(
             [
@@ -198,11 +198,11 @@ class CourtOrderTest extends TestCase
 
     public function testGetHybridCourtOrderType()
     {
-        $hybridReport = (new Report())->setType('103-4');
+        $hybridReport = new Report()->setType('103-4');
 
         // both hybrid court orders are assigned a hw order type
-        $pfaCourtOrder = (new CourtOrder())->setOrderType('hw');
-        $hwCourtOrder = (new CourtOrder())->setOrderType('hw');
+        $pfaCourtOrder = new CourtOrder()->setOrderType('hw');
+        $hwCourtOrder = new CourtOrder()->setOrderType('hw');
 
         $pfaCourtOrder->setReports([$hybridReport]);
         $hwCourtOrder->setReports([$hybridReport]);

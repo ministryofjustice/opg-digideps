@@ -48,7 +48,7 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->clientDischarged(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->clientDischarged(
             'ADMIN_BUTTON',
             '19348522',
             'me@test.com',
@@ -88,7 +88,7 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->userEmailChanged(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->userEmailChanged(
             'ADMIN_USER_EDIT',
             'me@test.com',
             'you@test.com',
@@ -118,7 +118,7 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->clientEmailChanged(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->clientEmailChanged(
             'DEPUTY_USER_EDIT',
             $oldEmail,
             $newEmail,
@@ -155,7 +155,7 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->roleChanged(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->roleChanged(
             $trigger,
             $changedFrom,
             $changedTo,
@@ -190,7 +190,7 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->userDeleted(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->userDeleted(
             'ADMIN_BUTTON',
             'super-admin@email.com',
             'Roisin Murphy',
@@ -218,7 +218,7 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->userDeleted(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->userDeleted(
             'ADMIN_BUTTON',
             'super-admin@email.com',
             'Robyn Konichiwa',
@@ -263,7 +263,7 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->orgCreated(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->orgCreated(
             'ADMIN_MANUAL_ORG_CREATION',
             $currentUser,
             $organisation
@@ -293,7 +293,7 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->adminManagerCreated(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->adminManagerCreated(
             'ADMIN_MANAGER_MANUALLY_CREATED',
             $currentUser,
             $createdAdminManager
@@ -323,7 +323,7 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->adminManagerDeleted(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->adminManagerDeleted(
             'ADMIN_MANAGER_MANUALLY_DELETED',
             $currentUser,
             $adminManagerToDelete
@@ -338,7 +338,7 @@ class AuditEventsTest extends TestCase
     public function emailSent()
     {
         $loggedInUser = UserHelpers::createSuperAdminUser();
-        $email = (new Email())
+        $email = new Email()
             ->setTemplate(MailFactory::ACTIVATION_TEMPLATE_ID)
             ->setToEmail('a@b.com')
             ->setParameters(['some' => 'info'])
@@ -356,7 +356,7 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->emailSent(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->emailSent(
             $email,
             $loggedInUser,
         );
@@ -370,7 +370,7 @@ class AuditEventsTest extends TestCase
     public function emailNotSent()
     {
         $loggedInUser = UserHelpers::createSuperAdminUser();
-        $email = (new Email())
+        $email = new Email()
             ->setTemplate(MailFactory::ACTIVATION_TEMPLATE_ID)
             ->setToEmail('a@b.com')
             ->setParameters(['more' => 'stuff'])
@@ -391,7 +391,7 @@ class AuditEventsTest extends TestCase
             'error_message' => 'Something went wrong',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->emailNotSent(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->emailNotSent(
             $email,
             $loggedInUser,
             $error

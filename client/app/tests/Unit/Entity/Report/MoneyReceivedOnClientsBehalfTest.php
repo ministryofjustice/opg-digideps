@@ -17,7 +17,7 @@ class MoneyReceivedOnClientsBehalfTest extends TestCase
      */
     public function testValidation($moneyType, $amount, $amountDontKnow, $whoReceived, $expectedViolationCount)
     {
-        $sut = (new MoneyReceivedOnClientsBehalf())
+        $sut = new MoneyReceivedOnClientsBehalf()
             ->setMoneyType($moneyType)
             ->setAmount($amount)
             ->setAmountDontKnow($amountDontKnow)

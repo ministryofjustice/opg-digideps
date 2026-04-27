@@ -39,7 +39,7 @@ final class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->clientArchived(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->clientArchived(
             'USER_ARCHIVED_CLIENT',
             '12345678',
             new DateTime('2023-01-01T00:00:00+00:00'),

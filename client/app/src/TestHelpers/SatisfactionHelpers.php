@@ -13,7 +13,7 @@ class SatisfactionHelpers
     {
         $faker = Factory::create('en_GB');
 
-        return (new Satisfaction())
+        return new Satisfaction()
             ->setComments($faker->text(250))
             ->setCreated($faker->dateTime)
             ->setDeputyrole($faker->randomKey(['ROLE_LAY_DEPUTY', 'ROLE_PROF_ADMIN', 'ROLE_PA_NAMED']))

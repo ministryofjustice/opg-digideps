@@ -45,15 +45,15 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
     {
         $this->reportId = 1436;
         $this->id = '8e3aaf2c-3145-4e07-b64b-37702323c6f9';
-        $this->created = (new \DateTime())->format('Y-m-d');
+        $this->created = new \DateTime()->format('Y-m-d');
         $this->whenLastCheckedEntitlement = 'haveChecked';
-        $this->dateLastCheckedEntitlement = (new \DateTime())->format('Y-m-d');
+        $this->dateLastCheckedEntitlement = new \DateTime()->format('Y-m-d');
         $this->neverCheckedExplanation = null;
         $this->doOthersReceiveMoneyOnClientsBehalf = 'yes';
         $this->dontKnowMoneyExplanation = null;
 
         $this->moneyId = '5d80a2f3-4f2c-4e0f-9709-2d201102cb13';
-        $this->moneyCreated = (new \DateTime())->format('Y-m-d');
+        $this->moneyCreated = new \DateTime()->format('Y-m-d');
         $this->moneyClientBenefitsCheck = null;
         $this->moneyType = 'Universal Credit';
         $this->moneyAmount = 100.5;
@@ -77,10 +77,10 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
 
         $sut = new ClientBenefitsCheckFactory($reportRepo->reveal(), $em->reveal());
 
-        $existingMoney = (new MoneyReceivedOnClientsBehalf())
+        $existingMoney = new MoneyReceivedOnClientsBehalf()
             ->setId(Uuid::fromString($this->moneyId));
 
-        $existingClientBenefitsCheck = (new ClientBenefitsCheck())
+        $existingClientBenefitsCheck = new ClientBenefitsCheck()
             ->addTypeOfMoneyReceivedOnClientsBehalf($existingMoney)
             ->setId(Uuid::fromString($this->id));
 
@@ -192,13 +192,13 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
         $reportRepo = self::prophesize(ReportRepository::class);
         $reportRepo->find($this->reportId)->shouldBeCalled()->willReturn($report);
 
-        $existingMoney = (new MoneyReceivedOnClientsBehalf())
+        $existingMoney = new MoneyReceivedOnClientsBehalf()
             ->setId(Uuid::fromString($this->moneyId))
             ->setCreated(new \DateTime($this->moneyCreated))
             ->setAmount($this->moneyAmount)
             ->setMoneyType($this->moneyType);
 
-        $existingClientBenefitsCheck = (new ClientBenefitsCheck())
+        $existingClientBenefitsCheck = new ClientBenefitsCheck()
             ->addTypeOfMoneyReceivedOnClientsBehalf($existingMoney)
             ->setId(Uuid::fromString($this->id));
 

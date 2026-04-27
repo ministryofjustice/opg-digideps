@@ -203,7 +203,7 @@ class UserApiTest extends TestCase
     public function selfRegister()
     {
         $selfRegisteredDeputy = UserHelpers::createUser();
-        $selfRegisterData = (new SelfRegisterData())
+        $selfRegisterData = new SelfRegisterData()
             ->setFirstname('Denis')
             ->setLastname('Brauchla')
             ->setPostcode('DB1 9FI')

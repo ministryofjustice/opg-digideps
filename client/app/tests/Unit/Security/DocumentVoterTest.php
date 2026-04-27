@@ -30,8 +30,8 @@ class DocumentVoterTest extends TestCase
         $this->sut = new DocumentVoter();
         $this->token = $this->createMock(TokenInterface::class);
 
-        $this->deputy = (new User())->setId(87);
-        $this->organisation =  (new Organisation())->setId(31)->setIsActivated(true);
+        $this->deputy = new User()->setId(87);
+        $this->organisation =  new Organisation()->setId(31)->setIsActivated(true);
         $this->report = new Report();
         $this->client = new Client();
         $this->document = new Document();
@@ -199,7 +199,7 @@ class DocumentVoterTest extends TestCase
 
     private function ensureClientAndDeputyBelongToDifferentOrganisation()
     {
-        $deputyOrg = (new Organisation())->setId(72)->setIsActivated(true);
+        $deputyOrg = new Organisation()->setId(72)->setIsActivated(true);
         $this->deputy->setOrganisations(new ArrayCollection([$deputyOrg]));
         $this->client->setOrganisation($this->organisation);
 

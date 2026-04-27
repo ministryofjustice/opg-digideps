@@ -55,8 +55,8 @@ final class ReportServiceTest extends TestCase
         $client->setCaseNumber('12345678');
         $client->setCourtDate(new DateTime('2014-06-06'));
 
-        $this->bank1 = (new BankAccount())->setAccountNumber('1234');
-        $this->asset1 = (new AssetProperty())
+        $this->bank1 = new BankAccount()->setAccountNumber('1234');
+        $this->asset1 = new AssetProperty()
             ->setAddress('SW1')
             ->setOwned(AssetProperty::OWNED_FULLY);
         $this->report = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime('2015-01-01'), new DateTime('2015-12-31'));
@@ -66,7 +66,7 @@ final class ReportServiceTest extends TestCase
             ->addAccount($this->bank1)
             ->setSubmittedBy($this->user);
 
-        $this->document1 = (new Document($this->report))->setFileName('file1.pdf');
+        $this->document1 = new Document($this->report)->setFileName('file1.pdf');
         $this->report->addDocument($this->document1);
 
         $this->em = m::mock(EntityManager::class);
@@ -312,26 +312,26 @@ final class ReportServiceTest extends TestCase
 
     public static function getReportTypeBasedOnSiriusProvider(): array
     {
-        $lay = (new User())->setRoleName(User::ROLE_LAY_DEPUTY);
-        $prof = (new User())->setRoleName(User::ROLE_PROF_ADMIN);
-        $pa = (new User())->setRoleName(User::ROLE_PA_ADMIN);
+        $lay = new User()->setRoleName(User::ROLE_LAY_DEPUTY);
+        $prof = new User()->setRoleName(User::ROLE_PROF_ADMIN);
+        $pa = new User()->setRoleName(User::ROLE_PA_ADMIN);
 
-        $layClient = (new Client())
+        $layClient = new Client()
             ->addUser($lay)
             ->setCaseNumber('12345678')
             ->setCourtDate(new DateTime('2014-06-06'));
 
-        $profClient = (new Client())
+        $profClient = new Client()
             ->addUser($prof)
             ->setCaseNumber('12345678')
             ->setCourtDate(new DateTime('2014-06-06'));
 
-        $paClient = (new Client())
+        $paClient = new Client()
             ->addUser($pa)
             ->setCaseNumber('12345678')
             ->setCourtDate(new DateTime('2014-06-06'));
 
-        $noUserClient = (new Client())
+        $noUserClient = new Client()
             ->setCaseNumber('12345678')
             ->setCourtDate(new DateTime('2014-06-06'));
 
@@ -364,7 +364,7 @@ final class ReportServiceTest extends TestCase
     // pre-reg entries for cases which will result in required reports being created
     public static function preRegEntriesForRequiredReports(): array
     {
-        $now = (new DateTime())->format('Y-m-d');
+        $now = new DateTime()->format('Y-m-d');
 
         $pfa = new PreRegistration(['ReportType' => 'OPG103', 'OrderType' => 'pfa', 'MadeDate' => $now]);
         $hw = new PreRegistration(['ReportType' => 'OPG104', 'OrderType' => 'hw', 'MadeDate' => $now]);

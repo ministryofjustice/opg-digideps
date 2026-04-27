@@ -60,11 +60,11 @@ class UserResearchController extends RestController
         try {
             $fromDateString = $request->get('fromDate', '');
             $fromDate = empty($fromDateString) ?
-                (new DateTime('-5 years'))->setTime(0, 0, 1) : (new DateTime($fromDateString))->setTime(0, 0, 1);
+                new DateTime('-5 years')->setTime(0, 0, 1) : new DateTime($fromDateString)->setTime(0, 0, 1);
 
             $toDateString = $request->get('toDate', '');
             $toDate = empty($toDateString) ?
-                (new DateTime())->setTime(23, 59, 59) : (new DateTime($toDateString))->setTime(23, 59, 59);
+                new DateTime()->setTime(23, 59, 59) : new DateTime($toDateString)->setTime(23, 59, 59);
 
             $groups = ['satisfaction', 'user-research', 'user-email', 'user-phone-main'];
             $this->formatter->setJmsSerialiserGroups($groups);

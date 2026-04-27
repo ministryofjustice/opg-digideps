@@ -35,7 +35,7 @@ class CSVUploadedSubscriber implements EventSubscriberInterface
 
     public function auditLog(CSVUploadedEvent $event)
     {
-        $csvUploadedEvent = (new AuditEvents($this->dateTimeProvider))
+        $csvUploadedEvent = new AuditEvents($this->dateTimeProvider)
             ->csvUploaded(
                 $event->getTrigger(),
                 $event->getRoleType()

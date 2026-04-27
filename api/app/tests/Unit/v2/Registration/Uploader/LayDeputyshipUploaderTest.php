@@ -195,7 +195,7 @@ final class LayDeputyshipUploaderTest extends KernelTestCase
 
     private function buildLayDeputyshipDto(int $count): LayDeputyshipDto
     {
-        return (new LayDeputyshipDto())
+        return new LayDeputyshipDto()
             ->setCaseNumber('case-' . $count)
             ->setDeputyUid('depnum-' . $count);
     }
@@ -254,7 +254,7 @@ final class LayDeputyshipUploaderTest extends KernelTestCase
         $this->layDeputyAssembler->expects($this->exactly(3))
             ->method('assembleFromArray')
             ->willReturnCallback(function (array $case): LayDeputyshipDto {
-                return (new LayDeputyshipDto())->setCaseNumber($case['Case']);
+                return new LayDeputyshipDto()->setCaseNumber($case['Case']);
             });
 
         $this->layDeputyProcessor->expects($this->exactly(3))

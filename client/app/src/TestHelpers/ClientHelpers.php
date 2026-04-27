@@ -15,7 +15,7 @@ class ClientHelpers
     {
         $faker = Factory::create();
 
-        $client = (new Client())
+        $client = new Client()
             ->setCaseNumber(self::createValidCaseNumber())
             ->setCourtDate(new DateTime())
             ->setEmail($faker->safeEmail())

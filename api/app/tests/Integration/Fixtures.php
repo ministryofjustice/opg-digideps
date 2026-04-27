@@ -212,16 +212,16 @@ class Fixtures
 
             $report = $this->createReport($client);
 
-            $other = (new AssetOther())
+            $other = new AssetOther()
                 ->setValue(rand(1, 10000))
                 ->setReport($report);
 
-            $property = (new AssetProperty())
+            $property = new AssetProperty()
                 ->setValue(rand(1, 10000))
                 ->setOwnedPercentage(rand(1, 100) / 100)
                 ->setReport($report);
 
-            $bankAccount = (new BankAccount())
+            $bankAccount = new BankAccount()
                 ->setClosingBalance(floatval(rand(10, 1000000) / 10))
                 ->setReport($report);
 
@@ -573,14 +573,14 @@ class Fixtures
 
             $researchType = new EntityDir\UserResearch\ResearchType(['surveys']);
 
-            $userResearchResponse = (new EntityDir\UserResearch\UserResearchResponse())
+            $userResearchResponse = new EntityDir\UserResearch\UserResearchResponse()
                 ->setCreated(new DateTime())
                 ->setDeputyshipLength('oneToFive')
                 ->setUser($rs->getCreatedBy())
                 ->setHasAccessToVideoCallDevice(true)
                 ->setResearchType($researchType);
 
-            $satisfaction = (new EntityDir\Satisfaction())
+            $satisfaction = new EntityDir\Satisfaction()
                 ->setReport($rs->getReport())
                 ->setDeputyrole(User::ROLE_LAY_DEPUTY)
                 ->setCreated(new DateTime())

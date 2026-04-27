@@ -56,7 +56,7 @@ class ReportsSubmittedQueryIntegrationTest extends ApiIntegrationTestCase
     private static function createUserOfType(string $type): User
     {
         $id = mt_rand();
-        $user = (new User())
+        $user = new User()
             ->setFirstname('Lay')
             ->setLastname('User')
             ->setEmail("metric-test-$id@publicguardian.gov.uk")

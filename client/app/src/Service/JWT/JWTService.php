@@ -18,21 +18,21 @@ class JWTService
 {
     public function getJWTHeaders(string $jwt): mixed
     {
-        $token = (new Parser(new JoseEncoder()))->parse($jwt);
+        $token = new Parser(new JoseEncoder())->parse($jwt);
 
         return $token->headers()->all();
     }
 
     public function getJWTClaims(string $jwt): mixed
     {
-        $token = (new Parser(new JoseEncoder()))->parse($jwt);
+        $token = new Parser(new JoseEncoder())->parse($jwt);
 
         return $token->claims()->all();
     }
 
     public function getJWTSignature(string $jwt): string|null
     {
-        $token = (new Parser(new JoseEncoder()))->parse($jwt);
+        $token = new Parser(new JoseEncoder())->parse($jwt);
 
         return $token->signature()->hash();
     }
@@ -41,7 +41,7 @@ class JWTService
     {
         $publicKey = $this->getPublicKeyByJWK($jwt, $jwks);
 
-        $token = (new Parser(new JoseEncoder()))->parse($jwt);
+        $token = new Parser(new JoseEncoder())->parse($jwt);
 
         $validator = new Validator();
 

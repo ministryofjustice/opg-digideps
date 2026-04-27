@@ -151,7 +151,7 @@ class LayUserFixtures extends AbstractDataFixture
         $deputyUid = substr_replace($data['deputyUid'], $iteration, -$offset);
 
         // Create user
-        $user = (new User())
+        $user = new User()
             ->setFirstname($data['id'])
             ->setLastname('User ' . $iteration)
             ->setDeputyUid(intval($deputyUid))
@@ -180,7 +180,7 @@ class LayUserFixtures extends AbstractDataFixture
 
         if (!in_array($deputyUid, $this->deputyUids)) {
             $this->deputyUids[] = $deputyUid;
-            $this->deputy = (new Deputy())
+            $this->deputy = new Deputy()
                 ->setDeputyType(DeputyType::LAY)
                 ->setFirstname($data['id'])
                 ->setLastname('User ' . $iteration)

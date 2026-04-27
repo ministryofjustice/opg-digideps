@@ -44,7 +44,7 @@ class DocumentSyncRunnerTest extends KernelTestCase
             ],
         ]);
 
-        $queuedDocumentData = (new QueuedDocumentData())
+        $queuedDocumentData = new QueuedDocumentData()
             ->setDocumentId(6789)
             ->setReportSubmissionId(1234)
             ->setCaseNumber('1234abc')

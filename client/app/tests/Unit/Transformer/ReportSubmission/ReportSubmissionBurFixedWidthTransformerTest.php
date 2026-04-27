@@ -59,7 +59,7 @@ class ReportSubmissionBurFixedWidthTransformerTest extends TestCase
      */
     private function buildAlphaReportSubmissionSummary()
     {
-        return (new ReportSubmissionSummary())
+        return new ReportSubmissionSummary()
             ->setId(1)
             ->setCaseNumber('11111111')
             ->setDateReceived(new \DateTime('10-02-2001'))
@@ -74,7 +74,7 @@ class ReportSubmissionBurFixedWidthTransformerTest extends TestCase
      */
     private function buildBetaReportSubmissionSummary()
     {
-        return (new ReportSubmissionSummary())
+        return new ReportSubmissionSummary()
             ->setId(2)
             ->setCaseNumber('22222222')
             ->setDateReceived(new \DateTime('20-02-2001'))

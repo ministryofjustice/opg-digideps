@@ -165,7 +165,7 @@ trait ActivateTrait
                 $matchingString = $assertionByExpectation ? 'Yes' : 'No';
                 break;
             case 'Registration date':
-                $matchingString = $assertionByExpectation ? (new DateTime())->format('j/m/Y') : 'Not registered';
+                $matchingString = $assertionByExpectation ? new DateTime()->format('j/m/Y') : 'Not registered';
                 break;
             default:
                 $supportedProperties = ['Registration date', 'Active flag'];

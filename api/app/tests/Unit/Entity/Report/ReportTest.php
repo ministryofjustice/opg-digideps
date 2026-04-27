@@ -82,7 +82,7 @@ final class ReportTest extends KernelTestCase
     {
         $client = new Client();
         foreach ($clientReports as $rep) {
-            $report = (new Report($this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime($rep[0]), new DateTime($rep[1])))->setSubmitted($rep[2]);
+            $report = new Report($this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime($rep[0]), new DateTime($rep[1]))->setSubmitted($rep[2]);
             $client->addReport($report);
         }
 
@@ -97,10 +97,10 @@ final class ReportTest extends KernelTestCase
         $this->assertEquals(0, $this->report->getMoneyInTotal());
         $this->assertEquals(0, $this->report->getMoneyOutTotal());
         $this->report->setMoneyTransactions(new ArrayCollection([
-            (new MoneyTransaction($this->report))->setCategory('account-interest')->setAmount(1),
-            (new MoneyTransaction($this->report))->setCategory('dividends')->setAmount(2),
-            (new MoneyTransaction($this->report))->setCategory('broadband')->setAmount(3),
-            (new MoneyTransaction($this->report))->setCategory('food')->setAmount(4),
+            new MoneyTransaction($this->report)->setCategory('account-interest')->setAmount(1),
+            new MoneyTransaction($this->report)->setCategory('dividends')->setAmount(2),
+            new MoneyTransaction($this->report)->setCategory('broadband')->setAmount(3),
+            new MoneyTransaction($this->report)->setCategory('food')->setAmount(4),
         ]));
         $this->assertEquals(1 + 2, $this->report->getMoneyInTotal());
         $this->assertEquals(3 + 4, $this->report->getMoneyOutTotal());
@@ -110,10 +110,10 @@ final class ReportTest extends KernelTestCase
         $this->assertEquals(0, $this->report->getMoneyInTotal());
         $this->assertEquals(0, $this->report->getMoneyOutTotal());
         $this->report->setMoneyTransactionsShort(new ArrayCollection([
-            (new MoneyTransactionShortIn($this->report))->setAmount(10),
-            (new MoneyTransactionShortIn($this->report))->setAmount(20),
-            (new MoneyTransactionShortOut($this->report))->setAmount(30),
-            (new MoneyTransactionShortOut($this->report))->setAmount(40),
+            new MoneyTransactionShortIn($this->report)->setAmount(10),
+            new MoneyTransactionShortIn($this->report)->setAmount(20),
+            new MoneyTransactionShortOut($this->report)->setAmount(30),
+            new MoneyTransactionShortOut($this->report)->setAmount(40),
         ]));
         $this->assertEquals(10 + 20, $this->report->getMoneyInTotal());
         $this->assertEquals(30 + 40, $this->report->getMoneyOutTotal());
@@ -123,9 +123,9 @@ final class ReportTest extends KernelTestCase
     {
         $this->assertEquals(0, $this->report->getAccountsOpeningBalanceTotal());
 
-        $this->report->addAccount((new BankAccount())->setBank('bank1')->setOpeningBalance(1));
-        $this->report->addAccount((new BankAccount())->setBank('bank2')->setOpeningBalance(3));
-        $this->report->addAccount((new BankAccount())->setBank('bank3')->setOpeningBalance(0));
+        $this->report->addAccount(new BankAccount()->setBank('bank1')->setOpeningBalance(1));
+        $this->report->addAccount(new BankAccount()->setBank('bank2')->setOpeningBalance(3));
+        $this->report->addAccount(new BankAccount()->setBank('bank3')->setOpeningBalance(0));
 
         $this->assertEquals(4, $this->report->getAccountsOpeningBalanceTotal());
     }
@@ -134,12 +134,12 @@ final class ReportTest extends KernelTestCase
     {
         $this->assertEquals(0, $this->report->getAccountsClosingBalanceTotal());
 
-        $this->report->addAccount((new BankAccount())->setBank('bank1')->setClosingBalance(1));
+        $this->report->addAccount(new BankAccount()->setBank('bank1')->setClosingBalance(1));
 
         $this->assertEquals(1, $this->report->getAccountsClosingBalanceTotal());
 
-        $this->report->addAccount((new BankAccount())->setBank('bank2')->setClosingBalance(3));
-        $this->report->addAccount((new BankAccount())->setBank('bank3')->setClosingBalance(0));
+        $this->report->addAccount(new BankAccount()->setBank('bank2')->setClosingBalance(3));
+        $this->report->addAccount(new BankAccount()->setBank('bank3')->setClosingBalance(0));
 
         $this->assertEquals(4, $this->report->getAccountsClosingBalanceTotal());
     }
@@ -153,14 +153,14 @@ final class ReportTest extends KernelTestCase
 
         $this->assertEquals(0, $this->report->getCalculatedBalance());
 
-        $this->report->addAccount((new BankAccount())->setBank('bank1')->setOpeningBalance(1));
+        $this->report->addAccount(new BankAccount()->setBank('bank1')->setOpeningBalance(1));
 
         $this->assertEquals(1, $this->report->getCalculatedBalance());
 
-        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('account-interest')->setAmount(20)); // in
-        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('account-interest')->setAmount(20)); // in
-        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('rent')->setAmount(15)); // out
-        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('rent')->setAmount(15)); // out
+        $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('account-interest')->setAmount(20)); // in
+        $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('account-interest')->setAmount(20)); // in
+        $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('rent')->setAmount(15)); // out
+        $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('rent')->setAmount(15)); // out
         $this->report->setGifts([$this->gift1, $this->gift2]);
         $this->report->setExpenses([$this->expense1, $this->expense2]);
 
@@ -214,9 +214,9 @@ final class ReportTest extends KernelTestCase
         $this->assertEquals(true, $this->report->getTotalsMatch());
 
         // account opened with 1000, closed with 2000. 1500 money in, 400 out. balance is 100
-        $this->report->addAccount((new BankAccount())->setBank('bank1')->setOpeningBalance(1000)->setClosingBalance(2000));
-        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('account-interest')->setAmount(1500)); // in
-        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('rent')->setAmount(400)); // out
+        $this->report->addAccount(new BankAccount()->setBank('bank1')->setOpeningBalance(1000)->setClosingBalance(2000));
+        $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('account-interest')->setAmount(1500)); // in
+        $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('rent')->setAmount(400)); // out
         $this->report->setGifts([$this->gift1, $this->gift2]);
         $this->report->setExpenses([$this->expense1, $this->expense2]);
 
@@ -225,7 +225,7 @@ final class ReportTest extends KernelTestCase
         $this->assertEquals(false, $this->report->getTotalsMatch());
 
         // add missing transaction that fix the balance
-        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('rent')->setAmount(67)); // in
+        $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('rent')->setAmount(67)); // in
 
         $this->assertEquals(0, $this->report->getTotalsOffset());
         $this->assertEquals(true, $this->report->getTotalsMatch());
@@ -283,7 +283,7 @@ final class ReportTest extends KernelTestCase
     #[DataProvider('sectionsSettingsProvider')]
     public function testAvailableSectionsAndHasSection(string $type, array $expectedSections, array $unExpectedSections): void
     {
-        $this->report = (new Report($this->client, $type, new DateTime('2017-06-23'), new DateTime('2018-06-22')))
+        $this->report = new Report($this->client, $type, new DateTime('2017-06-23'), new DateTime('2018-06-22'))
             ->setBenefitsSectionReleaseDate(new DateTime('2016-01-01'));
 
         foreach ($expectedSections as $section) {
