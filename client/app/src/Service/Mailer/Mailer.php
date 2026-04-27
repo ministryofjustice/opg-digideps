@@ -6,7 +6,6 @@ namespace OPG\Digideps\Frontend\Service\Mailer;
 
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\Report;
-use OPG\Digideps\Frontend\Entity\ReportInterface;
 use OPG\Digideps\Frontend\Entity\User;
 
 class Mailer
@@ -56,7 +55,7 @@ class Mailer
      */
     public function sendReportSubmissionConfirmationEmail(
         User $submittedByDeputy,
-        ReportInterface $submittedReport,
+        Report $submittedReport,
         Report $newReport,
     ): bool {
         return $this->mailSender->send(

@@ -50,7 +50,6 @@ class DocumentVoter extends Voter
             case self::DELETE_DOCUMENT:
                 return
                     $subject instanceof Document &&
-                    $subject->getReport() instanceof Report &&
                     (
                         $subject->getReport()->getClient()->hasUser($loggedInUser) ||
                         $subject->getReport()->getClient()->userBelongsToClientsOrganisation($loggedInUser)
