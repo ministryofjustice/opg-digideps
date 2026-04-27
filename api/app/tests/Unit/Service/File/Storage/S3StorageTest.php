@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\File\Storage;
+namespace Tests\OPG\Digideps\Backend\Unit\Service\File\Storage;
 
 use Aws\Command;
 use Aws\Exception\AwsException;
@@ -12,6 +12,9 @@ use Aws\S3\S3Client;
 use Aws\S3\S3ClientInterface;
 use GuzzleHttp\Psr7\Stream;
 use Mockery as m;
+use OPG\Digideps\Backend\Service\File\Storage\FileNotFoundException;
+use OPG\Digideps\Backend\Service\File\Storage\FileUploadFailedException;
+use OPG\Digideps\Backend\Service\File\Storage\S3Storage;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;

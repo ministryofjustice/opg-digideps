@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use App\Entity\Report\AssetOther;
-use App\Entity\Report\AssetProperty;
-use App\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\Asset;
+use OPG\Digideps\Frontend\Entity\Report\AssetOther;
+use OPG\Digideps\Frontend\Entity\Report\AssetProperty;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
 trait ReportAssetTrait
@@ -24,7 +25,7 @@ trait ReportAssetTrait
 
 
     /**
-     * @JMS\Type("array<App\Entity\Report\Asset>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Asset>")
      *
      * @var Asset[]
      */

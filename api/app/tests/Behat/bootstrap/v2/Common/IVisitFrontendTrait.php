@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\Common;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\Common;
 
-use App\Entity\Organisation;
-use App\Entity\User;
-use App\Tests\Behat\BehatException;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 trait IVisitFrontendTrait
 {

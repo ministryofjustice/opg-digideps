@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Backend\Entity\Report;
 
-use App\Entity\ClientBenefitsCheckInterface;
+use OPG\Digideps\Backend\Entity\ClientBenefitsCheckInterface;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -57,13 +57,13 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     private \DateTime $created;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\Report", inversedBy="clientBenefitsCheck")
+     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="clientBenefitsCheck")
      *
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE",nullable=true)
      *
      * @JMS\Groups({"client-benefits-check-report"})
      *
-     * @JMS\Type("App\Entity\Report\Report")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\Report")
      */
     private ?Report $report;
 
@@ -127,7 +127,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
      *
      * @JMS\Groups({"client-benefits-check"})
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Report\MoneyReceivedOnClientsBehalf>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\MoneyReceivedOnClientsBehalf>")
      *
      * @OrderBy({"created" = "ASC"})
      */

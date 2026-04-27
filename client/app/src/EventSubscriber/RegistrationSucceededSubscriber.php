@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\EventSubscriber;
+namespace OPG\Digideps\Frontend\EventSubscriber;
 
-use App\Event\RegistrationSucceededEvent;
-use App\Service\Audit\AuditEvents;
-use App\Service\Client\Internal\UserApi;
+use OPG\Digideps\Frontend\Event\RegistrationSucceededEvent;
+use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
+use OPG\Digideps\Frontend\Service\Client\Internal\UserApi;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class RegistrationSucceededSubscriber implements EventSubscriberInterface

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace OPG\Digideps\Backend\Controller;
 
-use App\Entity\Satisfaction;
-use App\Repository\ReportRepository;
-use App\Repository\SatisfactionRepository;
-use App\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\Entity\Satisfaction;
+use OPG\Digideps\Backend\Repository\ReportRepository;
+use OPG\Digideps\Backend\Repository\SatisfactionRepository;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;

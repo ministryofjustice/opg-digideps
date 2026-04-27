@@ -60,7 +60,7 @@ $ cd client/app
 
 $ PACT_MOCK_SERVER_HOST=localhost PACT_MOCK_SERVER_PORT=1234 APP_ENV=dev APP_DEBUG=0 \
   AWS_ACCESS_KEY_ID=aFakeSecretAccessKeyId AWS_SECRET_ACCESS_KEY=aFakeSecretAccessKey \
-  AWS_SESSION_TOKEN=fakeValue vendor/bin/phpunit -c tests/phpunit/phpunit.xml
+  AWS_SESSION_TOKEN=fakeValue vendor/bin/phpunit -c tests/Unit/phpunit.xml
 ```
 
 To re-run the tests, you just need to run the second command again, unless you are changing mocks. If mocks change,
@@ -86,7 +86,7 @@ Then run this modified phpunit command:
 ```shell
 $ XDEBUG_MODE=coverage PACT_MOCK_SERVER_HOST=localhost PACT_MOCK_SERVER_PORT=1234 APP_ENV=dev APP_DEBUG=0 \
   AWS_ACCESS_KEY_ID=aFakeSecretAccessKeyId AWS_SECRET_ACCESS_KEY=aFakeSecretAccessKey \
-  AWS_SESSION_TOKEN=fakeValue vendor/bin/phpunit -c tests/phpunit/phpunit.xml --coverage-html=build/coverage-client
+  AWS_SESSION_TOKEN=fakeValue vendor/bin/phpunit -c tests/Unit/phpunit.xml --coverage-html=build/coverage-client
 ```
 
 The coverage report is output to build/coverage-client.

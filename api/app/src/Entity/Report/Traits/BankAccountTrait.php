@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
-use App\Entity\BankAccountInterface;
-use App\Entity\Report\BankAccount;
-use App\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\BankAccountInterface;
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\Report;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -16,9 +16,9 @@ trait BankAccountTrait
      *
      * @JMS\Groups({"account"})
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Report\BankAccount>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\BankAccount>")
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\BankAccount", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\BankAccount", mappedBy="report", cascade={"persist", "remove"})
      *
      * @ORM\OrderBy({"id" = "ASC"})
      */

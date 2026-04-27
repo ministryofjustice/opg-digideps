@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Command;
+namespace OPG\Digideps\Backend\Command;
 
-use App\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\Report;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

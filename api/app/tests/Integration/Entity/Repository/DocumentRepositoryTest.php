@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Repository;
+namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
-use App\Tests\Integration\ApiTestTrait;
+use Tests\OPG\Digideps\Backend\Integration\ApiTestTrait;
 use DateTime;
 use DateInterval;
 use DateTimeZone;
-use App\Entity\Client;
-use App\Entity\Report\Document;
-use App\Entity\Report\Report;
-use App\Entity\Report\ReportSubmission;
-use App\Entity\User;
-use App\Repository\DocumentRepository;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\DocumentRepository;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class DocumentRepositoryTest extends KernelTestCase

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Mailer;
+namespace OPG\Digideps\Frontend\Service\Mailer;
 
-use App\Entity\Client;
-use App\Entity\Report\Report;
-use App\Entity\ReportInterface;
-use App\Entity\User;
+use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\ReportInterface;
+use OPG\Digideps\Frontend\Entity\User;
 
 class Mailer
 {

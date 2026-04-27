@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Audit;
+namespace OPG\Digideps\Backend\Service\Audit;
 
 use Aws\CloudWatchLogs\CloudWatchLogsClient;
 use Aws\CloudWatchLogs\Exception\CloudWatchLogsException;

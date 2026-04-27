@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Behat;
+namespace Tests\OPG\Digideps\Backend\Behat;
 
 use RuntimeException;
 use Behat\Gherkin\Node\TableNode;

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\DataFixtures;
+namespace OPG\Digideps\Backend\DataFixtures;
 
-use App\Entity\User;
+use OPG\Digideps\Backend\Entity\User;
 use Doctrine\Common\DataFixtures\OrderedFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\Org;
+namespace OPG\Digideps\Frontend\Form\Org;
 
-use App\Entity\Note as NoteEntity;
+use OPG\Digideps\Frontend\Entity\Note as NoteEntity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;

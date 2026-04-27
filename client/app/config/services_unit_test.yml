@@ -1,15 +1,15 @@
 services:
-  App\Service\Client\RestClientMock:
-    class: App\Service\Client\RestClientMock
+  OPG\Digideps\Frontend\Service\Client\RestClientMock:
+    class: OPG\Digideps\Frontend\Service\Client\RestClientMock
 
   Alphagov\Notifications\Client:
-    alias: App\Service\Mailer\NotifyClientMock
+    alias: OPG\Digideps\Frontend\Service\Mailer\NotifyClientMock
 
-  App\Service\Client\RestClientInterface:
-    alias: App\Service\Client\RestClientMock
+  OPG\Digideps\Frontend\Service\Client\RestClientInterface:
+    alias: OPG\Digideps\Frontend\Service\Client\RestClientMock
 
-  App\Service\Mailer\MailSender:
-    class: App\Service\Mailer\MailSender
+  OPG\Digideps\Frontend\Service\Mailer\MailSender:
+    class: OPG\Digideps\Frontend\Service\Mailer\MailSender
     arguments:
       $logger: "@logger"
-      $notifyClient: '@App\Service\Mailer\NotifyClientMock'
+      $notifyClient: '@OPG\Digideps\Frontend\Service\Mailer\NotifyClientMock'

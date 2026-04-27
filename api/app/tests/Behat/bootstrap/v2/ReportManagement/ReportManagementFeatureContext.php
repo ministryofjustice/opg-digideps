@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Tests\Behat\v2\ReportManagement;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\ReportManagement;
 
-use App\Tests\Behat\v2\Common\BaseFeatureContext;
-use App\Tests\Behat\v2\CourtOrder\CourtOrderTrait;
-use App\Tests\Behat\v2\Reporting\Sections\ClientBenefitsCheckSectionTrait;
+use Tests\OPG\Digideps\Backend\Behat\v2\Common\BaseFeatureContext;
+use Tests\OPG\Digideps\Backend\Behat\v2\CourtOrder\CourtOrderTrait;
+use Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections\ClientBenefitsCheckSectionTrait;
 
 class ReportManagementFeatureContext extends BaseFeatureContext
 {

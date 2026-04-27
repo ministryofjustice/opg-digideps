@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity;
+namespace OPG\Digideps\Frontend\Entity;
 
-use App\Entity\Traits\CreationAudit;
+use OPG\Digideps\Frontend\Entity\Traits\CreationAudit;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -63,7 +63,7 @@ class ClientContact
     /**
      * @var string
      *
-     * @JMS\Type("App\Entity\Client")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\Client")
      */
     private $client;
 

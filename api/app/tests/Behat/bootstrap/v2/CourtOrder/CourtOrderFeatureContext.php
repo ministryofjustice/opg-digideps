@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\CourtOrder;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\CourtOrder;
 
-use App\Tests\Behat\Common\LinksTrait;
-use App\Tests\Behat\Common\RegionTrait;
-use App\Tests\Behat\Common\SiteNavigationTrait;
-use App\Tests\Behat\v2\Common\BaseFeatureContext;
-use App\Tests\Behat\v2\Registration\SelfRegistrationTrait;
+use Tests\OPG\Digideps\Backend\Behat\Common\LinksTrait;
+use Tests\OPG\Digideps\Backend\Behat\Common\RegionTrait;
+use Tests\OPG\Digideps\Backend\Behat\Common\SiteNavigationTrait;
+use Tests\OPG\Digideps\Backend\Behat\v2\Common\BaseFeatureContext;
+use Tests\OPG\Digideps\Backend\Behat\v2\Registration\SelfRegistrationTrait;
 
 class CourtOrderFeatureContext extends BaseFeatureContext
 {

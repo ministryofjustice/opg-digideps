@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace OPG\Digideps\Backend\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -18,7 +18,7 @@ use League\Csv\Serializer;
  *
  * @ORM\Table(name="deputyship", schema="staging")
  *
- * @ORM\Entity(repositoryClass="App\Repository\StagingDeputyshipRepository")
+ * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\StagingDeputyshipRepository")
  */
 class StagingDeputyship
 {

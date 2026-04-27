@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\v2\CSV;
+namespace Tests\OPG\Digideps\Backend\Unit\v2\CSV;
 
 use ArrayIterator;
-use App\v2\CSV\CSVChunker;
+use OPG\Digideps\Backend\v2\CSV\CSVChunker;
 use PHPUnit\Framework\TestCase;
 
 final class CSVChunkerTest extends TestCase

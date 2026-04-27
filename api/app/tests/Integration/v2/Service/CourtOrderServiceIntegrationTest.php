@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\v2\Service;
+namespace Tests\OPG\Digideps\Backend\Integration\v2\Service;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Domain\CourtOrder\CourtOrderService;
-use App\Domain\CourtOrder\CourtOrderType;
-use App\Entity\CourtOrderDeputy;
-use App\Repository\CourtOrderDeputyRepository;
-use App\Tests\Integration\ApiIntegrationTestCase;
-use App\Tests\Integration\Fixtures;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderService;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Entity\CourtOrderDeputy;
+use OPG\Digideps\Backend\Repository\CourtOrderDeputyRepository;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 
 class CourtOrderServiceIntegrationTest extends ApiIntegrationTestCase
 {

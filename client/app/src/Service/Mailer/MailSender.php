@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Service\Mailer;
+namespace OPG\Digideps\Frontend\Service\Mailer;
 
 use Alphagov\Notifications\Client as NotifyClient;
-use App\Model\Email;
-use App\Service\Audit\AuditEvents;
-use App\Service\Time\DateTimeProvider;
+use OPG\Digideps\Frontend\Model\Email;
+use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
+use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Throwable;

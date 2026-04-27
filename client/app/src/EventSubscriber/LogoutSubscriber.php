@@ -1,8 +1,8 @@
 <?php
 
-namespace App\EventSubscriber;
+namespace OPG\Digideps\Frontend\EventSubscriber;
 
-use App\Service\Client\RestClientInterface;
+use OPG\Digideps\Frontend\Service\Client\RestClientInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;

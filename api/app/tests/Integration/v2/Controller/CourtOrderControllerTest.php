@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\v2\Controller;
+namespace Tests\OPG\Digideps\Backend\Integration\v2\Controller;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Domain\CourtOrder\CourtOrderType;
-use App\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
 use DateTime;
-use App\Entity\Deputy;
-use App\Entity\PreRegistration;
-use App\Entity\User;
-use App\TestHelpers\ReportTestHelper;
-use App\Tests\Behat\v2\Helpers\FixtureHelper;
-use App\Tests\Integration\Controller\AbstractTestController;
-use App\Tests\Integration\Controller\JsonHttpTestClient;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
+use Tests\OPG\Digideps\Backend\Behat\v2\Helpers\FixtureHelper;
+use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
+use Tests\OPG\Digideps\Backend\Integration\Controller\JsonHttpTestClient;
 
 class CourtOrderControllerTest extends AbstractTestController
 {

@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Report;
+namespace OPG\Digideps\Frontend\Controller\Report;
 
-use App\Controller\AbstractController;
-use App\Entity\Report\ProfDeputyEstimateCost;
-use App\Entity\Report\Report;
-use App\Entity\Report\Status;
-use App\Form\Report\ProfDeputyCostsEstimateHowType;
-use App\Form\Report\ProfDeputyCostsEstimateMoreInfoType;
-use App\Form\Report\ProfDeputyEstimateCostsType;
-use App\Resolver\SubSectionRoute\ProfCostsEstimateSubSectionRouteResolver;
-use App\Service\Client\Internal\ReportApi;
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Entity\Report\ProfDeputyEstimateCost;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\Status;
+use OPG\Digideps\Frontend\Form\Report\ProfDeputyCostsEstimateHowType;
+use OPG\Digideps\Frontend\Form\Report\ProfDeputyCostsEstimateMoreInfoType;
+use OPG\Digideps\Frontend\Form\Report\ProfDeputyEstimateCostsType;
+use OPG\Digideps\Frontend\Resolver\SubSectionRoute\ProfCostsEstimateSubSectionRouteResolver;
+use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model;
+namespace OPG\Digideps\Frontend\Model;
 
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;

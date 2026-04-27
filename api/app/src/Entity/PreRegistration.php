@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace OPG\Digideps\Backend\Entity;
 
-use App\Entity\Report\Report;
-use App\Entity\Traits\CreateUpdateTimestamps;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Table(name="pre_registration", indexes={@ORM\Index(name="updated_at_idx", columns={"updated_at"})})
  *
- * @ORM\Entity(repositoryClass="App\Repository\PreRegistrationRepository")
+ * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\PreRegistrationRepository")
  *
  * @ORM\HasLifecycleCallbacks()
  */

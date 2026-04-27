@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace OPG\Digideps\Backend\Controller;
 
-use App\Entity\Client;
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\Exception\NotFound;
-use App\Utility\Query\Hydrator;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Exception\NotFound;
+use OPG\Digideps\Backend\Utility\Query\Hydrator;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Repository;
+namespace Tests\OPG\Digideps\Backend\Unit\Repository;
 
-use App\Entity\Satisfaction;
-use App\Repository\SatisfactionRepository;
+use OPG\Digideps\Backend\Entity\Satisfaction;
+use OPG\Digideps\Backend\Repository\SatisfactionRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Doctrine\DBAL\Statement;

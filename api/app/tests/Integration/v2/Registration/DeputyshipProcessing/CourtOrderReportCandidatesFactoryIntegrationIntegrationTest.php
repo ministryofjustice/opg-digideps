@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\v2\Registration\DeputyshipProcessing;
+namespace Tests\OPG\Digideps\Backend\Integration\v2\Registration\DeputyshipProcessing;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Domain\CourtOrder\CourtOrderReportType;
-use App\Domain\CourtOrder\CourtOrderType;
-use App\Tests\Integration\ApiIntegrationTestCase;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use DateTime;
-use App\Entity\Client;
-use App\Entity\CourtOrder;
-use App\Entity\Report\Report;
-use App\Entity\StagingDeputyship;
-use App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
-use App\v2\Registration\Enum\DeputyshipCandidateAction;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\StagingDeputyship;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 
 class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiIntegrationTestCase
 {

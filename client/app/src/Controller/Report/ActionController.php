@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Report;
+namespace OPG\Digideps\Frontend\Controller\Report;
 
-use App\Controller\AbstractController;
-use App\Entity\Report\Action;
-use App\Entity\Report\Status;
-use App\Form\Report\ActionType;
-use App\Service\Client\Internal\ReportApi;
-use App\Service\Client\RestClient;
-use App\Service\StepRedirector;
+use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Entity\Report\Action;
+use OPG\Digideps\Frontend\Entity\Report\Status;
+use OPG\Digideps\Frontend\Form\Report\ActionType;
+use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\StepRedirector;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;

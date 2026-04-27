@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Twig;
+namespace OPG\Digideps\Frontend\Twig;
 
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormView;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;

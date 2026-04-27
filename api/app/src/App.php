@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace OPG\Digideps\Backend;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 

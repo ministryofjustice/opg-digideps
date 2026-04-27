@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Tests\Integration\ControllerReport;
+namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
 use DateTime;
 use Exception;
-use App\Entity\Report\Document;
-use App\Entity\Report\ReportSubmission;
-use App\TestHelpers\ReportSubmissionHelper;
-use App\Tests\Integration\Controller\AbstractTestController;
+use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\TestHelpers\ReportSubmissionHelper;
+use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 use Symfony\Component\HttpFoundation\Response;
 
 class ReportSubmissionControllerTest extends AbstractTestController
@@ -22,9 +23,9 @@ class ReportSubmissionControllerTest extends AbstractTestController
     public function setUp(): void
     {
         parent::setUp();
-        self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
-        self::$pa2 = self::fixtures()->getRepo('User')->findOneByEmail('pa_admin@example.org');
-        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$pa1 = self::fixtures()->getRepo(User::class)->findOneByEmail('pa@example.org');
+        self::$pa2 = self::fixtures()->getRepo(User::class)->findOneByEmail('pa_admin@example.org');
+        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
 
         // create 5 submitted reports
         for ($i = 0; $i < 5; ++$i) {
@@ -272,7 +273,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
      */
     private function updateReportSubmissionByIdWithNewDateTime(int $id, string $date)
     {
-        $entity = self::fixtures()->getRepo('Report\ReportSubmission')->findOneById($id);
+        $entity = self::fixtures()->getRepo(ReportSubmission::class)->findOneById($id);
         $entity->setCreatedOn(new DateTime($date));
 
         self::fixtures()->persist($entity);
@@ -350,7 +351,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         ]);
 
         foreach ($documents as $document) {
-            $record = self::fixtures()->getRepo('Report\Document')->findOneBy(['fileName' => $document[0]]);
+            $record = self::fixtures()->getRepo(Document::class)->findOneBy(['fileName' => $document[0]]);
 
             if ($document[2]) {
                 self::assertEquals(Document::SYNC_STATUS_QUEUED, $record->getSynchronisationStatus());

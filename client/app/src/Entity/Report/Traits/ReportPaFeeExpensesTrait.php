@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use App\Entity\Report\Fee;
+use OPG\Digideps\Frontend\Entity\Report\Fee;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 trait ReportPaFeeExpensesTrait
 {
     /**
-     * @JMS\Type("array<App\Entity\Report\Fee>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Fee>")
      * @JMS\Groups({"fee"})
      *
      * @var Fee[]
@@ -31,14 +31,14 @@ trait ReportPaFeeExpensesTrait
      * @JMS\Type("string")
      * @JMS\Groups({"fee"})
      *
-     * @var string
+     * @var string $hasFees
      */
     private $hasFees;
 
     /**
      * @JMS\Type("double")
      *
-     * @var decimal
+     * @var string $feesTotal
      */
     private $feesTotal;
 
@@ -75,7 +75,7 @@ trait ReportPaFeeExpensesTrait
     }
 
     /**
-     * @return decimal
+     * @return string
      */
     public function getFeesTotal()
     {
@@ -83,7 +83,7 @@ trait ReportPaFeeExpensesTrait
     }
 
     /**
-     * @param decimal $feesTotal
+     * @param string $feesTotal
      */
     public function setFeesTotal($feesTotal)
     {

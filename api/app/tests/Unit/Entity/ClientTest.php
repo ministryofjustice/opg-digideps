@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Entity;
+namespace Tests\OPG\Digideps\Backend\Unit\Entity;
 
 use DateTime;
 use PHPUnit\Framework\Attributes\DataProvider;
-use App\Entity\Client;
+use OPG\Digideps\Backend\Entity\Client;
 use PHPUnit\Framework\TestCase;
 
 /**

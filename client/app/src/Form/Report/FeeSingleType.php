@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\Report;
+namespace OPG\Digideps\Frontend\Form\Report;
 
-use App\Entity\Report\Fee;
+use OPG\Digideps\Frontend\Entity\Report\Fee;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -40,10 +40,10 @@ class FeeSingleType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'App\Entity\Report\Fee',
+            'data_class' => Fee::class,
             'validation_groups' => function (FormInterface $form) {
+                /* @var $data Fee */
                 $data = $form->getData();
-                /* @var $data \App\Entity\Report\Fee */
                 $validationGroups = ['fees'];
 
                 if ($data->getAmount() && $data->getHasMoreDetails()) {

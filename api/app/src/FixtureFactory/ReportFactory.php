@@ -1,11 +1,11 @@
 <?php
 
-namespace App\FixtureFactory;
+namespace OPG\Digideps\Backend\FixtureFactory;
 
-use App\Entity\Client;
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\v2\Fixture\ReportSection;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\v2\Fixture\ReportSection;
 
 class ReportFactory
 {

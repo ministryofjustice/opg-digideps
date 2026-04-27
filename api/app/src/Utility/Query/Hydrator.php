@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Utility\Query;
+namespace OPG\Digideps\Backend\Utility\Query;
 
 class Hydrator
 {

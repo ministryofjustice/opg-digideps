@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Event;
+namespace OPG\Digideps\Frontend\Event;
 
-use App\Entity\User;
+use OPG\Digideps\Frontend\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class AdminUserCreatedEvent extends Event

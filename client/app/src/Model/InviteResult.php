@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Model;
+namespace OPG\Digideps\Frontend\Model;
 
 /**
  * Holds responses to requests to invite a deputy.

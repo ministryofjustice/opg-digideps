@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Admin\Client;
+namespace OPG\Digideps\Frontend\Controller\Admin\Client;
 
-use App\Controller\AbstractController;
-use App\Form\Admin\SearchClientType;
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Form\Admin\SearchClientType;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Form\FormInterface;

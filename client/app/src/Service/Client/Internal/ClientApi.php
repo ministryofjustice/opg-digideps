@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Client\Internal;
+namespace OPG\Digideps\Frontend\Service\Client\Internal;
 
-use App\Entity\Client;
-use App\Entity\Report\Report;
-use App\Event\ClientDeletedEvent;
-use App\Event\ClientUpdatedEvent;
-use App\EventDispatcher\ObservableEventDispatcher;
-use App\Service\Client\RestClientInterface;
+use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Event\ClientDeletedEvent;
+use OPG\Digideps\Frontend\Event\ClientUpdatedEvent;
+use OPG\Digideps\Frontend\EventDispatcher\ObservableEventDispatcher;
+use OPG\Digideps\Frontend\Service\Client\RestClientInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -166,13 +166,13 @@ class ClientApi
     /**
      * Return value can be null if deputy UID does not exist in the client table.
      *
-     * @return ?Client[]
+     * @return array<Client>|null
      */
-    public function getAllClientsByDeputyUid(int $deputyUid, $groups = [])
+    public function getAllClientsByDeputyUid(int $deputyUid, $groups = []): ?array
     {
         return $this->restClient->get(
             sprintf(self::GET_ALL_CLIENTS_BY_DEPUTY_UID, $deputyUid),
-            'Client[]',
+            Client::class . '[]',
             $groups
         );
     }

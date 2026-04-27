@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace OPG\Digideps\Frontend\Entity;
 
 interface SynchronisableInterface
 {

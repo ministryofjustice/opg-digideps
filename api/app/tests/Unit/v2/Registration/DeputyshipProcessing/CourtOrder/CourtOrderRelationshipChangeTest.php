@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing\CourtOrder;
+namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\DeputyshipProcessing\CourtOrder;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Entity\CourtOrder;
-use App\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipChange;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipChange;
 use PHPUnit\Framework\TestCase;
 
 class CourtOrderRelationshipChangeTest extends TestCase

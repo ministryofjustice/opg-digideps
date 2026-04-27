@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Service;
+namespace OPG\Digideps\Frontend\Service;
 
-use App\Entity\User;
-use App\Service\Client\Internal\ClientApi;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Service\Client\Internal\ClientApi;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;

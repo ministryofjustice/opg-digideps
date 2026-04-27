@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service;
+namespace OPG\Digideps\Backend\Service;
 
-use App\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\PreRegistration;
 use DateTime;
 
 class ReportUtils

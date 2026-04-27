@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace OPG\Digideps\Backend\Service;
 
-use App\Repository\ClientRepository;
+use OPG\Digideps\Backend\Repository\ClientRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class LayRegistrationService

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Service;
+namespace Tests\OPG\Digideps\Backend\Integration\Service;
 
-use App\Entity\User;
-use App\Repository\UserRepository;
-use App\Service\UserDeputyService;
-use App\TestHelpers\DeputyTestHelper;
-use App\TestHelpers\UserTestHelper;
-use App\Tests\Integration\ApiIntegrationTestCase;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\Service\UserDeputyService;
+use OPG\Digideps\Backend\TestHelpers\DeputyTestHelper;
+use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 
 class UserDeputyServiceIntegrationTest extends ApiIntegrationTestCase

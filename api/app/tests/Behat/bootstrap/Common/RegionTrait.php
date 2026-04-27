@@ -1,13 +1,14 @@
 <?php
 
-namespace App\Tests\Behat\Common;
+namespace Tests\OPG\Digideps\Backend\Behat\Common;
 
+use Behat\Mink\WebAssert;
 use RuntimeException;
 use Throwable;
 use Behat\Gherkin\Node\TableNode;
 
 /**
- * @method Behat\Mink\WebAssert assertSession
+ * @method WebAssert assertSession
  */
 trait RegionTrait
 {

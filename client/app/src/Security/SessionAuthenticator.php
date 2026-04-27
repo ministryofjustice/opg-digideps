@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Security;
+namespace OPG\Digideps\Frontend\Security;
 
-use App\Exception\UnauthorizedSessionException;
+use OPG\Digideps\Frontend\Exception\UnauthorizedSessionException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;

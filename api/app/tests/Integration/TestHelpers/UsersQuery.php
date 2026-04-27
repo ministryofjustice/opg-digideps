@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\TestHelpers;
+namespace Tests\OPG\Digideps\Backend\Integration\TestHelpers;
 
-use App\Service\Stats\Query\Query;
+use OPG\Digideps\Backend\Service\Stats\Query\Query;
 
 class UsersQuery extends Query
 {

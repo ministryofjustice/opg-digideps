@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Tests\Integration\ControllerReport;
+namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
-use App\Entity\Report\Expense;
-use App\Entity\Report\Report;
-use App\Tests\Integration\Controller\AbstractTestController;
+use OPG\Digideps\Backend\Entity\Report\Expense;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class ExpenseControllerTest extends AbstractTestController
 {
@@ -31,7 +32,7 @@ class ExpenseControllerTest extends AbstractTestController
         parent::setUp();
 
         // deputy1
-        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
         self::$report1 = self::fixtures()->createReport(self::$client1);
         self::$expense1 = self::fixtures()->createReportExpense('other', self::$report1, ['setExplanation' => 'e1', 'setAmount' => 1.1]);
@@ -129,8 +130,8 @@ class ExpenseControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $expense = self::fixtures()->getRepo('Report\Expense')->find($expenseId);
-        /* @var $expense \App\Entity\Report\Expense */
+        $expense = self::fixtures()->getRepo(Expense::class)->find($expenseId);
+        /* @var $expense \OPG\Digideps\Backend\Entity\Report\Expense */
         $this->assertEquals(3.3, $expense->getAmount());
         $this->assertEquals('e3', $expense->getExplanation());
 
@@ -148,8 +149,8 @@ class ExpenseControllerTest extends AbstractTestController
 
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_DEPUTY_EXPENSES));
 
-        $expense = self::fixtures()->getRepo('Report\Expense')->find($expenseId);
-        /* @var $expense \App\Entity\Report\Expense */
+        $expense = self::fixtures()->getRepo(Expense::class)->find($expenseId);
+        /* @var $expense \OPG\Digideps\Backend\Entity\Report\Expense */
         $this->assertEquals(3.31, $expense->getAmount());
         $this->assertEquals('e3.1', $expense->getExplanation());
 
@@ -199,7 +200,7 @@ class ExpenseControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $exp = self::fixtures()->clear()->getRepo('Report\Expense')->find(self::$expense1->getId());
+        $exp = self::fixtures()->clear()->getRepo(Expense::class)->find(self::$expense1->getId());
         $this->assertTrue(null === $exp);
     }
 

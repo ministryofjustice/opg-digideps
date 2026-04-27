@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace OPG\Digideps\Backend\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use PDOException;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\EventListener;
+namespace OPG\Digideps\Frontend\EventListener;
 
 use Symfony\Component\HttpFoundation\Exception\SessionNotFoundException;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;

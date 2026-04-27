@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Report;
+namespace OPG\Digideps\Backend\Controller\Report;
 
-use App\Controller\RestController;
-use App\Entity\Report\ClientBenefitsCheck as ReportClientBenefitsCheck;
-use App\Entity\Report\Report;
-use App\Factory\ClientBenefitsCheckFactory;
-use App\Repository\ClientBenefitsCheckRepository;
-use App\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\Controller\RestController;
+use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck as ReportClientBenefitsCheck;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Factory\ClientBenefitsCheckFactory;
+use OPG\Digideps\Backend\Repository\ClientBenefitsCheckRepository;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
