@@ -2,7 +2,7 @@
 
 namespace OPG\Digideps\Frontend\Service;
 
-use OPG\Digideps\Frontend\Entity\ReportInterface;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use Symfony\Component\Routing\RouterInterface;
 
 class ReportSectionsLinkService
@@ -14,7 +14,7 @@ class ReportSectionsLinkService
         $this->router = $router;
     }
 
-    private function getOptions(ReportInterface $report): array
+    private function getOptions(Report $report): array
     {
         $routeParams = ['reportId' => $report->getId()];
 
@@ -105,7 +105,7 @@ class ReportSectionsLinkService
     /**
      * @return array empty if it's the last or first section
      */
-    public function getSectionParams(ReportInterface $report, string $sectionId, int $offset = 0): array
+    public function getSectionParams(Report $report, string $sectionId, int $offset = 0): array
     {
         $config = $this->getOptions($report);
 
