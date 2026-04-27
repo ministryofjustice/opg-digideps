@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service\BruteForce;
+namespace Tests\OPG\Digideps\Backend\Unit\Service\BruteForce;
 
 use Predis\Client;
 use InvalidArgumentException;

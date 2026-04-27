@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Validator\Constraints\ProfDeputyCostsEstimate;
+namespace OPG\Digideps\Frontend\Validator\Constraints\ProfDeputyCostsEstimate;
 
 use Symfony\Component\Validator\Constraint;
 

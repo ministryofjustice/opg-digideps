@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use App\Entity\Report\Debt;
-use App\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\Debt;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 trait ReportDebtsTrait
 {
     /**
-     * @JMS\Type("array<App\Entity\Report\Debt>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Debt>")
      * @JMS\Groups({"debt"})
      *
      * @var Debt[]
@@ -42,7 +42,7 @@ trait ReportDebtsTrait
      * @JMS\Type("string")
      * @JMS\Groups({"debt"})
      *
-     * @var decimal
+     * @var string $debtsTotalAmount
      */
     private $debtsTotalAmount;
 
@@ -98,7 +98,7 @@ trait ReportDebtsTrait
     }
 
     /**
-     * @return decimal
+     * @return string
      */
     public function getDebtsTotalAmount()
     {
@@ -106,7 +106,7 @@ trait ReportDebtsTrait
     }
 
     /**
-     * @param decimal $debtsTotalAmount
+     * @param string $debtsTotalAmount
      */
     public function setDebtsTotalAmount($debtsTotalAmount)
     {

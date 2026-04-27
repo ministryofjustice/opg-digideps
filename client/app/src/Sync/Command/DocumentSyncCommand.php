@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Sync\Command;
+namespace OPG\Digideps\Frontend\Sync\Command;
 
-use App\Service\ParameterStoreService;
-use App\Sync\Service\DocumentSyncRunner;
+use OPG\Digideps\Frontend\Service\ParameterStoreService;
+use OPG\Digideps\Frontend\Sync\Service\DocumentSyncRunner;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

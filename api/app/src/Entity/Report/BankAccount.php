@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Backend\Entity\Report;
 
-use App\Entity\BankAccountInterface;
-use App\Entity\Traits\CreateUpdateTimestamps;
+use OPG\Digideps\Backend\Entity\BankAccountInterface;
+use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -143,7 +143,7 @@ class BankAccount implements BankAccountInterface
     /**
      * @var Report
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="bankAccounts")
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="bankAccounts")
      *
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */

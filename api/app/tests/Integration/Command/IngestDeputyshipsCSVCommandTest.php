@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Tests\Integration\Entity\Command;
+namespace Tests\OPG\Digideps\Backend\Integration\Command;
 
-use App\Command\IngestDeputyshipsCSVCommand;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngestResult;
+use OPG\Digideps\Backend\Command\IngestDeputyshipsCSVCommand;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngestResult;
 use Aws\Result;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
-use App\Entity\Report\Expense;
-use App\Entity\Report\Fee;
-use App\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\Expense;
+use OPG\Digideps\Backend\Entity\Report\Fee;
+use OPG\Digideps\Backend\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -15,7 +15,7 @@ trait FeeExpensesTrait
      *
      * @JMS\Groups({"fee"})
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\Fee", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\Fee", mappedBy="report", cascade={"persist", "remove"})
      *
      * @ORM\OrderBy({"id" = "ASC"})
      */
@@ -50,11 +50,11 @@ trait FeeExpensesTrait
      *
      * @var Expense[]
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Report\Expense>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\Expense>")
      *
      * @JMS\Groups({"expenses"})
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\Expense", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\Expense", mappedBy="report", cascade={"persist", "remove"})
      *
      * @var Expense[]
      */

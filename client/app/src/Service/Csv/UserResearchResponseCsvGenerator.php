@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Csv;
+namespace OPG\Digideps\Frontend\Service\Csv;
 
-use App\Entity\UserResearch\UserResearchResponse;
+use OPG\Digideps\Frontend\Entity\UserResearch\UserResearchResponse;
 use DateTime;
 
 class UserResearchResponseCsvGenerator

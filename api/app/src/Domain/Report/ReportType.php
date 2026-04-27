@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Report;
+namespace OPG\Digideps\Backend\Domain\Report;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Domain\CourtOrder\CourtOrderType;
-use App\Domain\CourtOrder\CourtOrderReportType;
-use App\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
 
 final readonly class ReportType implements \Stringable
 {

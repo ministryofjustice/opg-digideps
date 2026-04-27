@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Security;
+namespace OPG\Digideps\Frontend\Security;
 
-use App\Entity\User;
-use App\Service\Client\Internal\UserApi;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Service\Client\Internal\UserApi;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;

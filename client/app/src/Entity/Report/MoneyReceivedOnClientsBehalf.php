@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Frontend\Entity\Report;
 
-use App\Entity\MoneyReceivedOnClientsBehalfInterface;
-use App\Validator\Constraints\ClientBenefitsCheck as CustomAssert;
+use OPG\Digideps\Frontend\Entity\MoneyReceivedOnClientsBehalfInterface;
+use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck as CustomAssert;
 use DateTime;
 use JMS\Serializer\Annotation as JMS;
 
@@ -24,7 +24,7 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     private ?DateTime $created = null;
 
     /**
-     * @JMS\Type("App\Entity\Report\ClientBenefitsCheck")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\ClientBenefitsCheck")
      * @JMS\Groups({"report", "client-benefits-check"})
      */
     private ?ClientBenefitsCheck $clientBenefitsCheck = null;

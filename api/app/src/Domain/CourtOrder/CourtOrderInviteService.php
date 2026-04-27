@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\CourtOrder;
+namespace OPG\Digideps\Backend\Domain\CourtOrder;
 
-use App\Domain\Deputy\DeputyType;
-use App\Entity\Deputy;
-use App\Entity\User;
-use App\Repository\PreRegistrationRepository;
-use App\Service\DeputyService;
-use App\Service\UserService;
-use App\v2\DTO\InvitedDto;
-use App\v2\DTO\InviteeDto;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
+use OPG\Digideps\Backend\Service\DeputyService;
+use OPG\Digideps\Backend\Service\UserService;
+use OPG\Digideps\Backend\v2\DTO\InvitedDto;
+use OPG\Digideps\Backend\v2\DTO\InviteeDto;
 use Doctrine\ORM\EntityManagerInterface;
 
 /**

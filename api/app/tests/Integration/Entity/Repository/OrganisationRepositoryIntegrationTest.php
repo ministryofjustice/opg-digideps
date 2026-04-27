@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Entity\Repository;
+namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
-use App\Tests\Integration\ApiIntegrationTestCase;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use DateTime;
-use App\Entity\Organisation;
-use App\Entity\User;
-use App\Repository\OrganisationRepository;
-use App\Tests\Integration\Fixtures;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\OrganisationRepository;
+use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 use Prophecy\PhpUnit\ProphecyTrait;
 
 class OrganisationRepositoryIntegrationTest extends ApiIntegrationTestCase

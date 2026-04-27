@@ -2,26 +2,26 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Admin\Client;
+namespace OPG\Digideps\Frontend\Controller\Admin\Client;
 
-use App\Controller\AbstractController;
-use App\Entity\Report\Checklist;
-use App\Entity\Report\Report;
-use App\Entity\SynchronisableInterface;
-use App\Entity\User;
-use App\Exception\ReportNotSubmittedException;
-use App\Form\Admin\CloseReportConfirmType;
-use App\Form\Admin\CloseReportType;
-use App\Form\Admin\ManageActiveReportType;
-use App\Form\Admin\ManageReportConfirmType;
-use App\Form\Admin\ManageSubmittedReportType;
-use App\Form\Admin\ReportChecklistType;
-use App\Form\Admin\ReviewChecklistType;
-use App\Service\Audit\AuditEvents;
-use App\Service\Client\Internal\ReportApi;
-use App\Service\Client\RestClient;
-use App\Service\ParameterStoreService;
-use App\Service\ReportSubmissionService;
+use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Entity\Report\Checklist;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\SynchronisableInterface;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Exception\ReportNotSubmittedException;
+use OPG\Digideps\Frontend\Form\Admin\CloseReportConfirmType;
+use OPG\Digideps\Frontend\Form\Admin\CloseReportType;
+use OPG\Digideps\Frontend\Form\Admin\ManageActiveReportType;
+use OPG\Digideps\Frontend\Form\Admin\ManageReportConfirmType;
+use OPG\Digideps\Frontend\Form\Admin\ManageSubmittedReportType;
+use OPG\Digideps\Frontend\Form\Admin\ReportChecklistType;
+use OPG\Digideps\Frontend\Form\Admin\ReviewChecklistType;
+use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
+use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\ParameterStoreService;
+use OPG\Digideps\Frontend\Service\ReportSubmissionService;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Form\Form;

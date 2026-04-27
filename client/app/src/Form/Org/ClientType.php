@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Org;
+namespace OPG\Digideps\Frontend\Form\Org;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;

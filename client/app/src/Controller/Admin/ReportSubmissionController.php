@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Admin;
+namespace OPG\Digideps\Frontend\Controller\Admin;
 
-use App\Controller\AbstractController;
-use App\Entity\Report\Document;
-use App\Entity\Report\ReportSubmission;
-use App\Entity\User;
-use App\Service\Client\RestClient;
-use App\Service\DocumentDownloader;
-use App\Service\File\Storage\S3Storage;
-use App\Service\ParameterStoreService;
+use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Entity\Report\Document;
+use OPG\Digideps\Frontend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\DocumentDownloader;
+use OPG\Digideps\Frontend\Service\File\Storage\S3Storage;
+use OPG\Digideps\Frontend\Service\ParameterStoreService;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -52,7 +52,7 @@ class ReportSubmissionController extends AbstractController
 
         $currentFilters = self::getFiltersFromRequest($request);
         $ret = $this->restClient->get('/report-submission?' . http_build_query($currentFilters), 'array');
-        $records = $this->restClient->arrayToEntities(ReportSubmission::class . '[]', $ret['records']);
+        $records = $this->restClient->arrayToEntities(ReportSubmission::class, $ret['records']);
 
         $nOfdownloadableSubmissions = count(array_filter($records, fn($s) => $s->isDownloadable()));
 

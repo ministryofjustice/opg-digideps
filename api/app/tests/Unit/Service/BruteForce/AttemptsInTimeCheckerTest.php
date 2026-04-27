@@ -2,16 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service\BruteForce;
+namespace Tests\OPG\Digideps\Backend\Unit\Service\BruteForce;
 
 use PHPUnit\Framework\Attributes\DataProvider;
-use App\Service\BruteForce\AttemptsInTimeChecker;
-use MockeryStub as m;
+use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
+use Tests\OPG\Digideps\Backend\Unit\MockeryStub as m;
 use PHPUnit\Framework\TestCase;
-
-// create a simple predis Mock to just return keys
-
-require_once __DIR__ . '/PredisMock.php';
 
 final class AttemptsInTimeCheckerTest extends TestCase
 {

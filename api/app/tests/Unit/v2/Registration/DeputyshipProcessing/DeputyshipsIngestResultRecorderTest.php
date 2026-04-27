@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
+namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\DeputyshipProcessing;
 
-use App\Factory\DataFactoryResult;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesSelectorResult;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoaderResult;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
+use OPG\Digideps\Backend\Factory\DataFactoryResult;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesSelectorResult;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoaderResult;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
 use ArrayIterator;
 use DateTimeImmutable;
 use Doctrine\DBAL\Exception;

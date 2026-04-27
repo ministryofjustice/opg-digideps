@@ -2,35 +2,30 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
-use App\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use DateTime;
 use PHPUnit\Framework\MockObject\Exception;
 use RuntimeException;
 use Mockery;
-use App\Entity\Ndr\Ndr;
 use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
 use PHPUnit\Framework\Attributes\DataProvider;
-use App\Entity\Client;
-use App\Entity\PreRegistration;
-use App\Entity\Report\Asset;
-use App\Entity\Report\AssetProperty;
-use App\Entity\Ndr\AssetProperty as NdrAssetProperty;
-use App\Entity\Report\BankAccount;
-use App\Entity\Ndr\BankAccount as NdrBankAccount;
-use App\Entity\Report\Document;
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\Factory\ReportFactory;
-use App\Repository\DocumentRepository;
-use App\Repository\PreRegistrationRepository;
-use App\Service\ReportService;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\Report\AssetProperty;
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Factory\ReportFactory;
+use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
+use OPG\Digideps\Backend\Service\ReportService;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Mockery\MockInterface;
-use MockeryStub as m;
+use Tests\OPG\Digideps\Backend\Unit\MockeryStub as m;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -46,9 +41,6 @@ final class ReportServiceTest extends TestCase
     private AssetProperty $asset1;
     private Report $report;
     private Document $document1;
-    private EntityRepository|MockInterface $casrecRepo;
-    private MockInterface $assetRepo;
-    private MockInterface $bankAccount;
     private MockInterface|EntityManager $em;
     private LoggerInterface&MockObject $mockLogger;
     private ReportFactory&MockObject $mockReportFactory;
@@ -77,26 +69,13 @@ final class ReportServiceTest extends TestCase
         $this->document1 = (new Document($this->report))->setFileName('file1.pdf');
         $this->report->addDocument($this->document1);
 
-        // mock em
-        $this->casrecRepo = m::mock(EntityRepository::class);
-        $this->assetRepo = m::mock();
-        $this->bankAccount = m::mock();
-
         $this->em = m::mock(EntityManager::class);
 
         $this->em->shouldReceive('getRepository')->andReturnUsing(function ($arg) {
-            switch ($arg) {
-                case PreRegistration::class:
-                    $this->mockPreRegistrationRepository = self::createMock(PreRegistrationRepository::class);
+            if ($arg == PreRegistration::class) {
+                $this->mockPreRegistrationRepository = self::createMock(PreRegistrationRepository::class);
 
-                    return $this->mockPreRegistrationRepository;
-                case Document::class:
-                    return m::mock(DocumentRepository::class)
-                        ->shouldReceive('find')
-                        ->zeroOrMoreTimes()
-                        ->with(999)
-                        ->andReturn($this->mockNdrDocument)
-                        ->getMock();
+                return $this->mockPreRegistrationRepository;
             }
         });
 

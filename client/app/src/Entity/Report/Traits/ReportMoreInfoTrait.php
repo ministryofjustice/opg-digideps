@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -31,10 +31,8 @@ trait ReportMoreInfoTrait
 
     /**
      * @param mixed $actionMoreInfo
-     *
-     * @return ActionTrait
      */
-    public function setActionMoreInfo($actionMoreInfo)
+    public function setActionMoreInfo($actionMoreInfo): self
     {
         $this->actionMoreInfo = $actionMoreInfo;
 
@@ -51,10 +49,8 @@ trait ReportMoreInfoTrait
 
     /**
      * @param mixed $actionMoreInfoDetails
-     *
-     * @return ActionTrait
      */
-    public function setActionMoreInfoDetails($actionMoreInfoDetails)
+    public function setActionMoreInfoDetails($actionMoreInfoDetails): self
     {
         $this->actionMoreInfoDetails = $actionMoreInfoDetails;
 

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Event;
+namespace OPG\Digideps\Frontend\Event;
 
-use App\Entity\Client;
-use App\Entity\User;
+use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\User;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exception;
+namespace OPG\Digideps\Frontend\Exception;
 
 class DisplayableException extends \RuntimeException
 {

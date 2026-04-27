@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Entity\Repository;
+namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
-use App\Entity\CourtOrder;
-use App\Repository\CourtOrderRepository;
-use App\TestHelpers\ClientTestHelper;
-use App\TestHelpers\CourtOrderTestHelper;
-use App\TestHelpers\DeputyTestHelper;
-use App\TestHelpers\ReportTestHelper;
-use App\Tests\Integration\ApiIntegrationTestCase;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Repository\CourtOrderRepository;
+use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
+use OPG\Digideps\Backend\TestHelpers\CourtOrderTestHelper;
+use OPG\Digideps\Backend\TestHelpers\DeputyTestHelper;
+use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 
 class CourtOrderRepositoryTest extends ApiIntegrationTestCase
 {

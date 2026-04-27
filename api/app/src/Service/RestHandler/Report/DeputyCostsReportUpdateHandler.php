@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Service\RestHandler\Report;
+namespace OPG\Digideps\Backend\Service\RestHandler\Report;
 
-use App\Entity\Report\ProfDeputyInterimCost;
-use App\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\ProfDeputyInterimCost;
+use OPG\Digideps\Backend\Entity\Report\Report;
 use Doctrine\ORM\EntityManagerInterface;
 
 class DeputyCostsReportUpdateHandler implements ReportUpdateHandlerInterface

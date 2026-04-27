@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Security;
+namespace Tests\OPG\Digideps\Backend\Unit\Security;
 
-use App\Entity\User;
-use App\Repository\UserRepository;
-use App\Security\HeaderTokenAuthenticator;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\Security\HeaderTokenAuthenticator;
 use PHPUnit\Framework\TestCase;
 use Predis\Client;
 use Prophecy\PhpUnit\ProphecyTrait;

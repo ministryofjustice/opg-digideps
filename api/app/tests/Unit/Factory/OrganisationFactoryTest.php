@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Factory;
+namespace Tests\OPG\Digideps\Backend\Unit\Factory;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use InvalidArgumentException;
-use App\Entity\Organisation;
-use App\Factory\OrganisationFactory;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Factory\OrganisationFactory;
 use PHPUnit\Framework\TestCase;
 
 final class OrganisationFactoryTest extends TestCase

@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\Report\BankAccount;
 
 trait HasBankAccountTrait
 {
     /**
-     * @var App\Entity\Report\BankAccount
+     * @var BankAccount
      * @JMS\SerializedName("bankAccount")
-     * @JMS\Type("App\Entity\Report\BankAccount")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\BankAccount")
      *
      * @JMS\Groups({"account"})
      */

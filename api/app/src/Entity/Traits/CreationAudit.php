@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity\Traits;
+namespace OPG\Digideps\Backend\Entity\Traits;
 
-use App\Entity\User;
+use OPG\Digideps\Backend\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 
@@ -11,10 +11,10 @@ trait CreationAudit
     /**
      * User who created the entity
      *
-     * @JMS\Type("App\Entity\User")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\User")
      * @JMS\Groups({"notes", "documents", "report-submission", "checklist-information"})
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", fetch="EAGER", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\User", fetch="EAGER", cascade={"persist"})
      *
      * @ORM\JoinColumn(name="created_by", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */

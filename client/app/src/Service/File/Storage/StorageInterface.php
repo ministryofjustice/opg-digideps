@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\File\Storage;
+namespace OPG\Digideps\Frontend\Service\File\Storage;
 
 interface StorageInterface
 {

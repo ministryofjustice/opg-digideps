@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace OPG\Digideps\Backend\Repository;
 
-use App\Entity\User;
-use App\Entity\UserResearch\UserResearchResponse;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;

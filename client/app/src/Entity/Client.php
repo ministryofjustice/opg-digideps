@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Entity;
+namespace OPG\Digideps\Frontend\Entity;
 
-use App\Entity\Report\Report;
-use App\Entity\Traits\ActiveAudit;
-use App\Entity\Traits\IsSoftDeleteableEntity;
-use App\Validator\Constraints as AppAssert;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Traits\ActiveAudit;
+use OPG\Digideps\Frontend\Entity\Traits\IsSoftDeleteableEntity;
+use OPG\Digideps\Frontend\Validator\Constraints as AppAssert;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -54,28 +54,28 @@ class Client
     private $lastname;
 
     /**
-     * @JMS\Type("array<App\Entity\User>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\User>")
      *
      * @var User[]
      */
     private $users = [];
 
     /**
-     * @JMS\Type("App\Entity\Deputy")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\Deputy")
      *
      * @var Deputy|null
      */
     private $deputy;
 
     /**
-     * @JMS\Type("array<App\Entity\Report\Report>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Report>")
      *
      * @var array
      */
     private array $reports = [];
 
     /**
-     * @JMS\Type("App\Entity\Report\Report")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\Report")
      *
      * @var Report
      */
@@ -239,7 +239,7 @@ class Client
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Note>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Frontend\Entity\Note>")
      *
      * @JMS\Groups({"notes"})
      */
@@ -248,7 +248,7 @@ class Client
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("ArrayCollection<App\Entity\ClientContact>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Frontend\Entity\ClientContact>")
      *
      * @JMS\Groups({"clientcontacts"})
      */
@@ -264,7 +264,7 @@ class Client
     private $totalReportCount;
 
     /**
-     * @JMS\Type("App\Entity\Organisation")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\Organisation")
      *
      * @var Organisation
      */

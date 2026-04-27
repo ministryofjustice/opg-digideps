@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Tests\Integration\Controller;
+namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
-use App\TestHelpers\ClientTestHelper;
-use App\TestHelpers\ReportTestHelper;
+use OPG\Digideps\Backend\Entity\Satisfaction;
+use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
+use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
 
 class SatisfactionControllerTest extends AbstractTestController
 {
@@ -161,7 +162,7 @@ class SatisfactionControllerTest extends AbstractTestController
             'data' => $data,
         ]);
 
-        $persistedEntity = self::fixtures()->getRepo('App\Entity\Satisfaction')->find($response['data']);
+        $persistedEntity = self::fixtures()->getRepo(Satisfaction::class)->find($response['data']);
 
         $this->assertEquals($data['score'], $persistedEntity->getScore());
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Backend\Entity\Report;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -15,7 +15,7 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\DiscriminatorColumn(name="fee_type_id", type="string")
  *
  * @ORM\DiscriminatorMap({
- *      "current"  = "App\Entity\Report\ProfServiceFeeCurrent",
+ *      "current"  = "OPG\Digideps\Backend\Entity\Report\ProfServiceFeeCurrent",
  * })
  */
 abstract class ProfServiceFee
@@ -47,7 +47,7 @@ abstract class ProfServiceFee
     /**
      * @var Report
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="profServiceFees")
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="profServiceFees")
      *
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      */
@@ -116,7 +116,7 @@ abstract class ProfServiceFee
     private $paymentReceived;
 
     /**
-     * @var decimal
+     * @var string decimal
      *
      * @JMS\Type("string")
      *
@@ -242,7 +242,7 @@ abstract class ProfServiceFee
     }
 
     /**
-     * @return decimal
+     * @return string decimal
      */
     public function getAmountReceived()
     {
@@ -250,7 +250,7 @@ abstract class ProfServiceFee
     }
 
     /**
-     * @param decimal $amountReceived
+     * @param  string $amountReceived decimal
      */
     public function setAmountReceived($amountReceived)
     {

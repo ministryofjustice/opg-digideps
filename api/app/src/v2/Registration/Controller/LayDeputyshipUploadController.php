@@ -1,9 +1,9 @@
 <?php
 
-namespace App\v2\Registration\Controller;
+namespace OPG\Digideps\Backend\v2\Registration\Controller;
 
-use App\Service\DataCompression;
-use App\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
+use OPG\Digideps\Backend\Service\DataCompression;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;

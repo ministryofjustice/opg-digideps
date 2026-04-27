@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Backend\Entity\Report;
 
-use App\Entity\SynchronisableInterface;
-use App\Entity\SynchronisableTrait;
-use App\Entity\Traits\CreationAudit;
+use OPG\Digideps\Backend\Entity\SynchronisableInterface;
+use OPG\Digideps\Backend\Entity\SynchronisableTrait;
+use OPG\Digideps\Backend\Entity\Traits\CreationAudit;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -18,7 +18,7 @@ use JMS\Serializer\Annotation as JMS;
  *     @ORM\Index(name="ix_document_created_by", columns={"created_by"})
  *     })
  *
- * @ORM\Entity(repositoryClass="App\Repository\DocumentRepository")
+ * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\DocumentRepository")
  */
 class Document implements SynchronisableInterface
 {
@@ -82,9 +82,9 @@ class Document implements SynchronisableInterface
      *
      * @JMS\Groups({"document-report"})
      *
-     * @JMS\Type("App\Entity\Report\Report")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\Report")
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="documents")
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="documents")
      *
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
@@ -93,11 +93,11 @@ class Document implements SynchronisableInterface
     /**
      * @var ReportSubmission
      *
-     * @JMS\Type("App\Entity\Report\ReportSubmission")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\ReportSubmission")
      *
      * @JMS\Groups({"document-report-submission"})
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\ReportSubmission", inversedBy="documents", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\ReportSubmission", inversedBy="documents", cascade={"persist"})
      *
      * @ORM\JoinColumn(name="report_submission_id", referencedColumnName="id", onDelete="SET NULL")
      */

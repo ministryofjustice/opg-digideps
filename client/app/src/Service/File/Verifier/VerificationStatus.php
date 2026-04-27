@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\File\Verifier;
+namespace OPG\Digideps\Frontend\Service\File\Verifier;
 
 class VerificationStatus
 {

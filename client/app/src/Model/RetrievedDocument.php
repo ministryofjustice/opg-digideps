@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Model;
+namespace OPG\Digideps\Frontend\Model;
 
-use App\Entity\Report\ReportSubmission;
+use OPG\Digideps\Frontend\Entity\Report\ReportSubmission;
 
 class RetrievedDocument
 {

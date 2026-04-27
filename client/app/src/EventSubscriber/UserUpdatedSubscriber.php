@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\EventSubscriber;
+namespace OPG\Digideps\Frontend\EventSubscriber;
 
-use App\Entity\User;
-use App\Event\UserUpdatedEvent;
-use App\Service\Audit\AuditEvents;
-use App\Service\Mailer\Mailer;
-use App\Service\Time\DateTimeProvider;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Event\UserUpdatedEvent;
+use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
+use OPG\Digideps\Frontend\Service\Mailer\Mailer;
+use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 

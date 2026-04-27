@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\Common;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\Common;
 
 use DateTime;
 use ReflectionClass;
 use ReflectionProperty;
-use App\Tests\Behat\BehatException;
+use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 class UserDetails
 {

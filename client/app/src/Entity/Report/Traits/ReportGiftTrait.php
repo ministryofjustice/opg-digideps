@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use App\Entity\Report\Gift;
-use App\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\Gift;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -19,7 +19,7 @@ trait ReportGiftTrait
     private $giftsExist;
 
     /**
-     * @JMS\Type("array<App\Entity\Report\Gift>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\Gift>")
      * @JMS\Groups({"gifts"})
      *
      * @var Gift[]
@@ -43,7 +43,7 @@ trait ReportGiftTrait
     }
 
     /**
-     * @return \App\Entity\Report\Gift[]
+     * @return \OPG\Digideps\Frontend\Entity\Report\Gift[]
      */
     public function getGifts()
     {

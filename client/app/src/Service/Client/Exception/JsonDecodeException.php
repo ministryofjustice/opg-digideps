@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Client\Exception;
+namespace OPG\Digideps\Frontend\Service\Client\Exception;
 
 class JsonDecodeException extends \RuntimeException
 {

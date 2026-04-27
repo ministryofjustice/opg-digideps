@@ -35,11 +35,11 @@
                 <dd class="govuk-summary-list__value">
                     {% if
                         report.clientBenefitsCheck.whenLastCheckedEntitlement
-                            == constant('App\\Entity\\Report\\ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED') %}
+                            == constant('OPG\\Digideps\\Frontend\\Entity\\Report\\ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED') %}
                         {{ report.clientBenefitsCheck.dateLastCheckedEntitlement|date('F Y') }}
                     {% elseif
                         report.clientBenefitsCheck.whenLastCheckedEntitlement
-                            == constant('App\\Entity\\Report\\ClientBenefitsCheck::WHEN_CHECKED_IVE_NEVER_CHECKED') %}
+                            == constant('OPG\\Digideps\\Frontend\\Entity\\Report\\ClientBenefitsCheck::WHEN_CHECKED_IVE_NEVER_CHECKED') %}
                         <p class="govuk-body">
                             {{
                                 ('form.whenLastChecked.choices.' ~ report.clientBenefitsCheck.whenLastCheckedEntitlement)|trans(
@@ -111,7 +111,7 @@
                 <dd class="govuk-summary-list__value">
                     {% if
                         report.clientBenefitsCheck.doOthersReceiveMoneyOnClientsBehalf
-                            == constant('App\\Entity\\Report\\ClientBenefitsCheck::OTHER_MONEY_DONT_KNOW') %}
+                            == constant('OPG\\Digideps\\Frontend\\Entity\\Report\\ClientBenefitsCheck::OTHER_MONEY_DONT_KNOW') %}
                         <p class="govuk-body">
                             {{
                                 ('form.moneyOnClientsBehalf.choices.'

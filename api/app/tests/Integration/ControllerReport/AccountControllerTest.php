@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Tests\Integration\ControllerReport;
+namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
-use App\Entity\Report\BankAccount;
-use App\Entity\Report\Report;
-use App\Tests\Integration\Controller\AbstractTestController;
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class AccountControllerTest extends AbstractTestController
 {
@@ -28,7 +29,7 @@ class AccountControllerTest extends AbstractTestController
             self::$tokenDeputy = $this->loginAsDeputy();
         }
 
-        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
 
         $client1 = self::fixtures()->createClient(self::$deputy1);
         self::fixtures()->flush();
@@ -68,7 +69,7 @@ class AccountControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    public function testaddAccount()
+    public function testAddAccount()
     {
         $url = '/report/' . self::$report1->getId() . '/account';
         $this->assertEndpointNeedsAuth('POST', $url);
@@ -89,8 +90,8 @@ class AccountControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         // assert account created with transactions
-        /* @var $account \App\Entity\Report\BankAccount */
-        $account = self::fixtures()->getRepo('Report\BankAccount')->find($return['data']['id']);
+        /* @var $account BankAccount */
+        $account = self::fixtures()->getRepo(BankAccount::class)->find($return['data']['id']);
         $this->assertNull($account->getUpdatedAt(), 'account.updatedAt must be null on creation');
         $this->assertFalse($account->getIsClosed());
         $this->assertNull($account->getIsJointAccount());
@@ -105,9 +106,9 @@ class AccountControllerTest extends AbstractTestController
     }
 
     /**
-     * @depends testaddAccount
+     * @depends testAddAccount
      */
-    public function testgetAccounts()
+    public function testGetAccounts()
     {
         $data = $this->assertJsonRequest(
             'GET',
@@ -121,7 +122,7 @@ class AccountControllerTest extends AbstractTestController
         $this->assertArrayHasKey('bank', $data[1]);
     }
 
-    public function testgetOneById()
+    public function testGetOneById()
     {
         $url = '/report/account/' . self::$account1->getId();
         $this->assertEndpointNeedsAuth('GET', $url);
@@ -142,7 +143,7 @@ class AccountControllerTest extends AbstractTestController
     }
 
     /**
-     * @depends testgetOneById
+     * @depends testGetOneById
      */
     public function testEdit()
     {
@@ -162,7 +163,7 @@ class AccountControllerTest extends AbstractTestController
             ],
         ])['data'];
 
-        $account = self::fixtures()->clear()->getRepo('Report\BankAccount')->find(self::$account1->getId());
+        $account = self::fixtures()->clear()->getRepo(BankAccount::class)->find(self::$account1->getId());
         $this->assertEquals('bank1-modified', $account->getBank());
         $this->assertTrue($account->getIsClosed());
         $this->assertEquals('yes', $account->getIsJointAccount());
@@ -177,10 +178,10 @@ class AccountControllerTest extends AbstractTestController
     /**
      * @depends testEdit
      */
-    public function testaccountDelete()
+    public function testAccountDelete()
     {
         $account1Id = self::$account1->getId();
-        $account = self::fixtures()->getRepo('Report\BankAccount')->find(self::$account1->getId()); /* @var $account BankAccount */
+        $account = self::fixtures()->getRepo(BankAccount::class)->find(self::$account1->getId()); /* @var $account BankAccount */
         $report = $account->getReport();
         $report->setSectionStatusesCached([]);
         $url = '/account/' . $account1Id;
@@ -199,7 +200,7 @@ class AccountControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $freshAccount = self::fixtures()->clear()->getRepo('Report\BankAccount')->find(self::$account3->getId());
+        $freshAccount = self::fixtures()->clear()->getRepo(BankAccount::class)->find(self::$account3->getId());
         $this->assertNotInstanceOf(BankAccount::class, $freshAccount);
 
         $this->assertEquals('incomplete', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_BANK_ACCOUNTS)['state']);

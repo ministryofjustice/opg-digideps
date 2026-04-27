@@ -2,21 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\TestHelpers;
+namespace Tests\OPG\Digideps\Backend\Integration\TestHelpers;
 
-use App\Domain\Deputy\DeputyType;
-use App\Entity\Client;
-use App\Entity\Deputy;
-use App\Entity\Organisation;
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\Repository\ClientRepository;
-use App\Repository\DeputyRepository;
-use App\Repository\OrganisationRepository;
-use App\Repository\ReportRepository;
-use App\Service\ReportUtils;
-use App\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
-use App\v2\Registration\DTO\OrgDeputyshipDto;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\ClientRepository;
+use OPG\Digideps\Backend\Repository\DeputyRepository;
+use OPG\Digideps\Backend\Repository\OrganisationRepository;
+use OPG\Digideps\Backend\Repository\ReportRepository;
+use OPG\Digideps\Backend\Service\ReportUtils;
+use OPG\Digideps\Backend\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
+use OPG\Digideps\Backend\v2\Registration\DTO\OrgDeputyshipDto;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManager;

@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Tests\Integration\ControllerReport;
+namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
-use App\Entity\Report\Report;
-use App\Tests\Integration\Controller\AbstractTestController;
+use OPG\Digideps\Backend\Entity\Report\Contact;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class ContactControllerTest extends AbstractTestController
 {
@@ -23,7 +25,7 @@ class ContactControllerTest extends AbstractTestController
         parent::setUp();
 
         // deputy1
-        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
         self::$report1 = self::fixtures()->createReport(self::$client1);
         self::$contact1 = self::fixtures()->createContact(self::$report1, ['setAddress' => 'address1']);
@@ -181,7 +183,7 @@ class ContactControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $contact = self::fixtures()->getRepo('Report\Contact')->find($return['data']['id']); /* @var $contact \App\Entity\Report\Contact */
+        $contact = self::fixtures()->getRepo(Contact::class)->find($return['data']['id']); /* @var $contact \OPG\Digideps\Backend\Entity\Report\Contact */
         $this->assertEquals('address-changed', $contact->getAddress());
         $this->assertEquals(self::$report1->getId(), $contact->getReport()->getId());
 
@@ -202,7 +204,7 @@ class ContactControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         // assert account created with transactions
-        $contact = self::fixtures()->getRepo('Report\Contact')->find($return['data']['id']); /* @var $contact \App\Entity\Report\Contact */
+        $contact = self::fixtures()->getRepo(Contact::class)->find($return['data']['id']); /* @var $contact \OPG\Digideps\Backend\Entity\Report\Contact */
         $this->assertEquals('address-changed', $contact->getAddress());
         $this->assertEquals(self::$report1->getId(), $contact->getReport()->getId());
         // TODO assert other fields
@@ -236,7 +238,7 @@ class ContactControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $this->assertTrue(null === self::fixtures()->getRepo('Report\Contact')->find(self::$contact1->getId()));
+        $this->assertTrue(null === self::fixtures()->getRepo(Contact::class)->find(self::$contact1->getId()));
 
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_CONTACTS));
     }

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Event;
+namespace OPG\Digideps\Backend\Event;
 
-use App\Entity\Client;
-use App\Entity\User;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\User;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class ClientArchivedEvent extends Event

@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Sync\Service;
+namespace OPG\Digideps\Frontend\Sync\Service;
 
-use App\Entity\Report\Checklist;
-use App\Entity\Report\Report;
-use App\Entity\Report\ReportSubmission;
-use App\Service\Client\RestClient;
-use App\Sync\Exception\PdfGenerationFailedException;
-use App\Sync\Exception\SiriusDocumentSyncFailedException;
-use App\Sync\Model\Sirius\QueuedChecklistData;
-use App\Sync\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
-use App\Sync\Model\Sirius\SiriusDocumentFile;
-use App\Sync\Model\Sirius\SiriusDocumentUpload;
-use App\Sync\Service\Client\Sirius\SiriusApiGatewayClient;
+use OPG\Digideps\Frontend\Entity\Report\Checklist;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Sync\Exception\PdfGenerationFailedException;
+use OPG\Digideps\Frontend\Sync\Exception\SiriusDocumentSyncFailedException;
+use OPG\Digideps\Frontend\Sync\Model\Sirius\QueuedChecklistData;
+use OPG\Digideps\Frontend\Sync\Model\Sirius\SiriusChecklistPdfDocumentMetadata;
+use OPG\Digideps\Frontend\Sync\Model\Sirius\SiriusDocumentFile;
+use OPG\Digideps\Frontend\Sync\Model\Sirius\SiriusDocumentUpload;
+use OPG\Digideps\Frontend\Sync\Service\Client\Sirius\SiriusApiGatewayClient;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\MimeType;

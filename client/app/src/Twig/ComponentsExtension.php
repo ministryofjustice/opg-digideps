@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Twig;
+namespace OPG\Digideps\Frontend\Twig;
 
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\Service\ReportSectionsLinkService;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Service\ReportSectionsLinkService;
 use Symfony\Component\Intl\Countries;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;

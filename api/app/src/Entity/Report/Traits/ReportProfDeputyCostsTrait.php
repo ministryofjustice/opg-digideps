@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
-use App\Entity\Report\ProfDeputyInterimCost;
-use App\Entity\Report\ProfDeputyOtherCost;
-use App\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\ProfDeputyInterimCost;
+use OPG\Digideps\Backend\Entity\Report\ProfDeputyOtherCost;
+use OPG\Digideps\Backend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
 trait ReportProfDeputyCostsTrait
@@ -32,11 +32,11 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyCostsHasPrevious;
 
     /**
-     * @JMS\Type("ArrayCollection<App\Entity\Report\ProfDeputyPreviousCost>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\ProfDeputyPreviousCost>")
      *
      * @JMS\Groups({"report-prof-deputy-costs-prev"})
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\ProfDeputyPreviousCost", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\ProfDeputyPreviousCost", mappedBy="report", cascade={"persist", "remove"})
      *
      * @ORM\OrderBy({"id" = "ASC"})
      */
@@ -54,11 +54,11 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyCostsHasInterim;
 
     /**
-     * @JMS\Type("ArrayCollection<App\Entity\Report\ProfDeputyInterimCost>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\ProfDeputyInterimCost>")
      *
      * @JMS\Groups({"report-prof-deputy-costs-interim"})
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\ProfDeputyInterimCost", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\ProfDeputyInterimCost", mappedBy="report", cascade={"persist", "remove"})
      *
      * @ORM\OrderBy({"id" = "ASC"})
      */
@@ -98,10 +98,10 @@ trait ReportProfDeputyCostsTrait
     private $profDeputyCostsReasonBeyondEstimate;
 
     /**
-     * @JMS\Type("ArrayCollection<App\Entity\Report\ProfDeputyOtherCost>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\ProfDeputyOtherCost>")
      * @JMS\Groups({"prof-deputy-other-costs"})
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\ProfDeputyOtherCost", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\ProfDeputyOtherCost", mappedBy="report", cascade={"persist", "remove"})
      * @ORM\OrderBy({"id" = "ASC"})
      */
     private $profDeputyOtherCosts;

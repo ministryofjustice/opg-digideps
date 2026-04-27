@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Security;
+namespace OPG\Digideps\Frontend\Security;
 
-use App\Entity\Client as ClientEntity;
-use App\Entity\User;
+use OPG\Digideps\Frontend\Entity\Client as ClientEntity;
+use OPG\Digideps\Frontend\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 

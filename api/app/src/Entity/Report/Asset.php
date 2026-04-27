@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Backend\Entity\Report;
 
-use App\Entity\Traits\CreateUpdateTimestamps;
+use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -11,15 +11,15 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(name="asset")
  *
- * @ORM\Entity(repositoryClass="App\Repository\AssetRepository")
+ * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\AssetRepository")
  *
  * @ORM\InheritanceType("SINGLE_TABLE")
  *
  * @ORM\DiscriminatorColumn(name="type", type="string")
  *
  * @ORM\DiscriminatorMap({
- *      "property"  = "App\Entity\Report\AssetProperty",
- *      "other"     = "App\Entity\Report\AssetOther"
+ *      "property"  = "OPG\Digideps\Backend\Entity\Report\AssetProperty",
+ *      "other"     = "OPG\Digideps\Backend\Entity\Report\AssetOther"
  * })
  *
  * @ORM\HasLifecycleCallbacks
@@ -59,7 +59,7 @@ abstract class Asset
     /**
      * @var Report
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="assets")
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="assets")
      *
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Mailer;
+namespace OPG\Digideps\Frontend\Service\Mailer;
 
 use Alphagov\Notifications\Client;
 use Alphagov\Notifications\Exception\NotifyException;

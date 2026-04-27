@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use App\Entity\Report\Report;
-use App\Entity\Report\UnsubmittedSection;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\UnsubmittedSection;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 trait ReportUnsubmittedSections

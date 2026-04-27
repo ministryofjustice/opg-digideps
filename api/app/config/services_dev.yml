@@ -7,5 +7,5 @@ services:
             $fixtureParams: "%fixtures%"
             $fixturesEnabled: "%env(bool:FIXTURES_ENABLED)%"
 
-    App\Tests\Behat\:
+    Tests\OPG\Digideps\Backend\Behat\:
         resource: "../tests/Behat/bootstrap/*"

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Entity\Report;
+namespace Tests\OPG\Digideps\Backend\Unit\Entity\Report;
 
 use DateTime;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -10,26 +10,26 @@ use RuntimeException;
 use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Test;
 use DateTimeImmutable;
-use App\Entity\Client;
-use App\Entity\Report\AssetOther;
-use App\Entity\Report\AssetProperty;
-use App\Entity\Report\BankAccount;
-use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\Expense;
-use App\Entity\Report\Fee;
-use App\Entity\Report\Gift;
-use App\Entity\Report\MoneyTransaction;
-use App\Entity\Report\MoneyTransactionShortIn;
-use App\Entity\Report\MoneyTransactionShortOut;
-use App\Entity\Report\ProfDeputyInterimCost;
-use App\Entity\Report\ProfDeputyOtherCost;
-use App\Entity\Report\ProfDeputyPreviousCost;
-use App\Entity\Report\Report;
-use App\TestHelpers\ReportTestHelper;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\AssetOther;
+use OPG\Digideps\Backend\Entity\Report\AssetProperty;
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
+use OPG\Digideps\Backend\Entity\Report\Expense;
+use OPG\Digideps\Backend\Entity\Report\Fee;
+use OPG\Digideps\Backend\Entity\Report\Gift;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransaction;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortIn;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortOut;
+use OPG\Digideps\Backend\Entity\Report\ProfDeputyInterimCost;
+use OPG\Digideps\Backend\Entity\Report\ProfDeputyOtherCost;
+use OPG\Digideps\Backend\Entity\Report\ProfDeputyPreviousCost;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Mockery\MockInterface;
-use MockeryStub as m;
+use Tests\OPG\Digideps\Backend\Unit\MockeryStub as m;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 final class ReportTest extends KernelTestCase

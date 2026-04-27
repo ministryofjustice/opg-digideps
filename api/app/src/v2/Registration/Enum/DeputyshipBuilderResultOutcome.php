@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\Enum;
+namespace OPG\Digideps\Backend\v2\Registration\Enum;
 
 /**
  * The outcome of building entities from a group of deputyship candidates.
