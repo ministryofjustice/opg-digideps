@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Unit\Service\RestHandler\Report;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use DateTime;
-use DateTimeZone;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\ReportRepository;
@@ -23,7 +21,7 @@ final class PaFeesExpensesReportUpdateHandlerTest extends TestCase
 
     public function setUp(): void
     {
-        $date = new DateTime('now', new DateTimeZone('Europe/London'));
+        $date = new \DateTime('now', new \DateTimeZone('Europe/London'));
         $this->report = $this->getMockBuilder(Report::class)
             ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, $date, $date])
             ->onlyMethods(['updateSectionsStatusCache'])

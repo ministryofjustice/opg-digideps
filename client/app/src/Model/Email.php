@@ -40,7 +40,7 @@ class Email
     /**
      * @param string $toEmail
      *
-     * @return \OPG\Digideps\Frontend\Model\Email
+     * @return Email
      */
     public function setToEmail($toEmail)
     {
@@ -60,7 +60,7 @@ class Email
     /**
      * @param string $fromName
      *
-     * @return \OPG\Digideps\Frontend\Model\Email
+     * @return Email
      */
     public function setFromName($fromName)
     {
@@ -80,7 +80,7 @@ class Email
     /**
      * @param string $subject
      *
-     * @return \OPG\Digideps\Frontend\Model\Email
+     * @return Email
      */
     public function setSubject($subject)
     {

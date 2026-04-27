@@ -156,7 +156,7 @@ class DecisionControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $decision = self::fixtures()->getRepo(Decision::class)->find($return['data']['id']); /* @var $decision \OPG\Digideps\Backend\Entity\Report\Decision */
+        $decision = self::fixtures()->getRepo(Decision::class)->find($return['data']['id']); /* @var $decision Decision */
         $this->assertEquals('description-changed', $decision->getDescription());
         $this->assertEquals(self::$report1->getId(), $decision->getReport()->getId());
 
@@ -177,7 +177,7 @@ class DecisionControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         // assert account created with transactions
-        $decision = self::fixtures()->getRepo(Decision::class)->find($return['data']['id']); /* @var $decision \OPG\Digideps\Backend\Entity\Report\Decision */
+        $decision = self::fixtures()->getRepo(Decision::class)->find($return['data']['id']); /* @var $decision Decision */
         $this->assertEquals('description-changed', $decision->getDescription());
         $this->assertEquals(self::$report1->getId(), $decision->getReport()->getId());
         // TODO assert other fields

@@ -46,7 +46,7 @@ class UserUpdatedSubscriber implements EventSubscriberInterface
     public function auditLog(UserUpdatedEvent $event)
     {
         if ($this->emailHasChanged($event)) {
-            $emailChangedEvent = (new AuditEvents($this->dateTimeProvider))
+            $emailChangedEvent = new AuditEvents($this->dateTimeProvider)
                 ->userEmailChanged(
                     $event->getTrigger(),
                     $event->getPreUpdateUser()->getEmail(),
@@ -60,7 +60,7 @@ class UserUpdatedSubscriber implements EventSubscriberInterface
         }
 
         if ($this->roleHasChanged($event)) {
-            $roleChangedEvent = (new AuditEvents($this->dateTimeProvider))
+            $roleChangedEvent = new AuditEvents($this->dateTimeProvider)
                 ->roleChanged(
                     $event->getTrigger(),
                     $event->getPreUpdateUser()->getRoleName(),

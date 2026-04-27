@@ -29,7 +29,7 @@ class ClientBenefitsCheckTest extends TestCase
     ) {
         $report = ReportHelpers::createReport();
 
-        $sut = (new ClientBenefitsCheck())
+        $sut = new ClientBenefitsCheck()
             ->setWhenLastCheckedEntitlement($whenLastChecked)
             ->setDateLastCheckedEntitlement($dateLastChecked)
             ->setNeverCheckedExplanation($neverCheckedExplanation)
@@ -50,7 +50,7 @@ class ClientBenefitsCheckTest extends TestCase
 
     public function invalidDataProvider()
     {
-        $moneyType = (new MoneyReceivedOnClientsBehalf())
+        $moneyType = new MoneyReceivedOnClientsBehalf()
         ->setAmountDontKnow(false);
 
         $moneyTypes = new ArrayCollection();

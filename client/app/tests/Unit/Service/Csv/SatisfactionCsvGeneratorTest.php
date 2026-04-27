@@ -15,13 +15,13 @@ class SatisfactionCsvGeneratorTest extends TestCase
     public function generateSatisfactionResponsesCsv()
     {
         $satisfactions = [
-            (new Satisfaction())
+            new Satisfaction()
             ->setComments('Loved it')
             ->setCreated(new \DateTime('2020-12-25'))
             ->setDeputyrole('LAY_DEPUTY')
             ->setReporttype('102')
             ->setScore(5),
-            (new Satisfaction())
+            new Satisfaction()
                 ->setComments('Not great...')
                 ->setCreated(new \DateTime('2020-12-26'))
                 ->setDeputyrole('PROF_DEPUTY')

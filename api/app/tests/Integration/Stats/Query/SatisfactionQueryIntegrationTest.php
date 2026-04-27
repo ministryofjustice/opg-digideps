@@ -3,7 +3,6 @@
 namespace Tests\OPG\Digideps\Backend\Integration\Stats\Query;
 
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
-use DateTime;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Satisfaction;
@@ -51,7 +50,7 @@ class SatisfactionQueryIntegrationTest extends ApiIntegrationTestCase
         ?string $reportType = null,
         ?string $deputyType = null
     ): void {
-        $satisfaction = (new Satisfaction())
+        $satisfaction = new Satisfaction()
             ->setScore($score);
 
         if (isset($reportType)) {
@@ -60,8 +59,8 @@ class SatisfactionQueryIntegrationTest extends ApiIntegrationTestCase
             $report = new Report(
                 $client,
                 $reportType,
-                new DateTime('2019-08-01'),
-                new DateTime('2020-08-01')
+                new \DateTime('2019-08-01'),
+                new \DateTime('2020-08-01')
             );
             self::$entityManager->persist($client);
             self::$entityManager->persist($report);

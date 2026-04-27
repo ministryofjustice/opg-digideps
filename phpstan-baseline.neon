@@ -2161,12 +2161,6 @@ parameters:
 			path: api/app/src/Controller/SettingController.php
 
 		-
-			message: '#^Class OPG\\Digideps\\Backend\\Service\\Formatter\\RestFormatter referenced with incorrect case\: OPG\\Digideps\\Backend\\Service\\Formatter\\Restformatter\.$#'
-			identifier: class.nameCase
-			count: 1
-			path: api/app/src/Controller/StatsController.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Controller\\StatsController\:\:getImbalanceReport\(\) should return array but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -55309,12 +55303,6 @@ parameters:
 			path: client/app/src/Form/Report/ProfDeputyOtherCostSingleType.php
 
 		-
-			message: '#^Cannot call method getPaymentReceived\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Form/Report/ProfServiceFeeType.php
-
-		-
 			message: '#^Cannot cast mixed to int\.$#'
 			identifier: cast.int
 			count: 1
@@ -55329,12 +55317,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Form\\Report\\ProfServiceFeeType\:\:getValidationGroups\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: client/app/src/Form/Report/ProfServiceFeeType.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$asset \\OPG\\Digideps\\Frontend\\Entity\\Report\\ProfServiceFee\)\: Unexpected token "\$asset", expected type at offset 9 on line 1$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: client/app/src/Form/Report/ProfServiceFeeType.php
 

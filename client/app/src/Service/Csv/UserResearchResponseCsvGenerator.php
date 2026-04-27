@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace OPG\Digideps\Frontend\Service\Csv;
 
 use OPG\Digideps\Frontend\Entity\UserResearch\UserResearchResponse;
-use DateTime;
 
 class UserResearchResponseCsvGenerator
 {
@@ -45,7 +44,7 @@ class UserResearchResponseCsvGenerator
 
             $satisfaction = $response['satisfaction'];
             $user = $response['user'];
-            $dateProvided = (new DateTime($satisfaction['created']['date']))->format('Y-m-d');
+            $dateProvided = new \DateTime($satisfaction['created']['date'])->format('Y-m-d');
 
             $rows[] = [
                 $satisfaction['score'],

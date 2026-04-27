@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections;
 
-use Throwable;
-
 trait AssetsSectionTrait
 {
     private array $combinedAssetTypes = ['Antiques', 'Artwork', 'Jewellery'];
@@ -110,7 +108,7 @@ trait AssetsSectionTrait
     {
         try {
             $this->iAmOnAssetTypePage();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->clickLink('Add an asset');
             $this->iAmOnAssetTypePage();
         }

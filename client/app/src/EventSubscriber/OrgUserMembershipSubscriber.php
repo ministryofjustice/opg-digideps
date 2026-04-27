@@ -35,7 +35,7 @@ class OrgUserMembershipSubscriber implements EventSubscriberInterface
 
     public function logUserAddedEvent(UserAddedToOrganisationEvent $event)
     {
-        $auditEvent = (new AuditEvents($this->dateTimeProvider))
+        $auditEvent = new AuditEvents($this->dateTimeProvider)
             ->userAddedToOrg(
                 $event->getTrigger(),
                 $event->getAddedUser(),
@@ -48,7 +48,7 @@ class OrgUserMembershipSubscriber implements EventSubscriberInterface
 
     public function logUserRemovedEvent(UserRemovedFromOrganisationEvent $event)
     {
-        $auditEvent = (new AuditEvents($this->dateTimeProvider))
+        $auditEvent = new AuditEvents($this->dateTimeProvider)
             ->userRemovedFromOrg(
                 $event->getTrigger(),
                 $event->getRemovedUser(),

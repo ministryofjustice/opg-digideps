@@ -3,7 +3,6 @@
 namespace Tests\OPG\Digideps\Backend\Integration\Entity;
 
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
-use DateTime;
 use OPG\Digideps\Backend\TestHelpers\ReportSubmissionHelper;
 
 /**
@@ -20,7 +19,7 @@ class UserIntegrationTest extends ApiIntegrationTestCase
 
         foreach (range(1, 2) as $ignored) {
             $submittedSubmissions[] = $submissionHelper->generateAndPersistSubmittedReportSubmission(
-                new DateTime()
+                new \DateTime()
             );
         }
 

@@ -7,7 +7,6 @@ use Aws\CloudWatchLogs\Exception\CloudWatchLogsException;
 use Aws\Result;
 use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
-use Monolog\Logger;
 use Monolog\LogRecord;
 use Monolog\Level;
 use OPG\Digideps\Common\Logger\OpgAwsFormatter;
@@ -31,7 +30,7 @@ class AwsAuditLogHandler extends AbstractProcessingHandler
             return;
         }
 
-        $stream = (new ValidatingArray($record->context))->getStringOrDefault('event', 'unknown');
+        $stream = new ValidatingArray($record->context)->getStringOrDefault('event', 'unknown');
         $sequenceToken = $this->initialize($stream);
         $record = $this->formatEntry($record);
 

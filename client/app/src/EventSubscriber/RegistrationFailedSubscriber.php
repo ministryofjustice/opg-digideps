@@ -25,7 +25,7 @@ class RegistrationFailedSubscriber implements EventSubscriberInterface
 
     public function logAuditEvent(RegistrationFailedEvent $event)
     {
-        $registrationFailedEvent = (new AuditEvents($this->dateTimeProvider))
+        $registrationFailedEvent = new AuditEvents($this->dateTimeProvider)
             ->selfRegistrationFailed(
                 $event->getFailureData(),
                 $event->getErrorMessage()

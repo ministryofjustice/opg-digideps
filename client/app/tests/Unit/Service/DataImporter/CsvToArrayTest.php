@@ -2,7 +2,6 @@
 
 namespace Tests\OPG\Digideps\Frontend\Unit\Service\DataImporter;
 
-use JMS\Serializer\Exception\RuntimeException;
 use OPG\Digideps\Frontend\Service\DataImporter\CsvToArray;
 use PHPUnit\Framework\TestCase;
 

@@ -2,8 +2,6 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
-use DateTime;
-use RuntimeException;
 use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\User;
 use Tests\OPG\Digideps\Backend\Integration\Fixtures;
@@ -224,7 +222,7 @@ class PreRegistrationControllerTest extends AbstractTestController
         $loggedInUser = $this->fixtures()->clear()->getRepo(User::class)->find($this->loggedInUserId);
 
         $this->assertEquals(700571111000, $loggedInUser->getDeputyUid());
-        self::assertTrue($loggedInUser->getPreRegisterValidatedDate() instanceof DateTime);
+        self::assertTrue($loggedInUser->getPreRegisterValidatedDate() instanceof \DateTime);
         self::assertTrue($loggedInUser->getIsPrimary());
     }
 
@@ -258,7 +256,7 @@ class PreRegistrationControllerTest extends AbstractTestController
 
         try {
             $this->assertEquals(0, $loggedInUser->getDeputyUid());
-        } catch (RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             $expectedErrorMessage = 'A unique deputy record for case number 39393939 could not be identified';
             $this->assertEquals($expectedErrorMessage, $e->getMessage());
             $this->assertEquals(462, $e->getCode());

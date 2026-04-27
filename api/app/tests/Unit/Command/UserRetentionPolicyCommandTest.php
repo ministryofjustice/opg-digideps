@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Command;
 
-use DateTime;
 use OPG\Digideps\Backend\Command\UserRetentionPolicyCommand;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Event\UserRetentionPolicyCommandEvent;
@@ -66,7 +65,7 @@ final class UserRetentionPolicyCommandTest extends KernelTestCase
         $user = new User();
         $user->setRoleName(User::ROLE_ADMIN);
         $user->setId(1);
-        $user->setLastLoggedIn(new DateTime('-36 months'));
+        $user->setLastLoggedIn(new \DateTime('-36 months'));
 
         $this->userRepository->getAllAdminAccountsNotUsedWithin('-24 months')
             ->shouldBeCalled()
@@ -93,22 +92,22 @@ final class UserRetentionPolicyCommandTest extends KernelTestCase
         $inactiveAdminUser = new User();
         $inactiveAdminUser->setRoleName(User::ROLE_ADMIN);
         $inactiveAdminUser->setId(1);
-        $inactiveAdminUser->setLastLoggedIn(new DateTime('-36 months'));
+        $inactiveAdminUser->setLastLoggedIn(new \DateTime('-36 months'));
 
         $inactiveAdminManagerUser = new User();
         $inactiveAdminManagerUser->setRoleName(User::ROLE_ADMIN_MANAGER);
         $inactiveAdminManagerUser->setId(2);
-        $inactiveAdminManagerUser->setLastLoggedIn(new DateTime('-30 months'));
+        $inactiveAdminManagerUser->setLastLoggedIn(new \DateTime('-30 months'));
 
         $activeSuperAdmin = new User();
         $activeSuperAdmin->setRoleName(User::ROLE_SUPER_ADMIN);
         $activeSuperAdmin->setId(3);
-        $activeSuperAdmin->setLastLoggedIn(new DateTime('-2 months'));
+        $activeSuperAdmin->setLastLoggedIn(new \DateTime('-2 months'));
 
         $inactiveSuperAdminProtected = new User();
         $inactiveSuperAdminProtected->setRoleName(User::ROLE_SUPER_ADMIN);
         $inactiveSuperAdminProtected->setId(4);
-        $inactiveSuperAdminProtected->setLastLoggedIn(new DateTime('-26 months'));
+        $inactiveSuperAdminProtected->setLastLoggedIn(new \DateTime('-26 months'));
 
         $expectedInactiveAdminUsersReturned = [
             $inactiveAdminUser,

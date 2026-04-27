@@ -167,7 +167,7 @@ class DocumentControllerTest extends AbstractTestController
 
         self::assertEquals(self::$document1->getId(), $response['data']['id']);
         self::assertEquals(Document::SYNC_STATUS_SUCCESS, $response['data']['synchronisation_status']);
-        self::assertEqualsWithDelta($syncTime->getTimeStamp(), (new \DateTime($response['data']['synchronisation_time']))->getTimestamp(), 5);
+        self::assertEqualsWithDelta($syncTime->getTimeStamp(), new \DateTime($response['data']['synchronisation_time'])->getTimestamp(), 5);
     }
 
     /**

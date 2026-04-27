@@ -15,7 +15,7 @@ class UserResearchResponseHelpers
     {
         $faker = Factory::create('en_GB');
 
-        $researchType = (new ResearchType())
+        $researchType = new ResearchType()
             ->setPhone(true);
 
         $satisfaction = SatisfactionHelpers::createSatisfaction();
@@ -34,7 +34,7 @@ class UserResearchResponseHelpers
                 $user = UserHelpers::createLayUser();
         }
 
-        return (new UserResearchResponse())
+        return new UserResearchResponse()
             ->setSatisfaction($satisfaction)
             ->setDeputyshipLength($faker->randomKey(['underOne', 'oneToFive', 'sixToTen', 'overTen']))
             ->setResearchType($researchType)

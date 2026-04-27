@@ -14,7 +14,6 @@ use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDtoCollection;
 use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
 use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\ORMException;
 use Psr\Log\LoggerInterface;
 
 class LayDeputyshipUploader

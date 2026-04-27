@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Sync\Model\Sirius;
 
-use InvalidArgumentException;
-
 class SiriusDocumentFile
 {
     private string $name;
@@ -47,7 +45,7 @@ class SiriusDocumentFile
         if (!is_null($source)) {
             // Ensure string is base64
             if (empty(base64_decode($source, true))) {
-                throw new InvalidArgumentException('Source must be base64 encoded');
+                throw new \InvalidArgumentException('Source must be base64 encoded');
             }
         }
 

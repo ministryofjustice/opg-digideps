@@ -28,11 +28,11 @@ class SiriusDocumentUploadNormalizer implements NormalizerInterface
         $data = $this->normalizer->normalize($object, $format, $context);
 
         if (isset($data['attributes']['reporting_period_from'])) {
-            $data['attributes']['reporting_period_from'] = (new \DateTime($data['attributes']['reporting_period_from']))->format('Y-m-d');
+            $data['attributes']['reporting_period_from'] = new \DateTime($data['attributes']['reporting_period_from'])->format('Y-m-d');
         }
 
         if (isset($data['attributes']['reporting_period_to'])) {
-            $data['attributes']['reporting_period_to'] = (new \DateTime($data['attributes']['reporting_period_to']))->format('Y-m-d');
+            $data['attributes']['reporting_period_to'] = new \DateTime($data['attributes']['reporting_period_to'])->format('Y-m-d');
         }
 
         return $data;

@@ -4,6 +4,7 @@ namespace OPG\Digideps\Backend\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use OPG\Digideps\Backend\Entity\User;
 
 /**
  * ModifyAudit Trait, usable with PHP >= 5.4.
@@ -13,7 +14,7 @@ trait ModifyAudit
     /**
      * Last modified by.
      *
-     * @var \OPG\Digideps\Backend\Entity\User
+     * @var User
      *
      * @JMS\Type("OPG\Digideps\Backend\Entity\User")
      *
@@ -41,7 +42,7 @@ trait ModifyAudit
     protected $lastModifiedOn;
 
     /**
-     * @return \OPG\Digideps\Backend\Entity\User
+     * @return User
      */
     public function getLastModifiedBy()
     {
@@ -49,7 +50,7 @@ trait ModifyAudit
     }
 
     /**
-     * @param \OPG\Digideps\Backend\Entity\User $lastModifiedBy
+     * @param User $lastModifiedBy
      *
      * @return $this
      */

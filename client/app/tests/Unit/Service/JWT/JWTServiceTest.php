@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Frontend\Unit\Service\JWT;
 
-use DateTimeImmutable;
 use OPG\Digideps\Frontend\Service\JWT\JWTService;
 use PHPUnit\Framework\TestCase;
 
@@ -113,9 +112,9 @@ JWT;
         $actualHeaders = $sut->getJWTClaims($this->jwtHeadersClaimSignature);
 
         $this->jwtClaims['aud'] = [$this->jwtClaims['aud']];
-        $this->jwtClaims['iat'] = DateTimeImmutable::createFromFormat('U.u', $this->jwtClaims['iat']);
-        $this->jwtClaims['exp'] = DateTimeImmutable::createFromFormat('U.u', $this->jwtClaims['exp']);
-        $this->jwtClaims['nbf'] = DateTimeImmutable::createFromFormat('U.u', $this->jwtClaims['nbf']);
+        $this->jwtClaims['iat'] = \DateTimeImmutable::createFromFormat('U.u', $this->jwtClaims['iat']);
+        $this->jwtClaims['exp'] = \DateTimeImmutable::createFromFormat('U.u', $this->jwtClaims['exp']);
+        $this->jwtClaims['nbf'] = \DateTimeImmutable::createFromFormat('U.u', $this->jwtClaims['nbf']);
 
         self::assertEquals($this->jwtClaims, $actualHeaders);
     }

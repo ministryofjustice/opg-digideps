@@ -6,10 +6,6 @@ namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\SelfRegistration\Facto
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\Attributes\Test;
-use DateTime;
-use Exception;
-use OPG\Digideps\Backend\Entity\PreRegistration;
-use OPG\Digideps\Backend\Service\DateTimeProvider;
 use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
 use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
 use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
@@ -74,11 +70,11 @@ final class PreRegistrationFactoryTest extends TestCase
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function buildLayDeputyshipDto(): LayDeputyshipDto
     {
-        return (new LayDeputyshipDto())
+        return new LayDeputyshipDto()
             ->setCaseNumber('case')
             ->setDeputyUid('depnum')
             ->setDeputyFirstname('depfirstname')
@@ -99,7 +95,7 @@ final class PreRegistrationFactoryTest extends TestCase
             ->setDeputyPostcode('postcode')
             ->setTypeOfReport('type')
             ->setOrderType('pfa')
-            ->setOrderDate(new DateTime('2011-06-14'))
+            ->setOrderDate(new \DateTime('2011-06-14'))
             ->setIsCoDeputy(false)
             ->setHybrid('hybrid');
     }

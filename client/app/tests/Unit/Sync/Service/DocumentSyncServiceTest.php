@@ -71,11 +71,11 @@ class DocumentSyncServiceTest extends KernelTestCase
     public function testSyncDocumentReportPdfSyncSuccess(string $reportTypeCode, string $expectedReportType): void
     {
         $reportPdfReportSubmission =
-            (new ReportSubmission())
+            new ReportSubmission()
                 ->setId($this->reportSubmissionId)
                 ->setUuid($this->reportPdfSubmissionUuid);
 
-        $queuedDocumentData = (new QueuedDocumentData())
+        $queuedDocumentData = new QueuedDocumentData()
             ->setReportType($reportTypeCode)
             ->setDocumentId(6789)
             ->setReportSubmissionId($this->reportSubmissionId)
@@ -153,11 +153,11 @@ class DocumentSyncServiceTest extends KernelTestCase
     public function testSendDocumentSyncFailureSiriusReportPdf(): void
     {
         $reportPdfReportSubmission =
-            (new ReportSubmission())
+            new ReportSubmission()
                 ->setId($this->reportSubmissionId)
                 ->setUuid($this->reportPdfSubmissionUuid);
 
-        $queuedDocumentData = (new QueuedDocumentData())
+        $queuedDocumentData = new QueuedDocumentData()
             ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
             ->setDocumentId(6789)
             ->setReportSubmissionId($this->reportSubmissionId)
@@ -223,13 +223,13 @@ class DocumentSyncServiceTest extends KernelTestCase
 
     public function testSendSupportingDocumentSuccess(): void
     {
-        $document = (new Document())->setId(6789);
+        $document = new Document()->setId(6789);
 
         $expectedUuidUsedToSyncDoc = 'report-pdf-submission-uuid';
         $expectedSubmissionIdUsedForSync = 1234;
         $expectedCaseRefUsedForSync = '1234567T';
 
-        $queuedDocumentData = (new QueuedDocumentData())
+        $queuedDocumentData = new QueuedDocumentData()
             ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
             ->setDocumentId($document->getId())
             ->setReportSubmissionId($expectedSubmissionIdUsedForSync)
@@ -280,7 +280,7 @@ class DocumentSyncServiceTest extends KernelTestCase
 
     public function testSendSupportingDocumentReportPdfNotSubmitted(): void
     {
-        $queuedDocumentData = (new QueuedDocumentData())
+        $queuedDocumentData = new QueuedDocumentData()
             ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
             ->setDocumentId(6789)
             ->setReportSubmissionId($this->reportSubmissionId)
@@ -316,7 +316,7 @@ class DocumentSyncServiceTest extends KernelTestCase
 
     public function testSendSupportingDocumentSyncFailure(): void
     {
-        $queuedDocumentData = (new QueuedDocumentData())
+        $queuedDocumentData = new QueuedDocumentData()
             ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
             ->setDocumentId(6789)
             ->setReportSubmissionId($this->reportSubmissionId)
@@ -375,11 +375,11 @@ class DocumentSyncServiceTest extends KernelTestCase
     public function testSendDocumentSyncFailureSiriusErrorTypeBasedOnResponseCode(int $errorCode, string $expectedErrorType, int $syncAttempts): void
     {
         $reportPdfReportSubmission =
-            (new ReportSubmission())
+            new ReportSubmission()
                 ->setId($this->reportSubmissionId)
                 ->setUuid($this->reportPdfSubmissionUuid);
 
-        $queuedDocumentData = (new QueuedDocumentData())
+        $queuedDocumentData = new QueuedDocumentData()
             ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
             ->setDocumentId(6789)
             ->setReportSubmissionId($this->reportSubmissionId)
@@ -453,13 +453,13 @@ class DocumentSyncServiceTest extends KernelTestCase
 
     public function testSendDocumentInvalidFilenamesAreFixed(): void
     {
-        $document = (new Document())->setId(6789);
+        $document = new Document()->setId(6789);
 
         $expectedUuidUsedToSyncDoc = 'report-pdf-submission-uuid';
         $expectedSubmissionIdUsedForSync = 1234;
         $expectedCaseRefUsedForSync = '1234567T';
 
-        $queuedDocumentData = (new QueuedDocumentData())
+        $queuedDocumentData = new QueuedDocumentData()
             ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
             ->setDocumentId($document->getId())
             ->setReportSubmissionId($expectedSubmissionIdUsedForSync)
@@ -510,12 +510,12 @@ class DocumentSyncServiceTest extends KernelTestCase
 
     public function testSendDocumentMissingFileExtensionThrowsError(): void
     {
-        $document = (new Document())->setId(6789);
+        $document = new Document()->setId(6789);
 
         $expectedUuidUsedToSyncDoc = 'report-pdf-submission-uuid';
         $expectedSubmissionIdUsedForSync = 1234;
 
-        $queuedDocumentData = (new QueuedDocumentData())
+        $queuedDocumentData = new QueuedDocumentData()
             ->setReportType(Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS)
             ->setDocumentId($document->getId())
             ->setReportSubmissionId($expectedSubmissionIdUsedForSync)

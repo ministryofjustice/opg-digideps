@@ -98,7 +98,7 @@ class ChecklistSyncServiceTest extends TestCase
 
     private function buildChecklistDataInput(): self
     {
-        $this->dataInput = (new QueuedChecklistData())
+        $this->dataInput = new QueuedChecklistData()
             ->setCaseNumber('12395438')
             ->setChecklistId(231)
             ->setChecklistFileContents('file-contents')
@@ -126,9 +126,9 @@ class ChecklistSyncServiceTest extends TestCase
 
     private function withReportSubmission(): self
     {
-        $submission = (new ReportSubmission())
+        $submission = new ReportSubmission()
             ->setId(1)
-            ->setCreatedBy((new User())->setEmail('a@b.com'))
+            ->setCreatedBy(new User()->setEmail('a@b.com'))
             ->setUuid('rs-uuid');
 
         $this->dataInput->setReportSubmissions([$submission]);
@@ -218,12 +218,12 @@ class ChecklistSyncServiceTest extends TestCase
     {
         $encodedSource = $source ? base64_encode($source) : base64_encode($this->dataInput->getChecklistFileContents());
 
-        $file = (new SiriusDocumentFile())
+        $file = new SiriusDocumentFile()
             ->setName('checklist-12395438-2020-2021.pdf')
             ->setMimetype('application/pdf')
             ->setSource($encodedSource);
 
-        $attributes = (new SiriusChecklistPdfDocumentMetadata())
+        $attributes = new SiriusChecklistPdfDocumentMetadata()
             ->setReportingPeriodFrom(new \DateTime('2020-02-01'))
             ->setReportingPeriodTo(new \DateTime('2021-02-01'))
             ->setSubmitterEmail('a@b.com')
@@ -231,7 +231,7 @@ class ChecklistSyncServiceTest extends TestCase
             ->setYear(2021)
             ->setSubmissionId(1);
 
-        return (new SiriusDocumentUpload())
+        return new SiriusDocumentUpload()
             ->setType('checklists')
             ->setAttributes($attributes)
             ->setFile($file);
@@ -428,9 +428,9 @@ class ChecklistSyncServiceTest extends TestCase
         foreach (range(1, 2) as $index) {
             $report = ChecklistTestHelper::buildPfaHighReport($index, 'a@b.com', '12395438');
 
-            $submission = (new ReportSubmission())
+            $submission = new ReportSubmission()
                 ->setId(1)
-                ->setCreatedBy((new User())->setEmail('a@b.com'))
+                ->setCreatedBy(new User()->setEmail('a@b.com'))
                 ->setUuid('rs-uuid');
             $report->setReportSubmissions([$submission]);
 

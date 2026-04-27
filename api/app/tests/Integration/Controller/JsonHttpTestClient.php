@@ -2,7 +2,6 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
-use Exception;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
 use OPG\Digideps\Backend\Service\JWT\JWTService;
@@ -95,7 +94,7 @@ class JsonHttpTestClient
      *
      * @return mixed token
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function login(string $email, string $password, $clientSecret)
     {

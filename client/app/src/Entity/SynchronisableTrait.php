@@ -14,7 +14,7 @@ trait SynchronisableTrait
     protected $synchronisationStatus;
 
     /**
-     * @var DateTime|null
+     * @var \DateTime|null
      * @JMS\Type("DateTime")
      * @JMS\Groups({"synchronisation"})
      */
@@ -63,17 +63,17 @@ trait SynchronisableTrait
         return $this;
     }
 
-    public function getSynchronisationTime(): ?DateTime
+    public function getSynchronisationTime(): ?\DateTime
     {
         return $this->synchronisationTime;
     }
 
     /**
-     * @param DateTime $time
+     * @param \DateTime $time
      *
      * @return $this
      */
-    public function setSynchronisationTime(?DateTime $time)
+    public function setSynchronisationTime(?\DateTime $time)
     {
         $this->synchronisationTime = $time;
 

@@ -21,7 +21,7 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"report", "client-benefits-check"})
      */
-    private ?DateTime $created = null;
+    private ?\DateTime $created = null;
 
     /**
      * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\ClientBenefitsCheck")
@@ -75,12 +75,12 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
         return $this;
     }
 
-    public function getCreated(): ?DateTime
+    public function getCreated(): ?\DateTime
     {
         return $this->created;
     }
 
-    public function setCreated(?DateTime $created): MoneyReceivedOnClientsBehalf
+    public function setCreated(?\DateTime $created): MoneyReceivedOnClientsBehalf
     {
         $this->created = $created;
 

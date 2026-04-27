@@ -2,8 +2,6 @@
 
 namespace Tests\OPG\Digideps\Backend\Behat;
 
-use Exception;
-
 trait LinksPreviouslySavedTrait
 {
     private static $linksCache = [];
@@ -33,7 +31,7 @@ trait LinksPreviouslySavedTrait
         $previouslySavedUrl = self::getPreviouslySavedLinkByUrlId($urlId);
         $currentUrl = $this->getSession()->getCurrentUrl();
         if ($currentUrl !== $previouslySavedUrl) {
-            throw new Exception("$currentUrl not the same as expected $previouslySavedUrl");
+            throw new \Exception("$currentUrl not the same as expected $previouslySavedUrl");
         }
     }
 
@@ -42,12 +40,12 @@ trait LinksPreviouslySavedTrait
      *
      * @return string
      *
-     * @throws Exception
+     * @throws \Exception
      */
     private static function getPreviouslySavedLinkByUrlId($urlId)
     {
         if (empty(self::$linksCache[$urlId])) {
-            throw new Exception("$urlId not saved");
+            throw new \Exception("$urlId not saved");
         }
 
         return self::$linksCache[$urlId];

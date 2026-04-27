@@ -23,7 +23,7 @@ class SiriusHelpers extends KernelTestCase
         ?string $fileContents,
         ?string $s3Reference
     ): SiriusDocumentUpload {
-        $siriusReportPdfDocumentMetadata = (new SiriusReportPdfDocumentMetadata())
+        $siriusReportPdfDocumentMetadata = new SiriusReportPdfDocumentMetadata()
             ->setReportingPeriodFrom($startDate)
             ->setReportingPeriodTo($endDate)
             ->setYear(2018)
@@ -31,7 +31,7 @@ class SiriusHelpers extends KernelTestCase
             ->setType($orderType)
             ->setSubmissionId($submissionId);
 
-        $file = (new SiriusDocumentFile())
+        $file = new SiriusDocumentFile()
             ->setName($fileName)
             ->setMimetype('application/pdf');
 
@@ -43,7 +43,7 @@ class SiriusHelpers extends KernelTestCase
             $file->setS3Reference($s3Reference);
         }
 
-        return (new SiriusDocumentUpload())
+        return new SiriusDocumentUpload()
             ->setType('reports')
             ->setAttributes($siriusReportPdfDocumentMetadata)
             ->setFile($file);
@@ -55,10 +55,10 @@ class SiriusHelpers extends KernelTestCase
         ?string $fileContents,
         ?string $s3Reference
     ): SiriusDocumentUpload {
-        $siriusSupportingDocumentMetadata = (new SiriusSupportingDocumentMetadata())
+        $siriusSupportingDocumentMetadata = new SiriusSupportingDocumentMetadata()
             ->setSubmissionId($submissionId);
 
-        $file = (new SiriusDocumentFile())
+        $file = new SiriusDocumentFile()
             ->setName($fileName)
             ->setMimetype('application/pdf');
 
@@ -70,7 +70,7 @@ class SiriusHelpers extends KernelTestCase
             $file->setS3Reference($s3Reference);
         }
 
-        return (new SiriusDocumentUpload())
+        return new SiriusDocumentUpload()
             ->setType('supportingdocuments')
             ->setAttributes($siriusSupportingDocumentMetadata)
             ->setFile($file);
@@ -86,12 +86,12 @@ class SiriusHelpers extends KernelTestCase
         int $year,
         string $type
     ) {
-        $file = (new SiriusDocumentFile())
+        $file = new SiriusDocumentFile()
             ->setName($fileName)
             ->setMimetype('application/pdf')
             ->setSource(base64_encode($fileContents));
 
-        $attributes = (new SiriusChecklistPdfDocumentMetadata())
+        $attributes = new SiriusChecklistPdfDocumentMetadata()
             ->setSubmissionId($submissionId)
             ->setSubmitterEmail($submitterEmail)
             ->setReportingPeriodFrom($reportingPeriodFrom)
@@ -99,7 +99,7 @@ class SiriusHelpers extends KernelTestCase
             ->setYear($year)
             ->setType($type);
 
-        return (new SiriusDocumentUpload())
+        return new SiriusDocumentUpload()
             ->setType('checklists')
             ->setAttributes($attributes)
             ->setFile($file);

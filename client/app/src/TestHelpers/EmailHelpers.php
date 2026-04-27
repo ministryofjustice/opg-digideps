@@ -16,7 +16,7 @@ class EmailHelpers
     {
         $faker = Factory::create();
 
-        return (new Email())
+        return new Email()
             ->setFromEmailNotifyID($faker->uuid())
             ->setToEmail($faker->safeEmail())
             ->setFromName($faker->name())

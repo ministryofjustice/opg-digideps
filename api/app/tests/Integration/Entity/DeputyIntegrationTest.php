@@ -6,7 +6,6 @@ use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
-use DateTime;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Repository\DeputyRepository;
@@ -46,7 +45,7 @@ class DeputyIntegrationTest extends ApiIntegrationTestCase
             ->setOrderKind(CourtOrderKind::Hybrid)
             ->setOrderReportType(CourtOrderReportType::OPG102)
             ->setStatus('ACTIVE')
-            ->setOrderMadeDate(new DateTime('2020-06-14'));
+            ->setOrderMadeDate(new \DateTime('2020-06-14'));
 
         $deputy->associateWithCourtOrder($courtOrder);
 
@@ -90,7 +89,7 @@ class DeputyIntegrationTest extends ApiIntegrationTestCase
             ->setOrderKind(CourtOrderKind::Hybrid)
             ->setOrderReportType(CourtOrderReportType::OPG102)
             ->setStatus('ACTIVE')
-            ->setOrderMadeDate(new DateTime('2020-06-14'));
+            ->setOrderMadeDate(new \DateTime('2020-06-14'));
 
         $deputy->associateWithCourtOrder($courtOrder);
 

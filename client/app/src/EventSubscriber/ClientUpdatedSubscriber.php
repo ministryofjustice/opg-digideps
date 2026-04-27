@@ -42,7 +42,7 @@ class ClientUpdatedSubscriber implements EventSubscriberInterface
     public function logEvent(ClientUpdatedEvent $clientUpdatedEvent)
     {
         if ($this->emailHasChanged($clientUpdatedEvent)) {
-            $event = (new AuditEvents($this->dateTimeProvider))->clientEmailChanged(
+            $event = new AuditEvents($this->dateTimeProvider)->clientEmailChanged(
                 $clientUpdatedEvent->getTrigger(),
                 $clientUpdatedEvent->getPreUpdateClient()->getEmail(),
                 $clientUpdatedEvent->getPostUpdateClient()->getEmail(),

@@ -8,6 +8,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 class FormFieldsExtension extends AbstractExtension
 {
@@ -48,9 +51,9 @@ class FormFieldsExtension extends AbstractExtension
      *   label on the element)
      * - translationDomain: the translation domain containing thingTranslationKey (e.g. "report-decisions")
      *
-     * @throws \Twig\Error\LoaderError
-     * @throws \Twig\Error\RuntimeError
-     * @throws \Twig\Error\SyntaxError
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function renderAddAnother(array $options): void
     {

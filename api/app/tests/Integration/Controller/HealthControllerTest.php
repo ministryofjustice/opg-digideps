@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
-use Exception;
 use Doctrine\DBAL\Connection;
-use ReflectionObject;
 
 class HealthControllerTest extends AbstractTestController
 {
@@ -64,9 +62,9 @@ class HealthControllerTest extends AbstractTestController
         $connection = self::getContainer()->get('doctrine.dbal.default_connection');
         $mockConnection = $this->createMock(Connection::class);
         $mockConnection->method('connect')
-            ->willThrowException(new Exception('Database connection failed'));
+            ->willThrowException(new \Exception('Database connection failed'));
 
-        $ref = new ReflectionObject($connection);
+        $ref = new \ReflectionObject($connection);
         $prop = $ref->getProperty('_conn');
         $prop->setValue($connection, $mockConnection);
     }

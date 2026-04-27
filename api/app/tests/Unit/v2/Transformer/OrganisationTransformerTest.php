@@ -17,7 +17,7 @@ final class OrganisationTransformerTest extends TestCase
     #[Test]
     public function transformsAnOrganisationDto(): void
     {
-        $dto = (new OrganisationDto())
+        $dto = new OrganisationDto()
             ->setId(4)
             ->setName('foo')
             ->setEmailIdentifier('bar')
@@ -30,7 +30,7 @@ final class OrganisationTransformerTest extends TestCase
 
         $clientTransformer = $this->createMock(ClientTransformer::class);
 
-        $transformed = (new OrganisationTransformer($userTransformer, $clientTransformer))
+        $transformed = new OrganisationTransformer($userTransformer, $clientTransformer)
             ->transform($dto, ['users', 'total_user_count', 'total_client_count']);
 
         $this->assertEquals(4, $transformed['id']);
@@ -43,7 +43,7 @@ final class OrganisationTransformerTest extends TestCase
     #[Test]
     public function transformsAnOrganisationDtoWithUsersIfNotExcluded(): void
     {
-        $dto = (new OrganisationDto())
+        $dto = new OrganisationDto()
             ->setId(4)
             ->setName('foo')
             ->setEmailIdentifier('bar')
@@ -67,7 +67,7 @@ final class OrganisationTransformerTest extends TestCase
 
         $clientTransformer = $this->createMock(ClientTransformer::class);
 
-        $transformed = (new OrganisationTransformer($userTransformer, $clientTransformer))
+        $transformed = new OrganisationTransformer($userTransformer, $clientTransformer)
             ->transform($dto, ['total_client_count', 'clients']);
 
         $this->assertEquals(4, $transformed['id']);

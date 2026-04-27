@@ -791,7 +791,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     {
         $expiresSeconds = $hoursExpires * 3600;
 
-        $timeStampNow = (new \DateTime())->getTimestamp();
+        $timeStampNow = new \DateTime()->getTimestamp();
         $timestampToken = $this->getTokenDate()->getTimestamp();
 
         $diffSeconds = $timeStampNow - $timestampToken;
@@ -1336,7 +1336,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      */
     public function regBeforeToday(User $user): bool
     {
-        return $user->getRegistrationDate() < (new \DateTime())->setTime(00, 00, 00);
+        return $user->getRegistrationDate() < new \DateTime()->setTime(00, 00, 00);
     }
 
     public function getAddress4()

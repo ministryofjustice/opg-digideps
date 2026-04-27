@@ -19,7 +19,7 @@ trait SynchronisableTrait
     protected $synchronisationStatus;
 
     /**
-     * @var DateTime|null
+     * @var \DateTime|null
      *
      * @ORM\Column(name="synchronisation_time", type="datetime", options={"default": null}, nullable=true)
      */
@@ -74,7 +74,7 @@ trait SynchronisableTrait
         return $this;
     }
 
-    public function getSynchronisationTime(): ?DateTime
+    public function getSynchronisationTime(): ?\DateTime
     {
         return $this->synchronisationTime;
     }
@@ -82,7 +82,7 @@ trait SynchronisableTrait
     /**
      * @return $this
      */
-    public function setSynchronisationTime(?DateTime $time)
+    public function setSynchronisationTime(?\DateTime $time)
     {
         $this->synchronisationTime = $time;
 

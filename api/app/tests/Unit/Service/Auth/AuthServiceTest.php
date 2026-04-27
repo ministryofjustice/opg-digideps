@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Service\Auth;
 
-use InvalidArgumentException;
 use Mockery\MockInterface;
 use OPG\Digideps\Backend\Entity\User;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -12,7 +11,6 @@ use PHPUnit\Framework\Attributes\Test;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Service\Auth\AuthService;
 use OPG\Digideps\Backend\Service\JWT\JWTService;
-use Mockery;
 use Tests\OPG\Digideps\Backend\Unit\MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -65,7 +63,7 @@ final class AuthServiceTest extends TestCase
 
     public function testMissingSecrets(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         $this->authService = new AuthService(
             $this->logger,
@@ -100,7 +98,7 @@ final class AuthServiceTest extends TestCase
     public function testGetUserByEmailAndPasswordUserNotFound(): void
     {
         $this->userRepo->shouldReceive('findOneBy')->with(['email' => 'email@example.org'])->andReturn(null);
-        $this->logger->shouldReceive('info')->with(Mockery::pattern('/not found/'))->once();
+        $this->logger->shouldReceive('info')->with(\Mockery::pattern('/not found/'))->once();
 
         $this->assertEquals(false, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }
@@ -115,7 +113,7 @@ final class AuthServiceTest extends TestCase
 
         $this->passwordHasher->shouldReceive('isPasswordValid')->with($user, 'plainPassword')->andReturn(false);
 
-        $this->logger->shouldReceive('info')->with(Mockery::pattern('/password mismatch/'))->once();
+        $this->logger->shouldReceive('info')->with(\Mockery::pattern('/password mismatch/'))->once();
 
         $this->assertEquals(null, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }

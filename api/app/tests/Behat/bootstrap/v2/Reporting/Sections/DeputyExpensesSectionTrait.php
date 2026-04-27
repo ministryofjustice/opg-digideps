@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections;
 
-use OPG\Digideps\Backend\Entity\User;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 trait DeputyExpensesSectionTrait

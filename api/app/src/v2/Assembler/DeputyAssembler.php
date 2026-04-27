@@ -34,7 +34,7 @@ class DeputyAssembler
             $deputyFirstName = empty($dto->getDeputyFirstname()) ? null : $dto->getDeputyFirstname();
         }
 
-        return (new Deputy())
+        return new Deputy()
             ->setEmail1($dto->getDeputyEmail())
             ->setDeputyUid($dto->getDeputyUid())
             ->setDeputyType(DeputyType::from($dto->getDeputyType()))

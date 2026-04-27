@@ -33,7 +33,7 @@ abstract class AbstractDataFixture implements FixtureInterface
     /**
      * Performs the actual fixtures loading.
      *
-     * @see \Doctrine\Common\DataFixtures\FixtureInterface::load()
+     * @see FixtureInterface::load
      *
      * @param ObjectManager $manager the object manager
      */

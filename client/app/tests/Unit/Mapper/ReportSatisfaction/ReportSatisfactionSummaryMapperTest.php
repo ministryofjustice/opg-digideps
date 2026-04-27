@@ -45,7 +45,7 @@ class ReportSatisfactionSummaryMapperTest extends TestCase
 
     public function testReturnsReportSatisfactionsByCustomParameters()
     {
-        $this->query = (new DateRangeQuery())
+        $this->query = new DateRangeQuery()
             ->setStartDate(new \DateTime('01-01-2001'))
             ->setEndDate(new \DateTime('02-01-2001'))
             ->setOrderBy('foo')

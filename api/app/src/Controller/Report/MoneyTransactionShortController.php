@@ -7,7 +7,6 @@ use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShort;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\MoneyTransactionShortRepository;
 use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -63,7 +62,7 @@ class MoneyTransactionShortController extends RestController
         $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $t = $this->findEntityBy(MoneyTransactionShort::class, $transactionId, 'transaction not found'); /* @var $t \OPG\Digideps\Backend\Entity\Report\MoneyTransaction */
+        $t = $this->findEntityBy(MoneyTransactionShort::class, $transactionId, 'transaction not found');
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
         // set data
@@ -84,10 +83,10 @@ class MoneyTransactionShortController extends RestController
         $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $t = $this->findEntityBy(MoneyTransactionShort::class, $transactionId, 'transaction not found'); /* @var $t \OPG\Digideps\Backend\Entity\Report\MoneyTransaction */
+        $t = $this->findEntityBy(MoneyTransactionShort::class, $transactionId, 'transaction not found');
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
-        $t->setDeletedAt(new DateTime());
+        $t->setDeletedAt(new \DateTime());
         $this->em->flush();
 
         // Entity is soft-deletable, so objects need to be removed a second time in order to action hard delete
@@ -120,7 +119,7 @@ class MoneyTransactionShortController extends RestController
         $t->setAmount($data['amount']);
 
         if (array_key_exists('date', $data)) {
-            $t->setDate($data['date'] ? new DateTime($data['date']) : null);
+            $t->setDate($data['date'] ? new \DateTime($data['date']) : null);
         }
     }
 
@@ -135,7 +134,7 @@ class MoneyTransactionShortController extends RestController
 
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
-        $t->isDeleted() ? $t->setDeletedAt(null) : $t->setDeletedAt(new DateTime());
+        $t->isDeleted() ? $t->setDeletedAt(null) : $t->setDeletedAt(new \DateTime());
 
         $this->em->flush($t);
 

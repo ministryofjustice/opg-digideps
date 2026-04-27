@@ -28,7 +28,7 @@ class RouteValidatorTest extends KernelTestCase
      */
     public function testValidateRoutes(string $path, bool $return): void
     {
-        $context = (new RequestContext())->setMethod(Request::METHOD_GET);
+        $context = new RequestContext()->setMethod(Request::METHOD_GET);
         if ($return) {
             self::assertTrue(RouteValidator::validateRoute($this->router, $path, $context));
         } else {

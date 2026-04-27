@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\AdminManagement;
 
-use Throwable;
 use OPG\Digideps\Backend\Entity\User;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
@@ -184,7 +183,7 @@ trait AdminManagementTrait
             $this->assertLinkWithTextIsOnPage('Delete user');
             $this->clickLink('Delete user');
             $this->clickLink("Yes, I'm sure");
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             //             Swallow error as we want to assert on deleting user in further step
         }
     }
@@ -282,7 +281,7 @@ trait AdminManagementTrait
             }
 
             $this->pressButton('Update user');
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             // Swallow error as we want to assert on deleting user in further step
         }
 

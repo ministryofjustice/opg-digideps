@@ -40,41 +40,41 @@ class UserVoterTest extends TestCase
     public function deleteUserProvider()
     {
         $clientNoReports = new Client();
-        $clientWithReport = (new Client())->setReports([new Report()]);
+        $clientWithReport = new Client()->setReports([new Report()]);
 
-        $layNoReportsOrClients = (new User())->setRoleName('ROLE_LAY_DEPUTY')->setId(1);
-        $layNoReportsOneClient = (new User())->setRoleName('ROLE_LAY_DEPUTY')->setClients([$clientNoReports])->setId(2);
-        $layReportOneClient = (new User())->setRoleName('ROLE_LAY_DEPUTY')->setClients([$clientWithReport])->setId(3);
+        $layNoReportsOrClients = new User()->setRoleName('ROLE_LAY_DEPUTY')->setId(1);
+        $layNoReportsOneClient = new User()->setRoleName('ROLE_LAY_DEPUTY')->setClients([$clientNoReports])->setId(2);
+        $layReportOneClient = new User()->setRoleName('ROLE_LAY_DEPUTY')->setClients([$clientWithReport])->setId(3);
 
-        $pa = (new User())->setRoleName('ROLE_PA')->setId(4);
-        $paTwo = (new User())->setRoleName('ROLE_PA')->setId(5);
+        $pa = new User()->setRoleName('ROLE_PA')->setId(4);
+        $paTwo = new User()->setRoleName('ROLE_PA')->setId(5);
 
-        $paTeamMember = (new User())->setRoleName('ROLE_PA_TEAM_MEMBER')->setId(6);
-        $paTeamMemberTwo = (new User())->setRoleName('ROLE_PA_TEAM_MEMBER')->setId(7);
+        $paTeamMember = new User()->setRoleName('ROLE_PA_TEAM_MEMBER')->setId(6);
+        $paTeamMemberTwo = new User()->setRoleName('ROLE_PA_TEAM_MEMBER')->setId(7);
 
-        $paNamed = (new User())->setRoleName('ROLE_PA_NAMED')->setId(8);
-        $paNamedTwo = (new User())->setRoleName('ROLE_PA_NAMED')->setId(9);
+        $paNamed = new User()->setRoleName('ROLE_PA_NAMED')->setId(8);
+        $paNamedTwo = new User()->setRoleName('ROLE_PA_NAMED')->setId(9);
 
-        $paAdmin = (new User())->setRoleName('ROLE_PA_ADMIN')->setId(10);
-        $paAdminTwo = (new User())->setRoleName('ROLE_PA_ADMIN')->setId(11);
+        $paAdmin = new User()->setRoleName('ROLE_PA_ADMIN')->setId(10);
+        $paAdminTwo = new User()->setRoleName('ROLE_PA_ADMIN')->setId(11);
 
-        $prof = (new User())->setRoleName('ROLE_PROF')->setId(12);
-        $profTwo = (new User())->setRoleName('ROLE_PROF')->setId(13);
+        $prof = new User()->setRoleName('ROLE_PROF')->setId(12);
+        $profTwo = new User()->setRoleName('ROLE_PROF')->setId(13);
 
-        $profTeamMember = (new User())->setRoleName('ROLE_PROF_TEAM_MEMBER')->setId(14);
-        $profTeamMemberTwo = (new User())->setRoleName('ROLE_PROF_TEAM_MEMBER')->setId(15);
+        $profTeamMember = new User()->setRoleName('ROLE_PROF_TEAM_MEMBER')->setId(14);
+        $profTeamMemberTwo = new User()->setRoleName('ROLE_PROF_TEAM_MEMBER')->setId(15);
 
-        $profNamed = (new User())->setRoleName('ROLE_PROF_NAMED')->setId(16);
-        $profNamedTwo = (new User())->setRoleName('ROLE_PROF_NAMED')->setId(17);
+        $profNamed = new User()->setRoleName('ROLE_PROF_NAMED')->setId(16);
+        $profNamedTwo = new User()->setRoleName('ROLE_PROF_NAMED')->setId(17);
 
-        $profAdmin = (new User())->setRoleName('ROLE_PROF_ADMIN')->setId(18);
-        $profAdminTwo = (new User())->setRoleName('ROLE_PROF_ADMIN')->setId(19);
+        $profAdmin = new User()->setRoleName('ROLE_PROF_ADMIN')->setId(18);
+        $profAdminTwo = new User()->setRoleName('ROLE_PROF_ADMIN')->setId(19);
 
-        $admin = (new User())->setRoleName('ROLE_ADMIN')->setId(20);
-        $adminTwo = (new User())->setRoleName('ROLE_ADMIN')->setId(21);
+        $admin = new User()->setRoleName('ROLE_ADMIN')->setId(20);
+        $adminTwo = new User()->setRoleName('ROLE_ADMIN')->setId(21);
 
-        $superAdmin = (new User())->setRoleName('ROLE_SUPER_ADMIN')->setId(22);
-        $superAdminTwo = (new User())->setRoleName('ROLE_SUPER_ADMIN')->setId(23);
+        $superAdmin = new User()->setRoleName('ROLE_SUPER_ADMIN')->setId(22);
+        $superAdminTwo = new User()->setRoleName('ROLE_SUPER_ADMIN')->setId(23);
 
         return [
             'Lay Deputy deletes Lay Deputy' => [$layNoReportsOrClients, $layNoReportsOneClient, -1],

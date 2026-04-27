@@ -14,7 +14,7 @@ final class LayDeputyshipDtoCollectionAssemblerFactoryTest extends TestCase
     #[Test]
     public function createsSiriusAssemblerWhenSourceIsSirius(): void
     {
-        $assembler = (new LayDeputyshipDtoCollectionAssemblerFactory())->create([['Source' => 'sirius']]);
+        $assembler = new LayDeputyshipDtoCollectionAssemblerFactory()->create([['Source' => 'sirius']]);
         $this->assertInstanceOf(SiriusToLayDeputyshipDtoAssembler::class, $assembler->getLayDeputyshipDtoAssembler());
     }
 }

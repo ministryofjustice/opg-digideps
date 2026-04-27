@@ -6,6 +6,7 @@ use OPG\Digideps\Backend\Entity\Report\Decision;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Doctrine\Common\Collections\Collection;
 
 trait DecisionTrait
 {
@@ -34,7 +35,7 @@ trait DecisionTrait
     /**
      * Get decisions.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getDecisions()
     {

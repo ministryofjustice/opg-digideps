@@ -4,11 +4,8 @@ namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
-use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
-use DateTime;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\User;
-use OPG\Digideps\Backend\TestHelpers\CourtOrderTestHelper;
 use OPG\Digideps\Backend\TestHelpers\DeputyTestHelper;
 use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
 use Tests\OPG\Digideps\Backend\Behat\v2\Helpers\FixtureHelper;
@@ -183,7 +180,7 @@ class DeputyControllerTest extends AbstractTestController
         self::$fixtures->flush();
 
         // generate and add a report to the court order
-        $startDate = new DateTime();
+        $startDate = new \DateTime();
         $report = ReportTestHelper::generateReport(self::$em, $client, startDate: $startDate);
         $courtOrder->addReport($report);
         self::$fixtures->persist($courtOrder);

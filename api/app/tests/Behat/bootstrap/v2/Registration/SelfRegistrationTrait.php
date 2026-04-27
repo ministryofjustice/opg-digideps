@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\Registration;
 
-use Exception;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\User;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
@@ -531,7 +530,7 @@ trait SelfRegistrationTrait
             $this->fillInField('set_password_password_first', 'DigidepsPass1234');
             $this->fillInField('set_password_password_second', 'DigidepsPass1234');
             $this->checkOption('set_password_showTermsAndConditions');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             throw new BehatException(
                 sprintf('Failed to find password fields, currently on page: %s', $this->getCurrentUrl())
             );

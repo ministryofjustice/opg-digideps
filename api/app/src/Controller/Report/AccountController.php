@@ -63,7 +63,7 @@ class AccountController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function editAccount(Request $request, int $id): BankAccount
     {
-        $account = $this->findEntityBy(BankAccount::class, $id, 'Account not found'); /* @var $account \OPG\Digideps\Backend\Entity\Report\BankAccount */
+        $account = $this->findEntityBy(BankAccount::class, $id, 'Account not found');
         $report = $account->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
@@ -85,7 +85,7 @@ class AccountController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function accountDependentRecords(int $id): array
     {
-        $account = $this->findEntityBy(BankAccount::class, $id, 'Account not found'); /* @var $account \OPG\Digideps\Backend\Entity\Report\BankAccount */
+        $account = $this->findEntityBy(BankAccount::class, $id, 'Account not found');
         $this->denyAccessIfReportDoesNotBelongToUser($account->getReport());
 
         $report = $account->getReport();
@@ -127,7 +127,7 @@ class AccountController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function accountDelete(int $id): array
     {
-        $account = $this->findEntityBy(BankAccount::class, $id, 'Account not found'); /* @var $account \OPG\Digideps\Backend\Entity\Report\BankAccount */
+        $account = $this->findEntityBy(BankAccount::class, $id, 'Account not found');
         $report = $account->getReport();
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         $this->em->remove($account);

@@ -15,8 +15,6 @@ use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Loader\FilesystemLoader;
 
-use const Dom\HTML_NO_DEFAULT_NS;
-
 class ComponentsExtensionTest extends TestCase
 {
     private TranslatorInterface|MockInterface $translator;

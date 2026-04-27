@@ -20,7 +20,7 @@ readonly class PreRegistrationFactory
         $generateDeputyUidIfNotSet = '7' . str_pad((string) rand(1, 99999999), 11, '0', STR_PAD_LEFT);
         $deputyUid = array_key_exists('deputyUid', $data) && strval($data['deputyUid']) ? strval($data['deputyUid']) : $generateDeputyUidIfNotSet;
 
-        $dto = (new LayDeputyshipDto())
+        $dto = new LayDeputyshipDto()
             ->setCaseNumber($data['caseNumber'] ?? $caseNumber)
             ->setClientFirstname($data['clientFirstName'] ?? 'John')
             ->setClientSurname($data['clientLastName'] ?? 'Smith')
@@ -52,7 +52,7 @@ readonly class PreRegistrationFactory
     {
         $deputyUid = str_pad((string) rand(1, 999999999999), 12, '0', STR_PAD_LEFT);
 
-        $dto = (new LayDeputyshipDto())
+        $dto = new LayDeputyshipDto()
             ->setCaseNumber($caseNumber)
             ->setClientFirstname('John')
             ->setClientSurname('Smith')

@@ -2,7 +2,6 @@
 
 namespace OPG\Digideps\Frontend\Form\Report;
 
-use OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;

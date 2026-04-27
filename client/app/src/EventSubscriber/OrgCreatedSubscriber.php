@@ -27,7 +27,7 @@ class OrgCreatedSubscriber implements EventSubscriberInterface
 
     public function auditLog(OrgCreatedEvent $event)
     {
-        $orgCreatedEvent = (new AuditEvents($this->dateTimeProvider))
+        $orgCreatedEvent = new AuditEvents($this->dateTimeProvider)
             ->orgCreated(
                 $event->getTrigger(),
                 $event->getCurrentUser(),

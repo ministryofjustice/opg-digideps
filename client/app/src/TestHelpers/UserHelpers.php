@@ -25,7 +25,7 @@ class UserHelpers extends KernelTestCase
             return $serializer->deserialize(json_encode($data), User::class, 'json');
         }
 
-        return (new User())
+        return new User()
             ->setId($faker->numberBetween(1, 999999999))
             ->setDeputyUid($faker->randomNumber(8))
             ->setFirstname($faker->firstName())
