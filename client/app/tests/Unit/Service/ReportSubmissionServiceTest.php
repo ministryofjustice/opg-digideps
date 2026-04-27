@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Frontend\Unit\Service;
 
+use Mockery\MockInterface;
 use OPG\Digideps\Frontend\Entity\Report\Document;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\Report\ReportSubmission;
-use OPG\Digideps\Frontend\Entity\ReportInterface;
 use OPG\Digideps\Frontend\Exception\ReportSubmissionDocumentsNotDownloadableException;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Frontend\Service\Csv\TransactionsCsvGenerator;
@@ -40,7 +40,7 @@ class ReportSubmissionServiceTest extends TestCase
     private $mockPdfGenerator;
     private $mockLogger;
     private $mockCsvGenerator;
-    private $mockReport;
+    private MockInterface&Report $mockReport;
 
     /** @var ObjectProphecy&S3FileUploader */
     private $fileUploader;
@@ -71,7 +71,7 @@ class ReportSubmissionServiceTest extends TestCase
         $this->mockLogger = m::mock(LoggerInterface::class);
         $this->mockCsvGenerator = m::mock(TransactionsCsvGenerator::class);
 
-        $this->mockReport = m::mock(ReportInterface::class);
+        $this->mockReport = m::mock(Report::class);
 
         $this->fileUploader = self::prophesize(S3FileUploader::class);
         $this->restClient = self::prophesize(RestClient::class);

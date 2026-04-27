@@ -73,7 +73,7 @@ class ReportService
 
         $newYearReport = null;
 
-        if ($currentReport instanceof Report && $currentReport->getUnSubmitDate()) {
+        if ($currentReport->getUnSubmitDate()) {
             $this->logger->warning("Creating next year report for client $clientId (existing unsubmitted report) at $now");
 
             // unsubmitted report

@@ -17,10 +17,7 @@ class FullReportAssembler implements ReportAssemblerInterface
     ) {
     }
 
-    /**
-     * @return ReportDto
-     */
-    public function assembleFromArray(array $data)
+    public function assembleFromArray(array $data): ReportDto
     {
         $reportDto = $this->reportSummaryAssembler->assembleFromArray($data);
 

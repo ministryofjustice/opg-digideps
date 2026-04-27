@@ -6,7 +6,6 @@ namespace OPG\Digideps\Frontend\Service\File;
 
 use OPG\Digideps\Frontend\Entity\Report\Document;
 use OPG\Digideps\Frontend\Entity\Report\Report;
-use OPG\Digideps\Frontend\Entity\ReportInterface;
 use OPG\Digideps\Frontend\Exception\MimeTypeAndFileExtensionDoNotMatchException;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Frontend\Service\File\Storage\StorageInterface;
@@ -22,7 +21,6 @@ class S3FileUploader
         private DateTimeProvider $dateTimeProvider,
         private MimeTypeAndExtensionChecker $mimeTypeAndExtensionChecker,
         private ImageConvertor $imageConvertor,
-        private array $options = []
     ) {
     }
 
@@ -64,7 +62,7 @@ class S3FileUploader
      * @return Document
      */
     public function uploadFileAndPersistDocument(
-        ReportInterface $report,
+        Report $report,
         string $body,
         string $fileName,
         bool $isReportPdf,

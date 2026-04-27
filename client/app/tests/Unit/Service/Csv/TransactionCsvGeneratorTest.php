@@ -5,13 +5,15 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Frontend\Unit\Service\Csv;
 
 use Mockery\Mock;
+use Mockery\MockInterface;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\BankAccount;
 use OPG\Digideps\Frontend\Entity\Report\Expense;
 use OPG\Digideps\Frontend\Entity\Report\Gift;
 use OPG\Digideps\Frontend\Entity\Report\MoneyTransaction;
-use OPG\Digideps\Frontend\Entity\ReportInterface;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use Mockery\Adapter\Phpunit\MockeryTestCase;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Tests\OPG\Digideps\Frontend\Unit\MockeryStub as m;
 use OPG\Digideps\Frontend\Service\Csv\CsvBuilder;
 use OPG\Digideps\Frontend\Service\Csv\TransactionsCsvGenerator;
@@ -19,11 +21,10 @@ use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 
 class TransactionCsvGeneratorTest extends MockeryTestCase
 {
-    /** @var TransactionsCsvGenerator */
-    protected $sut;
+    protected TransactionsCsvGenerator $sut;
 
-    private $mockTranslator;
-    private $mockReport;
+    private MockInterface&TranslatorInterface $mockTranslator;
+    private MockInterface&Report $mockReport;
 
     /**
      * Set up the mockservies
@@ -83,8 +84,8 @@ class TransactionCsvGeneratorTest extends MockeryTestCase
         $numMoneyIn = 0,
         $dueDate = '2/5/2018',
         $submitDate = '4/28/2018'
-    ) {
-        $mockReport = m::mock(ReportInterface::class);
+    ): MockInterface&Report {
+        $mockReport = m::mock(Report::class);
 
         $mockReport->shouldReceive('getId')->andReturn($reportId);
         $mockReport->shouldReceive('getGifts')->andReturn(

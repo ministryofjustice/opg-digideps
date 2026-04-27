@@ -4,11 +4,9 @@ namespace OPG\Digideps\Frontend\Entity\Report;
 
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\Traits as ReportTraits;
-use OPG\Digideps\Frontend\Entity\ReportInterface;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Validator\Constraints as AppAssert;
 use OPG\Digideps\Frontend\Validator\Constraints\StartEndDateComparableInterface;
-use DateTime;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -26,7 +24,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @Assert\Callback(callback="profCostsInterimAtLeastOne", groups={"prof-deputy-interim-costs"})
  * @Assert\Callback(callback="unsubmittedSectionAtLeastOnce", groups={"unsubmitted_sections"})
  */
-class Report implements ReportInterface, StartEndDateComparableInterface
+class Report implements StartEndDateComparableInterface
 {
     use ReportTraits\ReportAssetTrait;
     use ReportTraits\ReportBalanceTrait;
@@ -43,6 +41,27 @@ class Report implements ReportInterface, StartEndDateComparableInterface
     use ReportTraits\ReportProfDeputyCostsTrait;
     use ReportTraits\ReportProfDeputyCostsEstimateTrait;
     use ReportTraits\ReportUnsubmittedSections;
+
+    // https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations
+    public const string LAY_PFA_LOW_ASSETS_TYPE = '103';
+    public const string LAY_PFA_HIGH_ASSETS_TYPE = '102';
+    public const string LAY_HW_TYPE = '104';
+    public const string LAY_COMBINED_LOW_ASSETS_TYPE = '103-4';
+    public const string LAY_COMBINED_HIGH_ASSETS_TYPE = '102-4';
+
+    // PA
+    public const string PA_PFA_LOW_ASSETS_TYPE = '103-6';
+    public const string PA_PFA_HIGH_ASSETS_TYPE = '102-6';
+    public const string PA_HW_TYPE = '104-6';
+    public const string PA_COMBINED_LOW_ASSETS_TYPE = '103-4-6';
+    public const string PA_COMBINED_HIGH_ASSETS_TYPE = '102-4-6';
+
+    // PROF
+    public const string PROF_PFA_LOW_ASSETS_TYPE = '103-5';
+    public const string PROF_PFA_HIGH_ASSETS_TYPE = '102-5';
+    public const string PROF_HW_TYPE = '104-5';
+    public const string PROF_COMBINED_LOW_ASSETS_TYPE = '103-4-5';
+    public const string PROF_COMBINED_HIGH_ASSETS_TYPE = '102-4-5';
 
     // Applies to both costs and estimate costs
     public const string PROF_DEPUTY_COSTS_TYPE_FIXED = 'fixed';
