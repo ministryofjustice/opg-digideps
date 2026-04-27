@@ -25,11 +25,11 @@
         }
     },
     "require": {
-        "php": "^8.4",
+        "php": "^8.4.2",
         "ext-dom": "*",
         "ext-zip": "*",
         "alphagov/notifications-php-client": "^7.0.0",
-        "aws/aws-sdk-php": "3.371.4",
+        "aws/aws-sdk-php": "3.371.5",
         "digideps/common": "^1.0",
         "doctrine/annotations": "^2.0.2",
         "doctrine/collections": "^2.6.0",
@@ -121,6 +121,6 @@
         "phpunit/phpunit": "^9.6.34",
         "symfony/maker-bundle": "^1.66.0",
         "symfony/phpunit-bridge": "^6.4.26",
-        "symfony/var-dumper": "^6.4.32"
+        "symfony/var-dumper": "^6.4.36"
     }
 }
