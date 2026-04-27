@@ -6,8 +6,8 @@ terraform {
     }
     archive = {
       source  = "hashicorp/archive"
-      version = ">= 2.4.1"
+      version = ">= 2.4.2"
     }
   }
-  required_version = ">= 1.0.1"
+  required_version = ">= 1.0.2"
 }
