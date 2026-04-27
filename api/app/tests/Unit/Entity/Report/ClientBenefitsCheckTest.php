@@ -6,7 +6,6 @@ namespace Tests\OPG\Digideps\Backend\Unit\Entity\Report;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use DateTime;
 use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
 use PHPUnit\Framework\TestCase;
 
@@ -67,7 +66,7 @@ final class ClientBenefitsCheckTest extends TestCase
     public function setWhenLastCheckedEntitlementSetsDateNullWhenValueIsNotHaveChecked(
         string $whenChecked,
         ClientBenefitsCheck $sut,
-        ?DateTime $expectedDateLastChecked
+        ?\DateTime $expectedDateLastChecked
     ): void {
         $sut->setWhenLastCheckedEntitlement($whenChecked);
 
@@ -76,7 +75,7 @@ final class ClientBenefitsCheckTest extends TestCase
 
     public static function dateCheckedProvider(): array
     {
-        $now = new DateTime();
+        $now = new \DateTime();
         $sut = new ClientBenefitsCheck()
             ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED)
             ->setDateLastCheckedEntitlement($now);

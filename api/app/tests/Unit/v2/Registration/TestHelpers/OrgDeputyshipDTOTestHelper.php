@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\TestHelpers;
 
 use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
-use DateTimeImmutable;
-use DateTime;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\Organisation;
@@ -47,7 +45,7 @@ class OrgDeputyshipDTOTestHelper
     public static function generateValidSiriusOrgDeputyshipArray(): array
     {
         $faker = Factory::create();
-        $courtOrderMadeDate = DateTimeImmutable::createFromMutable($faker->dateTimeThisYear());
+        $courtOrderMadeDate = \DateTimeImmutable::createFromMutable($faker->dateTimeThisYear());
         $reportPeriodEndDate = $courtOrderMadeDate->modify('12 months - 1 day');
 
         return [
@@ -246,7 +244,7 @@ class OrgDeputyshipDTOTestHelper
             ->setCaseNumber($dto->getCaseNumber())
             ->setFirstname($dto->getClientFirstname())
             ->setLastname($dto->getClientLastname())
-            ->setCourtDate(new DateTime())
+            ->setCourtDate(new \DateTime())
             ->addUser($layDeputy);
 
         $em->persist($layDeputy);
@@ -263,7 +261,7 @@ class OrgDeputyshipDTOTestHelper
         string $startDate = '2019-11-01',
         string $endDate = '2020-10-31'
     ): Report {
-        $report = new Report($client, $reportType, new DateTime($startDate), new DateTime($endDate));
+        $report = new Report($client, $reportType, new \DateTime($startDate), new \DateTime($endDate));
         $client->addReport($report);
 
         $em->persist($report);

@@ -5,7 +5,6 @@ namespace OPG\Digideps\Frontend\Entity\Report;
 use OPG\Digideps\Frontend\Entity\Traits\CreationAudit;
 use OPG\Digideps\Frontend\Entity\User;
 use JMS\Serializer\Annotation as JMS;
-use RuntimeException;
 
 class ReportSubmission
 {
@@ -126,7 +125,7 @@ class ReportSubmission
         $report = $this->getReport();
 
         if (is_null($report)) {
-            throw new RuntimeException('Report submission has no associated report');
+            throw new \RuntimeException('Report submission has no associated report');
         }
 
         /** @var ?\DateTime $startDate */
@@ -136,7 +135,7 @@ class ReportSubmission
         $endDate = $report->getEndDate();
 
         if (is_null($startDate) || is_null($endDate)) {
-            throw new RuntimeException('Report submission is missing start or end date');
+            throw new \RuntimeException('Report submission is missing start or end date');
         }
 
         $client = $report->getClient();

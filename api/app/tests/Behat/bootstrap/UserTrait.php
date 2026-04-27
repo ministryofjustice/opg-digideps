@@ -2,10 +2,6 @@
 
 namespace Tests\OPG\Digideps\Backend\Behat;
 
-use Exception;
-use Throwable;
-use RuntimeException;
-use DateTime;
 use Behat\Gherkin\Node\TableNode;
 
 trait UserTrait
@@ -41,7 +37,7 @@ trait UserTrait
         $adminType = $inputs['adminType'];
 
         if (!in_array($adminType, ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN'])) {
-            throw new Exception("adminType should be 'ROLE_ADMIN' or 'ROLE_SUPER_ADMIN'; '$adminType' provided");
+            throw new \Exception("adminType should be 'ROLE_ADMIN' or 'ROLE_SUPER_ADMIN'; '$adminType' provided");
         }
 
         foreach (['adminType', 'firstName', 'lastName', 'email', 'activated'] as $key) {
@@ -53,7 +49,7 @@ trait UserTrait
 
             if (count($missingKeys) > 0) {
                 $missingKeysString = implode(', ', $missingKeys);
-                throw new Exception("Missing required parameter headings: $missingKeysString");
+                throw new \Exception("Missing required parameter headings: $missingKeysString");
             }
         }
     }
@@ -93,8 +89,8 @@ trait UserTrait
             $email = $inputs['email'];
             try {
                 $this->visitAdminPath("/admin/fixtures/deleteUser?email=$email");
-            } catch (Throwable $e) {
-                throw new Exception(sprintf('Error deleting user: %s', $e->getMessage()));
+            } catch (\Throwable $e) {
+                throw new \Exception(sprintf('Error deleting user: %s', $e->getMessage()));
             }
         }
     }
@@ -104,7 +100,7 @@ trait UserTrait
         $allowedRoles = ['ADMIN', 'AD', 'LAY', 'PA', 'PA_TEAM_MEMBER', 'PA_ADMIN', 'PROF', 'PROF_TEAM_MEMBER', 'PROF_ADMIN'];
 
         if (!in_array($roleName, $allowedRoles)) {
-            throw new Exception(sprintf("DeputyType should be one of %s; '%s' provided", implode(', ', $allowedRoles), $roleName));
+            throw new \Exception(sprintf("DeputyType should be one of %s; '%s' provided", implode(', ', $allowedRoles), $roleName));
         }
     }
 
@@ -113,7 +109,7 @@ trait UserTrait
      */
     public function iChangeTheUserToken($userId, $token)
     {
-        $tokenDate = new DateTime('-7days')->format('Y-m-d');
+        $tokenDate = new \DateTime('-7days')->format('Y-m-d');
         $query = sprintf('UPDATE dd_user SET registration_token = \'%s\', token_date = \'%s\' WHERE email = \'%s\'', $token, $tokenDate, $userId);
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
 

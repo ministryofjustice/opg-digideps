@@ -5,6 +5,7 @@ namespace OPG\Digideps\Backend\v2\Assembler\Report;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\ReportRepository;
 use OPG\Digideps\Backend\v2\Assembler\StatusAssembler;
+use OPG\Digideps\Backend\v2\DTO\ReportDto;
 use OPG\Digideps\Backend\v2\DTO\StatusDto;
 
 class FullReportAssembler implements ReportAssemblerInterface
@@ -17,7 +18,7 @@ class FullReportAssembler implements ReportAssemblerInterface
     }
 
     /**
-     * @return \OPG\Digideps\Backend\v2\DTO\ReportDto
+     * @return ReportDto
      */
     public function assembleFromArray(array $data)
     {

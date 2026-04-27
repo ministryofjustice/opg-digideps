@@ -7,7 +7,6 @@ use Aws\CloudWatchLogs\Exception\CloudWatchLogsException;
 use Aws\Result;
 use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
-use Monolog\Logger;
 use Monolog\LogRecord;
 use Monolog\Level;
 use OPG\Digideps\Common\Logger\OpgAwsFormatter;

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Unit\Transformer\ReportSubmission;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use DateTime;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Report;
@@ -28,18 +27,18 @@ final class ReportSubmissionSummaryTransformerTest extends TestCase
 
         $this->sut = new ReportSubmissionSummaryTransformer($this->dateTimeProvider);
 
-        $this->dateTimeProvider->method('getDateTime')->willReturn(new DateTime('2013-01-01'));
+        $this->dateTimeProvider->method('getDateTime')->willReturn(new \DateTime('2013-01-01'));
     }
 
     public function testTransformsAReportSubmission(): void
     {
-        $scanDate = new DateTime('2013-01-01');
+        $scanDate = new \DateTime('2013-01-01');
         $this->dateTimeProvider->method('getDateTime')->willReturn($scanDate);
 
         $reportSubmission = $this->buildReportSubmissionWith([
             'id' => 2,
             'report_type' => Report::class,
-            'created_on' => new DateTime('2012-01-02'),
+            'created_on' => new \DateTime('2012-01-02'),
             'report' => [
                 'client' => ['case_number' => '133'],
             ],
@@ -68,13 +67,13 @@ final class ReportSubmissionSummaryTransformerTest extends TestCase
 
     public function testReturnsNullDocumentIdIfReportDocumentNotFound(): void
     {
-        $scanDate = new DateTime('2013-01-01');
+        $scanDate = new \DateTime('2013-01-01');
         $this->dateTimeProvider->method('getDateTime')->willReturn($scanDate);
 
         $reportSubmission = $this->buildReportSubmissionWith([
             'id' => 3,
             'report_type' => Report::class,
-            'created_on' => new DateTime('2012-01-01'),
+            'created_on' => new \DateTime('2012-01-01'),
             'report' => [
                 'client' => ['case_number' => '132'],
             ],

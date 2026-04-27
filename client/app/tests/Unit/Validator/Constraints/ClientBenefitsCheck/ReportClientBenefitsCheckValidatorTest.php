@@ -9,7 +9,6 @@ use OPG\Digideps\Frontend\Entity\Report\MoneyReceivedOnClientsBehalf;
 use OPG\Digideps\Frontend\TestHelpers\ReportHelpers;
 use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheck as ClientBenefitsCheckConstraint;
 use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck\ClientBenefitsCheckValidator;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -137,7 +136,7 @@ class ReportClientBenefitsCheckValidatorTest extends TestCase
     {
         return [
             'null' => [null, 'form.whenLastChecked.errors.missingDate'],
-            'future date' => [new DateTime('+1 day'), 'form.whenLastChecked.errors.futureDate'],
+            'future date' => [new \DateTime('+1 day'), 'form.whenLastChecked.errors.futureDate'],
         ];
     }
 

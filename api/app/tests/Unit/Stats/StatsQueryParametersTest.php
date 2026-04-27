@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Unit\Stats;
 
 use PHPUnit\Framework\Attributes\Test;
-use DateTime;
-use InvalidArgumentException;
-use DateInterval;
 use OPG\Digideps\Backend\Service\Stats\StatsQueryParameters;
 use PHPUnit\Framework\TestCase;
 
@@ -27,9 +24,9 @@ final class StatsQueryParametersTest extends TestCase
         $this->assertIsArray($params->getDimensions());
         $this->assertContains('dimension1', $params->getDimensions());
         $this->assertContains('dimension2', $params->getDimensions());
-        $this->assertInstanceOf(DateTime::class, $params->getStartDate());
+        $this->assertInstanceOf(\DateTime::class, $params->getStartDate());
         $this->assertEquals('04-04-2015', $params->getStartDate()->format('d-m-Y'));
-        $this->assertInstanceOf(DateTime::class, $params->getEndDate());
+        $this->assertInstanceOf(\DateTime::class, $params->getEndDate());
         $this->assertEquals('10-06-2015', $params->getEndDate()->format('d-m-Y'));
     }
 
@@ -50,7 +47,7 @@ final class StatsQueryParametersTest extends TestCase
     #[Test]
     public function requiresMetric(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         new StatsQueryParameters([
             'dimension' => ['dimension1'],
             'startDate' => '2019-05-04',
@@ -61,7 +58,7 @@ final class StatsQueryParametersTest extends TestCase
     #[Test]
     public function requiresDimensionIsNotString(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         new StatsQueryParameters([
             'metric' => 'metric',
             'dimension' => 'dimension',
@@ -78,8 +75,8 @@ final class StatsQueryParametersTest extends TestCase
             'dimension' => ['dimension'],
         ]);
 
-        $expectedStartDate = new DateTime()->sub(new DateInterval('P30D'));
-        $expectedEndDate = new DateTime();
+        $expectedStartDate = new \DateTime()->sub(new \DateInterval('P30D'));
+        $expectedEndDate = new \DateTime();
 
         $this->assertEquals($expectedStartDate->format('d-m-Y'), $params->getStartDate()->format('d-m-Y'));
         $this->assertEquals($expectedEndDate->format('d-m-Y'), $params->getEndDate()->format('d-m-Y'));

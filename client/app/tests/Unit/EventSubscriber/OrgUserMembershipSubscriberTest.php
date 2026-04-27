@@ -10,7 +10,6 @@ use OPG\Digideps\Frontend\EventSubscriber\OrgUserMembershipSubscriber;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\OrganisationHelpers;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
-use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
@@ -41,7 +40,7 @@ class OrgUserMembershipSubscriberTest extends TestCase
         $expectedEventName = 'USER_ADDED_TO_ORG';
 
         $dateTimeProvider = self::prophesize(DateTimeProvider::class);
-        $now = new DateTime();
+        $now = new \DateTime();
         $dateTimeProvider->getDateTime()->willReturn($now);
 
         $expectedAuditEvent = [
@@ -49,7 +48,7 @@ class OrgUserMembershipSubscriberTest extends TestCase
             'added_user_email' => $addedUser->getEmail(),
             'organisation_identifier' => $organisation->getEmailIdentifier(),
             'organisation_id' => $organisation->getId(),
-            'added_on' => $now->format(DateTime::ATOM),
+            'added_on' => $now->format(\DateTime::ATOM),
             'added_by' => $currentUser->getEmail(),
             'event' => $expectedEventName,
             'type' => 'audit',
@@ -76,7 +75,7 @@ class OrgUserMembershipSubscriberTest extends TestCase
         $expectedEventName = 'USER_REMOVED_FROM_ORG';
 
         $dateTimeProvider = self::prophesize(DateTimeProvider::class);
-        $now = new DateTime();
+        $now = new \DateTime();
         $dateTimeProvider->getDateTime()->willReturn($now);
 
         $expectedAuditEvent = [
@@ -85,7 +84,7 @@ class OrgUserMembershipSubscriberTest extends TestCase
             'removed_user_name' => $userToRemove->getFullName(),
             'organisation_identifier' => $organisation->getEmailIdentifier(),
             'organisation_id' => $organisation->getId(),
-            'removed_on' => $now->format(DateTime::ATOM),
+            'removed_on' => $now->format(\DateTime::ATOM),
             'removed_by' => $currentUser->getEmail(),
             'event' => $expectedEventName,
             'type' => 'audit',

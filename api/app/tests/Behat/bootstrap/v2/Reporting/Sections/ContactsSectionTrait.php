@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections;
 
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
-use Behat\Behat\Tester\Exception\PendingException;
-use Behat\Gherkin\Node\TableNode;
 
 trait ContactsSectionTrait
 {

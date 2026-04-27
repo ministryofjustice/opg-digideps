@@ -70,7 +70,7 @@ class ContactController extends RestController
             $this->formatter->validateArray($contactData, [
                 'id' => 'mustExist',
             ]);
-            $contact = $this->findEntityBy(Contact::class, $contactData['id']); /* @var $contact \OPG\Digideps\Backend\Entity\Report\Contact */
+            $contact = $this->findEntityBy(Contact::class, $contactData['id']);
             $report = $contact->getReport();
             $this->denyAccessIfReportDoesNotBelongToUser($contact->getReport());
         }

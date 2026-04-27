@@ -6,7 +6,6 @@ namespace Tests\OPG\Digideps\Backend\Unit\Security;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use DateTime;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Exception\UnauthorisedException;
 use OPG\Digideps\Backend\Exception\UserWrongCredentialsException;
@@ -252,8 +251,8 @@ final class LoginRequestAuthenticatorTest extends TestCase
     #[Test]
     public function authenticateDoesNotAuthenticateIfUserIsFrozenOut(): void
     {
-        $now = new DateTime();
-        $nowPlusOneHour = new DateTime($now->format('Y-m-d'))->modify('+1 hour');
+        $now = new \DateTime();
+        $nowPlusOneHour = new \DateTime($now->format('Y-m-d'))->modify('+1 hour');
 
         $nowTime = intval($now->format('U'));
         $nowPlusOneHourTime = intval($nowPlusOneHour->format('U'));

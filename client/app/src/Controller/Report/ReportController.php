@@ -7,6 +7,7 @@ namespace OPG\Digideps\Frontend\Controller\Report;
 use OPG\Digideps\Frontend\Controller\AbstractController;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\DeputyInterface;
+use OPG\Digideps\Frontend\Entity\Report\Document;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Event\RegistrationSucceededEvent;
@@ -394,7 +395,7 @@ class ReportController extends AbstractController
 
         $documentStorageReferences = [];
         foreach ($documentIds as $documentId) {
-            /** @var \OPG\Digideps\Frontend\Entity\Report\Document $document */
+            /** @var Document $document */
             $document = $this->restClient->get(
                 sprintf('document/%s', $documentId),
                 'Report\Document',

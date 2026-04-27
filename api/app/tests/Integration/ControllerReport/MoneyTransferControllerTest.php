@@ -117,7 +117,7 @@ class MoneyTransferControllerTest extends AbstractTestController
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_MONEY_TRANSFERS));
 
         // assert account created with transactions
-        $report = self::fixtures()->getReportById(self::$report1->getId()); /* @var $report \OPG\Digideps\Backend\Entity\Report\Report */
+        $report = self::fixtures()->getReportById(self::$report1->getId());
 
         // test last transaction
         $t = $report->getMoneyTransfers()->get(2);

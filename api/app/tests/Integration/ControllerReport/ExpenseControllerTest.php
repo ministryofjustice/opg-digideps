@@ -131,7 +131,7 @@ class ExpenseControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         $expense = self::fixtures()->getRepo(Expense::class)->find($expenseId);
-        /* @var $expense \OPG\Digideps\Backend\Entity\Report\Expense */
+        /* @var $expense Expense */
         $this->assertEquals(3.3, $expense->getAmount());
         $this->assertEquals('e3', $expense->getExplanation());
 
@@ -150,7 +150,7 @@ class ExpenseControllerTest extends AbstractTestController
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_DEPUTY_EXPENSES));
 
         $expense = self::fixtures()->getRepo(Expense::class)->find($expenseId);
-        /* @var $expense \OPG\Digideps\Backend\Entity\Report\Expense */
+        /* @var $expense Expense */
         $this->assertEquals(3.31, $expense->getAmount());
         $this->assertEquals('e3.1', $expense->getExplanation());
 

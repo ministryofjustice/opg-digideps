@@ -25,6 +25,7 @@ use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Faker\Generator;
 
 class UserApiTest extends TestCase
 {
@@ -42,7 +43,7 @@ class UserApiTest extends TestCase
     /** @var UserApi */
     private $sut;
 
-    /** @var \Faker\Generator */
+    /** @var Generator */
     private $faker;
 
     public function setUp(): void

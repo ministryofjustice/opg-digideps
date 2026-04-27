@@ -6,7 +6,6 @@ namespace Tests\OPG\Digideps\Backend\Unit\Stats;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use InvalidArgumentException;
 use OPG\Digideps\Backend\Service\Stats\Query\Query;
 use OPG\Digideps\Backend\Service\Stats\QueryFactory;
 use OPG\Digideps\Backend\Service\Stats\StatsQueryParameters;
@@ -50,7 +49,7 @@ final class QueryFactoryTest extends TestCase
             'metric' => 'aMetricWeDoNotSupport',
         ]);
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $query = $this->factory->create($sq);
     }
 }

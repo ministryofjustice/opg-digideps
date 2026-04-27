@@ -4,12 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Entity\Report;
 
-use DateTime;
 use PHPUnit\Framework\Attributes\DataProvider;
-use RuntimeException;
-use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Test;
-use DateTimeImmutable;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\AssetOther;
 use OPG\Digideps\Backend\Entity\Report\AssetProperty;
@@ -46,7 +42,7 @@ final class ReportTest extends KernelTestCase
     public function setUp(): void
     {
         $this->client = m::mock(Client::class, ['getUnsubmittedReports' => new ArrayCollection(), 'getSubmittedReports' => new ArrayCollection()]);
-        $this->validReportCtorArgs = [$this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime('2017-06-23'), new DateTime('2018-06-22')];
+        $this->validReportCtorArgs = [$this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
         $this->report = m::mock(Report::class . '[has106Flag]', $this->validReportCtorArgs);
 
         $this->gift1 = m::mock(Gift::class, ['getAmount' => 1]);
@@ -60,8 +56,8 @@ final class ReportTest extends KernelTestCase
 
     public function testDueDate(): void
     {
-        $startDate = new DateTime('2017-01-01');
-        $endDate = new DateTime('2018-12-31');
+        $startDate = new \DateTime('2017-01-01');
+        $endDate = new \DateTime('2018-12-31');
 
         $report = new Report($this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, $startDate, $endDate, false);
         $this->assertEquals('2019-01-21', $report->getDueDate()->format('Y-m-d'));
@@ -82,13 +78,13 @@ final class ReportTest extends KernelTestCase
     {
         $client = new Client();
         foreach ($clientReports as $rep) {
-            $report = new Report($this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime($rep[0]), new DateTime($rep[1]))->setSubmitted($rep[2]);
+            $report = new Report($this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime($rep[0]), new \DateTime($rep[1]))->setSubmitted($rep[2]);
             $client->addReport($report);
         }
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
 
-        new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime($startDate), new DateTime($endDate));
+        new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime($startDate), new \DateTime($endDate));
     }
 
     public function testGetMoneyTotal(): void
@@ -146,7 +142,7 @@ final class ReportTest extends KernelTestCase
 
     public function testGetCalculatedBalance(): void
     {
-        $this->validReportCtorArgs = [$this->client, Report::PROF_PFA_HIGH_ASSETS_TYPE, new DateTime('2017-06-23'), new DateTime('2018-06-22')];
+        $this->validReportCtorArgs = [$this->client, Report::PROF_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
         $this->report = m::mock(Report::class . '[has106Flag]', $this->validReportCtorArgs);
 
         $this->report->shouldReceive('has106Flag')->andReturn(false);
@@ -171,7 +167,7 @@ final class ReportTest extends KernelTestCase
 
     public function testGetCalculatedBalanceProfDeputy(): void
     {
-        $this->validReportCtorArgs = [$this->client, Report::PROF_PFA_HIGH_ASSETS_TYPE, new DateTime('2017-06-23'), new DateTime('2018-06-22')];
+        $this->validReportCtorArgs = [$this->client, Report::PROF_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
         $this->report = m::mock(Report::class . '[has106Flag]', $this->validReportCtorArgs);
 
         $this->report->shouldReceive('has106Flag')->andReturn(false);
@@ -196,8 +192,8 @@ final class ReportTest extends KernelTestCase
         // change interim yes->no
         $this->report->setProfDeputyCostsHasInterim('yes');
         $this->report->setProfDeputyInterimCosts(new ArrayCollection([
-            new ProfDeputyInterimCost($this->report, new DateTime('now'), 11),
-            new ProfDeputyInterimCost($this->report, new DateTime('now'), 11),
+            new ProfDeputyInterimCost($this->report, new \DateTime('now'), 11),
+            new ProfDeputyInterimCost($this->report, new \DateTime('now'), 11),
         ]));
         $this->assertEquals(-1 - 1 - 11 - 11 - 10 - 10, $this->report->getCalculatedBalance());
     }
@@ -283,8 +279,8 @@ final class ReportTest extends KernelTestCase
     #[DataProvider('sectionsSettingsProvider')]
     public function testAvailableSectionsAndHasSection(string $type, array $expectedSections, array $unExpectedSections): void
     {
-        $this->report = new Report($this->client, $type, new DateTime('2017-06-23'), new DateTime('2018-06-22'))
-            ->setBenefitsSectionReleaseDate(new DateTime('2016-01-01'));
+        $this->report = new Report($this->client, $type, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'))
+            ->setBenefitsSectionReleaseDate(new \DateTime('2016-01-01'));
 
         foreach ($expectedSections as $section) {
             $this->assertContains($section, $this->report->getAvailableSections());
@@ -433,7 +429,7 @@ final class ReportTest extends KernelTestCase
 
     public function testInvalidAgreedBehalfOption(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->report->setAgreedBehalfDeputy('BAD_VALUE');
     }
 
@@ -485,7 +481,7 @@ final class ReportTest extends KernelTestCase
     public function testIsLayReport(string $type, bool $expectedResult): void
     {
         $client = new Client();
-        $endDate = new DateTime();
+        $endDate = new \DateTime();
         $startDate = clone $endDate;
         $startDate = $startDate->modify('-1 year');
 
@@ -497,7 +493,7 @@ final class ReportTest extends KernelTestCase
     public function testUpdateDuetDateBasedOnEndDate(string $type, string $endDate, string $expectedDueDate): void
     {
         $client = new Client();
-        $endDate = new DateTime($endDate);
+        $endDate = new \DateTime($endDate);
         $startDate = clone $endDate;
         $startDate = $startDate->modify('-1 year');
 
@@ -514,10 +510,10 @@ final class ReportTest extends KernelTestCase
     #[DataProvider('benefitsCheckSectionRequiredProvider')]
     #[Test]
     public function requiresBenefitsCheckSection(
-        DateTime $featureFlagDate,
-        DateTime $dueDate,
+        \DateTime $featureFlagDate,
+        \DateTime $dueDate,
         ?ClientBenefitsCheck $clientBenefitSection,
-        ?DateTime $unsubmitDate,
+        ?\DateTime $unsubmitDate,
         bool $expectedResult
     ): void {
         $reportTestHelper = ReportTestHelper::create();
@@ -536,48 +532,48 @@ final class ReportTest extends KernelTestCase
 
     public static function benefitsCheckSectionRequiredProvider(): array
     {
-        $featureFlagDate = new DateTimeImmutable('01/01/2021');
-        $unsubmitDate = new DateTime();
+        $featureFlagDate = new \DateTimeImmutable('01/01/2021');
+        $unsubmitDate = new \DateTime();
 
         return [
             'Due date 61 days after feature launch date' => [
-                DateTime::createFromImmutable($featureFlagDate),
-                DateTime::createFromImmutable($featureFlagDate->modify('+61 days')),
+                \DateTime::createFromImmutable($featureFlagDate),
+                \DateTime::createFromImmutable($featureFlagDate->modify('+61 days')),
                 null,
                 null,
                 true,
             ],
             'Due date 60 days after feature launch date' => [
-                DateTime::createFromImmutable($featureFlagDate),
-                DateTime::createFromImmutable($featureFlagDate->modify('+60 days')),
+                \DateTime::createFromImmutable($featureFlagDate),
+                \DateTime::createFromImmutable($featureFlagDate->modify('+60 days')),
                 null,
                 null,
                 false,
             ],
             'Due date 1 day before feature launch date' => [
-                DateTime::createFromImmutable($featureFlagDate),
-                DateTime::createFromImmutable($featureFlagDate->modify('-1 day')),
+                \DateTime::createFromImmutable($featureFlagDate),
+                \DateTime::createFromImmutable($featureFlagDate->modify('-1 day')),
                 null,
                 null,
                 false,
             ],
             'Due date 61 days after feature launch date, report unsubmitted but section not previously completed' => [
-                DateTime::createFromImmutable($featureFlagDate),
-                DateTime::createFromImmutable($featureFlagDate->modify('+61 days')),
+                \DateTime::createFromImmutable($featureFlagDate),
+                \DateTime::createFromImmutable($featureFlagDate->modify('+61 days')),
                 null,
                 $unsubmitDate,
                 false,
             ],
             'Due date 61 days after feature launch date, report unsubmitted but section previously completed' => [
-                DateTime::createFromImmutable($featureFlagDate),
-                DateTime::createFromImmutable($featureFlagDate->modify('+61 days')),
+                \DateTime::createFromImmutable($featureFlagDate),
+                \DateTime::createFromImmutable($featureFlagDate->modify('+61 days')),
                 new ClientBenefitsCheck(),
                 $unsubmitDate,
                 true,
             ],
             'Due date 1 day before feature launch date, report unsubmitted but section previously completed' => [
-                DateTime::createFromImmutable($featureFlagDate),
-                DateTime::createFromImmutable($featureFlagDate->modify('-1 days')),
+                \DateTime::createFromImmutable($featureFlagDate),
+                \DateTime::createFromImmutable($featureFlagDate->modify('-1 days')),
                 new ClientBenefitsCheck(),
                 $unsubmitDate,
                 true,

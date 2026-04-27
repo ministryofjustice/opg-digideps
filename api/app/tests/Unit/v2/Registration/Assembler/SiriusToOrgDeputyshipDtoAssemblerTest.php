@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\Assembler;
 
 use PHPUnit\Framework\Attributes\Test;
-use DateTime;
 use OPG\Digideps\Backend\Service\ReportUtils;
 use Tests\OPG\Digideps\Backend\Unit\v2\Registration\TestHelpers\OrgDeputyshipDTOTestHelper;
 use OPG\Digideps\Backend\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
@@ -25,10 +24,10 @@ final class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
         $siriusArray['ReportType'] = 'OPG102';
         $siriusArray['OrderType'] = 'pfa';
 
-        $expectedReportEndDate = DateTime::createFromFormat('Y-m-d', $siriusArray['LastReportDay']);
-        $expectedReportStartDate = DateTime::createFromFormat('Y-m-d', '2021-03-04');
-        $expectedClientDateOfBirth = DateTime::createFromFormat('Y-m-d', $siriusArray['ClientDateOfBirth']);
-        $expectedMadeDate = DateTime::createFromFormat('Y-m-d', $siriusArray['MadeDate']);
+        $expectedReportEndDate = \DateTime::createFromFormat('Y-m-d', $siriusArray['LastReportDay']);
+        $expectedReportStartDate = \DateTime::createFromFormat('Y-m-d', '2021-03-04');
+        $expectedClientDateOfBirth = \DateTime::createFromFormat('Y-m-d', $siriusArray['ClientDateOfBirth']);
+        $expectedMadeDate = \DateTime::createFromFormat('Y-m-d', $siriusArray['MadeDate']);
 
         $reportUtils = self::prophesize(ReportUtils::class);
 
@@ -78,7 +77,7 @@ final class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
         $siriusArray['ReportType'] = 'OPG103';
         $siriusArray['OrderType'] = 'hw';
 
-        $reportEndDate = DateTime::createFromFormat('Y-m-d', $siriusArray['LastReportDay']);
+        $reportEndDate = \DateTime::createFromFormat('Y-m-d', $siriusArray['LastReportDay']);
 
         $reportUtils = self::prophesize(ReportUtils::class);
 

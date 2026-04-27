@@ -7,7 +7,6 @@ use OPG\Digideps\Backend\Entity\Report\ProfServiceFee;
 use OPG\Digideps\Backend\Entity\Report\ProfServiceFeeCurrent;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -123,7 +122,7 @@ class ProfServiceFeeController extends RestController
                 }
 
                 if (array_key_exists('payment_received_date', $data)) {
-                    $profServiceFee->setPaymentReceivedDate(new DateTime($data['payment_received_date']));
+                    $profServiceFee->setPaymentReceivedDate(new \DateTime($data['payment_received_date']));
                 }
             }
         }

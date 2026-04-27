@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Security;
 
-use DateTime;
 use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Security\OrganisationVoter;
@@ -71,7 +70,7 @@ final class OrganisationVoterTest extends KernelTestCase
 
     public function testSubjectIsNotOrganisation(): void
     {
-        $subject = new DateTime();
+        $subject = new \DateTime();
 
         $token = self::prophesize(TokenInterface::class);
 

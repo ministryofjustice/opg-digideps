@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
-use stdClass;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\ClientRepository;
@@ -47,7 +46,7 @@ class LayRegistrationServiceTest extends TestCase
             ->method('findClientsWithoutAReport')
             ->willReturn($mockClients);
 
-        $counter = new stdClass();
+        $counter = new \stdClass();
         $counter->current = 0;
 
         $this->mockReportService->expects(self::exactly(3))

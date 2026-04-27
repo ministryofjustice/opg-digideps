@@ -3,10 +3,6 @@
 namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
-use DateTime;
-use DateTimeZone;
-use DateInterval;
-use Exception;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Checklist;
 use OPG\Digideps\Backend\Entity\Report\Report;
@@ -38,7 +34,7 @@ class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function ensureChecklistsExistInDatabase(): ReportRepositoryIntegrationTest
     {
@@ -80,7 +76,7 @@ class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function buildChecklistWithStatus(Client $client, ?string $status): Checklist
     {
@@ -97,12 +93,12 @@ class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function buildReport(Client $client): Report
     {
-        $startDate = new DateTime('now', new DateTimeZone('UTC'));
-        $endDate = $startDate->add(new DateInterval('P1D'));
+        $startDate = new \DateTime('now', new \DateTimeZone('UTC'));
+        $endDate = $startDate->add(new \DateInterval('P1D'));
         $report = new Report($client, Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS, $startDate, $endDate);
 
         $user = new User()
@@ -144,11 +140,11 @@ class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
         self::$fixtures->addClientToOrganisation($clientDual->getId(), $org[0]->getId());
 
         // create reports for clients
-        $report1 = self::$fixtures->createReport($client1)->setDueDate(new DateTime('2025-08-01'))->setEndDate(new DateTime('2025-07-10'));
-        $report2 = self::$fixtures->createReport($client2)->setDueDate(new DateTime('2025-03-01'))->setEndDate(new DateTime('2025-02-10'));
+        $report1 = self::$fixtures->createReport($client1)->setDueDate(new \DateTime('2025-08-01'))->setEndDate(new \DateTime('2025-07-10'));
+        $report2 = self::$fixtures->createReport($client2)->setDueDate(new \DateTime('2025-03-01'))->setEndDate(new \DateTime('2025-02-10'));
 
-        $dualReport1 = self::$fixtures->createReport($clientDual)->setDueDate(new DateTime('2025-02-01'))->setEndDate(new DateTime('2025-01-10'));
-        $dualReport2 = self::$fixtures->createReport($clientDual)->setDueDate(new DateTime('2025-06-01'))->setEndDate(new DateTime('2025-05-10'));
+        $dualReport1 = self::$fixtures->createReport($clientDual)->setDueDate(new \DateTime('2025-02-01'))->setEndDate(new \DateTime('2025-01-10'));
+        $dualReport2 = self::$fixtures->createReport($clientDual)->setDueDate(new \DateTime('2025-06-01'))->setEndDate(new \DateTime('2025-05-10'));
 
         self::$entityManager->flush();
 

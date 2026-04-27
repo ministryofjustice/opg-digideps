@@ -2,8 +2,6 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
-use ReflectionObject;
-use Exception;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
 use OPG\Digideps\Backend\Service\JWT\JWTService;
@@ -119,7 +117,7 @@ abstract class AbstractTestController extends WebTestCase
      *
      * @return mixed token
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function login(string $email, string $password, $clientSecret)
     {
@@ -288,7 +286,7 @@ abstract class AbstractTestController extends WebTestCase
         parent::tearDown();
 
         // clean up vars
-        $reflectionObject = new ReflectionObject($this);
+        $reflectionObject = new \ReflectionObject($this);
         foreach ($reflectionObject->getProperties() as $property) {
             if (!$property->isStatic() && !str_starts_with($property->getDeclaringClass()->getName(), 'PHPUnit_')) {
                 $property->setValue($this, null);

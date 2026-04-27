@@ -2,8 +2,6 @@
 
 namespace Tests\OPG\Digideps\Backend\Behat;
 
-use Exception;
-
 trait CookieTrait
 {
     /**
@@ -22,7 +20,7 @@ trait CookieTrait
     {
         $policy = json_decode($this->getSession()->getCookie('cookie_policy'));
         if (!is_null($policy)) {
-            throw new Exception('Found unexpected cookie policy');
+            throw new \Exception('Found unexpected cookie policy');
         }
     }
 
@@ -33,7 +31,7 @@ trait CookieTrait
     {
         $policy = json_decode($this->getSession()->getCookie('cookie_policy'));
         if (!$policy->usage) {
-            throw new Exception('Expected cookie usage policy to be enabled, but it is not');
+            throw new \Exception('Expected cookie usage policy to be enabled, but it is not');
         }
     }
 
@@ -44,7 +42,7 @@ trait CookieTrait
     {
         $policy = json_decode($this->getSession()->getCookie('cookie_policy'));
         if ($policy->usage) {
-            throw new Exception('Expected cookie usage policy to be disabled, but it is not');
+            throw new \Exception('Expected cookie usage policy to be disabled, but it is not');
         }
     }
 }

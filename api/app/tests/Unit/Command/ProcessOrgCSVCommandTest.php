@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Command;
 
-use RuntimeException;
 use OPG\Digideps\Backend\Command\ProcessOrgCSVCommand;
 use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
 use OPG\Digideps\Backend\Service\DataImporter\CsvToArray;
@@ -135,7 +134,7 @@ final class ProcessOrgCSVCommandTest extends KernelTestCase
     {
         // Required so we can trigger missing column exception with bad file
         copy(dirname(dirname(__DIR__)) . '/csv/paProDeputyReport-bad.csv', '/tmp/paProDeputyReport.csv');
-        $mockError = new RuntimeException('Invalid file. Cannot find expected header');
+        $mockError = new \RuntimeException('Invalid file. Cannot find expected header');
 
         $this->csvArray->shouldReceive(
             'setExpectedColumns->setUnexpectedColumns->getData'

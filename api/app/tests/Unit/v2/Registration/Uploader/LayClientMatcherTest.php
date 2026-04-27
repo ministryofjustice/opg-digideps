@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\Uploader;
 
-use DateTime;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\ClientRepository;
@@ -34,7 +33,7 @@ final class LayClientMatcherTest extends TestCase
         $dto->setHybrid(null);
 
         $client = new Client();
-        $report = new Report($client, '102', new DateTime(), new DateTime(), false);
+        $report = new Report($client, '102', new \DateTime(), new \DateTime(), false);
         $client->addReport($report);
 
         $clientRepository = $this->createMock(ClientRepository::class);
@@ -82,7 +81,7 @@ final class LayClientMatcherTest extends TestCase
         $dto->setCaseNumber('1234567T');
 
         $client = new Client();
-        $client->setDeletedAt(new DateTime());
+        $client->setDeletedAt(new \DateTime());
 
         $clientRepository = $this->createMock(ClientRepository::class);
         $clientRepository->expects($this->once())
@@ -110,7 +109,7 @@ final class LayClientMatcherTest extends TestCase
         $dto->setHybrid(null);
 
         $client = new Client();
-        $report = new Report($client, '102', new DateTime(), new DateTime(), false);
+        $report = new Report($client, '102', new \DateTime(), new \DateTime(), false);
         $client->addReport($report);
 
         $clientRepository = $this->createMock(ClientRepository::class);
@@ -139,7 +138,7 @@ final class LayClientMatcherTest extends TestCase
         $dto->setHybrid('HYBRID');
 
         $client = new Client();
-        $report = new Report($client, '102', new DateTime(), new DateTime(), false);
+        $report = new Report($client, '102', new \DateTime(), new \DateTime(), false);
         $client->addReport($report);
 
         $clientRepository = $this->createMock(ClientRepository::class);

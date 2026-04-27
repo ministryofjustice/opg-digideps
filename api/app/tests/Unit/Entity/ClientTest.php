@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Entity;
 
-use DateTime;
 use PHPUnit\Framework\Attributes\DataProvider;
 use OPG\Digideps\Backend\Entity\Client;
 use PHPUnit\Framework\TestCase;
@@ -43,20 +42,20 @@ final class ClientTest extends TestCase
     public static function courtDateExpectedStartDateProvider(): array
     {
         return [
-            [new DateTime('2000-01-01'), 2019, new DateTime('2018-01-01')],
-            [new DateTime('2000-12-31'), 2019, new DateTime('2018-12-31')],
-            [new DateTime('2003-09-30'), 2019, new DateTime('2018-09-30')],
-            [new DateTime('2015-03-31'), 2019, new DateTime('2018-03-31')],
-            [new DateTime('2016-02-29'), 2019, new DateTime('2018-03-01')],
-            [new DateTime('2012-02-29'), 2017, new DateTime('2016-02-29')],
-            [new DateTime('2017-03-01'), 2019, new DateTime('2018-03-01')],
-            [new DateTime('2018-08-15'), 2019, new DateTime('2018-08-15')],
-            [new DateTime('2018-08-16'), 2019, new DateTime('2018-08-16')],
-            [new DateTime('2019-08-16'), 2019, new DateTime('2019-08-16')],
-            [new DateTime('2016-02-29'), 2020, new DateTime('2019-03-01')],
-            [new DateTime('2020-02-29'), 2020, new DateTime('2020-02-29')],
-            [new DateTime('2020-02-29'), 2021, new DateTime('2020-02-29')],
-            [new DateTime('2020-02-29'), 2022, new DateTime('2021-03-01')],
+            [new \DateTime('2000-01-01'), 2019, new \DateTime('2018-01-01')],
+            [new \DateTime('2000-12-31'), 2019, new \DateTime('2018-12-31')],
+            [new \DateTime('2003-09-30'), 2019, new \DateTime('2018-09-30')],
+            [new \DateTime('2015-03-31'), 2019, new \DateTime('2018-03-31')],
+            [new \DateTime('2016-02-29'), 2019, new \DateTime('2018-03-01')],
+            [new \DateTime('2012-02-29'), 2017, new \DateTime('2016-02-29')],
+            [new \DateTime('2017-03-01'), 2019, new \DateTime('2018-03-01')],
+            [new \DateTime('2018-08-15'), 2019, new \DateTime('2018-08-15')],
+            [new \DateTime('2018-08-16'), 2019, new \DateTime('2018-08-16')],
+            [new \DateTime('2019-08-16'), 2019, new \DateTime('2019-08-16')],
+            [new \DateTime('2016-02-29'), 2020, new \DateTime('2019-03-01')],
+            [new \DateTime('2020-02-29'), 2020, new \DateTime('2020-02-29')],
+            [new \DateTime('2020-02-29'), 2021, new \DateTime('2020-02-29')],
+            [new \DateTime('2020-02-29'), 2022, new \DateTime('2021-03-01')],
         ];
     }
 
@@ -66,21 +65,21 @@ final class ClientTest extends TestCase
     public static function courtDateExpectedEndDateProvider(): array
     {
         return [
-            [new DateTime('2000-01-01'), 2019, new DateTime('2018-12-31')],
-            [new DateTime('2000-12-31'), 2019, new DateTime('2019-12-30')],
-            [new DateTime('2003-09-30'), 2019, new DateTime('2019-09-29')],
-            [new DateTime('2015-03-31'), 2019, new DateTime('2019-03-30')],
-            [new DateTime('2016-02-29'), 2019, new DateTime('2019-02-28')],
-            [new DateTime('2017-03-01'), 2019, new DateTime('2019-02-28')],
-            [new DateTime('1999-03-01'), 2016, new DateTime('2016-02-29')],
-            [new DateTime('2018-08-15'), 2019, new DateTime('2019-08-14')],
-            [new DateTime('2018-08-16'), 2019, new DateTime('2019-08-15')],
-            [new DateTime('2017-08-17'), 2019, new DateTime('2019-08-16')],
+            [new \DateTime('2000-01-01'), 2019, new \DateTime('2018-12-31')],
+            [new \DateTime('2000-12-31'), 2019, new \DateTime('2019-12-30')],
+            [new \DateTime('2003-09-30'), 2019, new \DateTime('2019-09-29')],
+            [new \DateTime('2015-03-31'), 2019, new \DateTime('2019-03-30')],
+            [new \DateTime('2016-02-29'), 2019, new \DateTime('2019-02-28')],
+            [new \DateTime('2017-03-01'), 2019, new \DateTime('2019-02-28')],
+            [new \DateTime('1999-03-01'), 2016, new \DateTime('2016-02-29')],
+            [new \DateTime('2018-08-15'), 2019, new \DateTime('2019-08-14')],
+            [new \DateTime('2018-08-16'), 2019, new \DateTime('2019-08-15')],
+            [new \DateTime('2017-08-17'), 2019, new \DateTime('2019-08-16')],
         ];
     }
 
     #[DataProvider('courtDateExpectedStartDateProvider')]
-    public function testGetExpectedStartDate(DateTime $courtDate, int $year, DateTime $expected): void
+    public function testGetExpectedStartDate(\DateTime $courtDate, int $year, \DateTime $expected): void
     {
         $this->object->setCourtDate($courtDate);
         $this->assertEquals(
@@ -96,7 +95,7 @@ final class ClientTest extends TestCase
     }
 
     #[DataProvider('courtDateExpectedEndDateProvider')]
-    public function testGetExpectedEndDate(DateTime $courtDate, int $year, DateTime $expected): void
+    public function testGetExpectedEndDate(\DateTime $courtDate, int $year, \DateTime $expected): void
     {
         $this->object->setCourtDate($courtDate);
         $this->assertEquals(

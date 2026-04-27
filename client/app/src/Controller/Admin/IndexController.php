@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace OPG\Digideps\Frontend\Controller\Admin;
 
 use OPG\Digideps\Frontend\Controller\AbstractController;
-use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Event\AdminManagerDeletedEvent;
 use OPG\Digideps\Frontend\Event\CSVUploadedEvent;

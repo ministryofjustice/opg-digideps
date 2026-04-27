@@ -14,8 +14,6 @@ use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Frontend\Service\DocumentService;
 use OPG\Digideps\Frontend\Service\File\Storage\FileNotFoundException;
 use OPG\Digideps\Frontend\Service\File\Storage\S3Storage;
-use Doctrine\Common\Collections\ArrayCollection;
-use Exception;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -108,13 +106,13 @@ class DocumentServiceTest extends TestCase
         $this->s3Storage
             ->removeFromS3('r1')
             ->shouldBeCalled()
-            ->willThrow(Exception::class);
+            ->willThrow(\Exception::class);
 
         $this->restClient
             ->delete(Argument::cetera())
             ->shouldNotBeCalled();
 
-        $this->expectException(Exception::class);
+        $this->expectException(\Exception::class);
 
         $this->object->removeDocumentFromS3($document);
     }

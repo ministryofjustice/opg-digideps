@@ -2,7 +2,6 @@
 
 namespace OPG\Digideps\Backend\Entity\Report;
 
-use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Traits\ModifyAudit;
 use OPG\Digideps\Backend\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
@@ -66,7 +65,7 @@ class ReviewChecklist
     private $decision;
 
     /**
-     * @var \OPG\Digideps\Backend\Entity\User
+     * @var User
      *
      * @JMS\Type("OPG\Digideps\Backend\Entity\User")
      *
@@ -168,7 +167,7 @@ class ReviewChecklist
     }
 
     /**
-     * @return \OPG\Digideps\Backend\Entity\User
+     * @return User
      */
     public function getSubmittedBy(): ?User
     {

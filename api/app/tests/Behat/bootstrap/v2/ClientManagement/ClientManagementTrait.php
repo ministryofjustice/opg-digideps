@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\ClientManagement;
 
-use Throwable;
-use DateTime;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Organisation;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
@@ -340,7 +338,7 @@ MESSAGE;
             $this->clickLink('Discharge deputy');
             $this->iAmOnAdminClientDischargePage();
             $this->clickLink('Discharge deputy');
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             // This step is used as part of testing the discharge button isnt here so swallow errors and assert on following step
         }
     }
@@ -366,7 +364,7 @@ MESSAGE;
         }
 
         $clientDtHtml = $clientDt->getHtml();
-        $todayString = new DateTime()->format('j M Y');
+        $todayString = new \DateTime()->format('j M Y');
 
         $clientIsDischarged = str_contains($clientDtHtml, $todayString);
         ++$this->dischargedClient;
@@ -420,7 +418,7 @@ MESSAGE;
             $this->clickLink('Un-archive client');
             $this->iAmOnAdminClientUnarchivePage();
             $this->clickLink('Return to client dashboard');
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             // This step is used as part of testing the unarchive button isnt here so swallow errors and assert on following step
         }
     }
@@ -436,7 +434,7 @@ MESSAGE;
         /** @var Client $client */
         $client = $this->em->getRepository(Client::class)->find($clientId);
 
-        $client->setArchivedAt(new DateTime('yesterday'));
+        $client->setArchivedAt(new \DateTime('yesterday'));
 
         $this->em->persist($client);
         $this->em->flush();
@@ -469,7 +467,7 @@ MESSAGE;
         $this->assertInteractingWithUserIsSet();
 
         $client = $this->em->find(Client::class, $this->interactingWithUserDetails->getClientId());
-        $client->setDeletedAt(new DateTime());
+        $client->setDeletedAt(new \DateTime());
 
         $this->em->persist($client);
         $this->em->flush();

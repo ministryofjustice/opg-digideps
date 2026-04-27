@@ -99,12 +99,12 @@ class UserResearchResponse
         return $this;
     }
 
-    public function getCreated(): ?DateTime
+    public function getCreated(): ?\DateTime
     {
         return $this->created;
     }
 
-    public function setCreated(?DateTime $created): UserResearchResponse
+    public function setCreated(?\DateTime $created): UserResearchResponse
     {
         $this->created = $created;
 

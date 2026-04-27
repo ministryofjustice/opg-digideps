@@ -10,7 +10,6 @@ use OPG\Digideps\Frontend\EventSubscriber\UserDeletedSubscriber;
 use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
-use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
@@ -37,7 +36,7 @@ class UserDeletedSubscriberTest extends TestCase
         $logger = self::prophesize(LoggerInterface::class);
         $dateTimeProvider = self::prophesize(DateTimeProvider::class);
 
-        $now = new DateTime();
+        $now = new \DateTime();
         $dateTimeProvider->getDateTime()->willReturn($now);
         $sut = new UserDeletedSubscriber($logger->reveal(), $dateTimeProvider->reveal());
 
@@ -48,7 +47,7 @@ class UserDeletedSubscriberTest extends TestCase
 
         $expectedEvent = [
             'trigger' => $trigger,
-            'deleted_on' => $now->format(DateTime::ATOM),
+            'deleted_on' => $now->format(\DateTime::ATOM),
             'deleted_by' => $deletedBy->getEmail(),
             'subject_full_name' => $deletedUser->getFullName(),
             'subject_email' => $deletedUser->getEmail(),

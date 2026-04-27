@@ -2,8 +2,6 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
-use DateTime;
-use Exception;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\User;
@@ -34,11 +32,11 @@ class ReportSubmissionControllerTest extends AbstractTestController
                 ['setFirstname' => "c{$i}", 'setLastname' => "l{$i}", 'setCaseNumber' => "100000{$i}"]
             );
             $report = self::fixtures()->createReport($client, [
-                'setStartDate' => new DateTime('2014-01-01'),
-                'setEndDate' => new DateTime('2014-12-31'),
+                'setStartDate' => new \DateTime('2014-01-01'),
+                'setEndDate' => new \DateTime('2014-12-31'),
                 'setSubmitted' => true,
                 'setSubmittedBy' => self::$pa1, // irrelevant for assertions
-                'setSubmitDate' => new DateTime('2015-01-01'),
+                'setSubmitDate' => new \DateTime('2015-01-01'),
             ]);
             // create submission
             $submission = new ReportSubmission($report, ($i < 3) ? self::$pa2 : self::$deputy1);
@@ -269,12 +267,12 @@ class ReportSubmissionControllerTest extends AbstractTestController
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function updateReportSubmissionByIdWithNewDateTime(int $id, string $date)
     {
         $entity = self::fixtures()->getRepo(ReportSubmission::class)->findOneById($id);
-        $entity->setCreatedOn(new DateTime($date));
+        $entity->setCreatedOn(new \DateTime($date));
 
         self::fixtures()->persist($entity);
     }

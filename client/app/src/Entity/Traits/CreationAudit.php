@@ -14,7 +14,7 @@ trait CreationAudit
      *
      * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
      *
-     * @var \OPG\Digideps\Frontend\Entity\User
+     * @var User
      */
     protected $createdBy;
 
@@ -28,7 +28,7 @@ trait CreationAudit
     protected $createdOn;
 
     /**
-     * @return \OPG\Digideps\Frontend\Entity\User
+     * @return User
      */
     public function getCreatedBy()
     {

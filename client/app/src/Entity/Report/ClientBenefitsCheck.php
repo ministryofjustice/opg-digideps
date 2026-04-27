@@ -26,7 +26,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"report", "client-benefits-check"})
      */
-    private ?DateTime $created = null;
+    private ?\DateTime $created = null;
 
     /**
      * @JMS\Type("string")
@@ -42,7 +42,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
-    private ?DateTime $dateLastCheckedEntitlement = null;
+    private ?\DateTime $dateLastCheckedEntitlement = null;
 
     /**
      * @JMS\Type("string")
@@ -101,24 +101,24 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
         return $this;
     }
 
-    public function getDateLastCheckedEntitlement(): ?DateTime
+    public function getDateLastCheckedEntitlement(): ?\DateTime
     {
         return $this->dateLastCheckedEntitlement;
     }
 
-    public function setDateLastCheckedEntitlement(?DateTime $dateLastCheckedEntitlement): ClientBenefitsCheck
+    public function setDateLastCheckedEntitlement(?\DateTime $dateLastCheckedEntitlement): ClientBenefitsCheck
     {
         $this->dateLastCheckedEntitlement = $dateLastCheckedEntitlement;
 
         return $this;
     }
 
-    public function getCreated(): ?DateTime
+    public function getCreated(): ?\DateTime
     {
         return $this->created;
     }
 
-    public function setCreated(?DateTime $created): ClientBenefitsCheck
+    public function setCreated(?\DateTime $created): ClientBenefitsCheck
     {
         $this->created = $created;
 

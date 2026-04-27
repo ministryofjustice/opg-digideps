@@ -7,6 +7,8 @@ namespace OPG\Digideps\Backend\TestHelpers;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 
 class ReportSubmissionHelper
 {
@@ -18,8 +20,8 @@ class ReportSubmissionHelper
     /**
      * @return ReportSubmission
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function generateAndPersistReportSubmission()
     {

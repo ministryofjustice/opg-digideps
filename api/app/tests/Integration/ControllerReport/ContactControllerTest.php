@@ -183,7 +183,7 @@ class ContactControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $contact = self::fixtures()->getRepo(Contact::class)->find($return['data']['id']); /* @var $contact \OPG\Digideps\Backend\Entity\Report\Contact */
+        $contact = self::fixtures()->getRepo(Contact::class)->find($return['data']['id']);
         $this->assertEquals('address-changed', $contact->getAddress());
         $this->assertEquals(self::$report1->getId(), $contact->getReport()->getId());
 
@@ -204,7 +204,7 @@ class ContactControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         // assert account created with transactions
-        $contact = self::fixtures()->getRepo(Contact::class)->find($return['data']['id']); /* @var $contact \OPG\Digideps\Backend\Entity\Report\Contact */
+        $contact = self::fixtures()->getRepo(Contact::class)->find($return['data']['id']);
         $this->assertEquals('address-changed', $contact->getAddress());
         $this->assertEquals(self::$report1->getId(), $contact->getReport()->getId());
         // TODO assert other fields

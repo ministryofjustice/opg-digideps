@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\Uploader;
 
 use PHPUnit\Framework\Attributes\Test;
-use RuntimeException;
 use PHPUnit\Framework\Attributes\DataProvider;
-use DateTime;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\Report\Report;
@@ -59,7 +57,7 @@ final class LayDeputyshipUploaderTest extends KernelTestCase
     #[Test]
     public function throwsExceptionIfDataSetTooLarge(): void
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         $collection = new LayDeputyshipDtoCollection();
 
         for ($i = 0; $i < LayDeputyshipUploader::MAX_UPLOAD + 1; ++$i) {
@@ -145,7 +143,7 @@ final class LayDeputyshipUploaderTest extends KernelTestCase
         }
 
         // $existingClient = (new Client())->setCaseNumber('case-1');
-        $activeReport = new Report($existingClient, $currentReportType, new DateTime(), new DateTime(), false);
+        $activeReport = new Report($existingClient, $currentReportType, new \DateTime(), new \DateTime(), false);
         $this->reportRepository
             ->expects($this->once())
             ->method('findAllActiveReportsByCaseNumbersAndRole')

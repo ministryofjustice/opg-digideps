@@ -6,7 +6,6 @@ namespace OPG\Digideps\Backend\Command;
 
 use OPG\Digideps\Backend\Repository\SatisfactionRepository;
 use OPG\Digideps\Backend\Service\File\Storage\S3SatisfactionDataStorage;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

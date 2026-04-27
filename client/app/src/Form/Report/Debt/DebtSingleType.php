@@ -42,7 +42,7 @@ class DebtSingleType extends AbstractType
             'data_class' => Debt::class,
             'validation_groups' => function (FormInterface $form) {
                 $data = $form->getData();
-                /* @var $data \OPG\Digideps\Frontend\Entity\Report\Debt */
+                /* @var $data Debt */
                 $validationGroups = ['debts'];
 
                 if ($data->getAmount() && $data->getHasMoreDetails()) {

@@ -43,7 +43,7 @@ trait ReportGiftTrait
     }
 
     /**
-     * @return \OPG\Digideps\Frontend\Entity\Report\Gift[]
+     * @return Gift[]
      */
     public function getGifts()
     {

@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Service\Csv;
 
-use DateTime;
-use Exception;
-
 class ClientBenefitMetricsCsvGenerator
 {
     public function __construct(private CsvBuilder $csvBuilder)
@@ -14,7 +11,7 @@ class ClientBenefitMetricsCsvGenerator
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function generateClientBenefitsMetricCsv(array $clientBenefitResponses): string
     {
@@ -33,7 +30,7 @@ class ClientBenefitMetricsCsvGenerator
 
         foreach ($clientBenefitResponses as $response) {
             if (null !== $response['dateLastCheckedEntitlement']) {
-                $dateLastCheckedFormatted = new DateTime($response['dateLastCheckedEntitlement'])->format('Y-m-d');
+                $dateLastCheckedFormatted = new \DateTime($response['dateLastCheckedEntitlement'])->format('Y-m-d');
             }
 
             $rows[] = [

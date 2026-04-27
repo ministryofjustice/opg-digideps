@@ -132,7 +132,7 @@ class GiftControllerTest extends AbstractTestController
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_GIFTS));
 
         $gift = self::fixtures()->getRepo(Gift::class)->find($giftId);
-        /* @var $gift \OPG\Digideps\Backend\Entity\Report\Gift */
+        /* @var $gift Gift */
         $this->assertEquals(3.3, $gift->getAmount());
         $this->assertEquals('e3', $gift->getExplanation());
 
@@ -149,7 +149,7 @@ class GiftControllerTest extends AbstractTestController
         self::fixtures()->clear();
 
         $gift = self::fixtures()->getRepo(Gift::class)->find($giftId);
-        /* @var $gift \OPG\Digideps\Backend\Entity\Report\Gift */
+        /* @var $gift Gift */
         $this->assertEquals(3.31, $gift->getAmount());
         $this->assertEquals('e3.1', $gift->getExplanation());
 

@@ -10,6 +10,7 @@ use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Factory\OrganisationFactory;
@@ -220,7 +221,7 @@ class FixtureController extends AbstractController
         return $client;
     }
 
-    private function generatePreRegistration(mixed $fromRequest, Client $client, User $user): \OPG\Digideps\Backend\Entity\PreRegistration
+    private function generatePreRegistration(mixed $fromRequest, Client $client, User $user): PreRegistration
     {
         if (!is_array($fromRequest)) {
             throw new \InvalidArgumentException('Invalid request payload: expected array.');

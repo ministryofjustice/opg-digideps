@@ -13,7 +13,6 @@ use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Frontend\Service\File\Storage\FileNotFoundException;
 use OPG\Digideps\Frontend\Service\File\Storage\S3Storage;
 use Psr\Log\LoggerInterface;
-use Throwable;
 use Twig\Environment;
 
 class DocumentService
@@ -74,7 +73,7 @@ class DocumentService
             }
 
             return $s3Result && $endpointResult;
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $message = "cannot delete $documentId, ref $storageRef. Error: " . $e->getMessage();
             $this->log('error', $message);
 

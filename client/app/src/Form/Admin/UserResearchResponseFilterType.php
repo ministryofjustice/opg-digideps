@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Form\Admin;
 
-use DateTime;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -26,7 +25,7 @@ class UserResearchResponseFilterType extends AbstractType
                     'input' => 'datetime',
                     'format' => 'dd-MM-yyyy',
                     'invalid_message' => 'Enter a valid date',
-                    'data' => new DateTime('2020-01-01'),
+                    'data' => new \DateTime('2020-01-01'),
                 ]
             )
             ->add(
@@ -37,7 +36,7 @@ class UserResearchResponseFilterType extends AbstractType
                     'input' => 'datetime',
                     'format' => 'dd-MM-yyyy',
                     'invalid_message' => 'Enter a valid date',
-                    'data' => new DateTime(),
+                    'data' => new \DateTime(),
                 ]
             )
             ->add('submitAndDownload', SubmitType::class)
@@ -48,7 +47,7 @@ class UserResearchResponseFilterType extends AbstractType
     {
         $entity = $event->getData();
 
-        if ($entity->getEndDate() instanceof DateTime) {
+        if ($entity->getEndDate() instanceof \DateTime) {
             $endDate = $entity->getEndDate();
             $entity->setEndDate($endDate->setTime(23, 59, 59));
         }

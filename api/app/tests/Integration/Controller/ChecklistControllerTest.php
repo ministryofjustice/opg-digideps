@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
-use DateTime;
 use OPG\Digideps\Backend\Entity\Report\Checklist;
 use OPG\Digideps\Backend\Entity\User;
 
@@ -63,7 +62,7 @@ class ChecklistControllerTest extends AbstractTestController
 
         self::assertEquals(self::$checklist->getId(), $response['data']['id']);
         self::assertEquals(Checklist::SYNC_STATUS_SUCCESS, $response['data']['synchronisation_status']);
-        self::assertEqualsWithDelta(new DateTime()->getTimestamp(), new DateTime($response['data']['synchronisation_time'])->getTimestamp(), 5);
+        self::assertEqualsWithDelta(new \DateTime()->getTimestamp(), new \DateTime($response['data']['synchronisation_time'])->getTimestamp(), 5);
     }
 
     /**

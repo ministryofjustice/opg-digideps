@@ -8,7 +8,6 @@ use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Throwable;
 
 class MailSender implements MailSenderInterface
 {
@@ -37,7 +36,7 @@ class MailSender implements MailSenderInterface
                 '',
                 new AuditEvents($this->dateTimeProvider)->emailSent($email, $currentUser)
             );
-        } catch (Throwable $exception) {
+        } catch (\Throwable $exception) {
             $this->logger->error(sprintf('Error sending email: %s', $exception->getMessage()));
 
             $currentUser = $this->tokenStorage?->getToken()?->getUser();
