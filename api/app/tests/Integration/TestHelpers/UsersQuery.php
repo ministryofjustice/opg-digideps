@@ -15,7 +15,7 @@ class UsersQuery extends Query
 
     protected function getSupportedDimensions(): array
     {
-        return ['roleName', 'ndrEnabled'];
+        return ['roleName'];
     }
 
     public function getSubquery(): string
@@ -24,8 +24,7 @@ class UsersQuery extends Query
             SELECT
                 id,
                 registration_date date,
-                role_name roleName,
-                odr_enabled ndrEnabled
+                role_name roleName
             FROM dd_user
         ';
     }

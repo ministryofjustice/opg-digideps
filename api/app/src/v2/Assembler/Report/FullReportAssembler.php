@@ -27,7 +27,8 @@ class FullReportAssembler implements ReportAssemblerInterface
             return $reportDto;
         }
 
-        if (null === ($reportEntity = $this->reportRepository->find($reportDto->getId()))) {
+        $reportEntity = $this->reportRepository->find($reportDto->getId());
+        if (null === $reportEntity) {
             return $reportDto;
         }
 

@@ -27,7 +27,6 @@ class DocumentRepository extends ServiceEntityRepository
         d.filename as filename,
         d.storage_reference as storage_reference,
         d.report_id as report_id,
-        d.ndr_id as ndr_id,
         d.sync_attempts as document_sync_attempts,
         r.start_date as report_start_date,
         r.end_date as report_end_date,
@@ -35,15 +34,11 @@ class DocumentRepository extends ServiceEntityRepository
         r.type as report_type,
         rs.opg_uuid as opg_uuid,
         rs.created_on as report_submission_created_on,
-        o.start_date as ndr_start_date,
-        o.submit_date as ndr_submit_date,
-        coalesce(c1.case_number, c2.case_number) AS case_number
+        c1.case_number AS case_number
         FROM document as d
         LEFT JOIN report as r on d.report_id = r.id
-        LEFT JOIN odr as o on d.ndr_id = o.id
         LEFT JOIN report_submission as rs on d.report_submission_id  = rs.id
         LEFT JOIN client as c1 on r.client_id = c1.id
-        LEFT JOIN client as c2 on o.client_id = c2.id
         WHERE synchronisation_status='QUEUED'
         ORDER BY is_report_pdf DESC, report_submission_id ASC
         LIMIT $limit;";
@@ -55,7 +50,6 @@ class DocumentRepository extends ServiceEntityRepository
 
         $documents = [];
         $reportIds = [];
-        $ndrIds = [];
 
         // Get all queued documents
         $results = $result->fetchAllAssociative();
@@ -64,11 +58,10 @@ class DocumentRepository extends ServiceEntityRepository
                 'document_id' => $row['document_id'],
                 'document_created_on' => $row['document_created_on'],
                 'report_submission_id' => $row['report_submission_id'],
-                'ndr_id' => $row['ndr_id'],
                 'report_id' => $row['report_id'],
-                'report_start_date' => isset($row['report_start_date']) ? $row['report_start_date'] : (new \DateTime($row['ndr_start_date']))->format('Y-m-d'),
+                'report_start_date' => $row['report_start_date'],
                 'report_end_date' => $row['report_end_date'],
-                'report_submit_date' => isset($row['report_submit_date']) ? $row['report_submit_date'] : $row['ndr_submit_date'],
+                'report_submit_date' => $row['report_submit_date'],
                 'report_type' => $row['report_type'],
                 'is_report_pdf' => $row['is_report_pdf'],
                 'filename' => $row['filename'],
@@ -81,19 +74,15 @@ class DocumentRepository extends ServiceEntityRepository
             if (!empty($row['report_id'])) {
                 $reportIds[] = $row['report_id'];
             }
-
-            if (!empty($row['ndr_id'])) {
-                $ndrIds[] = $row['ndr_id'];
-            }
         }
 
         if (count($documents) > 0) {
-            $getReportSubmissionsQuery = $this->buildReportSubmissionsQuery(
-                array_values(array_filter(array_unique($reportIds))),
-                array_values(array_filter(array_unique($ndrIds)))
-            );
+            $reportIdsFilter = array_values(array_filter(array_unique($reportIds)));
+            $reportIdsString = implode(",", $reportIdsFilter);
 
-            $submissionStmt = $conn->prepare($getReportSubmissionsQuery);
+            $sql = "SELECT * FROM report_submission WHERE report_id IN ({$reportIdsString}) ORDER BY created_on";
+
+            $submissionStmt = $conn->prepare($sql);
             $result = $submissionStmt->executeQuery();
             $submissions = $result->fetchAllAssociative();
 
@@ -112,50 +101,46 @@ class DocumentRepository extends ServiceEntityRepository
 
     public function getResubmittableErrorDocumentsAndSetToQueued(string $limit)
     {
-        $resubmittableErrorDocumentsQuery = "
-SELECT d.id AS document_id,
-d.created_on AS document_created_on,
-d.report_submission_id AS report_submission_id,
-d.is_report_pdf AS is_report_pdf,
-d.filename AS filename,
-d.storage_reference AS storage_reference,
-d.report_id AS report_id,
-d.ndr_id AS ndr_id,
-d.sync_attempts AS document_sync_attempts,
-r.start_date AS report_start_date,
-r.end_date AS report_end_date,
-r.submit_date AS report_submit_date,
-r.type AS report_type,
-rs.opg_uuid AS opg_uuid,
-rs.created_on AS report_submission_created_on,
-o.start_date AS ndr_start_date,
-o.submit_date AS ndr_submit_date,
-COALESCE(c1.case_number, c2.case_number) AS case_number
-FROM document AS d
-LEFT JOIN report AS r on d.report_id = r.id
-LEFT JOIN odr AS o on d.ndr_id = o.id
-LEFT JOIN report_submission AS rs on d.report_submission_id  = rs.id
-LEFT JOIN client AS c1 on r.client_id = c1.id
-LEFT JOIN client AS c2 on o.client_id = c2.id
-WHERE
-    (
-        d.synchronisation_status='PERMANENT_ERROR'
-        AND
+        $resubmittableErrorDocumentsQuery = <<<SQL
+        SELECT d.id AS document_id,
+        d.created_on AS document_created_on,
+        d.report_submission_id AS report_submission_id,
+        d.is_report_pdf AS is_report_pdf,
+        d.filename AS filename,
+        d.storage_reference AS storage_reference,
+        d.report_id AS report_id,
+        d.sync_attempts AS document_sync_attempts,
+        r.start_date AS report_start_date,
+        r.end_date AS report_end_date,
+        r.submit_date AS report_submit_date,
+        r.type AS report_type,
+        rs.opg_uuid AS opg_uuid,
+        rs.created_on AS report_submission_created_on,
+        c1.case_number AS case_number
+        FROM document AS d
+        LEFT JOIN report AS r on d.report_id = r.id
+        LEFT JOIN report_submission AS rs on d.report_submission_id  = rs.id
+        LEFT JOIN client AS c1 on r.client_id = c1.id
+        WHERE
             (
-                d.synchronisation_error LIKE 'Report PDF failed to sync%'
-                OR
-                d.synchronisation_error LIKE 'Document failed to sync after%'
-                OR
-                d.synchronisation_error LIKE '%OPGDATA-API-FORBIDDEN%'
+                d.synchronisation_status='PERMANENT_ERROR'
+                AND
+                    (
+                        d.synchronisation_error LIKE 'Report PDF failed to sync%'
+                        OR
+                        d.synchronisation_error LIKE 'Document failed to sync after%'
+                        OR
+                        d.synchronisation_error LIKE '%OPGDATA-API-FORBIDDEN%'
+                    )
+            ) OR
+            (
+                d.synchronisation_status='IN_PROGRESS'
+                AND
+                rs.created_on < (CURRENT_DATE - 1)
             )
-    ) OR
-    (
-        d.synchronisation_status='IN_PROGRESS'
-        AND
-        rs.created_on < (CURRENT_DATE - 1)
-    )
-ORDER BY is_report_pdf DESC, report_submission_id ASC
-LIMIT $limit;";
+        ORDER BY is_report_pdf DESC, report_submission_id ASC
+        LIMIT $limit;
+        SQL;
 
         $conn = $this->getEntityManager()->getConnection();
 
@@ -171,11 +156,10 @@ LIMIT $limit;";
                 'document_id' => $row['document_id'],
                 'document_created_on' => $row['document_created_on'],
                 'report_submission_id' => $row['report_submission_id'],
-                'ndr_id' => $row['ndr_id'],
                 'report_id' => $row['report_id'],
-                'report_start_date' => isset($row['report_start_date']) ? $row['report_start_date'] : (new \DateTime($row['ndr_start_date']))->format('Y-m-d'),
+                'report_start_date' => $row['report_start_date'],
                 'report_end_date' => $row['report_end_date'],
-                'report_submit_date' => isset($row['report_submit_date']) ? $row['report_submit_date'] : $row['ndr_submit_date'],
+                'report_submit_date' => $row['report_submit_date'],
                 'report_type' => $row['report_type'],
                 'is_report_pdf' => $row['is_report_pdf'],
                 'filename' => $row['filename'],
@@ -283,7 +267,7 @@ AND is_report_pdf=false";
 
     private function groupSubmissionsByReportId(array $reportSubmissions)
     {
-        $groupedReportSubmissions = ['reports' => [], 'ndrs' => []];
+        $groupedReportSubmissions = ['reports' => []];
 
         foreach ($reportSubmissions as $row) {
             if (!is_null($row['report_id'])) {
@@ -292,18 +276,6 @@ AND is_report_pdf=false";
                     'opg_uuid' => $row['opg_uuid'],
                     'created_on' => $row['created_on'],
                     'report_id' => $row['report_id'],
-                    'ndr_id' => $row['ndr_id'],
-                    'contains_report_pdf' => $row['contains_report_pdf'],
-                ];
-            }
-
-            if (!is_null($row['ndr_id'])) {
-                $groupedReportSubmissions['ndrs'][$row['ndr_id']][] = [
-                    'id' => $row['id'],
-                    'opg_uuid' => $row['opg_uuid'],
-                    'created_on' => $row['created_on'],
-                    'report_id' => $row['report_id'],
-                    'ndr_id' => $row['ndr_id'],
                     'contains_report_pdf' => $row['contains_report_pdf'],
                 ];
             }
@@ -366,24 +338,6 @@ AND is_report_pdf=false";
         }
 
         return $documents;
-    }
-
-    private function buildReportSubmissionsQuery(array $reportIds, array $ndrIds)
-    {
-        $reportIdsString = implode(',', $reportIds);
-        $ndrIdsString = implode(',', $ndrIds);
-
-        if (count($reportIds) > 0 && count($ndrIds) < 1) {
-            return "SELECT * FROM report_submission WHERE (report_id IN ($reportIdsString)) ORDER BY created_on ASC;";
-        }
-
-        if (count($ndrIds) > 0 && count($reportIds) < 1) {
-            return "SELECT * FROM report_submission WHERE (ndr_id IN ($ndrIdsString)) ORDER BY created_on ASC;";
-        }
-
-        if (count($reportIds) > 0 && count($ndrIds) > 0) {
-            return "SELECT * FROM report_submission WHERE (report_id IN ($reportIdsString)) OR (ndr_id IN ($ndrIdsString)) ORDER BY created_on ASC;";
-        }
     }
 
     /**

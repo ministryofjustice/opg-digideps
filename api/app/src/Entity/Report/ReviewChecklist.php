@@ -2,7 +2,7 @@
 
 namespace App\Entity\Report;
 
-use App\Entity\ReportInterface;
+use App\Entity\Report\Report;
 use App\Entity\Traits\ModifyAudit;
 use App\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
@@ -89,7 +89,7 @@ class ReviewChecklist
      */
     protected $submittedOn;
 
-    public function __construct(ReportInterface $report)
+    public function __construct(Report $report)
     {
         $this->setReport($report);
     }
@@ -114,7 +114,7 @@ class ReviewChecklist
         return $this;
     }
 
-    public function getReport(): ReportInterface
+    public function getReport(): Report
     {
         return $this->report;
     }
@@ -122,7 +122,7 @@ class ReviewChecklist
     /**
      * @return $this
      */
-    public function setReport(ReportInterface $report)
+    public function setReport(Report $report)
     {
         $this->report = $report;
 

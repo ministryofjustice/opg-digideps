@@ -2,11 +2,9 @@
 
 namespace App\Entity;
 
-use App\Entity\Ndr\Ndr;
 use App\Entity\Report\Report;
 use App\Entity\Traits\CreateUpdateTimestamps;
 use App\Entity\Traits\IsSoftDeleteableEntity;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -73,13 +71,6 @@ class Client implements ClientInterface
     #[JMS\Groups(['client-reports'])]
     #[JMS\Type('ArrayCollection<App\Entity\Report\Report>')]
     private $reports;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Ndr\Ndr", mappedBy="client", cascade={"persist", "remove"})
-     **/
-    #[JMS\Groups(['basic', 'client-ndr', 'ndr_id'])]
-    #[JMS\Type('App\Entity\Ndr\Ndr')]
-    private ?Ndr $ndr = null;
 
     /**
      * @var string
@@ -590,20 +581,19 @@ class Client implements ClientInterface
     /**
      * get progress the user is currenty work on
      * That means the first one that is unsubmitted AND has an unsubmit date.
-     *
-     * @return Report|null
      */
     #[JMS\VirtualProperty]
     #[JMS\Type('App\Entity\Report\Report')]
     #[JMS\SerializedName('current_report')]
     #[JMS\Groups(['current-report'])]
-    public function getCurrentReport()
+    public function getCurrentReport(): ?Report
     {
         foreach ($this->getReports() as $r) {
             if (empty($r->getSubmitted()) && empty($r->getUnSubmitDate())) {
                 return $r;
             }
         }
+        return null;
     }
 
     /**
@@ -620,16 +610,6 @@ class Client implements ClientInterface
         }
 
         return $reportIds;
-    }
-
-    public function getNdr(): ?Ndr
-    {
-        return $this->ndr;
-    }
-
-    public function setNdr(?Ndr $ndr = null)
-    {
-        $this->ndr = $ndr;
     }
 
     /**

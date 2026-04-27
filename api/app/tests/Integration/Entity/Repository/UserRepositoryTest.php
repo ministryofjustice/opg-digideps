@@ -53,12 +53,6 @@ class UserRepositoryTest extends KernelTestCase
         $oldClientWithReport = self::$fixtures->createClient($oldUserWithReport);
         self::$fixtures->createReport($oldClientWithReport);
 
-        $oldUserWithNdr = self::$fixtures->createUser();
-        $oldUserWithNdr->setRegistrationDate(DateTime::createFromFormat('Y-m-d', '2019-03-03'));
-        $oldUserWithNdr->setRoleName(User::ROLE_LAY_DEPUTY);
-        $oldClientWithNdr = self::$fixtures->createClient($oldUserWithNdr);
-        self::$fixtures->createNdr($oldClientWithNdr);
-
         $oldProfUserWithNoClient = self::$fixtures->createUser();
         $oldProfUserWithNoClient->setRegistrationDate(DateTime::createFromFormat('Y-m-d', '2019-03-03'));
         $oldProfUserWithNoClient->setRoleName(User::ROLE_PROF_ADMIN);

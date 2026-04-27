@@ -271,15 +271,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var bool
      *
-     * @ORM\Column(name="odr_enabled", type="boolean", nullable=true, options = { "default": false })
-     */
-    #[JMS\Type('boolean')]
-    #[JMS\Groups(['user', 'user-login'])]
-    private $ndrEnabled;
-
-    /**
-     * @var bool
-     *
      * @ORM\Column(name="ad_managed", type="boolean", nullable=true, options = { "default": false })
      */
     #[JMS\Type('boolean')]
@@ -887,24 +878,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return bool
      */
-    public function getNdrEnabled()
-    {
-        return $this->ndrEnabled;
-    }
-
-    /**
-     * @param bool $ndrEnabled
-     */
-    public function setNdrEnabled($ndrEnabled): User
-    {
-        $this->ndrEnabled = $ndrEnabled;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
     public function isAdManaged()
     {
         return $this->adManaged;
@@ -1363,7 +1336,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'address_country' => 'setAddressCountry',
             'phone_alternative' => 'setPhoneAlternative',
             'phone_main' => 'setPhoneMain',
-            'ndr_enabled' => 'setNdrEnabled',
             'ad_managed' => 'setAdManaged',
             'role_name' => 'setRoleName',
             'job_title' => 'setJobTitle',

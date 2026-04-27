@@ -2,11 +2,10 @@
 
 namespace App\Entity\Report;
 
-use App\Entity\Ndr\Ndr;
-use App\Entity\ReportInterface;
 use App\Entity\Traits\CreationAudit;
 use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -28,8 +27,6 @@ class ReportSubmission
     public const string REMOVE_FILES_WHEN_OLDER_THAN = '-500 days';
 
     /**
-     * @var int
-     *
      * @JMS\Type("integer")
      *
      * @JMS\Groups({"report-submission", "report-submission-id"})
@@ -42,11 +39,9 @@ class ReportSubmission
      *
      * @ORM\SequenceGenerator(sequenceName="report_submission_id_seq", allocationSize=1, initialValue=1)
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var ?Report
-     *
      * @JMS\Type("App\Entity\Report\Report")
      *
      * @JMS\Groups({"report-submission"})
@@ -55,23 +50,10 @@ class ReportSubmission
      *
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
-    private $report;
+    private ?Report $report;
 
     /**
-     * @var ?Ndr
-     *
-     * @JMS\Type("App\Entity\Ndr\Ndr")
-     *
-     * @JMS\Groups({"report-submission"})
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr")
-     *
-     * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="CASCADE")
-     */
-    private $ndr;
-
-    /**
-     * @var ArrayCollection<int, Document>
+     * @var Collection<int, Document>
      *
      * @JMS\Type("ArrayCollection<App\Entity\Report\Document>")
      *
@@ -83,22 +65,18 @@ class ReportSubmission
      *
      * @ORM\OrderBy({"createdBy"="ASC"})
      */
-    private $documents;
+    private Collection $documents;
 
     /**
-     * @var bool
-     *
      * @JMS\Type("boolean")
      *
      * @JMS\Groups({"report-submission"})
      *
      * @ORM\Column(name="archived", type="boolean", options={"default": false}, nullable=false)
      */
-    private $archived = false;
+    private bool $archived = false;
 
     /**
-     * @var User|null
-     *
      * @JMS\Type("App\Entity\User")
      *
      * @JMS\Groups({"report-submission"})
@@ -107,61 +85,42 @@ class ReportSubmission
      *
      * @ORM\JoinColumn(name="archived_by", referencedColumnName="id", onDelete="SET NULL")
      */
-    private $archivedBy;
+    private ?User $archivedBy;
 
     /**
-     * @var bool
-     *
      * @JMS\Type("boolean")
      *
      * @JMS\Groups({"report-submission"})
      *
      * @ORM\Column(name="downloadable", type="boolean", options={ "default": true}, nullable=false)
      */
-    private $downloadable;
+    private bool $downloadable;
 
     /**
-     * @var string|null
-     *
      * @JMS\Type("string")
      *
      * @JMS\Groups({"report-submission", "report-submission-uuid"})
      *
      * @ORM\Column(name="opg_uuid", type="string", length=36, nullable=true)
      */
-    private $uuid;
+    private ?string $uuid;
 
-    /**
-     * ReportSubmission constructor.
-     */
-    public function __construct(ReportInterface $report, User $createdBy)
+    public function __construct(Report $report, User $createdBy)
     {
-        if ($report instanceof Report) {
-            $this->report = $report;
-            $this->report->addReportSubmission($this); // double-link for UNIT test purposes
-        } elseif ($report instanceof Ndr) {
-            $this->ndr = $report;
-        }
-
+        $this->report = $report;
+        $this->report->addReportSubmission($this); // double-link for UNIT test purposes
         $this->documents = new ArrayCollection();
         $this->createdBy = $createdBy;
         $this->downloadable = true;
+        $this->uuid = null;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return ReportSubmission
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
         $this->id = $id;
 
@@ -173,15 +132,7 @@ class ReportSubmission
         return $this->report;
     }
 
-    public function getNdr(): ?Ndr
-    {
-        return $this->ndr;
-    }
-
-    /**
-     * @return ReportSubmission
-     */
-    public function setReport(Report $report)
+    public function setReport(Report $report): static
     {
         $this->report = $report;
 
@@ -189,17 +140,14 @@ class ReportSubmission
     }
 
     /**
-     * @return ArrayCollection<int, Document>
+     * @return Collection<int, Document>
      */
-    public function getDocuments()
+    public function getDocuments(): Collection
     {
         return $this->documents;
     }
 
-    /**
-     * @return $this
-     */
-    public function addDocument(Document $document)
+    public function addDocument(Document $document): static
     {
         if (!$this->documents->contains($document)) {
             $this->documents->add($document);
@@ -213,63 +161,43 @@ class ReportSubmission
         return $this->archived;
     }
 
-    public function setArchived(bool $archived): ReportSubmission
+    public function setArchived(bool $archived): static
     {
         $this->archived = $archived;
 
         return $this;
     }
 
-    /**
-     * @return User|null
-     */
-    public function getArchivedBy()
+    public function getArchivedBy(): ?User
     {
         return $this->archivedBy;
     }
 
-    /**
-     * @return ReportSubmission
-     */
-    public function setArchivedBy(?User $archivedBy = null)
+    public function setArchivedBy(?User $archivedBy = null): static
     {
         $this->archivedBy = $archivedBy;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDownloadable()
+    public function getDownloadable(): bool
     {
         return $this->downloadable;
     }
 
-    /**
-     * @param mixed $downloadable
-     *
-     * @return ReportSubmission
-     */
-    public function setDownloadable($downloadable)
+    public function setDownloadable(bool $downloadable): static
     {
         $this->downloadable = $downloadable;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getUuid(): ?string
     {
         return $this->uuid;
     }
 
-    /**
-     * @return $this
-     */
-    public function setUuid(?string $uuid)
+    public function setUuid(?string $uuid): static
     {
         $this->uuid = $uuid;
 

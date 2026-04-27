@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Client;
-use App\Entity\ReportInterface;
+use App\Entity\Report\Report;
 use App\Entity\User;
 use App\Exception\NotFound;
 use App\Utility\Query\Hydrator;
@@ -41,7 +41,7 @@ abstract class RestController extends AbstractController
         Hydrator::hydrateEntityWithArrayData($object, $data, $keySetters);
     }
 
-    protected function denyAccessIfReportDoesNotBelongToUser(ReportInterface $report): void
+    protected function denyAccessIfReportDoesNotBelongToUser(Report $report): void
     {
         if (!$this->isGranted('edit', $report->getClient())) {
             if (!$this->checkIfUserHasAccessViaDeputyUid($report->getClient()->getId())) {

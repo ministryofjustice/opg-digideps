@@ -32,7 +32,7 @@ class MoneyTransactionShortController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function addMoneyTransaction(Request $request, int $reportId): int
     {
-        $report = $this->findEntityBy(Report::class, $reportId); /* @var $report \App\Entity\Report\Report */
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $data = $this->formatter->deserializeBodyContent($request, [

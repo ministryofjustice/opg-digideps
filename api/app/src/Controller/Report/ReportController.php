@@ -936,16 +936,17 @@ class ReportController extends RestController
 
         $this->formatter->setJmsSerialiserGroups($groups);
 
-        /** @var array $data */
         $data = $this->formatter->deserializeBodyContent($request);
 
         if (!isset($data['sectionIds']) || empty($data['sectionIds'])) {
             throw new InvalidArgumentException('SectionIds are required to refresh the Report cache');
         }
 
-        /** @var ReportRepository $reportRepo */
         $reportRepo = $this->em->getRepository(Report::class);
         $report = $reportRepo->find($reportId);
+        if ($report === null) {
+            throw new InvalidArgumentException('Invalid reportId');
+        }
 
         $report->updateSectionsStatusCache($data['sectionIds']);
 

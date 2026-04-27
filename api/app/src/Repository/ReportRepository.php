@@ -12,7 +12,6 @@ use App\Entity\SynchronisableInterface;
 use App\Service\Search\ClientSearchFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -20,6 +19,9 @@ use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
+/**
+ * @extends ServiceEntityRepository<Report>
+ */
 class ReportRepository extends ServiceEntityRepository
 {
     public const int USER_DETERMINANT = 1;
@@ -177,9 +179,6 @@ class ReportRepository extends ServiceEntityRepository
         return 0 === count($result) ? null : $result;
     }
 
-    /**
-     * @throws DBALException
-     */
     public function getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(int $limit): array
     {
         $em = $this->getEntityManager();
