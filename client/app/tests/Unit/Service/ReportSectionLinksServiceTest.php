@@ -2,7 +2,7 @@
 
 namespace Tests\OPG\Digideps\Frontend\Unit\Service;
 
-use OPG\Digideps\Frontend\Entity\ReportInterface;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use Mockery\MockInterface;
 use Tests\OPG\Digideps\Frontend\Unit\MockeryStub as m;
 use OPG\Digideps\Frontend\Service\ReportSectionsLinkService;
@@ -12,7 +12,7 @@ use Symfony\Component\Routing\RouterInterface;
 class ReportSectionLinksServiceTest extends TestCase
 {
     protected ReportSectionsLinkService $sut;
-    private ReportInterface|MockInterface $report;
+    private Report&MockInterface $report;
 
     public function setUp(): void
     {
@@ -20,7 +20,7 @@ class ReportSectionLinksServiceTest extends TestCase
         $router->shouldReceive('generate')->withAnyArgs()->andReturnUsing(function ($a, $b) {
             return $a . http_build_query($b);
         });
-        $this->report = m::mock(ReportInterface::class);
+        $this->report = m::mock(Report::class);
 
         $this->report
             ->shouldReceive('getId')->andReturn('1')

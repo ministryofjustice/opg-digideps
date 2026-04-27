@@ -9265,12 +9265,6 @@ parameters:
 			path: src/Service/PreRegistrationVerificationService.php
 
 		-
-			message: '#^Instanceof between OPG\\Digideps\\Backend\\Entity\\Report\\Report and OPG\\Digideps\\Backend\\Entity\\Report\\Report will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: src/Service/ReportService.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Service\\ReportService\:\:clonePersistentResources\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -38879,72 +38873,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: tests/Integration/Factory/MissingReport/MissingReportFinderTest.php
-
-		-
-			message: '#^Parameter \#1 \$action of class OPG\\Digideps\\Backend\\Entity\\StagingSelectedCandidate constructor expects OPG\\Digideps\\Backend\\v2\\Registration\\Enum\\DeputyshipCandidateAction, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$expectedCount of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$needle of method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$needle of method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \#2 \$orderUid of class OPG\\Digideps\\Backend\\Entity\\StagingSelectedCandidate constructor expects string, int given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \$courtOrderReportType of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createCourtOrder\(\) expects OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderReportType\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \$kind of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createCourtOrder\(\) expects OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderKind, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \$type of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createCourtOrder\(\) expects OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderType, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \$uid of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createCourtOrder\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Factory\\ReportTypeUpdateFactoryIntegrationTest\:\:\$sut \(OPG\\Digideps\\Backend\\Factory\\ReportTypeUpdateFactory\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'

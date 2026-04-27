@@ -25,11 +25,7 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
     {
         parent::setUpBeforeClass();
 
-        self::assertNotNull(self::$entityManager, 'EntityManager should be configured');
-
         self::$fixtures = new Fixtures(self::$entityManager);
-
-        self::assertNotNull(self::$container, 'Container should be configured');
 
         /** @var ReportTypeUpdateFactory $sut */
         $sut = self::$container->get(ReportTypeUpdateFactory::class);
