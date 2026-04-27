@@ -55,19 +55,11 @@ jobs:
         id: unit-tests
         run: |
           make client-unit-tests ADDITIONAL_CONFIG=""
-          docker compose -f docker-compose.yml exec -T pact-mock cat /tmp/pacts/complete_the_deputy_report-opg_data.json > pact.json
-          docker compose -f docker-compose.yml down
 
       - name: Move cache
         run: |
           rm -rf /tmp/.buildx-cache
           mv /tmp/.buildx-cache-new /tmp/.buildx-cache
-
-      - name: archive pact results
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
-        with:
-          name: pact.json
-          path: pact.json
 
       - name: archive test results
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
