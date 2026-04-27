@@ -4,7 +4,6 @@ namespace Tests\OPG\Digideps\Frontend\Unit\Validator\Constraints\ProfDeputyCosts
 
 use OPG\Digideps\Frontend\Entity\Report\ProfDeputyEstimateCost;
 use OPG\Digideps\Frontend\Entity\Report\Report;
-use OPG\Digideps\Frontend\Entity\ReportInterface;
 use OPG\Digideps\Frontend\Validator\Constraints\ProfDeputyCostsEstimate\CostBreakdownNotGreaterThanTotal;
 use OPG\Digideps\Frontend\Validator\Constraints\ProfDeputyCostsEstimate\CostBreakdownNotGreaterThanTotalValidator;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -20,8 +19,7 @@ class CostBreakdownNotGreaterThanTotalValidatorTest extends TestCase
     /** @var ExecutionContextInterface | MockObject */
     private $context;
 
-    /** @var ReportInterface */
-    private $data;
+    private Report $data;
 
     /**
      * {@inheritdoc}
@@ -44,7 +42,7 @@ class CostBreakdownNotGreaterThanTotalValidatorTest extends TestCase
     public function testValidatorAddsConstraintIfBreakdownTotalGreaterThanAmountItCanExceed()
     {
         $this
-            ->setTotalCostEstimate(43)
+            ->setTotalCostEstimate(43.0)
             ->setIndividualBreakdownCosts(30, 13.01)
             ->assertConstraintWillBeApplied()
             ->invokeTest();
@@ -56,7 +54,7 @@ class CostBreakdownNotGreaterThanTotalValidatorTest extends TestCase
     public function testValidatorIgnoresConstraintIfBreakdownTotalNotGreaterThanAmountItCanExceed($costVariation)
     {
         $this
-            ->setTotalCostEstimate(43)
+            ->setTotalCostEstimate(43.0)
             ->setIndividualBreakdownCosts(30, $costVariation)
             ->assertConstraintWillNotBeApplied()
             ->invokeTest();
@@ -73,11 +71,7 @@ class CostBreakdownNotGreaterThanTotalValidatorTest extends TestCase
         ];
     }
 
-    /**
-     * @param $totalCost
-     * @return $this
-     */
-    private function setTotalCostEstimate($totalCost)
+    private function setTotalCostEstimate(float $totalCost): static
     {
         $this->data->setProfDeputyManagementCostAmount($totalCost);
 

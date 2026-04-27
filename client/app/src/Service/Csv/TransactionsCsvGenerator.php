@@ -7,7 +7,7 @@ namespace OPG\Digideps\Frontend\Service\Csv;
 use OPG\Digideps\Frontend\Entity\Report\Expense;
 use OPG\Digideps\Frontend\Entity\Report\Gift;
 use OPG\Digideps\Frontend\Entity\Report\MoneyTransaction;
-use OPG\Digideps\Frontend\Entity\ReportInterface;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TransactionsCsvGenerator
@@ -25,7 +25,7 @@ class TransactionsCsvGenerator
     /**
      * @return string
      */
-    public function generateTransactionsCsv(ReportInterface $report)
+    public function generateTransactionsCsv(Report $report)
     {
         $headers = ['Type', 'Category', 'Amount', 'Bank name', 'Account details', 'Description'];
         $this->generateTransactionsCsvLines($report);
@@ -36,7 +36,7 @@ class TransactionsCsvGenerator
     /**
      * Generates the lines of the CSV.
      */
-    private function generateTransactionsCsvLines(ReportInterface $report)
+    private function generateTransactionsCsvLines(Report $report)
     {
         $this->generateTransactionRows($report->getGifts(), 'gift');
         $this->generateTransactionRows($report->getExpenses(), 'expense');
