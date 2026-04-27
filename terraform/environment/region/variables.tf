@@ -74,14 +74,8 @@ locals {
   deputyships_report_csv_file = "deputyshipsReport.csv"
 
 
-  is_pr_environment = !contains([
-    "development",
-    "preproduction",
-    "production",
-    "staging"
-  ], local.environment)
+  wait_for_ecs_steady_state = var.account.ecs.wait_for_steady_state
 
-  wait_for_ecs_steady_state = !local.is_pr_environment
   # DNS switch variables
   certificate_arn = var.certificate_arn == "" ? data.aws_acm_certificate.service_justice.arn : var.certificate_arn
 
