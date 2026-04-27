@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace OPG\Digideps\Frontend\Command;
 
-use App\Service\Audit\AwsAuditLogHandler;
-use App\Service\Client\GovUK\BankHolidaysAPIClient;
-use App\Service\Client\Slack\ClientFactory;
-use App\Service\SecretManagerService;
-use App\Service\Time\DateTimeProvider;
+use OPG\Digideps\Frontend\Service\Audit\AwsAuditLogHandler;
+use OPG\Digideps\Frontend\Service\Client\GovUK\BankHolidaysAPIClient;
+use OPG\Digideps\Frontend\Service\Client\Slack\ClientFactory;
+use OPG\Digideps\Frontend\Service\SecretManagerService;
+use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use Aws\Exception\AwsException;
 use DateInterval;
 use DateTime;

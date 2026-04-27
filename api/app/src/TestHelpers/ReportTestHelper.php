@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\TestHelpers;
+namespace OPG\Digideps\Backend\TestHelpers;
 
-use App\Entity\Client;
-use App\Entity\Report\Action;
-use App\Entity\Report\BankAccount;
-use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\Debt;
-use App\Entity\Report\Document;
-use App\Entity\Report\Lifestyle;
-use App\Entity\Report\MentalCapacity;
-use App\Entity\Report\MoneyReceivedOnClientsBehalf;
-use App\Entity\Report\MoneyTransaction;
-use App\Entity\Report\ProfDeputyOtherCost;
-use App\Entity\Report\Report;
-use App\Entity\Report\ReportSubmission;
-use App\Entity\Report\VisitsCare;
-use App\Entity\User;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\Action;
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
+use OPG\Digideps\Backend\Entity\Report\Debt;
+use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\Lifestyle;
+use OPG\Digideps\Backend\Entity\Report\MentalCapacity;
+use OPG\Digideps\Backend\Entity\Report\MoneyReceivedOnClientsBehalf;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransaction;
+use OPG\Digideps\Backend\Entity\Report\ProfDeputyOtherCost;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Entity\Report\VisitsCare;
+use OPG\Digideps\Backend\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 

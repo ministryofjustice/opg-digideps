@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service\RestHandler\Report;
+namespace Tests\OPG\Digideps\Backend\Unit\Service\RestHandler\Report;
 
 use DateTime;
 use DateTimeZone;
 use PHPUnit\Framework\Attributes\DataProvider;
 use InvalidArgumentException;
-use App\Entity\Client;
-use App\Entity\Report\ProfDeputyEstimateCost;
-use App\Entity\Report\Report;
-use App\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\ProfDeputyEstimateCost;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\MockObject\MockObject;

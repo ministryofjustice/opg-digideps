@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service\Availability;
+namespace OPG\Digideps\Frontend\Service\Availability;
 
-use App\Service\Client\Sirius\SiriusHealthCheckClient;
+use OPG\Digideps\Frontend\Service\Client\Sirius\SiriusHealthCheckClient;
 
 class SiriusApiAvailability extends ServiceAvailabilityAbstract
 {

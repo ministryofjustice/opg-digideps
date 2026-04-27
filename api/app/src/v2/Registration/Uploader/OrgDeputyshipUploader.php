@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\Uploader;
+namespace OPG\Digideps\Backend\v2\Registration\Uploader;
 
-use App\Domain\Deputy\DeputyType;
-use App\Entity\Client;
-use App\Entity\Deputy;
-use App\Entity\Organisation;
-use App\Entity\Report\Report;
-use App\Exception\ClientIsArchivedException;
-use App\Factory\OrganisationFactory;
-use App\v2\Assembler\ClientAssembler;
-use App\v2\Assembler\DeputyAssembler;
-use App\v2\Registration\DTO\OrgDeputyshipDto;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Exception\ClientIsArchivedException;
+use OPG\Digideps\Backend\Factory\OrganisationFactory;
+use OPG\Digideps\Backend\v2\Assembler\ClientAssembler;
+use OPG\Digideps\Backend\v2\Assembler\DeputyAssembler;
+use OPG\Digideps\Backend\v2\Registration\DTO\OrgDeputyshipDto;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 

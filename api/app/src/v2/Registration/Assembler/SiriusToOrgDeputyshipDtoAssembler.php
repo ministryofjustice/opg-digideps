@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\Assembler;
+namespace OPG\Digideps\Backend\v2\Registration\Assembler;
 
-use App\Service\ReportUtils;
-use App\v2\Registration\DTO\OrgDeputyshipDto;
+use OPG\Digideps\Backend\Service\ReportUtils;
+use OPG\Digideps\Backend\v2\Registration\DTO\OrgDeputyshipDto;
 
 class SiriusToOrgDeputyshipDtoAssembler
 {

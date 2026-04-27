@@ -315,7 +315,7 @@ services:
     env_file:
       - ./client/app/frontend.env
     volumes:
-      - ./client/app/tests/phpunit/coverage:/var/www/tests/phpunit/coverage
+      - ./client/app/tests/Unit/coverage:/var/www/tests/Unit/coverage
       - ./build/coverage-client:/var/www/build/coverage-client
     command: sleep infinity
 

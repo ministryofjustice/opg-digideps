@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Backend\Entity\Report;
 
-use App\Entity\Traits\CreationAudit;
-use App\Entity\User;
+use OPG\Digideps\Backend\Entity\Traits\CreationAudit;
+use OPG\Digideps\Backend\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,7 +16,7 @@ use JMS\Serializer\Annotation as JMS;
  *     @ORM\Index(name="rs_created_on_idx", columns={"created_on"})
  *  })
  *
- * @ORM\Entity(repositoryClass="App\Repository\ReportSubmissionRepository")
+ * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\ReportSubmissionRepository")
  */
 class ReportSubmission
 {
@@ -42,11 +42,11 @@ class ReportSubmission
     private int $id;
 
     /**
-     * @JMS\Type("App\Entity\Report\Report")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\Report")
      *
      * @JMS\Groups({"report-submission"})
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="reportSubmissions", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="reportSubmissions", cascade={"persist"})
      *
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
@@ -55,11 +55,11 @@ class ReportSubmission
     /**
      * @var Collection<int, Document>
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Report\Document>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\Document>")
      *
      * @JMS\Groups({"report-submission", "report-submission-documents"})
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\Document", mappedBy="reportSubmission", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\Document", mappedBy="reportSubmission", cascade={"persist"})
      *
      * @ORM\JoinColumn(name="report_submission_id", referencedColumnName="id", onDelete="CASCADE")
      *
@@ -77,11 +77,11 @@ class ReportSubmission
     private bool $archived = false;
 
     /**
-     * @JMS\Type("App\Entity\User")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\User")
      *
      * @JMS\Groups({"report-submission"})
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\User", fetch="EAGER")
      *
      * @ORM\JoinColumn(name="archived_by", referencedColumnName="id", onDelete="SET NULL")
      */

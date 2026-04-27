@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Service;
+namespace OPG\Digideps\Backend\Service;
 
-use App\Entity\User;
-use App\Repository\ClientRepository;
-use App\Repository\UserRepository;
-use App\v2\DTO\InviteeDto;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\ClientRepository;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\v2\DTO\InviteeDto;
 use Doctrine\ORM\EntityManagerInterface;
 use Random\RandomException;
 

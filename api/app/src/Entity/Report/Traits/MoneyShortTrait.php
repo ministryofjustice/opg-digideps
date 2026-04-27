@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
-use App\Entity\Report\MoneyShortCategory;
-use App\Entity\Report\MoneyTransactionShort;
-use App\Entity\Report\MoneyTransactionShortIn;
-use App\Entity\Report\MoneyTransactionShortOut;
+use OPG\Digideps\Backend\Entity\Report\MoneyShortCategory;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShort;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortIn;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortOut;
 use Doctrine\Common\Collections\ArrayCollection;
 
 trait MoneyShortTrait
@@ -13,7 +13,7 @@ trait MoneyShortTrait
     /**
      * @var MoneyShortCategory[]
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\MoneyShortCategory", mappedBy="report", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\MoneyShortCategory", mappedBy="report", cascade={"persist"})
      *
      * @ORM\OrderBy({"id" = "ASC"})
      */
@@ -22,7 +22,7 @@ trait MoneyShortTrait
     /**
      * @var MoneyTransactionShort[]
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\MoneyTransactionShort", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\MoneyTransactionShort", mappedBy="report", cascade={"persist", "remove"})
      *
      * @ORM\OrderBy({"id" = "ASC"})
      */
@@ -73,7 +73,7 @@ trait MoneyShortTrait
     }
 
     /**
-     * @return \App\Entity\Report\MoneyShortCategory[]
+     * @return \OPG\Digideps\Backend\Entity\Report\MoneyShortCategory[]
      */
     public function getMoneyShortCategoriesInPresent()
     {
@@ -97,7 +97,7 @@ trait MoneyShortTrait
     }
 
     /**
-     * @return \App\Entity\Report\MoneyShortCategory[]
+     * @return \OPG\Digideps\Backend\Entity\Report\MoneyShortCategory[]
      */
     public function getMoneyShortCategoriesOutPresent()
     {
@@ -127,7 +127,7 @@ trait MoneyShortTrait
     }
 
     /**
-     * @return \App\Entity\Report\MoneyTransactionShort[]
+     * @return \OPG\Digideps\Backend\Entity\Report\MoneyTransactionShort[]
      */
     public function getMoneyTransactionsShort()
     {

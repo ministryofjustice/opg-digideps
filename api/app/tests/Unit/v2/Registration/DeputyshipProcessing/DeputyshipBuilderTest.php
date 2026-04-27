@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\DeputyshipProcessing;
+namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\DeputyshipProcessing;
 
-use App\Domain\Deputyship\DeputyshipCandidatesConverter;
-use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
-use App\v2\Registration\Enum\DeputyshipCandidateAction;
+use OPG\Digideps\Backend\Domain\Deputyship\DeputyshipCandidatesConverter;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipBuilder;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 use ArrayIterator;
 use PHPUnit\Framework\TestCase;
 use stdClass;

@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Tests\Integration\ControllerReport;
+namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
-use App\Entity\Report\Report;
-use App\Tests\Integration\Controller\AbstractTestController;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\VisitsCare;
+use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class VisitsCareControllerTest extends AbstractTestController
 {
@@ -25,7 +27,7 @@ class VisitsCareControllerTest extends AbstractTestController
         self::$fixtures::deleteReportsData(['safeguarding']);
 
         // deputy1
-        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
         self::$report1 = self::fixtures()->createReport(self::$client1);
         self::$visitsCare1 = self::fixtures()->createVisitsCare(self::$report1, ['setDoYouLiveWithClient' => 'y']);
@@ -175,7 +177,7 @@ class VisitsCareControllerTest extends AbstractTestController
 
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_VISITS_CARE));
 
-        $visitsCare = self::fixtures()->getRepo('Report\VisitsCare')->find($return['data']['id']); /* @var $visitsCare \App\Entity\Report\VisitsCare */
+        $visitsCare = self::fixtures()->getRepo(VisitsCare::class)->find($return['data']['id']);
         $this->assertEquals('y-m', $visitsCare->getDoYouLiveWithClient());
         $this->assertEquals('hodycc', $visitsCare->getHowOftenDoYouContactClient());
         $this->assertEquals(self::$report1->getId(), $visitsCare->getReport()->getId());
@@ -218,7 +220,7 @@ class VisitsCareControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $this->assertTrue(null === self::fixtures()->clear()->getRepo('Report\VisitsCare')->find($id));
+        $this->assertTrue(null === self::fixtures()->clear()->getRepo(VisitsCare::class)->find($id));
     }
 
     /**
@@ -250,7 +252,7 @@ class VisitsCareControllerTest extends AbstractTestController
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_VISITS_CARE));
 
         // assert account created with transactions
-        $visitsCare = self::fixtures()->getRepo('Report\VisitsCare')->find($return['data']['id']); /* @var $visitsCare \App\Entity\Report\VisitsCare */
+        $visitsCare = self::fixtures()->getRepo(VisitsCare::class)->find($return['data']['id']); /* @var $visitsCare VisitsCare */
         $this->assertEquals('y-m', $visitsCare->getDoYouLiveWithClient());
         $this->assertEquals(self::$report1->getId(), $visitsCare->getReport()->getId());
     }

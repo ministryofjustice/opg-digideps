@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Admin;
+namespace OPG\Digideps\Frontend\Controller\Admin;
 
-use App\Controller\AbstractController;
-use App\Service\Client\Internal\LayDeputyshipApi;
-use App\Service\Client\Internal\PreRegistrationApi;
+use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Service\Client\Internal\LayDeputyshipApi;
+use OPG\Digideps\Frontend\Service\Client\Internal\PreRegistrationApi;
 use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\ExpressionLanguage\Expression;

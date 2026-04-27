@@ -1,6 +1,6 @@
 <?php
 
-namespace App\EventListener;
+namespace OPG\Digideps\Frontend\EventListener;
 
 use InvalidArgumentException;
 use Psr\Log\LoggerInterface;

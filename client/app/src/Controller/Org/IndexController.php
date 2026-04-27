@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Org;
+namespace OPG\Digideps\Frontend\Controller\Org;
 
-use App\Controller\AbstractController;
-use App\Entity\Client;
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\Exception\RestClientException;
-use App\Form\Org\ClientArchiveType;
-use App\Form\Org\ClientType;
-use App\Service\Audit\AuditEvents;
-use App\Service\Client\Internal\ClientApi;
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Exception\RestClientException;
+use OPG\Digideps\Frontend\Form\Org\ClientArchiveType;
+use OPG\Digideps\Frontend\Form\Org\ClientType;
+use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
+use OPG\Digideps\Frontend\Service\Client\Internal\ClientApi;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -68,7 +68,7 @@ class IndexController extends AbstractController
 
         $response = $this->restClient->get($endpoint, 'array');
 
-        $reports = $this->restClient->arrayToEntities(Report::class . '[]', $response['reports']);
+        $reports = $this->restClient->arrayToEntities(Report::class, $response['reports']);
 
         return [
             'filters' => $currentFilters,

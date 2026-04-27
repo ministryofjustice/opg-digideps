@@ -1,8 +1,8 @@
 <?php
 
-namespace App\v2\DTO;
+namespace OPG\Digideps\Backend\v2\DTO;
 
-use App\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\Organisation;
 
 class ClientDto
 {

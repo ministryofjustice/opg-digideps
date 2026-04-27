@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Controller\Report;
+namespace OPG\Digideps\Backend\Controller\Report;
 
-use App\Controller\RestController;
-use App\Entity\Report\BankAccount;
-use App\Entity\Report\MoneyTransaction;
-use App\Entity\Report\Report;
-use App\Repository\MoneyTransactionRepository;
-use App\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\Controller\RestController;
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransaction;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Repository\MoneyTransactionRepository;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -80,7 +80,7 @@ class MoneyTransactionController extends RestController
         $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $t = $this->findEntityBy(MoneyTransaction::class, $transactionId, 'transaction not found'); /* @var $t \App\Entity\Report\MoneyTransaction */
+        $t = $this->findEntityBy(MoneyTransaction::class, $transactionId, 'transaction not found'); /* @var $t \OPG\Digideps\Backend\Entity\Report\MoneyTransaction */
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
         // set data

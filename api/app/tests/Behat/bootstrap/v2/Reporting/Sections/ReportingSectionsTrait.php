@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Tests\Behat\v2\Reporting\Sections;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections;
 
-use App\Tests\Behat\BehatException;
+use Tests\OPG\Digideps\Backend\Behat\BehatException;
 use Behat\Step\Then;
 use Behat\Step\When;
 

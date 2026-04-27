@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Mapper\ReportSatisfaction;
+namespace OPG\Digideps\Frontend\Mapper\ReportSatisfaction;
 
-use App\Mapper\DateRangeQuery;
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Mapper\DateRangeQuery;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 
 class ReportSatisfactionSummaryMapper
 {

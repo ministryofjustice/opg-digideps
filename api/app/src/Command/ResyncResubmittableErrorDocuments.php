@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Command;
+namespace OPG\Digideps\Backend\Command;
 
-use App\Repository\DocumentRepository;
+use OPG\Digideps\Backend\Repository\DocumentRepository;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,7 +23,7 @@ class ResyncResubmittableErrorDocuments extends Command
             $output->writeln('resync_resubmittable_error_documents - success - Updated ' . count($updatedDocuments) . ' documents back to QUEUED status');
 
             return 0;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             $output->writeln('resync_resubmittable_error_documents - failure - Failed to update documents back to QUEUED status');
             $output->writeln($e);
 

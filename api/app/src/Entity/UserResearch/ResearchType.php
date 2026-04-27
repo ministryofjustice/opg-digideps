@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\UserResearch;
+namespace OPG\Digideps\Backend\Entity\UserResearch;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -35,11 +35,11 @@ class ResearchType
     }
 
     /**
-     * @JMS\Type("App\Entity\UserResearch\UserResearchResponse")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse")
      *
      * @JMS\Groups({"user-research", "satisfaction"})
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="researchType", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse", mappedBy="researchType", cascade={"persist"})
      */
     private UserResearchResponse $userResearchResponse;
 

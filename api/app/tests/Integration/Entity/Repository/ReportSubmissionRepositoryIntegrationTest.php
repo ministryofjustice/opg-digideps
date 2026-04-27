@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Repository;
+namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
-use App\Entity\Client;
-use App\Repository\ReportSubmissionRepository;
-use App\TestHelpers\UserTestHelper;
-use App\Tests\Integration\ApiIntegrationTestCase;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Repository\ReportSubmissionRepository;
+use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use DateTime;
-use App\Entity\Report\Document;
-use App\Entity\Report\ReportSubmission;
-use App\TestHelpers\ReportSubmissionHelper;
-use App\TestHelpers\ReportTestHelper;
+use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\TestHelpers\ReportSubmissionHelper;
+use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
 
 class ReportSubmissionRepositoryIntegrationTest extends ApiIntegrationTestCase
 {

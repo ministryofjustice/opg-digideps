@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\Registration;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\Registration;
 
-use App\Entity\Client;
-use App\Entity\Deputy;
-use App\Entity\Organisation;
-use App\Entity\PreRegistration;
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\Tests\Behat\BehatException;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Behat\BehatException;
 use Behat\Gherkin\Node\TableNode;
 use Symfony\Component\Console\Input\ArrayInput;
 

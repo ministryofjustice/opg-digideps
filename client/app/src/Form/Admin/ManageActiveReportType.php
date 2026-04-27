@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Form\Admin;
+namespace OPG\Digideps\Frontend\Form\Admin;
 
-use App\Form\DateType;
-use App\Form\Subscriber\ReportTypeChoicesSubscriber;
-use App\Form\Traits\HasTranslatorTrait;
+use OPG\Digideps\Frontend\Form\DateType;
+use OPG\Digideps\Frontend\Form\Subscriber\ReportTypeChoicesSubscriber;
+use OPG\Digideps\Frontend\Form\Traits\HasTranslatorTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;

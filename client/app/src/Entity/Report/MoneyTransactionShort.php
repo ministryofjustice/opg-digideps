@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Frontend\Entity\Report;
 
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -16,7 +16,7 @@ class MoneyTransactionShort
     private $id;
 
     /**
-     * @JMS\Type("App\Entity\Report\Report")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\Report")
      *
      * @var Report
      */
@@ -45,7 +45,7 @@ class MoneyTransactionShort
     private $description;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"moneyTransactionShort"})
@@ -155,7 +155,7 @@ class MoneyTransactionShort
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getDate()
     {
@@ -163,7 +163,7 @@ class MoneyTransactionShort
     }
 
     /**
-     * @param DateTime $date
+     * @param \DateTime $date
      *
      * @return MoneyTransactionShort
      */

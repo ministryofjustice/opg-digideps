@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Deputyship;
+namespace OPG\Digideps\Backend\Domain\Deputyship;
 
-use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesGroup;
-use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
-use App\v2\Registration\Enum\DeputyshipCandidateAction;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesGroup;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 
 /**
  * Convert a group of candidates (with the same order UID) to a set of court order entities and relationships

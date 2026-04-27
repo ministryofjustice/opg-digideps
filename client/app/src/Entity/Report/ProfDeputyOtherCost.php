@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Frontend\Entity\Report;
 
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -18,7 +18,7 @@ class ProfDeputyOtherCost
     private $profDeputyOtherCostTypeId;
 
     /**
-     * @var decimal
+     * @var string decimal
      *
      * @JMS\Type("string")
      * @JMS\Groups({"prof-deputy-other-costs"})
@@ -45,7 +45,7 @@ class ProfDeputyOtherCost
      * ProfDeputyOtherCost constructor.
      *
      * @param $profDeputyOtherCostTypeId
-     * @param decimal $amount
+     * @param string $amount decimal
      * @param string  $hasMoreDetails
      * @param string  $moreDetails
      */
@@ -74,7 +74,7 @@ class ProfDeputyOtherCost
     }
 
     /**
-     * @return decimal
+     * @return string decimal
      */
     public function getAmount()
     {
@@ -82,7 +82,7 @@ class ProfDeputyOtherCost
     }
 
     /**
-     * @param decimal $amount
+     * @param string $amount decimal
      */
     public function setAmount($amount)
     {

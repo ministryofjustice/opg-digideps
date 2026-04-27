@@ -1,8 +1,8 @@
 <?php
 
-namespace App\TestHelpers;
+namespace OPG\Digideps\Backend\TestHelpers;
 
-use App\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\Organisation;
 
 class OrganisationTestHelper
 {

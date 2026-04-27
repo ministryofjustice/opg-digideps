@@ -2,19 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\CourtOrder;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\CourtOrder;
 
-use App\Domain\CourtOrder\CourtOrderType;
-use App\Entity\Report\Report;
-use App\Entity\Client;
-use App\Entity\CourtOrder;
-use App\Entity\CourtOrderDeputy;
-use App\Entity\Deputy;
-use App\Entity\User;
-use App\Service\Client\Internal\ClientApi;
-use App\TestHelpers\ClientTestHelper;
-use App\TestHelpers\DeputyTestHelper;
-use App\Tests\Behat\BehatException;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\CourtOrderDeputy;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
+use OPG\Digideps\Backend\TestHelpers\DeputyTestHelper;
+use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 use function PHPUnit\Framework\assertCount;
 use function PHPUnit\Framework\assertStringContainsString;
@@ -23,7 +22,6 @@ trait CourtOrderTrait
 {
     public ?CourtOrder $courtOrder = null;
     public array $courtOrders = [];
-    public ClientApi $clientApi;
     private Deputy $coDeputy;
     private array $invitedDeputy = [];
 

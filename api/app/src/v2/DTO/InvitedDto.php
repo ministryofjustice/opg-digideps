@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\v2\DTO;
+namespace OPG\Digideps\Backend\v2\DTO;
 
 /**
  * Holds data about the outcome of an attempt to create an invite.

@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\OrgDashboard;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\OrgDashboard;
 
-use App\Entity\Client;
-use App\Entity\Organisation;
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\Repository\ClientRepository;
-use App\Repository\ReportRepository;
-use App\Tests\Behat\v2\ClientManagement\ClientManagementTrait;
-use App\Tests\Behat\v2\Common\BaseFeatureContext;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\ClientRepository;
+use OPG\Digideps\Backend\Repository\ReportRepository;
+use Tests\OPG\Digideps\Backend\Behat\v2\ClientManagement\ClientManagementTrait;
+use Tests\OPG\Digideps\Backend\Behat\v2\Common\BaseFeatureContext;
 
 class OrgDashboardFeatureContext extends BaseFeatureContext
 {

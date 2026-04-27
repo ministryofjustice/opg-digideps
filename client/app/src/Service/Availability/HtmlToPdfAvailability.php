@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Availability;
+namespace OPG\Digideps\Frontend\Service\Availability;
 
-use App\Service\HtmlToPdfGenerator;
+use OPG\Digideps\Frontend\Service\HtmlToPdfGenerator;
 
 class HtmlToPdfAvailability extends ServiceAvailabilityAbstract
 {

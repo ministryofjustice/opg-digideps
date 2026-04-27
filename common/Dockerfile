@@ -5,6 +5,7 @@ COPY composer.json .
 COPY composer.lock .
 COPY phpunit.xml .
 COPY phpstan.neon .
+COPY phpstan-fragment.neon .
 COPY src src
 COPY tests tests
 

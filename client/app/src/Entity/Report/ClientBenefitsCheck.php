@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Frontend\Entity\Report;
 
-use App\Entity\ClientBenefitsCheckInterface;
-use App\Entity\Report\Traits\HasReportTrait;
-use App\Validator\Constraints\ClientBenefitsCheck as CustomAssert;
+use OPG\Digideps\Frontend\Entity\ClientBenefitsCheckInterface;
+use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
+use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck as CustomAssert;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
@@ -69,7 +69,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     private ?string $dontKnowMoneyExplanation = null;
 
     /**
-     * @JMS\Type("ArrayCollection<App\Entity\Report\MoneyReceivedOnClientsBehalf>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Frontend\Entity\Report\MoneyReceivedOnClientsBehalf>")
      * @JMS\Groups({"report", "client-benefits-check"})
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})

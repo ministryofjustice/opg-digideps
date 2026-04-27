@@ -132,6 +132,7 @@ COPY --chown=www-data:www-data --from=composer-devtools /app/src src
 COPY --chown=www-data:www-data --from=composer-devtools /app/composer.lock composer.lock
 COPY --chown=www-data:www-data api/app/tests tests
 COPY --chown=www-data:www-data api/app/phpstan.neon .
+COPY --chown=www-data:www-data api/app/phpstan-fragment.neon .
 COPY --chown=www-data:www-data api/app/phpstan-baseline.neon .
 
 RUN ./generate_parameters_yml.sh && mv /var/www/parameters.yml /var/www/config/parameters.yml

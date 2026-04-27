@@ -2,27 +2,50 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\v2\Registration\DeputyshipProcessing\CourtOrder;
+namespace Tests\OPG\Digideps\Backend\Integration\v2\Registration\DeputyshipProcessing\CourtOrder;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Domain\CourtOrder\CourtOrderReportType;
-use App\Domain\CourtOrder\CourtOrderType;
-use App\Entity\Client;
-use App\Entity\CourtOrder;
-use App\Entity\StagingDeputyship;
-use App\Tests\Integration\ApiIntegrationTestCase;
-use App\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipIngester;
-use App\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipReader;
-use App\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipResult;
-use App\v2\Registration\DeputyshipProcessing\Report\ReportReassembler;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\StagingDeputyship;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipIngester;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipReader;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipResult;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\Report\ReportReassembler;
 use Doctrine\ORM\Id\AbstractIdGenerator;
 use Doctrine\ORM\Id\AssignedGenerator;
 use Doctrine\ORM\Mapping\ClassMetadataInfo;
 
 class CourtOrderRelationshipIngesterTest extends ApiIntegrationTestCase
 {
+    /**
+     * @var int $oldGeneratorType
+     * @phpstan-var ClassMetadataInfo::GENERATOR_TYPE_* $oldGeneratorType
+     */
     private int $oldGeneratorType;
     private AbstractIdGenerator $oldGenerator;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $metadata = self::$entityManager->getClassMetaData(CourtOrder::class);
+        $this->oldGeneratorType = $metadata->generatorType;
+        $this->oldGenerator = $metadata->idGenerator;
+
+        $metadata->setIdGeneratorType(ClassMetadataInfo::GENERATOR_TYPE_NONE);
+        $metadata->setIdGenerator(new AssignedGenerator());
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        $metadata = self::$entityManager->getClassMetaData(CourtOrder::class);
+        $metadata->setIdGeneratorType($this->oldGeneratorType);
+        $metadata->setIdGenerator($this->oldGenerator);
+    }
 
     private function persistCourtOrder(int $id, CourtOrderKind $kind, ?int $siblingId = null, bool $active = true, ?bool $activeSibling = null, ?CourtOrderType $orderType = null): void
     {
@@ -92,23 +115,6 @@ class CourtOrderRelationshipIngesterTest extends ApiIntegrationTestCase
                 self::$entityManager->persist($sibling);
             }
         }
-    }
-
-    public function setUp(): void
-    {
-        $metadata = self::$entityManager->getClassMetaData(CourtOrder::class);
-        $this->oldGeneratorType = $metadata->generatorType;
-        $this->oldGenerator = $metadata->idGenerator;
-
-        $metadata->setIdGeneratorType(ClassMetadataInfo::GENERATOR_TYPE_NONE);
-        $metadata->setIdGenerator(new AssignedGenerator());
-    }
-
-    public function tearDown(): void
-    {
-        $metadata = self::$entityManager->getClassMetaData(CourtOrder::class);
-        $metadata->setIdGeneratorType($this->oldGeneratorType);
-        $metadata->setIdGenerator($this->oldGenerator);
     }
 
     public function testExecute()

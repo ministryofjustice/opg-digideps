@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service;
+namespace OPG\Digideps\Frontend\Service;
 
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpKernel\DataCollector\DataCollectorInterface;
 

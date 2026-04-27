@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
-use App\Entity\Report\Contact;
-use App\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\Contact;
+use OPG\Digideps\Backend\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -12,9 +12,9 @@ trait ContactTrait
     /**
      * @JMS\Groups({"contact"})
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Report\Contact>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\Contact>")
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\Contact", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\Contact", mappedBy="report", cascade={"persist", "remove"})
      */
     private $contacts;
 

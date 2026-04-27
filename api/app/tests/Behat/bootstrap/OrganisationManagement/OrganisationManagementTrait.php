@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Behat\OrganisationManagement;
+namespace Tests\OPG\Digideps\Backend\Behat\OrganisationManagement;
 
 use Exception;
 use Behat\Gherkin\Node\TableNode;

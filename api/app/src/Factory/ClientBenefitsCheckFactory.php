@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Factory;
+namespace OPG\Digideps\Backend\Factory;
 
-use App\Entity\ClientBenefitsCheckInterface;
-use App\Entity\MoneyReceivedOnClientsBehalfInterface;
-use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\MoneyReceivedOnClientsBehalf;
-use App\Repository\ReportRepository;
+use OPG\Digideps\Backend\Entity\ClientBenefitsCheckInterface;
+use OPG\Digideps\Backend\Entity\MoneyReceivedOnClientsBehalfInterface;
+use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
+use OPG\Digideps\Backend\Entity\Report\MoneyReceivedOnClientsBehalf;
+use OPG\Digideps\Backend\Repository\ReportRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Ramsey\Uuid\Uuid;
 

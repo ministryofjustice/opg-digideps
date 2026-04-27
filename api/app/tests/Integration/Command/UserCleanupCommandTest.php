@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Integration\Entity\Command;
+namespace Tests\OPG\Digideps\Backend\Integration\Command;
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;

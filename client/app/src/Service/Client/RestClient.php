@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Service\Client;
+namespace OPG\Digideps\Frontend\Service\Client;
 
-use App\Entity\User;
-use App\Exception as AppException;
-use App\Service\Client\TokenStorage\RedisStorage;
-use App\Service\JWT\JWTService;
-use App\Service\RequestIdLoggerProcessor;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Exception as AppException;
+use OPG\Digideps\Frontend\Service\Client\TokenStorage\RedisStorage;
+use OPG\Digideps\Frontend\Service\JWT\JWTService;
+use OPG\Digideps\Frontend\Service\RequestIdLoggerProcessor;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
@@ -106,7 +106,7 @@ class RestClient implements RestClientInterface
         }
 
         /** @var User $user */
-        $user = $this->arrayToEntity('User', $this->extractDataArray($response));
+        $user = $this->arrayToEntity(User::class, $this->extractDataArray($response));
         $authToken = $response->getHeader(RestClient::HEADER_AUTH_TOKEN)[0];
 
         // Temporarily scoping this to super admins until we're happy with the flow
@@ -163,7 +163,7 @@ class RestClient implements RestClientInterface
      */
     public function loadUserByToken($token)
     {
-        return $this->apiCall('get', 'user/get-by-token/' . $token, null, 'User', [], false);
+        return $this->apiCall('get', 'user/get-by-token/' . $token, null, User::class, [], false);
     }
 
     /**
@@ -177,7 +177,7 @@ class RestClient implements RestClientInterface
     /**
      * @param string $endpoint             e.g. /user
      * @param string $expectedResponseType Entity class to deserialise response into
-     *                                     e.g. "Account" (App\Entity\ prefix not needed)
+     *                                     e.g. "Account" (OPG\Digideps\Frontend\Entity\ prefix not needed)
      *                                     or "Account[]" to deseialise into an array of entities
      * @param array  $jmsGroups            deserialise_groups
      * @param array  $optionsOverride      e.g. ['addAuthToken' => false]
@@ -279,7 +279,7 @@ class RestClient implements RestClientInterface
      */
     public function registerUser(SelfRegisterData $selfRegData)
     {
-        return $this->apiCall('post', 'selfregister', $selfRegData, 'User', [], false);
+        return $this->apiCall('post', 'selfregister', $selfRegData, User::class, [], false);
     }
 
     /**
@@ -315,17 +315,19 @@ class RestClient implements RestClientInterface
 
         $responseArray = $this->extractDataArray($response);
 
-        if ('array' == $expectedResponseType) {
+        if ('array' === $expectedResponseType) {
             return $responseArray;
-        } elseif ('[]' == substr($expectedResponseType, -2)) {
-            return $this->arrayToEntities($expectedResponseType, $responseArray);
-        } elseif (class_exists($expectedResponseType)) {
-            return $this->arrayToEntity($expectedResponseType, $responseArray ?: []);
-        } elseif (class_exists('App\\Entity\\' . $expectedResponseType)) {
-            return $this->arrayToEntity($expectedResponseType, $responseArray ?: []);
-        } else {
-            throw new \InvalidArgumentException(__METHOD__ . ": invalid type of expected response, $expectedResponseType given.");
         }
+        $expectArray = str_ends_with($expectedResponseType, '[]');
+        $responseType = $expectArray ? substr($expectedResponseType, 0, -2) : $expectedResponseType;
+        if (!class_exists($responseType)) {
+            $responseType = 'OPG\\Digideps\\Frontend\\Entity\\' . $responseType;
+            if (!class_exists($responseType)) {
+                throw new \InvalidArgumentException(__METHOD__ . ": invalid type of expected response, $expectedResponseType given. Resolved to $responseType.");
+            }
+        }
+
+        return $expectArray ? $this->arrayToEntities($responseType, $responseArray) : $this->arrayToEntity($responseType, $responseArray ?: []);
     }
 
     /**
@@ -448,35 +450,36 @@ class RestClient implements RestClientInterface
     }
 
     /**
-     * @param string $class full class name of the class to deserialise to
-     * @param array  $data  "data" returned from the RESTful server
+     * @template T
+     * @param class-string<T> $class full class name of the class to deserialise to
+     * @param array $data "data" returned from the RESTful server
      *
-     * @return object of type $class
+     * @return T
      */
-    private function arrayToEntity($class, array $data)
+    private function arrayToEntity(string $class, array $data)
     {
-        $fullClassName = (str_contains($class, 'App')) ? $class : 'App\\Entity\\' . $class;
-
         /** @var string */
         $data = json_encode($data);
 
-        return $this->serializer->deserialize($data, $fullClassName, 'json');
+        try {
+            return $this->serializer->deserialize($data, $class, 'json');
+        } catch (\Throwable $throwable) {
+            throw new \Exception("{$class} - " . var_export($data, true), 0, $throwable);
+        }
     }
 
     /**
-     * @param string $class full class name of the class to deserialise to
-     * @param array  $data  "data" returned from the RESTful server
+     * @template T
+     * @param class-string<T> $class full class name of the class to deserialise to
+     * @param array<array> $data "data" returned from the RESTful server
      *
-     * @return array of type $class
+     * @return array<T>
      */
-    public function arrayToEntities(string $class, array $data)
+    public function arrayToEntities(string $class, array $data): array
     {
-        $fullClassName = (str_contains($class, 'App')) ? $class : 'App\\Entity\\' . $class;
-
-        $expectedResponseType = substr($fullClassName, 0, -2);
         $ret = [];
         foreach ($data as $row) {
-            $entity = $this->arrayToEntity($expectedResponseType, $row);
+            $entity = $this->arrayToEntity($class, $row);
 
             if (!method_exists($entity, 'getId')) {
                 throw new \RuntimeException('Cannot deserialise entities without an ID');

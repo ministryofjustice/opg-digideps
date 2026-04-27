@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\Uploader;
+namespace OPG\Digideps\Backend\v2\Registration\Uploader;
 
-use App\Entity\PreRegistration;
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\Repository\ReportRepository;
-use App\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
-use App\v2\Registration\DTO\LayDeputyshipDto;
-use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
-use App\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
-use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\ReportRepository;
+use OPG\Digideps\Backend\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
+use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
+use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDtoCollection;
+use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
+use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 use Psr\Log\LoggerInterface;

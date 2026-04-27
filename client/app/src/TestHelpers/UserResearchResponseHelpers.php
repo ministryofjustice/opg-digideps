@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\TestHelpers;
+namespace OPG\Digideps\Frontend\TestHelpers;
 
-use App\Entity\User;
-use App\Entity\UserResearch\ResearchType;
-use App\Entity\UserResearch\UserResearchResponse;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Entity\UserResearch\ResearchType;
+use OPG\Digideps\Frontend\Entity\UserResearch\UserResearchResponse;
 use Faker\Factory;
 
 class UserResearchResponseHelpers

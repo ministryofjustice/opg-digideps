@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Tests\Integration\Entity\Repository;
+namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
-use App\Tests\Integration\ApiTestTrait;
+use Tests\OPG\Digideps\Backend\Integration\ApiTestTrait;
 use DateTime;
-use App\Entity\User;
-use App\Repository\UserRepository;
-use App\TestHelpers\ClientTestHelper;
-use App\TestHelpers\DeputyTestHelper;
-use App\TestHelpers\ReportTestHelper;
-use App\TestHelpers\UserTestHelper;
-use App\Tests\Integration\Fixtures;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
+use OPG\Digideps\Backend\TestHelpers\DeputyTestHelper;
+use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
+use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
+use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class UserRepositoryTest extends KernelTestCase

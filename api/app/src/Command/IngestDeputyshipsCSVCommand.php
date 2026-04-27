@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace OPG\Digideps\Backend\Command;
 
-use App\Service\File\Storage\S3Storage;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester;
+use OPG\Digideps\Backend\Service\File\Storage\S3Storage;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Psr\Log\LoggerInterface;

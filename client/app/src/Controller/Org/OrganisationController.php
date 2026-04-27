@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Org;
+namespace OPG\Digideps\Frontend\Controller\Org;
 
-use App\Controller\AbstractController;
-use App\Entity\Organisation;
-use App\Entity\User;
-use App\Exception\RestClientException;
-use App\Form\ConfirmDeleteType;
-use App\Form\Org\OrganisationMemberType;
-use App\Form\User\SearchUserType;
-use App\Service\Audit\AuditEvents;
-use App\Service\Client\Internal\OrganisationApi;
-use App\Service\Client\Internal\UserApi;
-use App\Service\Client\RestClient;
-use App\Service\Logger;
+use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Entity\Organisation;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Exception\RestClientException;
+use OPG\Digideps\Frontend\Form\ConfirmDeleteType;
+use OPG\Digideps\Frontend\Form\Org\OrganisationMemberType;
+use OPG\Digideps\Frontend\Form\User\SearchUserType;
+use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
+use OPG\Digideps\Frontend\Service\Client\Internal\OrganisationApi;
+use OPG\Digideps\Frontend\Service\Client\Internal\UserApi;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\Logger;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -71,7 +71,7 @@ class OrganisationController extends AbstractController
 
         $result = $this->restClient->get('/v2/organisation/' . $id . '/users?' . http_build_query($currentFilters), 'array');
 
-        $users = $this->restClient->arrayToEntities(User::class . '[]', $result['records']);
+        $users = $this->restClient->arrayToEntities(User::class, $result['records']);
 
         return [
             'filters' => $currentFilters,

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace OPG\Digideps\Frontend\Controller;
 
-use App\Form\FeedbackType;
-use App\Service\Client\Internal\SatisfactionApi;
+use OPG\Digideps\Frontend\Form\FeedbackType;
+use OPG\Digideps\Frontend\Service\Client\Internal\SatisfactionApi;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
