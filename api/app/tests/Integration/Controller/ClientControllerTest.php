@@ -240,7 +240,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEndpointNotFoundFor('GET', $url, self::$tokenMultiClientPrimaryDeputy);
     }
 
-    public function testfindByIdAclOrDeputyUIDAllowed()
+    public function testfindByIdAclAllowed()
     {
         $url = '/client/' . self::$primaryAccountClient->getId();
         $url2 = '/client/' . self::$nonPrimaryAccountClient->getId();
