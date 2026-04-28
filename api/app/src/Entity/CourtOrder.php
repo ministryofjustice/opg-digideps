@@ -64,13 +64,11 @@ class CourtOrder
     #[ORM\Column(name: 'order_made_date', type: 'datetime', nullable: false)]
     private \DateTime $orderMadeDate;
 
-
-    #[JMS\Type(Client::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Client')]
     #[JMS\Groups(['court-order-full'])]
     #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'courtOrders')]
     private Client $client;
-
 
     #[ORM\JoinColumn(name: 'sibling_id', referencedColumnName: 'id')]
     #[ORM\OneToOne(targetEntity: CourtOrder::class)]

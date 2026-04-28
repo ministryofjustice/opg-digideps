@@ -31,7 +31,7 @@ class ResearchType
         }
     }
 
-    #[JMS\Type(UserResearchResponse::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\UserResearchResponse')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
     #[ORM\OneToOne(mappedBy: 'researchType', targetEntity: UserResearchResponse::class, cascade: ['persist'])]
     private UserResearchResponse $userResearchResponse;

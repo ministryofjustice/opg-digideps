@@ -121,7 +121,7 @@ class Deputy
     #[ORM\Column(name: 'phone_alternative', type: 'string', length: 20, nullable: true)]
     private ?string $phoneAlternative = null;
 
-    #[JMS\Type(User::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
     #[JMS\Groups(['deputy-user'])]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'cascade')]
     #[ORM\OneToOne(inversedBy: 'deputy', targetEntity: User::class, cascade: ['remove', 'persist'])]

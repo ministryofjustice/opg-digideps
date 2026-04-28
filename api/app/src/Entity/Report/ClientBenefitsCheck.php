@@ -41,7 +41,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     private \DateTime $created;
 
     #[JMS\Groups(['client-benefits-check-report'])]
-    #[JMS\Type(Report::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Report')]
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', nullable: true, onDelete: 'CASCADE')]
     #[ORM\OneToOne(inversedBy: 'clientBenefitsCheck', targetEntity: Report::class)]
     private ?Report $report;

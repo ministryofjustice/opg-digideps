@@ -288,7 +288,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var UserResearchResponse|null
      */
-    #[JMS\Type(UserResearchResponse::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse')]
     #[JMS\Groups(['user', 'satisfaction', 'user-research'])]
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: UserResearchResponse::class, cascade: ['persist'])]
     private $userResearchResponse;
@@ -296,7 +296,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var ?User
      */
-    #[JMS\Type(User::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
     #[JMS\Groups(['user', 'created-by'])]
     #[JMS\MaxDepth(3)]
     #[ORM\JoinColumn(name: 'created_by_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
@@ -311,7 +311,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'deletion_protection', type: 'boolean', nullable: true, options: ['default' => null])]
     private $deletionProtection;
 
-    #[JMS\Type(Deputy::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Deputy')]
     #[ORM\OneToOne(mappedBy: 'user', targetEntity: Deputy::class, cascade: ['persist'])]
     private ?Deputy $deputy;
 
