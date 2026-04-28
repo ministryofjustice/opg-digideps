@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Exception\NotFound;
 use OPG\Digideps\Backend\Utility\Query\Hydrator;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 abstract class RestController extends AbstractController
