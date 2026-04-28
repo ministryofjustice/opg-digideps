@@ -844,7 +844,7 @@ class Report
         return $this->agreedBehalfDeputy;
     }
 
-    public function setAgreedBehalfDeputy($agreeBehalfDeputy)
+    public function setAgreedBehalfDeputy(string $agreeBehalfDeputy)
     {
         $acceptedValues = ['not_deputy', 'only_deputy', 'more_deputies_behalf', 'more_deputies_not_behalf'];
 
