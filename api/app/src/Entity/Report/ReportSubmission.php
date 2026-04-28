@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Entity\Traits\CreationAudit;
 use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\ReportSubmissionRepository;
 
 #[ORM\Table(name: 'report_submission')]
 #[ORM\Index(columns: ['created_on'], name: 'rs_created_on_idx')]
