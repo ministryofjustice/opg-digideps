@@ -267,12 +267,27 @@ jobs:
       - terraform_apply_environment
       - workflow_variables
 
+  wait_for_ecs_services:
+    name: wait for all ecs services to stabilise
+    uses: ./.github/workflows/_wait-for-ecs-services.yml
+    needs:
+      - workflow_variables
+      - terraform_apply_environment
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
+      account_name: development
+      timeout: "15"
+
   restart_point:
     runs-on: ubuntu-latest
     name: restart point
     needs:
       - workflow_variables
       - terraform_apply_environment
+      - wait_for_ecs_services
       - client_unit_tests
       - api_phpstan
       - client_phpstan
