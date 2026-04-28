@@ -22,8 +22,23 @@ class ClientIdFixDataFactoryTest extends TestCase
 
         $sut = new ClientIdFixDataFactory($em);
 
-        $dataFactoryResult = $sut->run();
+        $dataFactoryResult = $sut->run(false);
 
         $this->assertFalse($dataFactoryResult->isSuccessful());
+    }
+
+    public function testRunDry(): void
+    {
+        $conn = self::createMock(Connection::class);
+        $conn->expects(self::never())->method('executeStatement');
+
+        $em = self::createMock(EntityManagerInterface::class);
+        $em->expects(self::once())->method('getConnection')->willReturn($conn);
+
+        $sut = new ClientIdFixDataFactory($em);
+
+        $dataFactoryResult = $sut->run(true);
+
+        $this->assertTrue($dataFactoryResult->isSuccessful());
     }
 }
