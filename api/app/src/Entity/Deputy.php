@@ -152,7 +152,9 @@ class Deputy
 
     public function getDeputyType(): DeputyType
     {
-        return DeputyType::tryFrom(strtoupper($this->deputyType)) ?? $this->getUser()?->deriveDeputyType() ?? DeputyType::LAY;
+        return DeputyType::tryFrom(strtoupper($this->deputyType))
+            ?? $this->getUser()?->deriveDeputyType()
+            ?? DeputyType::LAY;
     }
 
     public function setDeputyType(DeputyType $deputyType): self

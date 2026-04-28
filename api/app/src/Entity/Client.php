@@ -238,13 +238,13 @@ class Client
     /**
      * Set email.
      *
-     * @param string $email
+     * @param ?string $email
      *
      * @return Client
      */
     public function setEmail($email)
     {
-        $this->email = strtolower($email);
+        $this->email = (($email === null) ? null : strtolower($email));
 
         return $this;
     }

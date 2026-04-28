@@ -802,10 +802,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             return !is_null($report->getSubmitDate());
         };
 
-        $submittedReports = array_filter(
-            $this->getFirstClient()->getReports()->toArray(),
-            $isSubmittedClosure
-        );
+        $submittedReports = $this->getFirstClient()->getReports()->filter($isSubmittedClosure);
 
         return count($submittedReports);
     }
