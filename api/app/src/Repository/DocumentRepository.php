@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Repository;
 
-use OPG\Digideps\Backend\Entity\Report\Document;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
+use OPG\Digideps\Backend\Entity\Report\Document;
 
 class DocumentRepository extends ServiceEntityRepository
 {
@@ -77,7 +77,7 @@ class DocumentRepository extends ServiceEntityRepository
         }
 
         if (count($documents) > 0) {
-            $reportIdsFilter = array_values(array_filter(array_unique($reportIds)));
+            $reportIdsFilter = array_unique($reportIds);
             $reportIdsString = implode(",", $reportIdsFilter);
 
             $sql = "SELECT * FROM report_submission WHERE report_id IN ({$reportIdsString}) ORDER BY created_on";
