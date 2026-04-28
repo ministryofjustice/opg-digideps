@@ -22,7 +22,7 @@ trait ReportProfDeputyCostsEstimateTrait
     /**
      * @var ArrayCollection
      */
-    #[JMS\Type('ArrayCollection<App\Entity\Report\ProfDeputyEstimateCost>')]
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\ProfDeputyEstimateCost>')]
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
     #[ORM\OneToMany(targetEntity: ProfDeputyEstimateCost::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['id' => 'ASC'])]
