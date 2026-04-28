@@ -56,15 +56,24 @@ class FixtureController extends AbstractController
     }
 
     /** * @throws \Exception */
-    #[Route(path: '/court-order', methods: ['POST'])] #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    #[Route(path: '/court-order', methods: ['POST'])]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
     public function createCourtOrder(Request $request): JsonResponse
     {
         if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
         $fromRequest = (array) json_decode($request->getContent(), true);
-        $fromRequest['courtDate'] = new \DateTime('-366 days')->format('Y-m-d');
-        $client = $this->generateClient($fromRequest);
+        $fromRequest['courtDate'] = (new \DateTime('-366 days'))->format('Y-m-d');
+
+        if (!$this->deputyRepository->findOneBy(['email1' => $fromRequest['deputyEmail']])) {
+            $client = $this->generateClient($fromRequest);
+        } else {
+            /** @var Organisation $org */
+            $org = $this->organisationRepository->findByEmailIdentifier($fromRequest['deputyEmail']);
+            /** @var Client $client */
+            $client = $org->getClients()->first();
+        }
         $user = new User();
 
         $multiClientDeputy = [];
@@ -78,7 +87,7 @@ class FixtureController extends AbstractController
         }
 
         $this->em->flush();
-        $deputyIds = !$fromRequest['multiClientEnabled'] ? ['originalDeputy' => $user->getId()] : $multiClientDeputy['deputyIds'];
+        $deputyIds = ['originalDeputy' => $user->getId()];
         if (!$fromRequest['multiClientEnabled'] && isset($coDeputy)) {
             $deputyIds['coDeputy'] = $coDeputy->getId();
         }
@@ -87,6 +96,39 @@ class FixtureController extends AbstractController
         } else {
             return $this->buildSuccessResponse(['deputyEmail' => $user->getEmail(), 'deputyIds' => $deputyIds, 'multiClientCaseNumbers' => $multiClientDeputy['multiClientCaseNumbers']], 'Court order created', Response::HTTP_CREATED);
         }
+    }
+
+    /** * @throws \Exception */
+    #[Route(path: '/create-additional-clients', methods: ['POST'])]
+    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    public function createAdditionalClients(Request $request): void
+    {
+        if (!$this->fixturesEnabled) {
+            throw $this->createNotFoundException();
+        }
+
+        $fromRequest = (array) json_decode($request->getContent(), true);
+        $fromRequest['courtDate'] = (new \DateTime('-366 days'))->format('Y-m-d');
+
+        /** @var Deputy $deputy */
+        $deputy = $this->deputyRepository->findOneBy(['email1' => $fromRequest['deputyEmail']]);
+
+        /** @var Organisation $organisation */
+        $organisation = $this->organisationRepository->findByEmailIdentifier($fromRequest['deputyEmail']);
+
+        foreach (range(1, $fromRequest['orgSizeClients']) as $number) {
+            $orgClient = $this->clientFactory->createGenericOrgClient($deputy, $organisation, $fromRequest['courtDate']);
+            $this->em->persist($orgClient);
+
+            $report = $this->generateReport($fromRequest, $orgClient);
+            $this->em->persist($report);
+            if ($number % 100 === 0) {
+                $this->em->flush();
+            }
+        }
+
+        $this->em->flush();
+        $this->em->clear();
     }
 
     /** * @throws \Exception */
@@ -126,11 +168,14 @@ class FixtureController extends AbstractController
             $this->em->persist($deputy);
         }
 
-        $report = $this->generateReport($fromRequest, $client);
-        $this->em->persist($report);
-        if (User::TYPE_LAY === $fromRequest['deputyType']) {
-            $courtOrder->addReport($report);
-            $this->em->persist($courtOrder);
+        if (!$this->reportRepository->findOneBy(['client' => $client])) {
+            $report = $this->generateReport($fromRequest, $client);
+            $this->em->persist($report);
+
+            if (User::TYPE_LAY === $fromRequest['deputyType']) {
+                $courtOrder->addReport($report);
+                $this->em->persist($courtOrder);
+            }
         }
 
         if (User::TYPE_LAY === $fromRequest['deputyType']) {
@@ -336,59 +381,47 @@ class FixtureController extends AbstractController
         ], $client);
     }
 
-    private function createOrgAndAttachParticipants($fromRequest, User $deputy, Client $client): void
+    private function createOrgAndAttachParticipants($fromRequest, User $user, Client $client): void
     {
         $uniqueOrgNameSegment = (preg_match('/\d+/', $fromRequest['deputyEmail'], $matches)) ? $matches[0] : rand(0, 9999);
         $orgName = sprintf('Org %s Ltd', $uniqueOrgNameSegment);
 
-        if (null === ($organisation = $this->organisationRepository->findOneBy(['name' => $orgName]))) {
-            $organisation = $this->organisationFactory->createFromEmailIdentifier($orgName, $fromRequest['deputyEmail'], true);
+        /** @var Organisation $organisation */
+        $organisation = $this->organisationRepository->findOneBy(['name' => $orgName]);
+        if (null === $organisation) {
+            $organisation = $this->organisationFactory->createFromEmailIdentifier(
+                $orgName,
+                $fromRequest['deputyEmail'],
+                true
+            );
         }
 
-        $organisation->addUser($deputy);
+        $organisation->addUser($user);
 
         if ($fromRequest['orgSizeUsers'] > 1 && !empty($fromRequest['orgSizeUsers'])) {
             foreach (range(1, $fromRequest['orgSizeUsers']) as $number) {
-                $orgUser = $this->userFactory->createGenericOrgUser($organisation);
+                $orgUser = $this->userFactory->createGenericOrgUser($organisation, $number);
                 $organisation->addUser($orgUser);
                 $this->em->persist($orgUser);
+                if ($number % 100 === 0) {
+                    $this->em->flush();
+                }
             }
         }
 
-        $deputy = $this->buildDeputy($deputy, $fromRequest);
+        $this->em->flush();
 
-        $client->setDeputy($deputy);
+        if (!$this->deputyRepository->findOneBy(['email1' => $user->getEmail()])) {
+            $deputy = $this->buildDeputy($user, $fromRequest);
+            $client->setDeputy($deputy);
+        }
+
         $client->setOrganisation($organisation);
-
-        // if the org size is 1 but we want 10 clients still then create the clients but
-        // we return so we don't create another 10 clients on top if we have a org size > 1
-        if (1 === $fromRequest['orgSizeUsers'] && $fromRequest['orgSizeClients'] > 1 && !empty($fromRequest['orgSizeClients'])) {
-            foreach (range(1, $fromRequest['orgSizeClients']) as $number) {
-                $orgClient = $this->clientFactory->createGenericOrgClient($deputy, $organisation, $fromRequest['courtDate']);
-                $this->em->persist($orgClient);
-
-                $report = $this->generateReport($fromRequest, $orgClient);
-                $this->em->persist($report);
-            }
-
-            $this->em->persist($client);
-            $this->em->persist($organisation);
-
-            return;
-        }
-
-        if ($fromRequest['orgSizeUsers'] > 1 && !empty($fromRequest['orgSizeUsers'])) {
-            foreach (range(1, $fromRequest['orgSizeClients']) as $number) {
-                $orgClient = $this->clientFactory->createGenericOrgClient($deputy, $organisation, $fromRequest['courtDate']);
-                $this->em->persist($orgClient);
-
-                $report = $this->generateReport($fromRequest, $orgClient);
-                $this->em->persist($report);
-            }
-        }
 
         $this->em->persist($client);
         $this->em->persist($organisation);
+        $this->em->flush();
+        $this->em->clear();
     }
 
     private function buildDeputy(User $deputy, array $fromRequest): Deputy
