@@ -15,8 +15,9 @@ trait MoreInfoTrait
     private ?string $actionMoreInfo = null;
 
     #[JMS\Type('string')]
+    #[JMS\Groups(['action-more-info'])]
     #[ORM\Column(name: 'action_more_info_details', type: 'text', nullable: true)]
-    private ?string $actionMoreInfoDetails;
+    private ?string $actionMoreInfoDetails = null;
 
     public function getActionMoreInfo(): ?string
     {
