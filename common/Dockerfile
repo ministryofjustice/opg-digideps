@@ -1,10 +1,11 @@
-FROM composer:2.9@sha256:b148074c5cf8e5c564e92baa3f0d2e28ffa0361ede57a03de3bf4b9cf80de54a
+FROM composer:2.9@sha256:dc292c5c0f95f526b051d4c341bf08e7e2b18504c74625e3203d7f123050e318
 
 WORKDIR /common
 COPY composer.json .
 COPY composer.lock .
 COPY phpunit.xml .
 COPY phpstan.neon .
+COPY phpstan-fragment.neon .
 COPY src src
 COPY tests tests
 

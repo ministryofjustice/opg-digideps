@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Tests\Integration\DBAL;
+namespace Tests\OPG\Digideps\Backend\Integration\DBAL;
 
-use Exception;
-use App\DBAL\ConnectionWrapper;
+use OPG\Digideps\Backend\DBAL\ConnectionWrapper;
 use Aws\SecretsManager\SecretsManagerClient;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\DriverManager;
@@ -101,7 +100,7 @@ class ConnectionWrapperTest extends TestCase
             $newPassword = 'changedpw';
             $this->updateLocalstackSecret($secretName, $oldPassword);
             $this->updatePostgresMasterPassword($newPassword, $oldPassword);
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             // Do nothing: this is expected to fail if previous test has failed
         }
     }

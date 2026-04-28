@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Form\Admin;
+namespace OPG\Digideps\Frontend\Form\Admin;
 
-use DateTime;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -43,7 +42,7 @@ class ReportSubmissionDownloadFilterType extends AbstractType
     {
         $entity = $event->getData();
 
-        if ($entity->getEndDate() instanceof DateTime) {
+        if ($entity->getEndDate() instanceof \DateTime) {
             $endDate = $entity->getEndDate();
             $entity->setEndDate($endDate->setTime(23, 59, 59));
         }

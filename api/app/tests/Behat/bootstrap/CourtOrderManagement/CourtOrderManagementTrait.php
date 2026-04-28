@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Tests\Behat\CourtOrderManagement;
-
-use Exception;
+namespace Tests\OPG\Digideps\Backend\Behat\CourtOrderManagement;
 
 trait CourtOrderManagementTrait
 {
@@ -38,7 +36,7 @@ AND co.case_number = '$caseNumber'
 
         // The actual COUNT is found at 3rd element in $result.
         if ($result[2] < 1) {
-            throw new Exception('Expected court order to exist but it does not');
+            throw new \Exception('Expected court order to exist but it does not');
         }
     }
 }

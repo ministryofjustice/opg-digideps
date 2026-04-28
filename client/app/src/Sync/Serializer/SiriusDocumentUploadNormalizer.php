@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Sync\Serializer;
+namespace OPG\Digideps\Frontend\Sync\Serializer;
 
-use App\Sync\Model\Sirius\SiriusDocumentUpload;
+use OPG\Digideps\Frontend\Sync\Model\Sirius\SiriusDocumentUpload;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
@@ -28,11 +28,11 @@ class SiriusDocumentUploadNormalizer implements NormalizerInterface
         $data = $this->normalizer->normalize($object, $format, $context);
 
         if (isset($data['attributes']['reporting_period_from'])) {
-            $data['attributes']['reporting_period_from'] = (new \DateTime($data['attributes']['reporting_period_from']))->format('Y-m-d');
+            $data['attributes']['reporting_period_from'] = new \DateTime($data['attributes']['reporting_period_from'])->format('Y-m-d');
         }
 
         if (isset($data['attributes']['reporting_period_to'])) {
-            $data['attributes']['reporting_period_to'] = (new \DateTime($data['attributes']['reporting_period_to']))->format('Y-m-d');
+            $data['attributes']['reporting_period_to'] = new \DateTime($data['attributes']['reporting_period_to'])->format('Y-m-d');
         }
 
         return $data;

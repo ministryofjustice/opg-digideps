@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Client\Internal;
+namespace OPG\Digideps\Frontend\Service\Client\Internal;
 
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 
 class MoneyReceivedOnClientsBehalfApi
 {

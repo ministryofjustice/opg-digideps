@@ -2,21 +2,20 @@
 
 declare(strict_types=1);
 
-namespace App\Mapper;
+namespace OPG\Digideps\Frontend\Mapper;
 
-use App\Validator\Constraints as AppAssert;
-use App\Validator\Constraints\StartEndDateComparableInterface;
-use DateTime;
+use OPG\Digideps\Frontend\Validator\Constraints as AppAssert;
+use OPG\Digideps\Frontend\Validator\Constraints\StartEndDateComparableInterface;
 
 /**
  * @AppAssert\EndDateNotBeforeStartDate
  */
 class DateRangeQuery implements StartEndDateComparableInterface
 {
-    /** @var DateTime|null */
+    /** @var \DateTime|null */
     private $startDate;
 
-    /** @var DateTime|null */
+    /** @var \DateTime|null */
     private $endDate;
 
     /** @var string */
@@ -26,7 +25,7 @@ class DateRangeQuery implements StartEndDateComparableInterface
     private $sortOrder = 'DESC';
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getStartDate()
     {
@@ -34,7 +33,7 @@ class DateRangeQuery implements StartEndDateComparableInterface
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getEndDate()
     {
@@ -44,7 +43,7 @@ class DateRangeQuery implements StartEndDateComparableInterface
     /**
      * @return DateRangeQuery
      */
-    public function setStartDate(?DateTime $startDate)
+    public function setStartDate(?\DateTime $startDate)
     {
         $this->startDate = $startDate;
 
@@ -54,7 +53,7 @@ class DateRangeQuery implements StartEndDateComparableInterface
     /**
      * @return DateRangeQuery
      */
-    public function setEndDate(?DateTime $endDate)
+    public function setEndDate(?\DateTime $endDate)
     {
         $this->endDate = $endDate;
 

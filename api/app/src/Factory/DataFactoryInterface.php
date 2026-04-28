@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Factory;
+namespace OPG\Digideps\Backend\Factory;
 
 /**
  * Interface for components which perform ad hoc data manipulation tasks, typically during ingests.
@@ -14,5 +14,5 @@ interface DataFactoryInterface
     public function getName(): string;
 
     // run some form of data addition/fix/deletion etc. against the database
-    public function run(): DataFactoryResult;
+    public function run(bool $dryRun): DataFactoryResult;
 }

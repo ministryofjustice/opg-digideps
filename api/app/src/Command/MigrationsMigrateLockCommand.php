@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace OPG\Digideps\Backend\Command;
 
 use Predis\Client;
 use Psr\Container\ContainerInterface;

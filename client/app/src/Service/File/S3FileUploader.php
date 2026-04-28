@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Service\File;
+namespace OPG\Digideps\Frontend\Service\File;
 
-use App\Entity\Report\Document;
-use App\Entity\Report\Report;
-use App\Entity\ReportInterface;
-use App\Exception\MimeTypeAndFileExtensionDoNotMatchException;
-use App\Service\Client\RestClient;
-use App\Service\File\Storage\StorageInterface;
-use App\Service\Time\DateTimeProvider;
+use OPG\Digideps\Frontend\Entity\Report\Document;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\ReportInterface;
+use OPG\Digideps\Frontend\Exception\MimeTypeAndFileExtensionDoNotMatchException;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\File\Storage\StorageInterface;
+use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class S3FileUploader
@@ -80,7 +80,7 @@ class S3FileUploader
 
         $this->s3Storage->store($storageReference, $body);
 
-        $document = (new Document())
+        $document = new Document()
             ->setStorageReference($storageReference)
             ->setFileName($fileName)
             ->setIsReportPdf($isReportPdf);

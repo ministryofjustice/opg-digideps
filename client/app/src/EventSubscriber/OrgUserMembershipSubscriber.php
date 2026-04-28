@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\EventSubscriber;
+namespace OPG\Digideps\Frontend\EventSubscriber;
 
-use App\Event\UserAddedToOrganisationEvent;
-use App\Event\UserRemovedFromOrganisationEvent;
-use App\Service\Audit\AuditEvents;
-use App\Service\Time\DateTimeProvider;
+use OPG\Digideps\Frontend\Event\UserAddedToOrganisationEvent;
+use OPG\Digideps\Frontend\Event\UserRemovedFromOrganisationEvent;
+use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
+use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -35,7 +35,7 @@ class OrgUserMembershipSubscriber implements EventSubscriberInterface
 
     public function logUserAddedEvent(UserAddedToOrganisationEvent $event)
     {
-        $auditEvent = (new AuditEvents($this->dateTimeProvider))
+        $auditEvent = new AuditEvents($this->dateTimeProvider)
             ->userAddedToOrg(
                 $event->getTrigger(),
                 $event->getAddedUser(),
@@ -48,7 +48,7 @@ class OrgUserMembershipSubscriber implements EventSubscriberInterface
 
     public function logUserRemovedEvent(UserRemovedFromOrganisationEvent $event)
     {
-        $auditEvent = (new AuditEvents($this->dateTimeProvider))
+        $auditEvent = new AuditEvents($this->dateTimeProvider)
             ->userRemovedFromOrg(
                 $event->getTrigger(),
                 $event->getRemovedUser(),

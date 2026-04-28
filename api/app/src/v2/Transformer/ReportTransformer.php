@@ -1,9 +1,9 @@
 <?php
 
-namespace App\v2\Transformer;
+namespace OPG\Digideps\Backend\v2\Transformer;
 
-use App\v2\DTO\ReportDto;
-use App\v2\DTO\StatusDto;
+use OPG\Digideps\Backend\v2\DTO\ReportDto;
+use OPG\Digideps\Backend\v2\DTO\StatusDto;
 
 class ReportTransformer
 {

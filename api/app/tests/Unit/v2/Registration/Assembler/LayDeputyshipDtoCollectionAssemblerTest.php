@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\v2\Registration\Assembler;
+namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\Assembler;
 
 use PHPUnit\Framework\Attributes\Test;
-use Exception;
-use App\v2\Registration\Assembler\LayDeputyshipDtoAssemblerInterface;
-use App\v2\Registration\Assembler\LayDeputyshipDtoCollectionAssembler;
-use App\v2\Registration\DTO\LayDeputyshipDto;
-use App\v2\Registration\DTO\LayDeputyshipDtoCollection;
+use OPG\Digideps\Backend\v2\Registration\Assembler\LayDeputyshipDtoAssemblerInterface;
+use OPG\Digideps\Backend\v2\Registration\Assembler\LayDeputyshipDtoCollectionAssembler;
+use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
+use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDtoCollection;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
@@ -52,7 +51,7 @@ final class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
                 fn ($param): LayDeputyshipDto =>
                 match ($param) {
                     ['alpha' => 'alpha-data'], ['beta' => 'beta-data'] => new LayDeputyshipDto(),
-                    default => throw new Exception('Did not expect input ' . print_r($param, true)),
+                    default => throw new \Exception('Did not expect input ' . print_r($param, true)),
                 }
             );
     }
@@ -80,7 +79,7 @@ final class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
                     match ($param) {
                         ['alpha' => 'not-valid-enough-to-create-a-DTO'] => null,
                         ['beta' => 'beta-data'] => new LayDeputyshipDto(),
-                        default => throw new Exception('Did not expect input ' . print_r($param, true)),
+                        default => throw new \Exception('Did not expect input ' . print_r($param, true)),
                     }
             );
 

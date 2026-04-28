@@ -2,15 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service\RestHandler\Report;
+namespace Tests\OPG\Digideps\Backend\Unit\Service\RestHandler\Report;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use DateTime;
-use DateTimeZone;
 use PHPUnit\Framework\Attributes\DataProvider;
-use App\Entity\Client;
-use App\Entity\Report\Report;
-use App\Service\RestHandler\Report\DeputyCostsReportUpdateHandler;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Service\RestHandler\Report\DeputyCostsReportUpdateHandler;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 
@@ -22,7 +20,7 @@ final class DeputyCostsReportUpdateHandlerTest extends TestCase
 
     public function setUp(): void
     {
-        $date = new DateTime('now', new DateTimeZone('Europe/London'));
+        $date = new \DateTime('now', new \DateTimeZone('Europe/London'));
         $this->report = $this->getMockBuilder(Report::class)
             ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, $date, $date])
             ->onlyMethods(['updateSectionsStatusCache'])

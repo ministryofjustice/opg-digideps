@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Report;
+namespace OPG\Digideps\Frontend\Controller\Report;
 
-use App\Controller\AbstractController;
-use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\MoneyReceivedOnClientsBehalf;
-use App\Entity\Report\Status;
-use App\Form\AddAnotherThingType;
-use App\Form\ConfirmDeleteType;
-use App\Form\Report\ClientBenefitsCheckType;
-use App\Service\Client\Internal\ClientBenefitsCheckApi;
-use App\Service\Client\Internal\MoneyReceivedOnClientsBehalfApi;
-use App\Service\Client\Internal\ReportApi;
-use App\Service\StepRedirector;
+use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Entity\Report\ClientBenefitsCheck;
+use OPG\Digideps\Frontend\Entity\Report\MoneyReceivedOnClientsBehalf;
+use OPG\Digideps\Frontend\Entity\Report\Status;
+use OPG\Digideps\Frontend\Form\AddAnotherThingType;
+use OPG\Digideps\Frontend\Form\ConfirmDeleteType;
+use OPG\Digideps\Frontend\Form\Report\ClientBenefitsCheckType;
+use OPG\Digideps\Frontend\Service\Client\Internal\ClientBenefitsCheckApi;
+use OPG\Digideps\Frontend\Service\Client\Internal\MoneyReceivedOnClientsBehalfApi;
+use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
+use OPG\Digideps\Frontend\Service\StepRedirector;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\Form;

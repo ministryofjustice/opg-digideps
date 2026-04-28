@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Controller\Report;
+namespace OPG\Digideps\Backend\Controller\Report;
 
-use App\Controller\RestController;
-use App\Entity\Report\BankAccount;
-use App\Entity\Report\MoneyTransaction;
-use App\Entity\Report\Report;
-use App\Repository\MoneyTransactionRepository;
-use App\Service\Formatter\RestFormatter;
-use DateTime;
+use OPG\Digideps\Backend\Controller\RestController;
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransaction;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Repository\MoneyTransactionRepository;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -80,7 +79,7 @@ class MoneyTransactionController extends RestController
         $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $t = $this->findEntityBy(MoneyTransaction::class, $transactionId, 'transaction not found'); /* @var $t \App\Entity\Report\MoneyTransaction */
+        $t = $this->findEntityBy(MoneyTransaction::class, $transactionId, 'transaction not found');
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
         // set data
@@ -118,7 +117,7 @@ class MoneyTransactionController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
         // Entity is soft-deletable, so set the DeletedAt to hard delete
-        $t->setDeletedAt(new DateTime());
+        $t->setDeletedAt(new \DateTime());
         $this->em->remove($t);
 
         $report->updateSectionsStatusCache($this->sectionIds);
@@ -138,7 +137,7 @@ class MoneyTransactionController extends RestController
 
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
-        $t->isDeleted() ? $t->setDeletedAt(null) : $t->setDeletedAt(new DateTime());
+        $t->isDeleted() ? $t->setDeletedAt(null) : $t->setDeletedAt(new \DateTime());
 
         $this->em->flush($t);
 

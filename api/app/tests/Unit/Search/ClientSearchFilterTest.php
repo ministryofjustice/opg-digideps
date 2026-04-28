@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Search;
+namespace Tests\OPG\Digideps\Backend\Unit\Search;
 
 use PHPUnit\Framework\Attributes\Test;
-use App\Service\Search\ClientSearchFilter;
+use OPG\Digideps\Backend\Service\Search\ClientSearchFilter;
 use Doctrine\ORM\Configuration;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query;

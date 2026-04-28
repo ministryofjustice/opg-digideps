@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\Assembler;
+namespace OPG\Digideps\Backend\v2\Registration\Assembler;
 
-use App\v2\Registration\DTO\LayDeputyshipDto;
+use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
 
 class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInterface
 {
@@ -43,7 +43,7 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
     private function buildDto(array $data): LayDeputyshipDto
     {
         return
-            (new LayDeputyshipDto())
+            new LayDeputyshipDto()
                 ->setCaseNumber($data['Case'])
                 ->setClientFirstname($data['ClientFirstname'] ?: null)
                 ->setClientSurname($data['ClientSurname'])

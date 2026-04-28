@@ -1,26 +1,26 @@
 <?php
 
-namespace App\Controller;
+namespace OPG\Digideps\Frontend\Controller;
 
-use App\Entity\Client;
-use App\Entity\User;
-use App\Event\RegistrationFailedEvent;
-use App\Event\RegistrationSucceededEvent;
-use App\EventDispatcher\ObservableEventDispatcher;
-use App\Exception\RestClientException;
-use App\Form\PasswordForgottenType;
-use App\Form\ResetPasswordType;
-use App\Form\SelfRegisterDataType;
-use App\Form\SetPasswordType;
-use App\Form\User\UpdateTermsType;
-use App\Form\User\UserDetailsBasicType;
-use App\Form\User\UserDetailsFullType;
-use App\Form\User\UserDetailsPaType;
-use App\Service\Client\Internal\ClientApi;
-use App\Service\Client\Internal\UserApi;
-use App\Service\Client\RestClient;
-use App\Service\DeputyProvider;
-use App\Service\Redirector;
+use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Event\RegistrationFailedEvent;
+use OPG\Digideps\Frontend\Event\RegistrationSucceededEvent;
+use OPG\Digideps\Frontend\EventDispatcher\ObservableEventDispatcher;
+use OPG\Digideps\Frontend\Exception\RestClientException;
+use OPG\Digideps\Frontend\Form\PasswordForgottenType;
+use OPG\Digideps\Frontend\Form\ResetPasswordType;
+use OPG\Digideps\Frontend\Form\SelfRegisterDataType;
+use OPG\Digideps\Frontend\Form\SetPasswordType;
+use OPG\Digideps\Frontend\Form\User\UpdateTermsType;
+use OPG\Digideps\Frontend\Form\User\UserDetailsBasicType;
+use OPG\Digideps\Frontend\Form\User\UserDetailsFullType;
+use OPG\Digideps\Frontend\Form\User\UserDetailsPaType;
+use OPG\Digideps\Frontend\Service\Client\Internal\ClientApi;
+use OPG\Digideps\Frontend\Service\Client\Internal\UserApi;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\DeputyProvider;
+use OPG\Digideps\Frontend\Service\Redirector;
 use OPG\Digideps\Common\Registration\SelfRegisterData;
 use OPG\Digideps\Common\Validating\ValidatingForm;
 use Psr\Log\LoggerInterface;

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Controller;
+namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
-use DateTime;
-use App\Entity\Report\Checklist;
+use OPG\Digideps\Backend\Entity\Report\Checklist;
+use OPG\Digideps\Backend\Entity\User;
 
 class ChecklistControllerTest extends AbstractTestController
 {
@@ -18,7 +18,7 @@ class ChecklistControllerTest extends AbstractTestController
     {
         parent::setUpBeforeClass();
 
-        self::$deputy = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$deputy = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
         self::$client = self::fixtures()->createClient(self::$deputy, ['setFirstname' => 'CL']);
         self::$report = self::fixtures()->createReport(self::$client);
         self::$checklist = self::fixtures()->createChecklist(self::$report);
@@ -62,7 +62,7 @@ class ChecklistControllerTest extends AbstractTestController
 
         self::assertEquals(self::$checklist->getId(), $response['data']['id']);
         self::assertEquals(Checklist::SYNC_STATUS_SUCCESS, $response['data']['synchronisation_status']);
-        self::assertEqualsWithDelta((new DateTime())->getTimestamp(), (new DateTime($response['data']['synchronisation_time']))->getTimestamp(), 5);
+        self::assertEqualsWithDelta(new \DateTime()->getTimestamp(), new \DateTime($response['data']['synchronisation_time'])->getTimestamp(), 5);
     }
 
     /**

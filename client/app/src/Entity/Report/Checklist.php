@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Frontend\Entity\Report;
 
-use App\Entity\Report\Traits\HasReportTrait;
-use App\Entity\ReportInterface;
-use App\Entity\SynchronisableInterface;
-use App\Entity\SynchronisableTrait;
-use App\Entity\Traits\ModifyAudit;
-use App\Validator\Constraints as AppAssert;
+use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
+use OPG\Digideps\Frontend\Entity\SynchronisableInterface;
+use OPG\Digideps\Frontend\Entity\SynchronisableTrait;
+use OPG\Digideps\Frontend\Entity\Traits\ModifyAudit;
+use OPG\Digideps\Frontend\Entity\User;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -266,7 +265,7 @@ class Checklist implements SynchronisableInterface
      *
      * @JMS\Groups({"checklist-information"})
      *
-     * @JMS\Type("array<App\Entity\Report\ChecklistInformation>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\ChecklistInformation>")
      */
     private $checklistInformation = [];
 
@@ -281,10 +280,10 @@ class Checklist implements SynchronisableInterface
     /**
      * Submitted by.
      *
-     * @JMS\Type("App\Entity\User")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
      * @JMS\Groups({"checklist-information"})
      *
-     * @var \App\Entity\User
+     * @var User
      */
     protected $submittedBy;
 
@@ -883,7 +882,7 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @return \App\Entity\User
+     * @return User
      */
     public function getSubmittedBy()
     {
@@ -891,7 +890,7 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param \App\Entity\User $submittedBy
+     * @param User $submittedBy
      *
      * @return $this
      */

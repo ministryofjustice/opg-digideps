@@ -2,24 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\v2\Registration\Uploader;
+namespace Tests\OPG\Digideps\Backend\Integration\v2\Registration\Uploader;
 
-use App\Entity\Client;
-use App\Entity\Deputy;
-use App\Entity\Organisation;
-use App\Entity\Report\Report;
-use App\Factory\OrganisationFactory;
-use App\Repository\ClientRepository;
-use App\Repository\DeputyRepository;
-use App\Repository\OrganisationRepository;
-use App\Repository\ReportRepository;
-use App\Tests\Integration\ApiTestTrait;
-use App\Tests\Integration\TestHelpers\OrgDeputyshipDTOTestHelper;
-use App\v2\Assembler\ClientAssembler;
-use App\v2\Assembler\DeputyAssembler;
-use App\v2\Registration\DTO\OrgDeputyshipDto;
-use App\v2\Registration\Uploader\OrgDeputyshipUploader;
-use DateTime;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Factory\OrganisationFactory;
+use OPG\Digideps\Backend\Repository\ClientRepository;
+use OPG\Digideps\Backend\Repository\DeputyRepository;
+use OPG\Digideps\Backend\Repository\OrganisationRepository;
+use OPG\Digideps\Backend\Repository\ReportRepository;
+use Tests\OPG\Digideps\Backend\Integration\ApiTestTrait;
+use Tests\OPG\Digideps\Backend\Integration\TestHelpers\OrgDeputyshipDTOTestHelper;
+use OPG\Digideps\Backend\v2\Assembler\ClientAssembler;
+use OPG\Digideps\Backend\v2\Assembler\DeputyAssembler;
+use OPG\Digideps\Backend\v2\Registration\DTO\OrgDeputyshipDto;
+use OPG\Digideps\Backend\v2\Registration\Uploader\OrgDeputyshipUploader;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -201,7 +200,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], self::$entityManager);
         $client->setDeputy($originalDeputy)->setOrganisation($organisation);
-        $client->setCourtDate(new DateTime());
+        $client->setCourtDate(new \DateTime());
 
         self::$entityManager->persist($client);
         self::$entityManager->flush();
@@ -292,7 +291,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $originalClient = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], self::$entityManager);
         $originalClient->setDeputy($originalDeputy)->setOrganisation($organisation);
-        $originalClient->setCourtDate(new DateTime());
+        $originalClient->setCourtDate(new \DateTime());
 
         self::$entityManager->persist($originalClient);
         self::$entityManager->flush();
@@ -341,7 +340,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $originalClient = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], self::$entityManager);
         $originalClient->setDeputy($originalDeputy)->setOrganisation($organisation);
-        $originalClient->setCourtDate(new DateTime());
+        $originalClient->setCourtDate(new \DateTime());
 
         self::$entityManager->persist($originalClient);
         self::$entityManager->flush();
@@ -627,7 +626,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $deputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], self::$entityManager);
 
         $client->setDeputy($deputy);
-        $client->setArchivedAt(new DateTime());
+        $client->setArchivedAt(new \DateTime());
 
         self::$entityManager->persist($client);
         self::$entityManager->flush();

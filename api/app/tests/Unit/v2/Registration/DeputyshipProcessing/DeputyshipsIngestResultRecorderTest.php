@@ -2,15 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
+namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\DeputyshipProcessing;
 
-use App\Factory\DataFactoryResult;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesSelectorResult;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoaderResult;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
-use ArrayIterator;
-use DateTimeImmutable;
+use OPG\Digideps\Backend\Factory\DataFactoryResult;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesSelectorResult;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoaderResult;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
 use Doctrine\DBAL\Exception;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -39,7 +37,7 @@ final class DeputyshipsIngestResultRecorderTest extends TestCase
     public function testRecordDeputyshipCandidatesResultExceptionFail(): void
     {
         $exception = new Exception('Database connection failed');
-        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new ArrayIterator([]), 0, $exception);
+        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new \ArrayIterator([]), 0, $exception);
         $this->sut->recordDeputyshipCandidatesResult($candidatesSelectorResult);
 
         $result = $this->sut->result();
@@ -52,7 +50,7 @@ final class DeputyshipsIngestResultRecorderTest extends TestCase
     {
         $this->sut->recordCsvLoadResult(new DeputyshipsCSVLoaderResult('/tmp/deputyships.csv', true, 10));
 
-        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new ArrayIterator([]), 20, null);
+        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new \ArrayIterator([]), 20, null);
         $this->sut->recordDeputyshipCandidatesResult($candidatesSelectorResult);
 
         $this->sut->recordPreCSVDataFactoryResult(new DataFactoryResult());
@@ -68,7 +66,7 @@ final class DeputyshipsIngestResultRecorderTest extends TestCase
 
     public function testRecordBuilderResult(): void
     {
-        $candidatesResult = new DeputyshipCandidatesSelectorResult(new ArrayIterator([]), 10, null);
+        $candidatesResult = new DeputyshipCandidatesSelectorResult(new \ArrayIterator([]), 10, null);
         $this->sut->recordDeputyshipCandidatesResult($candidatesResult);
 
         $builderResult = self::createMock(DeputyshipBuilderResult::class);
@@ -86,8 +84,8 @@ final class DeputyshipsIngestResultRecorderTest extends TestCase
 
     public function testStartAndEndDateAndTimings(): void
     {
-        $start = new DateTimeImmutable('2025-05-21 23:59:00');
-        $end = new DateTimeImmutable('2025-05-22 01:05:10');
+        $start = new \DateTimeImmutable('2025-05-21 23:59:00');
+        $end = new \DateTimeImmutable('2025-05-22 01:05:10');
 
         $this->sut->recordStart($start);
         $this->sut->recordEnd($end);

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\TestHelpers;
+namespace OPG\Digideps\Frontend\TestHelpers;
 
-use App\Entity\Organisation;
+use OPG\Digideps\Frontend\Entity\Organisation;
 use Doctrine\Common\Collections\ArrayCollection;
 use Faker\Factory;
 
@@ -15,7 +15,7 @@ class OrganisationHelpers
         $faker = Factory::create();
         $orgName = $faker->company();
 
-        $organisation = (new Organisation())
+        $organisation = new Organisation()
             ->setId(1)
             ->setName($orgName)
             ->setEmailAddress(sprintf('info@%s', str_replace(' ', '', $orgName)))

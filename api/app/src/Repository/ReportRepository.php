@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace OPG\Digideps\Backend\Repository;
 
-use App\Entity\Report\Debt as ReportDebt;
-use App\Entity\Report\Fee as ReportFee;
-use App\Entity\Report\MoneyShortCategory as ReportMoneyShortCategory;
-use App\Entity\Report\Report;
-use App\Entity\SynchronisableInterface;
-use App\Service\Search\ClientSearchFilter;
+use OPG\Digideps\Backend\Entity\Report\Debt as ReportDebt;
+use OPG\Digideps\Backend\Entity\Report\Fee as ReportFee;
+use OPG\Digideps\Backend\Entity\Report\MoneyShortCategory as ReportMoneyShortCategory;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\SynchronisableInterface;
+use OPG\Digideps\Backend\Service\Search\ClientSearchFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
@@ -20,6 +19,9 @@ use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
+/**
+ * @extends ServiceEntityRepository<Report>
+ */
 class ReportRepository extends ServiceEntityRepository
 {
     public const int USER_DETERMINANT = 1;
@@ -177,16 +179,13 @@ class ReportRepository extends ServiceEntityRepository
         return 0 === count($result) ? null : $result;
     }
 
-    /**
-     * @throws DBALException
-     */
     public function getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(int $limit): array
     {
         $em = $this->getEntityManager();
 
         $dql = <<<DQL
 SELECT c.id as checklist_id, r.id as report_id
-FROM App\Entity\Report\Report r
+FROM OPG\Digideps\Backend\Entity\Report\Report r
 JOIN r.checklist c
 WHERE c.synchronisationStatus = :status
 DQL;
@@ -204,7 +203,7 @@ DQL;
             }, $result);
 
             $dql = <<<DQL
-UPDATE App\Entity\Report\Checklist c SET c.synchronisationStatus = 'IN_PROGRESS' WHERE c.id IN (:idsString)
+UPDATE OPG\Digideps\Backend\Entity\Report\Checklist c SET c.synchronisationStatus = 'IN_PROGRESS' WHERE c.id IN (:idsString)
 DQL;
 
             $em
@@ -229,7 +228,7 @@ DQL;
             ->getEntityManager()
             ->createQueryBuilder()
             ->select('c.id')
-            ->from('App\Entity\Report\Report', 'r')
+            ->from('OPG\Digideps\Backend\Entity\Report\Report', 'r')
             ->leftJoin('r.client', 'c')
             ->where('r.submitDate > :oneYearAgo')
             ->andWhere('r.type IN (:types)')
@@ -251,7 +250,7 @@ END deputy_type";
             ->getEntityManager()
             ->createQueryBuilder()
             ->select('b.whenLastCheckedEntitlement, b.doOthersReceiveMoneyOnClientsBehalf, b.dateLastCheckedEntitlement, b.neverCheckedExplanation, b.dontKnowMoneyExplanation, b.created')
-            ->from('App\Entity\Report\ClientBenefitsCheck', 'b')
+            ->from('OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck', 'b')
             ->addSelect($caseStatement)
             ->leftJoin('b.report', 'r')
             ->leftJoin('r.client', 'c')

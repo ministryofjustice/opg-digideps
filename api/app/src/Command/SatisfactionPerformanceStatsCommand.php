@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace OPG\Digideps\Backend\Command;
 
-use App\Repository\SatisfactionRepository;
-use App\Service\File\Storage\S3SatisfactionDataStorage;
+use OPG\Digideps\Backend\Repository\SatisfactionRepository;
+use OPG\Digideps\Backend\Service\File\Storage\S3SatisfactionDataStorage;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -30,7 +30,7 @@ class SatisfactionPerformanceStatsCommand extends Command
     {
         try {
             $statsStartDate = new \DateTime('FIRST DAY OF PREVIOUS MONTH');
-            $statsEndDate = (new \DateTime('FIRST DAY OF THIS MONTH'))->sub(new \DateInterval('PT1S'));
+            $statsEndDate = new \DateTime('FIRST DAY OF THIS MONTH')->sub(new \DateInterval('PT1S'));
             $satisfactionScores = $this->satisfactionRepository->getSatisfactionDataForPeriod($statsStartDate, $statsEndDate);
 
             if (empty($satisfactionScores)) {

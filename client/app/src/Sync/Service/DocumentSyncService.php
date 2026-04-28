@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Sync\Service;
+namespace OPG\Digideps\Frontend\Sync\Service;
 
-use App\Entity\Report\Document;
-use App\Entity\Report\Report;
-use App\Service\Client\RestClient;
-use App\Service\File\FileNameManipulation;
-use App\Sync\Exception\SiriusDocumentSyncFailedException;
-use App\Sync\Model\Sirius\QueuedDocumentData;
-use App\Sync\Model\Sirius\SiriusDocumentFile;
-use App\Sync\Model\Sirius\SiriusDocumentUpload;
-use App\Sync\Model\Sirius\SiriusReportPdfDocumentMetadata;
-use App\Sync\Model\Sirius\SiriusSupportingDocumentMetadata;
-use App\Sync\Service\Client\Sirius\SiriusApiGatewayClient;
+use OPG\Digideps\Frontend\Entity\Report\Document;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\File\FileNameManipulation;
+use OPG\Digideps\Frontend\Sync\Exception\SiriusDocumentSyncFailedException;
+use OPG\Digideps\Frontend\Sync\Model\Sirius\QueuedDocumentData;
+use OPG\Digideps\Frontend\Sync\Model\Sirius\SiriusDocumentFile;
+use OPG\Digideps\Frontend\Sync\Model\Sirius\SiriusDocumentUpload;
+use OPG\Digideps\Frontend\Sync\Model\Sirius\SiriusReportPdfDocumentMetadata;
+use OPG\Digideps\Frontend\Sync\Model\Sirius\SiriusSupportingDocumentMetadata;
+use OPG\Digideps\Frontend\Sync\Service\Client\Sirius\SiriusApiGatewayClient;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\MimeType;
 use Psr\Http\Message\ResponseInterface;
@@ -131,7 +131,7 @@ class DocumentSyncService
             throw (new \Exception(self::MISSING_FILE_EXTENSION_ERROR, 400));
         }
 
-        $file = (new SiriusDocumentFile())
+        $file = new SiriusDocumentFile()
             ->setName($fileName)
             ->setMimetype($mimeType)
             ->setS3Reference($documentData->getStorageReference());
@@ -142,7 +142,7 @@ class DocumentSyncService
                 $reportType = 'HW';
             }
 
-            $siriusDocumentMetadata = (new SiriusReportPdfDocumentMetadata())
+            $siriusDocumentMetadata = new SiriusReportPdfDocumentMetadata()
                 ->setReportingPeriodFrom($documentData->getReportStartDate())
                 ->setReportingPeriodTo($this->determineEndDate($documentData))
                 ->setDateSubmitted($documentData->getReportSubmitDate())
@@ -155,13 +155,13 @@ class DocumentSyncService
 
             $type = 'reports';
         } else {
-            $siriusDocumentMetadata = (new SiriusSupportingDocumentMetadata())
+            $siriusDocumentMetadata = new SiriusSupportingDocumentMetadata()
                 ->setSubmissionId($documentData->getReportSubmissionId());
 
             $type = 'supportingdocuments';
         }
 
-        return (new SiriusDocumentUpload())
+        return new SiriusDocumentUpload()
             ->setType($type)
             ->setAttributes($siriusDocumentMetadata)
             ->setFile($file);
@@ -208,7 +208,7 @@ class DocumentSyncService
     }
 
     /**
-     * @return \Exception|mixed|\Throwable
+     * @return Document|\Throwable
      */
     private function handleDocumentStatusUpdate(QueuedDocumentData $documentData, string $status, ?string $errorMessage = null): mixed
     {
@@ -224,7 +224,7 @@ class DocumentSyncService
                 'put',
                 sprintf('document/%s', $documentData->getDocumentId()),
                 json_encode($data),
-                'Report\\Document',
+                Document::class,
                 [],
                 false
             );

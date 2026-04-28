@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use App\Entity\Report\ProfDeputyEstimateCost;
-use App\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\ProfDeputyEstimateCost;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -21,7 +21,7 @@ trait ReportProfDeputyCostsEstimateTrait
     /**
      * @var ProfDeputyEstimateCost[]
      *
-     * @JMS\Type("array<App\Entity\Report\ProfDeputyEstimateCost>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\ProfDeputyEstimateCost>")
      *
      * @JMS\Groups({"prof-deputy-estimate-costs"})
      */

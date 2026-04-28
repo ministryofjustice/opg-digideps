@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Backend\Entity\Report;
 
-use App\Entity\AssetInterface;
-use App\Entity\Ndr\AssetProperty as NdrAssetProperty;
-use DateTime;
+use OPG\Digideps\Backend\Entity\AssetInterface;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -323,7 +321,7 @@ class AssetProperty extends Asset implements AssetInterface
         return $this;
     }
 
-    public function setOwnedPercentage($ownedPercentage)
+    public function setOwnedPercentage($ownedPercentage): static
     {
         $this->ownedPercentage = $ownedPercentage;
 
@@ -431,12 +429,11 @@ class AssetProperty extends Asset implements AssetInterface
      */
     public function isEqual(AssetInterface $asset)
     {
-        if (!($asset instanceof self) && !($asset instanceof NdrAssetProperty)) {
-            return false;
+        if ($asset instanceof AssetProperty) {
+            return $asset->getAddress() === $this->getAddress()
+                && $asset->getAddress2() === $this->getAddress2()
+                && $asset->getPostcode() === $this->getPostcode();
         }
-
-        return $asset->getAddress() === $this->getAddress()
-            && $asset->getAddress2() === $this->getAddress2()
-            && $asset->getPostcode() === $this->getPostcode();
+        return false;
     }
 }

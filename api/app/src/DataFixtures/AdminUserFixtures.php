@@ -1,8 +1,8 @@
 <?php
 
-namespace App\DataFixtures;
+namespace OPG\Digideps\Backend\DataFixtures;
 
-use App\Entity\User;
+use OPG\Digideps\Backend\Entity\User;
 use Doctrine\Persistence\ObjectManager;
 
 class AdminUserFixtures extends AbstractDataFixture
@@ -70,7 +70,7 @@ class AdminUserFixtures extends AbstractDataFixture
 
     private function addUser(array $data, ObjectManager $manager)
     {
-        $user = (new User())
+        $user = new User()
             ->setFirstname($data['firstName'])
             ->setLastname($data['lastName'])
             ->setEmail($data['email'])

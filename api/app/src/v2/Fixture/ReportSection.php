@@ -1,31 +1,26 @@
 <?php
 
-namespace App\v2\Fixture;
+namespace OPG\Digideps\Backend\v2\Fixture;
 
-use App\Entity\Ndr;
-use App\Entity\Ndr\ClientBenefitsCheck as NdrClientBenefitsCheck;
-use App\Entity\Ndr\MoneyReceivedOnClientsBehalf as NdrMoneyReceivedOnClientsBehalf;
-use App\Entity\Report\Action;
-use App\Entity\Report\BankAccount;
-use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\Lifestyle;
-use App\Entity\Report\MentalCapacity;
-use App\Entity\Report\MoneyReceivedOnClientsBehalf;
-use App\Entity\Report\MoneyTransaction;
-use App\Entity\Report\ProfDeputyOtherCost;
-use App\Entity\Report\Report;
-use App\Entity\Report\VisitsCare;
-use App\Entity\ReportInterface;
+use OPG\Digideps\Backend\Entity\Report\Action;
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
+use OPG\Digideps\Backend\Entity\Report\Lifestyle;
+use OPG\Digideps\Backend\Entity\Report\MentalCapacity;
+use OPG\Digideps\Backend\Entity\Report\MoneyReceivedOnClientsBehalf;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransaction;
+use OPG\Digideps\Backend\Entity\Report\ProfDeputyOtherCost;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\VisitsCare;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
 
 class ReportSection
 {
-    public function __construct(private readonly EntityManagerInterface $em)
+    public function __construct()
     {
     }
 
-    public function completeReport(ReportInterface $report): void
+    public function completeReport(Report $report): void
     {
         $this->completeDecisions($report);
         $this->completeContacts($report);
@@ -46,7 +41,7 @@ class ReportSection
         $this->completeClientBenefitsCheck($report);
     }
 
-    public function completeSection(ReportInterface $report, string $section): void
+    public function completeSection(Report $report, string $section): void
     {
         // Convert visits_care to VisitsCare, for example.
         $section = str_replace('_', ' ', $section);
@@ -59,29 +54,22 @@ class ReportSection
     /**
      * @throws \Exception
      */
-    private function completeDecisions(ReportInterface $report): void
+    private function completeDecisions(Report $report): void
     {
         $report->setSignificantDecisionsMade('No');
         $report->setReasonForNoDecisions('No need for decisions');
-        (new MentalCapacity($report))->setHasCapacityChanged('no')->setMentalAssessmentDate(new \DateTime());
+        new MentalCapacity($report)->setHasCapacityChanged('no')->setMentalAssessmentDate(new \DateTime());
     }
 
-    private function completeContacts(ReportInterface $report): void
+    private function completeContacts(Report $report): void
     {
         $report->setReasonForNoContacts('No need for contacts');
     }
 
-    private function completeVisitsCare(ReportInterface $report): void
+    private function completeVisitsCare(Report $report): void
     {
-        if ($report instanceof Ndr\Ndr) {
-            $vc = (new Ndr\VisitsCare())
-                ->setNdr($report)
-                ->setPlanMoveNewResidence('no');
-        } else {
-            $vc = (new VisitsCare())->setReport($report);
-        }
-
-        $vc
+        $vc = new VisitsCare()
+            ->setReport($report)
             ->setDoYouLiveWithClient('yes')
             ->setDoesClientReceivePaidCare('no')
             ->setWhoIsDoingTheCaring('me')
@@ -90,59 +78,46 @@ class ReportSection
         $report->setVisitsCare($vc);
     }
 
-    private function completeActions(ReportInterface $report): void
+    private function completeActions(Report $report): void
     {
-        if ($report instanceof Ndr\Ndr) {
-            $report
-                ->setActionGiveGiftsToClient('no')
-                ->setActionPropertyMaintenance('no')
-                ->setActionPropertySellingRent('no')
-                ->setActionPropertyBuy('no');
-        } else {
-            $action = (new Action($report))
-                ->setDoYouExpectFinancialDecisions('no')
-                ->setDoYouHaveConcerns('no');
-            $report->setAction($action);
-        }
+        $action = new Action($report)
+            ->setDoYouExpectFinancialDecisions('no')
+            ->setDoYouHaveConcerns('no');
+        $report->setAction($action);
     }
 
-    private function completeOtherInfo(ReportInterface $report): void
+    private function completeOtherInfo(Report $report): void
     {
         $report->setActionMoreInfo('no');
     }
 
-    private function completeLifestyle(ReportInterface $report): void
+    private function completeLifestyle(Report $report): void
     {
-        $ls = (new Lifestyle())
+        $ls = new Lifestyle()
             ->setReport($report);
         $ls->setCareAppointments('no');
         $ls->setDoesClientUndertakeSocialActivities('no');
         $report->setLifestyle($ls);
     }
 
-    private function completeDocuments(ReportInterface $report): void
+    private function completeDocuments(Report $report): void
     {
         $report->setWishToProvideDocumentation('no');
     }
 
-    private function completeGifts(ReportInterface $report): void
+    private function completeGifts(Report $report): void
     {
         $report->setGiftsExist('no');
     }
 
-    private function completeBankAccounts(ReportInterface $report): void
+    private function completeBankAccounts(Report $report): void
     {
-        if ($report instanceof Ndr\Ndr) {
-            $ba = (new Ndr\BankAccount())->setNdr($report);
-            $this->em->persist($ba);
-        } else {
-            $ba = (new BankAccount())->setReport($report)->setClosingBalance(1000);
-            $report->addAccount($ba);
-            $report->setBalanceMismatchExplanation('no reason');
-        }
+        $ba = new BankAccount()->setReport($report)->setClosingBalance(1000);
+        $report->addAccount($ba);
+        $report->setBalanceMismatchExplanation('no reason');
     }
 
-    private function completeMoneyIn(ReportInterface $report): void
+    private function completeMoneyIn(Report $report): void
     {
         if (
             Report::LAY_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
@@ -151,11 +126,11 @@ class ReportSection
         ) {
             $report->setMoneyInExists('Yes');
         }
-        $mt = (new MoneyTransaction($report))->setCategory('salary-or-wages')->setAmount(200);
+        $mt = new MoneyTransaction($report)->setCategory('salary-or-wages')->setAmount(200);
         $report->addMoneyTransaction($mt);
     }
 
-    private function completeMoneyOut(ReportInterface $report): void
+    private function completeMoneyOut(Report $report): void
     {
         if (
             Report::LAY_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
@@ -164,21 +139,21 @@ class ReportSection
         ) {
             $report->setMoneyOutExists('Yes');
         }
-        $mt = (new MoneyTransaction($report))->setCategory('care-fees')->setAmount(200);
+        $mt = new MoneyTransaction($report)->setCategory('care-fees')->setAmount(200);
         $report->addMoneyTransaction($mt);
     }
 
-    private function completeAssets(ReportInterface $report): void
+    private function completeAssets(Report $report): void
     {
         $report->setNoAssetToAdd(true);
     }
 
-    private function completeDebts(ReportInterface $report): void
+    private function completeDebts(Report $report): void
     {
         $report->setHasDebts('no');
     }
 
-    private function completeMoneyInShort(ReportInterface $report): void
+    private function completeMoneyInShort(Report $report): void
     {
         if (
             Report::LAY_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_LOW_ASSETS_TYPE === $report->getType()
@@ -191,7 +166,7 @@ class ReportSection
         $report->setMoneyTransactionsShortInExist('no');
     }
 
-    private function completeMoneyOutShort(ReportInterface $report): void
+    private function completeMoneyOutShort(Report $report): void
     {
         if (
             Report::LAY_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_LOW_ASSETS_TYPE === $report->getType()
@@ -204,9 +179,9 @@ class ReportSection
         $report->setMoneyTransactionsShortOutExist('no');
     }
 
-    private function completeDeputyExpenses(ReportInterface $report): void
+    private function completeDeputyExpenses(Report $report): void
     {
-        if ($report instanceof Ndr\Ndr || $report->isLayReport()) {
+        if ($report->isLayReport()) {
             $report->setPaidForAnything('no');
         } elseif ($report->isPAreport()) {
             $report->setReasonForNoFees('No reason for no fees');
@@ -224,68 +199,38 @@ class ReportSection
         }
     }
 
-    private function completeExpenses(ReportInterface $report): void
+    private function completeExpenses(Report $report): void
     {
         $this->completeDeputyExpenses($report);
     }
 
-    private function completeIncomeBenefits(ReportInterface $report)
-    {
-        if (!$report instanceof Ndr\Ndr) {
-            return;
-        }
-
-        $report
-            ->setReceiveStatePension('no')
-            ->setReceiveOtherIncome('no')
-            ->setExpectCompensationDamages('no');
-    }
-
-    private function completeMoneyTransfers(ReportInterface $report)
-    {
-        if (!$report instanceof Ndr\Ndr) {
-            return;
-        }
-
-        $report->setNoTransfersToAdd(true);
-    }
-
-    private function completeBalance(ReportInterface $report)
-    {
-        if (!$report instanceof Ndr\Ndr) {
-            return;
-        }
-
-        $report->setBalanceMismatchExplanation('no reason');
-    }
-
-    private function completeProfDeputyCosts(ReportInterface $report)
+    private function completeProfDeputyCosts(Report $report)
     {
         $this->completeDeputyExpenses($report);
     }
 
-    private function completeProfDeputyCostsEstimate(ReportInterface $report)
+    private function completeProfDeputyCostsEstimate(Report $report)
     {
         if ($report->isProfReport()) {
             $report->setProfDeputyCostsEstimateHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_FIXED);
         }
     }
 
-    private function completePaFeeExpense(ReportInterface $report)
+    private function completePaFeeExpense(Report $report)
     {
         $this->completeDeputyExpenses($report);
     }
 
-    private function completeClientBenefitsCheck(ReportInterface $report): void
+    private function completeClientBenefitsCheck(Report $report): void
     {
-        $typeOfIncome = $report instanceof Ndr\Ndr ? new NdrMoneyReceivedOnClientsBehalf() : new MoneyReceivedOnClientsBehalf();
+        $typeOfIncome = new MoneyReceivedOnClientsBehalf();
 
         $typeOfIncome->setCreated(new \DateTime())
             ->setWhoReceivedMoney('Someone')
             ->setAmount(100.50)
             ->setMoneyType('Universal Credit');
 
-        $clientBenefitsCheck = $report instanceof Ndr\Ndr ? new NdrClientBenefitsCheck() : new ClientBenefitsCheck();
+        $clientBenefitsCheck = new ClientBenefitsCheck();
 
         $clientBenefitsCheck->setReport($report)
             ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED)

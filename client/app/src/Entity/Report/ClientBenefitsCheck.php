@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Frontend\Entity\Report;
 
-use App\Entity\ClientBenefitsCheckInterface;
-use App\Entity\Report\Traits\HasReportTrait;
-use App\Validator\Constraints\ClientBenefitsCheck as CustomAssert;
+use OPG\Digideps\Frontend\Entity\ClientBenefitsCheckInterface;
+use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
+use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck as CustomAssert;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
@@ -26,7 +26,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"report", "client-benefits-check"})
      */
-    private ?DateTime $created = null;
+    private ?\DateTime $created = null;
 
     /**
      * @JMS\Type("string")
@@ -42,7 +42,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
      */
-    private ?DateTime $dateLastCheckedEntitlement = null;
+    private ?\DateTime $dateLastCheckedEntitlement = null;
 
     /**
      * @JMS\Type("string")
@@ -69,7 +69,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     private ?string $dontKnowMoneyExplanation = null;
 
     /**
-     * @JMS\Type("ArrayCollection<App\Entity\Report\MoneyReceivedOnClientsBehalf>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Frontend\Entity\Report\MoneyReceivedOnClientsBehalf>")
      * @JMS\Groups({"report", "client-benefits-check"})
      *
      * @CustomAssert\ClientBenefitsCheck(groups={"client-benefits-check"})
@@ -101,24 +101,24 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
         return $this;
     }
 
-    public function getDateLastCheckedEntitlement(): ?DateTime
+    public function getDateLastCheckedEntitlement(): ?\DateTime
     {
         return $this->dateLastCheckedEntitlement;
     }
 
-    public function setDateLastCheckedEntitlement(?DateTime $dateLastCheckedEntitlement): ClientBenefitsCheck
+    public function setDateLastCheckedEntitlement(?\DateTime $dateLastCheckedEntitlement): ClientBenefitsCheck
     {
         $this->dateLastCheckedEntitlement = $dateLastCheckedEntitlement;
 
         return $this;
     }
 
-    public function getCreated(): ?DateTime
+    public function getCreated(): ?\DateTime
     {
         return $this->created;
     }
 
-    public function setCreated(?DateTime $created): ClientBenefitsCheck
+    public function setCreated(?\DateTime $created): ClientBenefitsCheck
     {
         $this->created = $created;
 

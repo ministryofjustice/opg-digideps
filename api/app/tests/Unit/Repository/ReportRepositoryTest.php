@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Repository;
+namespace Tests\OPG\Digideps\Backend\Unit\Repository;
 
-use App\Entity\ClientInterface;
-use App\Entity\Report\Fee;
-use App\Entity\Report\Report;
-use App\Repository\ReportRepository;
-use App\Service\Search\ClientSearchFilter;
+use OPG\Digideps\Backend\Entity\ClientInterface;
+use OPG\Digideps\Backend\Entity\Report\Fee;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Repository\ReportRepository;
+use OPG\Digideps\Backend\Service\Search\ClientSearchFilter;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;

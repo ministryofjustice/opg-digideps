@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Factory;
+namespace OPG\Digideps\Backend\Factory;
 
-use App\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\Organisation;
 
 class OrganisationFactory
 {
@@ -50,7 +50,7 @@ class OrganisationFactory
             throw new \InvalidArgumentException(sprintf("Unable to create organisation with name '%s' from 'emailIdentifier': '%s'", $name, $emailIdentifier));
         }
 
-        return (new Organisation())
+        return new Organisation()
             ->setName($name)
             ->setEmailIdentifier($emailIdentifier)
             ->setIsActivated($isActivated);

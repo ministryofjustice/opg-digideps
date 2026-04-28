@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Security;
+namespace OPG\Digideps\Backend\Security;
 
-use App\Exception\UnauthorisedException;
-use App\Exception\UserWrongCredentialsException;
-use App\Repository\UserRepository;
-use App\Service\Auth\AuthService;
-use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
-use App\Service\BruteForce\AttemptsInTimeChecker;
-use App\Service\DateTimeProvider;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Exception\UnauthorisedException;
+use OPG\Digideps\Backend\Exception\UserWrongCredentialsException;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\Service\Auth\AuthService;
+use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
+use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
+use OPG\Digideps\Backend\Service\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +19,6 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
@@ -83,7 +83,7 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
 
         $user = $this->userRepository->findOneBy(['email' => $email]);
 
-        if ($user instanceof \App\Entity\User) {
+        if ($user instanceof User) {
             $request->attributes->set('user_id', $user->getId());
         } else {
             $request->attributes->set('user_id', null);

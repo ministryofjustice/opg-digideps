@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\TestHelpers;
+namespace OPG\Digideps\Backend\TestHelpers;
 
-use App\Entity\Client;
-use App\Entity\Report\Action;
-use App\Entity\Report\BankAccount;
-use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\Debt;
-use App\Entity\Report\Document;
-use App\Entity\Report\Lifestyle;
-use App\Entity\Report\MentalCapacity;
-use App\Entity\Report\MoneyReceivedOnClientsBehalf;
-use App\Entity\Report\MoneyTransaction;
-use App\Entity\Report\ProfDeputyOtherCost;
-use App\Entity\Report\Report;
-use App\Entity\Report\ReportSubmission;
-use App\Entity\Report\VisitsCare;
-use App\Entity\User;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\Action;
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
+use OPG\Digideps\Backend\Entity\Report\Debt;
+use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\Lifestyle;
+use OPG\Digideps\Backend\Entity\Report\MentalCapacity;
+use OPG\Digideps\Backend\Entity\Report\MoneyReceivedOnClientsBehalf;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransaction;
+use OPG\Digideps\Backend\Entity\Report\ProfDeputyOtherCost;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Entity\Report\VisitsCare;
+use OPG\Digideps\Backend\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -98,7 +98,7 @@ class ReportTestHelper
         $reportPdf->setCreatedBy($submittedBy);
         $reportPdf->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
 
-        $submission = (new ReportSubmission($report, $submittedBy))
+        $submission = new ReportSubmission($report, $submittedBy)
             ->setCreatedBy($submittedBy)
             ->setCreatedOn($submitDate)
             ->addDocument($reportPdf);
@@ -150,7 +150,7 @@ class ReportTestHelper
     private static function completeDecisions(Report $report): void
     {
         $report->setReasonForNoDecisions('No need for decisions');
-        (new MentalCapacity($report))->setHasCapacityChanged('no')->setMentalAssessmentDate(new \DateTime());
+        new MentalCapacity($report)->setHasCapacityChanged('no')->setMentalAssessmentDate(new \DateTime());
     }
 
     private static function completeContacts(Report $report): void
@@ -160,7 +160,7 @@ class ReportTestHelper
 
     private static function completeVisitsCare(Report $report): void
     {
-        $vc = (new VisitsCare())->setReport($report);
+        $vc = new VisitsCare()->setReport($report);
 
         $vc->setDoYouLiveWithClient('yes')
             ->setDoesClientReceivePaidCare('no')
@@ -172,7 +172,7 @@ class ReportTestHelper
 
     private static function completeActions(Report $report): void
     {
-        $action = (new Action($report))
+        $action = new Action($report)
             ->setDoYouExpectFinancialDecisions('no')
             ->setDoYouHaveConcerns('no');
         $report->setAction($action);
@@ -185,7 +185,7 @@ class ReportTestHelper
 
     private static function completeLifestyle(Report $report): void
     {
-        $ls = (new Lifestyle())->setReport($report);
+        $ls = new Lifestyle()->setReport($report);
         $ls->setCareAppointments('no');
         $ls->setDoesClientUndertakeSocialActivities('no');
 
@@ -204,7 +204,7 @@ class ReportTestHelper
 
     private static function completeBankAccounts(Report $report): void
     {
-        $ba = (new BankAccount())
+        $ba = new BankAccount()
             ->setReport($report)
             ->setClosingBalance(1000)
             ->setAccountNumber('1234');
@@ -223,7 +223,7 @@ class ReportTestHelper
             $report->setMoneyInExists('Yes');
         }
 
-        $mt = (new MoneyTransaction($report))->setCategory('salary-or-wages')->setAmount(200);
+        $mt = new MoneyTransaction($report)->setCategory('salary-or-wages')->setAmount(200);
         $report->addMoneyTransaction($mt);
     }
 
@@ -237,9 +237,9 @@ class ReportTestHelper
             $report->setMoneyOutExists('Yes');
         }
 
-        $mt = (new MoneyTransaction($report))->setCategory('care-fees')->setAmount(200);
+        $mt = new MoneyTransaction($report)->setCategory('care-fees')->setAmount(200);
         $report->addMoneyTransaction($mt);
-        $mt2 = (new MoneyTransaction($report))->setCategory('electricity')->setAmount(100);
+        $mt2 = new MoneyTransaction($report)->setCategory('electricity')->setAmount(100);
         $report->addMoneyTransaction($mt2);
     }
 

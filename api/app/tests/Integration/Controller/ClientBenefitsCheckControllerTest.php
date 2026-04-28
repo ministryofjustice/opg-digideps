@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Controller;
+namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
-use DateTime;
-use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\MoneyReceivedOnClientsBehalf;
-use App\TestHelpers\ClientTestHelper;
-use App\TestHelpers\ReportTestHelper;
+use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
+use OPG\Digideps\Backend\Entity\Report\MoneyReceivedOnClientsBehalf;
+use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
+use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
 
 class ClientBenefitsCheckControllerTest extends AbstractTestController
 {
@@ -163,15 +162,15 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
             $typeOfIncome = new MoneyReceivedOnClientsBehalf();
             $clientBenefitsCheck = new ClientBenefitsCheck();
 
-            $typeOfIncome->setCreated(new DateTime())
+            $typeOfIncome->setCreated(new \DateTime())
                 ->setAmount(100.50)
                 ->setMoneyType('Universal Credit')
                 ->setWhoReceivedMoney('Some org');
 
             $clientBenefitsCheck->setReport($report)
                 ->setWhenLastCheckedEntitlement(ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED)
-                ->setDateLastCheckedEntitlement(new DateTime())
-                ->setCreated(new DateTime())
+                ->setDateLastCheckedEntitlement(new \DateTime())
+                ->setCreated(new \DateTime())
                 ->setDoOthersReceiveMoneyOnClientsBehalf('yes')
                 ->addTypeOfMoneyReceivedOnClientsBehalf($typeOfIncome)
             ;

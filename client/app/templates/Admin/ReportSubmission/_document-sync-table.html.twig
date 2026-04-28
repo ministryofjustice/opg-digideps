@@ -1,7 +1,7 @@
 {% trans_default_domain "admin-documents" %}
 
 {% macro syncStatus(status, document) %}
-    {% set DocumentClass = 'App\\Entity\\Report\\Document' %}
+    {% set DocumentClass = 'OPG\\Digideps\\Frontend\\Entity\\Report\\Document' %}
 
     {% if status == class_const(DocumentClass, 'SYNC_STATUS_QUEUED') %}
         <span class="opg-text--secondary">Queued</span>

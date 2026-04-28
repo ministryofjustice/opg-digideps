@@ -2,20 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
-use DateTime;
 use PHPUnit\Framework\Attributes\DataProvider;
-use App\Entity\Client;
-use App\Entity\User;
-use App\Repository\ClientRepository;
-use App\Repository\UserRepository;
-use App\Service\UserService;
-use App\v2\DTO\InviteeDto;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\ClientRepository;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\Service\UserService;
+use OPG\Digideps\Backend\v2\DTO\InviteeDto;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Mockery\MockInterface;
-use MockeryStub as m;
+use Tests\OPG\Digideps\Backend\Unit\MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 
 use function PHPUnit\Framework\assertInstanceOf;
@@ -37,7 +36,7 @@ final class UserServiceTest extends TestCase
         $client = new Client();
         $client->addUser($this->user);
         $client->setCaseNumber('12345678');
-        $client->setCourtDate(new DateTime('2014-06-06'));
+        $client->setCourtDate(new \DateTime('2014-06-06'));
 
         $email = 'test@tester.co.uk';
 

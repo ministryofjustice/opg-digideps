@@ -1,22 +1,19 @@
 <?php
 
-namespace App\Controller;
+namespace OPG\Digideps\Backend\Controller;
 
-use App\Entity\Client;
-use App\Entity\User;
-use App\Repository\UserRepository;
-use App\Service\Auth\AuthService;
-use App\Service\Formatter\RestFormatter;
-use App\Service\UserRegistrationService;
-use DateTime;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\Service\Auth\AuthService;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\Service\UserRegistrationService;
 use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Common\Registration\SelfRegisterData;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Throwable;
 
 #[Route(path: '/selfregister')]
 class SelfRegisterController extends RestController
@@ -30,7 +27,7 @@ class SelfRegisterController extends RestController
     public function register(Request $request, UserRegistrationService $userRegistrationService): User
     {
         if (!$this->authService->isSecretValid($request)) {
-            throw new RuntimeException('client secret not accepted.', 403);
+            throw new \RuntimeException('client secret not accepted.', 403);
         }
 
         $selfRegisterData = new SelfRegisterData();
@@ -52,13 +49,13 @@ class SelfRegisterController extends RestController
         $errors = $this->validator->validate($selfRegisterData, null, 'self_registration');
 
         if (count($errors) > 0) {
-            throw new RuntimeException('Invalid registration data: ' . $errors);
+            throw new \RuntimeException('Invalid registration data: ' . $errors);
         }
 
         try {
             $user = $userRegistrationService->selfRegisterUser($selfRegisterData);
             $this->logger->warning('PreRegistration register success: ', ['extra' => ['page' => 'user_registration', 'success' => true] + $selfRegisterData->toArray()]);
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->logger->warning('PreRegistration register failed:', ['extra' => ['page' => 'user_registration', 'success' => false] + $selfRegisterData->toArray()]);
             throw $e;
         }
@@ -72,7 +69,7 @@ class SelfRegisterController extends RestController
     public function verifyCoDeputy(Request $request, UserRegistrationService $userRegistrationService): array
     {
         if (!$this->authService->isSecretValid($request)) {
-            throw new RuntimeException('client secret not accepted.', 403);
+            throw new \RuntimeException('client secret not accepted.', 403);
         }
 
         $selfRegisterData = new SelfRegisterData();
@@ -90,7 +87,7 @@ class SelfRegisterController extends RestController
         $errors = $this->validator->validate($selfRegisterData, null, ['verify_codeputy']);
 
         if (count($errors) > 0) {
-            throw new RuntimeException('Invalid registration data: ' . $errors);
+            throw new \RuntimeException('Invalid registration data: ' . $errors);
         }
 
         try {
@@ -99,7 +96,7 @@ class SelfRegisterController extends RestController
             if (1 !== count($matchedCodeputies)) {
                 // a deputy could not be uniquely identified due to matching first name, last name and postcode across more than one deputy record
                 $message = sprintf('A unique deputy record for case number %s could not be identified', $selfRegisterData->getCaseNumber());
-                throw new RuntimeException(json_encode($message) ?: '', 462);
+                throw new \RuntimeException(json_encode($message) ?: '', 462);
             }
 
             // find existing users for this deputy UID, but only those who are not the registering user;
@@ -118,11 +115,11 @@ class SelfRegisterController extends RestController
 
             if (!empty($existingDeputyCases)) {
                 $message = sprintf('A deputy with deputy number %s is already associated with the case number %s', $coDeputyUid, $selfRegisterData->getCaseNumber());
-                throw new RuntimeException(json_encode($message) ?: '', 463);
+                throw new \RuntimeException(json_encode($message) ?: '', 463);
             }
 
             $this->logger->warning('PreRegistration codeputy validation success: ', ['extra' => ['page' => 'codep_validation', 'success' => true] + $selfRegisterData->toArray()]);
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->logger->warning('PreRegistration codeputy validation failed:', ['extra' => ['page' => 'codep_validation', 'success' => false] + $selfRegisterData->toArray()]);
             throw $e;
         }
@@ -135,7 +132,7 @@ class SelfRegisterController extends RestController
     #[Route(path: '/updatecodeputy/{userId}', requirements: ['userId' => '\d+'], methods: ['PUT'])]
     public function updateCoDeputyWithVerificationData(Request $request, int $userId): User
     {
-        $user = $this->em->getRepository('App\Entity\User')->findOneBy(['id' => $userId]);
+        $user = $this->em->getRepository(User::class)->findOneBy(['id' => $userId]);
 
         $coDeputyVerificationData = $this->formatter->deserializeBodyContent($request);
 
@@ -144,8 +141,8 @@ class SelfRegisterController extends RestController
         $user->setDeputyUid($coDeputyVerificationData['coDeputyUid']);
 
         $user->setActive(true);
-        $user->setRegistrationDate(new DateTime());
-        $user->setPreRegisterValidatedDate(new DateTime());
+        $user->setRegistrationDate(new \DateTime());
+        $user->setPreRegisterValidatedDate(new \DateTime());
 
         if (!$coDeputyVerificationData['existingDeputyAccounts']) {
             $user->setIsPrimary(true);

@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Client\Internal;
+namespace OPG\Digideps\Frontend\Service\Client\Internal;
 
-use App\Entity\User;
-use App\Event\AdminManagerCreatedEvent;
-use App\Event\AdminUserCreatedEvent;
-use App\Event\CoDeputyInvitedEvent;
-use App\Event\DeputyInvitedEvent;
-use App\Event\DeputySelfRegisteredEvent;
-use App\Event\OrgUserCreatedEvent;
-use App\Event\UserActivatedEvent;
-use App\Event\UserDeletedEvent;
-use App\Event\UserPasswordResetEvent;
-use App\Event\UserUpdatedEvent;
-use App\EventDispatcher\ObservableEventDispatcher;
-use App\Service\Audit\AuditEvents;
-use App\Service\Client\RestClientInterface;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Event\AdminManagerCreatedEvent;
+use OPG\Digideps\Frontend\Event\AdminUserCreatedEvent;
+use OPG\Digideps\Frontend\Event\CoDeputyInvitedEvent;
+use OPG\Digideps\Frontend\Event\DeputyInvitedEvent;
+use OPG\Digideps\Frontend\Event\DeputySelfRegisteredEvent;
+use OPG\Digideps\Frontend\Event\OrgUserCreatedEvent;
+use OPG\Digideps\Frontend\Event\UserActivatedEvent;
+use OPG\Digideps\Frontend\Event\UserDeletedEvent;
+use OPG\Digideps\Frontend\Event\UserPasswordResetEvent;
+use OPG\Digideps\Frontend\Event\UserUpdatedEvent;
+use OPG\Digideps\Frontend\EventDispatcher\ObservableEventDispatcher;
+use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
+use OPG\Digideps\Frontend\Service\Client\RestClientInterface;
 use OPG\Digideps\Common\Registration\SelfRegisterData;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -171,7 +171,7 @@ class UserApi
             'put',
             sprintf(self::RECREATE_USER_TOKEN_ENDPOINT, $email),
             null,
-            'User',
+            User::class,
             [],
             false
         );
@@ -215,7 +215,7 @@ class UserApi
             'post',
             self::DEPUTY_SELF_REGISTER_ENDPOINT,
             $selfRegisterData,
-            'User',
+            User::class,
             [],
             false
         );

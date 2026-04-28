@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\DeputyshipProcessing;
+namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\DeputyshipProcessing;
 
-use App\Domain\Deputyship\DeputyshipCandidatesConverter;
-use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
-use App\v2\Registration\Enum\DeputyshipCandidateAction;
-use ArrayIterator;
+use OPG\Digideps\Backend\Domain\Deputyship\DeputyshipCandidatesConverter;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipBuilder;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 final class DeputyshipBuilderTest extends TestCase
 {
@@ -25,7 +25,7 @@ final class DeputyshipBuilderTest extends TestCase
 
     public function testBuildNoCandidatesFail(): void
     {
-        $candidates = new ArrayIterator([]);
+        $candidates = new \ArrayIterator([]);
 
         $results = iterator_to_array($this->sut->build($candidates));
 
@@ -47,14 +47,14 @@ final class DeputyshipBuilderTest extends TestCase
         $candidateOrder2_1 = ['action' => DeputyshipCandidateAction::InsertOrder, 'orderUid' => $orderUid2];
 
         // candidates are pre-sorted by court order UID
-        $candidates = new ArrayIterator([
+        $candidates = new \ArrayIterator([
             $candidateOrder1_1,
             $candidateOrder1_2,
             $candidateOrder1_3,
             $candidateOrder2_1,
         ]);
 
-        $caller = new stdClass();
+        $caller = new \stdClass();
         $caller->counter = 0;
 
         // two groups should be passed to the converter

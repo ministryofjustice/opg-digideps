@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Frontend\Entity\Report;
 
-use App\Entity\MoneyReceivedOnClientsBehalfInterface;
-use App\Validator\Constraints\ClientBenefitsCheck as CustomAssert;
+use OPG\Digideps\Frontend\Entity\MoneyReceivedOnClientsBehalfInterface;
+use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck as CustomAssert;
 use DateTime;
 use JMS\Serializer\Annotation as JMS;
 
@@ -21,10 +21,10 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"report", "client-benefits-check"})
      */
-    private ?DateTime $created = null;
+    private ?\DateTime $created = null;
 
     /**
-     * @JMS\Type("App\Entity\Report\ClientBenefitsCheck")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\ClientBenefitsCheck")
      * @JMS\Groups({"report", "client-benefits-check"})
      */
     private ?ClientBenefitsCheck $clientBenefitsCheck = null;
@@ -75,12 +75,12 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
         return $this;
     }
 
-    public function getCreated(): ?DateTime
+    public function getCreated(): ?\DateTime
     {
         return $this->created;
     }
 
-    public function setCreated(?DateTime $created): MoneyReceivedOnClientsBehalf
+    public function setCreated(?\DateTime $created): MoneyReceivedOnClientsBehalf
     {
         $this->created = $created;
 

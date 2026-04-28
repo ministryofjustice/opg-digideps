@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
-use App\Entity\Report\ProfDeputyEstimateCost;
+use OPG\Digideps\Backend\Entity\Report\ProfDeputyEstimateCost;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
 
@@ -22,11 +22,11 @@ trait ReportProfDeputyCostsEstimateTrait
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Report\ProfDeputyEstimateCost>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\ProfDeputyEstimateCost>")
      *
      * @JMS\Groups({"prof-deputy-estimate-costs"})
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\ProfDeputyEstimateCost", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\ProfDeputyEstimateCost", mappedBy="report", cascade={"persist", "remove"})
      *
      * @ORM\OrderBy({"id" = "ASC"})
      */

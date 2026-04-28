@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service\Mailer;
+namespace OPG\Digideps\Frontend\Service\Mailer;
 
-use App\Model\Email;
+use OPG\Digideps\Frontend\Model\Email;
 
 interface MailSenderInterface
 {

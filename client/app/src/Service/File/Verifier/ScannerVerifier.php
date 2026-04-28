@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Service\File\Verifier;
+namespace OPG\Digideps\Frontend\Service\File\Verifier;
 
-use App\Entity\Report\Document;
-use App\Service\File\Scanner\ClamFileScanner;
-use App\Service\File\Scanner\Exception\VirusFoundException;
+use OPG\Digideps\Frontend\Entity\Report\Document;
+use OPG\Digideps\Frontend\Service\File\Scanner\ClamFileScanner;
+use OPG\Digideps\Frontend\Service\File\Scanner\Exception\VirusFoundException;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 

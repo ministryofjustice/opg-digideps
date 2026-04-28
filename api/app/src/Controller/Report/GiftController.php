@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Controller\Report;
+namespace OPG\Digideps\Backend\Controller\Report;
 
-use App\Controller\RestController;
-use App\Entity\Report\BankAccount;
-use App\Entity\Report\Gift;
-use App\Entity\Report\Report;
-use App\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\Controller\RestController;
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\Gift;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -44,7 +44,7 @@ class GiftController extends RestController
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy(Report::class, $reportId); /* @var $report \App\Entity\Report\Report */
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         $this->formatter->validateArray($data, [
             'explanation' => 'mustExist',
@@ -98,7 +98,7 @@ class GiftController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function delete(int $reportId, int $giftId): array
     {
-        $report = $this->findEntityBy(Report::class, $reportId); /* @var $report \App\Entity\Report\Report */
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $gift = $this->findEntityBy(Gift::class, $giftId);

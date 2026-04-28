@@ -1,10 +1,10 @@
 <?php
 
-namespace App\v2\Transformer;
+namespace OPG\Digideps\Backend\v2\Transformer;
 
-use App\v2\DTO\ClientDto;
-use App\v2\DTO\OrganisationDto;
-use App\v2\DTO\UserDto;
+use OPG\Digideps\Backend\v2\DTO\ClientDto;
+use OPG\Digideps\Backend\v2\DTO\OrganisationDto;
+use OPG\Digideps\Backend\v2\DTO\UserDto;
 
 class OrganisationTransformer
 {
@@ -69,7 +69,7 @@ class OrganisationTransformer
 
         foreach ($clients as $client) {
             if ($client instanceof ClientDto) {
-                $transformed[] = $this->clientTransformer->transform($client, ['reports', 'ndr', 'organisation']);
+                $transformed[] = $this->clientTransformer->transform($client, ['reports', 'organisation']);
             }
         }
 

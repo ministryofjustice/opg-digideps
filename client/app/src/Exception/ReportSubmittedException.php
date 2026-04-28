@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exception;
+namespace OPG\Digideps\Frontend\Exception;
 
 use Symfony\Component\HttpKernel\Exception\HttpException;
 

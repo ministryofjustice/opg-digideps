@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Validator\Constraints\ClientBenefitsCheck;
+namespace OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck;
 
-use App\Entity\MoneyReceivedOnClientsBehalfInterface;
-use App\Validator\Constraints\ClientBenefitsCheck\MoneyReceivedOnClientsBehalf as MoneyReceivedOnClientsBehalfConstraint;
+use OPG\Digideps\Frontend\Entity\MoneyReceivedOnClientsBehalfInterface;
+use OPG\Digideps\Frontend\Validator\Constraints\ClientBenefitsCheck\MoneyReceivedOnClientsBehalf as MoneyReceivedOnClientsBehalfConstraint;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;

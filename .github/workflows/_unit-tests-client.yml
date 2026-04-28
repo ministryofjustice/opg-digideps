@@ -24,7 +24,7 @@ jobs:
 
       - name: cache docker layers
         id: cache-docker
-        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-client-unit-tests-build-${{ github.sha }}
@@ -73,4 +73,4 @@ jobs:
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: client-unit-tests
-          path: client/app/tests/phpunit/coverage/client-unit-tests.xml
+          path: client/app/tests/Unit/coverage/client-unit-tests.xml

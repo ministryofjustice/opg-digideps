@@ -1,18 +1,16 @@
 <?php
 
-namespace App\v2\Transformer;
+namespace OPG\Digideps\Backend\v2\Transformer;
 
-use App\v2\DTO\ClientDto;
-use App\v2\DTO\DeputyDto;
-use App\v2\DTO\NdrDto;
-use App\v2\DTO\ReportDto;
-use App\v2\DTO\UserDto;
+use OPG\Digideps\Backend\v2\DTO\ClientDto;
+use OPG\Digideps\Backend\v2\DTO\DeputyDto;
+use OPG\Digideps\Backend\v2\DTO\ReportDto;
+use OPG\Digideps\Backend\v2\DTO\UserDto;
 
 class ClientTransformer
 {
     public function __construct(
         private readonly ReportTransformer $reportTransformer,
-        private readonly NdrTransformer $ndrTransformer,
         private readonly DeputyTransformer $deputyTransformer
     ) {
     }
@@ -35,10 +33,6 @@ class ClientTransformer
 
         if (!in_array('reports', $exclude) && !empty($dto->getReports())) {
             $transformed['reports'] = $this->transformReports($dto->getReports());
-        }
-
-        if (!in_array('ndr', $exclude) && $dto->getNdr() instanceof NdrDto) {
-            $transformed['ndr'] = $this->transformNdr($dto->getNdr());
         }
 
         if (!in_array('organisation', $exclude) && null !== $org) {
@@ -95,14 +89,6 @@ class ClientTransformer
     /**
      * @return array
      */
-    private function transformNdr(NdrDto $ndr)
-    {
-        return $this->ndrTransformer->transform($ndr);
-    }
-
-    /**
-     * @return array
-     */
     private function transformDeputy(DeputyDto $deputy)
     {
         return $this->deputyTransformer->transform($deputy);
@@ -129,7 +115,6 @@ class ClientTransformer
                     'address3' => $userDto->getAddress3(),
                     'address_postcode' => $userDto->getAddressPostcode(),
                     'address_country' => $userDto->getAddressCountry(),
-                    'ndr_enabled' => $userDto->getNdrEnabled(),
                     'active' => $userDto->isActive(),
                     'job_title' => $userDto->getJobTitle(),
                     'phone_main' => $userDto->getPhoneMain(),

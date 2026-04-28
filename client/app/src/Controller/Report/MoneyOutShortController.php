@@ -2,22 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Report;
+namespace OPG\Digideps\Frontend\Controller\Report;
 
-use App\Controller\AbstractController;
-use App\Entity\Report\MoneyTransactionShort;
-use App\Entity\Report\Report;
-use App\Entity\Report\Status;
-use App\Form\AddAnotherRecordType;
-use App\Form\AddAnotherThingType;
-use App\Form\ConfirmDeleteType;
-use App\Form\Report\DoesMoneyOutExistType;
-use App\Form\Report\MoneyShortTransactionType;
-use App\Form\Report\MoneyShortType;
-use App\Form\Report\NoMoneyOutType;
-use App\Form\YesNoType;
-use App\Service\Client\Internal\ReportApi;
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Entity\Report\MoneyTransactionShort;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\Status;
+use OPG\Digideps\Frontend\Form\AddAnotherThingType;
+use OPG\Digideps\Frontend\Form\ConfirmDeleteType;
+use OPG\Digideps\Frontend\Form\Report\DoesMoneyOutExistType;
+use OPG\Digideps\Frontend\Form\Report\MoneyShortTransactionType;
+use OPG\Digideps\Frontend\Form\Report\MoneyShortType;
+use OPG\Digideps\Frontend\Form\Report\NoMoneyOutType;
+use OPG\Digideps\Frontend\Form\YesNoType;
+use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Common\Validating\ValidatingForm;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;

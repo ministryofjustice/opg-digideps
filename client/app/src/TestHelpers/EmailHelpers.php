@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\TestHelpers;
+namespace OPG\Digideps\Frontend\TestHelpers;
 
-use App\Model\Email;
+use OPG\Digideps\Frontend\Model\Email;
 use Faker\Factory;
 
 class EmailHelpers
@@ -16,7 +16,7 @@ class EmailHelpers
     {
         $faker = Factory::create();
 
-        return (new Email())
+        return new Email()
             ->setFromEmailNotifyID($faker->uuid())
             ->setToEmail($faker->safeEmail())
             ->setFromName($faker->name())

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Assembler;
+namespace OPG\Digideps\Backend\v2\Assembler;
 
-use App\Domain\Deputy\DeputyType;
-use App\Entity\Deputy;
-use App\v2\DTO\DeputyDto;
-use App\v2\DTO\DtoPropertySetterTrait;
-use App\v2\Registration\DTO\OrgDeputyshipDto;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\v2\DTO\DeputyDto;
+use OPG\Digideps\Backend\v2\DTO\DtoPropertySetterTrait;
+use OPG\Digideps\Backend\v2\Registration\DTO\OrgDeputyshipDto;
 
 class DeputyAssembler
 {
@@ -34,7 +34,7 @@ class DeputyAssembler
             $deputyFirstName = empty($dto->getDeputyFirstname()) ? null : $dto->getDeputyFirstname();
         }
 
-        return (new Deputy())
+        return new Deputy()
             ->setEmail1($dto->getDeputyEmail())
             ->setDeputyUid($dto->getDeputyUid())
             ->setDeputyType(DeputyType::from($dto->getDeputyType()))

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\File\Storage;
+namespace OPG\Digideps\Backend\Service\File\Storage;
 
 use Aws\Result;
 use Aws\ResultInterface;
@@ -8,7 +8,6 @@ use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3ClientInterface;
 use GuzzleHttp\Psr7\Stream;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
 
 /**
  * Class to upload/download/delete files from S3.
@@ -72,7 +71,7 @@ class S3Storage implements StorageInterface
     public function removeFromS3(string $key): array
     {
         if (empty($key)) {
-            throw new RuntimeException('Could not remove file: Document not specified');
+            throw new \RuntimeException('Could not remove file: Document not specified');
         } else {
             /*
              * ListObjectVersions is permitted by ListBucketVersions in IAM.
@@ -83,13 +82,13 @@ class S3Storage implements StorageInterface
             ]);
 
             if (!$objectVersions instanceof ResultInterface || !$objectVersions->hasKey('Versions')) {
-                throw new RuntimeException('Could not remove file: No results returned');
+                throw new \RuntimeException('Could not remove file: No results returned');
             } else {
                 $objectVersions = $objectVersions->toArray();
 
                 $objectsToDelete = $this->prepareObjectsToDelete($objectVersions);
                 if (empty($objectsToDelete)) {
-                    throw new RuntimeException('Could not remove file: No objects founds');
+                    throw new \RuntimeException('Could not remove file: No objects founds');
                 } else {
                     $s3Result = $this->s3Client->deleteObjects([
                         'Bucket' => $this->bucketName,
@@ -149,7 +148,7 @@ class S3Storage implements StorageInterface
                     $s3Error['VersionId'] . ', Code: ' . $s3Error['Code'] . ', Message: ' . $s3Error['Message']);
             }
             $this->log('error', 'Unable to remove key from S3: ' . json_encode($s3Result['Errors']));
-            throw new RuntimeException('Could not remove files: ' . json_encode($s3Result['Errors']));
+            throw new \RuntimeException('Could not remove files: ' . json_encode($s3Result['Errors']));
         }
     }
 

@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Report;
+namespace OPG\Digideps\Frontend\Controller\Report;
 
-use App\Controller\AbstractController;
-use App\Entity\Report\ProfServiceFee;
-use App\Entity\Report\ProfServiceFeeCurrent;
-use App\Entity\Report\Report;
-use App\Entity\Report\Status;
-use App\Form\Report\ProfServiceFeeExistType;
-use App\Form\Report\ProfServiceFeeType;
-use App\Form\Report\ProfServicePreviousFeesEstimateType;
-use App\Service\Client\Internal\ReportApi;
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Entity\Report\ProfServiceFee;
+use OPG\Digideps\Frontend\Entity\Report\ProfServiceFeeCurrent;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\Status;
+use OPG\Digideps\Frontend\Form\Report\ProfServiceFeeExistType;
+use OPG\Digideps\Frontend\Form\Report\ProfServiceFeeType;
+use OPG\Digideps\Frontend\Form\Report\ProfServicePreviousFeesEstimateType;
+use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;

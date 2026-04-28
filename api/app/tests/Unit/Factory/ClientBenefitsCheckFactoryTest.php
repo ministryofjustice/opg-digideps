@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Factory;
+namespace Tests\OPG\Digideps\Backend\Unit\Factory;
 
-use App\Entity\Client;
-use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\MoneyReceivedOnClientsBehalf;
-use App\Entity\Report\Report;
-use App\Factory\ClientBenefitsCheckFactory;
-use App\Repository\ReportRepository;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
+use OPG\Digideps\Backend\Entity\Report\MoneyReceivedOnClientsBehalf;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Factory\ClientBenefitsCheckFactory;
+use OPG\Digideps\Backend\Repository\ReportRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -45,15 +45,15 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
     {
         $this->reportId = 1436;
         $this->id = '8e3aaf2c-3145-4e07-b64b-37702323c6f9';
-        $this->created = (new \DateTime())->format('Y-m-d');
+        $this->created = new \DateTime()->format('Y-m-d');
         $this->whenLastCheckedEntitlement = 'haveChecked';
-        $this->dateLastCheckedEntitlement = (new \DateTime())->format('Y-m-d');
+        $this->dateLastCheckedEntitlement = new \DateTime()->format('Y-m-d');
         $this->neverCheckedExplanation = null;
         $this->doOthersReceiveMoneyOnClientsBehalf = 'yes';
         $this->dontKnowMoneyExplanation = null;
 
         $this->moneyId = '5d80a2f3-4f2c-4e0f-9709-2d201102cb13';
-        $this->moneyCreated = (new \DateTime())->format('Y-m-d');
+        $this->moneyCreated = new \DateTime()->format('Y-m-d');
         $this->moneyClientBenefitsCheck = null;
         $this->moneyType = 'Universal Credit';
         $this->moneyAmount = 100.5;
@@ -77,10 +77,10 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
 
         $sut = new ClientBenefitsCheckFactory($reportRepo->reveal(), $em->reveal());
 
-        $existingMoney = (new MoneyReceivedOnClientsBehalf())
+        $existingMoney = new MoneyReceivedOnClientsBehalf()
             ->setId(Uuid::fromString($this->moneyId));
 
-        $existingClientBenefitsCheck = (new ClientBenefitsCheck())
+        $existingClientBenefitsCheck = new ClientBenefitsCheck()
             ->addTypeOfMoneyReceivedOnClientsBehalf($existingMoney)
             ->setId(Uuid::fromString($this->id));
 
@@ -192,13 +192,13 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
         $reportRepo = self::prophesize(ReportRepository::class);
         $reportRepo->find($this->reportId)->shouldBeCalled()->willReturn($report);
 
-        $existingMoney = (new MoneyReceivedOnClientsBehalf())
+        $existingMoney = new MoneyReceivedOnClientsBehalf()
             ->setId(Uuid::fromString($this->moneyId))
             ->setCreated(new \DateTime($this->moneyCreated))
             ->setAmount($this->moneyAmount)
             ->setMoneyType($this->moneyType);
 
-        $existingClientBenefitsCheck = (new ClientBenefitsCheck())
+        $existingClientBenefitsCheck = new ClientBenefitsCheck()
             ->addTypeOfMoneyReceivedOnClientsBehalf($existingMoney)
             ->setId(Uuid::fromString($this->id));
 

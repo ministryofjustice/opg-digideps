@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
-use App\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
 use JMS\Serializer\Annotation as JMS;
 
 trait HasBankAccountTrait
@@ -14,9 +14,9 @@ trait HasBankAccountTrait
      *
      * @JMS\SerializedName("bankAccount")
      *
-     * @JMS\Type("App\Entity\Report\BankAccount")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\BankAccount")
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\BankAccount")
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\BankAccount")
      *
      * @ORM\JoinColumn(name="bank_account_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */

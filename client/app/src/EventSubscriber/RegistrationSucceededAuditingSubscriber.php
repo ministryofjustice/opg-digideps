@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\EventSubscriber;
+namespace OPG\Digideps\Frontend\EventSubscriber;
 
-use App\Event\RegistrationSucceededEvent;
-use App\Service\Audit\AuditEvents;
-use App\Service\Time\DateTimeProvider;
+use OPG\Digideps\Frontend\Event\RegistrationSucceededEvent;
+use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
+use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -34,7 +34,7 @@ class RegistrationSucceededAuditingSubscriber implements EventSubscriberInterfac
         try {
             $this->logger->notice(
                 '',
-                (new AuditEvents($this->dateTimeProvider))->selfRegistrationSucceeded($event->getRegisteredUser())
+                new AuditEvents($this->dateTimeProvider)->selfRegistrationSucceeded($event->getRegisteredUser())
             );
         } catch (\Exception $e) {
             error_log('Failed to create audit log for successful registration: ' . $e->getMessage());
@@ -45,7 +45,7 @@ class RegistrationSucceededAuditingSubscriber implements EventSubscriberInterfac
     {
         $this->logger->notice(
             '',
-            (new AuditEvents($this->dateTimeProvider))->adminRegistrationSucceeded($event->getRegisteredUser())
+            new AuditEvents($this->dateTimeProvider)->adminRegistrationSucceeded($event->getRegisteredUser())
         );
     }
 }

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Client\Internal;
+namespace OPG\Digideps\Frontend\Service\Client\Internal;
 
-use App\Model\FeedbackReport;
-use App\Service\Client\RestClientInterface;
+use OPG\Digideps\Frontend\Model\FeedbackReport;
+use OPG\Digideps\Frontend\Service\Client\RestClientInterface;
 
 class SatisfactionApi
 {

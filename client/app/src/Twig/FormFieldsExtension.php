@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Twig;
+namespace OPG\Digideps\Frontend\Twig;
 
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormView;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
@@ -180,14 +181,20 @@ class FormFieldsExtension extends AbstractExtension
         $showDay = $vars['showDay'] ?? 'true';
 
         // sort hint text translation with default fallback
-        $hintText = $this->getDateHintText($translationKey, $domain, $vars['hintText'] ?? null);
+        /** @var string|null $customHint */
+        $customHint = $vars['hintText'] ?? null;
+        $hintText = $this->getDateHintText($translationKey, $domain, $customHint);
 
         // get legendText translation
+        /** @var array $legendParams */
         $legendParams = $vars['legendParameters'] ?? [];
         $legendText = $this->getLegendText($translationKey, $legendParams, $domain);
 
+        /** @var array $legend */
+        $legend = $vars['legend'] ?? [];
+
         echo $this->environment->render('@App/Components/Form/_known-date.html.twig', [
-            'legend' => $this->buildLegendArray($legendText, $vars['legend'] ?? []),
+            'legend' => $this->buildLegendArray($legendText, $legend),
             'hintTextBold' => $vars['hintTextBold'] ?? null,
             'hintText' => $hintText,
             'element' => $element,
@@ -368,19 +375,6 @@ class FormFieldsExtension extends AbstractExtension
     }
 
     /**
-     * Extract hint text from translation, returning null if translation key not found.
-     *
-     * @param string $translationKey The translation key prefix
-     * @param string $domain The translation domain
-     * @return string|null The translated hint text or null if hint key does not exist
-     */
-    private function getHintText(string $translationKey, string $domain): ?string
-    {
-        $hintTextTrans = $this->translator->trans($translationKey . '.hint', [], $domain);
-        return ($hintTextTrans !== $translationKey . '.hint') ? $hintTextTrans : null;
-    }
-
-    /**
      * Extract hint text for date fields with optional override and default fallback.
      * Tries custom hint first, then translates from hint key, then falls back to default hint text.
      *
@@ -461,6 +455,7 @@ class FormFieldsExtension extends AbstractExtension
     private function getTranslationKeyAndDomain(FormView $element, string $elementName, ?int $transIndex = null): array
     {
         $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
+        /** @var string $domain */
         $domain = $element->parent->vars['translation_domain'];
         return ['translationKey' => $translationKey, 'domain' => $domain];
     }

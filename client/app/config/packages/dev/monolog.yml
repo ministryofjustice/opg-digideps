@@ -17,4 +17,4 @@ monolog:
       bubble: false
     audit:
       type: service
-      id: App\Service\Audit\AwsAuditLogHandler
+      id: OPG\Digideps\Frontend\Service\Audit\AwsAuditLogHandler

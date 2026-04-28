@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DataFixtures;
+namespace OPG\Digideps\Backend\DataFixtures;
 
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -33,7 +33,7 @@ abstract class AbstractDataFixture implements FixtureInterface
     /**
      * Performs the actual fixtures loading.
      *
-     * @see \Doctrine\Common\DataFixtures\FixtureInterface::load()
+     * @see FixtureInterface::load
      *
      * @param ObjectManager $manager the object manager
      */

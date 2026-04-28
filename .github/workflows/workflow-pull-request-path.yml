@@ -88,7 +88,7 @@ jobs:
 
       - name: generate semver tag and release
         id: semver_tag
-        uses: ministryofjustice/opg-github-actions/actions/semver@4daa651011e6595c5b9689c4ff634cd15221a206 # v4.3.11
+        uses: ministryofjustice/opg-github-actions/actions/semver@a6ee7f30fbae7d1bc6cee8cb2699063ef4f0c7e3 # v4.4.0
         with:
           prerelease: true
           default_bump: ${{ steps.semver_bump.outputs.default_bump }}
@@ -267,12 +267,27 @@ jobs:
       - terraform_apply_environment
       - workflow_variables
 
+  wait_for_ecs_services:
+    name: wait for all ecs services to stabilise
+    uses: ./.github/workflows/_wait-for-ecs-services.yml
+    needs:
+      - workflow_variables
+      - terraform_apply_environment
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
+      account_name: development
+      timeout: "15"
+
   restart_point:
     runs-on: ubuntu-latest
     name: restart point
     needs:
       - workflow_variables
       - terraform_apply_environment
+      - wait_for_ecs_services
       - client_unit_tests
       - api_phpstan
       - client_phpstan

@@ -2,16 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\EventSubscriber;
+namespace Tests\OPG\Digideps\Backend\Unit\EventSubscriber;
 
-use App\Service\Time\DateTimeProvider;
+use OPG\Digideps\Backend\Service\Audit\AuditEvents;
+use OPG\Digideps\Backend\Service\Time\DateTimeProvider;
 use PHPUnit\Framework\Attributes\Test;
-use DateTime;
-use App\Entity\User;
-use App\Event\UserRetentionPolicyCommandEvent;
-use App\EventSubscriber\UserRetentionPolicyCommandSubscriber;
-use App\Service\Audit\AuditEvents;
-use App\TestHelpers\UserTestHelper;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Event\UserRetentionPolicyCommandEvent;
+use OPG\Digideps\Backend\EventSubscriber\UserRetentionPolicyCommandSubscriber;
+use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
@@ -52,16 +51,16 @@ final class UserRetentionPolicyCommandSubscriberTest extends KernelTestCase
         $user = UserTestHelper::create();
         $deletedAdminUser = $user->createUser(null, User::ROLE_ADMIN_MANAGER);
         $deletedAdminUser->setId(1);
-        $deletedAdminUser->setLastLoggedIn(new DateTime('-25 months'));
+        $deletedAdminUser->setLastLoggedIn(new \DateTime('-25 months'));
 
-        $now = new DateTime();
+        $now = new \DateTime();
 
         $expectedEvent = [
             'trigger' => $trigger,
             'id' => $deletedAdminUser->getId(),
             'email_address' => $deletedAdminUser->getEmail(),
             'message' => 'Deletion due to two year retention policy',
-            'deleted_on' => $now->format(DateTime::ATOM),
+            'deleted_on' => $now->format(\DateTime::ATOM),
             'event' => AuditEvents::USER_DELETED_AUTOMATION,
             'type' => 'audit',
         ];

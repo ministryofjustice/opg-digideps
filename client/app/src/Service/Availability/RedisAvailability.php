@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Availability;
+namespace OPG\Digideps\Frontend\Service\Availability;
 
 use Predis\ClientInterface;
 

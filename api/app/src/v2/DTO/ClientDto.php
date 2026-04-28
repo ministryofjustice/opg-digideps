@@ -1,8 +1,8 @@
 <?php
 
-namespace App\v2\DTO;
+namespace OPG\Digideps\Backend\v2\DTO;
 
-use App\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\Organisation;
 
 class ClientDto
 {
@@ -29,9 +29,6 @@ class ClientDto
 
     /** @var int */
     private $reportCount = 0;
-
-    /** @var NdrDto */
-    private $ndr;
 
     /** @var array */
     private $reports;
@@ -107,14 +104,6 @@ class ClientDto
     public function getReportCount()
     {
         return $this->reportCount;
-    }
-
-    /**
-     * @return NdrDto
-     */
-    public function getNdr()
-    {
-        return $this->ndr;
     }
 
     /**
@@ -233,16 +222,6 @@ class ClientDto
     public function setReportCount($reportCount)
     {
         $this->reportCount = $reportCount;
-
-        return $this;
-    }
-
-    /**
-     * @return ClientDto
-     */
-    public function setNdr(NdrDto $ndr)
-    {
-        $this->ndr = $ndr;
 
         return $this;
     }

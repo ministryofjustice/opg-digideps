@@ -1,20 +1,21 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
-use App\Entity\Report\MoneyTransfer;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransfer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\Entity\Report\Report;
 
 trait MoneyTransferTrait
 {
     /**
      * @JMS\Groups({"money-transfer"})
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Report\MoneyTransfer>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\MoneyTransfer>")
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\MoneyTransfer", mappedBy="report", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\MoneyTransfer", mappedBy="report", cascade={"persist"})
      */
     private $moneyTransfers;
 
@@ -38,7 +39,7 @@ trait MoneyTransferTrait
     }
 
     /**
-     * @return \Report
+     * @return Report
      */
     public function addMoneyTransfers(MoneyTransfer $moneyTransfer)
     {

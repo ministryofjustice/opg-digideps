@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service\RestHandler\Report;
+namespace OPG\Digideps\Backend\Service\RestHandler\Report;
 
-use App\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\Report;
 
 interface ReportUpdateHandlerInterface
 {

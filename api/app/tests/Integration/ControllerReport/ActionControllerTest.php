@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Tests\Integration\ControllerReport;
+namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
-use App\Entity\Report\Report;
-use App\Tests\Integration\Controller\AbstractTestController;
+use OPG\Digideps\Backend\Entity\Report\Action;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class ActionControllerTest extends AbstractTestController
 {
@@ -21,7 +23,7 @@ class ActionControllerTest extends AbstractTestController
         parent::setUp();
 
         // deputy1
-        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
         self::$report1 = self::fixtures()->createReport(self::$client1);
 
@@ -80,7 +82,7 @@ class ActionControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $action = self::fixtures()->getRepo('Report\Action')->find($return['data']['id']); /* @var $action \App\Entity\Report\Action */
+        $action = self::fixtures()->getRepo(Action::class)->find($return['data']['id']);
         $this->assertEquals('yes', $action->getDoYouExpectFinancialDecisions());
         $this->assertEquals('fdd', $action->getDoYouExpectFinancialDecisionsDetails());
         $this->assertEquals('yes', $action->getDoYouHaveConcerns());
@@ -97,7 +99,7 @@ class ActionControllerTest extends AbstractTestController
         ]);
         $this->assertTrue($return['data']['id'] > 0);
         self::fixtures()->clear();
-        $action = self::fixtures()->getRepo('Report\Action')->find($return['data']['id']); /* @var $action \App\Entity\Report\Action */
+        $action = self::fixtures()->getRepo(Action::class)->find($return['data']['id']); /* @var $action Action */
         $this->assertEquals('no', $action->getDoYouExpectFinancialDecisions());
         $this->assertEquals(null, $action->getDoYouExpectFinancialDecisionsDetails());
         $this->assertEquals('no', $action->getDoYouHaveConcerns());

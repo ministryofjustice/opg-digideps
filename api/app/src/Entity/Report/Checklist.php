@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Backend\Entity\Report;
 
-use App\Entity\ReportInterface;
-use App\Entity\SynchronisableInterface;
-use App\Entity\SynchronisableTrait;
-use App\Entity\Traits\ModifyAudit;
-use App\Entity\User;
-use App\Repository\ChecklistRepository;
+use OPG\Digideps\Backend\Entity\SynchronisableInterface;
+use OPG\Digideps\Backend\Entity\SynchronisableTrait;
+use OPG\Digideps\Backend\Entity\Traits\ModifyAudit;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\ChecklistRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -42,17 +41,15 @@ class Checklist implements SynchronisableInterface
     private $id;
 
     /**
-     * @var Report
+     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\Report")
      *
-     * @JMS\Type("App\Entity\Report\Report")
-     *
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\Report", inversedBy="checklist")
+     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="checklist")
      *
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *
      * @JMS\Groups({"checklist-report"})
      */
-    private $report;
+    private Report $report;
 
     /**
      * @var string
@@ -284,11 +281,11 @@ class Checklist implements SynchronisableInterface
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Report\ChecklistInformation>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\ChecklistInformation>")
      *
      * @JMS\Groups({"checklist-information"})
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\ChecklistInformation", mappedBy="checklist", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\ChecklistInformation", mappedBy="checklist", cascade={"persist", "remove"})
      *
      * @ORM\OrderBy({"createdOn"="DESC"})
      */
@@ -306,11 +303,11 @@ class Checklist implements SynchronisableInterface
      *
      * @var User
      *
-     * @JMS\Type("App\Entity\User")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\User")
      *
      * @JMS\Groups({"report-checklist"})
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\User", fetch="EAGER")
      *
      * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
@@ -384,7 +381,7 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @return ReportInterface
+     * @return Report
      */
     public function getReport()
     {

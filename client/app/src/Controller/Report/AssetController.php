@@ -2,15 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Report;
+namespace OPG\Digideps\Frontend\Controller\Report;
 
-use App\Controller\AbstractController;
-use App\Entity\Report\AssetOther;
-use App\Entity\Report\AssetProperty;
-use App\Entity\Report\Status;
-use App\Form;
-use App\Service\Client\Internal\ReportApi;
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Entity\Report\AssetOther;
+use OPG\Digideps\Frontend\Entity\Report\AssetProperty;
+use OPG\Digideps\Frontend\Entity\Report\Status;
+use OPG\Digideps\Frontend\Form;
+use OPG\Digideps\Frontend\Form\Report\Asset\AssetTypeOther;
+use OPG\Digideps\Frontend\Form\Report\Asset\AssetTypeProperty;
+use OPG\Digideps\Frontend\Form\Report\Asset\AssetTypeTitle;
+use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Common\Validating\ValidatingForm;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\SubmitButton;
@@ -92,7 +95,7 @@ class AssetController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        $form = $this->createForm(Form\Report\Asset\AssetTypeTitle::class, new AssetOther());
+        $form = $this->createForm(AssetTypeTitle::class, new AssetOther());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -121,7 +124,7 @@ class AssetController extends AbstractController
         $asset->setTitle($title);
         $asset->setReport($report);
 
-        $form = $this->createForm(Form\Report\Asset\AssetTypeOther::class, $asset);
+        $form = $this->createForm(AssetTypeOther::class, $asset);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -158,7 +161,7 @@ class AssetController extends AbstractController
             $asset->setReport($report);
         }
 
-        $form = $this->createForm(Form\Report\Asset\AssetTypeOther::class, $asset);
+        $form = $this->createForm(AssetTypeOther::class, $asset);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -192,7 +195,7 @@ class AssetController extends AbstractController
             $asset = new AssetProperty();
         }
 
-        $form = $this->createForm(Form\Report\Asset\AssetTypeProperty::class, $asset);
+        $form = $this->createForm(AssetTypeProperty::class, $asset);
         $form->handleRequest($request);
 
 
