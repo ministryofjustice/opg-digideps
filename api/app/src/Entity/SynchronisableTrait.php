@@ -20,7 +20,7 @@ trait SynchronisableTrait
     /**
      * @var ?\DateTime
      */
-    #[JMS\Type(\DateTime::class)]
+    #[JMS\Type('DateTime')]
     #[JMS\Groups(['synchronisation'])]
     #[ORM\Column(name: 'synchronisation_time', type: 'datetime', nullable: true, options: ['default' => null])]
     protected $synchronisationTime;

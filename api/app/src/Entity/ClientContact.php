@@ -84,7 +84,7 @@ class ClientContact
     /**
      * @var Client
      */
-    #[JMS\Type(Client::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Client')]
     #[JMS\Groups(['clientcontact-client'])]
     #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'clientContacts')]

@@ -1,7 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Traits as ReportTraits;
@@ -11,10 +17,6 @@ use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\ReportRepository;
 use OPG\Digideps\Backend\Service\ReportService;
 use OPG\Digideps\Backend\Service\ReportStatusService;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as JMS;
 
 /**
  * Reports.
@@ -222,7 +224,7 @@ class Report
     private $type;
 
     #[JMS\Groups(['report-client'])]
-    #[JMS\Type(Client::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Client')]
     #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Client::class, cascade: ['persist'], inversedBy: 'reports')]
     private Client $client;
@@ -231,15 +233,15 @@ class Report
      * @var VisitsCare
      */
     #[JMS\Groups(['visits-care'])]
-    #[JMS\Type(VisitsCare::class)]
-    #[ORM\OneToOne(targetEntity: VisitsCare::class, mappedBy: 'report', cascade: ['persist', 'remove'], fetch: 'LAZY')]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Report\VisitsCare')]
+    #[ORM\OneToOne(mappedBy: 'report', targetEntity: VisitsCare::class, cascade: ['persist', 'remove'], fetch: 'LAZY')]
     private $visitsCare;
 
     /**
      * @var Lifestyle
      */
     #[JMS\Groups(['lifestyle'])]
-    #[JMS\Type(Lifestyle::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Lifestyle')]
     #[ORM\OneToOne(mappedBy: 'report', targetEntity: Lifestyle::class, cascade: ['persist', 'remove'])]
     private $lifestyle;
 
@@ -247,7 +249,7 @@ class Report
      * @var Action
      */
     #[JMS\Groups(['action'])]
-    #[JMS\Type(Action::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Action')]
     #[ORM\OneToOne(mappedBy: 'report', targetEntity: Action::class, cascade: ['persist', 'remove'])]
     private $action;
 
@@ -255,7 +257,7 @@ class Report
      * @var MentalCapacity
      */
     #[JMS\Groups(['mental-capacity'])]
-    #[JMS\Type(MentalCapacity::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Report\MentalCapacity')]
     #[ORM\OneToOne(mappedBy: 'report', targetEntity: MentalCapacity::class, cascade: ['persist', 'remove'])]
     private $mentalCapacity;
 
@@ -263,7 +265,7 @@ class Report
      * @var ?ClientBenefitsCheck
      */
     #[JMS\Groups(['client-benefits-check'])]
-    #[JMS\Type(ClientBenefitsCheck::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck')]
     #[ORM\OneToOne(mappedBy: 'report', targetEntity: ClientBenefitsCheck::class, cascade: ['persist', 'remove'])]
     private $clientBenefitsCheck;
 
@@ -294,7 +296,7 @@ class Report
 
     #[JMS\Groups(['report'])]
     #[JMS\Accessor(getter: 'getSubmitDate')]
-    #[JMS\Type(\DateTime::class)]
+    #[JMS\Type('DateTime')]
     #[ORM\Column(name: 'submit_date', type: 'datetime', nullable: true)]
     private ?\DateTimeInterface $submitDate = null;
 
@@ -313,7 +315,7 @@ class Report
     private ?bool $submitted = null;
 
     #[JMS\Groups(['report-submitted-by'])]
-    #[JMS\Type(User::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
     #[ORM\JoinColumn(name: 'submitted_by', referencedColumnName: 'id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class)]
     private ?User $submittedBy = null;
@@ -353,7 +355,6 @@ class Report
     #[ORM\OrderBy(['createdOn' => 'DESC', 'fileName' => 'ASC'])]
     private $documents;
 
-
     #[JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\ReportSubmission>")]
     #[JMS\Groups(['document-sync'])]
     #[ORM\OneToMany(mappedBy: 'report', targetEntity: ReportSubmission::class, fetch: 'EXTRA_LAZY')]
@@ -361,8 +362,6 @@ class Report
 
     /**
      * @var string
-     *
-     *
      */
     #[JMS\Groups(['report', 'wish-to-provide-documentation'])]
     #[JMS\Type('string')]
@@ -371,8 +370,6 @@ class Report
 
     /**
      * @var string yes/no
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'current-prof-payments-received'])]
@@ -381,8 +378,6 @@ class Report
 
     /**
      * @var string yes/no
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'report-prof-estimate-fees'])]
@@ -391,8 +386,6 @@ class Report
 
     /**
      * @var string
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'report-prof-estimate-fees'])]
@@ -401,8 +394,6 @@ class Report
 
     /**
      * @var string yes | no (see constants)
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'significantDecisionsMade'])]
@@ -419,7 +410,7 @@ class Report
      * @var Checklist
      */
     #[JMS\Groups(['report', 'report-checklist'])]
-    #[JMS\Type(Checklist::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Checklist')]
     #[ORM\OneToOne(mappedBy: 'report', targetEntity: Checklist::class, cascade: ['persist', 'remove'])]
     private $checklist;
 
@@ -427,20 +418,17 @@ class Report
      * @var ReviewChecklist
      */
     #[JMS\Groups(['report', 'report-checklist'])]
-    #[JMS\Type(ReviewChecklist::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Report\ReviewChecklist')]
     #[ORM\OneToOne(mappedBy: 'report', targetEntity: ReviewChecklist::class, cascade: ['persist', 'remove'])]
     private $reviewChecklist;
 
-
-    #[JMS\Type(Satisfaction::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Satisfaction')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
     #[ORM\OneToOne(mappedBy: 'report', targetEntity: Satisfaction::class, cascade: ['persist', 'remove'])]
     private Satisfaction $satisfaction;
 
     /**
      * @var string yes | no
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'doesMoneyInExist'])]
@@ -449,8 +437,6 @@ class Report
 
     /**
      * @var string captures reason for no money in. Required if no money has gone in
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'reasonForNoMoneyIn'])]
@@ -459,8 +445,6 @@ class Report
 
     /**
      * @var string yes | no
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'doesMoneyOutExist'])]
@@ -469,14 +453,11 @@ class Report
 
     /**
      * @var string captures reason for no money out. Required if no money has gone out
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'reasonForNoMoneyOut'])]
     #[ORM\Column(name: 'reason_for_no_money_out', type: 'text', nullable: true)]
     private $reasonForNoMoneyOut;
-
 
     #[JMS\Groups(['report-with-court-orders'])]
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\CourtOrder>')]

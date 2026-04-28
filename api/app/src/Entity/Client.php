@@ -41,7 +41,7 @@ class Client
     private $id;
 
     #[JMS\Groups(['client-users'])]
-    #[JMS\Type('ArrayCollection<Opg\Digideps\Backend\Entity\User>')]
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\User>')]
     #[ORM\JoinTable(name: 'deputy_case')]
     #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
@@ -165,7 +165,7 @@ class Client
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\ClientContact>')]
     #[JMS\Groups(['client-clientcontacts'])]
-    #[ORM\OneToMany(targetEntity: ClientContact::class, mappedBy: 'client', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: ClientContact::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['lastName' => 'ASC'])]
     private $clientContacts;
 
@@ -176,7 +176,7 @@ class Client
      * @var ?Deputy
      */
     #[JMS\Groups(['report-submitted-by', 'client-deputy'])]
-    #[JMS\Type(Deputy::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Deputy')]
     #[ORM\JoinColumn(name: 'deputy_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: Deputy::class, fetch: 'EAGER', inversedBy: 'clients')]
     private $deputy;
@@ -200,7 +200,7 @@ class Client
     /**
      * @var ?Organisation
      */
-    #[JMS\Type(Organisation::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Organisation')]
     #[JMS\Groups(['client-organisations'])]
     #[ORM\ManyToOne(targetEntity: Organisation::class, inversedBy: 'clients')]
     private $organisation;
@@ -536,7 +536,7 @@ class Client
      * That means the first one that is unsubmitted AND has an unsubmit date.
      */
     #[JMS\VirtualProperty]
-    #[JMS\Type(Report::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Report')]
     #[JMS\SerializedName('current_report')]
     #[JMS\Groups(['current-report'])]
     public function getCurrentReport(): ?Report

@@ -24,13 +24,13 @@ class UserResearchResponse
         $this->created = new \DateTime();
     }
 
-    #[JMS\Type(ResearchType::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\UserResearch\ResearchType')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\OneToOne(inversedBy: 'userResearchResponse', targetEntity: ResearchType::class, cascade: ['persist'], orphanRemoval: true)]
     private ResearchType $researchType;
 
-    #[JMS\Type(User::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], inversedBy: 'userResearchResponse')]
@@ -60,7 +60,7 @@ class UserResearchResponse
     #[Gedmo\Timestampable(on: 'create')]
     private \DateTime $created;
 
-    #[JMS\Type(Satisfaction::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Satisfaction')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
     #[ORM\OneToOne(inversedBy: 'userResearchResponse', targetEntity: Satisfaction::class, cascade: ['persist', 'remove'])]
     private Satisfaction $satisfaction;
