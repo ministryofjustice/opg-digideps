@@ -108,7 +108,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var int
      */
-
     #[JMS\Type('integer')]
     #[JMS\Groups(['user', 'report-submitted-by', 'user-id', 'user-list'])]
     #[ORM\Id]
@@ -664,21 +663,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials()
     {
-    }
-
-    /**
-     * Get gaTrackingId.
-     *
-     * @return string $gaTrackingId
-     */
-    public function getGaTrackingId()
-    {
-        if (!empty($this->gaTrackingId)) {
-            return $this->gaTrackingId;
-        }
-        $this->gaTrackingId = md5($this->id);
-
-        return $this->gaTrackingId;
     }
 
     /**
