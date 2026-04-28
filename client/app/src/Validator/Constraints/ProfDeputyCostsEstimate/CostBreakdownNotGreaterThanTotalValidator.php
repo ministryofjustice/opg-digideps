@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Validator\Constraints\ProfDeputyCostsEstimate;
+namespace OPG\Digideps\Frontend\Validator\Constraints\ProfDeputyCostsEstimate;
 
-use App\Entity\ReportInterface;
+use OPG\Digideps\Frontend\Entity\ReportInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 

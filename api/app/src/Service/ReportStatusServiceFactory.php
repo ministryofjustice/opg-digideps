@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service;
+namespace OPG\Digideps\Backend\Service;
 
-use App\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\Report;
 
 class ReportStatusServiceFactory
 {

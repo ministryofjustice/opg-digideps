@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\EventSubscriber;
+namespace OPG\Digideps\Backend\EventSubscriber;
 
-use App\Event\ClientArchivedEvent;
-use App\Service\Audit\AuditEvents;
-use App\Service\Time\DateTimeProvider;
+use OPG\Digideps\Backend\Event\ClientArchivedEvent;
+use OPG\Digideps\Backend\Service\Audit\AuditEvents;
+use OPG\Digideps\Backend\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -27,7 +27,7 @@ class ClientArchivedSubscriber implements EventSubscriberInterface
 
     public function logEvent(ClientArchivedEvent $event)
     {
-        $this->logger->notice('', (new AuditEvents($this->dateTimeProvider))->clientArchived(
+        $this->logger->notice('', new AuditEvents($this->dateTimeProvider)->clientArchived(
             $event->getTrigger(),
             $event->getClient()->getCaseNumber(),
             $event->getClient()->getCourtDate(),

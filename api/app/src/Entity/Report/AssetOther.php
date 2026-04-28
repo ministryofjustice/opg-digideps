@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Backend\Entity\Report;
 
-use App\Entity\AssetInterface;
-use App\Entity\Ndr\AssetOther as NdrAssetOther;
+use OPG\Digideps\Backend\Entity\AssetInterface;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -33,7 +32,7 @@ class AssetOther extends Asset implements AssetInterface
     private $description;
 
     /**
-     * @var \Date
+     * @var \DateTime
      *
      * @JMS\Type("DateTime")
      *
@@ -130,15 +129,8 @@ class AssetOther extends Asset implements AssetInterface
         return 'other';
     }
 
-    /**
-     * @return bool
-     */
-    public function isEqual(AssetInterface $asset)
+    public function isEqual(AssetInterface $asset): bool
     {
-        if (!($asset instanceof self) && !($asset instanceof NdrAssetOther)) {
-            return false;
-        }
-
-        return $asset->getDescription() === $this->getDescription();
+        return $asset instanceof AssetOther && $asset->getDescription() === $this->getDescription();
     }
 }

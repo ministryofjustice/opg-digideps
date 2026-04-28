@@ -2,20 +2,20 @@
 
 declare(strict_types=1);
 
-namespace app\tests\Integration\v2\Registration\DeputyshipProcessing;
+namespace Tests\OPG\Digideps\Backend\Integration\v2\Registration\DeputyshipProcessing;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Domain\CourtOrder\CourtOrderReportType;
-use App\Domain\CourtOrder\CourtOrderType;
-use App\Domain\Deputy\DeputyType;
-use App\Domain\Deputyship\DeputyshipCandidatesConverter;
-use App\Entity\Client;
-use App\Entity\CourtOrder;
-use App\Entity\CourtOrderDeputy;
-use App\Entity\Deputy;
-use App\Tests\Integration\ApiIntegrationTestCase;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesGroup;
-use App\v2\Registration\Enum\DeputyshipCandidateAction;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Domain\Deputyship\DeputyshipCandidatesConverter;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\CourtOrderDeputy;
+use OPG\Digideps\Backend\Entity\Deputy;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesGroup;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\ORM\Query\Expr\Join;
 
 class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrationTestCase
@@ -80,7 +80,7 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
             'orderMadeDate' => '2025-06-10',
             'clientId' => $client->getId(),
             'courtOrderKind' => CourtOrderKind::Single->value,
-            'courtOrderReportType' => CourtOrderReportType::OPG102->value,
+            'reportType' => CourtOrderReportType::OPG102->value,
         ];
         $candidatesGroup->insertOthers = [
             [

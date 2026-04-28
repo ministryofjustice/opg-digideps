@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\UserResearch;
+namespace OPG\Digideps\Frontend\Entity\UserResearch;
 
 use JMS\Serializer\Annotation as JMS;
 use Ramsey\Uuid\UuidInterface;
@@ -10,7 +10,7 @@ use Ramsey\Uuid\UuidInterface;
 class ResearchType
 {
     /**
-     * @JMS\Type("App\Entity\UserResearch\UserResearchResponse")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\UserResearch\UserResearchResponse")
      */
     private $userResearchResponse;
 

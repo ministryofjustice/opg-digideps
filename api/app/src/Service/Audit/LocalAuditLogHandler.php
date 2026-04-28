@@ -1,17 +1,20 @@
 <?php
 
-namespace App\Service\Audit;
+namespace OPG\Digideps\Backend\Service\Audit;
+
+use Monolog\LogRecord;
 
 class LocalAuditLogHandler extends AbstractAuditLogHandler
 {
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
-        if (!$this->shallHandle($record)) {
+        $formatted = $record->formatted;
+        if (!$this->shallHandle($record) || !is_string($formatted)) {
             return;
         }
 
         $fh = fopen('php://stderr', 'a');
-        fwrite($fh, $record['formatted']);
+        fwrite($fh, $formatted);
         fclose($fh);
     }
 }

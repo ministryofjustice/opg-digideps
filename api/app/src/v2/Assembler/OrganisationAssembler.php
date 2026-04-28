@@ -1,12 +1,12 @@
 <?php
 
-namespace App\v2\Assembler;
+namespace OPG\Digideps\Backend\v2\Assembler;
 
-use App\Entity\Client;
-use App\Entity\Organisation;
-use App\Entity\User;
-use App\v2\DTO\DtoPropertySetterTrait;
-use App\v2\DTO\OrganisationDto;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\v2\DTO\DtoPropertySetterTrait;
+use OPG\Digideps\Backend\v2\DTO\OrganisationDto;
 
 class OrganisationAssembler
 {

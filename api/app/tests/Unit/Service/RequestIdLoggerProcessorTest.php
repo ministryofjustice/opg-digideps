@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
-use App\Service\RequestIdLoggerProcessor;
+use OPG\Digideps\Backend\Service\RequestIdLoggerProcessor;
 use Mockery as m;
+use Monolog\Level;
+use Monolog\LogRecord;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -17,13 +19,13 @@ final class RequestIdLoggerProcessorTest extends TestCase
     private Container $container;
     private RequestStack $reqStack;
     private RequestIdLoggerProcessor $object;
-    private array $record = ['key1' => 'abc', 'key2' => 2];
+    private LogRecord $record;
 
     public function setUp(): void
     {
         $this->container = m::mock(Container::class);
         $this->reqStack = m::mock(RequestStack::class);
-
+        $this->record = new LogRecord(new \DateTimeImmutable(), '', Level::Emergency, '', ['key1' => 'abc', 'key2' => 2]);
         $this->object = new RequestIdLoggerProcessor($this->container);
     }
 
@@ -70,7 +72,9 @@ final class RequestIdLoggerProcessorTest extends TestCase
         $this->container->shouldReceive('has')->with('request_stack')->andReturn(true);
         $this->container->shouldReceive('get')->with('request_stack')->andReturn($this->reqStack);
 
-        $this->assertEquals($this->record + ['extra' => ['aws_request_id' => 'THIS_IS_THE_REQUEST_ID']], $this->object->processRecord($this->record));
+        $record = $this->object->processRecord($this->record);
+        $this->assertSame($this->record->context, $record->context);
+        $this->assertSame(['aws_request_id' => 'THIS_IS_THE_REQUEST_ID'], $record->extra);
     }
 
     public function testProcessRecordHasSafeId(): void
@@ -86,7 +90,9 @@ final class RequestIdLoggerProcessorTest extends TestCase
         $this->container->shouldReceive('has')->with('request_stack')->andReturn(true);
         $this->container->shouldReceive('get')->with('request_stack')->andReturn($this->reqStack);
 
-        $this->assertEquals($this->record + ['extra' => ['session_safe_id' => 'THIS_IS_THE_SAFE_ID']], $this->object->processRecord($this->record));
+        $record = $this->object->processRecord($this->record);
+        $this->assertSame($this->record->context, $record->context);
+        $this->assertSame(['session_safe_id' => 'THIS_IS_THE_SAFE_ID'], $record->extra);
     }
 
     public function testProcessRecordHasNullSafeId(): void

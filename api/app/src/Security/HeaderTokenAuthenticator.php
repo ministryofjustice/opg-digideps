@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Security;
+namespace OPG\Digideps\Backend\Security;
 
-use App\Entity\User;
-use App\Exception\UserWrongCredentialsException;
-use App\Repository\UserRepository;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Exception\UserWrongCredentialsException;
+use OPG\Digideps\Backend\Repository\UserRepository;
 use Predis\Client;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
@@ -42,6 +41,11 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
     public function authenticate(Request $request): Passport
     {
         $authTokenKey = $request->headers->get(self::HEADER_NAME);
+
+        if (null === $authTokenKey) {
+            $this->verboseLogger->warning('Auth token not found in request header');
+            throw new UserNotFoundException('User not found');
+        }
 
         $redisToken = $this->redis->get($authTokenKey);
         if (!$redisToken) {

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Resolver\SubSectionRoute;
+namespace OPG\Digideps\Frontend\Resolver\SubSectionRoute;
 
-use App\Entity\Report\Report;
-use App\Entity\Report\Status;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\Status;
 
 class ProfCostsSubSectionRouteResolver
 {

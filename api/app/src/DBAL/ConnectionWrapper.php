@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\DBAL;
+namespace OPG\Digideps\Backend\DBAL;
 
 use Aws\SecretsManager\Exception\SecretsManagerException;
 use Aws\SecretsManager\SecretsManagerClient;

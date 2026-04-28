@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repository;
+namespace OPG\Digideps\Backend\Repository;
 
-use App\Entity\Note;
+use OPG\Digideps\Backend\Entity\Note;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

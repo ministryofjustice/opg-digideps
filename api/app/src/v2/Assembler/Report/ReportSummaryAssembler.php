@@ -1,9 +1,9 @@
 <?php
 
-namespace App\v2\Assembler\Report;
+namespace OPG\Digideps\Backend\v2\Assembler\Report;
 
-use App\v2\DTO\DtoPropertySetterTrait;
-use App\v2\DTO\ReportDto;
+use OPG\Digideps\Backend\v2\DTO\DtoPropertySetterTrait;
+use OPG\Digideps\Backend\v2\DTO\ReportDto;
 
 class ReportSummaryAssembler implements ReportAssemblerInterface
 {

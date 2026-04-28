@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace OPG\Digideps\Frontend\Entity;
 
 use JMS\Serializer\Annotation as JMS;
 
@@ -122,7 +122,7 @@ class Deputy implements DeputyInterface
     private $phoneAlternative;
 
     /**
-     * @JMS\Type("App\Entity\User")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
      */
     public ?User $user = null;
 

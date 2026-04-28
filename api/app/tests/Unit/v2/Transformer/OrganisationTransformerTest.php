@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\v2\Transformer;
+namespace Tests\OPG\Digideps\Backend\Unit\v2\Transformer;
 
 use PHPUnit\Framework\Attributes\Test;
-use App\v2\DTO\OrganisationDto;
-use App\v2\DTO\UserDto;
-use App\v2\Transformer\ClientTransformer;
-use App\v2\Transformer\OrganisationTransformer;
-use App\v2\Transformer\UserTransformer;
+use OPG\Digideps\Backend\v2\DTO\OrganisationDto;
+use OPG\Digideps\Backend\v2\DTO\UserDto;
+use OPG\Digideps\Backend\v2\Transformer\ClientTransformer;
+use OPG\Digideps\Backend\v2\Transformer\OrganisationTransformer;
+use OPG\Digideps\Backend\v2\Transformer\UserTransformer;
 use PHPUnit\Framework\TestCase;
 
 final class OrganisationTransformerTest extends TestCase
@@ -17,7 +17,7 @@ final class OrganisationTransformerTest extends TestCase
     #[Test]
     public function transformsAnOrganisationDto(): void
     {
-        $dto = (new OrganisationDto())
+        $dto = new OrganisationDto()
             ->setId(4)
             ->setName('foo')
             ->setEmailIdentifier('bar')
@@ -30,7 +30,7 @@ final class OrganisationTransformerTest extends TestCase
 
         $clientTransformer = $this->createMock(ClientTransformer::class);
 
-        $transformed = (new OrganisationTransformer($userTransformer, $clientTransformer))
+        $transformed = new OrganisationTransformer($userTransformer, $clientTransformer)
             ->transform($dto, ['users', 'total_user_count', 'total_client_count']);
 
         $this->assertEquals(4, $transformed['id']);
@@ -43,7 +43,7 @@ final class OrganisationTransformerTest extends TestCase
     #[Test]
     public function transformsAnOrganisationDtoWithUsersIfNotExcluded(): void
     {
-        $dto = (new OrganisationDto())
+        $dto = new OrganisationDto()
             ->setId(4)
             ->setName('foo')
             ->setEmailIdentifier('bar')
@@ -67,7 +67,7 @@ final class OrganisationTransformerTest extends TestCase
 
         $clientTransformer = $this->createMock(ClientTransformer::class);
 
-        $transformed = (new OrganisationTransformer($userTransformer, $clientTransformer))
+        $transformed = new OrganisationTransformer($userTransformer, $clientTransformer)
             ->transform($dto, ['total_client_count', 'clients']);
 
         $this->assertEquals(4, $transformed['id']);

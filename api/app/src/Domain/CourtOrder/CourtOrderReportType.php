@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\CourtOrder;
+namespace OPG\Digideps\Backend\Domain\CourtOrder;
 
 enum CourtOrderReportType: string
 {
@@ -21,6 +21,6 @@ enum CourtOrderReportType: string
 
     public function getSuffix(): string
     {
-        return substr($this->value, 3);
+        return substr($this->value, -1);
     }
 }

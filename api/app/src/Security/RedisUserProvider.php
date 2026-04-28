@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Security;
+namespace OPG\Digideps\Backend\Security;
 
-use App\Entity\User;
-use App\Repository\UserRepository;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\UserRepository;
 use Predis\Client;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  */
 class RedisUserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
-    private readonly mixed $timeoutSeconds;
+    private readonly int $timeoutSeconds;
 
     public function __construct(
         private readonly Client $redis,
@@ -28,13 +28,10 @@ class RedisUserProvider implements UserProviderInterface, PasswordUpgraderInterf
         private readonly UserRepository $userRepository,
         private readonly string $workspace
     ) {
-        $this->timeoutSeconds = $options['timeout_seconds'];
+        $this->timeoutSeconds = (int) ($options['timeout_seconds'] ?? 30);
     }
 
-    /**
-     * @return string
-     */
-    public function generateRandomTokenAndStore(User $user)
+    public function generateRandomTokenAndStore(User $user): string
     {
         $token = $this->workspace . '_' . $user->getId() . '_' . sha1(microtime() . spl_object_hash($user) . rand(1, 999));
 
@@ -44,9 +41,9 @@ class RedisUserProvider implements UserProviderInterface, PasswordUpgraderInterf
         return $token;
     }
 
-    public function removeToken($token)
+    public function removeToken($token): void
     {
-        return $this->redis->set($token, null);
+        $this->redis->set($token, null);
     }
 
     public function refreshUser(UserInterface $user)
@@ -57,7 +54,7 @@ class RedisUserProvider implements UserProviderInterface, PasswordUpgraderInterf
 
     public function supportsClass(string $class): bool
     {
-        return 'App\Entity\User' === $class || is_subclass_of($class, 'App\Entity\User');
+        return 'OPG\Digideps\Backend\Entity\User' === $class || is_subclass_of($class, 'OPG\Digideps\Backend\Entity\User');
     }
 
     public function loadUserByUsername(string $username): ?User

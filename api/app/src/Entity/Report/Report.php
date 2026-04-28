@@ -1,22 +1,17 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Backend\Entity\Report;
 
-use App\Entity\Client;
-use App\Entity\Ndr\Ndr;
-use App\Entity\Report\Traits as ReportTraits;
-use App\Entity\ReportInterface;
-use App\Entity\Satisfaction;
-use App\Entity\Traits\CreateUpdateTimestamps;
-use App\Entity\User;
-use App\Service\ReportService;
-use App\Service\ReportStatusService;
-use DateTime;
-use DateTimeInterface;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\Traits as ReportTraits;
+use OPG\Digideps\Backend\Entity\Satisfaction;
+use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Service\ReportService;
+use OPG\Digideps\Backend\Service\ReportStatusService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use phpDocumentor\Reflection\Types\This;
 
 /**
  * Reports.
@@ -30,11 +25,11 @@ use phpDocumentor\Reflection\Types\This;
  *     @ORM\Index(name="report_status_cached_idx", columns={"report_status_cached"})
  *  })
  *
- * @ORM\Entity(repositoryClass="App\Repository\ReportRepository")
+ * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\ReportRepository")
  *
  * @ORM\HasLifecycleCallbacks()
  */
-class Report implements ReportInterface
+class Report
 {
     use CreateUpdateTimestamps;
     use ReportTraits\AssetTrait;
@@ -241,9 +236,9 @@ class Report implements ReportInterface
     /**
      * @JMS\Groups({"report-client"})
      *
-     * @JMS\Type("App\Entity\Client")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\Client")
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="reports", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Client", inversedBy="reports", cascade={"persist"})
      *
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")
      */
@@ -254,9 +249,9 @@ class Report implements ReportInterface
      *
      * @JMS\Groups({"visits-care"})
      *
-     * @JMS\Type("App\Entity\Report\VisitsCare")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\VisitsCare")
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\VisitsCare", mappedBy="report", cascade={"persist", "remove"}, fetch="LAZY")
+     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\VisitsCare", mappedBy="report", cascade={"persist", "remove"}, fetch="LAZY")
      **/
     private $visitsCare;
 
@@ -265,9 +260,9 @@ class Report implements ReportInterface
      *
      * @JMS\Groups({"lifestyle"})
      *
-     * @JMS\Type("App\Entity\Report\Lifestyle")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\Lifestyle")
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\Lifestyle", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Lifestyle", mappedBy="report", cascade={"persist", "remove"})
      **/
     private $lifestyle;
 
@@ -276,9 +271,9 @@ class Report implements ReportInterface
      *
      * @JMS\Groups({"action"})
      *
-     * @JMS\Type("App\Entity\Report\Action")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\Action")
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\Action", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Action", mappedBy="report", cascade={"persist", "remove"})
      **/
     private $action;
 
@@ -287,9 +282,9 @@ class Report implements ReportInterface
      *
      * @JMS\Groups({ "mental-capacity"})
      *
-     * @JMS\Type("App\Entity\Report\MentalCapacity")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\MentalCapacity")
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\MentalCapacity", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\MentalCapacity", mappedBy="report", cascade={"persist", "remove"})
      **/
     private $mentalCapacity;
 
@@ -298,9 +293,9 @@ class Report implements ReportInterface
      *
      * @JMS\Groups({"client-benefits-check"})
      *
-     * @JMS\Type("App\Entity\Report\ClientBenefitsCheck")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck")
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\ClientBenefitsCheck", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck", mappedBy="report", cascade={"persist", "remove"})
      **/
     private $clientBenefitsCheck;
 
@@ -348,7 +343,7 @@ class Report implements ReportInterface
      *
      * @ORM\Column(name="submit_date", type="datetime", nullable=true)
      */
-    private ?DateTimeInterface $submitDate = null;
+    private ?\DateTimeInterface $submitDate = null;
 
     /**
      * @var \DateTime
@@ -375,9 +370,9 @@ class Report implements ReportInterface
     /**
      * @JMS\Groups({"report-submitted-by"})
      *
-     * @JMS\Type("App\Entity\User")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\User")
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\User")
      *
      * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", onDelete="SET NULL")
      */
@@ -421,22 +416,22 @@ class Report implements ReportInterface
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Report\Document>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\Document>")
      *
      * @JMS\Groups({"report-documents"})
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\Document", mappedBy="report", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\Document", mappedBy="report", cascade={"persist", "remove"}, fetch="EXTRA_LAZY")
      *
      * @ORM\OrderBy({"createdOn"="DESC", "fileName"="ASC"})
      */
     private $documents;
 
     /**
-     * @JMS\Type("ArrayCollection<App\Entity\Report\ReportSubmission>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\ReportSubmission>")
      *
      * @JMS\Groups({"document-sync"})
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\ReportSubmission", mappedBy="report", fetch="EXTRA_LAZY")
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\ReportSubmission", mappedBy="report", fetch="EXTRA_LAZY")
      */
     private $reportSubmissions;
 
@@ -509,9 +504,9 @@ class Report implements ReportInterface
      *
      * @JMS\Groups({"report", "report-checklist"})
      *
-     * @JMS\Type("App\Entity\Report\Checklist")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\Checklist")
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\Checklist", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Checklist", mappedBy="report", cascade={"persist", "remove"})
      */
     private $checklist;
 
@@ -520,16 +515,16 @@ class Report implements ReportInterface
      *
      * @JMS\Groups({"report", "report-checklist"})
      *
-     * @JMS\Type("App\Entity\Report\ReviewChecklist")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\ReviewChecklist")
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\ReviewChecklist", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\ReviewChecklist", mappedBy="report", cascade={"persist", "remove"})
      */
     private $reviewChecklist;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Satisfaction", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\Satisfaction", mappedBy="report", cascade={"persist", "remove"})
      *
-     * @JMS\Type("App\Entity\Satisfaction")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\Satisfaction")
      *
      * @JMS\Groups({"user-research", "satisfaction"})
      */
@@ -582,9 +577,9 @@ class Report implements ReportInterface
     /**
      * @JMS\Groups({"report-with-court-orders"})
      *
-     * @JMS\Type("ArrayCollection<App\Entity\CourtOrder>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\CourtOrder>")
      *
-     * @ORM\ManyToMany(targetEntity="App\Entity\CourtOrder", mappedBy="reports", cascade={"persist"}, fetch="EXTRA_LAZY")
+     * @ORM\ManyToMany(targetEntity="OPG\Digideps\Backend\Entity\CourtOrder", mappedBy="reports", cascade={"persist"}, fetch="EXTRA_LAZY")
      */
     private $courtOrders;
 
@@ -596,7 +591,7 @@ class Report implements ReportInterface
      *
      * @param bool $dateChecks if true, perform checks around multiple reports and dates. Useful for PA upload
      */
-    public function __construct(Client $client, $type, \DateTime $startDate, \DateTime $endDate, $dateChecks = true)
+    public function __construct(Client $client, string $type, \DateTime $startDate, \DateTime $endDate, $dateChecks = true)
     {
         if (!in_array($type, self::allRolesAllReportTypes())) {
             throw new \InvalidArgumentException("$type not a valid report type");
@@ -670,7 +665,7 @@ class Report implements ReportInterface
     }
 
     /**
-     * @param $type see TYPE_ constants
+     * @param string $type see TYPE_ constants
      *
      * @return $this
      */
@@ -700,7 +695,7 @@ class Report implements ReportInterface
      *
      * @JMS\Type("array")
      */
-    public function getAvailableSections()
+    public function getAvailableSections(): array
     {
         if (!$this->requiresBenefitsCheckSection()) {
             $this->excludeSections = [Report::SECTION_CLIENT_BENEFITS_CHECK];
@@ -797,14 +792,14 @@ class Report implements ReportInterface
             && $this->endDate->format('Ymd') === $report->getEndDate()->format('Ymd');
     }
 
-    public function setSubmitDate(?DateTimeInterface $submitDate = null): static
+    public function setSubmitDate(?\DateTimeInterface $submitDate = null): static
     {
         $this->submitDate = $submitDate;
 
         return $this;
     }
 
-    public function getSubmitDate(): ?DateTimeInterface
+    public function getSubmitDate(): ?\DateTimeInterface
     {
         return $this->submitDate;
     }
@@ -1092,7 +1087,7 @@ class Report implements ReportInterface
      *
      * @JMS\Groups({"documents"})
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Report\Document>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\Document>")
      *
      * @return ArrayCollection|Document[]
      */
@@ -1280,10 +1275,8 @@ class Report implements ReportInterface
      * @JMS\Groups({"previous-report-data"})
      *
      * @JMS\Type("array")
-     *
-     * @return array
      */
-    public function getPreviousReportData()
+    public function getPreviousReportData(): array
     {
         $previousReport = $this->getPreviousReport();
 
@@ -1300,7 +1293,7 @@ class Report implements ReportInterface
     /**
      * Method to identify and return previous report.
      *
-     * @return Ndr|Report|bool|mixed
+     * @return Report|bool|mixed
      */
     private function getPreviousReport()
     {
@@ -1319,14 +1312,6 @@ class Report implements ReportInterface
                 // less than should imply their previous report
                 return $clientReport;
             }
-        }
-
-        // try NDR
-        /** @var Ndr $ndr */
-        $ndr = $this->getClient()->getNdr();
-
-        if (!empty($ndr)) {
-            return $ndr;
         }
 
         return false;

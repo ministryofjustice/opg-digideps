@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Tests\Integration\Controller;
+namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
-use DateTime;
-use App\Entity\Client;
-use App\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\User;
 
 class SelfRegisterControllerTest extends AbstractTestController
 {
@@ -58,7 +58,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
 
-        $user = self::fixtures()->getRepo('User')->findOneBy(['email' => 'behat-dontsaveme@example.org']);
+        $user = self::fixtures()->getRepo(User::class)->findOneBy(['email' => 'behat-dontsaveme@example.org']);
         $this->assertNull($user);
     }
 
@@ -81,7 +81,7 @@ class SelfRegisterControllerTest extends AbstractTestController
             'ClientSecret' => API_TOKEN_DEPUTY,
         ]);
 
-        $user = self::fixtures()->getRepo('User')->findOneBy(['email' => 'dontsavewithinvalidcasenum@example.org']);
+        $user = self::fixtures()->getRepo(User::class)->findOneBy(['email' => 'dontsavewithinvalidcasenum@example.org']);
 
         $this->assertStringContainsString('Invalid registration data', $response['message']);
         $this->assertNull($user);
@@ -116,12 +116,11 @@ class SelfRegisterControllerTest extends AbstractTestController
 
         $id = $responseArray['data']['id'];
 
-        $user = self::fixtures()->getRepo('User')->findOneBy(['id' => $id]); /* @var $user User */
+        $user = self::fixtures()->getRepo(User::class)->findOneBy(['id' => $id]); /* @var $user User */
         $this->assertEquals('Tolley', $user->getLastname());
         $this->assertEquals('Zac', $user->getFirstname());
         $this->assertEquals('SW1', $user->getAddressPostcode());
         $this->assertEquals('gooduser@example.com', $user->getEmail());
-        $this->assertEquals(null, $user->getNdrEnabled());
 
         /** @var Client $theClient */
         $theClient = $user->getClients()->first();
@@ -158,7 +157,7 @@ class SelfRegisterControllerTest extends AbstractTestController
 
         $id = $responseArray['data']['id'];
 
-        $user = self::fixtures()->getRepo('User')->findOneBy(['id' => $id]); /* @var $user User */
+        $user = self::fixtures()->getRepo(User::class)->findOneBy(['id' => $id]); /* @var $user User */
         $this->assertEquals('Tolley', $user->getLastname());
         $this->assertEquals('Zac', $user->getFirstname());
         $this->assertEquals('valid10digitcasenum@example.org', $user->getEmail());
@@ -263,7 +262,7 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function throwErrorForValidCaseNumberButDetailsNotMatching()
     {
-        $now = new DateTime();
+        $now = new \DateTime();
 
         $preRegistration = $this->generatePreRegistration('97643164', 'Douglas', '700000019957', 'Ben', 'Murphy');
 
@@ -321,7 +320,6 @@ class SelfRegisterControllerTest extends AbstractTestController
                     'updated_at' => null,
                     'order_date' => '2010-03-30T00:00:00+01:00',
                     'is_co_deputy' => null,
-                    'ndr' => null,
                     'hybrid' => null,
                     'created_at' => $now->format('c'),
                 ],
@@ -342,7 +340,7 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function throwErrorForValidCaseNumberClientLastnameDeputyPostcodeButInvalidDeputyFirstname()
     {
-        $now = new DateTime();
+        $now = new \DateTime();
 
         $preRegistration = $this->generatePreRegistration('97643164', 'Douglas', '700000019957', 'Stewart', 'Tolley');
 
@@ -400,7 +398,6 @@ class SelfRegisterControllerTest extends AbstractTestController
                     'updated_at' => null,
                     'order_date' => '2010-03-30T00:00:00+01:00',
                     'is_co_deputy' => null,
-                    'ndr' => null,
                     'hybrid' => null,
                     'created_at' => $now->format('c'),
                 ],
@@ -421,7 +418,7 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function throwErrorForValidCaseNumberClientLastnameDeputyPostcodeButInvalidDeputyLastname()
     {
-        $now = new DateTime();
+        $now = new \DateTime();
 
         $preRegistration = $this->generatePreRegistration('97643164', 'Douglas', '700000019957', 'Zac', 'Murphy');
 
@@ -479,7 +476,6 @@ class SelfRegisterControllerTest extends AbstractTestController
                     'updated_at' => null,
                     'order_date' => '2010-03-30T00:00:00+01:00',
                     'is_co_deputy' => null,
-                    'ndr' => null,
                     'hybrid' => null,
                     'created_at' => $now->format('c'),
                 ],
@@ -500,7 +496,7 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function throwErrorForValidCaseNumberClientLastnameAndDeputyFirstAndLastnameButInvalidPostcode()
     {
-        $now = new DateTime();
+        $now = new \DateTime();
 
         $preRegistration = $this->generatePreRegistration('97643164', 'Douglas', '700000019957', 'Zac', 'Murphy');
 
@@ -558,7 +554,6 @@ class SelfRegisterControllerTest extends AbstractTestController
                     'updated_at' => null,
                     'order_date' => '2010-03-30T00:00:00+01:00',
                     'is_co_deputy' => null,
-                    'ndr' => null,
                     'hybrid' => null,
                     'created_at' => $now->format('c'),
                 ],
@@ -574,7 +569,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertEquals($expectedErrorJson, json_decode($responseArray['message'], true));
     }
 
-    public function generatePreRegistration(string $caseNumber, string $clientSurname, string $deputyUid, string $deputyFirstname, string $deputySurname, ?DateTime $createdAt = null): PreRegistration
+    public function generatePreRegistration(string $caseNumber, string $clientSurname, string $deputyUid, string $deputyFirstname, string $deputySurname, ?\DateTime $createdAt = null): PreRegistration
     {
         return new PreRegistration([
             'Case' => $caseNumber,
@@ -621,7 +616,7 @@ class SelfRegisterControllerTest extends AbstractTestController
 
         $id = $responseArray['data']['id'];
 
-        $user = self::fixtures()->getRepo('User')->findOneBy(['id' => $id]);
+        $user = self::fixtures()->getRepo(User::class)->findOneBy(['id' => $id]);
         $this->assertEquals('700000019965', $user->getDeputyUid());
         $this->assertFalse($user->getIsPrimary());
     }
@@ -652,7 +647,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         ]);
 
         $deputyId = $responseArray['data']['id'];
-        $deputy = self::fixtures()->getRepo('User')->findOneBy(['id' => $deputyId]);
+        $deputy = self::fixtures()->getRepo(User::class)->findOneBy(['id' => $deputyId]);
         $this->assertTrue($deputy->getIsPrimary());
 
         $coDeputy = $this->fixtures()->createUser();
@@ -714,7 +709,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         ]);
 
         $deputyId = $responseArray['data']['id'];
-        $deputy = self::fixtures()->getRepo('User')->findOneBy(['id' => $deputyId]);
+        $deputy = self::fixtures()->getRepo(User::class)->findOneBy(['id' => $deputyId]);
         $this->assertTrue($deputy->getIsPrimary());
 
         $coDeputy = $this->fixtures()->createUser();
@@ -771,7 +766,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         ]);
 
         $deputyId = $responseArray['data']['id'];
-        $deputy = self::fixtures()->getRepo('User')->findOneBy(['id' => $deputyId]);
+        $deputy = self::fixtures()->getRepo(User::class)->findOneBy(['id' => $deputyId]);
 
         $this->assertEquals($deputyPreRegistration->getDeputyUid(), $deputy->getDeputyUid());
         $this->assertTrue($deputy->getIsPrimary());

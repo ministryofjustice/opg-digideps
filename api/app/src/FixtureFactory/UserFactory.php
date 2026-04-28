@@ -1,10 +1,11 @@
 <?php
 
-namespace App\FixtureFactory;
+namespace OPG\Digideps\Backend\FixtureFactory;
 
-use App\Entity\Client;
-use App\Entity\Organisation;
-use App\Entity\User;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\User;
+use Faker\Factory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFactory
@@ -20,19 +21,12 @@ class UserFactory
     {
         $roleName = $this->convertRoleName($data['deputyType']);
 
-        if (isset($data['ndr'])) {
-            $ndrEnabled = 'enabled' === strtolower($data['ndr']);
-        } else {
-            $ndrEnabled = false;
-        }
-
-        $user = (new User())
+        $user = new User()
             ->setFirstname($data['firstName'] ?? ucfirst($data['deputyType']) . ' Deputy ' . $data['id'])
             ->setLastname($data['lastName'] ?? 'User')
             ->setEmail($data['email'] ?? 'behat-' . strtolower($data['deputyType']) . '-deputy-' . $data['id'] . '@publicguardian.gov.uk')
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
-            ->setNdrEnabled($ndrEnabled)
             ->setCoDeputyClientConfirmed(isset($data['codeputyEnabled']))
             ->setPhoneMain('07911111111111')
             ->setAddress1('Victoria Road')
@@ -78,9 +72,9 @@ class UserFactory
      */
     public function createAdmin(array $data): User
     {
-        $user = (new User())
-            ->setFirstname($data['firstName'] ?? ucfirst($data['adminType']) . ' Admin ' . $data['email'])
-            ->setLastname($data['lastName'] ?? 'User')
+        $user = new User()
+            ->setFirstname(isset($data['firstName']) ? $data['firstName'] : ucfirst($data['adminType']) . ' Admin ' . $data['email'])
+            ->setLastname(isset($data['lastName']) ? $data['lastName'] : 'User')
             ->setEmail($data['email'])
             ->setRegistrationDate(new \DateTime())
             ->setRoleName($data['adminType']);
@@ -95,18 +89,19 @@ class UserFactory
     /**
      * @return User|void
      */
-    public function createGenericOrgUser(Organisation $organisation, int $number)
+    public function createGenericOrgUser(Organisation $organisation)
     {
-        $email = sprintf('%s.%s.%s.%s@%s', 'Test', 'Org', rand(1, 100000), $number, $organisation->getEmailIdentifier());
+        $faker = Factory::create();
+
+        $email = sprintf('%s.%s@%s', $faker->firstName(), $faker->lastName(), $organisation->getEmailIdentifier());
         $trimmedEmail = substr($email, 0, 59);
 
-        $user = (new User())
-            ->setFirstname('Bill')
-            ->setLastname('Bonds')
+        $user = new User()
+            ->setFirstname($faker->firstName())
+            ->setLastname($faker->lastName())
             ->setEmail($trimmedEmail)
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
-            ->setNdrEnabled(false)
             ->setPhoneMain('07911111111111')
             ->setAddress1('Victoria Road')
             ->setAddressPostcode('SW1')

@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service\BruteForce;
+namespace Tests\OPG\Digideps\Backend\Unit\Service\BruteForce;
 
 use Predis\Client;
-use InvalidArgumentException;
 
 // create a simple predis Mock to just return keys
 class PredisMock extends Client
@@ -29,12 +28,12 @@ class PredisMock extends Client
     public function expire($key, $seconds): void
     {
         if (!isset($this->data[$key])) {
-            throw new InvalidArgumentException("key $key not set");
+            throw new \InvalidArgumentException("key $key not set");
         }
     }
 
     public function __call($commandID, $arguments)
     {
-        throw new InvalidArgumentException("PredisMock: Method $commandID not implemented");
+        throw new \InvalidArgumentException("PredisMock: Method $commandID not implemented");
     }
 }

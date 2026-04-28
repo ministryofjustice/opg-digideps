@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Tests\Integration\Controller;
+namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
-use DateTime;
-use App\Entity\Ndr\Ndr;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\User;
 use Ramsey\Uuid\Uuid;
 
 class ClientControllerTest extends AbstractTestController
@@ -87,7 +88,7 @@ class ClientControllerTest extends AbstractTestController
         }
 
         // deputy 1
-        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'deputy1Client1']);
         self::fixtures()->createReport(self::$client1);
 
@@ -99,20 +100,20 @@ class ClientControllerTest extends AbstractTestController
         self::$deputy3 = self::fixtures()->createDeputy();
 
         // deputy 4 w/ Co-deputy (Deputy 5)
-        self::$deputy4 = self::fixtures()->getRepo('User')->findOneByEmail('main-deputy@example.org');
-        self::$coDeputy = self::fixtures()->getRepo('User')->findOneByEmail('co-deputy@example.org');
+        self::$deputy4 = self::fixtures()->getRepo(User::class)->findOneByEmail('main-deputy@example.org');
+        self::$coDeputy = self::fixtures()->getRepo(User::class)->findOneByEmail('co-deputy@example.org');
         self::fixtures()->createCoDeputyClient([self::$deputy4, self::$coDeputy], ['setFirstname' => 'coDeputyClient1']);
 
         // multi-client deputy
-        self::$primaryUserAccount = self::fixtures()->getRepo('User')->findOneByEmail('multi-client-primary-deputy@example.org');
+        self::$primaryUserAccount = self::fixtures()->getRepo(User::class)->findOneByEmail('multi-client-primary-deputy@example.org');
         self::$primaryAccountClient = self::fixtures()->createClient(self::$primaryUserAccount, ['setFirstname' => 'Multi-Client1', 'setCaseNumber' => '34566543']);
-        self::$primaryAccountDischargedClient = self::fixtures()->createClient(self::$primaryUserAccount, ['setFirstname' => 'clientName', 'setCaseNumber' => '34566544', 'setDeletedAt' => new DateTime()]);
+        self::$primaryAccountDischargedClient = self::fixtures()->createClient(self::$primaryUserAccount, ['setFirstname' => 'clientName', 'setCaseNumber' => '34566544', 'setDeletedAt' => new \DateTime()]);
 
-        self::$nonPrimaryUserAccount = self::fixtures()->getRepo('User')->findOneByEmail('multi-client-non-primary-deputy@example.org');
+        self::$nonPrimaryUserAccount = self::fixtures()->getRepo(User::class)->findOneByEmail('multi-client-non-primary-deputy@example.org');
         self::$nonPrimaryAccountClient = self::fixtures()->createClient(self::$nonPrimaryUserAccount, ['setFirstname' => 'Multi-Client2', 'setCaseNumber' => '78900987']);
 
         // pa
-        self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
+        self::$pa1 = self::fixtures()->getRepo(User::class)->findOneByEmail('pa@example.org');
         self::$pa1Client1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client1', 'setCaseNumber' => 'pa000001']);
         self::$pa1Client1Report1 = self::fixtures()->createReport(self::$pa1Client1);
 
@@ -155,7 +156,7 @@ class ClientControllerTest extends AbstractTestController
         ]);
         self::fixtures()->clear();
 
-        $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client Client */
+        $client = self::fixtures()->getRepo(Client::class)->find($return['data']['id']); /* @var $client Client */
         $this->assertEquals('Firstname', $client->getFirstname());
         $this->assertCount(1, $client->getUsers());
         $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
@@ -174,7 +175,7 @@ class ClientControllerTest extends AbstractTestController
             'data' => ['id' => self::$client1->getId()] + $this->updateDataLay,
         ]);
         self::fixtures()->clear();
-        $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client Client */
+        $client = self::fixtures()->getRepo(Client::class)->find($return['data']['id']); /* @var $client Client */
         $this->assertEquals('Firstname', $client->getFirstname());
         $this->assertEquals('Lastname', $client->getLastname());
         $this->assertEquals('Address', $client->getAddress());
@@ -202,7 +203,7 @@ class ClientControllerTest extends AbstractTestController
             'data' => ['id' => self::$pa1Client1->getId()] + $this->updateDataPa,
         ]);
         self::fixtures()->clear();
-        $client = self::fixtures()->getRepo('Client')->find($return['data']['id']); /* @var $client Client */
+        $client = self::fixtures()->getRepo(Client::class)->find($return['data']['id']); /* @var $client Client */
         $this->assertEquals('f', $client->getFirstname());
         $this->assertEquals('l', $client->getLastname());
         $this->assertEquals('a1', $client->getAddress());
@@ -214,7 +215,6 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals('p', $client->getPhone());
         $this->assertEquals('1947-01-31', $client->getDateOfBirth()->format('Y-m-d'));
         $this->assertEquals('pa000001', $client->getCaseNumber()); // assert not changed
-        $this->assertNull($client->getNdr());
     }
 
     public function testfindByIdAuth()
@@ -295,11 +295,11 @@ class ClientControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenPa,
             'data' => [],
         ]);
-        $client = self::fixtures()->clear()->getRepo('Client')->find($return['data']['id']);
+        $client = self::fixtures()->clear()->getRepo(Client::class)->find($return['data']['id']);
 
-        $this->assertInstanceOf('App\Entity\Client', $client);
+        $this->assertInstanceOf(Client::class, $client);
         $this->assertEquals(1, count($client->getUsers()));
-        $this->assertInstanceOf(DateTime::class, $client->getArchivedAt());
+        $this->assertInstanceOf(\DateTime::class, $client->getArchivedAt());
     }
 
     public function testDetailsAction()
@@ -357,9 +357,9 @@ class ClientControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
             'data' => [],
         ]);
-        $client = self::fixtures()->clear()->getRepo('Client')->find($return['data']['clientId']);
+        $client = self::fixtures()->clear()->getRepo(Client::class)->find($return['data']['clientId']);
 
-        $this->assertInstanceOf('App\Entity\Client', $client);
-        $this->assertInstanceOf('App\Entity\Deputy', $client->getDeputy());
+        $this->assertInstanceOf(Client::class, $client);
+        $this->assertInstanceOf(Deputy::class, $client->getDeputy());
     }
 }

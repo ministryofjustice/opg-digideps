@@ -1,25 +1,21 @@
 <?php
 
-namespace App\Service;
+namespace OPG\Digideps\Backend\Service;
 
-use App\Entity\AssetInterface;
-use App\Entity\BankAccountInterface;
-use App\Entity\Client;
-use App\Entity\Ndr\AssetOther as NdrAssetOther;
-use App\Entity\Ndr\AssetProperty as NdrAssetProperty;
-use App\Entity\Ndr\Ndr;
-use App\Entity\PreRegistration;
-use App\Entity\Report\Asset;
-use App\Entity\Report\AssetOther as ReportAssetOther;
-use App\Entity\Report\AssetProperty as ReportAssetProperty;
-use App\Entity\Report\BankAccount as ReportBankAccount;
-use App\Entity\Report\Document;
-use App\Entity\Report\Report;
-use App\Entity\Report\ReportSubmission;
-use App\Entity\ReportInterface;
-use App\Entity\User;
-use App\Factory\ReportFactory;
-use App\Repository\PreRegistrationRepository;
+use OPG\Digideps\Backend\Entity\AssetInterface;
+use OPG\Digideps\Backend\Entity\BankAccountInterface;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\Report\Asset;
+use OPG\Digideps\Backend\Entity\Report\AssetOther as ReportAssetOther;
+use OPG\Digideps\Backend\Entity\Report\AssetProperty as ReportAssetProperty;
+use OPG\Digideps\Backend\Entity\Report\BankAccount as ReportBankAccount;
+use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Factory\ReportFactory;
+use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -43,7 +39,7 @@ class ReportService
      *
      * @throws \Exception
      */
-    public function submit(ReportInterface $currentReport, User $user, \DateTime $submitDate, ?string $ndrDocumentId = null): ?Report
+    public function submit(Report $currentReport, User $user, \DateTime $submitDate): ?Report
     {
         if (!$currentReport->getAgreedBehalfDeputy()) {
             throw new \RuntimeException('Report must be agreed for submission');
@@ -56,21 +52,12 @@ class ReportService
 
         // create submission record with NEW documents (= documents not yet attached to a submission)
         $submission = new ReportSubmission($currentReport, $user);
-        if ($currentReport instanceof Ndr && (null !== $ndrDocumentId)) {
-            $document = $this->em->getRepository(Document::class)->find($ndrDocumentId);
 
-            if ($document instanceof Document) {
+        foreach ($currentReport->getDocuments() as $document) {
+            if (!$document->getReportSubmission()) {
                 $document->setReportSubmission($submission);
                 $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
                 $document->setSynchronisedBy($user);
-            }
-        } elseif ($currentReport instanceof Report) {
-            foreach ($currentReport->getDocuments() as $document) {
-                if (!$document->getReportSubmission()) {
-                    $document->setReportSubmission($submission);
-                    $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
-                    $document->setSynchronisedBy($user);
-                }
             }
         }
 
@@ -78,7 +65,7 @@ class ReportService
 
         $client = $currentReport->getClient();
         $clientId = $client->getId();
-        $now = (new \DateTime())->format('Y-m-d H:i:s');
+        $now = new \DateTime()->format('Y-m-d H:i:s');
         $this->logger->warning("Report submitted for client ID $clientId at $now");
 
         // Set user to active once they have submitted a report
@@ -86,23 +73,8 @@ class ReportService
 
         $newYearReport = null;
 
-        if ($currentReport instanceof Ndr) {
-            // Find the first report and clone assets/accounts across
-            $reports = $client->getReports();
-
-            if (1 === count($reports)) {
-                $this->logger->warning("Populating existing report for client $clientId (NDR submitted, existing report) at $now");
-
-                $newYearReport = $reports[0];
-
-                $this->clonePersistentResources($newYearReport, $currentReport);
-            } elseif (0 === count($reports)) {
-                $this->logger->warning("Creating next year report for client $clientId (NDR submitted, NO existing report) at $now");
-
-                $newYearReport = $this->createNextYearReport($currentReport);
-            }
-        } elseif ($currentReport instanceof Report && $currentReport->getUnSubmitDate()) {
-            $this->logger->warning("Creating next year report for client $clientId (NO NDR, existing unsubmitted report) at $now");
+        if ($currentReport instanceof Report && $currentReport->getUnSubmitDate()) {
+            $this->logger->warning("Creating next year report for client $clientId (existing unsubmitted report) at $now");
 
             // unsubmitted report
             $currentReport->setUnSubmitDate(null);
@@ -118,7 +90,7 @@ class ReportService
             }
         } else {
             // first-time submission
-            $this->logger->warning("Creating next year report for client $clientId (NO NDR, NO existing report) at $now");
+            $this->logger->warning("Creating next year report for client $clientId (NO existing report) at $now");
 
             $newYearReport = $this->createNextYearReport($currentReport);
         }
@@ -131,7 +103,7 @@ class ReportService
     /**
      * Clone resources which cross report periods from one account to another.
      *
-     * @param Ndr|Report $fromReport
+     * @param Report $fromReport
      */
     public function clonePersistentResources(Report $toReport, $fromReport)
     {
@@ -170,7 +142,7 @@ class ReportService
     /**
      * @return bool
      */
-    private function checkAssetExists(ReportInterface $toReport, AssetInterface $asset)
+    private function checkAssetExists(Report $toReport, AssetInterface $asset)
     {
         $toAssets = $toReport->getAssets();
 
@@ -186,16 +158,13 @@ class ReportService
     }
 
     /**
-     * Convert NDR asset into Report Asset.
+     * Convert asset into Report Asset.
      *
-     * @return ReportAssetOther|NdrAssetOther|ReportAssetProperty
+     * @return ReportAssetOther|ReportAssetProperty
      */
     private function cloneAsset(AssetInterface $asset)
     {
-        if (
-            $asset instanceof NdrAssetProperty
-            || $asset instanceof ReportAssetProperty
-        ) {
+        if ($asset instanceof ReportAssetProperty) {
             $newAsset = new ReportAssetProperty();
 
             $newAsset->setAddress($asset->getAddress());
@@ -212,7 +181,7 @@ class ReportService
             $newAsset->setIsRentedOut($asset->getIsRentedOut());
             $newAsset->setRentAgreementEndDate($asset->getRentAgreementEndDate());
             $newAsset->setRentIncomeMonth($asset->getRentIncomeMonth());
-        } elseif ($asset instanceof NdrAssetOther || $asset instanceof ReportAssetOther) {
+        } elseif ($asset instanceof ReportAssetOther) {
             $newAsset = new ReportAssetOther();
             $newAsset->setTitle($asset->getTitle() ?? '');
             $newAsset->setDescription($asset->getDescription());
@@ -229,7 +198,7 @@ class ReportService
     /**
      * @return bool
      */
-    private function checkBankAccountExists(ReportInterface $toReport, BankAccountInterface $account)
+    private function checkBankAccountExists(Report $toReport, BankAccountInterface $account)
     {
         foreach ($toReport->getBankAccounts() as $toAccount) {
             if (
@@ -247,7 +216,7 @@ class ReportService
     }
 
     /**
-     * Clones instance of ReportInterface and returns new Report Bank Account.
+     * Clones instance of Report and returns new Report Bank Account.
      *
      * @return ReportBankAccount
      */
@@ -267,32 +236,17 @@ class ReportService
 
     /**
      * Create new year's report copying data over (and set start/endDate accordingly).
-     *
-     * @return Report
-     *
-     * @throws \Exception
      */
-    private function createNextYearReport(ReportInterface $oldReport)
+    public function createNextYearReport(Report $oldReport, bool $log = true): Report
     {
         if (!$oldReport->getSubmitted()) {
             throw new \RuntimeException("Can't create a new year report based on an unsubmitted report");
         }
 
         $client = $oldReport->getClient();
-
-        if ($oldReport instanceof Report) {
-            $startDate = clone $oldReport->getEndDate();
-            $newReportType = $oldReport->getType();
-            $startDate->modify('+1 day');
-        } elseif ($oldReport instanceof Ndr) {
-            // when the previous report is NDR we need to work out the new reporting period
-            /** @var \DateTime $startDate */
-            $startDate = $oldReport->getClient()->getExpectedReportStartDate();
-            // set default type as oldReport is ndr
-            $newReportType = $this->getReportTypeBasedOnSirius($client) ?: Report::LAY_PFA_HIGH_ASSETS_TYPE;
-        } else {
-            throw new \RuntimeException('createNextYearReport() only supports Report and Ndr');
-        }
+        $startDate = clone $oldReport->getEndDate();
+        $newReportType = $oldReport->getType();
+        $startDate->modify('+1 day');
 
         $endDate = clone $startDate;
         $endDate->modify('+12 months -1 day');
@@ -316,12 +270,14 @@ class ReportService
             $createdAtStr = $createdAt->format('Y-m-d H:i:s');
         }
 
-        $this->logger->warning(
-            "Created next year report for client ID {$client->getId()} " .
-            "; created at = {$createdAtStr} " .
-            "; start date = {$startDate->format('Y-m-d')} " .
-            "; end date = {$endDate->format('Y-m-d')}"
-        );
+        if ($log) {
+            $this->logger->warning(
+                "Created next year report for client ID {$client->getId()} " .
+                "; created at = {$createdAtStr} " .
+                "; start date = {$startDate->format('Y-m-d')} " .
+                "; end date = {$endDate->format('Y-m-d')}"
+            );
+        }
 
         return $newReport;
     }

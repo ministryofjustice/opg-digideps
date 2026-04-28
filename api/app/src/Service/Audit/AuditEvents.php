@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Audit;
+namespace OPG\Digideps\Backend\Service\Audit;
 
-use App\Service\Time\DateTimeProvider;
+use OPG\Digideps\Backend\Service\Time\DateTimeProvider;
 
 final class AuditEvents
 {

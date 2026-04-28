@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Mailer;
+namespace OPG\Digideps\Frontend\Service\Mailer;
 
-use App\Entity as EntityDir;
-use App\Entity\Client;
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\Model\Email;
-use App\Service\IntlService;
+use OPG\Digideps\Frontend\Entity as EntityDir;
+use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Model\Email;
+use OPG\Digideps\Frontend\Service\IntlService;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -101,7 +101,7 @@ class MailFactory
             ]),
         ]);
 
-        return (new Email())
+        return new Email()
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('activation.fromName'))
             ->setToEmail($user->getEmail())
@@ -127,7 +127,7 @@ class MailFactory
             $parameters['deputyName'] = $deputyName;
         }
 
-        return (new Email())
+        return new Email()
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('activation.fromName'))
             ->setToEmail($user->getEmail())
@@ -172,7 +172,7 @@ class MailFactory
             'recreateLink' => $this->generateAbsoluteLink($area, 'password_forgotten'),
         ]);
 
-        return (new Email())
+        return new Email()
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translate('resetPassword.fromName'))
             ->setToEmail($user->getEmail())
@@ -190,7 +190,7 @@ class MailFactory
 
     public function createUpdateClientDetailsEmail(Client $client): Email
     {
-        $email = (new Email())
+        $email = new Email()
           ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
           ->setFromName($this->translator->trans('client.fromName', [], 'email'))
           ->setSubject($this->translator->trans('client.subject', [], 'email'))
@@ -217,7 +217,7 @@ class MailFactory
 
     public function createUpdateDeputyDetailsEmail(User $deputy): Email
     {
-        $email = (new Email())
+        $email = new Email()
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translator->trans('client.fromName', [], 'email'))
             ->setSubject($this->translator->trans('client.subject', [], 'email'))
@@ -250,7 +250,7 @@ class MailFactory
      */
     public function createReportSubmissionConfirmationEmail(User $user, EntityDir\ReportInterface $submittedReport, Report $newReport): Email
     {
-        $email = (new Email())
+        $email = new Email()
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translator->trans('reportSubmissionConfirmation.fromName', [], 'email'))
             ->setToEmail($user->getEmail())
@@ -290,7 +290,7 @@ class MailFactory
 
     public function createProcessOrgCSVEmail(string $adminEmail, array $output): Email
     {
-        $email = (new Email())
+        $email = new Email()
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translator->trans('processOrgCSV.fromName', [], 'email'))
             ->setToEmail($adminEmail)
@@ -318,7 +318,7 @@ class MailFactory
 
     public function createProcessLayCSVEmail(string $adminEmail, array $output): Email
     {
-        $email = (new Email())
+        $email = new Email()
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
             ->setFromName($this->translator->trans('processLayCSV.fromName', [], 'email'))
             ->setToEmail($adminEmail)

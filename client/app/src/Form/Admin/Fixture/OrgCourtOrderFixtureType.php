@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\Admin\Fixture;
+namespace OPG\Digideps\Frontend\Form\Admin\Fixture;
 
-use App\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;

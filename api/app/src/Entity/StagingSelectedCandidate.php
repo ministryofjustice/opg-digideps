@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace OPG\Digideps\Backend\Entity;
 
-use App\v2\Registration\Enum\DeputyshipCandidateAction;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -39,7 +39,7 @@ class StagingSelectedCandidate
     public ?int $id = null;
 
     /**
-     * @ORM\Column(name="action", enumType="App\v2\Registration\Enum\DeputyshipCandidateAction", length=30)
+     * @ORM\Column(name="action", enumType="OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction", length=30)
      */
     public DeputyshipCandidateAction $action;
 
@@ -109,11 +109,6 @@ class StagingSelectedCandidate
      * @ORM\Column(name="order_kind", type="string", length=6, nullable=true)
      */
     public ?string $courtOrderKind = null;
-
-    /**
-     * @ORM\Column(name="ndr_id", type="integer", nullable=true)
-     */
-    public ?int $ndrId = null;
 
     public function __construct(DeputyshipCandidateAction $action, string $orderUid)
     {

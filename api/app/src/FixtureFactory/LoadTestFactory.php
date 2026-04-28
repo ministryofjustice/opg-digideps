@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\FixtureFactory;
+namespace OPG\Digideps\Backend\FixtureFactory;
 
-use App\TestHelpers\ClientTestHelper;
-use App\TestHelpers\ReportTestHelper;
-use App\TestHelpers\UserTestHelper;
+use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
+use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
+use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
 use Doctrine\ORM\EntityManagerInterface;
 
 class LoadTestFactory
@@ -20,7 +20,7 @@ class LoadTestFactory
      */
     public function createUsersClientsReports(int $recordsToMake)
     {
-        $oneYearAgo = (new \DateTimeImmutable())->modify('-1 Year');
+        $oneYearAgo = new \DateTimeImmutable()->modify('-1 Year');
 
         $userTestHelper = UserTestHelper::create();
         $reportTestHelper = new ReportTestHelper();

@@ -57,16 +57,16 @@ services:
       $options:
         prefix: "%workspace%_%session_prefix%"
 
-  App\:
+  OPG\Digideps\Frontend\:
     resource: "../src/"
     exclude: "../src/{Entity,Event,Kernel.php}"
 
-  App\Controller\:
+  OPG\Digideps\Frontend\Controller\:
     resource: "../src/Controller/"
     tags: [controller.service_arguments]
 
-  App\Service\Redirector:
-    class: App\Service\Redirector
+  OPG\Digideps\Frontend\Service\Redirector:
+    class: OPG\Digideps\Frontend\Service\Redirector
     arguments:
       [
         "@security.token_storage",
@@ -74,19 +74,19 @@ services:
         "@router",
         "@request_stack",
         "%env(ROLE)%",
-        '@App\Service\Client\Internal\ClientApi',
+        '@OPG\Digideps\Frontend\Service\Client\Internal\ClientApi',
         "@logger",
       ]
 
-  App\Service\HtmlToPdfGenerator:
+  OPG\Digideps\Frontend\Service\HtmlToPdfGenerator:
     arguments: ["%htmltopdf_address%", 30]
 
   htmltopdf:
-    alias: App\Service\HtmlToPdfGenerator
+    alias: OPG\Digideps\Frontend\Service\HtmlToPdfGenerator
 
   # Disable autowiring
-  App\Model\EmailAttachment: ~
-  App\Service\DataImporter\CsvToArray: ~
+  OPG\Digideps\Frontend\Model\EmailAttachment: ~
+  OPG\Digideps\Frontend\Service\DataImporter\CsvToArray: ~
 
   guzzle_api_gateway_client:
     class: GuzzleHttp\Client
@@ -95,44 +95,44 @@ services:
         timeout: 30
         allow_redirects: false
 
-  App\Sync\Service\Client\Sirius\SiriusApiGatewayClient:
-    class: App\Sync\Service\Client\Sirius\SiriusApiGatewayClient
+  OPG\Digideps\Frontend\Sync\Service\Client\Sirius\SiriusApiGatewayClient:
+    class: OPG\Digideps\Frontend\Sync\Service\Client\Sirius\SiriusApiGatewayClient
     arguments:
       $httpClient: "@guzzle_api_gateway_client"
-      $requestSigner: '@App\Service\AWS\RequestSigner'
+      $requestSigner: '@OPG\Digideps\Frontend\Service\AWS\RequestSigner'
       $baseUrl: "%env(SIRIUS_API_BASE_URI)%"
       $serializer: "@serializer"
       $logger: "@logger"
 
-  App\Service\Client\Sirius\SiriusHealthCheckClient:
-    class: App\Service\Client\Sirius\SiriusHealthCheckClient
+  OPG\Digideps\Frontend\Service\Client\Sirius\SiriusHealthCheckClient:
+    class: OPG\Digideps\Frontend\Service\Client\Sirius\SiriusHealthCheckClient
     arguments:
       $httpClient: "@guzzle_api_gateway_client"
-      $requestSigner: '@App\Service\AWS\RequestSigner'
+      $requestSigner: '@OPG\Digideps\Frontend\Service\AWS\RequestSigner'
       $baseUrl: "%env(SIRIUS_API_BASE_URI)%"
 
-  App\Service\AWS\RequestSigner:
-    class: App\Service\AWS\RequestSigner
+  OPG\Digideps\Frontend\Service\AWS\RequestSigner:
+    class: OPG\Digideps\Frontend\Service\AWS\RequestSigner
     arguments:
-      $credentialProvider: '@App\Service\AWS\DefaultCredentialProvider'
-      $signer: '@App\Service\AWS\SignatureV4Signer'
+      $credentialProvider: '@OPG\Digideps\Frontend\Service\AWS\DefaultCredentialProvider'
+      $signer: '@OPG\Digideps\Frontend\Service\AWS\SignatureV4Signer'
 
-  App\Service\Client\GovUK\BankHolidaysAPIClient:
-    class: App\Service\Client\GovUK\BankHolidaysAPIClient
+  OPG\Digideps\Frontend\Service\Client\GovUK\BankHolidaysAPIClient:
+    class: OPG\Digideps\Frontend\Service\Client\GovUK\BankHolidaysAPIClient
     arguments:
       $httpClient: '@GuzzleHttp\Client'
       $logger: "@logger"
 
-  App\Service\AWS\DefaultCredentialProvider:
-    class: App\Service\AWS\DefaultCredentialProvider
+  OPG\Digideps\Frontend\Service\AWS\DefaultCredentialProvider:
+    class: OPG\Digideps\Frontend\Service\AWS\DefaultCredentialProvider
 
-  App\Service\AWS\SignatureV4Signer:
-    class: App\Service\AWS\SignatureV4Signer
+  OPG\Digideps\Frontend\Service\AWS\SignatureV4Signer:
+    class: OPG\Digideps\Frontend\Service\AWS\SignatureV4Signer
 
   Aws\Ssm\SsmClient:
     arguments: ["%ssm_client_params%"]
 
-  App\Service\ParameterStoreService:
+  OPG\Digideps\Frontend\Service\ParameterStoreService:
     arguments:
       [
         '@Aws\Ssm\SsmClient',
@@ -143,24 +143,25 @@ services:
   Aws\SecretsManager\SecretsManagerClient:
     arguments: ["%secrets_manager_client_params%"]
 
-  App\Service\SecretManagerService:
+  OPG\Digideps\Frontend\Service\SecretManagerService:
     arguments:
       ['@Aws\SecretsManager\SecretsManagerClient', "%env(SECRETS_PREFIX)%"]
 
-  App\Sync\Serializer\SiriusDocumentUploadNormalizer:
+  OPG\Digideps\Frontend\Sync\Serializer\SiriusDocumentUploadNormalizer:
     tags: ["serializer.normalizer"]
 
   # Make optional availability services pullable
-  App\Service\Availability\ClamAvAvailability:
+  OPG\Digideps\Frontend\Service\Availability\ClamAvAvailability:
     arguments: ["@guzzle_file_scanner_client"]
 
-  App\Service\Availability\SiriusApiAvailability:
-    arguments: ['@App\Service\Client\Sirius\SiriusHealthCheckClient']
+  OPG\Digideps\Frontend\Service\Availability\SiriusApiAvailability:
+    arguments:
+      ['@OPG\Digideps\Frontend\Service\Client\Sirius\SiriusHealthCheckClient']
 
-  App\Service\Availability\HtmlToPdfAvailability:
-    arguments: ['@App\Service\HtmlToPdfGenerator']
+  OPG\Digideps\Frontend\Service\Availability\HtmlToPdfAvailability:
+    arguments: ['@OPG\Digideps\Frontend\Service\HtmlToPdfGenerator']
 
-  App\Service\Availability\NotifyAvailability:
+  OPG\Digideps\Frontend\Service\Availability\NotifyAvailability:
     arguments:
       $notifyClient: '@Alphagov\Notifications\Client'
 
@@ -170,11 +171,11 @@ services:
   Aws\S3\S3Client:
     arguments: ["%s3_client_params%"]
 
-  App\Service\File\Storage\S3Storage:
+  OPG\Digideps\Frontend\Service\File\Storage\S3Storage:
     arguments: ['@Aws\S3\S3Client', "%s3_bucket_name%", "@logger"]
 
-  App\Command\DocumentRecoverCommand:
-    class: App\Command\DocumentRecoverCommand
+  OPG\Digideps\Frontend\Command\DocumentRecoverCommand:
+    class: OPG\Digideps\Frontend\Command\DocumentRecoverCommand
     arguments:
       $s3BucketName: "%s3_bucket_name%"
 
@@ -192,19 +193,25 @@ services:
         timeout: 10
         allow_redirects: false
 
-  App\Service\File\Verifier\MultiFileFormUploadVerifier:
+  OPG\Digideps\Frontend\Service\File\Verifier\MultiFileFormUploadVerifier:
     calls:
-      - [addVerifier, ['@App\Service\File\Verifier\ConstraintVerifier']]
-      - [addVerifier, ['@App\Service\File\Verifier\ScannerVerifier']]
+      - [
+          addVerifier,
+          ['@OPG\Digideps\Frontend\Service\File\Verifier\ConstraintVerifier'],
+        ]
+      - [
+          addVerifier,
+          ['@OPG\Digideps\Frontend\Service\File\Verifier\ScannerVerifier'],
+        ]
 
-  App\Service\File\Scanner\ClamFileScanner:
+  OPG\Digideps\Frontend\Service\File\Scanner\ClamFileScanner:
     arguments: ["@guzzle_file_scanner_client", "@logger", "%bad_pdf_keywords%"]
 
-  App\Sync\Service\DocumentSyncService:
+  OPG\Digideps\Frontend\Sync\Service\DocumentSyncService:
     arguments:
-      $siriusApiGatewayClient: '@App\Sync\Service\Client\Sirius\SiriusApiGatewayClient'
-      $restClient: '@App\Service\Client\RestClient'
-      $errorTranslator: '@App\Sync\Service\SiriusApiErrorTranslator'
+      $siriusApiGatewayClient: '@OPG\Digideps\Frontend\Sync\Service\Client\Sirius\SiriusApiGatewayClient'
+      $restClient: '@OPG\Digideps\Frontend\Service\Client\RestClient'
+      $errorTranslator: '@OPG\Digideps\Frontend\Sync\Service\SiriusApiErrorTranslator'
 
   League\MimeTypeDetection\FinfoMimeTypeDetector:
     class: League\MimeTypeDetection\FinfoMimeTypeDetector
@@ -213,26 +220,26 @@ services:
     class: Aws\CloudWatchLogs\CloudWatchLogsClient
     arguments: ["%cloudwatch_logs_client_params%"]
 
-  App\Service\Audit\AwsAuditLogHandler:
-    class: App\Service\Audit\AwsAuditLogHandler
+  OPG\Digideps\Frontend\Service\Audit\AwsAuditLogHandler:
+    class: OPG\Digideps\Frontend\Service\Audit\AwsAuditLogHandler
     arguments:
       - '@Aws\CloudWatchLogs\CloudWatchLogsClient'
       - "%env(AUDIT_LOG_GROUP_NAME)%"
 
-  App\Twig\AssetsExtension:
+  OPG\Digideps\Frontend\Twig\AssetsExtension:
     public: false
     arguments: ["%kernel.project_dir%"]
     tags:
       - { name: twig.extension }
 
-  App\Service\Mailer\MailFactory:
+  OPG\Digideps\Frontend\Service\Mailer\MailFactory:
     arguments:
       $emailParams: "%email_params%"
       $baseURLs:
         front: "%env(NONADMIN_HOST)%"
         admin: "%env(ADMIN_HOST)%"
 
-  App\Service\Mailer\MailSenderInterface: '@App\Service\Mailer\MailSender'
+  OPG\Digideps\Frontend\Service\Mailer\MailSenderInterface: '@OPG\Digideps\Frontend\Service\Mailer\MailSender'
 
   Alphagov\Notifications\Client:
     class: Alphagov\Notifications\Client
@@ -243,8 +250,8 @@ services:
         #                Setting the URI to null defaults to the uri defined in the package
         baseUrl: "%env(default:fallback_notify_base_uri:NOTIFY_API_BASE_URI)%"
 
-  App\Service\Mailer\NotifyClientMock:
-    class: App\Service\Mailer\NotifyClientMock
+  OPG\Digideps\Frontend\Service\Mailer\NotifyClientMock:
+    class: OPG\Digideps\Frontend\Service\Mailer\NotifyClientMock
     arguments:
       $config:
         httpClient: '@Http\Adapter\Guzzle7\Client'
@@ -256,12 +263,12 @@ services:
   Http\Adapter\Guzzle7\Client:
     class: Http\Adapter\Guzzle7\Client
 
-  App\Form\Report\Asset\AssetTypeTitle:
+  OPG\Digideps\Frontend\Form\Report\Asset\AssetTypeTitle:
     arguments: ["%asset_dropdown%", "@translator", "report-assets"]
     tags:
       - { name: form.type }
 
-  App\Validator\Constraints\EmailSameDomainValidator:
+  OPG\Digideps\Frontend\Validator\Constraints\EmailSameDomainValidator:
     calls:
       - [setTokenStorage, ["@security.token_storage"]]
     tags:
@@ -277,22 +284,22 @@ services:
         timeout: 20
         allow_redirects: false
 
-  App\Service\Client\RestClientInterface:
-    alias: App\Service\Client\RestClient
+  OPG\Digideps\Frontend\Service\Client\RestClientInterface:
+    alias: OPG\Digideps\Frontend\Service\Client\RestClient
 
-  App\Service\Client\RestClient:
+  OPG\Digideps\Frontend\Service\Client\RestClient:
     arguments:
       - "@service_container"
       - '@GuzzleHttp\Client'
-      - '@App\Service\Client\TokenStorage\RedisStorage'
+      - '@OPG\Digideps\Frontend\Service\Client\TokenStorage\RedisStorage'
       - "@jms_serializer"
       - "@logger"
       - "%api_client_secret%"
 
   rest_client:
-    alias: App\Service\Client\RestClient
+    alias: OPG\Digideps\Frontend\Service\Client\RestClient
 
-  App\EventListener\SessionListener:
+  OPG\Digideps\Frontend\EventListener\SessionListener:
     arguments:
       ["@router", "@logger", { idleTimeout: "%session_expire_seconds%" }]
     tags:
@@ -302,17 +309,17 @@ services:
           method: onKernelRequest,
         }
 
-  App\EventSubscriber\LogoutSubscriber:
+  OPG\Digideps\Frontend\EventSubscriber\LogoutSubscriber:
     arguments:
       $tokenStorage: "@security.token_storage"
       $restClient: "@rest_client"
     tags: ["kernel.event_subscriber"]
 
-  App\EventSubscriber\LoginSubscriber:
-    class: App\EventSubscriber\LoginSubscriber
+  OPG\Digideps\Frontend\EventSubscriber\LoginSubscriber:
+    class: OPG\Digideps\Frontend\EventSubscriber\LoginSubscriber
     tags: ["kernel.event_subscriber"]
 
-  App\EventListener\ResponseNoCacheListener:
+  OPG\Digideps\Frontend\EventListener\ResponseNoCacheListener:
     tags:
       - {
           name: kernel.event_listener,
@@ -320,7 +327,7 @@ services:
           method: onKernelResponse,
         }
 
-  App\EventListener\UnauthorizedExceptionListener:
+  OPG\Digideps\Frontend\EventListener\UnauthorizedExceptionListener:
     tags:
       - {
           name: kernel.event_listener,
@@ -328,7 +335,7 @@ services:
           method: onKernelException,
         }
 
-  App\EventListener\ForbiddenExceptionListener:
+  OPG\Digideps\Frontend\EventListener\ForbiddenExceptionListener:
     tags:
       - {
           name: kernel.event_listener,
@@ -336,13 +343,13 @@ services:
           method: onKernelException,
         }
 
-  App\Service\RequestIdLoggerProcessor:
+  OPG\Digideps\Frontend\Service\RequestIdLoggerProcessor:
     arguments: ["@service_container"]
     tags:
       - { name: monolog.processor, method: processRecord }
 
   security.validator.d_user_password:
-    class: App\Validator\Constraints\DUserPasswordValidator
+    class: OPG\Digideps\Frontend\Validator\Constraints\DUserPasswordValidator
     arguments: ["@security.token_storage", "@rest_client"]
     tags:
       - {
@@ -350,48 +357,48 @@ services:
           alias: security.validator.d_user_password,
         }
 
-  App\Service\Client\TokenStorage\RedisStorage:
+  OPG\Digideps\Frontend\Service\Client\TokenStorage\RedisStorage:
     arguments:
       $redis: "@predis"
 
   # Voter on User, used by PA area
   # http://symfony.com/doc/2.8/security/voters.html
   app.user_voter:
-    class: App\Security\UserVoter
+    class: OPG\Digideps\Frontend\Security\UserVoter
     arguments: ["@security.access.decision_manager"]
     tags:
       - { name: security.voter }
     # small performance boost
     public: false
   app.note_voter:
-    class: App\Security\NoteVoter
+    class: OPG\Digideps\Frontend\Security\NoteVoter
     arguments: ["@security.access.decision_manager"]
     tags:
       - { name: security.voter }
     # small performance boost
     public: false
   app.client_contact_voter:
-    class: App\Security\ClientContactVoter
+    class: OPG\Digideps\Frontend\Security\ClientContactVoter
     arguments: ["@security.access.decision_manager"]
     tags:
       - { name: security.voter }
     # small performance boost
     public: false
   app.document_voter:
-    class: App\Security\DocumentVoter
+    class: OPG\Digideps\Frontend\Security\DocumentVoter
     arguments: ["@security.access.decision_manager"]
     tags:
       - { name: security.voter }
     # small performance boost
     public: false
 
-  App\Twig\FormFieldsExtension:
-    class: App\Twig\FormFieldsExtension
+  OPG\Digideps\Frontend\Twig\FormFieldsExtension:
+    class: OPG\Digideps\Frontend\Twig\FormFieldsExtension
     arguments:
       $environment: "@twig"
 
-  App\Twig\ComponentsExtension:
-    class: App\Twig\ComponentsExtension
+  OPG\Digideps\Frontend\Twig\ComponentsExtension:
+    class: OPG\Digideps\Frontend\Twig\ComponentsExtension
 
   # Logtash formatter for Kibana
   logstash_formatter:
@@ -399,10 +406,10 @@ services:
     arguments: ["application.client", null, null, "", 1]
 
   opg_json_formatter:
-    class: App\Logger\OpgJsonFormatter
+    class: OPG\Digideps\Common\Logger\OpgJsonFormatter
 
   opg_line_formatter:
-    class: App\Logger\OpgLineFormatter
+    class: OPG\Digideps\Common\Logger\OpgLineFormatter
 
   line_formatter:
     class: Monolog\Formatter\LineFormatter
@@ -417,12 +424,12 @@ services:
     tags:
       - { name: serializer.denormalizer }
 
-  App\Command\CheckCSVUploadedCommand:
-    class: App\Command\CheckCSVUploadedCommand
+  OPG\Digideps\Frontend\Command\CheckCSVUploadedCommand:
+    class: OPG\Digideps\Frontend\Command\CheckCSVUploadedCommand
     arguments:
       $auditLogGroupName: "%env(AUDIT_LOG_GROUP_NAME)%"
 
-  App\EventListener\NotFoundExceptionListener:
+  OPG\Digideps\Frontend\EventListener\NotFoundExceptionListener:
     arguments:
       $logger: "@logger"
       $environment: "@twig"

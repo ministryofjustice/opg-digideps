@@ -22,7 +22,8 @@ resource "aws_ecs_service" "htmltopdf" {
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
-  wait_for_steady_state   = true
+  wait_for_steady_state   = var.account.ecs.wait_for_steady_state
+
 
   network_configuration {
     security_groups  = [module.htmltopdf_security_group.id]

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\v2\Assembler;
+namespace OPG\Digideps\Backend\v2\Assembler;
 
-use App\Entity\User;
-use App\v2\DTO\DtoPropertySetterTrait;
-use App\v2\DTO\UserDto;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\v2\DTO\DtoPropertySetterTrait;
+use OPG\Digideps\Backend\v2\DTO\UserDto;
 
 class UserAssembler
 {
@@ -43,7 +43,6 @@ class UserAssembler
         $dto->setEmail($user->getEmail());
         $dto->setRoleName($user->getRoleName());
         $dto->setAddressPostcode($user->getAddressPostcode());
-        $dto->setNdrEnabled($user->getNdrEnabled());
         $dto->setActive((bool) $user->getActive());
         $dto->setJobTitle($user->getJobTitle());
         $dto->setPhoneMain($user->getPhoneMain());

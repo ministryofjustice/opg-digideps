@@ -7,14 +7,15 @@
   "require": {
     "php": "^8.4",
     "jms/serializer-bundle": "^5.5.2",
-    "symfony/form": "^6.4.32",
-    "symfony/validator": "^6.4.30"
+    "symfony/form": "^6.4.35",
+    "symfony/validator": "^6.4.35",
+    "monolog/monolog": "^3.10.0"
   },
   "require-dev": {
-    "dg/bypass-finals": "^1.9",
-    "phpstan/phpstan": "^2.1",
-    "phpunit/phpunit": "^13.0.5",
-    "phpstan/phpstan-phpunit": "^2.0"
+    "dg/bypass-finals": "^1.9.0",
+    "phpstan/phpstan": "^2.1.49",
+    "phpunit/phpunit": "^13.1.6",
+    "phpstan/phpstan-phpunit": "^2.0.16"
   },
   "scripts": {
     "lint:phpstan": "phpstan",
@@ -27,7 +28,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "OPG\\Digideps\\Tests\\Common\\": "tests"
+      "Tests\\OPG\\Digideps\\Common\\": "tests"
     }
   }
 }

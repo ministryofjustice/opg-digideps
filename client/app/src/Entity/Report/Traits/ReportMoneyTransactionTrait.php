@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use App\Entity\Report\MoneyTransaction;
-use App\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\MoneyTransaction;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
 trait ReportMoneyTransactionTrait
 {
     /**
-     * @JMS\Type("array<App\Entity\Report\MoneyTransaction>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyTransaction>")
      * @JMS\Groups({"transactionsIn"})
      *
      * @var MoneyTransaction[]
@@ -17,7 +17,7 @@ trait ReportMoneyTransactionTrait
     private $moneyTransactionsIn = [];
 
     /**
-     * @JMS\Type("array<App\Entity\Report\MoneyTransaction>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyTransaction>")
      * @JMS\Groups({"transactionsOut"})
      *
      * @var MoneyTransaction[]

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Form\Report;
+namespace OPG\Digideps\Frontend\Form\Report;
 
-use App\Entity\MoneyReceivedOnClientsBehalfInterface;
-use App\Entity\Report\ClientBenefitsCheck;
-use App\Form\DateType;
+use OPG\Digideps\Frontend\Entity\MoneyReceivedOnClientsBehalfInterface;
+use OPG\Digideps\Frontend\Entity\Report\ClientBenefitsCheck;
+use OPG\Digideps\Frontend\Form\DateType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\SelfRegistration\Factory;
+namespace OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory;
 
-use App\Entity\PreRegistration;
-use App\v2\Registration\DTO\LayDeputyshipDto;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class PreRegistrationFactory
@@ -57,7 +57,7 @@ class PreRegistrationFactory
         $errors = $this->validator->validate($entity);
 
         if (count($errors) > 0) {
-            throw new PreRegistrationCreationException(str_replace('Object(App\Entity\PreRegistration).', '', (string) $errors));
+            throw new PreRegistrationCreationException(str_replace('Object(OPG\Digideps\Backend\Entity\PreRegistration).', '', (string) $errors));
         }
     }
 }

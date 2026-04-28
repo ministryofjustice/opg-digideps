@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Availability;
+namespace OPG\Digideps\Frontend\Service\Availability;
 
 use Alphagov\Notifications\Client as NotifyClient;
 use Alphagov\Notifications\Exception\NotifyException;

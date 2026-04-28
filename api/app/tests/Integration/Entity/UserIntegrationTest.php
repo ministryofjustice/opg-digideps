@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Tests\Integration\Entity;
+namespace Tests\OPG\Digideps\Backend\Integration\Entity;
 
-use App\Tests\Integration\ApiIntegrationTestCase;
-use DateTime;
-use App\TestHelpers\ReportSubmissionHelper;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use OPG\Digideps\Backend\TestHelpers\ReportSubmissionHelper;
 
 /**
  * User Entity test.
@@ -20,7 +19,7 @@ class UserIntegrationTest extends ApiIntegrationTestCase
 
         foreach (range(1, 2) as $ignored) {
             $submittedSubmissions[] = $submissionHelper->generateAndPersistSubmittedReportSubmission(
-                new DateTime()
+                new \DateTime()
             );
         }
 

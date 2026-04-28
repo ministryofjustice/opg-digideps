@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity\Traits;
+namespace OPG\Digideps\Frontend\Entity\Traits;
 
-use App\Entity\User;
+use OPG\Digideps\Frontend\Entity\User;
 
 /**
  * ModifyAudit Trait, usable with PHP >= 5.4.
@@ -13,9 +13,9 @@ trait ModifyAudit
      * Last modified by.
      *
      * @JMS\Groups({"last-modified"})
-     * @JMS\Type("App\Entity\User")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
      *
-     * @var \App\Entity\User
+     * @var User
      */
     protected $lastModifiedBy;
 
@@ -30,7 +30,7 @@ trait ModifyAudit
     protected $lastModifiedOn;
 
     /**
-     * @return \App\Entity\User
+     * @return User
      */
     public function getLastModifiedBy()
     {

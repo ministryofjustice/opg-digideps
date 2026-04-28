@@ -1,12 +1,12 @@
 <?php
 
-namespace App\v2\Controller;
+namespace OPG\Digideps\Backend\v2\Controller;
 
-use App\Entity\User;
-use App\Repository\UserRepository;
-use App\Service\DeputyService;
-use App\v2\Assembler\UserAssembler;
-use App\v2\Transformer\UserTransformer;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\Service\DeputyService;
+use OPG\Digideps\Backend\v2\Assembler\UserAssembler;
+use OPG\Digideps\Backend\v2\Transformer\UserTransformer;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;

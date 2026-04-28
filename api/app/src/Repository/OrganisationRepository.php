@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Repository;
+namespace OPG\Digideps\Backend\Repository;
 
-use App\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\Organisation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\NonUniqueResultException;
 
 class OrganisationRepository extends ServiceEntityRepository
 {
@@ -20,7 +21,7 @@ class OrganisationRepository extends ServiceEntityRepository
 
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT o FROM App\Entity\Organisation o');
+            ->createQuery('SELECT o FROM OPG\Digideps\Backend\Entity\Organisation o');
 
         return $query->getArrayResult();
     }
@@ -29,7 +30,7 @@ class OrganisationRepository extends ServiceEntityRepository
     {
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT o FROM App\Entity\Organisation o WHERE o.deletedAt IS NULL');
+            ->createQuery('SELECT o FROM OPG\Digideps\Backend\Entity\Organisation o WHERE o.deletedAt IS NULL');
 
         return $query->getArrayResult();
     }
@@ -41,7 +42,7 @@ class OrganisationRepository extends ServiceEntityRepository
 
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT o.id, o.name FROM App\Entity\Organisation o');
+            ->createQuery('SELECT o.id, o.name FROM OPG\Digideps\Backend\Entity\Organisation o');
 
         return $query->getArrayResult();
     }
@@ -50,7 +51,7 @@ class OrganisationRepository extends ServiceEntityRepository
     {
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT o, u, c FROM App\Entity\Organisation o LEFT JOIN o.users u LEFT JOIN o.clients c WHERE o.id = ?1')
+            ->createQuery('SELECT o, u, c FROM OPG\Digideps\Backend\Entity\Organisation o LEFT JOIN o.users u LEFT JOIN o.clients c WHERE o.id = ?1')
             ->setParameter(1, $id);
 
         $result = $query->getArrayResult();
@@ -62,7 +63,7 @@ class OrganisationRepository extends ServiceEntityRepository
     {
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT o, u FROM App\Entity\Organisation o
+            ->createQuery('SELECT o, u FROM OPG\Digideps\Backend\Entity\Organisation o
             INNER JOIN o.users u
             WHERE o.id = ?1')
             ->setParameter(1, $id);
@@ -75,7 +76,7 @@ class OrganisationRepository extends ServiceEntityRepository
 
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT o, c FROM App\Entity\Organisation o
+            ->createQuery('SELECT o, c FROM OPG\Digideps\Backend\Entity\Organisation o
             INNER JOIN o.clients c
             WHERE o.id = ?1
             AND c.deletedAt is null
@@ -92,7 +93,7 @@ class OrganisationRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function organisationExists(string $email): bool
     {
@@ -100,7 +101,7 @@ class OrganisationRepository extends ServiceEntityRepository
         $filter->disableForEntity(Organisation::class);
 
         $email = strtolower($email);
-        $queryString = 'SELECT COUNT(o.id) FROM App\Entity\Organisation o WHERE o.emailIdentifier = ?1';
+        $queryString = 'SELECT COUNT(o.id) FROM OPG\Digideps\Backend\Entity\Organisation o WHERE o.emailIdentifier = ?1';
         $queryParams = [1 => $email];
 
         if (false !== ($atSymbolPosition = strpos($email, '@'))) {
@@ -125,7 +126,7 @@ class OrganisationRepository extends ServiceEntityRepository
         $filter->disableForEntity(Organisation::class);
 
         $email = strtolower($email);
-        $queryString = 'SELECT o FROM App\Entity\Organisation o WHERE o.emailIdentifier = ?1';
+        $queryString = 'SELECT o FROM OPG\Digideps\Backend\Entity\Organisation o WHERE o.emailIdentifier = ?1';
         $queryParams = [1 => $email];
 
         if (false !== ($atSymbolPosition = strpos($email, '@'))) {

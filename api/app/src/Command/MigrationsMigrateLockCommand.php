@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace OPG\Digideps\Backend\Command;
 
 use Predis\Client;
 use Psr\Container\ContainerInterface;
@@ -91,7 +91,7 @@ class MigrationsMigrateLockCommand extends Command
 
     private function getRedis(): Client
     {
-        return $this->getService('snc_redis.default');
+        return $this->getService('predis');
     }
 
     private function getService(string $id): mixed

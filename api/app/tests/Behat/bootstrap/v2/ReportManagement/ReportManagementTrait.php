@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\ReportManagement;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\ReportManagement;
 
-use DateTime;
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\Tests\Behat\BehatException;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 trait ReportManagementTrait
 {
@@ -42,7 +41,7 @@ trait ReportManagementTrait
         'deputyExpenses' => 'Deputy expenses',
     ];
 
-    private DateTime $customDueDate;
+    private \DateTime $customDueDate;
 
     protected string $reportStatus = '';
 
@@ -188,7 +187,7 @@ trait ReportManagementTrait
             if ('custom' == $numberWeeksExtended['manage_report[dueDateChoice]']) {
                 $expectedDueDate = $this->customDueDate->format('j F Y');
             } else {
-                $expectedDueDate = (new DateTime())
+                $expectedDueDate = new \DateTime()
                     ->modify(
                         sprintf('+ %s weeks', $numberWeeksExtended['manage_report[dueDateChoice]'])
                     )
@@ -259,7 +258,7 @@ trait ReportManagementTrait
             throw new BehatException('$event must be either "start" or "end"');
         }
 
-        $dateObject = new DateTime($date);
+        $dateObject = new \DateTime($date);
 
         $this->fillInDateFields(
             sprintf('manage_report[%sDate]', $event),
@@ -476,7 +475,7 @@ trait ReportManagementTrait
         $this->fillInField('manage_report[dueDateChoice]', 'custom', 'manage-report');
         $this->fillInDateFields('manage_report[dueDateCustom]', $day, $month, $year);
 
-        $date = new DateTime();
+        $date = new \DateTime();
         $this->customDueDate = $date->setDate($year, $month, $day);
     }
 }

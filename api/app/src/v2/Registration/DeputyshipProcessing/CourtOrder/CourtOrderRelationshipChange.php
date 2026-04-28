@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\DeputyshipProcessing\CourtOrder;
+namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Entity\CourtOrder;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 
 final readonly class CourtOrderRelationshipChange
 {

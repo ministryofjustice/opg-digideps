@@ -1,32 +1,36 @@
 <?php
 
-namespace App\Service\Audit;
+namespace OPG\Digideps\Frontend\Service\Audit;
 
 use Aws\CloudWatchLogs\CloudWatchLogsClient;
 use Aws\CloudWatchLogs\Exception\CloudWatchLogsException;
 use Aws\Result;
 use Monolog\Formatter\JsonFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
-use Monolog\Logger;
+use Monolog\LogRecord;
+use Monolog\Level;
+use OPG\Digideps\Common\Logger\OpgAwsFormatter;
+use OPG\Digideps\Common\Validating\ValidatingArray;
 
 class AwsAuditLogHandler extends AbstractProcessingHandler
 {
     public function __construct(
         private readonly CloudWatchLogsClient $client,
         private readonly string $group,
-        int $level = Logger::NOTICE,
+        int $level = Level::Notice->value,
         bool $bubble = true
     ) {
-        parent::__construct($level, $bubble);
+        parent::__construct(Level::from($level), $bubble);
+        $this->setFormatter(new OpgAwsFormatter());
     }
 
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         if (!$this->shallHandle($record)) {
             return;
         }
 
-        $stream = $record['context']['event'];
+        $stream = new ValidatingArray($record->context)->getStringOrDefault('event', 'unknown');
         $sequenceToken = $this->initialize($stream);
         $record = $this->formatEntry($record);
 
@@ -42,12 +46,12 @@ class AwsAuditLogHandler extends AbstractProcessingHandler
         }
     }
 
-    private function formatEntry(array $entry): array
+    private function formatEntry(LogRecord $entry): array
     {
         return [
             [
-                'message' => $entry['formatted'],
-                'timestamp' => $entry['datetime']->format('U.u') * 1000,
+                'message' => $entry->formatted,
+                'timestamp' => $entry->datetime->format('U.u') * 1000,
             ],
         ];
     }
@@ -117,12 +121,12 @@ class AwsAuditLogHandler extends AbstractProcessingHandler
         $this->client->putLogEvents($data);
     }
 
-    private function shallHandle(array $record): bool
+    private function shallHandle(LogRecord $record): bool
     {
         return
-            isset($record['context']['event'])
-            && isset($record['context']['type'])
-            && 'audit' === $record['context']['type'];
+            isset($record->context['event'])
+            && isset($record->context['type'])
+            && 'audit' === $record->context['type'];
     }
 
     protected function getDefaultFormatter(): JsonFormatter

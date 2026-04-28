@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Backend\Entity\Report;
 
-use App\Entity\Report\Traits\HasBankAccountTrait;
+use OPG\Digideps\Backend\Entity\Report\Traits\HasBankAccountTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -61,7 +61,7 @@ class Expense
     /**
      * @var Report
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="expenses")
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="expenses")
      *
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */

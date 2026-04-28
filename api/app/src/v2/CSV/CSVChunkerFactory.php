@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\v2\CSV;
+namespace OPG\Digideps\Backend\v2\CSV;
 
 use League\Csv\Exception as CSVException;
 use League\Csv\Reader;

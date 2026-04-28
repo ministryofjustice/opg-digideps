@@ -1,20 +1,17 @@
 <?php
 
-namespace App\Service;
+namespace OPG\Digideps\Frontend\Service;
 
-use App\Entity\Report\Report;
-use App\Entity\Report\ReportSubmission;
-use App\Entity\ReportInterface;
-use App\Exception\ReportSubmissionDocumentsNotDownloadableException;
-use App\Service\Client\RestClient;
-use App\Service\Csv\TransactionsCsvGenerator;
-use App\Service\File\S3FileUploader;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Frontend\Entity\ReportInterface;
+use OPG\Digideps\Frontend\Exception\ReportSubmissionDocumentsNotDownloadableException;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\Csv\TransactionsCsvGenerator;
+use OPG\Digideps\Frontend\Service\File\S3FileUploader;
 use Psr\Log\LoggerInterface;
 use Twig\Environment;
 use Twig\Error\Error;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 class ReportSubmissionService
 {

@@ -1,8 +1,8 @@
 includes:
-  - vendor/phpstan/phpstan-mockery/extension.neon
   - vendor/phpstan/phpstan-phpunit/extension.neon
+  - vendor/phpstan/phpstan-mockery/extension.neon
   - vendor/jangregor/phpstan-prophecy/extension.neon
+  - phpstan-fragment.neon
   - phpstan-baseline.neon
 parameters:
-    ignoreErrors:
-        - identifier: missingType.iterableValue
+  reportUnmatchedIgnoredErrors: false

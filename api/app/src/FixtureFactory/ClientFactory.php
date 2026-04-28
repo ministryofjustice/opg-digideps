@@ -1,10 +1,11 @@
 <?php
 
-namespace App\FixtureFactory;
+namespace OPG\Digideps\Backend\FixtureFactory;
 
-use App\Entity\Client;
-use App\Entity\Deputy;
-use App\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\Organisation;
+use Faker\Factory;
 
 class ClientFactory
 {
@@ -13,7 +14,7 @@ class ClientFactory
         $client = new Client();
         $dateFormat = 'Y-m-d';
 
-        $courtDate = isset($data['courtDate']) ? $data['courtDate'] : (new \DateTime())->format($dateFormat);
+        $courtDate = isset($data['courtDate']) ? $data['courtDate'] : new \DateTime()->format($dateFormat);
 
         $client
             ->setCaseNumber(isset($data['firstName']) ? $data['firstName'] : $data['id'])
@@ -33,16 +34,18 @@ class ClientFactory
     /**
      * @return Client
      */
-    public function createGenericOrgClient(Deputy $deputy, Organisation $organisation, ?string $courtDate): Client
+    public function createGenericOrgClient(Deputy $deputy, Organisation $organisation, ?string $courtDate)
     {
-        $client = (new Client())
-            ->setCaseNumber(self::createValidCaseNumber())
-            ->setFirstname('John')
-            ->setLastname('Smith')
+        $faker = Factory::create();
+
+        $client = new Client()
+            ->setCaseNumber($faker->unique()->randomNumber(8))
+            ->setFirstname($faker->firstName())
+            ->setLastname($faker->lastName())
             ->setPhone('0212112345')
             ->setAddress('1 Fake road')
-            ->setAddress2('Birmingham')
-            ->setPostcode('B1 1AA')
+            ->setAddress2($faker->city())
+            ->setPostcode($faker->postcode())
             ->setAddress3('West Midlands')
             ->setCountry('GB')
             ->setCourtDate($courtDate ? new \DateTime($courtDate) : new \DateTime());
@@ -51,29 +54,5 @@ class ClientFactory
         $client->setOrganisation($organisation);
 
         return $client;
-    }
-
-    /**
-     * Sirius has a modulus 11 validation check on case references (because casrec.) which we should adhere to
-     * to make sure integration tests create data that is in the correct format.
-     */
-    private static function createValidCaseNumber(): string
-    {
-        $ref = '';
-        $sum = 0;
-
-        foreach ([3, 4, 7, 5, 8, 2, 4] as $constant) {
-            $value = mt_rand(0, 9);
-            $ref .= $value;
-            $sum += $value * $constant;
-        }
-
-        $checkbit = (11 - ($sum % 11)) % 11;
-
-        if (10 === $checkbit) {
-            $checkbit = 'T';
-        }
-
-        return $ref . $checkbit;
     }
 }

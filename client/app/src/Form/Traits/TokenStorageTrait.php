@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\Traits;
+namespace OPG\Digideps\Frontend\Form\Traits;
 
-use App\Entity\User;
+use OPG\Digideps\Frontend\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 trait TokenStorageTrait

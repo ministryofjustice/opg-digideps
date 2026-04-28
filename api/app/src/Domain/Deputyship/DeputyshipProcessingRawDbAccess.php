@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Deputyship;
+namespace OPG\Digideps\Backend\Domain\Deputyship;
 
-use App\v2\Registration\Enum\DeputyshipCandidateAction;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
 
@@ -102,7 +102,7 @@ class DeputyshipProcessingRawDbAccess
                 ->setParameter('orderMadeDate', $orderMadeDate->format('Y-m-d'))
                 ->setParameter('clientId', $insertOrder['clientId'] ?? '')
                 ->setParameter('courtOrderKind', $insertOrder['courtOrderKind'])
-                ->setParameter('courtOrderReportType', $insertOrder['courtOrderReportType'])
+                ->setParameter('courtOrderReportType', $insertOrder['reportType'])
                 ->executeQuery();
 
             return new DeputyshipProcessingRawDbAccessResult(DeputyshipCandidateAction::InsertOrder, true, $result);

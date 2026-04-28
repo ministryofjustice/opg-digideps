@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Service;
+namespace OPG\Digideps\Backend\Service;
 
-use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
+use OPG\Digideps\Backend\Entity\Report\Report;
 use JMS\Serializer\Annotation as JMS;
 
 /**
@@ -636,7 +636,7 @@ class ReportStatusService
     /**
      * @JMS\Exclude
      *
-     * @param $section SECTION_*
+     * @param $section string SECTION_*
      *
      * @return array [ state=>STATE_NOT_STARTED/DONE/INCOMPLETE, nOfRecords=> ]
      */

@@ -1,8 +1,7 @@
 <?php
 
-namespace App\EventListener;
+namespace OPG\Digideps\Frontend\EventListener;
 
-use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -19,7 +18,7 @@ class SessionListener
     /**
      * @param array $options keys: idleTimeout (seconds)
      *
-     * @throws InvalidArgumentException
+     * @throws \InvalidArgumentException
      */
     public function __construct(
         private readonly RouterInterface $router,
@@ -29,7 +28,7 @@ class SessionListener
         $this->idleTimeout = (int) $options['idleTimeout'];
 
         if ($this->idleTimeout < 5) {
-            throw new InvalidArgumentException(__CLASS__ . ' :session timeout cannot be lower than 5 seconds');
+            throw new \InvalidArgumentException(__CLASS__ . ' :session timeout cannot be lower than 5 seconds');
         }
     }
 

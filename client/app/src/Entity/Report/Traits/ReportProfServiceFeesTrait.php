@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use App\Entity\Report\ProfServiceFee;
+use OPG\Digideps\Frontend\Entity\Report\ProfServiceFee;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -35,7 +35,7 @@ trait ReportProfServiceFeesTrait
     private $profFeesEstimateSccoReason;
 
     /**
-     * @JMS\Type("array<App\Entity\Report\ProfServiceFee>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\ProfServiceFee>")
      * @JMS\Groups({"report-prof-service-fees"})
      *
      * @var ProfServiceFee[]
@@ -117,7 +117,7 @@ trait ReportProfServiceFeesTrait
         }
 
         return array_filter($this->getProfServiceFees(), function ($profServiceFee) use ($feeTypeId) {
-            /* @var $profServiceFee \App\Entity\Report\ProfServiceFee */
+            /* @var $profServiceFee ProfServiceFee */
             return $profServiceFee->getFeeTypeId() === $feeTypeId;
         });
     }

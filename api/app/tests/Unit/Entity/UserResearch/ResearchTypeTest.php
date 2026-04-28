@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Entity\UserResearch;
+namespace Tests\OPG\Digideps\Backend\Unit\Entity\UserResearch;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use RuntimeException;
-use App\Entity\UserResearch\ResearchType;
+use OPG\Digideps\Backend\Entity\UserResearch\ResearchType;
 use PHPUnit\Framework\TestCase;
 
 final class ResearchTypeTest extends TestCase
@@ -43,7 +42,7 @@ final class ResearchTypeTest extends TestCase
     #[Test]
     public function constructNoPropertiesThrowsException(): void
     {
-        self::expectException(RuntimeException::class);
+        self::expectException(\RuntimeException::class);
         new ResearchType([]);
     }
 }

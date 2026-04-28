@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Form\Org;
+namespace OPG\Digideps\Frontend\Form\Org;
 
-use App\Entity\User;
-use App\Validator\Constraints\EmailSameDomain;
+use OPG\Digideps\Frontend\Entity\User;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;

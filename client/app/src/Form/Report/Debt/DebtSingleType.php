@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\Report\Debt;
+namespace OPG\Digideps\Frontend\Form\Report\Debt;
 
-use App\Entity\Report\Debt;
+use OPG\Digideps\Frontend\Entity\Report\Debt;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -42,7 +42,7 @@ class DebtSingleType extends AbstractType
             'data_class' => Debt::class,
             'validation_groups' => function (FormInterface $form) {
                 $data = $form->getData();
-                /* @var $data \App\Entity\Report\Debt */
+                /* @var $data Debt */
                 $validationGroups = ['debts'];
 
                 if ($data->getAmount() && $data->getHasMoreDetails()) {

@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Security;
+namespace Tests\OPG\Digideps\Backend\Integration\Security;
 
-use App\Entity\Client;
-use App\Entity\Organisation;
-use App\Entity\User;
-use App\Security\ClientVoter;
-use App\TestHelpers\ClientTestHelper;
-use App\TestHelpers\UserTestHelper;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Security\ClientVoter;
+use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
+use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
 use PHPUnit\Framework\MockObject\MockObject;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -92,7 +92,7 @@ class ClientVoterTest extends KernelTestCase
 
     private function ensureClientAndUserBelongToDifferentOrganisations(Client $client, Organisation $organisation): ClientVoterTest
     {
-        $usersOrganisation = (new Organisation())->setIsActivated(true);
+        $usersOrganisation = new Organisation()->setIsActivated(true);
         $usersOrganisation->addUser($this->user);
         $client->setOrganisation($organisation);
 

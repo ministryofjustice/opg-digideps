@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Sync\Model\Sirius;
+namespace OPG\Digideps\Frontend\Sync\Model\Sirius;
 
-use App\Entity\Report\ReportSubmission;
+use OPG\Digideps\Frontend\Entity\Report\ReportSubmission;
 
 class QueuedDocumentData
 {

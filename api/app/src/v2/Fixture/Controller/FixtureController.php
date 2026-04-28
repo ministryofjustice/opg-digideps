@@ -1,30 +1,29 @@
 <?php
 
-namespace App\v2\Fixture\Controller;
+namespace OPG\Digideps\Backend\v2\Fixture\Controller;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Domain\CourtOrder\CourtOrderReportType;
-use App\Domain\CourtOrder\CourtOrderType;
-use App\Domain\Deputy\DeputyType;
-use App\Entity\Client;
-use App\Entity\CourtOrder;
-use App\Entity\Deputy;
-use App\Entity\Ndr\Ndr;
-use App\Entity\Organisation;
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\Factory\OrganisationFactory;
-use App\FixtureFactory\ClientFactory;
-use App\FixtureFactory\PreRegistrationFactory;
-use App\FixtureFactory\ReportFactory;
-use App\FixtureFactory\UserFactory;
-use App\Repository\DeputyRepository;
-use App\Repository\NdrRepository;
-use App\Repository\OrganisationRepository;
-use App\Repository\ReportRepository;
-use App\Repository\UserRepository;
-use App\v2\Controller\ControllerTrait;
-use App\v2\Fixture\ReportSection;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Factory\OrganisationFactory;
+use OPG\Digideps\Backend\FixtureFactory\ClientFactory;
+use OPG\Digideps\Backend\FixtureFactory\PreRegistrationFactory;
+use OPG\Digideps\Backend\FixtureFactory\ReportFactory;
+use OPG\Digideps\Backend\FixtureFactory\UserFactory;
+use OPG\Digideps\Backend\Repository\DeputyRepository;
+use OPG\Digideps\Backend\Repository\OrganisationRepository;
+use OPG\Digideps\Backend\Repository\ReportRepository;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\v2\Controller\ControllerTrait;
+use OPG\Digideps\Backend\v2\Fixture\ReportSection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\ExpressionLanguage\Expression;
@@ -50,7 +49,6 @@ class FixtureController extends AbstractController
         private readonly ReportSection $reportSection,
         private readonly OrganisationRepository $organisationRepository,
         private readonly UserRepository $userRepository,
-        private readonly NdrRepository $ndrRepository,
         private readonly PreRegistrationFactory $preRegistrationFactory,
         private readonly DeputyRepository $deputyRepository,
         private readonly bool $fixturesEnabled,
@@ -58,25 +56,15 @@ class FixtureController extends AbstractController
     }
 
     /** * @throws \Exception */
-    #[Route(path: '/court-order', methods: ['POST'])]
-    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
+    #[Route(path: '/court-order', methods: ['POST'])] #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
     public function createCourtOrder(Request $request): JsonResponse
     {
         if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
         $fromRequest = (array) json_decode($request->getContent(), true);
-        $fromRequest['courtDate'] = (new \DateTime('-366 days'))->format('Y-m-d');
-
-        if (!$this->deputyRepository->findOneBy(['email1' => $fromRequest['deputyEmail']])) {
-            $client = $this->generateClient($fromRequest);
-        } else {
-            /** @var Organisation $org */
-            $org = $this->organisationRepository->findByEmailIdentifier($fromRequest['deputyEmail']);
-            /** @var Client $client */
-            $client = $org->getClients()->first();
-        }
-
+        $fromRequest['courtDate'] = new \DateTime('-366 days')->format('Y-m-d');
+        $client = $this->generateClient($fromRequest);
         $user = new User();
 
         $multiClientDeputy = [];
@@ -90,8 +78,7 @@ class FixtureController extends AbstractController
         }
 
         $this->em->flush();
-        $deputyIds = ['originalDeputy' => $user->getId()];
-
+        $deputyIds = !$fromRequest['multiClientEnabled'] ? ['originalDeputy' => $user->getId()] : $multiClientDeputy['deputyIds'];
         if (!$fromRequest['multiClientEnabled'] && isset($coDeputy)) {
             $deputyIds['coDeputy'] = $coDeputy->getId();
         }
@@ -100,39 +87,6 @@ class FixtureController extends AbstractController
         } else {
             return $this->buildSuccessResponse(['deputyEmail' => $user->getEmail(), 'deputyIds' => $deputyIds, 'multiClientCaseNumbers' => $multiClientDeputy['multiClientCaseNumbers']], 'Court order created', Response::HTTP_CREATED);
         }
-    }
-
-    /** * @throws \Exception */
-    #[Route(path: '/create-additional-clients', methods: ['POST'])]
-    #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
-    public function createAdditionalClients(Request $request): void
-    {
-        if (!$this->fixturesEnabled) {
-            throw $this->createNotFoundException();
-        }
-
-        $fromRequest = (array) json_decode($request->getContent(), true);
-        $fromRequest['courtDate'] = (new \DateTime('-366 days'))->format('Y-m-d');
-
-        /** @var Deputy $deputy */
-        $deputy = $this->deputyRepository->findOneBy(['email1' => $fromRequest['deputyEmail']]);
-
-        /** @var Organisation $organisation */
-        $organisation = $this->organisationRepository->findByEmailIdentifier($fromRequest['deputyEmail']);
-
-        foreach (range(1, $fromRequest['orgSizeClients']) as $number) {
-            $orgClient = $this->clientFactory->createGenericOrgClient($deputy, $organisation, $fromRequest['courtDate']);
-            $this->em->persist($orgClient);
-
-            $report = $this->generateReport($fromRequest, $orgClient);
-            $this->em->persist($report);
-            if ($number % 100 === 0) {
-                $this->em->flush();
-            }
-        }
-
-        $this->em->flush();
-        $this->em->clear();
     }
 
     /** * @throws \Exception */
@@ -172,17 +126,11 @@ class FixtureController extends AbstractController
             $this->em->persist($deputy);
         }
 
-        if ('ndr' === $reportType) {
-            $this->createNdr($fromRequest, $client);
-            $user->setNdrEnabled(true);
-        } elseif (!$this->reportRepository->findOneBy(['client' => $client])) {
-                $report = $this->generateReport($fromRequest, $client);
-                $this->em->persist($report);
-
-            if (User::TYPE_LAY === $fromRequest['deputyType']) {
-                $courtOrder->addReport($report);
-                $this->em->persist($courtOrder);
-            }
+        $report = $this->generateReport($fromRequest, $client);
+        $this->em->persist($report);
+        if (User::TYPE_LAY === $fromRequest['deputyType']) {
+            $courtOrder->addReport($report);
+            $this->em->persist($courtOrder);
         }
 
         if (User::TYPE_LAY === $fromRequest['deputyType']) {
@@ -273,7 +221,7 @@ class FixtureController extends AbstractController
         return $client;
     }
 
-    private function generatePreRegistration(mixed $fromRequest, Client $client, User $user): \App\Entity\PreRegistration
+    private function generatePreRegistration(mixed $fromRequest, Client $client, User $user): PreRegistration
     {
         if (!is_array($fromRequest)) {
             throw new \InvalidArgumentException('Invalid request payload: expected array.');
@@ -298,7 +246,7 @@ class FixtureController extends AbstractController
             throw new \InvalidArgumentException('Deputy UID is missing for user ' . $user->getId());
         }
 
-        return (new Deputy())
+        return new Deputy()
             ->setDeputyUid((string) $uid)
             ->setDeputyType($user->deriveDeputyType() ?? DeputyType::LAY)
             ->setUser($user)
@@ -373,21 +321,6 @@ class FixtureController extends AbstractController
         return $user;
     }
 
-    private function createNdr(array $fromRequest, Client $client): void
-    {
-        $ndr = new Ndr($client);
-        $client->setNdr($ndr);
-
-        $this->em->persist($ndr);
-        $this->em->persist($client);
-
-        if (isset($fromRequest['reportStatus']) && Report::STATUS_READY_TO_SUBMIT === $fromRequest['reportStatus']) {
-            foreach (['visits_care', 'expenses', 'income_benefits', 'bank_accounts', 'assets', 'debts', 'actions', 'other_info', 'client_benefits_check'] as $section) {
-                $this->reportSection->completeSection($ndr, $section);
-            }
-        }
-    }
-
     /**
      * @throws \Exception
      */
@@ -403,53 +336,64 @@ class FixtureController extends AbstractController
         ], $client);
     }
 
-    private function createOrgAndAttachParticipants($fromRequest, User $user, Client $client): void
+    private function createOrgAndAttachParticipants($fromRequest, User $deputy, Client $client): void
     {
         $uniqueOrgNameSegment = (preg_match('/\d+/', $fromRequest['deputyEmail'], $matches)) ? $matches[0] : rand(0, 9999);
         $orgName = sprintf('Org %s Ltd', $uniqueOrgNameSegment);
 
-        /** @var Organisation $organisation */
-        $organisation = $this->organisationRepository->findOneBy(['name' => $orgName]);
-        if (null === $organisation) {
-            $organisation = $this->organisationFactory->createFromEmailIdentifier(
-                $orgName,
-                $fromRequest['deputyEmail'],
-                true
-            );
+        if (null === ($organisation = $this->organisationRepository->findOneBy(['name' => $orgName]))) {
+            $organisation = $this->organisationFactory->createFromEmailIdentifier($orgName, $fromRequest['deputyEmail'], true);
         }
 
-        $organisation->addUser($user);
+        $organisation->addUser($deputy);
 
         if ($fromRequest['orgSizeUsers'] > 1 && !empty($fromRequest['orgSizeUsers'])) {
             foreach (range(1, $fromRequest['orgSizeUsers']) as $number) {
-                /** @var User $orgUser */
-                $orgUser = $this->userFactory->createGenericOrgUser($organisation, $number);
+                $orgUser = $this->userFactory->createGenericOrgUser($organisation);
                 $organisation->addUser($orgUser);
                 $this->em->persist($orgUser);
-                if ($number % 100 === 0) {
-                    $this->em->flush();
-                }
             }
         }
 
-        $this->em->flush();
+        $deputy = $this->buildDeputy($deputy, $fromRequest);
 
-        if (!$this->deputyRepository->findOneBy(['email1' => $user->getEmail()])) {
-            $deputy = $this->buildDeputy($user, $fromRequest);
-            $client->setDeputy($deputy);
+        $client->setDeputy($deputy);
+        $client->setOrganisation($organisation);
+
+        // if the org size is 1 but we want 10 clients still then create the clients but
+        // we return so we don't create another 10 clients on top if we have a org size > 1
+        if (1 === $fromRequest['orgSizeUsers'] && $fromRequest['orgSizeClients'] > 1 && !empty($fromRequest['orgSizeClients'])) {
+            foreach (range(1, $fromRequest['orgSizeClients']) as $number) {
+                $orgClient = $this->clientFactory->createGenericOrgClient($deputy, $organisation, $fromRequest['courtDate']);
+                $this->em->persist($orgClient);
+
+                $report = $this->generateReport($fromRequest, $orgClient);
+                $this->em->persist($report);
+            }
+
+            $this->em->persist($client);
+            $this->em->persist($organisation);
+
+            return;
         }
 
-        $client->setOrganisation($organisation);
+        if ($fromRequest['orgSizeUsers'] > 1 && !empty($fromRequest['orgSizeUsers'])) {
+            foreach (range(1, $fromRequest['orgSizeClients']) as $number) {
+                $orgClient = $this->clientFactory->createGenericOrgClient($deputy, $organisation, $fromRequest['courtDate']);
+                $this->em->persist($orgClient);
+
+                $report = $this->generateReport($fromRequest, $orgClient);
+                $this->em->persist($report);
+            }
+        }
 
         $this->em->persist($client);
         $this->em->persist($organisation);
-        $this->em->flush();
-        $this->em->clear();
     }
 
     private function buildDeputy(User $deputy, array $fromRequest): Deputy
     {
-        $deputy = (new Deputy())
+        $deputy = new Deputy()
             ->setFirstname($deputy->getFirstname())
             ->setLastname($deputy->getLastname())
             ->setDeputyType($deputy->deriveDeputyType() ?? DeputyType::LAY)
@@ -467,17 +411,15 @@ class FixtureController extends AbstractController
     /**
      * @throws \Exception
      */
-    #[Route(path: '/complete-sections/{reportType}/{reportId}', requirements: ['id' => '\d+'], methods: ['PUT'])]
+    #[Route(path: '/complete-sections/report/{reportId}', requirements: ['id' => '\d+'], methods: ['PUT'])]
     #[IsGranted(attribute: 'ROLE_ADMIN')]
-    public function completeReportSections(Request $request, string $reportType, int $reportId): JsonResponse
+    public function completeReportSections(Request $request, int $reportId): JsonResponse
     {
         if (!$this->fixturesEnabled) {
             throw $this->createNotFoundException();
         }
 
-        $repository = 'ndr' === $reportType ? $this->ndrRepository : $this->reportRepository;
-
-        if (null === $report = $repository->find($reportId)) {
+        if (null === $report = $this->reportRepository->find($reportId)) {
             throw new NotFoundHttpException(sprintf('Report id %s not found', $reportId));
         }
 
@@ -489,9 +431,7 @@ class FixtureController extends AbstractController
             $this->reportSection->completeSection($report, $section);
         }
 
-        if ('report' === $reportType) {
-            $report->updateSectionsStatusCache($report->getAvailableSections());
-        }
+        $report->updateSectionsStatusCache($report->getAvailableSections());
 
         $this->em->flush();
 
@@ -511,7 +451,6 @@ class FixtureController extends AbstractController
         $deputy = $this->userFactory->createAdmin([
             'adminType' => $fromRequest['adminType'],
             'email' => $fromRequest['email'],
-            'ndr' => $fromRequest['ndr'],
             'firstName' => $fromRequest['firstName'],
             'lastName' => $fromRequest['lastName'],
             'activated' => $fromRequest['activated'],
@@ -687,7 +626,7 @@ class FixtureController extends AbstractController
             $user = $this->userRepository->findOneBy(['email' => $userEmail]);
 
             if ($user) {
-                $deputy = (new Deputy())
+                $deputy = new Deputy()
                     ->setDeputyUid(rand(8, 8))
                     ->setDeputyType($user->deriveDeputyType() ?? DeputyType::LAY)
                     ->setEmail1($user->getEmail())

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Controller;
+namespace OPG\Digideps\Backend\Controller;
 
-use App\Entity\Setting;
-use App\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\Entity\Setting;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;

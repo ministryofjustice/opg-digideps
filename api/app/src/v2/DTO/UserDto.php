@@ -1,6 +1,6 @@
 <?php
 
-namespace App\v2\DTO;
+namespace OPG\Digideps\Backend\v2\DTO;
 
 class UserDto
 {
@@ -33,9 +33,6 @@ class UserDto
 
     /** @var string|null */
     private $addressCountry;
-
-    /** @var bool */
-    private $ndrEnabled;
 
     /** @var bool */
     private $active;
@@ -84,11 +81,6 @@ class UserDto
     public function getAddressPostcode(): ?string
     {
         return $this->addressPostcode;
-    }
-
-    public function getNdrEnabled(): ?bool
-    {
-        return $this->ndrEnabled;
     }
 
     public function isActive(): ?bool
@@ -184,16 +176,6 @@ class UserDto
     public function setAddressPostcode($addressPostcode): UserDto
     {
         $this->addressPostcode = $addressPostcode;
-
-        return $this;
-    }
-
-    /**
-     * @param bool $ndrEnabled
-     */
-    public function setNdrEnabled($ndrEnabled): UserDto
-    {
-        $this->ndrEnabled = $ndrEnabled;
 
         return $this;
     }

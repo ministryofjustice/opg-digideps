@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Form\Report;
+namespace OPG\Digideps\Frontend\Form\Report;
 
-use App\Entity\MoneyReceivedOnClientsBehalfInterface;
+use OPG\Digideps\Frontend\Entity\MoneyReceivedOnClientsBehalfInterface;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;

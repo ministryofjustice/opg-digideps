@@ -1,14 +1,12 @@
 <?php
 
-namespace App\Tests\Integration\Service\Stats\Query;
+namespace Tests\OPG\Digideps\Backend\Integration\Stats\Query;
 
-use App\Tests\Integration\ApiIntegrationTestCase;
-use DateTime;
-use App\Entity\Client;
-use App\Entity\Ndr\Ndr;
-use App\Entity\Report\Report;
-use App\Service\Stats\Query\ClientsQuery;
-use App\Service\Stats\StatsQueryParameters;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Service\Stats\Query\ClientsQuery;
+use OPG\Digideps\Backend\Service\Stats\StatsQueryParameters;
 
 class ClientsQueryIntegrationTest extends ApiIntegrationTestCase
 {
@@ -16,11 +14,10 @@ class ClientsQueryIntegrationTest extends ApiIntegrationTestCase
     {
         parent::setUpBeforeClass();
 
-        static::givenClientWithReportsOfType(['NDR', '102']);
-        static::givenClientWithReportsOfType(['NDR', '102']);
         static::givenClientWithReportsOfType(['102', '102']);
         static::givenClientWithReportsOfType(['103']);
         static::givenClientWithReportsOfType(['103']);
+        static::givenClientWithReportsOfType(['104']);
         static::givenClientWithReportsOfType(['102-5']);
         static::givenClientWithReportsOfType(['102-5']);
         static::givenClientWithReportsOfType(['103-5']);
@@ -35,16 +32,12 @@ class ClientsQueryIntegrationTest extends ApiIntegrationTestCase
     {
         $client = new Client();
         foreach ($reportTypes as $reportType) {
-            if ('NDR' === $reportType) {
-                $report = new Ndr($client);
-            } else {
-                $report = new Report(
-                    $client,
-                    $reportType,
-                    new DateTime('2019-08-01'),
-                    new DateTime('2020-08-01')
-                );
-            }
+            $report = new Report(
+                $client,
+                $reportType,
+                new \DateTime('2019-08-01'),
+                new \DateTime('2020-08-01')
+            );
 
             self::$entityManager->persist($report);
         }
@@ -68,7 +61,7 @@ class ClientsQueryIntegrationTest extends ApiIntegrationTestCase
         foreach ($result as $metric) {
             switch ($metric['deputyType']) {
                 case 'lay':
-                    $this->assertEquals(5, $metric['amount']);
+                    $this->assertEquals(4, $metric['amount']);
                     break;
                 case 'pa':
                 case 'prof':
@@ -92,14 +85,13 @@ class ClientsQueryIntegrationTest extends ApiIntegrationTestCase
         // Assert correct amount is returned for each report type
         foreach ($result as $metric) {
             switch ($metric['reportType']) {
-                case '102':
-                    $this->assertEquals(3, $metric['amount']);
-                    break;
                 case '103':
                 case '102-6':
                 case '102-5':
                     $this->assertEquals(2, $metric['amount']);
                     break;
+                case '102':
+                case '104':
                 case '103-6':
                 case '103-5':
                     $this->assertEquals(1, $metric['amount']);

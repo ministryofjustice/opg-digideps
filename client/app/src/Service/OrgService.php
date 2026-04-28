@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Service;
+namespace OPG\Digideps\Frontend\Service;
 
-use App\Entity\User;
-use App\Event\CSVUploadedEvent;
-use App\Event\DeputyChangedOrgEvent;
-use App\Event\OrgCreatedEvent;
-use App\EventDispatcher\ObservableEventDispatcher;
-use App\Service\Audit\AuditEvents;
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Event\CSVUploadedEvent;
+use OPG\Digideps\Frontend\Event\DeputyChangedOrgEvent;
+use OPG\Digideps\Frontend\Event\OrgCreatedEvent;
+use OPG\Digideps\Frontend\EventDispatcher\ObservableEventDispatcher;
+use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;

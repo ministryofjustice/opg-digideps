@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Controller\Report;
+namespace OPG\Digideps\Backend\Controller\Report;
 
-use App\Controller\RestController;
-use App\Entity\Report\Asset;
-use App\Entity\Report\AssetOther;
-use App\Entity\Report\AssetProperty;
-use App\Entity\Report\Report;
-use App\Service\Formatter\RestFormatter;
-use DateTime;
+use OPG\Digideps\Backend\Controller\RestController;
+use OPG\Digideps\Backend\Entity\Report\Asset;
+use OPG\Digideps\Backend\Entity\Report\AssetOther;
+use OPG\Digideps\Backend\Entity\Report\AssetProperty;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -46,7 +45,7 @@ class AssetController extends RestController
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy(Report::class, $reportId); /* @var $report \App\Entity\Report\Report */
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         $this->formatter->validateArray($data, [
             'type' => 'mustExist',
@@ -120,7 +119,7 @@ class AssetController extends RestController
             ]);
 
             if (isset($data['valuation_date'])) {
-                $asset->setValuationDate(new DateTime($data['valuation_date']));
+                $asset->setValuationDate(new \DateTime($data['valuation_date']));
             }
         }
 
@@ -144,7 +143,7 @@ class AssetController extends RestController
             if (isset($data['rent_agreement_end_date'])) {
                 $value = isset($data['rent_agreement_end_date']['date'])
                     ? $data['rent_agreement_end_date']['date'] : $data['rent_agreement_end_date'];
-                $asset->setRentAgreementEndDate(new DateTime($value));
+                $asset->setRentAgreementEndDate(new \DateTime($value));
             }
         }
     }

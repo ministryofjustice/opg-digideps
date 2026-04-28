@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\Report;
+namespace OPG\Digideps\Frontend\Form\Report;
 
-use App\Entity\Report\MoneyTransaction;
+use OPG\Digideps\Frontend\Entity\Report\MoneyTransaction;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -31,7 +31,7 @@ class TransactionSingleType extends AbstractType
                  ]);
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
-            $transaction = $event->getData(); /* @var $accountTransaction Transaction */
+            $transaction = $event->getData();
             $form = $event->getForm();
 
             if ($transaction->getHasMoreDetails()) {

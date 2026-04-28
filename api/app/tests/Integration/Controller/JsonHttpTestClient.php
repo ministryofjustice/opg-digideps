@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Tests\Integration\Controller;
+namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
-use Exception;
-use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
-use App\Service\BruteForce\AttemptsInTimeChecker;
-use App\Service\JWT\JWTService;
+use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
+use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
+use OPG\Digideps\Backend\Service\JWT\JWTService;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\HttpFoundation\Response;
@@ -95,7 +94,7 @@ class JsonHttpTestClient
      *
      * @return mixed token
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function login(string $email, string $password, $clientSecret)
     {

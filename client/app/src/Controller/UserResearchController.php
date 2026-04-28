@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace OPG\Digideps\Frontend\Controller;
 
-use App\Exception\ReportNotSubmittedException;
-use App\Form\UserResearchResponseType;
-use App\Service\Client\Internal\ReportApi;
-use App\Service\Client\Internal\UserResearchApi;
+use OPG\Digideps\Frontend\Exception\ReportNotSubmittedException;
+use OPG\Digideps\Frontend\Form\UserResearchResponseType;
+use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
+use OPG\Digideps\Frontend\Service\Client\Internal\UserResearchApi;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;

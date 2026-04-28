@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Traits;
+namespace OPG\Digideps\Backend\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
 

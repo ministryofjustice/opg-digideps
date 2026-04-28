@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Report;
+namespace OPG\Digideps\Frontend\Form\Report;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
@@ -20,8 +20,8 @@ class ReportType extends AbstractType
                 'invalid_message' => 'report.startDate.invalidMessage',
                 'constraints' => [
                     new Range([
-                        'min' => (new \DateTime('now'))->modify('-7 years'),
-                        'max' => (new \DateTime('now'))->modify('+2 years'),
+                        'min' => new \DateTime('now')->modify('-7 years'),
+                        'max' => new \DateTime('now')->modify('+2 years'),
                         'notInRangeMessage' => 'Please enter a valid start date.',
                         'groups' => 'start-end-dates',
                     ]),

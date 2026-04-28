@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Tests\Integration\Controller;
+namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
-use App\Entity\User;
-use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
-use App\Service\BruteForce\AttemptsInTimeChecker;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
+use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
 
 class AuthControllerTest extends AbstractTestController
 {
@@ -159,7 +159,7 @@ class AuthControllerTest extends AbstractTestController
         $authToken = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
         // manually expire token in REDIS
-        static::getContainer()->get('snc_redis.default')->expire($authToken, 0);
+        static::getContainer()->get('predis')->expire($authToken, 0);
 
         $this->assertJsonRequest('GET', '/auth/get-logged-user', [
             'mustFail' => true,

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\ResponseComparison;
+namespace OPG\Digideps\Backend\Service\ResponseComparison;
 
 use Psr\Http\Message\ResponseInterface;
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Repository;
+namespace OPG\Digideps\Backend\Repository;
 
-use App\Entity\Client;
-use App\Entity\User;
-use App\Service\Search\ClientSearchFilter;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Service\Search\ClientSearchFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
@@ -52,7 +52,7 @@ class ClientRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
     public function saveUserToClient(User $user, int $clientId)
     {
@@ -73,9 +73,20 @@ class ClientRepository extends ServiceEntityRepository
         $filter = $this->_em->getFilters()->getFilter('softdeleteable');
         $filter->disableForEntity(Client::class);
 
+        $table = Client::class;
+        $dql = <<<DQL
+        SELECT c, r, o, nd, u
+        FROM {$table} c
+        LEFT JOIN c.reports r
+        LEFT JOIN c.deputy nd
+        LEFT JOIN c.organisation o
+        LEFT JOIN c.users u
+        WHERE c.id = ?1
+        DQL;
+
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT c, r, ndr, o, nd, u FROM App\Entity\Client c LEFT JOIN c.reports r LEFT JOIN c.ndr ndr LEFT JOIN c.deputy nd LEFT JOIN c.organisation o LEFT JOIN c.users u WHERE c.id = ?1')
+            ->createQuery($dql)
             ->setParameter(1, $id);
 
         $result = $query->getArrayResult();
@@ -89,9 +100,10 @@ class ClientRepository extends ServiceEntityRepository
      */
     public function getArrayByCaseNumber($caseNumber)
     {
+        $table = Client::class;
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT c FROM App\Entity\Client c WHERE LOWER(c.caseNumber) = LOWER(?1)')
+            ->createQuery("SELECT c FROM {$table} c WHERE LOWER(c.caseNumber) = LOWER(?1)")
             ->setParameter(1, $caseNumber);
 
         $result = $query->getArrayResult();
@@ -101,9 +113,10 @@ class ClientRepository extends ServiceEntityRepository
 
     public function findByCaseNumber(string $caseNumber): ?Client
     {
+        $table = Client::class;
         return $this
             ->getEntityManager()
-            ->createQuery('SELECT c FROM App\Entity\Client c WHERE LOWER(c.caseNumber) = LOWER(:caseNumber)')
+            ->createQuery("SELECT c FROM {$table} c WHERE LOWER(c.caseNumber) = LOWER(:caseNumber)")
             ->setParameter('caseNumber', $caseNumber)
             ->getOneOrNullResult();
     }
@@ -135,9 +148,10 @@ class ClientRepository extends ServiceEntityRepository
         $filter = $this->_em->getFilters()->getFilter('softdeleteable');
         $filter->disableForEntity(Client::class);
 
+        $table = Client::class;
         $clients = $this
             ->getEntityManager()
-            ->createQuery('SELECT c FROM App\Entity\Client c WHERE LOWER(c.caseNumber) = LOWER(:caseNumber)')
+            ->createQuery("SELECT c FROM {$table} c WHERE LOWER(c.caseNumber) = LOWER(:caseNumber)")
             ->setParameter('caseNumber', $caseNumber)
             ->getResult();
 
@@ -238,9 +252,10 @@ class ClientRepository extends ServiceEntityRepository
 
     public function getAllClientsAndReportsByDeputyUid(int $deputyUid)
     {
+        $table = Client::class;
         $query = $this
             ->getEntityManager()
-            ->createQuery("SELECT c FROM App\Entity\Client c LEFT JOIN c.users u where u.deputyUid = ?1 ORDER BY c.id")
+            ->createQuery("SELECT c FROM {$table} c LEFT JOIN c.users u where u.deputyUid = ?1 ORDER BY c.id")
             ->setParameter(1, $deputyUid);
 
         return $query->getResult();

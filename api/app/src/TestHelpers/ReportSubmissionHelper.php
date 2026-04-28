@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\TestHelpers;
+namespace OPG\Digideps\Backend\TestHelpers;
 
-use App\Entity\Client;
-use App\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\OptimisticLockException;
 
 class ReportSubmissionHelper
 {
@@ -18,13 +20,13 @@ class ReportSubmissionHelper
     /**
      * @return ReportSubmission
      *
-     * @throws \Doctrine\ORM\ORMException
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws ORMException
+     * @throws OptimisticLockException
      */
     public function generateAndPersistReportSubmission()
     {
         $client = new Client();
-        $report = (new ReportTestHelper())->generateReport($this->entityManager, $client, null, new \DateTime());
+        $report = new ReportTestHelper()->generateReport($this->entityManager, $client, null, new \DateTime());
         $client->addReport($report);
         $user = (UserTestHelper::create())->createAndPersistUser($this->entityManager, $client);
         $reportSubmission = new ReportSubmission($report, $user);
@@ -69,7 +71,7 @@ class ReportSubmissionHelper
 
         $client = $existingReport->getClient();
 
-        $report = (new ReportTestHelper())->generateReport(
+        $report = new ReportTestHelper()->generateReport(
             $this->entityManager,
             $client,
             $existingReport->getType(),
@@ -78,7 +80,7 @@ class ReportSubmissionHelper
 
         $client->addReport($report);
 
-        $reportSubmission = (new ReportSubmission($report, $client->getUsers()[0]))
+        $reportSubmission = new ReportSubmission($report, $client->getUsers()[0])
             ->setCreatedOn(new \DateTime('+366 days'));
 
         $report

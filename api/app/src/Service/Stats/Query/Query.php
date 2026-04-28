@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Service\Stats\Query;
+namespace OPG\Digideps\Backend\Service\Stats\Query;
 
-use App\Service\Stats\StatsQueryParameters;
+use OPG\Digideps\Backend\Service\Stats\StatsQueryParameters;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
 

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Model;
+namespace Tests\OPG\Digideps\Backend\Integration\Model;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Domain\CourtOrder\CourtOrderType;
-use App\Domain\Deputyship\DeputyshipProcessingRawDbAccess;
-use App\Tests\Integration\ApiIntegrationTestCase;
-use App\Tests\Integration\Fixtures;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Domain\Deputyship\DeputyshipProcessingRawDbAccess;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Query\QueryBuilder;
 
@@ -52,7 +52,7 @@ class DeputyshipProcessingRawDbAccessIntegrationIntegrationTest extends ApiInteg
             'orderMadeDate' => '2025-05-23 10:10:10',
             'clientId' => $client->getId(),
             'courtOrderKind' => 'single',
-            'courtOrderReportType' => 'OPG102',
+            'reportType' => 'OPG102',
         ];
 
         // use SUT to insert the order

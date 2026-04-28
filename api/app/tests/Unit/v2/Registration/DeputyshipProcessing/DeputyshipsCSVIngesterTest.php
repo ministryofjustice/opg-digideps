@@ -2,23 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
+namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\DeputyshipProcessing;
 
-use App\Entity\StagingSelectedCandidate;
-use App\Factory\DataFactoryInterface;
-use App\Factory\DataFactoryResult;
-use App\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipIngester;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilder;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesSelectorResult;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngestResult;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoaderResult;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
-use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
-use ArrayIterator;
+use OPG\Digideps\Backend\Entity\StagingSelectedCandidate;
+use OPG\Digideps\Backend\Factory\DataFactoryInterface;
+use OPG\Digideps\Backend\Factory\DataFactoryResult;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipIngester;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipBuilder;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipBuilderResult;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesSelectorResult;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngestResult;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoaderResult;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
 use Doctrine\DBAL\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -132,7 +131,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
         // candidate selection fails
         $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(
-            new ArrayIterator([]),
+            new \ArrayIterator([]),
             0,
             new Exception('unexpected database exception')
         );
@@ -160,7 +159,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
         $mockCSVLoaderResult->loadedOk = true;
 
         $candidates = [$this->createMock(StagingSelectedCandidate::class)];
-        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new ArrayIterator($candidates), 1);
+        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new \ArrayIterator($candidates), 1);
 
         $builderResult = new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidatesApplied);
 
@@ -194,8 +193,8 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
         $this->mockDeputyshipBuilder->expects(self::once())
             ->method('build')
-            ->with(new ArrayIterator($candidates))
-            ->willReturn(new ArrayIterator([$builderResult]));
+            ->with(new \ArrayIterator($candidates))
+            ->willReturn(new \ArrayIterator([$builderResult]));
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordBuilderResult')
@@ -224,7 +223,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
         $mockCSVLoaderResult->loadedOk = true;
 
         $candidates = [$this->createMock(StagingSelectedCandidate::class)];
-        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new ArrayIterator($candidates), 1);
+        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new \ArrayIterator($candidates), 1);
 
         $builderResult = new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidatesApplied);
 
@@ -255,8 +254,8 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
         $this->mockDeputyshipBuilder->expects(self::once())
             ->method('build')
-            ->with(new ArrayIterator($candidates))
-            ->willReturn(new ArrayIterator([$builderResult]));
+            ->with(new \ArrayIterator($candidates))
+            ->willReturn(new \ArrayIterator([$builderResult]));
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordBuilderResult')

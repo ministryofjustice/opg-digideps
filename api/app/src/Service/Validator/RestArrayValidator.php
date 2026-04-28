@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Validator;
+namespace OPG\Digideps\Backend\Service\Validator;
 
 class RestArrayValidator
 {

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Form;
+namespace OPG\Digideps\Frontend\Form;
 
-use App\Entity\UserResearch\UserResearchResponse;
+use OPG\Digideps\Frontend\Entity\UserResearch\UserResearchResponse;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;

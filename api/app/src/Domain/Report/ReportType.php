@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Report;
+namespace OPG\Digideps\Backend\Domain\Report;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Domain\CourtOrder\CourtOrderType;
-use App\Domain\CourtOrder\CourtOrderReportType;
-use App\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
 
 final readonly class ReportType implements \Stringable
 {
@@ -23,11 +23,11 @@ final readonly class ReportType implements \Stringable
     {
         $parts = [];
 
-        if ($this->courtOrderType !== CourtOrderType::HW || $this->courtOrderKind === CourtOrderKind::Hybrid) {
-            $parts[] = $this->courtOrderReportType->getSuffix();
-        } else {
-            $parts[] = CourtOrderReportType::OPG104->getSuffix();
-        }
+        $suffix = ($this->courtOrderType !== CourtOrderType::HW || $this->courtOrderKind === CourtOrderKind::Hybrid) ?
+            $this->courtOrderReportType->getSuffix() :
+            CourtOrderReportType::OPG104->getSuffix();
+
+        $parts[] = '10' . $suffix;
 
         if ($this->courtOrderKind === CourtOrderKind::Hybrid) {
             $parts[] = CourtOrderReportType::OPG104->getSuffix();

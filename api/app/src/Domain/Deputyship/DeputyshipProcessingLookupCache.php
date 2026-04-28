@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Deputyship;
+namespace OPG\Digideps\Backend\Domain\Deputyship;
 
-use App\Entity\CourtOrder;
-use App\Repository\ClientRepository;
-use App\Repository\CourtOrderRepository;
-use App\Repository\DeputyRepository;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Repository\ClientRepository;
+use OPG\Digideps\Backend\Repository\CourtOrderRepository;
+use OPG\Digideps\Backend\Repository\DeputyRepository;
 
 /**
  * Cached court order, deputy, and client data, for fast lookup of IDs and statuses by UID.

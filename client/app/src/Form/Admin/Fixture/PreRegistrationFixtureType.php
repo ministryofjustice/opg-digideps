@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Form\Admin\Fixture;
+namespace OPG\Digideps\Frontend\Form\Admin\Fixture;
 
-use App\Entity\User;
+use OPG\Digideps\Frontend\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;

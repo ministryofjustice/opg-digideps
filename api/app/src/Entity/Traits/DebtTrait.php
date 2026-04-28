@@ -1,10 +1,7 @@
 <?php
 
-namespace App\Entity\Traits;
+namespace OPG\Digideps\Backend\Entity\Traits;
 
-/**
- * Shared among Report\Debt and Ndr\Debt.
- */
 trait DebtTrait
 {
     public function setAmountAndDetails($amount, $details)

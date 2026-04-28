@@ -1,14 +1,14 @@
 <?php
 
-namespace App\v2\Controller;
+namespace OPG\Digideps\Backend\v2\Controller;
 
-use App\Controller\RestController;
-use App\Entity\Client;
-use App\Repository\ClientRepository;
-use App\v2\Assembler\ClientAssembler;
-use App\v2\Assembler\OrganisationAssembler;
-use App\v2\Transformer\ClientTransformer;
-use App\v2\Transformer\OrganisationTransformer;
+use OPG\Digideps\Backend\Controller\RestController;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Repository\ClientRepository;
+use OPG\Digideps\Backend\v2\Assembler\ClientAssembler;
+use OPG\Digideps\Backend\v2\Assembler\OrganisationAssembler;
+use OPG\Digideps\Backend\v2\Transformer\ClientTransformer;
+use OPG\Digideps\Backend\v2\Transformer\OrganisationTransformer;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -73,7 +73,7 @@ class ClientController extends RestController
 
         $dto = $this->clientAssembler->assembleFromArray($data);
 
-        $transformedDto = $this->clientTransformer->transform($dto, ['reports', 'ndr', 'organisation', 'deputy']);
+        $transformedDto = $this->clientTransformer->transform($dto, ['reports', 'organisation', 'deputy']);
 
         if ($transformedDto['archived_at']) {
             throw $this->createAccessDeniedException('Cannot access archived reports');

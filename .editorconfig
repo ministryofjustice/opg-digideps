@@ -3,7 +3,7 @@
 indent_style = tab
 indent_size = 4
 
-[*.yaml]
+[{*.yaml, *.neon}]
 intent_style = space
 indent_size = 2
 
@@ -13,4 +13,8 @@ indent_size = 4
 
 [*.{tf,tfvars,tpl}]
 indent_size = 2
+indent_style = space
+
+[*.php]
+indent_size = 4
 indent_style = space

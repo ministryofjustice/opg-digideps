@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service;
+namespace OPG\Digideps\Backend\Service;
 
 class DateTimeProvider
 {

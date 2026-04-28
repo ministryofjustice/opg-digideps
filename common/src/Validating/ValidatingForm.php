@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Common\Validating;
 
-use Symfony\Component\Form\Button;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 

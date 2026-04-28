@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Frontend\Entity\Report;
 
-use App\Entity\Traits\CreationAudit;
-use App\Entity\User;
+use OPG\Digideps\Frontend\Entity\Traits\CreationAudit;
+use OPG\Digideps\Frontend\Entity\User;
 use JMS\Serializer\Annotation as JMS;
-use RuntimeException;
 
 class ReportSubmission
 {
@@ -14,16 +13,16 @@ class ReportSubmission
     #[JMS\Type('integer')]
     private int $id;
 
-    #[JMS\Type('App\Entity\Report\Report')]
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\Report')]
     private Report $report;
 
     /**
      * @var Document[]
      */
-    #[JMS\Type('array<App\Entity\Report\Document>')]
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\Document>')]
     private array $documents = [];
 
-    #[JMS\Type('App\Entity\User')]
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
     private ?User $archivedBy = null;
 
     #[JMS\Type('boolean')]
@@ -126,7 +125,7 @@ class ReportSubmission
         $report = $this->getReport();
 
         if (is_null($report)) {
-            throw new RuntimeException('Report submission has no associated report');
+            throw new \RuntimeException('Report submission has no associated report');
         }
 
         /** @var ?\DateTime $startDate */
@@ -136,7 +135,7 @@ class ReportSubmission
         $endDate = $report->getEndDate();
 
         if (is_null($startDate) || is_null($endDate)) {
-            throw new RuntimeException('Report submission is missing start or end date');
+            throw new \RuntimeException('Report submission is missing start or end date');
         }
 
         $client = $report->getClient();

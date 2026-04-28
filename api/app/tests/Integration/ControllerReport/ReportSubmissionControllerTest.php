@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Tests\Integration\ControllerReport;
+namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
-use DateTime;
-use Exception;
-use App\Entity\Report\Document;
-use App\Entity\Report\ReportSubmission;
-use App\TestHelpers\ReportSubmissionHelper;
-use App\Tests\Integration\Controller\AbstractTestController;
+use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\TestHelpers\ReportSubmissionHelper;
+use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 use Symfony\Component\HttpFoundation\Response;
 
 class ReportSubmissionControllerTest extends AbstractTestController
@@ -22,9 +21,9 @@ class ReportSubmissionControllerTest extends AbstractTestController
     public function setUp(): void
     {
         parent::setUp();
-        self::$pa1 = self::fixtures()->getRepo('User')->findOneByEmail('pa@example.org');
-        self::$pa2 = self::fixtures()->getRepo('User')->findOneByEmail('pa_admin@example.org');
-        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$pa1 = self::fixtures()->getRepo(User::class)->findOneByEmail('pa@example.org');
+        self::$pa2 = self::fixtures()->getRepo(User::class)->findOneByEmail('pa_admin@example.org');
+        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
 
         // create 5 submitted reports
         for ($i = 0; $i < 5; ++$i) {
@@ -33,11 +32,11 @@ class ReportSubmissionControllerTest extends AbstractTestController
                 ['setFirstname' => "c{$i}", 'setLastname' => "l{$i}", 'setCaseNumber' => "100000{$i}"]
             );
             $report = self::fixtures()->createReport($client, [
-                'setStartDate' => new DateTime('2014-01-01'),
-                'setEndDate' => new DateTime('2014-12-31'),
+                'setStartDate' => new \DateTime('2014-01-01'),
+                'setEndDate' => new \DateTime('2014-12-31'),
                 'setSubmitted' => true,
                 'setSubmittedBy' => self::$pa1, // irrelevant for assertions
-                'setSubmitDate' => new DateTime('2015-01-01'),
+                'setSubmitDate' => new \DateTime('2015-01-01'),
             ]);
             // create submission
             $submission = new ReportSubmission($report, ($i < 3) ? self::$pa2 : self::$deputy1);
@@ -249,7 +248,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
      */
     public function updatePersistsUuidWhenProvided()
     {
-        $reportSubmission = (new ReportSubmissionHelper(self::fixtures()->getEntityManager()))->generateAndPersistReportSubmission();
+        $reportSubmission = new ReportSubmissionHelper(self::fixtures()->getEntityManager())->generateAndPersistReportSubmission();
 
         $uuid = '5a8b1a26-8296-4373-ae61-f8d0b250e773';
 
@@ -268,12 +267,12 @@ class ReportSubmissionControllerTest extends AbstractTestController
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function updateReportSubmissionByIdWithNewDateTime(int $id, string $date)
     {
-        $entity = self::fixtures()->getRepo('Report\ReportSubmission')->findOneById($id);
-        $entity->setCreatedOn(new DateTime($date));
+        $entity = self::fixtures()->getRepo(ReportSubmission::class)->findOneById($id);
+        $entity->setCreatedOn(new \DateTime($date));
 
         self::fixtures()->persist($entity);
     }
@@ -350,7 +349,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         ]);
 
         foreach ($documents as $document) {
-            $record = self::fixtures()->getRepo('Report\Document')->findOneBy(['fileName' => $document[0]]);
+            $record = self::fixtures()->getRepo(Document::class)->findOneBy(['fileName' => $document[0]]);
 
             if ($document[2]) {
                 self::assertEquals(Document::SYNC_STATUS_QUEUED, $record->getSynchronisationStatus());

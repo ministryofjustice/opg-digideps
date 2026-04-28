@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Form\Admin;
+namespace OPG\Digideps\Frontend\Form\Admin;
 
-use App\Entity\Report\Checklist;
-use App\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\Checklist;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\Form;

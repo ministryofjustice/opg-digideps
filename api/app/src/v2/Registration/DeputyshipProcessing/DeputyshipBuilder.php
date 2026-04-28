@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\DeputyshipProcessing;
+namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing;
 
-use App\Domain\Deputyship\DeputyshipCandidatesConverter;
-use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
+use OPG\Digideps\Backend\Domain\Deputyship\DeputyshipCandidatesConverter;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
 
 /**
  * Convert entity candidates into entities, but without saving them to the database.

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\ACL;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\ACL;
 
-use App\Tests\Behat\BehatException;
+use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 trait ACLTrait
 {

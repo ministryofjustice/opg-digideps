@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
+use OPG\Digideps\Backend\Entity\PreRegistration;
 use PHPUnit\Framework\Attributes\Test;
-use RuntimeException;
-use App\Repository\PreRegistrationRepository;
-use App\Repository\UserRepository;
-use App\Service\PreRegistrationVerificationService;
+use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\Service\PreRegistrationVerificationService;
 use Mockery as m;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -27,7 +27,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
 
     public function setUp(): void
     {
-        $crLayHasPC = m::mock('\App\Entity\PreRegistration')
+        $crLayHasPC = m::mock(PreRegistration::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('11111111')
             ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('CSurn')
@@ -37,7 +37,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
             ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('Dep1')
             ->getMock();
 
-        $crLayNoPC = m::mock('\App\Entity\PreRegistration')
+        $crLayNoPC = m::mock(PreRegistration::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('22222222')
             ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('CSurn')
@@ -48,7 +48,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
             ->getMock();
 
         // Group MLD1 has a postcode for each of the three deputies
-        $preRegMLD1A = m::mock('\App\Entity\PreRegistration')
+        $preRegMLD1A = m::mock(PreRegistration::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('33333333')
             ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('CSurn')
@@ -58,7 +58,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
             ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('MLDA')
             ->getMock();
 
-        $preRegMLD1B = m::mock('\App\Entity\PreRegistration')
+        $preRegMLD1B = m::mock(PreRegistration::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('33333333')
             ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('CSurn')
@@ -68,7 +68,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
             ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('MLDB')
             ->getMock();
 
-        $preRegMLD1C = m::mock('\App\Entity\PreRegistration')
+        $preRegMLD1C = m::mock(PreRegistration::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('33333333')
             ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('CSurn')
@@ -79,7 +79,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
             ->getMock();
 
         // Group MLD2 has a missing postcode for one of the two deputies
-        $preRegMLD2A = m::mock('\App\Entity\PreRegistration')
+        $preRegMLD2A = m::mock(PreRegistration::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('44444444')
             ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('CSurn')
@@ -89,7 +89,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
             ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('MLDA')
             ->getMock();
 
-        $preRegMLD2B = m::mock('\App\Entity\PreRegistration')
+        $preRegMLD2B = m::mock(PreRegistration::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('44444444')
             ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('CSurn')
@@ -99,7 +99,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
             ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('MLDB')
             ->getMock();
 
-        $singleLayDeputy = m::mock('\App\Entity\PreRegistration')
+        $singleLayDeputy = m::mock(PreRegistration::class)
             ->shouldIgnoreMissing(true)
             ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('55555555')
             ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('Smith')
@@ -155,7 +155,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
         $incorrectCaseNumberMessage = '{"search_terms":{"caseNumber":"%s","clientLastname":"%s","deputyFirstname":"%s","deputyLastname":"%s","deputyPostcode":"%s"}}';
         try {
             $this->preRegistrationVerificationService->validate('WRONG678', 'CSurn', 'DFirs', 'DSurn', 'DPC123');
-        } catch (RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             $this->assertStringContainsString(
                 sprintf($incorrectCaseNumberMessage, 'WRONG678', 'CSurn', 'DFirs', 'DSurn', 'DPC123'),
                 $e->getMessage()
@@ -168,7 +168,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
         $incorrectClientLastnameMessage = '"matching_errors":{"client_lastname":true,"deputy_firstname":false,"deputy_lastname":false,"deputy_postcode":false}';
         try {
             $this->assertCount(1, $this->preRegistrationVerificationService->validate('11111111', 'WRONG', 'DFirs', 'DSurn', 'DPC123'));
-        } catch (RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             $this->assertStringContainsString(
                 sprintf($termsAndMatchesMessage, '11111111', 'WRONG', 'DFirs', 'DSurn', 'DPC123'),
                 $e->getMessage()
@@ -180,7 +180,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
         $incorrectDeputyFirstnameMessage = '"matching_errors":{"client_lastname":false,"deputy_firstname":true,"deputy_lastname":false,"deputy_postcode":false}';
         try {
             $this->assertCount(1, $this->preRegistrationVerificationService->validate('11111111', 'CSurn', 'WRONG', 'DSurn', 'DPC123'));
-        } catch (RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             $this->assertStringContainsString(
                 sprintf($termsAndMatchesMessage, '11111111', 'CSurn', 'WRONG', 'DSurn', 'DPC123'),
                 $e->getMessage()
@@ -192,7 +192,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
         $incorrectDeputyLastnameMessage = '"matching_errors":{"client_lastname":false,"deputy_firstname":false,"deputy_lastname":true,"deputy_postcode":false}';
         try {
             $this->assertCount(1, $this->preRegistrationVerificationService->validate('11111111', 'CSurn', 'DFirs', 'WRONG', 'DPC123'));
-        } catch (RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             $this->assertStringContainsString(
                 sprintf($termsAndMatchesMessage, '11111111', 'CSurn', 'DFirs', 'WRONG', 'DPC123'),
                 $e->getMessage()
@@ -204,7 +204,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
         $incorrectPostCodeMessage = '"matching_errors":{"client_lastname":false,"deputy_firstname":false,"deputy_lastname":false,"deputy_postcode":true}';
         try {
             $this->assertCount(1, $this->preRegistrationVerificationService->validate('11111111', 'CSurn', 'DFirs', 'DSurn', 'WRONG'));
-        } catch (RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             $this->assertStringContainsString(
                 sprintf($termsAndMatchesMessage, '11111111', 'CSurn', 'DFirs', 'DSurn', 'WRONG'),
                 $e->getMessage()
@@ -216,7 +216,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
         $incorrectNamesAndPostcode = '"matching_errors":{"client_lastname":true,"deputy_firstname":true,"deputy_lastname":true,"deputy_postcode":true}';
         try {
             $this->assertCount(1, $this->preRegistrationVerificationService->validate('11111111', 'WRONG', 'WRONG', 'WRONG', 'WRONG'));
-        } catch (RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             $this->assertStringContainsString(
                 sprintf($termsAndMatchesMessage, '11111111', 'WRONG', 'WRONG', 'WRONG', 'WRONG'),
                 $e->getMessage()
@@ -250,7 +250,7 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
         // if all MLD postcodes are in preRegistration, the postcode check is run
         try {
             $this->assertCount(1, $this->preRegistrationVerificationService->validate('11111111', 'CSurn', 'DFirs', 'DSurn', 'DOEsnT MatteR'));
-        } catch (RuntimeException $e) {
+        } catch (\RuntimeException $e) {
             $expectedErrorMessage = '{"search_terms":{"caseNumber":"%s","clientLastname":"%s","deputyFirstname":"%s","deputyLastname":"%s","deputyPostcode":"%s"},"case_number_matches":null,"matching_errors":{"client_lastname":false,"deputy_firstname":false,"deputy_lastname":false,"deputy_postcode":true}}';
             $this->assertStringContainsString(
                 sprintf($expectedErrorMessage, '11111111', 'CSurn', 'DFirs', 'DSurn', 'DOEsnT MatteR'),

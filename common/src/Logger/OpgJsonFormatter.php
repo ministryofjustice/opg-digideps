@@ -1,0 +1,56 @@
+<?php
+
+namespace OPG\Digideps\Common\Logger;
+
+use Monolog\Formatter\JsonFormatter;
+use Monolog\LogRecord;
+
+class OpgJsonFormatter extends JsonFormatter
+{
+    public function format(LogRecord $record): string
+    {
+        $caller = $this->getCallerInfo();
+        $file = $caller['file'] ?? 'unknown file';
+        $line = $caller['line'] ?? 'unknown line';
+
+        $formattedRecord = [
+            'time' => $record->datetime->format('Y-m-d\TH:i:s\Z'),
+            'level' => strtoupper($record->level->name),
+            'msg' => $record->message,
+            'service_name' => getenv('NGINX_APP_NAME'),
+            'request' => [
+                'method' => $_SERVER['REQUEST_METHOD'] ?? 'UNKNOWN',
+                'path' => $_SERVER['REQUEST_URI'] ?? 'UNKNOWN',
+                'aws_request_id' => $_SERVER['HTTP_X_AWS_REQUEST_ID'] ?? 'UNKNOWN',
+                'session_safe_id' => $_SERVER['HTTP_X_SESSION_SAFE_ID'] ?? 'UNKNOWN'
+            ],
+            'location' => [
+                'file' => $file,
+                'line' => $line,
+            ],
+        ];
+
+        return $this->toJson($formattedRecord, true) . ($this->appendNewline ? "\n" : '');
+    }
+
+    private function getCallerInfo(): array
+    {
+        $backtrace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
+
+        foreach ($backtrace as $trace) {
+            // We want the first file that doesn't have monolog in path or this file
+            if (
+                isset($trace['file'])
+                && !str_contains($trace['file'], 'monolog')
+                && !str_contains($trace['file'], 'OpgJsonFormatter.php')
+            ) {
+                return [
+                    'file' => $trace['file'],
+                    'line' => $trace['line'] ?? '?',
+                ];
+            }
+        }
+
+        return [];
+    }
+}

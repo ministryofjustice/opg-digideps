@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Tests\Integration\Entity\Repository;
+namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
-use App\Tests\Integration\ApiTestTrait;
-use DateTime;
-use App\Entity\User;
-use App\Repository\UserRepository;
-use App\TestHelpers\ClientTestHelper;
-use App\TestHelpers\DeputyTestHelper;
-use App\TestHelpers\ReportTestHelper;
-use App\TestHelpers\UserTestHelper;
-use App\Tests\Integration\Fixtures;
+use Tests\OPG\Digideps\Backend\Integration\ApiTestTrait;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
+use OPG\Digideps\Backend\TestHelpers\DeputyTestHelper;
+use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
+use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
+use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class UserRepositoryTest extends KernelTestCase
@@ -39,32 +38,26 @@ class UserRepositoryTest extends KernelTestCase
     public function testCountsInactiveUsers()
     {
         $oldUserWithNoClient = self::$fixtures->createUser();
-        $oldUserWithNoClient->setRegistrationDate(DateTime::createFromFormat('Y-m-d', '2019-03-03'));
+        $oldUserWithNoClient->setRegistrationDate(\DateTime::createFromFormat('Y-m-d', '2019-03-03'));
         $oldUserWithNoClient->setRoleName(User::ROLE_LAY_DEPUTY);
 
         $oldUserWithNoReports = self::$fixtures->createUser();
-        $oldUserWithNoReports->setRegistrationDate(DateTime::createFromFormat('Y-m-d', '2019-03-03'));
+        $oldUserWithNoReports->setRegistrationDate(\DateTime::createFromFormat('Y-m-d', '2019-03-03'));
         $oldUserWithNoReports->setRoleName(User::ROLE_LAY_DEPUTY);
         self::$fixtures->createClient($oldUserWithNoReports);
 
         $oldUserWithReport = self::$fixtures->createUser();
-        $oldUserWithReport->setRegistrationDate(DateTime::createFromFormat('Y-m-d', '2019-03-03'));
+        $oldUserWithReport->setRegistrationDate(\DateTime::createFromFormat('Y-m-d', '2019-03-03'));
         $oldUserWithReport->setRoleName(User::ROLE_LAY_DEPUTY);
         $oldClientWithReport = self::$fixtures->createClient($oldUserWithReport);
         self::$fixtures->createReport($oldClientWithReport);
 
-        $oldUserWithNdr = self::$fixtures->createUser();
-        $oldUserWithNdr->setRegistrationDate(DateTime::createFromFormat('Y-m-d', '2019-03-03'));
-        $oldUserWithNdr->setRoleName(User::ROLE_LAY_DEPUTY);
-        $oldClientWithNdr = self::$fixtures->createClient($oldUserWithNdr);
-        self::$fixtures->createNdr($oldClientWithNdr);
-
         $oldProfUserWithNoClient = self::$fixtures->createUser();
-        $oldProfUserWithNoClient->setRegistrationDate(DateTime::createFromFormat('Y-m-d', '2019-03-03'));
+        $oldProfUserWithNoClient->setRegistrationDate(\DateTime::createFromFormat('Y-m-d', '2019-03-03'));
         $oldProfUserWithNoClient->setRoleName(User::ROLE_PROF_ADMIN);
 
         $recentUserWithNoClient = self::$fixtures->createUser();
-        $recentUserWithNoClient->setRegistrationDate(new DateTime());
+        $recentUserWithNoClient->setRegistrationDate(new \DateTime());
         $recentUserWithNoClient->setRoleName(User::ROLE_LAY_DEPUTY);
         self::$fixtures->createClient($recentUserWithNoClient);
 
@@ -83,21 +76,21 @@ class UserRepositoryTest extends KernelTestCase
 
         $clientOne = $clientHelper->generateClient(self::$entityManager);
         $activeUserOne = $userHelper->createAndPersistUser(self::$entityManager, $clientOne);
-        $reportOne = $reportHelper->generateReport(self::$entityManager, $clientOne)->setSubmitDate(new DateTime());
+        $reportOne = $reportHelper->generateReport(self::$entityManager, $clientOne)->setSubmitDate(new \DateTime());
 
         $clientTwo = $clientHelper->generateClient(self::$entityManager);
         $activeUserTwo = $userHelper->createAndPersistUser(self::$entityManager, $clientTwo);
-        $reportTwo = $reportHelper->generateReport(self::$entityManager, $clientTwo)->setSubmitDate(new DateTime());
+        $reportTwo = $reportHelper->generateReport(self::$entityManager, $clientTwo)->setSubmitDate(new \DateTime());
 
         $clientThree = $clientHelper->generateClient(self::$entityManager);
-        $reportThree = $reportHelper->generateReport(self::$entityManager, $clientThree)->setSubmitDate(new DateTime());
+        $reportThree = $reportHelper->generateReport(self::$entityManager, $clientThree)->setSubmitDate(new \DateTime());
         $inactiveUserOne = $userHelper->createAndPersistUser(self::$entityManager, $clientThree);
-        $inactiveUserOne->setLastLoggedIn(new DateTime('-380 days'));
+        $inactiveUserOne->setLastLoggedIn(new \DateTime('-380 days'));
 
         $clientFour = $clientHelper->generateClient(self::$entityManager);
         $reportFour = $reportHelper->generateReport(self::$entityManager, $clientFour);
         $inactiveUserTwo = $userHelper->createAndPersistUser(self::$entityManager, $clientFour);
-        $inactiveUserTwo->setLastLoggedIn(new DateTime());
+        $inactiveUserTwo->setLastLoggedIn(new \DateTime());
 
         self::$entityManager->persist($inactiveUserOne);
         self::$entityManager->persist($inactiveUserTwo);
@@ -165,15 +158,15 @@ class UserRepositoryTest extends KernelTestCase
         $usersToAdd[] = $adminUserLessThan60Days = $userHelper->createUser(null, User::ROLE_ADMIN);
         $usersToAdd[] = $nonAdminUserLessThan60Days = $userHelper->createUser();
 
-        $adminUserMoreThan60Days->setRegistrationDate(new DateTime('-61 days'));
+        $adminUserMoreThan60Days->setRegistrationDate(new \DateTime('-61 days'));
         $adminUserMoreThan60Days->setLastLoggedIn();
-        $superAdminUserMoreThan60Days->setRegistrationDate(new DateTime('-61 days'));
+        $superAdminUserMoreThan60Days->setRegistrationDate(new \DateTime('-61 days'));
         $superAdminUserMoreThan60Days->setLastLoggedIn();
-        $adminManagerUserMoreThan60Days->setRegistrationDate(new DateTime('-61 days'));
+        $adminManagerUserMoreThan60Days->setRegistrationDate(new \DateTime('-61 days'));
         $adminManagerUserMoreThan60Days->setLastLoggedIn();
-        $adminUserLessThan60Days->setRegistrationDate(new DateTime('-5 days'));
-        $adminUserLessThan60Days->setLastLoggedIn(new DateTime());
-        $nonAdminUserLessThan60Days->setRegistrationDate(new DateTime('-61 days'));
+        $adminUserLessThan60Days->setRegistrationDate(new \DateTime('-5 days'));
+        $adminUserLessThan60Days->setLastLoggedIn(new \DateTime());
+        $nonAdminUserLessThan60Days->setRegistrationDate(new \DateTime('-61 days'));
         $nonAdminUserLessThan60Days->setLastLoggedIn();
 
         foreach ($usersToAdd as $user) {
@@ -204,11 +197,11 @@ class UserRepositoryTest extends KernelTestCase
         $usersToAdd[] = $inactiveAdminManagerUser = $userHelper->createUser(null, User::ROLE_ADMIN_MANAGER);
         $usersToAdd[] = $activeDeputyUser = $userHelper->createUser();
 
-        $activeAdminUser->setLastLoggedIn(new DateTime());
-        $activeSuperAdminUser->setLastLoggedIn(new DateTime());
-        $activeAdminManagerUser->setLastLoggedIn(new DateTime());
+        $activeAdminUser->setLastLoggedIn(new \DateTime());
+        $activeSuperAdminUser->setLastLoggedIn(new \DateTime());
+        $activeAdminManagerUser->setLastLoggedIn(new \DateTime());
         $inactiveAdminManagerUser->setLastLoggedIn();
-        $activeDeputyUser->setLastLoggedIn(new DateTime());
+        $activeDeputyUser->setLastLoggedIn(new \DateTime());
 
         foreach ($usersToAdd as $user) {
             self::$entityManager->persist($user);
@@ -240,11 +233,11 @@ class UserRepositoryTest extends KernelTestCase
         $usersToAdd[] = $recentlyLoggedInAdminManagerUser = $userHelper->createUser(null, User::ROLE_ADMIN_MANAGER);
         $usersToAdd[] = $recentlyLoggedInDeputyUser = $userHelper->createUser();
 
-        $loggedInAdminUser->setLastLoggedIn(new DateTime('-95 days'));
-        $loggedInSuperAdminUser->setLastLoggedIn(new DateTime('-91 days'));
-        $loggedInAdminManagerUser->setLastLoggedIn(new DateTime('-91 days'));
-        $recentlyLoggedInAdminManagerUser->setLastLoggedIn(new DateTime('-1 day'));
-        $recentlyLoggedInDeputyUser->setLastLoggedIn(new DateTime('-1 day'));
+        $loggedInAdminUser->setLastLoggedIn(new \DateTime('-95 days'));
+        $loggedInSuperAdminUser->setLastLoggedIn(new \DateTime('-91 days'));
+        $loggedInAdminManagerUser->setLastLoggedIn(new \DateTime('-91 days'));
+        $recentlyLoggedInAdminManagerUser->setLastLoggedIn(new \DateTime('-1 day'));
+        $recentlyLoggedInDeputyUser->setLastLoggedIn(new \DateTime('-1 day'));
 
         foreach ($usersToAdd as $user) {
             self::$entityManager->persist($user);
@@ -274,11 +267,11 @@ class UserRepositoryTest extends KernelTestCase
         $usersToAdd[] = $notRecentlyLoggedInAdminManagerUser = $userHelper->createUser(null, User::ROLE_ADMIN_MANAGER);
         $usersToAdd[] = $notRecentlyLoggedInDeputyUser = $userHelper->createUser();
 
-        $loggedInAdminUser->setLastLoggedIn(new DateTime('-50 days'));
-        $loggedInSuperAdminUser->setLastLoggedIn(new DateTime('-50 days'));
-        $loggedInAdminManagerUser->setLastLoggedIn(new DateTime('-50 days'));
-        $notRecentlyLoggedInAdminManagerUser->setLastLoggedIn(new DateTime('-100 days'));
-        $notRecentlyLoggedInDeputyUser->setLastLoggedIn(new DateTime('-100 days'));
+        $loggedInAdminUser->setLastLoggedIn(new \DateTime('-50 days'));
+        $loggedInSuperAdminUser->setLastLoggedIn(new \DateTime('-50 days'));
+        $loggedInAdminManagerUser->setLastLoggedIn(new \DateTime('-50 days'));
+        $notRecentlyLoggedInAdminManagerUser->setLastLoggedIn(new \DateTime('-100 days'));
+        $notRecentlyLoggedInDeputyUser->setLastLoggedIn(new \DateTime('-100 days'));
 
         foreach ($usersToAdd as $user) {
             self::$entityManager->persist($user);
@@ -311,13 +304,13 @@ class UserRepositoryTest extends KernelTestCase
         $usersToAdd[] = $recentlyLoggedInSuperAdminManagerUser = $userHelper->createUser(null, User::ROLE_SUPER_ADMIN);
         $usersToAdd[] = $recentlyLoggedInDeputyUser = $userHelper->createUser();
 
-        $notRecentlyLoggedInAdminUser->setLastLoggedIn(new DateTime('-13 months'));
-        $notRecentlyLoggedInSuperAdminManagerUser->setLastLoggedIn(new DateTime('-24 months'));
-        $recentlyLoggedInAdminUser->setLastLoggedIn(new DateTime('-10 days'));
-        $recentlyLoggedInAdminManagerUser->setLastLoggedIn(new DateTime('-10 days'));
-        $recentlyLoggedInSuperAdminManagerUser->setLastLoggedIn(new DateTime('-10 days'));
+        $notRecentlyLoggedInAdminUser->setLastLoggedIn(new \DateTime('-13 months'));
+        $notRecentlyLoggedInSuperAdminManagerUser->setLastLoggedIn(new \DateTime('-24 months'));
+        $recentlyLoggedInAdminUser->setLastLoggedIn(new \DateTime('-10 days'));
+        $recentlyLoggedInAdminManagerUser->setLastLoggedIn(new \DateTime('-10 days'));
+        $recentlyLoggedInSuperAdminManagerUser->setLastLoggedIn(new \DateTime('-10 days'));
 
-        $recentlyLoggedInDeputyUser->setLastLoggedIn(new DateTime('-10 days'));
+        $recentlyLoggedInDeputyUser->setLastLoggedIn(new \DateTime('-10 days'));
 
         foreach ($usersToAdd as $user) {
             self::$entityManager->persist($user);
@@ -343,13 +336,13 @@ class UserRepositoryTest extends KernelTestCase
 
         $usersToAdd = [];
         $usersToAdd[] = $activeAdminUser = $userHelper->createUser(null, User::ROLE_ADMIN)
-            ->setLastLoggedIn(new DateTime('-2 months'));
+            ->setLastLoggedIn(new \DateTime('-2 months'));
         $usersToAdd[] = $activeLayDeputyUser = $userHelper->createUser()
-            ->setLastLoggedIn(new DateTime('-2 months'));
+            ->setLastLoggedIn(new \DateTime('-2 months'));
         $usersToAdd[] = $inactiveAdminUser = $userHelper->createUser(null, User::ROLE_ADMIN)
-            ->setLastLoggedIn(new DateTime('-25 months'));
+            ->setLastLoggedIn(new \DateTime('-25 months'));
         $usersToAdd[] = $inactiveAdminManagerUser = $userHelper->createUser(null, User::ROLE_ADMIN_MANAGER)
-            ->setLastLoggedIn(new DateTime('-26 months'));
+            ->setLastLoggedIn(new \DateTime('-26 months'));
 
         foreach ($usersToAdd as $user) {
             self::$entityManager->persist($user);

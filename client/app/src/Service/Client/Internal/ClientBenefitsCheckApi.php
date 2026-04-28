@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Client\Internal;
+namespace OPG\Digideps\Frontend\Service\Client\Internal;
 
-use App\Entity\ClientBenefitsCheckInterface;
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Entity\ClientBenefitsCheckInterface;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 
 class ClientBenefitsCheckApi
 {

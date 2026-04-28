@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Service;
+namespace OPG\Digideps\Backend\Service;
 
-use App\Entity\Client;
-use App\Entity\Organisation;
-use App\Entity\PreRegistration;
-use App\Entity\User;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Common\Registration\SelfRegisterData;
 
@@ -89,8 +89,6 @@ class UserRegistrationService
         if (!$this->preRegistrationVerificationService->deputyUidHasOtherUserAccounts($preregMatches[0]->getDeputyUid())) {
             $user->setIsPrimary(true);
         }
-
-        $user->setNdrEnabled(true === $preregMatches[0]->getNdr());
 
         $this->saveUserAndClient($user, $client);
 
