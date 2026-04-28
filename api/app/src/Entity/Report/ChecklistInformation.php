@@ -32,7 +32,7 @@ class ChecklistInformation
     /**
      * @var Checklist
      */
-    #[JMS\Type(Checklist::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Checklist')]
     #[JMS\Groups(['checklist-information-checklist'])]
     #[ORM\JoinColumn(name: 'checklist_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Checklist::class, cascade: ['persist'], inversedBy: 'checklistInformation')]

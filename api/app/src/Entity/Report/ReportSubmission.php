@@ -31,7 +31,7 @@ class ReportSubmission
     #[ORM\SequenceGenerator(sequenceName: 'report_submission_id_seq', allocationSize: 1, initialValue: 1)]
     private int $id;
 
-    #[JMS\Type(Report::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Report')]
     #[JMS\Groups(['report-submission'])]
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Report::class, cascade: ['persist'], inversedBy: 'reportSubmissions')]
@@ -52,7 +52,7 @@ class ReportSubmission
     #[ORM\Column(name: 'archived', type: 'boolean', nullable: false, options: ['default' => false])]
     private bool $archived = false;
 
-    #[JMS\Type(User::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
     #[JMS\Groups(['report-submission'])]
     #[ORM\JoinColumn(name: 'archived_by', referencedColumnName: 'id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EAGER')]

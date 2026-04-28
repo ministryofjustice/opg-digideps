@@ -66,7 +66,7 @@ class Document implements SynchronisableInterface
      * @var Report
      */
     #[JMS\Groups(['document-report'])]
-    #[JMS\Type(Report::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Report')]
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'documents')]
     private $report;
@@ -74,7 +74,7 @@ class Document implements SynchronisableInterface
     /**
      * @var ReportSubmission
      */
-    #[JMS\Type(ReportSubmission::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Report\ReportSubmission')]
     #[JMS\Groups(['document-report-submission'])]
     #[ORM\JoinColumn(name: 'report_submission_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: ReportSubmission::class, cascade: ['persist'], inversedBy: 'documents')]

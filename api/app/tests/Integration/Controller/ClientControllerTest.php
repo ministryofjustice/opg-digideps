@@ -117,7 +117,7 @@ class ClientControllerTest extends AbstractTestController
         self::$pa1Client1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client1', 'setCaseNumber' => 'pa000001']);
         self::$pa1Client1Report1 = self::fixtures()->createReport(self::$pa1Client1);
 
-        $org = self::fixtures()->createOrganisation('Example', '' . Uuid::uuid4() . 'example.org', true);
+        $org = self::fixtures()->createOrganisation('Example', '' . Uuid::uuid4() . '@example.org', true);
         self::fixtures()->flush();
         self::fixtures()->addClientToOrganisation(self::$pa1Client1->getId(), $org->getId());
         self::fixtures()->addUserToOrganisation(self::$pa1->getId(), $org->getId());
@@ -132,7 +132,7 @@ class ClientControllerTest extends AbstractTestController
     {
         parent::tearDownAfterClass();
 
-        self::fixtures()->clear();
+        //self::fixtures()->clear();
     }
 
     public function testUpsertAuth()
@@ -240,7 +240,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEndpointNotFoundFor('GET', $url, self::$tokenMultiClientPrimaryDeputy);
     }
 
-    public function testfindByIdAclAllowed()
+    public function testfindByIdAclOrDeputyUIDAllowed()
     {
         $url = '/client/' . self::$primaryAccountClient->getId();
         $url2 = '/client/' . self::$nonPrimaryAccountClient->getId();

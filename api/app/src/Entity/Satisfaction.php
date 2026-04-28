@@ -68,12 +68,12 @@ class Satisfaction
     #[Gedmo\Timestampable(on: 'create')]
     private \DateTime $created;
 
-    #[JMS\Type(UserResearchResponse::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
     #[ORM\OneToOne(mappedBy: 'satisfaction', targetEntity: UserResearchResponse::class, cascade: ['persist', 'remove'])]
     private UserResearchResponse $userResearchResponse;
 
-    #[JMS\Type(Report::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Report')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
     #[ORM\OneToOne(inversedBy: 'satisfaction', targetEntity: Report::class, cascade: ['persist'])]
     private ?Report $report = null;

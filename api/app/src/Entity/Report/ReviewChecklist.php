@@ -32,7 +32,7 @@ class ReviewChecklist
     private $id;
 
 
-    #[JMS\Type(Report::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Report')]
     #[JMS\Groups(['checklist'])]
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\OneToOne(inversedBy: 'checklist', targetEntity: Report::class)]
@@ -56,7 +56,7 @@ class ReviewChecklist
     /**
      * @var User
      */
-    #[JMS\Type(User::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
     #[JMS\Groups(['checklist'])]
     #[ORM\JoinColumn(name: 'submitted_by', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EAGER')]
