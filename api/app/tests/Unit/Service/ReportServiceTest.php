@@ -4,29 +4,29 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
-use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
-use PHPUnit\Framework\MockObject\Exception;
-use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
-use PHPUnit\Framework\Attributes\DataProvider;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Mockery\MockInterface;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\Report\AssetProperty;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Factory\ReportFactory;
 use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
 use OPG\Digideps\Backend\Service\ReportService;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
-use Mockery\MockInterface;
-use Tests\OPG\Digideps\Backend\Unit\MockeryStub as m;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\DoesNotPerformAssertions;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
+use Tests\OPG\Digideps\Backend\Unit\MockeryStub as m;
 
 final class ReportServiceTest extends TestCase
 {
@@ -89,8 +89,10 @@ final class ReportServiceTest extends TestCase
 
     public function testSubmitInvalid(): void
     {
-        $this->report->setAgreedBehalfDeputy(false);
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(\InvalidArgumentException::class);
+
+        $this->report->setAgreedBehalfDeputy('foo');
+
         $this->sut->submit($this->report, $this->user, new \DateTime('2016-01-15'));
     }
 
@@ -116,7 +118,7 @@ final class ReportServiceTest extends TestCase
         // clonePersistentResources should be called
         $reportService->shouldReceive('clonePersistentResources')->with(\Mockery::type(Report::class), $report);
 
-        $report->setAgreedBehalfDeputy(true);
+        $report->setAgreedBehalfDeputy('only_deputy');
         $newYearReport = $reportService->submit($report, $this->user, new \DateTime('2016-01-15'));
 
         // assert current report
@@ -157,7 +159,7 @@ final class ReportServiceTest extends TestCase
         // clonePersistentResources should be called
         $reportService->shouldReceive('clonePersistentResources')->with($nextReport, $report);
 
-        $report->setAgreedBehalfDeputy(true);
+        $report->setAgreedBehalfDeputy('only_deputy');
         $newYearReport = $reportService->submit($report, $this->user, new \DateTime());
 
         // assert current report
@@ -179,7 +181,7 @@ final class ReportServiceTest extends TestCase
     {
         $report = $this->report;
         $report->setUnSubmitDate(new \DateTime('2018-02-14'));
-        $report->setAgreedBehalfDeputy(true);
+        $report->setAgreedBehalfDeputy('only_deputy');
 
         /** @var ReportService|MockInterface $reportService */
         $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
@@ -200,7 +202,7 @@ final class ReportServiceTest extends TestCase
         $client->addReport($nextReport);
 
         $report->setUnSubmitDate(new \DateTime('2018-02-14'));
-        $report->setAgreedBehalfDeputy(true);
+        $report->setAgreedBehalfDeputy('only_deputy');
 
         $reportService->submit($report, $this->user, new \DateTime());
     }
@@ -350,7 +352,7 @@ final class ReportServiceTest extends TestCase
         $this->em->shouldReceive('persist');
         $this->em->shouldReceive('flush');
 
-        $this->report->setAgreedBehalfDeputy(true);
+        $this->report->setAgreedBehalfDeputy('only_deputy');
 
         $reportService->submit($this->report, $user, new \DateTime());
 
