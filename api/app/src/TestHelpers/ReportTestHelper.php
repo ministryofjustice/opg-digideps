@@ -302,7 +302,7 @@ class ReportTestHelper
                 ->setProfDeputyCostsHasPrevious('no')
                 ->setProfDeputyFixedCost(1000)
                 ->setProfDeputyOtherCosts(new ArrayCollection())
-                ->addProfDeputyOtherCost(new ProfDeputyOtherCost($report, 1, false, 500));
+                ->addProfDeputyOtherCost(new ProfDeputyOtherCost($report, '1', false, 500));
 
             $report->setProfDeputyCostsEstimateHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_FIXED);
         }

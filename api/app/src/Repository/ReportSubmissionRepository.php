@@ -166,7 +166,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
         $docStmt = $conn->prepare($submittedReportsQuery);
         $result = $docStmt->executeQuery();
 
-        return array_filter($this->transformReportSubmissionsRawSql($result->fetchAllAssociative()));
+        return $this->transformReportSubmissionsRawSql($result->fetchAllAssociative());
     }
 
     /**
