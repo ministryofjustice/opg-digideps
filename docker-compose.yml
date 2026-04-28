@@ -167,11 +167,11 @@ services:
     restart: always
 
   redis-frontend:
-    image: redis:6.2.18@sha256:a1407ab0d0dd15f4fdaad5d4cdc121830497af4be27027a8423fff823c4fc3e0
+    image: redis:6.2.19@sha256:1a1394b2feea67b9984ff7a12cab6d5e30c54b8dd3524a637f995dbc376dd1db
     restart: always
 
   redis-api:
-    image: redis:6.2.18@sha256:a1407ab0d0dd15f4fdaad5d4cdc121830497af4be27027a8423fff823c4fc3e0
+    image: redis:6.2.19@sha256:1a1394b2feea67b9984ff7a12cab6d5e30c54b8dd3524a637f995dbc376dd1db
     restart: always
 
   file-scanner-rest:
@@ -258,7 +258,7 @@ services:
       - OPENAPI_MOCK_SPECIFICATION_URL=/app/deputy-reporting-openapi.yml
 
   mock-notify-api:
-    image: stoplight/prism:5.15.6@sha256:6640f7d73f18091fc9aaa73647de27ddb8b178615aabfc3ff30c5cb500f387a6
+    image: stoplight/prism:5.15.7@sha256:a917c873ce9c065575f4d402c4c5048fb3a566e11e2248f19bff58f58c04121e
     ports:
       - 4010:4010
     command:
@@ -269,7 +269,7 @@ services:
       - --dynamic
 
   composer:
-    image: composer:2.9.4@sha256:22a95bd2bc3cf6ff19550a246208138d35f0015602db3d67dc6841945324acc1
+    image: composer:2.9.5@sha256:698d3801b2a622ace460c4743c781282fcbcb733a4cbf8b31c44731e846585e8
     command: ["install"]
 
   custom-sql-query:
