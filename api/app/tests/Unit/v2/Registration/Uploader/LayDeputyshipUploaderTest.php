@@ -143,7 +143,7 @@ final class LayDeputyshipUploaderTest extends KernelTestCase
                 ->willReturn(new ArrayCollection([$deputy]));
         }
 
-        $activeReport = new Report($existingClient, $currentReportType, new DateTime(), new DateTime(), false);
+        $activeReport = new Report($existingClient, $currentReportType, new \DateTime(), new \DateTime(), false);
         $this->reportRepository
             ->expects($this->once())
             ->method('findAllActiveReportsByCaseNumbersAndRole')

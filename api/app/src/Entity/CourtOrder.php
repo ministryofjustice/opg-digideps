@@ -93,7 +93,7 @@ class CourtOrder
     #[ORM\ManyToMany(targetEntity: Report::class, inversedBy: 'courtOrders', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     private Collection $reports;
 
-    #[JMS\Type('ArrayCollection<App\Entity\CourtOrderDeputy>')]
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\CourtOrderDeputy>')]
     #[ORM\OneToMany(mappedBy: 'courtOrder', targetEntity: CourtOrderDeputy::class, cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     private Collection $courtOrderDeputyRelationships;
 

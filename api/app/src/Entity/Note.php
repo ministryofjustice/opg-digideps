@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Entity;
 
-namespace App\Entity;
-
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Traits\CreationAudit;
 use OPG\Digideps\Backend\Entity\Traits\ModifyAudit;
 use OPG\Digideps\Backend\Repository\NoteRepository;
