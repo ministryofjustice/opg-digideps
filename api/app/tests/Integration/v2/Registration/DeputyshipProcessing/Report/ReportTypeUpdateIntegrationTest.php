@@ -1,18 +1,20 @@
 <?php
 
-namespace App\Tests\Integration\v2\Registration\DeputyshipProcessing\Report\ReportType;
+namespace Tests\OPG\Digideps\Backend\Integration\v2\Registration\DeputyshipProcessing\Report\ReportType;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Domain\CourtOrder\CourtOrderReportType;
-use App\Domain\CourtOrder\CourtOrderType;
-use App\Domain\Deputy\DeputyType;
-use App\Entity\Report\Report;
-use App\Entity\StagingSelectedCandidate;
-use App\Factory\DataFactoryResult;
-use App\Tests\Integration\ApiIntegrationTestCase;
-use App\Tests\Integration\Fixtures;
-use App\v2\Registration\DeputyshipProcessing\Report\ReportTypeUpdate;
-use App\v2\Registration\Enum\DeputyshipCandidateAction;
+use Doctrine\ORM\Exception\ORMException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\Persistence\Mapping\MappingException;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\StagingSelectedCandidate;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\Report\ReportTypeUpdate;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 
 class ReportTypeUpdateIntegrationTest extends ApiIntegrationTestCase
 {

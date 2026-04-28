@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\DeputyshipProcessing\Report;
+namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\Report;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Domain\Report\ReportType;
-use App\Entity\CourtOrder;
-use App\Entity\Report\Report;
-use App\Factory\DataFactoryResult;
-use App\Repository\ReportRepository;
-use App\Service\ReportTypeService;
-use App\v2\Registration\Enum\DeputyshipCandidateAction;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\Report\ReportType;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Factory\DataFactoryResult;
+use OPG\Digideps\Backend\Repository\ReportRepository;
+use OPG\Digideps\Backend\Service\ReportTypeService;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;

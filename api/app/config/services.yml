@@ -507,6 +507,14 @@ services:
                       '@OPG\Digideps\Backend\Factory\MissingReport\MissingReportDataFactory',
                       "dry-run-only",
                   ]
+                - [
+                    '@OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\Report\ReportTypeUpdate',
+                    "dry-run-only",
+                  ]
+                - [
+                    '@OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\Report\ReportTypeUpdate',
+                    "dry-run-only",
+                  ]
 
     OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester:
         public: true

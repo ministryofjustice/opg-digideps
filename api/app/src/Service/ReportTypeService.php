@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace OPG\Digideps\Backend\Service;
 
-use App\Domain\Report\ReportType;
-use App\Entity\CourtOrder;
+use OPG\Digideps\Backend\Domain\Report\ReportType;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 
 class ReportTypeService
 {

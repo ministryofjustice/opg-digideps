@@ -2,18 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Domain\CourtOrder\CourtOrderReportType;
-use App\Domain\CourtOrder\CourtOrderType;
-use App\Domain\Deputy\DeputyType;
-use App\Domain\Report\ReportType;
-use App\Entity\CourtOrder;
-use App\Service\ReportTypeService;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Domain\Report\ReportType;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Service\ReportTypeService;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use TypeError;
 
 class ReportTypeServiceTest extends TestCase
 {
@@ -72,7 +71,7 @@ class ReportTypeServiceTest extends TestCase
         try {
             $sut = ReportTypeService::determineReportType(['123', '456']);
         } catch (\TypeError $e) {
-            $this->assertInstanceOf(TypeError::class, $e);
+            $this->assertInstanceOf(\TypeError::class, $e);
         }
     }
 
