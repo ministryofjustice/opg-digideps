@@ -30,7 +30,7 @@ class AssetOther extends Asset implements AssetInterface
     /**
      * @var \DateTime
      */
-    #[JMS\Type(\DateTime::class)]
+    #[JMS\Type('DateTime')]
     #[JMS\Groups(['asset'])]
     #[ORM\Column(name: 'valuation_date', type: 'date', nullable: true)]
     private $valuationDate;

@@ -14,7 +14,7 @@ trait CreationAudit
     /**
      * User who created the entity
      */
-    #[JMS\Type(User::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
     #[JMS\Groups(['notes', 'documents', 'report-submission', 'checklist-information'])]
     #[ORM\JoinColumn(name: 'created_by', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], fetch: 'EAGER')]
