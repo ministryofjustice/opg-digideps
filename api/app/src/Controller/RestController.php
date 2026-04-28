@@ -70,11 +70,13 @@ abstract class RestController extends AbstractController
     protected function checkIfUserHasAccessViaDeputyUid(int $clientId): bool
     {
         $hasAccess = false;
+
         // Check if the user has access on other accounts based on deputy uid
         if (in_array('ROLE_LAY_DEPUTY', $this->getUser()->getRoles())) {
             $deputyUid = $this->getUser()->getDeputyUid();
             if ($deputyUid) {
                 $deputyUidArray = $this->em->getRepository(User::class)->findDeputyUidsForClient($clientId);
+
                 if (in_array($deputyUid, array_column($deputyUidArray, 'deputyUid'))) {
                     $hasAccess = true;
                 }
