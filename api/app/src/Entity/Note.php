@@ -76,7 +76,7 @@ class Note
      * @var Client
      */
     #[JMS\Groups(['note-client'])]
-    #[JMS\Type(Client::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Client')]
     #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Client::class, inversedBy: 'notes')]
     private $client;

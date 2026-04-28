@@ -32,7 +32,7 @@ class Checklist implements SynchronisableInterface
     #[ORM\SequenceGenerator(sequenceName: 'checklist_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
-    #[JMS\Type(Report::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Report')]
     #[JMS\Groups(['checklist-report'])]
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     #[ORM\OneToOne(inversedBy: 'checklist', targetEntity: Report::class)]
@@ -234,7 +234,7 @@ class Checklist implements SynchronisableInterface
      *
      * @var User
      */
-    #[JMS\Type(User::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
     #[JMS\Groups(['report-checklist'])]
     #[ORM\JoinColumn(name: 'submitted_by', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EAGER')]
@@ -245,7 +245,7 @@ class Checklist implements SynchronisableInterface
      *
      * @var \DateTime
      */
-    #[JMS\Type(\DateTime::class)]
+    #[JMS\Type('DateTime')]
     #[JMS\Groups(['report-checklist'])]
     #[ORM\Column(name: 'submitted_on', type: 'datetime', nullable: true)]
     protected $submittedOn;

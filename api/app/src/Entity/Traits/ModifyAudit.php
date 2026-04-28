@@ -16,7 +16,7 @@ trait ModifyAudit
      *
      * @var User
      */
-    #[JMS\Type(User::class)]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
     #[JMS\Groups(['last-modified'])]
     #[ORM\JoinColumn(name: 'last_modified_by', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EAGER')]
@@ -27,7 +27,7 @@ trait ModifyAudit
      *
      * @var \DateTime
      */
-    #[JMS\Type(\DateTime::class)]
+    #[JMS\Type('DateTime')]
     #[JMS\Groups(['last-modified'])]
     #[ORM\Column(name: 'last_modified_on', type: 'datetime', nullable: true)]
     #[Gedmo\Timestampable(on: 'update')]
