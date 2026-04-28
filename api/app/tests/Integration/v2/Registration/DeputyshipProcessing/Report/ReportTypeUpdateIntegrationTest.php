@@ -2,9 +2,6 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\v2\Registration\DeputyshipProcessing\Report\ReportType;
 
-use Doctrine\ORM\Exception\ORMException;
-use Doctrine\ORM\OptimisticLockException;
-use Doctrine\Persistence\Mapping\MappingException;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
@@ -13,6 +10,7 @@ use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\StagingSelectedCandidate;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\Report\ReportTypeUpdate;
 use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 
@@ -108,9 +106,7 @@ class ReportTypeUpdateIntegrationTest extends ApiIntegrationTestCase
         ];
     }
 
-    /**
-     * @dataProvider reportTypeChanges
-     */
+    #[DataProvider('reportTypeChanges')]
     public function testProcessCandidates(array $data)
     {
         ++self::$count;
@@ -140,7 +136,7 @@ class ReportTypeUpdateIntegrationTest extends ApiIntegrationTestCase
 
         /** @var ReportTypeUpdate $sut */
         $sut = self::$container->get(ReportTypeUpdate::class);
-        $dataFactoryResult = $sut->run();
+        $dataFactoryResult = $sut->run(false);
 
         $this->assertEquals(
             $data['expectedReportType'],
@@ -152,6 +148,51 @@ class ReportTypeUpdateIntegrationTest extends ApiIntegrationTestCase
         );
 
         $this->assertStringContainsString($data['updatedCount'], $dataFactoryResult->getMessages()['success'][0], 'Updated String Count');
+        $this->assertCount($data['errorCount'], $dataFactoryResult->getErrorMessages()['errors'], 'Error count');
+    }
+
+    #[DataProvider('reportTypeChanges')]
+    public function testProcessCandidatesDryRun(array $data)
+    {
+        ++self::$count;
+        $courtOrder = self::$fixtures->createCourtOrder(
+            uid: self::$count,
+            type: $data['orderType'],
+            kind: $data['orderKind'],
+            status: 'ACTIVE',
+            courtOrderReportType: $data['reportType'],
+        );
+        $deputy = self::$fixtures->createDeputy([
+            'setDeputyUid' => self::$count,
+            'setDeputyType' => $data['deputyType'],
+        ]);
+        $client = self::$fixtures->createClient();
+        $report = self::$fixtures->createReport($client, ['setType' => $data['existingReportType']]);
+        $candidate = new StagingSelectedCandidate($data['action'], self::$count);
+
+        self::$fixtures->persist($courtOrder, $deputy, $client, $report, $candidate);
+
+        $courtOrder->addReport($report);
+        $deputy->associateWithCourtOrder($courtOrder);
+
+        self::$fixtures->flush();
+        self::$fixtures->refresh($report);
+        self::$fixtures->refresh($courtOrder);
+
+        /** @var ReportTypeUpdate $sut */
+        $sut = self::$container->get(ReportTypeUpdate::class);
+        $dataFactoryResult = $sut->run(true);
+
+        $this->assertEquals(
+            $data['existingReportType'],
+            $report->getType(),
+            sprintf(
+                'ReportType differs from expected type "%s"',
+                $data['existingReportType'],
+            )
+        );
+
+        $this->assertStringContainsString(0, $dataFactoryResult->getMessages()['success'][0], 'Updated String Count');
         $this->assertCount($data['errorCount'], $dataFactoryResult->getErrorMessages()['errors'], 'Error count');
     }
 }

@@ -15,12 +15,14 @@ use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
+use Psr\Log\LoggerInterface;
 
 class ReportTypeUpdate
 {
     public function __construct(
         public readonly EntityManagerInterface $entityManager,
-        public readonly ReportRepository $reportRepository
+        public readonly ReportRepository $reportRepository,
+        public readonly LoggerInterface $logger,
     ) {
     }
 
@@ -68,11 +70,13 @@ class ReportTypeUpdate
         }
     }
 
-    public function run(): DataFactoryResult
+    public function run(bool $dryRun = false): DataFactoryResult
     {
         $count = 0;
         $errors = [];
         foreach ($this->getChangedReports() as $report) {
+            $reportId = $report->getId();
+
             /** @var CourtOrder[] $courtOrders */
             $courtOrders = $report->getCourtOrders()->toArray();
 
@@ -80,7 +84,7 @@ class ReportTypeUpdate
             $possibleReportType = ReportTypeService::determineReportType($courtOrders);
 
             if ($possibleReportType === null) {
-                $errors[] = 'Unable to determine report type from CourtOrders associated with report: ' . $report->getId();
+                $errors[] = 'Unable to determine report type from CourtOrders associated with report: ' . $reportId;
                 continue;
             }
 
@@ -92,11 +96,17 @@ class ReportTypeUpdate
                 $currentReportType !== null && $currentReportType->courtOrderKind === CourtOrderKind::Hybrid ||
                 $possibleReportType->courtOrderKind === CourtOrderKind::Hybrid
             ) {
-                $errors[] = 'Possible dangerous change to or from Hybrid on report: ' . $report->getId();
+                $errors[] = 'Possible dangerous change to or from Hybrid on report: ' . $reportId;
             }
 
-            $report->setType($possibleReportType);
-            $this->entityManager->persist($report);
+            if (!$dryRun) {
+                $report->setType($possibleReportType);
+                $this->entityManager->persist($report);
+            } else {
+                $this->logger->info(
+                    "DRYRUN: Report with ID: {$reportId}. ReportType change from {$currentReportType} to {$possibleReportType}"
+                );
+            }
             ++$count;
         }
 
