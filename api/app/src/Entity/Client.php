@@ -904,8 +904,9 @@ class Client
      */
     public function userBelongsToClientsOrganisation(UserInterface $user)
     {
-        if ($this->getOrganisation() instanceof OrganisationInterface && $this->getOrganisation()->isActivated()) {
-            return $this->getOrganisation()->containsUser($user);
+        $org = $this->getOrganisation();
+        if ($org instanceof Organisation && $org->isActivated()) {
+            return $org->containsUser($user);
         }
 
         return false;
