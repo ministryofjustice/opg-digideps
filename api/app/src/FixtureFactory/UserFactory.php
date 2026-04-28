@@ -5,7 +5,6 @@ namespace OPG\Digideps\Backend\FixtureFactory;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Entity\User;
-use Faker\Factory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class UserFactory
@@ -89,16 +88,14 @@ class UserFactory
     /**
      * @return User|void
      */
-    public function createGenericOrgUser(Organisation $organisation)
+    public function createGenericOrgUser(Organisation $organisation, int $number)
     {
-        $faker = Factory::create();
-
-        $email = sprintf('%s.%s@%s', $faker->firstName(), $faker->lastName(), $organisation->getEmailIdentifier());
+        $email = sprintf('%s.%s.%s.%s@%s', 'Test', 'Org', rand(1, 100000), $number, $organisation->getEmailIdentifier());
         $trimmedEmail = substr($email, 0, 59);
 
         $user = new User()
-            ->setFirstname($faker->firstName())
-            ->setLastname($faker->lastName())
+            ->setFirstname('Bill')
+            ->setLastname('Bonds')
             ->setEmail($trimmedEmail)
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
