@@ -137,7 +137,7 @@ class AssetControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $asset = self::fixtures()->getRepo(Asset::class)->find($return['data']['id']); /* @var $asset \OPG\Digideps\Backend\Entity\Report\AssetOther */
+        $asset = self::fixtures()->getRepo(Asset::class)->find($return['data']['id']); /* @var $asset AssetOther */
         $this->assertInstanceOf(AssetOther::class, $asset);
         $this->assertEquals(123, $asset->getValue());
         $this->assertEquals('de', $asset->getDescription());

@@ -13,8 +13,6 @@ use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use Aws\Command;
 use Aws\Exception\AwsException;
 use Aws\Result;
-use DateInterval;
-use DateTime;
 use GuzzleHttp\Exception\TransferException;
 use JoliCode\Slack\Api\Client;
 use JoliCode\Slack\Exception\SlackErrorResponse;
@@ -39,7 +37,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
 
     private CommandTester $commandTester;
 
-    private DateTime $now;
+    private \DateTime $now;
 
     private string $auditLogGroupName;
     private string $slackSecret;
@@ -77,7 +75,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
         $command = $app->find(CheckCSVUploadedCommand::$defaultName);
         $this->commandTester = new CommandTester($command);
 
-        $this->now = new DateTime();
+        $this->now = new \DateTime();
         $this->slackSecret = 'AFAKETOKEN';
     }
 
@@ -295,7 +293,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
      */
     public function executeErrorMessagePostedToSlackWhenUnableToRetrieveBankHolidays()
     {
-        $this->now = new DateTime('01-02-2021');
+        $this->now = new \DateTime('01-02-2021');
         $this->dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($this->now);
 
         $this->unableToRetrieveBankHolidays();
@@ -347,13 +345,13 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
             ]
         );
 
-        $this->now = new DateTime($isABankHoliday ? '27-12-2021' : '01-02-2021');
+        $this->now = new \DateTime($isABankHoliday ? '27-12-2021' : '01-02-2021');
         $this->dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($this->now);
     }
 
     private function aCsvUploadedEventExists(bool $exists, array $uploadedCSVs = [])
     {
-        $startingTime = (int) (clone $this->now)->sub(new DateInterval('P1D'))->format('Uv');
+        $startingTime = (int) (clone $this->now)->sub(new \DateInterval('P1D'))->format('Uv');
         $endTime = (int) (clone $this->now)->format('Uv');
 
         if ($exists) {
@@ -431,7 +429,7 @@ class CheckCSVUploadedCommandTest extends KernelTestCase
 
     private function cannotRetrieveAuditLogs()
     {
-        $startingTime = (int) (clone $this->now)->sub(new DateInterval('P1D'))->format('Uv');
+        $startingTime = (int) (clone $this->now)->sub(new \DateInterval('P1D'))->format('Uv');
         $endTime = (int) (clone $this->now)->format('Uv');
 
         $this->awsAuditLogHandler->getLogStreams($this->auditLogGroupName)

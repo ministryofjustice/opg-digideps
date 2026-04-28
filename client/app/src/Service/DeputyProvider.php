@@ -64,7 +64,7 @@ class DeputyProvider implements UserProviderInterface
     /**
      * @codeCoverageIgnore
      *
-     * @return \OPG\Digideps\Frontend\Entity\User
+     * @return User
      *
      *@throws UnsupportedUserException
      */

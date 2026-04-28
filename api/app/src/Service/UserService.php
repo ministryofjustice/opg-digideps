@@ -8,6 +8,7 @@ use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\v2\DTO\InviteeDto;
 use Doctrine\ORM\EntityManagerInterface;
 use Random\RandomException;
+use Doctrine\ORM\OptimisticLockException;
 
 class UserService
 {
@@ -54,7 +55,7 @@ class UserService
     /**
      * @param User $originalUser Original user for comparison checks
      *
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws OptimisticLockException
      */
     public function editUser(User $originalUser, User $updatedUser)
     {

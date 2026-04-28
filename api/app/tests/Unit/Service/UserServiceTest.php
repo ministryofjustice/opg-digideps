@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
-use DateTime;
 use PHPUnit\Framework\Attributes\DataProvider;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\User;
@@ -37,7 +36,7 @@ final class UserServiceTest extends TestCase
         $client = new Client();
         $client->addUser($this->user);
         $client->setCaseNumber('12345678');
-        $client->setCourtDate(new DateTime('2014-06-06'));
+        $client->setCourtDate(new \DateTime('2014-06-06'));
 
         $email = 'test@tester.co.uk';
 

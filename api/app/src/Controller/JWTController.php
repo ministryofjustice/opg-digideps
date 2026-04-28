@@ -10,7 +10,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Throwable;
 
 class JWTController extends AbstractController
 {
@@ -27,7 +26,7 @@ class JWTController extends AbstractController
         try {
             $this->logger->warning('Serving JWK');
             $jwk = $this->JWTService->generateJWK();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $message = sprintf('Error Serving JWK: %s', $e->getMessage());
             $this->logger->warning($message);
             throw $e;

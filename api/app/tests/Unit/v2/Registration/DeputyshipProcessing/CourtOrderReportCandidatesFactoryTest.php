@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\DeputyshipProcessing;
 
-use ArrayIterator;
 use OPG\Digideps\Backend\Entity\StagingSelectedCandidate;
 use OPG\Digideps\Backend\Factory\StagingSelectedCandidateFactory;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
@@ -36,7 +35,7 @@ final class CourtOrderReportCandidatesFactoryTest extends TestCase
 
     public function testCreateCompatibleReportCandidates(): void
     {
-        $rows = new ArrayIterator([
+        $rows = new \ArrayIterator([
             ['court_order_uid' => '123', 'report_id' => '456'],
             ['court_order_uid' => '789', 'report_id' => '012'],
         ]);

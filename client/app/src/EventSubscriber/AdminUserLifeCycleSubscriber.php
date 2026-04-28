@@ -38,7 +38,7 @@ class AdminUserLifeCycleSubscriber implements EventSubscriberInterface
 
     public function logAdminManagerCreatedEvent(AdminManagerCreatedEvent $event)
     {
-        $adminManagerCreatedEvent = (new AuditEvents($this->dateTimeProvider))
+        $adminManagerCreatedEvent = new AuditEvents($this->dateTimeProvider)
             ->adminManagerCreated(
                 $event->getTrigger(),
                 $event->getCurrentUser(),
@@ -49,7 +49,7 @@ class AdminUserLifeCycleSubscriber implements EventSubscriberInterface
 
     public function logAdminManagerDeletedEvent(AdminManagerDeletedEvent $event)
     {
-        $adminManagerDeletedEvent = (new AuditEvents($this->dateTimeProvider))
+        $adminManagerDeletedEvent = new AuditEvents($this->dateTimeProvider)
             ->adminManagerDeleted(
                 $event->getTrigger(),
                 $event->getCurrentUser(),

@@ -10,6 +10,7 @@ use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Factory\OrganisationFactory;
@@ -62,7 +63,7 @@ class FixtureController extends AbstractController
             throw $this->createNotFoundException();
         }
         $fromRequest = (array) json_decode($request->getContent(), true);
-        $fromRequest['courtDate'] = (new \DateTime('-366 days'))->format('Y-m-d');
+        $fromRequest['courtDate'] = new \DateTime('-366 days')->format('Y-m-d');
         $client = $this->generateClient($fromRequest);
         $user = new User();
 
@@ -220,7 +221,7 @@ class FixtureController extends AbstractController
         return $client;
     }
 
-    private function generatePreRegistration(mixed $fromRequest, Client $client, User $user): \OPG\Digideps\Backend\Entity\PreRegistration
+    private function generatePreRegistration(mixed $fromRequest, Client $client, User $user): PreRegistration
     {
         if (!is_array($fromRequest)) {
             throw new \InvalidArgumentException('Invalid request payload: expected array.');
@@ -245,7 +246,7 @@ class FixtureController extends AbstractController
             throw new \InvalidArgumentException('Deputy UID is missing for user ' . $user->getId());
         }
 
-        return (new Deputy())
+        return new Deputy()
             ->setDeputyUid((string) $uid)
             ->setDeputyType($user->deriveDeputyType() ?? DeputyType::LAY)
             ->setUser($user)
@@ -392,7 +393,7 @@ class FixtureController extends AbstractController
 
     private function buildDeputy(User $deputy, array $fromRequest): Deputy
     {
-        $deputy = (new Deputy())
+        $deputy = new Deputy()
             ->setFirstname($deputy->getFirstname())
             ->setLastname($deputy->getLastname())
             ->setDeputyType($deputy->deriveDeputyType() ?? DeputyType::LAY)
@@ -625,7 +626,7 @@ class FixtureController extends AbstractController
             $user = $this->userRepository->findOneBy(['email' => $userEmail]);
 
             if ($user) {
-                $deputy = (new Deputy())
+                $deputy = new Deputy()
                     ->setDeputyUid(rand(8, 8))
                     ->setDeputyType($user->deriveDeputyType() ?? DeputyType::LAY)
                     ->setEmail1($user->getEmail())

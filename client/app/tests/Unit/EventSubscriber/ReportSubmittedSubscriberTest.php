@@ -12,7 +12,6 @@ use OPG\Digideps\Frontend\Service\Mailer\Mailer;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\ReportHelpers;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
-use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -105,11 +104,11 @@ class ReportSubmittedSubscriberTest extends TestCase
         $mailer = self::prophesize(Mailer::class);
 
         $submittedReport = ReportHelpers::createReport()
-            ->setUnSubmitDate(new DateTime());
+            ->setUnSubmitDate(new \DateTime());
 
         $nextYearReport = ReportHelpers::createReport();
 
-        $now = new DateTime();
+        $now = new \DateTime();
         $dateTimeProvider->getDateTime()->willReturn($now);
         $submittedBy = UserHelpers::createUser();
         $trigger = 'RESUBMIT_REPORT';

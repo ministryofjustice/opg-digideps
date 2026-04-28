@@ -8,7 +8,6 @@ use OPG\Digideps\Backend\Entity\Report\Expense;
 use OPG\Digideps\Backend\Service\ReportStatusService;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use DateTime;
 use OPG\Digideps\Backend\Entity\Report\Asset;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Contact;
@@ -388,7 +387,7 @@ final class ReportStatusServiceTest extends TestCase
     private function initReport(): static
     {
         $this->report = $this->getMockBuilder(Report::class)
-            ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime(), new DateTime()])
+            ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime()])
             ->onlyMethods(['hasSection'])
             ->getMock();
 
@@ -588,7 +587,7 @@ final class ReportStatusServiceTest extends TestCase
         ]);
         $mcComplete = m::mock(MentalCapacity::class, [
             'getHasCapacityChanged' => 'no',
-            'getMentalAssessmentDate' => new DateTime('2016-01-01'),
+            'getMentalAssessmentDate' => new \DateTime('2016-01-01'),
         ]);
 
         return [

@@ -10,7 +10,6 @@ use OPG\Digideps\Frontend\Service\File\DocumentsZipFileCreator;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
-use ZipArchive;
 
 class DocumentZipFileCreatorTest extends TestCase
 {
@@ -48,7 +47,7 @@ class DocumentZipFileCreatorTest extends TestCase
         $expectedZipFilenames = ['/tmp/zip-file-1.zip', '/tmp/zip-file-2.zip'];
         $actualZipFileNames = $sut->createZipFilesFromRetrievedDocuments($retrievedDocuments);
 
-        $zip = new ZipArchive();
+        $zip = new \ZipArchive();
 
         foreach ($expectedZipFilenames as $zipFileName) {
             self::assertContains($zipFileName, $actualZipFileNames);
@@ -69,7 +68,7 @@ class DocumentZipFileCreatorTest extends TestCase
     {
         $sut = new DocumentsZipFileCreator();
 
-        $zip = new ZipArchive();
+        $zip = new \ZipArchive();
         $zipFileContents = ['zip1' => 'some content', 'zip2' => 'some different content'];
         $zipFiles = self::generateTestZipFiles($zip, $zipFileContents);
 
@@ -84,7 +83,7 @@ class DocumentZipFileCreatorTest extends TestCase
         $zip->close();
     }
 
-    protected function generateTestZipFiles(ZipArchive $zip, array $zipFileContent)
+    protected function generateTestZipFiles(\ZipArchive $zip, array $zipFileContent)
     {
         $zipFiles = [];
 
@@ -92,7 +91,7 @@ class DocumentZipFileCreatorTest extends TestCase
             $zipFile = "/tmp/$fileName";
             file_put_contents($zipFile, $content);
 
-            $zip->open($zipFile, ZipArchive::CREATE | ZipArchive::OVERWRITE | ZipArchive::CHECKCONS);
+            $zip->open($zipFile, \ZipArchive::CREATE | \ZipArchive::OVERWRITE | \ZipArchive::CHECKCONS);
             $zip->addFile($zipFile, $zipFile);
 
             $zipFiles[] = $zipFile;

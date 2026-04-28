@@ -83,7 +83,7 @@ class MentalCapacityControllerTest extends AbstractTestController
 
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_DECISIONS));
 
-        $mc = self::fixtures()->getRepo(MentalCapacity::class)->find($return['data']['id']); /* @var $mc \OPG\Digideps\Backend\Entity\Report\MentalCapacity */
+        $mc = self::fixtures()->getRepo(MentalCapacity::class)->find($return['data']['id']); /* @var $mc MentalCapacity */
         $this->assertEquals(MentalCapacity::CAPACITY_CHANGED, $mc->getHasCapacityChanged());
         $this->assertEquals('ccd', $mc->getHasCapacityChangedDetails());
         $this->assertEquals('2015-12-31', $mc->getMentalAssessmentDate()->format('Y-m-d'));
@@ -100,7 +100,7 @@ class MentalCapacityControllerTest extends AbstractTestController
         ]);
         $this->assertTrue($return['data']['id'] > 0);
         self::fixtures()->clear();
-        $mc = self::fixtures()->getRepo(MentalCapacity::class)->find($return['data']['id']); /* @var $mc \OPG\Digideps\Backend\Entity\Report\MentalCapacity */
+        $mc = self::fixtures()->getRepo(MentalCapacity::class)->find($return['data']['id']); /* @var $mc MentalCapacity */
         $this->assertEquals(MentalCapacity::CAPACITY_STAYED_SAME, $mc->getHasCapacityChanged());
         $this->assertEquals(null, $mc->getHasCapacityChangedDetails());
         $this->assertEquals('2016-01-01', $mc->getMentalAssessmentDate()->format('Y-m-d'));

@@ -44,7 +44,7 @@ class ExpenseController extends RestController
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
-        $report = $this->findEntityBy(Report::class, $reportId); /* @var $report \OPG\Digideps\Backend\Entity\Report\Report */
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         $this->formatter->validateArray($data, [
             'explanation' => 'mustExist',
@@ -91,7 +91,7 @@ class ExpenseController extends RestController
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
     public function delete(int $reportId, int $expenseId): array
     {
-        $report = $this->findEntityBy(Report::class, $reportId); /* @var $report \OPG\Digideps\Backend\Entity\Report\Report */
+        $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
         $expense = $this->findEntityBy(Expense::class, $expenseId);

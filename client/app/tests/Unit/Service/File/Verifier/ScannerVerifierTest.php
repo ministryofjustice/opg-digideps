@@ -46,7 +46,7 @@ class ScannerVerifierTest extends TestCase
 
         $file = $this->getMockBuilder(UploadedFile::class)->disableOriginalConstructor()->getMock();
         $file->method('getClientOriginalName')->willReturn('file.txt');
-        $this->document = (new Document())->setFile($file);
+        $this->document = new Document()->setFile($file);
     }
 
     /**

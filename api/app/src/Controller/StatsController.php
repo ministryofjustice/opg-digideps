@@ -89,7 +89,7 @@ class StatsController extends RestController
 
     #[Route(path: 'stats/admins/inactive_admin_users', methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
-    public function getInactiveAdminUserReportData(Request $request, Restformatter $formatter): array
+    public function getInactiveAdminUserReportData(Request $request, RestFormatter $formatter): array
     {
         $serialisedGroups = $request->query->all('groups');
         $formatter->setJmsSerialiserGroups($serialisedGroups);

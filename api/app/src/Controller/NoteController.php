@@ -11,7 +11,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Throwable;
 
 #[Route(path: '/note/')]
 class NoteController extends RestController
@@ -25,7 +24,7 @@ class NoteController extends RestController
     #[IsGranted(attribute: 'ROLE_ORG')]
     public function add(Request $request, int $clientId): array
     {
-        $client = $this->findEntityBy(Client::class, $clientId); /* @var $report \OPG\Digideps\Backend\Entity\Client */
+        $client = $this->findEntityBy(Client::class, $clientId);
         $this->denyAccessIfClientDoesNotBelongToUser($client);
 
         // hydrate and persist
@@ -61,7 +60,7 @@ class NoteController extends RestController
             ? $request->query->all('groups') : ['notes', 'user'];
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
-        $note = $this->findEntityBy(Note::class, $id); /* @var $note \OPG\Digideps\Backend\Entity\Note */
+        $note = $this->findEntityBy(Note::class, $id);
         $this->denyAccessIfClientDoesNotBelongToUser($note->getClient());
 
         return $note;
@@ -75,7 +74,7 @@ class NoteController extends RestController
     #[IsGranted(attribute: 'ROLE_ORG')]
     public function updateNote(Request $request, int $id): int
     {
-        $note = $this->findEntityBy(Note::class, $id); /* @var $note \OPG\Digideps\Backend\Entity\Note */
+        $note = $this->findEntityBy(Note::class, $id);
 
         // enable if the check above is removed and the note is available for editing for the whole team
         $this->denyAccessIfClientDoesNotBelongToUser($note->getClient());
@@ -107,7 +106,7 @@ class NoteController extends RestController
             $this->em->remove($note);
 
             $this->em->flush($note);
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $logger->error('Failed to delete note ID: ' . $id . ' - ' . $e->getMessage());
         }
 

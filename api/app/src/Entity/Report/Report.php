@@ -9,7 +9,6 @@ use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Service\ReportService;
 use OPG\Digideps\Backend\Service\ReportStatusService;
-use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -344,7 +343,7 @@ class Report
      *
      * @ORM\Column(name="submit_date", type="datetime", nullable=true)
      */
-    private ?DateTimeInterface $submitDate = null;
+    private ?\DateTimeInterface $submitDate = null;
 
     /**
      * @var \DateTime
@@ -793,14 +792,14 @@ class Report
             && $this->endDate->format('Ymd') === $report->getEndDate()->format('Ymd');
     }
 
-    public function setSubmitDate(?DateTimeInterface $submitDate = null): static
+    public function setSubmitDate(?\DateTimeInterface $submitDate = null): static
     {
         $this->submitDate = $submitDate;
 
         return $this;
     }
 
-    public function getSubmitDate(): ?DateTimeInterface
+    public function getSubmitDate(): ?\DateTimeInterface
     {
         return $this->submitDate;
     }

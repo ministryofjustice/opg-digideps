@@ -20,7 +20,6 @@ use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
-use ZipArchive;
 
 class DocumentDownloaderTest extends TestCase
 {
@@ -175,7 +174,7 @@ class DocumentDownloaderTest extends TestCase
     public function testZipDownloadedDocuments(): void
     {
         $retrievedDocs = [new RetrievedDocument()];
-        $this->zipFileCreator->createZipFilesFromRetrievedDocuments($retrievedDocs)->shouldBeCalled()->willReturn([new ZipArchive()]);
+        $this->zipFileCreator->createZipFilesFromRetrievedDocuments($retrievedDocs)->shouldBeCalled()->willReturn([new \ZipArchive()]);
         $this->zipFileCreator->createMultiZipFile(Argument::type('Array'))->shouldBeCalled()->willReturn('some-file.zip');
         $sut = new DocumentDownloader($this->documentService->reveal(), $this->reportSubmissionService->reveal(), $this->zipFileCreator->reveal());
 

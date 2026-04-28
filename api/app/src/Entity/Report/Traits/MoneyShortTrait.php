@@ -73,7 +73,7 @@ trait MoneyShortTrait
     }
 
     /**
-     * @return \OPG\Digideps\Backend\Entity\Report\MoneyShortCategory[]
+     * @return MoneyShortCategory[]
      */
     public function getMoneyShortCategoriesInPresent()
     {
@@ -97,7 +97,7 @@ trait MoneyShortTrait
     }
 
     /**
-     * @return \OPG\Digideps\Backend\Entity\Report\MoneyShortCategory[]
+     * @return MoneyShortCategory[]
      */
     public function getMoneyShortCategoriesOutPresent()
     {
@@ -127,7 +127,7 @@ trait MoneyShortTrait
     }
 
     /**
-     * @return \OPG\Digideps\Backend\Entity\Report\MoneyTransactionShort[]
+     * @return MoneyTransactionShort[]
      */
     public function getMoneyTransactionsShort()
     {

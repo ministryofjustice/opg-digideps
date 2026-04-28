@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Service\File;
 
-use Exception;
-use InvalidArgumentException;
 use Orbitale\Component\ImageMagick\Command;
 
 class ImageConvertor
@@ -43,7 +41,7 @@ class ImageConvertor
 
         // Check if the command failed and get the error if needed
         if ($response->hasFailed()) {
-            throw new Exception('An error occurred: ' . $response->getError());
+            throw new \Exception('An error occurred: ' . $response->getError());
         }
 
         $newBody = file_get_contents($newPath);
@@ -58,7 +56,7 @@ class ImageConvertor
     {
         if (!in_array($fileExtension, self::SUPPORTED_IMAGE_TYPES)) {
             $message = sprintf('Image type "%s" is not supported. Supported image types are %s', $fileExtension, implode(', ', self::SUPPORTED_IMAGE_TYPES));
-            throw new InvalidArgumentException($message);
+            throw new \InvalidArgumentException($message);
         }
 
         return $fileExtension;

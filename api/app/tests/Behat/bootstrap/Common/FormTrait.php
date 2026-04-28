@@ -2,7 +2,6 @@
 
 namespace Tests\OPG\Digideps\Backend\Behat\Common;
 
-use RuntimeException;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Mink\Element\NodeElement;
 
@@ -23,7 +22,7 @@ trait FormTrait
             && !$this->getSession()->getPage()->has('css', '.govuk-form-group--error')
             && !$this->getSession()->getPage()->has('css', '#error-summary-heading')
         ) {
-            throw new RuntimeException('No errors found');
+            throw new \RuntimeException('No errors found');
         }
     }
 
@@ -47,7 +46,7 @@ trait FormTrait
             || $page->has('css', '.govuk-form-group--error')
             || $page->has('css', '#error-summary-heading')
         ) {
-            throw new RuntimeException('Errors found in elements: ' . implode(',', $this->getElementsIdsWithValidationErrors()));
+            throw new \RuntimeException('Errors found in elements: ' . implode(',', $this->getElementsIdsWithValidationErrors()));
         }
     }
 
@@ -64,7 +63,7 @@ trait FormTrait
         );
         foreach ($errorRegions as $errorRegion) {
             $elementsWithErros = $errorRegion->findAll('xpath', "//*[name()='input' or name()='textarea' or name()='select']");
-            foreach ($elementsWithErros as $elementWithError) { /* @var $found \Behat\Mink\Element\NodeElement */
+            foreach ($elementsWithErros as $elementWithError) { /* @var $found NodeElement */
                 $ret[] = $elementWithError->getAttribute('id');
             }
         }
@@ -95,7 +94,7 @@ trait FormTrait
                 $message .= " - Form fields unexpectedly throwing errors: \n      " . implode(', ', $unexpectedFields) . "\n";
             }
 
-            throw new RuntimeException($message);
+            throw new \RuntimeException($message);
         }
     }
 
@@ -119,10 +118,10 @@ trait FormTrait
             $elementsFound = $this->getSession()->getPage()->find('css', '#' . $field);
 
             if (empty($elementsFound)) {
-                throw new RuntimeException("Element $field not found");
+                throw new \RuntimeException("Element $field not found");
             }
             if ($elementsFound->getAttribute('value') != $value) {
-                throw new RuntimeException("Element $field value not equal to $value");
+                throw new \RuntimeException("Element $field value not equal to $value");
             }
         }
     }
@@ -141,7 +140,7 @@ trait FormTrait
         } elseif ('next' === $yearType) {
             $year = $currentYear + 1;
         } else {
-            throw new RuntimeException("Invalid year type \"$yearType\"");
+            throw new \RuntimeException("Invalid year type \"$yearType\"");
         }
 
         $this->assertFieldContains($field, $year);

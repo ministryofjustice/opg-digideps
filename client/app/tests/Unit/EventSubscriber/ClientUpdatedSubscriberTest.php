@@ -13,7 +13,6 @@ use OPG\Digideps\Frontend\Service\Mailer\Mailer;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\ClientHelpers;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
-use DateTime;
 use Faker\Factory;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
@@ -70,7 +69,7 @@ class ClientUpdatedSubscriberTest extends TestCase
      */
     public function logEvent(Client $postUpdateClient, string $expectedLogMessage)
     {
-        $now = new DateTime();
+        $now = new \DateTime();
         $this->dateTimeProvider->getDateTime()->willReturn($now);
 
         $preUpdateClient = ClientHelpers::createClient();
@@ -83,7 +82,7 @@ class ClientUpdatedSubscriberTest extends TestCase
             'trigger' => $trigger,
             'email_changed_from' => $preUpdateClient->getEmail(),
             'email_changed_to' => $postUpdateClient->getEmail(),
-            'changed_on' => $now->format(DateTime::ATOM),
+            'changed_on' => $now->format(\DateTime::ATOM),
             'changed_by' => $changedBy->getEmail(),
             'subject_full_name' => $postUpdateClient->getFullName(),
             'subject_role' => 'CLIENT',
@@ -145,7 +144,7 @@ class ClientUpdatedSubscriberTest extends TestCase
             'Lastname changed' => [$preUpdateClient, (clone $preUpdateClient)->setLastname($faker->lastName())],
             'Address changed' => [$preUpdateClient, (clone $preUpdateClient)->setAddress($faker->address())],
             'Address2 changed' => [$preUpdateClient, (clone $preUpdateClient)->setAddress2($faker->address())],
-            'CourtDate changed' => [$preUpdateClient, (clone $preUpdateClient)->setCourtDate(new DateTime($faker->date()))],
+            'CourtDate changed' => [$preUpdateClient, (clone $preUpdateClient)->setCourtDate(new \DateTime($faker->date()))],
             'Postcode changed' => [$preUpdateClient, (clone $preUpdateClient)->setPostcode($faker->postcode())],
             'Country changed' => [$preUpdateClient, (clone $preUpdateClient)->setCountry('USA')],
             'Phone changed' => [$preUpdateClient, (clone $preUpdateClient)->setPhone($faker->phoneNumber())],

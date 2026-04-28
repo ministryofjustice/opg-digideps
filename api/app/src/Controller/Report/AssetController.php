@@ -8,7 +8,6 @@ use OPG\Digideps\Backend\Entity\Report\AssetOther;
 use OPG\Digideps\Backend\Entity\Report\AssetProperty;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -120,7 +119,7 @@ class AssetController extends RestController
             ]);
 
             if (isset($data['valuation_date'])) {
-                $asset->setValuationDate(new DateTime($data['valuation_date']));
+                $asset->setValuationDate(new \DateTime($data['valuation_date']));
             }
         }
 
@@ -144,7 +143,7 @@ class AssetController extends RestController
             if (isset($data['rent_agreement_end_date'])) {
                 $value = isset($data['rent_agreement_end_date']['date'])
                     ? $data['rent_agreement_end_date']['date'] : $data['rent_agreement_end_date'];
-                $asset->setRentAgreementEndDate(new DateTime($value));
+                $asset->setRentAgreementEndDate(new \DateTime($value));
             }
         }
     }

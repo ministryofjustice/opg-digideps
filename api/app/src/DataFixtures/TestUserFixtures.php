@@ -75,7 +75,7 @@ class TestUserFixtures extends AbstractDataFixture
     private function addUser($data, $manager)
     {
         // Create user
-        $user = (new User())
+        $user = new User()
             ->setFirstname('test')
             ->setLastname($data['id'])
             ->setEmail($data['id'] . '@example.org')

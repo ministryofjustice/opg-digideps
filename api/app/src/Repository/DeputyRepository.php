@@ -6,7 +6,6 @@ namespace OPG\Digideps\Backend\Repository;
 
 use OPG\Digideps\Backend\Entity\Deputy;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\Exception;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**

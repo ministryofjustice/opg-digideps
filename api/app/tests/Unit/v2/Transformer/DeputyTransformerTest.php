@@ -14,7 +14,7 @@ final class DeputyTransformerTest extends TestCase
     #[Test]
     public function transformsADeputyDto(): void
     {
-        $dto = (new DeputyDto())
+        $dto = new DeputyDto()
             ->setId(4)
             ->setDeputyUid('01234567')
             ->setFirstName('foo')
@@ -32,7 +32,7 @@ final class DeputyTransformerTest extends TestCase
             ->setAddressPostcode('apc')
             ->setAddressCountry('bar');
 
-        $transformed = (new DeputyTransformer())->transform($dto);
+        $transformed = new DeputyTransformer()->transform($dto);
 
         $this->assertEquals(4, $transformed['id']);
         $this->assertEquals('01234567', $transformed['deputy_uid']);

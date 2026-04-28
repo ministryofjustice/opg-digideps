@@ -10,9 +10,6 @@ use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
 use OPG\Digideps\Frontend\Service\Mailer\MailFactory;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
-use DateTime;
-use DateTimeZone;
-use Exception;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -21,12 +18,12 @@ class AuditEventsTest extends TestCase
 {
     use ProphecyTrait;
 
-    private DateTime $now;
+    private \DateTime $now;
     private ObjectProphecy|DateTimeProvider $dateTimeProvider;
 
     public function setUp(): void
     {
-        $this->now = new DateTime();
+        $this->now = new \DateTime();
         $this->dateTimeProvider = self::prophesize(DateTimeProvider::class);
         $this->dateTimeProvider->getDateTime()->shouldBeCalled()->willReturn($this->now);
     }
@@ -35,20 +32,20 @@ class AuditEventsTest extends TestCase
      * @test
      * @dataProvider startDateProvider
      */
-    public function clientDischarged(?string $expectedStartDate, ?DateTime $actualStartDate): void
+    public function clientDischarged(?string $expectedStartDate, ?\DateTime $actualStartDate): void
     {
         $expected = [
             'trigger' => 'ADMIN_BUTTON',
             'case_number' => '19348522',
             'discharged_by' => 'me@test.com',
             'deputy_name' => 'Bjork Gudmundsdottir',
-            'discharged_on' => $this->now->format(DateTime::ATOM),
+            'discharged_on' => $this->now->format(\DateTime::ATOM),
             'deputyship_start_date' => $expectedStartDate,
             'event' => 'CLIENT_DELETED',
             'type' => 'audit',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->clientDischarged(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->clientDischarged(
             'ADMIN_BUTTON',
             '19348522',
             'me@test.com',
@@ -64,7 +61,7 @@ class AuditEventsTest extends TestCase
         return [
             'Start date present' => [
                 '2019-07-08T09:36:00+01:00',
-                new DateTime('2019-07-08T09:36', new DateTimeZone('+0100')),
+                new \DateTime('2019-07-08T09:36', new \DateTimeZone('+0100')),
             ],
             'Null start date' => [null, null],
         ];
@@ -80,7 +77,7 @@ class AuditEventsTest extends TestCase
             'trigger' => 'ADMIN_USER_EDIT',
             'email_changed_from' => 'me@test.com',
             'email_changed_to' => 'you@test.com',
-            'changed_on' => $this->now->format(DateTime::ATOM),
+            'changed_on' => $this->now->format(\DateTime::ATOM),
             'changed_by' => 'super-admin@email.com',
             'subject_full_name' => 'Panda Bear',
             'subject_role' => 'ROLE_LAY_DEPUTY',
@@ -88,7 +85,7 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->userEmailChanged(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->userEmailChanged(
             'ADMIN_USER_EDIT',
             'me@test.com',
             'you@test.com',
@@ -110,7 +107,7 @@ class AuditEventsTest extends TestCase
             'trigger' => 'DEPUTY_USER_EDIT',
             'email_changed_from' => $oldEmail,
             'email_changed_to' => $newEmail,
-            'changed_on' => $this->now->format(DateTime::ATOM),
+            'changed_on' => $this->now->format(\DateTime::ATOM),
             'changed_by' => 'super-admin@email.com',
             'subject_full_name' => 'Panda Bear',
             'subject_role' => 'CLIENT',
@@ -118,7 +115,7 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->clientEmailChanged(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->clientEmailChanged(
             'DEPUTY_USER_EDIT',
             $oldEmail,
             $newEmail,
@@ -150,12 +147,12 @@ class AuditEventsTest extends TestCase
             'role_changed_to' => $changedTo,
             'changed_by' => $changedBy,
             'user_changed' => $userChanged,
-            'changed_on' => $this->now->format(DateTime::ATOM),
+            'changed_on' => $this->now->format(\DateTime::ATOM),
             'event' => AuditEvents::EVENT_ROLE_CHANGED,
             'type' => 'audit',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->roleChanged(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->roleChanged(
             $trigger,
             $changedFrom,
             $changedTo,
@@ -181,7 +178,7 @@ class AuditEventsTest extends TestCase
     {
         $expected = [
             'trigger' => 'ADMIN_BUTTON',
-            'deleted_on' => $this->now->format(DateTime::ATOM),
+            'deleted_on' => $this->now->format(\DateTime::ATOM),
             'deleted_by' => 'super-admin@email.com',
             'subject_full_name' => 'Roisin Murphy',
             'subject_email' => 'r.murphy@email.com',
@@ -190,7 +187,7 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->userDeleted(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->userDeleted(
             'ADMIN_BUTTON',
             'super-admin@email.com',
             'Roisin Murphy',
@@ -209,7 +206,7 @@ class AuditEventsTest extends TestCase
     {
         $expected = [
             'trigger' => 'ADMIN_BUTTON',
-            'deleted_on' => $this->now->format(DateTime::ATOM),
+            'deleted_on' => $this->now->format(\DateTime::ATOM),
             'deleted_by' => 'super-admin@email.com',
             'subject_full_name' => 'Robyn Konichiwa',
             'subject_email' => 'r.konichiwa@email.com',
@@ -218,7 +215,7 @@ class AuditEventsTest extends TestCase
             'type' => 'audit',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->userDeleted(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->userDeleted(
             'ADMIN_BUTTON',
             'super-admin@email.com',
             'Robyn Konichiwa',
@@ -258,12 +255,12 @@ class AuditEventsTest extends TestCase
             'organisation_name' => $organisation['name'],
             'organisation_identifier' => $organisation['email_identifier'],
             'organisation_status' => $organisation['is_activated'],
-            'created_on' => $this->now->format(DateTime::ATOM),
+            'created_on' => $this->now->format(\DateTime::ATOM),
             'event' => 'ORG_CREATED',
             'type' => 'audit',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->orgCreated(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->orgCreated(
             'ADMIN_MANUAL_ORG_CREATION',
             $currentUser,
             $organisation
@@ -288,12 +285,12 @@ class AuditEventsTest extends TestCase
             'admin_user_first_name' => $createdAdminManager->getFirstname(),
             'admin_user_last_name' => $createdAdminManager->getLastname(),
             'admin_user_email' => $createdAdminManager->getEmail(),
-            'created_on' => $this->now->format(DateTime::ATOM),
+            'created_on' => $this->now->format(\DateTime::ATOM),
             'event' => 'ADMIN_MANAGER_CREATED',
             'type' => 'audit',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->adminManagerCreated(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->adminManagerCreated(
             'ADMIN_MANAGER_MANUALLY_CREATED',
             $currentUser,
             $createdAdminManager
@@ -318,12 +315,12 @@ class AuditEventsTest extends TestCase
             'admin_user_first_name' => $adminManagerToDelete->getFirstname(),
             'admin_user_last_name' => $adminManagerToDelete->getLastname(),
             'admin_user_email' => $adminManagerToDelete->getEmail(),
-            'created_on' => $this->now->format(DateTime::ATOM),
+            'created_on' => $this->now->format(\DateTime::ATOM),
             'event' => 'ADMIN_MANAGER_DELETED',
             'type' => 'audit',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->adminManagerDeleted(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->adminManagerDeleted(
             'ADMIN_MANAGER_MANUALLY_DELETED',
             $currentUser,
             $adminManagerToDelete
@@ -338,7 +335,7 @@ class AuditEventsTest extends TestCase
     public function emailSent()
     {
         $loggedInUser = UserHelpers::createSuperAdminUser();
-        $email = (new Email())
+        $email = new Email()
             ->setTemplate(MailFactory::ACTIVATION_TEMPLATE_ID)
             ->setToEmail('a@b.com')
             ->setParameters(['some' => 'info'])
@@ -351,12 +348,12 @@ class AuditEventsTest extends TestCase
             'notify_template_id' => '07e7fdb3-ad81-4105-b6b6-c3854e0c6caa',
             'email_parameters' => ['some' => 'info'],
             'from_address_id' => 'abc123',
-            'sent_on' => $this->now->format(DateTime::ATOM),
+            'sent_on' => $this->now->format(\DateTime::ATOM),
             'event' => 'EMAIL_SENT',
             'type' => 'audit',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->emailSent(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->emailSent(
             $email,
             $loggedInUser,
         );
@@ -370,13 +367,13 @@ class AuditEventsTest extends TestCase
     public function emailNotSent()
     {
         $loggedInUser = UserHelpers::createSuperAdminUser();
-        $email = (new Email())
+        $email = new Email()
             ->setTemplate(MailFactory::ACTIVATION_TEMPLATE_ID)
             ->setToEmail('a@b.com')
             ->setParameters(['more' => 'stuff'])
             ->setFromEmailNotifyID('xyz987');
 
-        $error = new Exception('Something went wrong');
+        $error = new \Exception('Something went wrong');
 
         $expected = [
             'logged_in_user_email' => $loggedInUser->getEmail(),
@@ -385,13 +382,13 @@ class AuditEventsTest extends TestCase
             'notify_template_id' => '07e7fdb3-ad81-4105-b6b6-c3854e0c6caa',
             'email_parameters' => ['more' => 'stuff'],
             'from_address_id' => 'xyz987',
-            'sent_on' => $this->now->format(DateTime::ATOM),
+            'sent_on' => $this->now->format(\DateTime::ATOM),
             'event' => 'EMAIL_NOT_SENT',
             'type' => 'audit',
             'error_message' => 'Something went wrong',
         ];
 
-        $actual = (new AuditEvents($this->dateTimeProvider->reveal()))->emailNotSent(
+        $actual = new AuditEvents($this->dateTimeProvider->reveal())->emailNotSent(
             $email,
             $loggedInUser,
             $error

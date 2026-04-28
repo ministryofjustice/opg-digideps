@@ -6,7 +6,6 @@ namespace Tests\OPG\Digideps\Backend\Unit\Entity\UserResearch;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use RuntimeException;
 use OPG\Digideps\Backend\Entity\UserResearch\ResearchType;
 use PHPUnit\Framework\TestCase;
 
@@ -43,7 +42,7 @@ final class ResearchTypeTest extends TestCase
     #[Test]
     public function constructNoPropertiesThrowsException(): void
     {
-        self::expectException(RuntimeException::class);
+        self::expectException(\RuntimeException::class);
         new ResearchType([]);
     }
 }

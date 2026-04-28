@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
 use OPG\Digideps\Backend\Entity\Deputy;
-use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\DeputyRepository;
-use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Service\DeputyService;
 use OPG\Digideps\Backend\Service\UserDeputyService;

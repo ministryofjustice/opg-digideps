@@ -2,7 +2,6 @@
 
 namespace Tests\OPG\Digideps\Backend\Behat\Common;
 
-use RuntimeException;
 use Behat\Gherkin\Node\TableNode;
 
 trait AuthenticationTrait
@@ -83,7 +82,7 @@ trait AuthenticationTrait
             'admin' == $area ? $this->visitAdminPath($url) : $this->visitPath($url);
             $actual = $this->getSession()->getStatusCode();
             if (intval($expectedReturnCode) !== intval($actual)) {
-                throw new RuntimeException("$url: Current response status code is $actual, but $expectedReturnCode expected.");
+                throw new \RuntimeException("$url: Current response status code is $actual, but $expectedReturnCode expected.");
             }
         }
     }

@@ -88,7 +88,7 @@ class ClientAssembler
 
     public function assembleFromOrgDeputyshipDto(OrgDeputyshipDto $dto)
     {
-        $client = (new Client())
+        $client = new Client()
             ->setCaseNumber($dto->getCaseNumber())
             ->setFirstname($dto->getClientFirstname())
             ->setLastname($dto->getClientLastname())
@@ -110,7 +110,7 @@ class ClientAssembler
 
     public function assembleFromLayDeputyshipDto(LayDeputyshipDto $dto)
     {
-        $client = (new Client())
+        $client = new Client()
             ->setCaseNumber($dto->getCaseNumber())
             ->setFirstname($dto->getClientFirstname() ?: null)
             ->setLastname($dto->getClientSurname())

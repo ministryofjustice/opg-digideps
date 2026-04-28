@@ -42,7 +42,7 @@ class CourtOrderService
 
         foreach ($dateFields as $field => $format) {
             $reportArray[$field] = !empty($reportArray[$field])
-                ? (new \DateTimeImmutable($reportArray[$field]))->format($format)
+                ? new \DateTimeImmutable($reportArray[$field])->format($format)
                 : null;
         }
 

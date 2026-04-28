@@ -6,7 +6,6 @@ use OPG\Digideps\Backend\Entity\Report\Checklist;
 use OPG\Digideps\Backend\Exception\UnauthorisedException;
 use OPG\Digideps\Backend\Service\Auth\AuthService;
 use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -46,7 +45,7 @@ class ChecklistController extends RestController
             }
 
             if (Checklist::SYNC_STATUS_SUCCESS == $data['syncStatus']) {
-                $checklist->setSynchronisationTime(new DateTime());
+                $checklist->setSynchronisationTime(new \DateTime());
             }
         }
 

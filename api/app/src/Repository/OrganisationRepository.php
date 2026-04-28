@@ -5,6 +5,7 @@ namespace OPG\Digideps\Backend\Repository;
 use OPG\Digideps\Backend\Entity\Organisation;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\NonUniqueResultException;
 
 class OrganisationRepository extends ServiceEntityRepository
 {
@@ -92,7 +93,7 @@ class OrganisationRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws NonUniqueResultException
      */
     public function organisationExists(string $email): bool
     {

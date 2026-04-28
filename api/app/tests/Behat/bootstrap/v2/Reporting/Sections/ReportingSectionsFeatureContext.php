@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections;
 
 use OPG\Digideps\Backend\Entity\Client;
-use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use Tests\OPG\Digideps\Backend\Behat\v2\Common\BaseFeatureContext;
-use Tests\OPG\Digideps\Backend\Behat\v2\Common\UserDetails;
 
 class ReportingSectionsFeatureContext extends BaseFeatureContext
 {

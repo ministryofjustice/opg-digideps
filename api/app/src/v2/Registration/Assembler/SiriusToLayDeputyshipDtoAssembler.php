@@ -43,7 +43,7 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
     private function buildDto(array $data): LayDeputyshipDto
     {
         return
-            (new LayDeputyshipDto())
+            new LayDeputyshipDto()
                 ->setCaseNumber($data['Case'])
                 ->setClientFirstname($data['ClientFirstname'] ?: null)
                 ->setClientSurname($data['ClientSurname'])

@@ -12,7 +12,6 @@ use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
 use OPG\Digideps\Frontend\Service\Mailer\Mailer;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
-use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -75,7 +74,7 @@ class AdminUserLifeCycleSubscriberTest extends TestCase
     /** @test */
     public function logAdminManagerCreatedEvent()
     {
-        $now = new DateTime('now');
+        $now = new \DateTime('now');
 
         $currentUser = $this->userHelpers->createSuperAdminUser();
         $createdAdminManager = $this->userHelpers->createAdminManager();
@@ -89,7 +88,7 @@ class AdminUserLifeCycleSubscriberTest extends TestCase
             'admin_user_first_name' => $createdAdminManager->getFirstname(),
             'admin_user_last_name' => $createdAdminManager->getLastname(),
             'admin_user_email' => $createdAdminManager->getEmail(),
-            'created_on' => $now->format(DateTime::ATOM),
+            'created_on' => $now->format(\DateTime::ATOM),
             'event' => AuditEvents::EVENT_ADMIN_MANAGER_CREATED,
             'type' => 'audit',
         ];
@@ -105,7 +104,7 @@ class AdminUserLifeCycleSubscriberTest extends TestCase
     /** @test */
     public function logAdminManagerDeletedEvent()
     {
-        $now = new DateTime('now');
+        $now = new \DateTime('now');
 
         $currentUser = $this->userHelpers->createSuperAdminUser();
         $deletedAdminManager = $this->userHelpers->createAdminManager();
@@ -119,7 +118,7 @@ class AdminUserLifeCycleSubscriberTest extends TestCase
             'admin_user_first_name' => $deletedAdminManager->getFirstname(),
             'admin_user_last_name' => $deletedAdminManager->getLastname(),
             'admin_user_email' => $deletedAdminManager->getEmail(),
-            'created_on' => $now->format(DateTime::ATOM),
+            'created_on' => $now->format(\DateTime::ATOM),
             'event' => AuditEvents::EVENT_ADMIN_MANAGER_DELETED,
             'type' => 'audit',
         ];

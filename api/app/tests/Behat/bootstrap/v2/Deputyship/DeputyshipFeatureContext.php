@@ -29,7 +29,7 @@ class DeputyshipFeatureContext extends BaseFeatureContext
      */
     public function deputyWithSurnameExists(string $surname): void
     {
-        $email = (new Uuid())->uuid3() . '@opg-testing.gov.uk';
+        $email = new Uuid()->uuid3() . '@opg-testing.gov.uk';
         $this->user = $this->fixtureHelper->createAndPersistUser(
             roleName: User::ROLE_LAY_DEPUTY,
             email: $email,

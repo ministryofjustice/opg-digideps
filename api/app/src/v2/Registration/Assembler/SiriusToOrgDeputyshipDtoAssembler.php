@@ -34,7 +34,7 @@ class SiriusToOrgDeputyshipDtoAssembler
         $dateOfBirth = $this->processDate($row['ClientDateOfBirth']);
         $deputyEmail = filter_var($row['DeputyEmail'], FILTER_VALIDATE_EMAIL) ? $row['DeputyEmail'] : null;
 
-        return (new OrgDeputyshipDto())
+        return new OrgDeputyshipDto()
             ->setCaseNumber($row['Case'])
             ->setClientFirstname($row['ClientForename'])
             ->setClientLastname($row['ClientSurname'])

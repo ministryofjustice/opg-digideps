@@ -59,7 +59,7 @@ trait ReportMoneyShortTrait
     private $moneyTransactionsShortOutExist;
 
     /**
-     * @return \OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory[]
+     * @return MoneyShortCategory[]
      */
     public function getMoneyShortCategoriesIn()
     {
@@ -67,7 +67,7 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @return \OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory[]
+     * @return MoneyShortCategory[]
      */
     public function getMoneyShortCategoriesInPresent()
     {
@@ -77,7 +77,7 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @param \OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory[] $moneyShortCategoriesIn
+     * @param MoneyShortCategory[] $moneyShortCategoriesIn
      */
     public function setMoneyShortCategoriesIn($moneyShortCategoriesIn)
     {
@@ -85,7 +85,7 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @return \OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory[]
+     * @return MoneyShortCategory[]
      */
     public function getMoneyShortCategoriesOut()
     {
@@ -93,7 +93,7 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @return \OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory[]
+     * @return MoneyShortCategory[]
      */
     public function getMoneyShortCategoriesOutPresent()
     {
@@ -103,7 +103,7 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @param \OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory[] $moneyShortCategoriesOut
+     * @param MoneyShortCategory[] $moneyShortCategoriesOut
      */
     public function setMoneyShortCategoriesOut($moneyShortCategoriesOut)
     {
@@ -111,7 +111,7 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @return \OPG\Digideps\Frontend\Entity\Report\MoneyTransactionShort[]
+     * @return MoneyTransactionShort[]
      */
     public function getMoneyTransactionsShortIn()
     {
@@ -119,7 +119,7 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @param \OPG\Digideps\Frontend\Entity\Report\MoneyTransactionShort[] $moneyTransactionsShortIn
+     * @param MoneyTransactionShort[] $moneyTransactionsShortIn
      */
     public function setMoneyTransactionsShortIn($moneyTransactionsShortIn)
     {

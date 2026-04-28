@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\DeputyshipProcessing;
 
-use ArrayIterator;
 use OPG\Digideps\Backend\Entity\StagingDeputyship;
 use OPG\Digideps\Backend\Entity\StagingSelectedCandidate;
 use OPG\Digideps\Backend\Repository\StagingDeputyshipRepository;
@@ -100,7 +99,7 @@ final class DeputyshipsCandidatesSelectorTest extends TestCase
         $this->mockStagingDeputyshipRepository
             ->expects($this->once())
             ->method('findAllPaged')
-            ->willReturn(new ArrayIterator([$mockStagingDeputyship1, $mockStagingDeputyship2]));
+            ->willReturn(new \ArrayIterator([$mockStagingDeputyship1, $mockStagingDeputyship2]));
 
         $this->mockCourtOrderAndDeputyCandidatesFactory
             ->expects($this->once())
@@ -119,7 +118,7 @@ final class DeputyshipsCandidatesSelectorTest extends TestCase
         $this->mockCourtOrderReportCandidatesFactory
             ->expects($this->once())
             ->method('createCompatibleReportCandidates')
-            ->willReturn(new ArrayIterator([$mockCandidate4]));
+            ->willReturn(new \ArrayIterator([$mockCandidate4]));
 
         $mockCandidates = [
             $mockCandidate1,
@@ -137,7 +136,7 @@ final class DeputyshipsCandidatesSelectorTest extends TestCase
 
         $this->mockStagingSelectedCandidateRepository->expects($this->once())
             ->method('getDistinctOrderedCandidates')
-            ->willReturn(new ArrayIterator($mockCandidates));
+            ->willReturn(new \ArrayIterator($mockCandidates));
 
         $result = $this->sut->select();
 

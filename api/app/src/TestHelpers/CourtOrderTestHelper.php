@@ -27,7 +27,7 @@ class CourtOrderTestHelper
         \DateTime $orderDate = (new \DateTime()),
         CourtOrderKind $courtOrderKind = CourtOrderKind::Single,
     ): CourtOrder {
-        $courtOrder = (new CourtOrder())
+        $courtOrder = new CourtOrder()
             ->setCourtOrderUid($courtOrderUid)
             ->setClient($client)
             ->setOrderKind($courtOrderKind)

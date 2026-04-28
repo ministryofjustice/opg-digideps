@@ -80,7 +80,7 @@ class S3FileUploader
 
         $this->s3Storage->store($storageReference, $body);
 
-        $document = (new Document())
+        $document = new Document()
             ->setStorageReference($storageReference)
             ->setFileName($fileName)
             ->setIsReportPdf($isReportPdf);

@@ -6,17 +6,16 @@ namespace OPG\Digideps\Frontend\TestHelpers;
 
 use OPG\Digideps\Frontend\Entity\Report\Document;
 use OPG\Digideps\Frontend\Entity\Report\Report;
-use DateTime;
 
 class ReportHelpers
 {
     public static function createReport(): Report
     {
         $client = ClientHelpers::createClient();
-        $startDate = new DateTime('now');
-        $endDate = new DateTime('+1 year');
+        $startDate = new \DateTime('now');
+        $endDate = new \DateTime('+1 year');
 
-        return (new Report())
+        return new Report()
             ->setType(Report::TYPE_COMBINED_HIGH_ASSETS)
             ->setSubmittedBy(null)
             ->setSubmitted(false)
@@ -29,7 +28,7 @@ class ReportHelpers
 
     public static function createSubmittedReport(): Report
     {
-        $submittedDate = new DateTime();
+        $submittedDate = new \DateTime();
         $submittedBy = UserHelpers::createUser();
         $documents = [new Document(), new Document()];
 

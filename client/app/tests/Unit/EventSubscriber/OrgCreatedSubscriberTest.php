@@ -9,7 +9,6 @@ use OPG\Digideps\Frontend\EventSubscriber\OrgCreatedSubscriber;
 use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
-use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
@@ -34,7 +33,7 @@ class OrgCreatedSubscriberTest extends TestCase
         $logger = self::prophesize(LoggerInterface::class);
         $dateTimeProvider = self::prophesize(DateTimeProvider::class);
 
-        $now = new DateTime();
+        $now = new \DateTime();
         $dateTimeProvider->getDateTime()->willReturn($now);
         $trigger = 'ADMIN_MANUAL_ORG_CREATION';
 
@@ -58,7 +57,7 @@ class OrgCreatedSubscriberTest extends TestCase
             'organisation_name' => $organisation['name'],
             'organisation_identifier' => $organisation['email_identifier'],
             'organisation_status' => $organisation['is_activated'],
-            'created_on' => $now->format(DateTime::ATOM),
+            'created_on' => $now->format(\DateTime::ATOM),
             'event' => AuditEvents::EVENT_ORG_CREATED,
             'type' => 'audit',
         ];

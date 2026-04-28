@@ -55,32 +55,32 @@ class FormattedTest extends WebTestCase
 
         $this->client->addUser($this->user);
 
-        $this->account1 = (new BankAccount())
+        $this->account1 = new BankAccount()
             ->setBank('barclays')
             ->setOpeningBalance(89);
-        $this->account2 = (new BankAccount())
+        $this->account2 = new BankAccount()
             ->setBank('HSBC')
             ->setOpeningBalance(43);
 
-        $this->transactionIn1 = (new MoneyTransaction())
+        $this->transactionIn1 = new MoneyTransaction()
             ->setCategory('council-tax')
             ->setAmount(1234)
             ->setId('gas');
-        $this->transactionIn2 = (new MoneyTransaction())
+        $this->transactionIn2 = new MoneyTransaction()
             ->setCategory('council-tax')
             ->setAmount(45)
             ->setId('electricity');
-        $this->transactionOut1 = (new MoneyTransaction())
+        $this->transactionOut1 = new MoneyTransaction()
             ->setCategory('anything-else-paid-out') //or accommodation
             ->setAmount(1233)
             ->setId('anything-else-paid-out');
 
-        $this->transfer1 = (new MoneyTransfer())
+        $this->transfer1 = new MoneyTransfer()
             ->setAccountFrom($this->account1)
             ->setAccountTo($this->account2)
             ->setAmount(10500.60);
         ;
-        $this->transfer2 = (new MoneyTransfer())
+        $this->transfer2 = new MoneyTransfer()
             ->setAccountFrom($this->account2)
             ->setAccountTo($this->account1)
             ->setAmount(45123.00)
@@ -89,7 +89,7 @@ class FormattedTest extends WebTestCase
 
         $this->debt1 = new Debt('care-fees', 123, false, '');
 
-        $this->action1 = (new Action())
+        $this->action1 = new Action()
             ->setDoYouExpectFinancialDecisions('yes')
             ->setDoYouExpectFinancialDecisionsDetails('sell both flats')
             ->setDoYouHaveConcerns('yes')
@@ -104,11 +104,11 @@ class FormattedTest extends WebTestCase
         $this->assetProp2 = new AssetProperty();
         $this->assetProp2->setAddress('victoria rd')->setPostcode('sw1')->setid(4)->setValue(100000)->setOwned(AssetProperty::OWNED_PARTLY)->setOwnedPercentage(60);
 
-        $this->decision1 = (new Decision())
+        $this->decision1 = new Decision()
             ->setDescription('sold the flat in SW2')
             ->setClientInvolvedBoolean(true)
             ->setClientInvolvedDetails('he wanted to leave this area');
-        $this->decision2 = (new Decision())
+        $this->decision2 = new Decision()
             ->setDescription('bought flat in E1')
             ->setClientInvolvedBoolean(true)
             ->setClientInvolvedDetails('he wanted to live here');

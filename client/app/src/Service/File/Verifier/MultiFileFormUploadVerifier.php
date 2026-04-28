@@ -41,7 +41,7 @@ class MultiFileFormUploadVerifier
 
     private function verifyFiles(Report $report, UploadedFile $file): VerificationStatus
     {
-        $document = (new Document())->setFile($file)->setReport($report);
+        $document = new Document()->setFile($file)->setReport($report);
         $status = new VerificationStatus();
 
         foreach ($this->verifiers as $verifier) {

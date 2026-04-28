@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Frontend\Unit\Service\File;
 
-use finfo;
 use OPG\Digideps\Frontend\Service\File\ImageConvertor;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -15,7 +14,7 @@ class ImageConvertorTest extends KernelTestCase
     {
         $projectDir = self::bootKernel()->getProjectDir();
         $sut = new ImageConvertor();
-        $fileInfo = new finfo(FILEINFO_MIME);
+        $fileInfo = new \finfo(FILEINFO_MIME);
 
         $filePath = sprintf('%s/tests/Unit/TestData/good-heic.heic', $projectDir);
         self::assertStringContainsString('image/heif', $fileInfo->buffer(file_get_contents($filePath)));

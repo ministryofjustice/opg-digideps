@@ -8,7 +8,6 @@ use OPG\Digideps\Backend\Entity\Report\MoneyTransaction;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\MoneyTransactionRepository;
 use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -80,7 +79,7 @@ class MoneyTransactionController extends RestController
         $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
 
-        $t = $this->findEntityBy(MoneyTransaction::class, $transactionId, 'transaction not found'); /* @var $t \OPG\Digideps\Backend\Entity\Report\MoneyTransaction */
+        $t = $this->findEntityBy(MoneyTransaction::class, $transactionId, 'transaction not found');
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
         // set data
@@ -118,7 +117,7 @@ class MoneyTransactionController extends RestController
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
         // Entity is soft-deletable, so set the DeletedAt to hard delete
-        $t->setDeletedAt(new DateTime());
+        $t->setDeletedAt(new \DateTime());
         $this->em->remove($t);
 
         $report->updateSectionsStatusCache($this->sectionIds);
@@ -138,7 +137,7 @@ class MoneyTransactionController extends RestController
 
         $this->denyAccessIfReportDoesNotBelongToUser($t->getReport());
 
-        $t->isDeleted() ? $t->setDeletedAt(null) : $t->setDeletedAt(new DateTime());
+        $t->isDeleted() ? $t->setDeletedAt(null) : $t->setDeletedAt(new \DateTime());
 
         $this->em->flush($t);
 

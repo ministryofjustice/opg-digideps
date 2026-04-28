@@ -2,7 +2,6 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
-use DateTime;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShort;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortIn;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortOut;
@@ -40,7 +39,7 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
 
         // transactions. 2 in, 1 out. one out for report 2
         self::$transaction1 = $t1 = new MoneyTransactionShortIn(self::$report1);
-        $t1->setAmount(123.45)->setDescription('d1')->setDate(new DateTime('2015-12-31'));
+        $t1->setAmount(123.45)->setDescription('d1')->setDate(new \DateTime('2015-12-31'));
         self::$transaction2 = $t2 = new MoneyTransactionShortIn(self::$report1);
         $t2->setAmount(789.12)->setDescription('d2');
         self::$transaction3 = $t3 = new MoneyTransactionShortOut(self::$report1);

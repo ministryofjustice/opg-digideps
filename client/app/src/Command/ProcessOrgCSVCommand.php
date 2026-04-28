@@ -141,7 +141,7 @@ class ProcessOrgCSVCommand extends Command
     private function csvToArray(string $fileName): array
     {
         try {
-            return (new CsvToArray($fileName, false))
+            return new CsvToArray($fileName, false)
             ->setExpectedColumns(self::EXPECTED_COLUMNS)
             ->setOptionalColumns(self::OPTIONAL_COLUMNS)
             ->setUnexpectedColumns(self::UNEXPECTED_COLUMNS)

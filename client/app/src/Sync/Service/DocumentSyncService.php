@@ -131,7 +131,7 @@ class DocumentSyncService
             throw (new \Exception(self::MISSING_FILE_EXTENSION_ERROR, 400));
         }
 
-        $file = (new SiriusDocumentFile())
+        $file = new SiriusDocumentFile()
             ->setName($fileName)
             ->setMimetype($mimeType)
             ->setS3Reference($documentData->getStorageReference());
@@ -142,7 +142,7 @@ class DocumentSyncService
                 $reportType = 'HW';
             }
 
-            $siriusDocumentMetadata = (new SiriusReportPdfDocumentMetadata())
+            $siriusDocumentMetadata = new SiriusReportPdfDocumentMetadata()
                 ->setReportingPeriodFrom($documentData->getReportStartDate())
                 ->setReportingPeriodTo($this->determineEndDate($documentData))
                 ->setDateSubmitted($documentData->getReportSubmitDate())
@@ -155,13 +155,13 @@ class DocumentSyncService
 
             $type = 'reports';
         } else {
-            $siriusDocumentMetadata = (new SiriusSupportingDocumentMetadata())
+            $siriusDocumentMetadata = new SiriusSupportingDocumentMetadata()
                 ->setSubmissionId($documentData->getReportSubmissionId());
 
             $type = 'supportingdocuments';
         }
 
-        return (new SiriusDocumentUpload())
+        return new SiriusDocumentUpload()
             ->setType($type)
             ->setAttributes($siriusDocumentMetadata)
             ->setFile($file);

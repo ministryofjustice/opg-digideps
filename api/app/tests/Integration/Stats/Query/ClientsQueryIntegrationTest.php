@@ -3,7 +3,6 @@
 namespace Tests\OPG\Digideps\Backend\Integration\Stats\Query;
 
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
-use DateTime;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Service\Stats\Query\ClientsQuery;
@@ -36,8 +35,8 @@ class ClientsQueryIntegrationTest extends ApiIntegrationTestCase
             $report = new Report(
                 $client,
                 $reportType,
-                new DateTime('2019-08-01'),
-                new DateTime('2020-08-01')
+                new \DateTime('2019-08-01'),
+                new \DateTime('2020-08-01')
             );
 
             self::$entityManager->persist($report);

@@ -34,7 +34,7 @@ class ReportUnsubmittedSubscriber implements EventSubscriberInterface
      */
     public function logReportUnsubmittedEvent(ReportUnsubmittedEvent $event)
     {
-        $auditEvent = (new AuditEvents($this->dateTimeProvider))
+        $auditEvent = new AuditEvents($this->dateTimeProvider)
             ->reportUnsubmitted(
                 $event->getUnsubmittedReport(),
                 $event->getUnsubmittedBy(),
