@@ -98,7 +98,7 @@ form:
     label: "Description of asset"
     hint: ""
   valuationDate:
-    legend: Valuation date (optional)
+    legend: Valuation date
     hint: For example, 31 3 2010
     label: Valuation date
   property:
