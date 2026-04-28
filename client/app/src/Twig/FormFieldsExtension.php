@@ -11,9 +11,6 @@ use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 class FormFieldsExtension extends AbstractExtension
 {
@@ -184,14 +181,20 @@ class FormFieldsExtension extends AbstractExtension
         $showDay = $vars['showDay'] ?? 'true';
 
         // sort hint text translation with default fallback
-        $hintText = $this->getDateHintText($translationKey, $domain, $vars['hintText'] ?? null);
+        /** @var string|null $customHint */
+        $customHint = $vars['hintText'] ?? null;
+        $hintText = $this->getDateHintText($translationKey, $domain, $customHint);
 
         // get legendText translation
+        /** @var array $legendParams */
         $legendParams = $vars['legendParameters'] ?? [];
         $legendText = $this->getLegendText($translationKey, $legendParams, $domain);
 
+        /** @var array $legend */
+        $legend = $vars['legend'] ?? [];
+
         echo $this->environment->render('@App/Components/Form/_known-date.html.twig', [
-            'legend' => $this->buildLegendArray($legendText, $vars['legend'] ?? []),
+            'legend' => $this->buildLegendArray($legendText, $legend),
             'hintTextBold' => $vars['hintTextBold'] ?? null,
             'hintText' => $hintText,
             'element' => $element,
@@ -460,6 +463,7 @@ class FormFieldsExtension extends AbstractExtension
     private function getTranslationKeyAndDomain(FormView $element, string $elementName, ?int $transIndex = null): array
     {
         $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
+        /** @var string $domain */
         $domain = $element->parent->vars['translation_domain'];
         return ['translationKey' => $translationKey, 'domain' => $domain];
     }
