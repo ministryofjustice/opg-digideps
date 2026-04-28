@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-namespace App\Entity\Report;
 namespace OPG\Digideps\Backend\Entity\Report;
 
 use Doctrine\ORM\Mapping as ORM;

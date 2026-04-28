@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Entity\Report;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -216,7 +217,7 @@ class Checklist implements SynchronisableInterface
     /**
      * @var Collection<ChecklistInformation>
      */
-    #[JMS\Type('ArrayCollection<App\Entity\Report\ChecklistInformation>')]
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\ChecklistInformation>')]
     #[JMS\Groups(['checklist-information'])]
     #[ORM\OneToMany(mappedBy: 'checklist', targetEntity: ChecklistInformation::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['createdOn' => 'DESC'])]
