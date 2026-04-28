@@ -2,22 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\v2\Registration\DeputyshipProcessing;
+namespace Tests\OPG\Digideps\Backend\Integration\v2\Registration\DeputyshipProcessing;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Domain\CourtOrder\CourtOrderReportType;
-use App\Domain\CourtOrder\CourtOrderType;
-use App\Domain\Deputy\DeputyType;
-use App\Tests\Integration\ApiTestTrait;
-use DateTime;
-use App\Entity\CourtOrder;
-use App\Entity\Deputy;
-use App\Entity\StagingDeputyship;
-use App\TestHelpers\ClientTestHelper;
-use App\TestHelpers\ReportTestHelper;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
-use App\v2\Registration\Enum\DeputyshipCandidateAction;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use Tests\OPG\Digideps\Backend\Integration\ApiTestTrait;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\StagingDeputyship;
+use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
+use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
@@ -63,7 +62,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         $courtOrder->setCourtOrderUid($courtOrderUid);
         $courtOrder->setOrderType(CourtOrderType::PFA);
         $courtOrder->setStatus('OPEN');
-        $courtOrder->setOrderMadeDate(new DateTime('2018-01-21'));
+        $courtOrder->setOrderMadeDate(new \DateTime('2018-01-21'));
         $courtOrder->setOrderKind(CourtOrderKind::Single);
         $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
 
@@ -83,7 +82,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         $courtOrder->setCourtOrderUid($courtOrderUid);
         $courtOrder->setOrderType(CourtOrderType::HW);
         $courtOrder->setStatus('ACTIVE');
-        $courtOrder->setOrderMadeDate(new DateTime('2019-01-21'));
+        $courtOrder->setOrderMadeDate(new \DateTime('2019-01-21'));
         $courtOrder->setOrderKind(CourtOrderKind::Single);
         $courtOrder->setOrderReportType(CourtOrderReportType::OPG104);
 
@@ -118,7 +117,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         $courtOrder->setCourtOrderUid($courtOrderUid);
         $courtOrder->setOrderType(CourtOrderType::HW);
         $courtOrder->setStatus('ACTIVE');
-        $courtOrder->setOrderMadeDate(new DateTime('2019-01-21'));
+        $courtOrder->setOrderMadeDate(new \DateTime('2019-01-21'));
         $courtOrder->setOrderKind(CourtOrderKind::Single);
         $courtOrder->setOrderReportType(CourtOrderReportType::OPG104);
 
@@ -154,7 +153,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         self::$entityManager->persist($deputy);
 
         $client = ClientTestHelper::create()->generateClient(self::$entityManager, null, null, '61111002');
-        $report = ReportTestHelper::create()->generateReport(self::$entityManager, $client, '104', new DateTime('2019-01-21'), new DateTime('2020-01-21'));
+        $report = ReportTestHelper::create()->generateReport(self::$entityManager, $client, '104', new \DateTime('2019-01-21'), new \DateTime('2020-01-21'));
 
         $client->addReport($report);
         $report->setClient($client);

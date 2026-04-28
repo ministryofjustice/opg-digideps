@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Common\Unit\Logger;
 
-use DateTime;
 use Monolog\Level;
 use Monolog\LogRecord;
 use OPG\Digideps\Common\Logger\OpgLineFormatter;
-use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
 
 final class OpgLineFormatterTest extends TestCase

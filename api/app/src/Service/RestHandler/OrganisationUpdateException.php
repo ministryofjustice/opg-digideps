@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\RestHandler;
+namespace OPG\Digideps\Backend\Service\RestHandler;
 
 class OrganisationUpdateException extends \InvalidArgumentException
 {

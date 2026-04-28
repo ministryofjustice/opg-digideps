@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\Deputyship;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\Deputyship;
 
-use App\Entity\User;
-use App\Tests\Behat\v2\Common\BaseFeatureContext;
+use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Behat\v2\Common\BaseFeatureContext;
 use Faker\Core\Uuid;
 
 class DeputyshipFeatureContext extends BaseFeatureContext
@@ -29,7 +29,7 @@ class DeputyshipFeatureContext extends BaseFeatureContext
      */
     public function deputyWithSurnameExists(string $surname): void
     {
-        $email = (new Uuid())->uuid3() . '@opg-testing.gov.uk';
+        $email = new Uuid()->uuid3() . '@opg-testing.gov.uk';
         $this->user = $this->fixtureHelper->createAndPersistUser(
             roleName: User::ROLE_LAY_DEPUTY,
             email: $email,

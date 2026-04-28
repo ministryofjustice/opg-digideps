@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Behat\Common;
+namespace Tests\OPG\Digideps\Backend\Behat\Common;
 
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Tester\Result\ExecutedStepResult;

@@ -1,11 +1,12 @@
 <?php
 
-namespace App\v2\Assembler\Report;
+namespace OPG\Digideps\Backend\v2\Assembler\Report;
 
-use App\Entity\Report\Report;
-use App\Repository\ReportRepository;
-use App\v2\Assembler\StatusAssembler;
-use App\v2\DTO\StatusDto;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Repository\ReportRepository;
+use OPG\Digideps\Backend\v2\Assembler\StatusAssembler;
+use OPG\Digideps\Backend\v2\DTO\ReportDto;
+use OPG\Digideps\Backend\v2\DTO\StatusDto;
 
 class FullReportAssembler implements ReportAssemblerInterface
 {
@@ -17,7 +18,7 @@ class FullReportAssembler implements ReportAssemblerInterface
     }
 
     /**
-     * @return \App\v2\DTO\ReportDto
+     * @return ReportDto
      */
     public function assembleFromArray(array $data)
     {
@@ -27,7 +28,8 @@ class FullReportAssembler implements ReportAssemblerInterface
             return $reportDto;
         }
 
-        if (null === ($reportEntity = $this->reportRepository->find($reportDto->getId()))) {
+        $reportEntity = $this->reportRepository->find($reportDto->getId());
+        if (null === $reportEntity) {
             return $reportDto;
         }
 

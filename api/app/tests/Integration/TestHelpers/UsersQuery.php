@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\TestHelpers;
+namespace Tests\OPG\Digideps\Backend\Integration\TestHelpers;
 
-use App\Service\Stats\Query\Query;
+use OPG\Digideps\Backend\Service\Stats\Query\Query;
 
 class UsersQuery extends Query
 {
@@ -15,7 +15,7 @@ class UsersQuery extends Query
 
     protected function getSupportedDimensions(): array
     {
-        return ['roleName', 'ndrEnabled'];
+        return ['roleName'];
     }
 
     public function getSubquery(): string
@@ -24,8 +24,7 @@ class UsersQuery extends Query
             SELECT
                 id,
                 registration_date date,
-                role_name roleName,
-                odr_enabled ndrEnabled
+                role_name roleName
             FROM dd_user
         ';
     }

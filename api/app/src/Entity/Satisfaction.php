@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace OPG\Digideps\Backend\Entity;
 
-use App\Entity\Ndr\Ndr;
-use App\Entity\Report\Report;
-use App\Entity\UserResearch\UserResearchResponse;
-use DateTime;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
@@ -18,7 +16,7 @@ use JMS\Serializer\Annotation as JMS;
  * @ORM\Table(name="satisfaction")
  *
  * @ORM\Entity()
- * @ORM\Entity(repositoryClass="App\Repository\SatisfactionRepository")
+ * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\SatisfactionRepository")
  */
 class Satisfaction
 {
@@ -83,25 +81,18 @@ class Satisfaction
     private \DateTime $created;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="satisfaction", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse", mappedBy="satisfaction", cascade={"persist", "remove"})
      */
-    #[JMS\Type('App\Entity\UserResearch\UserResearchResponse')]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
     private UserResearchResponse $userResearchResponse;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\Report", inversedBy="satisfaction", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="satisfaction", cascade={"persist"})
      */
-    #[JMS\Type('App\Entity\Report\Report')]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Report')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
     private ?Report $report = null;
-
-    /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Ndr\Ndr", inversedBy="satisfaction", cascade={"persist"})
-     */
-    #[JMS\Type('App\Entity\Ndr\Ndr')]
-    #[JMS\Groups(['user-research', 'satisfaction'])]
-    private ?Ndr $ndr = null;
 
     public function getId(): int
     {
@@ -204,21 +195,6 @@ class Satisfaction
     public function setReport(?Report $report): Satisfaction
     {
         $this->report = $report;
-
-        return $this;
-    }
-
-    /**
-     * @return Ndr
-     */
-    public function getNdr(): ?Ndr
-    {
-        return $this->ndr;
-    }
-
-    public function setNdr(?Ndr $ndr): Satisfaction
-    {
-        $this->ndr = $ndr;
 
         return $this;
     }

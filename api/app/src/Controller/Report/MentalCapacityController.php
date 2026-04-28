@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Controller\Report;
+namespace OPG\Digideps\Backend\Controller\Report;
 
-use App\Controller\RestController;
-use App\Entity\Report\MentalCapacity;
-use App\Entity\Report\Report;
-use App\Service\Formatter\RestFormatter;
-use DateTime;
+use OPG\Digideps\Backend\Controller\RestController;
+use OPG\Digideps\Backend\Entity\Report\MentalCapacity;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -69,7 +68,7 @@ class MentalCapacityController extends RestController
         }
 
         if (array_key_exists('mental_assessment_date', $data)) {
-            $mc->setMentalAssessmentDate(new DateTime($data['mental_assessment_date']));
+            $mc->setMentalAssessmentDate(new \DateTime($data['mental_assessment_date']));
         }
 
         $mc->cleanUpUnusedData();

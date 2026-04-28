@@ -2,23 +2,22 @@
 
 declare(strict_types=1);
 
-namespace App\Security;
+namespace OPG\Digideps\Backend\Security;
 
-use App\Entity\User;
-use App\Exception\InvalidRegistrationTokenException;
-use App\Exception\UnauthorisedException;
-use App\Exception\UserWrongCredentialsManyAttempts;
-use App\Repository\UserRepository;
-use App\Service\Auth\AuthService;
-use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
-use App\Service\BruteForce\AttemptsInTimeChecker;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Exception\InvalidRegistrationTokenException;
+use OPG\Digideps\Backend\Exception\UnauthorisedException;
+use OPG\Digideps\Backend\Exception\UserWrongCredentialsManyAttempts;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\Service\Auth\AuthService;
+use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
+use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;

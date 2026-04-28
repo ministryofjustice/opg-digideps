@@ -1,8 +1,8 @@
 <?php
 
-namespace App\DataFixtures;
+namespace OPG\Digideps\Backend\DataFixtures;
 
-use App\Entity\User;
+use OPG\Digideps\Backend\Entity\User;
 use Doctrine\Persistence\ObjectManager;
 
 class TestUserFixtures extends AbstractDataFixture
@@ -75,13 +75,12 @@ class TestUserFixtures extends AbstractDataFixture
     private function addUser($data, $manager)
     {
         // Create user
-        $user = (new User())
+        $user = new User()
             ->setFirstname('test')
             ->setLastname($data['id'])
             ->setEmail($data['id'] . '@example.org')
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
-            ->setNdrEnabled(false)
             ->setPhoneMain('07911111111111')
             ->setAddress1('Victoria Road')
             ->setAddressPostcode('SW1')

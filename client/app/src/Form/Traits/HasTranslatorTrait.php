@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Traits;
+namespace OPG\Digideps\Frontend\Form\Traits;
 
 use Symfony\Component\Translation\Translator;
 use Symfony\Contracts\Translation\TranslatorInterface;

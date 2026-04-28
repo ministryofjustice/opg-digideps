@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Factory;
+namespace OPG\Digideps\Backend\Factory;
 
-use App\Service\UserDeputyService;
+use OPG\Digideps\Backend\Service\UserDeputyService;
 
 /**
  * Adds deputy records to users where they don't have one.

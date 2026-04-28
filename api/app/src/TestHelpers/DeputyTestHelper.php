@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\TestHelpers;
+namespace OPG\Digideps\Backend\TestHelpers;
 
-use App\Domain\Deputy\DeputyType;
-use App\Entity\Deputy;
-use App\Entity\User;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\User;
 use Faker\Factory;
 
 class DeputyTestHelper
@@ -15,7 +15,7 @@ class DeputyTestHelper
     {
         $faker = Factory::create('en_GB');
 
-        $deputy = (new Deputy())
+        $deputy = new Deputy()
             ->setDeputyUid($deputyUid ?: '' . $faker->randomNumber(8))
             ->setFirstname(is_null($user) ? $faker->firstName() : $user->getFirstName())
             ->setLastname(is_null($user) ? $faker->lastName() : $user->getLastName())

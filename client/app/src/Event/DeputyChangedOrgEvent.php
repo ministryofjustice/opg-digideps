@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Event;
+namespace OPG\Digideps\Frontend\Event;
 
 use Symfony\Contracts\EventDispatcher\Event;
 

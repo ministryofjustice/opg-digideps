@@ -1,9 +1,9 @@
 <?php
 
-namespace App\v2\Transformer;
+namespace OPG\Digideps\Backend\v2\Transformer;
 
-use App\v2\DTO\ClientDto;
-use App\v2\DTO\UserDto;
+use OPG\Digideps\Backend\v2\DTO\ClientDto;
+use OPG\Digideps\Backend\v2\DTO\UserDto;
 
 class UserTransformer
 {
@@ -23,7 +23,6 @@ class UserTransformer
             'email' => $dto->getEmail(),
             'role_name' => $dto->getRoleName(),
             'address_postcode' => $dto->getAddressPostcode(),
-            'ndr_enabled' => $dto->getNdrEnabled(),
             'active' => $dto->isActive(),
             'job_title' => $dto->getJobTitle(),
             'phone_main' => $dto->getPhoneMain(),
@@ -50,7 +49,7 @@ class UserTransformer
 
         foreach ($clients as $client) {
             if ($client instanceof ClientDto) {
-                $transformed[] = $this->clientTransformer->transform($client, ['reports', 'ndr']);
+                $transformed[] = $this->clientTransformer->transform($client, ['reports']);
             }
         }
 

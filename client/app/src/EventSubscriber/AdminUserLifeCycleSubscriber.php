@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\EventSubscriber;
+namespace OPG\Digideps\Frontend\EventSubscriber;
 
-use App\Event\AdminManagerCreatedEvent;
-use App\Event\AdminManagerDeletedEvent;
-use App\Event\AdminUserCreatedEvent;
-use App\Service\Audit\AuditEvents;
-use App\Service\Mailer\Mailer;
-use App\Service\Time\DateTimeProvider;
+use OPG\Digideps\Frontend\Event\AdminManagerCreatedEvent;
+use OPG\Digideps\Frontend\Event\AdminManagerDeletedEvent;
+use OPG\Digideps\Frontend\Event\AdminUserCreatedEvent;
+use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
+use OPG\Digideps\Frontend\Service\Mailer\Mailer;
+use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -38,7 +38,7 @@ class AdminUserLifeCycleSubscriber implements EventSubscriberInterface
 
     public function logAdminManagerCreatedEvent(AdminManagerCreatedEvent $event)
     {
-        $adminManagerCreatedEvent = (new AuditEvents($this->dateTimeProvider))
+        $adminManagerCreatedEvent = new AuditEvents($this->dateTimeProvider)
             ->adminManagerCreated(
                 $event->getTrigger(),
                 $event->getCurrentUser(),
@@ -49,7 +49,7 @@ class AdminUserLifeCycleSubscriber implements EventSubscriberInterface
 
     public function logAdminManagerDeletedEvent(AdminManagerDeletedEvent $event)
     {
-        $adminManagerDeletedEvent = (new AuditEvents($this->dateTimeProvider))
+        $adminManagerDeletedEvent = new AuditEvents($this->dateTimeProvider)
             ->adminManagerDeleted(
                 $event->getTrigger(),
                 $event->getCurrentUser(),

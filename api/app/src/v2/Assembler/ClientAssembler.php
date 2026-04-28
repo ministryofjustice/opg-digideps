@@ -1,26 +1,22 @@
 <?php
 
-namespace App\v2\Assembler;
+namespace OPG\Digideps\Backend\v2\Assembler;
 
-use App\Entity\Client;
-use App\v2\Assembler\Report\ReportAssemblerInterface;
-use App\v2\DTO\ClientDto;
-use App\v2\DTO\DtoPropertySetterTrait;
-use App\v2\DTO\OrganisationDto;
-use App\v2\DTO\UserDto;
-use App\v2\Registration\DTO\LayDeputyshipDto;
-use App\v2\Registration\DTO\OrgDeputyshipDto;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\v2\Assembler\Report\ReportAssemblerInterface;
+use OPG\Digideps\Backend\v2\DTO\ClientDto;
+use OPG\Digideps\Backend\v2\DTO\DtoPropertySetterTrait;
+use OPG\Digideps\Backend\v2\DTO\OrganisationDto;
+use OPG\Digideps\Backend\v2\DTO\UserDto;
+use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
+use OPG\Digideps\Backend\v2\Registration\DTO\OrgDeputyshipDto;
 
 class ClientAssembler
 {
     use DtoPropertySetterTrait;
 
-    /**
-     * ClientAssembler constructor.
-     */
     public function __construct(
         private readonly ReportAssemblerInterface $reportDtoAssembler,
-        private readonly NdrAssembler $ndrDtoAssembler,
         private readonly DeputyAssembler $deputyAssembler
     ) {
     }
@@ -32,12 +28,8 @@ class ClientAssembler
     {
         $dto = new ClientDto();
 
-        $exclude = ['ndr', 'reports', 'deputy'];
+        $exclude = ['reports', 'deputy'];
         $this->setPropertiesFromData($dto, $data, $exclude);
-
-        if (isset($data['ndr']) && is_array($data['ndr'])) {
-            $dto->setNdr($this->assembleClientNdr($data['ndr']));
-        }
 
         if (isset($data['reports']) && is_array($data['reports'])) {
             $dto->setReports($this->assembleClientReports($data['reports']));
@@ -89,11 +81,6 @@ class ClientAssembler
         return $dtos;
     }
 
-    private function assembleClientNdr(array $ndr)
-    {
-        return $this->ndrDtoAssembler->assembleFromArray($ndr);
-    }
-
     private function assembleClientDeputy(array $deputy)
     {
         return $this->deputyAssembler->assembleFromArray($deputy);
@@ -101,7 +88,7 @@ class ClientAssembler
 
     public function assembleFromOrgDeputyshipDto(OrgDeputyshipDto $dto)
     {
-        $client = (new Client())
+        $client = new Client()
             ->setCaseNumber($dto->getCaseNumber())
             ->setFirstname($dto->getClientFirstname())
             ->setLastname($dto->getClientLastname())
@@ -123,7 +110,7 @@ class ClientAssembler
 
     public function assembleFromLayDeputyshipDto(LayDeputyshipDto $dto)
     {
-        $client = (new Client())
+        $client = new Client()
             ->setCaseNumber($dto->getCaseNumber())
             ->setFirstname($dto->getClientFirstname() ?: null)
             ->setLastname($dto->getClientSurname())

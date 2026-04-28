@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\FixtureFactory;
+namespace OPG\Digideps\Backend\FixtureFactory;
 
-use App\Entity\PreRegistration;
-use App\v2\Registration\DTO\LayDeputyshipDto;
-use App\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory as PreRegistrationDTOFactory;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
+use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory as PreRegistrationDTOFactory;
 
 readonly class PreRegistrationFactory
 {
@@ -20,7 +20,7 @@ readonly class PreRegistrationFactory
         $generateDeputyUidIfNotSet = '7' . str_pad((string) rand(1, 99999999), 11, '0', STR_PAD_LEFT);
         $deputyUid = array_key_exists('deputyUid', $data) && strval($data['deputyUid']) ? strval($data['deputyUid']) : $generateDeputyUidIfNotSet;
 
-        $dto = (new LayDeputyshipDto())
+        $dto = new LayDeputyshipDto()
             ->setCaseNumber($data['caseNumber'] ?? $caseNumber)
             ->setClientFirstname($data['clientFirstName'] ?? 'John')
             ->setClientSurname($data['clientLastName'] ?? 'Smith')
@@ -52,7 +52,7 @@ readonly class PreRegistrationFactory
     {
         $deputyUid = str_pad((string) rand(1, 999999999999), 12, '0', STR_PAD_LEFT);
 
-        $dto = (new LayDeputyshipDto())
+        $dto = new LayDeputyshipDto()
             ->setCaseNumber($caseNumber)
             ->setClientFirstname('John')
             ->setClientSurname('Smith')

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Backend\Entity\Report;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -63,7 +63,7 @@ class MoneyShortCategory
     /**
      * @var Report
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="moneyShortCategories")
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="moneyShortCategories")
      *
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */

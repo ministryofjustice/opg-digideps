@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Csv;
+namespace OPG\Digideps\Frontend\Service\Csv;
 
 class AssetsTotalsCSVGenerator
 {

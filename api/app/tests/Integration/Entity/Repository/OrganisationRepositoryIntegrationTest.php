@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Entity\Repository;
+namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
-use App\Tests\Integration\ApiIntegrationTestCase;
-use DateTime;
-use App\Entity\Organisation;
-use App\Entity\User;
-use App\Repository\OrganisationRepository;
-use App\Tests\Integration\Fixtures;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\OrganisationRepository;
+use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 use Prophecy\PhpUnit\ProphecyTrait;
 
 class OrganisationRepositoryIntegrationTest extends ApiIntegrationTestCase
@@ -79,7 +78,7 @@ class OrganisationRepositoryIntegrationTest extends ApiIntegrationTestCase
     {
         $orgs = self::$fixtures->createOrganisations(1);
         $user = self::$fixtures->createUser(roleName: User::ROLE_PA);
-        $clientDeleted = self::$fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
+        $clientDeleted = self::$fixtures->createClient($user, ['setDeletedAt' => new \DateTime()]);
         $clientDeleted->setOrganisation($orgs[0]);
         self::$entityManager->flush();
 
@@ -91,7 +90,7 @@ class OrganisationRepositoryIntegrationTest extends ApiIntegrationTestCase
     {
         $orgs = self::$fixtures->createOrganisations(1);
         $user = self::$fixtures->createUser(roleName: User::ROLE_PA);
-        $clientArchived = self::$fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
+        $clientArchived = self::$fixtures->createClient($user, ['setArchivedAt' => new \DateTime()]);
         self::$entityManager->flush();
 
         self::$fixtures->addClientToOrganisation($clientArchived->getId(), $orgs[0]->getId());
@@ -104,8 +103,8 @@ class OrganisationRepositoryIntegrationTest extends ApiIntegrationTestCase
     {
         $orgs = self::$fixtures->createOrganisations(1);
         $user = self::$fixtures->createUser(roleName: User::ROLE_PA);
-        $clientDeleted = self::$fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
-        $clientArchived = self::$fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
+        $clientDeleted = self::$fixtures->createClient($user, ['setDeletedAt' => new \DateTime()]);
+        $clientArchived = self::$fixtures->createClient($user, ['setArchivedAt' => new \DateTime()]);
         $clientDeleted->setOrganisation($orgs[0]);
         $clientArchived->setOrganisation($orgs[0]);
         self::$entityManager->flush();
@@ -119,8 +118,8 @@ class OrganisationRepositoryIntegrationTest extends ApiIntegrationTestCase
         $orgs = self::$fixtures->createOrganisations(1);
         $user = self::$fixtures->createUser(roleName: User::ROLE_PA);
         $clientActive = self::$fixtures->createClient($user);
-        $clientDeleted = self::$fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
-        $clientArchived = self::$fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
+        $clientDeleted = self::$fixtures->createClient($user, ['setDeletedAt' => new \DateTime()]);
+        $clientArchived = self::$fixtures->createClient($user, ['setArchivedAt' => new \DateTime()]);
         $clientActive->setOrganisation($orgs[0]);
         $clientArchived->setOrganisation($orgs[0]);
         $clientDeleted->setOrganisation($orgs[0]);
@@ -134,8 +133,8 @@ class OrganisationRepositoryIntegrationTest extends ApiIntegrationTestCase
     {
         $orgs = self::$fixtures->createOrganisations(1);
         $user = self::$fixtures->createUser(roleName: User::ROLE_PA);
-        $clientDeleted = self::$fixtures->createClient($user, ['setDeletedAt' => new DateTime()]);
-        $clientArchived = self::$fixtures->createClient($user, ['setArchivedAt' => new DateTime()]);
+        $clientDeleted = self::$fixtures->createClient($user, ['setDeletedAt' => new \DateTime()]);
+        $clientArchived = self::$fixtures->createClient($user, ['setArchivedAt' => new \DateTime()]);
         $orgs[0]->addUser($user);
         $clientDeleted->setOrganisation($orgs[0]);
         $clientArchived->setOrganisation($orgs[0]);

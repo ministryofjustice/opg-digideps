@@ -1,9 +1,13 @@
 <?php
 
-namespace App\Tests\Integration\ControllerReport;
+namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
-use App\Entity\Report\Report;
-use App\Tests\Integration\Controller\AbstractTestController;
+use OPG\Digideps\Backend\Entity\Report\Asset;
+use OPG\Digideps\Backend\Entity\Report\AssetOther;
+use OPG\Digideps\Backend\Entity\Report\AssetProperty;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class AssetControllerTest extends AbstractTestController
 {
@@ -24,7 +28,7 @@ class AssetControllerTest extends AbstractTestController
         parent::setUp();
 
         // deputy1
-        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
         self::$report1 = self::fixtures()->createReport(self::$client1);
         self::$asset1 = self::fixtures()->createAsset('other', self::$report1, ['setTitle' => 'asset1']);
@@ -133,8 +137,8 @@ class AssetControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $asset = self::fixtures()->getRepo('Report\Asset')->find($return['data']['id']); /* @var $asset \App\Entity\Report\AssetOther */
-        $this->assertInstanceOf('App\Entity\Report\AssetOther', $asset);
+        $asset = self::fixtures()->getRepo(Asset::class)->find($return['data']['id']); /* @var $asset AssetOther */
+        $this->assertInstanceOf(AssetOther::class, $asset);
         $this->assertEquals(123, $asset->getValue());
         $this->assertEquals('de', $asset->getDescription());
         $this->assertEquals('01/01/2015', $asset->getValuationDate()->format('m/d/Y'));
@@ -173,9 +177,9 @@ class AssetControllerTest extends AbstractTestController
 
         self::fixtures()->clear();
 
-        $asset = self::fixtures()->getRepo('Report\Asset')->find($return['data']['id']); /* @var $asset \App\Entity\Report\AssetProperty */
+        $asset = self::fixtures()->getRepo(Asset::class)->find($return['data']['id']); /* @var $asset AssetProperty */
 
-        $this->assertInstanceOf('App\Entity\Report\AssetProperty', $asset);
+        $this->assertInstanceOf(AssetProperty::class, $asset);
         $this->assertEquals('me', $asset->getOccupants());
         $this->assertEquals('partly', $asset->getOwned());
         $this->assertEquals('51.00', $asset->getOwnedPercentage());
@@ -223,7 +227,7 @@ class AssetControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $this->assertTrue(null === self::fixtures()->getRepo('Report\Asset')->find(self::$asset1->getId()));
+        $this->assertTrue(null === self::fixtures()->getRepo(Asset::class)->find(self::$asset1->getId()));
 
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_ASSETS));
     }

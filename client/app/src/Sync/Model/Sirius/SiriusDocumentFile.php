@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Sync\Model\Sirius;
-
-use InvalidArgumentException;
+namespace OPG\Digideps\Frontend\Sync\Model\Sirius;
 
 class SiriusDocumentFile
 {
@@ -47,7 +45,7 @@ class SiriusDocumentFile
         if (!is_null($source)) {
             // Ensure string is base64
             if (empty(base64_decode($source, true))) {
-                throw new InvalidArgumentException('Source must be base64 encoded');
+                throw new \InvalidArgumentException('Source must be base64 encoded');
             }
         }
 

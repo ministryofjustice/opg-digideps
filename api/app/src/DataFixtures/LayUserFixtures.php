@@ -1,18 +1,17 @@
 <?php
 
-namespace App\DataFixtures;
+namespace OPG\Digideps\Backend\DataFixtures;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Domain\CourtOrder\CourtOrderReportType;
-use App\Domain\CourtOrder\CourtOrderType;
-use App\Domain\Deputy\DeputyType;
-use App\Entity\Client;
-use App\Entity\CourtOrder;
-use App\Entity\Deputy;
-use App\Entity\Ndr\Ndr;
-use App\Entity\PreRegistration;
-use App\Entity\Report\Report;
-use App\Entity\User;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
 use Doctrine\Persistence\ObjectManager;
 
 class LayUserFixtures extends AbstractDataFixture
@@ -26,7 +25,6 @@ class LayUserFixtures extends AbstractDataFixture
             'reportType' => 'OPG102',
             'orderType' => 'pfa',
             'coDeputy' => false,
-            'ndr' => false,
             'multi-client' => false,
             'duplicate-client' => false,
             'count' => 15,
@@ -39,7 +37,6 @@ class LayUserFixtures extends AbstractDataFixture
             'reportType' => 'OPG103',
             'orderType' => 'pfa',
             'coDeputy' => false,
-            'ndr' => false,
             'multi-client' => false,
             'duplicate-client' => false,
             'count' => 10,
@@ -52,7 +49,6 @@ class LayUserFixtures extends AbstractDataFixture
             'reportType' => 'OPG104',
             'orderType' => 'hw',
             'coDeputy' => false,
-            'ndr' => false,
             'multi-client' => false,
             'duplicate-client' => false,
             'count' => 10,
@@ -65,7 +61,6 @@ class LayUserFixtures extends AbstractDataFixture
             'reportType' => 'OPG102',
             'orderType' => 'hw',
             'coDeputy' => false,
-            'ndr' => false,
             'multi-client' => false,
             'duplicate-client' => false,
             'count' => 15,
@@ -78,33 +73,6 @@ class LayUserFixtures extends AbstractDataFixture
             'reportType' => 'OPG103',
             'orderType' => 'hw',
             'coDeputy' => false,
-            'ndr' => false,
-            'multi-client' => false,
-            'duplicate-client' => false,
-            'count' => 10,
-        ],
-        [
-            'id' => 'Lay-OPG102-NDR',
-            'courtOrderUid' => '700000006600',
-            'caseNumber' => '66666000',
-            'deputyUid' => '700766666000',
-            'reportType' => 'OPG102',
-            'orderType' => 'hw',
-            'coDeputy' => false,
-            'ndr' => true,
-            'multi-client' => false,
-            'duplicate-client' => false,
-            'count' => 10,
-        ],
-        [
-            'id' => 'Lay-OPG103-4-NDR',
-            'courtOrderUid' => '700007700',
-            'caseNumber' => '67777000',
-            'deputyUid' => '700767777000',
-            'reportType' => 'OPG103',
-            'orderType' => 'hw',
-            'coDeputy' => false,
-            'ndr' => true,
             'multi-client' => false,
             'duplicate-client' => false,
             'count' => 10,
@@ -117,7 +85,6 @@ class LayUserFixtures extends AbstractDataFixture
             'reportType' => 'OPG103',
             'orderType' => 'pfa',
             'coDeputy' => true,
-            'ndr' => false,
             'multi-client' => false,
             'duplicate-client' => false,
             'count' => 10,
@@ -130,7 +97,6 @@ class LayUserFixtures extends AbstractDataFixture
             'reportType' => 'OPG103',
             'orderType' => 'hw',
             'coDeputy' => true,
-            'ndr' => false,
             'multi-client' => false,
             'duplicate-client' => false,
             'count' => 10,
@@ -143,7 +109,6 @@ class LayUserFixtures extends AbstractDataFixture
             'reportType' => 'OPG102',
             'orderType' => 'pfa',
             'coDeputy' => false,
-            'ndr' => false,
             'multi-client' => true,
             'duplicate-client' => false,
             'count' => 2,
@@ -156,7 +121,6 @@ class LayUserFixtures extends AbstractDataFixture
             'reportType' => 'OPG102',
             'orderType' => 'pfa',
             'coDeputy' => false,
-            'ndr' => false,
             'multi-client' => false,
             'duplicate-client' => true,
             'count' => 2,
@@ -187,14 +151,13 @@ class LayUserFixtures extends AbstractDataFixture
         $deputyUid = substr_replace($data['deputyUid'], $iteration, -$offset);
 
         // Create user
-        $user = (new User())
+        $user = new User()
             ->setFirstname($data['id'])
             ->setLastname('User ' . $iteration)
             ->setDeputyUid(intval($deputyUid))
             ->setEmail(strtolower($data['id']) . '-user-' . $iteration . '@publicguardian.gov.uk')
             ->setActive(true)
             ->setRegistrationDate(new \DateTime())
-            ->setNdrEnabled($data['ndr'])
             ->setCoDeputyClientConfirmed($data['coDeputy'])
             ->setPhoneMain('07911111111111')
             ->setAddress1('ABC Road')
@@ -217,7 +180,7 @@ class LayUserFixtures extends AbstractDataFixture
 
         if (!in_array($deputyUid, $this->deputyUids)) {
             $this->deputyUids[] = $deputyUid;
-            $this->deputy = (new Deputy())
+            $this->deputy = new Deputy()
                 ->setDeputyType(DeputyType::LAY)
                 ->setFirstname($data['id'])
                 ->setLastname('User ' . $iteration)
@@ -253,7 +216,6 @@ class LayUserFixtures extends AbstractDataFixture
             'DeputyAddress5' => null,
             'DeputyPostcode' => 'AB1 2CD',
             'ReportType' => $data['reportType'],
-            'NDR' => $data['ndr'],
             'MadeDate' => '2010-03-30',
             'OrderType' => $data['orderType'],
             'CoDeputy' => $data['coDeputy'],
@@ -310,32 +272,24 @@ class LayUserFixtures extends AbstractDataFixture
             $manager->persist($duplicateUser);
         }
 
-        $report = null;
         $multiClientSecondReport = null;
 
-        if ($data['ndr']) {
-            $ndr = new Ndr($client);
-            $client->setNdr($ndr);
+        $realm = PreRegistration::REALM_LAY;
+        $type = PreRegistration::getReportTypeByOrderType($data['reportType'], $data['orderType'], $realm);
 
-            $manager->persist($ndr);
-        } else {
-            $realm = PreRegistration::REALM_LAY;
-            $type = PreRegistration::getReportTypeByOrderType($data['reportType'], $data['orderType'], $realm);
+        $startDate = $client->getExpectedReportStartDate();
+        $startDate->setDate('2016', intval($startDate->format('m')), intval($startDate->format('d')));
 
-            $startDate = $client->getExpectedReportStartDate();
-            $startDate->setDate('2016', intval($startDate->format('m')), intval($startDate->format('d')));
+        $endDate = $client->getExpectedReportEndDate();
+        $endDate->setDate('2017', intval($endDate->format('m')), intval($endDate->format('d')));
 
-            $endDate = $client->getExpectedReportEndDate();
-            $endDate->setDate('2017', intval($endDate->format('m')), intval($endDate->format('d')));
+        $report = new Report($client, $type, $startDate, $endDate);
 
-            $report = new Report($client, $type, $startDate, $endDate);
+        $manager->persist($report);
 
-            $manager->persist($report);
-
-            if ($data['multi-client']) {
-                $multiClientSecondReport = new Report($client2, $type, $startDate, $endDate);
-                $manager->persist($multiClientSecondReport);
-            }
+        if ($data['multi-client']) {
+            $multiClientSecondReport = new Report($client2, $type, $startDate, $endDate);
+            $manager->persist($multiClientSecondReport);
         }
 
         // If codeputy was enabled, add a secondary account
@@ -389,8 +343,8 @@ class LayUserFixtures extends AbstractDataFixture
         // Associate deputy with court order
         $this->deputy->associateWithCourtOrder($courtOrder);
 
-        // Associate court order with reports if it's not an NDR
-        if (!str_ends_with($data['id'], '-NDR') && !is_null($report)) {
+        // Associate court order with reports if it's not null
+        if (!is_null($report)) {
             $courtOrder->addReport($report);
         }
 
@@ -412,7 +366,7 @@ class LayUserFixtures extends AbstractDataFixture
         ?Report $report,
         ?Report $multiClientSecondReport,
     ) {
-        if (str_ends_with($data['id'], '-4') || str_ends_with($data['id'], '-4-NDR') || str_ends_with($data['id'], '-4-Co')) {
+        if (str_ends_with($data['id'], '-4') || str_ends_with($data['id'], '-4-Co')) {
             // Populate court order table and link tables
             $courtOrderPfa = new CourtOrder();
             $courtOrderHW = new CourtOrder();
@@ -444,7 +398,7 @@ class LayUserFixtures extends AbstractDataFixture
             $this->deputy->associateWithCourtOrder($courtOrderPfa);
             $this->deputy->associateWithCourtOrder($courtOrderHW);
 
-            // Associate court order with reports, excluding NDRs
+            // Associate court order with reports
             if (!is_null($report)) {
                 $courtOrderPfa->addReport($report);
                 $courtOrderHW->addReport($report);

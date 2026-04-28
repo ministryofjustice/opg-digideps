@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace OPG\Digideps\Frontend\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\Annotation as JMS;
@@ -45,14 +45,14 @@ class Organisation
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("ArrayCollection<App\Entity\User>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Frontend\Entity\User>")
      */
     private $users;
 
     /**
      * @var ArrayCollection
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Client>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Frontend\Entity\Client>")
      */
     private $clients;
 

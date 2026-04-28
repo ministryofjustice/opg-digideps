@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Tests\Behat;
+namespace Tests\OPG\Digideps\Backend\Behat;
 
-use App\Tests\Behat\Common\AuthenticationTrait;
-use App\Tests\Behat\Common\CourtOrderTrait;
-use App\Tests\Behat\Common\DebugTrait;
-use App\Tests\Behat\Common\FormTrait;
-use App\Tests\Behat\Common\LinksTrait;
-use App\Tests\Behat\Common\RegionTrait;
-use App\Tests\Behat\Common\ReportTrait;
-use App\Tests\Behat\Common\SiteNavigationTrait;
-use App\Tests\Behat\OrganisationManagement\OrganisationManagementTrait;
+use Tests\OPG\Digideps\Backend\Behat\Common\AuthenticationTrait;
+use Tests\OPG\Digideps\Backend\Behat\Common\CourtOrderTrait;
+use Tests\OPG\Digideps\Backend\Behat\Common\DebugTrait;
+use Tests\OPG\Digideps\Backend\Behat\Common\FormTrait;
+use Tests\OPG\Digideps\Backend\Behat\Common\LinksTrait;
+use Tests\OPG\Digideps\Backend\Behat\Common\RegionTrait;
+use Tests\OPG\Digideps\Backend\Behat\Common\ReportTrait;
+use Tests\OPG\Digideps\Backend\Behat\Common\SiteNavigationTrait;
+use Tests\OPG\Digideps\Backend\Behat\OrganisationManagement\OrganisationManagementTrait;
 use Behat\MinkExtension\Context\MinkContext;
 
 /**

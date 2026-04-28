@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
-use App\Entity\Report\Report;
-use App\Service\ReportStatusService;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Service\ReportStatusService;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\File;
+namespace OPG\Digideps\Frontend\Service\File;
 
 use League\MimeTypeDetection\FinfoMimeTypeDetector;
 

@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Tests\Integration\Controller;
+namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
-use ReflectionObject;
-use Exception;
-use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
-use App\Service\BruteForce\AttemptsInTimeChecker;
-use App\Service\JWT\JWTService;
-use App\Tests\Integration\Fixtures;
+use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
+use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
+use OPG\Digideps\Backend\Service\JWT\JWTService;
+use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 use Doctrine\ORM\EntityManager;
 use Osteel\OpenApi\Testing\ValidatorBuilder;
 use Osteel\OpenApi\Testing\ValidatorInterface;
@@ -119,7 +117,7 @@ abstract class AbstractTestController extends WebTestCase
      *
      * @return mixed token
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function login(string $email, string $password, $clientSecret)
     {
@@ -288,7 +286,7 @@ abstract class AbstractTestController extends WebTestCase
         parent::tearDown();
 
         // clean up vars
-        $reflectionObject = new ReflectionObject($this);
+        $reflectionObject = new \ReflectionObject($this);
         foreach ($reflectionObject->getProperties() as $property) {
             if (!$property->isStatic() && !str_starts_with($property->getDeclaringClass()->getName(), 'PHPUnit_')) {
                 $property->setValue($this, null);

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Behat\v2\Common;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\Common;
 
 trait IShouldBeOnAdminTrait
 {

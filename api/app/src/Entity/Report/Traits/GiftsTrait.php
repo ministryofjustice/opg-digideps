@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
-use App\Entity\Report\Gift;
-use App\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\Gift;
+use OPG\Digideps\Backend\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -23,11 +23,11 @@ trait GiftsTrait
     /**
      * @var Gift[]
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Report\Gift>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\Gift>")
      *
      * @JMS\Groups({"gifts"})
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\Gift", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\Gift", mappedBy="report", cascade={"persist", "remove"})
      */
     private $gifts;
 

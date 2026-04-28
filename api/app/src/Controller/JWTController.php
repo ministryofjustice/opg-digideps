@@ -2,15 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace OPG\Digideps\Backend\Controller;
 
-use App\Service\Auth\AuthService;
-use App\Service\JWT\JWTService;
+use OPG\Digideps\Backend\Service\Auth\AuthService;
+use OPG\Digideps\Backend\Service\JWT\JWTService;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Throwable;
 
 class JWTController extends AbstractController
 {
@@ -27,7 +26,7 @@ class JWTController extends AbstractController
         try {
             $this->logger->warning('Serving JWK');
             $jwk = $this->JWTService->generateJWK();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $message = sprintf('Error Serving JWK: %s', $e->getMessage());
             $this->logger->warning($message);
             throw $e;

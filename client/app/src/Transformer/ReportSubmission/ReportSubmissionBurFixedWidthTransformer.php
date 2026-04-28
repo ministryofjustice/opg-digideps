@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Transformer\ReportSubmission;
+namespace OPG\Digideps\Frontend\Transformer\ReportSubmission;
 
-use App\Entity\Report\ReportSubmissionSummary;
+use OPG\Digideps\Frontend\Entity\Report\ReportSubmissionSummary;
 
 class ReportSubmissionBurFixedWidthTransformer
 {

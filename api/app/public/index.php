@@ -1,6 +1,6 @@
 <?php
 
-use App\Kernel;
+use OPG\Digideps\Backend\Kernel;
 use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\HttpFoundation\Request;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Audit;
+namespace OPG\Digideps\Backend\Service\Audit;
 
 use Aws\CloudWatchLogs\CloudWatchLogsClient;
 use Aws\CloudWatchLogs\Exception\CloudWatchLogsException;
@@ -26,7 +26,7 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
             return;
         }
 
-        $stream = (new ValidatingArray($record->context))->getStringOrDefault('event', 'unknown');
+        $stream = new ValidatingArray($record->context)->getStringOrDefault('event', 'unknown');
         $sequenceToken = $this->initialize($stream);
         $record = $this->formatEntry($record);
 

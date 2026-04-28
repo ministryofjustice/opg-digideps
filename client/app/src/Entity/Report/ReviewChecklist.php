@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Frontend\Entity\Report;
 
-use App\Entity\Report\Traits\HasReportTrait;
-use App\Entity\ReportInterface;
-use App\Entity\Traits\ModifyAudit;
-use App\Entity\User;
-use App\Model\FullReviewChecklist;
+use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
+use OPG\Digideps\Frontend\Entity\ReportInterface;
+use OPG\Digideps\Frontend\Entity\Traits\ModifyAudit;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Model\FullReviewChecklist;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -25,7 +25,7 @@ class ReviewChecklist
     /**
      * @var FullReviewChecklist
      *
-     * @JMS\Type("App\Model\FullReviewChecklist")\
+     * @JMS\Type("OPG\Digideps\Frontend\Model\FullReviewChecklist")\
      * @Assert\Valid
      */
     private $answers;
@@ -39,9 +39,9 @@ class ReviewChecklist
     private $decision;
 
     /**
-     * @var \App\Entity\User
+     * @var User
      *
-     * @JMS\Type("App\Entity\User")
+     * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
      */
     protected $submittedBy;
 
@@ -141,7 +141,7 @@ class ReviewChecklist
     }
 
     /**
-     * @return \App\Entity\User
+     * @return User
      */
     public function getSubmittedBy(): ?User
     {

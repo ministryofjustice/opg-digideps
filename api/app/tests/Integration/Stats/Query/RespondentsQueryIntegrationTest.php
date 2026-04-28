@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Tests\Integration\Service\Stats\Query;
+namespace Tests\OPG\Digideps\Backend\Integration\Stats\Query;
 
-use App\Tests\Integration\ApiIntegrationTestCase;
-use DateTime;
-use App\Entity\Client;
-use App\Entity\Report\Report;
-use App\Entity\Satisfaction;
-use App\Service\Stats\Query\RespondentsQuery;
-use App\Service\Stats\StatsQueryParameters;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Satisfaction;
+use OPG\Digideps\Backend\Service\Stats\Query\RespondentsQuery;
+use OPG\Digideps\Backend\Service\Stats\StatsQueryParameters;
 
 class RespondentsQueryIntegrationTest extends ApiIntegrationTestCase
 {
@@ -40,7 +39,7 @@ class RespondentsQueryIntegrationTest extends ApiIntegrationTestCase
         ?string $reportType = null,
         ?string $deputyType = null
     ): void {
-        $satisfaction = (new Satisfaction())->setScore($score);
+        $satisfaction = new Satisfaction()->setScore($score);
 
         if (isset($reportType)) {
             $client = new Client();
@@ -48,8 +47,8 @@ class RespondentsQueryIntegrationTest extends ApiIntegrationTestCase
             $report = new Report(
                 $client,
                 $reportType,
-                new DateTime('2019-08-01'),
-                new DateTime('2020-08-01')
+                new \DateTime('2019-08-01'),
+                new \DateTime('2020-08-01')
             );
             self::$entityManager->persist($client);
             self::$entityManager->persist($report);

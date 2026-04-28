@@ -2,14 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service;
+namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
-use stdClass;
-use App\Entity\Client;
-use App\Entity\Report\Report;
-use App\Repository\ClientRepository;
-use App\Service\LayRegistrationService;
-use App\Service\ReportService;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Repository\ClientRepository;
+use OPG\Digideps\Backend\Service\LayRegistrationService;
+use OPG\Digideps\Backend\Service\ReportService;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -47,7 +46,7 @@ class LayRegistrationServiceTest extends TestCase
             ->method('findClientsWithoutAReport')
             ->willReturn($mockClients);
 
-        $counter = new stdClass();
+        $counter = new \stdClass();
         $counter->current = 0;
 
         $this->mockReportService->expects(self::exactly(3))

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Security;
+namespace OPG\Digideps\Frontend\Security;
 
-use App\Service\Client\RestClient;
-use App\Service\Client\TokenStorage\RedisStorage;
-use App\Service\Redirector;
-use App\Validator\RouteValidator;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\Client\TokenStorage\RedisStorage;
+use OPG\Digideps\Frontend\Service\Redirector;
+use OPG\Digideps\Frontend\Validator\RouteValidator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

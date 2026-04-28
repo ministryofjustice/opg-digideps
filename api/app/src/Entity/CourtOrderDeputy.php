@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity;
+namespace OPG\Digideps\Backend\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -10,7 +10,7 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(name="court_order_deputy")
  *
- * @ORM\Entity(repositoryClass="App\Repository\CourtOrderDeputyRepository")
+ * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\CourtOrderDeputyRepository")
  *
  * @ORM\HasLifecycleCallbacks()
  */
@@ -19,7 +19,7 @@ class CourtOrderDeputy
     /**
      * @ORM\Id
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\CourtOrder", inversedBy="courtOrderDeputyRelationships", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\CourtOrder", inversedBy="courtOrderDeputyRelationships", cascade={"persist"})
      *
      * @ORM\JoinColumn(name="court_order_id", referencedColumnName="id", nullable=false)
      */
@@ -30,7 +30,7 @@ class CourtOrderDeputy
      *
      * @ORM\Id
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Deputy", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Deputy", cascade={"persist"})
      *
      * @ORM\JoinColumn(name="deputy_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */

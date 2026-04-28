@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\DeputyshipProcessing;
+namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing;
 
-use App\Domain\Deputyship\DeputyshipProcessingRawDbAccessResult;
-use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
-use App\v2\Registration\Enum\DeputyshipCandidateAction;
+use OPG\Digideps\Backend\Domain\Deputyship\DeputyshipProcessingRawDbAccessResult;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 
 /**
  * Records the entities created and any errors when building from candidates for a single order.

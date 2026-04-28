@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Security;
+namespace Tests\OPG\Digideps\Backend\Unit\Security;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use App\Entity\User;
-use App\Exception\InvalidRegistrationTokenException;
-use App\Exception\UnauthorisedException;
-use App\Exception\UserWrongCredentialsManyAttempts;
-use App\Repository\UserRepository;
-use App\Security\RegistrationTokenAuthenticator;
-use App\Service\Auth\AuthService;
-use App\Service\BruteForce\AttemptsIncrementalWaitingChecker;
-use App\Service\BruteForce\AttemptsInTimeChecker;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Exception\InvalidRegistrationTokenException;
+use OPG\Digideps\Backend\Exception\UnauthorisedException;
+use OPG\Digideps\Backend\Exception\UserWrongCredentialsManyAttempts;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\Security\RegistrationTokenAuthenticator;
+use OPG\Digideps\Backend\Service\Auth\AuthService;
+use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
+use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -114,7 +114,7 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
 
         $this->userRepo->findOneBy(['registrationToken' => 'a-token'])
             ->shouldBeCalled()
-            ->willReturn((new User())->setId(1));
+            ->willReturn(new User()->setId(1));
 
         self::assertEquals(true, $this->sut->supports($request));
     }
@@ -124,7 +124,7 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
     public function supportsFirstPasswordRouteFailures(Request $request): void
     {
         $this->userRepo->findOneBy(['registrationToken' => 'a-token'])
-            ->willReturn((new User())->setId(1));
+            ->willReturn(new User()->setId(1));
 
         self::assertEquals(false, $this->sut->supports($request));
     }
@@ -207,7 +207,7 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(true);
 
-        $expectedUser = (new User())
+        $expectedUser = new User()
             ->setId(1)
             ->setEmail('user@example.org')
             ->setRoleName('FAKE_ROLE');
@@ -346,7 +346,7 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
         $this->authService->isSecretValid($request)
             ->willReturn(true);
 
-        $expectedUser = (new User())
+        $expectedUser = new User()
             ->setId(1)
             ->setEmail('user@example.org')
             ->setRoleName('FAKE_ROLE');

@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Entity\Traits;
-
-use Doctrine\ORM\Mapping as ORM;
+namespace OPG\Digideps\Frontend\Entity\Traits;
 
 /**
  * SoftDeletable Trait, usable with PHP >= 5.4

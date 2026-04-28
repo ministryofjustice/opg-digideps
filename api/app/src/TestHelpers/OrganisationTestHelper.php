@@ -1,14 +1,14 @@
 <?php
 
-namespace App\TestHelpers;
+namespace OPG\Digideps\Backend\TestHelpers;
 
-use App\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\Organisation;
 
 class OrganisationTestHelper
 {
     public function createOrganisation(string $orgName, string $emailIdentifier)
     {
-        return (new Organisation())
+        return new Organisation()
             ->setName($orgName)
             ->setEmailIdentifier($emailIdentifier)
             ->setIsActivated(true);

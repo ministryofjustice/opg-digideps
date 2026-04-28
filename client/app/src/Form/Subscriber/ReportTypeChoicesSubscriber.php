@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Form\Subscriber;
+namespace OPG\Digideps\Frontend\Form\Subscriber;
 
-use App\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormEvent;

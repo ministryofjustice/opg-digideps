@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace OPG\Digideps\Backend\Entity;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Domain\CourtOrder\CourtOrderReportType;
-use App\Domain\CourtOrder\CourtOrderType;
-use App\Domain\Deputy\DeputyType;
-use App\Domain\Report\ReportType;
-use App\Entity\Report\Report;
-use App\Entity\Traits\CreateUpdateTimestamps;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Domain\Report\ReportType;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,7 +21,7 @@ use JMS\Serializer\Annotation as JMS;
  *
  * @ORM\Table(name="court_order")
  *
- * @ORM\Entity(repositoryClass="App\Repository\CourtOrderRepository")
+ * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\CourtOrderRepository")
  *
  * @ORM\HasLifecycleCallbacks()
  */
@@ -80,7 +80,7 @@ class CourtOrder
     private \DateTime $orderMadeDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Client", inversedBy="courtOrders")
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Client", inversedBy="courtOrders")
      *
      * @ORM\JoinColumn(name="client_id", referencedColumnName="id")
      */
@@ -90,7 +90,7 @@ class CourtOrder
 
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\CourtOrder")
+     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\CourtOrder")
      * @ORM\JoinColumn(name="sibling_id", referencedColumnName="id")
      */
     private ?CourtOrder $sibling;
@@ -98,12 +98,12 @@ class CourtOrder
     /**
      * @see CourtOrderKind
      *
-     * @ORM\Column(name="order_kind", type="string", length=6, nullable=false, options={"default" = "single"})
+     * @ORM\Column(name="order_kind", type="string", length=6, nullable=false)
      */
     private string $orderKind;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Report\Report", inversedBy="courtOrders", fetch="EXTRA_LAZY", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="courtOrders", fetch="EXTRA_LAZY", cascade={"persist"})
      *
      * @ORM\JoinTable(name="court_order_report",
      *         joinColumns={@ORM\JoinColumn(name="court_order_id", referencedColumnName="id", onDelete="CASCADE")},
@@ -112,14 +112,14 @@ class CourtOrder
      *
      * @var Collection<int, Report> $reports
      */
-    #[JMS\Type('ArrayCollection<App\Entity\Report\Report>')]
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Report>')]
     #[JMS\Groups(['court-order-full'])]
     private Collection $reports;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrderDeputy", mappedBy="courtOrder", fetch="EXTRA_LAZY", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\CourtOrderDeputy", mappedBy="courtOrder", fetch="EXTRA_LAZY", cascade={"persist"})
      */
-    #[JMS\Type('ArrayCollection<App\Entity\CourtOrderDeputy>')]
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\CourtOrderDeputy>')]
     private Collection $courtOrderDeputyRelationships;
 
     private ?ReportType $desiredReportType = null;

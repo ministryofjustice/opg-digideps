@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Security;
+namespace OPG\Digideps\Frontend\Security;
 
-use App\Entity\Client;
-use App\Entity\Note;
-use App\Entity\User;
+use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\Note;
+use OPG\Digideps\Frontend\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 

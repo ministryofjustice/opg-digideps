@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\TestHelpers;
+namespace OPG\Digideps\Frontend\TestHelpers;
 
-use App\Entity\Deputy;
+use OPG\Digideps\Frontend\Entity\Deputy;
 use Faker;
 
 class DeputyHelper
@@ -13,7 +13,7 @@ class DeputyHelper
     {
         $faker = Faker\Factory::create();
 
-        return (new Deputy())
+        return new Deputy()
             ->setFirstname($faker->firstName())
             ->setLastname($faker->lastName())
             ->setEmail1($faker->safeEmail())

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Tests\Integration\v2\Controller;
+namespace Tests\OPG\Digideps\Backend\Integration\v2\Controller;
 
-use App\Entity\Organisation;
-use App\Entity\User;
-use App\Repository\UserRepository;
-use App\Tests\Integration\Controller\AbstractTestController;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 use Symfony\Component\HttpFoundation\Response;
 
 class OrganisationControllerTest extends AbstractTestController
@@ -51,7 +51,7 @@ class OrganisationControllerTest extends AbstractTestController
 
         self::fixtures()->flush()->clear();
 
-        self::$profUser = self::fixtures()->getRepo('User')->findOneByEmail('prof@example.org');
+        self::$profUser = self::fixtures()->getRepo(User::class)->findOneByEmail('prof@example.org');
         self::fixtures()->addUserToOrganisation(self::$profUser->getId(), end(self::$orgs)->getId());
         self::fixtures()->flush()->clear();
 
@@ -378,7 +378,7 @@ class OrganisationControllerTest extends AbstractTestController
     public function addUserActionAddsUserToOrganisation()
     {
         $orgId = self::$orgs[0]->getId();
-        $newUser = self::fixtures()->getRepo('User')->findOneBy([], ['id' => 'ASC']);
+        $newUser = self::fixtures()->getRepo(User::class)->findOneBy([], ['id' => 'ASC']);
 
         self::$frameworkBundleClient->request(
             'PUT',
@@ -488,7 +488,7 @@ class OrganisationControllerTest extends AbstractTestController
     public function removeUserActionRemovesUserFromOrganisation()
     {
         $orgId = self::$orgs[0]->getId();
-        $newUser = self::fixtures()->getRepo('User')->findOneBy([], ['id' => 'DESC']);
+        $newUser = self::fixtures()->getRepo(User::class)->findOneBy([], ['id' => 'DESC']);
 
         self::fixtures()->addUserToOrganisation($newUser->getId(), $orgId);
         self::fixtures()->flush()->clear();
@@ -522,7 +522,7 @@ class OrganisationControllerTest extends AbstractTestController
      */
     public function removeUserActionReturnsNotFoundOnInvalidOrganisationId()
     {
-        $user = self::fixtures()->getRepo('User')->findOneBy([], ['id' => 'DESC']);
+        $user = self::fixtures()->getRepo(User::class)->findOneBy([], ['id' => 'DESC']);
         self::$frameworkBundleClient->request(
             'DELETE',
             '/v2/organisation/9001/user/' . $user->getId(),
@@ -569,7 +569,7 @@ class OrganisationControllerTest extends AbstractTestController
     public function removeUserActionReturnsForbiddenForUsersNotInOrganisation()
     {
         $orgId = self::$orgs[0]->getId();
-        $user = self::fixtures()->getRepo('User')->findOneBy([], ['id' => 'DESC']);
+        $user = self::fixtures()->getRepo(User::class)->findOneBy([], ['id' => 'DESC']);
 
         self::$frameworkBundleClient->request(
             'DELETE',

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Exception;
+namespace OPG\Digideps\Backend\Exception;
 
 class UserWrongCredentialsException extends \RuntimeException
 {

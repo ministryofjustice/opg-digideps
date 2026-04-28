@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Service;
+namespace Tests\OPG\Digideps\Backend\Integration\Service;
 
-use App\Entity\Client;
-use App\Entity\PreRegistration;
-use App\Entity\User;
-use App\Service\DeputyCaseService;
-use App\TestHelpers\ClientTestHelper;
-use App\TestHelpers\UserTestHelper;
-use App\Tests\Integration\ApiIntegrationTestCase;
-use App\Tests\Integration\Fixtures;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Service\DeputyCaseService;
+use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
+use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 
 class DeputyCaseServiceIntegrationIntegrationTest extends ApiIntegrationTestCase
 {

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\Reporting\Sections;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections;
 
-use App\Tests\Behat\BehatException;
+use Tests\OPG\Digideps\Backend\Behat\BehatException;
 use Behat\Gherkin\Node\TableNode;
 use Behat\Step\Given;
 use Behat\Step\Then;

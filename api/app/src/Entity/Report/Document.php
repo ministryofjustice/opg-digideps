@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Backend\Entity\Report;
 
-use App\Entity\Ndr\Ndr;
-use App\Entity\SynchronisableInterface;
-use App\Entity\SynchronisableTrait;
-use App\Entity\Traits\CreationAudit;
-use App\Entity\User;
+use OPG\Digideps\Backend\Entity\SynchronisableInterface;
+use OPG\Digideps\Backend\Entity\SynchronisableTrait;
+use OPG\Digideps\Backend\Entity\Traits\CreationAudit;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -20,7 +18,7 @@ use JMS\Serializer\Annotation as JMS;
  *     @ORM\Index(name="ix_document_created_by", columns={"created_by"})
  *     })
  *
- * @ORM\Entity(repositoryClass="App\Repository\DocumentRepository")
+ * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\DocumentRepository")
  */
 class Document implements SynchronisableInterface
 {
@@ -84,35 +82,22 @@ class Document implements SynchronisableInterface
      *
      * @JMS\Groups({"document-report"})
      *
-     * @JMS\Type("App\Entity\Report\Report")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\Report")
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\Report", inversedBy="documents")
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="documents")
      *
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
     private $report;
 
     /**
-     * @var Ndr
-     *
-     * @JMS\Groups({"document-report"})
-     *
-     * @JMS\Type("App\Entity\Ndr\Ndr")
-     *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Ndr\Ndr")
-     *
-     * @ORM\JoinColumn(name="ndr_id", referencedColumnName="id", onDelete="CASCADE")
-     */
-    private $ndr;
-
-    /**
      * @var ReportSubmission
      *
-     * @JMS\Type("App\Entity\Report\ReportSubmission")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\ReportSubmission")
      *
      * @JMS\Groups({"document-report-submission"})
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Report\ReportSubmission", inversedBy="documents", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\ReportSubmission", inversedBy="documents", cascade={"persist"})
      *
      * @ORM\JoinColumn(name="report_submission_id", referencedColumnName="id", onDelete="SET NULL")
      */
@@ -135,14 +120,9 @@ class Document implements SynchronisableInterface
      * Report is initially required, but will be set to null at submission time,
      * and associated to a specific ReportSubmission instead
      */
-    public function __construct($report)
+    public function __construct(Report $report)
     {
-        // TODO create ReportInterface class and use as type hinting
-        if ($report instanceof Report) {
-            $this->report = $report;
-        } elseif ($report instanceof Ndr) {
-            $this->ndr = $report;
-        }
+        $this->report = $report;
         $this->isReportPdf = true;
     }
 
@@ -212,14 +192,6 @@ class Document implements SynchronisableInterface
     public function getReport()
     {
         return $this->report;
-    }
-
-    /**
-     * @return Ndr
-     */
-    public function getNdr()
-    {
-        return $this->ndr;
     }
 
     /**

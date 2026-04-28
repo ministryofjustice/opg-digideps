@@ -1,9 +1,9 @@
 <?php
 
-namespace App\EventListener;
+namespace OPG\Digideps\Backend\EventListener;
 
-use App\Exception\BusinessRulesException;
-use App\Exception\HasDataInterface;
+use OPG\Digideps\Backend\Exception\BusinessRulesException;
+use OPG\Digideps\Backend\Exception\HasDataInterface;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Psr\Log\LoggerInterface;

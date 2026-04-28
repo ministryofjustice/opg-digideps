@@ -4,7 +4,7 @@ security:
             algorithm: sha512
             encode_as_base64: true
 
-        App\Entity\User:
+        OPG\Digideps\Backend\Entity\User:
             algorithm: bcrypt
             migrate_from:
                 - legacy
@@ -20,10 +20,10 @@ security:
     providers:
         entity_user_provider:
             entity:
-                class: App\Entity\User
+                class: OPG\Digideps\Backend\Entity\User
                 property: email
         redis_user_provider:
-            id: App\Security\RedisUserProvider
+            id: OPG\Digideps\Backend\Security\RedisUserProvider
 
     firewalls:
         health:
@@ -100,9 +100,9 @@ security:
         # keep this one last so that the previous ones bypass the catch-all pattern below
         default:
             custom_authenticators:
-                - App\Security\LoginRequestAuthenticator
-                - App\Security\RegistrationTokenAuthenticator
-                - App\Security\HeaderTokenAuthenticator
+                - OPG\Digideps\Backend\Security\LoginRequestAuthenticator
+                - OPG\Digideps\Backend\Security\RegistrationTokenAuthenticator
+                - OPG\Digideps\Backend\Security\HeaderTokenAuthenticator
             pattern: .*
             provider: entity_user_provider
             security: true

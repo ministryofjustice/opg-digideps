@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\DataImporter;
+namespace OPG\Digideps\Backend\Service\DataImporter;
 
 use League\Csv\Exception;
 use League\Csv\Reader;

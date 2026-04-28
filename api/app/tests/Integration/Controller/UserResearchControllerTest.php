@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Tests\Integration\Controller;
+namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
-use App\Entity\Satisfaction;
-use App\TestHelpers\ClientTestHelper;
-use App\TestHelpers\ReportTestHelper;
+use OPG\Digideps\Backend\Entity\Satisfaction;
+use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
+use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
 
 class UserResearchControllerTest extends AbstractTestController
 {
@@ -119,7 +119,7 @@ class UserResearchControllerTest extends AbstractTestController
 
         $report->setClient($client);
 
-        $satisfaction = (new Satisfaction())
+        $satisfaction = new Satisfaction()
             ->setReport($report)
             ->setScore(2);
 

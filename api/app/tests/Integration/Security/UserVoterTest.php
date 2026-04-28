@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Security;
+namespace Tests\OPG\Digideps\Backend\Integration\Security;
 
-use App\Entity\User;
-use App\TestHelpers\ClientTestHelper;
-use App\TestHelpers\ReportTestHelper;
-use App\TestHelpers\UserTestHelper;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Security\UserVoter;
+use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
+use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
+use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 

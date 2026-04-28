@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Factory;
+namespace OPG\Digideps\Backend\Factory;
 
-use App\Entity\Client;
-use App\Entity\PreRegistration;
-use App\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\Report\Report;
 
 class ReportFactory
 {

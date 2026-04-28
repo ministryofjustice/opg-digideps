@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Sync\Service;
+namespace OPG\Digideps\Frontend\Sync\Service;
 
-use App\Sync\Model\Sirius\SiriusApiError;
+use OPG\Digideps\Frontend\Sync\Model\Sirius\SiriusApiError;
 use Symfony\Component\Serializer\SerializerInterface;
 
 class SiriusApiErrorTranslator

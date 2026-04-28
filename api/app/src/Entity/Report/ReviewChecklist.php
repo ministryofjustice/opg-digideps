@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Backend\Entity\Report;
 
-use App\Entity\ReportInterface;
-use App\Entity\Traits\ModifyAudit;
-use App\Entity\User;
+use OPG\Digideps\Backend\Entity\Traits\ModifyAudit;
+use OPG\Digideps\Backend\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
@@ -37,9 +36,9 @@ class ReviewChecklist
     private $id;
 
     /**
-     * @JMS\Type("App\Entity\Report\Report")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\Report")
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\Report", inversedBy="checklist")
+     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="checklist")
      *
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
      *
@@ -66,20 +65,20 @@ class ReviewChecklist
     private $decision;
 
     /**
-     * @var \App\Entity\User
+     * @var User
      *
-     * @JMS\Type("App\Entity\User")
+     * @JMS\Type("OPG\Digideps\Backend\Entity\User")
      *
      * @JMS\Groups({"checklist"})
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\User", fetch="EAGER")
      *
      * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
     protected $submittedBy;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      *
      * @JMS\Type("DateTime")
      *
@@ -89,7 +88,7 @@ class ReviewChecklist
      */
     protected $submittedOn;
 
-    public function __construct(ReportInterface $report)
+    public function __construct(Report $report)
     {
         $this->setReport($report);
     }
@@ -114,7 +113,7 @@ class ReviewChecklist
         return $this;
     }
 
-    public function getReport(): ReportInterface
+    public function getReport(): Report
     {
         return $this->report;
     }
@@ -122,7 +121,7 @@ class ReviewChecklist
     /**
      * @return $this
      */
-    public function setReport(ReportInterface $report)
+    public function setReport(Report $report)
     {
         $this->report = $report;
 
@@ -168,7 +167,7 @@ class ReviewChecklist
     }
 
     /**
-     * @return \App\Entity\User
+     * @return User
      */
     public function getSubmittedBy(): ?User
     {

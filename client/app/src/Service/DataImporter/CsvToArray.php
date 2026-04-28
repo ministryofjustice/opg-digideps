@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\DataImporter;
+namespace OPG\Digideps\Frontend\Service\DataImporter;
 
 class CsvToArray
 {

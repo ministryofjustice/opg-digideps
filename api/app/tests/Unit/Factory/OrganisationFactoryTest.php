@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Factory;
+namespace Tests\OPG\Digideps\Backend\Unit\Factory;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use InvalidArgumentException;
-use App\Entity\Organisation;
-use App\Factory\OrganisationFactory;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Factory\OrganisationFactory;
 use PHPUnit\Framework\TestCase;
 
 final class OrganisationFactoryTest extends TestCase
@@ -66,7 +65,7 @@ final class OrganisationFactoryTest extends TestCase
     #[Test]
     public function createFromFullEmailThrowsExceptionIfGivenBadData(string $name, string $emailIdentifier): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->factory->createFromFullEmail($name, $emailIdentifier);
     }
 
@@ -74,7 +73,7 @@ final class OrganisationFactoryTest extends TestCase
     #[Test]
     public function createFromEmailIdentifierThrowsExceptionIfGivenBadData(string $name, string $emailIdentifier): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->factory->createFromEmailIdentifier($name, $emailIdentifier);
     }
 

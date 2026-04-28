@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Entity\Traits;
+namespace OPG\Digideps\Frontend\Entity\Traits;
 
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 
 trait LoginInfoTrait
 {

@@ -2,24 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Admin;
+namespace OPG\Digideps\Frontend\Controller\Admin;
 
-use App\Controller\AbstractController;
-use App\Entity\Client;
-use App\Entity\User;
-use App\Event\AdminManagerDeletedEvent;
-use App\Event\CSVUploadedEvent;
-use App\EventDispatcher\ObservableEventDispatcher;
-use App\Exception\RestClientException;
-use App\Form\Admin\AddUserType;
-use App\Form\Admin\EditUserType;
-use App\Form\Admin\SearchType;
-use App\Form\ProcessCSVType;
-use App\Security\UserVoter;
-use App\Service\Audit\AuditEvents;
-use App\Service\Client\Internal\PreRegistrationApi;
-use App\Service\Client\Internal\UserApi;
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Event\AdminManagerDeletedEvent;
+use OPG\Digideps\Frontend\Event\CSVUploadedEvent;
+use OPG\Digideps\Frontend\EventDispatcher\ObservableEventDispatcher;
+use OPG\Digideps\Frontend\Exception\RestClientException;
+use OPG\Digideps\Frontend\Form\Admin\AddUserType;
+use OPG\Digideps\Frontend\Form\Admin\EditUserType;
+use OPG\Digideps\Frontend\Form\Admin\SearchType;
+use OPG\Digideps\Frontend\Form\ProcessCSVType;
+use OPG\Digideps\Frontend\Security\UserVoter;
+use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
+use OPG\Digideps\Frontend\Service\Client\Internal\PreRegistrationApi;
+use OPG\Digideps\Frontend\Service\Client\Internal\UserApi;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Predis\ClientInterface;

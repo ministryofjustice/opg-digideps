@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\v2\Registration\DeputyshipProcessing;
+namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\DeputyshipProcessing;
 
-use App\Domain\Deputyship\DeputyshipProcessingLookupCache;
-use App\Entity\CourtOrderDeputy;
-use App\Entity\StagingDeputyship;
-use App\Entity\StagingSelectedCandidate;
-use App\Factory\StagingSelectedCandidateFactory;
-use App\Repository\CourtOrderDeputyRepository;
-use App\v2\Registration\DeputyshipProcessing\CourtOrderAndDeputyCandidatesFactory;
+use OPG\Digideps\Backend\Domain\Deputyship\DeputyshipProcessingLookupCache;
+use OPG\Digideps\Backend\Entity\CourtOrderDeputy;
+use OPG\Digideps\Backend\Entity\StagingDeputyship;
+use OPG\Digideps\Backend\Entity\StagingSelectedCandidate;
+use OPG\Digideps\Backend\Factory\StagingSelectedCandidateFactory;
+use OPG\Digideps\Backend\Repository\CourtOrderDeputyRepository;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrderAndDeputyCandidatesFactory;
 use PHPUnit\Framework\TestCase;
 
 final class CourtOrderAndDeputyCandidatesFactoryTest extends TestCase

@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Entity;
+namespace OPG\Digideps\Backend\Entity;
 
-use App\Domain\Deputy\DeputyType;
-use App\Entity\Report\Report;
-use App\Entity\Traits\AddressTrait;
-use App\Entity\Traits\CreateUpdateTimestamps;
-use App\Entity\UserResearch\UserResearchResponse;
-use App\Utility\Query\Hydrator;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Traits\AddressTrait;
+use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
+use OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse;
+use OPG\Digideps\Backend\Utility\Query\Hydrator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *     @ORM\Index(name="created_by_idx", columns={"created_by_id"})
  * })
  *
- * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
+ * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\UserRepository")
  *
  * @ORM\HasLifecycleCallbacks()
  */
@@ -121,18 +121,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Client", mappedBy="users", cascade={"persist"}, fetch="EXTRA_LAZY")
+     * @ORM\ManyToMany(targetEntity="OPG\Digideps\Backend\Entity\Client", mappedBy="users", cascade={"persist"}, fetch="EXTRA_LAZY")
      */
     #[JMS\Groups(['user-clients'])]
-    #[JMS\Type('ArrayCollection<App\Entity\Client>')]
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Client>')]
     private $clients;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Organisation", mappedBy="users", fetch="EXTRA_LAZY")
+     * @ORM\ManyToMany(targetEntity="OPG\Digideps\Backend\Entity\Organisation", mappedBy="users", fetch="EXTRA_LAZY")
      *
      * @var ArrayCollection
      */
-    #[JMS\Type('ArrayCollection<App\Entity\Organisation>')]
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Organisation>')]
     #[JMS\Groups(['user-organisations'])]
     #[JMS\Accessor(getter: 'getOrganisations')]
     private $organisations;
@@ -271,15 +271,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var bool
      *
-     * @ORM\Column(name="odr_enabled", type="boolean", nullable=true, options = { "default": false })
-     */
-    #[JMS\Type('boolean')]
-    #[JMS\Groups(['user', 'user-login'])]
-    private $ndrEnabled;
-
-    /**
-     * @var bool
-     *
      * @ORM\Column(name="ad_managed", type="boolean", nullable=true, options = { "default": false })
      */
     #[JMS\Type('boolean')]
@@ -325,20 +316,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var UserResearchResponse|null
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\UserResearch\UserResearchResponse", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse", mappedBy="user", cascade={"persist"})
      */
-    #[JMS\Type('App\Entity\UserResearch\UserResearchResponse')]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse')]
     #[JMS\Groups(['user', 'satisfaction', 'user-research'])]
     private $userResearchResponse;
 
     /**
      * @var User|null
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="user")
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\User", inversedBy="user")
      *
      * @ORM\JoinColumn(name="created_by_id", referencedColumnName="id", onDelete="SET NULL")
      */
-    #[JMS\Type('App\Entity\User')]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
     #[JMS\Groups(['user', 'created-by'])]
     #[JMS\MaxDepth(3)]
     private $createdBy;
@@ -353,9 +344,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $deletionProtection;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Deputy", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\Deputy", mappedBy="user", cascade={"persist"})
      */
-    #[JMS\Type('App\Entity\Deputy')]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Deputy')]
     private ?Deputy $deputy;
 
     /**
@@ -887,24 +878,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @return bool
      */
-    public function getNdrEnabled()
-    {
-        return $this->ndrEnabled;
-    }
-
-    /**
-     * @param bool $ndrEnabled
-     */
-    public function setNdrEnabled($ndrEnabled): User
-    {
-        $this->ndrEnabled = $ndrEnabled;
-
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
     public function isAdManaged()
     {
         return $this->adManaged;
@@ -1243,7 +1216,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function regBeforeToday(User $user): bool
     {
-        return $user->getRegistrationDate() < (new \DateTime())->setTime(00, 00, 00);
+        return $user->getRegistrationDate() < new \DateTime()->setTime(00, 00, 00);
     }
 
     public function getCreatedBy(): ?User
@@ -1363,7 +1336,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             'address_country' => 'setAddressCountry',
             'phone_alternative' => 'setPhoneAlternative',
             'phone_main' => 'setPhoneMain',
-            'ndr_enabled' => 'setNdrEnabled',
             'ad_managed' => 'setAdManaged',
             'role_name' => 'setRoleName',
             'job_title' => 'setJobTitle',

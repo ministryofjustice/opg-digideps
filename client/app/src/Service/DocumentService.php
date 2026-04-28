@@ -2,18 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace OPG\Digideps\Frontend\Service;
 
-use App\Entity\DocumentInterface;
-use App\Entity\Report\Document;
-use App\Entity\Report\ReportSubmission;
-use App\Model\MissingDocument;
-use App\Model\RetrievedDocument;
-use App\Service\Client\RestClient;
-use App\Service\File\Storage\FileNotFoundException;
-use App\Service\File\Storage\S3Storage;
+use OPG\Digideps\Frontend\Entity\DocumentInterface;
+use OPG\Digideps\Frontend\Entity\Report\Document;
+use OPG\Digideps\Frontend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Frontend\Model\MissingDocument;
+use OPG\Digideps\Frontend\Model\RetrievedDocument;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\File\Storage\FileNotFoundException;
+use OPG\Digideps\Frontend\Service\File\Storage\S3Storage;
 use Psr\Log\LoggerInterface;
-use Throwable;
 use Twig\Environment;
 
 class DocumentService
@@ -74,7 +73,7 @@ class DocumentService
             }
 
             return $s3Result && $endpointResult;
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $message = "cannot delete $documentId, ref $storageRef. Error: " . $e->getMessage();
             $this->log('error', $message);
 

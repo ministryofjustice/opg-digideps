@@ -1,16 +1,15 @@
 <?php
 
-namespace App\Tests\Integration\Entity;
+namespace Tests\OPG\Digideps\Backend\Integration\Entity;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Domain\CourtOrder\CourtOrderReportType;
-use App\Domain\CourtOrder\CourtOrderType;
-use App\Tests\Integration\ApiIntegrationTestCase;
-use DateTime;
-use App\Entity\CourtOrder;
-use App\Entity\Deputy;
-use App\Repository\DeputyRepository;
-use App\TestHelpers\DeputyTestHelper;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Repository\DeputyRepository;
+use OPG\Digideps\Backend\TestHelpers\DeputyTestHelper;
 use Faker\Factory;
 use Faker\Generator;
 
@@ -46,7 +45,7 @@ class DeputyIntegrationTest extends ApiIntegrationTestCase
             ->setOrderKind(CourtOrderKind::Hybrid)
             ->setOrderReportType(CourtOrderReportType::OPG102)
             ->setStatus('ACTIVE')
-            ->setOrderMadeDate(new DateTime('2020-06-14'));
+            ->setOrderMadeDate(new \DateTime('2020-06-14'));
 
         $deputy->associateWithCourtOrder($courtOrder);
 
@@ -90,7 +89,7 @@ class DeputyIntegrationTest extends ApiIntegrationTestCase
             ->setOrderKind(CourtOrderKind::Hybrid)
             ->setOrderReportType(CourtOrderReportType::OPG102)
             ->setStatus('ACTIVE')
-            ->setOrderMadeDate(new DateTime('2020-06-14'));
+            ->setOrderMadeDate(new \DateTime('2020-06-14'));
 
         $deputy->associateWithCourtOrder($courtOrder);
 

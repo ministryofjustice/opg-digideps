@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Command;
+namespace Tests\OPG\Digideps\Backend\Unit\Command;
 
-use App\Command\ProcessLayCSVCommand;
-use App\Repository\PreRegistrationRepository;
-use App\Service\DataImporter\CsvToArray;
-use App\Service\DeputyCaseService;
-use App\Service\LayRegistrationService;
-use App\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
+use OPG\Digideps\Backend\Command\ProcessLayCSVCommand;
+use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
+use OPG\Digideps\Backend\Service\DataImporter\CsvToArray;
+use OPG\Digideps\Backend\Service\DeputyCaseService;
+use OPG\Digideps\Backend\Service\LayRegistrationService;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use Aws\Result;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;

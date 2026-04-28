@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Service;
+namespace OPG\Digideps\Frontend\Service;
 
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 use Symfony\Component\HttpKernel\DataCollector\DataCollectorInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @codeCoverageIgnore
@@ -21,7 +23,7 @@ class ApiCollector extends DataCollector implements DataCollectorInterface
         $this->restClient = $restClient;
     }
 
-    public function collect(\Symfony\Component\HttpFoundation\Request $request, \Symfony\Component\HttpFoundation\Response $response, ?\Throwable $throwable = null)
+    public function collect(Request $request, Response $response, ?\Throwable $throwable = null)
     {
         $this->data = [
             'calls' => $this->restClient->getHistory(),

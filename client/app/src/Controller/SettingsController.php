@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Controller;
+namespace OPG\Digideps\Frontend\Controller;
 
-use App\Entity\User;
-use App\Form\ChangeEmailType;
-use App\Form\ChangePasswordType;
-use App\Form\Settings\ProfileType;
-use App\Form\User\UserDetailsBasicType;
-use App\Service\Audit\AuditEvents;
-use App\Service\Client\Internal\UserApi;
-use App\Service\Client\RestClient;
-use App\Service\Redirector;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Form\ChangeEmailType;
+use OPG\Digideps\Frontend\Form\ChangePasswordType;
+use OPG\Digideps\Frontend\Form\Settings\ProfileType;
+use OPG\Digideps\Frontend\Form\User\UserDetailsBasicType;
+use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
+use OPG\Digideps\Frontend\Service\Client\Internal\UserApi;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\Redirector;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\RedirectResponse;

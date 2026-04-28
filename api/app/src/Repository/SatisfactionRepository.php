@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Repository;
+namespace OPG\Digideps\Backend\Repository;
 
-use App\Entity\Satisfaction;
+use OPG\Digideps\Backend\Entity\Satisfaction;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -26,7 +26,7 @@ class SatisfactionRepository extends ServiceEntityRepository
         $query = $entityManager->createQuery(
             "SELECT s.id, s.score, s.comments, s.deputyrole, s.reporttype, s.created
              FROM $table s
-             WHERE (s.report IS NOT NULL OR s.ndr IS NOT NULL)
+             WHERE s.report IS NOT NULL
              AND s.created > :fromDate
              AND s.created < :toDate"
         )->setParameters(['fromDate' => $fromDate, 'toDate' => $toDate]);
@@ -44,7 +44,7 @@ class SatisfactionRepository extends ServiceEntityRepository
                 count(CASE WHEN score = 4 THEN 1 END) AS satisfied,
                 count(CASE WHEN score = 5 THEN 1 END) AS very_satisfied
             FROM satisfaction
-            WHERE (report_id IS NOT NULL OR ndr_id IS NOT NULL)
+            WHERE report_id IS NOT NULL
             AND created_at >= :fromDate
             AND created_at <= :toDate
         ';

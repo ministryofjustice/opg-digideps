@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Tests\Integration\Service\Stats\Query;
+namespace Tests\OPG\Digideps\Backend\Integration\Stats\Query;
 
-use App\Tests\Integration\ApiIntegrationTestCase;
-use DateTime;
-use App\Entity\Client;
-use App\Entity\Report\Report;
-use App\Entity\Report\ReportSubmission;
-use App\Entity\User;
-use App\Service\Stats\Query\ReportsSubmittedQuery;
-use App\Service\Stats\StatsQueryParameters;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Service\Stats\Query\ReportsSubmittedQuery;
+use OPG\Digideps\Backend\Service\Stats\StatsQueryParameters;
 
 class ReportsSubmittedQueryIntegrationTest extends ApiIntegrationTestCase
 {
@@ -35,8 +34,8 @@ class ReportsSubmittedQueryIntegrationTest extends ApiIntegrationTestCase
         $report = new Report(
             $client,
             $type,
-            new DateTime('2019-08-01'),
-            new DateTime('2020-08-01')
+            new \DateTime('2019-08-01'),
+            new \DateTime('2020-08-01')
         );
 
         $submission = new ReportSubmission($report, $user);
@@ -56,7 +55,7 @@ class ReportsSubmittedQueryIntegrationTest extends ApiIntegrationTestCase
     private static function createUserOfType(string $type): User
     {
         $id = mt_rand();
-        $user = (new User())
+        $user = new User()
             ->setFirstname('Lay')
             ->setLastname('User')
             ->setEmail("metric-test-$id@publicguardian.gov.uk")
