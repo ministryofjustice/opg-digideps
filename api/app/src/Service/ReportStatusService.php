@@ -423,14 +423,11 @@ class ReportStatusService
             $action->getDoYouExpectFinancialDecisions(),
         ] : [];
 
-        switch (count(array_filter($answers))) {
-            case 0:
-                return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
-            case count($answers):
-                return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
-            default:
-                return ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0];
-        }
+        return match (count($answers)) {
+            0 => ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0],
+            count($answers) => ['state' => self::STATE_DONE, 'nOfRecords' => 0],
+            default => ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0],
+        };
     }
 
     #[JMS\VirtualProperty]

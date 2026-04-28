@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Entity\Report\ProfDeputyInterimCost;
 use OPG\Digideps\Backend\Entity\Report\ProfDeputyOtherCost;
@@ -73,6 +74,9 @@ trait ReportProfDeputyCostsTrait
     #[ORM\Column(name: 'prof_dc_scco_reason_beyond_estimate', type: 'text', nullable: true)]
     private $profDeputyCostsReasonBeyondEstimate;
 
+    /**
+     * @var Collection<int, ProfDeputyOtherCost>
+     */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\ProfDeputyOtherCost>')]
     #[JMS\Groups(['prof-deputy-other-costs'])]
     #[ORM\OneToMany(mappedBy: 'report', targetEntity: ProfDeputyOtherCost::class, cascade: ['persist', 'remove'])]
@@ -169,7 +173,7 @@ trait ReportProfDeputyCostsTrait
     }
 
     /**
-     * @return ProfDeputyOtherCost[]
+     * @return Collection<int, ProfDeputyOtherCost>
      */
     public function getProfDeputyOtherCosts()
     {
@@ -185,8 +189,8 @@ trait ReportProfDeputyCostsTrait
 
     public function addProfDeputyOtherCost(ProfDeputyOtherCost $profDeputyOtherCost): static
     {
-        if (!in_array($profDeputyOtherCost, $this->profDeputyOtherCosts)) {
-            $this->profDeputyOtherCosts[] = $profDeputyOtherCost;
+        if (!$this->profDeputyOtherCosts->contains($profDeputyOtherCost)) {
+            $this->profDeputyOtherCosts->add($profDeputyOtherCost);
         }
 
         return $this;
@@ -199,11 +203,11 @@ trait ReportProfDeputyCostsTrait
      */
     public function getProfDeputyOtherCostByTypeId($typeId)
     {
-        $costs = array_filter($this->profDeputyOtherCosts, function (ProfDeputyOtherCost $profDeputyOtherCost) use ($typeId) {
+        $costs = $this->profDeputyOtherCosts->filter(function (ProfDeputyOtherCost $profDeputyOtherCost) use ($typeId) {
             return $profDeputyOtherCost->getProfDeputyOtherCostTypeId() == $typeId;
         });
 
-        return $costs[0] ?? null;
+        return $costs->first() ?? null;
     }
 
     /**
