@@ -417,6 +417,8 @@ class FixtureController extends AbstractController
 
         if (!$this->deputyRepository->findOneBy(['email1' => $user->getEmail()])) {
             $deputy = $this->buildDeputy($user, $fromRequest);
+            $this->em->persist($deputy);
+            $this->em->flush();
             $client->setDeputy($deputy);
         }
 
