@@ -11,7 +11,6 @@ use OPG\Digideps\Backend\Repository\DeputyRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 
 final class DeputyshipProcessingLookupCacheTest extends TestCase
 {
@@ -36,16 +35,16 @@ final class DeputyshipProcessingLookupCacheTest extends TestCase
 
     public function testGettersBeforeInitFail(): void
     {
-        static::expectException(RuntimeException::class);
+        static::expectException(\RuntimeException::class);
         $this->sut->getCourtOrderStatusForUid('111111111');
 
-        static::expectException(RuntimeException::class);
+        static::expectException(\RuntimeException::class);
         $this->sut->getClientIdForCaseNumber('41443433434');
 
-        static::expectException(RuntimeException::class);
+        static::expectException(\RuntimeException::class);
         $this->sut->getDeputyIdForUid('112214555');
 
-        static::expectException(RuntimeException::class);
+        static::expectException(\RuntimeException::class);
         $this->sut->getCourtOrderStatusForUid('4324234234');
     }
 

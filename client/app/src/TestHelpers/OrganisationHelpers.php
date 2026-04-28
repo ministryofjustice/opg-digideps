@@ -15,7 +15,7 @@ class OrganisationHelpers
         $faker = Factory::create();
         $orgName = $faker->company();
 
-        $organisation = (new Organisation())
+        $organisation = new Organisation()
             ->setId(1)
             ->setName($orgName)
             ->setEmailAddress(sprintf('info@%s', str_replace(' ', '', $orgName)))

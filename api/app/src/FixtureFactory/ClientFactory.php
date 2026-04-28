@@ -14,7 +14,7 @@ class ClientFactory
         $client = new Client();
         $dateFormat = 'Y-m-d';
 
-        $courtDate = isset($data['courtDate']) ? $data['courtDate'] : (new \DateTime())->format($dateFormat);
+        $courtDate = isset($data['courtDate']) ? $data['courtDate'] : new \DateTime()->format($dateFormat);
 
         $client
             ->setCaseNumber(isset($data['firstName']) ? $data['firstName'] : $data['id'])
@@ -38,7 +38,7 @@ class ClientFactory
     {
         $faker = Factory::create();
 
-        $client = (new Client())
+        $client = new Client()
             ->setCaseNumber($faker->unique()->randomNumber(8))
             ->setFirstname($faker->firstName())
             ->setLastname($faker->lastName())

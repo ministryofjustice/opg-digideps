@@ -14,7 +14,7 @@ use Mockery\MockInterface;
  *
  * </code>
  */
-class MockeryStub extends Mockery
+class MockeryStub extends \Mockery
 {
     /**
      * @template T

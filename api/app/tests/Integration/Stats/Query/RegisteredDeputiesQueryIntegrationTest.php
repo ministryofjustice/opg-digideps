@@ -3,7 +3,6 @@
 namespace Tests\OPG\Digideps\Backend\Integration\Stats\Query;
 
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
-use DateTime;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Service\Stats\Query\RegisteredDeputiesQuery;
 use OPG\Digideps\Backend\Service\Stats\StatsQueryParameters;
@@ -28,11 +27,11 @@ class RegisteredDeputiesQueryIntegrationTest extends ApiIntegrationTestCase
     {
         for ($i = 0; $i < $count; ++$i) {
             $id = md5(microtime());
-            $user = (new User())
+            $user = new User()
                 ->setFirstname('Test')
                 ->setLastname('User')
                 ->setEmail("test-user-$id@example.com")
-                ->setRegistrationDate(new DateTime())
+                ->setRegistrationDate(new \DateTime())
                 ->setRoleName($roleName);
 
             self::$entityManager->persist($user);
@@ -86,9 +85,9 @@ class RegisteredDeputiesQueryIntegrationTest extends ApiIntegrationTestCase
     {
         $query = new RegisteredDeputiesQuery(self::$entityManager);
 
-        $twoWeeksAgo = (new DateTime('-14 days'))->format('Y-m-d');
-        $oneWeeksAgo = (new DateTime('-7 days'))->format('Y-m-d');
-        $today = (new DateTime())->format('Y-m-d');
+        $twoWeeksAgo = new \DateTime('-14 days')->format('Y-m-d');
+        $oneWeeksAgo = new \DateTime('-7 days')->format('Y-m-d');
+        $today = new \DateTime()->format('Y-m-d');
 
         $resultOutOfRange = $query->execute(new StatsQueryParameters([
             'metric' => 'registeredDeputies',

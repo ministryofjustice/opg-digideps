@@ -36,7 +36,7 @@ class ClientDeletedSubscriber implements EventSubscriberInterface
         $clientsDeputy = $event->getClientWithUsers()->getDeputy();
         $clientsDeputyName = (is_null($clientsDeputy) ? '' : $clientsDeputy->getFullName());
 
-        $this->logger->notice('', (new AuditEvents($this->dateTimeProvider))->clientDischarged(
+        $this->logger->notice('', new AuditEvents($this->dateTimeProvider)->clientDischarged(
             $event->getTrigger(),
             $event->getClientWithUsers()->getCaseNumber(),
             $event->getCurrentUser()->getEmail(),

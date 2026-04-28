@@ -26,7 +26,7 @@ class ProfDeputyInterimCost
     private $amount;
 
     /**
-     * @var DateTime
+     * @var \DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\Groups({"profDeputyInterimCosts"})
@@ -69,7 +69,7 @@ class ProfDeputyInterimCost
     }
 
     /**
-     * @return DateTime
+     * @return \DateTime
      */
     public function getDate()
     {
@@ -77,7 +77,7 @@ class ProfDeputyInterimCost
     }
 
     /**
-     * @param DateTime $date
+     * @param \DateTime $date
      */
     public function setDate($date)
     {

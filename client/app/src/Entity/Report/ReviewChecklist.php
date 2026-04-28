@@ -39,7 +39,7 @@ class ReviewChecklist
     private $decision;
 
     /**
-     * @var \OPG\Digideps\Frontend\Entity\User
+     * @var User
      *
      * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
      */
@@ -141,7 +141,7 @@ class ReviewChecklist
     }
 
     /**
-     * @return \OPG\Digideps\Frontend\Entity\User
+     * @return User
      */
     public function getSubmittedBy(): ?User
     {

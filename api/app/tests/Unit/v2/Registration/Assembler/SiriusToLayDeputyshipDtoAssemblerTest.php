@@ -6,7 +6,6 @@ namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\Assembler;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use InvalidArgumentException;
 use OPG\Digideps\Backend\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
 use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
 use PHPUnit\Framework\TestCase;
@@ -27,7 +26,7 @@ final class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
         $input = $this->getInput();
         unset($input[$itemToRemove]);
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
 
         $this->sut->assembleFromArray($input);
     }
@@ -55,7 +54,7 @@ final class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
         $input = $this->getInput();
         $input['ReportType'] = 'invalidReportType';
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->sut->assembleFromArray($input);
     }
 

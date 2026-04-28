@@ -8587,12 +8587,6 @@ parameters:
 			path: src/Form/Report/ProfDeputyOtherCostSingleType.php
 
 		-
-			message: '#^Cannot call method getPaymentReceived\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Form/Report/ProfServiceFeeType.php
-
-		-
 			message: '#^Cannot cast mixed to int\.$#'
 			identifier: cast.int
 			count: 1
@@ -8607,12 +8601,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Form\\Report\\ProfServiceFeeType\:\:getValidationGroups\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Form/Report/ProfServiceFeeType.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$asset \\OPG\\Digideps\\Frontend\\Entity\\Report\\ProfServiceFee\)\: Unexpected token "\$asset", expected type at offset 9 on line 1$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: src/Form/Report/ProfServiceFeeType.php
 

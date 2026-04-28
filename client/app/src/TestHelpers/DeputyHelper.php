@@ -13,7 +13,7 @@ class DeputyHelper
     {
         $faker = Faker\Factory::create();
 
-        return (new Deputy())
+        return new Deputy()
             ->setFirstname($faker->firstName())
             ->setLastname($faker->lastName())
             ->setEmail1($faker->safeEmail())

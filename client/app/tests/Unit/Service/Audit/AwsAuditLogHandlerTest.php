@@ -6,9 +6,6 @@ namespace Tests\OPG\Digideps\Frontend\Unit\Service\Audit;
 
 use Aws\CloudWatchLogs\CloudWatchLogsClient;
 use Aws\Result;
-use DateTime;
-use DateTimeZone;
-use Exception;
 use Monolog\Handler\AbstractProcessingHandler;
 use Monolog\Level;
 use Monolog\Logger;
@@ -52,7 +49,7 @@ class AwsAuditLogHandlerTest extends TestCase
     /**
      * @test
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function ignoresRecordsWithoutEventName(): void
     {
@@ -74,7 +71,7 @@ class AwsAuditLogHandlerTest extends TestCase
     /**
      * @test
      *
-     * @throws Exception
+     * @throws \Exception
      */
     public function ignoresRecordsWithoutEventType(): void
     {
@@ -233,7 +230,7 @@ class AwsAuditLogHandlerTest extends TestCase
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function getLogMessageInput(): LogRecord
     {
@@ -303,7 +300,7 @@ class AwsAuditLogHandlerTest extends TestCase
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function assertLogWillBePutOnAwsWithSequenceToken(): void
     {
@@ -318,7 +315,7 @@ class AwsAuditLogHandlerTest extends TestCase
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function assertLogWillBePutOnAwsWithoutSequenceToken(): void
     {
@@ -333,7 +330,7 @@ class AwsAuditLogHandlerTest extends TestCase
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function assertConsecutiveLogsWillBePutOnAws(): void
     {
@@ -356,12 +353,12 @@ class AwsAuditLogHandlerTest extends TestCase
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function getExpectedMessageWithoutSequenceToken(): array
     {
-        $dateTime = new DateTime('2018-09-02 13:42:23');
-        $timezone = new DateTimeZone(date_default_timezone_get());
+        $dateTime = new \DateTime('2018-09-02 13:42:23');
+        $timezone = new \DateTimeZone(date_default_timezone_get());
         $dateTime->setTimezone($timezone);
 
         $message = [
@@ -386,7 +383,7 @@ class AwsAuditLogHandlerTest extends TestCase
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     private function getExpectedMessageWithSequenceToken(): array
     {

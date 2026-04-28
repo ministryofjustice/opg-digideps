@@ -53,7 +53,7 @@ class ReportSubmittedSubscriber implements EventSubscriberInterface
     public function logResubmittedReport(ReportSubmittedEvent $event)
     {
         if (null !== $event->getSubmittedReport()->getUnSubmitDate()) {
-            $auditEvent = (new AuditEvents($this->dateTimeProvider))
+            $auditEvent = new AuditEvents($this->dateTimeProvider)
                 ->reportResubmitted(
                     $event->getSubmittedReport(),
                     $event->getSubmittedBy()

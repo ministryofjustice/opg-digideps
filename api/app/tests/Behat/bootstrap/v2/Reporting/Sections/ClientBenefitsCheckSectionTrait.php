@@ -6,8 +6,6 @@ namespace Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections;
 
 use OPG\Digideps\Backend\Entity\Report\Report;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
-use Behat\Behat\Tester\Exception\PendingException;
-use Behat\Gherkin\Node\TableNode;
 
 trait ClientBenefitsCheckSectionTrait
 {

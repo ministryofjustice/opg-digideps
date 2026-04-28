@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Service\RestHandler\Report;
 
-use DateTime;
-use DateTimeZone;
 use PHPUnit\Framework\Attributes\DataProvider;
-use InvalidArgumentException;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\ProfDeputyEstimateCost;
 use OPG\Digideps\Backend\Entity\Report\Report;
@@ -25,7 +22,7 @@ final class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
 
     public function setUp(): void
     {
-        $date = new DateTime('now', new DateTimeZone('Europe/London'));
+        $date = new \DateTime('now', new \DateTimeZone('Europe/London'));
         $this->report = $this->getMockBuilder(Report::class)
             ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, $date, $date])
             ->onlyMethods(['updateSectionsStatusCache'])
@@ -95,7 +92,7 @@ final class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
     #[DataProvider('getInvalidCostEstimateInputs')]
     public function testThrowsExceptionUpdatingCostEstimatesWithInsufficientData(array $data): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->invokeHandler($data);
     }
 

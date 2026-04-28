@@ -12,9 +12,6 @@ use OPG\Digideps\Frontend\Service\File\S3FileUploader;
 use Psr\Log\LoggerInterface;
 use Twig\Environment;
 use Twig\Error\Error;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 class ReportSubmissionService
 {

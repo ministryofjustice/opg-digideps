@@ -7,8 +7,6 @@ use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
-use DateTime;
-use InvalidArgumentException;
 use OPG\Digideps\Backend\Entity\Report\Asset;
 use OPG\Digideps\Backend\Entity\Report\AssetOther;
 use OPG\Digideps\Backend\Entity\Report\AssetProperty;
@@ -19,7 +17,6 @@ use OPG\Digideps\Backend\Entity\Report\Decision;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Expense;
 use OPG\Digideps\Backend\Entity\Report\VisitsCare;
-use RuntimeException;
 use OPG\Digideps\Backend\Entity as EntityDir;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
@@ -74,7 +71,7 @@ class Fixtures
     public function createUser(
         ?string $email = null,
         ?string $roleName = null,
-        ?DateTime $registrationDate = null,
+        ?\DateTime $registrationDate = null,
         ?string $phoneMain = null,
         ?int $deputyUid = null,
         ?bool $isPrimary = null,
@@ -202,7 +199,7 @@ class Fixtures
         if (is_null($user)) {
             $user = $this->createUser(
                 roleName: User::ROLE_LAY_DEPUTY,
-                registrationDate: new DateTime(),
+                registrationDate: new \DateTime(),
                 phoneMain: '01211234567'
             );
         }
@@ -212,16 +209,16 @@ class Fixtures
 
             $report = $this->createReport($client);
 
-            $other = (new AssetOther())
+            $other = new AssetOther()
                 ->setValue(rand(1, 10000))
                 ->setReport($report);
 
-            $property = (new AssetProperty())
+            $property = new AssetProperty()
                 ->setValue(rand(1, 10000))
                 ->setOwnedPercentage(rand(1, 100) / 100)
                 ->setReport($report);
 
-            $bankAccount = (new BankAccount())
+            $bankAccount = new BankAccount()
                 ->setClosingBalance(floatval(rand(10, 1000000) / 10))
                 ->setReport($report);
 
@@ -231,7 +228,7 @@ class Fixtures
         }
 
         $submission = new ReportSubmission($report, $user);
-        $report->setSubmitDate(new DateTime('-2 days'));
+        $report->setSubmitDate(new \DateTime('-2 days'));
 
         $this->em->persist($submission);
         $this->em->persist($report);
@@ -247,8 +244,8 @@ class Fixtures
         $report = new Report(
             $client,
             empty($settersMap['setType']) ? Report::LAY_PFA_HIGH_ASSETS_TYPE : $settersMap['setType'],
-            empty($settersMap['setStartDate']) ? new DateTime('now') : $settersMap['setStartDate'],
-            empty($settersMap['setEndDate']) ? new DateTime('+12 months -1 day') : $settersMap['setEndDate']
+            empty($settersMap['setStartDate']) ? new \DateTime('now') : $settersMap['setStartDate'],
+            empty($settersMap['setEndDate']) ? new \DateTime('+12 months -1 day') : $settersMap['setEndDate']
         );
 
         foreach ($settersMap as $k => $v) {
@@ -439,7 +436,7 @@ class Fixtures
         /** @var Organisation $org */
         $org = $this->em->getRepository(Organisation::class)->find($orgId);
 
-        $org->setDeletedAt(new DateTime('now'));
+        $org->setDeletedAt(new \DateTime('now'));
     }
 
     public function flush()
@@ -470,7 +467,7 @@ class Fixtures
     {
         $args = func_get_args();
         if (empty($args)) {
-            throw new InvalidArgumentException('You must pass at least one object to persist');
+            throw new \InvalidArgumentException('You must pass at least one object to persist');
         }
         foreach (func_get_args() as $e) {
             $this->em->persist($e);
@@ -548,7 +545,7 @@ class Fixtures
     public static function restoreDb()
     {
         if (!file_exists(self::PG_DUMP_PATH)) {
-            throw new RuntimeException(self::PG_DUMP_PATH . ' not found');
+            throw new \RuntimeException(self::PG_DUMP_PATH . ' not found');
         }
         self::pgCommand('psql < ' . self::PG_DUMP_PATH);
     }
@@ -573,17 +570,17 @@ class Fixtures
 
             $researchType = new EntityDir\UserResearch\ResearchType(['surveys']);
 
-            $userResearchResponse = (new EntityDir\UserResearch\UserResearchResponse())
-                ->setCreated(new DateTime())
+            $userResearchResponse = new EntityDir\UserResearch\UserResearchResponse()
+                ->setCreated(new \DateTime())
                 ->setDeputyshipLength('oneToFive')
                 ->setUser($rs->getCreatedBy())
                 ->setHasAccessToVideoCallDevice(true)
                 ->setResearchType($researchType);
 
-            $satisfaction = (new EntityDir\Satisfaction())
+            $satisfaction = new EntityDir\Satisfaction()
                 ->setReport($rs->getReport())
                 ->setDeputyrole(User::ROLE_LAY_DEPUTY)
-                ->setCreated(new DateTime())
+                ->setCreated(new \DateTime())
                 ->setComments(' Some comments')
                 ->setScore(rand(1, 5))
                 ->setReporttype(Report::LAY_COMBINED_LOW_ASSETS_TYPE)
@@ -605,7 +602,7 @@ class Fixtures
         $this->em->clear();
     }
 
-    public function createCourtOrder(string $uid, CourtOrderType $type, CourtOrderKind $kind, string $status, DateTime $madeDate = new DateTime(), ?CourtOrderReportType $courtOrderReportType = null): CourtOrder
+    public function createCourtOrder(string $uid, CourtOrderType $type, CourtOrderKind $kind, string $status, \DateTime $madeDate = new \DateTime(), ?CourtOrderReportType $courtOrderReportType = null): CourtOrder
     {
         $courtOrder = new CourtOrder();
         $courtOrder->setCourtOrderUid($uid);

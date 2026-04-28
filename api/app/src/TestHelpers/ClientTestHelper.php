@@ -26,7 +26,7 @@ class ClientTestHelper
     ): Client {
         $faker = Factory::create('en_GB');
 
-        $client = (new Client())
+        $client = new Client()
             ->setFirstname($faker->firstName())
             ->setLastname($faker->lastName())
             ->setCaseNumber($caseNumber ?: self::createValidCaseNumber())

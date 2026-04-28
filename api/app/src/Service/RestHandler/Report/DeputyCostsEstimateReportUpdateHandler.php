@@ -5,6 +5,7 @@ namespace OPG\Digideps\Backend\Service\RestHandler\Report;
 use OPG\Digideps\Backend\Entity\Report\ProfDeputyEstimateCost;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\OptimisticLockException;
 
 class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInterface
 {
@@ -27,7 +28,7 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
     /**
      * @return $this
      *
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws OptimisticLockException
      */
     private function updateHowCharged(Report $report, array $data)
     {
@@ -59,7 +60,7 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
     /**
      * @return $this
      *
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws OptimisticLockException
      */
     private function updateBreakdownEstimates(Report $report, array $data)
     {
@@ -128,7 +129,7 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
      */
     private function createProfDeputyEstimateCost(Report $report, $postedProfDeputyEstimateCostType)
     {
-        return (new ProfDeputyEstimateCost())
+        return new ProfDeputyEstimateCost()
             ->setReport($report)
             ->setProfDeputyEstimateCostTypeId($postedProfDeputyEstimateCostType['prof_deputy_estimate_cost_type_id'])
             ->setHasMoreDetails($postedProfDeputyEstimateCostType['has_more_details'])
@@ -156,7 +157,7 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
     }
 
     /**
-     * @throws \Doctrine\ORM\OptimisticLockException
+     * @throws OptimisticLockException
      */
     private function updateManagementCost(Report $report, array $data)
     {

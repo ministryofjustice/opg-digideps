@@ -8,7 +8,6 @@ use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
-use DateTime;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;
@@ -51,18 +50,18 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
         $report = new Report(
             client: $client,
             type: $incompatibleReportType,
-            startDate: new DateTime(),
-            endDate: new DateTime(),
+            startDate: new \DateTime(),
+            endDate: new \DateTime(),
             dateChecks: false
         );
 
-        $report->setDueDate(new DateTime());
+        $report->setDueDate(new \DateTime());
 
         return $report;
     }
 
     // create a report which is not compatible with a deputyship due to starting too early
-    private function createIncompatiblyDatedReport(Client $client, string $orderType, DateTime $madeDate): Report
+    private function createIncompatiblyDatedReport(Client $client, string $orderType, \DateTime $madeDate): Report
     {
         // make sure types are compatible
         $compatibleReportType = '102';
@@ -127,7 +126,7 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
         $deputyUid = '12121212';
         $caseNumber = '12345678';
         $orderUid = '66667777';
-        $madeDate = new DateTime();
+        $madeDate = new \DateTime();
 
         // add staging deputyship
         $deputyship = new StagingDeputyship();
@@ -187,7 +186,7 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
     // not be selected as a candidate (see DDLS-797)
     public function testCreateCompatibleReportCandidatesDoesNotSuggestAlreadyRelated(): void
     {
-        $orderMadeDate = new DateTime();
+        $orderMadeDate = new \DateTime();
 
         // add pfa/LAY staging deputyship referencing an existing court order record
         $deputyship = new StagingDeputyship();
@@ -250,7 +249,7 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
         $deputyUid = '9384576384';
         $caseNumber = '928475631';
         $orderUid = '99944477';
-        $madeDate = new DateTime();
+        $madeDate = new \DateTime();
 
         // add staging deputyship which currently has hybrid reporting
         $deputyship = new StagingDeputyship();
@@ -313,7 +312,7 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
         $deputyUid = '9384576384';
         $caseNumber = '928475631';
         $orderUid = '99944477';
-        $madeDate = new DateTime();
+        $madeDate = new \DateTime();
 
         // add staging deputyship which currently has hybrid reporting
         $deputyship = new StagingDeputyship();

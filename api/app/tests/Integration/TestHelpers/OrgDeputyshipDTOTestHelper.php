@@ -17,8 +17,6 @@ use OPG\Digideps\Backend\Repository\ReportRepository;
 use OPG\Digideps\Backend\Service\ReportUtils;
 use OPG\Digideps\Backend\v2\Registration\Assembler\SiriusToOrgDeputyshipDtoAssembler;
 use OPG\Digideps\Backend\v2\Registration\DTO\OrgDeputyshipDto;
-use DateTime;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManager;
 use Faker\Factory;
 use Faker\Provider\en_GB\Address;
@@ -50,7 +48,7 @@ class OrgDeputyshipDTOTestHelper
     public static function generateValidSiriusOrgDeputyshipArray()
     {
         $faker = Factory::create();
-        $courtOrderMadeDate = DateTimeImmutable::createFromMutable($faker->dateTimeThisYear());
+        $courtOrderMadeDate = \DateTimeImmutable::createFromMutable($faker->dateTimeThisYear());
         $reportPeriodEndDate = $courtOrderMadeDate->modify('12 months - 1 day');
 
         return [
@@ -188,7 +186,7 @@ class OrgDeputyshipDTOTestHelper
      */
     public static function ensureDeputyInUploadExists(OrgDeputyshipDto $dto, EntityManager $em)
     {
-        $deputy = (new Deputy())
+        $deputy = new Deputy()
             ->setDeputyType(DeputyType::from($dto->getDeputyType()))
             ->setEmail1($dto->getDeputyEmail())
             ->setDeputyUid($dto->getDeputyUid())
@@ -212,7 +210,7 @@ class OrgDeputyshipDTOTestHelper
      */
     public static function ensureOrgInUploadExists(string $orgIdentifier, EntityManager $em)
     {
-        $organisation = (new Organisation())
+        $organisation = new Organisation()
             ->setName('Your Organisation')
             ->setEmailIdentifier($orgIdentifier)
             ->setIsActivated(false);
@@ -225,7 +223,7 @@ class OrgDeputyshipDTOTestHelper
 
     public static function ensureClientInUploadExists(OrgDeputyshipDto $dto, EntityManager $em)
     {
-        $client = (new Client())
+        $client = new Client()
             ->setCaseNumber($dto->getCaseNumber())
             ->setFirstname($dto->getClientFirstname())
             ->setLastname($dto->getClientLastname())
@@ -241,18 +239,18 @@ class OrgDeputyshipDTOTestHelper
     {
         $faker = Factory::create();
 
-        $layDeputy = (new User())
+        $layDeputy = new User()
             ->setRoleName(User::ROLE_LAY_DEPUTY)
             ->setFirstname($faker->firstName())
             ->setLastname($faker->lastName())
             ->setEmail($faker->email())
             ->setCoDeputyClientConfirmed(false);
 
-        $client = (new Client())
+        $client = new Client()
             ->setCaseNumber($dto->getCaseNumber())
             ->setFirstname($dto->getClientFirstname())
             ->setLastname($dto->getClientLastname())
-            ->setCourtDate(new DateTime())
+            ->setCourtDate(new \DateTime())
             ->addUser($layDeputy);
 
         $em->persist($layDeputy);
@@ -269,7 +267,7 @@ class OrgDeputyshipDTOTestHelper
         string $startDate = '2019-11-01',
         string $endDate = '2020-10-31',
     ) {
-        $report = new Report($client, $reportType, new DateTime($startDate), new DateTime($endDate));
+        $report = new Report($client, $reportType, new \DateTime($startDate), new \DateTime($endDate));
         $client->addReport($report);
 
         $em->persist($report);

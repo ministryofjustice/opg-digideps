@@ -3,11 +3,10 @@
 namespace OPG\Digideps\Frontend\Entity\Report;
 
 use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
-use OPG\Digideps\Frontend\Entity\ReportInterface;
 use OPG\Digideps\Frontend\Entity\SynchronisableInterface;
 use OPG\Digideps\Frontend\Entity\SynchronisableTrait;
 use OPG\Digideps\Frontend\Entity\Traits\ModifyAudit;
-use OPG\Digideps\Frontend\Validator\Constraints as AppAssert;
+use OPG\Digideps\Frontend\Entity\User;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -284,7 +283,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
      * @JMS\Groups({"checklist-information"})
      *
-     * @var \OPG\Digideps\Frontend\Entity\User
+     * @var User
      */
     protected $submittedBy;
 
@@ -883,7 +882,7 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @return \OPG\Digideps\Frontend\Entity\User
+     * @return User
      */
     public function getSubmittedBy()
     {
@@ -891,7 +890,7 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param \OPG\Digideps\Frontend\Entity\User $submittedBy
+     * @param User $submittedBy
      *
      * @return $this
      */

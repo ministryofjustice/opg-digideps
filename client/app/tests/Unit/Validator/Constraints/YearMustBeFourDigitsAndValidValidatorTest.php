@@ -100,7 +100,7 @@ class YearMustBeFourDigitsAndValidValidatorTest extends TestCase
 
         $client = ReportHelpers::createReport();
         $client->setStartDate(new \DateTime('today'));
-        $client->setEndDate((new \DateTime('today'))->modify('+1 year'));
+        $client->setEndDate(new \DateTime('today')->modify('+1 year'));
 
         $validator->validate($client, $constraint);
     }

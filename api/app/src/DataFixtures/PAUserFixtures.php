@@ -229,7 +229,7 @@ class PAUserFixtures extends AbstractDataFixture
 
     private function createUser($userData, $iteration)
     {
-        return (new User())
+        return new User()
             ->setFirstname($userData['id'] . '-' . $iteration)
             ->setLastname('User')
             ->setEmail($userData['id'] . '-' . $iteration . $userData['email'])
@@ -247,7 +247,7 @@ class PAUserFixtures extends AbstractDataFixture
     {
         $offset = strlen((string) abs($iteration));
 
-        return (new Client())
+        return new Client()
             ->setCaseNumber(substr_replace($clientData['caseNumber'], $iteration, -$offset))
             ->setFirstname($clientData['id'])
             ->setLastname('Client ' . $iteration)
@@ -277,7 +277,7 @@ class PAUserFixtures extends AbstractDataFixture
 
     private function createDeputy(mixed $deputyData, mixed $clientData)
     {
-        return (new Deputy())
+        return new Deputy()
             ->setDeputyType(DeputyType::PA)
             ->setFirstname($deputyData['id'])
             ->setLastname('Deputy')

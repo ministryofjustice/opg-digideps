@@ -19,7 +19,6 @@ use OPG\Digideps\Backend\v2\Assembler\ClientAssembler;
 use OPG\Digideps\Backend\v2\Assembler\DeputyAssembler;
 use OPG\Digideps\Backend\v2\Registration\DTO\OrgDeputyshipDto;
 use OPG\Digideps\Backend\v2\Registration\Uploader\OrgDeputyshipUploader;
-use DateTime;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
@@ -201,7 +200,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $client = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], self::$entityManager);
         $client->setDeputy($originalDeputy)->setOrganisation($organisation);
-        $client->setCourtDate(new DateTime());
+        $client->setCourtDate(new \DateTime());
 
         self::$entityManager->persist($client);
         self::$entityManager->flush();
@@ -292,7 +291,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $originalClient = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], self::$entityManager);
         $originalClient->setDeputy($originalDeputy)->setOrganisation($organisation);
-        $originalClient->setCourtDate(new DateTime());
+        $originalClient->setCourtDate(new \DateTime());
 
         self::$entityManager->persist($originalClient);
         self::$entityManager->flush();
@@ -341,7 +340,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
 
         $originalClient = OrgDeputyshipDTOTestHelper::ensureClientInUploadExists($deputyships[0], self::$entityManager);
         $originalClient->setDeputy($originalDeputy)->setOrganisation($organisation);
-        $originalClient->setCourtDate(new DateTime());
+        $originalClient->setCourtDate(new \DateTime());
 
         self::$entityManager->persist($originalClient);
         self::$entityManager->flush();
@@ -627,7 +626,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $deputy = OrgDeputyshipDTOTestHelper::ensureDeputyInUploadExists($deputyships[0], self::$entityManager);
 
         $client->setDeputy($deputy);
-        $client->setArchivedAt(new DateTime());
+        $client->setArchivedAt(new \DateTime());
 
         self::$entityManager->persist($client);
         self::$entityManager->flush();

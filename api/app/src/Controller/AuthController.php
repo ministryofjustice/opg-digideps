@@ -8,15 +8,12 @@ use OPG\Digideps\Backend\Security\HeaderTokenAuthenticator;
 use OPG\Digideps\Backend\Security\RedisUserProvider;
 use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
 use OPG\Digideps\Backend\Service\JWT\JWTService;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Predis\ClientInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
-use Throwable;
 
 #[Route(path: '/auth')]
 class AuthController extends RestController
@@ -35,7 +32,7 @@ class AuthController extends RestController
     /**
      * @return User
      *
-     * @throws Throwable
+     * @throws \Throwable
      */
     #[Route(path: '/login', name: 'api_login', methods: ['POST'])]
     public function login(
@@ -51,7 +48,7 @@ class AuthController extends RestController
                 /** @var User $user */
                 $user = $token->getUser();
 
-                $user->setLastLoggedIn(new DateTime());
+                $user->setLastLoggedIn(new \DateTime());
                 $em->persist($user);
                 $em->flush();
 
@@ -64,7 +61,7 @@ class AuthController extends RestController
                     $response->headers->set(HeaderTokenAuthenticator::HEADER_NAME, $authToken);
                 });
             } else {
-                throw new Exception('User token is not available');
+                throw new \Exception('User token is not available');
             }
 
             if (User::ROLE_SUPER_ADMIN === $user->getRoleName()) {
@@ -79,7 +76,7 @@ class AuthController extends RestController
             $this->restFormatter->setJmsSerialiserGroups(['user', 'user-login']);
 
             return $user;
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->logger->warning(sprintf('Error when attempting to log user in: %s', $e->getMessage()));
             throw $e;
         }

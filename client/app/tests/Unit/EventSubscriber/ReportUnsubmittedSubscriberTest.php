@@ -10,7 +10,6 @@ use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\ReportHelpers;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
-use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Psr\Log\LoggerInterface;
@@ -40,7 +39,7 @@ class ReportUnsubmittedSubscriberTest extends TestCase
         $logger = self::prophesize(LoggerInterface::class);
         $dateTimeProvider = self::prophesize(DateTimeProvider::class);
 
-        $now = new DateTime();
+        $now = new \DateTime();
         $dateTimeProvider->getDateTime()->willReturn($now);
         $currentUser = UserHelpers::createUser();
         $trigger = 'UNSUBMIT_REPORT';

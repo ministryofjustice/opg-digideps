@@ -117,7 +117,7 @@ trait ReportProfServiceFeesTrait
         }
 
         return array_filter($this->getProfServiceFees(), function ($profServiceFee) use ($feeTypeId) {
-            /* @var $profServiceFee \OPG\Digideps\Frontend\Entity\Report\ProfServiceFee */
+            /* @var $profServiceFee ProfServiceFee */
             return $profServiceFee->getFeeTypeId() === $feeTypeId;
         });
     }

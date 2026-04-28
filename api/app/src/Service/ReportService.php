@@ -65,7 +65,7 @@ class ReportService
 
         $client = $currentReport->getClient();
         $clientId = $client->getId();
-        $now = (new \DateTime())->format('Y-m-d H:i:s');
+        $now = new \DateTime()->format('Y-m-d H:i:s');
         $this->logger->warning("Report submitted for client ID $clientId at $now");
 
         // Set user to active once they have submitted a report

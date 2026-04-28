@@ -54,12 +54,12 @@ class MailFactoryTest extends TestCase
         $this->layDeputy = $this->generateUser();
         $this->layDeputy->setClients([$this->client]);
 
-        $this->submittedReport = (new Report())
+        $this->submittedReport = new Report()
             ->setClient($this->client)
             ->setStartDate(new \DateTime('2017-03-24'))
             ->setEndDate(new \DateTime('2018-03-23'));
 
-        $this->newReport = (new Report())
+        $this->newReport = new Report()
             ->setStartDate(new \DateTime('2018-03-24'))
             ->setEndDate(new \DateTime('2019-03-23'));
 
@@ -82,7 +82,7 @@ class MailFactoryTest extends TestCase
 
     private function generateClient(): Client
     {
-        return (new Client())
+        return new Client()
             ->setFirstname('Joanne')
             ->setLastname('Bloggs')
             ->setCaseNumber('12345678')
@@ -96,7 +96,7 @@ class MailFactoryTest extends TestCase
 
     private function generateUser($role = User::ROLE_LAY_DEPUTY): User
     {
-        return (new User())
+        return new User()
             ->setRegistrationToken('regToken')
             ->setEmail('user@digital.justice.gov.uk')
             ->setFirstname('Joe')

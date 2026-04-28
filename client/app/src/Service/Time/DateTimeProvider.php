@@ -4,14 +4,12 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Service\Time;
 
-use DateTime;
-
 class DateTimeProvider
 {
-    public function getDateTime(?string $dateTime = null): DateTime
+    public function getDateTime(?string $dateTime = null): \DateTime
     {
         $dateTime = is_null($dateTime) ? 'now' : $dateTime;
 
-        return new DateTime($dateTime);
+        return new \DateTime($dateTime);
     }
 }

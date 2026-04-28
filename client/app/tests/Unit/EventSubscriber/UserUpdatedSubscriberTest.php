@@ -10,7 +10,6 @@ use OPG\Digideps\Frontend\EventSubscriber\UserUpdatedSubscriber;
 use OPG\Digideps\Frontend\Service\Mailer\Mailer;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
-use DateTime;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -67,7 +66,7 @@ class UserUpdatedSubscriberTest extends TestCase
     /** @test */
     public function auditLogEmailHasChanged()
     {
-        $now = new DateTime('now');
+        $now = new \DateTime('now');
 
         $preUpdateUser = $this->userHelpers->createUser();
         $postUpdateUser = (clone $preUpdateUser)->setEmail('changed@example.com');
@@ -78,7 +77,7 @@ class UserUpdatedSubscriberTest extends TestCase
             'trigger' => 'A_TRIGGER',
             'email_changed_from' => $preUpdateUser->getEmail(),
             'email_changed_to' => 'changed@example.com',
-            'changed_on' => $now->format(DateTime::ATOM),
+            'changed_on' => $now->format(\DateTime::ATOM),
             'changed_by' => $currentUser->getEmail(),
             'subject_full_name' => $postUpdateUser->getFullName(),
             'subject_role' => $postUpdateUser->getRoleName(),
@@ -96,7 +95,7 @@ class UserUpdatedSubscriberTest extends TestCase
     /** @test */
     public function auditLogRoleHasChanged()
     {
-        $now = new DateTime('now');
+        $now = new \DateTime('now');
 
         $preUpdateUser = $this->userHelpers->createUser();
         $postUpdateUser = (clone $preUpdateUser)->setRoleName('A_DIFFERENT_ROLE');
@@ -107,7 +106,7 @@ class UserUpdatedSubscriberTest extends TestCase
             'trigger' => 'A_TRIGGER',
             'role_changed_from' => $preUpdateUser->getRoleName(),
             'role_changed_to' => 'A_DIFFERENT_ROLE',
-            'changed_on' => $now->format(DateTime::ATOM),
+            'changed_on' => $now->format(\DateTime::ATOM),
             'changed_by' => $currentUser->getEmail(),
             'user_changed' => $postUpdateUser->getEmail(),
             'event' => 'ROLE_CHANGED',
@@ -153,7 +152,7 @@ class UserUpdatedSubscriberTest extends TestCase
 
     public function deputyProvider()
     {
-        $preUpdateUser = (new User())
+        $preUpdateUser = new User()
             ->setId(1)
             ->setFirstname('Sufjan')
             ->setLastname('Stevens')

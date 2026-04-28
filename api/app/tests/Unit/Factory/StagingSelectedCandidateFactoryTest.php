@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Factory;
 
-use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\StagingDeputyship;
 use OPG\Digideps\Backend\Factory\StagingSelectedCandidateFactory;
 use PHPUnit\Framework\TestCase;

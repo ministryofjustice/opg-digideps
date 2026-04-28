@@ -52,7 +52,7 @@ class ClientRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws \Doctrine\DBAL\Exception
+     * @throws Exception
      */
     public function saveUserToClient(User $user, int $clientId)
     {

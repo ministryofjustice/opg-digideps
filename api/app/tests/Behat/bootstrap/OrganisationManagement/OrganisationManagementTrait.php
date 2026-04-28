@@ -2,7 +2,6 @@
 
 namespace Tests\OPG\Digideps\Backend\Behat\OrganisationManagement;
 
-use Exception;
 use Behat\Gherkin\Node\TableNode;
 
 trait OrganisationManagementTrait
@@ -50,7 +49,7 @@ trait OrganisationManagementTrait
             $this->pressButton('Add user to organisation');
 
             if ($this->getSession()->getStatusCode() > 399) {
-                throw new Exception($this->getSession()->getPage()->getContent());
+                throw new \Exception($this->getSession()->getPage()->getContent());
             }
         }
     }
@@ -66,7 +65,7 @@ trait OrganisationManagementTrait
             $this->visitAdminPath(sprintf('/admin/fixtures/move-users-clients-to-users-org/%s', $inputs['userEmail']));
 
             if ($this->getSession()->getStatusCode() > 399) {
-                throw new Exception($this->getSession()->getPage()->getContent());
+                throw new \Exception($this->getSession()->getPage()->getContent());
             }
         }
     }
@@ -81,7 +80,7 @@ trait OrganisationManagementTrait
         $this->visitAdminPath(sprintf('/admin/fixtures/activateOrg/%s', $orgName));
 
         if ($this->getSession()->getStatusCode() > 399) {
-            throw new Exception($this->getSession()->getPage()->getContent());
+            throw new \Exception($this->getSession()->getPage()->getContent());
         }
     }
 }

@@ -88,7 +88,7 @@ class SatisfactionApiTest extends TestCase
             ->shouldBeCalled()
             ->willReturn(1);
 
-        $feedbackReportObject = (new FeedbackReport())
+        $feedbackReportObject = new FeedbackReport()
             ->setComments($comments)
             ->setSatisfactionLevel($score);
 

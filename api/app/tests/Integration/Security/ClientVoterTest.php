@@ -92,7 +92,7 @@ class ClientVoterTest extends KernelTestCase
 
     private function ensureClientAndUserBelongToDifferentOrganisations(Client $client, Organisation $organisation): ClientVoterTest
     {
-        $usersOrganisation = (new Organisation())->setIsActivated(true);
+        $usersOrganisation = new Organisation()->setIsActivated(true);
         $usersOrganisation->addUser($this->user);
         $client->setOrganisation($organisation);
 

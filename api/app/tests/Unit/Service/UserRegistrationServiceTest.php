@@ -14,13 +14,11 @@ use OPG\Digideps\Backend\Repository\ClientRepository;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Service\PreRegistrationVerificationService;
 use OPG\Digideps\Backend\Service\UserRegistrationService;
-use DateTime;
 use Doctrine\ORM\EntityManager;
 use Mockery as m;
 use OPG\Digideps\Common\Registration\SelfRegisterData;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 
 final class UserRegistrationServiceTest extends TestCase
 {
@@ -64,10 +62,10 @@ final class UserRegistrationServiceTest extends TestCase
         $mockClient = m::mock(Client::class)
             ->shouldIgnoreMissing(true)
             ->makePartial()
-            ->shouldReceive('getCourtDate')->andReturn(new DateTime('2015-05-04'))
+            ->shouldReceive('getCourtDate')->andReturn(new \DateTime('2015-05-04'))
             ->getMock();
 
-        $datetime = new DateTime('2015-05-04');
+        $datetime = new \DateTime('2015-05-04');
         $mockClient->shouldIgnoreMissing(true)
             ->shouldReceive('getCourtDate')->andReturn($datetime)
             ->getMock();
@@ -109,7 +107,7 @@ final class UserRegistrationServiceTest extends TestCase
         $selfRegisteredUser = $this->userRegistrationService->selfRegisterUser($data);
 
         self::assertEquals(User::SELF_REGISTER, $selfRegisteredUser->getRegistrationRoute());
-        self::assertTrue($selfRegisteredUser->getPreRegisterValidatedDate() instanceof DateTime);
+        self::assertTrue($selfRegisteredUser->getPreRegisterValidatedDate() instanceof \DateTime);
     }
 
     public function testUserCannotRegisterIfClientExistsWithDeputies(): void
@@ -144,7 +142,7 @@ final class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('isMultiDeputyCase')->andReturn(false)
             ->getMock();
 
-        self::expectException(RuntimeException::class);
+        self::expectException(\RuntimeException::class);
         self::expectExceptionMessage('User registration: Case number 12341234 already used');
 
         $this->userRegistrationService = new UserRegistrationService($em, $preRegVerificationService);
@@ -183,7 +181,7 @@ final class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('isMultiDeputyCase')->andReturn(false)
             ->getMock();
 
-        self::expectException(RuntimeException::class);
+        self::expectException(\RuntimeException::class);
         self::expectExceptionMessage('User registration: Case number 1234123t already used');
 
         $this->userRegistrationService = new UserRegistrationService($em, $preRegVerificationService);
@@ -222,7 +220,7 @@ final class UserRegistrationServiceTest extends TestCase
             ->shouldReceive('isMultiDeputyCase')->andReturn(false)
             ->getMock();
 
-        self::expectException(RuntimeException::class);
+        self::expectException(\RuntimeException::class);
         self::expectExceptionMessage('User registration: Case number 12341234 already used');
 
         $this->userRegistrationService = new UserRegistrationService($em, $preRegVerificationService);

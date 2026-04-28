@@ -72,7 +72,7 @@ class MailSenderTest extends WebTestCase
         array $parameters = ['param' => 'param value'],
         string $fromEmailNotifyID = 'fake-id'
     ) {
-        return (new Email())
+        return new Email()
             ->setToEmail($toEmail)
             ->setTemplate($templateID)
             ->setParameters($parameters)

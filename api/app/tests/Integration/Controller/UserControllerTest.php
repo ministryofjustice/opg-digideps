@@ -6,7 +6,6 @@ namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
-use DateTime;
 use OPG\Digideps\Backend\Entity\User;
 
 class UserControllerTest extends AbstractTestController
@@ -130,7 +129,7 @@ class UserControllerTest extends AbstractTestController
             ],
         ]);
 
-        $user = self::fixtures()->clear()->getRepo(User::class)->find($deputyId); /* @var $user \OPG\Digideps\Backend\Entity\User */
+        $user = self::fixtures()->clear()->getRepo(User::class)->find($deputyId); /* @var $user User */
 
         $this->assertEquals(self::$deputy1->getLastname() . '-modified', $user->getLastname());
         $this->assertEquals(self::$deputy1->getEmail() . '-modified', $user->getEmail());
@@ -489,7 +488,7 @@ class UserControllerTest extends AbstractTestController
     {
         $deputy = self::fixtures()->clear()->getRepo(User::class)->findOneByEmail($email);
         $deputy->setRegistrationToken(null);
-        $deputy->setTokenDate(new DateTime('2014-12-30'));
+        $deputy->setTokenDate(new \DateTime('2014-12-30'));
         self::fixtures()->flush($deputy);
 
         $url = '/user/recreate-token/' . $email;
@@ -513,7 +512,7 @@ class UserControllerTest extends AbstractTestController
 
         $deputy = self::fixtures()->clear()->getRepo(User::class)->findOneByEmail('deputy@example.org');
         $deputy->setRegistrationToken(null);
-        $deputy->setTokenDate(new DateTime('2014-12-30'));
+        $deputy->setTokenDate(new \DateTime('2014-12-30'));
         self::fixtures()->flush($deputy);
 
         $this->assertJsonRequest('PUT', $url, [
@@ -524,7 +523,7 @@ class UserControllerTest extends AbstractTestController
         // refresh deputy from db and chack token has been reset
         $deputyRefreshed = self::fixtures()->clear()->getRepo(User::class)->findOneByEmail('deputy@example.org');
         $this->assertTrue(strlen($deputyRefreshed->getRegistrationToken()) > 5);
-        $this->assertEquals(0, $deputyRefreshed->getTokenDate()->diff(new DateTime())->format('%a'));
+        $this->assertEquals(0, $deputyRefreshed->getTokenDate()->diff(new \DateTime())->format('%a'));
     }
 
     public function testGetByToken()

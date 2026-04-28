@@ -8,16 +8,13 @@ use OPG\Digideps\Backend\Factory\UserResearchResponseFactory;
 use OPG\Digideps\Backend\Repository\SatisfactionRepository;
 use OPG\Digideps\Backend\Repository\UserResearchResponseRepository;
 use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use RuntimeException;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Throwable;
 
 class UserResearchController extends RestController
 {
@@ -48,8 +45,8 @@ class UserResearchController extends RestController
             $this->formatter->setJmsSerialiserGroups($groups);
 
             return 'Created';
-        } catch (Throwable $e) {
-            throw new RuntimeException(sprintf('UserResearchResponse not created: %s', $e->getMessage()), Response::HTTP_BAD_REQUEST);
+        } catch (\Throwable $e) {
+            throw new \RuntimeException(sprintf('UserResearchResponse not created: %s', $e->getMessage()), Response::HTTP_BAD_REQUEST);
         }
     }
 
@@ -60,18 +57,18 @@ class UserResearchController extends RestController
         try {
             $fromDateString = $request->get('fromDate', '');
             $fromDate = empty($fromDateString) ?
-                (new DateTime('-5 years'))->setTime(0, 0, 1) : (new DateTime($fromDateString))->setTime(0, 0, 1);
+                new \DateTime('-5 years')->setTime(0, 0, 1) : new \DateTime($fromDateString)->setTime(0, 0, 1);
 
             $toDateString = $request->get('toDate', '');
             $toDate = empty($toDateString) ?
-                (new DateTime())->setTime(23, 59, 59) : (new DateTime($toDateString))->setTime(23, 59, 59);
+                new \DateTime()->setTime(23, 59, 59) : new \DateTime($toDateString)->setTime(23, 59, 59);
 
             $groups = ['satisfaction', 'user-research', 'user-email', 'user-phone-main'];
             $this->formatter->setJmsSerialiserGroups($groups);
 
             return new JsonResponse(['data' => $this->userResearchResponseRepository->getAllFilteredByDate($fromDate, $toDate), 'success' => true]);
-        } catch (Throwable $e) {
-            throw new RuntimeException(sprintf('There was a problem getting user research responses: %s', $e->getMessage()), Response::HTTP_BAD_REQUEST);
+        } catch (\Throwable $e) {
+            throw new \RuntimeException(sprintf('There was a problem getting user research responses: %s', $e->getMessage()), Response::HTTP_BAD_REQUEST);
         }
     }
 }

@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\Common;
 
-use InvalidArgumentException;
-use RuntimeException;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
 use Behat\Mink\Element\NodeElement;
 
@@ -60,7 +58,7 @@ trait ElementSelectionTrait
         );
 
         if (null === $element) {
-            throw new InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
+            throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
         }
 
         $element->click();
@@ -118,7 +116,7 @@ trait ElementSelectionTrait
         );
 
         if (null === $element) {
-            throw new InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
+            throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
         }
 
         $element->click();
@@ -152,7 +150,7 @@ trait ElementSelectionTrait
         );
 
         if (null === $element) {
-            throw new InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
+            throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
         }
 
         $values = $element->findAll('css', 'option');
@@ -179,7 +177,7 @@ trait ElementSelectionTrait
         );
 
         if (null === $values) {
-            throw new InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
+            throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
         }
 
         foreach ($values as $value) {
@@ -203,7 +201,7 @@ trait ElementSelectionTrait
         );
 
         if (null === $values) {
-            throw new InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
+            throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
         }
 
         $select = trim($values[$choiceNumber]->getAttribute('name'));

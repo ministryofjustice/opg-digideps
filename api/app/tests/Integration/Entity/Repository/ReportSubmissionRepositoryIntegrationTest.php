@@ -8,7 +8,6 @@ use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Repository\ReportSubmissionRepository;
 use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
-use DateTime;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\TestHelpers\ReportSubmissionHelper;
@@ -101,8 +100,8 @@ class ReportSubmissionRepositoryIntegrationTest extends ApiIntegrationTestCase
 
     public function testFindAllReportSubmissions()
     {
-        $today = new DateTime();
-        $yesterday = new DateTime('-1 day');
+        $today = new \DateTime();
+        $yesterday = new \DateTime('-1 day');
 
         $createdReportSubmissions = [];
         for ($i = 1; $i <= 3; $i++) {
@@ -117,9 +116,9 @@ class ReportSubmissionRepositoryIntegrationTest extends ApiIntegrationTestCase
 
     public function testFindAllReportSubmissionsOnlyReturnsSubmissionsWithPeriodProvided()
     {
-        $today = new DateTime();
-        $todayOneHourAgo = new DateTime('-1 hour');
-        $yesterday = new DateTime('-1 day');
+        $today = new \DateTime();
+        $todayOneHourAgo = new \DateTime('-1 hour');
+        $yesterday = new \DateTime('-1 day');
 
         $todaysReportSubmissions = [];
         for ($i = 0; $i < 3; $i++) {
@@ -146,10 +145,10 @@ class ReportSubmissionRepositoryIntegrationTest extends ApiIntegrationTestCase
 
     public function testFindAllReportSubmissionsRawSqlWithPeriodProvided()
     {
-        $today = new DateTime();
-        $yesterday = new DateTime('-1 day');
-        $threeDaysAgo = new DateTime('-3 days');
-        $lastWeek = new DateTime('-7 days');
+        $today = new \DateTime();
+        $yesterday = new \DateTime('-1 day');
+        $threeDaysAgo = new \DateTime('-3 days');
+        $lastWeek = new \DateTime('-7 days');
 
         $yesterdaysReportSubmissionsIds = [];
         for ($i = 0; $i < 3; $i++) {

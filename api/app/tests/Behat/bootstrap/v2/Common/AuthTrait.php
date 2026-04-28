@@ -4,13 +4,14 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\Common;
 
-use DateTime;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\User;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 trait AuthTrait
 {
+    private array $activeClientIds;
+
     /**
      * @Given :email logs in
      */
@@ -189,7 +190,7 @@ trait AuthTrait
             throw new BehatException(sprintf('User with email %s not found', $email));
 
         if ('expired' === $token) {
-            $user->setTokenDate(new DateTime('-2hours'));
+            $user->setTokenDate(new \DateTime('-2hours'));
             $this->em->persist($user);
             $this->em->flush($user);
         }

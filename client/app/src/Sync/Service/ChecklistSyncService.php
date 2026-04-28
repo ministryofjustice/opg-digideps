@@ -108,7 +108,7 @@ class ChecklistSyncService
             $checklistData->getReportEndDate()?->format('Y')
         );
 
-        $file = (new SiriusDocumentFile())
+        $file = new SiriusDocumentFile()
             ->setName($filename)
             ->setMimetype(MimeType::fromFilename($filename) ?? '')
             ->setSource(base64_encode($checklistData->getChecklistFileContents()));
@@ -116,7 +116,7 @@ class ChecklistSyncService
         $submissionId = is_null($checklistData->getSyncedReportSubmission()) ?
             null : $checklistData->getSyncedReportSubmission()->getId();
 
-        $metadata = (new SiriusChecklistPdfDocumentMetadata())
+        $metadata = new SiriusChecklistPdfDocumentMetadata()
             ->setYear(intval($checklistData->getReportEndDate()?->format('Y')))
             ->setType($checklistData->getReportType())
             ->setSubmitterEmail($checklistData->getSubmitterEmail())
@@ -124,7 +124,7 @@ class ChecklistSyncService
             ->setReportingPeriodTo($checklistData->getReportEndDate())
             ->setSubmissionId($submissionId);
 
-        return (new SiriusDocumentUpload())
+        return new SiriusDocumentUpload()
             ->setType('checklists')
             ->setAttributes($metadata)
             ->setFile($file);
@@ -182,7 +182,7 @@ class ChecklistSyncService
 
     protected function buildChecklistData(Report $report, string $content): QueuedChecklistData
     {
-        return (new QueuedChecklistData())
+        return new QueuedChecklistData()
             ->setChecklistId($report->getChecklist()->getId())
             ->setChecklistUuid($report->getChecklist()->getUuid())
             ->setCaseNumber($report->getClient()->getCaseNumber())

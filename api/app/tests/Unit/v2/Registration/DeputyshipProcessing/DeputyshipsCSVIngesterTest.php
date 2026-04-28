@@ -18,7 +18,6 @@ use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoad
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoaderResult;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
 use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
-use ArrayIterator;
 use Doctrine\DBAL\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -132,7 +131,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
         // candidate selection fails
         $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(
-            new ArrayIterator([]),
+            new \ArrayIterator([]),
             0,
             new Exception('unexpected database exception')
         );
@@ -160,7 +159,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
         $mockCSVLoaderResult->loadedOk = true;
 
         $candidates = [$this->createMock(StagingSelectedCandidate::class)];
-        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new ArrayIterator($candidates), 1);
+        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new \ArrayIterator($candidates), 1);
 
         $builderResult = new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidatesApplied);
 
@@ -194,8 +193,8 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
         $this->mockDeputyshipBuilder->expects(self::once())
             ->method('build')
-            ->with(new ArrayIterator($candidates))
-            ->willReturn(new ArrayIterator([$builderResult]));
+            ->with(new \ArrayIterator($candidates))
+            ->willReturn(new \ArrayIterator([$builderResult]));
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordBuilderResult')
@@ -224,7 +223,7 @@ final class DeputyshipsCSVIngesterTest extends TestCase
         $mockCSVLoaderResult->loadedOk = true;
 
         $candidates = [$this->createMock(StagingSelectedCandidate::class)];
-        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new ArrayIterator($candidates), 1);
+        $candidatesSelectorResult = new DeputyshipCandidatesSelectorResult(new \ArrayIterator($candidates), 1);
 
         $builderResult = new DeputyshipBuilderResult(DeputyshipBuilderResultOutcome::CandidatesApplied);
 
@@ -255,8 +254,8 @@ final class DeputyshipsCSVIngesterTest extends TestCase
 
         $this->mockDeputyshipBuilder->expects(self::once())
             ->method('build')
-            ->with(new ArrayIterator($candidates))
-            ->willReturn(new ArrayIterator([$builderResult]));
+            ->with(new \ArrayIterator($candidates))
+            ->willReturn(new \ArrayIterator([$builderResult]));
 
         $this->mockDeputyshipsIngestResultRecorder->expects(self::once())
             ->method('recordBuilderResult')

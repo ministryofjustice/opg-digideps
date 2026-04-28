@@ -6,9 +6,7 @@ use OPG\Digideps\Backend\Controller\RestController;
 use OPG\Digideps\Backend\Entity\Report\ProfDeputyPreviousCost;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -31,7 +29,7 @@ class ProfDeputyPrevCostController extends RestController
         $report = $this->findEntityBy(Report::class, $reportId);
         $this->denyAccessIfReportDoesNotBelongToUser($report);
         if (!array_key_exists('amount', $data)) {
-            throw new InvalidArgumentException('Missing amount');
+            throw new \InvalidArgumentException('Missing amount');
         }
         $cost = new ProfDeputyPreviousCost($report, $data['amount']);
         $this->updateEntity($data, $cost);
@@ -104,11 +102,11 @@ class ProfDeputyPrevCostController extends RestController
     private function updateEntity(array $data, ProfDeputyPreviousCost $cost): ProfDeputyPreviousCost
     {
         if (array_key_exists('start_date', $data)) {
-            $cost->setStartDate(new DateTime($data['start_date']));
+            $cost->setStartDate(new \DateTime($data['start_date']));
         }
 
         if (array_key_exists('end_date', $data)) {
-            $cost->setEndDate(new DateTime($data['end_date']));
+            $cost->setEndDate(new \DateTime($data['end_date']));
         }
 
         if (array_key_exists('amount', $data)) {

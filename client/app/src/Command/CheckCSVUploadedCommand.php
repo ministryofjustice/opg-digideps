@@ -10,12 +10,9 @@ use OPG\Digideps\Frontend\Service\Client\Slack\ClientFactory;
 use OPG\Digideps\Frontend\Service\SecretManagerService;
 use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use Aws\Exception\AwsException;
-use DateInterval;
-use DateTime;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Throwable;
 
 class CheckCSVUploadedCommand extends DaemonableCommand
 {
@@ -30,7 +27,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
 
     public static $defaultName = 'digideps:check-csv-uploaded';
 
-    private DateTime $now;
+    private \DateTime $now;
 
     public function __construct(
         private BankHolidaysAPIClient $bankHolidayAPIClient,
@@ -60,7 +57,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
 
         try {
             $dates = $this->bankHolidayAPIClient->getBankHolidays();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->postSlackMessage(sprintf(self::FAILED_TO_RETRIEVE_BANK_HOLIDAYS_SLACK_MESSAGE, $e->getMessage()), 'opg-digideps-devs');
 
             return 1;
@@ -98,7 +95,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
     private function getLogEvents(): int|array
     {
         // Calculate 24 hour period start time and end time
-        $startingTime = (int) (clone $this->now)->sub(new DateInterval('P1D'))->format('Uv');
+        $startingTime = (int) (clone $this->now)->sub(new \DateInterval('P1D'))->format('Uv');
         $endTime = (int) (clone $this->now)->format('Uv');
 
         try {
@@ -176,7 +173,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
                     'text' => $message,
                 ]
             );
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             $this->logger->log('error', sprintf('Failed to post to Slack during CSV upload check: %s', $e->getMessage()));
         }
     }

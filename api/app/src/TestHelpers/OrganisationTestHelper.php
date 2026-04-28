@@ -8,7 +8,7 @@ class OrganisationTestHelper
 {
     public function createOrganisation(string $orgName, string $emailIdentifier)
     {
-        return (new Organisation())
+        return new Organisation()
             ->setName($orgName)
             ->setEmailIdentifier($emailIdentifier)
             ->setIsActivated(true);

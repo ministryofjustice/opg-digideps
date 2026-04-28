@@ -15,7 +15,7 @@ trait ModifyAudit
      * @JMS\Groups({"last-modified"})
      * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
      *
-     * @var \OPG\Digideps\Frontend\Entity\User
+     * @var User
      */
     protected $lastModifiedBy;
 
@@ -30,7 +30,7 @@ trait ModifyAudit
     protected $lastModifiedOn;
 
     /**
-     * @return \OPG\Digideps\Frontend\Entity\User
+     * @return User
      */
     public function getLastModifiedBy()
     {

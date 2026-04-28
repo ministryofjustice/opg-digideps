@@ -14,7 +14,6 @@ use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use RuntimeException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ClamFileScannerTest extends TestCase
@@ -80,7 +79,7 @@ class ClamFileScannerTest extends TestCase
      */
     public function scanFileThrowsRuntimeExceptionIfServiceIsForeverUnavailable(): void
     {
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
 
         $this
             ->ensureServiceIsForeverUnavailable()
