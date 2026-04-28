@@ -86,9 +86,9 @@ class UserFactory
     }
 
     /**
-     * @return User|void
+     * @return User
      */
-    public function createGenericOrgUser(Organisation $organisation, int $number)
+    public function createGenericOrgUser(Organisation $organisation, int $number): User
     {
         $email = sprintf('%s.%s.%s.%s@%s', 'Test', 'Org', rand(1, 100000), $number, $organisation->getEmailIdentifier());
         $trimmedEmail = substr($email, 0, 59);

@@ -69,8 +69,10 @@ class FixtureController extends AbstractController
         if (!$this->deputyRepository->findOneBy(['email1' => $fromRequest['deputyEmail']])) {
             $client = $this->generateClient($fromRequest);
         } else {
+            /** @var string $deputyEmail */
+            $deputyEmail = $fromRequest['deputyEmail'];
             /** @var Organisation $org */
-            $org = $this->organisationRepository->findByEmailIdentifier($fromRequest['deputyEmail']);
+            $org = $this->organisationRepository->findByEmailIdentifier($deputyEmail);
             /** @var Client $client */
             $client = $org->getClients()->first();
         }
@@ -113,8 +115,10 @@ class FixtureController extends AbstractController
         /** @var Deputy $deputy */
         $deputy = $this->deputyRepository->findOneBy(['email1' => $fromRequest['deputyEmail']]);
 
+        /** @var string $deputyEmail */
+        $deputyEmail = $fromRequest['deputyEmail'];
         /** @var Organisation $organisation */
-        $organisation = $this->organisationRepository->findByEmailIdentifier($fromRequest['deputyEmail']);
+        $organisation = $this->organisationRepository->findByEmailIdentifier($deputyEmail);
 
         foreach (range(1, $fromRequest['orgSizeClients']) as $number) {
             $orgClient = $this->clientFactory->createGenericOrgClient($deputy, $organisation, $fromRequest['courtDate']);
