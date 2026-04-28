@@ -597,7 +597,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''deputyType'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 4
 			path: src/Controller/Admin/FixtureController.php
 
 		-
@@ -627,13 +627,13 @@ parameters:
 		-
 			message: '#^Cannot access offset ''reportStatus'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 3
 			path: src/Controller/Admin/FixtureController.php
 
 		-
 			message: '#^Cannot access offset ''reportType'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 3
 			path: src/Controller/Admin/FixtureController.php
 
 		-
@@ -717,7 +717,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$mixed of method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:post\(\) expects array\|object\|string, string\|false given\.$#'
 			identifier: argument.type
-			count: 8
+			count: 9
 			path: src/Controller/Admin/FixtureController.php
 
 		-
