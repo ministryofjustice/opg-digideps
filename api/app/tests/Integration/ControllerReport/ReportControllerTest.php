@@ -663,6 +663,7 @@ class ReportControllerTest extends AbstractTestController
         $q = http_build_query(['groups' => [
             'action-more-info',
         ]]);
+
         $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
