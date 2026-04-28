@@ -215,11 +215,11 @@ final class ReportStatusServiceTest extends TestCase
 
         return [
             [['getMoneyInExists' => null], ReportStatusService::STATE_NOT_STARTED],
-            [['getMoneyInExists' => 'No','getReasonForNoMoneyIn' => null], StatusService::STATE_INCOMPLETE],
-            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => $emptyCategories,'getMoneyTransactionsShortInExist' => 'no'], StatusService::STATE_INCOMPLETE],
-            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => $emptyCategories,'getMoneyTransactionsShortInExist' => 'yes'], StatusService::STATE_INCOMPLETE],
-            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => $oneCategory,'getMoneyTransactionsShortInExist' => 'no'], StatusService::STATE_LOW_ASSETS_DONE],
-            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => $oneCategory,'getMoneyTransactionsShortInExist' => 'yes', 'getMoneyTransactionsShortIn' => $oneTransaction], StatusService::STATE_DONE],
+            [['getMoneyInExists' => 'No','getReasonForNoMoneyIn' => null], ReportStatusService::STATE_INCOMPLETE],
+            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => $emptyCategories,'getMoneyTransactionsShortInExist' => 'no'], ReportStatusService::STATE_INCOMPLETE],
+            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => $emptyCategories,'getMoneyTransactionsShortInExist' => 'yes'], ReportStatusService::STATE_INCOMPLETE],
+            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => $oneCategory,'getMoneyTransactionsShortInExist' => 'no'], ReportStatusService::STATE_LOW_ASSETS_DONE],
+            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => $oneCategory,'getMoneyTransactionsShortInExist' => 'yes', 'getMoneyTransactionsShortIn' => $oneTransaction], ReportStatusService::STATE_DONE],
         ];
     }
 
@@ -242,11 +242,11 @@ final class ReportStatusServiceTest extends TestCase
 
         return [
             [['getMoneyOutExists' => null], ReportStatusService::STATE_NOT_STARTED],
-            [['getMoneyOutExists' => 'No','getReasonForNoMoneyOut' => null], StatusService::STATE_INCOMPLETE],
-            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => $emptyCategories,'getMoneyTransactionsShortOutExist' => 'no'], StatusService::STATE_INCOMPLETE],
-            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => $emptyCategories,'getMoneyTransactionsShortOutExist' => 'yes'], StatusService::STATE_INCOMPLETE],
-            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => $oneCategory,'getMoneyTransactionsShortOutExist' => 'no'], StatusService::STATE_LOW_ASSETS_DONE],
-            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => $oneCategory,'getMoneyTransactionsShortOutExist' => 'yes', 'getMoneyTransactionsShortOut' => $oneTransaction], StatusService::STATE_DONE],
+            [['getMoneyOutExists' => 'No','getReasonForNoMoneyOut' => null], ReportStatusService::STATE_INCOMPLETE],
+            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => $emptyCategories,'getMoneyTransactionsShortOutExist' => 'no'], ReportStatusService::STATE_INCOMPLETE],
+            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => $emptyCategories,'getMoneyTransactionsShortOutExist' => 'yes'], ReportStatusService::STATE_INCOMPLETE],
+            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => $oneCategory,'getMoneyTransactionsShortOutExist' => 'no'], ReportStatusService::STATE_LOW_ASSETS_DONE],
+            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => $oneCategory,'getMoneyTransactionsShortOutExist' => 'yes', 'getMoneyTransactionsShortOut' => $oneTransaction], ReportStatusService::STATE_DONE],
         ];
     }
 
@@ -689,8 +689,8 @@ final class ReportStatusServiceTest extends TestCase
         return [
             [['getWishToProvideDocumentation' => 'no'], ReportStatusService::STATE_DONE],
             [['getDocuments' => []], ReportStatusService::STATE_NOT_STARTED],
-            [['getWishToProvideDocumentation' => 'yes', 'getDeputyDocuments' => []], ReportStatusService::STATE_INCOMPLETE],
-            [['getWishToProvideDocumentation' => 'yes', 'getDeputyDocuments' => [$document]], ReportStatusService::STATE_DONE],
+            [['getWishToProvideDocumentation' => 'yes', 'getDeputyDocuments' => new ArrayCollection([])], ReportStatusService::STATE_INCOMPLETE],
+            [['getWishToProvideDocumentation' => 'yes', 'getDeputyDocuments' => new ArrayCollection([$document])], ReportStatusService::STATE_DONE],
         ];
     }
 
@@ -728,9 +728,9 @@ final class ReportStatusServiceTest extends TestCase
         $emptyAccounts = new ArrayCollection([]);
 
         return [
-            [['getBankAccounts' => $emptyAccounts, 'getBankAccountsIncomplete' => []], StatusService::STATE_NOT_STARTED],
-            [['getBankAccounts' => $accounts, 'getBankAccountsIncomplete' => $accounts], StatusService::STATE_INCOMPLETE],
-            [['getBankAccounts' => $accounts, 'getBankAccountsIncomplete' => $emptyAccounts], StatusService::STATE_DONE],
+            [['getBankAccounts' => $emptyAccounts, 'getBankAccountsIncomplete' => []], ReportStatusService::STATE_NOT_STARTED],
+            [['getBankAccounts' => $accounts, 'getBankAccountsIncomplete' => $accounts], ReportStatusService::STATE_INCOMPLETE],
+            [['getBankAccounts' => $accounts, 'getBankAccountsIncomplete' => $emptyAccounts], ReportStatusService::STATE_DONE],
         ];
     }
 
@@ -778,12 +778,12 @@ final class ReportStatusServiceTest extends TestCase
         $noAccounts = new ArrayCollection([]);
 
         return [
-            [['getBankAccounts' => $bothAccounts, 'getMoneyTransfers' => [], 'getNoTransfersToAdd' => null], StatusService::STATE_NOT_STARTED],
-            [['getBankAccounts' => $bothAccounts, 'getMoneyTransfers' => [$mt1], 'getNoTransfersToAdd' => null], StatusService::STATE_DONE],
-            [['getBankAccounts' => $bothAccounts, 'getMoneyTransfers' => [], 'getNoTransfersToAdd' => true], StatusService::STATE_DONE],
+            [['getBankAccounts' => $bothAccounts, 'getMoneyTransfers' => [], 'getNoTransfersToAdd' => null], ReportStatusService::STATE_NOT_STARTED],
+            [['getBankAccounts' => $bothAccounts, 'getMoneyTransfers' => [$mt1], 'getNoTransfersToAdd' => null], ReportStatusService::STATE_DONE],
+            [['getBankAccounts' => $bothAccounts, 'getMoneyTransfers' => [], 'getNoTransfersToAdd' => true], ReportStatusService::STATE_DONE],
             // less than 2 accounts => done
-            [['getBankAccounts' => $noAccounts], StatusService::STATE_DONE],
-            [['getBankAccounts' => new ArrayCollection([$account1])], StatusService::STATE_DONE],
+            [['getBankAccounts' => $noAccounts], ReportStatusService::STATE_DONE],
+            [['getBankAccounts' => new ArrayCollection([$account1])], ReportStatusService::STATE_DONE],
         ];
     }
 
