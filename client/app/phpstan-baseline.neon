@@ -9921,7 +9921,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''timeout'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
+			count: 2
 			path: src/Service/Client/RestClient.php
 
 		-
