@@ -24,13 +24,13 @@ class UserResearchResponse
         $this->created = new \DateTime();
     }
 
-    #[JMS\Type('App\Entity\UserResearch\ResearchType')]
+    #[JMS\Type(ResearchType::class)]
     #[JMS\Groups(['user-research', 'satisfaction'])]
     #[ORM\JoinColumn(onDelete: 'CASCADE')]
     #[ORM\OneToOne(inversedBy: 'userResearchResponse', targetEntity: ResearchType::class, cascade: ['persist'], orphanRemoval: true)]
     private ResearchType $researchType;
 
-    #[JMS\Type('App\Entity\User')]
+    #[JMS\Type(User::class)]
     #[JMS\Groups(['user-research', 'satisfaction'])]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: User::class, cascade: ['persist'], inversedBy: 'userResearchResponse')]

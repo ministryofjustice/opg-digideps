@@ -8,13 +8,12 @@ use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Repository\AssetRepository;
-use OPG\Digideps\Backend\Entity\Report\AssetProperty;
 
 #[ORM\Table(name: 'asset')]
 #[ORM\Entity(repositoryClass: AssetRepository::class)]
 #[ORM\InheritanceType('SINGLE_TABLE')]
 #[ORM\DiscriminatorColumn(name: 'type', type: 'string')]
-#[ORM\DiscriminatorMap(['property' => AssetProperty::class, 'other' => 'App\Entity\Report\AssetOther'])]
+#[ORM\DiscriminatorMap(['property' => AssetProperty::class, 'other' => AssetOther::class])]
 #[ORM\HasLifecycleCallbacks]
 abstract class Asset
 {

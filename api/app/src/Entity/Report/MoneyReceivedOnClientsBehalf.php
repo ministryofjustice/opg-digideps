@@ -38,7 +38,7 @@ class MoneyReceivedOnClientsBehalf implements MoneyReceivedOnClientsBehalfInterf
     private \DateTime $created;
 
     #[JMS\Groups(['client-benefits-check'])]
-    #[JMS\Type('App\Entity\Report\ClientBenefitsCheck')]
+    #[JMS\Type(ClientBenefitsCheck::class)]
     #[JoinColumn(name: 'client_benefits_check_id', referencedColumnName: 'id')]
     #[ORM\ManyToOne(targetEntity: ClientBenefitsCheck::class, cascade: ['persist'], inversedBy: 'moneyReceivedOnClientsBehalf')]
     private ClientBenefitsCheck $clientBenefitsCheck;
