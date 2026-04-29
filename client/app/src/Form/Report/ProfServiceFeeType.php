@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Form\Report;
+namespace OPG\Digideps\Frontend\Form\Report;
 
-use App\Entity\Report\Fee;
-use App\Entity\Report\ProfServiceFee;
+use OPG\Digideps\Frontend\Entity\Report\ProfServiceFee;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -89,7 +88,7 @@ class ProfServiceFeeType extends AbstractType
     protected function getValidationGroups()
     {
         return function (FormInterface $form) {
-            /** @var $asset \App\Entity\Report\ProfServiceFee */
+            /** @var ProfServiceFee $profServiceFee */
             $profServiceFee = $form->getData();
             switch ($this->step) {
                 case '1':

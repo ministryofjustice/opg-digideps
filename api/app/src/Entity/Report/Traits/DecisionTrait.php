@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
-use App\Entity\Report\Decision;
-use App\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\Decision;
+use OPG\Digideps\Backend\Entity\Report\Report;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use Doctrine\Common\Collections\Collection;
 
 trait DecisionTrait
 {
@@ -14,9 +15,9 @@ trait DecisionTrait
      *
      * @JMS\Groups({"decision"})
      *
-     * @JMS\Type("ArrayCollection<App\Entity\Report\Decision>")
+     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\Decision>")
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\Decision", mappedBy="report", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\Decision", mappedBy="report", cascade={"persist", "remove"})
      */
     private $decisions;
 
@@ -34,7 +35,7 @@ trait DecisionTrait
     /**
      * Get decisions.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getDecisions()
     {

@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace OPG\Digideps\Backend\Controller;
 
-use App\Entity\Report\AssetOther;
-use App\Entity\Report\AssetProperty;
-use App\Exception\UnauthorisedException;
-use App\Repository\AssetRepository;
-use App\Repository\BankAccountRepository;
-use App\Repository\ReportRepository;
-use App\Repository\UserRepository;
-use App\Service\Auth\AuthService;
-use App\Service\Formatter\RestFormatter;
-use App\Service\Stats\QueryFactory;
-use App\Service\Stats\StatsQueryParameters;
+use OPG\Digideps\Backend\Entity\Report\AssetOther;
+use OPG\Digideps\Backend\Entity\Report\AssetProperty;
+use OPG\Digideps\Backend\Exception\UnauthorisedException;
+use OPG\Digideps\Backend\Repository\AssetRepository;
+use OPG\Digideps\Backend\Repository\BankAccountRepository;
+use OPG\Digideps\Backend\Repository\ReportRepository;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\Service\Auth\AuthService;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\Service\Stats\QueryFactory;
+use OPG\Digideps\Backend\Service\Stats\StatsQueryParameters;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -89,7 +89,7 @@ class StatsController extends RestController
 
     #[Route(path: 'stats/admins/inactive_admin_users', methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
-    public function getInactiveAdminUserReportData(Request $request, Restformatter $formatter): array
+    public function getInactiveAdminUserReportData(Request $request, RestFormatter $formatter): array
     {
         $serialisedGroups = $request->query->all('groups');
         $formatter->setJmsSerialiserGroups($serialisedGroups);

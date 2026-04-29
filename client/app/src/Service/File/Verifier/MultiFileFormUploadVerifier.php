@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Service\File\Verifier;
+namespace OPG\Digideps\Frontend\Service\File\Verifier;
 
-use App\Entity\Report\Document;
-use App\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\Document;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -41,7 +41,7 @@ class MultiFileFormUploadVerifier
 
     private function verifyFiles(Report $report, UploadedFile $file): VerificationStatus
     {
-        $document = (new Document())->setFile($file)->setReport($report);
+        $document = new Document()->setFile($file)->setReport($report);
         $status = new VerificationStatus();
 
         foreach ($this->verifiers as $verifier) {

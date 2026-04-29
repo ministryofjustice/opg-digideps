@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\v2\Registration\DeputyshipProcessing;
+namespace Tests\OPG\Digideps\Backend\Integration\v2\Registration\DeputyshipProcessing;
 
-use App\Entity\StagingDeputyship;
-use App\Tests\Integration\ApiIntegrationTestCase;
-use App\v2\CSV\CSVChunkerFactory;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
+use OPG\Digideps\Backend\Entity\StagingDeputyship;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use OPG\Digideps\Backend\v2\CSV\CSVChunkerFactory;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
 use Doctrine\ORM\Exception\NotSupported;
 use League\Csv\Exception;
 use League\Csv\Reader;

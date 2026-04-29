@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\AppNotification;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\AppNotification;
 
-use App\Tests\Behat\v2\Common\AssertTrait;
-use App\Tests\Behat\v2\Common\BaseFeatureContext;
+use Tests\OPG\Digideps\Backend\Behat\v2\Common\AssertTrait;
+use Tests\OPG\Digideps\Backend\Behat\v2\Common\BaseFeatureContext;
 
 class AppNotificationFeatureContext extends BaseFeatureContext
 {

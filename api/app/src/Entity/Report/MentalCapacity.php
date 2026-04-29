@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Backend\Entity\Report;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -33,7 +33,7 @@ class MentalCapacity
     /**
      * @var Report
      *
-     * @ORM\OneToOne(targetEntity="App\Entity\Report\Report", inversedBy="mentalCapacity")
+     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="mentalCapacity")
      *
      * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
@@ -62,7 +62,7 @@ class MentalCapacity
     private $hasCapacityChangedDetails;
 
     /**
-     * @var \Date
+     * @var \DateTime
      *
      * @JMS\Type("DateTime<'Y-m-d'>")
      *

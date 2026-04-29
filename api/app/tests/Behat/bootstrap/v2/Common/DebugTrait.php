@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\Common;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\Common;
 
 use Exception;
 use Behat\Behat\Hook\Scope\AfterStepScope;
@@ -57,7 +57,7 @@ trait DebugTrait
     /**
      * @Then I save the page as :name
      */
-    public function debug(string $name, Exception $ex)
+    public function debug(string $name, \Exception $ex)
     {
         for ($i = 1; $i < 100; ++$i) {
             $iPadded = str_pad((string) $i, 2, '0', STR_PAD_LEFT);

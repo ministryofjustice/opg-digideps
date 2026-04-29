@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Entity\Report;
+namespace OPG\Digideps\Frontend\Entity\Report;
 
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -14,7 +14,7 @@ class Debt
     private $debtTypeId;
 
     /**
-     * @var decimal
+     * @var string decimal
      *
      * @JMS\Type("string")
      * @JMS\Groups({"debt"})
@@ -43,7 +43,7 @@ class Debt
      * Debt constructor.
      *
      * @param $debtTypeId
-     * @param decimal $amount
+     * @param string $amount decimal
      * @param string  $hasMoreDetails
      * @param string  $moreDetails
      */
@@ -72,7 +72,7 @@ class Debt
     }
 
     /**
-     * @return decimal
+     * @return string decimal
      */
     public function getAmount()
     {
@@ -80,7 +80,7 @@ class Debt
     }
 
     /**
-     * @param decimal $amount
+     * @param string $amount decimal
      */
     public function setAmount($amount)
     {

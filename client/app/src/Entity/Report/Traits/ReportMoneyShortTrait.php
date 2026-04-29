@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Entity\Report\Traits;
+namespace OPG\Digideps\Frontend\Entity\Report\Traits;
 
-use App\Entity\Report\MoneyShortCategory;
-use App\Entity\Report\MoneyTransactionShort;
+use OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory;
+use OPG\Digideps\Frontend\Entity\Report\MoneyTransactionShort;
 use JMS\Serializer\Annotation as JMS;
 
 trait ReportMoneyShortTrait
@@ -12,7 +12,7 @@ trait ReportMoneyShortTrait
      * @var MoneyShortCategory[]
      *
      * @JMS\Groups({"moneyShortCategoriesIn"})
-     * @JMS\Type("array<App\Entity\Report\MoneyShortCategory>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory>")
      */
     private $moneyShortCategoriesIn = [];
 
@@ -20,21 +20,21 @@ trait ReportMoneyShortTrait
      * @var MoneyShortCategory[]
      *
      * @JMS\Groups({"moneyShortCategoriesOut"})
-     * @JMS\Type("array<App\Entity\Report\MoneyShortCategory>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyShortCategory>")
      */
     private $moneyShortCategoriesOut = [];
 
     /**
      * @var MoneyTransactionShort[]
      *
-     * @JMS\Type("array<App\Entity\Report\MoneyTransactionShort>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyTransactionShort>")
      */
     private $moneyTransactionsShortIn = [];
 
     /**
      * @var MoneyTransactionShort[]
      *
-     * @JMS\Type("array<App\Entity\Report\MoneyTransactionShort>")
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\MoneyTransactionShort>")
      */
     private $moneyTransactionsShortOut = [];
 
@@ -59,7 +59,7 @@ trait ReportMoneyShortTrait
     private $moneyTransactionsShortOutExist;
 
     /**
-     * @return \App\Entity\Report\MoneyShortCategory[]
+     * @return MoneyShortCategory[]
      */
     public function getMoneyShortCategoriesIn()
     {
@@ -67,7 +67,7 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @return \App\Entity\Report\MoneyShortCategory[]
+     * @return MoneyShortCategory[]
      */
     public function getMoneyShortCategoriesInPresent()
     {
@@ -77,7 +77,7 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @param \App\Entity\Report\MoneyShortCategory[] $moneyShortCategoriesIn
+     * @param MoneyShortCategory[] $moneyShortCategoriesIn
      */
     public function setMoneyShortCategoriesIn($moneyShortCategoriesIn)
     {
@@ -85,7 +85,7 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @return \App\Entity\Report\MoneyShortCategory[]
+     * @return MoneyShortCategory[]
      */
     public function getMoneyShortCategoriesOut()
     {
@@ -93,7 +93,7 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @return \App\Entity\Report\MoneyShortCategory[]
+     * @return MoneyShortCategory[]
      */
     public function getMoneyShortCategoriesOutPresent()
     {
@@ -103,7 +103,7 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @param \App\Entity\Report\MoneyShortCategory[] $moneyShortCategoriesOut
+     * @param MoneyShortCategory[] $moneyShortCategoriesOut
      */
     public function setMoneyShortCategoriesOut($moneyShortCategoriesOut)
     {
@@ -111,7 +111,7 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @return \App\Entity\Report\MoneyTransactionShort[]
+     * @return MoneyTransactionShort[]
      */
     public function getMoneyTransactionsShortIn()
     {
@@ -119,7 +119,7 @@ trait ReportMoneyShortTrait
     }
 
     /**
-     * @param \App\Entity\Report\MoneyTransactionShort[] $moneyTransactionsShortIn
+     * @param MoneyTransactionShort[] $moneyTransactionsShortIn
      */
     public function setMoneyTransactionsShortIn($moneyTransactionsShortIn)
     {

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace OPG\Digideps\Backend\Service;
 
-use App\Entity\Deputy;
-use App\Entity\User;
-use App\Repository\DeputyRepository;
-use App\Repository\UserRepository;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\DeputyRepository;
+use OPG\Digideps\Backend\Repository\UserRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Psr\Log\LoggerInterface;
@@ -33,7 +33,7 @@ class UserDeputyService
      * @throws NoResultException
      * @throws NonUniqueResultException
      */
-    public function addMissingUserDeputies(): int
+    public function addMissingUserDeputies(bool $dryRun = false): int
     {
         // find dd_users (active, primary, lay/named) who have no deputy associated with them
         $usersWithoutDeputies = $this->userRepository->findUsersWithoutDeputies();
@@ -83,11 +83,13 @@ class UserDeputyService
             }
 
             if (!is_null($deputy)) {
-                $deputy->setUser($user);
-                $this->deputyRepository->save($deputy);
+                if (!$dryRun) {
+                    $deputy->setUser($user);
+                    $this->deputyRepository->save($deputy);
 
-                $user->setDeputy($deputy);
-                $this->userRepository->save($user);
+                    $user->setDeputy($deputy);
+                    $this->userRepository->save($user);
+                }
 
                 $deputyUidsToIds[$deputyUid] = $deputy->getId();
 

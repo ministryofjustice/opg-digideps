@@ -70,24 +70,24 @@ services:
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
-    App\:
+    OPG\Digideps\Backend\:
         resource: "../src/*"
         exclude: "../src/{DependencyInjection,Entity,Migrations,Tests,Kernel.php}"
 
-    App\Controller\:
+    OPG\Digideps\Backend\Controller\:
         resource: "../src/Controller/"
         tags: [controller.service_arguments]
 
-    App\v2\Controller\:
+    OPG\Digideps\Backend\v2\Controller\:
         resource: "../src/v2/Controller"
         tags: [controller.service_arguments]
 
-    App\v2\Registration\Controller\:
+    OPG\Digideps\Backend\v2\Registration\Controller\:
         resource: "../src/v2/Registration/Controller"
         tags: [controller.service_arguments]
 
     monolog.processor.add_request_id:
-        class: App\Service\RequestIdLoggerProcessor
+        class: OPG\Digideps\Backend\Service\RequestIdLoggerProcessor
         arguments: ["@service_container"]
         tags:
             - { name: monolog.processor, method: processRecord }
@@ -106,13 +106,13 @@ services:
         calls:
             - [setAnnotationReader, ["@annotation_reader"]]
 
-    App\DataFixtures\:
+    OPG\Digideps\Backend\DataFixtures\:
         resource: "../src/DataFixtures"
         tags: ["doctrine.fixture.orm"]
         autowire: true
 
-    App\Controller\Report\ReportController:
-        class: App\Controller\Report\ReportController
+    OPG\Digideps\Backend\Controller\Report\ReportController:
+        class: OPG\Digideps\Backend\Controller\Report\ReportController
         arguments:
             $updateHandlers:
                 [
@@ -121,7 +121,7 @@ services:
                     "@rest_handler.report.pa_fees_expenses_report_update_handler",
                 ]
 
-    App\EventListener\RestInputOuputFormatter:
+    OPG\Digideps\Backend\EventListener\RestInputOuputFormatter:
         arguments:
             ["@jms_serializer", "@logger", ["json"], "json", "%kernel.debug%"]
         tags:
@@ -141,7 +141,7 @@ services:
                   method: onKernelRequest,
               }
 
-    App\EventListener\DoctrineListener:
+    OPG\Digideps\Backend\EventListener\DoctrineListener:
         tags:
             - {
                   name: doctrine.event_listener,
@@ -159,8 +159,8 @@ services:
                   method: preRemove,
               }
 
-    App\EventListener\FixDefaultSchemaListener:
-        class: App\EventListener\FixDefaultSchemaListener
+    OPG\Digideps\Backend\EventListener\FixDefaultSchemaListener:
+        class: OPG\Digideps\Backend\EventListener\FixDefaultSchemaListener
         tags:
             - {
                   name: doctrine.event_listener,
@@ -168,56 +168,56 @@ services:
                   method: postGenerateSchema,
               }
 
-    App\Factory\OrganisationFactory:
-        class: App\Factory\OrganisationFactory
+    OPG\Digideps\Backend\Factory\OrganisationFactory:
+        class: OPG\Digideps\Backend\Factory\OrganisationFactory
         arguments: ["%shared_email_domains%"]
         public: true
 
-    App\Service\RestHandler\OrganisationRestHandler:
-        class: App\Service\RestHandler\OrganisationRestHandler
+    OPG\Digideps\Backend\Service\RestHandler\OrganisationRestHandler:
+        class: OPG\Digideps\Backend\Service\RestHandler\OrganisationRestHandler
         arguments:
             - "@em"
             - "@validator"
-            - '@App\Repository\OrganisationRepository'
-            - '@App\Repository\UserRepository'
-            - '@App\Factory\OrganisationFactory'
+            - '@OPG\Digideps\Backend\Repository\OrganisationRepository'
+            - '@OPG\Digideps\Backend\Repository\UserRepository'
+            - '@OPG\Digideps\Backend\Factory\OrganisationFactory'
             - "%shared_email_domains%"
 
-    App\Security\RedisUserProvider:
+    OPG\Digideps\Backend\Security\RedisUserProvider:
         arguments:
             [
                 "@predis",
                 "@logger",
                 { "timeout_seconds": "%user_provider_timeout_seconds%" },
-                '@App\Repository\UserRepository',
+                '@OPG\Digideps\Backend\Repository\UserRepository',
             ]
 
-    App\Security\OrganisationVoter:
-        class: App\Security\OrganisationVoter
+    OPG\Digideps\Backend\Security\OrganisationVoter:
+        class: OPG\Digideps\Backend\Security\OrganisationVoter
         arguments: ["@security.helper"]
         tags:
             - { name: security.voter }
 
-    App\Security\ClientVoter:
-        class: App\Security\ClientVoter
+    OPG\Digideps\Backend\Security\ClientVoter:
+        class: OPG\Digideps\Backend\Security\ClientVoter
         arguments: ["@security.helper"]
         tags:
             - { name: security.voter }
 
-    App\Security\UserVoter:
-        class: App\Security\UserVoter
+    OPG\Digideps\Backend\Security\UserVoter:
+        class: OPG\Digideps\Backend\Security\UserVoter
         tags:
             - { name: security.voter }
 
-    App\Service\Client\TokenStorage\RedisStorage:
+    OPG\Digideps\Backend\Service\Client\TokenStorage\RedisStorage:
         arguments:
             $redis: "@predis"
 
-    App\Service\DataImporter\CsvToArray: ~
+    OPG\Digideps\Backend\Service\DataImporter\CsvToArray: ~
 
     # Disable autowiring for these helper classes
-    App\Service\ReportStatusService: ~
-    App\Service\Stats\StatsQueryParameters: ~
+    OPG\Digideps\Backend\Service\ReportStatusService: ~
+    OPG\Digideps\Backend\Service\Stats\StatsQueryParameters: ~
 
     Aws\S3\S3ClientInterface:
         alias: Aws\S3\S3Client
@@ -225,96 +225,96 @@ services:
     Aws\S3\S3Client:
         arguments: ["%s3_client_params%"]
 
-    App\Service\File\Storage\S3Storage:
+    OPG\Digideps\Backend\Service\File\Storage\S3Storage:
         arguments: ['@Aws\S3\S3Client', "%s3_sirius_bucket%", "@logger"]
 
-    App\Service\File\Storage\S3SatisfactionDataStorage:
-        parent: App\Service\File\Storage\S3Storage
+    OPG\Digideps\Backend\Service\File\Storage\S3SatisfactionDataStorage:
+        parent: OPG\Digideps\Backend\Service\File\Storage\S3Storage
         arguments:
             index_1: "%s3_satisfaction_bucket%"
 
     Symfony\Component\Security\Core\Role\RoleHierarchyInterface: "@security.role_hierarchy"
 
-    App\Repository\PreRegistrationRepository:
-        class: App\Repository\PreRegistrationRepository
+    OPG\Digideps\Backend\Repository\PreRegistrationRepository:
+        class: OPG\Digideps\Backend\Repository\PreRegistrationRepository
         tags: ["doctrine.repository_service"]
 
-    App\Repository\ClientRepository:
-        class: App\Repository\ClientRepository
+    OPG\Digideps\Backend\Repository\ClientRepository:
+        class: OPG\Digideps\Backend\Repository\ClientRepository
         tags: ["doctrine.repository_service"]
 
-    App\Repository\DocumentRepository:
-        class: App\Repository\DocumentRepository
+    OPG\Digideps\Backend\Repository\DocumentRepository:
+        class: OPG\Digideps\Backend\Repository\DocumentRepository
         tags: ["doctrine.repository_service"]
 
-    App\Repository\ChecklistRepository:
-        class: App\Repository\ChecklistRepository
+    OPG\Digideps\Backend\Repository\ChecklistRepository:
+        class: OPG\Digideps\Backend\Repository\ChecklistRepository
         tags: ["doctrine.repository_service"]
 
-    App\Repository\CourtOrderRepository:
-        class: App\Repository\CourtOrderRepository
+    OPG\Digideps\Backend\Repository\CourtOrderRepository:
+        class: OPG\Digideps\Backend\Repository\CourtOrderRepository
         tags: ["doctrine.repository_service"]
 
-    App\Repository\CourtOrderDeputyRepository:
-        class: App\Repository\CourtOrderDeputyRepository
+    OPG\Digideps\Backend\Repository\CourtOrderDeputyRepository:
+        class: OPG\Digideps\Backend\Repository\CourtOrderDeputyRepository
         tags: ["doctrine.repository_service"]
 
-    App\Repository\DeputyRepository:
-        class: App\Repository\DeputyRepository
+    OPG\Digideps\Backend\Repository\DeputyRepository:
+        class: OPG\Digideps\Backend\Repository\DeputyRepository
         tags: ["doctrine.repository_service"]
 
-    App\Repository\NoteRepository:
-        class: App\Repository\NoteRepository
+    OPG\Digideps\Backend\Repository\NoteRepository:
+        class: OPG\Digideps\Backend\Repository\NoteRepository
         tags: ["doctrine.repository_service"]
 
-    App\Repository\OrganisationRepository:
-        class: App\Repository\OrganisationRepository
+    OPG\Digideps\Backend\Repository\OrganisationRepository:
+        class: OPG\Digideps\Backend\Repository\OrganisationRepository
         tags: ["doctrine.repository_service"]
 
-    App\Repository\ReportRepository:
-        class: App\Repository\ReportRepository
+    OPG\Digideps\Backend\Repository\ReportRepository:
+        class: OPG\Digideps\Backend\Repository\ReportRepository
         tags: ["doctrine.repository_service"]
 
-    App\Repository\ReportSubmissionRepository:
-        class: App\Repository\ReportSubmissionRepository
+    OPG\Digideps\Backend\Repository\ReportSubmissionRepository:
+        class: OPG\Digideps\Backend\Repository\ReportSubmissionRepository
         tags: ["doctrine.repository_service"]
 
-    App\Repository\SatisfactionRepository:
-        class: App\Repository\SatisfactionRepository
+    OPG\Digideps\Backend\Repository\SatisfactionRepository:
+        class: OPG\Digideps\Backend\Repository\SatisfactionRepository
         tags: ["doctrine.repository_service"]
 
-    App\Repository\StagingDeputyshipRepository:
-        class: App\Repository\StagingDeputyshipRepository
+    OPG\Digideps\Backend\Repository\StagingDeputyshipRepository:
+        class: OPG\Digideps\Backend\Repository\StagingDeputyshipRepository
         tags: ["doctrine.repository_service"]
 
-    App\Repository\UserRepository:
-        class: App\Repository\UserRepository
+    OPG\Digideps\Backend\Repository\UserRepository:
+        class: OPG\Digideps\Backend\Repository\UserRepository
         tags: ["doctrine.repository_service"]
 
-    App\Repository\UserResearchResponseRepository:
-        class: App\Repository\UserResearchResponseRepository
+    OPG\Digideps\Backend\Repository\UserResearchResponseRepository:
+        class: OPG\Digideps\Backend\Repository\UserResearchResponseRepository
         tags: ["doctrine.repository_service"]
 
-    App\Repository\AssetRepository:
-        class: App\Repository\AssetRepository
+    OPG\Digideps\Backend\Repository\AssetRepository:
+        class: OPG\Digideps\Backend\Repository\AssetRepository
         tags: ["doctrine.repository_service"]
 
-    App\Repository\BankAccountRepository:
-        class: App\Repository\BankAccountRepository
+    OPG\Digideps\Backend\Repository\BankAccountRepository:
+        class: OPG\Digideps\Backend\Repository\BankAccountRepository
         tags: ["doctrine.repository_service"]
 
-    App\Service\Auth\AuthService:
+    OPG\Digideps\Backend\Service\Auth\AuthService:
         arguments:
             $clientPermissions: "%client_permissions%"
 
-    App\Service\BruteForce\AttemptsInTimeChecker:
+    OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker:
         arguments: ["@predis"]
         calls:
             - [setRedisPrefix, ["ac_ret_code"]]
             # after 5 attempts in the last 10 minutes, return a different return code (activate captcha)
             - [addTrigger, [5, 600]]
 
-    App\Service\BruteForce\AttemptsIncrementalWaitingChecker:
+    OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker:
         arguments: ["@predis"]
         calls:
             - [setRedisPrefix, ["ac_exception"]]
@@ -343,25 +343,25 @@ services:
         class: OPG\Digideps\Common\Logger\OpgLineFormatter
 
     rest_handler.report.deputy_costs_estimate_report_update_handler:
-        class: App\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler
+        class: OPG\Digideps\Backend\Service\RestHandler\Report\DeputyCostsEstimateReportUpdateHandler
         arguments: ["@em"]
 
     rest_handler.report.deputy_costs_report_update_handler:
-        class: App\Service\RestHandler\Report\DeputyCostsReportUpdateHandler
+        class: OPG\Digideps\Backend\Service\RestHandler\Report\DeputyCostsReportUpdateHandler
         arguments: ["@em"]
 
     rest_handler.report.pa_fees_expenses_report_update_handler:
-        class: App\Service\RestHandler\Report\PaFeesExpensesReportUpdateHandler
+        class: OPG\Digideps\Backend\Service\RestHandler\Report\PaFeesExpensesReportUpdateHandler
         arguments: ["@em"]
 
     PlainUserAssembler:
-        class: App\v2\Assembler\UserAssembler
+        class: OPG\Digideps\Backend\v2\Assembler\UserAssembler
 
-    App\v2\Assembler\Report\ReportSummaryAssembler: ~
-    App\v2\Assembler\Report\ReportAssemblerInterface: '@App\v2\Assembler\Report\ReportSummaryAssembler'
+    OPG\Digideps\Backend\v2\Assembler\Report\ReportSummaryAssembler: ~
+    OPG\Digideps\Backend\v2\Assembler\Report\ReportAssemblerInterface: '@OPG\Digideps\Backend\v2\Assembler\Report\ReportSummaryAssembler'
 
     PlainOrganisationAssembler:
-        class: App\v2\Assembler\OrganisationAssembler
+        class: OPG\Digideps\Backend\v2\Assembler\OrganisationAssembler
 
     uuid_normalizer:
         class: GBProd\UuidNormalizer\UuidNormalizer
@@ -376,7 +376,7 @@ services:
     Aws\Ssm\SsmClient:
         arguments: ["%ssm_client_params%"]
 
-    App\Service\ParameterStoreService:
+    OPG\Digideps\Backend\Service\ParameterStoreService:
         arguments:
             [
                 '@Aws\Ssm\SsmClient',
@@ -384,15 +384,15 @@ services:
                 "%env(FEATURE_FLAG_PREFIX)%",
             ]
 
-    App\Security\HeaderTokenAuthenticator:
-        class: App\Security\HeaderTokenAuthenticator
+    OPG\Digideps\Backend\Security\HeaderTokenAuthenticator:
+        class: OPG\Digideps\Backend\Security\HeaderTokenAuthenticator
         arguments:
             $redis: "@predis"
 
     Aws\SecretsManager\SecretsManagerClient:
         arguments: ["%secrets_manager_client_params%"]
 
-    App\Service\SecretManagerService:
+    OPG\Digideps\Backend\Service\SecretManagerService:
         arguments:
             [
                 '@Aws\SecretsManager\SecretsManagerClient',
@@ -403,14 +403,14 @@ services:
         class: Aws\CloudWatchLogs\CloudWatchLogsClient
         arguments: ["%cloudwatch_logs_client_params%"]
 
-    App\Service\Audit\AwsAuditLogHandler:
-        class: App\Service\Audit\AwsAuditLogHandler
+    OPG\Digideps\Backend\Service\Audit\AwsAuditLogHandler:
+        class: OPG\Digideps\Backend\Service\Audit\AwsAuditLogHandler
         arguments:
             - '@Aws\CloudWatchLogs\CloudWatchLogsClient'
             - "%env(AUDIT_LOG_GROUP_NAME)%"
 
-    App\Service\Audit\LocalAuditLogHandler:
-        class: App\Service\Audit\LocalAuditLogHandler
+    OPG\Digideps\Backend\Service\Audit\LocalAuditLogHandler:
+        class: OPG\Digideps\Backend\Service\Audit\LocalAuditLogHandler
 
     app.guzzlehttp_clientinterface:
         class: GuzzleHttp\Client
@@ -423,12 +423,12 @@ services:
                 allow_redirects: false
 
     app.response_comparer_cli:
-        class: App\Service\ResponseComparison\ClientsResponseComparer
+        class: OPG\Digideps\Backend\Service\ResponseComparison\ClientsResponseComparer
 
     app.response_comparer_co:
-        class: App\Service\ResponseComparison\CourtOrderResponseComparer
+        class: OPG\Digideps\Backend\Service\ResponseComparison\CourtOrderResponseComparer
 
-    App\Command\ApiComparison:
+    OPG\Digideps\Backend\Command\ApiComparison:
         arguments:
             $httpClient: "@app.guzzlehttp_clientinterface"
             $redis: "@predis"
@@ -436,64 +436,79 @@ services:
                 - "@app.response_comparer_cli"
                 - "@app.response_comparer_co"
 
-    App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader:
+    OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader:
         public: true
 
-    App\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector:
+    OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector:
         public: true
 
-    App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory:
+    OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory:
         public: true
 
-    App\Domain\Deputyship\DeputyshipProcessingRawDbAccess:
+    OPG\Digideps\Backend\Domain\Deputyship\DeputyshipProcessingRawDbAccess:
         arguments:
             $ingestWriterEm: "@doctrine.orm.ingestwriter_entity_manager"
         public: true
 
-    App\Domain\Deputyship\DeputyshipCandidatesConverter:
+    OPG\Digideps\Backend\Domain\Deputyship\DeputyshipCandidatesConverter:
         public: true
 
-    App\Service\DeputyCaseService:
+    OPG\Digideps\Backend\Service\DeputyCaseService:
         public: true
 
-    App\v2\Assembler\ClientAssembler:
+    OPG\Digideps\Backend\v2\Assembler\ClientAssembler:
         public: true
 
-    App\v2\Assembler\DeputyAssembler:
+    OPG\Digideps\Backend\v2\Assembler\DeputyAssembler:
         public: true
 
-    App\Domain\CourtOrder\CourtOrderService:
+    OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderService:
         public: true
 
-    App\Service\LayRegistrationService:
+    OPG\Digideps\Backend\Service\LayRegistrationService:
         public: true
 
-    App\Service\DeputyService:
+    OPG\Digideps\Backend\Service\DeputyService:
         public: true
 
-    App\Service\UserDeputyService:
+    OPG\Digideps\Backend\Service\UserDeputyService:
         public: true
 
     preCSVDataFactory:
-        class: App\Factory\ChainedDataFactory
+        class: OPG\Digideps\Backend\Factory\ChainedDataFactory
         public: true
         arguments:
             $name: "preCSVDataFactory"
             $dataFactories:
-                - '@App\Factory\MissingDeputyDataFactory'
+                - [
+                      '@OPG\Digideps\Backend\Factory\MissingDeputyDataFactory',
+                      "active",
+                  ]
 
     postCSVDataFactory:
-        class: App\Factory\ChainedDataFactory
+        class: OPG\Digideps\Backend\Factory\ChainedDataFactory
         public: true
         arguments:
             $name: "postCSVDataFactory"
             $dataFactories:
-                - '@App\Factory\UpdateCourtOrderReportTypeDataFactory'
-                - '@App\Factory\UpdateDeputyTypeDataFactory'
-                - '@App\Factory\ClientIdFixDataFactory'
-                - '@App\Factory\MissingReport\MissingReportDataFactory'
+                - [
+                      '@OPG\Digideps\Backend\Factory\UpdateCourtOrderReportTypeDataFactory',
+                      "active",
+                  ]
+                - [
+                      '@OPG\Digideps\Backend\Factory\UpdateDeputyTypeDataFactory',
+                      "active",
+                  ]
+                - [
+                      '@OPG\Digideps\Backend\Factory\ClientIdFixDataFactory',
+                      "active",
+                  ]
+                - [
+                      '@OPG\Digideps\Backend\Factory\MissingReport\MissingReportDataFactory',
+                      "dry-run-only",
+                  ]
 
-    App\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester:
+    OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester:
         public: true
         arguments:
             $preCSVDataFactory: "@preCSVDataFactory"

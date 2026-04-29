@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Validator\Constraints;
+namespace OPG\Digideps\Frontend\Validator\Constraints;
 
-use App\Form\Traits\HasTranslatorTrait;
-use App\Form\Traits\TokenStorageTrait;
+use OPG\Digideps\Frontend\Form\Traits\HasTranslatorTrait;
+use OPG\Digideps\Frontend\Form\Traits\TokenStorageTrait;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 

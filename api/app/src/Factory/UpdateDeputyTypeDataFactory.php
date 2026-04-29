@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Factory;
+namespace OPG\Digideps\Backend\Factory;
 
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -17,24 +17,26 @@ final readonly class UpdateDeputyTypeDataFactory implements DataFactoryInterface
         return 'UpdateDeputyType';
     }
 
-    public function run(): DataFactoryResult
+    public function run(bool $dryRun): DataFactoryResult
     {
         $messages = [];
         $errorMessages = [];
 
         try {
-            $this->entityManager->flush();
-            $this->entityManager->clear();
+            if (!$dryRun) {
+                $this->entityManager->flush();
+                $this->entityManager->clear();
 
-            $count = $this->entityManager->getConnection()->executeQuery('
-                UPDATE deputy d
-                SET deputy_type = ds.deputy_type
-                FROM staging.deputyship ds
-                WHERE
-                    d.deputy_uid = ds.deputy_uid
-                    AND ds.deputy_type IS NOT NULL
-            ')->rowCount();
-            $messages[] = "Updated {$count} deputy entities.";
+                $count = $this->entityManager->getConnection()->executeQuery('
+                    UPDATE deputy d
+                    SET deputy_type = ds.deputy_type
+                    FROM staging.deputyship ds
+                    WHERE
+                        d.deputy_uid = ds.deputy_uid
+                        AND ds.deputy_type IS NOT NULL
+                ')->rowCount();
+                $messages[] = "Updated {$count} deputy entities.";
+            }
         } catch (\Throwable $throwable) {
             $errorMessages[] = $throwable->getMessage();
         }

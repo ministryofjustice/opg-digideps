@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\EventSubscriber;
+namespace OPG\Digideps\Frontend\EventSubscriber;
 
-use App\Event\OrgCreatedEvent;
-use App\Service\Audit\AuditEvents;
-use App\Service\Time\DateTimeProvider;
+use OPG\Digideps\Frontend\Event\OrgCreatedEvent;
+use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
+use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -27,7 +27,7 @@ class OrgCreatedSubscriber implements EventSubscriberInterface
 
     public function auditLog(OrgCreatedEvent $event)
     {
-        $orgCreatedEvent = (new AuditEvents($this->dateTimeProvider))
+        $orgCreatedEvent = new AuditEvents($this->dateTimeProvider)
             ->orgCreated(
                 $event->getTrigger(),
                 $event->getCurrentUser(),

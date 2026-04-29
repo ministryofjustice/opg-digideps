@@ -2,13 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\Reporting\Sections;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections;
 
-use App\Entity\Client;
-use App\Entity\Deputy;
-use App\Entity\Report\Report;
-use App\Tests\Behat\v2\Common\BaseFeatureContext;
-use App\Tests\Behat\v2\Common\UserDetails;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use Tests\OPG\Digideps\Backend\Behat\v2\Common\BaseFeatureContext;
 
 class ReportingSectionsFeatureContext extends BaseFeatureContext
 {

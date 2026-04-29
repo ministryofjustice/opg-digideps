@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\v2\Service;
+namespace Tests\OPG\Digideps\Backend\Unit\v2\Service;
 
-use App\Domain\Deputyship\DeputyshipCandidatesConverter;
-use App\Domain\Deputyship\DeputyshipProcessingRawDbAccess;
-use App\Domain\Deputyship\DeputyshipProcessingRawDbAccessResult;
-use App\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesGroup;
-use App\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
-use App\v2\Registration\Enum\DeputyshipCandidateAction;
+use OPG\Digideps\Backend\Domain\Deputyship\DeputyshipCandidatesConverter;
+use OPG\Digideps\Backend\Domain\Deputyship\DeputyshipProcessingRawDbAccess;
+use OPG\Digideps\Backend\Domain\Deputyship\DeputyshipProcessingRawDbAccessResult;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesGroup;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

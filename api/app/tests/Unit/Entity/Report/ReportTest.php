@@ -2,34 +2,30 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Entity\Report;
+namespace Tests\OPG\Digideps\Backend\Unit\Entity\Report;
 
-use DateTime;
 use PHPUnit\Framework\Attributes\DataProvider;
-use RuntimeException;
-use InvalidArgumentException;
 use PHPUnit\Framework\Attributes\Test;
-use DateTimeImmutable;
-use App\Entity\Client;
-use App\Entity\Report\AssetOther;
-use App\Entity\Report\AssetProperty;
-use App\Entity\Report\BankAccount;
-use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\Expense;
-use App\Entity\Report\Fee;
-use App\Entity\Report\Gift;
-use App\Entity\Report\MoneyTransaction;
-use App\Entity\Report\MoneyTransactionShortIn;
-use App\Entity\Report\MoneyTransactionShortOut;
-use App\Entity\Report\ProfDeputyInterimCost;
-use App\Entity\Report\ProfDeputyOtherCost;
-use App\Entity\Report\ProfDeputyPreviousCost;
-use App\Entity\Report\Report;
-use App\TestHelpers\ReportTestHelper;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\AssetOther;
+use OPG\Digideps\Backend\Entity\Report\AssetProperty;
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
+use OPG\Digideps\Backend\Entity\Report\Expense;
+use OPG\Digideps\Backend\Entity\Report\Fee;
+use OPG\Digideps\Backend\Entity\Report\Gift;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransaction;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortIn;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortOut;
+use OPG\Digideps\Backend\Entity\Report\ProfDeputyInterimCost;
+use OPG\Digideps\Backend\Entity\Report\ProfDeputyOtherCost;
+use OPG\Digideps\Backend\Entity\Report\ProfDeputyPreviousCost;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Mockery\MockInterface;
-use MockeryStub as m;
+use Tests\OPG\Digideps\Backend\Unit\MockeryStub as m;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 final class ReportTest extends KernelTestCase
@@ -46,7 +42,7 @@ final class ReportTest extends KernelTestCase
     public function setUp(): void
     {
         $this->client = m::mock(Client::class, ['getUnsubmittedReports' => new ArrayCollection(), 'getSubmittedReports' => new ArrayCollection()]);
-        $this->validReportCtorArgs = [$this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime('2017-06-23'), new DateTime('2018-06-22')];
+        $this->validReportCtorArgs = [$this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
         $this->report = m::mock(Report::class . '[has106Flag]', $this->validReportCtorArgs);
 
         $this->gift1 = m::mock(Gift::class, ['getAmount' => 1]);
@@ -60,8 +56,8 @@ final class ReportTest extends KernelTestCase
 
     public function testDueDate(): void
     {
-        $startDate = new DateTime('2017-01-01');
-        $endDate = new DateTime('2018-12-31');
+        $startDate = new \DateTime('2017-01-01');
+        $endDate = new \DateTime('2018-12-31');
 
         $report = new Report($this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, $startDate, $endDate, false);
         $this->assertEquals('2019-01-21', $report->getDueDate()->format('Y-m-d'));
@@ -82,13 +78,13 @@ final class ReportTest extends KernelTestCase
     {
         $client = new Client();
         foreach ($clientReports as $rep) {
-            $report = (new Report($this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime($rep[0]), new DateTime($rep[1])))->setSubmitted($rep[2]);
+            $report = new Report($this->client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime($rep[0]), new \DateTime($rep[1]))->setSubmitted($rep[2]);
             $client->addReport($report);
         }
 
-        $this->expectException(RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
 
-        new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime($startDate), new DateTime($endDate));
+        new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime($startDate), new \DateTime($endDate));
     }
 
     public function testGetMoneyTotal(): void
@@ -97,10 +93,10 @@ final class ReportTest extends KernelTestCase
         $this->assertEquals(0, $this->report->getMoneyInTotal());
         $this->assertEquals(0, $this->report->getMoneyOutTotal());
         $this->report->setMoneyTransactions(new ArrayCollection([
-            (new MoneyTransaction($this->report))->setCategory('account-interest')->setAmount(1),
-            (new MoneyTransaction($this->report))->setCategory('dividends')->setAmount(2),
-            (new MoneyTransaction($this->report))->setCategory('broadband')->setAmount(3),
-            (new MoneyTransaction($this->report))->setCategory('food')->setAmount(4),
+            new MoneyTransaction($this->report)->setCategory('account-interest')->setAmount(1),
+            new MoneyTransaction($this->report)->setCategory('dividends')->setAmount(2),
+            new MoneyTransaction($this->report)->setCategory('broadband')->setAmount(3),
+            new MoneyTransaction($this->report)->setCategory('food')->setAmount(4),
         ]));
         $this->assertEquals(1 + 2, $this->report->getMoneyInTotal());
         $this->assertEquals(3 + 4, $this->report->getMoneyOutTotal());
@@ -110,10 +106,10 @@ final class ReportTest extends KernelTestCase
         $this->assertEquals(0, $this->report->getMoneyInTotal());
         $this->assertEquals(0, $this->report->getMoneyOutTotal());
         $this->report->setMoneyTransactionsShort(new ArrayCollection([
-            (new MoneyTransactionShortIn($this->report))->setAmount(10),
-            (new MoneyTransactionShortIn($this->report))->setAmount(20),
-            (new MoneyTransactionShortOut($this->report))->setAmount(30),
-            (new MoneyTransactionShortOut($this->report))->setAmount(40),
+            new MoneyTransactionShortIn($this->report)->setAmount(10),
+            new MoneyTransactionShortIn($this->report)->setAmount(20),
+            new MoneyTransactionShortOut($this->report)->setAmount(30),
+            new MoneyTransactionShortOut($this->report)->setAmount(40),
         ]));
         $this->assertEquals(10 + 20, $this->report->getMoneyInTotal());
         $this->assertEquals(30 + 40, $this->report->getMoneyOutTotal());
@@ -123,9 +119,9 @@ final class ReportTest extends KernelTestCase
     {
         $this->assertEquals(0, $this->report->getAccountsOpeningBalanceTotal());
 
-        $this->report->addAccount((new BankAccount())->setBank('bank1')->setOpeningBalance(1));
-        $this->report->addAccount((new BankAccount())->setBank('bank2')->setOpeningBalance(3));
-        $this->report->addAccount((new BankAccount())->setBank('bank3')->setOpeningBalance(0));
+        $this->report->addAccount(new BankAccount()->setBank('bank1')->setOpeningBalance(1));
+        $this->report->addAccount(new BankAccount()->setBank('bank2')->setOpeningBalance(3));
+        $this->report->addAccount(new BankAccount()->setBank('bank3')->setOpeningBalance(0));
 
         $this->assertEquals(4, $this->report->getAccountsOpeningBalanceTotal());
     }
@@ -134,33 +130,33 @@ final class ReportTest extends KernelTestCase
     {
         $this->assertEquals(0, $this->report->getAccountsClosingBalanceTotal());
 
-        $this->report->addAccount((new BankAccount())->setBank('bank1')->setClosingBalance(1));
+        $this->report->addAccount(new BankAccount()->setBank('bank1')->setClosingBalance(1));
 
         $this->assertEquals(1, $this->report->getAccountsClosingBalanceTotal());
 
-        $this->report->addAccount((new BankAccount())->setBank('bank2')->setClosingBalance(3));
-        $this->report->addAccount((new BankAccount())->setBank('bank3')->setClosingBalance(0));
+        $this->report->addAccount(new BankAccount()->setBank('bank2')->setClosingBalance(3));
+        $this->report->addAccount(new BankAccount()->setBank('bank3')->setClosingBalance(0));
 
         $this->assertEquals(4, $this->report->getAccountsClosingBalanceTotal());
     }
 
     public function testGetCalculatedBalance(): void
     {
-        $this->validReportCtorArgs = [$this->client, Report::PROF_PFA_HIGH_ASSETS_TYPE, new DateTime('2017-06-23'), new DateTime('2018-06-22')];
+        $this->validReportCtorArgs = [$this->client, Report::PROF_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
         $this->report = m::mock(Report::class . '[has106Flag]', $this->validReportCtorArgs);
 
         $this->report->shouldReceive('has106Flag')->andReturn(false);
 
         $this->assertEquals(0, $this->report->getCalculatedBalance());
 
-        $this->report->addAccount((new BankAccount())->setBank('bank1')->setOpeningBalance(1));
+        $this->report->addAccount(new BankAccount()->setBank('bank1')->setOpeningBalance(1));
 
         $this->assertEquals(1, $this->report->getCalculatedBalance());
 
-        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('account-interest')->setAmount(20)); // in
-        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('account-interest')->setAmount(20)); // in
-        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('rent')->setAmount(15)); // out
-        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('rent')->setAmount(15)); // out
+        $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('account-interest')->setAmount(20)); // in
+        $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('account-interest')->setAmount(20)); // in
+        $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('rent')->setAmount(15)); // out
+        $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('rent')->setAmount(15)); // out
         $this->report->setGifts([$this->gift1, $this->gift2]);
         $this->report->setExpenses([$this->expense1, $this->expense2]);
 
@@ -171,7 +167,7 @@ final class ReportTest extends KernelTestCase
 
     public function testGetCalculatedBalanceProfDeputy(): void
     {
-        $this->validReportCtorArgs = [$this->client, Report::PROF_PFA_HIGH_ASSETS_TYPE, new DateTime('2017-06-23'), new DateTime('2018-06-22')];
+        $this->validReportCtorArgs = [$this->client, Report::PROF_PFA_HIGH_ASSETS_TYPE, new \DateTime('2017-06-23'), new \DateTime('2018-06-22')];
         $this->report = m::mock(Report::class . '[has106Flag]', $this->validReportCtorArgs);
 
         $this->report->shouldReceive('has106Flag')->andReturn(false);
@@ -196,8 +192,8 @@ final class ReportTest extends KernelTestCase
         // change interim yes->no
         $this->report->setProfDeputyCostsHasInterim('yes');
         $this->report->setProfDeputyInterimCosts(new ArrayCollection([
-            new ProfDeputyInterimCost($this->report, new DateTime('now'), 11),
-            new ProfDeputyInterimCost($this->report, new DateTime('now'), 11),
+            new ProfDeputyInterimCost($this->report, new \DateTime('now'), 11),
+            new ProfDeputyInterimCost($this->report, new \DateTime('now'), 11),
         ]));
         $this->assertEquals(-1 - 1 - 11 - 11 - 10 - 10, $this->report->getCalculatedBalance());
     }
@@ -214,9 +210,9 @@ final class ReportTest extends KernelTestCase
         $this->assertEquals(true, $this->report->getTotalsMatch());
 
         // account opened with 1000, closed with 2000. 1500 money in, 400 out. balance is 100
-        $this->report->addAccount((new BankAccount())->setBank('bank1')->setOpeningBalance(1000)->setClosingBalance(2000));
-        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('account-interest')->setAmount(1500)); // in
-        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('rent')->setAmount(400)); // out
+        $this->report->addAccount(new BankAccount()->setBank('bank1')->setOpeningBalance(1000)->setClosingBalance(2000));
+        $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('account-interest')->setAmount(1500)); // in
+        $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('rent')->setAmount(400)); // out
         $this->report->setGifts([$this->gift1, $this->gift2]);
         $this->report->setExpenses([$this->expense1, $this->expense2]);
 
@@ -225,7 +221,7 @@ final class ReportTest extends KernelTestCase
         $this->assertEquals(false, $this->report->getTotalsMatch());
 
         // add missing transaction that fix the balance
-        $this->report->addMoneyTransaction((new MoneyTransaction($this->report))->setCategory('rent')->setAmount(67)); // in
+        $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('rent')->setAmount(67)); // in
 
         $this->assertEquals(0, $this->report->getTotalsOffset());
         $this->assertEquals(true, $this->report->getTotalsMatch());
@@ -283,8 +279,8 @@ final class ReportTest extends KernelTestCase
     #[DataProvider('sectionsSettingsProvider')]
     public function testAvailableSectionsAndHasSection(string $type, array $expectedSections, array $unExpectedSections): void
     {
-        $this->report = (new Report($this->client, $type, new DateTime('2017-06-23'), new DateTime('2018-06-22')))
-            ->setBenefitsSectionReleaseDate(new DateTime('2016-01-01'));
+        $this->report = new Report($this->client, $type, new \DateTime('2017-06-23'), new \DateTime('2018-06-22'))
+            ->setBenefitsSectionReleaseDate(new \DateTime('2016-01-01'));
 
         foreach ($expectedSections as $section) {
             $this->assertContains($section, $this->report->getAvailableSections());
@@ -433,7 +429,7 @@ final class ReportTest extends KernelTestCase
 
     public function testInvalidAgreedBehalfOption(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->report->setAgreedBehalfDeputy('BAD_VALUE');
     }
 
@@ -485,7 +481,7 @@ final class ReportTest extends KernelTestCase
     public function testIsLayReport(string $type, bool $expectedResult): void
     {
         $client = new Client();
-        $endDate = new DateTime();
+        $endDate = new \DateTime();
         $startDate = clone $endDate;
         $startDate = $startDate->modify('-1 year');
 
@@ -497,7 +493,7 @@ final class ReportTest extends KernelTestCase
     public function testUpdateDuetDateBasedOnEndDate(string $type, string $endDate, string $expectedDueDate): void
     {
         $client = new Client();
-        $endDate = new DateTime($endDate);
+        $endDate = new \DateTime($endDate);
         $startDate = clone $endDate;
         $startDate = $startDate->modify('-1 year');
 
@@ -514,10 +510,10 @@ final class ReportTest extends KernelTestCase
     #[DataProvider('benefitsCheckSectionRequiredProvider')]
     #[Test]
     public function requiresBenefitsCheckSection(
-        DateTime $featureFlagDate,
-        DateTime $dueDate,
+        \DateTime $featureFlagDate,
+        \DateTime $dueDate,
         ?ClientBenefitsCheck $clientBenefitSection,
-        ?DateTime $unsubmitDate,
+        ?\DateTime $unsubmitDate,
         bool $expectedResult
     ): void {
         $reportTestHelper = ReportTestHelper::create();
@@ -536,48 +532,48 @@ final class ReportTest extends KernelTestCase
 
     public static function benefitsCheckSectionRequiredProvider(): array
     {
-        $featureFlagDate = new DateTimeImmutable('01/01/2021');
-        $unsubmitDate = new DateTime();
+        $featureFlagDate = new \DateTimeImmutable('01/01/2021');
+        $unsubmitDate = new \DateTime();
 
         return [
             'Due date 61 days after feature launch date' => [
-                DateTime::createFromImmutable($featureFlagDate),
-                DateTime::createFromImmutable($featureFlagDate->modify('+61 days')),
+                \DateTime::createFromImmutable($featureFlagDate),
+                \DateTime::createFromImmutable($featureFlagDate->modify('+61 days')),
                 null,
                 null,
                 true,
             ],
             'Due date 60 days after feature launch date' => [
-                DateTime::createFromImmutable($featureFlagDate),
-                DateTime::createFromImmutable($featureFlagDate->modify('+60 days')),
+                \DateTime::createFromImmutable($featureFlagDate),
+                \DateTime::createFromImmutable($featureFlagDate->modify('+60 days')),
                 null,
                 null,
                 false,
             ],
             'Due date 1 day before feature launch date' => [
-                DateTime::createFromImmutable($featureFlagDate),
-                DateTime::createFromImmutable($featureFlagDate->modify('-1 day')),
+                \DateTime::createFromImmutable($featureFlagDate),
+                \DateTime::createFromImmutable($featureFlagDate->modify('-1 day')),
                 null,
                 null,
                 false,
             ],
             'Due date 61 days after feature launch date, report unsubmitted but section not previously completed' => [
-                DateTime::createFromImmutable($featureFlagDate),
-                DateTime::createFromImmutable($featureFlagDate->modify('+61 days')),
+                \DateTime::createFromImmutable($featureFlagDate),
+                \DateTime::createFromImmutable($featureFlagDate->modify('+61 days')),
                 null,
                 $unsubmitDate,
                 false,
             ],
             'Due date 61 days after feature launch date, report unsubmitted but section previously completed' => [
-                DateTime::createFromImmutable($featureFlagDate),
-                DateTime::createFromImmutable($featureFlagDate->modify('+61 days')),
+                \DateTime::createFromImmutable($featureFlagDate),
+                \DateTime::createFromImmutable($featureFlagDate->modify('+61 days')),
                 new ClientBenefitsCheck(),
                 $unsubmitDate,
                 true,
             ],
             'Due date 1 day before feature launch date, report unsubmitted but section previously completed' => [
-                DateTime::createFromImmutable($featureFlagDate),
-                DateTime::createFromImmutable($featureFlagDate->modify('-1 days')),
+                \DateTime::createFromImmutable($featureFlagDate),
+                \DateTime::createFromImmutable($featureFlagDate->modify('-1 days')),
                 new ClientBenefitsCheck(),
                 $unsubmitDate,
                 true,

@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Service\File;
+namespace OPG\Digideps\Frontend\Service\File;
 
-use App\Entity\Report\Document;
-use ZipArchive;
+use OPG\Digideps\Frontend\Entity\Report\Document;
 
 class DocumentsZipFileCreator
 {
@@ -29,7 +28,7 @@ class DocumentsZipFileCreator
         // store files locally, for subsequent memory-less ZIP creation
         $filesToAdd = [];
 
-        $zip = new ZipArchive();
+        $zip = new \ZipArchive();
 
         foreach ($retrievedDocuments as $retrievedDocument) {
             // create ZIP files and add previously-stored uploaded documents
@@ -39,7 +38,7 @@ class DocumentsZipFileCreator
                 $this->zipFiles[] = $localZipFileName;
             }
 
-            $zip->open($localZipFileName, ZipArchive::CREATE | ZipArchive::CHECKCONS);
+            $zip->open($localZipFileName, \ZipArchive::CREATE | \ZipArchive::CHECKCONS);
 
             $document = self::createDocumentTmpFilePath($retrievedDocument->getFileName());
             file_put_contents($document, $retrievedDocument->getContent());
@@ -66,10 +65,10 @@ class DocumentsZipFileCreator
     {
         $parentFilename = self::createMultiZipFilePath();
 
-        $zip = new ZipArchive();
+        $zip = new \ZipArchive();
         $zip->open(
             $parentFilename,
-            ZipArchive::CREATE | ZipArchive::OVERWRITE | ZipArchive::CHECKCONS
+            \ZipArchive::CREATE | \ZipArchive::OVERWRITE | \ZipArchive::CHECKCONS
         );
 
         //add each individual zipped report into the main zip file

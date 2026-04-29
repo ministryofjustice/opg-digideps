@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Service\Stats\Metrics;
+namespace Tests\OPG\Digideps\Backend\Integration\Stats\Query;
 
-use App\Tests\Integration\ApiIntegrationTestCase;
-use App\Tests\Integration\TestHelpers\UsersQuery;
-use DateTime;
-use App\Entity\User;
-use App\Service\Stats\StatsQueryParameters;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use Tests\OPG\Digideps\Backend\Integration\TestHelpers\UsersQuery;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Service\Stats\StatsQueryParameters;
 
 class QueryIntegrationTest extends ApiIntegrationTestCase
 {
@@ -20,7 +19,7 @@ class QueryIntegrationTest extends ApiIntegrationTestCase
         $user->setLastname('Lastname');
         $user->setEmail("metric-test-$id@publicguardian.gov.uk");
         $user->setRoleName('ROLE_PROF_ADMIN');
-        $user->setRegistrationDate(new DateTime($date));
+        $user->setRegistrationDate(new \DateTime($date));
 
         self::$entityManager->persist($user);
         self::$entityManager->flush();

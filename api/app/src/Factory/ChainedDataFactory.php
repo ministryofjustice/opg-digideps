@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Factory;
+namespace OPG\Digideps\Backend\Factory;
 
 /**
  * Run multiple data factories in sequence and aggregate their outputs.
  */
-class ChainedDataFactory implements DataFactoryInterface
+final readonly class ChainedDataFactory implements DataFactoryInterface
 {
     public function __construct(
-        private readonly string $name = 'Chained',
-        /** @var array<DataFactoryInterface> $dataFactories */
-        private readonly array $dataFactories = [],
+        private string $name = 'Chained',
+        /** @var array<array{DataFactoryInterface, string}> $dataFactories */
+        private array $dataFactories = [],
     ) {
     }
 
@@ -25,13 +25,20 @@ class ChainedDataFactory implements DataFactoryInterface
      * @return DataFactoryResult Aggregated results from all data factories; the messages and error messages are
      * keyed by the name of the data factory that produced them.
      */
-    public function run(): DataFactoryResult
+    public function run(bool $dryRun): DataFactoryResult
     {
         $result = new DataFactoryResult();
 
-        foreach ($this->dataFactories as $dataFactory) {
-            $factoryResult = $dataFactory->run();
+        foreach ($this->dataFactories as [$dataFactory, $flag]) {
+            $dry = $dryRun;
+            $flag = FactoryExecutionFlag::tryFrom($flag) ?? FactoryExecutionFlag::Inactive;
+            if ($flag === FactoryExecutionFlag::Inactive) {
+                continue;
+            } elseif ($flag === FactoryExecutionFlag::DryRunOnly) {
+                $dry = true;
+            }
 
+            $factoryResult = $dataFactory->run($dry);
             $factoryName = $dataFactory->getName();
 
             foreach ($factoryResult->getMessages() as $key => $messages) {

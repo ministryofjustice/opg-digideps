@@ -155,11 +155,14 @@ phpstan-client-baseline:
 get-audit-logs: ##@localstack Get audit log groups by passing event name e.g. get-audit-logs event_name=ROLE_CHANGED (see client/Audit/src/service/Audit/AuditEvents)
 	docker compose exec localstack awslocal logs get-log-events --log-group-name audit-local --log-stream-name $(event_name)
 
-composer-api: ##@application Drops you into the API container with composer installed
-	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/api/app:/app composer ${COMPOSER_ARGS}
+composer-api: ##@application Runs composer on Api
+	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/api/app:/app --volume ${PWD}/common:/common composer ${COMPOSER_ARGS}
 
-composer-client: ##@application Drops you into the frontend container with composer installed
-	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/client/app:/app composer ${COMPOSER_ARGS}
+composer-client: ##@application Runs composer on Client
+	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/client/app:/app --volume ${PWD}/common:/common composer ${COMPOSER_ARGS}
+
+composer-common: ##@application Runs composer on Common
+	docker compose run --rm --volume ~/.composer:/tmp --volume ${PWD}/common:/app composer ${COMPOSER_ARGS}
 
 js-lint: ##@javascript Lint JS resources
 	docker compose -f docker-compose.yml ${ADDITIONAL_CONFIG} run --rm node-js npm run lint
@@ -234,7 +237,8 @@ common-phpunit: ##@unit-tests Run the common unit tests.
 common-phpstan: ##@static-analysis Runs PHPStan against common.
 	docker compose run composer-common-phpstan
 
-composer-install:
-	(cd ./common && composer install)
-	(cd ./api/app && composer install)
-	(cd ./client/app && composer install)
+phpstan-regenerate:
+	(cd ./common && composer run lint:phpstan)
+	(cd ./api/app && composer run lint:phpstan:baseline)
+	(cd ./client/app && composer run lint:phpstan:baseline)
+	composer run lint:phpstan:baseline

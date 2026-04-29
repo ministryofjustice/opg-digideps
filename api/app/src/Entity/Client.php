@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Entity;
+namespace OPG\Digideps\Backend\Entity;
 
-use App\Entity\Report\Report;
-use App\Entity\Traits\CreateUpdateTimestamps;
-use App\Entity\Traits\IsSoftDeleteableEntity;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
+use OPG\Digideps\Backend\Entity\Traits\IsSoftDeleteableEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -25,7 +25,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  *     options={"collate":"utf8_general_ci", "charset":"utf8"}
  *     )
  *
- * @ORM\Entity(repositoryClass="App\Repository\ClientRepository")
+ * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\ClientRepository")
  *
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  *
@@ -52,7 +52,7 @@ class Client implements ClientInterface
     private $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\User", inversedBy="clients", fetch="EXTRA_LAZY")
+     * @ORM\ManyToMany(targetEntity="OPG\Digideps\Backend\Entity\User", inversedBy="clients", fetch="EXTRA_LAZY")
      *
      * @ORM\JoinTable(name="deputy_case",
      *         joinColumns={@ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")},
@@ -60,16 +60,16 @@ class Client implements ClientInterface
      *     )
      */
     #[JMS\Groups(['client-users'])]
-    #[JMS\Type('ArrayCollection<App\Entity\User>')]
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\User>')]
     private $users;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Report\Report", mappedBy="client", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", mappedBy="client", cascade={"persist", "remove"})
      *
      * @ORM\OrderBy({"submitDate"="DESC"})
      */
     #[JMS\Groups(['client-reports'])]
-    #[JMS\Type('ArrayCollection<App\Entity\Report\Report>')]
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Report>')]
     private $reports;
 
     /**
@@ -191,22 +191,22 @@ class Client implements ClientInterface
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\Note", mappedBy="client", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Note", mappedBy="client", cascade={"persist", "remove"})
      *
      * @ORM\OrderBy({"createdOn"="DESC"})
      */
-    #[JMS\Type('ArrayCollection<App\Entity\Note>')]
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Note>')]
     #[JMS\Groups(['client-notes'])]
     private $notes;
 
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\ClientContact", mappedBy="client", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\ClientContact", mappedBy="client", cascade={"persist", "remove"})
      *
      * @ORM\OrderBy({"lastName"="ASC"})
      */
-    #[JMS\Type('ArrayCollection<App\Entity\ClientContact>')]
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\ClientContact>')]
     #[JMS\Groups(['client-clientcontacts'])]
     private $clientContacts;
 
@@ -216,22 +216,22 @@ class Client implements ClientInterface
      *
      * @var Deputy|null
      *
-     * @ORM\ManyToOne(targetEntity="App\Entity\Deputy", inversedBy="clients", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Deputy", inversedBy="clients", fetch="EAGER")
      *
      * @ORM\JoinColumn(name="deputy_id", referencedColumnName="id", onDelete="SET NULL")
      */
     #[JMS\Groups(['report-submitted-by', 'client-deputy'])]
-    #[JMS\Type('App\Entity\Deputy')]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Deputy')]
     private $deputy;
 
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="App\Entity\CourtOrder", mappedBy="client", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\CourtOrder", mappedBy="client", cascade={"persist", "remove"})
      *
      * @ORM\OrderBy({"createdAt"="DESC"})
      */
-    #[JMS\Type('ArrayCollection<App\Entity\CourtOrder>')]
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\CourtOrder>')]
     private $courtOrders;
 
     /**
@@ -248,7 +248,7 @@ class Client implements ClientInterface
      *
      * @ORM\ManyToOne(targetEntity="Organisation", inversedBy="clients")
      */
-    #[JMS\Type('App\Entity\Organisation')]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Organisation')]
     #[JMS\Groups(['client-organisations'])]
     private $organisation;
 
@@ -583,7 +583,7 @@ class Client implements ClientInterface
      * That means the first one that is unsubmitted AND has an unsubmit date.
      */
     #[JMS\VirtualProperty]
-    #[JMS\Type('App\Entity\Report\Report')]
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Report')]
     #[JMS\SerializedName('current_report')]
     #[JMS\Groups(['current-report'])]
     public function getCurrentReport(): ?Report

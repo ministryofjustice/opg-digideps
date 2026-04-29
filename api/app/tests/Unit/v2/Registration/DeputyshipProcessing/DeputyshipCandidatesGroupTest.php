@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\DeputyshipProcessing;
+namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\DeputyshipProcessing;
 
-use App\v2\Registration\Enum\DeputyshipCandidateAction;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipCandidatesGroup;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 use PHPUnit\Framework\TestCase;
 
 final class DeputyshipCandidatesGroupTest extends TestCase

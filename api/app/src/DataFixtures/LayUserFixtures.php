@@ -1,17 +1,17 @@
 <?php
 
-namespace App\DataFixtures;
+namespace OPG\Digideps\Backend\DataFixtures;
 
-use App\Domain\CourtOrder\CourtOrderKind;
-use App\Domain\CourtOrder\CourtOrderReportType;
-use App\Domain\CourtOrder\CourtOrderType;
-use App\Domain\Deputy\DeputyType;
-use App\Entity\Client;
-use App\Entity\CourtOrder;
-use App\Entity\Deputy;
-use App\Entity\PreRegistration;
-use App\Entity\Report\Report;
-use App\Entity\User;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
 use Doctrine\Persistence\ObjectManager;
 
 class LayUserFixtures extends AbstractDataFixture
@@ -151,7 +151,7 @@ class LayUserFixtures extends AbstractDataFixture
         $deputyUid = substr_replace($data['deputyUid'], $iteration, -$offset);
 
         // Create user
-        $user = (new User())
+        $user = new User()
             ->setFirstname($data['id'])
             ->setLastname('User ' . $iteration)
             ->setDeputyUid(intval($deputyUid))
@@ -180,7 +180,7 @@ class LayUserFixtures extends AbstractDataFixture
 
         if (!in_array($deputyUid, $this->deputyUids)) {
             $this->deputyUids[] = $deputyUid;
-            $this->deputy = (new Deputy())
+            $this->deputy = new Deputy()
                 ->setDeputyType(DeputyType::LAY)
                 ->setFirstname($data['id'])
                 ->setLastname('User ' . $iteration)

@@ -25,6 +25,7 @@ services:
       - ./client/app/composer.json:/var/www/composer.json
       - ./client/app/composer.lock:/var/www/composer.lock
       - ./scripts/miscellaneous/install-composer.sh:/var/www/install-composer.sh
+      - ./common/src:/var/www/vendor/digideps/common/src
 
   admin-webserver:
     volumes:
@@ -45,6 +46,7 @@ services:
       - ./client/app/composer.json:/var/www/composer.json
       - ./client/app/composer.lock:/var/www/composer.lock
       - ./scripts/miscellaneous/install-composer.sh:/var/www/install-composer.sh
+      - ./common/src:/var/www/vendor/digideps/common/src
 
   api-app:
     volumes:
@@ -57,6 +59,7 @@ services:
       - ./api/app/phpstan.neon:/var/www/phpstan.neon
       - ./api/app/phpstan-baseline.neon:/var/www/phpstan-baseline.neon
       - ./api/app/postgres.env:/var/www/postgres.env
+      - ./common/src:/var/www/vendor/digideps/common/src
 
   htmltopdf:
     volumes:
@@ -84,6 +87,7 @@ services:
       - ./client/app/templates:/var/www/templates
       - ./client/app/tests:/var/www/tests
       - ./client/app/translations:/var/www/translations
+      - ./common/src:/var/www/vendor/digideps/common/src
 
   api-unit-tests:
     volumes:
@@ -94,6 +98,7 @@ services:
       - ./build/coverage-api:/var/www/build/coverage-api
       - ./build/.phpunit.api-integration.cache:/var/www/build/.phpunit.api-integration.cache
       - ./build/.phpunit.api-unit.cache:/var/www/build/.phpunit.api-unit.cache
+      - ./common/src:/var/www/vendor/digideps/common/src
 
   api-integration-tests:
     volumes:
@@ -106,6 +111,7 @@ services:
       - ./build/coverage-api:/var/www/build/coverage-api
       - ./build/.phpunit.api-integration.cache:/var/www/build/.phpunit.api-integration.cache
       - ./build/.phpunit.api-unit.cache:/var/www/build/.phpunit.api-unit.cache
+      - ./common/src:/var/www/vendor/digideps/common/src
 
   end-to-end-tests:
     volumes:

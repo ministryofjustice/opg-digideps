@@ -2,18 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Repository;
+namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
-use App\Tests\Integration\ApiIntegrationTestCase;
-use DateTime;
-use DateTimeZone;
-use DateInterval;
-use App\Entity\Client;
-use App\Entity\Report\Checklist;
-use App\Entity\Report\Report;
-use App\Entity\Report\ReportSubmission;
-use App\Entity\User;
-use App\Repository\ChecklistRepository;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\Checklist;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\ChecklistRepository;
 
 class ChecklistRepositoryIntegrationTest extends ApiIntegrationTestCase
 {
@@ -30,10 +27,10 @@ class ChecklistRepositoryIntegrationTest extends ApiIntegrationTestCase
 
     private function createAndSubmitReportWithChecklist($status, $error): Checklist
     {
-        $firstJulyAm = DateTime::createFromFormat('d/m/Y', '01/07/2020', new DateTimeZone('UTC'));
+        $firstJulyAm = \DateTime::createFromFormat('d/m/Y', '01/07/2020', new \DateTimeZone('UTC'));
 
         // Create Client
-        $client = (new Client())->setCaseNumber('abc-123');
+        $client = new Client()->setCaseNumber('abc-123');
         self::$entityManager->persist($client);
 
         // Create report
@@ -42,7 +39,7 @@ class ChecklistRepositoryIntegrationTest extends ApiIntegrationTestCase
                 $client,
                 Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,
                 $firstJulyAm,
-                $firstJulyAm->add(new DateInterval('P364D'))
+                $firstJulyAm->add(new \DateInterval('P364D'))
             )
         );
 
@@ -51,7 +48,7 @@ class ChecklistRepositoryIntegrationTest extends ApiIntegrationTestCase
         // Submit Report
         $submittedOn = $firstJulyAm;
         $report->setSubmitDate($submittedOn);
-        $reportSubmission = (new ReportSubmission($report, $this->generateAndPersistUser()))->setCreatedOn($submittedOn);
+        $reportSubmission = new ReportSubmission($report, $this->generateAndPersistUser())->setCreatedOn($submittedOn);
         self::$entityManager->persist($reportSubmission);
 
         // Create Checklist
@@ -68,12 +65,12 @@ class ChecklistRepositoryIntegrationTest extends ApiIntegrationTestCase
 
     private function generateAndPersistUser(): User
     {
-        $user = (new User())
+        $user = new User()
             ->setFirstname('Test')
             ->setLastname('User')
             ->setPassword('password123');
 
-        $datePostFix = (string) (new DateTime())->getTimestamp();
+        $datePostFix = (string) new \DateTime()->getTimestamp();
         $user->setEmail(sprintf('test-user%s%s@test.com', $datePostFix, rand(0, 100000)));
 
         self::$entityManager->persist($user);

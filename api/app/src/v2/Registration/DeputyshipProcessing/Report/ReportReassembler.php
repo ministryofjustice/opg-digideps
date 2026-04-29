@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\DeputyshipProcessing\Report;
+namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\Report;
 
-use App\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipChange;
-use App\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipResult;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipChange;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipResult;
 
 final readonly class ReportReassembler
 {

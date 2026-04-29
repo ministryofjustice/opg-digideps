@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service\Formatter;
+namespace Tests\OPG\Digideps\Backend\Unit\Service\Formatter;
 
 use PHPUnit\Framework\Attributes\Test;
-use App\EventListener\RestInputOuputFormatter;
-use App\Service\Formatter\RestFormatter;
-use App\Service\Validator\RestArrayValidator;
+use OPG\Digideps\Backend\EventListener\RestInputOuputFormatter;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\Service\Validator\RestArrayValidator;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\v2\Registration\Enum;
+namespace OPG\Digideps\Backend\v2\Registration\Enum;
 
 enum DeputyshipCandidateAction: string
 {

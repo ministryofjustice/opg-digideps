@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Controller;
+namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
-use DateTime;
-use App\Entity\Report\Document;
-use App\Entity\Report\Report;
-use App\Entity\Report\ReportSubmission;
-use App\Repository\DocumentRepository;
+use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\DocumentRepository;
 
 class DocumentControllerTest extends AbstractTestController
 {
@@ -47,7 +47,7 @@ class DocumentControllerTest extends AbstractTestController
 
         self::setupFixtures();
 
-        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
 
         self::$report1 = self::fixtures()->createReport(self::$client1);
@@ -66,7 +66,7 @@ class DocumentControllerTest extends AbstractTestController
 
         self::fixtures()->flush();
 
-        $this->repo = self::fixtures()->getRepo('Report\Document');
+        $this->repo = self::fixtures()->getRepo(Document::class);
         self::$tokenDeputy = $this->loginAsDeputy();
     }
 
@@ -99,11 +99,11 @@ class DocumentControllerTest extends AbstractTestController
         ])['data'];
 
         /** @var Document $document */
-        $document = self::fixtures()->getRepo('Report\Document')->find($data['id']);
+        $document = self::fixtures()->getRepo(Document::class)->find($data['id']);
 
         $this->assertEquals($data['id'], $document->getId());
         $this->assertEquals(self::$deputy1->getId(), $document->getCreatedBy()->getId());
-        $this->assertInstanceof(DateTime::class, $document->getCreatedOn());
+        $this->assertInstanceof(\DateTime::class, $document->getCreatedOn());
         $this->assertEquals('s3StorageKey', $document->getStorageReference());
         $this->assertEquals('testfile.pdf', $document->getFilename());
         $this->assertEquals(true, $document->isReportPdf());
@@ -157,7 +157,7 @@ class DocumentControllerTest extends AbstractTestController
     {
         $url = sprintf('/document/%s', self::$document1->getId());
 
-        $syncTime = new DateTime();
+        $syncTime = new \DateTime();
 
         $response = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -167,7 +167,7 @@ class DocumentControllerTest extends AbstractTestController
 
         self::assertEquals(self::$document1->getId(), $response['data']['id']);
         self::assertEquals(Document::SYNC_STATUS_SUCCESS, $response['data']['synchronisation_status']);
-        self::assertEqualsWithDelta($syncTime->getTimeStamp(), (new DateTime($response['data']['synchronisation_time']))->getTimestamp(), 5);
+        self::assertEqualsWithDelta($syncTime->getTimeStamp(), new \DateTime($response['data']['synchronisation_time'])->getTimestamp(), 5);
     }
 
     /**

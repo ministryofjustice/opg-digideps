@@ -1,6 +1,6 @@
 <?php
 
-namespace App\v2\DTO;
+namespace OPG\Digideps\Backend\v2\DTO;
 
 class UserDto
 {

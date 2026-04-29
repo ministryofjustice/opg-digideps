@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Tests\Integration\ControllerReport;
+namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
-use App\Entity\Report\Gift;
-use App\Entity\Report\Report;
-use App\Tests\Integration\Controller\AbstractTestController;
+use OPG\Digideps\Backend\Entity\Report\Gift;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class GiftControllerTest extends AbstractTestController
 {
@@ -30,16 +31,16 @@ class GiftControllerTest extends AbstractTestController
         parent::setUp();
 
         // deputy1
-        self::$deputy1 = self::fixtures()->getRepo('User')->findOneByEmail('deputy@example.org');
+        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
         self::$report1 = self::fixtures()->createReport(self::$client1);
-        self::$gift1 = (new Gift(self::$report1))->setExplanation('e1')->setAmount('1.10');
+        self::$gift1 = new Gift(self::$report1)->setExplanation('e1')->setAmount('1.10');
 
         // deputy 2
         self::$deputy2 = self::fixtures()->createUser();
         self::$client2 = self::fixtures()->createClient(self::$deputy2);
         self::$report2 = self::fixtures()->createReport(self::$client2);
-        self::$gift2 = (new Gift(self::$report2))->setExplanation('e2')->setAmount('2.20');
+        self::$gift2 = new Gift(self::$report2)->setExplanation('e2')->setAmount('2.20');
 
         self::fixtures()->persist(self::$gift1, self::$gift2)->flush()->clear();
 
@@ -130,8 +131,8 @@ class GiftControllerTest extends AbstractTestController
 
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_GIFTS));
 
-        $gift = self::fixtures()->getRepo('Report\Gift')->find($giftId);
-        /* @var $gift \App\Entity\Report\Gift */
+        $gift = self::fixtures()->getRepo(Gift::class)->find($giftId);
+        /* @var $gift Gift */
         $this->assertEquals(3.3, $gift->getAmount());
         $this->assertEquals('e3', $gift->getExplanation());
 
@@ -147,8 +148,8 @@ class GiftControllerTest extends AbstractTestController
         ]);
         self::fixtures()->clear();
 
-        $gift = self::fixtures()->getRepo('Report\Gift')->find($giftId);
-        /* @var $gift \App\Entity\Report\Gift */
+        $gift = self::fixtures()->getRepo(Gift::class)->find($giftId);
+        /* @var $gift Gift */
         $this->assertEquals(3.31, $gift->getAmount());
         $this->assertEquals('e3.1', $gift->getExplanation());
 
@@ -198,7 +199,7 @@ class GiftControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $this->assertTrue(null === self::fixtures()->getRepo('Report\Gift')->find(self::$gift1->getId()));
+        $this->assertTrue(null === self::fixtures()->getRepo(Gift::class)->find(self::$gift1->getId()));
     }
 
     /**

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\DeputyshipProcessing;
+namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing;
 
-use App\Entity\StagingDeputyship;
-use App\v2\CSV\CSVChunkerFactory;
+use OPG\Digideps\Backend\Entity\StagingDeputyship;
+use OPG\Digideps\Backend\v2\CSV\CSVChunkerFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Csv\Exception as CSVException;
 use League\Csv\UnavailableStream;
@@ -27,7 +27,7 @@ class DeputyshipsCSVLoader
 
             // delete records from staging table
             $this->em->beginTransaction();
-            $this->em->createQuery('DELETE FROM App\Entity\StagingDeputyship sd')->execute();
+            $this->em->createQuery('DELETE FROM OPG\Digideps\Backend\Entity\StagingDeputyship sd')->execute();
             $this->em->flush();
             $this->em->commit();
 

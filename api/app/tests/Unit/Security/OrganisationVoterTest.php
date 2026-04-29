@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Security;
+namespace Tests\OPG\Digideps\Backend\Unit\Security;
 
-use DateTime;
-use App\Entity\Organisation;
-use App\Entity\User;
-use App\Security\OrganisationVoter;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Security\OrganisationVoter;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -71,7 +70,7 @@ final class OrganisationVoterTest extends KernelTestCase
 
     public function testSubjectIsNotOrganisation(): void
     {
-        $subject = new DateTime();
+        $subject = new \DateTime();
 
         $token = self::prophesize(TokenInterface::class);
 

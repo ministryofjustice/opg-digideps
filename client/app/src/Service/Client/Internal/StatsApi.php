@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Client\Internal;
+namespace OPG\Digideps\Frontend\Service\Client\Internal;
 
-use App\Service\Client\RestClientInterface;
+use OPG\Digideps\Frontend\Service\Client\RestClientInterface;
 
 class StatsApi
 {

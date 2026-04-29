@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Admin\Client;
+namespace OPG\Digideps\Frontend\Controller\Admin\Client;
 
-use App\Controller\AbstractController;
-use App\Entity\User;
-use App\Service\Audit\AuditEvents;
-use App\Service\Client\Internal\ClientApi;
-use App\Service\Client\Internal\UserApi;
+use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
+use OPG\Digideps\Frontend\Service\Client\Internal\ClientApi;
+use OPG\Digideps\Frontend\Service\Client\Internal\UserApi;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\RedirectResponse;

@@ -2,30 +2,27 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Integration\Repository;
+namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
-use App\Tests\Integration\ApiTestTrait;
-use DateTime;
-use DateInterval;
-use DateTimeZone;
-use App\Entity\Client;
-use App\Entity\Report\Document;
-use App\Entity\Report\Report;
-use App\Entity\Report\ReportSubmission;
-use App\Entity\User;
-use App\Repository\DocumentRepository;
+use Tests\OPG\Digideps\Backend\Integration\ApiTestTrait;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\DocumentRepository;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class DocumentRepositoryTest extends KernelTestCase
 {
     use ApiTestTrait;
 
-    private DateTime $firstJulyAm;
-    private DateTime $firstJulyPm;
-    private DateTime $secondJulyAm;
-    private DateTime $secondJulyPm;
-    private DateTime $thirdJulyAm;
-    private DateTime $thirdJulyPm;
+    private \DateTime $firstJulyAm;
+    private \DateTime $firstJulyPm;
+    private \DateTime $secondJulyAm;
+    private \DateTime $secondJulyPm;
+    private \DateTime $thirdJulyAm;
+    private \DateTime $thirdJulyPm;
 
     private static DocumentRepository $sut;
 
@@ -41,15 +38,15 @@ class DocumentRepositoryTest extends KernelTestCase
         $repo = self::$entityManager->getRepository(Document::class);
         self::$sut = $repo;
 
-        $this->firstJulyAm = DateTime::createFromFormat('d/m/Y', '01/07/2020', new DateTimeZone('UTC'));
-        $this->firstJulyPm = clone $this->firstJulyAm->add(new DateInterval('PT20H'));
-        $this->secondJulyAm = DateTime::createFromFormat('d/m/Y', '02/07/2020', new DateTimeZone('UTC'));
-        $this->secondJulyPm = clone $this->secondJulyAm->add(new DateInterval('PT20H'));
-        $this->thirdJulyAm = DateTime::createFromFormat('d/m/Y', '03/07/2020', new DateTimeZone('UTC'));
-        $this->thirdJulyPm = clone $this->thirdJulyAm->add(new DateInterval('PT20H'));
+        $this->firstJulyAm = \DateTime::createFromFormat('d/m/Y', '01/07/2020', new \DateTimeZone('UTC'));
+        $this->firstJulyPm = clone $this->firstJulyAm->add(new \DateInterval('PT20H'));
+        $this->secondJulyAm = \DateTime::createFromFormat('d/m/Y', '02/07/2020', new \DateTimeZone('UTC'));
+        $this->secondJulyPm = clone $this->secondJulyAm->add(new \DateInterval('PT20H'));
+        $this->thirdJulyAm = \DateTime::createFromFormat('d/m/Y', '03/07/2020', new \DateTimeZone('UTC'));
+        $this->thirdJulyPm = clone $this->thirdJulyAm->add(new \DateInterval('PT20H'));
     }
 
-    private function createAndSubmitReportWithSupportingDoc(DateTime $submittedOn): array
+    private function createAndSubmitReportWithSupportingDoc(\DateTime $submittedOn): array
     {
         $client = $this->generateAndPersistClient('abc-123');
         $report = $this->generateAndPersistReport($client);
@@ -65,7 +62,7 @@ class DocumentRepositoryTest extends KernelTestCase
 
     private function generateAndPersistClient(string $caseNumber): Client
     {
-        $client = (new Client())->setCaseNumber($caseNumber);
+        $client = new Client()->setCaseNumber($caseNumber);
 
         self::$entityManager->persist($client);
 
@@ -78,7 +75,7 @@ class DocumentRepositoryTest extends KernelTestCase
             $client,
             Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS,
             $this->firstJulyAm,
-            $this->firstJulyAm->add(new DateInterval('P364D'))
+            $this->firstJulyAm->add(new \DateInterval('P364D'))
         ));
 
         self::$entityManager->persist($report);
@@ -86,7 +83,7 @@ class DocumentRepositoryTest extends KernelTestCase
         return $report;
     }
 
-    private function generateAndPersistDocument(Report $report, bool $isReportPdf, string $syncStatus, DateTime $createdOn, bool $isResubmission): Document
+    private function generateAndPersistDocument(Report $report, bool $isReportPdf, string $syncStatus, \DateTime $createdOn, bool $isResubmission): Document
     {
         $fileName = $isReportPdf ? 'report' : 'supporting-document';
         $storageRef = $isReportPdf ? 'storage-ref-report' : 'storage-ref-supporting-document';
@@ -94,7 +91,7 @@ class DocumentRepositoryTest extends KernelTestCase
         $fileName .= $isResubmission ? '-resubmission.pdf' : '.pdf';
         $storageRef .= $isResubmission ? '-resubmission.pdf' : '.pdf';
 
-        $doc = (new Document($report))
+        $doc = new Document($report)
             ->setFileName($fileName)
             ->setStorageReference($storageRef)
             ->setIsReportPdf($isReportPdf)
@@ -106,7 +103,7 @@ class DocumentRepositoryTest extends KernelTestCase
         return $doc;
     }
 
-    private function submitReport(Report $report, DateTime $submittedOn, Document $reportPdf, ?Document $supportingDocument): ReportSubmission
+    private function submitReport(Report $report, \DateTime $submittedOn, Document $reportPdf, ?Document $supportingDocument): ReportSubmission
     {
         $report->setSubmitDate($submittedOn);
         $reportSubmission = $this->generateAndPersistReportSubmission($report, $submittedOn);
@@ -127,9 +124,9 @@ class DocumentRepositoryTest extends KernelTestCase
         return $reportSubmission;
     }
 
-    private function generateAndPersistReportSubmission(Report $report, DateTime $createdOn): ReportSubmission
+    private function generateAndPersistReportSubmission(Report $report, \DateTime $createdOn): ReportSubmission
     {
-        $submission = (new ReportSubmission($report, $this->generateAndPersistUser()))->setCreatedOn($createdOn);
+        $submission = new ReportSubmission($report, $this->generateAndPersistUser())->setCreatedOn($createdOn);
 
         self::$entityManager->persist($submission);
 
@@ -138,12 +135,12 @@ class DocumentRepositoryTest extends KernelTestCase
 
     private function generateAndPersistUser(): User
     {
-        $user = (new User())
+        $user = new User()
             ->setFirstname('Test')
             ->setLastname('User')
             ->setPassword('password123');
 
-        $datePostFix = (string) (new DateTime())->getTimestamp();
+        $datePostFix = (string) new \DateTime()->getTimestamp();
         $user->setEmail(sprintf('test-user%s%s@test.com', $datePostFix, rand(0, 100000)));
 
         self::$entityManager->persist($user);
@@ -202,7 +199,7 @@ class DocumentRepositoryTest extends KernelTestCase
         self::$entityManager->flush();
     }
 
-    private function createAndSubmitAdditionalDocuments(Report $report, DateTime $submittedOn)
+    private function createAndSubmitAdditionalDocuments(Report $report, \DateTime $submittedOn)
     {
         $additionalSubmission = $this->generateAndPersistReportSubmission($report, $submittedOn);
         $additionalSupportingDoc = $this->generateAndPersistDocument($report, false, 'QUEUED', $submittedOn, false);
@@ -216,7 +213,7 @@ class DocumentRepositoryTest extends KernelTestCase
         return [$additionalSubmission, $additionalSupportingDoc];
     }
 
-    private function createAndSubmitResubmissionWithSupportingDoc(Report $report, DateTime $submittedOn): array
+    private function createAndSubmitResubmissionWithSupportingDoc(Report $report, \DateTime $submittedOn): array
     {
         $resubmissionReportPdfDoc = $this->generateAndPersistDocument($report, true, 'QUEUED', $this->secondJulyAm, true);
         $resubmissionSupportingDoc = $this->generateAndPersistDocument($report, false, 'QUEUED', $this->secondJulyAm, true);
@@ -262,12 +259,12 @@ class DocumentRepositoryTest extends KernelTestCase
 
         $reportPdfDocInProgressNow->setSynchronisationStatus(Document::SYNC_STATUS_IN_PROGRESS);
         $supportingDocInProgressNow->setSynchronisationStatus(Document::SYNC_STATUS_IN_PROGRESS);
-        $currentDateTime = new DateTime('now');
+        $currentDateTime = new \DateTime('now');
         $reportSubmissionNow->setCreatedOn($currentDateTime);
 
         $reportPdfDocInProgressOld->setSynchronisationStatus(Document::SYNC_STATUS_IN_PROGRESS);
         $supportingDocInProgressOld->setSynchronisationStatus(Document::SYNC_STATUS_IN_PROGRESS);
-        $lastYearDateTime = new DateTime('now -1 year');
+        $lastYearDateTime = new \DateTime('now -1 year');
         $reportSubmissionOld->setCreatedOn($lastYearDateTime);
 
         self::$entityManager->persist($reportPdfDocValid);
@@ -308,7 +305,7 @@ class DocumentRepositoryTest extends KernelTestCase
 
     public function testLogFailedDocuments(): void
     {
-        $currentDateTime = new DateTime(); // Current date and time
+        $currentDateTime = new \DateTime(); // Current date and time
         $tomorrow = $currentDateTime->modify('+1 day');
 
         // Tomorrow shouldn't count. Archived shouldn't count.

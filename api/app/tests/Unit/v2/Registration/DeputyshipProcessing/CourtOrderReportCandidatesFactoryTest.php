@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\v2\Registration\DeputyshipProcessing;
+namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\DeputyshipProcessing;
 
-use ArrayIterator;
-use App\Entity\StagingSelectedCandidate;
-use App\Factory\StagingSelectedCandidateFactory;
-use App\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
+use OPG\Digideps\Backend\Entity\StagingSelectedCandidate;
+use OPG\Digideps\Backend\Factory\StagingSelectedCandidateFactory;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Doctrine\ORM\EntityManagerInterface;
@@ -36,7 +35,7 @@ final class CourtOrderReportCandidatesFactoryTest extends TestCase
 
     public function testCreateCompatibleReportCandidates(): void
     {
-        $rows = new ArrayIterator([
+        $rows = new \ArrayIterator([
             ['court_order_uid' => '123', 'report_id' => '456'],
             ['court_order_uid' => '789', 'report_id' => '012'],
         ]);

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\EventSubscriber;
+namespace OPG\Digideps\Frontend\EventSubscriber;
 
-use App\Event\ClientDeletedEvent;
-use App\Service\Audit\AuditEvents;
-use App\Service\Time\DateTimeProvider;
+use OPG\Digideps\Frontend\Event\ClientDeletedEvent;
+use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
+use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -36,7 +36,7 @@ class ClientDeletedSubscriber implements EventSubscriberInterface
         $clientsDeputy = $event->getClientWithUsers()->getDeputy();
         $clientsDeputyName = (is_null($clientsDeputy) ? '' : $clientsDeputy->getFullName());
 
-        $this->logger->notice('', (new AuditEvents($this->dateTimeProvider))->clientDischarged(
+        $this->logger->notice('', new AuditEvents($this->dateTimeProvider)->clientDischarged(
             $event->getTrigger(),
             $event->getClientWithUsers()->getCaseNumber(),
             $event->getCurrentUser()->getEmail(),

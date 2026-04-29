@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\EventSubscriber;
+namespace OPG\Digideps\Frontend\EventSubscriber;
 
-use App\Event\RegistrationFailedEvent;
-use App\Service\Audit\AuditEvents;
-use App\Service\Time\DateTimeProvider;
+use OPG\Digideps\Frontend\Event\RegistrationFailedEvent;
+use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
+use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -25,7 +25,7 @@ class RegistrationFailedSubscriber implements EventSubscriberInterface
 
     public function logAuditEvent(RegistrationFailedEvent $event)
     {
-        $registrationFailedEvent = (new AuditEvents($this->dateTimeProvider))
+        $registrationFailedEvent = new AuditEvents($this->dateTimeProvider)
             ->selfRegistrationFailed(
                 $event->getFailureData(),
                 $event->getErrorMessage()

@@ -2,30 +2,31 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Report;
+namespace OPG\Digideps\Frontend\Controller\Report;
 
-use App\Controller\AbstractController;
-use App\Entity\Client;
-use App\Entity\DeputyInterface;
-use App\Entity\Report\Report;
-use App\Entity\User;
-use App\Event\RegistrationSucceededEvent;
-use App\EventDispatcher\ObservableEventDispatcher;
-use App\Exception\DisplayableException;
-use App\Exception\ReportNotSubmittableException;
-use App\Form\FeedbackReportType;
-use App\Form\Report\ReportDeclarationType;
-use App\Form\Report\ReportType;
-use App\Model\FeedbackReport;
-use App\Service\Client\Internal\ClientApi;
-use App\Service\Client\Internal\ReportApi;
-use App\Service\Client\Internal\SatisfactionApi;
-use App\Service\Client\Internal\UserApi;
-use App\Service\Client\RestClient;
-use App\Service\Csv\TransactionsCsvGenerator;
-use App\Service\File\Storage\S3Storage;
-use App\Service\Redirector;
-use App\Service\ReportSubmissionService;
+use OPG\Digideps\Frontend\Controller\AbstractController;
+use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\DeputyInterface;
+use OPG\Digideps\Frontend\Entity\Report\Document;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Event\RegistrationSucceededEvent;
+use OPG\Digideps\Frontend\EventDispatcher\ObservableEventDispatcher;
+use OPG\Digideps\Frontend\Exception\DisplayableException;
+use OPG\Digideps\Frontend\Exception\ReportNotSubmittableException;
+use OPG\Digideps\Frontend\Form\FeedbackReportType;
+use OPG\Digideps\Frontend\Form\Report\ReportDeclarationType;
+use OPG\Digideps\Frontend\Form\Report\ReportType;
+use OPG\Digideps\Frontend\Model\FeedbackReport;
+use OPG\Digideps\Frontend\Service\Client\Internal\ClientApi;
+use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
+use OPG\Digideps\Frontend\Service\Client\Internal\SatisfactionApi;
+use OPG\Digideps\Frontend\Service\Client\Internal\UserApi;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\Csv\TransactionsCsvGenerator;
+use OPG\Digideps\Frontend\Service\File\Storage\S3Storage;
+use OPG\Digideps\Frontend\Service\Redirector;
+use OPG\Digideps\Frontend\Service\ReportSubmissionService;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -350,7 +351,7 @@ class ReportController extends AbstractController
      */
     #[Route(path: '/report/{reportId}/review', name: 'report_review')]
     #[Template('@App/Report/Report/review.html.twig')]
-    public function reviewAction(int $reportId): RedirectResponse|array
+    public function reviewAction(Request $request, int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
 
@@ -381,6 +382,7 @@ class ReportController extends AbstractController
             'reportStatus' => $status,
             'backLink' => $backLink,
             'feeTotals' => $report->getFeeTotals(),
+            'devPreview' => $request->query->getString('dev-preview') === 'QED'
         ];
     }
 
@@ -394,7 +396,7 @@ class ReportController extends AbstractController
 
         $documentStorageReferences = [];
         foreach ($documentIds as $documentId) {
-            /** @var \App\Entity\Report\Document $document */
+            /** @var Document $document */
             $document = $this->restClient->get(
                 sprintf('document/%s', $documentId),
                 'Report\Document',
@@ -435,10 +437,10 @@ class ReportController extends AbstractController
     }
 
     #[Route(path: '/report/deputyreport-{reportId}.pdf', name: 'report_pdf')]
-    public function pdfViewAction(int $reportId, ReportSubmissionService $reportSubmissionService): Response
+    public function pdfViewAction(Request $request, int $reportId, ReportSubmissionService $reportSubmissionService): Response
     {
         $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
-        $pdfBinary = $reportSubmissionService->getPdfBinaryContent($report);
+        $pdfBinary = $reportSubmissionService->getPdfBinaryContent($report, devPreview: $request->query->getString('dev-preview') === 'QED');
 
         if (false === $pdfBinary) {
             // unable to get the PDF for the report

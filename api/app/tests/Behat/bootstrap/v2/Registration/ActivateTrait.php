@@ -2,12 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\Registration;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\Registration;
 
-use DateTime;
-use RuntimeException;
-use App\Entity\PreRegistration;
-use App\Tests\Behat\BehatException;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 trait ActivateTrait
 {
@@ -165,7 +163,7 @@ trait ActivateTrait
                 $matchingString = $assertionByExpectation ? 'Yes' : 'No';
                 break;
             case 'Registration date':
-                $matchingString = $assertionByExpectation ? (new DateTime())->format('j/m/Y') : 'Not registered';
+                $matchingString = $assertionByExpectation ? new \DateTime()->format('j/m/Y') : 'Not registered';
                 break;
             default:
                 $supportedProperties = ['Registration date', 'Active flag'];
@@ -337,7 +335,7 @@ EOT;
             $elementsFound = $this->getSession()->getPage()->findAll('css', $field);
 
             if (empty($elementsFound)) {
-                throw new RuntimeException("Element $field not found");
+                throw new \RuntimeException("Element $field not found");
             }
 
             $elementsFound[0]->setValue($value);

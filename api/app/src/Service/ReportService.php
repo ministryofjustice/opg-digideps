@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Service;
+namespace OPG\Digideps\Backend\Service;
 
-use App\Entity\AssetInterface;
-use App\Entity\BankAccountInterface;
-use App\Entity\Client;
-use App\Entity\PreRegistration;
-use App\Entity\Report\Asset;
-use App\Entity\Report\AssetOther as ReportAssetOther;
-use App\Entity\Report\AssetProperty as ReportAssetProperty;
-use App\Entity\Report\BankAccount as ReportBankAccount;
-use App\Entity\Report\Document;
-use App\Entity\Report\Report;
-use App\Entity\Report\ReportSubmission;
-use App\Entity\User;
-use App\Factory\ReportFactory;
-use App\Repository\PreRegistrationRepository;
+use OPG\Digideps\Backend\Entity\AssetInterface;
+use OPG\Digideps\Backend\Entity\BankAccountInterface;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\PreRegistration;
+use OPG\Digideps\Backend\Entity\Report\Asset;
+use OPG\Digideps\Backend\Entity\Report\AssetOther as ReportAssetOther;
+use OPG\Digideps\Backend\Entity\Report\AssetProperty as ReportAssetProperty;
+use OPG\Digideps\Backend\Entity\Report\BankAccount as ReportBankAccount;
+use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Factory\ReportFactory;
+use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -65,7 +65,7 @@ class ReportService
 
         $client = $currentReport->getClient();
         $clientId = $client->getId();
-        $now = (new \DateTime())->format('Y-m-d H:i:s');
+        $now = new \DateTime()->format('Y-m-d H:i:s');
         $this->logger->warning("Report submitted for client ID $clientId at $now");
 
         // Set user to active once they have submitted a report

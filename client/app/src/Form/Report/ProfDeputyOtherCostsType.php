@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Report;
+namespace OPG\Digideps\Frontend\Form\Report;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
@@ -24,7 +24,7 @@ class ProfDeputyOtherCostsType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => 'App\Entity\Report\Report',
+            'data_class' => 'OPG\Digideps\Frontend\Entity\Report\Report',
             'validation_groups' => ['prof-deputy-other-costs'],
             'constraints' => new Valid(),
             'translation_domain' => 'report-prof-deputy-costs',

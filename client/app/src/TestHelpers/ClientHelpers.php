@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\TestHelpers;
+namespace OPG\Digideps\Frontend\TestHelpers;
 
-use App\Entity\Client;
-use App\Entity\Report\Report;
-use DateTime;
+use OPG\Digideps\Frontend\Entity\Client;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use Faker\Factory;
 
 class ClientHelpers
@@ -15,9 +14,9 @@ class ClientHelpers
     {
         $faker = Factory::create();
 
-        $client = (new Client())
+        $client = new Client()
             ->setCaseNumber(self::createValidCaseNumber())
-            ->setCourtDate(new DateTime())
+            ->setCourtDate(new \DateTime())
             ->setEmail($faker->safeEmail())
             ->setFirstname($faker->firstName())
             ->setLastname($faker->lastName())

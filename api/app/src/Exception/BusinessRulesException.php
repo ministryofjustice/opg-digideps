@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Exception;
+namespace OPG\Digideps\Backend\Exception;
 
 /**
  * Class BusinessRulesException

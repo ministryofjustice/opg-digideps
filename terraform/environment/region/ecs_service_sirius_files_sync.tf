@@ -23,7 +23,7 @@ resource "aws_ecs_service" "sirius_files_sync" {
   platform_version        = "1.4.0"
   enable_ecs_managed_tags = true
   propagate_tags          = "SERVICE"
-  wait_for_steady_state   = true
+  wait_for_steady_state   = var.account.ecs.wait_for_steady_state
   tags                    = var.default_tags
 
   service_connect_configuration {

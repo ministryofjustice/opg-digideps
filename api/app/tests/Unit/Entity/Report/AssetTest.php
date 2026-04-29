@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Entity\Report;
+namespace Tests\OPG\Digideps\Backend\Unit\Entity\Report;
 
-use App\Entity\Report\AssetOther;
-use App\Entity\Report\AssetProperty;
+use OPG\Digideps\Backend\Entity\Report\AssetOther;
+use OPG\Digideps\Backend\Entity\Report\AssetProperty;
 use PHPUnit\Framework\TestCase;
 
 final class AssetTest extends TestCase

@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\Common;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\Common;
 
-use DateTime;
-use App\Tests\Behat\BehatException;
+use Tests\OPG\Digideps\Backend\Behat\BehatException;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ElementNotFoundException;
 
@@ -55,7 +54,7 @@ trait FormFillingTrait
         if ($month) {
             $monthField = sprintf('%s[month]', $fieldName);
             $this->fillField($monthField, $month);
-            $monthName = DateTime::createFromFormat('!m', strval($month))->format('F');
+            $monthName = \DateTime::createFromFormat('!m', strval($month))->format('F');
 
             $fullDate .= " $monthName";
         }

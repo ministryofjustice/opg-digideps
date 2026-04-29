@@ -2,26 +2,26 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
+use OPG\Digideps\Backend\Entity\Report\Expense;
+use OPG\Digideps\Backend\Service\ReportStatusService;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
-use DateTime;
-use App\Entity\Asset;
-use App\Entity\Client;
-use App\Entity\Contact;
-use App\Entity\Decision;
-use App\Entity\MentalCapacity;
-use App\Entity\Report\Account;
-use App\Entity\Report\Action;
-use App\Entity\Report\Debt;
-use App\Entity\Report\Document;
-use App\Entity\Report\MoneyShortCategory;
-use App\Entity\Report\MoneyTransactionShort;
-use App\Entity\Report\MoneyTransfer;
-use App\Entity\Report\Report;
-use App\Entity\Report\VisitsCare;
-use App\Service\ReportStatusService as StatusService;
+use OPG\Digideps\Backend\Entity\Report\Asset;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\Contact;
+use OPG\Digideps\Backend\Entity\Report\Decision;
+use OPG\Digideps\Backend\Entity\Report\MentalCapacity;
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\Action;
+use OPG\Digideps\Backend\Entity\Report\Debt;
+use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\MoneyShortCategory;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShort;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransfer;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\VisitsCare;
 use Mockery as m;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -37,7 +37,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function decisions(array $mocks, string $state): void
     {
-        $object = new StatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getDecisionsState()['state']);
     }
 
@@ -135,7 +135,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function contacts(array $mocks, string $state): void
     {
-        $object = new StatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getContactsState()['state']);
     }
 
@@ -143,7 +143,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function visitsCare(array $mocks, string $state): void
     {
-        $object = new StatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getVisitsCareState()['state']);
     }
 
@@ -163,9 +163,9 @@ final class ReportStatusServiceTest extends TestCase
         ]);
 
         return [
-            [['getLifestyle' => $empty], StatusService::STATE_NOT_STARTED],
-            [['getLifestyle' => $incomplete], StatusService::STATE_INCOMPLETE],
-            [['getLifestyle' => $done], StatusService::STATE_DONE],
+            [['getLifestyle' => $empty], ReportStatusService::STATE_NOT_STARTED],
+            [['getLifestyle' => $incomplete], ReportStatusService::STATE_INCOMPLETE],
+            [['getLifestyle' => $done], ReportStatusService::STATE_DONE],
         ];
     }
 
@@ -173,7 +173,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function lifestyle(array $mocks, string $state): void
     {
-        $object = new StatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getLifestyleState()['state']);
     }
 
@@ -181,7 +181,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function bankAccount(array $mocks, string $state): void
     {
-        $object = new StatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getBankAccountsState()['state']);
     }
 
@@ -189,7 +189,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function moneyTransfer(array $mocks, string $state): void
     {
-        $object = new StatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getMoneyTransferState()['state']);
     }
 
@@ -197,7 +197,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function moneyIn(array $mocks, string $state): void
     {
-        $object = new StatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getMoneyInState()['state']);
     }
 
@@ -205,7 +205,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function moneyOut(array $mocks, string $state): void
     {
-        $object = new StatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getMoneyOutState()['state']);
     }
 
@@ -215,12 +215,12 @@ final class ReportStatusServiceTest extends TestCase
         $t = m::mock(MoneyTransactionShort::class);
 
         return [
-            [['getMoneyInExists' => null], StatusService::STATE_NOT_STARTED],
-            [['getMoneyInExists' => 'No','getReasonForNoMoneyIn' => null], StatusService::STATE_INCOMPLETE],
-            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => [],'getMoneyTransactionsShortInExist' => 'no'], StatusService::STATE_INCOMPLETE],
-            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => [],'getMoneyTransactionsShortInExist' => 'yes'], StatusService::STATE_INCOMPLETE],
-            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => [[$cat]],'getMoneyTransactionsShortInExist' => 'no'], StatusService::STATE_LOW_ASSETS_DONE],
-            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => [[$cat]],'getMoneyTransactionsShortInExist' => 'yes', 'getMoneyTransactionsShortIn' => [$t]], StatusService::STATE_DONE],
+            [['getMoneyInExists' => null], ReportStatusService::STATE_NOT_STARTED],
+            [['getMoneyInExists' => 'No','getReasonForNoMoneyIn' => null], ReportStatusService::STATE_INCOMPLETE],
+            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => [],'getMoneyTransactionsShortInExist' => 'no'], ReportStatusService::STATE_INCOMPLETE],
+            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => [],'getMoneyTransactionsShortInExist' => 'yes'], ReportStatusService::STATE_INCOMPLETE],
+            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => [[$cat]],'getMoneyTransactionsShortInExist' => 'no'], ReportStatusService::STATE_LOW_ASSETS_DONE],
+            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => [[$cat]],'getMoneyTransactionsShortInExist' => 'yes', 'getMoneyTransactionsShortIn' => [$t]], ReportStatusService::STATE_DONE],
         ];
     }
 
@@ -228,7 +228,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function moneyInShort(array $mocks, string $state): void
     {
-        $object = new StatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getMoneyInShortState()['state']);
     }
 
@@ -238,12 +238,12 @@ final class ReportStatusServiceTest extends TestCase
         $t = m::mock(MoneyTransactionShort::class);
 
         return [
-            [['getMoneyOutExists' => null], StatusService::STATE_NOT_STARTED],
-            [['getMoneyOutExists' => 'No','getReasonForNoMoneyOut' => null], StatusService::STATE_INCOMPLETE],
-            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => [],'getMoneyTransactionsShortOutExist' => 'no'], StatusService::STATE_INCOMPLETE],
-            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => [],'getMoneyTransactionsShortOutExist' => 'yes'], StatusService::STATE_INCOMPLETE],
-            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => [$cat],'getMoneyTransactionsShortOutExist' => 'no'], StatusService::STATE_LOW_ASSETS_DONE],
-            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => [[$cat]],'getMoneyTransactionsShortOutExist' => 'yes', 'getMoneyTransactionsShortOut' => [$t]], StatusService::STATE_DONE],
+            [['getMoneyOutExists' => null], ReportStatusService::STATE_NOT_STARTED],
+            [['getMoneyOutExists' => 'No','getReasonForNoMoneyOut' => null], ReportStatusService::STATE_INCOMPLETE],
+            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => [],'getMoneyTransactionsShortOutExist' => 'no'], ReportStatusService::STATE_INCOMPLETE],
+            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => [],'getMoneyTransactionsShortOutExist' => 'yes'], ReportStatusService::STATE_INCOMPLETE],
+            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => [$cat],'getMoneyTransactionsShortOutExist' => 'no'], ReportStatusService::STATE_LOW_ASSETS_DONE],
+            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => [[$cat]],'getMoneyTransactionsShortOutExist' => 'yes', 'getMoneyTransactionsShortOut' => [$t]], ReportStatusService::STATE_DONE],
         ];
     }
 
@@ -251,7 +251,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function moneyOutShort(array $mocks, string $state): void
     {
-        $object = new StatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getMoneyOutShortState()['state']);
     }
 
@@ -262,16 +262,16 @@ final class ReportStatusServiceTest extends TestCase
         $report = $this->getReportMocked($mocks);
         $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(true);
 
-        $object = new StatusService($report);
+        $object = new ReportStatusService($report);
         $this->assertEquals($state, $object->getExpensesState()['state']);
     }
 
     public static function paFeesExpensesProvider(): array
     {
         return [
-            [['paFeesExpensesNotStarted' => true], StatusService::STATE_NOT_STARTED],
-            [['paFeesExpensesNotStarted' => false, 'paFeesExpensesCompleted' => false], StatusService::STATE_INCOMPLETE],
-            [['paFeesExpensesNotStarted' => false, 'paFeesExpensesCompleted' => true], StatusService::STATE_DONE],
+            [['paFeesExpensesNotStarted' => true], ReportStatusService::STATE_NOT_STARTED],
+            [['paFeesExpensesNotStarted' => false, 'paFeesExpensesCompleted' => false], ReportStatusService::STATE_INCOMPLETE],
+            [['paFeesExpensesNotStarted' => false, 'paFeesExpensesCompleted' => true], ReportStatusService::STATE_DONE],
         ];
     }
 
@@ -282,7 +282,7 @@ final class ReportStatusServiceTest extends TestCase
         $report = $this->getReportMocked(['has106Flag' => true] + $mocks);
         $report->shouldReceive('hasSection')->with(Report::SECTION_PA_DEPUTY_EXPENSES)->andReturn(true);
 
-        $object = new StatusService($report);
+        $object = new ReportStatusService($report);
         $this->assertEquals($state, $object->getPaFeesExpensesState()['state']);
     }
 
@@ -313,36 +313,36 @@ final class ReportStatusServiceTest extends TestCase
         $scco = ['getProfDeputyCostsAmountToScco' => 1];
 
         return [
-            [[], StatusService::STATE_NOT_STARTED], // no data at all
+            [[], ReportStatusService::STATE_NOT_STARTED], // no data at all
 
-            [['getProfDeputyCostsHowCharged' => 'fixed'], StatusService::STATE_INCOMPLETE],
-            [['getProfDeputyCostsHowCharged' => 'assessed'], StatusService::STATE_INCOMPLETE],
-            [['getProfDeputyCostsHowCharged' => 'both'], StatusService::STATE_INCOMPLETE],
+            [['getProfDeputyCostsHowCharged' => 'fixed'], ReportStatusService::STATE_INCOMPLETE],
+            [['getProfDeputyCostsHowCharged' => 'assessed'], ReportStatusService::STATE_INCOMPLETE],
+            [['getProfDeputyCostsHowCharged' => 'both'], ReportStatusService::STATE_INCOMPLETE],
 
             // fixed costs: all flows
-            [$onlyFixedCosts + $prevNo + $fixed + $scco + $otherCostsSubmitted, StatusService::STATE_DONE],
-            [$onlyFixedCosts + $prevYes + $fixed + $scco + $otherCostsNotSubmitted, StatusService::STATE_INCOMPLETE],
+            [$onlyFixedCosts + $prevNo + $fixed + $scco + $otherCostsSubmitted, ReportStatusService::STATE_DONE],
+            [$onlyFixedCosts + $prevYes + $fixed + $scco + $otherCostsNotSubmitted, ReportStatusService::STATE_INCOMPLETE],
 
             // same as above, but with some missing
-            [$onlyFixedCosts + $interimNo + $fixed + $scco, StatusService::STATE_INCOMPLETE],
-            [$onlyFixedCosts + $interimNo + $fixed + $scco + $otherCostsSubmitted, StatusService::STATE_INCOMPLETE],
-            [$onlyFixedCosts + $prevNo + $scco, StatusService::STATE_INCOMPLETE],
-            [$onlyFixedCosts + $prevNo + $interimYes, StatusService::STATE_INCOMPLETE],
+            [$onlyFixedCosts + $interimNo + $fixed + $scco, ReportStatusService::STATE_INCOMPLETE],
+            [$onlyFixedCosts + $interimNo + $fixed + $scco + $otherCostsSubmitted, ReportStatusService::STATE_INCOMPLETE],
+            [$onlyFixedCosts + $prevNo + $scco, ReportStatusService::STATE_INCOMPLETE],
+            [$onlyFixedCosts + $prevNo + $interimYes, ReportStatusService::STATE_INCOMPLETE],
 
             // two ticked (equivalent to all ticked): all flows
-            [$bothFixedAndAssessed + $prevNo + $interimYes + $scco + $otherCostsSubmitted, StatusService::STATE_DONE],
-            [$bothFixedAndAssessed + $prevYes + $interimYes + $scco + $otherCostsSubmitted, StatusService::STATE_DONE],
-            [$bothFixedAndAssessed + $prevNo + $interimNo + $fixed + $scco + $otherCostsSubmitted, StatusService::STATE_DONE],
+            [$bothFixedAndAssessed + $prevNo + $interimYes + $scco + $otherCostsSubmitted, ReportStatusService::STATE_DONE],
+            [$bothFixedAndAssessed + $prevYes + $interimYes + $scco + $otherCostsSubmitted, ReportStatusService::STATE_DONE],
+            [$bothFixedAndAssessed + $prevNo + $interimNo + $fixed + $scco + $otherCostsSubmitted, ReportStatusService::STATE_DONE],
 
-            [$bothFixedAndAssessed + $prevNo + $interimYes + $scco + $otherCostsNotSubmitted, StatusService::STATE_INCOMPLETE],
-            [$bothFixedAndAssessed + $prevYes + $interimYes + $scco + $otherCostsNotSubmitted, StatusService::STATE_INCOMPLETE],
-            [$bothFixedAndAssessed + $prevNo + $interimNo + $fixed + $scco + $otherCostsNotSubmitted, StatusService::STATE_INCOMPLETE],
+            [$bothFixedAndAssessed + $prevNo + $interimYes + $scco + $otherCostsNotSubmitted, ReportStatusService::STATE_INCOMPLETE],
+            [$bothFixedAndAssessed + $prevYes + $interimYes + $scco + $otherCostsNotSubmitted, ReportStatusService::STATE_INCOMPLETE],
+            [$bothFixedAndAssessed + $prevNo + $interimNo + $fixed + $scco + $otherCostsNotSubmitted, ReportStatusService::STATE_INCOMPLETE],
 
             // same as above, but with some missing
-            [$bothFixedAndAssessed + $interimYes + $scco, StatusService::STATE_INCOMPLETE],
-            [$bothFixedAndAssessed + $prevYes + $scco, StatusService::STATE_INCOMPLETE],
-            [$bothFixedAndAssessed + $prevNo + $interimNo + $scco, StatusService::STATE_INCOMPLETE], // miss fixed
-            [$bothFixedAndAssessed + $prevNo + $interimNo + $fixed, StatusService::STATE_INCOMPLETE],
+            [$bothFixedAndAssessed + $interimYes + $scco, ReportStatusService::STATE_INCOMPLETE],
+            [$bothFixedAndAssessed + $prevYes + $scco, ReportStatusService::STATE_INCOMPLETE],
+            [$bothFixedAndAssessed + $prevNo + $interimNo + $scco, ReportStatusService::STATE_INCOMPLETE], // miss fixed
+            [$bothFixedAndAssessed + $prevNo + $interimNo + $fixed, ReportStatusService::STATE_INCOMPLETE],
         ];
     }
 
@@ -353,7 +353,7 @@ final class ReportStatusServiceTest extends TestCase
         $report = $this->getReportMocked([] + $mocks);
         $report->shouldReceive('hasSection')->with(Report::SECTION_PROF_DEPUTY_COSTS)->andReturn(true);
 
-        $object = new StatusService($report);
+        $object = new ReportStatusService($report);
         $this->assertEquals($state, $object->getProfDeputyCostsState()['state']);
     }
 
@@ -366,7 +366,7 @@ final class ReportStatusServiceTest extends TestCase
             ->setProfDeputyCostsEstimateHowCharged($howCharged)
             ->setProfDeputyCostsEstimateHasMoreInfo($hasMoreInfo);
 
-        $sut = new StatusService($this->report);
+        $sut = new ReportStatusService($this->report);
         $this->assertEquals($expectedStatus, $sut->getProfDeputyCostsEstimateState()['state']);
     }
 
@@ -387,7 +387,7 @@ final class ReportStatusServiceTest extends TestCase
     private function initReport(): static
     {
         $this->report = $this->getMockBuilder(Report::class)
-            ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new DateTime(), new DateTime()])
+            ->setConstructorArgs([new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime()])
             ->onlyMethods(['hasSection'])
             ->getMock();
 
@@ -439,14 +439,14 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function gifts(array $mocks, string $state): void
     {
-        $object = new StatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getGiftsState()['state']);
     }
 
     #[DataProvider('documentsProvider')]
     public function testGetDocumentState(array $mocks, string $state): void
     {
-        $object = new StatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getDocumentsState()['state']);
     }
 
@@ -454,7 +454,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function assets(array $mocks, string $state): void
     {
-        $object = new StatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getAssetsState()['state']);
     }
 
@@ -462,7 +462,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function debts(array $mocks, string $state): void
     {
-        $object = new StatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getDebtsState()['state']);
     }
 
@@ -471,9 +471,9 @@ final class ReportStatusServiceTest extends TestCase
         $debt = m::mock(Debt::class);
 
         return [
-            [['getCurrentProfPaymentsReceived' => null], StatusService::STATE_NOT_STARTED],
-            [['getCurrentProfPaymentsReceived' => 'yes', 'profCurrentFeesSectionCompleted' => false], StatusService::STATE_INCOMPLETE],
-            [['getCurrentProfPaymentsReceived' => 'yes', 'profCurrentFeesSectionCompleted' => true], StatusService::STATE_DONE],
+            [['getCurrentProfPaymentsReceived' => null], ReportStatusService::STATE_NOT_STARTED],
+            [['getCurrentProfPaymentsReceived' => 'yes', 'profCurrentFeesSectionCompleted' => false], ReportStatusService::STATE_INCOMPLETE],
+            [['getCurrentProfPaymentsReceived' => 'yes', 'profCurrentFeesSectionCompleted' => true], ReportStatusService::STATE_DONE],
         ];
     }
 
@@ -484,7 +484,7 @@ final class ReportStatusServiceTest extends TestCase
         $report = $this->getReportMocked($mocks);
         $report->shouldReceive('hasSection')->with(Report::SECTION_PROF_CURRENT_FEES)->andReturn(true);
 
-        $object = new StatusService($report);
+        $object = new ReportStatusService($report);
         $this->assertEquals($state, $object->getProfCurrentFeesState()['state']);
     }
 
@@ -497,7 +497,7 @@ final class ReportStatusServiceTest extends TestCase
         $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(true);
         $report->shouldReceive('hasSection')->with(Report::SECTION_PA_DEPUTY_EXPENSES)->andReturn(true);
 
-        $object = new StatusService($report);
+        $object = new ReportStatusService($report);
         $this->assertEquals($state, $object->getBalanceState()['state']);
     }
 
@@ -505,7 +505,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function actions(array $mocks, string $state): void
     {
-        $object = new StatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getActionsState()['state']);
     }
 
@@ -513,7 +513,7 @@ final class ReportStatusServiceTest extends TestCase
     #[Test]
     public function otherinfo(array $mocks, string $state): void
     {
-        $object = new StatusService($this->getReportMocked($mocks));
+        $object = new ReportStatusService($this->getReportMocked($mocks));
         $this->assertEquals($state, $object->getOtherInfoState()['state']);
     }
 
@@ -541,7 +541,7 @@ final class ReportStatusServiceTest extends TestCase
         $report = $this->getReportMocked();
         $report->shouldReceive('isDue')->andReturn(true);
         $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(true);
-        $object = new StatusService($report);
+        $object = new ReportStatusService($report);
         $this->assertNotEquals([], $object->getRemainingSections());
         $this->assertEquals('notStarted', $object->getStatus());
 
@@ -552,7 +552,7 @@ final class ReportStatusServiceTest extends TestCase
         $report = $this->getReportMocked($retPartial);
         $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(false);
         $report->shouldReceive('hasSection')->with(Report::SECTION_PA_DEPUTY_EXPENSES)->andReturn(false);
-        $object = new StatusService($report);
+        $object = new ReportStatusService($report);
         $report->shouldReceive('isDue')->andReturn(true);
         $this->assertEquals('notFinished', $object->getStatus());
 
@@ -560,7 +560,7 @@ final class ReportStatusServiceTest extends TestCase
         $report = $this->getReportMocked($mocksCompletingReport);
         $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(false);
         $report->shouldReceive('hasSection')->with(Report::SECTION_PA_DEPUTY_EXPENSES)->andReturn(false);
-        $object = new StatusService($report);
+        $object = new ReportStatusService($report);
         $this->assertEquals([], $object->getRemainingSections());
         $report->shouldReceive('isDue')->andReturn(false);
         $this->assertEquals('notFinished', $object->getStatus());
@@ -569,7 +569,7 @@ final class ReportStatusServiceTest extends TestCase
         $report = $this->getReportMocked($mocksCompletingReport);
         $report->shouldReceive('hasSection')->with(Report::SECTION_DEPUTY_EXPENSES)->andReturn(false);
         $report->shouldReceive('hasSection')->with(Report::SECTION_PA_DEPUTY_EXPENSES)->andReturn(false);
-        $object = new StatusService($report);
+        $object = new ReportStatusService($report);
         $report->shouldReceive('isDue')->andReturn(true);
         $this->assertEquals('readyToSubmit', $object->getStatus());
     }
@@ -587,19 +587,19 @@ final class ReportStatusServiceTest extends TestCase
         ]);
         $mcComplete = m::mock(MentalCapacity::class, [
             'getHasCapacityChanged' => 'no',
-            'getMentalAssessmentDate' => new DateTime('2016-01-01'),
+            'getMentalAssessmentDate' => new \DateTime('2016-01-01'),
         ]);
 
         return [
-            [[], StatusService::STATE_NOT_STARTED, false],
+            [[], ReportStatusService::STATE_NOT_STARTED, false],
             // incomplete
-            [['getDecisions' => [$decision]], StatusService::STATE_INCOMPLETE, false],
-            [['getSignificantDecisionsMade' => 'No'], StatusService::STATE_INCOMPLETE, false],
-            [['getMentalCapacity' => $mcComplete], StatusService::STATE_INCOMPLETE, false],
-            [['getMentalCapacity' => $mcPartial, 'getDecisions' => [$decision]], StatusService::STATE_INCOMPLETE, false],
+            [['getDecisions' => [$decision]], ReportStatusService::STATE_INCOMPLETE, false],
+            [['getSignificantDecisionsMade' => 'No'], ReportStatusService::STATE_INCOMPLETE, false],
+            [['getMentalCapacity' => $mcComplete], ReportStatusService::STATE_INCOMPLETE, false],
+            [['getMentalCapacity' => $mcPartial, 'getDecisions' => [$decision]], ReportStatusService::STATE_INCOMPLETE, false],
             // done
-            [['getMentalCapacity' => $mcComplete, 'getDecisions' => [$decision]], StatusService::STATE_DONE, true],
-            [['getMentalCapacity' => $mcComplete, 'getReasonForNoDecisions' => 'x'], StatusService::STATE_DONE, true],
+            [['getMentalCapacity' => $mcComplete, 'getDecisions' => [$decision]], ReportStatusService::STATE_DONE, true],
+            [['getMentalCapacity' => $mcComplete, 'getReasonForNoDecisions' => 'x'], ReportStatusService::STATE_DONE, true],
         ];
     }
 
@@ -608,10 +608,10 @@ final class ReportStatusServiceTest extends TestCase
         $contact = m::mock(Contact::class);
 
         return [
-            [[], StatusService::STATE_NOT_STARTED, false],
+            [[], ReportStatusService::STATE_NOT_STARTED, false],
             // done
-            [['getContacts' => [$contact]], StatusService::STATE_DONE, true],
-            [['getReasonForNoContacts' => 'x'], StatusService::STATE_DONE, true],
+            [['getContacts' => [$contact]], ReportStatusService::STATE_DONE, true],
+            [['getReasonForNoContacts' => 'x'], ReportStatusService::STATE_DONE, true],
         ];
     }
 
@@ -637,9 +637,9 @@ final class ReportStatusServiceTest extends TestCase
         ]);
 
         return [
-            [['getVisitsCare' => $empty], StatusService::STATE_NOT_STARTED],
-            [['getVisitsCare' => $incomplete], StatusService::STATE_INCOMPLETE],
-            [['getVisitsCare' => $done], StatusService::STATE_DONE],
+            [['getVisitsCare' => $empty], ReportStatusService::STATE_NOT_STARTED],
+            [['getVisitsCare' => $incomplete], ReportStatusService::STATE_INCOMPLETE],
+            [['getVisitsCare' => $done], ReportStatusService::STATE_DONE],
         ];
     }
 
@@ -661,25 +661,25 @@ final class ReportStatusServiceTest extends TestCase
         ]);
 
         return [
-            [['getAction' => $empty], StatusService::STATE_NOT_STARTED],
-            [['getAction' => $incomplete], StatusService::STATE_INCOMPLETE],
-            [['getAction' => $done], StatusService::STATE_DONE],
+            [['getAction' => $empty], ReportStatusService::STATE_NOT_STARTED],
+            [['getAction' => $incomplete], ReportStatusService::STATE_INCOMPLETE],
+            [['getAction' => $done], ReportStatusService::STATE_DONE],
         ];
     }
 
     public static function otherInfoProvider(): array
     {
         return [
-            [[], StatusService::STATE_NOT_STARTED],
-            [['getActionMoreInfo' => 'mr'], StatusService::STATE_DONE],
+            [[], ReportStatusService::STATE_NOT_STARTED],
+            [['getActionMoreInfo' => 'mr'], ReportStatusService::STATE_DONE],
         ];
     }
 
     public static function giftsProvider(): array
     {
         return [
-            [['giftsSectionCompleted' => false], StatusService::STATE_NOT_STARTED],
-            [['giftsSectionCompleted' => true], StatusService::STATE_DONE],
+            [['giftsSectionCompleted' => false], ReportStatusService::STATE_NOT_STARTED],
+            [['giftsSectionCompleted' => true], ReportStatusService::STATE_DONE],
         ];
     }
 
@@ -688,10 +688,10 @@ final class ReportStatusServiceTest extends TestCase
         $document = m::mock(Document::class);
 
         return [
-            [['getWishToProvideDocumentation' => 'no'], StatusService::STATE_DONE],
-            [['getDocuments' => []], StatusService::STATE_NOT_STARTED],
-            [['getWishToProvideDocumentation' => 'yes', 'getDeputyDocuments' => []], StatusService::STATE_INCOMPLETE],
-            [['getWishToProvideDocumentation' => 'yes', 'getDeputyDocuments' => [$document]], StatusService::STATE_DONE],
+            [['getWishToProvideDocumentation' => 'no'], ReportStatusService::STATE_DONE],
+            [['getDocuments' => []], ReportStatusService::STATE_NOT_STARTED],
+            [['getWishToProvideDocumentation' => 'yes', 'getDeputyDocuments' => []], ReportStatusService::STATE_INCOMPLETE],
+            [['getWishToProvideDocumentation' => 'yes', 'getDeputyDocuments' => [$document]], ReportStatusService::STATE_DONE],
         ];
     }
 
@@ -713,24 +713,24 @@ final class ReportStatusServiceTest extends TestCase
         $paFeesExpensesNotCompleted = ['paFeesExpensesCompleted' => false] + $allComplete;
 
         return [
-            [$banksNotCompleted, StatusService::STATE_NOT_STARTED],
-            [$giftsNotCompleted, StatusService::STATE_NOT_STARTED],
-            [$deputyExpensesNotCompleted, StatusService::STATE_NOT_STARTED],
-            [$paFeesExpensesNotCompleted, StatusService::STATE_NOT_STARTED],
-            [$allComplete + ['getTotalsMatch' => false, 'getBalanceMismatchExplanation' => ''], StatusService::STATE_NOT_MATCHING],
-            [$allComplete + ['getTotalsMatch' => false, 'getBalanceMismatchExplanation' => 'reason'], StatusService::STATE_EXPLAINED],
-            [$allComplete + ['getTotalsMatch' => true], StatusService::STATE_DONE],
+            [$banksNotCompleted, ReportStatusService::STATE_NOT_STARTED],
+            [$giftsNotCompleted, ReportStatusService::STATE_NOT_STARTED],
+            [$deputyExpensesNotCompleted, ReportStatusService::STATE_NOT_STARTED],
+            [$paFeesExpensesNotCompleted, ReportStatusService::STATE_NOT_STARTED],
+            [$allComplete + ['getTotalsMatch' => false, 'getBalanceMismatchExplanation' => ''], ReportStatusService::STATE_NOT_MATCHING],
+            [$allComplete + ['getTotalsMatch' => false, 'getBalanceMismatchExplanation' => 'reason'], ReportStatusService::STATE_EXPLAINED],
+            [$allComplete + ['getTotalsMatch' => true], ReportStatusService::STATE_DONE],
         ];
     }
 
     public static function bankAccountProvider(): array
     {
-        $account = m::mock(Account::class);
+        $account = m::mock(BankAccount::class);
 
         return [
-            [['getBankAccounts' => [], 'getBankAccountsIncomplete' => []], StatusService::STATE_NOT_STARTED],
-            [['getBankAccounts' => [$account], 'getBankAccountsIncomplete' => [$account]], StatusService::STATE_INCOMPLETE],
-            [['getBankAccounts' => [$account], 'getBankAccountsIncomplete' => []], StatusService::STATE_DONE],
+            [['getBankAccounts' => [], 'getBankAccountsIncomplete' => []], ReportStatusService::STATE_NOT_STARTED],
+            [['getBankAccounts' => [$account], 'getBankAccountsIncomplete' => [$account]], ReportStatusService::STATE_INCOMPLETE],
+            [['getBankAccounts' => [$account], 'getBankAccountsIncomplete' => []], ReportStatusService::STATE_DONE],
         ];
     }
 
@@ -739,8 +739,8 @@ final class ReportStatusServiceTest extends TestCase
         $expense = m::mock(Expense::class);
 
         return [
-            [['expensesSectionCompleted' => false], StatusService::STATE_NOT_STARTED],
-            [['expensesSectionCompleted' => true], StatusService::STATE_DONE],
+            [['expensesSectionCompleted' => false], ReportStatusService::STATE_NOT_STARTED],
+            [['expensesSectionCompleted' => true], ReportStatusService::STATE_DONE],
         ];
     }
 
@@ -749,10 +749,10 @@ final class ReportStatusServiceTest extends TestCase
         $asset = m::mock(Asset::class);
 
         return [
-            [['getAssets' => [], 'getNoAssetToAdd' => null], StatusService::STATE_NOT_STARTED],
-            [['getAssets' => [$asset], 'getNoAssetToAdd' => null], StatusService::STATE_DONE],
-            [['getAssets' => [$asset], 'getNoAssetToAdd' => true], StatusService::STATE_DONE],
-            [['getAssets' => [], 'getNoAssetToAdd' => true], StatusService::STATE_DONE],
+            [['getAssets' => [], 'getNoAssetToAdd' => null], ReportStatusService::STATE_NOT_STARTED],
+            [['getAssets' => [$asset], 'getNoAssetToAdd' => null], ReportStatusService::STATE_DONE],
+            [['getAssets' => [$asset], 'getNoAssetToAdd' => true], ReportStatusService::STATE_DONE],
+            [['getAssets' => [], 'getNoAssetToAdd' => true], ReportStatusService::STATE_DONE],
         ];
     }
 
@@ -761,44 +761,44 @@ final class ReportStatusServiceTest extends TestCase
         $debt = m::mock(Debt::class);
 
         return [
-            [['getHasDebts' => false], StatusService::STATE_NOT_STARTED],
-            [['getHasDebts' => 'yes'], StatusService::STATE_INCOMPLETE],
-            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount' => [$debt]], StatusService::STATE_INCOMPLETE],
-            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount' => [$debt], 'getDebtManagement' => ''], StatusService::STATE_INCOMPLETE],
-            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount' => [$debt], 'getDebtManagement' => 'Payment plan'], StatusService::STATE_DONE],
-            [['getHasDebts' => 'no'], StatusService::STATE_DONE],
+            [['getHasDebts' => false], ReportStatusService::STATE_NOT_STARTED],
+            [['getHasDebts' => 'yes'], ReportStatusService::STATE_INCOMPLETE],
+            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount' => [$debt]], ReportStatusService::STATE_INCOMPLETE],
+            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount' => [$debt], 'getDebtManagement' => ''], ReportStatusService::STATE_INCOMPLETE],
+            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount' => [$debt], 'getDebtManagement' => 'Payment plan'], ReportStatusService::STATE_DONE],
+            [['getHasDebts' => 'no'], ReportStatusService::STATE_DONE],
         ];
     }
 
     public static function moneyTransferProvider(): array
     {
-        $account1 = m::mock(Account::class);
-        $account2 = m::mock(Account::class);
+        $account1 = m::mock(BankAccount::class);
+        $account2 = m::mock(BankAccount::class);
         $mt1 = m::mock(MoneyTransfer::class);
 
         return [
-            [['getBankAccounts' => [$account1, $account2], 'getMoneyTransfers' => [], 'getNoTransfersToAdd' => null], StatusService::STATE_NOT_STARTED],
-            [['getBankAccounts' => [$account1, $account2], 'getMoneyTransfers' => [$mt1], 'getNoTransfersToAdd' => null], StatusService::STATE_DONE],
-            [['getBankAccounts' => [$account1, $account2], 'getMoneyTransfers' => [], 'getNoTransfersToAdd' => true], StatusService::STATE_DONE],
+            [['getBankAccounts' => [$account1, $account2], 'getMoneyTransfers' => [], 'getNoTransfersToAdd' => null], ReportStatusService::STATE_NOT_STARTED],
+            [['getBankAccounts' => [$account1, $account2], 'getMoneyTransfers' => [$mt1], 'getNoTransfersToAdd' => null], ReportStatusService::STATE_DONE],
+            [['getBankAccounts' => [$account1, $account2], 'getMoneyTransfers' => [], 'getNoTransfersToAdd' => true], ReportStatusService::STATE_DONE],
             // less than 2 accounts => done
-            [['getBankAccounts' => []], StatusService::STATE_DONE],
-            [['getBankAccounts' => [$account1]], StatusService::STATE_DONE],
+            [['getBankAccounts' => []], ReportStatusService::STATE_DONE],
+            [['getBankAccounts' => [$account1]], ReportStatusService::STATE_DONE],
         ];
     }
 
     public static function moneyInProvider(): array
     {
         return [
-            [['hasMoneyIn' => false], StatusService::STATE_NOT_STARTED],
-            [['hasMoneyIn' => true], StatusService::STATE_DONE],
+            [['hasMoneyIn' => false], ReportStatusService::STATE_NOT_STARTED],
+            [['hasMoneyIn' => true], ReportStatusService::STATE_DONE],
         ];
     }
 
     public static function moneyOutProvider(): array
     {
         return [
-            [['hasMoneyOut' => false], StatusService::STATE_NOT_STARTED],
-            [['hasMoneyOut' => true], StatusService::STATE_DONE],
+            [['hasMoneyOut' => false], ReportStatusService::STATE_NOT_STARTED],
+            [['hasMoneyOut' => true], ReportStatusService::STATE_DONE],
         ];
     }
 

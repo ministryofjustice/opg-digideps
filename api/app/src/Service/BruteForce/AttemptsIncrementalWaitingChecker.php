@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\BruteForce;
+namespace OPG\Digideps\Backend\Service\BruteForce;
 
 use Predis\Client as PredisClient;
 

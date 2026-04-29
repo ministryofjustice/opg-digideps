@@ -1,20 +1,17 @@
 <?php
 
-namespace App\Service;
+namespace OPG\Digideps\Frontend\Service;
 
-use App\Entity\Report\Report;
-use App\Entity\Report\ReportSubmission;
-use App\Entity\ReportInterface;
-use App\Exception\ReportSubmissionDocumentsNotDownloadableException;
-use App\Service\Client\RestClient;
-use App\Service\Csv\TransactionsCsvGenerator;
-use App\Service\File\S3FileUploader;
+use OPG\Digideps\Frontend\Entity\Report\Report;
+use OPG\Digideps\Frontend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Frontend\Entity\ReportInterface;
+use OPG\Digideps\Frontend\Exception\ReportSubmissionDocumentsNotDownloadableException;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Service\Csv\TransactionsCsvGenerator;
+use OPG\Digideps\Frontend\Service\File\S3FileUploader;
 use Psr\Log\LoggerInterface;
 use Twig\Environment;
 use Twig\Error\Error;
-use Twig\Error\LoaderError;
-use Twig\Error\RuntimeError;
-use Twig\Error\SyntaxError;
 
 class ReportSubmissionService
 {
@@ -85,9 +82,9 @@ class ReportSubmissionService
     /**
      * Generate the HTML of the report and convert to PDF.
      */
-    public function getPdfBinaryContent(ReportInterface $report, bool $showSummary = false): string|false
+    public function getPdfBinaryContent(ReportInterface $report, bool $showSummary = false, bool $devPreview = false): string|false
     {
-        $html = $this->templating->render('@App/Report/Formatted/formatted_standalone.html.twig', [
+        $html = $this->templating->render($devPreview ? '@App/Report/Rendered/standalone.html.twig' : '@App/Report/Formatted/formatted_standalone.html.twig', [
             'report' => $report,
             'showSummary' => $showSummary,
         ]);

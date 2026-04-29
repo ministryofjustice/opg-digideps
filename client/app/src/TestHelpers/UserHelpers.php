@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\TestHelpers;
+namespace OPG\Digideps\Frontend\TestHelpers;
 
-use App\Entity\User;
+use OPG\Digideps\Frontend\Entity\User;
 use Faker;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Serializer\Serializer;
@@ -25,7 +25,7 @@ class UserHelpers extends KernelTestCase
             return $serializer->deserialize(json_encode($data), User::class, 'json');
         }
 
-        return (new User())
+        return new User()
             ->setId($faker->numberBetween(1, 999999999))
             ->setDeputyUid($faker->randomNumber(8))
             ->setFirstname($faker->firstName())

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\FixtureFactory;
+namespace OPG\Digideps\Backend\FixtureFactory;
 
-use App\Entity\Client;
-use App\Entity\Organisation;
-use App\Entity\User;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\User;
 use Faker\Factory;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -21,7 +21,7 @@ class UserFactory
     {
         $roleName = $this->convertRoleName($data['deputyType']);
 
-        $user = (new User())
+        $user = new User()
             ->setFirstname($data['firstName'] ?? ucfirst($data['deputyType']) . ' Deputy ' . $data['id'])
             ->setLastname($data['lastName'] ?? 'User')
             ->setEmail($data['email'] ?? 'behat-' . strtolower($data['deputyType']) . '-deputy-' . $data['id'] . '@publicguardian.gov.uk')
@@ -72,7 +72,7 @@ class UserFactory
      */
     public function createAdmin(array $data): User
     {
-        $user = (new User())
+        $user = new User()
             ->setFirstname(isset($data['firstName']) ? $data['firstName'] : ucfirst($data['adminType']) . ' Admin ' . $data['email'])
             ->setLastname(isset($data['lastName']) ? $data['lastName'] : 'User')
             ->setEmail($data['email'])
@@ -96,7 +96,7 @@ class UserFactory
         $email = sprintf('%s.%s@%s', $faker->firstName(), $faker->lastName(), $organisation->getEmailIdentifier());
         $trimmedEmail = substr($email, 0, 59);
 
-        $user = (new User())
+        $user = new User()
             ->setFirstname($faker->firstName())
             ->setLastname($faker->lastName())
             ->setEmail($trimmedEmail)

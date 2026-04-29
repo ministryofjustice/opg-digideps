@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Form\Report\Asset;
+namespace OPG\Digideps\Frontend\Form\Report\Asset;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
@@ -16,7 +16,7 @@ class AssetTypeTitle extends AbstractType
     protected $assetDropdownKeys;
 
     /**
-     * @var Translator
+     * @var TranslatorInterface
      */
     protected $translator;
 

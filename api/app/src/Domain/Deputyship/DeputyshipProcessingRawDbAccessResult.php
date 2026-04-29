@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\Deputyship;
+namespace OPG\Digideps\Backend\Domain\Deputyship;
 
-use App\v2\Registration\Enum\DeputyshipCandidateAction;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\DBAL\Result;
 
 class DeputyshipProcessingRawDbAccessResult

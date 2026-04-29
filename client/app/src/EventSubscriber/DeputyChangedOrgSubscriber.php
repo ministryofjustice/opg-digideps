@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\EventSubscriber;
+namespace OPG\Digideps\Frontend\EventSubscriber;
 
-use App\Event\DeputyChangedOrgEvent;
-use App\Service\Audit\AuditEvents;
-use App\Service\Time\DateTimeProvider;
+use OPG\Digideps\Frontend\Event\DeputyChangedOrgEvent;
+use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
+use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -27,7 +27,7 @@ class DeputyChangedOrgSubscriber implements EventSubscriberInterface
 
     public function auditLog(DeputyChangedOrgEvent $event)
     {
-            $deputyChangedOrgEvent = (new AuditEvents($this->dateTimeProvider))
+            $deputyChangedOrgEvent = new AuditEvents($this->dateTimeProvider)
                 ->deputyChangedOrganisationEvent(
                     $event->getTrigger(),
                     $event->getDeputyId(),

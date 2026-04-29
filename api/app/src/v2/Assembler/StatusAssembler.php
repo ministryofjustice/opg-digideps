@@ -1,10 +1,10 @@
 <?php
 
-namespace App\v2\Assembler;
+namespace OPG\Digideps\Backend\v2\Assembler;
 
-use App\Entity\Report\Report;
-use App\Service\ReportStatusServiceFactory;
-use App\v2\DTO\StatusDto;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Service\ReportStatusServiceFactory;
+use OPG\Digideps\Backend\v2\DTO\StatusDto;
 
 class StatusAssembler
 {

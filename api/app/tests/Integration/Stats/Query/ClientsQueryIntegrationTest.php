@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Tests\Integration\Service\Stats\Query;
+namespace Tests\OPG\Digideps\Backend\Integration\Stats\Query;
 
-use App\Tests\Integration\ApiIntegrationTestCase;
-use DateTime;
-use App\Entity\Client;
-use App\Entity\Report\Report;
-use App\Service\Stats\Query\ClientsQuery;
-use App\Service\Stats\StatsQueryParameters;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Service\Stats\Query\ClientsQuery;
+use OPG\Digideps\Backend\Service\Stats\StatsQueryParameters;
 
 class ClientsQueryIntegrationTest extends ApiIntegrationTestCase
 {
@@ -36,8 +35,8 @@ class ClientsQueryIntegrationTest extends ApiIntegrationTestCase
             $report = new Report(
                 $client,
                 $reportType,
-                new DateTime('2019-08-01'),
-                new DateTime('2020-08-01')
+                new \DateTime('2019-08-01'),
+                new \DateTime('2020-08-01')
             );
 
             self::$entityManager->persist($report);

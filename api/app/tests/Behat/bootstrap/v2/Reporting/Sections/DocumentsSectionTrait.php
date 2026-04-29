@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Behat\v2\Reporting\Sections;
+namespace Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections;
 
-use App\Entity\Report\Document;
-use App\Tests\Behat\BehatException;
+use OPG\Digideps\Backend\Entity\Report\Document;
+use Tests\OPG\Digideps\Backend\Behat\BehatException;
 use Behat\Mink\Exception\ElementNotFoundException;
 
 trait DocumentsSectionTrait

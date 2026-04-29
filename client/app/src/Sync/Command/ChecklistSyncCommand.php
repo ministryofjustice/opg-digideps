@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Sync\Command;
+namespace OPG\Digideps\Frontend\Sync\Command;
 
-use App\Service\Client\Internal\ReportApi;
-use App\Service\ParameterStoreService;
-use App\Sync\Service\ChecklistSyncService;
+use OPG\Digideps\Frontend\Service\Client\Internal\ReportApi;
+use OPG\Digideps\Frontend\Service\ParameterStoreService;
+use OPG\Digideps\Frontend\Sync\Service\ChecklistSyncService;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

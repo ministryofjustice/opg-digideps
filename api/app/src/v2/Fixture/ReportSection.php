@@ -1,17 +1,17 @@
 <?php
 
-namespace App\v2\Fixture;
+namespace OPG\Digideps\Backend\v2\Fixture;
 
-use App\Entity\Report\Action;
-use App\Entity\Report\BankAccount;
-use App\Entity\Report\ClientBenefitsCheck;
-use App\Entity\Report\Lifestyle;
-use App\Entity\Report\MentalCapacity;
-use App\Entity\Report\MoneyReceivedOnClientsBehalf;
-use App\Entity\Report\MoneyTransaction;
-use App\Entity\Report\ProfDeputyOtherCost;
-use App\Entity\Report\Report;
-use App\Entity\Report\VisitsCare;
+use OPG\Digideps\Backend\Entity\Report\Action;
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
+use OPG\Digideps\Backend\Entity\Report\Lifestyle;
+use OPG\Digideps\Backend\Entity\Report\MentalCapacity;
+use OPG\Digideps\Backend\Entity\Report\MoneyReceivedOnClientsBehalf;
+use OPG\Digideps\Backend\Entity\Report\MoneyTransaction;
+use OPG\Digideps\Backend\Entity\Report\ProfDeputyOtherCost;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Report\VisitsCare;
 use Doctrine\Common\Collections\ArrayCollection;
 
 class ReportSection
@@ -58,7 +58,7 @@ class ReportSection
     {
         $report->setSignificantDecisionsMade('No');
         $report->setReasonForNoDecisions('No need for decisions');
-        (new MentalCapacity($report))->setHasCapacityChanged('no')->setMentalAssessmentDate(new \DateTime());
+        new MentalCapacity($report)->setHasCapacityChanged('no')->setMentalAssessmentDate(new \DateTime());
     }
 
     private function completeContacts(Report $report): void
@@ -68,7 +68,7 @@ class ReportSection
 
     private function completeVisitsCare(Report $report): void
     {
-        $vc = (new VisitsCare())
+        $vc = new VisitsCare()
             ->setReport($report)
             ->setDoYouLiveWithClient('yes')
             ->setDoesClientReceivePaidCare('no')
@@ -80,7 +80,7 @@ class ReportSection
 
     private function completeActions(Report $report): void
     {
-        $action = (new Action($report))
+        $action = new Action($report)
             ->setDoYouExpectFinancialDecisions('no')
             ->setDoYouHaveConcerns('no');
         $report->setAction($action);
@@ -93,7 +93,7 @@ class ReportSection
 
     private function completeLifestyle(Report $report): void
     {
-        $ls = (new Lifestyle())
+        $ls = new Lifestyle()
             ->setReport($report);
         $ls->setCareAppointments('no');
         $ls->setDoesClientUndertakeSocialActivities('no');
@@ -112,7 +112,7 @@ class ReportSection
 
     private function completeBankAccounts(Report $report): void
     {
-        $ba = (new BankAccount())->setReport($report)->setClosingBalance(1000);
+        $ba = new BankAccount()->setReport($report)->setClosingBalance(1000);
         $report->addAccount($ba);
         $report->setBalanceMismatchExplanation('no reason');
     }
@@ -126,7 +126,7 @@ class ReportSection
         ) {
             $report->setMoneyInExists('Yes');
         }
-        $mt = (new MoneyTransaction($report))->setCategory('salary-or-wages')->setAmount(200);
+        $mt = new MoneyTransaction($report)->setCategory('salary-or-wages')->setAmount(200);
         $report->addMoneyTransaction($mt);
     }
 
@@ -139,7 +139,7 @@ class ReportSection
         ) {
             $report->setMoneyOutExists('Yes');
         }
-        $mt = (new MoneyTransaction($report))->setCategory('care-fees')->setAmount(200);
+        $mt = new MoneyTransaction($report)->setCategory('care-fees')->setAmount(200);
         $report->addMoneyTransaction($mt);
     }
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\v2\Registration\DTO;
+namespace OPG\Digideps\Backend\v2\Registration\DTO;
 
 class LayDeputyshipDto
 {

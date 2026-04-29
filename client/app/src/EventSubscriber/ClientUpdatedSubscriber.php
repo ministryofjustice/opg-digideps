@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\EventSubscriber;
+namespace OPG\Digideps\Frontend\EventSubscriber;
 
-use App\Event\ClientUpdatedEvent;
-use App\Service\Audit\AuditEvents;
-use App\Service\Mailer\Mailer;
-use App\Service\Time\DateTimeProvider;
+use OPG\Digideps\Frontend\Event\ClientUpdatedEvent;
+use OPG\Digideps\Frontend\Service\Audit\AuditEvents;
+use OPG\Digideps\Frontend\Service\Mailer\Mailer;
+use OPG\Digideps\Frontend\Service\Time\DateTimeProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -42,7 +42,7 @@ class ClientUpdatedSubscriber implements EventSubscriberInterface
     public function logEvent(ClientUpdatedEvent $clientUpdatedEvent)
     {
         if ($this->emailHasChanged($clientUpdatedEvent)) {
-            $event = (new AuditEvents($this->dateTimeProvider))->clientEmailChanged(
+            $event = new AuditEvents($this->dateTimeProvider)->clientEmailChanged(
                 $clientUpdatedEvent->getTrigger(),
                 $clientUpdatedEvent->getPreUpdateClient()->getEmail(),
                 $clientUpdatedEvent->getPostUpdateClient()->getEmail(),

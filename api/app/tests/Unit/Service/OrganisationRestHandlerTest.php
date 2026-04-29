@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Service\RestHandler;
+namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\DataProvider;
-use App\Entity\Organisation;
-use App\Factory\OrganisationFactory;
-use App\Repository\OrganisationRepository;
-use App\Repository\UserRepository;
-use App\Service\RestHandler\OrganisationCreationException;
-use App\Service\RestHandler\OrganisationRestHandler;
-use App\Service\RestHandler\OrganisationUpdateException;
+use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Factory\OrganisationFactory;
+use OPG\Digideps\Backend\Repository\OrganisationRepository;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\Service\RestHandler\OrganisationCreationException;
+use OPG\Digideps\Backend\Service\RestHandler\OrganisationRestHandler;
+use OPG\Digideps\Backend\Service\RestHandler\OrganisationUpdateException;
 use Doctrine\ORM\EntityManager;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Argument;

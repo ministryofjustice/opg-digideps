@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Domain\CourtOrder;
+namespace OPG\Digideps\Backend\Domain\CourtOrder;
 
 enum CourtOrderReportType: string
 {

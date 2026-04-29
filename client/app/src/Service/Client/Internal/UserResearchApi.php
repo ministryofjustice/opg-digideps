@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service\Client\Internal;
+namespace OPG\Digideps\Frontend\Service\Client\Internal;
 
-use App\Mapper\DateRangeQuery;
-use App\Service\Client\RestClient;
+use OPG\Digideps\Frontend\Mapper\DateRangeQuery;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
 use Psr\Http\Message\StreamInterface;
 
 class UserResearchApi
@@ -28,8 +28,8 @@ class UserResearchApi
         $url = self::GET_USER_RESEARCH_RESPONSES;
 
         if ($query) {
-            $fromDate = $query->getStartDate() ? $query->getStartDate()->format('Y-m-d') : (new \DateTime('-5 years'))->format('Y-m-d');
-            $toDate = $query->getEndDate() ? $query->getEndDate()->format('Y-m-d') : (new \DateTime('today'))->format('Y-m-d');
+            $fromDate = $query->getStartDate() ? $query->getStartDate()->format('Y-m-d') : new \DateTime('-5 years')->format('Y-m-d');
+            $toDate = $query->getEndDate() ? $query->getEndDate()->format('Y-m-d') : new \DateTime('today')->format('Y-m-d');
 
             $queryArray = [
                 'orderBy' => $query->getOrderBy(),

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service\AWS;
+namespace OPG\Digideps\Frontend\Service\AWS;
 
 use Aws\Credentials\CredentialProvider;
 use Aws\Credentials\Credentials;

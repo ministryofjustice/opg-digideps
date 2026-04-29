@@ -2,16 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Model;
+namespace Tests\OPG\Digideps\Backend\Unit\Model;
 
-use App\Domain\Deputyship\DeputyshipProcessingLookupCache;
-use App\Repository\ClientRepository;
-use App\Repository\CourtOrderRepository;
-use App\Repository\DeputyRepository;
+use OPG\Digideps\Backend\Domain\Deputyship\DeputyshipProcessingLookupCache;
+use OPG\Digideps\Backend\Repository\ClientRepository;
+use OPG\Digideps\Backend\Repository\CourtOrderRepository;
+use OPG\Digideps\Backend\Repository\DeputyRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 
 final class DeputyshipProcessingLookupCacheTest extends TestCase
 {
@@ -36,16 +35,16 @@ final class DeputyshipProcessingLookupCacheTest extends TestCase
 
     public function testGettersBeforeInitFail(): void
     {
-        static::expectException(RuntimeException::class);
+        static::expectException(\RuntimeException::class);
         $this->sut->getCourtOrderStatusForUid('111111111');
 
-        static::expectException(RuntimeException::class);
+        static::expectException(\RuntimeException::class);
         $this->sut->getClientIdForCaseNumber('41443433434');
 
-        static::expectException(RuntimeException::class);
+        static::expectException(\RuntimeException::class);
         $this->sut->getDeputyIdForUid('112214555');
 
-        static::expectException(RuntimeException::class);
+        static::expectException(\RuntimeException::class);
         $this->sut->getCourtOrderStatusForUid('4324234234');
     }
 

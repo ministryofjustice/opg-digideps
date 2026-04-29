@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Repository;
+namespace OPG\Digideps\Backend\Repository;
 
-use App\Entity\Client;
-use App\Entity\Deputy;
-use App\Entity\User;
-use App\Utility\Query\QueryPager;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Utility\Query\QueryPager;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\NonUniqueResultException;
@@ -37,7 +37,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT u, c, r FROM App\Entity\User u LEFT JOIN u.clients c LEFT JOIN c.reports r WHERE u.id = ?1 ORDER BY c.id')
+            ->createQuery('SELECT u, c, r FROM OPG\Digideps\Backend\Entity\User u LEFT JOIN u.clients c LEFT JOIN c.reports r WHERE u.id = ?1 ORDER BY c.id')
             ->setParameter(1, $id);
 
         $result = $query->getArrayResult();
@@ -218,7 +218,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function findActiveLaysInLastYear(): array
     {
-        $oneYearAgo = (new \DateTime())->modify('-1 Year')->format('Y-m-d');
+        $oneYearAgo = new \DateTime()->modify('-1 Year')->format('Y-m-d');
 
         $conn = $this->getEntityManager()->getConnection();
 
@@ -249,7 +249,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function getAllAdminAccounts()
     {
-        $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')";
+        $dql = "SELECT u FROM OPG\Digideps\Backend\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')";
 
         $query = $this
             ->getEntityManager()
@@ -260,9 +260,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function getAllAdminAccountsCreatedButNotActivatedWithin(string $timeframe)
     {
-        $date = (new \DateTime())->modify($timeframe);
+        $date = new \DateTime()->modify($timeframe);
 
-        $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')
+        $dql = "SELECT u FROM OPG\Digideps\Backend\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')
                 AND u.lastLoggedIn IS NULL
                 AND u.registrationDate < :date ";
 
@@ -276,7 +276,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function getAllActivatedAdminAccounts()
     {
-        $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')
+        $dql = "SELECT u FROM OPG\Digideps\Backend\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')
                 AND u.lastLoggedIn IS NOT NULL";
 
         $query = $this
@@ -288,9 +288,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function getAllAdminAccountsUsedWithin(string $timeframe)
     {
-        $date = (new \DateTime())->modify($timeframe);
+        $date = new \DateTime()->modify($timeframe);
 
-        $dql = "SELECT u FROM App\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')
+        $dql = "SELECT u FROM OPG\Digideps\Backend\Entity\User u WHERE u.roleName IN('ROLE_ADMIN', 'ROLE_SUPER_ADMIN', 'ROLE_ADMIN_MANAGER')
                 AND u.lastLoggedIn > :date ";
 
         $query = $this
@@ -308,9 +308,9 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     private function getAllRoleBasedUsers(array $roles, string $timeframe)
     {
-        $date = (new \DateTime())->modify($timeframe);
+        $date = new \DateTime()->modify($timeframe);
 
-        $dql = 'SELECT u FROM App\Entity\User u WHERE u.roleName IN(:roles) AND u.lastLoggedIn < :date ';
+        $dql = 'SELECT u FROM OPG\Digideps\Backend\Entity\User u WHERE u.roleName IN(:roles) AND u.lastLoggedIn < :date ';
 
         $query = $this
             ->getEntityManager()
@@ -349,7 +349,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function getAllDeletionProtectedAccounts()
     {
-        $dql = 'SELECT u.id FROM App\Entity\User u WHERE u.deletionProtection = true';
+        $dql = 'SELECT u.id FROM OPG\Digideps\Backend\Entity\User u WHERE u.deletionProtection = true';
 
         $stmt = $this->getEntityManager()->createQuery($dql);
 
@@ -405,7 +405,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         $query = $this
             ->getEntityManager()
-            ->createQuery("SELECT u.deputyUid FROM App\Entity\User u INNER JOIN u.clients c where c.id = ?1 AND u.deputyUid IS NOT NULL AND c.deletedAt IS NULL ORDER BY u.id")
+            ->createQuery("SELECT u.deputyUid FROM OPG\Digideps\Backend\Entity\User u INNER JOIN u.clients c where c.id = ?1 AND u.deputyUid IS NOT NULL AND c.deletedAt IS NULL ORDER BY u.id")
             ->setParameter(1, $clientId);
 
         return $query->getArrayResult();
@@ -415,7 +415,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         $query = $this
             ->getEntityManager()
-            ->createQuery("SELECT COUNT(u) FROM App\Entity\User u INNER JOIN u.clients c where c.archivedAt IS NULL and c.deletedAt IS NULL AND u.deputyUid = :deputyUid")
+            ->createQuery("SELECT COUNT(u) FROM OPG\Digideps\Backend\Entity\User u INNER JOIN u.clients c where c.archivedAt IS NULL and c.deletedAt IS NULL AND u.deputyUid = :deputyUid")
             ->setParameter('deputyUid', $deputyUid);
 
         return $query->getSingleScalarResult();
@@ -425,7 +425,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         $query = $this
             ->getEntityManager()
-            ->createQuery("SELECT u FROM App\Entity\User u WHERE u.deputyUid = :deputyUid AND u.isPrimary = True")
+            ->createQuery("SELECT u FROM OPG\Digideps\Backend\Entity\User u WHERE u.deputyUid = :deputyUid AND u.isPrimary = True")
             ->setParameter('deputyUid', $deputyUid);
 
         return $query->getSingleResult();

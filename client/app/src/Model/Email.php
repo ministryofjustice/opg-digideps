@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Model;
+namespace OPG\Digideps\Frontend\Model;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -40,7 +40,7 @@ class Email
     /**
      * @param string $toEmail
      *
-     * @return \App\Model\Email
+     * @return Email
      */
     public function setToEmail($toEmail)
     {
@@ -60,7 +60,7 @@ class Email
     /**
      * @param string $fromName
      *
-     * @return \App\Model\Email
+     * @return Email
      */
     public function setFromName($fromName)
     {
@@ -80,7 +80,7 @@ class Email
     /**
      * @param string $subject
      *
-     * @return \App\Model\Email
+     * @return Email
      */
     public function setSubject($subject)
     {

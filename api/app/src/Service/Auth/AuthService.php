@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Service\Auth;
+namespace OPG\Digideps\Backend\Service\Auth;
 
-use App\Entity\User;
-use App\Repository\UserRepository;
-use App\Service\JWT\JWTService;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\UserRepository;
+use OPG\Digideps\Backend\Service\JWT\JWTService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;

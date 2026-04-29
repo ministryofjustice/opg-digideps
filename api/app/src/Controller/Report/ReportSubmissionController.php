@@ -2,19 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\Controller\Report;
+namespace OPG\Digideps\Backend\Controller\Report;
 
-use App\Controller\RestController;
-use App\Entity\Report\Document;
-use App\Entity\Report\ReportSubmission;
-use App\Entity\User;
-use App\Exception\UnauthorisedException;
-use App\Repository\ReportSubmissionRepository;
-use App\Service\Auth\AuthService;
-use App\Service\Formatter\RestFormatter;
+use OPG\Digideps\Backend\Controller\RestController;
+use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Exception\UnauthorisedException;
+use OPG\Digideps\Backend\Repository\ReportSubmissionRepository;
+use OPG\Digideps\Backend\Service\Auth\AuthService;
+use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
-use InvalidArgumentException;
-use RuntimeException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -141,7 +139,7 @@ class ReportSubmissionController extends RestController
     public function getOld(Request $request): array
     {
         if (!$this->authService->isSecretValidForRole(User::ROLE_ADMIN, $request)) {
-            throw new RuntimeException(__METHOD__ . ' only accessible from ADMIN container.', 403);
+            throw new \RuntimeException(__METHOD__ . ' only accessible from ADMIN container.', 403);
         }
 
         /* @var $repo ReportSubmissionRepository */
@@ -162,7 +160,7 @@ class ReportSubmissionController extends RestController
     public function setUndownloadable(int $id, Request $request)
     {
         if (!$this->authService->isSecretValidForRole(User::ROLE_ADMIN, $request)) {
-            throw new RuntimeException(__METHOD__ . ' only accessible from ADMIN container.', 403);
+            throw new \RuntimeException(__METHOD__ . ' only accessible from ADMIN container.', 403);
         }
 
         $reportSubmission = $this->em->getRepository(ReportSubmission::class)->find($id);
@@ -187,7 +185,7 @@ class ReportSubmissionController extends RestController
         $reportSubmission = $this->em->getRepository(ReportSubmission::class)->find($id);
 
         if ($reportSubmission->getArchived()) {
-            throw new InvalidArgumentException('Cannot queue documents for an archived report submission');
+            throw new \InvalidArgumentException('Cannot queue documents for an archived report submission');
         }
 
         foreach ($reportSubmission->getDocuments() as $document) {

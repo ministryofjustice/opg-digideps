@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Controller;
+namespace OPG\Digideps\Frontend\Controller;
 
-use App\Service\Availability\ApiAvailability;
-use App\Service\Availability\ClamAvAvailability;
-use App\Service\Availability\HtmlToPdfAvailability;
-use App\Service\Availability\NotifyAvailability;
-use App\Service\Availability\RedisAvailability;
-use App\Service\Availability\SiriusApiAvailability;
+use OPG\Digideps\Frontend\Service\Availability\ApiAvailability;
+use OPG\Digideps\Frontend\Service\Availability\ClamAvAvailability;
+use OPG\Digideps\Frontend\Service\Availability\HtmlToPdfAvailability;
+use OPG\Digideps\Frontend\Service\Availability\NotifyAvailability;
+use OPG\Digideps\Frontend\Service\Availability\RedisAvailability;
+use OPG\Digideps\Frontend\Service\Availability\SiriusApiAvailability;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\Response;
