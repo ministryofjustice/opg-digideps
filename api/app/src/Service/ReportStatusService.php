@@ -418,14 +418,21 @@ class ReportStatusService
     public function getActionsState(): array
     {
         $action = $this->report->getAction();
-        $answers = $action ? [
-            $action->getDoYouHaveConcerns(),
-            $action->getDoYouExpectFinancialDecisions(),
-        ] : [];
 
-        return match (count($answers)) {
+        $numberOfQuestionsToAnswer = 2;
+        $questionsAnswered = 0;
+
+        if ($action?->getDoYouHaveConcerns() !== null) {
+            $questionsAnswered += 1;
+        }
+
+        if ($action?->getDoYouExpectFinancialDecisions() !== null) {
+            $questionsAnswered += 1;
+        }
+
+        return match ($questionsAnswered) {
             0 => ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0],
-            count($answers) => ['state' => self::STATE_DONE, 'nOfRecords' => 0],
+            $numberOfQuestionsToAnswer => ['state' => self::STATE_DONE, 'nOfRecords' => 0],
             default => ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0],
         };
     }
