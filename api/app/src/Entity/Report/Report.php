@@ -230,7 +230,7 @@ class Report
     private Client $client;
 
     /**
-     * @var VisitsCare
+     * @var ?VisitsCare
      */
     #[JMS\Groups(['visits-care'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\VisitsCare')]
@@ -246,7 +246,7 @@ class Report
     private $lifestyle;
 
     /**
-     * @var Action
+     * @var ?Action
      */
     #[JMS\Groups(['action'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Action')]
@@ -573,6 +573,8 @@ class Report
 
     /**
      * Get sections based on the report type
+     *
+     * @return string[]
      */
     #[JMS\VirtualProperty]
     #[JMS\Groups(['report', 'report-sections'])]
@@ -748,7 +750,7 @@ class Report
     }
 
     /**
-     * @return VisitsCare
+     * @return ?VisitsCare
      */
     public function getVisitsCare()
     {
@@ -779,7 +781,7 @@ class Report
     }
 
     /**
-     * @return Action
+     * @return ?Action
      */
     public function getAction()
     {
@@ -789,7 +791,7 @@ class Report
     /**
      * @return Report
      */
-    public function setAction(Action $action)
+    public function setAction(?Action $action)
     {
         $this->action = $action;
 

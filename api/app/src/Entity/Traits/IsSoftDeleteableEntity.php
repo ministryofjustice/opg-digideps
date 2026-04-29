@@ -7,13 +7,10 @@ namespace OPG\Digideps\Backend\Entity\Traits;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * SoftDeletable Trait, usable with PHP >= 5.4.
- */
 trait IsSoftDeleteableEntity
 {
     /**
-     * @var \DateTime
+     * @var ?\DateTime
      */
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
     #[JMS\Groups(['client', 'transactionSoftDelete'])]
@@ -35,7 +32,7 @@ trait IsSoftDeleteableEntity
     /**
      * Returns deletedAt.
      *
-     * @return \DateTime
+     * @return ?\DateTime
      */
     public function getDeletedAt()
     {

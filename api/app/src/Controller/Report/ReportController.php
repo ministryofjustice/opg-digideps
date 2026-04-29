@@ -159,10 +159,15 @@ class ReportController extends RestController
             throw new \InvalidArgumentException('\'not_deputy\' is invalid option of agreed_behalf_deputy for lay deputies');
         }
 
-        $currentReport->setAgreedBehalfDeputy($data['agreed_behalf_deputy']);
-        $xplanation = ('more_deputies_not_behalf' === $data['agreed_behalf_deputy'])
+        /** @var string $agreedBehalfDeputy */
+        $agreedBehalfDeputy = $data['agreed_behalf_deputy'];
+
+        $currentReport->setAgreedBehalfDeputy($agreedBehalfDeputy);
+
+        $explanation = ('more_deputies_not_behalf' === $data['agreed_behalf_deputy'])
             ? $data['agreed_behalf_deputy_explanation'] : null;
-        $currentReport->setAgreedBehalfDeputyExplanation($xplanation);
+
+        $currentReport->setAgreedBehalfDeputyExplanation($explanation);
 
         /** @var User $user */
         $user = $this->getUser();
@@ -279,8 +284,11 @@ class ReportController extends RestController
             ]);
         }
 
-        if (array_key_exists('reason_for_no_fees', $data)) {
-            $report->setReasonForNoFees($data['reason_for_no_fees']);
+        /** @var ?string $reasonForNoFees */
+        $reasonForNoFees = $data['reason_for_no_fees'] ?? null;
+
+        if ($reasonForNoFees !== null) {
+            $report->setReasonForNoFees($reasonForNoFees);
             if ($data['reason_for_no_fees']) {
                 foreach ($report->getFees() as $fee) {
                     $fee->setAmount(null)
@@ -310,7 +318,7 @@ class ReportController extends RestController
 
         if (array_key_exists('gifts_exist', $data)) {
             if ('no' === $data['gifts_exist']) { // remove existing gift
-                foreach ($report->getGifts() as $e) {
+                foreach (($report->getGifts() ?? []) as $e) {
                     $this->em->remove($e);
                 }
             }
@@ -471,7 +479,11 @@ class ReportController extends RestController
                     $this->em->remove($e);
                 }
             }
-            $report->setMoneyTransactionsShortInExist($data['money_transactions_short_in_exist']);
+
+            /** @var string $moneyTransactionsShortInExist */
+            $moneyTransactionsShortInExist = $data['money_transactions_short_in_exist'];
+
+            $report->setMoneyTransactionsShortInExist($moneyTransactionsShortInExist);
             $this->em->flush();
             $report->updateSectionsStatusCache([
                 Report::SECTION_MONEY_IN_SHORT,

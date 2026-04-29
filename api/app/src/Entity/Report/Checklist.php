@@ -215,7 +215,7 @@ class Checklist implements SynchronisableInterface
     private $finalDecision;
 
     /**
-     * @var Collection<ChecklistInformation>
+     * @var Collection<int, ChecklistInformation>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\ChecklistInformation>')]
     #[JMS\Groups(['checklist-information'])]
@@ -808,7 +808,7 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection<int, ChecklistInformation>
      */
     public function getChecklistInformation()
     {

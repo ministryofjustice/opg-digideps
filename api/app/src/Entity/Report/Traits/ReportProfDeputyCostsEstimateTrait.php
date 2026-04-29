@@ -119,7 +119,7 @@ trait ReportProfDeputyCostsEstimateTrait
         return self::$profDeputyEstimateCostTypeIds;
     }
 
-    public static function setProfDeputyEstimateCostTypeIds($profDeputyEstimateCostTypeIds)
+    public static function setProfDeputyEstimateCostTypeIds($profDeputyEstimateCostTypeIds): void
     {
         self::$profDeputyEstimateCostTypeIds = $profDeputyEstimateCostTypeIds;
     }
