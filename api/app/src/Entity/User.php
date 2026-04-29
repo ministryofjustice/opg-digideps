@@ -19,9 +19,6 @@ use Random\RandomException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * Users.
- */
 #[ORM\Table(name: 'dd_user')]
 #[ORM\Index(columns: ['created_by_id'], name: 'created_by_idx')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -116,13 +113,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\SequenceGenerator(sequenceName: 'user_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
+    /**
+     * @var Collection<int, Client>
+     */
     #[JMS\Groups(['user-clients'])]
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Client>')]
     #[ORM\ManyToMany(targetEntity: Client::class, mappedBy: 'users', cascade: ['persist'], fetch: 'EXTRA_LAZY')]
     private $clients;
 
     /**
-     * @var Collection<Organisation>
+     * @var Collection<int, Organisation>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Organisation>')]
     #[JMS\Groups(['user-organisations'])]
@@ -204,16 +204,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[JMS\Groups(['user', 'report-submitted-by', 'user-rolename', 'user-list', 'team-users'])]
     #[ORM\Column(name: 'role_name', type: 'string', length: 50, nullable: true)]
     private $roleName;
-
-    /**
-     * This id is supplied to GA for UserID tracking. It is an md5 of the user id,
-     * does not get stored in the database.
-     *
-     * @var string
-     */
-    #[JMS\Type('string')]
-    #[JMS\Groups(['user'])]
-    private $gaTrackingId;
 
     /**
      * @var string
@@ -590,7 +580,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Get clients.
      *
-     * @return Collection<Client>
+     * @return Collection<int, Client>
      */
     public function getClients()
     {
@@ -598,7 +588,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return Collection<Organisation>
+     * @return Collection<int, Organisation>
      */
     public function getOrganisations()
     {
@@ -794,30 +784,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[JMS\SerializedName('number_of_submitted_reports')]
     public function getNumberOfSubmittedReports()
     {
-        if (!$this->getFirstClient()) {
+        $firstClient = $this->getFirstClient();
+
+        if ($firstClient === null) {
             return 0;
         }
 
-        $isSubmittedClosure = function (Report $report) {
-            return !is_null($report->getSubmitDate());
-        };
-
-        $submittedReports = $this->getFirstClient()->getReports()->filter($isSubmittedClosure);
-
-        return count($submittedReports);
+        return count($firstClient->getReports()->filter(
+            fn ($report) => $report->getSubmitDate() !== null
+        ));
     }
 
     /**
-     * @return Client|null
+     * @return ?Client
      */
     public function getFirstClient()
     {
-        $clients = $this->getClients();
-        if (0 === count($clients)) {
-            return null;
-        }
-
-        return $clients->first();
+        return $this->getClients()->first() ?: null;
     }
 
     /**
@@ -1106,11 +1089,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function hasReports()
     {
-        if (0 === count($this->clients)) {
+        $firstClient = $this->getFirstClient();
+
+        if ($firstClient === null) {
             return false;
         }
 
-        $reports = $this->clients[0]->getReports();
+        $reports = $firstClient->getReports();
 
         if (!empty($reports)) {
             return true;
