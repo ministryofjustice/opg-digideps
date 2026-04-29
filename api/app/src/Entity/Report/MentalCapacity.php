@@ -75,7 +75,7 @@ class MentalCapacity
     /**
      * Set report.
      */
-    public function setReport(?Report $report = null)
+    public function setReport(?Report $report = null): static
     {
         $this->report = $report;
 

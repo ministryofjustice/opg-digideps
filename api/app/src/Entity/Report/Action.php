@@ -108,14 +108,14 @@ class Action
         return $this->doYouHaveConcerns;
     }
 
-    public function setDoYouExpectFinancialDecisions($doYouExpectFinancialDecisions)
+    public function setDoYouExpectFinancialDecisions($doYouExpectFinancialDecisions): static
     {
         $this->doYouExpectFinancialDecisions = $doYouExpectFinancialDecisions;
 
         return $this;
     }
 
-    public function setDoYouHaveConcerns($doYouHaveConcerns)
+    public function setDoYouHaveConcerns($doYouHaveConcerns): static
     {
         $this->doYouHaveConcerns = $doYouHaveConcerns;
 

@@ -49,6 +49,8 @@ class DocumentRepository extends ServiceEntityRepository
         $result = $docStmt->executeQuery();
 
         $documents = [];
+
+        /** @var string[] $reportIds */
         $reportIds = [];
 
         // Get all queued documents
@@ -71,8 +73,11 @@ class DocumentRepository extends ServiceEntityRepository
                 'document_sync_attempts' => $row['document_sync_attempts'],
             ];
 
-            if (!empty($row['report_id'])) {
-                $reportIds[] = $row['report_id'];
+            /** @var string $reportId */
+            $reportId = $row['report_id'];
+
+            if (!empty($reportId)) {
+                $reportIds[] = $reportId;
             }
         }
 
