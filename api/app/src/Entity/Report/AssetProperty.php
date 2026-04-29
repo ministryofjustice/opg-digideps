@@ -18,8 +18,6 @@ class AssetProperty extends Asset implements AssetInterface
 
     /**
      * @var string
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['asset'])]
@@ -28,8 +26,6 @@ class AssetProperty extends Asset implements AssetInterface
 
     /**
      * @var string
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['asset'])]
@@ -38,8 +34,6 @@ class AssetProperty extends Asset implements AssetInterface
 
     /**
      * @var string
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['asset'])]
@@ -47,8 +41,6 @@ class AssetProperty extends Asset implements AssetInterface
     private $county;
 
     /**
-     *
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -58,8 +50,6 @@ class AssetProperty extends Asset implements AssetInterface
 
     /**
      * @var string
-     *
-     *
      */
     #[JMS\Groups(['asset'])]
     #[JMS\Type('string')]
@@ -68,8 +58,6 @@ class AssetProperty extends Asset implements AssetInterface
 
     /**
      * @var string fully/partly
-     *
-     *
      */
     #[JMS\Groups(['asset'])]
     #[JMS\Type('string')]
@@ -78,14 +66,11 @@ class AssetProperty extends Asset implements AssetInterface
 
     /**
      * @var float 0-100
-     *
-     *
      */
     #[JMS\Groups(['asset'])]
     #[JMS\Type('float')]
     #[ORM\Column(name: 'owned_percentage', type: 'decimal', precision: 14, scale: 2)]
     private $ownedPercentage;
-
 
     #[JMS\Groups(['asset'])]
     #[JMS\Type('string')]
@@ -94,8 +79,6 @@ class AssetProperty extends Asset implements AssetInterface
 
     /**
      * @var string
-     *
-     *
      */
     #[JMS\Groups(['asset'])]
     #[JMS\Type('string')]
@@ -104,8 +87,6 @@ class AssetProperty extends Asset implements AssetInterface
 
     /**
      * @var float
-     *
-     *
      */
     #[JMS\Groups(['asset'])]
     #[JMS\Type('integer')]
@@ -114,8 +95,6 @@ class AssetProperty extends Asset implements AssetInterface
 
     /**
      * @var string
-     *
-     *
      */
     #[JMS\Groups(['asset'])]
     #[JMS\Type('string')]
@@ -124,8 +103,6 @@ class AssetProperty extends Asset implements AssetInterface
 
     /**
      * @var string
-     *
-     *
      */
     #[JMS\Groups(['asset'])]
     #[JMS\Type('string')]
@@ -134,8 +111,6 @@ class AssetProperty extends Asset implements AssetInterface
 
     /**
      * @var \DateTime
-     *
-     *
      */
     #[JMS\Groups(['asset'])]
     #[JMS\Type("DateTime<'Y-m-d'>")]
@@ -144,8 +119,6 @@ class AssetProperty extends Asset implements AssetInterface
 
     /**
      * @var float
-     *
-     *
      */
     #[JMS\Groups(['asset'])]
     #[JMS\Type('float')]
@@ -369,7 +342,6 @@ class AssetProperty extends Asset implements AssetInterface
         return parent::getValueTotal();
     }
 
-
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
     public function deleteUnusedData()
@@ -387,7 +359,6 @@ class AssetProperty extends Asset implements AssetInterface
             $this->setOwnedPercentage(null);
         }
     }
-
 
     #[JMS\VirtualProperty]
     #[JMS\SerializedName('type')]
