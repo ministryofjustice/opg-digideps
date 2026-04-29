@@ -474,6 +474,9 @@ services:
     OPG\Digideps\Backend\Service\UserDeputyService:
         public: true
 
+    OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\Report\ReportTypeUpdate:
+        public: true
+
     preCSVDataFactory:
         class: OPG\Digideps\Backend\Factory\ChainedDataFactory
         public: true
@@ -508,12 +511,8 @@ services:
                       "dry-run-only",
                   ]
                 - [
-                    '@OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\Report\ReportTypeUpdate',
-                    "dry-run-only",
-                  ]
-                - [
-                    '@OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\Report\ReportTypeUpdate',
-                    "dry-run-only",
+                      '@OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\Report\ReportTypeUpdate',
+                      "dry-run-only",
                   ]
 
     OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester:

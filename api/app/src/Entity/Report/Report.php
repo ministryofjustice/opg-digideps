@@ -3,6 +3,7 @@
 namespace OPG\Digideps\Backend\Entity\Report;
 
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Traits as ReportTraits;
 use OPG\Digideps\Backend\Entity\Satisfaction;
 use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
@@ -577,13 +578,15 @@ class Report
     private $reasonForNoMoneyOut;
 
     /**
+     * @var Collection<int, CourtOrder>
+     *
      * @JMS\Groups({"report-with-court-orders"})
      *
      * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\CourtOrder>")
      *
      * @ORM\ManyToMany(targetEntity="OPG\Digideps\Backend\Entity\CourtOrder", mappedBy="reports", cascade={"persist"}, fetch="EXTRA_LAZY")
      */
-    private $courtOrders;
+    private Collection $courtOrders;
 
     private array $excludeSections = [];
     private ?\DateTime $benefitsSectionReleaseDate = null;
