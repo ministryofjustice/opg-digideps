@@ -100,11 +100,11 @@ class ReportTypeUpdate
             }
 
             if (!$dryRun) {
-                $report->setType($possibleReportType);
+                $report->setType((string) $possibleReportType);
                 $this->entityManager->persist($report);
             } else {
                 $this->logger->info(
-                    "DRYRUN: Report with ID: {$reportId}. ReportType change from {$currentReportType} to {$possibleReportType}"
+                    "DRYRUN[ReportTypeUpdate]: Report with ID: {$reportId}. ReportType change from {$currentReportType} to {$possibleReportType}"
                 );
             }
             ++$count;
