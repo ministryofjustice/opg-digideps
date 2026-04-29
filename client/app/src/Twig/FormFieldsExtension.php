@@ -216,8 +216,11 @@ class FormFieldsExtension extends AbstractExtension
         $labelParams = [];
         $legendText = $this->getLegendText($translationKey, $labelParams, $domain);
 
+        /** @var array $legend */
+        $legend = $vars['legend'] ?? [];
+
         echo $this->environment->render('@App/Components/Form/_sort-code.html.twig', [
-            'legend' => $this->buildLegendArray($legendText, $vars['legend'] ?? []),
+            'legend' => $this->buildLegendArray($legendText, $legend),
             'hintText' => $hintText,
             'element' => $element,
             'required' => $vars['required'] ?? true,
@@ -372,6 +375,19 @@ class FormFieldsExtension extends AbstractExtension
             ], $vars['label'] ?? []),
             'extraAttrs' => $vars['extraAttrs'] ?? [],
         ];
+    }
+
+    /**
+     * Extract hint text from translation, returning null if translation key not found.
+     *
+     * @param string $translationKey The translation key prefix
+     * @param string $domain The translation domain
+     * @return string|null The translated hint text or null if hint key does not exist
+     */
+    private function getHintText(string $translationKey, string $domain): ?string
+    {
+        $hintTextTrans = $this->translator->trans($translationKey . '.hint', [], $domain);
+        return ($hintTextTrans !== $translationKey . '.hint') ? $hintTextTrans : null;
     }
 
     /**
