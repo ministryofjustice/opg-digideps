@@ -66,12 +66,14 @@ class FormFieldsExtension extends AbstractExtension
      */
     public function renderFormInput(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null): void
     {
+        /** @var array $elementVars */
+        $elementVars = $element->vars;
         // generate input field html using variables supplied
         echo $this->environment->render(
             '@App/Components/Form/_input.html.twig',
             array_merge(
                 $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex),
-                ['multiline' => in_array('textarea', $element->vars['block_prefixes'] ?? [])]
+                ['multiline' => in_array('textarea', $elementVars['block_prefixes'] ?? [])]
             )
         );
     }
@@ -96,11 +98,13 @@ class FormFieldsExtension extends AbstractExtension
      */
     public function renderCheckboxInput(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null): void
     {
+        /** @var array $elementVars */
+        $elementVars = $element->vars;
         echo $this->environment->render(
             '@App/Components/Form/_checkbox.html.twig',
             array_merge(
                 $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex),
-                ['type' => in_array('radio', $element->vars['block_prefixes']) ? 'radio' : 'checkbox']
+                ['type' => in_array('radio', $elementVars['block_prefixes']) ? 'radio' : 'checkbox']
             )
         );
     }
@@ -276,9 +280,11 @@ class FormFieldsExtension extends AbstractExtension
     {
         $formErrorMessages = $this->getErrorsFromFormViewRecursive($form);
 
+        /** @var array $vars */
+        $vars = $form->vars;
         $html = $this->environment->render('@App/Components/Alerts/_validation-summary.html.twig', [
             'formErrorMessages' => $formErrorMessages,
-            'formUncaughtErrors' => empty($form->vars['errors']) ? [] : $form->vars['errors'],
+            'formUncaughtErrors' => empty($vars['errors']) ? [] : $vars['errors'],
         ]);
 
         echo $html;
@@ -288,9 +294,12 @@ class FormFieldsExtension extends AbstractExtension
     {
         $ret = [];
         foreach ($elementsFormView as $elementFormView) {
-            $elementFormErrors = empty($elementFormView->vars['errors']) ? [] : $elementFormView->vars['errors'];
+            /** @var array $elementVars */
+            $elementVars = $elementFormView->vars;
+            /** @var array $elementFormErrors */
+            $elementFormErrors = empty($elementVars['errors']) ? [] : $elementVars['errors'];
             foreach ($elementFormErrors as $formError) { /* @var $error FormError */
-                $ret[] = ['elementId' => $elementFormView->vars['id'], 'message' => $formError->getMessage()];
+                $ret[] = ['elementId' => $elementVars['id'], 'message' => $formError->getMessage()];
             }
             $ret = array_merge(
                 $ret,
