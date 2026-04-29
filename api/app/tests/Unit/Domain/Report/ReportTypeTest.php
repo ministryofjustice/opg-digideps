@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\Domain\Report;
+namespace Tests\OPG\Digideps\Backend\Unit\Domain\Report;
 
-use App\Domain\Report\ReportType;
-use App\Entity\Report\Report;
+use OPG\Digideps\Backend\Domain\Report\ReportType;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
