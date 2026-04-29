@@ -439,6 +439,8 @@ class Fixtures
         $org = $this->em->getRepository(Organisation::class)->find($orgId);
 
         $org->setDeletedAt(new \DateTime('now'));
+        $this->em->flush();
+        $this->em->clear();
     }
 
     public function flush()
