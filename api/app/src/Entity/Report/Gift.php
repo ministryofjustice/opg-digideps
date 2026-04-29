@@ -26,8 +26,6 @@ class Gift
 
     /**
      * @var string
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['gifts'])]
@@ -35,11 +33,6 @@ class Gift
     private $explanation;
 
     /**
-     * @var float
-     *
-     *
-     *
-     *
      * @var string
      */
     #[JMS\Type('string')]
@@ -54,9 +47,6 @@ class Gift
     #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'gifts')]
     private $report;
 
-    /**
-     * Gift constructor.
-     */
     public function __construct(Report $report)
     {
         $this->report = $report;

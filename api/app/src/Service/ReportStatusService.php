@@ -87,16 +87,20 @@ class ReportStatusService
     public function getVisitsCareState(): array
     {
         $visitsCare = $this->report->getVisitsCare();
-        $answers = $visitsCare ? [
-            $visitsCare->getDoYouLiveWithClient(),
-            $visitsCare->getDoesClientReceivePaidCare(),
-            $visitsCare->getWhoIsDoingTheCaring(),
-            $visitsCare->getDoesClientHaveACarePlan(),
-        ] : [];
 
-        return match (count(array_filter($answers))) {
+        $answers = [
+            $visitsCare?->getDoYouLiveWithClient(),
+            $visitsCare?->getDoesClientReceivePaidCare(),
+            $visitsCare?->getWhoIsDoingTheCaring(),
+            $visitsCare?->getDoesClientHaveACarePlan(),
+        ];
+
+        $numberOfQuestionsToAnswer = count($answers);
+        $numberOfAnsweredQuestions = count(array_filter($answers, fn ($a) => $a !== null));
+
+        return match ($numberOfAnsweredQuestions) {
             0 => ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0],
-            count($answers) => ['state' => self::STATE_DONE, 'nOfRecords' => 0],
+            $numberOfQuestionsToAnswer => ['state' => self::STATE_DONE, 'nOfRecords' => 0],
             default => ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0],
         };
     }
