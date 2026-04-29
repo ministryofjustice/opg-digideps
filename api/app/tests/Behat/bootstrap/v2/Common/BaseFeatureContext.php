@@ -637,6 +637,7 @@ class BaseFeatureContext extends MinkContext
         $client->setDeletedAt(new \DateTime('now'));
         $this->em->persist($client);
         $this->em->flush();
+        $this->em->clear();
 
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetailsOne;
@@ -658,6 +659,7 @@ class BaseFeatureContext extends MinkContext
         $client->setDeletedAt(new \DateTime('now'));
         $this->em->persist($client);
         $this->em->flush();
+        $this->em->clear();
 
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser = $nonPrimaryUserDetails;
