@@ -22,7 +22,6 @@ class VisitsCare
     #[ORM\SequenceGenerator(sequenceName: 'safeguarding_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
-
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\OneToOne(inversedBy: 'visitsCare', targetEntity: Report::class)]
     private $report;
@@ -37,8 +36,6 @@ class VisitsCare
 
     /**
      * @var ?string
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['visits-care'])]
@@ -47,8 +44,6 @@ class VisitsCare
 
     /**
      * @var ?string yes|no|null
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['visits-care'])]
@@ -57,8 +52,6 @@ class VisitsCare
 
     /**
      * @var ?string client_pays_for_all | client_gets_financial_help | all_care_is_paid_by_someone_else
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['visits-care'])]
@@ -67,8 +60,6 @@ class VisitsCare
 
     /**
      * @var ?string
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['visits-care'])]
@@ -77,9 +68,6 @@ class VisitsCare
 
     /**
      * @var ?string yes|no|null
-     *
-     *
-     *
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['visits-care'])] // Setting this due to JMS bug that returned a name of does_client_have_acare_plan
@@ -89,8 +77,6 @@ class VisitsCare
 
     /**
      * @var ?\DateTime
-     *
-     *
      */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['visits-care'])]

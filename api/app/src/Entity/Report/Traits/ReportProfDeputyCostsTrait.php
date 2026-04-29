@@ -349,8 +349,6 @@ trait ReportProfDeputyCostsTrait
 
     /**
      * @return float
-     *
-     *
      */
     #[JMS\VirtualProperty]
     #[JMS\Groups(['report-prof-deputy-costs'])]

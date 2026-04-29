@@ -132,7 +132,7 @@ class ClientControllerTest extends AbstractTestController
     {
         parent::tearDownAfterClass();
 
-        //self::fixtures()->clear();
+        self::fixtures()->clear();
     }
 
     public function testUpsertAuth()

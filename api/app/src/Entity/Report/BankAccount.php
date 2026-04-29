@@ -105,8 +105,6 @@ class BankAccount implements BankAccountInterface
 
     /**
      * @var bool
-     *
-     *
      */
     #[JMS\Groups(['account'])]
     #[JMS\Type('boolean')]
@@ -136,9 +134,6 @@ class BankAccount implements BankAccountInterface
     #[ORM\Column(name: 'meta', type: 'text', nullable: true)]
     private $meta;
 
-    /**
-     * Constructor.
-     */
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -198,9 +193,6 @@ class BankAccount implements BankAccountInterface
     }
 
     /**
-     *
-     *
-     *
      * @return string
      */
     #[JMS\VirtualProperty]
@@ -416,9 +408,6 @@ class BankAccount implements BankAccountInterface
      * e.g.
      * barclays - Current account (****1234)
      * Natwest - ISA (****4444).
-     *
-     *
-     *
      *
      * @return string
      */
