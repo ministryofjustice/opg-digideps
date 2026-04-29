@@ -180,7 +180,11 @@ trait ReportProfDeputyCostsTrait
         return $this->profDeputyOtherCosts;
     }
 
-    public function setProfDeputyOtherCosts($profDeputyOtherCosts): static
+    /**
+     * @param Collection<int, ProfDeputyOtherCost> $profDeputyOtherCosts
+     * @return $this
+     */
+    public function setProfDeputyOtherCosts(Collection $profDeputyOtherCosts): static
     {
         $this->profDeputyOtherCosts = $profDeputyOtherCosts;
 
@@ -207,7 +211,7 @@ trait ReportProfDeputyCostsTrait
             return $profDeputyOtherCost->getProfDeputyOtherCostTypeId() == $typeId;
         });
 
-        return $costs->first() ?? null;
+        return $costs->first() ?: null;
     }
 
     /**

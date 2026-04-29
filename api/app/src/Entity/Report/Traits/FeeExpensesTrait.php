@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -14,7 +15,7 @@ use OPG\Digideps\Backend\Entity\Report\Report;
 trait FeeExpensesTrait
 {
     /**
-     * @var Collection<Fee>
+     * @var Collection<int, Fee>
      */
     #[JMS\Groups(['fee'])]
     #[ORM\OneToMany(mappedBy: 'report', targetEntity: Fee::class, cascade: ['persist', 'remove'])]
@@ -42,7 +43,7 @@ trait FeeExpensesTrait
      * - Lay deputy expenses
      * - PA Fees outside practice direction.
      *
-     * @var Collection<Expense>
+     * @var ?Collection<int, Expense>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Expense>')]
     #[JMS\Groups(['expenses'])]
@@ -50,7 +51,7 @@ trait FeeExpensesTrait
     private $expenses;
 
     /**
-     * @return Collection<Fee>
+     * @return Collection<int, Fee>
      */
     public function getFees()
     {
@@ -69,17 +70,17 @@ trait FeeExpensesTrait
     /**
      * @param string $typeId
      *
-     * @return Fee
+     * @return ?Fee
      */
     public function getFeeByTypeId($typeId)
     {
         return $this->getFees()->filter(function (Fee $fee) use ($typeId) {
-            return $fee->getFeeTypeId() == $typeId;
-        })->first();
+            return $fee->getFeeTypeId() === $typeId;
+        })->first() ?: null;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getReasonForNoFees()
     {
@@ -87,7 +88,7 @@ trait FeeExpensesTrait
     }
 
     /**
-     * @param mixed $reasonForNoFees
+     * @param string $reasonForNoFees
      */
     public function setReasonForNoFees($reasonForNoFees)
     {
@@ -114,7 +115,7 @@ trait FeeExpensesTrait
     }
 
     /**
-     * @return Collection<Fee>
+     * @return Collection<int, Fee>
      */
     public function getFeesWithValidAmount()
     {
@@ -163,15 +164,15 @@ trait FeeExpensesTrait
     }
 
     /**
-     * @return Collection<Expense>
+     * @return Collection<int, Expense>
      */
     public function getExpenses()
     {
-        return $this->expenses;
+        return $this->expenses ?? new ArrayCollection();
     }
 
     /**
-     * @param ?Collection<Expense> $expenses
+     * @param ?Collection<int, Expense> $expenses
      *
      * @return Report
      */
@@ -187,7 +188,7 @@ trait FeeExpensesTrait
      */
     public function addExpense(Expense $expense)
     {
-        if (!$this->expenses->contains($expense)) {
+        if ($this->expenses !== null && !$this->expenses->contains($expense)) {
             $this->expenses->add($expense);
         }
 

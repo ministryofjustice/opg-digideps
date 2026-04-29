@@ -13,6 +13,8 @@ trait CreationAudit
 {
     /**
      * User who created the entity
+     *
+     * @var ?User
      */
     #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
     #[JMS\Groups(['notes', 'documents', 'report-submission', 'checklist-information'])]

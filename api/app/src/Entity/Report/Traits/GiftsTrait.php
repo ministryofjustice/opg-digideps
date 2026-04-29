@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -21,7 +22,7 @@ trait GiftsTrait
     private $giftsExist;
 
     /**
-     * @var Collection<Gift>
+     * @var ?Collection<int, Gift>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Gift>')]
     #[JMS\Groups(['gifts'])]
@@ -29,7 +30,7 @@ trait GiftsTrait
     private $gifts;
 
     /**
-     * @return string
+     * @return ?string
      */
     public function getGiftsExist()
     {
@@ -45,19 +46,17 @@ trait GiftsTrait
     }
 
     /**
-     * @return Collection<Gift>
+     * @return Collection<int, Gift>
      */
     public function getGifts()
     {
-        return $this->gifts;
+        return $this->gifts ?? new ArrayCollection();
     }
 
     /**
-     * @param ?Collection<Gift> $gifts
-     *
-     * @return Report
+     * @param ?Collection<int, Gift> $gifts
      */
-    public function setGifts($gifts)
+    public function setGifts($gifts): static
     {
         $this->gifts = $gifts;
 
@@ -74,12 +73,9 @@ trait GiftsTrait
         return count($this->getGifts()) > 0 || 'no' === $this->getGiftsExist();
     }
 
-    /**
-     * @return Report
-     */
-    public function addGift(Gift $gift)
+    public function addGift(Gift $gift): static
     {
-        if (!$this->gifts->contains($gift)) {
+        if ($this->gifts !== null && !$this->gifts->contains($gift)) {
             $this->gifts->add($gift);
         }
 
@@ -93,7 +89,7 @@ trait GiftsTrait
     {
         $ret = 0;
         foreach ($this->getGifts() as $record) {
-            $ret += $record->getAmount();
+            $ret += (float) $record->getAmount();
         }
 
         return $ret;

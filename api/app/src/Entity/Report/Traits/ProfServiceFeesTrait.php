@@ -13,7 +13,7 @@ use OPG\Digideps\Backend\Entity\Report\ProfServiceFeeCurrent;
 trait ProfServiceFeesTrait
 {
     /**
-     * @var Collection<ProfServiceFee>
+     * @var Collection<int, ProfServiceFee>
      */
     #[JMS\Groups(['report-prof-service-fees'])]
     #[ORM\OneToMany(mappedBy: 'report', targetEntity: ProfServiceFee::class, cascade: ['persist', 'remove'])]
@@ -30,7 +30,7 @@ trait ProfServiceFeesTrait
     }
 
     /**
-     * @return Collection<ProfServiceFee>
+     * @return Collection<int, ProfServiceFee>
      */
     public function getCurrentProfServiceFees()
     {
@@ -56,7 +56,7 @@ trait ProfServiceFeesTrait
     }
 
     /**
-     * @return Collection<ProfServiceFee>
+     * @return Collection<int, ProfServiceFee>
      */
     public function getProfServiceFees()
     {
@@ -64,7 +64,7 @@ trait ProfServiceFeesTrait
     }
 
     /**
-     * @param Collection<ProfServiceFee> $profServiceFees
+     * @param Collection<int, ProfServiceFee> $profServiceFees
      */
     public function setProfServiceFees($profServiceFees)
     {

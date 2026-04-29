@@ -58,14 +58,14 @@ class Organisation
     private $isActivated;
 
     /**
-     * @var Collection
+     * @var Collection<int, User>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\User>')]
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'organisations')]
     private $users;
 
     /**
-     * @var Collection
+     * @var Collection<int, Client>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Clients>')]
     #[ORM\OneToMany(mappedBy: 'organisation', targetEntity: Client::class)]

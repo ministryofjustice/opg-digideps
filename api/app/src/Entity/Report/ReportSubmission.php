@@ -68,7 +68,7 @@ class ReportSubmission
     #[ORM\Column(name: 'opg_uuid', type: 'string', length: 36, nullable: true)]
     private ?string $uuid;
 
-    public function __construct(Report $report, User $createdBy)
+    public function __construct(Report $report, ?User $createdBy)
     {
         $this->report = $report;
         $this->report->addReportSubmission($this); // double-link for UNIT test purposes
