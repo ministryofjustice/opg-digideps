@@ -14,7 +14,7 @@
 
 {% set transOptions = {'%client%': report.client.firstname | striptags, '%assetTitle%': assetTitle } %}
 
-{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans }}{% endblock %}
+{% block htmlTitle %}{{ (page ~ '.htmlTitle') | trans(transOptions) }}{% endblock %}
 {% block pageTitle %}{{ (page ~ '.pageTitle') | trans(transOptions) }}{% endblock %}
 
 

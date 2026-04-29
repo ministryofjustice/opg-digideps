@@ -6,11 +6,11 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormView;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFunction;
 
 class FormFieldsExtension extends AbstractExtension
 {
@@ -166,7 +166,7 @@ class FormFieldsExtension extends AbstractExtension
     /**
      * Renders form select element.
      */
-    public function renderFormDropDown(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null)
+    public function renderFormDropDown(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null): void
     {
         // generate input field html using variables supplied
         echo $this->environment->render(
@@ -177,56 +177,31 @@ class FormFieldsExtension extends AbstractExtension
 
     public function renderFormKnownDate(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null): void
     {
-        // read domain from Form ption 'translation_domain'
-        $domain = $element->parent->vars['translation_domain'];
+        ['translationKey' => $translationKey, 'domain' => $domain] = $this->getTranslationKeyAndDomain($element, $elementName, $transIndex);
+        $showDay = $vars['showDay'] ?? 'true';
 
-        $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
-
-        if (isset($vars['showDay'])) {
-            $showDay = $vars['showDay'];
-        } else {
-            $showDay = 'true';
-        }
-
-        // sort hint text translation
-        $hintTextTrans = $this->translator->trans($translationKey . '.hint', [], $domain);
-        if (isset($vars['hintText']) && !empty($vars['hintText'])) {
-            $hintText = $vars['hintText'];
-        } elseif ($hintTextTrans !== $translationKey . '.hint') {
-            $hintText = $hintTextTrans;
-        } else {
-            $hintText = $this->translator->trans('defaultDateHintText', [], 'common');
-        }
+        // sort hint text translation with default fallback
+        /** @var string|null $customHint */
+        $customHint = $vars['hintText'] ?? null;
+        $hintText = $this->getDateHintText($translationKey, $domain, $customHint);
 
         // get legendText translation
-        $legendParams = isset($vars['legendParameters']) ? $vars['legendParameters'] : [];
+        /** @var array $legendParams */
+        $legendParams = $vars['legendParameters'] ?? [];
+        $legendText = $this->getLegendText($translationKey, $legendParams, $domain);
 
-        $legendTextTrans = $this->translator->trans($translationKey . '.legend', $legendParams, $domain);
+        /** @var array $legend */
+        $legend = $vars['legend'] ?? [];
 
-        if ($legendTextTrans != $translationKey . '.legend') {
-            $legendText = $legendTextTrans;
-        } else {
-            // the
-            $legendTextTrans = $this->translator->trans($translationKey . '.label', $legendParams, $domain);
-            if ($legendTextTrans != $translationKey . '.label') {
-                $legendText = $legendTextTrans;
-            } else {
-                $legendText = null;
-            }
-        }
-
-        $html = $this->environment->render('@App/Components/Form/_known-date.html.twig', [
-            'legend' => array_merge([
-                'text' => $legendText,
-                'isPageHeading' => false,
-                'caption' => false,
-            ], $vars['legend'] ?? []),
+        echo $this->environment->render('@App/Components/Form/_known-date.html.twig', [
+            'legend' => $this->buildLegendArray($legendText, $legend),
             'hintTextBold' => $vars['hintTextBold'] ?? null,
             'hintText' => $hintText,
             'element' => $element,
             'showDay' => $showDay,
-            'legendTextRaw' => !empty($vars['legendRaw']), ]);
-        echo $html;
+            'legendTextRaw' => !empty($vars['legendRaw']),
+            'required' => $vars['required'] ?? true,
+        ]);
     }
 
     public function renderFormSortCode(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null): void
@@ -405,6 +380,92 @@ class FormFieldsExtension extends AbstractExtension
             ], $vars['label'] ?? []),
             'extraAttrs' => $vars['extraAttrs'] ?? [],
         ];
+    }
+
+    /**
+     * Extract hint text for date fields with optional override and default fallback.
+     * Tries custom hint first, then translates from hint key, then falls back to default hint text.
+     *
+     * @param string $translationKey The translation key prefix
+     * @param string $domain The translation domain
+     * @param string|null $customHint Optional custom hint text to use instead of translation
+     * @return string The hint text or default date hint if no translation found
+     */
+    private function getDateHintText(string $translationKey, string $domain, ?string $customHint = null): string
+    {
+        // Use custom hint if provided
+        if (null !== $customHint) {
+            return $customHint;
+        }
+
+        // Try to get hint text translation
+        $hintTextTrans = $this->translator->trans($translationKey . '.hint', [], $domain);
+        if ($hintTextTrans !== $translationKey . '.hint') {
+            return $hintTextTrans;
+        }
+
+        // Fall back to default date hint text
+        return $this->translator->trans('defaultDateHintText', [], 'common');
+    }
+
+    /**
+     * Extract legend text from translation, falling back to label if legend is not available.
+     *
+     * @param string $translationKey The translation key prefix
+     * @param array $labelParams Parameters for translation
+     * @param string $domain The translation domain
+     * @return string|null The translated legend text or null if neither legend nor label exists
+     */
+    private function getLegendText(string $translationKey, array $labelParams, string $domain): ?string
+    {
+        // Try to get legend translation first
+        $legendTextTrans = $this->translator->trans($translationKey . '.legend', $labelParams, $domain);
+
+        if ($legendTextTrans !== $translationKey . '.legend') {
+            return $legendTextTrans;
+        }
+
+        // Fall back to label translation if legend doesn't exist
+        $labelTextTrans = $this->translator->trans($translationKey . '.label', $labelParams, $domain);
+
+        if ($labelTextTrans !== $translationKey . '.label') {
+            return $labelTextTrans;
+        }
+
+        return null;
+    }
+
+    /**
+     * Build the legend array structure used across multiple form components.
+     *
+     * @param string|null $legendText The legend text to display
+     * @param array $customLegend Optional custom legend values to merge
+     * @return array The formatted legend array
+     */
+    private function buildLegendArray(?string $legendText, array $customLegend = []): array
+    {
+        return array_merge([
+            'text' => $legendText,
+            'isPageHeading' => false,
+            'caption' => false,
+        ], $customLegend);
+    }
+
+    /**
+     * Extract translation key and domain from FormView and parameters.
+     * Handles optional transaction index for nested translations.
+     *
+     * @param FormView $element The form element
+     * @param string $elementName The element name
+     * @param int|null $transIndex Optional transaction index for nested translations
+     * @return array{'translationKey':string, 'domain':string} containing [translationKey, domain]
+     */
+    private function getTranslationKeyAndDomain(FormView $element, string $elementName, ?int $transIndex = null): array
+    {
+        $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
+        /** @var string $domain */
+        $domain = $element->parent->vars['translation_domain'];
+        return ['translationKey' => $translationKey, 'domain' => $domain];
     }
 
     public function getName(): string

@@ -27,7 +27,9 @@ class AssetTypeOther extends AbstractType
                 ->add('valuationDate', FormTypes\DateType::class, ['widget' => 'text',
                     'input' => 'datetime',
                     'format' => 'dd-MM-yyyy',
-                    'invalid_message' => 'Enter a valid date',])
+                    'invalid_message' => 'Enter a valid date',
+                    'required' => false,
+                ])
                 ->add('addAnother', AddAnotherThingType::class);
 
 
@@ -46,12 +48,7 @@ class AssetTypeOther extends AbstractType
     {
         $resolver->setDefaults([
             'translation_domain' => 'report-assets',
-            'validation_groups' => $this->getValidationGroups(),
+            'validation_groups' => [],
         ]);
-    }
-
-    protected function getValidationGroups()
-    {
-        return [];
     }
 }

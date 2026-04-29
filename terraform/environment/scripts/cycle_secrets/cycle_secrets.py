@@ -105,6 +105,7 @@ def modify_db_instances_password(session, workspaces, aws_config):
     for workspace in workspaces:
         secret_name = f"{workspace}/{db_password_suffix}"
         cluster_identifier = f"api-{workspace}"
+        cluster_alternative = f"digideps-{workspace}"
 
         try:
             # Fetch the secret value from AWS Secrets Manager
@@ -121,6 +122,21 @@ def modify_db_instances_password(session, workspaces, aws_config):
                 ApplyImmediately=True,
             )
             print(f"RDS modification initiated successfully for {cluster_identifier}.")
+
+            # Try and cycle the new DB password too. TODO: Switch fully to new DB
+            try:
+                # Apply the RDS modification with the fetched password
+                rds_client.modify_db_cluster(
+                    DBClusterIdentifier=cluster_alternative,
+                    MasterUserPassword=secret_string,
+                    ApplyImmediately=True,
+                )
+                print(
+                    f"RDS modification initiated successfully for {cluster_alternative}."
+                )
+            except:
+                print(f"{cluster_alternative} does not exist in this environment")
+
             wait_for_cluster_update(rds_client, cluster_identifier)
         except Exception as e:
             print("Error occurred:")

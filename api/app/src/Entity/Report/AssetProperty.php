@@ -321,7 +321,7 @@ class AssetProperty extends Asset implements AssetInterface
         return $this;
     }
 
-    public function setOwnedPercentage($ownedPercentage)
+    public function setOwnedPercentage($ownedPercentage): static
     {
         $this->ownedPercentage = $ownedPercentage;
 
