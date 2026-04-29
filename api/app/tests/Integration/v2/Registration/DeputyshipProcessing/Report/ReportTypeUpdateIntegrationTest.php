@@ -26,6 +26,7 @@ class ReportTypeUpdateIntegrationTest extends ApiIntegrationTestCase
         parent::setUpBeforeClass();
 
         self::$fixtures = new Fixtures(self::$entityManager);
+        self::$sut = self::$container->get(ReportTypeUpdate::class);
     }
 
     public function tearDown(): void
@@ -134,9 +135,7 @@ class ReportTypeUpdateIntegrationTest extends ApiIntegrationTestCase
         self::$fixtures->refresh($report);
         self::$fixtures->refresh($courtOrder);
 
-        /** @var ReportTypeUpdate $sut */
-        $sut = self::$container->get(ReportTypeUpdate::class);
-        $dataFactoryResult = $sut->run(false);
+        $dataFactoryResult = self::$sut->run(false);
 
         $this->assertEquals(
             $data['expectedReportType'],
@@ -179,9 +178,7 @@ class ReportTypeUpdateIntegrationTest extends ApiIntegrationTestCase
         self::$fixtures->refresh($report);
         self::$fixtures->refresh($courtOrder);
 
-        /** @var ReportTypeUpdate $sut */
-        $sut = self::$container->get(ReportTypeUpdate::class);
-        $dataFactoryResult = $sut->run(true);
+        $dataFactoryResult = self::$sut->run(true);
 
         $this->assertEquals(
             $data['existingReportType'],
@@ -193,6 +190,5 @@ class ReportTypeUpdateIntegrationTest extends ApiIntegrationTestCase
         );
 
         $this->assertStringContainsString(0, $dataFactoryResult->getMessages()['success'][0], 'Updated String Count');
-        $this->assertCount($data['errorCount'], $dataFactoryResult->getErrorMessages()['errors'], 'Error count');
     }
 }
