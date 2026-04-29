@@ -1,0 +1,100 @@
+on:
+  workflow_call:
+    secrets:
+      ssh_private_key:
+        required: true
+    inputs:
+      terraform_path:
+        description: "The name of the terraform path"
+        required: true
+        type: string
+      workspace:
+        description: "Terraform workspace"
+        required: true
+        type: string
+      container_version:
+        description: "Image tag to use"
+        required: false
+        type: string
+        default: ""
+      apply:
+        description: "Whether to apply terraform"
+        required: false
+        type: boolean
+        default: false
+      pull_request_path:
+        description: "Called from pull request"
+        required: false
+        type: boolean
+        default: false
+      account_name:
+        required: true
+        type: string
+        description: "Account to get credentials for"
+
+jobs:
+  terraform_workflow:
+    runs-on: ubuntu-latest
+    container:
+      image: alpine:3.23
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: install alpine dependencies
+        run: apk add bash
+
+      #      - id: terraform_version
+      #        name: get terraform version
+      #        uses: ministryofjustice/opg-github-actions/actions/terraform-version@a6ee7f30fbae7d1bc6cee8cb2699063ef4f0c7e3 # v4.4.0
+      #        with:
+      #          terraform_directory: terraform/${{ inputs.terraform_path }}
+
+      - id: deploy-key
+        uses: ministryofjustice/opg-github-actions/actions/github-deploy-key@ceeda9d30ec7f6705c819d0b7664b9a79df99a3b # v4.8.0
+        with:
+          deploy_key: ${{ secrets.ssh_private_key }}
+
+      - name: configure OIDC AWS credentials for terraform
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
+        with:
+          role-to-assume: "arn:aws:iam::${{ vars.IDENTITY_ACCOUNT }}:role/oidc-digideps-${{ inputs.account_name }}"
+          role-session-name: github-actions-terraform
+          role-duration-seconds: 7400
+          aws-region: eu-west-1
+
+      - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
+        with:
+          terraform_version: v1.14.9
+          terraform_wrapper: false
+
+      - name: terraform init for account
+        if: inputs.terraform_path == 'account'
+        run: terraform init -input=false
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+        working-directory: terraform/${{ inputs.terraform_path }}
+
+      - name: terraform init for environment
+        run: terraform init -input=false
+        if: inputs.terraform_path == 'environment'
+        working-directory: terraform/${{ inputs.terraform_path }}
+
+      - name: terraform apply ${{ inputs.terraform_path }}
+        if: inputs.apply
+        env:
+          TF_WORKSPACE: ${{ inputs.workspace }}
+          TF_VAR_OPG_DOCKER_TAG: ${{ inputs.container_version }}
+          CI: true
+        run: |
+          terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30
+        working-directory: terraform/${{ inputs.terraform_path }}
+
+      - name: Unset AWS variables
+        if: always()
+        run: |
+          {
+            echo "AWS_SECRET_ACCESS_KEY="
+            echo "AWS_ACCESS_KEY_ID="
+            echo "AWS_SESSION_TOKEN="
+          } >> "$GITHUB_ENV"
