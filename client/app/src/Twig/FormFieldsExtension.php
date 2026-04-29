@@ -80,7 +80,9 @@ class FormFieldsExtension extends AbstractExtension
 
     public function renderPasswordInput(FormView $element, array $vars = []): void
     {
-        $domain = $element->parent->vars['translation_domain'];
+        /** @var array $elementVars */
+        $elementVars = $element->parent instanceof FormView ? $element->parent->vars : [];
+        $domain = $elementVars['translation_domain'];
         $vars['label'] = $this->translator->trans('signInForm.password.label', [], $domain);
         $vars['element'] = $element;
         echo $this->environment->render('@App/Components/Form/_password.html.twig', $vars);
@@ -89,7 +91,9 @@ class FormFieldsExtension extends AbstractExtension
     public function renderHiddenInput(FormView $element, array $vars = []): void
     {
         $vars['element'] = $element;
-        $vars['value'] = $element->vars['value'];
+        /** @var array $elementVars */
+        $elementVars = $element->vars;
+        $vars['value'] = $elementVars['value'];
         echo $this->environment->render('@App/Components/Form/_hidden.html.twig', $vars);
     }
 
@@ -113,7 +117,9 @@ class FormFieldsExtension extends AbstractExtension
     {
         // enables getting the translation for hintText, labelClass and labelText
         $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
-        $domain = $element->parent->vars['translation_domain'];
+        /** @var array $elementVars */
+        $elementVars = $element->parent instanceof FormView ? $element->parent->vars : [];
+        $domain = $elementVars['translation_domain'];
 
         // sort hint text translation
         if (isset($vars['hintText'])) {
@@ -296,7 +302,7 @@ class FormFieldsExtension extends AbstractExtension
         foreach ($elementsFormView as $elementFormView) {
             /** @var array $elementVars */
             $elementVars = $elementFormView->vars;
-            /** @var array $elementFormErrors */
+            /** @var FormError[] $elementFormErrors */
             $elementFormErrors = empty($elementVars['errors']) ? [] : $elementVars['errors'];
             foreach ($elementFormErrors as $formError) { /* @var $error FormError */
                 $ret[] = ['elementId' => $elementVars['id'], 'message' => $formError->getMessage()];
@@ -317,7 +323,9 @@ class FormFieldsExtension extends AbstractExtension
     {
         // lets get the translation for hintText, labelClass and labelText
         $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
-        $domain = $element->parent->vars['translation_domain'];
+        /** @var array $elementVars */
+        $elementVars = $element->parent instanceof FormView ? $element->parent->vars : [];
+        $domain = $elementVars['translation_domain'];
 
         if (isset($vars['hintText'])) {
             $hintText = $vars['hintText'];
@@ -480,8 +488,10 @@ class FormFieldsExtension extends AbstractExtension
     private function getTranslationKeyAndDomain(FormView $element, string $elementName, ?int $transIndex = null): array
     {
         $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
+        /** @var array $elementVars */
+        $elementVars = $element->parent instanceof FormView ? $element->parent->vars : [];
         /** @var string $domain */
-        $domain = $element->parent->vars['translation_domain'];
+        $domain = $elementVars['translation_domain'];
         return ['translationKey' => $translationKey, 'domain' => $domain];
     }
 

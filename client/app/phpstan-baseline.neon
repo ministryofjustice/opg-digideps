@@ -12865,30 +12865,6 @@ parameters:
 			path: src/Twig/ComponentsExtension.php
 
 		-
-			message: '#^Cannot access offset ''translation_domain'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Cannot access offset ''value'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Cannot access property \$vars on mixed\.$#'
-			identifier: property.nonObject
-			count: 5
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Cannot call method getMessage\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
 			message: '#^Parameter \#1 \$id of method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:trans\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
