@@ -224,13 +224,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @JMS\Type("string")
      *
-     * @var string
-     */
-    private $gaTrackingId;
-
-    /**
-     * @JMS\Type("string")
-     *
      * @JMS\Groups({"user_details_full", "profile_org"})
      *
      * @Assert\NotBlank( message="user.address1.notBlank", groups={"user_details_full", "verify-codeputy"} )
