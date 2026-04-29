@@ -185,6 +185,16 @@ jobs:
           fi
         working-directory: ${{ matrix.sub_folder }}
 
+      - name: calculate docker image checksum
+        id: image_checksum
+        env:
+          IMAGE_NAME: ${{ matrix.svc_name }}
+        run: |
+          IMAGE_ID="$(docker image inspect "${IMAGE_NAME}:latest" --format '{{.Id}}')"
+          CHECKSUM="${IMAGE_ID#sha256:}"
+          echo "checksum_tag=checksum-${CHECKSUM}" >> "$GITHUB_OUTPUT"
+          echo "Image checksum tag: checksum-${CHECKSUM}"
+
       - name: configure OIDC AWS credentials for ECR pull
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
         with:
@@ -199,9 +209,26 @@ jobs:
           registries: ${{ vars.MANAGEMENT_ACCOUNT }}
           mask-password: "true"
 
+      - name: check existing scanned image
+        id: existing_image
+        env:
+          IMAGE_NAME: ${{ matrix.svc_name }}
+          CHECKSUM_TAG: ${{ steps.image_checksum.outputs.checksum_tag }}
+        run: |
+          if aws ecr describe-images \
+            --repository-name "digideps/${IMAGE_NAME}" \
+            --image-ids imageTag="${CHECKSUM_TAG}" \
+            >/dev/null 2>&1; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "Existing scanned image found: ${CHECKSUM_TAG}"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "No existing scanned image found: ${CHECKSUM_TAG}"
+          fi
+
       - name: Run Snyk Scan
         id: snyk_scan
-        if: matrix.svc_name != 'mock-sirius'
+        if: matrix.svc_name != 'mock-sirius' && steps.existing_image.outputs.exists != 'true'
         uses: ministryofjustice/opg-github-actions/actions/snyk-scan@ceeda9d30ec7f6705c819d0b7664b9a79df99a3b # v4.8.0
         with:
           SNYK_TEST_IMAGE: ${{ matrix.svc_name }}:latest
@@ -217,6 +244,40 @@ jobs:
         with:
           sarif_file: test-results/snyk-results.sarif
           category: ${{ matrix.svc_name }}
+
+      - name: retag existing scanned image
+        if: steps.existing_image.outputs.exists == 'true'
+        env:
+          IMAGE_NAME: ${{ matrix.svc_name }}
+          IMAGE_TAG: ${{ inputs.tag }}
+          CHECKSUM_TAG: ${{ steps.image_checksum.outputs.checksum_tag }}
+          BRANCH_NAME: ${{ inputs.branch_name }}
+        run: |
+          MANIFEST="$(aws ecr batch-get-image \
+            --repository-name "digideps/${IMAGE_NAME}" \
+            --image-ids imageTag="${CHECKSUM_TAG}" \
+            --query 'images[0].imageManifest' \
+            --output text)"
+
+          aws ecr put-image \
+            --repository-name "digideps/${IMAGE_NAME}" \
+            --image-tag "${IMAGE_TAG}" \
+            --image-manifest "${MANIFEST}" \
+            >/dev/null
+
+          if [[ "${BRANCH_NAME}" == "main" ]]; then
+            aws ecr put-image \
+              --repository-name "digideps/${IMAGE_NAME}" \
+              --image-tag "latest" \
+              --image-manifest "${MANIFEST}" \
+              >/dev/null
+
+            aws ecr put-image \
+              --repository-name "digideps/${IMAGE_NAME}" \
+              --image-tag "main-${IMAGE_TAG}" \
+              --image-manifest "${MANIFEST}" \
+              >/dev/null
+          fi
 
       - name: Move cache
         run: |
@@ -243,7 +304,7 @@ jobs:
         run: echo "Tag to use - ${IMAGE_TAG}"
 
       - name: tag and push user research development container
-        if: matrix.svc_name == 'client-webserver' && inputs.branch_name == 'main'
+        if: matrix.svc_name == 'client-webserver' && inputs.branch_name == 'main' && steps.existing_image.outputs.exists != 'true'
         env:
           ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
           ECR_REGISTRY_ALIAS: digideps
@@ -254,14 +315,17 @@ jobs:
           docker tag "${IMAGE_NAME}:latest" "${ECR_REGISTRY}/${ECR_REGISTRY_ALIAS}/${IMAGE_NAME}:${IMAGE_TAG_DEV}"
 
       - name: tag and push container
+        if: steps.existing_image.outputs.exists != 'true'
         env:
           ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
           ECR_REGISTRY_ALIAS: digideps
           IMAGE_TAG: ${{ inputs.tag }}
           IMAGE_NAME: ${{ matrix.svc_name }}
           BRANCH_NAME: ${{ inputs.branch_name }}
+          CHECKSUM_TAG: ${{ steps.image_checksum.outputs.checksum_tag }}
         run: |
           docker tag "${IMAGE_NAME}:latest" "${ECR_REGISTRY}/${ECR_REGISTRY_ALIAS}/${IMAGE_NAME}:${IMAGE_TAG}"
+          docker tag "${IMAGE_NAME}:latest" "${ECR_REGISTRY}/${ECR_REGISTRY_ALIAS}/${IMAGE_NAME}:${CHECKSUM_TAG}"
           if [[ "${BRANCH_NAME}" == "main" ]]; then
             docker tag "${IMAGE_NAME}:latest" "${ECR_REGISTRY}/${ECR_REGISTRY_ALIAS}/${IMAGE_NAME}:latest"
             docker tag "${IMAGE_NAME}:latest" "${ECR_REGISTRY}/${ECR_REGISTRY_ALIAS}/${IMAGE_NAME}:main-${IMAGE_TAG}"
