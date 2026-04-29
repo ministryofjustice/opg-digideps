@@ -344,13 +344,22 @@ class OrganisationControllerTest extends AbstractTestController
         $this->assertTrue($responseContent['success']);
         $this->assertEquals('Organisation deleted', $responseContent['message']);
 
-        $organisation = self::$em
-            ->getRepository(Organisation::class)
-            ->find($orgId);
+        $organisation = self::$em->getRepository(Organisation::class)->find($orgId);
+
+        // org should be null as it has been soft-deleted
+        $this->assertNull($organisation);
+
+        // turn off the soft delete filter and do the fetch again: org should be accessible and have the correct
+        // deletedAt field value
+        self::$em->getFilters()->disable('softdeleteable');
+
+        $organisation = self::$em->getRepository(Organisation::class)->find($orgId);
 
         $this->assertNotNull($organisation);
         $this->assertNotNull($organisation->getDeletedAt());
         $this->assertTrue($organisation->isDeleted());
+
+        self::$em->getFilters()->enable('softdeleteable');
     }
 
     /**
