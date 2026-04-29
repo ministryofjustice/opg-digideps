@@ -40,6 +40,9 @@ class Client
     #[ORM\SequenceGenerator(sequenceName: 'client_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
+    /**
+     * @var Collection<int, User>
+     */
     #[JMS\Groups(['client-users'])]
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\User>')]
     #[ORM\JoinTable(name: 'deputy_case')]
@@ -48,6 +51,9 @@ class Client
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'clients', fetch: 'EXTRA_LAZY')]
     private $users;
 
+    /**
+     * @var Collection<int, Report>
+     */
     #[JMS\Groups(['client-reports'])]
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Report>')]
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Report::class, cascade: ['persist', 'remove'])]
@@ -63,7 +69,7 @@ class Client
     private $caseNumber;
 
     /**
-     * @var string
+     * @var ?string
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['client', 'client-email'])]
@@ -252,7 +258,7 @@ class Client
     /**
      * Get email.
      *
-     * @return string
+     * @return ?string
      */
     public function getEmail()
     {
@@ -422,7 +428,7 @@ class Client
     }
 
     /**
-     * @param array $users
+     * @param Collection<int, User> $users
      *
      * @return $this
      */
@@ -440,10 +446,8 @@ class Client
     {
         $userIds = [];
 
-        if (!empty($this->users)) {
-            foreach ($this->users as $user) {
-                $userIds[] = $user->getId();
-            }
+        foreach ($this->users as $user) {
+            $userIds[] = $user->getId();
         }
 
         return $userIds;
@@ -475,7 +479,7 @@ class Client
     /**
      * Get reports.
      *
-     * @return ArrayCollection<Report>
+     * @return Collection<int, Report>
      */
     public function getReports()
     {
@@ -519,20 +523,20 @@ class Client
      */
     public function getSubmittedReports(): Collection
     {
-        $arrayIterator = $this->reports->filter(function ($report) {
-            return $report->getSubmitted();
-        })->getIterator();
+        $reports = $this->reports->filter(function (Report $report) {
+            return $report->getSubmitted() === true;
+        })->toArray();
 
         // Sort by submitted date so the most recently submitted are first
-        $arrayIterator->uasort(function ($first, $second) {
+        uasort($reports, function ($first, $second) {
             return $first->getSubmitDate() < $second->getSubmitDate() ? 1 : -1;
         });
 
-        return new ArrayCollection(iterator_to_array($arrayIterator));
+        return new ArrayCollection($reports);
     }
 
     /**
-     * get progress the user is currenty work on
+     * get progress the user is currently work on
      * That means the first one that is unsubmitted AND has an unsubmit date.
      */
     #[JMS\VirtualProperty]
@@ -556,10 +560,8 @@ class Client
     {
         $reportIds = [];
 
-        if (!empty($this->reports)) {
-            foreach ($this->reports as $report) {
-                $reportIds[] = $report->getId();
-            }
+        foreach ($this->reports as $report) {
+            $reportIds[] = $report->getId();
         }
 
         return $reportIds;
@@ -756,20 +758,20 @@ class Client
     }
 
     /**
-     * @return ArrayCollection<int, Report>
+     * @return Collection<int, Report>
      */
     #[JMS\Exclude]
     public function getUnsubmittedReports()
     {
-        return $this->getReports()->filter(function (Report $report) {
-            return empty($report->getSubmitted());
+        return $this->getReports()->filter(function (Report $report): bool {
+            return $report->getSubmitted() === null || $report->getSubmitted() === false;
         });
     }
 
     /**
      * Generates the expected Report Start date based on the Court date.
      *
-     * @return \DateTime|null
+     * @return ?\DateTime
      */
     #[JMS\VirtualProperty]
     #[JMS\Type("DateTime<'Y-m-d'>")]
@@ -802,7 +804,7 @@ class Client
     /**
      * Generates the expected Report End date based on the Court date.
      *
-     * @return \DateTime|null
+     * @return ?\DateTime
      */
     #[JMS\VirtualProperty]
     #[JMS\Type("DateTime<'Y-m-d'>")]

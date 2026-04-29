@@ -13,7 +13,7 @@ use OPG\Digideps\Backend\Entity\Report\Report;
 trait DecisionTrait
 {
     /**
-     * @var Collection<Decision>
+     * @var Collection<int, Decision>
      */
     #[JMS\Groups(['decision'])]
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Decision>')]
@@ -31,7 +31,7 @@ trait DecisionTrait
     /**
      * Get decisions.
      *
-     * @return Collection<Decision>
+     * @return Collection<int, Decision>
      */
     public function getDecisions()
     {

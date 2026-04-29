@@ -29,7 +29,7 @@ class ReportSubmissionHelper
         $client = new Client();
         $report = new ReportTestHelper()->generateReport($this->entityManager, $client, null, new \DateTime());
         $client->addReport($report);
-        $user = (UserTestHelper::create())->createAndPersistUser($this->entityManager, $client);
+        $user = UserTestHelper::create()->createAndPersistUser($this->entityManager, $client);
         $reportSubmission = new ReportSubmission($report, $user);
         $reportSubmission->setCreatedOn(new \DateTime());
 
