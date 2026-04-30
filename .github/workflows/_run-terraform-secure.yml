@@ -32,6 +32,19 @@ on:
         type: string
         description: "Account to get credentials for"
 
+permissions:
+  id-token: write
+  contents: read
+  security-events: none
+  pull-requests: none
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+
 jobs:
   terraform_workflow:
     runs-on: ubuntu-latest
@@ -51,35 +64,16 @@ jobs:
           ca-certificates \
           libc6-compat
 
-      - name: check for sec vulnerabilities
-        run: ps -ef
-
-      - name: Set Global SSH Auth Socket
+      - name: Setup SSH
         shell: bash
         run: |
           echo "SSH_AUTH_SOCK=/tmp/ssh_agent.sock" >> "$GITHUB_ENV"
-
-      - name: Create SSH Dir
-        shell: bash
-        run: |
           mkdir -p "$HOME/.ssh"
           chmod 700 "$HOME/.ssh"
-
-      - name: Add github.com to known_hosts
-        shell: bash
-        run: |
           ssh-keyscan -H -t rsa,ed25519 github.com >> "$HOME/.ssh/known_hosts"
           chmod 600 "$HOME/.ssh/known_hosts"
-
-      - name: Force git to use user known_hosts
-        shell: bash
-        run: |
           git config --global core.sshCommand \
             'ssh -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o StrictHostKeyChecking=yes'
-
-      - name: Start Agent
-        shell: bash
-        run: |
           ssh-agent -a "$SSH_AUTH_SOCK" > /dev/null
 
       - name: Add SSH Key
@@ -121,7 +115,7 @@ jobs:
           TF_VAR_OPG_DOCKER_TAG: ${{ inputs.container_version }}
           CI: true
         run: |
-          terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30
+          terraform plan -lock-timeout=300s -input=false -auto-approve -parallelism=30
         working-directory: terraform/${{ inputs.terraform_path }}
 
       - name: Unset AWS variables
