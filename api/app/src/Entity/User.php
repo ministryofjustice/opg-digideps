@@ -114,7 +114,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     /**
-     * @var Collection<int, Client>
+     * @var Collection<int, Client> $clients
      */
     #[JMS\Groups(['user-clients'])]
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Client>')]
@@ -122,7 +122,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $clients;
 
     /**
-     * @var Collection<int, Organisation>
+     * @var Collection<int, Organisation> $organisations
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Organisation>')]
     #[JMS\Groups(['user-organisations'])]

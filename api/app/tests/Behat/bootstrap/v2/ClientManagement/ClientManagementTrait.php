@@ -471,7 +471,7 @@ MESSAGE;
 
         $this->em->persist($client);
         $this->em->flush();
-        $this->em->clear();
+        $this->em->detach($client);
     }
 
     /**

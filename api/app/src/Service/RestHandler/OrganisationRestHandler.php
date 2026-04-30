@@ -103,7 +103,7 @@ class OrganisationRestHandler
 
         $organisation->setDeletedAt(new \DateTime());
         $this->em->flush();
-        $this->em->clear();
+        $this->em->detach($organisation);
 
         return true;
     }
