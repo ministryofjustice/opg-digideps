@@ -358,13 +358,10 @@ class FormFieldsExtension extends AbstractExtension
         $extraAttrs = $vars['extraAttrs'] ?? [];
 
         // Default to required attribute, unless field is explicitly marked as not required
-        $extraAttrs['required'] = 'required';
-
         /** @var array $elementVars */
         $elementVars = $element->vars;
 
-        if ($elementVars['required'] === false) {
-            // Field is optional - ensure required attribute is not set
+        if (isset($elementVars['required']) && ($elementVars['required'] === false)) {
             unset($extraAttrs['required']);
         }
 
