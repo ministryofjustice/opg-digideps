@@ -111,6 +111,8 @@ jobs:
 
   build_web_resources:
     name: build web resources
+    needs:
+      - terraform_apply_environment
     uses: ./.github/workflows/_web-resources.yml
 
   terraform_lint:
@@ -243,11 +245,11 @@ jobs:
 
   terraform_apply_environment:
     name: environment apply terraform
-    uses: ./.github/workflows/_run-terraform.yml
+    uses: ./.github/workflows/_run-terraform-secure.yml
     needs:
-      - docker_build_scan_push
-      - terraform_lint
       - workflow_variables
+    #      - docker_build_scan_push
+    #      - terraform_lint
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
