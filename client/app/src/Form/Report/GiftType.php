@@ -28,6 +28,7 @@ class GiftType extends AbstractType
             $builder->add('bankAccountId', FormTypes\ChoiceType::class, [
                 'choices' => $options['report']->getBankAccountOptions(),
                 'placeholder' => 'Please select',
+                'required' => false,
             ]);
         }
 

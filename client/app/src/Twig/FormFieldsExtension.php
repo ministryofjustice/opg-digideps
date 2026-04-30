@@ -191,7 +191,10 @@ class FormFieldsExtension extends AbstractExtension
         // generate input field html using variables supplied
         echo $this->environment->render(
             '@App/Components/Form/_select.html.twig',
-            $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex)
+            array_merge(
+                $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex),
+                ['required' => $vars['required'] ?? true]
+            )
         );
     }
 
