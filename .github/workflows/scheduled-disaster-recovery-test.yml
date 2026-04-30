@@ -47,7 +47,7 @@ jobs:
           TEN_MINS_AGO="$(TZ=UTC date -d '-5 minutes' +'%Y-%m-%d %H:%M:%S')"
           python3 database_restore.py \
             --environment preproduction \
-            --cluster_from api-integration \
+            --cluster_from digideps-integration \
             --pitr "${TEN_MINS_AGO}"
         working-directory: disaster-recovery/restore
 
@@ -98,7 +98,7 @@ jobs:
         run: |
           python database_restore.py \
             --environment preproduction \
-            --cluster_from api-integration \
+            --cluster_from digideps-integration \
             --restore_from_remote True \
             --snapshot_id "${SNAPSHOT_ID}"
         working-directory: disaster-recovery/restore
