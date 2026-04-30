@@ -39,4 +39,29 @@ final readonly class ReportType implements \Stringable
 
         return implode('-', $parts);
     }
+
+    public static function tryFrom(string $value): ?ReportType
+    {
+        $courtOrderReportType = CourtOrderReportType::tryFrom('OPG' . substr($value, 0, 3));
+
+        if ($courtOrderReportType === null) {
+            return null;
+        }
+
+        $courtOrderType = match ($courtOrderReportType) {
+            CourtOrderReportType::OPG102, CourtOrderReportType::OPG103 => CourtOrderType::PFA,
+            CourtOrderReportType::OPG104 => CourtOrderType::HW,
+        };
+
+        // Default to single as we can not determine Dual or Single at this stage
+        $courtOrderKind = str_contains($value, '-4') ? CourtOrderKind::Hybrid : CourtOrderKind::Single;
+
+        $deputyType = match (true) {
+            str_contains($value, '-5') => DeputyType::PRO,
+            str_contains($value, '-6') => DeputyType::PA,
+            default => DeputyType::LAY,
+        };
+
+        return new ReportType($courtOrderReportType, $courtOrderType, $courtOrderKind, $deputyType);
+    }
 }
