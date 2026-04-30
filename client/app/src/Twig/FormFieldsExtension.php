@@ -229,7 +229,7 @@ class FormFieldsExtension extends AbstractExtension
 
     /**
      * @param string $elementName used to pick the translation by appending ".label"
-     * @param array  $vars        [buttonClass => additional class. "disabled" supported]
+     * @param array  $vars [buttonClass => additional class. "disabled" supported]
      */
     public function renderFormSubmit(
         FormView $element,
@@ -240,9 +240,9 @@ class FormFieldsExtension extends AbstractExtension
             // label comes from labelText (if defined, but throws warning) ,or elementname.label from the form translation domain
             'label' => $elementName . '.label',
             'element' => $element,
-            'translationDomain' => isset($vars['labelTranslationDomain']) ? $vars['labelTranslationDomain'] : null,
-            'buttonClass' => isset($vars['buttonClass']) ? $vars['buttonClass'] : null,
-            'attr' => isset($vars['attr']) ? $vars['attr'] : null,
+            'translationDomain' => $vars['labelTranslationDomain'] ?? null,
+            'buttonClass' => $vars['buttonClass'] ?? null,
+            'attr' => $vars['attr'] ?? null,
         ];
 
         // deprecated. only kept in order not to break forms that use it
@@ -329,7 +329,7 @@ class FormFieldsExtension extends AbstractExtension
         if (isset($vars['labelText']) && $vars['labelText']) {
             $labelText = $vars['labelText'];
         } else {
-            $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
+            $labelParams = $vars['labelParameters'] ?? [];
             // label is translated directly here
             if ('' != $translationKey) {
                 $labelText = $this->translator->trans($translationKey . '.label', $labelParams, $domain);
@@ -341,15 +341,27 @@ class FormFieldsExtension extends AbstractExtension
         // inputPrefix
         $inputPrefix = isset($vars['inputPrefix']) ? $this->translator->trans($vars['inputPrefix'], [], $domain) : null;
 
-        $labelClass = isset($vars['labelClass']) ? $vars['labelClass'] : null;
-        $inputClass = isset($vars['inputClass']) ? $vars['inputClass'] : null;
-        $formGroupClass = isset($vars['formGroupClass']) ? $vars['formGroupClass'] : '';
+        $labelClass = $vars['labelClass'] ?? null;
+        $inputClass = $vars['inputClass'] ?? null;
+        $formGroupClass = $vars['formGroupClass'] ?? '';
 
         // Text to insert to the left of an input, e.g. * * * * for account
         $preInputText = null;
         if (!empty($vars['hasPreInput'])) {
             $preInputTextTrans = $this->translator->trans($translationKey . '.preInput', [], $domain);
             $preInputText = $preInputTextTrans;
+        }
+
+        // Prepare extra attributes
+        $extraAttrs = $vars['extraAttrs'] ?? [];
+
+        // Default to required attribute, unless field is optional
+        if ($element->vars['required'] === false) {
+            // Field is optional - ensure required attribute is not set
+            unset($extraAttrs['required']);
+        } elseif (!isset($extraAttrs['required'])) {
+            // Field is required or undetermined - set required attribute
+            $extraAttrs['required'] = 'required';
         }
 
         return [
@@ -373,7 +385,7 @@ class FormFieldsExtension extends AbstractExtension
                 'isPageHeading' => false,
                 'caption' => false,
             ], $vars['label'] ?? []),
-            'extraAttrs' => $vars['extraAttrs'] ?? [],
+            'extraAttrs' => $extraAttrs,
         ];
     }
 
