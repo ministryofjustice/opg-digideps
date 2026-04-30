@@ -286,7 +286,7 @@ class RestClient implements RestClientInterface
      * @param string $method
      * @param string $endpoint
      * @param string $expectedResponseType
-     * @param array  $options
+     * @param array  $options "timeout" in seconds
      *
      * @throws \InvalidArgumentException
      */
@@ -376,7 +376,7 @@ class RestClient implements RestClientInterface
             }
         }
 
-        if ($this->timeout) {
+        if ($this->timeout && !isset($options['timeout'])) {
             $options['timeout'] = $this->timeout;
         }
 

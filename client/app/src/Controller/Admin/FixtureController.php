@@ -150,26 +150,70 @@ class FixtureController extends AbstractController
             $formAndRequestData = $this->retrieveFormData($form, $request);
             $submittedFormData = $formAndRequestData['submitted'];
 
-            $response = $this->restClient->post('v2/fixture/court-order', json_encode([
-                'deputyType' => $submittedFormData['deputyType'],
-                'deputyEmail' => $formAndRequestData['deputyEmail'],
-                'caseNumber' => $formAndRequestData['caseNumber'],
-                'reportType' => $submittedFormData['reportType'],
-                'reportStatus' => $submittedFormData['reportStatus'],
-                'courtDate' => $formAndRequestData['courtDate']->format('Y-m-d'),
-                'activated' => $submittedFormData['activated'],
-                'orgSizeClients' => $submittedFormData['orgSizeClients'],
-                'orgSizeUsers' => $submittedFormData['orgSizeUsers'],
-                'deputyUid' => $formAndRequestData['deputyUid'],
-            ]));
+            // Do not move this loop to below the other loop as there is a dependency on the court order being created before creating additional clients
+            $batchSize = 25;
+            /** @var int $remainingUsersToCreate */
+            $remainingUsersToCreate = $submittedFormData['orgSizeUsers'];
+            $response = [];
+            while ($remainingUsersToCreate > 0) {
+                /** @var array $response */
+                $response = $this->restClient->post(
+                    'v2/fixture/court-order',
+                    json_encode([
+                        'deputyType' => $submittedFormData['deputyType'],
+                        'deputyEmail' => $formAndRequestData['deputyEmail'],
+                        'caseNumber' => $formAndRequestData['caseNumber'],
+                        'reportType' => $submittedFormData['reportType'],
+                        'reportStatus' => $submittedFormData['reportStatus'],
+                        'courtDate' => $formAndRequestData['courtDate']->format('Y-m-d'),
+                        'activated' => $submittedFormData['activated'],
+                        'orgSizeUsers' => min($remainingUsersToCreate, $batchSize),
+                        'deputyUid' => $formAndRequestData['deputyUid'],
+                    ]),
+                    options: ['timeout' => 1000]
+                );
 
-            $query = ['query' => ['filter_by_ids' => implode(',', $response['deputyIds'])]];
-            $deputiesData = $this->restClient->get('/user/get-all', 'array', [], $query);
-            $sanitizedDeputyData = $this->removeNullValues($deputiesData);
+                $remainingUsersToCreate -= $batchSize;
+            }
 
-            $deputies = $this->serializer->deserialize(json_encode($sanitizedDeputyData), 'OPG\Digideps\Frontend\Entity\User[]', 'json');
+            if ($submittedFormData['orgSizeClients'] > 1) {
+                $batchSize = 100;
+                /** @var int $orgSizeClients */
+                $orgSizeClients = $submittedFormData['orgSizeClients'];
+                $remainingAdditionalClientsToCreate = $orgSizeClients - 1; // minus 1 to account for client created with court order
+                while ($remainingAdditionalClientsToCreate > 0) {
+                    $this->restClient->post(
+                        'v2/fixture/create-additional-clients',
+                        json_encode([
+                            'deputyType' => $submittedFormData['deputyType'],
+                            'deputyEmail' => $formAndRequestData['deputyEmail'],
+                            'reportType' => $submittedFormData['reportType'],
+                            'reportStatus' => $submittedFormData['reportStatus'],
+                            'orgSizeClients' => min($remainingAdditionalClientsToCreate, $batchSize),
+                        ]),
+                        options: ['timeout' => 1000]
+                    );
 
-            $this->addFlash('courtOrderFixture', ['deputies' => array_reverse($deputies), 'caseNumber' => [$formAndRequestData['caseNumber']]]);
+                    $remainingAdditionalClientsToCreate -= $batchSize;
+                }
+            }
+
+            if (array_key_exists('deputyIds', $response)) {
+                $query = ['query' => ['filter_by_ids' => implode(',', $response['deputyIds'])]];
+                $deputiesData = $this->restClient->get('/user/get-all', 'array', [], $query);
+                $sanitizedDeputyData = $this->removeNullValues($deputiesData);
+
+                $deputies = $this->serializer->deserialize(
+                    json_encode($sanitizedDeputyData),
+                    'OPG\Digideps\Frontend\Entity\User[]',
+                    'json'
+                );
+
+                $this->addFlash(
+                    'courtOrderFixture',
+                    ['deputies' => array_reverse($deputies), 'caseNumber' => [$formAndRequestData['caseNumber']]]
+                );
+            }
         }
 
         return ['form' => $form->createView()];
