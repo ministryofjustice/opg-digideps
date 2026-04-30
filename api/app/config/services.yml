@@ -474,6 +474,9 @@ services:
     OPG\Digideps\Backend\Service\UserDeputyService:
         public: true
 
+    OPG\Digideps\Backend\Factory\ReportTypeUpdateFactory:
+        public: true
+
     preCSVDataFactory:
         class: OPG\Digideps\Backend\Factory\ChainedDataFactory
         public: true
@@ -505,6 +508,10 @@ services:
                   ]
                 - [
                       '@OPG\Digideps\Backend\Factory\MissingReport\MissingReportDataFactory',
+                      "dry-run-only",
+                  ]
+                - [
+                      '@OPG\Digideps\Backend\Factory\ReportTypeUpdateFactory',
                       "dry-run-only",
                   ]
 

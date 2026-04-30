@@ -3,6 +3,7 @@
 namespace OPG\Digideps\Backend\Entity\Report;
 
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Traits as ReportTraits;
 use OPG\Digideps\Backend\Entity\Satisfaction;
 use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
@@ -10,7 +11,9 @@ use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Service\ReportService;
 use OPG\Digideps\Backend\Service\ReportStatusService;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 use JMS\Serializer\Annotation as JMS;
 
 /**
@@ -575,13 +578,15 @@ class Report
     private $reasonForNoMoneyOut;
 
     /**
+     * @var Collection<int, CourtOrder>
+     *
      * @JMS\Groups({"report-with-court-orders"})
      *
      * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\CourtOrder>")
      *
      * @ORM\ManyToMany(targetEntity="OPG\Digideps\Backend\Entity\CourtOrder", mappedBy="reports", cascade={"persist"}, fetch="EXTRA_LAZY")
      */
-    private $courtOrders;
+    private Collection $courtOrders;
 
     private array $excludeSections = [];
     private ?\DateTime $benefitsSectionReleaseDate = null;
@@ -645,6 +650,7 @@ class Report
         $this->profDeputyPreviousCosts = new ArrayCollection();
         $this->profDeputyInterimCosts = new ArrayCollection();
         $this->profDeputyEstimateCosts = new ArrayCollection();
+        $this->courtOrders = new ArrayCollection();
 
         // set sections as notStarted when a new report is created
         $statusCached = [];
@@ -1639,5 +1645,13 @@ class Report
                 self::PA_HW_TYPE,
             ]
         );
+    }
+
+    /**
+     * @return Collection<int, CourtOrder>
+     */
+    public function getCourtOrders(): Collection
+    {
+        return $this->courtOrders;
     }
 }
