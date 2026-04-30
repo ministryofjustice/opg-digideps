@@ -202,9 +202,9 @@ form:
   bankAccount:
     hint: ""
     moneyIn:
-      label: Which bank account was this paid into? (optional)
+      label: Which bank account was this paid into?
     moneyOut:
-      label: Which bank account was this paid from? (optional)
+      label: Which bank account was this paid from?
   category:
     moneyOut.legend: What type of payment was it?
     moneyIn.legend:
