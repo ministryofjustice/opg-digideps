@@ -8251,24 +8251,6 @@ parameters:
 			path: src/Form/Report/Asset/AssetTypeTitle.php
 
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Form/Report/BankAccountType.php
-
-		-
-			message: '#^Binary operation "\." between ''form\.accountType…'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Form/Report/BankAccountType.php
-
-		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 1
-			path: src/Form/Report/BankAccountType.php
-
-		-
 			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Entity\\MoneyReceivedOnClientsBehalfInterface\:\:getAmount\(\)\.$#'
 			identifier: method.notFound
 			count: 1

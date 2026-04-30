@@ -20,7 +20,9 @@ class BankAccountType extends AbstractType
     private static function getBankAccountChoices(): array
     {
         $ret = [];
-        foreach (BankAccount::$types as $key) {
+        /** @var string[] $types */
+        $types = BankAccount::$types;
+        foreach ($types as $key) {
             $ret['form.accountType.choices.' . $key] = $key;
         }
 
@@ -29,7 +31,7 @@ class BankAccountType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $this->step = (int) $options['step'];
+        $this->step = isset($options['step']) && is_numeric($options['step']) ? (int) $options['step'] : throw new \InvalidArgumentException('The "step" option must be a numeric value.');
 
         $builder->add('id', FormTypes\HiddenType::class);
 
@@ -48,7 +50,6 @@ class BankAccountType extends AbstractType
             $builder->add('accountNumber', FormTypes\TextType::class, ['attr' => ['maxlength' => 4]]);
             $builder->add('sortCode', SortCodeType::class, [
                 'error_bubbling' => false,
-                'required' => false,
                 'constraints' => [
                     new NotBlank(['message' => 'account.sortCode.notBlank', 'groups' => ['bank-account-sortcode']]),
                     new Type(['type' => 'numeric', 'message' => 'account.sortCode.type', 'groups' => ['bank-account-sortcode']]),
