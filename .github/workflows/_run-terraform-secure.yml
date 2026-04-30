@@ -37,6 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: alpine:3.23
+      options: --user 1000:1000
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -51,56 +52,30 @@ jobs:
           ca-certificates \
           libc6-compat
 
-      - name: check for sec vulnerabilities
-        run: ps -ef
-
-      - name: Set Global SSH Auth Socket
-        shell: bash
-        run: |
-          echo "SSH_AUTH_SOCK=/tmp/ssh_agent.sock" >> "$GITHUB_ENV"
-
-      - name: Create SSH Dir
-        shell: bash
-        run: |
-          mkdir -p "$HOME/.ssh"
-          chmod 700 "$HOME/.ssh"
-
-      - name: Add github.com to known_hosts
-        shell: bash
-        run: |
-          ssh-keyscan -H -t rsa,ed25519 github.com >> "$HOME/.ssh/known_hosts"
-          chmod 600 "$HOME/.ssh/known_hosts"
-
-      - name: Force git to use user known_hosts
-        shell: bash
-        run: |
-          git config --global core.sshCommand \
-            'ssh -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o StrictHostKeyChecking=yes'
-
-      - name: Start Agent
-        shell: bash
-        run: |
-          ssh-agent -a "$SSH_AUTH_SOCK" > /dev/null
-
-      - name: Add SSH Key
+      - name: Setup SSH
         shell: bash
         env:
           DEPLOY_KEY: ${{ secrets.ssh_private_key }}
         run: |
+          export HOME=/home/ci
+          mkdir -p "$HOME/.ssh"
+          chmod 700 "$HOME/.ssh"
+
+          ssh-keyscan -H -t rsa,ed25519 github.com >> "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/known_hosts"
+
+          git config --global core.sshCommand \
+            'ssh -o UserKnownHostsFile=$HOME/.ssh/known_hosts -o StrictHostKeyChecking=yes -o ForwardAgent=no'
+
+          ssh-agent -a /tmp/ssh_agent.sock > /dev/null
+          export SSH_AUTH_SOCK=/tmp/ssh_agent.sock
+
           printf '%s\n' "$DEPLOY_KEY" | ssh-add -
 
       - uses: hashicorp/setup-terraform@b9cd54a3c349d3f38e8881555d616ced269862dd # v3.1.2
         with:
           terraform_version: v1.14.8
           terraform_wrapper: false
-
-      - name: configure OIDC AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
-        with:
-          role-to-assume: "arn:aws:iam::${{ vars.IDENTITY_ACCOUNT }}:role/oidc-digideps-${{ inputs.account_name }}"
-          role-session-name: github-actions-terraform
-          role-duration-seconds: 7400
-          aws-region: eu-west-1
 
       - name: terraform init for account
         if: inputs.terraform_path == 'account'
@@ -113,6 +88,29 @@ jobs:
         run: terraform init -input=false
         if: inputs.terraform_path == 'environment'
         working-directory: terraform/${{ inputs.terraform_path }}
+
+      - name: ps
+        run: ps -ef
+
+      - name: Stop SSH agent
+        if: always()
+        run: |
+          pkill ssh-agent || true
+
+      - name: ps
+        run: ps -ef
+
+      - name: hardening ideas
+        run: |
+          apk del curl git
+
+      - name: configure OIDC AWS credentials for terraform
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
+        with:
+          role-to-assume: "arn:aws:iam::${{ vars.IDENTITY_ACCOUNT }}:role/oidc-digideps-${{ inputs.account_name }}"
+          role-session-name: github-actions-terraform
+          role-duration-seconds: 7400
+          aws-region: eu-west-1
 
       - name: terraform apply ${{ inputs.terraform_path }}
         if: inputs.apply

@@ -33,7 +33,7 @@ func main() {
 		return
 	}
 
-	rdsClusterID := fmt.Sprintf("api-%s", environment)
+	rdsClusterID := fmt.Sprintf("digideps-%s", environment)
 	ecsClusterName := environment
 
 	if environment == "" || *action == "" {

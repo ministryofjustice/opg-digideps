@@ -43,11 +43,11 @@ connect_to_database() {
     exit 1
   fi
 
-  if [[ "$input" == api-* ]]; then
+  if [[ "$input" == digideps-* ]]; then
     database="$input"
     environment=$(echo "$input" | awk -F'-' '{print $2}')
   else
-    database="api-$input"
+    database="digideps-$input"
     environment="$input"
   fi
 
