@@ -84,6 +84,7 @@ class FormFieldsExtension extends AbstractExtension
     {
         /** @var array $elementVars */
         $elementVars = $element->parent instanceof FormView ? $element->parent->vars : [];
+        /** @var string|null $domain */
         $domain = $elementVars['translation_domain'];
         $vars['label'] = $this->translator->trans('signInForm.password.label', [], $domain);
         $vars['element'] = $element;
@@ -123,6 +124,7 @@ class FormFieldsExtension extends AbstractExtension
         $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
         /** @var array $elementVars */
         $elementVars = $element->parent instanceof FormView ? $element->parent->vars : [];
+        /** @var string|null $domain */
         $domain = $elementVars['translation_domain'];
 
         // sort hint text translation
@@ -143,7 +145,7 @@ class FormFieldsExtension extends AbstractExtension
                 $legendText = $legendTextTrans;
             } else {
                 /** @var array $labelParams */
-                $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
+                $labelParams = $vars['labelParameters'] ?? [];
                 $legendTextTrans = $this->translator->trans($translationKey . '.label', $labelParams, $domain);
                 if ($legendTextTrans != $translationKey . '.label') {
                     $legendText = $legendTextTrans;
@@ -153,24 +155,27 @@ class FormFieldsExtension extends AbstractExtension
             }
         }
 
+        /** @var array $legend */
+        $legend = $vars['legend'] ?? [];
+
         // generate input field html using variables supplied
         echo $this->environment->render('@App/Components/Form/_checkboxgroup.html.twig', [
-            'classes' => isset($vars['classes']) ? $vars['classes'] : null,
-            'disabled' => isset($vars['disabled']) ? $vars['disabled'] : false,
-            'fieldSetClass' => isset($vars['fieldSetClass']) ? $vars['fieldSetClass'] : null,
-            'formGroupClass' => isset($vars['formGroupClass']) ? $vars['formGroupClass'] : null,
+            'classes' => $vars['classes'] ?? null,
+            'disabled' => $vars['disabled'] ?? false,
+            'fieldSetClass' => $vars['fieldSetClass'] ?? null,
+            'formGroupClass' => $vars['formGroupClass'] ?? null,
             'legend' => array_merge([
                 'text' => $legendText,
                 'isPageHeading' => false,
                 'caption' => false,
-            ], $vars['legend'] ?? []),
-            'legendClass' => isset($vars['legendClass']) ? $vars['legendClass'] : null,
-            'useFormGroup' => isset($vars['useFormGroup']) ? $vars['useFormGroup'] : true,
+            ], $legend),
+            'legendClass' => $vars['legendClass'] ?? null,
+            'useFormGroup' => $vars['useFormGroup'] ?? true,
             'hintText' => $hintText,
-            'hintLink' => isset($vars['hintLink']) ? $vars['hintLink'] : null,
+            'hintLink' => $vars['hintLink'] ?? null,
             'hintList' => empty($vars['hintList']) ? [] : $vars['hintList'],
             'element' => $element,
-            'vertical' => isset($vars['vertical']) ? $vars['vertical'] : false,
+            'vertical' => $vars['vertical'] ?? false,
             'items' => empty($vars['items']) ? [] : $vars['items'],
             'translationDomain' => $domain,
             'multitoggle' => empty($vars['multitoggle']) ? [] : $vars['multitoggle'],
@@ -254,9 +259,9 @@ class FormFieldsExtension extends AbstractExtension
             // label comes from labelText (if defined, but throws warning) ,or elementname.label from the form translation domain
             'label' => $elementName . '.label',
             'element' => $element,
-            'translationDomain' => isset($vars['labelTranslationDomain']) ? $vars['labelTranslationDomain'] : null,
-            'buttonClass' => isset($vars['buttonClass']) ? $vars['buttonClass'] : null,
-            'attr' => isset($vars['attr']) ? $vars['attr'] : null,
+            'translationDomain' => $vars['labelTranslationDomain'] ?? null,
+            'buttonClass' => $vars['buttonClass'] ?? null,
+            'attr' => $vars['attr'] ?? null,
         ];
 
         // deprecated. only kept in order not to break forms that use it
@@ -329,6 +334,7 @@ class FormFieldsExtension extends AbstractExtension
         $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
         /** @var array $elementVars */
         $elementVars = $element->parent instanceof FormView ? $element->parent->vars : [];
+        /** @var string|null $domain */
         $domain = $elementVars['translation_domain'];
 
         if (isset($vars['hintText'])) {
@@ -342,7 +348,7 @@ class FormFieldsExtension extends AbstractExtension
         $hintListArray = null;
         if (!empty($vars['hasHintList'])) {
             /** @var array $hintListParams */
-            $hintListParams = isset($vars['hintListParameters']) ? $vars['hintListParameters'] : [];
+            $hintListParams = $vars['hintListParameters'] ?? [];
             $hintListTextTrans = $this->translator->trans($translationKey . '.hintList', $hintListParams, $domain);
             $hintListArray = array_filter(explode("\n", $hintListTextTrans));
         }
@@ -352,7 +358,7 @@ class FormFieldsExtension extends AbstractExtension
             $labelText = $vars['labelText'];
         } else {
             /** @var array $labelParams */
-            $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
+            $labelParams = $vars['labelParameters'] ?? [];
             // label is translated directly here
             if ('' != $translationKey) {
                 $labelText = $this->translator->trans($translationKey . '.label', $labelParams, $domain);
@@ -366,9 +372,9 @@ class FormFieldsExtension extends AbstractExtension
         $varsInputPrefix = $vars['inputPrefix'] ?? null;
         $inputPrefix = isset($vars['inputPrefix']) ? $this->translator->trans($varsInputPrefix, [], $domain) : null;
 
-        $labelClass = isset($vars['labelClass']) ? $vars['labelClass'] : null;
-        $inputClass = isset($vars['inputClass']) ? $vars['inputClass'] : null;
-        $formGroupClass = isset($vars['formGroupClass']) ? $vars['formGroupClass'] : '';
+        $labelClass = $vars['labelClass'] ?? null;
+        $inputClass = $vars['inputClass'] ?? null;
+        $formGroupClass = $vars['formGroupClass'] ?? '';
 
         // Text to insert to the left of an input, e.g. * * * * for account
         $preInputText = null;
@@ -376,6 +382,9 @@ class FormFieldsExtension extends AbstractExtension
             $preInputTextTrans = $this->translator->trans($translationKey . '.preInput', [], $domain);
             $preInputText = $preInputTextTrans;
         }
+
+        /** @var array $label */
+        $label = $vars['label'] ?? [];
 
         return [
             'labelDataTarget' => empty($vars['labelDataTarget']) ? null : $vars['labelDataTarget'],
@@ -397,7 +406,7 @@ class FormFieldsExtension extends AbstractExtension
                 'text' => $labelText,
                 'isPageHeading' => false,
                 'caption' => false,
-            ], $vars['label'] ?? []),
+            ], $label),
             'extraAttrs' => $vars['extraAttrs'] ?? [],
         ];
     }

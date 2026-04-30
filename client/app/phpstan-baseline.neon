@@ -12865,18 +12865,6 @@ parameters:
 			path: src/Twig/ComponentsExtension.php
 
 		-
-			message: '#^Parameter \#2 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 4
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Parameter \#3 \$domain of method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:trans\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 14
-			path: src/Twig/FormFieldsExtension.php
-
-		-
 			message: '#^Binary operation "\." between ''The value '' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
