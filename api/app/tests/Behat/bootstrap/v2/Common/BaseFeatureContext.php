@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\Common;
 
-use Behat\Hook\BeforeScenario;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Service\File\Storage\S3Storage;
 use OPG\Digideps\Backend\Service\ParameterStoreService;
@@ -656,9 +655,13 @@ class BaseFeatureContext extends MinkContext
         // Discharge client linked to secondary account
         $nonPrimaryDischargedClientId = $nonPrimaryUserDetails->getClientId();
         $client = $this->em->getRepository(Client::class)->find($nonPrimaryDischargedClientId);
+
+        // this does a soft delete on the client
         $client->setDeletedAt(new \DateTime('now'));
         $this->em->persist($client);
         $this->em->flush();
+
+        // necessary to ensure that the next time this client is referenced, it is re-fetched from the db
         $this->em->detach($client);
 
         $this->fixtureUsers[] = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser = $primaryUserDetails;
