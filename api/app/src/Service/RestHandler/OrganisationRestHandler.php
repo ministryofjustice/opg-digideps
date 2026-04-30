@@ -101,8 +101,12 @@ class OrganisationRestHandler
             throw new \Exception();
         }
 
+        // this does a soft delete on the org
         $organisation->setDeletedAt(new \DateTime());
+        $this->em->persist($organisation);
         $this->em->flush();
+
+        // necessary to ensure that the next time this org is referenced, it is re-fetched from the db
         $this->em->detach($organisation);
 
         return true;

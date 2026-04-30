@@ -467,10 +467,13 @@ MESSAGE;
         $this->assertInteractingWithUserIsSet();
 
         $client = $this->em->find(Client::class, $this->interactingWithUserDetails->getClientId());
-        $client->setDeletedAt(new \DateTime());
 
+        // NB discharging a deputy is the same as soft-deleting them (sets deletedAt to datetime)
+        $client->setDeletedAt(new \DateTime('yesterday'));
         $this->em->persist($client);
         $this->em->flush();
+
+        // necessary to ensure that the next time this client is referenced, it is re-fetched from the db
         $this->em->detach($client);
     }
 
