@@ -97,13 +97,12 @@ class MoneyTransactionType extends AbstractType
                 'invalid_message' => 'moneyTransaction.form.amount.type',
             ]);
 
-            $reportType = $options['report']->getType();
-
             if (!empty($options['report']->getBankAccountOptions()) && $options['report']->canLinkToBankAccounts()) {
                 $builder->add('bankAccountId', FormTypes\ChoiceType::class, [
                     'choices' => $options['report']->getBankAccountOptions(),
                     'placeholder' => 'Please select',
                     'label' => 'form.bankAccount.money' . ucfirst($this->type) . '.label',
+                    'required' => false,
                 ]);
             }
         }
