@@ -56,7 +56,6 @@ services:
       - htmltopdf
       - localstack
       - mock-notify-api
-      - pact-mock
       - file-scanner-rest
     environment:
       APP_ENV: ${APP_ENV:-local}
@@ -219,35 +218,6 @@ services:
   wait-for-it:
     build: ./wait-for-it
 
-  #    pa11y:
-  #        build:
-  #            context: ./pa11y
-  #        depends_on:
-  #            - frontend
-
-  pact-mock:
-    image: pactfoundation/pact-cli:0.56.0.8@sha256:ee390ae508c8e783145f0b818984236846ce5f1826ac0ecdb460b4aefdcb34a1
-    ports:
-      - 1234:80
-    command:
-      - mock-service
-      - -p
-      - "80"
-      - --host
-      - "0.0.0.0"
-      - --pact-dir
-      - /tmp/pacts
-      - --consumer
-      - Complete the deputy report
-      - --provider
-      - OPG Data
-    healthcheck:
-      test: "wget -O /dev/null --header='Content-Type: application/json' --header='X-Pact-Mock-Service: true' -S 'http://0.0.0.0:80/' 2>&1 | grep 'HTTP/1.1 200 OK' || exit 1"
-      interval: 5s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
-
   mock-sirius-integration:
     build:
       context: .
@@ -303,9 +273,6 @@ services:
       args:
         REQUIRE_XDEBUG: ${REQUIRE_XDEBUG_CLIENT} # set REQUIRE_XDEBUG_CLIENT=1 in .env to install Xdebug
         LOCAL_RESOURCES: true
-    depends_on:
-      pact-mock:
-        condition: service_healthy
     environment:
       APP_ENV: ${APP_ENV:-local}
       APP_DEBUG: ${APP_DEBUG:-0}
