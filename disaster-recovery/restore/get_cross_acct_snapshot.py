@@ -71,7 +71,7 @@ def main():
     )
 
     backup_client = backup_session.client("rds", region_name=aws_region)
-    snapshot = get_latest_snapshot(backup_client, "api-integration", cluster=True)
+    snapshot = get_latest_snapshot(backup_client, "digideps-integration", cluster=True)
     print(snapshot)
 
 
