@@ -104,6 +104,7 @@ class MoneyTransactionType extends AbstractType
                     'choices' => $options['report']->getBankAccountOptions(),
                     'placeholder' => 'Please select',
                     'label' => 'form.bankAccount.money' . ucfirst($this->type) . '.label',
+                    'required' => false,
                 ]);
             }
         }

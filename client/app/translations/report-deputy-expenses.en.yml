@@ -76,7 +76,7 @@ form:
     label: Amount
     hint: ""
   bankAccount:
-    label: Which bank account was this paid from? (optional)
+    label: Which bank account was this paid from?
     hint: ""
   save:
     label: Save expense
