@@ -60,6 +60,7 @@ def get_latest_snapshot(rds_client, cid, cluster=True):
     return snapshot_id
 
 
+# Script for debugging purposes to get latest snapshot
 def main():
     aws_region = "eu-west-1"
     backup_account = "238302996107"
