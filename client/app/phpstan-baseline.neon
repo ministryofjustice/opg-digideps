@@ -597,7 +597,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''deputyType'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 4
 			path: src/Controller/Admin/FixtureController.php
 
 		-
@@ -627,13 +627,13 @@ parameters:
 		-
 			message: '#^Cannot access offset ''reportStatus'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 3
 			path: src/Controller/Admin/FixtureController.php
 
 		-
 			message: '#^Cannot access offset ''reportType'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 3
 			path: src/Controller/Admin/FixtureController.php
 
 		-
@@ -717,7 +717,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$mixed of method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:post\(\) expects array\|object\|string, string\|false given\.$#'
 			identifier: argument.type
-			count: 8
+			count: 9
 			path: src/Controller/Admin/FixtureController.php
 
 		-
@@ -8251,24 +8251,6 @@ parameters:
 			path: src/Form/Report/Asset/AssetTypeTitle.php
 
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Form/Report/BankAccountType.php
-
-		-
-			message: '#^Binary operation "\." between ''form\.accountType…'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Form/Report/BankAccountType.php
-
-		-
-			message: '#^Cannot cast mixed to int\.$#'
-			identifier: cast.int
-			count: 1
-			path: src/Form/Report/BankAccountType.php
-
-		-
 			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Entity\\MoneyReceivedOnClientsBehalfInterface\:\:getAmount\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -9921,7 +9903,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''timeout'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
+			count: 2
 			path: src/Service/Client/RestClient.php
 
 		-

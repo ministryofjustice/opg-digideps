@@ -32,6 +32,19 @@ on:
         type: string
         description: "Account to get credentials for"
 
+permissions:
+  id-token: write
+  contents: read
+  security-events: none
+  pull-requests: none
+  actions: none
+  checks: none
+  deployments: none
+  issues: none
+  packages: none
+  repository-projects: none
+  statuses: none
+
 jobs:
   terraform_workflow:
     runs-on: ubuntu-latest
@@ -51,8 +64,15 @@ jobs:
           ca-certificates \
           libc6-compat
 
-      - name: check for sec vulnerabilities
-        run: ps -ef
+      - name: install alpine dependencies
+        run: |
+          apk add --no-cache \
+          bash \
+          git \
+          openssh-client \
+          curl \
+          ca-certificates \
+          libc6-compat
 
       - name: Set Global SSH Auth Socket
         shell: bash
@@ -94,14 +114,6 @@ jobs:
           terraform_version: v1.14.8
           terraform_wrapper: false
 
-      - name: configure OIDC AWS credentials for terraform
-        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
-        with:
-          role-to-assume: "arn:aws:iam::${{ vars.IDENTITY_ACCOUNT }}:role/oidc-digideps-${{ inputs.account_name }}"
-          role-session-name: github-actions-terraform
-          role-duration-seconds: 7400
-          aws-region: eu-west-1
-
       - name: terraform init for account
         if: inputs.terraform_path == 'account'
         run: terraform init -input=false
@@ -114,6 +126,29 @@ jobs:
         if: inputs.terraform_path == 'environment'
         working-directory: terraform/${{ inputs.terraform_path }}
 
+      - name: ps
+        run: ps -ef
+
+      - name: Stop SSH agent
+        if: always()
+        run: |
+          pkill ssh-agent || true
+
+      - name: ps
+        run: ps -ef
+
+      - name: hardening ideas
+        run: |
+          apk del curl git
+
+      - name: configure OIDC AWS credentials for terraform
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
+        with:
+          role-to-assume: "arn:aws:iam::${{ vars.IDENTITY_ACCOUNT }}:role/oidc-digideps-${{ inputs.account_name }}"
+          role-session-name: github-actions-terraform
+          role-duration-seconds: 7400
+          aws-region: eu-west-1
+
       - name: terraform apply ${{ inputs.terraform_path }}
         if: inputs.apply
         env:
@@ -121,7 +156,7 @@ jobs:
           TF_VAR_OPG_DOCKER_TAG: ${{ inputs.container_version }}
           CI: true
         run: |
-          terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30
+          terraform plan -lock-timeout=300s -input=false -auto-approve -parallelism=30
         working-directory: terraform/${{ inputs.terraform_path }}
 
       - name: Unset AWS variables
