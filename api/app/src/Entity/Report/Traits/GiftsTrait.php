@@ -1,38 +1,36 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
-use OPG\Digideps\Backend\Entity\Report\Gift;
-use OPG\Digideps\Backend\Entity\Report\Report;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\Entity\Report\Gift;
+use OPG\Digideps\Backend\Entity\Report\Report;
 
 trait GiftsTrait
 {
     /**
-     * @var string yes|no|null
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"gifts"})
-     *
-     * @ORM\Column(name="gifts_exist", type="string", length=3, nullable=true)
+     * @var ?string yes|no|null
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['gifts'])]
+    #[ORM\Column(name: 'gifts_exist', type: 'string', length: 3, nullable: true)]
     private $giftsExist;
 
     /**
-     * @var Gift[]
-     *
-     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\Gift>")
-     *
-     * @JMS\Groups({"gifts"})
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\Gift", mappedBy="report", cascade={"persist", "remove"})
+     * @var ?Collection<int, Gift>
      */
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Gift>')]
+    #[JMS\Groups(['gifts'])]
+    #[ORM\OneToMany(mappedBy: 'report', targetEntity: Gift::class, cascade: ['persist', 'remove'])]
     private $gifts;
 
     /**
-     * @return string
+     * @return ?string
      */
     public function getGiftsExist()
     {
@@ -48,19 +46,17 @@ trait GiftsTrait
     }
 
     /**
-     * @return Gift[]
+     * @return Collection<int, Gift>
      */
     public function getGifts()
     {
-        return $this->gifts;
+        return $this->gifts ?? new ArrayCollection();
     }
 
     /**
-     * @param Gift[]|null $gifts
-     *
-     * @return Report
+     * @param ?Collection<int, Gift> $gifts
      */
-    public function setGifts($gifts)
+    public function setGifts($gifts): static
     {
         $this->gifts = $gifts;
 
@@ -77,12 +73,9 @@ trait GiftsTrait
         return count($this->getGifts()) > 0 || 'no' === $this->getGiftsExist();
     }
 
-    /**
-     * @return Report
-     */
-    public function addGift(Gift $gift)
+    public function addGift(Gift $gift): static
     {
-        if (!$this->gifts->contains($gift)) {
+        if ($this->gifts !== null && !$this->gifts->contains($gift)) {
             $this->gifts->add($gift);
         }
 
@@ -96,7 +89,7 @@ trait GiftsTrait
     {
         $ret = 0;
         foreach ($this->getGifts() as $record) {
-            $ret += $record->getAmount();
+            $ret += (float) $record->getAmount();
         }
 
         return $ret;

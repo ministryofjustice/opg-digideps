@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
 use OPG\Digideps\Backend\Entity\Report\Report;
@@ -19,11 +21,9 @@ trait StatusTrait
      * Note: Manually Json-serialised. `json_array` type not working properly in the unity of work in this doctrine version
      *
      * @var string
-     *
-     * @JMS\Exclude()
-     *
-     * @ORM\Column(name="status_cached", type="text", nullable=true)
      */
+    #[JMS\Exclude]
+    #[ORM\Column(name: 'status_cached', type: 'text', nullable: true)]
     private $sectionStatusesCached;
 
     /**
@@ -33,20 +33,17 @@ trait StatusTrait
      * Used for ORG dashboard for tab calculation and pagination
      *
      * value: STATUS_* constant
-     *
-     * @JMS\Exclude()
-     *
-     * @ORM\Column(name="report_status_cached", type="string", length=20, nullable=true)
      */
+    #[JMS\Exclude]
+    #[ORM\Column(name: 'report_status_cached', type: 'string', length: 20, nullable: true)]
     private $reportStatusCached;
 
     /**
      * Holds a copy of the [sectionId => [state=>, nOfRecords=>].
      *
-     * @JMS\Exclude
-     *
      * @return array
      */
+    #[JMS\Exclude]
     public function getSectionStatusesCached()
     {
         return $this->sectionStatusesCached ? json_decode($this->sectionStatusesCached, true) : [];
@@ -110,35 +107,10 @@ trait StatusTrait
     }
 
     /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Groups({
-     *     "status",
-     *     "report-status",
-     *     "decision-status",
-     *     "contact-status",
-     *     "visits-care-state",
-     *     "expenses-state",
-     *     "gifts-state",
-     *     "account-state",
-     *     "money-transfer-state",
-     *     "money-in-state",
-     *     "money-out-state",
-     *     "asset-state",
-     *     "debt-state",
-     *     "action-state",
-     *     "more-info-state",
-     *     "balance-state",
-     *     "money-in-short-state",
-     *     "money-out-short-state",
-     *     "fee-state",
-     *     "documents-state",
-     *     "lifestyle-state",
-     *     "client-benefits-check-state",
-     * })
-     *
      * @return ReportStatusService
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Groups(['status', 'report-status', 'decision-status', 'contact-status', 'visits-care-state', 'expenses-state', 'gifts-state', 'account-state', 'money-transfer-state', 'money-in-state', 'money-out-state', 'asset-state', 'debt-state', 'action-state', 'more-info-state', 'balance-state', 'money-in-short-state', 'money-out-short-state', 'fee-state', 'documents-state', 'lifestyle-state', 'client-benefits-check-state'])]
     public function getStatus()
     {
         return new ReportStatusService($this);

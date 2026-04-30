@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
 use OPG\Digideps\Backend\Entity\AssetInterface;
@@ -13,24 +15,18 @@ trait AssetTrait
 {
     /**
      * @var AssetInterface[]
-     *
-     * @JMS\Groups({"asset"})
-     *
-     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\Asset>")
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\Asset", mappedBy="report", cascade={"persist", "remove"})
      */
+    #[JMS\Groups(['asset'])]
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Asset>')]
+    #[ORM\OneToMany(mappedBy: 'report', targetEntity: Asset::class, cascade: ['persist', 'remove'])]
     private $assets;
 
     /**
      * @var bool deputy declaration saying there are no assets. Required (true/false) if no assets are added
-     *
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"report"})
-     *
-     * @ORM\Column(name="no_asset_to_add", type="boolean", options={ "default": false}, nullable=true)
      */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['report'])]
+    #[ORM\Column(name: 'no_asset_to_add', type: 'boolean', options: ['default' => false], nullable: true)]
     private $noAssetToAdd;
 
     /**
@@ -64,16 +60,12 @@ trait AssetTrait
     /**
      * Get assets total value.
      *
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("double")
-     *
-     * @JMS\SerializedName("assets_total_value")
-     *
-     * @JMS\Groups({"asset"})
-     *
      * @return float
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('double')]
+    #[JMS\SerializedName('assets_total_value')]
+    #[JMS\Groups(['asset'])]
     public function getAssetsTotalValue()
     {
         $ret = 0;

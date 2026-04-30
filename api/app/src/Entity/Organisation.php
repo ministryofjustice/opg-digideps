@@ -1,84 +1,74 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity;
 
-use OPG\Digideps\Backend\Entity\Traits\IsSoftDeleteableEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\Entity\Traits\IsSoftDeleteableEntity;
+use OPG\Digideps\Backend\Repository\OrganisationRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @ORM\Table(name="organisation")
- *
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
- *
- * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\OrganisationRepository")
- */
-class Organisation implements OrganisationInterface
+#[ORM\Table(name: 'organisation')]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false)]
+#[ORM\Entity(repositoryClass: OrganisationRepository::class)]
+class Organisation
 {
     use IsSoftDeleteableEntity;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="organisation_id_seq", allocationSize=1, initialValue=1)
      */
     #[JMS\Groups(['organisation', 'user-organisations', 'client-organisations', 'org-created-event'])]
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'organisation_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=256, nullable=false)
      */
     #[Assert\NotBlank]
     #[JMS\Groups(['organisation', 'user-organisations', 'client-organisations', 'org-created-event'])]
+    #[ORM\Column(name: 'name', type: 'string', length: 256, nullable: false)]
     private $name;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="email_identifier", type="string", length=256, nullable=false, unique=true)
      */
     #[Assert\NotBlank]
     #[JMS\Type('string')]
     #[JMS\Groups(['user-organisations', 'organisation', 'org-created-event'])]
     #[JMS\SerializedName('email_identifier')]
+    #[ORM\Column(name: 'email_identifier', type: 'string', length: 256, unique: true, nullable: false)]
     private $emailIdentifier;
 
     /**
      * @var bool
-     *
-     * @ORM\Column(name="is_activated", type="boolean", options={ "default": false}, nullable=false)
      */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['organisation', 'user-organisations', 'client-organisations', 'org-created-event'])]
     #[JMS\SerializedName('is_activated')]
+    #[ORM\Column(name: 'is_activated', type: 'boolean', nullable: false, options: ['default' => false])]
     private $isActivated;
 
     /**
-     * @var ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="User", inversedBy="organisations")
+     * @var Collection<int, User>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\User>')]
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'organisations')]
     private $users;
 
     /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="Client", mappedBy="organisation")
+     * @var Collection<int, Client>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Clients>')]
+    #[ORM\OneToMany(mappedBy: 'organisation', targetEntity: Client::class)]
     private $clients;
 
     public function __construct()

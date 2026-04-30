@@ -1,81 +1,74 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Entity\Report\MoneyShortCategory;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShort;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortIn;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortOut;
-use Doctrine\Common\Collections\ArrayCollection;
 
 trait MoneyShortTrait
 {
     /**
-     * @var MoneyShortCategory[]
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\MoneyShortCategory", mappedBy="report", cascade={"persist"})
-     *
-     * @ORM\OrderBy({"id" = "ASC"})
+     * @var Collection<int, MoneyShortCategory>
      */
-    private $moneyShortCategories;
+    #[ORM\OneToMany(mappedBy: 'report', targetEntity: MoneyShortCategory::class, cascade: ['persist'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
+    private Collection $moneyShortCategories;
 
     /**
-     * @var MoneyTransactionShort[]
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\MoneyTransactionShort", mappedBy="report", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"id" = "ASC"})
+     * @var Collection<int, MoneyTransactionShort>
      */
-    private $moneyTransactionsShort;
+    #[ORM\OneToMany(mappedBy: 'report', targetEntity: MoneyTransactionShort::class, cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
+    private Collection $moneyTransactionsShort;
 
     /**
-     * @var string yes|no|null
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"moneyShortCategoriesIn"})
-     *
-     * @ORM\Column(name="money_transactions_short_in_exist", type="string", length=3, nullable=true)
+     * @var ?string 'yes'|'no'|null
      */
-    private $moneyTransactionsShortInExist;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['moneyShortCategoriesIn'])]
+    #[ORM\Column(name: 'money_transactions_short_in_exist', type: 'string', length: 3, nullable: true)]
+    private ?string $moneyTransactionsShortInExist = null;
 
     /**
-     * @var string yes|no|null
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"moneyShortCategoriesOut"})
-     *
-     * @ORM\Column(name="money_transactions_short_out_exist", type="string", length=3, nullable=true)
+     * @var ?string 'yes'|'no'|null
      */
-    private $moneyTransactionsShortOutExist;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['moneyShortCategoriesOut'])]
+    #[ORM\Column(name: 'money_transactions_short_out_exist', type: 'string', length: 3, nullable: true)]
+    private ?string $moneyTransactionsShortOutExist = null;
 
     /**
-     * @return MoneyShortCategory[]
+     * @return Collection<int, MoneyShortCategory>
      */
-    public function getMoneyShortCategories()
+    public function getMoneyShortCategories(): Collection
     {
         return $this->moneyShortCategories;
     }
 
     /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\SerializedName("money_short_categories_in")
-     *
-     * @JMS\Groups({"moneyShortCategoriesIn"})
+     * @return Collection<int, MoneyShortCategory>
      */
-    public function getMoneyShortCategoriesIn()
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('money_short_categories_in')]
+    #[JMS\Groups(['moneyShortCategoriesIn'])]
+    public function getMoneyShortCategoriesIn(): Collection
     {
-        return $this->getMoneyShortCategories()->filter(function ($e) {
+        return $this->moneyShortCategories->filter(function ($e) {
             return 'in' == $e->getType();
         });
     }
 
     /**
-     * @return MoneyShortCategory[]
+     * @return Collection<int, MoneyShortCategory>
      */
-    public function getMoneyShortCategoriesInPresent()
+    public function getMoneyShortCategoriesInPresent(): Collection
     {
         return $this->getMoneyShortCategories()->filter(function ($e) {
             return 'in' == $e->getType() && $e->getPresent();
@@ -83,13 +76,12 @@ trait MoneyShortTrait
     }
 
     /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\SerializedName("money_short_categories_out")
-     *
-     * @JMS\Groups({"moneyShortCategoriesOut"})
+     * @return Collection<int, MoneyShortCategory>
      */
-    public function getMoneyShortCategoriesOut()
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('money_short_categories_out')]
+    #[JMS\Groups(['moneyShortCategoriesOut'])]
+    public function getMoneyShortCategoriesOut(): Collection
     {
         return $this->getMoneyShortCategories()->filter(function ($e) {
             return 'out' == $e->getType();
@@ -97,9 +89,9 @@ trait MoneyShortTrait
     }
 
     /**
-     * @return MoneyShortCategory[]
+     * @return Collection<int, MoneyShortCategory>
      */
-    public function getMoneyShortCategoriesOutPresent()
+    public function getMoneyShortCategoriesOutPresent(): Collection
     {
         return $this->getMoneyShortCategories()->filter(function ($e) {
             return 'out' == $e->getType() && $e->getPresent();
@@ -107,51 +99,48 @@ trait MoneyShortTrait
     }
 
     /**
-     * @param MoneyShortCategory[] $moneyShortCategories
+     *  @param Collection<int, MoneyShortCategory> $moneyShortCategories
      */
-    public function setMoneyShortCategories($moneyShortCategories)
+    public function setMoneyShortCategories(Collection $moneyShortCategories)
     {
         $this->moneyShortCategories = $moneyShortCategories;
     }
 
     /**
-     * @param string $typeId
-     *
-     * @return MoneyShortCategory
+     * @return ?MoneyShortCategory
      */
-    public function getMoneyShortCategoryByTypeId($typeId)
+    public function getMoneyShortCategoryByTypeId(string $typeId)
     {
-        return $this->moneyShortCategories->filter(function ($e) use ($typeId) {
+        $categories = $this->moneyShortCategories->filter(function ($e) use ($typeId) {
             return $e->getTypeId() == $typeId;
-        })->first();
+        });
+
+        return $categories->first() ?: null;
     }
 
     /**
-     * @return MoneyTransactionShort[]
+     *  @return Collection<int, MoneyTransactionShort>
      */
-    public function getMoneyTransactionsShort()
+    public function getMoneyTransactionsShort(): Collection
     {
         return $this->moneyTransactionsShort;
     }
 
     /**
-     * @param ArrayCollection $moneyTransactionsShort
+     * @param Collection<int, MoneyTransactionShort> $moneyTransactionsShort
      */
-    public function setMoneyTransactionsShort($moneyTransactionsShort)
+    public function setMoneyTransactionsShort(Collection $moneyTransactionsShort): void
     {
         $this->moneyTransactionsShort = $moneyTransactionsShort;
     }
 
     /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\SerializedName("money_transactions_short_in")
-     *
-     * @JMS\Groups({"moneyTransactionsShortIn"})
-     *
-     * @return MoneyTransactionShort[]
+     * @return Collection<int, MoneyTransactionShort>
      */
-    public function getMoneyTransactionsShortIn()
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('money_transactions_short_in')]
+    #[JMS\Groups(['moneyTransactionsShortIn'])]
+    public function getMoneyTransactionsShortIn(): Collection
     {
         return $this->moneyTransactionsShort->filter(function ($t) {
             return $t instanceof MoneyTransactionShortIn;
@@ -159,49 +148,34 @@ trait MoneyShortTrait
     }
 
     /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\SerializedName("money_transactions_short_out")
-     *
-     * @JMS\Groups({"moneyTransactionsShortOut"})
-     *
-     * @return MoneyTransactionShort[]
+     * @return Collection<int, MoneyTransactionShort>
      */
-    public function getMoneyTransactionsShortOut()
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('money_transactions_short_out')]
+    #[JMS\Groups(['moneyTransactionsShortOut'])]
+    public function getMoneyTransactionsShortOut(): Collection
     {
         return $this->moneyTransactionsShort->filter(function ($t) {
             return $t instanceof MoneyTransactionShortOut;
         });
     }
 
-    /**
-     * @return string
-     */
-    public function getMoneyTransactionsShortInExist()
+    public function getMoneyTransactionsShortInExist(): ?string
     {
         return $this->moneyTransactionsShortInExist;
     }
 
-    /**
-     * @param string $moneyTransactionsShortInExist
-     */
-    public function setMoneyTransactionsShortInExist($moneyTransactionsShortInExist)
+    public function setMoneyTransactionsShortInExist(?string $moneyTransactionsShortInExist): void
     {
         $this->moneyTransactionsShortInExist = $moneyTransactionsShortInExist;
     }
 
-    /**
-     * @return string
-     */
-    public function getMoneyTransactionsShortOutExist()
+    public function getMoneyTransactionsShortOutExist(): ?string
     {
         return $this->moneyTransactionsShortOutExist;
     }
 
-    /**
-     * @param string $moneyTransactionsShortOutExist
-     */
-    public function setMoneyTransactionsShortOutExist($moneyTransactionsShortOutExist)
+    public function setMoneyTransactionsShortOutExist(string $moneyTransactionsShortOutExist): void
     {
         $this->moneyTransactionsShortOutExist = $moneyTransactionsShortOutExist;
     }

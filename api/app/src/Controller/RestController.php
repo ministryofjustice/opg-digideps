@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Exception\NotFound;
 use OPG\Digideps\Backend\Utility\Query\Hydrator;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 abstract class RestController extends AbstractController
@@ -70,11 +70,13 @@ abstract class RestController extends AbstractController
     protected function checkIfUserHasAccessViaDeputyUid(int $clientId): bool
     {
         $hasAccess = false;
+
         // Check if the user has access on other accounts based on deputy uid
         if (in_array('ROLE_LAY_DEPUTY', $this->getUser()->getRoles())) {
             $deputyUid = $this->getUser()->getDeputyUid();
             if ($deputyUid) {
                 $deputyUidArray = $this->em->getRepository(User::class)->findDeputyUidsForClient($clientId);
+
                 if (in_array($deputyUid, array_column($deputyUidArray, 'deputyUid'))) {
                     $hasAccess = true;
                 }

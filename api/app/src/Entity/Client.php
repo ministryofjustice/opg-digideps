@@ -1,255 +1,214 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity;
 
-use OPG\Digideps\Backend\Entity\Report\Report;
-use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
-use OPG\Digideps\Backend\Entity\Traits\IsSoftDeleteableEntity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
+use OPG\Digideps\Backend\Entity\Traits\IsSoftDeleteableEntity;
+use OPG\Digideps\Backend\Repository\ClientRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Client.
- *
- * @ORM\Table(
- *     name="client",
- *     indexes={
- *
- *       @ORM\Index(name="case_number_idx", columns={"case_number"}),
- *       @ORM\Index(name="archived_at_idx", columns={"archived_at"})
- *     },
- *     options={"collate":"utf8_general_ci", "charset":"utf8"}
- *     )
- *
- * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\ClientRepository")
- *
- * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
- *
- * @ORM\HasLifecycleCallbacks()
  */
-class Client implements ClientInterface
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false)]
+#[ORM\Table(name: 'client', options: ['collate' => 'utf8_general_ci', 'charset' => 'utf8'])]
+#[ORM\Index(columns: ['case_number'], name: 'case_number_idx')]
+#[ORM\Index(columns: ['archived_at'], name: 'archived_at_idx')]
+#[ORM\Entity(repositoryClass: ClientRepository::class)]
+#[ORM\HasLifecycleCallbacks]
+class Client
 {
     use CreateUpdateTimestamps;
     use IsSoftDeleteableEntity;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="client_id_seq", allocationSize=1, initialValue=1)
      */
     #[JMS\Groups(['related', 'basic', 'client', 'client-id'])]
     #[JMS\Type('integer')]
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'client_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="OPG\Digideps\Backend\Entity\User", inversedBy="clients", fetch="EXTRA_LAZY")
-     *
-     * @ORM\JoinTable(name="deputy_case",
-     *         joinColumns={@ORM\JoinColumn(name="client_id", referencedColumnName="id", onDelete="CASCADE")},
-     *         inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="CASCADE")}
-     *     )
+     * @var Collection<int, User>
      */
     #[JMS\Groups(['client-users'])]
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\User>')]
+    #[ORM\JoinTable(name: 'deputy_case')]
+    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'clients', fetch: 'EXTRA_LAZY')]
     private $users;
 
     /**
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", mappedBy="client", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"submitDate"="DESC"})
+     * @var Collection<int, Report>
      */
     #[JMS\Groups(['client-reports'])]
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Report>')]
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Report::class, cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['submitDate' => 'DESC'])]
     private $reports;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="case_number", type="string", length=20, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['client', 'client-case-number', 'deputy-court-order-basic'])]
+    #[ORM\Column(name: 'case_number', type: 'string', length: 20, nullable: true)]
     private $caseNumber;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="email", type="string", length=60, nullable=true, unique=false)
+     * @var ?string
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['client', 'client-email'])]
+    #[ORM\Column(name: 'email', type: 'string', length: 60, unique: false, nullable: true)]
     private $email;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="phone", type="string", length=20, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['client'])]
+    #[ORM\Column(name: 'phone', type: 'string', length: 20, nullable: true)]
     private $phone;
 
-    /**
-     * @ORM\Column(name="address", type="string", length=200, nullable=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['client'])]
+    #[ORM\Column(name: 'address', type: 'string', length: 200, nullable: true)]
     private ?string $address = null;
 
-    /**
-     * @ORM\Column(name="address2", type="string", length=200, nullable=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['client'])]
+    #[ORM\Column(name: 'address2', type: 'string', length: 200, nullable: true)]
     private ?string $address2 = null;
 
-    /**
-     * @ORM\Column(name="address3", type="string", length=200, nullable=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['client'])]
+    #[ORM\Column(name: 'address3', type: 'string', length: 200, nullable: true)]
     private ?string $address3 = null;
 
-    /**
-     * @ORM\Column(name="address4", type="string", length=200, nullable=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['client'])]
+    #[ORM\Column(name: 'address4', type: 'string', length: 200, nullable: true)]
     private ?string $address4 = null;
 
-    /**
-     * @ORM\Column(name="address5", type="string", length=200, nullable=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['client'])]
+    #[ORM\Column(name: 'address5', type: 'string', length: 200, nullable: true)]
     private ?string $address5 = null;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="postcode", type="string", length=10, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['client'])]
+    #[ORM\Column(name: 'postcode', type: 'string', length: 10, nullable: true)]
     private $postcode;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="country", type="string", length=10, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['client'])]
+    #[ORM\Column(name: 'country', type: 'string', length: 10, nullable: true)]
     private $country;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="firstname", type="string", length=50, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['client', 'client-name', 'deputy-court-order-basic'])]
+    #[ORM\Column(name: 'firstname', type: 'string', length: 50, nullable: true)]
     private $firstname;
 
     /**
      * @var string
-     *
-     * @ORM\Column(name="lastname", type="string", length=50, nullable=true)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['client', 'client-name', 'deputy-court-order-basic'])]
+    #[ORM\Column(name: 'lastname', type: 'string', length: 50, nullable: true)]
     private $lastname;
 
     /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="court_date", type="date", nullable=true)
+     * @var ?\DateTime
      */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['client', 'client-court-date', 'checklist-information'])]
+    #[ORM\Column(name: 'court_date', type: 'date', nullable: true)]
     private $courtDate;
 
     /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="date_of_birth", type="date", nullable=true)
+     * @var ?\DateTime
      */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['client'])]
+    #[ORM\Column(name: 'date_of_birth', type: 'date', nullable: true)]
     private $dateOfBirth;
 
     /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Note", mappedBy="client", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"createdOn"="DESC"})
+     * @var Collection<int, Note>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Note>')]
     #[JMS\Groups(['client-notes'])]
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Note::class, cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdOn' => 'DESC'])]
     private $notes;
 
     /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\ClientContact", mappedBy="client", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"lastName"="ASC"})
+     * @var Collection<int, ClientContact>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\ClientContact>')]
     #[JMS\Groups(['client-clientcontacts'])]
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: ClientContact::class, cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['lastName' => 'ASC'])]
     private $clientContacts;
 
     /**
      * Holds the deputy the client belongs to
      * Loaded from the CSV upload.
      *
-     * @var Deputy|null
-     *
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Deputy", inversedBy="clients", fetch="EAGER")
-     *
-     * @ORM\JoinColumn(name="deputy_id", referencedColumnName="id", onDelete="SET NULL")
+     * @var ?Deputy
      */
     #[JMS\Groups(['report-submitted-by', 'client-deputy'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Deputy')]
+    #[ORM\JoinColumn(name: 'deputy_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: Deputy::class, fetch: 'EAGER', inversedBy: 'clients')]
     private $deputy;
 
     /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\CourtOrder", mappedBy="client", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"createdAt"="DESC"})
+     * @var Collection<int, CourtOrder>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\CourtOrder>')]
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: CourtOrder::class, cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdAt' => 'DESC'])]
     private $courtOrders;
 
     /**
-     * @var \DateTime|null
-     *
-     * @ORM\Column(name="archived_at", type="datetime", nullable=true)
+     * @var ?\DateTime
      */
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
     #[JMS\Groups(['client'])]
+    #[ORM\Column(name: 'archived_at', type: 'datetime', nullable: true)]
     private $archivedAt;
 
     /**
-     * @var Organisation|null
-     *
-     * @ORM\ManyToOne(targetEntity="Organisation", inversedBy="clients")
+     * @var ?Organisation
      */
     #[JMS\Type('OPG\Digideps\Backend\Entity\Organisation')]
     #[JMS\Groups(['client-organisations'])]
+    #[ORM\ManyToOne(targetEntity: Organisation::class, inversedBy: 'clients')]
     private $organisation;
 
     public function __construct()
@@ -285,13 +244,13 @@ class Client implements ClientInterface
     /**
      * Set email.
      *
-     * @param string $email
+     * @param ?string $email
      *
      * @return Client
      */
     public function setEmail($email)
     {
-        $this->email = strtolower($email);
+        $this->email = (($email === null) ? null : strtolower($email));
 
         return $this;
     }
@@ -299,7 +258,7 @@ class Client implements ClientInterface
     /**
      * Get email.
      *
-     * @return string
+     * @return ?string
      */
     public function getEmail()
     {
@@ -461,7 +420,7 @@ class Client implements ClientInterface
     /**
      * Get users.
      *
-     * @return Collection
+     * @return Collection<int, User>
      */
     public function getUsers()
     {
@@ -469,7 +428,7 @@ class Client implements ClientInterface
     }
 
     /**
-     * @param array $users
+     * @param Collection<int, User> $users
      *
      * @return $this
      */
@@ -487,10 +446,8 @@ class Client implements ClientInterface
     {
         $userIds = [];
 
-        if (!empty($this->users)) {
-            foreach ($this->users as $user) {
-                $userIds[] = $user->getId();
-            }
+        foreach ($this->users as $user) {
+            $userIds[] = $user->getId();
         }
 
         return $userIds;
@@ -522,7 +479,7 @@ class Client implements ClientInterface
     /**
      * Get reports.
      *
-     * @return ArrayCollection<Report>|Report[]
+     * @return Collection<int, Report>
      */
     public function getReports()
     {
@@ -530,7 +487,7 @@ class Client implements ClientInterface
     }
 
     /**
-     * @param Report[] $reports
+     * @param ArrayCollection<int, Report> $reports
      *
      * @return Client
      */
@@ -562,24 +519,24 @@ class Client implements ClientInterface
      *
      *  //TODO refactor using OrderBy({"submitDate"="DESC"}) on client.reports
      *
-     * @return ArrayCollection
+     * @return Collection<int, Report>
      */
-    public function getSubmittedReports()
+    public function getSubmittedReports(): Collection
     {
-        $arrayIterator = $this->reports->filter(function ($report) {
-            return $report->getSubmitted();
-        })->getIterator();
+        $reports = $this->reports->filter(function (Report $report) {
+            return $report->getSubmitted() === true;
+        })->toArray();
 
         // Sort by submitted date so the most recently submitted are first
-        $arrayIterator->uasort(function ($first, $second) {
+        uasort($reports, function ($first, $second) {
             return $first->getSubmitDate() < $second->getSubmitDate() ? 1 : -1;
         });
 
-        return new ArrayCollection(iterator_to_array($arrayIterator));
+        return new ArrayCollection($reports);
     }
 
     /**
-     * get progress the user is currenty work on
+     * get progress the user is currently work on
      * That means the first one that is unsubmitted AND has an unsubmit date.
      */
     #[JMS\VirtualProperty]
@@ -603,10 +560,8 @@ class Client implements ClientInterface
     {
         $reportIds = [];
 
-        if (!empty($this->reports)) {
-            foreach ($this->reports as $report) {
-                $reportIds[] = $report->getId();
-            }
+        foreach ($this->reports as $report) {
+            $reportIds[] = $report->getId();
         }
 
         return $reportIds;
@@ -724,7 +679,7 @@ class Client implements ClientInterface
     }
 
     /**
-     * @param ArrayCollection $notes
+     * @param ArrayCollection<int, Note> $notes
      *
      * @return $this
      */
@@ -741,7 +696,7 @@ class Client implements ClientInterface
     }
 
     /**
-     * @param ArrayCollection $clientContacts
+     * @param ArrayCollection<int, ClientContact> $clientContacts
      *
      * @return $this
      */
@@ -803,20 +758,20 @@ class Client implements ClientInterface
     }
 
     /**
-     * @return Collection<Report>
+     * @return Collection<int, Report>
      */
     #[JMS\Exclude]
     public function getUnsubmittedReports()
     {
-        return $this->getReports()->filter(function (Report $report) {
-            return empty($report->getSubmitted());
+        return $this->getReports()->filter(function (Report $report): bool {
+            return $report->getSubmitted() === null || $report->getSubmitted() === false;
         });
     }
 
     /**
      * Generates the expected Report Start date based on the Court date.
      *
-     * @return \DateTime|null
+     * @return ?\DateTime
      */
     #[JMS\VirtualProperty]
     #[JMS\Type("DateTime<'Y-m-d'>")]
@@ -849,7 +804,7 @@ class Client implements ClientInterface
     /**
      * Generates the expected Report End date based on the Court date.
      *
-     * @return \DateTime|null
+     * @return ?\DateTime
      */
     #[JMS\VirtualProperty]
     #[JMS\Type("DateTime<'Y-m-d'>")]
@@ -927,7 +882,7 @@ class Client implements ClientInterface
     }
 
     /**
-     * @return Organisation|null
+     * @return ?Organisation
      */
     public function getOrganisation()
     {
@@ -951,22 +906,28 @@ class Client implements ClientInterface
      */
     public function userBelongsToClientsOrganisation(UserInterface $user)
     {
-        if ($this->getOrganisation() instanceof OrganisationInterface && $this->getOrganisation()->isActivated()) {
-            return $this->getOrganisation()->containsUser($user);
+        $org = $this->getOrganisation();
+        if ($org instanceof Organisation && $org->isActivated()) {
+            return $org->containsUser($user);
         }
 
         return false;
     }
 
-    public function getCourtOrders(): ArrayCollection
+    /**
+     * @return Collection<int, CourtOrder>
+     */
+    public function getCourtOrders(): Collection
     {
         return $this->courtOrders;
     }
 
     /**
+     * @param Collection<int, CourtOrder> $courtOrders
+     *
      * @return $this
      */
-    public function setCourtOrders(ArrayCollection $courtOrders)
+    public function setCourtOrders(Collection $courtOrders)
     {
         $this->courtOrders = $courtOrders;
 

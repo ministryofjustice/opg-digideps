@@ -10,11 +10,8 @@ use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
-/**
- * @ORM\Entity()
- *
- * @ORM\Table(name="research_type")
- */
+#[ORM\Table(name: 'research_type')]
+#[ORM\Entity]
 class ResearchType
 {
     public function __construct(array $formResponses, ?UuidInterface $id = null)
@@ -34,64 +31,37 @@ class ResearchType
         }
     }
 
-    /**
-     * @JMS\Type("OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse")
-     *
-     * @JMS\Groups({"user-research", "satisfaction"})
-     *
-     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse", mappedBy="researchType", cascade={"persist"})
-     */
+    #[JMS\Type('OPG\Digideps\Backend\Entity\UserResearchResponse')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
+    #[ORM\OneToOne(mappedBy: 'researchType', targetEntity: UserResearchResponse::class, cascade: ['persist'])]
     private UserResearchResponse $userResearchResponse;
 
-    /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"user-research", "satisfaction"})
-     *
-     * @ORM\Id
-     *
-     * @ORM\Column(name="id", type="uuid")
-     *
-     * @ORM\GeneratedValue(strategy="NONE")
-     *
-     * @ORM\CustomIdGenerator(class=UuidGenerator::class)
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
+    #[ORM\Id]
+    #[ORM\Column(name: 'id', type: 'uuid')]
+    #[ORM\GeneratedValue(strategy: 'NONE')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     private UuidInterface $id;
 
-    /**
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"user-research", "satisfaction"})
-     *
-     * @ORM\Column(name="surveys", type="boolean", nullable=true)
-     */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
+    #[ORM\Column(name: 'surveys', type: 'boolean', nullable: true)]
     private ?bool $surveys = null;
 
-    /**
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"user-research", "satisfaction"})
-     *
-     * @ORM\Column(name="video_call", type="boolean", nullable=true)
-     */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
+    #[ORM\Column(name: 'video_call', type: 'boolean', nullable: true)]
     private ?bool $videoCall = null;
 
-    /**
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"user-research", "satisfaction"})
-     *
-     * @ORM\Column(name="phone", type="boolean", nullable=true)
-     */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
+    #[ORM\Column(name: 'phone', type: 'boolean', nullable: true)]
     private ?bool $phone = null;
 
-    /**
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"user-research", "satisfaction"})
-     *
-     * @ORM\Column(name="in_person", type="boolean", nullable=true)
-     */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['user-research', 'satisfaction'])]
+    #[ORM\Column(name: 'in_person', type: 'boolean', nullable: true)]
     private ?bool $inPerson = null;
 
     public function getUserResearchResponse(): UserResearchResponse

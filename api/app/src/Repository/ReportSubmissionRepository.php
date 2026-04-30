@@ -38,8 +38,8 @@ class ReportSubmissionRepository extends ServiceEntityRepository
         $order = 'ASC'
     ) {
         $statusFilters = [
-            'new' => 'rs.archived = false AND NOT EXISTS (SELECT 1 FROM App:Report\Document d WHERE d.reportSubmission = rs AND d.synchronisationStatus IS NOT NULL)',
-            'pending' => 'rs.archived = false AND EXISTS (SELECT 1 FROM App:Report\Document d WHERE d.reportSubmission = rs AND d.synchronisationStatus IS NOT NULL)',
+            'new' => 'rs.archived = false AND NOT EXISTS (SELECT 1 FROM OPG\Digideps\Backend\Entity\Report\Document d WHERE d.reportSubmission = rs AND d.synchronisationStatus IS NOT NULL)',
+            'pending' => 'rs.archived = false AND EXISTS (SELECT 1 FROM OPG\Digideps\Backend\Entity\Report\Document d WHERE d.reportSubmission = rs AND d.synchronisationStatus IS NOT NULL)',
             'archived' => 'rs.archived = true',
         ];
 
@@ -166,7 +166,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
         $docStmt = $conn->prepare($submittedReportsQuery);
         $result = $docStmt->executeQuery();
 
-        return array_filter($this->transformReportSubmissionsRawSql($result->fetchAllAssociative()));
+        return $this->transformReportSubmissionsRawSql($result->fetchAllAssociative());
     }
 
     /**

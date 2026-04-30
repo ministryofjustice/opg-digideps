@@ -138,6 +138,7 @@ services:
       - postgres
       - redis-api
       - localstack
+      - mock-sirius-integration
     environment:
       APP_ENV: ${APP_ENV:-local}
       APP_DEBUG: ${APP_DEBUG:-0}
@@ -262,11 +263,15 @@ services:
     ports:
       - 4010:4010
     command:
-      - mock
-      - /tmp/govuk-notifications.yaml
-      - -h
-      - 0.0.0.0
-      - --dynamic
+      [
+        "mock",
+        "-m",
+        "false",
+        "-h",
+        "0.0.0.0",
+        "--dynamic",
+        "/tmp/govuk-notifications.yaml",
+      ]
 
   composer:
     image: composer:2.9.5@sha256:698d3801b2a622ace460c4743c781282fcbcb733a4cbf8b31c44731e846585e8
@@ -390,6 +395,8 @@ services:
       localstack:
         condition: service_healthy
       mock-sirius-integration:
+        condition: service_started
+      mock-notify-api:
         condition: service_started
     environment:
       AWS_ACCESS_KEY_ID: aFakeSecretAccessKeyId

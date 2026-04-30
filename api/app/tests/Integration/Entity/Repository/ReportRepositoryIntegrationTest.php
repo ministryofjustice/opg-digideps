@@ -31,6 +31,10 @@ class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
         $repo = self::$entityManager->getRepository(Report::class);
 
         self::$sut = $repo;
+
+        // there is unindentified cross-contamination from other integration tests, so clear out the database before
+        // these tests (this test runs on its own but not as part of the whole integration test suite)
+        self::purgeDatabase();
     }
 
     /**

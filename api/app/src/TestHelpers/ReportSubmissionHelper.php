@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\TestHelpers;
 
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\ORMException;
-use Doctrine\ORM\OptimisticLockException;
+use OPG\Digideps\Backend\Entity\User;
 
 class ReportSubmissionHelper
 {
@@ -28,7 +29,7 @@ class ReportSubmissionHelper
         $client = new Client();
         $report = new ReportTestHelper()->generateReport($this->entityManager, $client, null, new \DateTime());
         $client->addReport($report);
-        $user = (UserTestHelper::create())->createAndPersistUser($this->entityManager, $client);
+        $user = UserTestHelper::create()->createAndPersistUser($this->entityManager, $client);
         $reportSubmission = new ReportSubmission($report, $user);
         $reportSubmission->setCreatedOn(new \DateTime());
 
@@ -79,6 +80,11 @@ class ReportSubmissionHelper
         );
 
         $client->addReport($report);
+
+        $submitter = $client->getUsers()->first();
+        if (!($submitter instanceof User)) {
+            throw new \LogicException('Report submission cannot be created with a submitting user');
+        }
 
         $reportSubmission = new ReportSubmission($report, $client->getUsers()[0])
             ->setCreatedOn(new \DateTime('+366 days'));

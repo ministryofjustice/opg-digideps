@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Controller;
 
+use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\User;
@@ -12,7 +13,6 @@ use OPG\Digideps\Backend\EventDispatcher\ObservableEventDispatcher;
 use OPG\Digideps\Backend\Repository\ClientRepository;
 use OPG\Digideps\Backend\Service\Audit\AuditEvents;
 use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -104,9 +104,11 @@ class ClientController extends RestController
     {
         $serialisedGroups = $request->query->has('groups')
             ? $request->query->all('groups') : ['client'];
+
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         $client = $this->findEntityBy(Client::class, $id);
+
         if ($client->getArchivedAt()) {
             throw $this->createAccessDeniedException('Cannot access archived reports');
         }
@@ -199,7 +201,8 @@ class ClientController extends RestController
         $client = $this->findEntityBy(Client::class, $id);
 
         $client->setDeletedAt(new \DateTime());
-        $this->em->flush($client);
+        $this->em->flush();
+        $this->em->clear();
 
         return [];
     }

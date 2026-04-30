@@ -1,23 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report;
 
-use OPG\Digideps\Backend\Entity\Traits\CreationAudit;
-use OPG\Digideps\Backend\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\Entity\Traits\CreationAudit;
+use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\ReportSubmissionRepository;
 
-/**
- * @ORM\Table(name="report_submission",
- *     indexes={
- *
- *     @ORM\Index(name="rs_created_on_idx", columns={"created_on"})
- *  })
- *
- * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\ReportSubmissionRepository")
- */
+#[ORM\Table(name: 'report_submission')]
+#[ORM\Index(columns: ['created_on'], name: 'rs_created_on_idx')]
+#[ORM\Entity(repositoryClass: ReportSubmissionRepository::class)]
 class ReportSubmission
 {
     // createdBy is the user who submitted the report
@@ -26,86 +23,52 @@ class ReportSubmission
 
     public const string REMOVE_FILES_WHEN_OLDER_THAN = '-500 days';
 
-    /**
-     * @JMS\Type("integer")
-     *
-     * @JMS\Groups({"report-submission", "report-submission-id"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="report_submission_id_seq", allocationSize=1, initialValue=1)
-     */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['report-submission', 'report-submission-id'])]
+    #[ORM\Id]
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'report_submission_id_seq', allocationSize: 1, initialValue: 1)]
     private int $id;
 
-    /**
-     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\Report")
-     *
-     * @JMS\Groups({"report-submission"})
-     *
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="reportSubmissions", cascade={"persist"})
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
-     */
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Report')]
+    #[JMS\Groups(['report-submission'])]
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, cascade: ['persist'], inversedBy: 'reportSubmissions')]
     private ?Report $report;
 
     /**
      * @var Collection<int, Document>
-     *
-     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\Document>")
-     *
-     * @JMS\Groups({"report-submission", "report-submission-documents"})
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\Document", mappedBy="reportSubmission", cascade={"persist"})
-     *
-     * @ORM\JoinColumn(name="report_submission_id", referencedColumnName="id", onDelete="CASCADE")
-     *
-     * @ORM\OrderBy({"createdBy"="ASC"})
      */
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Document>')]
+    #[JMS\Groups(['report-submission', 'report-submission-documents'])]
+    #[ORM\JoinColumn(name: 'report_submission_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\OneToMany(mappedBy: 'reportSubmission', targetEntity: Document::class, cascade: ['persist'])]
+    #[ORM\OrderBy(['createdBy' => 'ASC'])]
     private Collection $documents;
 
-    /**
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"report-submission"})
-     *
-     * @ORM\Column(name="archived", type="boolean", options={"default": false}, nullable=false)
-     */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['report-submission'])]
+    #[ORM\Column(name: 'archived', type: 'boolean', nullable: false, options: ['default' => false])]
     private bool $archived = false;
 
-    /**
-     * @JMS\Type("OPG\Digideps\Backend\Entity\User")
-     *
-     * @JMS\Groups({"report-submission"})
-     *
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\User", fetch="EAGER")
-     *
-     * @ORM\JoinColumn(name="archived_by", referencedColumnName="id", onDelete="SET NULL")
-     */
+    #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
+    #[JMS\Groups(['report-submission'])]
+    #[ORM\JoinColumn(name: 'archived_by', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EAGER')]
     private ?User $archivedBy;
 
-    /**
-     * @JMS\Type("boolean")
-     *
-     * @JMS\Groups({"report-submission"})
-     *
-     * @ORM\Column(name="downloadable", type="boolean", options={ "default": true}, nullable=false)
-     */
+    #[JMS\Type('boolean')]
+    #[JMS\Groups(['report-submission'])]
+    #[ORM\Column(name: 'downloadable', type: 'boolean', nullable: false, options: ['default' => true])]
     private bool $downloadable;
 
-    /**
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report-submission", "report-submission-uuid"})
-     *
-     * @ORM\Column(name="opg_uuid", type="string", length=36, nullable=true)
-     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submission', 'report-submission-uuid'])]
+    #[ORM\Column(name: 'opg_uuid', type: 'string', length: 36, nullable: true)]
     private ?string $uuid;
 
-    public function __construct(Report $report, User $createdBy)
+    public function __construct(Report $report, ?User $createdBy)
     {
         $this->report = $report;
         $this->report->addReportSubmission($this); // double-link for UNIT test purposes

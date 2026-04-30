@@ -1,46 +1,41 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Entity\Report\Expense;
 use OPG\Digideps\Backend\Entity\Report\Fee;
 use OPG\Digideps\Backend\Entity\Report\Report;
-use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as JMS;
 
 trait FeeExpensesTrait
 {
     /**
-     * @var Fee[]
-     *
-     * @JMS\Groups({"fee"})
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\Fee", mappedBy="report", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"id" = "ASC"})
+     * @var Collection<int, Fee>
      */
+    #[JMS\Groups(['fee'])]
+    #[ORM\OneToMany(mappedBy: 'report', targetEntity: Fee::class, cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['id' => 'ASC'])]
     private $fees;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"fee"})
-     *
-     * @ORM\Column(name="reason_for_no_fees", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['fee'])]
+    #[ORM\Column(name: 'reason_for_no_fees', type: 'text', nullable: true)]
     private $reasonForNoFees;
 
     /**
      * @var string yes|no|null
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"expenses"})
-     *
-     * @ORM\Column(name="paid_for_anything", type="string", length=3, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['expenses'])]
+    #[ORM\Column(name: 'paid_for_anything', type: 'string', length: 3, nullable: true)]
     private $paidForAnything;
 
     /**
@@ -48,20 +43,15 @@ trait FeeExpensesTrait
      * - Lay deputy expenses
      * - PA Fees outside practice direction.
      *
-     * @var Expense[]
-     *
-     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\Expense>")
-     *
-     * @JMS\Groups({"expenses"})
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\Expense", mappedBy="report", cascade={"persist", "remove"})
-     *
-     * @var Expense[]
+     * @var ?Collection<int, Expense>
      */
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Expense>')]
+    #[JMS\Groups(['expenses'])]
+    #[ORM\OneToMany(mappedBy: 'report', targetEntity: Expense::class, cascade: ['persist', 'remove'])]
     private $expenses;
 
     /**
-     * @return Fee[]
+     * @return Collection<int, Fee>
      */
     public function getFees()
     {
@@ -80,17 +70,17 @@ trait FeeExpensesTrait
     /**
      * @param string $typeId
      *
-     * @return Fee
+     * @return ?Fee
      */
     public function getFeeByTypeId($typeId)
     {
         return $this->getFees()->filter(function (Fee $fee) use ($typeId) {
-            return $fee->getFeeTypeId() == $typeId;
-        })->first();
+            return $fee->getFeeTypeId() === $typeId;
+        })->first() ?: null;
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getReasonForNoFees()
     {
@@ -98,7 +88,7 @@ trait FeeExpensesTrait
     }
 
     /**
-     * @param mixed $reasonForNoFees
+     * @param string $reasonForNoFees
      */
     public function setReasonForNoFees($reasonForNoFees)
     {
@@ -108,16 +98,12 @@ trait FeeExpensesTrait
     /**
      * Get fee total value.
      *
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("double")
-     *
-     * @JMS\SerializedName("fees_total")
-     *
-     * @JMS\Groups({"fee"})
-     *
      * @return float
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('double')]
+    #[JMS\SerializedName('fees_total')]
+    #[JMS\Groups(['fee'])]
     public function getFeesTotal()
     {
         $ret = 0;
@@ -129,7 +115,7 @@ trait FeeExpensesTrait
     }
 
     /**
-     * @return Fee[]
+     * @return Collection<int, Fee>
      */
     public function getFeesWithValidAmount()
     {
@@ -144,16 +130,12 @@ trait FeeExpensesTrait
      * Implement the report.hasFees based on the content of fees and reaons for no fees
      * Alternative to have a column.
      *
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\SerializedName("has_fees")
-     *
-     * @JMS\Groups({"fee"})
-     *
      * @return float
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('string')]
+    #[JMS\SerializedName('has_fees')]
+    #[JMS\Groups(['fee'])]
     public function getHasFees()
     {
         // never set -> return null
@@ -182,15 +164,15 @@ trait FeeExpensesTrait
     }
 
     /**
-     * @return Expense[]
+     * @return Collection<int, Expense>
      */
     public function getExpenses()
     {
-        return $this->expenses;
+        return $this->expenses ?? new ArrayCollection();
     }
 
     /**
-     * @param Expense[]|null $expenses
+     * @param ?Collection<int, Expense> $expenses
      *
      * @return Report
      */
@@ -206,7 +188,7 @@ trait FeeExpensesTrait
      */
     public function addExpense(Expense $expense)
     {
-        if (!$this->expenses->contains($expense)) {
+        if ($this->expenses !== null && !$this->expenses->contains($expense)) {
             $this->expenses->add($expense);
         }
 
@@ -214,21 +196,17 @@ trait FeeExpensesTrait
     }
 
     /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Type("double")
-     *
-     * @JMS\SerializedName("expenses_total")
-     *
-     * @JMS\Groups({"expenses"})
-     *
      * @return float
      */
+    #[JMS\VirtualProperty]
+    #[JMS\Type('double')]
+    #[JMS\SerializedName('expenses_total')]
+    #[JMS\Groups(['expenses'])]
     public function getExpensesTotal()
     {
         $ret = 0;
         foreach ($this->getExpenses() as $record) {
-            $ret += $record->getAmount();
+            $ret += (float) $record->getAmount();
         }
 
         return $ret;

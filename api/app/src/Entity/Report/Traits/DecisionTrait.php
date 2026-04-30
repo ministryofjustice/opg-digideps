@@ -1,41 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
-use OPG\Digideps\Backend\Entity\Report\Decision;
-use OPG\Digideps\Backend\Entity\Report\Report;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use Doctrine\Common\Collections\Collection;
+use OPG\Digideps\Backend\Entity\Report\Decision;
+use OPG\Digideps\Backend\Entity\Report\Report;
 
 trait DecisionTrait
 {
     /**
-     * @var Decision[]
-     *
-     * @JMS\Groups({"decision"})
-     *
-     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\Decision>")
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\Decision", mappedBy="report", cascade={"persist", "remove"})
+     * @var Collection<int, Decision>
      */
+    #[JMS\Groups(['decision'])]
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Decision>')]
+    #[ORM\OneToMany(mappedBy: 'report', targetEntity: Decision::class, cascade: ['persist', 'remove'])]
     private $decisions;
 
     /**
      * @var string deputy reason for not having decision. Required if no decisions are added
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report","decision"})
-     *
-     * @ORM\Column(name="reason_for_no_decisions", type="text", nullable=true)
-     **/
+     */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report', 'decision'])]
+    #[ORM\Column(name: 'reason_for_no_decisions', type: 'text', nullable: true)]
     private $reasonForNoDecisions;
 
     /**
      * Get decisions.
      *
-     * @return Collection
+     * @return Collection<int, Decision>
      */
     public function getDecisions()
     {
@@ -68,7 +64,7 @@ trait DecisionTrait
      * @param string $reasonForNoDecisions
      *
      * @return Report
-     **/
+     */
     public function setReasonForNoDecisions($reasonForNoDecisions)
     {
         if (is_string($reasonForNoDecisions)) {
