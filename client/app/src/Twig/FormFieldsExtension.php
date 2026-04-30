@@ -68,12 +68,14 @@ class FormFieldsExtension extends AbstractExtension
     {
         /** @var array $elementVars */
         $elementVars = $element->vars;
+        /** @var array $blockPrefixes */
+        $blockPrefixes = $elementVars['block_prefixes'] ?? [];
         // generate input field html using variables supplied
         echo $this->environment->render(
             '@App/Components/Form/_input.html.twig',
             array_merge(
                 $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex),
-                ['multiline' => in_array('textarea', $elementVars['block_prefixes'] ?? [])]
+                ['multiline' => in_array('textarea', $blockPrefixes)]
             )
         );
     }
@@ -104,11 +106,13 @@ class FormFieldsExtension extends AbstractExtension
     {
         /** @var array $elementVars */
         $elementVars = $element->vars;
+        /** @var array $blockPrefixes */
+        $blockPrefixes = $elementVars['block_prefixes'] ?? [];
         echo $this->environment->render(
             '@App/Components/Form/_checkbox.html.twig',
             array_merge(
                 $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex),
-                ['type' => in_array('radio', $elementVars['block_prefixes']) ? 'radio' : 'checkbox']
+                ['type' => in_array('radio', $blockPrefixes) ? 'radio' : 'checkbox']
             )
         );
     }
@@ -355,7 +359,9 @@ class FormFieldsExtension extends AbstractExtension
         }
 
         // inputPrefix
-        $inputPrefix = isset($vars['inputPrefix']) ? $this->translator->trans($vars['inputPrefix'], [], $domain) : null;
+        /** @var string $varsInputPrefix */
+        $varsInputPrefix = $vars['inputPrefix'] ?? null;
+        $inputPrefix = isset($vars['inputPrefix']) ? $this->translator->trans($varsInputPrefix, [], $domain) : null;
 
         $labelClass = isset($vars['labelClass']) ? $vars['labelClass'] : null;
         $inputClass = isset($vars['inputClass']) ? $vars['inputClass'] : null;
