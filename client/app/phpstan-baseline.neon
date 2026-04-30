@@ -12865,12 +12865,6 @@ parameters:
 			path: src/Twig/ComponentsExtension.php
 
 		-
-			message: '#^Parameter \#2 \$parameters of method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:trans\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 5
-			path: src/Twig/FormFieldsExtension.php
-
-		-
 			message: '#^Parameter \#2 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 4

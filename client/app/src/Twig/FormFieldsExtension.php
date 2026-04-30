@@ -142,6 +142,7 @@ class FormFieldsExtension extends AbstractExtension
             if ($legendTextTrans != $translationKey . '.legend') {
                 $legendText = $legendTextTrans;
             } else {
+                /** @var array $labelParams */
                 $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
                 $legendTextTrans = $this->translator->trans($translationKey . '.label', $labelParams, $domain);
                 if ($legendTextTrans != $translationKey . '.label') {
@@ -340,6 +341,7 @@ class FormFieldsExtension extends AbstractExtension
         // sort hintList text translation
         $hintListArray = null;
         if (!empty($vars['hasHintList'])) {
+            /** @var array $hintListParams */
             $hintListParams = isset($vars['hintListParameters']) ? $vars['hintListParameters'] : [];
             $hintListTextTrans = $this->translator->trans($translationKey . '.hintList', $hintListParams, $domain);
             $hintListArray = array_filter(explode("\n", $hintListTextTrans));
@@ -349,6 +351,7 @@ class FormFieldsExtension extends AbstractExtension
         if (isset($vars['labelText']) && $vars['labelText']) {
             $labelText = $vars['labelText'];
         } else {
+            /** @var array $labelParams */
             $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
             // label is translated directly here
             if ('' != $translationKey) {
