@@ -223,8 +223,7 @@ class FormFieldsExtension extends AbstractExtension
         $hintText = $this->getHintText($translationKey, $domain);
 
         // get legendText translation
-        $labelParams = [];
-        $legendText = $this->getLegendText($translationKey, $labelParams, $domain);
+        $legendText = $this->getLegendText($translationKey, [], $domain);
 
         /** @var array $legend */
         $legend = $vars['legend'] ?? [];
