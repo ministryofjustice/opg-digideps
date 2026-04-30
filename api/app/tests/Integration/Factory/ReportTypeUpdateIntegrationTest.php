@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\OPG\Digideps\Backend\Integration\v2\Registration\DeputyshipProcessing\Report\ReportType;
+namespace Tests\OPG\Digideps\Backend\Factory;
 
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
@@ -8,15 +8,15 @@ use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\StagingSelectedCandidate;
-use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\Report\ReportTypeUpdate;
+use OPG\Digideps\Backend\Factory\ReportTypeUpdateFactory;
 use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 
-class ReportTypeUpdateIntegrationTest extends ApiIntegrationTestCase
+class ReportTypeUpdateFactoryIntegrationTest extends ApiIntegrationTestCase
 {
-    private static ReportTypeUpdate $sut;
+    private static ReportTypeUpdateFactory $sut;
     private static Fixtures $fixtures;
 
     private static int $count = 0;
@@ -26,7 +26,7 @@ class ReportTypeUpdateIntegrationTest extends ApiIntegrationTestCase
         parent::setUpBeforeClass();
 
         self::$fixtures = new Fixtures(self::$entityManager);
-        self::$sut = self::$container->get(ReportTypeUpdate::class);
+        self::$sut = self::$container->get(ReportTypeUpdateFactory::class);
     }
 
     public function tearDown(): void

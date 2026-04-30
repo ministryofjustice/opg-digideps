@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\Report;
+namespace OPG\Digideps\Backend\Factory;
 
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\Report\ReportType;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;
-use OPG\Digideps\Backend\Factory\DataFactoryResult;
 use OPG\Digideps\Backend\Repository\ReportRepository;
 use OPG\Digideps\Backend\Service\ReportTypeService;
 use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
@@ -17,12 +16,12 @@ use Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Psr\Log\LoggerInterface;
 
-class ReportTypeUpdate
+readonly class ReportTypeUpdateFactory implements DataFactoryInterface
 {
     public function __construct(
-        public readonly EntityManagerInterface $entityManager,
-        public readonly ReportRepository $reportRepository,
-        public readonly LoggerInterface $logger,
+        public EntityManagerInterface $entityManager,
+        public ReportRepository $reportRepository,
+        public LoggerInterface $logger,
     ) {
     }
 
@@ -70,7 +69,7 @@ class ReportTypeUpdate
         }
     }
 
-    public function run(bool $dryRun = false): DataFactoryResult
+    public function run(bool $dryRun): DataFactoryResult
     {
         $count = 0;
         $errors = [];
