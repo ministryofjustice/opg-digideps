@@ -29,7 +29,7 @@ abstract class RestController extends AbstractController
 
         $entity = is_array($criteriaOrId) ? $repo->findOneBy($criteriaOrId) : $repo->find($criteriaOrId);
 
-        if (null === $entity) {
+        if ($entity === null) {
             throw new NotFound($errorMessage ?: $entityClass . ' not found');
         }
 

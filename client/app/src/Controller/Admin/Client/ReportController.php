@@ -137,7 +137,7 @@ class ReportController extends AbstractController
         if ($reviewForm->isSubmitted() && $reviewForm->isValid()) {
             /** @var SubmitButton $button */
             $button = $reviewForm->getClickedButton();
-            if (ReviewChecklistType::SUBMIT_ACTION === $button->getName()) {
+            if ($button->getName() === ReviewChecklistType::SUBMIT_ACTION) {
                 $reviewChecklist->setIsSubmitted(true);
             }
 
@@ -147,7 +147,7 @@ class ReportController extends AbstractController
                 $this->restClient->post('report/' . $report->getId() . '/checklist', $reviewChecklist);
             }
 
-            if (ReviewChecklistType::SUBMIT_ACTION === $button->getName()) {
+            if ($button->getName() === ReviewChecklistType::SUBMIT_ACTION) {
                 return $this->redirect($this->generateUrl('admin_report_checklist_submitted', ['id' => $report->getId()]));
             } else {
                 $this->addFlash('notice', 'Review checklist saved');
@@ -180,12 +180,12 @@ class ReportController extends AbstractController
                 $this->addFlash('notice', 'Lodging checklist saved');
             }
 
-            if ('saveFurtherInformation' == $buttonClicked->getName()) {
+            if ($buttonClicked->getName() == 'saveFurtherInformation') {
                 return $this->redirect(
                     $this->generateUrl('admin_report_checklist', ['id' => $report->getId()]) . '#furtherInformation'
                 );
             } else {
-                if ('submitAndContinue' == $buttonClicked->getName()) {
+                if ($buttonClicked->getName() == 'submitAndContinue') {
                     return $this->redirect($this->generateUrl('admin_report_checklist_submitted', ['id' => $report->getId()]));
                 } else {
                     return $this->redirect($this->generateUrl('admin_report_checklist', ['id' => $report->getId()]) . '#');
@@ -195,7 +195,7 @@ class ReportController extends AbstractController
 
         $costBreakdown = null;
 
-        if (Report::PROF_DEPUTY_COSTS_TYPE_FIXED !== $report->getProfDeputyCostsEstimateHowCharged()) {
+        if ($report->getProfDeputyCostsEstimateHowCharged() !== Report::PROF_DEPUTY_COSTS_TYPE_FIXED) {
             $costBreakdown = $report->generateActualSubmittedEstimateCosts();
         }
 
@@ -229,7 +229,7 @@ class ReportController extends AbstractController
         $report = $this->reportApi->getReport($id, ['report-checklist']);
         $syncFeatureIsEnabled = false;
 
-        if ('1' === $parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC)) {
+        if ($parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC) === '1') {
             $syncFeatureIsEnabled = true;
             $this->queueChecklistForSyncing($report);
         }
@@ -262,7 +262,7 @@ class ReportController extends AbstractController
         try {
             $pdfBinary = $reportSubmissionService->getChecklistPdfBinaryContent($report);
 
-            if (false === $pdfBinary) {
+            if ($pdfBinary === false) {
                 // could not access PDF generator endpoint
                 throw $this->createNotFoundException();
             }
@@ -404,7 +404,7 @@ class ReportController extends AbstractController
         if (!empty($dueDateChoice) && preg_match('/^\d+$/', "$dueDateChoice")) {
             $newDueDate = new \DateTime();
             $newDueDate->modify("+$dueDateChoice weeks");
-        } elseif ('custom' == $dueDateChoice) {
+        } elseif ($dueDateChoice == 'custom') {
             /** @var ?\DateTime $dueDateCustom */
             $dueDateCustom = $form['dueDateCustom']->getData();
 
@@ -427,7 +427,7 @@ class ReportController extends AbstractController
         $report = $this->reportApi->getReport(intval($id), ['report-checklist', 'action']);
 
         $sessionData = $request->getSession()->get('report-management-changes');
-        if (null === $sessionData || !$this->sufficientDataInSession($sessionData)) {
+        if ($sessionData === null || !$this->sufficientDataInSession($sessionData)) {
             return $this->redirect($this->generateUrl('admin_report_manage', ['id' => $report->getId()]));
         }
 
@@ -435,7 +435,7 @@ class ReportController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->has('confirm') && 'no' === $form['confirm']->getData()) {
+            if ($form->has('confirm') && $form['confirm']->getData() === 'no') {
                 // User decided not to update.
                 return $this->redirect($this->generateUrl('admin_client_details', ['id' => $report->getClient()->getId()]));
             }
@@ -443,7 +443,7 @@ class ReportController extends AbstractController
             $this->populateReportFromSession($report, $sessionData);
             $this->restClient->put('report/' . $report->getId(), $report, ['report_type', 'report_due_date']);
 
-            if ($form->has('confirm') && 'yes' === $form['confirm']->getData() && $report->isSubmitted()) {
+            if ($form->has('confirm') && $form['confirm']->getData() === 'yes' && $report->isSubmitted()) {
                 /** @var User $user */
                 $user = $this->getUser();
 

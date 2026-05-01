@@ -231,7 +231,7 @@ class BankAccount implements BankAccountInterface
 
     public function isClosingBalanceZero(): bool
     {
-        return !is_null($this->closingBalance) && 0.0 === $this->getClosingBalance();
+        return !is_null($this->closingBalance) && $this->getClosingBalance() === 0.0;
     }
 
     /**
@@ -375,7 +375,7 @@ class BankAccount implements BankAccountInterface
      */
     public function getDisplaySortCode()
     {
-        if (6 == strlen($this->getSortCode())) {
+        if (strlen($this->getSortCode()) == 6) {
             $sc = str_split($this->getSortCode());
 
             return $sc[0] . $sc[1] . '-' . $sc[2] . $sc[3] . '-' . $sc[4] . $sc[5];

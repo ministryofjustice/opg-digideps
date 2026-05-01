@@ -117,7 +117,7 @@ class RedirectorTest extends TestCase
             });
 
         $this->user->method('isDeputyOrg')->willReturn($paOrProfDeputy);
-        $this->user->method('hasAdminRole')->willReturn(User::ROLE_LAY_DEPUTY !== $grantedRole);
+        $this->user->method('hasAdminRole')->willReturn($grantedRole !== User::ROLE_LAY_DEPUTY);
         $this->user->method('getIsCoDeputy')->willReturn($coDeputy);
         $this->user->method('hasAddressDetails')->willReturn($userHasAddress);
         $this->user->method('getIdOfClientWithDetails')->willReturn($clientIdWithDetails);
@@ -178,7 +178,7 @@ class RedirectorTest extends TestCase
 
         $this->authChecker->method('isGranted')
             ->willReturnCallback(function ($role) {
-                return User::ROLE_LAY_DEPUTY === $role;
+                return $role === User::ROLE_LAY_DEPUTY;
             });
 
         $this->router->expects($this->once())
@@ -207,7 +207,7 @@ class RedirectorTest extends TestCase
 
         $this->authChecker->method('isGranted')
             ->willReturnCallback(function ($role) {
-                return User::ROLE_LAY_DEPUTY === $role;
+                return $role === User::ROLE_LAY_DEPUTY;
             });
 
         $this->router->expects($this->once())
@@ -229,7 +229,7 @@ class RedirectorTest extends TestCase
 
         $this->authChecker->method('isGranted')
             ->willReturnCallback(function ($role) {
-                return User::ROLE_LAY_DEPUTY === $role;
+                return $role === User::ROLE_LAY_DEPUTY;
             });
 
         $this->user->method('getDeputyUid')->willReturn(3322);
@@ -313,7 +313,7 @@ class RedirectorTest extends TestCase
     {
         $this->authChecker->method('isGranted')
             ->willReturnCallback(function ($role) {
-                return 'IS_AUTHENTICATED_FULLY' === $role;
+                return $role === 'IS_AUTHENTICATED_FULLY';
             });
 
         $this->tokenStorage->expects($this->once())->method('getToken')->willReturn($this->token);

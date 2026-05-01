@@ -46,7 +46,7 @@ class ReportSubmissionHelper
         $rs = $this->generateAndPersistReportSubmission();
         $report = $rs->getReport();
 
-        if (null === $report) {
+        if ($report === null) {
             throw new \LogicException('Generated ReportSubmission was created without a report');
         }
 
@@ -65,7 +65,7 @@ class ReportSubmissionHelper
     {
         $existingReport = $lastSubmission->getReport();
 
-        if (null === $existingReport) {
+        if ($existingReport === null) {
             throw new \LogicException('Report submission was created without a report');
         }
 

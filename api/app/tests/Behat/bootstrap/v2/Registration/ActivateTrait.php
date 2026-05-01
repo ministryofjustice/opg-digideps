@@ -280,11 +280,11 @@ trait ActivateTrait
         $field = $this->fixStepArgument($field);
         $value = $this->fixStepArgument($value);
 
-        if ('.' != substr($field, 0, 1) && '#' != substr($field, 0, 1)) {
+        if (substr($field, 0, 1) != '.' && substr($field, 0, 1) != '#') {
             $field = '#' . $field;
         }
 
-        if ('Behat\Mink\Driver\Selenium2Driver' == get_class($driver)) {
+        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
             $this->scrollTo($field);
 
             $javascript = <<<EOT

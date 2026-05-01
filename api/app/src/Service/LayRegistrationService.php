@@ -39,7 +39,7 @@ class LayRegistrationService
 
                 ++$numReportsPersisted;
 
-                if (0 === $numReportsPersisted % $batchSize) {
+                if ($numReportsPersisted % $batchSize === 0) {
                     $this->entityManager->flush();
                 }
             }

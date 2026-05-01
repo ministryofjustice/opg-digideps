@@ -20,7 +20,7 @@ final class Version242 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf('postgresql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('ALTER TABLE checklist ADD synchronised_by INT DEFAULT NULL');
         $this->addSql('ALTER TABLE checklist ADD opg_uuid VARCHAR(36) DEFAULT NULL');
@@ -34,7 +34,7 @@ final class Version242 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf('postgresql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('ALTER TABLE checklist DROP CONSTRAINT FK_5C696D2F1EFE0E05');
         $this->addSql('DROP INDEX IDX_5C696D2F1EFE0E05');

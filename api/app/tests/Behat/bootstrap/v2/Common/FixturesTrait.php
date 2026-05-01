@@ -40,7 +40,7 @@ trait FixturesTrait
             $url = sprintf('/admin/fixtures/court-orders?%s', $queryString);
             $this->visitAdminPath($url);
 
-            $activated = is_null($row['activated']) || 'true' == $row['activated'];
+            $activated = is_null($row['activated']) || $row['activated'] == 'true';
             $this->fillField('court_order_fixture_activated', $activated);
             $this->fillField('court_order_fixture_deputyType', $row['deputy_type']);
             $this->fillField('court_order_fixture_reportType', $this->resolveReportType($row));
@@ -101,7 +101,7 @@ trait FixturesTrait
         $userDetails2 = $this->createLayCombinedHighSubmitted(null, $this->testRunId . mt_rand(1, 10000));
         $client2 = $this->em->getRepository(Client::class)->find($userDetails2->getClientId());
 
-        if ('first' === $whichName) {
+        if ($whichName === 'first') {
             $userDetails1->setClientFirstName($firstName);
             $userDetails2->setClientFirstName($firstName);
             $client2->setFirstname($firstName);
@@ -250,7 +250,7 @@ trait FixturesTrait
 
     private function setExistingUser(string $adminPermissions)
     {
-        if ('admin' === $adminPermissions) {
+        if ($adminPermissions === 'admin') {
             return $this->profAdminCombinedHighNotStartedDetails;
         } else {
             return $this->profTeamDeputyNotStartedHealthWelfareDetails;

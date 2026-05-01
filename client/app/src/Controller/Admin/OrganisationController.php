@@ -59,7 +59,7 @@ class OrganisationController extends AbstractController
     #[Template('@App/Admin/Organisation/view.html.twig')]
     public function viewAction(Request $request, int $id): array|Response
     {
-        /** @var $organisation Organisation */
+        /** @var Organisation $organisation */
         $organisation = $this->restClient->get('v2/organisation/' . $id, 'Organisation');
         assert($organisation instanceof Organisation);
 
@@ -79,7 +79,7 @@ class OrganisationController extends AbstractController
         /** @var array $result */
         $result = $this->restClient->get('/v2/organisation/' . $id . '/' . $tab . '?' . http_build_query($currentFilters), 'array');
 
-        if ('clients' == $tab) {
+        if ($tab == 'clients') {
             $tabData = $this->restClient->arrayToEntities(Client::class, $result['records']);
         } else {
             $tabData = $this->restClient->arrayToEntities(User::class, $result['records']);

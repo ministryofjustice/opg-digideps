@@ -68,7 +68,7 @@ class DocumentSyncService
      */
     public function syncDocument(QueuedDocumentData $documentData): mixed
     {
-        if ($documentData->isReportPdf() && 'application/pdf' == MimeType::fromFilename($documentData->getFileName())) {
+        if ($documentData->isReportPdf() && MimeType::fromFilename($documentData->getFileName()) == 'application/pdf') {
             return $this->syncReportDocument($documentData);
         }
 
@@ -254,7 +254,7 @@ class DocumentSyncService
             $syncStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
         }
 
-        if (Document::SYNC_STATUS_PERMANENT_ERROR === $syncStatus) {
+        if ($syncStatus === Document::SYNC_STATUS_PERMANENT_ERROR) {
             if ($documentData->isReportPdf()) {
                 $this->syncErrorSubmissionIds[] = $documentData->getReportSubmissionId();
             }

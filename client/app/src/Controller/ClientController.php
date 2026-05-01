@@ -90,7 +90,7 @@ class ClientController extends AbstractController
 
             $activeReport = $postUpdateClient->getActiveReport();
 
-            if ('declaration' === $from && $activeReport instanceof Report) {
+            if ($from === 'declaration' && $activeReport instanceof Report) {
                 return $this->redirect($this->generateUrl('report_confirm_details', ['reportId' => $activeReport->getId()]));
             }
 

@@ -120,9 +120,9 @@ class ReportSection
     private function completeMoneyIn(Report $report): void
     {
         if (
-            Report::LAY_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
-            || Report::PA_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::PA_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
-            || Report::PROF_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
+            $report->getType() === Report::LAY_PFA_HIGH_ASSETS_TYPE || $report->getType() === Report::LAY_COMBINED_HIGH_ASSETS_TYPE
+            || $report->getType() === Report::PA_PFA_HIGH_ASSETS_TYPE || $report->getType() === Report::PA_COMBINED_HIGH_ASSETS_TYPE
+            || $report->getType() === Report::PROF_PFA_HIGH_ASSETS_TYPE || $report->getType() === Report::PROF_COMBINED_HIGH_ASSETS_TYPE
         ) {
             $report->setMoneyInExists('Yes');
         }
@@ -133,9 +133,9 @@ class ReportSection
     private function completeMoneyOut(Report $report): void
     {
         if (
-            Report::LAY_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
-            || Report::PA_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::PA_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
-            || Report::PROF_PFA_HIGH_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_HIGH_ASSETS_TYPE === $report->getType()
+            $report->getType() === Report::LAY_PFA_HIGH_ASSETS_TYPE || $report->getType() === Report::LAY_COMBINED_HIGH_ASSETS_TYPE
+            || $report->getType() === Report::PA_PFA_HIGH_ASSETS_TYPE || $report->getType() === Report::PA_COMBINED_HIGH_ASSETS_TYPE
+            || $report->getType() === Report::PROF_PFA_HIGH_ASSETS_TYPE || $report->getType() === Report::PROF_COMBINED_HIGH_ASSETS_TYPE
         ) {
             $report->setMoneyOutExists('Yes');
         }
@@ -156,9 +156,9 @@ class ReportSection
     private function completeMoneyInShort(Report $report): void
     {
         if (
-            Report::LAY_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_LOW_ASSETS_TYPE === $report->getType()
-            || Report::PA_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PA_COMBINED_LOW_ASSETS_TYPE === $report->getType()
-            || Report::PROF_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_LOW_ASSETS_TYPE === $report->getType()
+            $report->getType() === Report::LAY_PFA_LOW_ASSETS_TYPE || $report->getType() === Report::LAY_COMBINED_LOW_ASSETS_TYPE
+            || $report->getType() === Report::PA_PFA_LOW_ASSETS_TYPE || $report->getType() === Report::PA_COMBINED_LOW_ASSETS_TYPE
+            || $report->getType() === Report::PROF_PFA_LOW_ASSETS_TYPE || $report->getType() === Report::PROF_COMBINED_LOW_ASSETS_TYPE
         ) {
             $report->setMoneyInExists('No');
             $report->setReasonForNoMoneyIn('No money in');
@@ -169,9 +169,9 @@ class ReportSection
     private function completeMoneyOutShort(Report $report): void
     {
         if (
-            Report::LAY_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::LAY_COMBINED_LOW_ASSETS_TYPE === $report->getType()
-            || Report::PA_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PA_COMBINED_LOW_ASSETS_TYPE === $report->getType()
-            || Report::PROF_PFA_LOW_ASSETS_TYPE === $report->getType() || Report::PROF_COMBINED_LOW_ASSETS_TYPE === $report->getType()
+            $report->getType() === Report::LAY_PFA_LOW_ASSETS_TYPE || $report->getType() === Report::LAY_COMBINED_LOW_ASSETS_TYPE
+            || $report->getType() === Report::PA_PFA_LOW_ASSETS_TYPE || $report->getType() === Report::PA_COMBINED_LOW_ASSETS_TYPE
+            || $report->getType() === Report::PROF_PFA_LOW_ASSETS_TYPE || $report->getType() === Report::PROF_COMBINED_LOW_ASSETS_TYPE
         ) {
             $report->setMoneyOutExists('No');
             $report->setReasonForNoMoneyOut('No money out');

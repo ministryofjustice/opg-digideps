@@ -120,7 +120,7 @@ class DeputyshipProcessingRawDbAccess
     public function insertOrderDeputy(int $courtOrderId, array $candidate): DeputyshipProcessingRawDbAccessResult
     {
         $deputyId = $candidate['deputyId'];
-        $deputyActive = (true === $candidate['deputyStatusOnOrder'] ? 'true' : 'false');
+        $deputyActive = ($candidate['deputyStatusOnOrder'] === true ? 'true' : 'false');
 
         try {
             $result = $this->ingestWriterEm->getConnection()->createQueryBuilder()
@@ -207,7 +207,7 @@ class DeputyshipProcessingRawDbAccess
     {
         // this is necessary because doctrine treats 0 and false differently when passed as update parameters,
         // while true and 1 result in the same outcome when used as a parameter
-        $isActive = (true === $candidate['deputyStatusOnOrder'] ? 1 : 0);
+        $isActive = ($candidate['deputyStatusOnOrder'] === true ? 1 : 0);
 
         $deputyId = $candidate['deputyId'];
 

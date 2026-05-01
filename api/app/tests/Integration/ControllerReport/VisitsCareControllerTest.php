@@ -40,7 +40,7 @@ class VisitsCareControllerTest extends AbstractTestController
 
         self::fixtures()->flush()->clear();
 
-        if (null === self::$tokenAdmin) {
+        if (self::$tokenAdmin === null) {
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
         }
@@ -220,7 +220,7 @@ class VisitsCareControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $this->assertTrue(null === self::fixtures()->clear()->getRepo(VisitsCare::class)->find($id));
+        $this->assertTrue(self::fixtures()->clear()->getRepo(VisitsCare::class)->find($id) === null);
     }
 
     /**

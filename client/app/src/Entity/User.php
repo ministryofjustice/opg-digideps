@@ -955,7 +955,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
 
     public function hasReports()
     {
-        if (0 === count($this->clients)) {
+        if (count($this->clients) === 0) {
             return false;
         }
 
@@ -1031,7 +1031,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      */
     public function isPaTeamMember()
     {
-        return self::ROLE_PA_TEAM_MEMBER === $this->roleName;
+        return $this->roleName === self::ROLE_PA_TEAM_MEMBER;
     }
 
     /**
@@ -1041,7 +1041,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      */
     public function isProfTeamMember()
     {
-        return self::ROLE_PROF_TEAM_MEMBER === $this->roleName;
+        return $this->roleName === self::ROLE_PROF_TEAM_MEMBER;
     }
 
     /**
@@ -1162,7 +1162,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      */
     public function isLayDeputy()
     {
-        return self::ROLE_LAY_DEPUTY === $this->roleName;
+        return $this->roleName === self::ROLE_LAY_DEPUTY;
     }
 
     /**
@@ -1217,7 +1217,7 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      */
     public function isPaTopRole()
     {
-        return self::ROLE_PA === $this->getRoleName();
+        return $this->getRoleName() === self::ROLE_PA;
     }
 
     /**
@@ -1225,22 +1225,22 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
      */
     public function isProfTopRole()
     {
-        return self::ROLE_PROF === $this->getRoleName();
+        return $this->getRoleName() === self::ROLE_PROF;
     }
 
     public function isAdmin(): bool
     {
-        return self::ROLE_ADMIN === $this->getRoleName();
+        return $this->getRoleName() === self::ROLE_ADMIN;
     }
 
     public function isSuperAdmin(): bool
     {
-        return self::ROLE_SUPER_ADMIN === $this->getRoleName();
+        return $this->getRoleName() === self::ROLE_SUPER_ADMIN;
     }
 
     public function isAdminManager(): bool
     {
-        return self::ROLE_ADMIN_MANAGER === $this->getRoleName();
+        return $this->getRoleName() === self::ROLE_ADMIN_MANAGER;
     }
 
     public function hasAdminRole(): bool

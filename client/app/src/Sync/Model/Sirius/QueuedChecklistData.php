@@ -104,7 +104,7 @@ class QueuedChecklistData
 
     public function getSyncedReportSubmission(): ?ReportSubmission
     {
-        if (null === $this->getReportSubmissions()) {
+        if ($this->getReportSubmissions() === null) {
             return null;
         }
 

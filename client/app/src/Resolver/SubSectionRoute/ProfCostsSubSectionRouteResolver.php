@@ -47,7 +47,7 @@ class ProfCostsSubSectionRouteResolver
      */
     private function sectionNotStarted($state)
     {
-        return Status::STATE_NOT_STARTED === $state || (Status::STATE_INCOMPLETE !== $state && Status::STATE_DONE !== $state);
+        return $state === Status::STATE_NOT_STARTED || ($state !== Status::STATE_INCOMPLETE && $state !== Status::STATE_DONE);
     }
 
     /**
@@ -55,7 +55,7 @@ class ProfCostsSubSectionRouteResolver
      */
     private function sectionIsComplete($state)
     {
-        return Status::STATE_DONE === $state;
+        return $state === Status::STATE_DONE;
     }
 
     /**
@@ -145,7 +145,7 @@ class ProfCostsSubSectionRouteResolver
     {
         $getProfDeputyCostsHasInterimLower = is_null($report->getProfDeputyCostsHasInterim()) ? '' : strtolower($report->getProfDeputyCostsHasInterim());
 
-        return 'yes' == $getProfDeputyCostsHasInterimLower;
+        return $getProfDeputyCostsHasInterimLower == 'yes';
     }
 
     /**

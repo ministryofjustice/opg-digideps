@@ -231,12 +231,12 @@ class MailFactory
             'caseNumber' => $deputy->getFirstClient()->getCaseNumber(),
             'fullName' => $deputy->getFullName(),
             'address' => $deputy->getAddress1(),
-            'address2' => null !== $deputy->getAddress2() ? $deputy->getAddress2() : 'Not provided',
-            'address3' => null !== $deputy->getAddress3() ? $deputy->getAddress3() : 'Not provided',
+            'address2' => $deputy->getAddress2() !== null ? $deputy->getAddress2() : 'Not provided',
+            'address3' => $deputy->getAddress3() !== null ? $deputy->getAddress3() : 'Not provided',
             'postcode' => $deputy->getAddressPostcode(),
             'countryName' => $countryName,
             'phone' => $deputy->getPhoneMain(),
-            'altPhoneNumber' => null !== $deputy->getPhoneAlternative() ? $deputy->getPhoneAlternative() : 'Not provided',
+            'altPhoneNumber' => $deputy->getPhoneAlternative() !== null ? $deputy->getPhoneAlternative() : 'Not provided',
             'email' => $deputy->getEmail(),
         ];
 
@@ -263,7 +263,7 @@ class MailFactory
         $notifyParams = [
             'clientFullname' => $submittedReport->getClient()->getFullname(),
             'deputyFullname' => $user->getFullName(),
-            'orgIntro' => 'default' == self::getRecipientRole($user) ? '' : $this->buildOrgIntroText($submittedReport->getClient()),
+            'orgIntro' => self::getRecipientRole($user) == 'default' ? '' : $this->buildOrgIntroText($submittedReport->getClient()),
             'startDate' => $submittedReport->getStartDate()->format(self::DATE_FORMAT),
             'endDate' => $submittedReport->getEndDate()->format(self::DATE_FORMAT),
             'homepageURL' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),

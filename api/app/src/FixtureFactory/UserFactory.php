@@ -33,9 +33,9 @@ class UserFactory
             ->setAddressCountry('GB')
             ->setRoleName($roleName)
             ->setAgreeTermsUse(true)
-            ->setDeputyUid(User::TYPE_LAY === $data['deputyType'] ? ($data['deputyUid'] ?? null) : null);
+            ->setDeputyUid($data['deputyType'] === User::TYPE_LAY ? ($data['deputyUid'] ?? null) : null);
 
-        if ('true' === $data['activated'] || true === $data['activated']) {
+        if ($data['activated'] === 'true' || $data['activated'] === true) {
             $user->setPassword($this->passwordHasher->hashPassword($user, 'DigidepsPass1234'));
         } else {
             $user->setActive(false);
@@ -78,7 +78,7 @@ class UserFactory
             ->setRegistrationDate(new \DateTime())
             ->setRoleName($data['adminType']);
 
-        if ('true' === $data['activated']) {
+        if ($data['activated'] === 'true') {
             $user->setPassword($this->passwordHasher->hashPassword($user, 'DigidepsPass1234'))->setActive(true);
         }
 
@@ -128,7 +128,7 @@ class UserFactory
             ->setActive(true)
             ->setDeputyUid('7' . str_pad((string) rand(1, 99999999), 11, '0', STR_PAD_LEFT));
 
-        if ('true' === $data['activated'] || true === $data['activated']) {
+        if ($data['activated'] === 'true' || $data['activated'] === true) {
             $user2->setPassword($this->passwordHasher->hashPassword($user2, 'DigidepsPass1234'))
                   ->setIsPrimary(true);
         } else {

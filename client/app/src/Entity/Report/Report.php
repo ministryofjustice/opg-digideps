@@ -805,7 +805,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
 
     public function hasContacts()
     {
-        if (empty($this->getContacts()) && null === $this->getReasonForNoContacts()) {
+        if (empty($this->getContacts()) && $this->getReasonForNoContacts() === null) {
             return null;
         }
 
@@ -1208,7 +1208,7 @@ class Report implements ReportInterface, StartEndDateComparableInterface
         return (strpos($this->getType(), '-4') > 0) ?
             '-4' :
             (
-                '104' === $this->getType() || '104-6' === $this->getType() ?
+                $this->getType() === '104' || $this->getType() === '104-6' ?
                 '-104' : ''
             );
     }

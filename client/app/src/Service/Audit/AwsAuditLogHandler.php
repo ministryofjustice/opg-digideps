@@ -38,7 +38,7 @@ class AwsAuditLogHandler extends AbstractProcessingHandler
         try {
             $this->send($record, $stream, $sequenceToken);
         } catch (CloudWatchLogsException $e) {
-            if ('InvalidSequenceTokenException' === $e->getAwsErrorCode()) {
+            if ($e->getAwsErrorCode() === 'InvalidSequenceTokenException') {
                 $this->send($record, $stream, $e->get('expectedSequenceToken'));
             }
 
@@ -126,7 +126,7 @@ class AwsAuditLogHandler extends AbstractProcessingHandler
         return
             isset($record->context['event'])
             && isset($record->context['type'])
-            && 'audit' === $record->context['type'];
+            && $record->context['type'] === 'audit';
     }
 
     protected function getDefaultFormatter(): JsonFormatter

@@ -19,7 +19,7 @@ class OpgLineFormatter extends LineFormatter
         // Split the log message into components
         preg_match('/^\[(.*?)\] (.*?): (.*)$/', $output, $matches);
 
-        if (4 === count($matches)) {
+        if (count($matches) === 4) {
             // Format date (light blue)
             $date = "\033[0;94m" . $matches[1] . "\033[0m";
 

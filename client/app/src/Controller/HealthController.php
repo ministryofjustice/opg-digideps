@@ -44,7 +44,7 @@ class HealthController extends AbstractController
             $redisAvailability,
         ];
 
-        if ('admin' !== $this->environment) {
+        if ($this->environment !== 'admin') {
             $services[] = $clamAvailability;
             $services[] = $htmlAvailability;
         }
@@ -73,7 +73,7 @@ class HealthController extends AbstractController
             $notifyAvailability,
         ];
 
-        if ('admin' !== $this->environment) {
+        if ($this->environment !== 'admin') {
             $services[] = $siriusAvailability;
         }
 

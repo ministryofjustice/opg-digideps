@@ -211,7 +211,7 @@ trait MoneyOutSectionTrait
             $this->fillInFieldTrackTotal('account[amount]', $paymentAmount, 'addPayment-' . $translatedPaymentValue);
         }
 
-        if ('Care fees' === $translatedPaymentValue) {
+        if ($translatedPaymentValue === 'Care fees') {
             $this->chooseOption(
                 'account[bankAccountId]',
                 $this->loggedInUserDetails->getCurrentReportBankAccountId(),
@@ -259,7 +259,7 @@ trait MoneyOutSectionTrait
 
         $transactionItemTableRows = $this->getSession()->getPage()->find('xpath', "//tr[contains(@class,'behat-region-transaction-')]");
 
-        if ('no' == $arg1) {
+        if ($arg1 == 'no') {
             $this->assertIsNull($transactionItemTableRows, 'Transaction items are not rendered');
 
             $this->expectedResultsDisplayedSimplified(null, true, false, false, false);

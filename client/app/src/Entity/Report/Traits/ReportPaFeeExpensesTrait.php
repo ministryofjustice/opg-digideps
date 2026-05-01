@@ -92,7 +92,7 @@ trait ReportPaFeeExpensesTrait
 
     public function feesValid(ExecutionContextInterface $context)
     {
-        if (empty($this->getReasonForNoFees()) && 0 === count($this->getFeesWithValidAmount())) {
+        if (empty($this->getReasonForNoFees()) && count($this->getFeesWithValidAmount()) === 0) {
             $context->addViolation('fee.mustHaveAtLeastOneFee');
         }
     }
@@ -130,7 +130,7 @@ trait ReportPaFeeExpensesTrait
      */
     public function isOtherFeesSectionComplete()
     {
-        return 'no' === $this->getPaidForAnything()
-        || ('yes' === $this->getPaidForAnything() && count($this->getExpenses()));
+        return $this->getPaidForAnything() === 'no'
+        || ($this->getPaidForAnything() === 'yes' && count($this->getExpenses()));
     }
 }

@@ -164,7 +164,7 @@ trait HealthAndLifestyleTrait
         );
 
         $this->fillInField(
-            'yes' == $takesPart ? 'lifestyle[activityDetailsYes]' : 'lifestyle[activityDetailsNo]',
+            $takesPart == 'yes' ? 'lifestyle[activityDetailsYes]' : 'lifestyle[activityDetailsNo]',
             $this->faker->text(200),
             'health-lifestyle-leisure'
         );

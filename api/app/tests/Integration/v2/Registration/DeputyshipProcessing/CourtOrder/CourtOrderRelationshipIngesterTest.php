@@ -195,7 +195,7 @@ class CourtOrderRelationshipIngesterTest extends ApiIntegrationTestCase
             self::$entityManager
         );
         $results = [...$ingester->execute()];
-        usort($results, fn(CourtOrderRelationshipResult $left, CourtOrderRelationshipResult $right) => $left->getMessage() <=> $right->getMessage());
+        usort($results, fn (CourtOrderRelationshipResult $left, CourtOrderRelationshipResult $right) => $left->getMessage() <=> $right->getMessage());
 
         $this->assertCount(14, $results);
         $this->assertSame("Changes in CourtOrder 10: SiblingId changed from '110' -> '210'. Kind changed from 'hybrid' -> 'dual'.", $results[0]->getMessage());
@@ -214,6 +214,6 @@ class CourtOrderRelationshipIngesterTest extends ApiIntegrationTestCase
         $this->assertSame("Changes in CourtOrder 9: SiblingId changed from '109' -> ''. Kind changed from 'hybrid' -> 'single'.", $results[13]->getMessage());
 
         $closed = self::$entityManager->getRepository(CourtOrder::class)->findBy(['status' => 'CLOSED']);
-        $this->assertTrue(array_all($closed, fn(CourtOrder $order) => $order->getSibling() === null));
+        $this->assertTrue(array_all($closed, fn (CourtOrder $order) => $order->getSibling() === null));
     }
 }

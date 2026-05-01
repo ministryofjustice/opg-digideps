@@ -35,7 +35,7 @@ class VisitsCareType extends AbstractType
         $this->translator = $options['translator'];
         $this->clientFirstName = $options['clientFirstName'];
 
-        if (1 === $this->step) {
+        if ($this->step === 1) {
             $builder->add('doYouLiveWithClient', FormTypes\ChoiceType::class, [
                 'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
@@ -43,7 +43,7 @@ class VisitsCareType extends AbstractType
             $builder->add('howOftenDoYouContactClient', FormTypes\TextareaType::class);
         }
 
-        if (2 === $this->step) {
+        if ($this->step === 2) {
             $builder->add('doesClientReceivePaidCare', FormTypes\ChoiceType::class, [
                 'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
@@ -59,11 +59,11 @@ class VisitsCareType extends AbstractType
             ]);
         }
 
-        if (3 === $this->step) {
+        if ($this->step === 3) {
             $builder->add('whoIsDoingTheCaring', FormTypes\TextareaType::class);
         }
 
-        if (4 === $this->step) {
+        if ($this->step === 4) {
             $builder->add('doesClientHaveACarePlan', FormTypes\ChoiceType::class, [
                 'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
@@ -81,10 +81,10 @@ class VisitsCareType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $data = $event->getData();
 
-            if (4 == $this->step) {
+            if ($this->step == 4) {
                 // Strip out the date field if it's not needed. Having a partial date field breaks things
                 // if the care plan date is hidden as it receives a date that only has a day
-                if (isset($data['doesClientHaveACarePlan']) && 'no' == $data['doesClientHaveACarePlan']) {
+                if (isset($data['doesClientHaveACarePlan']) && $data['doesClientHaveACarePlan'] == 'no') {
                     $data['whenWasCarePlanLastReviewed'] = null;
                 }
 
@@ -111,14 +111,14 @@ class VisitsCareType extends AbstractType
                 $data = $form->getData();
                 /* @var $data VisitsCare */
                 $validationGroups = [
-                    1 => ('no' == $data->getDoYouLiveWithClient())
+                    1 => ($data->getDoYouLiveWithClient() == 'no')
                         ? ['visits-care-live-client', 'visits-care-how-often-contact']
                         : ['visits-care-live-client'],
-                    2 => ('yes' == $data->getDoesClientReceivePaidCare())
+                    2 => ($data->getDoesClientReceivePaidCare() == 'yes')
                     ? ['visits-care-receive-paid-care', 'visits-care-how-care-funded']
                     : ['visits-care-receive-paid-care'],
                     3 => ['visits-care-who-does-caring'],
-                    4 => ('yes' == $data->getDoesClientHaveACarePlan())
+                    4 => ($data->getDoesClientHaveACarePlan() == 'yes')
                         ? ['visits-care-have-care-plan', 'visits-care-care-plan-last-review']
                         : ['visits-care-have-care-plan'],
                 ][$this->step];

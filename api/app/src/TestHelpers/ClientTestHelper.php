@@ -36,7 +36,7 @@ class ClientTestHelper
             ->setAddress2($faker->streetAddress())
             ->setPostcode($faker->postcode());
 
-        if (!is_null($user) && User::ROLE_LAY_DEPUTY === $user->getRoleName()) {
+        if (!is_null($user) && $user->getRoleName() === User::ROLE_LAY_DEPUTY) {
             /** @var EntityManager $em */
             return $client->addUser($user ?: (UserTestHelper::create())->createAndPersistUser($em));
         }
@@ -65,7 +65,7 @@ class ClientTestHelper
 
         $checkbit = (11 - ($sum % 11)) % 11;
 
-        if (10 === $checkbit) {
+        if ($checkbit === 10) {
             $checkbit = 'T';
         }
 

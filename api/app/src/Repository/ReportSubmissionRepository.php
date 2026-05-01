@@ -238,7 +238,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
      */
     private function determineCreatedFromDate(?\DateTime $date = null)
     {
-        $dateFormat = (1 == date('N')) ? 'last Friday midnight' : 'yesterday midnight';
+        $dateFormat = (date('N') == 1) ? 'last Friday midnight' : 'yesterday midnight';
 
         return ($date instanceof \DateTime) ? $date : new \DateTime($dateFormat);
     }
@@ -266,7 +266,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
             $allSynced = true;
 
             foreach ($reportSubmission->getDocuments() as $document) {
-                if (Document::SYNC_STATUS_SUCCESS !== $document->getSynchronisationStatus()) {
+                if ($document->getSynchronisationStatus() !== Document::SYNC_STATUS_SUCCESS) {
                     $allSynced = false;
                 }
             }

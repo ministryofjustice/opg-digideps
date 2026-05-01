@@ -30,7 +30,7 @@ class ActionType extends AbstractType
         $this->translator = $options['translator'];
         $this->clientFirstName = $options['clientFirstName'];
 
-        if (1 === $this->step) {
+        if ($this->step === 1) {
             $builder
                 ->add('doYouExpectFinancialDecisions', FormTypes\ChoiceType::class, [
                 'choices' => ['Yes' => 'yes', 'No' => 'no'],
@@ -38,7 +38,7 @@ class ActionType extends AbstractType
             ])->add('doYouExpectFinancialDecisionsDetails', FormTypes\TextareaType::class);
         }
 
-        if (2 === $this->step) {
+        if ($this->step === 2) {
             $builder->add('doYouHaveConcerns', FormTypes\ChoiceType::class, [
                 'choices' => ['Yes' => 'yes', 'No' => 'no'],
                 'expanded' => true,
@@ -57,16 +57,16 @@ class ActionType extends AbstractType
                 /* @var $data Action */
                 $validationGroups = [];
 
-                if (1 === $this->step) {
+                if ($this->step === 1) {
                     $validationGroups = ['action-expect-decisions-choice'];
-                    if ('yes' == $data->getDoYouExpectFinancialDecisions()) {
+                    if ($data->getDoYouExpectFinancialDecisions() == 'yes') {
                         $validationGroups = ['action-expect-decisions-details'];
                     }
                 }
 
-                if (2 === $this->step) {
+                if ($this->step === 2) {
                     $validationGroups = ['action-have-concerns-choice'];
-                    if ('yes' == $data->getDoYouHaveConcerns()) {
+                    if ($data->getDoYouHaveConcerns() == 'yes') {
                         $validationGroups = ['action-have-concerns-details'];
                     }
                 }

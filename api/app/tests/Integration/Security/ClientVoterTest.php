@@ -58,7 +58,7 @@ class ClientVoterTest extends KernelTestCase
     {
         $this->token->method('getUser')->willReturn($this->user);
 
-        if ('ROLE_ADMIN' === $role) {
+        if ($role === 'ROLE_ADMIN') {
             // The ROLE_ADMIN check verifies the users role with the isGranted($roleName) method.
             $this->security->method('isGranted')->with($role)->willReturn(true);
         } else {

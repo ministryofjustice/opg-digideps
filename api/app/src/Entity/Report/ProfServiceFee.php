@@ -312,7 +312,7 @@ abstract class ProfServiceFee
      */
     public function isFixedFee()
     {
-        return self::TYPE_FIXED_FEE == $this->getAssessedOrFixed();
+        return $this->getAssessedOrFixed() == self::TYPE_FIXED_FEE;
     }
 
     /**
@@ -322,6 +322,6 @@ abstract class ProfServiceFee
      */
     public function isAssessedFee()
     {
-        return self::TYPE_ASSESSED_FEE == $this->getAssessedOrFixed();
+        return $this->getAssessedOrFixed() == self::TYPE_ASSESSED_FEE;
     }
 }

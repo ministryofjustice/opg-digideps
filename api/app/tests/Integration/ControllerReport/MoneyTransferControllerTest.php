@@ -56,7 +56,7 @@ class MoneyTransferControllerTest extends AbstractTestController
 
         self::fixtures()->flush()->clear();
 
-        if (null === self::$tokenAdmin) {
+        if (self::$tokenAdmin === null) {
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
         }
@@ -181,7 +181,7 @@ class MoneyTransferControllerTest extends AbstractTestController
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_MONEY_TRANSFERS));
 
         $t = self::fixtures()->getRepo(MoneyTransfer::class)->find(self::$transfer1->getId());
-        $this->assertTrue(null === $t);
+        $this->assertTrue($t === null);
     }
 
     /**

@@ -246,7 +246,7 @@ trait MoneyInShortSectionTrait
         $this->fillInField('money_short_transaction[description]', $description, 'moneyInDetails' . $paymentCount);
         $this->fillInFieldTrackTotal('money_short_transaction[amount]', $amount, 'moneyInDetails' . $paymentCount);
 
-        if (null !== $date) {
+        if ($date !== null) {
             $explodedDate = explode('/', $date);
 
             $this->fillInDateFields(
@@ -294,7 +294,7 @@ trait MoneyInShortSectionTrait
 
         $oneOffPaymentTableRows = $this->getSession()->getPage()->find('xpath', "//tr[contains(@class,'behat-region-transaction-')]");
 
-        if ('no' == $arg1) {
+        if ($arg1 == 'no') {
             $this->assertPageNotContainsText('List of items of income over £1000');
             $this->assertIsNull($oneOffPaymentTableRows, 'One off payment rows are not rendered');
 
@@ -334,7 +334,7 @@ trait MoneyInShortSectionTrait
                 $count++;
             }
         }
-        if (0 == $count) {
+        if ($count == 0) {
             $this->removeSection('one-off-payments');
             $this->updateExpectedAnswerInSection('yes_no[moneyTransactionsShortInExist]', 'one-off-payments', 'no');
         }

@@ -20,7 +20,7 @@ final class Version248 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf('postgresql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('CREATE TABLE research_type (id UUID NOT NULL, surveys BOOLEAN DEFAULT NULL, video_call BOOLEAN DEFAULT NULL, phone BOOLEAN DEFAULT NULL, in_person BOOLEAN DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('COMMENT ON COLUMN research_type.id IS \'(DC2Type:uuid)\'');
@@ -36,7 +36,7 @@ final class Version248 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf('postgresql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('ALTER TABLE user_research_response DROP CONSTRAINT FK_3B9FE71A5423F28F');
         $this->addSql('DROP TABLE research_type');

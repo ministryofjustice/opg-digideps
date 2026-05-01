@@ -64,70 +64,70 @@ class DoctrineListener
 
         if ($entity instanceof MoneyTransactionShortIn) {
             $report = $entity->getReport();
-            if (0 === count($report->getMoneyTransactionsShortIn())) {
+            if (count($report->getMoneyTransactionsShortIn()) === 0) {
                 $report->setMoneyTransactionsShortInExist('no');
             }
         }
 
         if ($entity instanceof MoneyTransactionShortOut) {
             $report = $entity->getReport();
-            if (0 === count($report->getMoneyTransactionsShortOut())) {
+            if (count($report->getMoneyTransactionsShortOut()) === 0) {
                 $report->setMoneyTransactionsShortOutExist('no');
             }
         }
 
         if ($entity instanceof Contact) {
             $report = $entity->getReport();
-            if (1 === count($report->getContacts())) {
+            if (count($report->getContacts()) === 1) {
                 $report->setReasonForNoContacts(null);
             }
         }
 
         if ($entity instanceof Gift) {
             $report = $entity->getReport();
-            if (1 === count($report->getGifts())) {
+            if (count($report->getGifts()) === 1) {
                 $report->setGiftsExist(null);
             }
         }
 
         if ($entity instanceof Document) {
             $report = $entity->getReport();
-            if ($report instanceof Report && 1 === count($report->getDocuments())) {
+            if ($report instanceof Report && count($report->getDocuments()) === 1) {
                 $report->setWishToProvideDocumentation(null);
             }
         }
 
         if ($entity instanceof Decision) {
             $report = $entity->getReport();
-            if (1 === count($report->getDecisions())) {
+            if (count($report->getDecisions()) === 1) {
                 $report->setReasonForNoDecisions(null);
             }
         }
 
         if ($entity instanceof Expense) {
             $report = $entity->getReport();
-            if (1 === count($report->getExpenses())) {
+            if (count($report->getExpenses()) === 1) {
                 $report->setPaidForAnything(null);
             }
         }
 
         if ($entity instanceof MoneyTransfer) {
             $report = $entity->getReport();
-            if (1 === count($report->getMoneyTransfers())) {
+            if (count($report->getMoneyTransfers()) === 1) {
                 $report->setNoTransfersToAdd(null);
             }
         }
 
         if ($entity instanceof Asset) {
             $report = $entity->getReport();
-            if (1 === count($report->getAssets())) {
+            if (count($report->getAssets()) === 1) {
                 $report->setNoAssetToAdd(null);
             }
         }
 
         if ($entity instanceof ProfServiceFeeCurrent) {
             $report = $entity->getReport();
-            if (1 === count($report->getCurrentProfServiceFees())) {
+            if (count($report->getCurrentProfServiceFees()) === 1) {
                 $report->setCurrentProfPaymentsReceived(null);
                 $report->setPreviousProfFeesEstimateGiven(null);
                 $report->setProfFeesEstimateSccoReason(null);
