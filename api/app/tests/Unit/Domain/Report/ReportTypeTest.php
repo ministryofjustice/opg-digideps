@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 class ReportTypeTest extends TestCase
 {
     #[Test]
-    public function unexpectedReportTypeReturnsNull()
+    public function unexpectedReportTypeReturnsNull(): void
     {
         $reportType = ReportType::tryFrom('107-01');
         $this->assertNull($reportType);
