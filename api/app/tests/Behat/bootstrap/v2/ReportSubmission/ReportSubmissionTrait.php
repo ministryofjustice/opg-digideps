@@ -104,7 +104,7 @@ trait ReportSubmissionTrait
     #[Given('/^I send the documents to complete the upload process on the "([^"]*)" report$/')]
     public function iSendTheDocumentsToCompleteTheUploadProcess($reportStatus)
     {
-        if ('submitted' != $reportStatus) {
+        if ($reportStatus != 'submitted') {
             $this->clickLink('Continue to send documents');
         }
 
@@ -116,8 +116,8 @@ trait ReportSubmissionTrait
         string $whichNameSearched,
         string $whichNamesAreSame,
     ) {
-        $userDetails = 'first' === $whichNamesAreSame ? $this->sameFirstNameUserDetails[0] : $this->sameLastNameUserDetails[0];
-        $nameToSearchOn = 'first' === $whichNameSearched ? $userDetails->getClientFirstName() : $userDetails->getClientLastName();
+        $userDetails = $whichNamesAreSame === 'first' ? $this->sameFirstNameUserDetails[0] : $this->sameLastNameUserDetails[0];
+        $nameToSearchOn = $whichNameSearched === 'first' ? $userDetails->getClientFirstName() : $userDetails->getClientLastName();
 
         $this->fillInField('q', $nameToSearchOn);
         $this->pressButton('Search');
@@ -127,7 +127,7 @@ trait ReportSubmissionTrait
     #[Then('I should see the clients with the same :whichName names in the search results')]
     public function iShouldSeeBothClientsInTheSearchResults(string $whichName)
     {
-        $usersToSearchOn = 'first' === $whichName ? $this->sameFirstNameUserDetails : $this->sameLastNameUserDetails;
+        $usersToSearchOn = $whichName === 'first' ? $this->sameFirstNameUserDetails : $this->sameLastNameUserDetails;
         $locator = sprintf(
             '//td[normalize-space()="%s"]|//td[normalize-space()="%s"]',
             $usersToSearchOn[0]->getClientCaseNumber(),
@@ -146,7 +146,7 @@ trait ReportSubmissionTrait
     #[Then('I should not see the two clients with different :whichName names')]
     public function iShouldNotSeeTheOtherTwoClientsWithDifferentNames(string $whichName)
     {
-        $usersToSearchOn = 'first' === $whichName ? $this->sameFirstNameUserDetails : $this->sameLastNameUserDetails;
+        $usersToSearchOn = $whichName === 'first' ? $this->sameFirstNameUserDetails : $this->sameLastNameUserDetails;
         $locator = sprintf(
             '//td[normalize-space()="%s"]|//td[normalize-space()="%s"]',
             $usersToSearchOn[0]->getClientCaseNumber(),
@@ -165,7 +165,7 @@ trait ReportSubmissionTrait
     #[When('I search for submissions using the court order number of the client with :numberReports report(s)')]
     public function iSearchForSubmissionsUsingTheCourtOrderNumberOfTheClientWithNumberReports(string $numberReports)
     {
-        $userToSearchOn = 'one' === $numberReports ? $this->oneReportsUserDetails : $this->twoReportsUserDetails;
+        $userToSearchOn = $numberReports === 'one' ? $this->oneReportsUserDetails : $this->twoReportsUserDetails;
         $this->fillInField('q', $userToSearchOn->getClientCaseNumber());
         $this->pressButton('Search');
         $this->clickLink('Pending');
@@ -174,7 +174,7 @@ trait ReportSubmissionTrait
     #[Then('I should see :numberRows rows for the client with :numberReports report submission(s) in the search results')]
     public function iShouldSeeNumberRowsForClientWithNumberReports(string $numberRows, string $numberReports)
     {
-        $userToSearchOn = 'one' === $numberReports ? $this->oneReportsUserDetails : $this->twoReportsUserDetails;
+        $userToSearchOn = $numberReports === 'one' ? $this->oneReportsUserDetails : $this->twoReportsUserDetails;
         $locator = sprintf(
             '//td[normalize-space()="%s"]',
             $userToSearchOn->getClientCaseNumber()
@@ -182,7 +182,7 @@ trait ReportSubmissionTrait
 
         $clientRows = $this->getSession()->getPage()->findAll('xpath', $locator);
 
-        $expectedRows = 'one' === $numberRows ? 1 : 2;
+        $expectedRows = $numberRows === 'one' ? 1 : 2;
         $this->assertIntEqualsInt(
             $expectedRows,
             count($clientRows),
@@ -193,7 +193,7 @@ trait ReportSubmissionTrait
     #[Then('I should not see the client with :numberReports report submission(s) in the search results')]
     public function iShouldNotSeeTheClientWithSubmissionsInResults(string $numberReports)
     {
-        $userToSearchOn = 'one' === $numberReports ? $this->oneReportsUserDetails : $this->twoReportsUserDetails;
+        $userToSearchOn = $numberReports === 'one' ? $this->oneReportsUserDetails : $this->twoReportsUserDetails;
 
         $locator = sprintf(
             '//td[normalize-space()="%s"]',
@@ -219,7 +219,7 @@ trait ReportSubmissionTrait
 
         $clientRowCheckBox = $this->getSession()->getPage()->find('xpath', $locator);
         $clientRowCheckBox->check();
-        $this->pressButton('archive' === $action ? 'Archive' : 'Synchronise');
+        $this->pressButton($action === 'archive' ? 'Archive' : 'Synchronise');
     }
 
     #[Then('I should see the client row under the Synchronised tab')]
@@ -290,7 +290,7 @@ trait ReportSubmissionTrait
     #[Then('/^the \'([^\']*)\' tab \'([^\']*)\' visible$/')]
     public function tabVisibilityCheck($tabName, $visibility)
     {
-        $shouldBeVisible = 'is' === $visibility;
+        $shouldBeVisible = $visibility === 'is';
         $newSubmissionTab = $this->getSession()->getPage()->find('css', "a:contains('$tabName')");
 
         if ($shouldBeVisible && !$newSubmissionTab) {
@@ -319,11 +319,11 @@ trait ReportSubmissionTrait
         $caseNumber = $this->interactingWithUserDetails->getClientCaseNumber();
         $reportPdfRow = $this->getSession()->getPage()->find('css', "table tr:contains('$caseNumber')");
 
-        if ('New' === $status) {
+        if ($status === 'New') {
             if (!is_null($reportPdfRow)) {
                 throw new BehatException("The submission ($caseNumber) appears in the new column when it should not appear");
             }
-        } elseif ('Pending' === $status) {
+        } elseif ($status === 'Pending') {
             if (is_null($reportPdfRow)) {
                 throw new BehatException("The submission ($caseNumber) does not appear in the pending column when it should appear");
             }

@@ -379,7 +379,7 @@ class AssetProperty extends Asset implements AssetInterface
 
     public function getValueTotal(): float|int|null
     {
-        if (self::OWNED_PARTLY == $this->getOwned()) {
+        if ($this->getOwned() == self::OWNED_PARTLY) {
             return $this->getValue() * $this->getOwnedPercentage() / 100;
         }
 
@@ -393,16 +393,16 @@ class AssetProperty extends Asset implements AssetInterface
      */
     public function deleteUnusedData()
     {
-        if ('no' === $this->getIsRentedOut()) {
+        if ($this->getIsRentedOut() === 'no') {
             $this->setRentAgreementEndDate(null);
             $this->setRentIncomeMonth(null);
         }
 
-        if ('no' === $this->getHasMortgage()) {
+        if ($this->getHasMortgage() === 'no') {
             $this->setMortgageOutstandingAmount(null);
         }
 
-        if (self::OWNED_FULLY === $this->getOwned()) {
+        if ($this->getOwned() === self::OWNED_FULLY) {
             $this->setOwnedPercentage(null);
         }
     }

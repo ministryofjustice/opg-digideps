@@ -12,7 +12,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserPasswordFixtures extends AbstractDataFixture implements OrderedFixtureInterface
 {
     public function __construct(
-        readonly KernelInterface $kernel,
+        public readonly KernelInterface $kernel,
         private readonly ParameterBagInterface $params,
         private readonly UserPasswordHasherInterface $passwordHasher
     ) {

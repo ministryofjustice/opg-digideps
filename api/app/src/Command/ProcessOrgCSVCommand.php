@@ -226,7 +226,7 @@ class ProcessOrgCSVCommand extends Command
             if (is_array($stats) && count($stats) >= 1) {
                 foreach ($stats as $statHeader => $statValue) {
                     if (!is_array($statValue)) {
-                        if ('count' === $statHeader) {
+                        if ($statHeader === 'count') {
                             $processed .= sprintf('%s: %s. ', $reportedHeader, $statValue);
                         } else {
                             $processed .= sprintf('%s %s: %s. ', ucfirst($statHeader), $reportedHeader, $statValue);
@@ -234,7 +234,7 @@ class ProcessOrgCSVCommand extends Command
                     } else {
                         if (count($statValue) >= 1) {
                             foreach ($statValue as $i => $message) {
-                                if (0 === $i) {
+                                if ($i === 0) {
                                     $processed .= sprintf('%s %s: ', ucfirst($statHeader), $reportedHeader);
                                 }
 

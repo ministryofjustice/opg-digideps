@@ -66,7 +66,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
         $isBankHoliday = array_search($currentDate, array_column($dates['england-and-wales']['events'], 'date'));
 
         // Do not alert on Bank Holidays
-        if (false === $isBankHoliday) {
+        if ($isBankHoliday === false) {
             $logStreams = $this->getLogStreams();
 
             if (empty($logStreams)) {
@@ -107,7 +107,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
             )->get('events');
         } catch (AwsException $e) {
             // AWS returns a 400 response if the log stream is empty or log group does not exist with ResourceNotFoundException code
-            if ('ResourceNotFoundException' === $e->getAwsErrorCode()) {
+            if ($e->getAwsErrorCode() === 'ResourceNotFoundException') {
                 $this->alertNoCSVsWereUploaded();
 
                 return 0;
@@ -126,7 +126,7 @@ class CheckCSVUploadedCommand extends DaemonableCommand
         try {
             return $this->awsAuditLogHandler->getLogStreams($this->auditLogGroupName);
         } catch (AwsException $e) {
-            if ('ResourceNotFoundException' === $e->getAwsErrorCode()) {
+            if ($e->getAwsErrorCode() === 'ResourceNotFoundException') {
                 $this->postSlackMessage(sprintf(self::LOG_GROUP_NOT_CREATED_SLACK_MESSAGE, $this->auditLogGroupName), 'opg-digideps-devs');
             } else {
                 $this->postSlackMessage(sprintf(self::UNEXPECTED_ERROR_SLACK_MESSAGE, $e->getAwsErrorMessage()), 'opg-digideps-devs');

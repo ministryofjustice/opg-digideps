@@ -82,13 +82,13 @@ class OrgDashboardFeatureContext extends BaseFeatureContext
             /** @var ?Report $report */
             $report = null;
 
-            if ("notStarted" === $reportStatus) {
+            if ($reportStatus === "notStarted") {
                 // NB we don't want to retrieve the report and update its status, as it always updates to "notFinished"
                 $userDetails = $this->fixtureHelper->createLayCombinedHighAssetsNotStarted($id);
-            } elseif ("readyToSubmit" === $reportStatus) {
+            } elseif ($reportStatus === "readyToSubmit") {
                 $userDetails = $this->fixtureHelper->createLayCombinedHighAssetsCompleted($id);
                 $report = $reportRepo->find($userDetails['currentReportId']);
-            } elseif ("notFinished" === $reportStatus) {
+            } elseif ($reportStatus === "notFinished") {
                 $userDetails = $this->fixtureHelper->createLayCombinedHighAssetsNotStarted($id);
 
                 // we set one section so that the report status is "notFinished" and not "notStarted"

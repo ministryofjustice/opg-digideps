@@ -72,7 +72,7 @@ class MigrationsMigrateLockCommand extends Command
      */
     private function acquireLock(OutputInterface $output): bool
     {
-        $ret = 1 == $this->getRedis()->setnx(self::LOCK_KEY, self::LOCK_VALUE);
+        $ret = $this->getRedis()->setnx(self::LOCK_KEY, self::LOCK_VALUE) == 1;
         $this->getRedis()->expire(self::LOCK_KEY, self::LOCK_EXPIRES_SECONDS);
         $output->writeln($ret ? 'Lock acquired.' : 'Cannot acquire lock, already acquired.');
 

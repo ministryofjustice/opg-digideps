@@ -45,7 +45,7 @@ class ExpenseControllerTest extends AbstractTestController
 
         self::fixtures()->flush()->clear();
 
-        if (null === self::$tokenAdmin) {
+        if (self::$tokenAdmin === null) {
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
         }
@@ -201,7 +201,7 @@ class ExpenseControllerTest extends AbstractTestController
         ]);
 
         $exp = self::fixtures()->clear()->getRepo(Expense::class)->find(self::$expense1->getId());
-        $this->assertTrue(null === $exp);
+        $this->assertTrue($exp === null);
     }
 
     /**

@@ -167,7 +167,7 @@ class SettingsController extends AbstractController
             } else {
                 $this->addFlash('notice', 'Your account details have been updated');
 
-                if ('declaration' === $request->get('from') && null !== $request->get('rid')) {
+                if ($request->get('from') === 'declaration' && $request->get('rid') !== null) {
                     $redirectRoute = $this->generateUrl('report_confirm_details', ['reportId' => $request->get('rid')]);
                 } elseif ($postUpdateDeputy->isDeputyPA() || $postUpdateDeputy->isDeputyProf()) {
                     $redirectRoute = $this->generateUrl('org_profile_show');
@@ -181,7 +181,7 @@ class SettingsController extends AbstractController
 
                 return $this->redirect($redirectRoute);
             } catch (\Throwable $e) {
-                if (422 === $e->getCode() && $form->get('email')) {
+                if ($e->getCode() === 422 && $form->get('email')) {
                     $form->get('email')->addError(new FormError($this->translator->trans('user.email.alreadyUsed', [], 'validators')));
                 }
             }

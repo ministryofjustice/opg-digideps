@@ -64,7 +64,7 @@ class LayClientMatcher
                 $isCompatibleReport = str_starts_with($determinedReportType, $existingReportType);
             }
             if (str_ends_with($determinedReportType, '-4')) {
-                $isCompatibleReport &= 'HYBRID' === $dto->getHybrid();
+                $isCompatibleReport &= $dto->getHybrid() === 'HYBRID';
             }
 
             if ($isCompatibleReport) {

@@ -38,7 +38,7 @@ class ContactControllerTest extends AbstractTestController
 
         self::fixtures()->flush()->clear();
 
-        if (null === self::$tokenAdmin) {
+        if (self::$tokenAdmin === null) {
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
         }
@@ -238,7 +238,7 @@ class ContactControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $this->assertTrue(null === self::fixtures()->getRepo(Contact::class)->find(self::$contact1->getId()));
+        $this->assertTrue(self::fixtures()->getRepo(Contact::class)->find(self::$contact1->getId()) === null);
 
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_CONTACTS));
     }

@@ -157,7 +157,7 @@ trait FeeExpensesTrait
     public function getHasFees()
     {
         // never set -> return null
-        if (0 === count($this->getFeesWithValidAmount()) && null === $this->getReasonForNoFees()) {
+        if (count($this->getFeesWithValidAmount()) === 0 && $this->getReasonForNoFees() === null) {
             return null;
         }
 
@@ -241,7 +241,7 @@ trait FeeExpensesTrait
      */
     public function expensesSectionCompleted()
     {
-        return count($this->getExpenses()) > 0 || 'no' === $this->getPaidForAnything();
+        return count($this->getExpenses()) > 0 || $this->getPaidForAnything() === 'no';
     }
 
     /**
@@ -251,9 +251,9 @@ trait FeeExpensesTrait
      */
     public function paFeesExpensesNotStarted()
     {
-        return 0 === count($this->getFeesWithValidAmount())
+        return count($this->getFeesWithValidAmount()) === 0
             && empty($this->getReasonForNoFees())
-            && 0 === count($this->getExpenses())
+            && count($this->getExpenses()) === 0
             && empty($this->getPaidForAnything());
     }
 
@@ -268,8 +268,8 @@ trait FeeExpensesTrait
         $countExpenses = count($this->getExpenses());
 
         $feeComplete = $countValidFees || !empty($this->getReasonForNoFees());
-        $expenseComplete = 'no' === $this->getPaidForAnything()
-            || ('yes' === $this->getPaidForAnything() && $countExpenses);
+        $expenseComplete = $this->getPaidForAnything() === 'no'
+            || ($this->getPaidForAnything() === 'yes' && $countExpenses);
 
         return $feeComplete && $expenseComplete;
     }

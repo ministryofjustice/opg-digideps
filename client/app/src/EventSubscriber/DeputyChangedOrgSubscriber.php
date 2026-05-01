@@ -27,15 +27,15 @@ class DeputyChangedOrgSubscriber implements EventSubscriberInterface
 
     public function auditLog(DeputyChangedOrgEvent $event)
     {
-            $deputyChangedOrgEvent = new AuditEvents($this->dateTimeProvider)
-                ->deputyChangedOrganisationEvent(
-                    $event->getTrigger(),
-                    $event->getDeputyId(),
-                    $event->getPreviousOrgId(),
-                    $event->getNewOrgId(),
-                    $event->getClientId()
-                );
+        $deputyChangedOrgEvent = new AuditEvents($this->dateTimeProvider)
+            ->deputyChangedOrganisationEvent(
+                $event->getTrigger(),
+                $event->getDeputyId(),
+                $event->getPreviousOrgId(),
+                $event->getNewOrgId(),
+                $event->getClientId()
+            );
 
-            $this->logger->notice('', $deputyChangedOrgEvent);
+        $this->logger->notice('', $deputyChangedOrgEvent);
     }
 }

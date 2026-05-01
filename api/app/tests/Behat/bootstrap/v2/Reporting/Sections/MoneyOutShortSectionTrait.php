@@ -126,7 +126,7 @@ trait MoneyOutShortSectionTrait
         foreach ($this->paymentNumber as $payment) {
             $this->getSectionAnswers('moneyOutDetails' . $payment) ? $count++ : $count;
         }
-        if (0 == $count) {
+        if ($count == 0) {
             $this->removeSection('over1K');
             $this->updateExpectedAnswerInSection('yes_no[moneyTransactionsShortOutExist]', 'over1K', 'no');
         }
@@ -271,7 +271,7 @@ trait MoneyOutShortSectionTrait
 
         $oneOffPaymentTableRows = $this->getSession()->getPage()->find('xpath', "//tr[contains(@class,'behat-region-transaction-')]");
 
-        if ('no' == $arg1) {
+        if ($arg1 == 'no') {
             $this->assertPageNotContainsText('List of expenses over £1000');
             $this->assertIsNull($oneOffPaymentTableRows, 'One off payment rows are not rendered');
 

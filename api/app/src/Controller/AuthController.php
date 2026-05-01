@@ -44,7 +44,7 @@ class AuthController extends RestController
             // See LoginRequestAuthenticator and RegistrationTokenAuthenticator for checks. User is set in token storage on successful authentication via Symfony event
             $token = $this->tokenStorage->getToken();
 
-            if (null !== $token) {
+            if ($token !== null) {
                 /** @var User $user */
                 $user = $token->getUser();
 
@@ -64,7 +64,7 @@ class AuthController extends RestController
                 throw new \Exception('User token is not available');
             }
 
-            if (User::ROLE_SUPER_ADMIN === $user->getRoleName()) {
+            if ($user->getRoleName() === User::ROLE_SUPER_ADMIN) {
                 $jwt = $this->JWTService->createNewJWT($user);
 
                 $restInputOutputFormatter->addResponseModifier(function ($response) use ($jwt): void {

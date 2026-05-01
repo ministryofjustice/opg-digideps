@@ -264,7 +264,7 @@ abstract class ProfServiceFee
      */
     public function isCurrentFee()
     {
-        return self::TYPE_CURRENT_FEE == $this->getFeeTypeId();
+        return $this->getFeeTypeId() == self::TYPE_CURRENT_FEE;
     }
 
     /**
@@ -274,7 +274,7 @@ abstract class ProfServiceFee
      */
     public function isPreviousFee()
     {
-        return self::TYPE_PREVIOUS_FEE == $this->getFeeTypeId();
+        return $this->getFeeTypeId() == self::TYPE_PREVIOUS_FEE;
     }
 
     /**
@@ -284,6 +284,6 @@ abstract class ProfServiceFee
      */
     public function isEstimatedFee()
     {
-        return self::TYPE_ESTIMATED_FEE == $this->getFeeTypeId();
+        return $this->getFeeTypeId() == self::TYPE_ESTIMATED_FEE;
     }
 }

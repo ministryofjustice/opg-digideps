@@ -13,7 +13,7 @@ abstract class AbstractAuditLogHandler extends AbstractProcessingHandler
         return
             isset($record->context['event'])
             && isset($record->context['type'])
-            && 'audit' === $record->context['type'];
+            && $record->context['type'] === 'audit';
     }
 
     protected function getDefaultFormatter(): JsonFormatter

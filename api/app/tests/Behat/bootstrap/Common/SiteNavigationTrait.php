@@ -19,12 +19,12 @@ trait SiteNavigationTrait
      */
     public function scrollTo($element)
     {
-        if ('.' != substr($element, 0, 1) && '#' != substr($element, 0, 1)) {
+        if (substr($element, 0, 1) != '.' && substr($element, 0, 1) != '#') {
             $element = '#' . $element;
         }
 
         $driver = $this->getSession()->getDriver();
-        if ('Behat\Mink\Driver\Selenium2Driver' == get_class($driver)) {
+        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
             $javascript =
                 "var el = $('$element');"
                 . 'var elOffset = el.offset().top;'

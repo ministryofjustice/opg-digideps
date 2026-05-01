@@ -65,7 +65,7 @@ class ReportSubmissionService
     {
         $pdf = $this->getPdfBinaryContent($report, true);
 
-        if (false !== $pdf) {
+        if ($pdf !== false) {
             // store PDF (with summary info) as a document
             $this->fileUploader->uploadFileAndPersistDocument(
                 $report,
@@ -112,7 +112,7 @@ class ReportSubmissionService
         $reviewChecklist = $this->restClient->get('report/' . $report->getId() . '/checklist', 'Report\\ReviewChecklist');
 
         // A null id indicates a reviewChecklist has not yet been submitted.
-        if (null === $reviewChecklist->getId()) {
+        if ($reviewChecklist->getId() === null) {
             $reviewChecklist = null;
         }
 
@@ -153,7 +153,7 @@ class ReportSubmissionService
      */
     public function assertReportSubmissionIsDownloadable(ReportSubmission $reportSubmission)
     {
-        if (true !== $reportSubmission->isDownloadable()) {
+        if ($reportSubmission->isDownloadable() !== true) {
             throw new ReportSubmissionDocumentsNotDownloadableException(self::MSG_NOT_DOWNLOADABLE);
         }
 

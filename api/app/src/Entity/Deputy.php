@@ -473,13 +473,12 @@ class Deputy
     public function emailHasChanged(OrgDeputyshipDto $dto): bool
     {
         return $this->email1 !== $dto->getDeputyEmail()
-            && null !== $dto->getDeputyEmail();
+            && $dto->getDeputyEmail() !== null;
     }
 
     public function typeHasChanged(OrgDeputyshipDto $dto): bool
     {
-        return $this->deputyType !== $dto->getDeputyType()
-            && null !== $dto->getDeputyType();
+        return $this->deputyType !== $dto->getDeputyType();
     }
 
     /**

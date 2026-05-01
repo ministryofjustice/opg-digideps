@@ -64,7 +64,7 @@ class ClamFileScanner
     {
         $getClientOriginalExtensionLower = is_null($file->getClientOriginalExtension()) ? '' : strtolower($file->getClientOriginalExtension());
 
-        return 'pdf' === $getClientOriginalExtensionLower;
+        return $getClientOriginalExtensionLower === 'pdf';
     }
 
     private function pdfContainsBadKeywords(UploadedFile $file): bool
@@ -98,6 +98,6 @@ class ClamFileScanner
     {
         $result = explode(':', trim($response->getBody()->getContents()));
 
-        return 'true' === trim(end($result)) ?: false;
+        return trim(end($result)) === 'true' ?: false;
     }
 }

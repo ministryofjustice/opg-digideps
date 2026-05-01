@@ -54,7 +54,7 @@ class StatsApi
     public function getBenefitsReportMetrics(?string $append = null)
     {
         $link = self::GET_BENEFITS_REPORT_METRICS;
-        if (null !== $append) {
+        if ($append !== null) {
             $link = self::GET_BENEFITS_REPORT_METRICS . $append;
         }
 

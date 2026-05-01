@@ -57,15 +57,15 @@ class OrganisationControllerTest extends AbstractTestController
 
         self::$em = self::fixtures()->getEntityManager();
 
-        if (null === self::$tokenAdmin) {
+        if (self::$tokenAdmin === null) {
             self::$tokenAdmin = $this->loginAsAdmin();
         }
 
-        if (null === self::$tokenSuperAdmin) {
+        if (self::$tokenSuperAdmin === null) {
             self::$tokenSuperAdmin = $this->loginAsSuperAdmin();
         }
 
-        if (null === self::$tokenDeputyInOrg) {
+        if (self::$tokenDeputyInOrg === null) {
             self::$tokenDeputyInOrg = $this->loginAsProf();
         }
 

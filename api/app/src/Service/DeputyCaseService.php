@@ -77,7 +77,7 @@ class DeputyCaseService
 
             ++$numAdded;
 
-            if (0 === $numAdded % $batchSize) {
+            if ($numAdded % $batchSize === 0) {
                 $this->entityManager->flush();
             }
         }

@@ -56,7 +56,7 @@ class OrganisationRepository extends ServiceEntityRepository
 
         $result = $query->getArrayResult();
 
-        return 0 === count($result) ? null : $result[0];
+        return count($result) === 0 ? null : $result[0];
     }
 
     public function hasActiveEntities(int $id): bool
@@ -142,6 +142,6 @@ class OrganisationRepository extends ServiceEntityRepository
 
         $result = $query->getResult();
 
-        return 0 === count($result) ? null : $result[0];
+        return count($result) === 0 ? null : $result[0];
     }
 }

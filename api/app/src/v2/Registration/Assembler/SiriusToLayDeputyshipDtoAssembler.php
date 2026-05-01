@@ -65,7 +65,7 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
                 ->setTypeOfReport($this->determineReportTypeIsSupported($data['ReportType']))
                 ->setOrderDate(new \DateTime($data['MadeDate']))
                 ->setOrderType($data['OrderType'])
-                ->setIsCoDeputy('yes' === $data['CoDeputy'])
+                ->setIsCoDeputy($data['CoDeputy'] === 'yes')
                 ->setHybrid($data['Hybrid']);
     }
 

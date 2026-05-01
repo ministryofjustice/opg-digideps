@@ -173,7 +173,7 @@ trait AdminManagementTrait
             }
         }
 
-        if (User::ROLE_ADMIN_MANAGER === $this->loggedInUserDetails->getUserRole() && 'admin manager' === strtolower($role)) {
+        if ($this->loggedInUserDetails->getUserRole() === User::ROLE_ADMIN_MANAGER && strtolower($role) === 'admin manager') {
             $this->iVisitAdminViewUserPageForInteractingWithUser();
         } else {
             $this->iVisitAdminEditUserPageForInteractingWithUser();
@@ -272,7 +272,7 @@ trait AdminManagementTrait
             $this->completedFormFields['admin[lastname]'] = $this->faker->lastName();
             $this->completedFormFields['admin[addressPostcode]'] = $this->faker->postcode();
 
-            if (User::ROLE_SUPER_ADMIN === $this->loggedInUserDetails->getUserRole()) {
+            if ($this->loggedInUserDetails->getUserRole() === User::ROLE_SUPER_ADMIN) {
                 $this->completedFormFields['admin[email]'] = $this->faker->safeEmail();
             }
 
@@ -314,7 +314,7 @@ trait AdminManagementTrait
             $comparisonSubjectMessage
         );
 
-        if (User::ROLE_SUPER_ADMIN === $this->loggedInUserDetails->getUserRole()) {
+        if ($this->loggedInUserDetails->getUserRole() === User::ROLE_SUPER_ADMIN) {
             $this->assertStringEqualsString(
                 $this->completedFormFields['admin[email]'],
                 $user->getEmail(),
@@ -351,7 +351,7 @@ trait AdminManagementTrait
             $comparisonSubjectMessage
         );
 
-        if (User::ROLE_SUPER_ADMIN === $this->loggedInUserDetails->getUserRole()) {
+        if ($this->loggedInUserDetails->getUserRole() === User::ROLE_SUPER_ADMIN) {
             $this->assertStringEqualsString(
                 $this->interactingWithUserDetails->getUserEmail(),
                 $user->getEmail(),

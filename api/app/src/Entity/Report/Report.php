@@ -13,7 +13,6 @@ use OPG\Digideps\Backend\Service\ReportStatusService;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\PersistentCollection;
 use JMS\Serializer\Annotation as JMS;
 
 /**
@@ -621,7 +620,7 @@ class Report
             $expectedStartDate = clone $endDateLastReport;
             $expectedStartDate->modify('+1 day');
             $daysDiff = (int) $expectedStartDate->diff($this->startDate)->format('%a');
-            if (0 !== $daysDiff) {
+            if ($daysDiff !== 0) {
                 throw new \RuntimeException(sprintf('Incorrect start date. Last submitted report was on %s, therefore the new report is expected to start on %s, not on %s', $endDateLastReport->format('d/m/Y'), $expectedStartDate->format('d/m/Y'), $this->startDate->format('d/m/Y')));
             }
         }
@@ -1055,7 +1054,7 @@ class Report
      */
     public function has106Flag()
     {
-        return '-6' === substr($this->type, -2);
+        return substr($this->type, -2) === '-6';
     }
 
     /**

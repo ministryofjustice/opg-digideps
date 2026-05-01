@@ -68,7 +68,7 @@ trait MoneyShortTrait
     public function getMoneyShortCategoriesIn()
     {
         return $this->getMoneyShortCategories()->filter(function ($e) {
-            return 'in' == $e->getType();
+            return $e->getType() == 'in';
         });
     }
 
@@ -78,7 +78,7 @@ trait MoneyShortTrait
     public function getMoneyShortCategoriesInPresent()
     {
         return $this->getMoneyShortCategories()->filter(function ($e) {
-            return 'in' == $e->getType() && $e->getPresent();
+            return $e->getType() == 'in' && $e->getPresent();
         });
     }
 
@@ -92,7 +92,7 @@ trait MoneyShortTrait
     public function getMoneyShortCategoriesOut()
     {
         return $this->getMoneyShortCategories()->filter(function ($e) {
-            return 'out' == $e->getType();
+            return $e->getType() == 'out';
         });
     }
 
@@ -102,7 +102,7 @@ trait MoneyShortTrait
     public function getMoneyShortCategoriesOutPresent()
     {
         return $this->getMoneyShortCategories()->filter(function ($e) {
-            return 'out' == $e->getType() && $e->getPresent();
+            return $e->getType() == 'out' && $e->getPresent();
         });
     }
 

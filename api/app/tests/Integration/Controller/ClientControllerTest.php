@@ -77,7 +77,7 @@ class ClientControllerTest extends AbstractTestController
 
         self::$fixtures::deleteReportsData(['client']);
 
-        if (null === self::$tokenAdmin) {
+        if (self::$tokenAdmin === null) {
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
             self::$tokenMultiClientPrimaryDeputy = $this->loginAsMultiClientPrimaryDeputy();

@@ -116,7 +116,7 @@ trait ReportProfDeputyCostsEstimateTrait
     {
         $getProfDeputyCostsEstimateHowChargedLower = is_null($this->getProfDeputyCostsEstimateHowCharged()) ? '' : strtolower($this->getProfDeputyCostsEstimateHowCharged());
 
-        return Report::PROF_DEPUTY_COSTS_TYPE_FIXED == $getProfDeputyCostsEstimateHowChargedLower;
+        return $getProfDeputyCostsEstimateHowChargedLower == Report::PROF_DEPUTY_COSTS_TYPE_FIXED;
     }
 
     /**

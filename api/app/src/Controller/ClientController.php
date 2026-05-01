@@ -47,12 +47,12 @@ class ClientController extends RestController
 
         // truncate case number if length is 10 digits long before persisting
         if (isset($data['case_number']) && is_string($data['case_number'])) {
-            $data['case_number'] = (10 == strlen($data['case_number'])) ? substr($data['case_number'], 0, -2) : $data['case_number'];
+            $data['case_number'] = (strlen($data['case_number']) == 10) ? substr($data['case_number'], 0, -2) : $data['case_number'];
         } else {
             $data['case_number'] = ''; // Set a default value if missing
         }
 
-        if (!is_null($user) && 'POST' == $request->getMethod()) {
+        if (!is_null($user) && $request->getMethod() == 'POST') {
             $client = new Client();
             $client->addUser($user);
         } else {

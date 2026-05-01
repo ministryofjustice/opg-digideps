@@ -17,7 +17,7 @@ class OrgDeputyshipControllerTest extends AbstractTestController
     {
         parent::setUp();
 
-        if (null === self::$tokenAdmin) {
+        if (self::$tokenAdmin === null) {
             self::$tokenAdmin = $this->loginAsAdmin();
         }
 

@@ -34,7 +34,7 @@ class AwsAuditLogHandler extends AbstractAuditLogHandler
         try {
             $this->send($record, $stream, $sequenceToken);
         } catch (CloudWatchLogsException $e) {
-            if ('InvalidSequenceTokenException' === $e->getAwsErrorCode()) {
+            if ($e->getAwsErrorCode() === 'InvalidSequenceTokenException') {
                 $this->send($record, $stream, $e->get('expectedSequenceToken'));
             }
 

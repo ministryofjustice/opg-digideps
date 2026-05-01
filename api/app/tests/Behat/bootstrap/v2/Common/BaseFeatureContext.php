@@ -139,7 +139,7 @@ class BaseFeatureContext extends MinkContext
 
         $this->appEnvironment = $this->symfonyKernel->getEnvironment();
 
-        if ('prod' === $this->appEnvironment) {
+        if ($this->appEnvironment === 'prod') {
             throw new \Exception('Unable to run behat tests in prod mode. Change the apps mode to dev or test and try again');
         }
     }

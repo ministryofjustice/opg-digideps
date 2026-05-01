@@ -88,7 +88,7 @@ trait ActionsSectionTrait
     {
         $this->chooseOption($actionName, $answer, 'actions');
 
-        if (null != $comment) {
+        if ($comment != null) {
             $this->fillInField($commentName, $comment, 'actions');
         }
 

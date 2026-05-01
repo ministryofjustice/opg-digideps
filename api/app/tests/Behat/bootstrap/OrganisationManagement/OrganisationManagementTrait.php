@@ -17,7 +17,7 @@ trait OrganisationManagementTrait
             $this->visitAdminPath('/admin/organisations/add');
             $this->fillField('organisation_name', $inputs['name']);
 
-            if ('@' === substr($inputs['emailIdentifier'], 0, 1)) {
+            if (substr($inputs['emailIdentifier'], 0, 1) === '@') {
                 $this->fillField('organisation_emailIdentifierType_0', 'domain');
                 $this->fillField('organisation_emailDomain', substr($inputs['emailIdentifier'], 1));
             } else {

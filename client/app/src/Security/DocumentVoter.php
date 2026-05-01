@@ -22,8 +22,8 @@ class DocumentVoter extends Voter
     protected function supports(string $attribute, mixed $subject): bool
     {
         return
-            self::ADD_DOCUMENT === $attribute ||
-            self::DELETE_DOCUMENT === $attribute;
+            $attribute === self::ADD_DOCUMENT ||
+            $attribute === self::DELETE_DOCUMENT;
     }
 
     /**

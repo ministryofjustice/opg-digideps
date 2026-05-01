@@ -42,7 +42,7 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
     {
         // a 104 is not compatible with a hybrid or pfa deputyship
         $incompatibleReportType = '104';
-        if ('hw' === $orderType) {
+        if ($orderType === 'hw') {
             // a 102 is not compatible with a hybrid or hw deputyship
             $incompatibleReportType = '102';
         }
@@ -65,7 +65,7 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
     {
         // make sure types are compatible
         $compatibleReportType = '102';
-        if ('hw' === $orderType) {
+        if ($orderType === 'hw') {
             $compatibleReportType = '104';
         }
 

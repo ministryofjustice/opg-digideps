@@ -82,7 +82,7 @@ class ProfDeputyCostsController extends AbstractController
 
             $this->restClient->put('report/' . $reportId, $data, ['deputyCostsHowCharged']);
 
-            if ('summary' === $from) {
+            if ($from === 'summary') {
                 $this->addFlash('notice', 'Answer edited');
                 $nextRoute = 'prof_deputy_costs_summary';
             } else {
@@ -95,7 +95,7 @@ class ProfDeputyCostsController extends AbstractController
         return [
             'report' => $report,
             'form' => $form->createView(),
-            'backLink' => $this->generateUrl('summary' === $from ? 'prof_deputy_costs_summary' : 'prof_deputy_costs', ['reportId' => $reportId]),
+            'backLink' => $this->generateUrl($from === 'summary' ? 'prof_deputy_costs_summary' : 'prof_deputy_costs', ['reportId' => $reportId]),
         ];
     }
 
@@ -127,7 +127,7 @@ class ProfDeputyCostsController extends AbstractController
                     // store and go to next route
                     $this->restClient->put('report/' . $reportId, $data, ['profDeputyCostsHasPrevious']);
 
-                    if ('summary' == $from) {
+                    if ($from == 'summary') {
                         $this->addFlash('notice', 'Answer edited');
                         $nextRoute = 'prof_deputy_costs_summary';
                     } elseif ($report->hasProfDeputyCostsHowChargedFixedOnly()) {
@@ -142,7 +142,7 @@ class ProfDeputyCostsController extends AbstractController
 
         return [
             // previous step could be interim or fixed. easier NOT showing any backlink
-            'backLink' => $this->generateUrl('summary' === $from ? 'prof_deputy_costs_summary' : 'prof_deputy_costs_how_charged', ['reportId' => $reportId]),
+            'backLink' => $this->generateUrl($from === 'summary' ? 'prof_deputy_costs_summary' : 'prof_deputy_costs_how_charged', ['reportId' => $reportId]),
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -185,7 +185,7 @@ class ProfDeputyCostsController extends AbstractController
 
             if ($validatingForm->getStringOrNull('addAnother') === 'yes') {
                 $nextRoute = 'prof_deputy_costs_previous_received';
-            } elseif ('summary' === $from) {
+            } elseif ($from === 'summary') {
                 $nextRoute = 'prof_deputy_costs_summary';
             } elseif ($report->hasProfDeputyCostsHowChargedFixedOnly()) {
                 $nextRoute = 'prof_deputy_costs_received';
@@ -194,7 +194,7 @@ class ProfDeputyCostsController extends AbstractController
             }
 
             $parameters = ['reportId' => $reportId];
-            if ($nextRoute === 'prof_deputy_costs_previous_received' && 'summary' === $from) {
+            if ($nextRoute === 'prof_deputy_costs_previous_received' && $from === 'summary') {
                 $parameters['from'] = 'summary';
             }
 
@@ -202,7 +202,7 @@ class ProfDeputyCostsController extends AbstractController
         }
 
         return [
-            'backLink' => $this->generateUrl('summary' == $from ? 'prof_deputy_costs_summary' : 'prof_deputy_costs_previous_received_exists', ['reportId' => $reportId]),
+            'backLink' => $this->generateUrl($from == 'summary' ? 'prof_deputy_costs_summary' : 'prof_deputy_costs_previous_received_exists', ['reportId' => $reportId]),
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -269,10 +269,10 @@ class ProfDeputyCostsController extends AbstractController
                     // go to interim page, and pass by the "from"
                     return $this->redirectToRoute('prof_deputy_costs_inline_interim_19b', ['reportId' => $reportId, 'from' => $from]);
                 case 'no':
-                    if ('summary' === $from) {
+                    if ($from === 'summary') {
                         $this->addFlash('notice', 'Answer edited');
                         $nextRoute = 'prof_deputy_costs_summary';
-                    // TODO consider going to fixed costs adding from=summmary if not set
+                        // TODO consider going to fixed costs adding from=summmary if not set
                     } else {
                         $nextRoute = 'prof_deputy_costs_received';
                     }
@@ -305,7 +305,7 @@ class ProfDeputyCostsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->restClient->put('/report/' . $reportId, $report, ['profDeputyInterimCosts']);
 
-            if ('summary' === $from) {
+            if ($from === 'summary') {
                 $this->addFlash('notice', 'Answer edited');
                 $nextRoute = 'prof_deputy_costs_summary';
             } else { // saveAndContinue
@@ -316,7 +316,7 @@ class ProfDeputyCostsController extends AbstractController
         }
 
         return [
-            'backLink' => $this->generateUrl('summary' == $from ? 'prof_deputy_costs_summary' : 'prof_deputy_costs_inline_interim_19b_exists', ['reportId' => $reportId]),
+            'backLink' => $this->generateUrl($from == 'summary' ? 'prof_deputy_costs_summary' : 'prof_deputy_costs_inline_interim_19b_exists', ['reportId' => $reportId]),
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -336,7 +336,7 @@ class ProfDeputyCostsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->restClient->put('/report/' . $reportId, $report, ['profDeputyFixedCost']);
 
-            if ('summary' === $from) {
+            if ($from === 'summary') {
                 $this->addFlash('notice', 'Answer edited');
                 $nextRoute = 'prof_deputy_costs_summary';
             } else {
@@ -350,7 +350,7 @@ class ProfDeputyCostsController extends AbstractController
         }
 
         return [
-            'backLink' => 'summary' == $from ? $this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]) : null,
+            'backLink' => $from == 'summary' ? $this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]) : null,
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -369,7 +369,7 @@ class ProfDeputyCostsController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->restClient->put("/report/$reportId", $report, ['profDeputyCostsScco']);
 
-            if ('summary' === $from) {
+            if ($from === 'summary') {
                 $this->addFlash('notice', 'Answer edited');
                 $nextRoute = 'prof_deputy_costs_summary';
             } else {
@@ -381,7 +381,7 @@ class ProfDeputyCostsController extends AbstractController
 
         return [
             // backlink depends on "fixed" being selected. Simpler not to show a backlink unless necessary
-            'backLink' => 'summary' == $from ? $this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]) : null,
+            'backLink' => $from == 'summary' ? $this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]) : null,
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -410,14 +410,14 @@ class ProfDeputyCostsController extends AbstractController
 
             $this->restClient->put('report/' . $report->getId(), $data, ['prof-deputy-other-costs']);
 
-            if ('summary' === $from) {
+            if ($from === 'summary') {
                 $this->addFlash('notice', 'Answer edited');
             }
 
             return $this->redirect($this->generateUrl('prof_deputy_costs_summary', ['reportId' => $reportId]));
         }
 
-        if ('summary' === $from) {
+        if ($from === 'summary') {
             $backLink = 'prof_deputy_costs_summary';
         } elseif ($report->hasProfDeputyCostsHowChargedFixedOnly()) {
             $backLink = 'prof_deputy_costs_received';
@@ -459,7 +459,7 @@ class ProfDeputyCostsController extends AbstractController
     public function summaryAction(int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED == $report->getStatus()->getProfDeputyCostsState()['state']) {
+        if ($report->getStatus()->getProfDeputyCostsState()['state'] == Status::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('prof_deputy_costs', ['reportId' => $reportId]));
         }
 

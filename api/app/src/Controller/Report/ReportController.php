@@ -155,12 +155,12 @@ class ReportController extends RestController
 
         /** @var User $user */
         $user = $this->getUser();
-        if ('not_deputy' === $data['agreed_behalf_deputy'] && $user->isLayDeputy()) {
+        if ($data['agreed_behalf_deputy'] === 'not_deputy' && $user->isLayDeputy()) {
             throw new \InvalidArgumentException('\'not_deputy\' is invalid option of agreed_behalf_deputy for lay deputies');
         }
 
         $currentReport->setAgreedBehalfDeputy($data['agreed_behalf_deputy']);
-        $xplanation = ('more_deputies_not_behalf' === $data['agreed_behalf_deputy'])
+        $xplanation = ($data['agreed_behalf_deputy'] === 'more_deputies_not_behalf')
             ? $data['agreed_behalf_deputy_explanation'] : null;
         $currentReport->setAgreedBehalfDeputyExplanation($xplanation);
 
@@ -201,7 +201,7 @@ class ReportController extends RestController
                 $this->em->flush($debt);
             }
             // set debts as per "debts" key
-            if ('yes' == $data['has_debts']) {
+            if ($data['has_debts'] == 'yes') {
                 foreach ($data['debts'] as $row) {
                     $debt = $report->getDebtByTypeId($row['debt_type_id']);
                     if (!$debt instanceof Debt) {
@@ -295,7 +295,7 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('paid_for_anything', $data)) {
-            if ('no' === $data['paid_for_anything']) { // remove existing expenses
+            if ($data['paid_for_anything'] === 'no') { // remove existing expenses
                 foreach ($report->getExpenses() as $e) {
                     $this->em->remove($e);
                 }
@@ -309,7 +309,7 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('gifts_exist', $data)) {
-            if ('no' === $data['gifts_exist']) { // remove existing gift
+            if ($data['gifts_exist'] === 'no') { // remove existing gift
                 foreach ($report->getGifts() as $e) {
                     $this->em->remove($e);
                 }
@@ -361,7 +361,7 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('no_transfers_to_add', $data)) {
-            if (true === $data['no_transfers_to_add']) {
+            if ($data['no_transfers_to_add'] === true) {
                 // true here means "no", so remove existing transfers
                 foreach ($report->getMoneyTransfers() as $e) {
                     $this->em->remove($e);
@@ -398,7 +398,7 @@ class ReportController extends RestController
             $report->setActionMoreInfo($data['action_more_info']);
             if (array_key_exists('action_more_info_details', $data)) {
                 $report->setActionMoreInfoDetails(
-                    'yes' == $data['action_more_info'] ? $data['action_more_info_details'] : null
+                    $data['action_more_info'] == 'yes' ? $data['action_more_info_details'] : null
                 );
             }
             $report->updateSectionsStatusCache([
@@ -467,7 +467,7 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('money_transactions_short_in_exist', $data)) {
-            if ('no' === $data['money_transactions_short_in_exist']) { // remove existing
+            if ($data['money_transactions_short_in_exist'] === 'no') { // remove existing
                 foreach ($report->getMoneyTransactionsShortIn() as $e) {
                     $this->em->remove($e);
                 }
@@ -481,7 +481,7 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('money_transactions_short_out_exist', $data)) {
-            if ('no' === $data['money_transactions_short_out_exist']) { // remove existing
+            if ($data['money_transactions_short_out_exist'] === 'no') { // remove existing
                 foreach ($report->getMoneyTransactionsShortOut() as $e) {
                     $this->em->remove($e);
                 }
@@ -496,7 +496,7 @@ class ReportController extends RestController
 
         if (array_key_exists('wish_to_provide_documentation', $data)) {
             $report->setWishToProvideDocumentation($data['wish_to_provide_documentation']);
-            if ('no' === $data['wish_to_provide_documentation']) {
+            if ($data['wish_to_provide_documentation'] === 'no') {
                 $report->setWishToProvideDocumentation($data['wish_to_provide_documentation']);
             }
             $this->em->flush();
@@ -507,7 +507,7 @@ class ReportController extends RestController
 
         if (array_key_exists('previous_prof_fees_estimate_given', $data)) {
             $report->setPreviousProfFeesEstimateGiven($data['previous_prof_fees_estimate_given']);
-            if ('no' === $data['previous_prof_fees_estimate_given']) {
+            if ($data['previous_prof_fees_estimate_given'] === 'no') {
                 $report->setProfFeesEstimateSccoReason(null);
             } else {
                 $report->setProfFeesEstimateSccoReason($data['prof_fees_estimate_scco_reason']);
@@ -519,7 +519,7 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('current_prof_payments_received', $data)) {
-            if ('no' == $data['current_prof_payments_received']) { // reset whole section
+            if ($data['current_prof_payments_received'] == 'no') { // reset whole section
                 foreach ($report->getCurrentProfServiceFees() as $f) {
                     $this->em->remove($f);
                 }
@@ -607,7 +607,7 @@ class ReportController extends RestController
         $this->updateReportStatusCache($user->getId());
 
         $result = [];
-        $result['reports'] = (null === $data) ? [] : $this->transformReports($data);
+        $result['reports'] = ($data === null) ? [] : $this->transformReports($data);
         $result['counts'] = $this->getReportCountsByStatus($request, $orgIdsOrUserId, $determinant);
 
         return $result;
@@ -754,7 +754,7 @@ class ReportController extends RestController
             $this->em->persist($info);
         }
 
-        if ('submitAndContinue' == $checklistData['button_clicked']) {
+        if ($checklistData['button_clicked'] == 'submitAndContinue') {
             $checklist->setSubmittedBy($user);
             $checklist->setSubmittedOn(new \DateTime());
         }
@@ -828,7 +828,7 @@ class ReportController extends RestController
             $this->em->persist($info);
         }
 
-        if (isset($checklistData['button_clicked']) && 'submitAndContinue' == $checklistData['button_clicked']) {
+        if (isset($checklistData['button_clicked']) && $checklistData['button_clicked'] == 'submitAndContinue') {
             $checklist->setSubmittedBy($user);
             $checklist->setSubmittedOn(new \DateTime());
         }

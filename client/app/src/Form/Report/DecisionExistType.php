@@ -42,7 +42,7 @@ class DecisionExistType extends AbstractType
 
                 $validationGroups = ['decision-exist'];
 
-                if ('No' == $data->getSignificantDecisionsMade()) {
+                if ($data->getSignificantDecisionsMade() == 'No') {
                     $validationGroups[] = 'reason-no-decisions';
                 }
 

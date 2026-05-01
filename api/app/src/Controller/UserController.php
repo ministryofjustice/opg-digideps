@@ -92,7 +92,7 @@ class UserController extends RestController
         // check if rolename in data - if so add audit log
         $this->userService->editUser($originalUser, $requestedUser);
 
-        if (null !== $requestedUser->getRegistrationToken()) {
+        if ($requestedUser->getRegistrationToken() !== null) {
             $requestedUser->setRegistrationToken(null);
             $this->em->persist($requestedUser);
             $this->em->flush();
@@ -202,13 +202,13 @@ class UserController extends RestController
     #[Route(path: '/get-one-by/{what}/{filter}', requirements: ['what' => '(user_id|email|case_number)'], methods: ['GET'])]
     public function getOneByFilter(Request $request, string $what, string $filter): ?User
     {
-        if ('email' == $what) {
+        if ($what == 'email') {
             /** @var ?User $user */
             $user = $this->userRepository->findOneBy(['email' => strtolower($filter)]);
             if (!$user) {
                 throw new \RuntimeException('User not found', 404);
             }
-        } elseif ('case_number' == $what) {
+        } elseif ($what == 'case_number') {
             /** @var ?Client $client */
             $client = $this->clientRepository->findOneBy(['caseNumber' => $filter]);
             if (!$client) {
@@ -219,7 +219,7 @@ class UserController extends RestController
             }
             /** @var User $user */
             $user = $client->getUsers()[0];
-        } elseif ('user_id' == $what) {
+        } elseif ($what == 'user_id') {
             /** @var ?User $user */
             $user = $this->userRepository->find($filter);
             if (!$user) {
@@ -306,7 +306,7 @@ class UserController extends RestController
 
         $canDelete = $this->userVoter->vote($token, $deletee, [UserVoter::DELETE_USER]);
 
-        if (UserVoter::ACCESS_DENIED === $canDelete) {
+        if ($canDelete === UserVoter::ACCESS_DENIED) {
             /** @var ?User $user */
             $user = $token->getUser();
 
@@ -349,7 +349,7 @@ class UserController extends RestController
         $user = $this->findEntityBy(User::class, ['email' => strtolower($email)]);
         $hasAdminSecret = $this->authService->isSecretValidForRole(User::ROLE_ADMIN, $request);
 
-        if (!$hasAdminSecret && User::ROLE_ADMIN == $user->getRoleName()) {
+        if (!$hasAdminSecret && $user->getRoleName() == User::ROLE_ADMIN) {
             throw new \RuntimeException('Admin emails not accepted.', 403);
         }
 
@@ -508,7 +508,7 @@ class UserController extends RestController
         $users = $this->userRepository->findBy(['deputyUid' => $deputyUid, 'isPrimary' => true]);
 
         // multiple primary accounts or no primary account
-        if (1 !== count($users)) {
+        if (count($users) !== 1) {
             return null;
         }
 
