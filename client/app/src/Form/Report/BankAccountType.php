@@ -20,9 +20,9 @@ class BankAccountType extends AbstractType
     private static function getBankAccountChoices(): array
     {
         $ret = [];
-        $types = BankAccount::$types;
-        foreach ($types as $key) {
-            $ret['form.accountType.choices.' . $key] = $key;
+
+        foreach (BankAccount::$types as $key) {
+            $ret["form.accountType.choices.$key"] = $key;
         }
 
         return $ret;
