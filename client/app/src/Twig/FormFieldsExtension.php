@@ -360,6 +360,7 @@ class FormFieldsExtension extends AbstractExtension
         /** @var array $elementVars */
         $elementVars = $element->vars;
 
+        $extraAttrs['required'] = true;
         if (isset($elementVars['required']) && ($elementVars['required'] === false)) {
             unset($extraAttrs['required']);
         }
