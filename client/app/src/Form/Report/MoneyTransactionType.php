@@ -3,6 +3,7 @@
 namespace OPG\Digideps\Frontend\Form\Report;
 
 use OPG\Digideps\Frontend\Entity\Report\MoneyTransaction;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -34,11 +35,14 @@ class MoneyTransactionType extends AbstractType
     /**
      * @return array where keys and values are the categoriesID. e.g. [broadband=>null, fees=>null]
      */
-    private function getCategories()
+    private function getCategories(): array
     {
         $ret = [];
 
-        foreach (MoneyTransaction::$categories as $cat) {
+        /** @var array[] $categories */
+        $categories = MoneyTransaction::$categories;
+        foreach ($categories as $cat) {
+            /** @var int $categoryId */
             $categoryId = $cat[0];
             $type = $cat[3];
 
@@ -58,23 +62,36 @@ class MoneyTransactionType extends AbstractType
     /**
      * @return bool
      */
-    private function isDescriptionMandatory()
+    private function isDescriptionMandatory(): bool
     {
-        foreach (MoneyTransaction::$categories as $row) {
+        /** @var array[] $categories */
+        $categories = MoneyTransaction::$categories;
+        foreach ($categories as $row) {
             $categoryId = $row[0];
+            /** @var bool $hasDetails */
             $hasDetails = $row[1];
             if ($categoryId == $this->selectedCategory) {
                 return $hasDetails;
             }
         }
+        return false;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $this->authorizationChecker = $options['authChecker'];
-        $this->step = (int) $options['step'];
-        $this->type = $options['type'];
-        $this->selectedCategory = $options['selectedCategory'];
+        /** @var int $step */
+        $step = $options['step'];
+        /** @var AuthorizationCheckerInterface $authorizationChecker */
+        $authorizationChecker = $options['authChecker'];
+        /** @var string $selectedCategory */
+        $selectedCategory = $options['selectedCategory'];
+        /** @var string $type */
+        $type = $options['type'];
+
+        $this->authorizationChecker = $authorizationChecker;
+        $this->step = $step;
+        $this->type = $type;
+        $this->selectedCategory = $selectedCategory;
 
         $builder->add('id', FormTypes\HiddenType::class);
 
@@ -97,13 +114,15 @@ class MoneyTransactionType extends AbstractType
                 'invalid_message' => 'moneyTransaction.form.amount.type',
             ]);
 
-            $reportType = $options['report']->getType();
-
-            if (!empty($options['report']->getBankAccountOptions()) && $options['report']->canLinkToBankAccounts()) {
+            /** @var Report $report */
+            $report = $options['report'];
+            /** @var string $type */
+            $type = $this->type;
+            if (!empty($report->getBankAccountOptions()) && $report->canLinkToBankAccounts()) {
                 $builder->add('bankAccountId', FormTypes\ChoiceType::class, [
-                    'choices' => $options['report']->getBankAccountOptions(),
+                    'choices' => $report->getBankAccountOptions(),
                     'placeholder' => 'Please select',
-                    'label' => 'form.bankAccount.money' . ucfirst($this->type) . '.label',
+                    'label' => 'form.bankAccount.money' . ucfirst($type) . '.label',
                     'required' => false,
                 ]);
             }
