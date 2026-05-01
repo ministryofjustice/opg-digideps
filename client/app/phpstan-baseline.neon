@@ -1801,6 +1801,12 @@ parameters:
 			path: src/Controller/Report/DocumentController.php
 
 		-
+			message: '#^Cannot call method getStatus\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Controller/Report/DocumentController.php
+
+		-
 			message: '#^Cannot call method getStorageReference\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -1810,6 +1816,12 @@ parameters:
 			message: '#^Cannot call method getWishToProvideDocumentation\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
+			path: src/Controller/Report/DocumentController.php
+
+		-
+			message: '#^Cannot call method isSubmitted\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null\.$#'
+			identifier: method.nonObject
+			count: 1
 			path: src/Controller/Report/DocumentController.php
 
 		-
@@ -4249,6 +4261,12 @@ parameters:
 			path: src/Entity/Report/Debt.php
 
 		-
+			message: '#^Cannot call method getDocuments\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Entity/Report/Document.php
+
+		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Document\:\:isTransactionDocument\(\) never returns int so it can be removed from the return type\.$#'
 			identifier: return.unusedType
 			count: 1
@@ -5801,6 +5819,12 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: src/Entity/Report/ReportSubmissionSummary.php
+
+		-
+			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ReviewChecklist\:\:getReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Entity/Report/ReviewChecklist.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:getState\(\) has no return type specified\.$#'
@@ -8543,6 +8567,12 @@ parameters:
 			identifier: argument.type
 			count: 2
 			path: src/Security/ClientVoter.php
+
+		-
+			message: '#^Cannot call method getClient\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: src/Security/DocumentVoter.php
 
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
@@ -12416,6 +12446,12 @@ parameters:
 
 		-
 			message: '#^Cannot call method getAmountDontKnow\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
+
+		-
+			message: '#^Cannot call method getClient\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
