@@ -15,6 +15,7 @@ import { initAll as MOJFrontendAll } from '@ministryofjustice/frontend'
 import { Accordion, Button, CharacterCount, Checkboxes, ErrorSummary, ExitThisPage, Header, NotificationBanner, PasswordInput, Radios, SkipLink, createAll } from 'govuk-frontend'
 import EnableJavascript from './modules_new/EnableJavascript'
 import FormSingleSubmit from './modules_new/FormSingleSubmit'
+import ToggleRequired from './modules_new/ToggleRequired'
 
 window.addEventListener('DOMContentLoaded', () => {
   // Session Timeout
@@ -53,6 +54,8 @@ window.addEventListener('DOMContentLoaded', () => {
   Multitoggle.init(document)
 
   UploadFile.init(document)
+
+  ToggleRequired.init(document)
 
   // Error summaries
   const errorSummaries = document.querySelector('#error-summary')
