@@ -26179,30 +26179,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
-			message: '#^Offset ''Case'' on non\-empty\-list\<string\|null\> on left side of \?\? does not exist\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
-			message: '#^Offset ''DeputyEmail'' does not exist on non\-empty\-list\<string\|null\>\.$#'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
-			message: '#^Offset ''DeputyEmail'' on non\-empty\-list\<string\|null\> in empty\(\) does not exist\.$#'
-			identifier: empty.offset
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
-			message: '#^Offset ''DeputyUid'' on non\-empty\-list\<string\|null\> on left side of \?\? does not exist\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
 			message: '#^Offset ''addressPostcode'' might not exist on array\|null\.$#'
 			identifier: offsetAccess.notFound
 			count: 1
@@ -26266,12 +26242,6 @@ parameters:
 			message: '#^Parameter \#1 \$haystack of function str_contains expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 5
-			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
-			message: '#^Parameter \#1 \$haystack of function strstr expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
@@ -47317,6 +47287,12 @@ parameters:
 			path: client/app/src/Controller/Report/DocumentController.php
 
 		-
+			message: '#^Cannot call method getStatus\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: client/app/src/Controller/Report/DocumentController.php
+
+		-
 			message: '#^Cannot call method getStorageReference\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -47326,6 +47302,12 @@ parameters:
 			message: '#^Cannot call method getWishToProvideDocumentation\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
+			path: client/app/src/Controller/Report/DocumentController.php
+
+		-
+			message: '#^Cannot call method isSubmitted\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null\.$#'
+			identifier: method.nonObject
+			count: 1
 			path: client/app/src/Controller/Report/DocumentController.php
 
 		-
@@ -49765,6 +49747,12 @@ parameters:
 			path: client/app/src/Entity/Report/Debt.php
 
 		-
+			message: '#^Cannot call method getDocuments\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: client/app/src/Entity/Report/Document.php
+
+		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Document\:\:isTransactionDocument\(\) never returns int so it can be removed from the return type\.$#'
 			identifier: return.unusedType
 			count: 1
@@ -51317,6 +51305,12 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: client/app/src/Entity/Report/ReportSubmissionSummary.php
+
+		-
+			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ReviewChecklist\:\:getReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: client/app/src/Entity/Report/ReviewChecklist.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Status\:\:getState\(\) has no return type specified\.$#'
@@ -54059,6 +54053,12 @@ parameters:
 			identifier: argument.type
 			count: 2
 			path: client/app/src/Security/ClientVoter.php
+
+		-
+			message: '#^Cannot call method getClient\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: client/app/src/Security/DocumentVoter.php
 
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
@@ -57932,6 +57932,12 @@ parameters:
 
 		-
 			message: '#^Cannot call method getAmountDontKnow\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: client/app/src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
+
+		-
+			message: '#^Cannot call method getClient\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: client/app/src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
