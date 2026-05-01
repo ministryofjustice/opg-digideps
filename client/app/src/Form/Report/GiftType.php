@@ -3,6 +3,7 @@
 namespace OPG\Digideps\Frontend\Form\Report;
 
 use OPG\Digideps\Frontend\Entity\Report\Gift;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -22,11 +23,11 @@ class GiftType extends AbstractType
                 'invalid_message' => 'gifts.amount.type',
             ]);
 
-        $reportType = $options['report']->getType();
-
-        if (!empty($options['report']->getBankAccountOptions()) && $options['report']->canLinkToBankAccounts()) {
+        /** @var Report $report */
+        $report = $options['report'];
+        if (!empty($report->getBankAccountOptions()) && $report->canLinkToBankAccounts()) {
             $builder->add('bankAccountId', FormTypes\ChoiceType::class, [
-                'choices' => $options['report']->getBankAccountOptions(),
+                'choices' => $report->getBankAccountOptions(),
                 'placeholder' => 'Please select',
                 'required' => false,
             ]);

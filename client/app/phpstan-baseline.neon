@@ -8329,24 +8329,6 @@ parameters:
 			path: src/Form/Report/DecisionExistType.php
 
 		-
-			message: '#^Cannot call method canLinkToBankAccounts\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Form/Report/DeputyExpenseType.php
-
-		-
-			message: '#^Cannot call method getBankAccountOptions\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Form/Report/DeputyExpenseType.php
-
-		-
-			message: '#^Cannot call method getType\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Form/Report/DeputyExpenseType.php
-
-		-
 			message: '#^Cannot call method getWishToProvideDocumentation\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -8363,24 +8345,6 @@ parameters:
 			identifier: method.nonObject
 			count: 2
 			path: src/Form/Report/FeeSingleType.php
-
-		-
-			message: '#^Cannot call method canLinkToBankAccounts\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Form/Report/GiftType.php
-
-		-
-			message: '#^Cannot call method getBankAccountOptions\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Form/Report/GiftType.php
-
-		-
-			message: '#^Cannot call method getType\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Form/Report/GiftType.php
 
 		-
 			message: '#^Cannot call method getDoesClientUndertakeSocialActivities\(\) on mixed\.$#'
