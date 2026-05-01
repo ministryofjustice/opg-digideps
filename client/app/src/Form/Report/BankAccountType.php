@@ -20,7 +20,6 @@ class BankAccountType extends AbstractType
     private static function getBankAccountChoices(): array
     {
         $ret = [];
-        /** @var string[] $types */
         $types = BankAccount::$types;
         foreach ($types as $key) {
             $ret['form.accountType.choices.' . $key] = $key;
@@ -44,8 +43,11 @@ class BankAccountType extends AbstractType
         }
 
         if (2 === $this->step) {
+            /** @var BankAccount $formData */
+            $formData = $builder->getData();
+
             $builder->add('bank', FormTypes\TextType::class, [
-                'required' => false,
+                'required' => $formData->requiresBankName(),
             ]);
             $builder->add('accountNumber', FormTypes\TextType::class, ['attr' => ['maxlength' => 4]]);
             $builder->add('sortCode', SortCodeType::class, [
