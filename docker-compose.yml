@@ -139,6 +139,7 @@ services:
       - redis-api
       - localstack
       - mock-sirius-integration
+      - mock-notify-api
     environment:
       APP_ENV: ${APP_ENV:-local}
       APP_DEBUG: ${APP_DEBUG:-0}
