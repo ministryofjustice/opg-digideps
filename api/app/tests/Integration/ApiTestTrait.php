@@ -20,8 +20,8 @@ use Psr\Container\ContainerInterface;
  */
 trait ApiTestTrait
 {
-    protected static ?EntityManager $entityManager;
-    protected static ?ContainerInterface $container;
+    protected static EntityManager $entityManager;
+    protected static ContainerInterface $container;
 
     // should be called in the setUp() or setUpBeforeClass() method of the KernelTestCase subclass using this trait
     public static function configureTest(): void
@@ -46,8 +46,9 @@ trait ApiTestTrait
         self::purgeDatabase();
 
         self::$entityManager->close();
-        self::$entityManager = null;
-        self::$container = null;
+        self::$entityManager = new \ReflectionClass(EntityManager::class)->newLazyGhost(fn () => throw new \LogicException("Please reinitialise your test correctly."));
+        self::$container = new \ReflectionClass(ContainerInterface::class)->newLazyGhost(fn () => throw new \LogicException("Please reinitialise your test correctly."));
+        ;
     }
 
     /**
