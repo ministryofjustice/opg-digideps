@@ -50,25 +50,24 @@ class ReportSubmissionRepository extends ServiceEntityRepository
             ->leftJoin('rs.createdBy', 'cb')
             ->leftJoin('r.client', 'c');
 
-        // Only include report submissions which are related to standard reports, not NDRs
-        // TODO remove when NDR entities are removed
-        $qb->andWhere($qb->expr()->isNotNull('rs.report'));
-
         // search filter
-        if ($q) {
+        $q = is_string($q) ? strtolower(trim($q)) : '';
+        if ($q !== '') {
             $qb->andWhere(implode(' OR ', [
                 // user
-                'lower(cb.firstname) LIKE :qLike',
-                'lower(cb.lastname) LIKE :qLike',
-                // client names and case number (exact match)
-                'lower(c.firstname) LIKE :qLike',
-                'lower(c.lastname) LIKE :qLike',
-                // case number
-                'LOWER(c.caseNumber) = LOWER(:q)',
+                'LOWER(cb.firstname) LIKE :qLike',
+                'LOWER(cb.lastname) LIKE :qLike',
+                "LOWER(CONCAT(c.firstname, ' ', c.lastname)) LIKE :qLike",
+                // client names
+                'LOWER(c.firstname) LIKE :qLike',
+                'LOWER(c.lastname) LIKE :qLike',
+                "LOWER(CONCAT(c.firstname, ' ', c.lastname)) LIKE :qLike",
+                // case number (exact match)
+                'LOWER(c.caseNumber) = :q',
             ]));
 
-            $qb->setParameter('qLike', '%' . strtolower($q) . '%');
-            $qb->setParameter('q', strtolower($q));
+            $qb->setParameter('qLike', "%{$q}%");
+            $qb->setParameter('q', $q);
         }
 
         // role filter

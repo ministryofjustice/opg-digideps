@@ -69,13 +69,17 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
     public function testGetAllWithFiltersGetOneArchive()
     {
-        $reportsGetAllRequest = function (array $params = []) {
+        $reportsGetAllRequest = function (array $params = []): array {
             $url = '/report-submission?' . http_build_query($params);
 
-            return $this->assertJsonRequest('GET', $url, [
+            /**
+             * @var array $data
+             */
+            $data = $this->assertJsonRequest('GET', $url, [
                 'mustSucceed' => true,
                 'AuthToken' => self::$tokenAdmin,
             ])['data'];
+            return $data;
         };
 
         $this->assertEndpointNeedsAuth('GET', '/report-submission');

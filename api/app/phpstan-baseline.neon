@@ -6859,18 +6859,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$courtOrders has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$courtOrders is unused\.$#'
-			identifier: property.unused
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$currentProfPaymentsReceived \(string\) does not accept null\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -8000,12 +7988,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$address of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setAddress\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/FixtureFactory/ClientFactory.php
-
-		-
-			message: '#^Parameter \#1 \$caseNumber of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setCaseNumber\(\) expects string\|null, int given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/FixtureFactory/ClientFactory.php
@@ -11929,12 +11911,6 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: '#^Call to an undefined method object\:\:addUser\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: '#^Cannot access offset ''activated'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -11965,21 +11941,9 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: '#^Cannot access offset ''coDeputy'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: '#^Cannot access offset ''county'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: '#^Cannot access offset ''courtDate'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
@@ -12013,15 +11977,9 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: '#^Cannot access offset ''orgSizeClients'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: '#^Cannot access offset ''orgSizeUsers'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
@@ -12103,12 +12061,6 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -12116,18 +12068,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:remove\(\) expects object, object\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: '#^Parameter \#1 \$organisation of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setOrganisation\(\) expects OPG\\Digideps\\Backend\\Entity\\Organisation\|null, object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: '#^Parameter \#1 \$organisation of method OPG\\Digideps\\Backend\\FixtureFactory\\UserFactory\:\:createGenericOrgUser\(\) expects OPG\\Digideps\\Backend\\Entity\\Organisation, object given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
@@ -12171,19 +12111,13 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$end of function range expects float\|int\|string, mixed given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 2
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
 			message: '#^Parameter \#2 \$fromRequest of method OPG\\Digideps\\Backend\\v2\\Fixture\\Controller\\FixtureController\:\:buildDeputy\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: '#^Parameter \#2 \$organisation of method OPG\\Digideps\\Backend\\FixtureFactory\\ClientFactory\:\:createGenericOrgClient\(\) expects OPG\\Digideps\\Backend\\Entity\\Organisation, object given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
@@ -12200,12 +12134,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: '#^Parameter \#3 \$courtDate of method OPG\\Digideps\\Backend\\FixtureFactory\\ClientFactory\:\:createGenericOrgClient\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/v2/Fixture/Controller/FixtureController.php
@@ -38899,12 +38827,6 @@ parameters:
 			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
 		-
-			message: '#^Cannot access offset ''counts'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 11
-			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
-
-		-
 			message: '#^Cannot access offset ''created_by'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -38950,12 +38872,6 @@ parameters:
 			message: '#^Cannot access offset ''lastname'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''records'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 8
 			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
 		-
@@ -40625,6 +40541,96 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: tests/Integration/Factory/MissingReport/MissingReportFinderTest.php
+
+		-
+			message: '#^Cannot call method clear\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
+
+		-
+			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
+
+		-
+			message: '#^Cannot call method get\(\) on Psr\\Container\\ContainerInterface\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
+
+		-
+			message: '#^Parameter \#1 \$action of class OPG\\Digideps\\Backend\\Entity\\StagingSelectedCandidate constructor expects OPG\\Digideps\\Backend\\v2\\Registration\\Enum\\DeputyshipCandidateAction, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
+
+		-
+			message: '#^Parameter \#1 \$em of class Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures constructor expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManager\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
+
+		-
+			message: '#^Parameter \#1 \$expectedCount of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects int, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
+
+		-
+			message: '#^Parameter \#1 \$needle of method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
+
+		-
+			message: '#^Parameter \#1 \$needle of method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
+
+		-
+			message: '#^Parameter \#2 \$orderUid of class OPG\\Digideps\\Backend\\Entity\\StagingSelectedCandidate constructor expects string, int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
+
+		-
+			message: '#^Parameter \$courtOrderReportType of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createCourtOrder\(\) expects OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderReportType\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
+
+		-
+			message: '#^Parameter \$kind of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createCourtOrder\(\) expects OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderKind, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
+
+		-
+			message: '#^Parameter \$type of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createCourtOrder\(\) expects OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderType, mixed given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
+
+		-
+			message: '#^Parameter \$uid of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createCourtOrder\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 2
+			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
+
+		-
+			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Factory\\ReportTypeUpdateFactoryIntegrationTest\:\:\$sut \(OPG\\Digideps\\Backend\\Factory\\ReportTypeUpdateFactory\) does not accept mixed\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
