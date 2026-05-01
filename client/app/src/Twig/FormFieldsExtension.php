@@ -180,6 +180,7 @@ class FormFieldsExtension extends AbstractExtension
             'translationDomain' => $domain,
             'multitoggle' => empty($vars['multitoggle']) ? [] : $vars['multitoggle'],
             'extraAttrs' => $vars['extraAttrs'] ?? [],
+            'required' => $vars['required'] ?? true,
         ]);
     }
 
