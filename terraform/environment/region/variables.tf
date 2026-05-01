@@ -75,7 +75,4 @@ locals {
 
   # DNS switch variables
   certificate_arn = var.certificate_arn == "" ? data.aws_acm_certificate.service_justice.arn : var.certificate_arn
-
-  use_new_db    = true
-  create_new_db = true
 }
