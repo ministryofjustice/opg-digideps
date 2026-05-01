@@ -1654,4 +1654,18 @@ class Report
     {
         return $this->courtOrders;
     }
+
+    public function getActiveCourtOrders(): array
+    {
+        $active = [];
+
+        /** @var CourtOrder $courtOrder */
+        foreach ($this->courtOrders as $courtOrder) {
+            if ($courtOrder->getStatus() !== 'ACTIVE') {
+                $active[] = $courtOrder;
+            }
+        }
+
+        return $active;
+    }
 }
