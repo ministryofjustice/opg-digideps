@@ -27,7 +27,7 @@ trait FormStepTrait
         $expectedErrors = [];
         foreach ($table->getRowsHash() as $field => $value) {
             if (is_array($value)) {
-                if ('[ERR]' == $value[1]) {
+                if ($value[1] == '[ERR]') {
                     $expectedErrors[] = $field;
                 }
                 $value = $value[0];

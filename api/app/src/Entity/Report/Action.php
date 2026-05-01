@@ -168,11 +168,11 @@ class Action
 
     public function cleanUpUnusedData()
     {
-        if ('no' == $this->doYouExpectFinancialDecisions) {
+        if ($this->doYouExpectFinancialDecisions == 'no') {
             $this->doYouExpectFinancialDecisionsDetails = null;
         }
 
-        if ('no' == $this->doYouHaveConcerns) {
+        if ($this->doYouHaveConcerns == 'no') {
             $this->doYouHaveConcernsDetails = null;
         }
     }

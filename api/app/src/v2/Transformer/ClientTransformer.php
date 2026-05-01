@@ -35,7 +35,7 @@ class ClientTransformer
             $transformed['reports'] = $this->transformReports($dto->getReports());
         }
 
-        if (!in_array('organisation', $exclude) && null !== $org) {
+        if (!in_array('organisation', $exclude) && $org !== null) {
             $transformed['organisation'] = $org;
         }
 

@@ -111,7 +111,7 @@ final class LayDeputyshipUploaderTest extends KernelTestCase
 
         $preRegistration = new PreRegistration([
             'ReportType' => $preRegistrationNewReportType,
-            'OrderType' => 'OPG104' === $preRegistrationNewReportType ? 'hw' : 'pfa',
+            'OrderType' => $preRegistrationNewReportType === 'OPG104' ? 'hw' : 'pfa',
             'Hybrid' => $caseType,
             'DeputyUid' => $deputyUid,
         ]);

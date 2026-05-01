@@ -49,7 +49,7 @@ class CommonPasswordValidator extends ConstraintValidator
         if ($handle && strlen($searchTerm) > 0) {
             while (!feof($handle)) {
                 $buffer = fgets($handle);
-                if (false !== strpos($buffer, $searchTerm)) {
+                if (strpos($buffer, $searchTerm) !== false) {
                     $matches[] = $buffer;
                 }
             }
@@ -73,12 +73,12 @@ class CommonPasswordValidator extends ConstraintValidator
         }
 
         $fp = fopen($this->pwnedPasswordsUrl, 'r');
-        if (false !== $fp) {
+        if ($fp !== false) {
             $written = file_put_contents(
                 "$filePath",
                 $fp
             );
-            if (false === $written) {
+            if ($written === false) {
                 throw new \RuntimeException(sprintf('Unable to download or write common password file to disk'));
             }
         }

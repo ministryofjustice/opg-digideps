@@ -99,7 +99,7 @@ class IndexController extends AbstractController
         }
 
         // PA client profile is ATM relying on report ID, this is a working until next refactor
-        $returnLink = ('declaration' === $request->get('from')) ?
+        $returnLink = ($request->get('from') === 'declaration') ?
             $this->generateUrl('report_declaration', ['reportId' => $client->getCurrentReport()->getId()]) :
             $this->generateUrl('report_overview', ['reportId' => $client->getCurrentReport()->getId()]);
 
@@ -143,7 +143,7 @@ class IndexController extends AbstractController
         /** @var SubmitButton $submitBtn */
         $submitBtn = $form->get('save');
         if ($submitBtn->isClicked() && $form->isSubmitted() && $form->isValid()) {
-            if (true === $form->get('confirmArchive')->getData()) {
+            if ($form->get('confirmArchive')->getData() === true) {
                 $this->restClient->apiCall('put', 'client/' . $client->getId() . '/archive', null, 'array');
                 $this->addFlash('notice', 'The client has been archived');
 

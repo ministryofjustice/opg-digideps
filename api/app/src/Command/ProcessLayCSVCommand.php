@@ -100,7 +100,7 @@ class ProcessLayCSVCommand extends Command
         $bucket = $this->params->get('s3_sirius_bucket');
         $layReportFile = $input->getArgument('csv-filename');
         $fileLocation = sprintf('/tmp/%s', $layReportFile);
-        $multiclientApplyDbChanges = 'true' === $input->getOption('multiclient-apply-db-changes');
+        $multiclientApplyDbChanges = $input->getOption('multiclient-apply-db-changes') === 'true';
 
         try {
             $this->s3->getObject([
@@ -206,7 +206,7 @@ class ProcessLayCSVCommand extends Command
             );
         }
 
-        if (0 == $result['new-clients-found']) {
+        if ($result['new-clients-found'] == 0) {
             $this->verboseLogger->notice('No new multiclients were found, so none were added');
         }
 

@@ -27,7 +27,7 @@ class ReportTransformer
             'end_date' => $this->transformDate($dto, 'endDate', 'Y-m-d'),
         ];
 
-        if (null !== $dto->getAvailableSections()) {
+        if ($dto->getAvailableSections() !== null) {
             $transformed['available_sections'] = $dto->getAvailableSections();
         }
 

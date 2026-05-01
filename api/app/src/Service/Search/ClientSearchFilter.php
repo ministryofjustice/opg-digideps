@@ -15,7 +15,7 @@ class ClientSearchFilter
         } else {
             $searchTerms = explode(' ', $searchTerm);
 
-            if (1 === count($searchTerms)) {
+            if (count($searchTerms) === 1) {
                 $this->addBroadMatchFilter($searchTerm, $qb, $alias);
             } else {
                 $this->addFullNameExactMatchFilter($searchTerms[0], $searchTerms[1], $qb, $alias);

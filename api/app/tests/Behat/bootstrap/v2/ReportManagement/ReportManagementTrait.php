@@ -53,7 +53,7 @@ trait ReportManagementTrait
         $this->iAmOnAdminClientDetailsPage();
         $this->reportStatus = $reportStatus;
 
-        $reportId = 'completed' === $reportStatus ? $this->interactingWithUserDetails->getCurrentReportId() : $this->interactingWithUserDetails->getPreviousReportId();
+        $reportId = $reportStatus === 'completed' ? $this->interactingWithUserDetails->getCurrentReportId() : $this->interactingWithUserDetails->getPreviousReportId();
 
         $xpathLocator = sprintf(
             "//a[contains(@href,'/admin/report/%s/manage')]",
@@ -162,7 +162,7 @@ trait ReportManagementTrait
     {
         $this->iAmOnAdminClientDetailsPage();
 
-        if ('completed' === $this->reportStatus) {
+        if ($this->reportStatus === 'completed') {
             $reportPeriod = $this->interactingWithUserDetails->getCurrentReportPeriod();
             $reportDueDate = $this->interactingWithUserDetails->getCurrentReportDueDate();
         } else {
@@ -184,7 +184,7 @@ trait ReportManagementTrait
         $numberWeeksExtended = $this->getSectionAnswers('manage-report')[0] ?? null;
 
         if ($numberWeeksExtended['manage_report[dueDateChoice]'] ?? null) {
-            if ('custom' == $numberWeeksExtended['manage_report[dueDateChoice]']) {
+            if ($numberWeeksExtended['manage_report[dueDateChoice]'] == 'custom') {
                 $expectedDueDate = $this->customDueDate->format('j F Y');
             } else {
                 $expectedDueDate = new \DateTime()
@@ -212,9 +212,9 @@ trait ReportManagementTrait
         $this->iAmOnAdminManageReportPage();
         $roleType = $this->translateDeputyRole($this->interactingWithUserDetails->getUserRole());
 
-        if (User::TYPE_LAY === $roleType) {
+        if ($roleType === User::TYPE_LAY) {
             $extraFields = $this->layCombinedHighExtraCheckboxes;
-        } elseif (User::TYPE_PA === $roleType) {
+        } elseif ($roleType === User::TYPE_PA) {
             $extraFields = $this->paCombinedHighExtraCheckboxes;
         } else {
             $extraFields = $this->profCombinedHighExtraCheckboxes;
@@ -268,14 +268,14 @@ trait ReportManagementTrait
             'manage-report'
         );
 
-        if ('start' === $event) {
-            if ('completed' === $this->reportStatus) {
+        if ($event === 'start') {
+            if ($this->reportStatus === 'completed') {
                 $this->interactingWithUserDetails->setCurrentReportStartDate($dateObject);
             } else {
                 $this->interactingWithUserDetails->setPreviousReportStartDate($dateObject);
             }
         } else {
-            if ('completed' === $this->reportStatus) {
+            if ($this->reportStatus === 'completed') {
                 $this->interactingWithUserDetails->setCurrentReportEndDate($dateObject);
             } else {
                 $this->interactingWithUserDetails->setPreviousReportEndDate($dateObject);
@@ -288,7 +288,7 @@ trait ReportManagementTrait
      */
     public function iShouldSeeReportSectionsLabelledAsChangesNeeded()
     {
-        if ('completed' === $this->reportStatus) {
+        if ($this->reportStatus === 'completed') {
             $reportPeriod = sprintf(
                 '%s to %s report',
                 $this->interactingWithUserDetails->getCurrentReportStartDate()->format('Y'),
@@ -329,7 +329,7 @@ trait ReportManagementTrait
     {
         $this->iAmOnAdminClientDetailsPage();
 
-        $reportPeriod = 'completed' === $this->reportStatus ? $this->interactingWithUserDetails->getCurrentReportPeriod() : $this->interactingWithUserDetails->getPreviousReportPeriod();
+        $reportPeriod = $this->reportStatus === 'completed' ? $this->interactingWithUserDetails->getCurrentReportPeriod() : $this->interactingWithUserDetails->getPreviousReportPeriod();
         $locator = sprintf(
             "//td[normalize-space()='%s']/..",
             $reportPeriod
@@ -359,7 +359,7 @@ trait ReportManagementTrait
     {
         $this->iAmOnAdminClientDetailsPage();
 
-        $reportPeriod = 'completed' === $this->reportStatus ? $this->interactingWithUserDetails->getCurrentReportPeriod() : $this->interactingWithUserDetails->getPreviousReportPeriod();
+        $reportPeriod = $this->reportStatus === 'completed' ? $this->interactingWithUserDetails->getCurrentReportPeriod() : $this->interactingWithUserDetails->getPreviousReportPeriod();
         $locator = sprintf(
             "//td[normalize-space()='%s']/../../..",
             $reportPeriod

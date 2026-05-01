@@ -149,7 +149,7 @@ class MentalCapacity
 
     public function cleanUpUnusedData()
     {
-        if (self::CAPACITY_STAYED_SAME == $this->hasCapacityChanged) {
+        if ($this->hasCapacityChanged == self::CAPACITY_STAYED_SAME) {
             $this->hasCapacityChangedDetails = null;
         }
     }

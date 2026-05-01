@@ -19,7 +19,7 @@ class SiriusApiAvailability extends ServiceAvailabilityAbstract
         try {
             $response = $this->client->get('healthcheck');
 
-            if (200 !== $response->getStatusCode()) {
+            if ($response->getStatusCode() !== 200) {
                 $this->isHealthy = false;
                 $this->errors = 'Returned HTTP code ' . $response->getStatusCode();
             }

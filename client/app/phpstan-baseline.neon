@@ -681,7 +681,7 @@ parameters:
 		-
 			message: '#^Offset ''deputyIds'' does not exist on string\.$#'
 			identifier: offsetAccess.notFound
-			count: 2
+			count: 1
 			path: src/Controller/Admin/FixtureController.php
 
 		-
@@ -915,12 +915,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Controller\\Admin\\OrganisationController\:\:editAction\(\) has parameter \$id with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$organisation Organisation\)\: Unexpected token "\$organisation", expected type at offset 9 on line 1$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: src/Controller/Admin/OrganisationController.php
 
@@ -8227,12 +8221,6 @@ parameters:
 			path: src/Form/Report/ActionType.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Form\\Report\\Asset\\AssetTypeOther\:\:getValidationGroups\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Form/Report/Asset/AssetTypeOther.php
-
-		-
 			message: '#^Binary operation "\." between ''form\.title\.choices\.'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -12891,7 +12879,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''translation_domain'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 5
+			count: 4
 			path: src/Twig/FormFieldsExtension.php
 
 		-
@@ -12903,18 +12891,12 @@ parameters:
 		-
 			message: '#^Cannot access property \$vars on mixed\.$#'
 			identifier: property.nonObject
-			count: 5
+			count: 4
 			path: src/Twig/FormFieldsExtension.php
 
 		-
 			message: '#^Cannot call method getMessage\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Twig\\FormFieldsExtension\:\:renderFormDropDown\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Twig/FormFieldsExtension.php
 
@@ -12933,19 +12915,19 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$parameters of method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:trans\(\) expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 5
+			count: 3
 			path: src/Twig/FormFieldsExtension.php
 
 		-
 			message: '#^Parameter \#2 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
 			identifier: argument.type
-			count: 4
+			count: 2
 			path: src/Twig/FormFieldsExtension.php
 
 		-
 			message: '#^Parameter \#3 \$domain of method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:trans\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 14
+			count: 9
 			path: src/Twig/FormFieldsExtension.php
 
 		-

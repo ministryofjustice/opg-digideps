@@ -45,7 +45,7 @@ class MoneyTransactionType extends AbstractType
             // filter by user roles (if specified)
             $allowedRole = $cat[4] ?? null;
 
-            $isCategoryAllowedForThisRole = null === $allowedRole || $this->authorizationChecker->isGranted($allowedRole);
+            $isCategoryAllowedForThisRole = $allowedRole === null || $this->authorizationChecker->isGranted($allowedRole);
             // filter by
             if ($type === $this->type && $isCategoryAllowedForThisRole) {
                 $ret[$categoryId] = $categoryId;
@@ -78,14 +78,14 @@ class MoneyTransactionType extends AbstractType
 
         $builder->add('id', FormTypes\HiddenType::class);
 
-        if (1 === $this->step) {
+        if ($this->step === 1) {
             $builder->add('category', FormTypes\ChoiceType::class, [
                 'choices' => $this->getCategories(),
                 'expanded' => true,
             ]);
         }
 
-        if (2 === $this->step) {
+        if ($this->step === 2) {
             $builder->add('description', FormTypes\TextareaType::class, [
                 'required' => $this->isDescriptionMandatory(),
             ]);
@@ -124,10 +124,10 @@ class MoneyTransactionType extends AbstractType
             'choice_translation_domain' => 'report-money-transaction',
             'validation_groups' => function () {
                 $validationGroups = [];
-                if (1 === $this->step) {
+                if ($this->step === 1) {
                     $validationGroups[] = 'transaction-category';
                 }
-                if (2 === $this->step) {
+                if ($this->step === 2) {
                     $validationGroups[] = 'transaction-amount';
                     if ($this->isDescriptionMandatory()) {
                         $validationGroups[] = 'transaction-description';

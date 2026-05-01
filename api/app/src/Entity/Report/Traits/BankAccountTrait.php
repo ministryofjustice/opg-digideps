@@ -58,7 +58,7 @@ trait BankAccountTrait
     public function getBankAccountsIncomplete(): Collection|array
     {
         return $this->getBankAccounts()->filter(function ($b) {
-            return null == $b->getClosingBalance();
+            return $b->getClosingBalance() == null;
         });
     }
 

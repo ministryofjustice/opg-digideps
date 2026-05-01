@@ -130,8 +130,8 @@ class LifestyleController extends RestController
         if (array_key_exists('does_client_undertake_social_activities', $data)) {
             $yesNo = $data['does_client_undertake_social_activities'];
             $lifestyle->setDoesClientUndertakeSocialActivities($yesNo);
-            $lifestyle->setActivityDetailsYes('yes' === $yesNo ? $data['activity_details_yes'] : null);
-            $lifestyle->setActivityDetailsNo('no' === $yesNo ? $data['activity_details_no'] : null);
+            $lifestyle->setActivityDetailsYes($yesNo === 'yes' ? $data['activity_details_yes'] : null);
+            $lifestyle->setActivityDetailsNo($yesNo === 'no' ? $data['activity_details_no'] : null);
         }
     }
 }

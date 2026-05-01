@@ -59,7 +59,7 @@ trait ReportTrait
     {
         $usertype = strtolower(trim($usertype));
         $this->assertUrlRegExp('#/overview#');
-        if ('lay' == $usertype) {
+        if ($usertype == 'lay') {
             // Lay report
             $this->assertSession()->elementExists('css', '#edit-report-preview');
             $this->assertSession()->elementNotExists('css', '#edit-report-review');
@@ -78,7 +78,7 @@ trait ReportTrait
     {
         $usertype = strtolower(trim($usertype));
         $this->assertUrlRegExp('#/overview#');
-        if ('lay' == $usertype) {
+        if ($usertype == 'lay') {
             // Lay report
             $this->assertSession()->elementExists('css', '#edit-report-review');
             $this->assertSession()->elementNotExists('css', '#edit-report-preview');

@@ -63,7 +63,7 @@ class ReportApi
                 $groups
             );
         } catch (RestClientException $e) {
-            if (403 === $e->getStatusCode() || 404 === $e->getStatusCode()) {
+            if ($e->getStatusCode() === 403 || $e->getStatusCode() === 404) {
                 throw new NotFoundHttpException($e->getData()['message']);
             } else {
                 throw $e;

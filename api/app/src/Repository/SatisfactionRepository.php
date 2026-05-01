@@ -66,7 +66,7 @@ class SatisfactionRepository extends ServiceEntityRepository
         $numSatisfied = $satisfactionScoresResults['satisfied'] + $satisfactionScoresResults['very_satisfied'];
         $total = array_sum($satisfactionScoresResults);
 
-        if (0 === $total) {
+        if ($total === 0) {
             return [];
         }
 

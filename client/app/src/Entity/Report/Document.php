@@ -246,6 +246,6 @@ class Document implements DocumentInterface, SynchronisableInterface
      */
     private function isTransactionDocument()
     {
-        return false !== strpos($this->getFileName(), 'DigiRepTransactions');
+        return strpos($this->getFileName(), 'DigiRepTransactions') !== false;
     }
 }

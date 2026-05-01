@@ -36,7 +36,7 @@ trait RegionTrait
     {
         $regionCss = self::behatElementToCssSelector($element, $type);
         $found = count($this->getSession()->getPage()->findAll('css', $regionCss));
-        if (1 !== $found) {
+        if ($found !== 1) {
             throw new \RuntimeException("One $regionCss class expected, $found found");
         }
     }
@@ -63,7 +63,7 @@ trait RegionTrait
         // assert only one region is present
         $regionCss = self::behatElementToCssSelector($region, 'region');
         $found = count($this->getSession()->getPage()->findAll('css', $regionCss));
-        if (1 !== $found) {
+        if ($found !== 1) {
             throw new \RuntimeException("Can't assert text existing in region $region, $found found");
         }
 
@@ -78,14 +78,14 @@ trait RegionTrait
         $parentRegionCss = self::behatElementToCssSelector($parentRegionId, 'region');
         $parentRegion = $this->getSession()->getPage()->find('css', $parentRegionCss);
 
-        if (null === $parentRegion) {
+        if ($parentRegion === null) {
             throw new \RuntimeException("Can't find region $parentRegionId");
         }
 
         $regionCss = self::behatElementToCssSelector($regionId, 'region');
         $region = $parentRegion->find('css', $regionCss);
 
-        if (null === $region) {
+        if ($region === null) {
             throw new \RuntimeException("Can't find region $regionId in $parentRegionId");
         }
     }

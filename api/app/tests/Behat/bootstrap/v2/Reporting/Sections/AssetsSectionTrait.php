@@ -66,7 +66,7 @@ trait AssetsSectionTrait
         foreach ($assetRange as $propertyNumber) {
             $assetType = $this->assetDictionary[$propertyNumber];
 
-            if ('Property' === $assetType) {
+            if ($assetType === 'Property') {
                 continue;
             }
 
@@ -170,7 +170,7 @@ trait AssetsSectionTrait
         foreach ($properties as $index => $propertyPercentageAnswers) {
             $propertyPercentage = $this->getSectionAnswers('assetDetailsPropertyPercentage')[$index];
 
-            if (isset($propertyPercentage['asset[owned]']) && 'Partly owned' === $propertyPercentage['asset[owned]']) {
+            if (isset($propertyPercentage['asset[owned]']) && $propertyPercentage['asset[owned]'] === 'Partly owned') {
                 if ($this->getSectionAnswers('assetDetailsPropertyValue')) {
                     $propertyValue = $this->getSectionAnswers('assetDetailsPropertyValue')[$index]['asset[value]'];
                     $ownedPercentage = $this->getSectionAnswers('assetDetailsPropertyPercentage')[$index]['asset[ownedPercentage]'];

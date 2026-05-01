@@ -21,7 +21,7 @@ class HtmlToPdfGenerator
     {
         $pdf = $this->getPdfFromHtml('test');
 
-        if (false === $pdf) {
+        if ($pdf === false) {
             $pdf = '';
         }
 
@@ -56,7 +56,7 @@ class HtmlToPdfGenerator
         $httpCode = 0;
         $count = 0;
         $pdfBody = false;
-        while (200 !== $httpCode and $count < 3) {
+        while ($httpCode !== 200 and $count < 3) {
             $pdfBody = curl_exec($ch);
 
             if (!is_string($pdfBody)) {

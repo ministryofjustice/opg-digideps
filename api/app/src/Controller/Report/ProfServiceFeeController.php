@@ -113,7 +113,7 @@ class ProfServiceFeeController extends RestController
 
         if (array_key_exists('payment_received', $data)) {
             $profServiceFee->setPaymentReceived($data['payment_received']);
-            if ('no' == $profServiceFee->getPaymentReceived()) {
+            if ($profServiceFee->getPaymentReceived() == 'no') {
                 $profServiceFee->setAmountReceived(null);
                 $profServiceFee->setPaymentReceivedDate(null);
             } else {

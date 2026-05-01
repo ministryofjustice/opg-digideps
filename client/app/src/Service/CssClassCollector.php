@@ -19,18 +19,18 @@ class CssClassCollector extends DataCollector
 
         foreach ($matches[2] as $classList) {
             foreach (explode(' ', $classList) as $className) {
-                if ('' === $className) {
+                if ($className === '') {
                     continue;
                 }
 
-                if ('behat-' === substr($className, 0, 6)) {
+                if (substr($className, 0, 6) === 'behat-') {
                     // Ignore behat classes
                     continue;
-                } elseif ('opg-' === substr($className, 0, 4)) {
+                } elseif (substr($className, 0, 4) === 'opg-') {
                     $counter = &$appClasses;
-                } elseif ('govuk-' === substr($className, 0, 6)) {
+                } elseif (substr($className, 0, 6) === 'govuk-') {
                     $counter = &$govukClasses;
-                } elseif ('moj-' === substr($className, 0, 4)) {
+                } elseif (substr($className, 0, 4) === 'moj-') {
                     $counter = &$mojClasses;
                 } else {
                     $counter = &$otherClasses;

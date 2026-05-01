@@ -23,7 +23,7 @@ trait CourtOrderTrait
             $url = sprintf('/admin/fixtures/court-orders?%s', $queryString);
             $this->visitAdminPath($url);
 
-            $activated = is_null($row['activated']) || 'true' == $row['activated'];
+            $activated = is_null($row['activated']) || $row['activated'] == 'true';
             $this->fillField('court_order_fixture_activated', $activated);
             $this->fillField('court_order_fixture_deputyType', $row['deputy_type']);
             $this->fillField('court_order_fixture_reportType', $this->resolveReportType($row));

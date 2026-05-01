@@ -352,7 +352,7 @@ MESSAGE;
 
         $this->iVisitAdminClientDetailsPageForDeputyInteractingWith();
 
-        if (null != $this->interactingWithUserDetails->getOrganisationName()) {
+        if ($this->interactingWithUserDetails->getOrganisationName() != null) {
             $this->organisationEmail = $this->interactingWithUserDetails->getOrganisationEmailIdentifier();
         }
 

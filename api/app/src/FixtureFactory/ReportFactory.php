@@ -20,7 +20,7 @@ class ReportFactory
     {
         $type = '';
 
-        if (User::TYPE_LAY === $data['deputyType']) {
+        if ($data['deputyType'] === User::TYPE_LAY) {
             $type = $data['reportType'];
         } elseif (in_array($data['deputyType'], ['PA', 'PA_ADMIN', 'PA_TEAM_MEMBER'])) {
             $type = $data['reportType'] . '-6';
@@ -33,7 +33,7 @@ class ReportFactory
 
         $report = new Report($client, $type, $startDate, $endDate);
 
-        if (isset($data['reportStatus']) && Report::STATUS_READY_TO_SUBMIT === $data['reportStatus']) {
+        if (isset($data['reportStatus']) && $data['reportStatus'] === Report::STATUS_READY_TO_SUBMIT) {
             $this->reportSection->completeReport($report);
             $report->updateSectionsStatusCache($report->getAvailableSections());
         }

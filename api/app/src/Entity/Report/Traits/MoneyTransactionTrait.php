@@ -30,7 +30,7 @@ trait MoneyTransactionTrait
     public function getMoneyTransactionsIn()
     {
         return $this->moneyTransactions->filter(function ($t) {
-            return 'in' == $t->getType();
+            return $t->getType() == 'in';
         });
     }
 
@@ -46,7 +46,7 @@ trait MoneyTransactionTrait
     public function getMoneyTransactionsOut()
     {
         return $this->moneyTransactions->filter(function ($t) {
-            return 'out' == $t->getType();
+            return $t->getType() == 'out';
         });
     }
 
@@ -114,7 +114,7 @@ trait MoneyTransactionTrait
 
         $ret = 0;
 
-        if (self::LAY_PFA_LOW_ASSETS_TYPE === $this->type) {
+        if ($this->type === self::LAY_PFA_LOW_ASSETS_TYPE) {
             $transactions = $this->getMoneyTransactionsShort();
         } else {
             $transactions = $this->getMoneyTransactions();

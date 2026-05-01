@@ -62,7 +62,7 @@ trait DeputyManagementTrait
 
         $session = $this->getSession();
 
-        if (Response::HTTP_OK === $session->getStatusCode()) {
+        if ($session->getStatusCode() === Response::HTTP_OK) {
             throw new \Exception("The user '$userEmail' should have been deleted but they still exist");
         }
 
@@ -171,10 +171,10 @@ trait DeputyManagementTrait
             User::ROLE_PA_TEAM_MEMBER,
         ];
 
-        $isSuperAdmin = User::ROLE_SUPER_ADMIN === $loggedInUserRole;
+        $isSuperAdmin = $loggedInUserRole === User::ROLE_SUPER_ADMIN;
 
         $adminManagerIsEditingNonAdminUser =
-            (User::ROLE_ADMIN_MANAGER === $loggedInUserRole
+            ($loggedInUserRole === User::ROLE_ADMIN_MANAGER
                 && in_array($userToBeUpdatedRole, $rolesAdminManagersCanUpdateEmail));
 
         return $isSuperAdmin || $adminManagerIsEditingNonAdminUser;

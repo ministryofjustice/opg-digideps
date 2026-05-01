@@ -55,7 +55,7 @@ class IndexController extends AbstractController
     {
         $form = $this->createForm(Form\LoginType::class);
         $vars = [
-            'isAdmin' => 'admin' === $this->environment,
+            'isAdmin' => $this->environment === 'admin',
         ];
 
         // See LoginFormAuthenticator - exceptions are set in request session and accessed here once redirected
@@ -88,13 +88,13 @@ class IndexController extends AbstractController
         // different page version for timeout and manual logout
         $session = $request->getSession();
 
-        if ('logoutPage' === $session->get('loggedOutFrom')) {
+        if ($session->get('loggedOutFrom') === 'logoutPage') {
             $session->set('loggedOutFrom', null); // avoid display the message at next page reload
 
             return $this->render('@App/Index/login-from-logout.html.twig', [
                 'form' => $form->createView(),
             ] + $vars);
-        } elseif ('timeout' === $session->get('loggedOutFrom') || 'api' === $request->query->get('from')) {
+        } elseif ($session->get('loggedOutFrom') === 'timeout' || $request->query->get('from') === 'api') {
             $session->set('loggedOutFrom', null); // avoid display the message at next page reload
             $vars['error'] = $this->translator->trans('sessionTimeoutOutWarning', [
                 '%time%' => StringUtils::secondsToHoursMinutes($this->params->get('session_expire_seconds')),
@@ -184,13 +184,13 @@ class IndexController extends AbstractController
         if ($request->cookies->has('cookie_policy')) {
             $policy = json_decode($request->cookies->get('cookie_policy'));
             $form->get('usage')->setData($policy->usage);
-        } elseif ('all' === $request->query->get('accept')) {
+        } elseif ($request->query->get('accept') === 'all') {
             $form->get('usage')->setData(true);
         }
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid() || 'all' === $request->query->get('accept')) {
+        if ($form->isSubmitted() && $form->isValid() || $request->query->get('accept') === 'all') {
             $settings = [
                 'essential' => true,
                 'usage' => $form->get('usage')->getData(),

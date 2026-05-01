@@ -139,7 +139,7 @@ trait ReportBankAccountsTrait
         $banks = $this->getBankAccounts();
         foreach ($banks as $bank) {
             /* @var $bank BankAccount */
-            $bankName = (!empty($bank->getBank()) ? $bank->getBank() . ' - '  : '') . $bank->getAccountTypeText() . ' (****' . $bank->getAccountNumber() . ')';
+            $bankName = (!empty($bank->getBank()) ? $bank->getBank() . ' - ' : '') . $bank->getAccountTypeText() . ' (****' . $bank->getAccountNumber() . ')';
             $banksList[$bankName] = $bank->getId();
         }
 

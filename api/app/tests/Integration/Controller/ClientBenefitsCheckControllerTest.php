@@ -21,7 +21,7 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
     {
         parent::setUp();
 
-        if (null === self::$tokenAdmin) {
+        if (self::$tokenAdmin === null) {
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
             self::$tokenProf = $this->loginAsProf();

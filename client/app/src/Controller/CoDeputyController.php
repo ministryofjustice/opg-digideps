@@ -106,7 +106,7 @@ class CoDeputyController extends AbstractController
                     // truncate case number if length is 10 digits long before setting
                     /** @var string $caseNumber */
                     $caseNumber = $form->get('clientCaseNumber')->getData();
-                    if (10 == strlen($caseNumber)) {
+                    if (strlen($caseNumber) == 10) {
                         $selfRegisterData->setCaseNumber(substr($caseNumber, 0, -2));
                     } else {
                         $selfRegisterData->setCaseNumber($caseNumber);

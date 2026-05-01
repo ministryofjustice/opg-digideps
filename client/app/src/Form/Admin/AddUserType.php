@@ -38,7 +38,7 @@ class AddUserType extends AbstractType
         $staffRoles = [User::ROLE_ADMIN];
 
         $loggedInUser = $this->tokenStorage->getToken()->getUser();
-        if (User::ROLE_SUPER_ADMIN === $loggedInUser->getRoleName()) {
+        if ($loggedInUser->getRoleName() === User::ROLE_SUPER_ADMIN) {
             $staffRoles[] = User::ROLE_SUPER_ADMIN;
             $staffRoles[] = User::ROLE_ADMIN_MANAGER;
         }
@@ -78,7 +78,7 @@ class AddUserType extends AbstractType
             $user = $event->getData();
             $form = $event->getForm();
 
-            if (in_array($user->getRoleName(), $staffRoles) || 'ROLE_AD' === $user->getRoleName()) {
+            if (in_array($user->getRoleName(), $staffRoles) || $user->getRoleName() === 'ROLE_AD') {
                 $form->get('roleType')->setData('staff');
                 $form->get('roleNameStaff')->setData($user->getRoleName());
             } else {

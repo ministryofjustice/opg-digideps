@@ -17,7 +17,7 @@ class SatisfactionControllerTest extends AbstractTestController
     {
         parent::setUp();
 
-        if (null === self::$tokenAdmin) {
+        if (self::$tokenAdmin === null) {
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
             self::$tokenProf = $this->loginAsProf();
@@ -172,7 +172,7 @@ class SatisfactionControllerTest extends AbstractTestController
             $this->assertNull($persistedEntity->getReportType());
         }
 
-        if ('/satisfaction' === $url) {
+        if ($url === '/satisfaction') {
             $this->assertEquals('ROLE_LAY_DEPUTY', $persistedEntity->getDeputyRole());
         } else {
             $this->assertNull($persistedEntity->getDeputyRole());

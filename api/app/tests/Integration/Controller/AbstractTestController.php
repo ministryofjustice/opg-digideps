@@ -296,7 +296,7 @@ abstract class AbstractTestController extends WebTestCase
 
     private function getOpenApiSpecification()
     {
-        if (null === $this->openapiValidator) {
+        if ($this->openapiValidator === null) {
             $this->openapiValidator = ValidatorBuilder::fromYamlFile(__DIR__ . '/../../../openapi/specification.yaml')->getValidator();
         }
 

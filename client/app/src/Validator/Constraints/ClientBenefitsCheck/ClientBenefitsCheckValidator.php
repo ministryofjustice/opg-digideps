@@ -30,27 +30,27 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
         $this->clientName = $report->getClient()->getFirstName();
         $propertyName = $this->context->getPropertyName();
 
-        if ('whenLastCheckedEntitlement' === $propertyName) {
+        if ($propertyName === 'whenLastCheckedEntitlement') {
             $this->whenLastCheckedEntitlementValid($value, $constraint);
         }
 
-        if ('dateLastCheckedEntitlement' === $propertyName) {
+        if ($propertyName === 'dateLastCheckedEntitlement') {
             $this->dateLastCheckedEntitlementValid($value, $object, $constraint);
         }
 
-        if ('neverCheckedExplanation' === $propertyName) {
+        if ($propertyName === 'neverCheckedExplanation') {
             $this->neverCheckedExplanationValid($value, $object, $constraint);
         }
 
-        if ('doOthersReceiveMoneyOnClientsBehalf' === $propertyName) {
+        if ($propertyName === 'doOthersReceiveMoneyOnClientsBehalf') {
             $this->moneyOnClientsBehalfValid($value, $constraint);
         }
 
-        if ('dontKnowMoneyExplanation' === $propertyName) {
+        if ($propertyName === 'dontKnowMoneyExplanation') {
             $this->dontKnowMoneyExplanationValid($value, $object, $constraint);
         }
 
-        if ('typesOfMoneyReceivedOnClientsBehalf' === $propertyName) {
+        if ($propertyName === 'typesOfMoneyReceivedOnClientsBehalf') {
             $this->typesOfMoneyReceivedOnClientsBehalfValid($object, $constraint);
         }
     }
@@ -74,7 +74,7 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
 
     private function dateLastCheckedEntitlementValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
     {
-        if (is_null($value) && ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED === $object->getWhenLastCheckedEntitlement()) {
+        if (is_null($value) && $object->getWhenLastCheckedEntitlement() === ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED) {
             $this->context
                 ->buildViolation($constraint->whenLastCheckedMissingDate)
                 ->setTranslationDomain($this->translationDomain)
@@ -93,7 +93,7 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
 
     private function neverCheckedExplanationValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
     {
-        if (is_null($value) && ClientBenefitsCheck::WHEN_CHECKED_IVE_NEVER_CHECKED === $object->getWhenLastCheckedEntitlement()) {
+        if (is_null($value) && $object->getWhenLastCheckedEntitlement() === ClientBenefitsCheck::WHEN_CHECKED_IVE_NEVER_CHECKED) {
             $this->context
                 ->buildViolation($constraint->whenLastCheckedNeverCheckedEntitlementMissingExplanation)
                 ->setTranslationDomain($this->translationDomain)
@@ -123,7 +123,7 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
 
     private function dontKnowMoneyExplanationValid($value, ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
     {
-        if (is_null($value) && ClientBenefitsCheck::OTHER_MONEY_DONT_KNOW === $object->getDoOthersReceiveMoneyOnClientsBehalf()) {
+        if (is_null($value) && $object->getDoOthersReceiveMoneyOnClientsBehalf() === ClientBenefitsCheck::OTHER_MONEY_DONT_KNOW) {
             $this->context
                 ->buildViolation($constraint->moneyOnClientsBehalfNeverCheckedMoneyMissingExplanation)
                 ->setTranslationDomain($this->translationDomain)
@@ -142,10 +142,10 @@ class ClientBenefitsCheckValidator extends ConstraintValidator
 
     private function typesOfMoneyReceivedOnClientsBehalfValid(ClientBenefitsCheckInterface $object, ClientBenefitsCheckConstraint $constraint)
     {
-        if ($object->getTypesOfMoneyReceivedOnClientsBehalf() instanceof ArrayCollection && 1 === $object->getTypesOfMoneyReceivedOnClientsBehalf()->count()) {
+        if ($object->getTypesOfMoneyReceivedOnClientsBehalf() instanceof ArrayCollection && $object->getTypesOfMoneyReceivedOnClientsBehalf()->count() === 1) {
             $money = $object->getTypesOfMoneyReceivedOnClientsBehalf()->first();
 
-            if (is_null($money->getAmount()) && is_null($money->getMoneyType()) && false === $money->getAmountDontKnow()) {
+            if (is_null($money->getAmount()) && is_null($money->getMoneyType()) && $money->getAmountDontKnow() === false) {
                 $this->context
                     ->buildViolation($constraint->moneyOnClientsBehalfMissingMoney)
                     ->setTranslationDomain($this->translationDomain)

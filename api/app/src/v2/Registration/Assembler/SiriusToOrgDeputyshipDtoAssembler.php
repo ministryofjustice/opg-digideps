@@ -69,7 +69,7 @@ class SiriusToOrgDeputyshipDtoAssembler
         if ($date) {
             $result = \DateTime::createFromFormat('Y-m-d', $date);
 
-            if (false != $result) {
+            if ($result != false) {
                 return $result;
             } else {
                 return null;

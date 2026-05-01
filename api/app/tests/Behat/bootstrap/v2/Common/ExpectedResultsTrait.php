@@ -146,7 +146,7 @@ trait ExpectedResultsTrait
     {
         $this->summarySectionItemsFound = array_filter(
             $this->summarySectionItemsFound,
-            fn ($value) => !is_null($value) && '' !== $value
+            fn ($value) => !is_null($value) && $value !== ''
         );
     }
 
@@ -155,7 +155,7 @@ trait ExpectedResultsTrait
      */
     private function extractDescriptionListContents(NodeElement $element)
     {
-        if ('dl' == $element->getTagName()) {
+        if ($element->getTagName() == 'dl') {
             $xpath = '//dd';
             $descriptionDetailsElements = $element->findAll('xpath', $xpath);
 
@@ -197,7 +197,7 @@ trait ExpectedResultsTrait
      */
     private function extractTableBodyContents(NodeElement $element)
     {
-        if ('tbody' == $element->getTagName()) {
+        if ($element->getTagName() == 'tbody') {
             $xpath = '//th';
             $tableHeadElements = $element->findAll('xpath', $xpath);
 
@@ -268,7 +268,7 @@ trait ExpectedResultsTrait
         // Loop over the collection of values inputted to forms via FormFillingTrait functions for a specific section
         foreach ($this->getSectionAnswers($sectionName) as $sectionAnswers) {
             // We assert on totals separately - skip asserting
-            if ('totals' === $sectionName) {
+            if ($sectionName === 'totals') {
                 continue;
             }
 
@@ -298,7 +298,7 @@ trait ExpectedResultsTrait
     {
         if ($partialMatch) {
             $matches = array_filter($this->summarySectionItemsFound, function ($item) use ($fieldValue) {
-                return empty($fieldValue) || false !== strpos($item, $fieldValue);
+                return empty($fieldValue) || strpos($item, $fieldValue) !== false;
             });
 
             $sectionAnswerFound = !empty($matches);

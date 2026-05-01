@@ -21,7 +21,7 @@ class UserControllerTest extends AbstractTestController
     {
         parent::setUp();
 
-        if (null === self::$tokenAdmin) {
+        if (self::$tokenAdmin === null) {
             self::$tokenSuperAdmin = $this->loginAsSuperAdmin();
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
@@ -345,8 +345,8 @@ class UserControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenSuperAdmin,
         ]);
 
-        $this->assertTrue(null === self::fixtures()->clear()->getRepo(User::class)->find($userToDeleteId));
-        $this->assertTrue(null === $client->getDeletedAt());
+        $this->assertTrue(self::fixtures()->clear()->getRepo(User::class)->find($userToDeleteId) === null);
+        $this->assertTrue($client->getDeletedAt() === null);
     }
 
     public function testDeleteNotPermittedForAdmin()
