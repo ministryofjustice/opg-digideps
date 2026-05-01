@@ -108,7 +108,7 @@ class ReportTypeUpdateFactoryIntegrationTest extends ApiIntegrationTestCase
     }
 
     #[DataProvider('reportTypeChanges')]
-    public function testProcessCandidates(array $data)
+    public function testProcessCandidates(array $data): void
     {
         ++self::$count;
         $courtOrder = self::$fixtures->createCourtOrder(
@@ -151,7 +151,7 @@ class ReportTypeUpdateFactoryIntegrationTest extends ApiIntegrationTestCase
     }
 
     #[DataProvider('reportTypeChanges')]
-    public function testProcessCandidatesDryRun(array $data)
+    public function testProcessCandidatesDryRun(array $data): void
     {
         ++self::$count;
         $courtOrder = self::$fixtures->createCourtOrder(
