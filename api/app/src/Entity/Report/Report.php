@@ -1660,8 +1660,8 @@ class Report
         $active = [];
 
         /** @var CourtOrder $courtOrder */
-        foreach ($this->courtOrders as $courtOrder) {
-            if ($courtOrder->getStatus() !== 'ACTIVE') {
+        foreach ($this->courtOrders->toArray() as $courtOrder) {
+            if ($courtOrder->getStatus() === 'ACTIVE') {
                 $active[] = $courtOrder;
             }
         }
