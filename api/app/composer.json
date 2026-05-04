@@ -28,7 +28,7 @@
         }
     },
     "require": {
-        "php": "^8.4",
+        "php": "^8.4.2",
         "aws/aws-sdk-php": "^3.368.0",
         "digideps/common": "^1.0",
         "doctrine/annotations": "^2.0.2",
@@ -98,7 +98,7 @@
         "symfony/maker-bundle": "^1.65.1",
         "symfony/mime": "^6.4.30",
         "symfony/phpunit-bridge": "^6.4.26",
-        "symfony/var-dumper": "^6.4.26"
+        "symfony/var-dumper": "^6.4.32"
     },
     "minimum-stability": "stable",
     "extra": {
