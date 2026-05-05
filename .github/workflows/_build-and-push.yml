@@ -190,8 +190,7 @@ jobs:
         env:
           IMAGE_NAME: ${{ matrix.svc_name }}
         run: |
-          IMAGE_ID="$(docker image inspect "${IMAGE_NAME}:latest" --format '{{.Id}}')"
-          CHECKSUM="${IMAGE_ID#sha256:}"
+          CHECKSUM="$(docker save "${IMAGE_NAME}:latest" | sha256sum | awk '{print $1}')"
           echo "checksum_tag=checksum-${CHECKSUM}" >> "$GITHUB_OUTPUT"
           echo "Image checksum tag: checksum-${CHECKSUM}"
 
