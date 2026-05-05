@@ -18,7 +18,7 @@ const ToggleRequired = {
       const requiredMessage = toggleRequired.getAttribute('data-required-message')
       const optionalMessage = toggleRequired.getAttribute('data-optional-message')
 
-      if (!(triggerElement) || !targetElement || !optionalLabelSuffix || !requiredMessage || !optionalMessage) {
+      if (!(triggerElement && targetElement && optionalLabelSuffix && requiredMessage && optionalMessage)) {
         console.error("ERROR: ToggleRequired element is misconfigured")
         return
       }
@@ -27,7 +27,7 @@ const ToggleRequired = {
       // this is added/removed rather than hidden, as hiding it will mean
       // it is still visible to assistive technologies
       let optionalSpan = document.createElement('span')
-      optionalSpan.innerText = optionalLabelSuffix.trim()
+      optionalSpan.innerText = optionalLabelSuffix
 
       // aria-live area for notifying assistive technologies when the
       // required/optional status of the target field changes;
@@ -61,33 +61,33 @@ const ToggleRequired = {
   // if it has no value, show "(optional)" in the targetElement's label and
   // remove the required attribute
   makeHandler: function(triggerElement, targetElement) {
-    const labelElement = targetElement.querySelector('label')
+    const targetLabelElement = targetElement.querySelector('label')
     const targetInputElement = targetElement.querySelector('input, textarea')
     const config = targetElement.toggleRequiredConfig
 
     return function() {
-      const greaterThanZero = parseFloat(triggerElement.value.trim()) > 0
+      const triggerValue = parseFloat(triggerElement.value.trim())
 
-      if (greaterThanZero) {
+      if (!isNaN(triggerValue) && triggerValue !== 0) {
         // required: remove the "optional" label suffix
-        if (labelElement.contains(config.optionalSpan)) {
-          labelElement.removeChild(config.optionalSpan)
+        if (targetLabelElement.contains(config.optionalSpan)) {
+          targetLabelElement.removeChild(config.optionalSpan)
         }
 
         targetInputElement.setAttribute('required', 'required')
 
         // set required message in aria-live area
-        config.toggleMessage.textContent = config.requiredMessage
+        config.toggleMessage.innerText = config.requiredMessage
       } else {
         // optional: add the "optional" label suffix
-        if (!labelElement.contains(config.optionalSpan)) {
-          labelElement.appendChild(config.optionalSpan)
+        if (!targetLabelElement.contains(config.optionalSpan)) {
+          targetLabelElement.appendChild(config.optionalSpan)
         }
 
         targetInputElement.removeAttribute('required')
 
         // set optional message in aria-live area
-        config.toggleMessage.textContent = config.optionalMessage
+        config.toggleMessage.innerText = config.optionalMessage
       }
     }
   }
