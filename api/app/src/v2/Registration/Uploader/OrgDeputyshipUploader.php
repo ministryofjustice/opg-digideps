@@ -68,8 +68,11 @@ class OrgDeputyshipUploader
                 $this->client = $this->em->getRepository(Client::class)->findByCaseNumber($deputyshipDto->getCaseNumber());
 
                 $this->skipArchivedClients();
-                $this->handleDeputy($deputyshipDto);
+
                 $this->handleOrganisation($deputyshipDto);
+                $this->handleDeputy($deputyshipDto);
+
+
                 $this->handleClient($deputyshipDto);
                 $this->handleReport($deputyshipDto);
             } catch (ClientIsArchivedException) {
@@ -106,7 +109,7 @@ class OrgDeputyshipUploader
         );
 
         if (is_null($deputy)) {
-            $deputy = $this->deputyAssembler->assembleFromOrgDeputyshipDto($dto);
+            $deputy = $this->deputyAssembler->assembleFromOrgDeputyshipDto($dto, $this->currentOrganisation);
 
             $this->em->persist($deputy);
             $this->em->flush();
@@ -147,6 +150,12 @@ class OrgDeputyshipUploader
 
             if ($deputy->typeHasChanged($dto)) {
                 $deputy->setDeputyType(DeputyType::from(strtoupper($dto->getDeputyType())));
+
+                $updated = true;
+            }
+
+            if ($deputy->getOrganisation()?->getId() !== $this->currentOrganisation?->getId()) {
+                $deputy->setOrganisation($this->currentOrganisation);
 
                 $updated = true;
             }

@@ -186,6 +186,10 @@ class OrgDeputyshipDTOTestHelper
      */
     public static function ensureDeputyInUploadExists(OrgDeputyshipDto $dto, EntityManager $em)
     {
+        /**
+         * @var OrganisationRepository $repository
+         */
+        $repository = $em->getRepository(Organisation::class);
         $deputy = new Deputy()
             ->setDeputyType(DeputyType::from($dto->getDeputyType()))
             ->setEmail1($dto->getDeputyEmail())
@@ -197,7 +201,8 @@ class OrgDeputyshipDTOTestHelper
             ->setAddress3($dto->getDeputyAddress3())
             ->setAddress4($dto->getDeputyAddress4())
             ->setAddress5($dto->getDeputyAddress5())
-            ->setAddressPostcode($dto->getDeputyPostcode());
+            ->setAddressPostcode($dto->getDeputyPostcode())
+            ->setOrganisation($dto->getDeputyEmail() === null ? null : $repository->findByEmailIdentifier($dto->getDeputyEmail()));
 
         $em->persist($deputy);
         $em->flush();
