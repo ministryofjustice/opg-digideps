@@ -309,7 +309,7 @@ parameters:
 		-
 			message: '#^Method Doctrine\\Persistence\\ObjectManager\:\:flush\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
-			count: 3
+			count: 2
 			path: src/Controller/ClientController.php
 
 		-
@@ -3613,12 +3613,6 @@ parameters:
 			path: src/Entity/Client.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Client\:\:\$deletedAt \(DateTime\) does not accept DateTime\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Client.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Client\:\:\$id is never written, only read\.$#'
 			identifier: property.onlyRead
 			count: 1
@@ -3723,12 +3717,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Organisation\:\:getUsers\(\) return type with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
 			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Organisation.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Organisation\:\:\$deletedAt \(DateTime\) does not accept DateTime\|null\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: src/Entity/Organisation.php
 
@@ -4103,12 +4091,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/AssetOther.php
-
-		-
-			message: '#^Binary operation "\*" between string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Entity/Report/AssetProperty.php
 
 		-
 			message: '#^Binary operation "/" between mixed and 100 results in an error\.$#'
@@ -5185,12 +5167,6 @@ parameters:
 			path: src/Entity/Report/MoneyTransaction.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\:\:\$deletedAt \(DateTime\) does not accept DateTime\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\:\:\$meta is unused\.$#'
 			identifier: property.unused
 			count: 1
@@ -5199,12 +5175,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransactionShort\:\:setType\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/MoneyTransactionShort.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransactionShort\:\:\$deletedAt \(DateTime\) does not accept DateTime\|null\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: src/Entity/Report/MoneyTransactionShort.php
 
@@ -5602,12 +5572,6 @@ parameters:
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:addProfServiceFee\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:addReportSubmission\(\) should return OPG\\Digideps\\Backend\\Entity\\Report\\Report but return statement is missing\.$#'
-			identifier: return.missing
-			count: 2
 			path: src/Entity/Report/Report.php
 
 		-
@@ -6081,18 +6045,6 @@ parameters:
 		-
 			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$contacts has no type specified\.$#'
 			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$courtOrders has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$courtOrders is unused\.$#'
-			identifier: property.unused
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -7034,12 +6986,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$address of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setAddress\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/FixtureFactory/ClientFactory.php
-
-		-
-			message: '#^Parameter \#1 \$caseNumber of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setCaseNumber\(\) expects string\|null, int given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/FixtureFactory/ClientFactory.php
@@ -10885,12 +10831,6 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: '#^Call to an undefined method object\:\:addUser\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: '#^Cannot access offset ''activated'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -10921,21 +10861,9 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: '#^Cannot access offset ''coDeputy'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: '#^Cannot access offset ''county'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: '#^Cannot access offset ''courtDate'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
@@ -10969,15 +10897,9 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: '#^Cannot access offset ''orgSizeClients'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: '#^Cannot access offset ''orgSizeUsers'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
@@ -11053,12 +10975,6 @@ parameters:
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -11066,18 +10982,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:remove\(\) expects object, object\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: '#^Parameter \#1 \$organisation of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setOrganisation\(\) expects OPG\\Digideps\\Backend\\Entity\\Organisation\|null, object given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: '#^Parameter \#1 \$organisation of method OPG\\Digideps\\Backend\\FixtureFactory\\UserFactory\:\:createGenericOrgUser\(\) expects OPG\\Digideps\\Backend\\Entity\\Organisation, object given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
@@ -11115,19 +11019,13 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$end of function range expects float\|int\|string, mixed given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 2
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
 			message: '#^Parameter \#2 \$fromRequest of method OPG\\Digideps\\Backend\\v2\\Fixture\\Controller\\FixtureController\:\:buildDeputy\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: '#^Parameter \#2 \$organisation of method OPG\\Digideps\\Backend\\FixtureFactory\\ClientFactory\:\:createGenericOrgClient\(\) expects OPG\\Digideps\\Backend\\Entity\\Organisation, object given\.$#'
-			identifier: argument.type
-			count: 2
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
@@ -11144,12 +11042,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: '#^Parameter \#3 \$courtDate of method OPG\\Digideps\\Backend\\FixtureFactory\\ClientFactory\:\:createGenericOrgClient\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: src/v2/Fixture/Controller/FixtureController.php

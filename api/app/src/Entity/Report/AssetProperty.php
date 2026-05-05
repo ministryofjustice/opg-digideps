@@ -333,10 +333,10 @@ class AssetProperty extends Asset implements AssetInterface
         return $this;
     }
 
-    public function getValueTotal(): float|int|null
+    public function getValueTotal(): float|null
     {
         if (self::OWNED_PARTLY == $this->getOwned()) {
-            return $this->getValue() * $this->getOwnedPercentage() / 100;
+            return floatval($this->getValue()) * floatval($this->getOwnedPercentage() / 100);
         }
 
         return parent::getValueTotal();
