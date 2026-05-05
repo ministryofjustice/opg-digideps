@@ -43,10 +43,8 @@ abstract class RestController extends AbstractController
 
     protected function denyAccessIfReportDoesNotBelongToUser(Report $report): void
     {
-        if (!$this->isGranted('edit', $report->getClient())) {
-            if (!$this->checkIfUserHasAccessViaDeputyUid($report->getClient()->getId())) {
-                throw $this->createAccessDeniedException('Report does not belong to user');
-            }
+        if (!$this->isGranted('edit', $report)) {
+            throw $this->createAccessDeniedException('Report does not belong to user');
         }
     }
 
