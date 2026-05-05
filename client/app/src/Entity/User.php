@@ -224,13 +224,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     /**
      * @JMS\Type("string")
      *
-     * @var string
-     */
-    private $gaTrackingId;
-
-    /**
-     * @JMS\Type("string")
-     *
      * @JMS\Groups({"user_details_full", "profile_org"})
      *
      * @Assert\NotBlank( message="user.address1.notBlank", groups={"user_details_full", "verify-codeputy"} )
@@ -686,30 +679,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     public function setTokenDate($tokenDate)
     {
         $this->tokenDate = $tokenDate;
-
-        return $this;
-    }
-
-    /**
-     * @return string $gaTrackingId
-     */
-    public function getGaTrackingId()
-    {
-        if (empty($this->gaTrackingId)) {
-            $this->gaTrackingId = md5(strval($this->id));
-        }
-
-        return $this->gaTrackingId;
-    }
-
-    /**
-     * @param string $gaTrackingId
-     *
-     * @return User
-     */
-    public function setGaTrackingId($gaTrackingId)
-    {
-        $this->gaTrackingId = $gaTrackingId;
 
         return $this;
     }

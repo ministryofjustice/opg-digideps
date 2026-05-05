@@ -192,8 +192,8 @@ final class ReportTest extends KernelTestCase
         // change interim yes->no
         $this->report->setProfDeputyCostsHasInterim('yes');
         $this->report->setProfDeputyInterimCosts(new ArrayCollection([
-            new ProfDeputyInterimCost($this->report, new \DateTime('now'), 11),
-            new ProfDeputyInterimCost($this->report, new \DateTime('now'), 11),
+            new ProfDeputyInterimCost($this->report, new \DateTime('now'), '11'),
+            new ProfDeputyInterimCost($this->report, new \DateTime('now'), '11'),
         ]));
         $this->assertEquals(-1 - 1 - 11 - 11 - 10 - 10, $this->report->getCalculatedBalance());
     }

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\Uploader;
 
-use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\Attributes\DataProvider;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\Report\Report;
@@ -19,7 +19,8 @@ use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\PreRegistratio
 use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
 use OPG\Digideps\Backend\v2\Registration\Uploader\LayDeputyshipProcessor;
 use OPG\Digideps\Backend\v2\Registration\Uploader\LayDeputyshipUploader;
-use Doctrine\ORM\EntityManager;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -139,10 +140,9 @@ final class LayDeputyshipUploaderTest extends KernelTestCase
             $existingClient
                 ->expects($this->once())
                 ->method('getUsers')
-                ->willReturn([$deputy]);
+                ->willReturn(new ArrayCollection([$deputy]));
         }
 
-        // $existingClient = (new Client())->setCaseNumber('case-1');
         $activeReport = new Report($existingClient, $currentReportType, new \DateTime(), new \DateTime(), false);
         $this->reportRepository
             ->expects($this->once())
@@ -151,6 +151,7 @@ final class LayDeputyshipUploaderTest extends KernelTestCase
             ->willReturn([$activeReport]);
 
         $return = $this->sut->upload($collection);
+
         $this->assertEquals(1, $return['added']);
         $this->assertCount(0, $return['errors']);
         $this->assertEquals($expectedNewReportType, $activeReport->getType());
