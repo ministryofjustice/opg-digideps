@@ -24,7 +24,7 @@ class MoneyReceivedOnClientsBehalfValidator extends ConstraintValidator
         $object = $this->context->getObject();
         $propertyName = $this->context->getPropertyName();
 
-        if ('moneyType' === $propertyName) {
+        if ($propertyName === 'moneyType') {
             if (is_null($value)) {
                 $this->context
                     ->buildViolation($constraint->moneyDetailsMissingMoneyTypeMessage)
@@ -33,7 +33,7 @@ class MoneyReceivedOnClientsBehalfValidator extends ConstraintValidator
             }
         }
 
-        if ('whoReceivedMoney' === $propertyName) {
+        if ($propertyName === 'whoReceivedMoney') {
             if (is_null($value)) {
                 $this->context
                     ->buildViolation($constraint->moneyDetailsMissingWhoReceivedMoneyMessage)
@@ -42,25 +42,25 @@ class MoneyReceivedOnClientsBehalfValidator extends ConstraintValidator
             }
         }
 
-        if ('amount' === $propertyName) {
+        if ($propertyName === 'amount') {
             $this->amountValid($value, $object, $constraint);
         }
 
-        if ('amountDontKnow' === $propertyName) {
+        if ($propertyName === 'amountDontKnow') {
             $this->amountDontKnowValid($value, $object, $constraint);
         }
     }
 
     private function amountValid($value, MoneyReceivedOnClientsBehalfInterface $object, MoneyReceivedOnClientsBehalfConstraint $constraint)
     {
-        if (!is_null($value) && true === $object->getAmountDontKnow()) {
+        if (!is_null($value) && $object->getAmountDontKnow() === true) {
             $this->context
                 ->buildViolation($constraint->moneyDetailsAmountAndDontKnowMessage)
                 ->setTranslationDomain($this->translationDomain)
                 ->addViolation();
         }
 
-        if (is_null($value) && false === $object->getAmountDontKnow()) {
+        if (is_null($value) && $object->getAmountDontKnow() === false) {
             $this->context
                 ->buildViolation($constraint->moneyDetailsMissingAmountMessage)
                 ->setTranslationDomain($this->translationDomain)
@@ -70,14 +70,14 @@ class MoneyReceivedOnClientsBehalfValidator extends ConstraintValidator
 
     private function amountDontKnowValid($value, MoneyReceivedOnClientsBehalfInterface $object, MoneyReceivedOnClientsBehalfConstraint $constraint)
     {
-        if (true === $value && !is_null($object->getAmount())) {
+        if ($value === true && !is_null($object->getAmount())) {
             $this->context
                 ->buildViolation($constraint->moneyDetailsAmountAndDontKnowMessage)
                 ->setTranslationDomain($this->translationDomain)
                 ->addViolation();
         }
 
-        if (false === $value && is_null($object->getAmount())) {
+        if ($value === false && is_null($object->getAmount())) {
             $this->context
                 ->buildViolation($constraint->moneyDetailsMissingAmountMessage)
                 ->setTranslationDomain($this->translationDomain)

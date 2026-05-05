@@ -18,7 +18,7 @@ class UserResearchControllerTest extends AbstractTestController
     {
         parent::setUp();
 
-        if (null === self::$tokenAdmin) {
+        if (self::$tokenAdmin === null) {
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenSuperAdmin = $this->loginAsSuperAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();

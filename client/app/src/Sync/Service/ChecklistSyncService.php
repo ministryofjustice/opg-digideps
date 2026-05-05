@@ -134,12 +134,12 @@ class ChecklistSyncService
     {
         $data = ['syncStatus' => $status];
 
-        if (null !== $message) {
+        if ($message !== null) {
             $errorMessage = json_decode($message, true) ? json_decode($message, true) : $message;
             $data['syncError'] = $errorMessage;
         }
 
-        if (null !== $uuid) {
+        if ($uuid !== null) {
             $data['uuid'] = $uuid;
         }
 

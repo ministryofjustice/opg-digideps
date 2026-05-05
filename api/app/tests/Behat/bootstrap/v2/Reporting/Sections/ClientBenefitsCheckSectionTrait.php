@@ -264,7 +264,7 @@ trait ClientBenefitsCheckSectionTrait
         $moneyTypeRowXpath = sprintf('//dd[contains(.,"%s")]/..', $moneyTypeDescription);
         $moneyTypeRow = $this->getSession()->getPage()->find('xpath', $moneyTypeRowXpath);
 
-        if ('edit' === strtolower($action)) {
+        if (strtolower($action) === 'edit') {
             $this->editFieldAnswerInSection(
                 $moneyTypeRow,
                 array_key_first($moneyTypeAnswers),
@@ -273,7 +273,7 @@ trait ClientBenefitsCheckSectionTrait
             );
             $this->addAnotherClientBenefit('no');
             $this->pressButton('Save and continue');
-        } elseif ('remove' === strtolower($action)) {
+        } elseif (strtolower($action) === 'remove') {
             $this->removeAnswerFromSection(
                 array_key_first($moneyTypeAnswers),
                 'moneyType',
@@ -317,7 +317,7 @@ trait ClientBenefitsCheckSectionTrait
             throw new BehatException(sprintf('This step only accepts "more" or "less". %s provided.', $moreOrLess));
         }
 
-        if ('more' === $moreOrLess) {
+        if ($moreOrLess === 'more') {
             $this->endDateAndDueDateLoggedInUsersCurrentReportSetToDate('2040-01-01', $currentOrPrevious);
             $this->clientBenefitsSectionAvailable = true;
         } else {
@@ -331,7 +331,7 @@ trait ClientBenefitsCheckSectionTrait
      */
     public function haveNotCompletedBenefitsSection(string $currentOrPrevious): void
     {
-        $reportId = 'current' === $currentOrPrevious ? $this->loggedInUserDetails->getCurrentReportId() : $this->loggedInUserDetails->getPreviousReportId();
+        $reportId = $currentOrPrevious === 'current' ? $this->loggedInUserDetails->getCurrentReportId() : $this->loggedInUserDetails->getPreviousReportId();
 
         if (empty($this->loggedInUserDetails) && empty($reportId)) {
             $message = sprintf(

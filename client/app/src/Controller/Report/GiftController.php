@@ -42,7 +42,7 @@ class GiftController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (Status::STATE_NOT_STARTED != $report->getStatus()->getGiftsState()['state']) {
+        if ($report->getStatus()->getGiftsState()['state'] != Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('gifts_summary', ['reportId' => $reportId]);
         }
 
@@ -78,7 +78,7 @@ class GiftController extends AbstractController
         }
 
         $backLink = $this->generateUrl('gifts', ['reportId' => $reportId]);
-        if ('summary' == $request->get('from')) {
+        if ($request->get('from') == 'summary') {
             $backLink = $this->generateUrl('gifts_summary', ['reportId' => $reportId]);
         }
 
@@ -194,7 +194,7 @@ class GiftController extends AbstractController
     public function summaryAction(int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED == $report->getStatus()->getGiftsState()['state']) {
+        if ($report->getStatus()->getGiftsState()['state'] == Status::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('gifts', ['reportId' => $reportId]));
         }
 

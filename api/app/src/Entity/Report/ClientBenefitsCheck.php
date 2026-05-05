@@ -125,11 +125,11 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     {
         $this->whenLastCheckedEntitlement = $whenLastCheckedEntitlement;
 
-        if (self::WHEN_CHECKED_IVE_NEVER_CHECKED !== $whenLastCheckedEntitlement) {
+        if ($whenLastCheckedEntitlement !== self::WHEN_CHECKED_IVE_NEVER_CHECKED) {
             $this->setNeverCheckedExplanation(null);
         }
 
-        if (self::WHEN_CHECKED_I_HAVE_CHECKED !== $whenLastCheckedEntitlement) {
+        if ($whenLastCheckedEntitlement !== self::WHEN_CHECKED_I_HAVE_CHECKED) {
             $this->setDateLastCheckedEntitlement(null);
         }
 
@@ -145,7 +145,7 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
     {
         $this->doOthersReceiveMoneyOnClientsBehalf = $doOthersReceiveMoneyOnClientsBehalf;
 
-        if (self::OTHER_MONEY_DONT_KNOW !== $doOthersReceiveMoneyOnClientsBehalf) {
+        if ($doOthersReceiveMoneyOnClientsBehalf !== self::OTHER_MONEY_DONT_KNOW) {
             $this->setDontKnowMoneyExplanation(null);
         }
 

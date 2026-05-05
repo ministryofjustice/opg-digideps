@@ -20,7 +20,7 @@ final class Version223 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf('postgresql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('CREATE TABLE review_checklist (id SERIAL NOT NULL, report_id INT NOT NULL, submitted_by INT DEFAULT NULL, last_modified_by INT DEFAULT NULL, answers JSON DEFAULT NULL, decision VARCHAR(30) DEFAULT NULL, submitted_on TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, last_modified_on TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE UNIQUE INDEX UNIQ_CB98F62E4BD2A4C0 ON review_checklist (report_id)');
@@ -34,7 +34,7 @@ final class Version223 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf('postgresql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('DROP TABLE review_checklist');
     }

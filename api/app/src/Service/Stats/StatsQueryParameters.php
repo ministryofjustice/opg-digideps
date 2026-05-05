@@ -18,7 +18,7 @@ class StatsQueryParameters
         $this->metric = isset($parameters['metric']) ? $parameters['metric'] : null;
         $this->dimensions = isset($parameters['dimension']) ? $parameters['dimension'] : null;
 
-        if (null === $this->metric) {
+        if ($this->metric === null) {
             throw new \InvalidArgumentException('Must specify a metric');
         }
 
@@ -47,14 +47,14 @@ class StatsQueryParameters
         $this->startDate = isset($parameters['startDate']) ? $parameters['startDate'] : null;
         $this->endDate = isset($parameters['endDate']) ? $parameters['endDate'] : null;
 
-        if (null === $this->startDate && null === $this->endDate) {
+        if ($this->startDate === null && $this->endDate === null) {
             $this->endDate = new \DateTime();
             $this->startDate = new \DateTime('-30 days');
-        } elseif (null === $this->startDate) {
+        } elseif ($this->startDate === null) {
             $this->endDate = new \DateTime($this->endDate);
             $this->startDate = clone $this->endDate;
             $this->startDate->sub(new \DateInterval('P30D'));
-        } elseif (null === $this->endDate) {
+        } elseif ($this->endDate === null) {
             $this->startDate = new \DateTime($this->startDate);
             $this->endDate = clone $this->startDate;
             $this->endDate->add(new \DateInterval('P30D'));

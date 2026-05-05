@@ -55,7 +55,7 @@ class IngestDeputyshipsCSVCommand extends Command
         /** @var string $deputyshipsCSVFile */
         $deputyshipsCSVFile = $input->getArgument('csv-filename');
 
-        $dryRun = ('true' === $input->getOption('dry-run'));
+        $dryRun = ($input->getOption('dry-run') === 'true');
         if ($dryRun) {
             $output->writeln('*** deputyships-ingest running in DRY RUN mode: court order data will not be saved ***');
         }

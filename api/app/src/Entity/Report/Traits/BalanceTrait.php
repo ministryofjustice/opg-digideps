@@ -42,7 +42,7 @@ trait BalanceTrait
     {
         $ret = 0;
         foreach ($this->getBankAccounts() as $a) {
-            if (null === $a->getOpeningBalance()) {
+            if ($a->getOpeningBalance() === null) {
                 return;
             }
             $ret += $a->getOpeningBalance();
@@ -64,7 +64,7 @@ trait BalanceTrait
     {
         $ret = 0;
         foreach ($this->getBankAccounts() as $a) {
-            if (null === $a->getClosingBalance()) {
+            if ($a->getClosingBalance() === null) {
                 return;
             }
             $ret += $a->getClosingBalance();
@@ -90,7 +90,7 @@ trait BalanceTrait
     #[JMS\SerializedName('calculated_balance')]
     public function getCalculatedBalance()
     {
-        if (null === $this->getAccountsOpeningBalanceTotal()) {
+        if ($this->getAccountsOpeningBalanceTotal() === null) {
             return null;
         }
 
@@ -116,7 +116,7 @@ trait BalanceTrait
     #[JMS\SerializedName('totals_offset')]
     public function getTotalsOffset()
     {
-        if (null === $this->getCalculatedBalance() || null === $this->getAccountsClosingBalanceTotal()) {
+        if ($this->getCalculatedBalance() === null || $this->getAccountsClosingBalanceTotal() === null) {
             return null;
         }
 
@@ -129,6 +129,6 @@ trait BalanceTrait
     #[JMS\SerializedName('totals_match')]
     public function getTotalsMatch()
     {
-        return null !== $this->getTotalsOffset() && abs($this->getTotalsOffset()) < 0.2;
+        return $this->getTotalsOffset() !== null && abs($this->getTotalsOffset()) < 0.2;
     }
 }

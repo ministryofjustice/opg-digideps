@@ -938,7 +938,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function isPaNamedDeputy()
     {
-        return self::ROLE_PA_NAMED === $this->getRoleName();
+        return $this->getRoleName() === self::ROLE_PA_NAMED;
     }
 
     /**
@@ -948,7 +948,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function isProfNamedDeputy()
     {
-        return self::ROLE_PROF_NAMED === $this->getRoleName();
+        return $this->getRoleName() === self::ROLE_PROF_NAMED;
     }
 
     /**
@@ -956,7 +956,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function isLayDeputy()
     {
-        return self::ROLE_LAY_DEPUTY === $this->getRoleName();
+        return $this->getRoleName() === self::ROLE_LAY_DEPUTY;
     }
 
     /**
@@ -996,7 +996,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function isPaTeamMember()
     {
-        return self::ROLE_PA_TEAM_MEMBER === $this->getRoleName();
+        return $this->getRoleName() === self::ROLE_PA_TEAM_MEMBER;
     }
 
     /**
@@ -1006,7 +1006,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function isProfTeamMember()
     {
-        return self::ROLE_PROF_TEAM_MEMBER === $this->getRoleName();
+        return $this->getRoleName() === self::ROLE_PROF_TEAM_MEMBER;
     }
 
     /**
@@ -1014,7 +1014,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function isPaTopRole()
     {
-        return self::ROLE_PA === $this->getRoleName();
+        return $this->getRoleName() === self::ROLE_PA;
     }
 
     /**
@@ -1022,7 +1022,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function isProfTopRole()
     {
-        return self::ROLE_PROF === $this->getRoleName();
+        return $this->getRoleName() === self::ROLE_PROF;
     }
 
     /**
@@ -1055,17 +1055,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function isAdmin(): bool
     {
-        return self::ROLE_ADMIN === $this->getRoleName();
+        return $this->getRoleName() === self::ROLE_ADMIN;
     }
 
     public function isSuperAdmin(): bool
     {
-        return self::ROLE_SUPER_ADMIN === $this->getRoleName();
+        return $this->getRoleName() === self::ROLE_SUPER_ADMIN;
     }
 
     public function isAdminManager(): bool
     {
-        return self::ROLE_ADMIN_MANAGER === $this->getRoleName();
+        return $this->getRoleName() === self::ROLE_ADMIN_MANAGER;
     }
 
     public function hasAdminRole(): bool

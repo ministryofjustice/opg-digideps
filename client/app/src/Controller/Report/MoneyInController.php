@@ -48,7 +48,7 @@ class MoneyInController extends AbstractController
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $status = $report->getStatus()->getMoneyInState();
-        if (Status::STATE_NOT_STARTED != $status['state']) {
+        if ($status['state'] != Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('money_in_summary', ['reportId' => $reportId]);
         }
 
@@ -79,17 +79,17 @@ class MoneyInController extends AbstractController
 
             $softDeletedMoneyInTransactionIds = [];
             foreach ($softDeletedTransactionIds as $softDeletedTransactionId) {
-                if ('in' == $softDeletedTransactionId->getType()) {
+                if ($softDeletedTransactionId->getType() == 'in') {
                     $softDeletedMoneyInTransactionIds[] = $softDeletedTransactionId->getId();
                 }
             }
 
-            if ('Yes' === $answer && 'summary' != $fromPage) {
+            if ($answer === 'Yes' && $fromPage != 'summary') {
                 $report->setReasonForNoMoneyIn(null);
                 $this->restClient->put('report/' . $reportId, $report, ['reasonForNoMoneyIn']);
 
                 return $this->redirectToRoute('money_in_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_in_exist']);
-            } elseif ('Yes' === $answer && 'summary' === $fromPage) {
+            } elseif ($answer === 'Yes' && $fromPage === 'summary') {
                 $report->setReasonForNoMoneyIn(null);
                 $this->restClient->put('report/' . $reportId, $report, ['reasonForNoMoneyIn']);
 
@@ -100,7 +100,7 @@ class MoneyInController extends AbstractController
 
                 return empty($softDeletedMoneyInTransactionIds) ? $this->redirectToRoute('money_in_step', $moneyInStepRedirectParameters)
                 : $this->redirectToRoute('money_in_summary', $moneyInSummaryRedirectParameters);
-            } elseif ('No' === $answer && 'summary' === $fromPage) {
+            } elseif ($answer === 'No' && $fromPage === 'summary') {
                 $this->handleSoftDeletionOfMoneyTransactionItems($answer, $softDeletedMoneyInTransactionIds, $report);
 
                 return $this->redirectToRoute('no_money_in_exists', ['reportId' => $reportId, 'from' => 'does_money_in_exist']);
@@ -122,7 +122,7 @@ class MoneyInController extends AbstractController
     {
         $reportId = $report->getId();
 
-        if ('Yes' === $answer) {
+        if ($answer === 'Yes') {
             // undelete soft deleted items if present
             foreach ($softDeletedTransactionIds as $transactionId) {
                 $this->restClient->put('/report/' . $reportId . '/money-transaction/soft-delete/' . $transactionId, ['transactionSoftDelete']);
@@ -234,7 +234,7 @@ class MoneyInController extends AbstractController
         );
 
         // if we are adding an item and on the second page, we need the "add another" option
-        if ($addingItem && 2 === $step) {
+        if ($addingItem && $step === 2) {
             $form->add('addAnother', AddAnotherThingType::class);
         }
 
@@ -245,7 +245,7 @@ class MoneyInController extends AbstractController
 
         if ($saveButton->isClicked() && $form->isSubmitted() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
-            if (1 === $step) {
+            if ($step === 1) {
                 // unset from page to prevent step redirector skipping step 2
                 $stepRedirector->setFromPage(null);
 
@@ -305,12 +305,12 @@ class MoneyInController extends AbstractController
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $status = $report->getStatus()->getMoneyInState();
-        if (Status::STATE_NOT_STARTED == $status['state'] && 'skip-step' != $fromPage) {
+        if ($status['state'] == Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('money_in', ['reportId' => $reportId]);
         }
 
         return [
-            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
+            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'report' => $report,
             'status' => $report->getStatus(),
         ];

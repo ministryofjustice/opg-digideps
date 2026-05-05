@@ -22,7 +22,7 @@ trait VisitsCareSectionTrait
     public function iViewAndStartVisitsCareSection()
     {
         $driver = $this->getSession()->getDriver();
-        if ('Behat\Mink\Driver\Selenium2Driver' == get_class($driver)) {
+        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
             $this->getSession()->maximizeWindow();
         }
         $this->iViewVisitsCareSection();
@@ -86,7 +86,7 @@ trait VisitsCareSectionTrait
 
         $this->pressButton('Save and continue');
 
-        true === $fromSummaryPage ? $this->iAmOnVisitsCareSummaryPage() : $this->iAmOnVisitsCarePage3();
+        $fromSummaryPage === true ? $this->iAmOnVisitsCareSummaryPage() : $this->iAmOnVisitsCarePage3();
     }
 
     /**

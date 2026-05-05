@@ -92,7 +92,7 @@ class ClientRepository extends ServiceEntityRepository
         $result = $query->getArrayResult();
         $this->_em->getFilters()->enable('softdeleteable');
 
-        return 0 === count($result) ? null : $result[0];
+        return count($result) === 0 ? null : $result[0];
     }
 
     /**
@@ -108,7 +108,7 @@ class ClientRepository extends ServiceEntityRepository
 
         $result = $query->getArrayResult();
 
-        return 0 === count($result) ? null : $result[0];
+        return count($result) === 0 ? null : $result[0];
     }
 
     public function findByCaseNumber(string $caseNumber): ?Client
@@ -140,7 +140,7 @@ class ClientRepository extends ServiceEntityRepository
 
         $result = $query->fetchAssociative();
 
-        return false === $result ? null : $result;
+        return $result === false ? null : $result;
     }
 
     public function findByCaseNumberIncludingDischarged(string $caseNumber): mixed
@@ -247,7 +247,7 @@ class ClientRepository extends ServiceEntityRepository
         $result = $statsStmt->executeQuery($params);
         $deputyCaseResults = $result->fetchAllAssociative();
 
-        return 0 === count($deputyCaseResults) ? null : $deputyCaseResults[0];
+        return count($deputyCaseResults) === 0 ? null : $deputyCaseResults[0];
     }
 
     public function getAllClientsAndReportsByDeputyUid(int $deputyUid)

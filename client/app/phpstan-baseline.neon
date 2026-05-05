@@ -919,12 +919,6 @@ parameters:
 			path: src/Controller/Admin/OrganisationController.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$organisation Organisation\)\: Unexpected token "\$organisation", expected type at offset 9 on line 1$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: src/Controller/Admin/OrganisationController.php
-
-		-
 			message: '#^Parameter \#1 \$message of class Symfony\\Component\\Form\\FormError constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2

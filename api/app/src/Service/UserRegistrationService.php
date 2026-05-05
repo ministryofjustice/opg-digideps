@@ -76,7 +76,7 @@ class UserRegistrationService
             $user->getAddressPostcode()
         );
 
-        if (1 !== count($preregMatches)) {
+        if (count($preregMatches) !== 1) {
             // a deputy could not be uniquely identified due to matching first name, last name and postcode across more than one deputy record
             $message = sprintf('A unique deputy record for case number %s could not be identified', $selfRegisterData->getCaseNumber());
             throw new \RuntimeException(json_encode($message) ?: '', 462);

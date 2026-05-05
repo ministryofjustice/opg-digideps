@@ -198,10 +198,10 @@ trait UserTrait
         $this->visit('/user/details');
         $rows = $table->getRowsHash();
         if (isset($rows['name'])) {
-            if ('PREFILLED' != trim($rows['name'][0])) {
+            if (trim($rows['name'][0]) != 'PREFILLED') {
                 $this->fillField('user_details_firstname', $rows['name'][0]);
             }
-            if ('PREFILLED' != trim($rows['name'][1])) {
+            if (trim($rows['name'][1]) != 'PREFILLED') {
                 $this->fillField('user_details_lastname', $rows['name'][1]);
             }
         }
@@ -210,7 +210,7 @@ trait UserTrait
             $this->fillField('user_details_address1', $rows['address'][0]);
             $this->fillField('user_details_address2', $rows['address'][1]);
             $this->fillField('user_details_address3', $rows['address'][2]);
-            if ('PREFILLED' != trim($rows['address'][3])) {
+            if (trim($rows['address'][3]) != 'PREFILLED') {
                 $this->fillField('user_details_addressPostcode', $rows['address'][3]);
             }
             $this->fillField('user_details_addressCountry', $rows['address'][4]);
@@ -234,10 +234,10 @@ trait UserTrait
         $this->visit('/client/add');
         $rows = $table->getRowsHash();
         if (isset($rows['name'])) {
-            if ('PREFILLED' != trim($rows['name'][0])) {
+            if (trim($rows['name'][0]) != 'PREFILLED') {
                 $this->fillField('client_firstname', $rows['name'][0]);
             }
-            if ('PREFILLED' != trim($rows['name'][1])) {
+            if (trim($rows['name'][1]) != 'PREFILLED') {
                 $this->fillField('client_lastname', $rows['name'][1]);
             }
         }
@@ -250,7 +250,7 @@ trait UserTrait
         $this->fillField('client_address', $rows['address'][0]);
         $this->fillField('client_address2', $rows['address'][1]);
         $this->fillField('client_county', $rows['address'][2]);
-        if ('PREFILLED' != trim($rows['address'][3])) {
+        if (trim($rows['address'][3]) != 'PREFILLED') {
             $this->fillField('client_postcode', $rows['address'][3]);
         }
         $this->fillField('client_country', $rows['address'][4]);
@@ -269,10 +269,10 @@ trait UserTrait
         $this->visit('/client/add');
         $rows = $table->getRowsHash();
         if (isset($rows['name'])) {
-            if ('PREFILLED' !== $rows['name'][0]) {
+            if ($rows['name'][0] !== 'PREFILLED') {
                 $this->fillField('client_firstname', $rows['name'][0]);
             }
-            if (isset($rows['name']) && 'PREFILLED' !== $rows['name'][1]) {
+            if (isset($rows['name']) && $rows['name'][1] !== 'PREFILLED') {
                 $this->fillField('client_lastname', $rows['name'][1]);
             }
         }
@@ -285,7 +285,7 @@ trait UserTrait
         $this->fillField('client_address', $rows['address'][0]);
         $this->fillField('client_address2', $rows['address'][1]);
         $this->fillField('client_county', $rows['address'][2]);
-        if ('PREFILLED' !== $rows['address'][3]) {
+        if ($rows['address'][3] !== 'PREFILLED') {
             $this->fillField('client_postcode', $rows['address'][3]);
         }
         $this->fillField('client_country', $rows['address'][4]);

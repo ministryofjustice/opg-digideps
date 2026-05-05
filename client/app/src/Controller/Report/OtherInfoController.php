@@ -34,7 +34,7 @@ class OtherInfoController extends AbstractController
     public function startAction(int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED != $report->getStatus()->getOtherInfoState()['state']) {
+        if ($report->getStatus()->getOtherInfoState()['state'] != Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('other_info_summary', ['reportId' => $reportId]);
         }
 
@@ -69,7 +69,7 @@ class OtherInfoController extends AbstractController
             $data = $form->getData();
             $this->restClient->put('report/' . $reportId, $data, ['more-info']);
 
-            if ('summary' == $fromPage) {
+            if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add(
                     'notice',
                     'Answer edited'
@@ -93,12 +93,12 @@ class OtherInfoController extends AbstractController
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED == $report->getStatus()->getOtherInfoState()['state'] && 'skip-step' != $fromPage) {
+        if ($report->getStatus()->getOtherInfoState()['state'] == Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('other_info', ['reportId' => $reportId]);
         }
 
         return [
-            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
+            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'report' => $report,
         ];
     }

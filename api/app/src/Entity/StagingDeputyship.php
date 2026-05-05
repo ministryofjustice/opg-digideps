@@ -97,6 +97,6 @@ class StagingDeputyship
 
     public function deputyIsActiveOnOrder(): bool
     {
-        return 'ACTIVE' === $this->deputyStatusOnOrder;
+        return $this->deputyStatusOnOrder === 'ACTIVE';
     }
 }

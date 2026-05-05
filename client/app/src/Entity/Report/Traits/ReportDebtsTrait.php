@@ -161,7 +161,7 @@ trait ReportDebtsTrait
 
     public function debtsValid(ExecutionContextInterface $context)
     {
-        if ('yes' == $this->getHasDebts() && 0 === count($this->getDebtsWithValidAmount())) {
+        if ($this->getHasDebts() == 'yes' && count($this->getDebtsWithValidAmount()) === 0) {
             $context->addViolation('report.hasDebts.mustHaveAtLeastOneDebt');
         }
     }

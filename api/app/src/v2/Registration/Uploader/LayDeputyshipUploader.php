@@ -93,7 +93,7 @@ class LayDeputyshipUploader
             'details' => [],
         ];
 
-        if (0 == $numMultiClients) {
+        if ($numMultiClients == 0) {
             $this->logger->info('No new multi clients to add');
 
             return $info;
@@ -168,7 +168,7 @@ class LayDeputyshipUploader
                 );
 
                 // For Dual Cases, deputy uid needs to match for the report type to be updated
-                if (PreRegistration::DUAL_TYPE == $preRegistration->getHybrid()) {
+                if ($preRegistration->getHybrid() == PreRegistration::DUAL_TYPE) {
                     $existingDeputyUid = null;
 
                     $existingDeputy = $currentActiveReport->getClient()->getUsers()->first();

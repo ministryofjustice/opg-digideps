@@ -217,13 +217,13 @@ final class ReportServiceTest extends TestCase
         $this->em->shouldReceive('detach')->once();
         $this->em->shouldReceive('persist')->with(\Mockery::on(function ($asset): bool {
             return $asset instanceof AssetProperty
-                && 'SW1' === $asset->getAddress();
+                && $asset->getAddress() === 'SW1';
         }))->once();
 
         // Assert bank account is cloned, with opening/closing balance modified
         $this->em->shouldReceive('persist')->with(\Mockery::on(function ($bankAccount): bool {
             return $bankAccount instanceof BankAccount
-                && '1234' === $bankAccount->getAccountNumber()
+                && $bankAccount->getAccountNumber() === '1234'
                 && $bankAccount->getOpeningBalance() === $this->report->getBankAccounts()[0]->getClosingBalance()
                 && is_null($bankAccount->getClosingBalance());
         }))->once();
@@ -426,8 +426,8 @@ final class ReportServiceTest extends TestCase
 
                 $reportType = str_replace('OPG', '', $typeOfReport);
 
-                if ('OPG102' === $typeOfReport || 'OPG103' === $typeOfReport) {
-                    if ('hw' === $orderType) {
+                if ($typeOfReport === 'OPG102' || $typeOfReport === 'OPG103') {
+                    if ($orderType === 'hw') {
                         $stub->method('isHybrid')->willReturn(true);
                         $stub->method('isPfa')->willReturn(false);
                         $reportType .= '-4';
@@ -435,7 +435,7 @@ final class ReportServiceTest extends TestCase
                         $stub->method('isHybrid')->willReturn(false);
                         $stub->method('isPfa')->willReturn(true);
                     }
-                } elseif ('OPG104' === $typeOfReport) {
+                } elseif ($typeOfReport === 'OPG104') {
                     $stub->method('isHw')->willReturn(true);
                 }
 

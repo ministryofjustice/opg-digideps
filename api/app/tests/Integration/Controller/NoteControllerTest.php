@@ -61,7 +61,7 @@ class NoteControllerTest extends AbstractTestController
     {
         parent::setUp();
 
-        if (null === self::$tokenAdmin) {
+        if (self::$tokenAdmin === null) {
             self::$tokenDeputy = $this->loginAsDeputy();
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenPa = $this->loginAsPa();

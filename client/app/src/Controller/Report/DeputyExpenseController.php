@@ -44,7 +44,7 @@ class DeputyExpenseController extends AbstractController
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $status = $report->getStatus()->getExpensesState();
-        if (Status::STATE_NOT_STARTED != $status['state']) {
+        if ($status['state'] != Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('deputy_expenses_summary', ['reportId' => $reportId]);
         }
 
@@ -80,7 +80,7 @@ class DeputyExpenseController extends AbstractController
         }
 
         $backLink = $this->generateUrl('deputy_expenses', ['reportId' => $reportId]);
-        if ('summary' == $request->query->getString('from', $request->getPayload()->getString('from'))) {
+        if ($request->query->getString('from', $request->getPayload()->getString('from')) == 'summary') {
             $backLink = $this->generateUrl('deputy_expenses_summary', ['reportId' => $reportId]);
         }
 
@@ -207,7 +207,7 @@ class DeputyExpenseController extends AbstractController
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $status = $report->getStatus()->getExpensesState();
-        if (Status::STATE_NOT_STARTED == $status['state']) {
+        if ($status['state'] == Status::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('deputy_expenses', ['reportId' => $reportId]));
         }
 

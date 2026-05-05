@@ -87,7 +87,7 @@ class ProfDeputyPrevCostController extends RestController
         $this->em->remove($cost);
         $this->em->flush();
 
-        if (0 === count($report->getProfDeputyPreviousCosts())) {
+        if (count($report->getProfDeputyPreviousCosts()) === 0) {
             $report->setProfDeputyCostsHasPrevious(null);
         }
 

@@ -29,7 +29,7 @@ class ArrayToStringTransformer implements DataTransformerInterface
         foreach ($this->keys as $key) {
             ++$counter;
 
-            if ((0 != $remainder) && ($counter == $keyCount)) {
+            if (($remainder != 0) && ($counter == $keyCount)) {
                 $result[$key] = substr($value, $start);
             } else {
                 $result[$key] = substr($value, $start, $sub);

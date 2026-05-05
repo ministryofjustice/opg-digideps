@@ -32,7 +32,7 @@ class ClientBenefitsCheckType extends AbstractType
         $baseTransParams = ['%client%' => $options['label_translation_parameters']['clientFirstname']];
         $domain = 'report-client-benefits-check';
 
-        if (1 === $this->step) {
+        if ($this->step === 1) {
             $builder->add('whenLastCheckedEntitlement', ChoiceType::class, [
                 'choices' => [
                     $this->translator->trans('form.whenLastChecked.choices.haveChecked', $baseTransParams, $domain) => ClientBenefitsCheck::WHEN_CHECKED_I_HAVE_CHECKED,
@@ -55,7 +55,7 @@ class ClientBenefitsCheckType extends AbstractType
             $builder->add('neverCheckedExplanation', TextareaType::class);
         }
 
-        if (2 === $this->step) {
+        if ($this->step === 2) {
             $builder->add('doOthersReceiveMoneyOnClientsBehalf', ChoiceType::class, [
                 'choices' => [
                     'form.moneyOnClientsBehalf.choices.yes' => ClientBenefitsCheck::OTHER_MONEY_YES,
@@ -68,12 +68,12 @@ class ClientBenefitsCheckType extends AbstractType
             $builder->add('dontKnowMoneyExplanation', TextareaType::class);
         }
 
-        if (3 === $this->step) {
+        if ($this->step === 3) {
             $builder->add('typesOfMoneyReceivedOnClientsBehalf', CollectionType::class, [
                 'entry_type' => MoneyReceivedOnClientsBehalfType::class,
                 'entry_options' => ['label' => false, 'empty_data' => null],
                 'delete_empty' => function (MoneyReceivedOnClientsBehalfInterface $money) use ($options) {
-                    return null === $money->getAmount() && null === $money->getMoneyType() && false === $money->getAmountDontKnow() && $options['allow_delete_empty'];
+                    return $money->getAmount() === null && $money->getMoneyType() === null && $money->getAmountDontKnow() === false && $options['allow_delete_empty'];
                 },
                 'allow_delete' => true,
             ]);

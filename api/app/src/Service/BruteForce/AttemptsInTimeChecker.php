@@ -39,7 +39,7 @@ class AttemptsInTimeChecker
 
     public function maxAttemptsReached($key, $timestamp = null)
     {
-        $currentTimestamp = (null === $timestamp) ? time() : $timestamp;
+        $currentTimestamp = ($timestamp === null) ? time() : $timestamp;
 
         $id = $this->keyToRedisId($key);
         $history = $this->redis->get($id) ? json_decode($this->redis->get($id), true) : [];
@@ -63,7 +63,7 @@ class AttemptsInTimeChecker
         $id = $this->keyToRedisId($key);
         $history = $this->redis->get($id) ? json_decode($this->redis->get($id), true) : [];
 
-        $history[] = (null === $timestamp ? time() : $timestamp);
+        $history[] = ($timestamp === null ? time() : $timestamp);
 
         $this->redis->set($id, json_encode($history));
         $this->redis->expire($id, 86400);

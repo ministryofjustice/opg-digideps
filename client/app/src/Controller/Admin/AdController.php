@@ -103,7 +103,7 @@ class AdController extends AbstractController
             ]);
         }
 
-        if (User::ROLE_LAY_DEPUTY != $user->getRoleName()) {
+        if ($user->getRoleName() != User::ROLE_LAY_DEPUTY) {
             return $this->render('@App/Admin/Ad/error.html.twig', [
                 'error' => 'You can only view Lay deputies',
             ]);
@@ -126,7 +126,7 @@ class AdController extends AbstractController
         try {
             /* @var User $deputy */
             $deputy = $this->restClient->get("user/get-one-by/user_id/{$deputyId}", 'User', ['user']);
-            if (User::ROLE_LAY_DEPUTY != $deputy->getRoleName()) {
+            if ($deputy->getRoleName() != User::ROLE_LAY_DEPUTY) {
                 throw new \RuntimeException('User not a Lay deputy');
             }
 

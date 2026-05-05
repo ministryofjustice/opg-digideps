@@ -165,10 +165,10 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         $selectedCandidates = iterator_to_array($this->sut->select()->candidates);
 
         foreach ($selectedCandidates as $candidate) {
-            if (DeputyshipCandidateAction::InsertOrder === $candidate['action']) {
+            if ($candidate['action'] === DeputyshipCandidateAction::InsertOrder) {
                 static::assertEquals($stagingDeputyshipObject->orderUid, $candidate['orderUid']);
                 static::assertEquals($client->getId(), $candidate['clientId']);
-            } elseif (DeputyshipCandidateAction::InsertOrderDeputy === $candidate['action']) {
+            } elseif ($candidate['action'] === DeputyshipCandidateAction::InsertOrderDeputy) {
                 static::assertEquals($stagingDeputyshipObject->orderUid, $candidate['orderUid']);
                 static::assertEquals($stagingDeputyshipObject->deputyUid, $candidate['deputyUid']);
                 static::assertEquals($stagingDeputyshipObject->deputyStatusOnOrder, $candidate['deputyStatusOnOrder']);

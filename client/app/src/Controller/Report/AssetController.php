@@ -40,7 +40,7 @@ class AssetController extends AbstractController
     public function startAction(int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED != $report->getStatus()->getAssetsState()['state']) {
+        if ($report->getStatus()->getAssetsState()['state'] != Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('assets_summary', ['reportId' => $reportId]);
         }
 
@@ -54,7 +54,7 @@ class AssetController extends AbstractController
     public function existAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if ('GET' == $request->getMethod() && $report->getAssets()) { // if assets are added, set form default to "Yes"
+        if ($request->getMethod() == 'GET' && $report->getAssets()) { // if assets are added, set form default to "Yes"
             $report->setNoAssetToAdd(false);
         }
         $form = $this->createForm(Form\YesNoType::class, $report, [
@@ -78,7 +78,7 @@ class AssetController extends AbstractController
 
         $backLink = $this->generateUrl('assets', ['reportId' => $reportId]);
         $fromPage = $request->query->getString('from', $request->getPayload()->getString('from'));
-        if ('summary' == $fromPage) {
+        if ($fromPage == 'summary') {
             $backLink = $this->generateUrl('assets_summary', ['reportId' => $reportId]);
         }
 
@@ -248,7 +248,7 @@ class AssetController extends AbstractController
     public function summaryAction(int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED == $report->getStatus()->getAssetsState()['state']) {
+        if ($report->getStatus()->getAssetsState()['state'] == Status::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('assets', ['reportId' => $reportId]));
         }
 

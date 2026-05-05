@@ -50,7 +50,7 @@ class Redirector
         $isAdUser = $this->authChecker->isGranted(User::ROLE_AD);
         $isLayDeputy = $this->authChecker->isGranted(User::ROLE_LAY_DEPUTY);
         $isDeputyOrg = !is_null($user) && $user->isDeputyOrg();
-        $inPasswordCreateContext = 'password-create' === $session->get('login-context');
+        $inPasswordCreateContext = $session->get('login-context') === 'password-create';
 
         if ($inPasswordCreateContext && ($isAdminUser || $isAdUser || $isDeputyOrg)) {
             return $this->router->generate('user_details');
@@ -84,11 +84,11 @@ class Redirector
             return false;
         }
 
-        if ($user->getIsCoDeputy() || User::CO_DEPUTY_INVITE === $user->getRegistrationRoute()) {
+        if ($user->getIsCoDeputy() || $user->getRegistrationRoute() === User::CO_DEPUTY_INVITE) {
             $coDeputyClientConfirmed = $user->getCoDeputyClientConfirmed();
 
             // already verified - shouldn't be on verification page
-            if ('codep_verification' === $currentRoute && $coDeputyClientConfirmed) {
+            if ($currentRoute === 'codep_verification' && $coDeputyClientConfirmed) {
                 $route = 'courtorders_for_deputy';
             }
 
@@ -116,7 +116,7 @@ class Redirector
                         "API call getAllClientsByDeputyUid() with deputy UID {$deputyUid} returned null " .
                         '(via Redirector::getCorrectRouteIfDifferent)'
                     );
-                } elseif (0 == count($clients)) {
+                } elseif (count($clients) == 0) {
                     $route = 'client_add';
                 }
             }
@@ -137,7 +137,7 @@ class Redirector
 
     public function getHomepageRedirect(): string
     {
-        if ('admin' === $this->env) {
+        if ($this->env === 'admin') {
             // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
             if ($this->authChecker->isGranted(User::ROLE_ADMIN)) {
                 return $this->router->generate('admin_homepage');

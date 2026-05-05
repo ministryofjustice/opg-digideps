@@ -47,7 +47,7 @@ class ClientBenefitsCheckFactory
     {
         if (
             isset($formData['do_others_receive_money_on_clients_behalf'])
-            && 'yes' !== $formData['do_others_receive_money_on_clients_behalf']
+            && $formData['do_others_receive_money_on_clients_behalf'] !== 'yes'
             && !empty($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf())
         ) {
             foreach ($clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf() as $moneyType) {
@@ -93,7 +93,7 @@ class ClientBenefitsCheckFactory
                         return $money->getId()->toString() === $moneyTypeData['id'];
                     })->first();
 
-                    if (false === $moneyType) {
+                    if ($moneyType === false) {
                         $message = sprintf(
                             'MoneyReceivedOnClientsBehalf with id "%s" was not associated with the ClientBenefitsCheck - cannot build entity',
                             $moneyTypeData['id']

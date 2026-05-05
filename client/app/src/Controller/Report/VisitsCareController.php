@@ -36,7 +36,7 @@ class VisitsCareController extends AbstractController
     public function startAction(Request $request, int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED != $report->getStatus()->getVisitsCareState()['state']) {
+        if ($report->getStatus()->getVisitsCareState()['state'] != Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('visits_care_summary', ['reportId' => $reportId]);
         }
 
@@ -85,13 +85,13 @@ class VisitsCareController extends AbstractController
                 ->setReport($report)
                 ->keepOnlyRelevantVisitsCareData();
 
-            if (null == $visitsCare->getId()) {
+            if ($visitsCare->getId() == null) {
                 $this->restClient->post('report/visits-care', $data, ['visits-care', 'report-id']);
             } else {
                 $this->restClient->put('report/visits-care/' . $visitsCare->getId(), $data, self::$jmsGroups);
             }
 
-            if ('summary' == $fromPage) {
+            if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add(
                     'notice',
                     'Answer edited'
@@ -119,7 +119,7 @@ class VisitsCareController extends AbstractController
         $fromPage = $request->get('from');
 
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED == $report->getStatus()->getVisitsCareState()['state'] && 'skip-step' != $fromPage) {
+        if ($report->getStatus()->getVisitsCareState()['state'] == Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('visits_care', ['reportId' => $reportId]);
         }
 
@@ -128,7 +128,7 @@ class VisitsCareController extends AbstractController
         }
 
         return [
-            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
+            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'report' => $report,
             'status' => $report->getStatus(),
         ];

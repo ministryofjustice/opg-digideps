@@ -20,7 +20,7 @@ class RedisAvailability extends ServiceAvailabilityAbstract
         try {
             $this->redis->set($this->workspace . '_' . self::TEST_KEY, 'valueSaved');
 
-            if ('valueSaved' == $this->redis->get($this->workspace . '_' . self::TEST_KEY)) {
+            if ($this->redis->get($this->workspace . '_' . self::TEST_KEY) == 'valueSaved') {
                 $this->isHealthy = true;
             }
         } catch (\Throwable $e) {

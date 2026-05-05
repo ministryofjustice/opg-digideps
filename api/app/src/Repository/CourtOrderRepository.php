@@ -39,7 +39,7 @@ class CourtOrderRepository extends ServiceEntityRepository
 
         $result = $query->fetchAssociative();
 
-        return false === $result ? null : $result;
+        return $result === false ? null : $result;
     }
 
     public function findReportsInfoByUid(string $uid): ?array
@@ -84,6 +84,6 @@ class CourtOrderRepository extends ServiceEntityRepository
 
         $result = $query->fetchAllAssociative();
 
-        return 0 === count($result) ? null : $result;
+        return count($result) === 0 ? null : $result;
     }
 }

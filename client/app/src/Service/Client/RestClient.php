@@ -78,7 +78,7 @@ class RestClient implements RestClientInterface
         protected JWTService $JWTService
     ) {
         $saveHistory = $params->get('kernel.debug');
-        if (true !== $saveHistory) {
+        if ($saveHistory !== true) {
             $saveHistory = false;
         }
         $this->saveHistory = $saveHistory;
@@ -98,7 +98,7 @@ class RestClient implements RestClientInterface
         try {
             $response = $this->apiCall('post', '/auth/login', $credentials, 'response', [], false);
         } catch (AppException\RestClientException $e) {
-            if (423 == $e->getCode()) {
+            if ($e->getCode() == 423) {
                 throw new TooManyLoginAttemptsAuthenticationException($e->getData()['data']);
             } else {
                 throw new BadCredentialsException('Invalid credentials.', 498);
@@ -110,7 +110,7 @@ class RestClient implements RestClientInterface
         $authToken = $response->getHeader(RestClient::HEADER_AUTH_TOKEN)[0];
 
         // Temporarily scoping this to super admins until we're happy with the flow
-        if ($response->hasHeader(self::HEADER_JWT) && User::ROLE_SUPER_ADMIN === $user->getRoleName()) {
+        if ($response->hasHeader(self::HEADER_JWT) && $user->getRoleName() === User::ROLE_SUPER_ADMIN) {
             try {
                 $jwt = $response->getHeader(self::HEADER_JWT)[0];
                 $jwtHeaders = $this->JWTService->getJWTHeaders($jwt);
@@ -265,7 +265,7 @@ class RestClient implements RestClientInterface
             'addAuthToken' => true,
         ]);
 
-        if (Response::HTTP_NO_CONTENT === $response->getStatusCode()) {
+        if ($response->getStatusCode() === Response::HTTP_NO_CONTENT) {
             return null;
         }
 
@@ -301,21 +301,21 @@ class RestClient implements RestClientInterface
             'addAuthToken' => $authenticated,
         ]);
 
-        if ('raw' == $expectedResponseType) {
+        if ($expectedResponseType == 'raw') {
             return $response->getBody();
         }
 
-        if ('response' == $expectedResponseType) {
+        if ($expectedResponseType == 'response') {
             return $response;
         }
 
-        if (Response::HTTP_NO_CONTENT === $response->getStatusCode()) {
+        if ($response->getStatusCode() === Response::HTTP_NO_CONTENT) {
             return;
         }
 
         $responseArray = $this->extractDataArray($response);
 
-        if ('array' === $expectedResponseType) {
+        if ($expectedResponseType === 'array') {
             return $responseArray;
         }
         $expectArray = str_ends_with($expectedResponseType, '[]');

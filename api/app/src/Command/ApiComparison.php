@@ -93,7 +93,7 @@ class ApiComparison extends Command
     {
         $user = $this->entityManager->getRepository(User::class)->find($user_id);
 
-        assert(null !== $user, "User with ID {$user_id} not found");
+        assert($user !== null, "User with ID {$user_id} not found");
         assert($user instanceof User, "Expected instance of User for {$user_id}");
 
         try {
@@ -115,7 +115,7 @@ class ApiComparison extends Command
     protected function getUrls(string $baseUrl, string $legacyRoute, string $newRoute, array $ids): array
     {
         assert(
-            1 === preg_match('#^https?://#', $baseUrl),
+            preg_match('#^https?://#', $baseUrl) === 1,
             sprintf('Base URL "%s" must start with http:// or https://', $baseUrl)
         );
 
@@ -164,7 +164,7 @@ class ApiComparison extends Command
     private function extractNonUserIds(array $row): array
     {
         try {
-            $extracted_ids = array_values(array_filter($row, fn ($key) => 'user_id' !== $key, ARRAY_FILTER_USE_KEY));
+            $extracted_ids = array_values(array_filter($row, fn ($key) => $key !== 'user_id', ARRAY_FILTER_USE_KEY));
         } catch (\Throwable $e) {
             throw new \RuntimeException('Error extracting ids from row: ' . $e->getMessage(), 0, $e);
         }
@@ -231,7 +231,7 @@ class ApiComparison extends Command
                     $resultLegacy,
                     $resultNew,
                     $this->baseurl,
-                    fn(string $url) => $this->getApiResponse($authToken, $url)
+                    fn (string $url) => $this->getApiResponse($authToken, $url)
                 );
 
                 if (!$compareResult['matching']) {

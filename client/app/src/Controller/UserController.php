@@ -62,7 +62,7 @@ class UserController extends AbstractController
         string $token,
         RateLimiterFactory $anonymousApiLimiter,
     ): Response {
-        $isActivatePage = 'activate' === $action;
+        $isActivatePage = $action === 'activate';
 
         $userId = substr($token, -8);
 

@@ -99,7 +99,7 @@ class AttemptsIncrementalWaitingChecker
 
     public function getTimestamp()
     {
-        return (null === $this->timeOffset) ? time() : $this->timeOffset;
+        return ($this->timeOffset === null) ? time() : $this->timeOffset;
     }
 
     /**

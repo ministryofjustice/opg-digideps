@@ -145,7 +145,7 @@ class PAUserFixtures extends AbstractDataFixture
     ];
 
     public function __construct(
-        readonly KernelInterface $kernel,
+        public readonly KernelInterface $kernel,
         private readonly OrganisationRepository $orgRepository,
         private readonly OrganisationFactory $orgFactory,
         private readonly DeputyRepository $deputyRepository
@@ -174,7 +174,7 @@ class PAUserFixtures extends AbstractDataFixture
                 $fullEmail = $userData['id'] . '-' . $i . $userData['email'];
 
                 // Set the $deputyData when we are processing the deputy
-                if (null === $deputyData) {
+                if ($deputyData === null) {
                     $deputyData = $userData['isDeputy'] ? $userData : null;
                 }
 
@@ -185,7 +185,7 @@ class PAUserFixtures extends AbstractDataFixture
 
                 $organisation = $this->orgRepository->findByEmailIdentifier($fullEmail);
                 // Create organisation if it doesn't exist
-                if (null === $organisation) {
+                if ($organisation === null) {
                     $organisation = $this->orgFactory->createFromFullEmail($userData['orgName'] ?? 'Org Name', $fullEmail, true);
 
                     $manager->persist($organisation);
@@ -204,7 +204,7 @@ class PAUserFixtures extends AbstractDataFixture
                 $client = $this->createClient($clientData, $i);
 
                 $deputy = $this->deputyRepository->findOneBy(['deputyUid' => $clientData['deputyUid']]);
-                if (null === $deputy) {
+                if ($deputy === null) {
                     // Create deputy if they don't exist
                     $deputy = $this->createDeputy($deputyData, $clientData);
 

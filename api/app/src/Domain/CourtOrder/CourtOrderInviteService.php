@@ -63,7 +63,7 @@ class CourtOrderInviteService
         $errorPrefix = "Could not invite $invitedDeputyDTO->email to court order $courtOrderUid:";
 
         // check invited deputy is a Lay
-        if (User::ROLE_LAY_DEPUTY !== $invitedDeputyDTO->roleName) {
+        if ($invitedDeputyDTO->roleName !== User::ROLE_LAY_DEPUTY) {
             return $invitationResult->setMessage("$errorPrefix invited deputy is not a Lay deputy");
         }
 
@@ -91,7 +91,7 @@ class CourtOrderInviteService
 
         // check prereg record has a deputy UID set and that it is numeric
         $deputyUid = $preRegRecord->getDeputyUid();
-        if (empty($deputyUid) || !is_string($deputyUid) || 0 === intval($deputyUid)) {
+        if (empty($deputyUid) || !is_string($deputyUid) || intval($deputyUid) === 0) {
             return $invitationResult->setMessage("$errorPrefix empty or invalid deputy UID in pre-reg table");
         }
 

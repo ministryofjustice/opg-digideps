@@ -18,11 +18,11 @@ class OrganisationFactory
 
         $domainArray = explode('@', $email);
 
-        if (1 === count($domainArray) && !empty($domainArray[0])) {
+        if (count($domainArray) === 1 && !empty($domainArray[0])) {
             return $this->createFromEmailIdentifier($name, $domainArray[0], $isActivated);
         }
 
-        if (2 === count($domainArray) && !empty($domainArray[1])) {
+        if (count($domainArray) === 2 && !empty($domainArray[1])) {
             $domain = $domainArray[1];
             $emailIdentifier = in_array($domain, $this->sharedDomains) ? $email : $domain;
 
@@ -36,8 +36,8 @@ class OrganisationFactory
     {
         $domainArray = explode('@', $emailIdentifier);
         if (
-            (1 == count($domainArray) && !empty($domainArray[0]))
-            || (2 == count($domainArray) && !empty($domainArray[1]))
+            (count($domainArray) == 1 && !empty($domainArray[0]))
+            || (count($domainArray) == 2 && !empty($domainArray[1]))
         ) {
             return $this->create($name, strtolower($emailIdentifier), $isActivated);
         }

@@ -99,16 +99,16 @@ class AssetTypeProperty extends AbstractType
             $asset = $form->getData();
             $val = ['property-address', 'property-occupants','property-owned','property-mortgage','property-value','property-subject-equity-release','property-has-charges'];
 
-            if ('partly' == $asset->getOwned()) {
+            if ($asset->getOwned() == 'partly') {
                 $val[] = 'property-owned-partly';
             }
 
-            if ('yes' == $asset->getHasMortgage()) {
+            if ($asset->getHasMortgage() == 'yes') {
                 $val[] = 'property-mortgage-outstanding-amount';
             }
 
             $val[] = 'property-rented-out';
-            if ('yes' == $asset->getIsRentedOut()) {
+            if ($asset->getIsRentedOut() == 'yes') {
                 $val[] = 'property-rent-agree-date';
                 $val[] = 'property-rent-income-month';
             }

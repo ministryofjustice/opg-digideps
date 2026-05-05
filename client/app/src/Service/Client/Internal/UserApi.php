@@ -62,7 +62,7 @@ class UserApi
         $userCreatedEvent = new AdminUserCreatedEvent($createdUser);
         $this->eventDispatcher->dispatch($userCreatedEvent, AdminUserCreatedEvent::NAME);
 
-        if (User::ROLE_ADMIN_MANAGER === $createdUser->getRoleName()) {
+        if ($createdUser->getRoleName() === User::ROLE_ADMIN_MANAGER) {
             $this->dispatchAdminManagerCreatedEvent($createdUser);
         }
 

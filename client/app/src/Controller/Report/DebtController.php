@@ -35,7 +35,7 @@ class DebtController extends AbstractController
     public function startAction(int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED != $report->getStatus()->getDebtsState()['state']) {
+        if ($report->getStatus()->getDebtsState()['state'] != Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('debts_summary', ['reportId' => $reportId]);
         }
 
@@ -59,7 +59,7 @@ class DebtController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->restClient->put('report/' . $reportId, $report, ['debt']);
 
-            if ('yes' == $report->getHasDebts()) {
+            if ($report->getHasDebts() == 'yes') {
                 return $this->redirectToRoute('debts_edit', ['reportId' => $reportId]);
             }
 
@@ -67,7 +67,7 @@ class DebtController extends AbstractController
         }
 
         $backLink = $this->generateUrl('debts', ['reportId' => $reportId]);
-        if ('summary' == $request->get('from')) {
+        if ($request->get('from') == 'summary') {
             $backLink = $this->generateUrl('debts_summary', ['reportId' => $reportId]);
         }
 
@@ -95,7 +95,7 @@ class DebtController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->restClient->put('report/' . $report->getId(), $form->getData(), ['debt']);
 
-            if ('summary' == $fromPage) {
+            if ($fromPage == 'summary') {
                 if (empty($report->getDebtManagement())) {
                     return $this->redirect($this->generateUrl('debts_management', ['reportId' => $reportId, 'from' => 'summary']));
                 }
@@ -108,7 +108,7 @@ class DebtController extends AbstractController
         }
 
         $backLink = $this->generateUrl('debts_exist', ['reportId' => $reportId]);
-        if ('summary' == $fromPage) {
+        if ($fromPage == 'summary') {
             $backLink = $this->generateUrl('debts_summary', ['reportId' => $reportId]);
         }
 
@@ -130,12 +130,12 @@ class DebtController extends AbstractController
         $form = $this->createForm(DebtManagementType::class, $report);
         $form->handleRequest($request);
         $fromPage = $request->get('from');
-        $fromSummaryPage = 'summary' == $request->get('from');
+        $fromSummaryPage = $request->get('from') == 'summary';
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->restClient->put('report/' . $report->getId(), $form->getData(), ['debt-management']);
 
-            if ('summary' == $fromPage) {
+            if ($fromPage == 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
             }
 
@@ -143,7 +143,7 @@ class DebtController extends AbstractController
         }
 
         $backLink = $this->generateUrl('debts_exist', ['reportId' => $reportId]);
-        if ('summary' == $fromPage) {
+        if ($fromPage == 'summary') {
             $backLink = $this->generateUrl('debts_summary', ['reportId' => $reportId]);
         }
 
@@ -164,12 +164,12 @@ class DebtController extends AbstractController
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED == $report->getStatus()->getDebtsState()['state'] && 'skip-step' != $fromPage) {
+        if ($report->getStatus()->getDebtsState()['state'] == Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('debts', ['reportId' => $reportId]);
         }
 
         return [
-            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
+            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'report' => $report,
             'status' => $report->getStatus(),
         ];
