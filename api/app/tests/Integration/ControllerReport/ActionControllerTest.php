@@ -9,11 +9,9 @@ use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class ActionControllerTest extends AbstractTestController
 {
-    private static $deputy1;
-    private static $client1;
+    private static $user1;
     private static $report1;
-    private static $deputy2;
-    private static $client2;
+    private static $user2;
     private static $report2;
     private static $tokenAdmin;
     private static $tokenDeputy;
@@ -23,14 +21,12 @@ class ActionControllerTest extends AbstractTestController
         parent::setUp();
 
         // deputy1
-        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
-        self::$report1 = self::fixtures()->createReport(self::$client1);
+        self::$user1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
+        self::$report1 = self::fixtures()->setupReportForDeputyUser(self::$user1, clientSetters: ['setFirstname' => 'c1']);
 
         // deputy 2
-        self::$deputy2 = self::fixtures()->createUser();
-        self::$client2 = self::fixtures()->createClient(self::$deputy2);
-        self::$report2 = self::fixtures()->createReport(self::$client2);
+        self::$user2 = self::fixtures()->createUser();
+        self::$report2 = self::fixtures()->setupReportForDeputyUser(self::$user2);
 
         self::fixtures()->flush()->clear();
 
@@ -50,21 +46,21 @@ class ActionControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    public function testupdateAuth()
+    public function testUpdateAuth(): void
     {
         $url = '/report/' . self::$report1->getId() . '/action';
         $this->assertEndpointNeedsAuth('PUT', $url);
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
     }
 
-    public function testupdateAcl()
+    public function testUpdateAcl(): void
     {
         $url2 = '/report/' . self::$report2->getId() . '/action';
 
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
     }
 
-    public function testupdate()
+    public function testUpdate(): void
     {
         $url = '/report/' . self::$report1->getId() . '/action';
 

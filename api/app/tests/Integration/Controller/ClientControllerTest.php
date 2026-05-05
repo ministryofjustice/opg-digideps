@@ -9,9 +9,9 @@ use Ramsey\Uuid\Uuid;
 
 class ClientControllerTest extends AbstractTestController
 {
-    private static $deputy1;
+    private static $user1;
     private static $client1;
-    private static $deputy2;
+    private static $user2;
     private static $client2;
     private static $deputy3;
     private static $deputy4;
@@ -88,13 +88,13 @@ class ClientControllerTest extends AbstractTestController
         }
 
         // deputy 1
-        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'deputy1Client1']);
-        self::fixtures()->createReport(self::$client1);
+        self::$user1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
+        self::$client1 = self::fixtures()->createClient(self::$user1, ['setFirstname' => 'deputy1Client1']);
+        self::fixtures()->setupReportForDeputyUser(self::$user1, client: self::$client1);
 
         // deputy 2
-        self::$deputy2 = self::fixtures()->createUser();
-        self::$client2 = self::fixtures()->createClient(self::$deputy2, ['setFirstname' => 'deputy2Client1']);
+        self::$user2 = self::fixtures()->createUser();
+        self::$client2 = self::fixtures()->createClient(self::$user2, ['setFirstname' => 'deputy2Client1']);
 
         // deputy 3
         self::$deputy3 = self::fixtures()->createDeputy();
@@ -152,14 +152,14 @@ class ClientControllerTest extends AbstractTestController
         $return = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
-            'data' => ['users' => [0 => self::$deputy1->getId()]] + $this->updateDataLay,
+            'data' => ['users' => [0 => self::$user1->getId()]] + $this->updateDataLay,
         ]);
         self::fixtures()->clear();
 
         $client = self::fixtures()->getRepo(Client::class)->find($return['data']['id']); /* @var $client Client */
         $this->assertEquals('Firstname', $client->getFirstname());
         $this->assertCount(1, $client->getUsers());
-        $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
+        $this->assertEquals(self::$user1->getId(), $client->getUsers()->first()->getId());
     }
 
     public function testUpsertPutLayDeputy()
@@ -187,7 +187,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals('Phone', $client->getPhone());
         $this->assertEquals(null, $client->getDateOfBirth());
         $this->assertEquals('2015-12-31', $client->getCourtDate()->format('Y-m-d'));
-        $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
+        $this->assertEquals(self::$user1->getId(), $client->getUsers()->first()->getId());
     }
 
     public function testUpsertPutPA()

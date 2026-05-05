@@ -11,13 +11,11 @@ use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class AssetControllerTest extends AbstractTestController
 {
-    private static $deputy1;
-    private static $client1;
+    private static $user1;
     private static $report1;
     private static $asset1;
     private static $assetp1;
-    private static $deputy2;
-    private static $client2;
+    private static $user2;
     private static $report2;
     private static $asset2;
     private static $tokenAdmin;
@@ -28,15 +26,13 @@ class AssetControllerTest extends AbstractTestController
         parent::setUp();
 
         // deputy1
-        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
-        self::$report1 = self::fixtures()->createReport(self::$client1);
+        self::$user1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
+        self::$report1 = self::fixtures()->setupReportForDeputyUser(self::$user1, clientSetters: ['setFirstname' => 'c1']);
         self::$asset1 = self::fixtures()->createAsset('other', self::$report1, ['setTitle' => 'asset1']);
         self::$assetp1 = self::fixtures()->createAsset('property', self::$report1, ['setAddress' => 'ha1']);
         // deputy 2
-        self::$deputy2 = self::fixtures()->createUser();
-        self::$client2 = self::fixtures()->createClient(self::$deputy2);
-        self::$report2 = self::fixtures()->createReport(self::$client2);
+        self::$user2 = self::fixtures()->createUser();
+        self::$report2 = self::fixtures()->setupReportForDeputyUser(self::$user2);
         self::$asset2 = self::fixtures()->createAsset('other', self::$report2, ['setTitle' => 'asset2']);
 
         self::fixtures()->flush()->clear();
@@ -57,7 +53,7 @@ class AssetControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    public function testgetAssets()
+    public function testGetAssets()
     {
         $data = $this->assertJsonRequest(
             'GET',
@@ -76,7 +72,7 @@ class AssetControllerTest extends AbstractTestController
         $this->assertEquals('property', $data[1]['type']);
     }
 
-    public function testgetOneByIdAuth()
+    public function testGetOneByIdAuth()
     {
         $url = '/report/' . self::$report1->getId() . '/asset/' . self::$asset1->getId();
 
@@ -84,13 +80,13 @@ class AssetControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
     }
 
-    public function testgetOneByIdAcl()
+    public function testGetOneByIdAcl()
     {
         $url2 = '/report/' . self::$report1->getId() . '/asset/' . self::$asset2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
-    public function testgetOneById()
+    public function testGetOneById()
     {
         $url = '/report/' . self::$report1->getId() . '/asset/' . self::$asset1->getId();
 

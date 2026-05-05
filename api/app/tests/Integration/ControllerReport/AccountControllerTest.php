@@ -9,14 +9,13 @@ use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class AccountControllerTest extends AbstractTestController
 {
-    private static $deputy1;
+    private static $user1;
     private static $report1;
     private static $account1;
-    private static $deputy2;
+    private static $user2;
     private static $report2;
     private static $account2;
     private static $account3;
-    private static $expense1;
     private static $tokenAdmin;
     private static $tokenDeputy;
 
@@ -29,24 +28,19 @@ class AccountControllerTest extends AbstractTestController
             self::$tokenDeputy = $this->loginAsDeputy();
         }
 
-        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-
-        $client1 = self::fixtures()->createClient(self::$deputy1);
-        self::fixtures()->flush();
-
-        self::$report1 = self::fixtures()->createReport($client1);
+        self::$user1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
+        self::$report1 = self::fixtures()->setupReportForDeputyUser(self::$user1);
         self::$account1 = self::fixtures()->createAccount(self::$report1, ['setBank' => 'bank1']);
 
         // deputy 2
-        self::$deputy2 = self::fixtures()->createUser();
-        $client2 = self::fixtures()->createClient(self::$deputy2);
-        self::$report2 = self::fixtures()->createReport($client2);
+        self::$user2 = self::fixtures()->createUser();
+        self::$report2 = self::fixtures()->setupReportForDeputyUser(self::$user2);
         self::$account2 = self::fixtures()->createAccount(self::$report2, ['setBank' => 'bank2']);
 
         // create an expense attached to account1 meaning account 1 cannot be removed
         self::$account3 = self::fixtures()->createAccount(self::$report1, ['setBank' => 'bank3']);
 
-        self::$expense1 = self::fixtures()->createReportExpense(
+        self::fixtures()->createReportExpense(
             'other',
             self::$report1,
             [

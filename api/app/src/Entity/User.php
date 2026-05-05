@@ -301,7 +301,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[JMS\Type('OPG\Digideps\Backend\Entity\Deputy')]
     #[ORM\OneToOne(mappedBy: 'user', targetEntity: Deputy::class)]
-    private ?Deputy $deputy;
+    private ?Deputy $deputy = null;
 
     /**
      * @var \DateTime

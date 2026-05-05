@@ -14,7 +14,7 @@ class ReportControllerTest extends AbstractTestController
 {
     private static $preRegistration1;
     private static $preRegistration3;
-    private static $deputy1;
+    private static $user1;
     private static $client1;
     private static $report1;
     private static $report103;
@@ -50,26 +50,26 @@ class ReportControllerTest extends AbstractTestController
         parent::setUp();
 
         // create deputy 1, with 2 submitted reports
-        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
+        self::$user1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
         self::$client1 = self::fixtures()->createClient(
-            self::$deputy1,
+            self::$user1,
             ['setFirstname' => 'c1', 'setLastname' => 'l1', 'setCaseNumber' => '101010101']
         );
         self::$client3 = self::fixtures()->createClient(
-            self::$deputy1,
+            self::$user1,
             ['setFirstname' => 'c3', 'setLastname' => 'l3', 'setCaseNumber' => '303030303']
         );
-        self::$deputy1->addClient(self::$client1);
-        self::$deputy1->addClient(self::$client3);
-        self::fixtures()->persist(self::$deputy1);
+        self::$user1->addClient(self::$client1);
+        self::$user1->addClient(self::$client3);
+        self::fixtures()->persist(self::$user1);
 
         self::$preRegistration1 = new PreRegistration([
             'Case' => self::$client1->getCaseNumber(),
             'ClientSurname' => self::$client1->getLastName(),
-            'DeputyUid' => (string) self::$deputy1->getDeputyUid(),
-            'DeputyFirstname' => self::$deputy1->getFirstname(),
-            'DeputySurname' => self::$deputy1->getLastname(),
-            'DeputyPostcode' => self::$deputy1->getAddressPostcode(),
+            'DeputyUid' => (string) self::$user1->getDeputyUid(),
+            'DeputyFirstname' => self::$user1->getFirstname(),
+            'DeputySurname' => self::$user1->getLastname(),
+            'DeputyPostcode' => self::$user1->getAddressPostcode(),
             'ReportType' => 'OPG102',
             'MadeDate' => new \DateTime('2016-01-01')->format('Y-m-d'),
             'OrderType' => 'pfa',
@@ -81,10 +81,10 @@ class ReportControllerTest extends AbstractTestController
         self::$preRegistration3 = new PreRegistration([
             'Case' => self::$client3->getCaseNumber(),
             'ClientSurname' => self::$client3->getLastName(),
-            'DeputyUid' => (string) self::$deputy1->getDeputyUid(),
-            'DeputyFirstname' => self::$deputy1->getFirstname(),
-            'DeputySurname' => self::$deputy1->getLastname(),
-            'DeputyPostcode' => self::$deputy1->getAddressPostcode(),
+            'DeputyUid' => (string) self::$user1->getDeputyUid(),
+            'DeputyFirstname' => self::$user1->getFirstname(),
+            'DeputySurname' => self::$user1->getLastname(),
+            'DeputyPostcode' => self::$user1->getAddressPostcode(),
             'ReportType' => 'OPG102',
             'MadeDate' => new \DateTime('2017-01-01')->format('Y-m-d'),
             'OrderType' => 'pfa',
@@ -95,16 +95,16 @@ class ReportControllerTest extends AbstractTestController
         self::$fixtures->persist(self::$preRegistration1, self::$preRegistration3);
 
         self::$clientEdit = self::fixtures()->createClient(
-            self::$deputy1,
+            self::$user1,
             ['setFirstname' => 'cEdit1', 'setLastname' => 'l1', 'setCaseNumber' => '010101010']
         );
         self::fixtures()->flush();
 
-        self::$report1 = self::fixtures()->createReport(self::$client1, [
+        self::$report1 = self::fixtures()->setupReportForDeputyUser(self::$user1, reportSetters: [
             'setStartDate' => new \DateTime('2014-01-01'),
             'setEndDate' => new \DateTime('2014-12-31'),
             'setSubmitted' => true,
-            'setSubmittedBy' => self::$deputy1,
+            'setSubmittedBy' => self::$user1,
             'setWishToProvideDocumentation' => true,
         ]);
 
@@ -115,18 +115,18 @@ class ReportControllerTest extends AbstractTestController
         self::fixtures()->persist($document);
         self::fixtures()->flush();
 
-        self::$reportEdit = self::fixtures()->createReport(self::$clientEdit, [
+        self::$reportEdit = self::fixtures()->setupReportForDeputyUser(self::$user1, client: self::$clientEdit, reportSetters: [
             'setStartDate' => new \DateTime('2014-01-01'),
             'setEndDate' => new \DateTime('2014-12-31'),
             'setSubmitted' => false,
             'setSubmittedBy' => null,
         ]);
-        self::$report103 = self::fixtures()->createReport(self::$client1, [
+        self::$report103 = self::fixtures()->setupReportForDeputyUser(self::$user1, client: self::$client1, reportSetters: [
             'setStartDate' => new \DateTime('2015-01-01'),
             'setEndDate' => new \DateTime('2015-12-31'),
             'setType' => Report::LAY_PFA_LOW_ASSETS_TYPE,
             'setSubmitted' => true,
-            'setSubmittedBy' => self::$deputy1,
+            'setSubmittedBy' => self::$user1,
         ]);
 
         // deputy 2
@@ -137,22 +137,22 @@ class ReportControllerTest extends AbstractTestController
         // pa 1
         self::$pa1 = self::fixtures()->getRepo(User::class)->findOneByEmail('pa@example.org');
         self::$pa1Client1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client1', 'setCaseNumber' => '11111111']);
-        self::$pa1Client1Report1 = self::fixtures()->createReport(self::$pa1Client1, ['setType' => Report::PA_PFA_HIGH_ASSETS_TYPE]);
+        self::$pa1Client1Report1 = self::fixtures()->setupReportForDeputyUser(self::$pa1, client: self::$pa1Client1, reportSetters: ['setType' => Report::PA_PFA_HIGH_ASSETS_TYPE]);
         self::$pa1Client2 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client2', 'setCaseNumber' => '22222222']);
         self::$pa1Client3 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client3', 'setCaseNumber' => '33333333']);
 
-        self::fixtures()->createReport(self::$pa1Client2, ['setType' => Report::PA_PFA_HIGH_ASSETS_TYPE]);
-        self::fixtures()->createReport(self::$pa1Client3, ['setType' => Report::PA_PFA_HIGH_ASSETS_TYPE]);
+        self::fixtures()->setupReportForDeputyUser(self::$pa1, client: self::$pa1Client2, reportSetters: ['setType' => Report::PA_PFA_HIGH_ASSETS_TYPE]);
+        self::fixtures()->setupReportForDeputyUser(self::$pa1, client: self::$pa1Client3, reportSetters: ['setType' => Report::PA_PFA_HIGH_ASSETS_TYPE]);
 
         // pa 2
         self::$pa2Admin = self::fixtures()->getRepo(User::class)->findOneByEmail('pa_admin@example.org');
         self::$pa2Client1 = self::fixtures()->createClient(self::$pa2Admin, ['setFirstname' => 'pa2Client1']);
-        self::$pa2Client1Report1 = self::fixtures()->createReport(self::$pa2Client1);
+        self::$pa2Client1Report1 = self::fixtures()->setupReportForDeputyUser(self::$pa2Admin, client: self::$pa2Client1);
 
         // pa 3
         self::$pa3TeamMember = self::fixtures()->getRepo(User::class)->findOneByEmail('pa_team_member@example.org');
         self::$pa3Client1 = self::fixtures()->createClient(self::$pa3TeamMember, ['setFirstname' => 'pa3Client1']);
-        self::$pa3Client1Report1 = self::fixtures()->createReport(self::$pa3Client1);
+        self::$pa3Client1Report1 = self::fixtures()->setupReportForDeputyUser(self::$pa3TeamMember, client: self::$pa3Client1);
 
         $pa1Org = self::fixtures()->createOrganisation('Example', rand(1, 9999999) . 'example.org', true);
         $pa2Org = self::fixtures()->createOrganisation('Example', rand(1, 9999999) . 'example.org', true);
@@ -320,7 +320,7 @@ class ReportControllerTest extends AbstractTestController
             ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
         )['data'];
 
-        $this->assertEquals(self::$deputy1->getId(), $submittedByData['submitted_by']['id']);
+        $this->assertEquals(self::$user1->getId(), $submittedByData['submitted_by']['id']);
         $this->assertEquals('deputy@example.org', $submittedByData['submitted_by']['email']);
 
         // assert status
@@ -388,7 +388,7 @@ class ReportControllerTest extends AbstractTestController
         $report = self::fixtures()->clear()->getReportById(self::$reportEdit->getId());
 
         $this->assertEquals(true, $report->getSubmitted());
-        $this->assertEquals(self::$deputy1->getId(), $report->getSubmittedBy()->getId());
+        $this->assertEquals(self::$user1->getId(), $report->getSubmittedBy()->getId());
         $this->assertEquals('only_deputy', $report->getAgreedBehalfDeputy());
         $this->assertEquals(null, $report->getAgreedBehalfDeputyExplanation());
         $this->assertEquals('2015-12-30', $report->getSubmitDate()->format('Y-m-d'));

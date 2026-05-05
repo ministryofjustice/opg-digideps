@@ -4,36 +4,41 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\DocumentRepository;
+use OPG\Digideps\Backend\Repository\UserRepository;
 
 class DocumentControllerTest extends AbstractTestController
 {
-    /** @var Report */
-    private static $report1;
-    private static $report2;
+    private static Report $report1;
+    private static Report $report2;
+    private static CourtOrder $courtOrder1;
+    private static CourtOrder $courtOrder2;
 
-    /** @var Document */
-    private static $document1;
-    private static $document2;
-    private static $document3;
+    private static Document $document1;
+    private static Document $document2;
+    private static Document $document3;
 
-    /** @var DocumentRepository */
-    private $repo;
+    private static DocumentRepository $repository;
 
     // users
-    private static $tokenDeputy;
+    private static string $tokenDeputy;
 
     // lay
-    private static $deputy1;
-    private static $client1;
+    private static User $user1;
+    private static Deputy $deputy1;
+    private static Client $client1;
 
-    /** @var ReportSubmission */
-    private static $reportSubmission1;
-    private static $reportSubmission2;
+    private static ReportSubmission $reportSubmission1;
+    private static ReportSubmission $reportSubmission2;
 
 
     public static function setUpBeforeClass(): void
@@ -47,11 +52,20 @@ class DocumentControllerTest extends AbstractTestController
 
         self::setupFixtures();
 
-        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
+        /**
+         * @var UserRepository $repository;
+         */
+        $repository = self::fixtures()->getRepo(User::class);
+        self::$user1 = $repository->findOneByEmail('deputy@example.org');
+        self::$deputy1 = self::$user1->getDeputy();
+        self::$user1->setDeputyUid(intval(self::$deputy1->getDeputyUid()));
+        self::$client1 = self::fixtures()->createClient(self::$user1, ['setFirstname' => 'c1']);
 
-        self::$report1 = self::fixtures()->createReport(self::$client1);
-        self::$report2 = self::fixtures()->createReport(self::$client1);
+        $nowish = time() + random_int(3600, 4600);
+        self::$courtOrder1 = self::fixtures()->createCourtOrder("{$nowish}1", CourtOrderType::PFA, CourtOrderKind::Single, 'ACTIVE', deputy: self::$deputy1, client: self::$client1);
+        self::$courtOrder2 = self::fixtures()->createCourtOrder("{$nowish}2", CourtOrderType::PFA, CourtOrderKind::Single, 'ACTIVE', deputy: self::$deputy1, client: self::$client1);
+        self::$report1 = self::fixtures()->createReport(self::$client1, courtOrder: self::$courtOrder1);
+        self::$report2 = self::fixtures()->createReport(self::$client1, courtOrder: self::$courtOrder2);
 
         self::$document1 = self::fixtures()->createDocument(self::$report1, 'file_name.pdf');
         self::$document2 = self::fixtures()->createDocument(self::$report1, 'another_file_name.pdf', false);
@@ -66,7 +80,11 @@ class DocumentControllerTest extends AbstractTestController
 
         self::fixtures()->flush();
 
-        $this->repo = self::fixtures()->getRepo(Document::class);
+        /**
+         * @var DocumentRepository $repository;
+         */
+        $repository = self::fixtures()->getRepo(Document::class);
+        self::$repository = $repository;
         self::$tokenDeputy = $this->loginAsDeputy();
     }
 
@@ -102,7 +120,7 @@ class DocumentControllerTest extends AbstractTestController
         $document = self::fixtures()->getRepo(Document::class)->find($data['id']);
 
         $this->assertEquals($data['id'], $document->getId());
-        $this->assertEquals(self::$deputy1->getId(), $document->getCreatedBy()->getId());
+        $this->assertEquals(self::$user1->getId(), $document->getCreatedBy()->getId());
         $this->assertInstanceof(\DateTime::class, $document->getCreatedOn());
         $this->assertEquals('s3StorageKey', $document->getStorageReference());
         $this->assertEquals('testfile.pdf', $document->getFilename());
@@ -137,7 +155,7 @@ class DocumentControllerTest extends AbstractTestController
     public function getQueuedDocuments(): void
     {
         // Queue a document
-        $document = $this->repo->find(self::$document1->getId());
+        $document = self::$repository->find(self::$document1->getId());
         self::assertInstanceOf(Document::class, $document);
 
         $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
@@ -224,7 +242,7 @@ class DocumentControllerTest extends AbstractTestController
      */
     public function updateDocumentPermErrorReturnsAfter4Attempts(): void
     {
-        $document = $this->repo->find(self::$document1->getId());
+        $document = self::$repository->find(self::$document1->getId());
         self::assertInstanceOf(Document::class, $document);
 
         $document->incrementSyncAttempts();

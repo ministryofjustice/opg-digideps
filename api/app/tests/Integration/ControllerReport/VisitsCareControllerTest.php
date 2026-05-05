@@ -9,11 +9,11 @@ use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class VisitsCareControllerTest extends AbstractTestController
 {
-    private static $deputy1;
+    private static $user1;
     private static $client1;
     private static $report1;
     private static $visitsCare1;
-    private static $deputy2;
+    private static $user2;
     private static $client2;
     private static $report2;
     private static $visitsCare2;
@@ -27,15 +27,13 @@ class VisitsCareControllerTest extends AbstractTestController
         self::$fixtures::deleteReportsData(['safeguarding']);
 
         // deputy1
-        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
-        self::$report1 = self::fixtures()->createReport(self::$client1);
+        self::$user1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
+        self::$report1 = self::fixtures()->setupReportForDeputyUser(self::$user1, clientSetters: ['setFirstname' => 'c1']);
         self::$visitsCare1 = self::fixtures()->createVisitsCare(self::$report1, ['setDoYouLiveWithClient' => 'y']);
 
         // deputy 2
-        self::$deputy2 = self::fixtures()->createUser();
-        self::$client2 = self::fixtures()->createClient(self::$deputy2);
-        self::$report2 = self::fixtures()->createReport(self::$client2);
+        self::$user2 = self::fixtures()->createUser();
+        self::$report2 = self::fixtures()->setupReportForDeputyUser(self::$user2);
         self::$visitsCare2 = self::fixtures()->createVisitsCare(self::$report2);
 
         self::fixtures()->flush()->clear();
@@ -56,13 +54,13 @@ class VisitsCareControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    private $dataUpdate = [
+    private array $dataUpdate = [
         'do_you_live_with_client' => 'y-m',
         'how_often_do_you_visit' => 'ho-m',
         'how_often_do_you_contact_client' => 'hodycc',
     ];
 
-    public function testgetOneByIdAuth()
+    public function testGetOneByIdAuth()
     {
         $url = '/report/visits-care/' . self::$visitsCare1->getId();
 
@@ -71,18 +69,18 @@ class VisitsCareControllerTest extends AbstractTestController
     }
 
     /**
-     * @depends testgetOneByIdAuth
+     * @depends testGetOneByIdAuth
      */
-    public function testgetOneByIdAcl()
+    public function testGetOneByIdAcl()
     {
         $url2 = '/report/visits-care/' . self::$visitsCare2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
     /**
-     * @depends testgetOneByIdAcl
+     * @depends testGetOneByIdAcl
      */
-    public function testgetOneById()
+    public function testGetOneById()
     {
         $url = '/report/visits-care/' . self::$visitsCare1->getId();
 

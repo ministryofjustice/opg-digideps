@@ -41,30 +41,26 @@ class Fixtures
 {
     public const string PG_DUMP_PATH = '/tmp/dd_phpunit.pgdump';
 
-    /**
-     * @var EntityManager
-     */
-    private $em;
+    private EntityManager $em;
+    private static int $uidCounter= 9090900;
 
     public function __construct(EntityManager $em)
     {
         $this->em = $em;
     }
 
-    public function getEntityManager()
+    private function nextUid(): int
+    {
+        self::$uidCounter += 3;
+        return self::$uidCounter;
+    }
+
+    public function getEntityManager(): EntityManager
     {
         return $this->em;
     }
 
-    public function getQueryResults($dql)
-    {
-        return $this->em->createQuery($dql)->getResult();
-    }
-
-    /**
-     * @return string
-     */
-    private static function getPGExportCommand()
+    private static function getPGExportCommand(): string
     {
         $pgHost = getenv('PGHOST') ?: 'postgres';
         $pgPass = getenv('PGPASSWORD') ?: 'api';
@@ -130,9 +126,9 @@ class Fixtures
 
     public function createDeputy(array $settersMap = [], ?User $user = null): Deputy
     {
-        $deputy = new Deputy();
-        $deputy->setDeputyUid((string)rand(100000, 999999));
-        $deputy->setEmail1('temp' . microtime(true) . rand(100, 99999) . '@temp.com');
+        $deputy = $user?->getDeputy() ?? new Deputy();
+        $deputy->setDeputyUid((string)$this->nextUid());
+        $deputy->setEmail1("{$deputy->getDeputyUid()}@temp.com");
         $deputy->setFirstname('name' . time());
         $deputy->setLastname('surname' . time());
         $deputy->setDeputyType(DeputyType::LAY);
@@ -153,12 +149,9 @@ class Fixtures
         return $deputy;
     }
 
-    /**
-     * @return Client
-     */
-    public function createClient(?User $user = null, array $settersMap = [])
+    public function createClient(?User $user = null, array $settersMap = []): Client
     {
-        // add clent, cot, report, needed for assets
+        // add client, cot, report, needed for assets
         $client = new Client();
         $client->setEmail('temp@temp.com');
         foreach ($settersMap as $k => $v) {
@@ -174,12 +167,7 @@ class Fixtures
         return $client;
     }
 
-    /**
-     * @return Document
-     *
-     * @throws ORMException
-     */
-    public function createDocument($report, string $filename, bool $isReportPdf = true)
+    public function createDocument($report, string $filename, bool $isReportPdf = true): Document
     {
         $doc = new Document($report);
         $doc->setFileName($filename);
@@ -190,7 +178,7 @@ class Fixtures
         return $doc;
     }
 
-    public function createChecklist(Report $report)
+    public function createChecklist(Report $report): Checklist
     {
         $cl = new Checklist($report);
         $this->em->persist($cl);
@@ -198,12 +186,7 @@ class Fixtures
         return $cl;
     }
 
-    /**
-     * @return ReportSubmission
-     *
-     * @throws ORMException
-     */
-    public function createReportSubmission(?Report $report = null, ?User $user = null)
+    public function createReportSubmission(?Report $report = null, ?User $user = null): ReportSubmission
     {
         if (is_null($user)) {
             $user = $this->createUser(
@@ -245,11 +228,27 @@ class Fixtures
         return $submission;
     }
 
+    public function setupReportForDeputyUser(User $user, ?Client $client = null, array $clientSetters = [], array $reportSetters = []): Report
+    {
+        $client ??= $user->getClients()[0] ?? $this->createClient($user, $clientSetters);
+        $deputy = $user->getDeputy() ?? $this->createDeputy(user: $user);
+        $courtOrder = $this->createCourtOrder(deputy: $deputy, client: $client);
+        $report = $this->createReport(client: $client, settersMap: $reportSetters, courtOrder: $courtOrder);
+        $this->em->persist($client);
+        $this->em->persist($deputy);
+        $this->em->persist($courtOrder);
+        $this->em->persist($report);
+        return $report;
+    }
+
     public function createReport(
         Client $client,
         array $settersMap = [],
         ?CourtOrder $courtOrder = null
     ): Report {
+        if ($courtOrder !== null && $courtOrder->getLatestReport() !== null) {
+            return $courtOrder->getLatestReport();
+        }
         $validatedSettersMap = new ValidatingArray($settersMap);
         // should be created via ReportService, but this is a fixture, so better to keep it simple
         $report = new Report(
@@ -257,6 +256,7 @@ class Fixtures
             $validatedSettersMap->getStringOrDefault('setType', Report::LAY_PFA_HIGH_ASSETS_TYPE),
             $validatedSettersMap->getObjectOrNull('setStartDate', \DateTime::class) ?? new \DateTime('now'),
             $validatedSettersMap->getObjectOrNull('setEndDate', \DateTime::class) ?? new \DateTime('+12 months -1 day'),
+            false
         );
 
         if ($courtOrder !== null) {
@@ -547,7 +547,7 @@ class Fixtures
         return $this->em->getConnection();
     }
 
-    private static function pgCommand($cmd)
+    public static function pgCommand($cmd)
     {
         exec(self::getPGExportCommand() . $cmd);
     }
@@ -621,10 +621,10 @@ class Fixtures
         $this->em->clear();
     }
 
-    public function createCourtOrder(string $uid, CourtOrderType $type, CourtOrderKind $kind, string $status, \DateTime $madeDate = new \DateTime(), ?CourtOrderReportType $courtOrderReportType = null, ?Deputy $deputy = null, ?Client $client = null): CourtOrder
+    public function createCourtOrder(?string $uid = null, CourtOrderType $type = CourtOrderType::PFA, CourtOrderKind $kind = CourtOrderKind::Single, string $status = 'ACTIVE', \DateTime $madeDate = new \DateTime(), ?CourtOrderReportType $courtOrderReportType = null, ?Deputy $deputy = null, ?Client $client = null): CourtOrder
     {
         $courtOrder = new CourtOrder();
-        $courtOrder->setCourtOrderUid($uid);
+        $courtOrder->setCourtOrderUid($uid ?? $this->nextUid());
         $courtOrder->setOrderType($type);
         $courtOrder->setOrderKind($kind);
         $courtOrder->setOrderReportType($courtOrderReportType ?? ($kind === CourtOrderKind::Hybrid || $type == CourtOrderType::PFA ? CourtOrderReportType::OPG102 : CourtOrderReportType::OPG104));

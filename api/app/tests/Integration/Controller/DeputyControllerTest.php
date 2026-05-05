@@ -17,6 +17,7 @@ class DeputyControllerTest extends AbstractTestController
 
     public static function setUpBeforeClass(): void
     {
+        self::tearDownAfterClass();
         parent::setUpBeforeClass();
 
         self::$client = new JsonHttpTestClient(self::$frameworkBundleClient, self::$jwtService);
@@ -26,6 +27,11 @@ class DeputyControllerTest extends AbstractTestController
     public function setUp(): void
     {
         parent::setup();
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
     }
 
     public static function tearDownAfterClass(): void
