@@ -112,9 +112,9 @@ abstract class Asset
     #[JMS\Type('float')]
     #[JMS\SerializedName('value_total')]
     #[JMS\Groups(['asset'])]
-    public function getValueTotal()
+    public function getValueTotal(): ?float
     {
-        return $this->value;
+        return $this->value === null ? null : floatval($this->value);
     }
 
     /**
