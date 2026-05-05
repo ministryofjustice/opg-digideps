@@ -1,83 +1,62 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * MoneyTransfer.
- *
- * @ORM\Table(name="money_transfer")
- *
- * @ORM\Entity
- */
+#[ORM\Table(name: 'money_transfer')]
+#[ORM\Entity]
 class MoneyTransfer
 {
     /**
      * @var int
-     *
-     * @JMS\Groups({"money-transfer"})
-     *
-     * @ORM\Column(name="id", type="integer")
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[JMS\Groups(['money-transfer'])]
+    #[ORM\Column(name: 'id', type: 'integer')]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
     private $id;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"money-transfer"})
-     *
-     * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[JMS\Groups(['money-transfer'])]
+    #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $amount;
 
     /**
      * @var BankAccount
-     *
-     * @JMS\Groups({"account"})
-     *
-     * @JMS\SerializedName("accountFrom")
-     *
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\BankAccount")
-     *
-     * @ORM\JoinColumn(name="from_account_id", referencedColumnName="id")
      */
+    #[JMS\Groups(['account'])]
+    #[JMS\SerializedName('accountFrom')]
+    #[ORM\JoinColumn(name: 'from_account_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: BankAccount::class)]
     private $from;
 
     /**
      * @var BankAccount
-     *
-     * @JMS\Groups({"account"})
-     *
-     * @JMS\SerializedName("accountTo")
-     *
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\BankAccount")
-     *
-     * @ORM\JoinColumn(name="to_account_id", referencedColumnName="id")
      */
+    #[JMS\Groups(['account'])]
+    #[JMS\SerializedName('accountTo')]
+    #[ORM\JoinColumn(name: 'to_account_id', referencedColumnName: 'id')]
+    #[ORM\ManyToOne(targetEntity: BankAccount::class)]
     private $to;
 
     /**
      * @var Report
-     *
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="moneyTransfers")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'moneyTransfers')]
     private $report;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"money-transfer"})
-     *
-     * @ORM\Column(name="description", type="text", nullable=true)
      */
+    #[JMS\Groups(['money-transfer'])]
+    #[ORM\Column(name: 'description', type: 'text', nullable: true)]
     private $description;
 
     /**
@@ -155,15 +134,10 @@ class MoneyTransfer
         return $this->report;
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\Groups({"money-transfer"})
-     *
-     * @JMS\Type("integer")
-     *
-     * @JMS\SerializedName("reportId")
-     */
+    #[JMS\VirtualProperty]
+    #[JMS\Groups(['money-transfer'])]
+    #[JMS\Type('integer')]
+    #[JMS\SerializedName('reportId')]
     public function getReportId()
     {
         return $this->getReport()->getId();

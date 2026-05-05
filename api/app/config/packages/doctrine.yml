@@ -36,10 +36,11 @@ doctrine:
         entity_managers:
             default:
                 connection: default
-                auto_mapping: true
+                # disable ORM annotation mapping
+                auto_mapping: false
                 mappings:
                     commonEntities:
-                        type: annotation
+                        type: attribute
                         dir: "%kernel.project_dir%/src/Entity"
                         prefix: OPG\Digideps\Backend\Entity
                         is_bundle: false
@@ -50,9 +51,11 @@ doctrine:
             # separate entity manager for use during ingest, to prevent transactions interfering with queries
             ingestwriter:
                 connection: ingestwriter
+                # disable ORM annotation mapping
+                auto_mapping: false
                 mappings:
                     ingestEntities:
-                        type: annotation
+                        type: attribute
                         dir: "%kernel.project_dir%/src/Entity"
                         prefix: OPG\Digideps\Backend\Entity
                         is_bundle: false

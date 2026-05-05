@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
-use OPG\Digideps\Backend\Entity\Report\Expense;
-use OPG\Digideps\Backend\Service\ReportStatusService;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
-use OPG\Digideps\Backend\Entity\Report\Asset;
+use Doctrine\Common\Collections\ArrayCollection;
+use Mockery as m;
 use OPG\Digideps\Backend\Entity\Client;
-use OPG\Digideps\Backend\Entity\Report\Contact;
-use OPG\Digideps\Backend\Entity\Report\Decision;
-use OPG\Digideps\Backend\Entity\Report\MentalCapacity;
-use OPG\Digideps\Backend\Entity\Report\BankAccount;
 use OPG\Digideps\Backend\Entity\Report\Action;
+use OPG\Digideps\Backend\Entity\Report\Asset;
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
+use OPG\Digideps\Backend\Entity\Report\Contact;
 use OPG\Digideps\Backend\Entity\Report\Debt;
+use OPG\Digideps\Backend\Entity\Report\Decision;
 use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\MentalCapacity;
 use OPG\Digideps\Backend\Entity\Report\MoneyShortCategory;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShort;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransfer;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\VisitsCare;
-use Mockery as m;
+use OPG\Digideps\Backend\Service\ReportStatusService;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
@@ -45,7 +45,7 @@ final class ReportStatusServiceTest extends TestCase
     {
         $report = m::mock(Report::class, $reportMethods + [
                 'getSectionStatusesCached' => [],
-                'getBankAccounts' => [],
+                'getBankAccounts' => new ArrayCollection([]),
                 'getBankAccountsIncomplete' => [],
                 'getExpenses' => [],
                 'getPaidForAnything' => null,
@@ -80,10 +80,10 @@ final class ReportStatusServiceTest extends TestCase
                 'getMentalCapacity' => null,
                 'getMoneyInExists' => null,
                 'hasMoneyIn' => false,
-                'getMoneyTransactionsIn' => [],
+                'getMoneyTransactionsIn' => new ArrayCollection([]),
                 'getMoneyOutExists' => null,
                 'hasMoneyOut' => false,
-                'getMoneyTransactionsOut' => [],
+                'getMoneyTransactionsOut' => new ArrayCollection([]),
                 'getHasDebts' => null,
                 'getDebts' => [],
                 'getDebtsWithValidAmount' => [],
@@ -91,22 +91,20 @@ final class ReportStatusServiceTest extends TestCase
                 'getTotalsMatch' => null,
                 'getBalanceMismatchExplanation' => null,
                 'getDocuments' => [],
-                'getDeputyDocuments' => [],
+                'getDeputyDocuments' => new ArrayCollection([]),
                 'getWishToProvideDocumentation' => null,
                 // 103
                 'getMoneyShortCategoriesIn' => [],
-                'getMoneyShortCategoriesInPresent' => [],
+                'getMoneyShortCategoriesInPresent' => new ArrayCollection([]),
                 'getMoneyTransactionsShortInExist' => null,
-                'getMoneyTransactionsShortIn' => [],
-                'getMoneyShortCategoriesOut' => [],
-                'getMoneyShortCategoriesOutPresent' => [],
+                'getMoneyTransactionsShortIn' => new ArrayCollection([]),
+                'getMoneyShortCategoriesOut' => new ArrayCollection([]),
+                'getMoneyShortCategoriesOutPresent' => new ArrayCollection([]),
                 'getMoneyTransactionsShortOutExist' => null,
-                'getMoneyTransactionsShortOut' => [],
+                'getMoneyTransactionsShortOut' => new ArrayCollection([]),
                 'getType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
                 // 106
                 'has106Flag' => false,
-//                'getFeesWithValidAmount'                           => [],
-//                'getReasonForNoFees'                => null,
                 'paFeesExpensesNotStarted' => null,
                 'paFeesExpensesCompleted' => null,
                 'getProfDeputyCostsHowCharged' => null,
@@ -117,9 +115,6 @@ final class ReportStatusServiceTest extends TestCase
                 'getProfDeputyCostsAmountToScco' => null,
                 'hasProfDeputyOtherCosts' => null,
                 'isMissingMoneyOrAccountsOrClosingBalance' => true,
-//                'hasSection' => false,
-                // 'getExpenses'                       => [],
-                // 'getPaidForAnything'                => null,
                 'getAvailableSections' => [ // 102 sections
                     'decisions', 'contacts', 'visitsCare', 'balance', 'bankAccounts',
                     'moneyTransfers', 'moneyIn', 'moneyOut',
@@ -214,13 +209,17 @@ final class ReportStatusServiceTest extends TestCase
         $cat = m::mock(MoneyShortCategory::class);
         $t = m::mock(MoneyTransactionShort::class);
 
+        $oneCategory = new ArrayCollection([$cat]);
+        $emptyCategories = new ArrayCollection([]);
+        $oneTransaction = new ArrayCollection([$t]);
+
         return [
             [['getMoneyInExists' => null], ReportStatusService::STATE_NOT_STARTED],
             [['getMoneyInExists' => 'No','getReasonForNoMoneyIn' => null], ReportStatusService::STATE_INCOMPLETE],
-            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => [],'getMoneyTransactionsShortInExist' => 'no'], ReportStatusService::STATE_INCOMPLETE],
-            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => [],'getMoneyTransactionsShortInExist' => 'yes'], ReportStatusService::STATE_INCOMPLETE],
-            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => [[$cat]],'getMoneyTransactionsShortInExist' => 'no'], ReportStatusService::STATE_LOW_ASSETS_DONE],
-            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => [[$cat]],'getMoneyTransactionsShortInExist' => 'yes', 'getMoneyTransactionsShortIn' => [$t]], ReportStatusService::STATE_DONE],
+            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => $emptyCategories,'getMoneyTransactionsShortInExist' => 'no'], ReportStatusService::STATE_INCOMPLETE],
+            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => $emptyCategories,'getMoneyTransactionsShortInExist' => 'yes'], ReportStatusService::STATE_INCOMPLETE],
+            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => $oneCategory,'getMoneyTransactionsShortInExist' => 'no'], ReportStatusService::STATE_LOW_ASSETS_DONE],
+            [['getMoneyInExists' => 'Yes','getMoneyShortCategoriesInPresent' => $oneCategory,'getMoneyTransactionsShortInExist' => 'yes', 'getMoneyTransactionsShortIn' => $oneTransaction], ReportStatusService::STATE_DONE],
         ];
     }
 
@@ -237,13 +236,17 @@ final class ReportStatusServiceTest extends TestCase
         $cat = m::mock(MoneyShortCategory::class);
         $t = m::mock(MoneyTransactionShort::class);
 
+        $emptyCategories = new ArrayCollection([]);
+        $oneCategory = new ArrayCollection([$cat]);
+        $oneTransaction = new ArrayCollection([$t]);
+
         return [
             [['getMoneyOutExists' => null], ReportStatusService::STATE_NOT_STARTED],
             [['getMoneyOutExists' => 'No','getReasonForNoMoneyOut' => null], ReportStatusService::STATE_INCOMPLETE],
-            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => [],'getMoneyTransactionsShortOutExist' => 'no'], ReportStatusService::STATE_INCOMPLETE],
-            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => [],'getMoneyTransactionsShortOutExist' => 'yes'], ReportStatusService::STATE_INCOMPLETE],
-            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => [$cat],'getMoneyTransactionsShortOutExist' => 'no'], ReportStatusService::STATE_LOW_ASSETS_DONE],
-            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => [[$cat]],'getMoneyTransactionsShortOutExist' => 'yes', 'getMoneyTransactionsShortOut' => [$t]], ReportStatusService::STATE_DONE],
+            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => $emptyCategories,'getMoneyTransactionsShortOutExist' => 'no'], ReportStatusService::STATE_INCOMPLETE],
+            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => $emptyCategories,'getMoneyTransactionsShortOutExist' => 'yes'], ReportStatusService::STATE_INCOMPLETE],
+            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => $oneCategory,'getMoneyTransactionsShortOutExist' => 'no'], ReportStatusService::STATE_LOW_ASSETS_DONE],
+            [['getMoneyOutExists' => 'Yes','getMoneyShortCategoriesOutPresent' => $oneCategory,'getMoneyTransactionsShortOutExist' => 'yes', 'getMoneyTransactionsShortOut' => $oneTransaction], ReportStatusService::STATE_DONE],
         ];
     }
 
@@ -577,10 +580,6 @@ final class ReportStatusServiceTest extends TestCase
     public static function decisionsProvider(): array
     {
         $decision = m::mock(Decision::class);
-        $mcEmpty = m::mock(MentalCapacity::class, [
-            'getHasCapacityChanged' => null,
-            'getMentalAssessmentDate' => null,
-        ]);
         $mcPartial = m::mock(MentalCapacity::class, [
             'getHasCapacityChanged' => 'no',
             'getMentalAssessmentDate' => null,
@@ -690,8 +689,8 @@ final class ReportStatusServiceTest extends TestCase
         return [
             [['getWishToProvideDocumentation' => 'no'], ReportStatusService::STATE_DONE],
             [['getDocuments' => []], ReportStatusService::STATE_NOT_STARTED],
-            [['getWishToProvideDocumentation' => 'yes', 'getDeputyDocuments' => []], ReportStatusService::STATE_INCOMPLETE],
-            [['getWishToProvideDocumentation' => 'yes', 'getDeputyDocuments' => [$document]], ReportStatusService::STATE_DONE],
+            [['getWishToProvideDocumentation' => 'yes', 'getDeputyDocuments' => new ArrayCollection([])], ReportStatusService::STATE_INCOMPLETE],
+            [['getWishToProvideDocumentation' => 'yes', 'getDeputyDocuments' => new ArrayCollection([$document])], ReportStatusService::STATE_DONE],
         ];
     }
 
@@ -725,19 +724,18 @@ final class ReportStatusServiceTest extends TestCase
 
     public static function bankAccountProvider(): array
     {
-        $account = m::mock(BankAccount::class);
+        $accounts = new ArrayCollection([m::mock(BankAccount::class)]);
+        $emptyAccounts = new ArrayCollection([]);
 
         return [
-            [['getBankAccounts' => [], 'getBankAccountsIncomplete' => []], ReportStatusService::STATE_NOT_STARTED],
-            [['getBankAccounts' => [$account], 'getBankAccountsIncomplete' => [$account]], ReportStatusService::STATE_INCOMPLETE],
-            [['getBankAccounts' => [$account], 'getBankAccountsIncomplete' => []], ReportStatusService::STATE_DONE],
+            [['getBankAccounts' => $emptyAccounts, 'getBankAccountsIncomplete' => []], ReportStatusService::STATE_NOT_STARTED],
+            [['getBankAccounts' => $accounts, 'getBankAccountsIncomplete' => $accounts], ReportStatusService::STATE_INCOMPLETE],
+            [['getBankAccounts' => $accounts, 'getBankAccountsIncomplete' => $emptyAccounts], ReportStatusService::STATE_DONE],
         ];
     }
 
     public static function expensesProvider(): array
     {
-        $expense = m::mock(Expense::class);
-
         return [
             [['expensesSectionCompleted' => false], ReportStatusService::STATE_NOT_STARTED],
             [['expensesSectionCompleted' => true], ReportStatusService::STATE_DONE],
@@ -776,13 +774,16 @@ final class ReportStatusServiceTest extends TestCase
         $account2 = m::mock(BankAccount::class);
         $mt1 = m::mock(MoneyTransfer::class);
 
+        $bothAccounts = new ArrayCollection([$account1, $account2]);
+        $noAccounts = new ArrayCollection([]);
+
         return [
-            [['getBankAccounts' => [$account1, $account2], 'getMoneyTransfers' => [], 'getNoTransfersToAdd' => null], ReportStatusService::STATE_NOT_STARTED],
-            [['getBankAccounts' => [$account1, $account2], 'getMoneyTransfers' => [$mt1], 'getNoTransfersToAdd' => null], ReportStatusService::STATE_DONE],
-            [['getBankAccounts' => [$account1, $account2], 'getMoneyTransfers' => [], 'getNoTransfersToAdd' => true], ReportStatusService::STATE_DONE],
+            [['getBankAccounts' => $bothAccounts, 'getMoneyTransfers' => [], 'getNoTransfersToAdd' => null], ReportStatusService::STATE_NOT_STARTED],
+            [['getBankAccounts' => $bothAccounts, 'getMoneyTransfers' => [$mt1], 'getNoTransfersToAdd' => null], ReportStatusService::STATE_DONE],
+            [['getBankAccounts' => $bothAccounts, 'getMoneyTransfers' => [], 'getNoTransfersToAdd' => true], ReportStatusService::STATE_DONE],
             // less than 2 accounts => done
-            [['getBankAccounts' => []], ReportStatusService::STATE_DONE],
-            [['getBankAccounts' => [$account1]], ReportStatusService::STATE_DONE],
+            [['getBankAccounts' => $noAccounts], ReportStatusService::STATE_DONE],
+            [['getBankAccounts' => new ArrayCollection([$account1])], ReportStatusService::STATE_DONE],
         ];
     }
 

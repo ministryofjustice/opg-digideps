@@ -117,7 +117,7 @@ class ClientControllerTest extends AbstractTestController
         self::$pa1Client1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client1', 'setCaseNumber' => 'pa000001']);
         self::$pa1Client1Report1 = self::fixtures()->createReport(self::$pa1Client1);
 
-        $org = self::fixtures()->createOrganisation('Example', '' . Uuid::uuid4() . 'example.org', true);
+        $org = self::fixtures()->createOrganisation('Example', '' . Uuid::uuid4() . '@example.org', true);
         self::fixtures()->flush();
         self::fixtures()->addClientToOrganisation(self::$pa1Client1->getId(), $org->getId());
         self::fixtures()->addUserToOrganisation(self::$pa1->getId(), $org->getId());
