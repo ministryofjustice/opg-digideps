@@ -4,7 +4,6 @@ namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
 use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\Report\Checklist;
-use OPG\Digideps\Backend\Entity\Report\ChecklistInformation;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Fee;
 use OPG\Digideps\Backend\Entity\Report\Report;
@@ -36,9 +35,7 @@ class ReportControllerTest extends AbstractTestController
     private static $pa1Client1;
     private static $pa1Client1Report1;
     private static $pa1Client2;
-    private static $pa1Client2Report1;
     private static $pa1Client3;
-    private static $pa1Client3Report1;
     private static $pa2Client1;
     private static $pa2Client1Report1;
     private static $pa3Client1;
@@ -142,9 +139,10 @@ class ReportControllerTest extends AbstractTestController
         self::$pa1Client1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client1', 'setCaseNumber' => '11111111']);
         self::$pa1Client1Report1 = self::fixtures()->createReport(self::$pa1Client1, ['setType' => Report::PA_PFA_HIGH_ASSETS_TYPE]);
         self::$pa1Client2 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client2', 'setCaseNumber' => '22222222']);
-        self::$pa1Client2Report1 = self::fixtures()->createReport(self::$pa1Client2, ['setType' => Report::PA_PFA_HIGH_ASSETS_TYPE]);
         self::$pa1Client3 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client3', 'setCaseNumber' => '33333333']);
-        self::$pa1Client3Report1 = self::fixtures()->createReport(self::$pa1Client3, ['setType' => Report::PA_PFA_HIGH_ASSETS_TYPE]);
+
+        self::fixtures()->createReport(self::$pa1Client2, ['setType' => Report::PA_PFA_HIGH_ASSETS_TYPE]);
+        self::fixtures()->createReport(self::$pa1Client3, ['setType' => Report::PA_PFA_HIGH_ASSETS_TYPE]);
 
         // pa 2
         self::$pa2Admin = self::fixtures()->getRepo(User::class)->findOneByEmail('pa_admin@example.org');
@@ -221,7 +219,7 @@ class ReportControllerTest extends AbstractTestController
 
         // assert creation
         $report = self::fixtures()->getReportById($reportId);
-        /* @var $report Report */
+
         $this->assertEquals(self::$client3->getId(), $report->getClient()->getId());
 
         $currentYear = date('Y');
@@ -376,8 +374,6 @@ class ReportControllerTest extends AbstractTestController
         self::fixtures()->persist($document)->flush();
         $this->assertEquals(false, $report->getSubmitted());
 
-        $url = '/report/' . self::$reportEdit->getId() . '/submit';
-
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
@@ -390,7 +386,7 @@ class ReportControllerTest extends AbstractTestController
 
         // assert account created with transactions
         $report = self::fixtures()->clear()->getReportById(self::$reportEdit->getId());
-        /* @var $report Report */
+
         $this->assertEquals(true, $report->getSubmitted());
         $this->assertEquals(self::$deputy1->getId(), $report->getSubmittedBy()->getId());
         $this->assertEquals('only_deputy', $report->getAgreedBehalfDeputy());
@@ -667,6 +663,7 @@ class ReportControllerTest extends AbstractTestController
         $q = http_build_query(['groups' => [
             'action-more-info',
         ]]);
+
         $data = $this->assertJsonRequest('GET', $url . '?' . $q, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
@@ -843,10 +840,11 @@ class ReportControllerTest extends AbstractTestController
         ])['data']['checklist'];
 
         // assert creation
-        /* @var $report Report */
         $report = self::fixtures()->getReportById($reportId);
-        /* @var $checklist Checklist */
+
+        /* @var Checklist $checklist */
         $checklist = $report->getChecklist();
+
         $this->assertEquals($checklistId, $checklist->getId());
         $this->assertEquals('yes', $checklist->getReportingPeriodAccurate());
         $this->assertEquals('1', $checklist->getContactDetailsUptoDate());
@@ -961,13 +959,11 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());
 
         // assert checklist information created
-        /* @var $checklist Checklist */
         $checklistInfo = $checklist->getChecklistInformation();
         $this->assertCount(1, $checklistInfo);
 
         // assert checklist information saved correctly
         $checklistInfo = $checklistInfo[0];
-        /* @var $checklistInfo ChecklistInformation * */
         $this->assertEquals($checklist->getId(), $checklistInfo->getChecklist()->getId());
         $this->assertNotEmpty($checklistInfo->getId());
         $this->assertNotEmpty($checklistInfo->getCreatedBy());
@@ -1046,9 +1042,7 @@ class ReportControllerTest extends AbstractTestController
         ])['data']['checklist'];
 
         // assert creation
-        /* @var $report Report */
         $report = self::fixtures()->getReportById($reportId);
-        /* @var $checklist Checklist */
         $checklist = $report->getChecklist();
 
         $this->assertEquals($checklistId, $checklist->getId());
@@ -1072,14 +1066,11 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('for-review', $checklist->getFinalDecision());
 
         // assert checklist information created
-        /* @var $checklist Checklist */
-        $checklist = $report->getChecklist();
         $checklistInfo = $checklist->getChecklistInformation();
         $this->assertCount(1, $checklistInfo);
 
         // assert checklist information saved correctly
         $checklistInfo = $checklistInfo[0];
-        /* @var $checklistInfo ChecklistInformation * */
         $this->assertEquals($checklist->getId(), $checklistInfo->getChecklist()->getId());
         $this->assertNotEmpty($checklistInfo->getId());
         $this->assertNotEmpty($checklistInfo->getCreatedBy());
@@ -1111,8 +1102,7 @@ class ReportControllerTest extends AbstractTestController
         self::assertCount(0, $return['data']);
     }
 
-    /** @test */
-    public function refreshReportCache(): void
+    public function testRefreshReportCache(): void
     {
         $initialCache = self::$report1->getSectionStatusesCached();
         self::assertEquals(['state' => 'not-started', 'nOfRecords' => 0], $initialCache['documents']);

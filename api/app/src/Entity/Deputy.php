@@ -1,180 +1,136 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity;
 
-use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
-use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
-use OPG\Digideps\Backend\v2\Registration\DTO\OrgDeputyshipDto;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
+use OPG\Digideps\Backend\Repository\DeputyRepository;
+use OPG\Digideps\Backend\v2\Registration\DTO\OrgDeputyshipDto;
 
-/**
- * Deputy.
- *
- * @ORM\Table(name="deputy", indexes={@ORM\Index(name="deputy_uid_idx", columns={"deputy_uid"})})
- *
- * @ORM\Entity(repositoryClass="OPG\Digideps\Backend\Repository\DeputyRepository")
- *
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Table(name: 'deputy')]
+#[ORM\Index(columns: ['deputy_uid'], name: 'deputy_uid_idx')]
+#[ORM\Entity(repositoryClass: DeputyRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Deputy
 {
     use CreateUpdateTimestamps;
 
-    /**
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="deputy_id_seq", allocationSize=1, initialValue=1)
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'deputy_id_seq', allocationSize: 1, initialValue: 1)]
     private int $id;
 
     /**
      * Holds the deputy the client belongs to
      * Loaded from the CSV upload.
      *
-     * @var ArrayCollection<int, Client>
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Client", mappedBy="deputy")
-     *
-     * @ORM\JoinColumn(name="id", referencedColumnName="deputy_id", onDelete="CASCADE")
+     * @var Collection<int, Client>
      */
     #[JMS\Exclude]
+    #[ORM\JoinColumn(name: 'id', referencedColumnName: 'deputy_id', onDelete: 'CASCADE')]
+    #[ORM\OneToMany(mappedBy: 'deputy', targetEntity: Client::class)]
     private Collection $clients;
 
-    /**
-     * @ORM\Column(name="deputy_uid", type="string", length=20, nullable=false, unique=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    #[ORM\Column(name: 'deputy_uid', type: 'string', length: 20, unique: true, nullable: false)]
     private string $deputyUid;
 
     /**
      * @see DeputyType
-     *
-     * @ORM\Column(name="deputy_type", type="string", length=3, nullable=false)
      */
+    #[ORM\Column(name: 'deputy_type', type: 'string', length: 3, nullable: false)]
     private string $deputyType;
 
-    /**
-     * @ORM\Column(name="firstname", type="string", length=100, nullable=false)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    #[ORM\Column(name: 'firstname', type: 'string', length: 100, nullable: false)]
     private string $firstname;
 
-    /**
-     * @ORM\Column(name="lastname", type="string", length=100, nullable=false)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    #[ORM\Column(name: 'lastname', type: 'string', length: 100, nullable: false)]
     private string $lastname;
 
-    /**
-     * @ORM\Column(name="email1", type="string", length=60, nullable=false, unique=false)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    #[ORM\Column(name: 'email1', type: 'string', length: 60, unique: false, nullable: false)]
     private string $email1;
 
-    /**
-     * @ORM\Column(name="email2", type="string", length=60, nullable=true, unique=false)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    #[ORM\Column(name: 'email2', type: 'string', length: 60, unique: false, nullable: true)]
     private ?string $email2 = null;
 
-    /**
-     * @ORM\Column(name="email3", type="string", length=60, nullable=true, unique=false)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    #[ORM\Column(name: 'email3', type: 'string', length: 60, unique: false, nullable: true)]
     private ?string $email3 = null;
 
-    /**
-     * @ORM\Column(name="address1", type="string", length=200, nullable=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    #[ORM\Column(name: 'address1', type: 'string', length: 200, nullable: true)]
     private ?string $address1 = null;
 
-    /**
-     * @ORM\Column(name="address2", type="string", length=200, nullable=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    #[ORM\Column(name: 'address2', type: 'string', length: 200, nullable: true)]
     private ?string $address2 = null;
 
-    /**
-     * @ORM\Column(name="address3", type="string", length=200, nullable=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    #[ORM\Column(name: 'address3', type: 'string', length: 200, nullable: true)]
     private ?string $address3 = null;
 
-    /**
-     * @ORM\Column(name="address4", type="string", length=200, nullable=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    #[ORM\Column(name: 'address4', type: 'string', length: 200, nullable: true)]
     private ?string $address4 = null;
 
-    /**
-     * @ORM\Column(name="address5", type="string", length=200, nullable=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    #[ORM\Column(name: 'address5', type: 'string', length: 200, nullable: true)]
     private ?string $address5 = null;
 
-    /**
-     * @ORM\Column(name="address_postcode", type="string", length=10, nullable=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    #[ORM\Column(name: 'address_postcode', type: 'string', length: 10, nullable: true)]
     private ?string $addressPostcode = null;
 
-    /**
-     * @ORM\Column(name="address_country", type="string", length=10, nullable=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['user', 'team', 'report-submitted-by', 'deputy'])]
+    #[ORM\Column(name: 'address_country', type: 'string', length: 10, nullable: true)]
     private ?string $addressCountry = null;
 
-    /**
-     * @ORM\Column(name="phone_main", type="string", length=20, nullable=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    #[ORM\Column(name: 'phone_main', type: 'string', length: 20, nullable: true)]
     private ?string $phoneMain = null;
 
-    /**
-     * @ORM\Column(name="phone_alternative", type="string", length=20, nullable=true)
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report-submitted-by', 'deputy'])]
+    #[ORM\Column(name: 'phone_alternative', type: 'string', length: 20, nullable: true)]
     private ?string $phoneAlternative = null;
 
-    /**
-     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\User", inversedBy="deputy", cascade={"remove", "persist"})
-     *
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", onDelete="cascade")
-     */
     #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
     #[JMS\Groups(['deputy-user'])]
+    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'cascade')]
+    #[ORM\OneToOne(inversedBy: 'deputy', targetEntity: User::class, cascade: ['remove', 'persist'])]
     private ?User $user = null;
 
     /**
-     * @var ArrayCollection<int, CourtOrderDeputy>
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\CourtOrderDeputy", mappedBy="deputy", cascade={"persist", "remove"})
+     * @var Collection<int, CourtOrderDeputy>
      */
+    #[ORM\OneToMany(mappedBy: 'deputy', targetEntity: CourtOrderDeputy::class, cascade: ['persist', 'remove'])]
     private Collection $courtOrderDeputyRelationships;
 
     public function __construct()
@@ -196,7 +152,9 @@ class Deputy
 
     public function getDeputyType(): DeputyType
     {
-        return DeputyType::tryFrom(strtoupper($this->deputyType)) ?? $this->getUser()?->deriveDeputyType() ?? DeputyType::LAY;
+        return DeputyType::tryFrom(strtoupper($this->deputyType))
+            ?? $this->getUser()?->deriveDeputyType()
+            ?? DeputyType::LAY;
     }
 
     public function setDeputyType(DeputyType $deputyType): self

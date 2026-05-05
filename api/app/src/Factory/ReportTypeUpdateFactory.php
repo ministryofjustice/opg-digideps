@@ -77,7 +77,7 @@ readonly class ReportTypeUpdateFactory implements DataFactoryInterface
             $reportId = $report->getId();
 
             /** @var CourtOrder[] $courtOrders */
-            $courtOrders = $report->getCourtOrders()->toArray();
+            $courtOrders = $report->getActiveCourtOrders();
 
             $currentReportType = ReportType::tryFrom($report->getType());
             $possibleReportType = ReportTypeService::determineReportType($courtOrders);

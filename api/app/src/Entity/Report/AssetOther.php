@@ -1,45 +1,38 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report;
 
-use OPG\Digideps\Backend\Entity\AssetInterface;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\Entity\AssetInterface;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 class AssetOther extends Asset implements AssetInterface
 {
     /**
      * @var string type of the asset
      *             Vehicles | Jewellery etc...
      *             (needs refactor into an enum, as it originally was a freetext)
-     *
-     * @JMS\Groups({"asset"})
-     *
-     * @ORM\Column(name="title", type="string", length=100, nullable=true)
      */
+    #[JMS\Groups(['asset'])]
+    #[ORM\Column(name: 'title', type: 'string', length: 100, nullable: true)]
     private $title;
 
     /**
      * @var string more info about asset
-     *
-     * @JMS\Groups({"asset"})
-     *
-     * @ORM\Column(name="description", type="text", nullable=true)
      */
+    #[JMS\Groups(['asset'])]
+    #[ORM\Column(name: 'description', type: 'text', nullable: true)]
     private $description;
 
     /**
      * @var \DateTime
-     *
-     * @JMS\Type("DateTime")
-     *
-     * @JMS\Groups({"asset"})
-     *
-     * @ORM\Column(name="valuation_date", type="date", nullable=true)
      */
+    #[JMS\Type('DateTime')]
+    #[JMS\Groups(['asset'])]
+    #[ORM\Column(name: 'valuation_date', type: 'date', nullable: true)]
     private $valuationDate;
 
     /**
@@ -112,13 +105,10 @@ class AssetOther extends Asset implements AssetInterface
         return $this->title;
     }
 
-    /**
-     * @JMS\VirtualProperty
-     *
-     * @JMS\SerializedName("type")
-     *
-     * @JMS\Groups({"asset"})
-     */
+
+    #[JMS\VirtualProperty]
+    #[JMS\SerializedName('type')]
+    #[JMS\Groups(['asset'])]
     public function getAssetType()
     {
         return 'other';
