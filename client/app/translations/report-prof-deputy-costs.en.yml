@@ -117,6 +117,8 @@ breakdown:
         label: Other
         moreInformation: Give details of any other costs
         moreInformationLabelSummary: Details of other costs
+        isOptional: This field is only required if you have entered an amount in the other expenses field
+        isRequired: This field is required as you have entered an amount in the other expenses field
 
 summaryPage:
   htmlTitle: "Deputy costs - Complete the deputy report | GOV.UK"

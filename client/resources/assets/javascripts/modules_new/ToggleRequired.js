@@ -1,9 +1,11 @@
 /**
- * An component which makes one input/textarea optional or required,
+ * A component which makes one input/textarea optional or required,
  * depending on whether another input/textarea has a value set.
  *
  * The target field should not be marked with required=false, as the required
  * attribute and "optional" label are handled by this component.
+ *
+ * See breakdown.html.twig for an example of usage.
  */
 const ToggleRequired = {
   init: function(document) {
@@ -21,12 +23,15 @@ const ToggleRequired = {
         return
       }
 
-      // span element inside the label for the "(optional)" suffix
+      // span element inside the label for the "(optional)" suffix;
+      // this is added/removed rather than hidden, as hiding it will mean
+      // it is still visible to assistive technologies
       let optionalSpan = document.createElement('span')
       optionalSpan.innerText = optionalLabelSuffix.trim()
 
       // aria-live area for notifying assistive technologies when the
-      // required/optional status of the target field changes
+      // required/optional status of the target field changes;
+      // this is permanently included on the page
       let toggleMessage = document.createElement('span')
       toggleMessage.setAttribute('aria-live', 'polite')
       toggleMessage.classList.add('visually-hidden')

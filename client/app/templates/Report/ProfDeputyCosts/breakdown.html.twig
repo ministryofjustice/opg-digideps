@@ -26,29 +26,37 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
-    {% for profDeputyOtherCost in form.profDeputyOtherCosts %}
-        <div class="js-toggle-required" data-optional-label-suffix="{{ ' ' ~ ('optional' | trans({}, 'common')) }}"
-             data-optional-message="This field is only required if you have entered an amount in the other expenses field"
-             data-required-message="This field is required as you have entered an amount in the other expenses field">
+        {% for profDeputyOtherCost in form.profDeputyOtherCosts %}
+            {% set toggleRequired = profDeputyOtherCost.moreDetails is defined %}
+            {% set transKey = page ~ '.form.entries.' ~ profDeputyOtherCost.profDeputyOtherCostTypeId.vars.value %}
 
-            {{ form_row(profDeputyOtherCost.profDeputyOtherCostTypeId) }}
+            <div
+                {% if toggleRequired %}
+                    class="js-toggle-required"
+                    data-optional-label-suffix="{{ ' ' ~ ('optional' | trans({}, 'common')) }}"
+                    data-optional-message="{{ (transKey ~ '.isOptional') | trans }}"
+                    data-required-message="{{ (transKey ~ '.isRequired') | trans }}"
+                {% endif %}
+            >
 
-            {{ form_input(profDeputyOtherCost.amount, 'amount', {
-                'inputPrefix' : '£',
-                'inputClass' : 'govuk-!-width-one-quarter js-format-currency js-toggle-required-trigger',
-                'labelText': (page ~ '.form.entries.' ~ profDeputyOtherCost.profDeputyOtherCostTypeId.vars.value ~ '.label') | trans
-            }) }}
+                {{ form_row(profDeputyOtherCost.profDeputyOtherCostTypeId) }}
 
-            {% if profDeputyOtherCost.moreDetails is defined %}
-                {{ form_input(profDeputyOtherCost.moreDetails, 'moreDetails', {
-                    'labelText': (page ~ '.form.entries.' ~ profDeputyOtherCost.profDeputyOtherCostTypeId.vars.value ~ '.moreInformation') | trans,
-                    'formGroupClass': 'js-toggle-required-target'
+                {{ form_input(profDeputyOtherCost.amount, 'amount', {
+                    'inputPrefix' : '£',
+                    'inputClass' : 'govuk-!-width-one-quarter js-format-currency js-toggle-required-trigger',
+                    'labelText': (transKey ~ '.label') | trans
                 }) }}
-            {% endif %}
-        </div>
-    {% endfor %}
 
-    {{ macros.saveAndContinueButton(form.save) }}
+                {% if toggleRequired %}
+                    {{ form_input(profDeputyOtherCost.moreDetails, 'moreDetails', {
+                        'labelText': (transKey ~ '.moreInformation') | trans,
+                        'formGroupClass': 'js-toggle-required-target'
+                    }) }}
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        {{ macros.saveAndContinueButton(form.save) }}
 
     {{ form_end(form) }}
 
