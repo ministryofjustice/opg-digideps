@@ -301,7 +301,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $deletionProtection;
 
     #[JMS\Type('OPG\Digideps\Backend\Entity\Deputy')]
-    #[ORM\OneToOne(mappedBy: 'user', targetEntity: Deputy::class, cascade: ['persist'])]
+    #[ORM\OneToOne(mappedBy: 'user', targetEntity: Deputy::class)]
     private ?Deputy $deputy;
 
     /**

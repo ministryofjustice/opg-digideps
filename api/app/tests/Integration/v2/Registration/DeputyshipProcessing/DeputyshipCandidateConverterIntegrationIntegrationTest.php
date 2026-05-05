@@ -62,6 +62,7 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
 
         $deputy = new Deputy();
         $deputy->setDeputyType(DeputyType::LAY);
+        $deputy->setOrganisation(null);
         $deputy->setFirstname('Alf');
         $deputy->setLastname('Alf');
         $deputy->setEmail1('alf@notarealemail.com');
@@ -121,6 +122,7 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
 
         $deputy = new Deputy();
         $deputy->setDeputyType(DeputyType::LAY);
+        $deputy->setOrganisation(null);
         $deputy->setFirstname('Vev');
         $deputy->setLastname('Alfome');
         $deputy->setEmail1('vev@notarealemail.com');

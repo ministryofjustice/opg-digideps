@@ -295,13 +295,24 @@ class FixtureController extends AbstractController
             throw new \InvalidArgumentException('Deputy UID is missing for user ' . $user->getId());
         }
 
+        $deputyType = $user->deriveDeputyType() ?? DeputyType::LAY;
+        $organisation = null;
+        if ($deputyType !== DeputyType::LAY) {
+            /**
+             * @var OrganisationRepository $repository
+             */
+            $repository = $this->em->getRepository(Organisation::class);
+            $organisation = $repository->findByEmailIdentifier($user->getEmail());
+        }
+
         return new Deputy()
             ->setDeputyUid((string) $uid)
             ->setDeputyType($user->deriveDeputyType() ?? DeputyType::LAY)
             ->setUser($user)
             ->setEmail1($user->getEmail())
             ->setFirstname($user->getFirstname())
-            ->setLastname($user->getLastname());
+            ->setLastname($user->getLastname())
+            ->setOrganisation($organisation);
     }
 
     private function generateCourtOrder(Client $client, string $reportType): CourtOrder
@@ -432,15 +443,26 @@ class FixtureController extends AbstractController
 
     private function buildDeputy(User $deputy, array $fromRequest): Deputy
     {
+        $deputyType = $deputy->deriveDeputyType() ?? DeputyType::LAY;
+        $organisation = null;
+        if ($deputyType !== DeputyType::LAY) {
+            /**
+             * @var OrganisationRepository $repository
+             */
+            $repository = $this->em->getRepository(Organisation::class);
+            $organisation = $repository->findByEmailIdentifier($deputy->getEmail());
+        }
+
         $deputy = new Deputy()
             ->setFirstname($deputy->getFirstname())
             ->setLastname($deputy->getLastname())
-            ->setDeputyType($deputy->deriveDeputyType() ?? DeputyType::LAY)
+            ->setDeputyType($deputyType)
             ->setEmail1($deputy->getEmail())
             ->setDeputyUid('70' . str_pad($fromRequest['caseNumber'] . mt_rand(1, 100), 10))
             ->setAddress1($deputy->getAddress1())
             ->setAddressPostcode($deputy->getAddressPostcode())
-            ->setPhoneMain($deputy->getPhoneMain());
+            ->setPhoneMain($deputy->getPhoneMain())
+            ->setOrganisation($organisation);
 
         $this->em->persist($deputy);
 
@@ -665,12 +687,23 @@ class FixtureController extends AbstractController
             $user = $this->userRepository->findOneBy(['email' => $userEmail]);
 
             if ($user) {
+                $deputyType = $user->deriveDeputyType() ?? DeputyType::LAY;
+                $organisation = null;
+                if ($deputyType !== DeputyType::LAY) {
+                    /**
+                     * @var OrganisationRepository $repository
+                     */
+                    $repository = $this->em->getRepository(Organisation::class);
+                    $organisation = $repository->findByEmailIdentifier($user->getEmail());
+                }
+
                 $deputy = new Deputy()
                     ->setDeputyUid(rand(8, 8))
-                    ->setDeputyType($user->deriveDeputyType() ?? DeputyType::LAY)
+                    ->setDeputyType($deputyType)
                     ->setEmail1($user->getEmail())
                     ->setFirstname($user->getFirstname())
-                    ->setLastname($user->getLastname());
+                    ->setLastname($user->getLastname())
+                    ->setOrganisation($organisation);
 
                 $this->em->persist($deputy);
 

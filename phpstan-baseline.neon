@@ -2659,18 +2659,6 @@ parameters:
 			path: api/app/src/DataFixtures/PAUserFixtures.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\PAUserFixtures\:\:createDeputy\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\PAUserFixtures\:\:createFixture\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\PAUserFixtures\:\:createFixture\(\) has parameter \$data with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -3009,12 +2997,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\ProfUserFixtures\:\:createClient\(\) has parameter \$iteration with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\ProfUserFixtures\:\:createDeputy\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: api/app/src/DataFixtures/ProfUserFixtures.php
 
@@ -8839,12 +8821,6 @@ parameters:
 			path: api/app/src/Service/DeputyService.php
 
 		-
-			message: '#^Parameter \#1 \$email1 of method OPG\\Digideps\\Backend\\Entity\\Deputy\:\:setEmail1\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Service/DeputyService.php
-
-		-
 			message: '#^Parameter \#1 \$haystack of function str_contains expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 4
@@ -10297,30 +10273,6 @@ parameters:
 			path: api/app/src/Transformer/ReportSubmission/ReportSubmissionSummaryTransformer.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Assembler\\ClientAssembler\:\:assembleClientDeputies\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/v2/Assembler/ClientAssembler.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Assembler\\ClientAssembler\:\:assembleClientDeputy\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/v2/Assembler/ClientAssembler.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Assembler\\ClientAssembler\:\:assembleFromLayDeputyshipDto\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/v2/Assembler/ClientAssembler.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Assembler\\ClientAssembler\:\:assembleFromOrgDeputyshipDto\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/v2/Assembler/ClientAssembler.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\v2\\Assembler\\ClientAssembler\:\:setPropertiesFromData\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -10340,18 +10292,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$data of method OPG\\Digideps\\Backend\\v2\\Assembler\\Report\\ReportAssemblerInterface\:\:assembleFromArray\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/v2/Assembler/ClientAssembler.php
-
-		-
-			message: '#^Parameter \#1 \$deputies of method OPG\\Digideps\\Backend\\v2\\DTO\\ClientDto\:\:setDeputies\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/v2/Assembler/ClientAssembler.php
-
-		-
-			message: '#^Parameter \#1 \$deputy of method OPG\\Digideps\\Backend\\v2\\DTO\\ClientDto\:\:setDeputy\(\) expects OPG\\Digideps\\Backend\\v2\\DTO\\DeputyDto, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/v2/Assembler/ClientAssembler.php
@@ -11533,12 +11473,6 @@ parameters:
 			path: api/app/src/v2/Registration/Uploader/LayDeputyshipProcessor.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Registration\\Uploader\\LayDeputyshipProcessor\:\:handleNewClient\(\) should return OPG\\Digideps\\Backend\\Entity\\Client\|null but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/src/v2/Registration/Uploader/LayDeputyshipProcessor.php
-
-		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
 			count: 2
@@ -11677,24 +11611,6 @@ parameters:
 			path: api/app/src/v2/Registration/Uploader/OrgDeputyshipUploader.php
 
 		-
-			message: '#^Cannot call method setDeputy\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
-			message: '#^Cannot call method setOrganisation\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Registration\\Uploader\\OrgDeputyshipUploader\:\:buildClientAndAssociateWithDeputyAndOrg\(\) should return OPG\\Digideps\\Backend\\Entity\\Client but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\v2\\Registration\\Uploader\\OrgDeputyshipUploader\:\:clientHasNewOrgAndDeputy\(\) is unused\.$#'
 			identifier: method.unused
 			count: 1
@@ -11708,12 +11624,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$client of class OPG\\Digideps\\Backend\\Entity\\Report\\Report constructor expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
-			message: '#^Parameter \#1 \$client of method OPG\\Digideps\\Backend\\Entity\\Organisation\:\:addClient\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/v2/Registration/Uploader/OrgDeputyshipUploader.php
@@ -37597,12 +37507,6 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
 		-
-			message: '#^Cannot access offset ''counts'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 11
-			path: api/app/tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
-
-		-
 			message: '#^Cannot access offset ''created_by'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -37648,12 +37552,6 @@ parameters:
 			message: '#^Cannot access offset ''lastname'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: api/app/tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''records'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 8
 			path: api/app/tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
 		-
@@ -39463,18 +39361,6 @@ parameters:
 			path: api/app/tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Factory\\ReportTypeUpdateFactoryIntegrationTest\:\:testProcessCandidates\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Factory\\ReportTypeUpdateFactoryIntegrationTest\:\:testProcessCandidatesDryRun\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
 			message: '#^Parameter \#1 \$action of class OPG\\Digideps\\Backend\\Entity\\StagingSelectedCandidate constructor expects OPG\\Digideps\\Backend\\v2\\Registration\\Enum\\DeputyshipCandidateAction, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -40867,90 +40753,6 @@ parameters:
 			path: api/app/tests/Integration/TestHelpers/OrgDeputyshipDTOTestHelper.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\OrgDeputyshipDTOTestHelper\:\:clientAndDeputyAreAssociated\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\OrgDeputyshipDTOTestHelper\:\:clientAndDeputyAreNotAssociated\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\OrgDeputyshipDTOTestHelper\:\:clientAndOrgAreAssociated\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\OrgDeputyshipDTOTestHelper\:\:clientHasAReportOfType\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\OrgDeputyshipDTOTestHelper\:\:clientWasCreated\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\OrgDeputyshipDTOTestHelper\:\:deputyWasCreated\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\OrgDeputyshipDTOTestHelper\:\:ensureAReportExistsAndIsAssociatedWithClient\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\OrgDeputyshipDTOTestHelper\:\:ensureClientInUploadExists\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\OrgDeputyshipDTOTestHelper\:\:ensureClientInUploadExistsAndHasALayDeputy\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\OrgDeputyshipDTOTestHelper\:\:generateInvalidOrgDeputyshipArray\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\OrgDeputyshipDTOTestHelper\:\:generateSiriusOrgDeputyshipCompressedJson\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\OrgDeputyshipDTOTestHelper\:\:generateSiriusOrgDeputyshipDecompressedJson\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\OrgDeputyshipDTOTestHelper\:\:organisationWasCreated\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\OrgDeputyshipDTOTestHelper\:\:reportTypeHasChanged\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
 			message: '#^Parameter \#1 \$data of function gzcompress expects string, string\|false given\.$#'
 			identifier: argument.type
 			count: 1
@@ -40964,12 +40766,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Deputy\:\:setFirstname\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Parameter \#1 \$json of function json_decode expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/TestHelpers/OrgDeputyshipDTOTestHelper.php
@@ -41653,12 +41449,6 @@ parameters:
 			path: api/app/tests/Integration/v2/Registration/Controller/OrgDeputyshipControllerTest.php
 
 		-
-			message: '#^Parameter \#6 \$content of method Symfony\\Component\\BrowserKit\\AbstractBrowser\:\:request\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/v2/Registration/Controller/OrgDeputyshipControllerTest.php
-
-		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\v2\\Registration\\Controller\\OrgDeputyshipControllerTest\:\:\$headers has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -41901,7 +41691,7 @@ parameters:
 		-
 			message: '#^Cannot call method clear\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
 			identifier: method.nonObject
-			count: 13
+			count: 12
 			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
 
 		-
@@ -41911,15 +41701,9 @@ parameters:
 			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
 
 		-
-			message: '#^Cannot call method first\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
 			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
 			identifier: method.nonObject
-			count: 13
+			count: 12
 			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
 
 		-
@@ -41965,27 +41749,9 @@ parameters:
 			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
-			message: '#^Cannot call method getReports\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
 			message: '#^Cannot call method getRepository\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
 			identifier: method.nonObject
 			count: 15
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
-			message: '#^Cannot call method getType\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 6
 			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
 
 		-
@@ -41998,36 +41764,6 @@ parameters:
 			message: '#^Cannot call method refresh\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
 			identifier: method.nonObject
 			count: 8
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
-			message: '#^Cannot call method setArchivedAt\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
-			message: '#^Cannot call method setCaseNumber\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
-			message: '#^Cannot call method setCourtDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 5
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
-			message: '#^Cannot call method setDeputy\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 10
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
-			message: '#^Cannot call method setOrganisation\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 5
 			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
 
 		-
@@ -42181,12 +41917,6 @@ parameters:
 			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
 
 		-
-			message: '#^Parameter \#1 \$client of static method Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\OrgDeputyshipDTOTestHelper\:\:ensureAReportExistsAndIsAssociatedWithClient\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
 			message: '#^Parameter \#1 \$em of class OPG\\Digideps\\Backend\\v2\\Registration\\Uploader\\OrgDeputyshipUploader constructor expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -42199,21 +41929,9 @@ parameters:
 			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
 
 		-
-			message: '#^Parameter \#1 \$oldReportType of static method Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\OrgDeputyshipDTOTestHelper\:\:reportTypeHasChanged\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 9
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
-			message: '#^Parameter \#2 \$client of static method Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\OrgDeputyshipDTOTestHelper\:\:reportTypeHasChanged\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, mixed given\.$#'
-			identifier: argument.type
-			count: 3
 			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
 
 		-
@@ -42289,21 +42007,9 @@ parameters:
 			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
 
 		-
-			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
 			message: '#^Parameter \#4 \$deputyAssembler of class OPG\\Digideps\\Backend\\v2\\Registration\\Uploader\\OrgDeputyshipUploader constructor expects OPG\\Digideps\\Backend\\v2\\Assembler\\DeputyAssembler, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
-			message: '#^Parameter \#4 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 3
 			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
 
 		-
@@ -42629,12 +42335,6 @@ parameters:
 			identifier: missingType.generics
 			count: 1
 			path: api/app/tests/Unit/Command/UserRetentionPolicyCommandTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Unit\\Domain\\Report\\ReportTypeTest\:\:unexpectedReportTypeReturnsNull\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Unit/Domain/Report/ReportTypeTest.php
 
 		-
 			message: '#^Cannot unset property Tests\\OPG\\Digideps\\Backend\\Unit\\Entity\\Abstracts\\EntityTester\:\:\$entity because it might have hooks in a subclass\.$#'
@@ -44291,18 +43991,6 @@ parameters:
 			identifier: deadCode.unreachable
 			count: 1
 			path: api/app/tests/Unit/Service/ReportStatusServiceTest.php
-
-		-
-			message: '#^Call to method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''TypeError'' and TypeError will always evaluate to true\.$#'
-			identifier: method.alreadyNarrowedType
-			count: 1
-			path: api/app/tests/Unit/Service/ReportTypeServiceTest.php
-
-		-
-			message: '#^Parameter \#1 \$courtOrders of static method OPG\\Digideps\\Backend\\Service\\ReportTypeService\:\:determineReportType\(\) expects array\<OPG\\Digideps\\Backend\\Entity\\CourtOrder\>, array\<int, string\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Unit/Service/ReportTypeServiceTest.php
 
 		-
 			message: '#^Call to an undefined method Symfony\\Component\\DependencyInjection\\Container\:\:shouldReceive\(\)\.$#'
@@ -49171,12 +48859,6 @@ parameters:
 			path: client/app/src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:\$types has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Entity/Report/BankAccount.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:\$typesNotRequiringBankName has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -53587,12 +53269,6 @@ parameters:
 			path: client/app/src/Form/Report/DeputyExpenseType.php
 
 		-
-			message: '#^Cannot call method getType\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Form/Report/DeputyExpenseType.php
-
-		-
 			message: '#^Cannot call method getWishToProvideDocumentation\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -53620,12 +53296,6 @@ parameters:
 			message: '#^Cannot call method getBankAccountOptions\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: client/app/src/Form/Report/GiftType.php
-
-		-
-			message: '#^Cannot call method getType\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: client/app/src/Form/Report/GiftType.php
 
 		-
@@ -53722,12 +53392,6 @@ parameters:
 			message: '#^Cannot call method getBankAccountOptions\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: client/app/src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Cannot call method getType\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: client/app/src/Form/Report/MoneyTransactionType.php
 
 		-
