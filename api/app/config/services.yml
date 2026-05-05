@@ -96,15 +96,11 @@ services:
         class: Gedmo\SoftDeleteable\SoftDeleteableListener
         tags:
             - { name: doctrine.event_subscriber, connection: default }
-        calls:
-            - [setAnnotationReader, ["@annotation_reader"]]
 
     gedmo.listener.timestampable:
         class: Gedmo\Timestampable\TimestampableListener
         tags:
             - { name: doctrine.event_subscriber, connection: default }
-        calls:
-            - [setAnnotationReader, ["@annotation_reader"]]
 
     OPG\Digideps\Backend\DataFixtures\:
         resource: "../src/DataFixtures"
@@ -474,6 +470,9 @@ services:
     OPG\Digideps\Backend\Service\UserDeputyService:
         public: true
 
+    OPG\Digideps\Backend\Factory\ReportTypeUpdateFactory:
+        public: true
+
     preCSVDataFactory:
         class: OPG\Digideps\Backend\Factory\ChainedDataFactory
         public: true
@@ -505,6 +504,10 @@ services:
                   ]
                 - [
                       '@OPG\Digideps\Backend\Factory\MissingReport\MissingReportDataFactory',
+                      "dry-run-only",
+                  ]
+                - [
+                      '@OPG\Digideps\Backend\Factory\ReportTypeUpdateFactory',
                       "dry-run-only",
                   ]
 

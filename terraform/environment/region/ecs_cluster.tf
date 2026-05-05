@@ -40,19 +40,19 @@ locals {
   api_base_variables = [
     {
       name  = "DATABASE_HOSTNAME",
-      value = local.use_new_db ? local.database.endpoint : local.db.endpoint
+      value = local.database.endpoint
     },
     {
       name  = "DATABASE_NAME",
-      value = local.use_new_db ? local.database.name : local.db.name
+      value = local.database.name
     },
     {
       name  = "DATABASE_PORT",
-      value = local.use_new_db ? tostring(local.database.port) : tostring(local.db.port)
+      value = tostring(local.database.port)
     },
     {
       name  = "DATABASE_USERNAME",
-      value = local.use_new_db ? local.database.username : local.db.username
+      value = local.database.username
     },
     {
       name  = "DATABASE_SSL",
@@ -142,15 +142,15 @@ locals {
   api_integration_test_variables = [
     {
       name  = "PGHOST",
-      value = local.use_new_db ? local.database.endpoint : local.db.endpoint
+      value = local.database.endpoint
     },
     {
       name  = "PGDATABASE",
-      value = local.use_new_db ? local.database.name : local.db.name
+      value = local.database.name
     },
     {
       name  = "PGUSER",
-      value = local.use_new_db ? local.database.username : local.db.username
+      value = local.database.username
     },
     {
       name  = "NONADMIN_HOST",
@@ -161,41 +161,21 @@ locals {
   api_single_db_tasks_base_variables = [
     {
       name  = "POSTGRES_DATABASE",
-      value = local.use_new_db ? local.database.name : local.db.name
+      value = local.database.name
     },
     {
       name  = "POSTGRES_HOST",
-      value = local.use_new_db ? local.database.endpoint : local.db.endpoint
+      value = local.database.endpoint
     },
     {
       name  = "POSTGRES_PORT",
-      value = local.use_new_db ? tostring(local.database.port) : tostring(local.db.port)
+      value = tostring(local.database.port)
     },
     {
       name  = "POSTGRES_USER",
-      value = local.use_new_db ? local.database.username : local.db.username
+      value = local.database.username
     }
   ]
-
-  #  To be used as part of the DB switchover process then removed
-  #  api_single_db_tasks_orch_variables = [
-  #    {
-  #      name  = "POSTGRES_DATABASE",
-  #      value = local.database.name
-  #    },
-  #    {
-  #      name  = "POSTGRES_HOST",
-  #      value = local.database.endpoint
-  #    },
-  #    {
-  #      name  = "POSTGRES_PORT",
-  #      value = tostring(local.database.port)
-  #    },
-  #    {
-  #      name  = "POSTGRES_USER",
-  #      value = local.database.username
-  #    }
-  #  ]
 
   fis_template_variables = var.account.environment.fault_injection_experiments_enabled ? [
     { name = "STOP_FRONTEND_TASK_XID", value = module.fault_injection_simulator_experiments[0].ecs_stop_frontend_tasks_template_id }

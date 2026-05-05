@@ -9,7 +9,7 @@ module "disaster_recovery_backup" {
   images                  = local.images
   aws_ecs_cluster_arn     = aws_ecs_cluster.main.arn
   aws_subnet_ids          = data.aws_subnet.application[*].id
-  db                      = local.db
+  db                      = local.database
   aws_vpc_id              = data.aws_vpc.main.id
   logs_kms_key_arn        = data.aws_kms_alias.cloudwatch_application_logs_encryption.arn
   log_retention           = 30
