@@ -51,6 +51,9 @@ class Deputy
     #[ORM\Column(name: 'deputy_type', type: 'string', length: 3, nullable: false)]
     private string $deputyType;
 
+    #[ORM\ManyToOne(targetEntity: Organisation::class)]
+    private ?Organisation $organisation;
+
     #[JMS\Type('string')]
     #[JMS\Groups(['report-submitted-by', 'deputy'])]
     #[ORM\Column(name: 'firstname', type: 'string', length: 100, nullable: false)]
@@ -123,8 +126,7 @@ class Deputy
 
     #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
     #[JMS\Groups(['deputy-user'])]
-    #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'cascade')]
-    #[ORM\OneToOne(inversedBy: 'deputy', targetEntity: User::class, cascade: ['remove', 'persist'])]
+    #[ORM\OneToOne(inversedBy: 'deputy', targetEntity: User::class)]
     private ?User $user = null;
 
     /**
@@ -486,5 +488,15 @@ class Deputy
         }
 
         return $result;
+    }
+
+    public function getOrganisation(): ?Organisation
+    {
+        return $this->organisation;
+    }
+
+    public function setOrganisation(?Organisation $organisation): void
+    {
+        $this->organisation = $organisation;
     }
 }

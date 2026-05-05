@@ -24,6 +24,7 @@ class OrgDeputyshipUploader
     private array $added = ['clients' => [], 'deputies' => [], 'reports' => [], 'organisations' => []];
     private array $updated = ['clients' => [], 'deputies' => [], 'reports' => [], 'organisations' => []];
     private array $changeOrg = [];
+    private ?array $organisationNamesToIdMap = null;
 
     private ?Organisation $currentOrganisation = null;
     private ?Deputy $deputy = null;
@@ -96,6 +97,27 @@ class OrgDeputyshipUploader
         return $uploadResults;
     }
 
+    private function findOrganisationByName(?string $name): ?Organisation
+    {
+        if ($name === null) {
+            return null;
+        }
+        if ($this->organisationNamesToIdMap === null) {
+            $this->organisationNamesToIdMap = array_map(fn(string|int $value): int => (int)$value, $this->em->getConnection()->executeQuery('
+                SELECT name, id
+                FROM organisation
+                WHERE
+                    is_activated
+                    AND deleted_at IS NULL
+            ')->fetchAllKeyValue());
+        }
+        $id = $this->organisationNamesToIdMap[$name] ?? null;
+        if ($id === null) {
+            return null;
+        }
+        return $this->em->getRepository(Organisation::class)->find($id);
+    }
+
     private function handleDeputy(OrgDeputyshipDto $dto): void
     {
         /** @var Deputy $deputy */
@@ -107,6 +129,7 @@ class OrgDeputyshipUploader
 
         if (is_null($deputy)) {
             $deputy = $this->deputyAssembler->assembleFromOrgDeputyshipDto($dto);
+            $deputy->setOrganisation($this->findOrganisationByName($dto->getOrganisationName()));
 
             $this->em->persist($deputy);
             $this->em->flush();
@@ -150,6 +173,13 @@ class OrgDeputyshipUploader
 
                 $updated = true;
             }
+
+            if ($deputy->getOrganisation()?->getName() !== $dto->getOrganisationName()) {
+                $deputy->setOrganisation($this->findOrganisationByName($dto->getOrganisationName()));
+
+                $updated = true;
+            }
+
 
             if ($updated) {
                 $this->em->persist($deputy);
