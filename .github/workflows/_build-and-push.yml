@@ -224,10 +224,13 @@ jobs:
           IMAGE_NAME: ${{ matrix.svc_name }}
           CHECKSUM_TAG: ${{ steps.image_checksum.outputs.checksum_tag }}
         run: |
-          if aws ecr describe-images \
+          IMAGE_COUNT="$(aws ecr batch-get-image \
             --repository-name "digideps/${IMAGE_NAME}" \
             --image-ids imageTag="${CHECKSUM_TAG}" \
-            >/dev/null 2>&1; then
+            --query 'length(images)' \
+            --output text)"
+
+          if [ "${IMAGE_COUNT}" = "1" ]; then
             echo "exists=true" >> "$GITHUB_OUTPUT"
             echo "Existing scanned image found: ${CHECKSUM_TAG}"
           else
@@ -253,6 +256,25 @@ jobs:
         with:
           sarif_file: test-results/snyk-results.sarif
           category: ${{ matrix.svc_name }}
+
+      - name: Move cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+      - name: configure OIDC AWS credentials for ECR push
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.MANAGEMENT_ACCOUNT }}:role/digideps-gh-actions-ecr-push
+          role-session-name: github-actions-ecr-push
+          role-duration-seconds: 900
+          aws-region: eu-west-1
+
+      - uses: aws-actions/amazon-ecr-login@f2e9fc6c2b355c1890b65e6f6f0e2ac3e6e22f78 # v2.1.2
+        id: login_ecr
+        with:
+          registries: ${{ vars.MANAGEMENT_ACCOUNT }}
+          mask-password: "true"
 
       - name: retag existing scanned image
         if: steps.existing_image.outputs.exists == 'true'
@@ -287,25 +309,6 @@ jobs:
               --image-manifest "${MANIFEST}" \
               >/dev/null
           fi
-
-      - name: Move cache
-        run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
-
-      - name: configure OIDC AWS credentials for ECR push
-        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
-        with:
-          role-to-assume: arn:aws:iam::${{ vars.MANAGEMENT_ACCOUNT }}:role/digideps-gh-actions-ecr-push
-          role-session-name: github-actions-ecr-push
-          role-duration-seconds: 900
-          aws-region: eu-west-1
-
-      - uses: aws-actions/amazon-ecr-login@f2e9fc6c2b355c1890b65e6f6f0e2ac3e6e22f78 # v2.1.2
-        id: login_ecr
-        with:
-          registries: ${{ vars.MANAGEMENT_ACCOUNT }}
-          mask-password: "true"
 
       - name: show build tag
         env:
