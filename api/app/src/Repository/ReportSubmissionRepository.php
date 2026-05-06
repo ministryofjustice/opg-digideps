@@ -54,10 +54,10 @@ class ReportSubmissionRepository extends ServiceEntityRepository
         $q = is_string($q) ? strtolower(trim($q)) : '';
         if ($q !== '') {
             $qb->andWhere(implode(' OR ', [
-                // user
+                // user names
                 'LOWER(cb.firstname) LIKE :qLike',
                 'LOWER(cb.lastname) LIKE :qLike',
-                "LOWER(CONCAT(c.firstname, ' ', c.lastname)) LIKE :qLike",
+                "LOWER(CONCAT(cb.firstname, ' ', cb.lastname)) LIKE :qLike",
                 // client names
                 'LOWER(c.firstname) LIKE :qLike',
                 'LOWER(c.lastname) LIKE :qLike',
