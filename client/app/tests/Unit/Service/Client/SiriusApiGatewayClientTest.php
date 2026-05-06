@@ -81,7 +81,10 @@ class SiriusApiGatewayClientTest extends KernelTestCase
      */
     public function testSendReportPdfDocument()
     {
-        $this->setUpReportPdfPactBuilder($this->caseRef);
+        $digidepsReportType = '102';
+        $courtOrderUids = ['11122233', '22332244'];
+
+        $this->setUpReportPdfPactBuilder($this->caseRef, $digidepsReportType, $courtOrderUids);
 
         $this->signer->signRequest(Argument::type(Request::class), 'execute-api')->willReturnArgument(0);
 
@@ -98,7 +101,9 @@ class SiriusApiGatewayClientTest extends KernelTestCase
             $reportSubmissionId,
             $this->fileName,
             null,
-            $this->s3Reference
+            $this->s3Reference,
+            $digidepsReportType,
+            $courtOrderUids,
         );
 
         try {
@@ -115,7 +120,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
         );
     }
 
-    private function setUpReportPdfPactBuilder(string $caseRef)
+    private function setUpReportPdfPactBuilder(string $caseRef, string $digidepsReportType, array $courtOrderUids): void
     {
         $matcher = new Matcher();
         // Create your expected request from the consumer.
@@ -134,6 +139,8 @@ class SiriusApiGatewayClientTest extends KernelTestCase
                             'date_submitted' => $matcher->dateTimeISO8601('2019-06-20T00:00:00+01:00'),
                             'type' => $matcher->regex('PF', 'PF|HW'),
                             'submission_id' => $matcher->integer(9876),
+                            'digideps_report_type' => $digidepsReportType,
+                            'court_order_uids' => $courtOrderUids,
                         ],
                         'file' => [
                             'name' => $this->fileName,
@@ -216,6 +223,8 @@ class SiriusApiGatewayClientTest extends KernelTestCase
                         'type' => 'supportingdocuments',
                         'attributes' => [
                             'submission_id' => $matcher->integer(9876),
+                            'digideps_report_type' => null,
+                            'court_order_uids' => [],
                         ],
                         'file' => [
                             'name' => $this->fileName,
