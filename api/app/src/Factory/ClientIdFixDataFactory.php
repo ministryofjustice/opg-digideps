@@ -19,7 +19,7 @@ class ClientIdFixDataFactory implements DataFactoryInterface
         return 'ClientIdFix';
     }
 
-    public function run(): DataFactoryResult
+    public function run(bool $dryRun): DataFactoryResult
     {
         // while this SQL only queries for court orders where the client ID needs to be updated,
         // we will (for now) also update reports associated with those clients
@@ -56,17 +56,19 @@ class ClientIdFixDataFactory implements DataFactoryInterface
                 $oldClientId = $row['old_client_id'];
                 $newClientId = $row['new_client_id'];
 
-                // update court orders
-                $this->em->getConnection()->executeStatement(
-                    'UPDATE court_order SET client_id = ? WHERE client_id = ?',
-                    [$newClientId, $oldClientId],
-                );
+                if (!$dryRun) {
+                    // update court orders
+                    $this->em->getConnection()->executeStatement(
+                        'UPDATE court_order SET client_id = ? WHERE client_id = ?',
+                        [$newClientId, $oldClientId],
+                    );
 
-                // update reports
-                $this->em->getConnection()->executeStatement(
-                    'UPDATE report SET client_id = ? WHERE client_id = ?',
-                    [$newClientId, $oldClientId],
-                );
+                    // update reports
+                    $this->em->getConnection()->executeStatement(
+                        'UPDATE report SET client_id = ? WHERE client_id = ?',
+                        [$newClientId, $oldClientId],
+                    );
+                }
             }
         } catch (Exception $e) {
             return new DataFactoryResult(errorMessages: ['Error' => ['Database error: ' . $e->getMessage()]]);

@@ -82,9 +82,9 @@ class ReportSubmissionService
     /**
      * Generate the HTML of the report and convert to PDF.
      */
-    public function getPdfBinaryContent(ReportInterface $report, bool $showSummary = false): string|false
+    public function getPdfBinaryContent(ReportInterface $report, bool $showSummary = false, bool $devPreview = false): string|false
     {
-        $html = $this->templating->render('@App/Report/Formatted/formatted_standalone.html.twig', [
+        $html = $this->templating->render($devPreview ? '@App/Report/Rendered/standalone.html.twig' : '@App/Report/Formatted/formatted_standalone.html.twig', [
             'report' => $report,
             'showSummary' => $showSummary,
         ]);

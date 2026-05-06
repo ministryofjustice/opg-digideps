@@ -351,7 +351,7 @@ class ReportController extends AbstractController
      */
     #[Route(path: '/report/{reportId}/review', name: 'report_review')]
     #[Template('@App/Report/Report/review.html.twig')]
-    public function reviewAction(int $reportId): RedirectResponse|array
+    public function reviewAction(Request $request, int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
 
@@ -382,6 +382,7 @@ class ReportController extends AbstractController
             'reportStatus' => $status,
             'backLink' => $backLink,
             'feeTotals' => $report->getFeeTotals(),
+            'devPreview' => $request->query->getString('dev-preview') === 'QED'
         ];
     }
 
@@ -436,10 +437,10 @@ class ReportController extends AbstractController
     }
 
     #[Route(path: '/report/deputyreport-{reportId}.pdf', name: 'report_pdf')]
-    public function pdfViewAction(int $reportId, ReportSubmissionService $reportSubmissionService): Response
+    public function pdfViewAction(Request $request, int $reportId, ReportSubmissionService $reportSubmissionService): Response
     {
         $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
-        $pdfBinary = $reportSubmissionService->getPdfBinaryContent($report);
+        $pdfBinary = $reportSubmissionService->getPdfBinaryContent($report, devPreview: $request->query->getString('dev-preview') === 'QED');
 
         if (false === $pdfBinary) {
             // unable to get the PDF for the report

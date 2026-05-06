@@ -42,7 +42,7 @@ jobs:
           aws ecs update-service --service "api-${TF_WORKSPACE}" --cluster "${TF_WORKSPACE}" --desired-count "${REPLICAS}"
           aws ecs update-service --service "front-${TF_WORKSPACE}" --cluster "${TF_WORKSPACE}" --desired-count "${REPLICAS}"
           aws ecs update-service --service "admin-${TF_WORKSPACE}" --cluster "${TF_WORKSPACE}" --desired-count "${REPLICAS}"
-          aws rds modify-db-cluster --db-cluster-identifier "api-${TF_WORKSPACE}" --serverless-v2-scaling-configuration "MinCapacity=0,MaxCapacity=${ACU},SecondsUntilAutoPause=300"
+          aws rds modify-db-cluster --db-cluster-identifier "digideps-${TF_WORKSPACE}" --serverless-v2-scaling-configuration "MinCapacity=0,MaxCapacity=${ACU},SecondsUntilAutoPause=300"
 
       - name: Unset AWS variables
         if: always()

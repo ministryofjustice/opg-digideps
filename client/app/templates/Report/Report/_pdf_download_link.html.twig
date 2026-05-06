@@ -1,7 +1,12 @@
 {% set translationDomain = "report-display" %}
 {% trans_default_domain translationDomain %}
+{% if devPreview == false %}
+    {% set url = path('report_pdf', {'reportId': report.id }) %}
+{% else %}
+    {% set url = path('report_pdf', {'reportId': report.id, 'dev-preview': 'QED' }) %}
+{% endif %}
 
 <a class="govuk-link single-click-link button-link behat-link-download-pdf js-trackDownloadLink"
-   href="{{ path('report_pdf', {'reportId': report.id}) }}">
+   href="{{ url }}">
     <i class="icon icon-pdf"></i>{{ 'downloadAsPdf' | trans() }}
 </a>

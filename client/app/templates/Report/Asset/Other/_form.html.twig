@@ -5,9 +5,9 @@
 {{ form_input(form.value, 'form.value', {
     'inputPrefix' : '£',
     'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
-} ) }}
+}) }}
 {{ form_input(form.description, 'form.description') }}
-{{ form_known_date(form.valuationDate, 'form.valuationDate') }}
+{{ form_known_date(form.valuationDate, 'form.valuationDate', { required: false }) }}
 {{ form_add_another({
     'addAnother': form.addAnother,
     'thingTranslationKey': 'form.thing'|trans(transOptions, translationDomain),

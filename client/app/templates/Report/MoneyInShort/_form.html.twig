@@ -11,7 +11,7 @@
         'formGroupClass': ' form-group-value'
     }) }}
 
-    {{ form_known_date(form.date, 'form.transactionsIn.date') }}
+    {{ form_known_date(form.date, 'form.transactionsIn.date', { required: false }) }}
 
     {% if form.addAnother %}
         {{ form_add_another({

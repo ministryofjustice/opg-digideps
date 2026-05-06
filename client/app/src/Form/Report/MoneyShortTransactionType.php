@@ -25,6 +25,7 @@ class MoneyShortTransactionType extends AbstractType
                 'input' => 'datetime',
                 'format' => 'dd-MM-yyyy',
                 'invalid_message' => 'Enter a valid date',
+                'required' => false,
             ])
             ->add('save', FormTypes\SubmitType::class);
     }

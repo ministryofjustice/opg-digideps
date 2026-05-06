@@ -52,7 +52,11 @@
 
     <div class="push--bottom">
         <div class="opg-border--secondary">
-            {% include '@App/Report/Formatted/formatted_body.html.twig' %}
+            {% if devPreview == false %}
+                {% include '@App/Report/Formatted/formatted_body.html.twig' %}
+            {% else %}
+                {% include '@App/Report/Rendered/body.html.twig' %}
+            {% endif %}
         </div>
     </div>
 

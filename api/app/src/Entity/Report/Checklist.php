@@ -1,23 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report;
 
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Entity\SynchronisableInterface;
 use OPG\Digideps\Backend\Entity\SynchronisableTrait;
 use OPG\Digideps\Backend\Entity\Traits\ModifyAudit;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\ChecklistRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation as JMS;
 
-/**
- * Checklist.
- *
- * @ORM\Table(name="checklist")
- *
- * @ORM\Entity(repositoryClass=ChecklistRepository::class)
- */
+#[ORM\Table(name: 'checklist')]
+#[ORM\Entity(repositoryClass: ChecklistRepository::class)]
 class Checklist implements SynchronisableInterface
 {
     use ModifyAudit;
@@ -25,334 +23,253 @@ class Checklist implements SynchronisableInterface
 
     /**
      * @var int
-     *
-     * @JMS\Type("integer")
-     *
-     * @JMS\Groups({"report-checklist", "checklist-id"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="checklist_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['report-checklist', 'checklist-id'])]
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'checklist_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
-    /**
-     * @JMS\Type("OPG\Digideps\Backend\Entity\Report\Report")
-     *
-     * @ORM\OneToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="checklist")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE", nullable=false)
-     *
-     * @JMS\Groups({"checklist-report"})
-     */
+    #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Report')]
+    #[JMS\Groups(['checklist-report'])]
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
+    #[ORM\OneToOne(inversedBy: 'checklist', targetEntity: Report::class)]
     private Report $report;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="reporting_period_accurate", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'reporting_period_accurate', type: 'string', length: 3, nullable: true)]
     private $reportingPeriodAccurate;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="contact_details_upto_date", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'contact_details_upto_date', type: 'string', length: 3, nullable: true)]
     private $contactDetailsUptoDate;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="deputy_full_name_accurate_in_sirius", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'deputy_full_name_accurate_in_sirius', type: 'string', length: 3, nullable: true)]
     private $deputyFullNameAccurateInSirius;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="decisions_satisfactory", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'decisions_satisfactory', type: 'string', length: 3, nullable: true)]
     private $decisionsSatisfactory;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="consultations_satisfactory", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'consultations_satisfactory', type: 'string', length: 3, nullable: true)]
     private $consultationsSatisfactory;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="care_arrangements", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'care_arrangements', type: 'string', length: 3, nullable: true)]
     private $careArrangements;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="assets_declared_and_managed", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'assets_declared_and_managed', type: 'string', length: 3, nullable: true)]
     private $assetsDeclaredAndManaged;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="debts_managed", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'debts_managed', type: 'string', length: 3, nullable: true)]
     private $debtsManaged;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="open_closing_balances_match", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'open_closing_balances_match', type: 'string', length: 3, nullable: true)]
     private $openClosingBalancesMatch;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="accounts_balance", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'accounts_balance', type: 'string', length: 3, nullable: true)]
     private $accountsBalance;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="money_movements_acceptable", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'money_movements_acceptable', type: 'string', length: 3, nullable: true)]
     private $moneyMovementsAcceptable;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="deputy_charge_allowed_by_court", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'deputy_charge_allowed_by_court', type: 'string', length: 3, nullable: true)]
     private $deputyChargeAllowedByCourt;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="satisfied_with_pa_expenses", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'satisfied_with_pa_expenses', type: 'string', length: 3, nullable: true)]
     private $satisfiedWithPaExpenses;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="satisfied_with_health_and_lifestyle", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'satisfied_with_health_and_lifestyle', type: 'string', length: 3, nullable: true)]
     private $satisfiedWithHealthAndLifestyle;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="bond_adequate", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'bond_adequate', type: 'string', length: 3, nullable: true)]
     private $bondAdequate;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="bond_order_match_sirius", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'bond_order_match_sirius', type: 'string', length: 3, nullable: true)]
     private $bondOrderMatchSirius;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="future_significant_decisions", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'future_significant_decisions', type: 'string', length: 3, nullable: true)]
     private $futureSignificantDecisions;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="has_deputy_raised_concerns", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'has_deputy_raised_concerns', type: 'string', length: 3, nullable: true)]
     private $hasDeputyRaisedConcerns;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="case_worker_satisified", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'case_worker_satisified', type: 'string', length: 3, nullable: true)]
     private $caseWorkerSatisified;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="payments_match_cost_certificate", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'payments_match_cost_certificate', type: 'string', length: 3, nullable: true)]
     private $paymentsMatchCostCertificate;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="prof_costs_reasonable_and_proportionate", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'prof_costs_reasonable_and_proportionate', type: 'string', length: 3, nullable: true)]
     private $profCostsReasonableAndProportionate;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="has_deputy_overcharged_from_previous_estimates", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'has_deputy_overcharged_from_previous_estimates', type: 'string', length: 3, nullable: true)]
     private $hasDeputyOverchargedFromPreviousEstimates;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="next_billing_estimate_satisfactory", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'next_billing_estimate_satisfactory', type: 'string', length: 3, nullable: true)]
     private $nextBillingEstimatesSatisfactory;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="lodging_summary", type="text", nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'lodging_summary', type: 'text', nullable: true)]
     private $lodgingSummary;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="final_decision", type="string", length=30, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'final_decision', type: 'string', length: 30, nullable: true)]
     private $finalDecision;
 
     /**
-     * @var ArrayCollection
-     *
-     * @JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\ChecklistInformation>")
-     *
-     * @JMS\Groups({"checklist-information"})
-     *
-     * @ORM\OneToMany(targetEntity="OPG\Digideps\Backend\Entity\Report\ChecklistInformation", mappedBy="checklist", cascade={"persist", "remove"})
-     *
-     * @ORM\OrderBy({"createdOn"="DESC"})
+     * @var Collection<int, ChecklistInformation>
      */
+    #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\ChecklistInformation>')]
+    #[JMS\Groups(['checklist-information'])]
+    #[ORM\OneToMany(mappedBy: 'checklist', targetEntity: ChecklistInformation::class, cascade: ['persist', 'remove'])]
+    #[ORM\OrderBy(['createdOn' => 'DESC'])]
     private $checklistInformation;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"checklist-information"})
      */
+    #[JMS\Groups(['checklist-information'])]
     private $furtherInformationReceived;
 
     /**
      * Submitted by.
      *
      * @var User
-     *
-     * @JMS\Type("OPG\Digideps\Backend\Entity\User")
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\User", fetch="EAGER")
-     *
-     * @ORM\JoinColumn(name="submitted_by", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      */
+    #[JMS\Type('OPG\Digideps\Backend\Entity\User')]
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\JoinColumn(name: 'submitted_by', referencedColumnName: 'id', nullable: true, onDelete: 'SET NULL')]
+    #[ORM\ManyToOne(targetEntity: User::class, fetch: 'EAGER')]
     protected $submittedBy;
 
     /**
      * Submitted on.
      *
      * @var \DateTime
-     *
-     * @JMS\Type("DateTime")
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(type="datetime", name="submitted_on", nullable=true)
      */
+    #[JMS\Type('DateTime')]
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'submitted_on', type: 'datetime', nullable: true)]
     protected $submittedOn;
 
     /**
      * @var string
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report-checklist"})
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-checklist'])]
     private $buttonClicked;
 
     /**
-     * @var string|null
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"report-submission", "report-checklist", "checklist-uuid"})
-     *
-     * @ORM\Column(name="opg_uuid", type="string", length=36, nullable=true)
+     * @var ?string
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-submission', 'report-checklist', 'checklist-uuid'])]
+    #[ORM\Column(name: 'opg_uuid', type: 'string', length: 36, nullable: true)]
     private $uuid;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     *
-     * @ORM\Column(name="client_benefits_checked", type="string", length=3, nullable=true)
      */
+    #[JMS\Groups(['report-checklist'])]
+    #[ORM\Column(name: 'client_benefits_checked', type: 'string', length: 3, nullable: true)]
     private $clientBenefitsChecked;
 
     public function __construct(Report $report)
@@ -891,7 +808,7 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @return ArrayCollection
+     * @return Collection<int, ChecklistInformation>
      */
     public function getChecklistInformation()
     {

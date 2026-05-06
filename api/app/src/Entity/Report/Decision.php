@@ -1,81 +1,60 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report;
 
-use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
 
-/**
- * Decisions.
- *
- * @ORM\Table(name="decision")
- *
- * @ORM\Entity
- *
- * @ORM\HasLifecycleCallbacks()
- */
+#[ORM\Table(name: 'decision')]
+#[ORM\Entity]
+#[ORM\HasLifecycleCallbacks]
 class Decision
 {
     use CreateUpdateTimestamps;
 
     /**
      * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="decision_id_seq", allocationSize=1, initialValue=1)
-     *
-     * @JMS\Groups({"decision"})
-     *
-     * @JMS\Type("integer")
      */
+    #[JMS\Groups(['decision'])]
+    #[JMS\Type('integer')]
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'decision_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"decision"})
-     *
-     * @JMS\Type("string")
-     *
-     * @ORM\Column(type="text")
      */
+    #[JMS\Groups(['decision'])]
+    #[JMS\Type('string')]
+    #[ORM\Column(type: 'text')]
     private $description;
 
     /**
      * @var bool
-     *
-     * @JMS\Groups({"decision"})
-     *
-     * @JMS\Type("boolean")
-     *
-     * @ORM\Column(name="client_involved_boolean", type="boolean")
      */
+    #[JMS\Groups(['decision'])]
+    #[JMS\Type('boolean')]
+    #[ORM\Column(name: 'client_involved_boolean', type: 'boolean')]
     private $clientInvolvedBoolean;
 
     /**
      * @var string
-     *
-     * @JMS\Groups({"decision"})
-     *
-     * @JMS\Type("string")
-     *
-     * @ORM\Column(name="client_involved_details", type="text", nullable=true)
      */
+    #[JMS\Groups(['decision'])]
+    #[JMS\Type('string')]
+    #[ORM\Column(name: 'client_involved_details', type: 'text', nullable: true)]
     private $clientInvolvedDetails;
 
     /**
      * @var Report
-     *
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="decisions")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'decisions')]
     private $report;
 
     /**
@@ -110,8 +89,8 @@ class Decision
         $this->clientInvolvedBoolean = (bool) $clientInvolvedBoolean;
     }
 
-    /*
-     * @return boolean
+    /**
+     * @return bool
      */
     public function getClientInvolvedBoolean()
     {
