@@ -116,8 +116,7 @@ trait ReportAssetTrait
             if ($asset instanceof AssetProperty) {
                 $title = 'Property';
             } elseif ($asset instanceof AssetOther) {
-                $title = isset($titleToGroupOverride[$asset->getTitle()]) ?
-                    $titleToGroupOverride[$asset->getTitle()] : $asset->getTitle();
+                $title = $titleToGroupOverride[$asset->getTitle() ?? ''] ?? $asset->getTitle() ?? '';
             }
 
             // add asset into "items" and sum total
