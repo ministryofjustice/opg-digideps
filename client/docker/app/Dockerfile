@@ -1,7 +1,7 @@
 ##############################
 # Stage 1: Base Composer Setup
 ##############################
-FROM composer:2.9.5@sha256:698d3801b2a622ace460c4743c781282fcbcb733a4cbf8b31c44731e846585e8 AS composer
+FROM composer:2.9.7@sha256:dc292c5c0f95f526b051d4c341bf08e7e2b18504c74625e3203d7f123050e318 AS composer
 
 WORKDIR /app
 
@@ -33,7 +33,7 @@ RUN composer install --prefer-dist --no-interaction --no-scripts \
 ##############################
 # Stage 2: Base PHP + Shared Files
 ##############################
-FROM php:8.5-fpm-alpine3.22@sha256:e26486ef72b22800c02eee83807ae22bc9dbad9a26a2c8210a085728ea1e8f66 AS base
+FROM php:8.4.20-fpm-alpine3.22@sha256:f3d02a72df28619294637c339151b1b280af05e982cf8930c234dbf078d057f4 AS base
 
 ARG LOCAL_RESOURCES=${LOCAL_RESOURCES:-"false"}
 
