@@ -68,11 +68,11 @@ class ReportTypeServiceTest extends TestCase
     #[Test]
     public function determineReportTypePassedNonCourtOrderObjectArray(): void
     {
-        try {
-            $sut = ReportTypeService::determineReportType(['123', '456']);
-        } catch (\TypeError $e) {
-            $this->assertInstanceOf(\TypeError::class, $e);
-        }
+        $this->expectException(\TypeError::class);
+        /**
+         * @phpstan-ignore-next-line intentinal misstyping for testing purposes.
+         */
+        ReportTypeService::determineReportType(['123', '456']);
     }
 
     #[Test]
