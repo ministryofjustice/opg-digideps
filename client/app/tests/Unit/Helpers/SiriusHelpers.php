@@ -21,16 +21,19 @@ class SiriusHelpers extends KernelTestCase
         int $submissionId,
         string $fileName,
         ?string $fileContents,
-        ?string $s3Reference
+        ?string $s3Reference,
+        ?string $digidepsReportType,
+        array $courtOrderUids = [],
     ): SiriusDocumentUpload {
         $siriusReportPdfDocumentMetadata = new SiriusReportPdfDocumentMetadata();
-
         $siriusReportPdfDocumentMetadata->reportingPeriodFrom = $startDate;
         $siriusReportPdfDocumentMetadata->reportingPeriodTo = $endDate;
         $siriusReportPdfDocumentMetadata->year = 2018;
         $siriusReportPdfDocumentMetadata->dateSubmitted = $submittedDate;
         $siriusReportPdfDocumentMetadata->type = $orderType;
         $siriusReportPdfDocumentMetadata->submissionId = $submissionId;
+        $siriusReportPdfDocumentMetadata->digidepsReportType = $digidepsReportType;
+        $siriusReportPdfDocumentMetadata->courtOrderUids = $courtOrderUids;
 
         $file = new SiriusDocumentFile()
             ->setName($fileName)
@@ -54,10 +57,13 @@ class SiriusHelpers extends KernelTestCase
         int $submissionId,
         string $fileName,
         ?string $fileContents,
-        ?string $s3Reference
+        ?string $s3Reference,
+        ?string $digidepsReportType,
+        array $courtOrderUids = [],
     ): SiriusDocumentUpload {
         $siriusSupportingDocumentMetadata = new SiriusSupportingDocumentMetadata();
-
+        $siriusSupportingDocumentMetadata->digidepsReportType = $digidepsReportType;
+        $siriusSupportingDocumentMetadata->courtOrderUids = $courtOrderUids;
         $siriusSupportingDocumentMetadata->submissionId = $submissionId;
 
         $file = new SiriusDocumentFile()

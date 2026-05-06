@@ -97,7 +97,8 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->reportSubmissionId,
             $this->fileName,
             null,
-            $this->s3Reference
+            $this->s3Reference,
+            $reportTypeCode
         );
 
         $successResponseBody = ['data' => ['id' => $this->reportPdfSubmissionUuid]];
@@ -108,31 +109,30 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->with($siriusDocumentUpload, '1234567T')
             ->willReturn($successResponse);
 
-        $this->restClient
-            ->expects(self::once())
-            ->method('apiCall')
-            ->with(
-                'put',
-                'report-submission/9876/update-uuid',
-                json_encode(['uuid' => $this->reportPdfSubmissionUuid]),
-                'raw',
-                [],
-                false
-            )
-            ->willReturn(new SymfonyResponse('9876'));
-
-        $this->restClient
-            ->expects(self::once())
-            ->method('apiCall')
-            ->with(
-                'put',
-                'document/6789',
-                json_encode(['syncStatus' => Document::SYNC_STATUS_SUCCESS]),
-                Document::class,
-                [],
-                false
-            )
-            ->willReturn($this->makeDocument());
+        $this->setRestClientExpectations([
+            [
+                'args' => [
+                    'put',
+                    'report-submission/9876/update-uuid',
+                    json_encode(['uuid' => $this->reportPdfSubmissionUuid]),
+                    'raw',
+                    [],
+                    false,
+                ],
+                'return' => new SymfonyResponse('6789')
+            ],
+            [
+                'args' => [
+                    'put',
+                    'document/6789',
+                    json_encode(['syncStatus' => Document::SYNC_STATUS_SUCCESS]),
+                    Document::class,
+                    [],
+                    false
+                ],
+                'return' => new Document(),
+            ]
+        ]);
 
         $sut = new DocumentSyncService(
             $this->siriusApiGatewayClient,
@@ -182,7 +182,8 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->reportSubmissionId,
             $this->fileName,
             null,
-            $this->s3Reference
+            $this->s3Reference,
+            Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS
         );
 
         $failureResponseBody = ['errors' => [0 => ['id' => 'ABC123', 'code' => 'OPGDATA-API-FORBIDDEN']]];
@@ -196,9 +197,11 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->with($siriusDocumentUpload, '1234567T')
             ->willThrowException($requestException);
 
-        $this->errorTranslator->translateApiError(json_encode($failureResponseBody))->willReturn(
-            'OPGDATA-API-FORBIDDEN: Credentials used for integration lack correct permissions'
-        );
+        $this->errorTranslator
+            ->expects(self::once())
+            ->method('translateApiError')
+            ->with(json_encode($failureResponseBody))
+            ->willReturn('OPGDATA-API-FORBIDDEN: Credentials used for integration lack correct permissions');
 
         $this->restClient
             ->expects(self::once())
@@ -256,7 +259,8 @@ class DocumentSyncServiceTest extends KernelTestCase
             $expectedSubmissionIdUsedForSync,
             $this->fileName,
             null,
-            $this->s3Reference
+            $this->s3Reference,
+            Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS
         );
 
         $this->siriusApiGatewayClient
@@ -349,9 +353,11 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->method('sendSupportingDocument')
             ->willThrowException($requestException);
 
-        $this->errorTranslator->translateApiError(json_encode($failureResponseBody))->willReturn(
-            'OPGDATA-API-FORBIDDEN: Credentials used for integration lack correct permissions'
-        );
+        $this->errorTranslator
+            ->expects(self::once())
+            ->method('translateApiError')
+            ->with(json_encode($failureResponseBody))
+            ->willReturn('OPGDATA-API-FORBIDDEN: Credentials used for integration lack correct permissions');
 
         $this->restClient
             ->expects(self::once())
@@ -413,7 +419,8 @@ class DocumentSyncServiceTest extends KernelTestCase
             $this->reportSubmissionId,
             $this->fileName,
             null,
-            $this->s3Reference
+            $this->s3Reference,
+            Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS
         );
 
         $failureResponseBody = ['errors' => [0 => ['id' => 'ABC123', 'code' => 'OPGDATA-API-FORBIDDEN']]];
@@ -427,9 +434,11 @@ class DocumentSyncServiceTest extends KernelTestCase
             ->with($siriusDocumentUpload, '1234567T')
             ->willThrowException($requestException);
 
-        $this->errorTranslator->translateApiError(json_encode($failureResponseBody))->willReturn(
-            'OPGDATA-API-FORBIDDEN: Credentials used for integration lack correct permissions'
-        );
+        $this->errorTranslator
+            ->expects(self::once())
+            ->method('translateApiError')
+            ->with(json_encode($failureResponseBody))
+            ->willReturn('OPGDATA-API-FORBIDDEN: Credentials used for integration lack correct permissions');
 
         $this->restClient
             ->expects(self::once())
@@ -494,7 +503,8 @@ class DocumentSyncServiceTest extends KernelTestCase
             $expectedSubmissionIdUsedForSync,
             'test_.pdf',
             null,
-            $this->s3Reference
+            $this->s3Reference,
+            Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS
         );
 
         $this->siriusApiGatewayClient
@@ -574,5 +584,29 @@ class DocumentSyncServiceTest extends KernelTestCase
         );
 
         $sut->syncDocument($queuedDocumentData);
+    }
+
+    /**
+     * $expectations is structured like this:
+     * [['args' => [arg1, arg2, arg3], 'return' => returnValue], ...]
+     */
+    private function setRestClientExpectations(array $expectations): void
+    {
+        $matcher = self::exactly(count($expectations));
+
+        $this->restClient
+            ->expects($matcher)
+            ->method('apiCall')
+            ->willReturnCallback(function ($parameters) use ($matcher, $expectations) {
+                $invocation = $matcher->getInvocationCount();
+
+                if (!isset($expectations[$invocation])) {
+                    throw new \LogicException('Unexpected number of invocations');
+                }
+
+                self::assertSame($expectations[$invocation]['args'], $parameters);
+
+                return $expectations[$invocation]['return'];
+            });
     }
 }
