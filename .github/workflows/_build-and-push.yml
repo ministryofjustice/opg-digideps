@@ -261,10 +261,11 @@ jobs:
         id: daily_snyk
         env:
           IMAGE_NAME: ${{ matrix.svc_name }}
+          CHECKSUM_TAG: ${{ steps.image_checksum.outputs.checksum_tag }}
         run: |
           TODAY="$(date +'%Y%m%d')"
-          OLD_FILE="/tmp/.buildx-cache/snyk-last-run-${IMAGE_NAME}.txt"
-          NEW_FILE="/tmp/.buildx-cache-new/snyk-last-run-${IMAGE_NAME}.txt"
+          OLD_FILE="/tmp/.buildx-cache/snyk-last-run-${CHECKSUM_TAG}.txt"
+          NEW_FILE="/tmp/.buildx-cache-new/snyk-last-run-${CHECKSUM_TAG}.txt"
 
           mkdir -p /tmp/.buildx-cache-new
 
@@ -276,12 +277,15 @@ jobs:
 
           echo "${TODAY}" > "${NEW_FILE}"
 
+          echo "Image: ${IMAGE_NAME}"
+          echo "Checksum: ${CHECKSUM_TAG}"
+
           if [ "${LAST_RUN}" != "${TODAY}" ]; then
             echo "run=true" >> "$GITHUB_OUTPUT"
-            echo "Last Snyk run was '${LAST_RUN}'. Running Snyk for ${TODAY}."
+            echo "Last Snyk run was '${LAST_RUN}'. Running Snyk scan today for ${IMAGE_NAME} (${CHECKSUM_TAG})"
           else
             echo "run=false" >> "$GITHUB_OUTPUT"
-            echo "Snyk already ran today for ${IMAGE_NAME}."
+            echo "Snyk already ran today for ${IMAGE_NAME} (${CHECKSUM_TAG})"
           fi
 
       - name: Run Snyk Scan
