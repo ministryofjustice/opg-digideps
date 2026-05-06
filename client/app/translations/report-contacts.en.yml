@@ -70,18 +70,18 @@ form:
     label: Why did you ask this person to help you?
     hint: ""
   address:
-    label: Address line 1 (optional)
+    label: Address line 1
   address2:
-    label: Address line 2 (optional)
+    label: Address line 2
     hint: ""
   county:
-    label: County (optional)
+    label: County
     hint: ""
   postcode:
-    label: Postcode (optional)
+    label: Postcode
     hint: ""
   country:
-    label: Country (optional)
+    label: Country
     hint: ""
     defaultOption: Please select ...
   save:
