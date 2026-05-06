@@ -2359,33 +2359,9 @@ parameters:
 			path: src/DataFixtures/LayUserFixtures.php
 
 		-
-			message: '#^Cannot call method setCountry\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Cannot call method setCourtDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
 			message: '#^Cannot call method setDate\(\) on DateTime\|null\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Cannot call method setDeputy\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Cannot call method setPostcode\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: src/DataFixtures/LayUserFixtures.php
 
 		-
@@ -2414,6 +2390,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$coDeputyClientConfirmed of method OPG\\Digideps\\Backend\\Entity\\User\:\:setCoDeputyClientConfirmed\(\) expects bool, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/DataFixtures/LayUserFixtures.php
+
+		-
+			message: '#^Parameter \#1 \$courtDate of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setCourtDate\(\) expects DateTime\|null, DateTime\|false given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/DataFixtures/LayUserFixtures.php
@@ -2665,18 +2647,6 @@ parameters:
 			path: src/DataFixtures/PAUserFixtures.php
 
 		-
-			message: '#^Cannot call method setCountry\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot call method setCourtDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/DataFixtures/PAUserFixtures.php
-
-		-
 			message: '#^Cannot call method setDate\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -2690,12 +2660,6 @@ parameters:
 
 		-
 			message: '#^Cannot call method setOrganisation\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot call method setPostcode\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: src/DataFixtures/PAUserFixtures.php
@@ -2792,6 +2756,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$client of class OPG\\Digideps\\Backend\\Entity\\Report\\Report constructor expects OPG\\Digideps\\Backend\\Entity\\Client, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/DataFixtures/PAUserFixtures.php
+
+		-
+			message: '#^Parameter \#1 \$courtDate of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setCourtDate\(\) expects DateTime\|null, DateTime\|false given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/DataFixtures/PAUserFixtures.php
@@ -3031,18 +3001,6 @@ parameters:
 			path: src/DataFixtures/ProfUserFixtures.php
 
 		-
-			message: '#^Cannot call method setCountry\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot call method setCourtDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/DataFixtures/ProfUserFixtures.php
-
-		-
 			message: '#^Cannot call method setDate\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -3056,12 +3014,6 @@ parameters:
 
 		-
 			message: '#^Cannot call method setOrganisation\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot call method setPostcode\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: src/DataFixtures/ProfUserFixtures.php
@@ -3158,6 +3110,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$client of class OPG\\Digideps\\Backend\\Entity\\Report\\Report constructor expects OPG\\Digideps\\Backend\\Entity\\Client, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/DataFixtures/ProfUserFixtures.php
+
+		-
+			message: '#^Parameter \#1 \$courtDate of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setCourtDate\(\) expects DateTime\|null, DateTime\|false given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/DataFixtures/ProfUserFixtures.php
@@ -3566,24 +3524,6 @@ parameters:
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Client\:\:removeUser\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Client\:\:setAddress\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Client\:\:setAddress2\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Client\:\:setAddress3\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Entity/Client.php
@@ -6937,61 +6877,31 @@ parameters:
 			path: src/FixtureFactory/ClientFactory.php
 
 		-
-			message: '#^Cannot call method setAddress2\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/FixtureFactory/ClientFactory.php
-
-		-
-			message: '#^Cannot call method setAddress3\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/FixtureFactory/ClientFactory.php
-
-		-
-			message: '#^Cannot call method setCountry\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/FixtureFactory/ClientFactory.php
-
-		-
-			message: '#^Cannot call method setCourtDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/FixtureFactory/ClientFactory.php
-
-		-
-			message: '#^Cannot call method setDeputy\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/FixtureFactory/ClientFactory.php
-
-		-
-			message: '#^Cannot call method setOrganisation\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/FixtureFactory/ClientFactory.php
-
-		-
-			message: '#^Cannot call method setPostcode\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/FixtureFactory/ClientFactory.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\FixtureFactory\\ClientFactory\:\:createGenericOrgClient\(\) should return OPG\\Digideps\\Backend\\Entity\\Client but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/FixtureFactory/ClientFactory.php
-
-		-
 			message: '#^Parameter \#1 \$address of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setAddress\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/FixtureFactory/ClientFactory.php
 
 		-
+			message: '#^Parameter \#1 \$address2 of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setAddress2\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/FixtureFactory/ClientFactory.php
+
+		-
+			message: '#^Parameter \#1 \$address3 of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setAddress3\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/FixtureFactory/ClientFactory.php
+
+		-
 			message: '#^Parameter \#1 \$caseNumber of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setCaseNumber\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/FixtureFactory/ClientFactory.php
+
+		-
+			message: '#^Parameter \#1 \$courtDate of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setCourtDate\(\) expects DateTime\|null, DateTime\|false given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/FixtureFactory/ClientFactory.php
@@ -7010,6 +6920,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$phone of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setPhone\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/FixtureFactory/ClientFactory.php
+
+		-
+			message: '#^Parameter \#1 \$postcode of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setPostcode\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/FixtureFactory/ClientFactory.php
@@ -10231,36 +10147,6 @@ parameters:
 			path: src/Service/Validator/RestArrayValidator.php
 
 		-
-			message: '#^Cannot call method addUser\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ClientTestHelper.php
-
-		-
-			message: '#^Cannot call method setAddress2\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ClientTestHelper.php
-
-		-
-			message: '#^Cannot call method setOrganisation\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ClientTestHelper.php
-
-		-
-			message: '#^Cannot call method setPostcode\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ClientTestHelper.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\TestHelpers\\ClientTestHelper\:\:generateClient\(\) should return OPG\\Digideps\\Backend\\Entity\\Client but returns mixed\.$#'
-			identifier: return.type
-			count: 3
-			path: src/TestHelpers/ClientTestHelper.php
-
-		-
 			message: '#^Ternary operator condition is always true\.$#'
 			identifier: ternary.alwaysTrue
 			count: 1
@@ -10417,54 +10303,6 @@ parameters:
 			path: src/Transformer/ReportSubmission/ReportSubmissionSummaryTransformer.php
 
 		-
-			message: '#^Cannot call method setAddress2\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/v2/Assembler/ClientAssembler.php
-
-		-
-			message: '#^Cannot call method setAddress3\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/v2/Assembler/ClientAssembler.php
-
-		-
-			message: '#^Cannot call method setAddress4\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/v2/Assembler/ClientAssembler.php
-
-		-
-			message: '#^Cannot call method setAddress5\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/v2/Assembler/ClientAssembler.php
-
-		-
-			message: '#^Cannot call method setCountry\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/v2/Assembler/ClientAssembler.php
-
-		-
-			message: '#^Cannot call method setCourtDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/v2/Assembler/ClientAssembler.php
-
-		-
-			message: '#^Cannot call method setDateOfBirth\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/v2/Assembler/ClientAssembler.php
-
-		-
-			message: '#^Cannot call method setPostcode\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: src/v2/Assembler/ClientAssembler.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\v2\\Assembler\\ClientAssembler\:\:assembleClientDeputies\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -10532,6 +10370,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$object_or_class of function method_exists expects object\|string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/v2/Assembler/ClientAssembler.php
+
+		-
+			message: '#^Parameter \#1 \$postcode of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setPostcode\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/v2/Assembler/ClientAssembler.php
@@ -42694,12 +42538,6 @@ parameters:
 			message: '#^Cannot call method format\(\) on DateTime\|null\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: tests/Unit/Entity/ClientTest.php
-
-		-
-			message: '#^Cannot call method getAddress\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: tests/Unit/Entity/ClientTest.php
 
 		-
