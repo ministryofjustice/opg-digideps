@@ -7,11 +7,46 @@ namespace OPG\Digideps\Backend\Repository;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
+use Doctrine\DBAL\Result;
 use Doctrine\Persistence\ManagerRegistry;
 use OPG\Digideps\Backend\Entity\Report\Document;
 
 class DocumentRepository extends ServiceEntityRepository
 {
+    private const string DOCUMENTS_SQL = "
+        SELECT docs.*, court_orders.court_order_uids FROM (
+            SELECT d.id as document_id,
+            d.created_on as document_created_on,
+            d.report_submission_id as report_submission_id,
+            d.is_report_pdf as is_report_pdf,
+            d.filename as filename,
+            d.storage_reference as storage_reference,
+            d.report_id,
+            d.sync_attempts as document_sync_attempts,
+            r.start_date as report_start_date,
+            r.end_date as report_end_date,
+            r.submit_date as report_submit_date,
+            r.type as report_type,
+            rs.opg_uuid as opg_uuid,
+            rs.created_on as report_submission_created_on,
+            c1.case_number AS case_number
+            FROM document as d
+            LEFT JOIN report as r on d.report_id = r.id
+            LEFT JOIN report_submission as rs on d.report_submission_id  = rs.id
+            LEFT JOIN client as c1 on r.client_id = c1.id
+            %s
+        ) docs
+        LEFT JOIN (
+            SELECT cor.report_id, STRING_AGG(co.court_order_uid, ',') AS court_order_uids
+            FROM court_order_report cor
+            INNER JOIN court_order co ON cor.court_order_id = co.id
+            GROUP BY cor.report_id
+        ) court_orders
+        ON docs.report_id = court_orders.report_id
+        ORDER BY docs.is_report_pdf DESC, docs.report_submission_id ASC
+        LIMIT %d;
+        ";
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Document::class);
@@ -19,65 +54,26 @@ class DocumentRepository extends ServiceEntityRepository
 
     public function getQueuedDocumentsAndSetToInProgress(int $limit)
     {
-        $queuedDocumentsQuery = "
-        SELECT d.id as document_id,
-        d.created_on as document_created_on,
-        d.report_submission_id as report_submission_id,
-        d.is_report_pdf as is_report_pdf,
-        d.filename as filename,
-        d.storage_reference as storage_reference,
-        d.report_id as report_id,
-        d.sync_attempts as document_sync_attempts,
-        r.start_date as report_start_date,
-        r.end_date as report_end_date,
-        r.submit_date as report_submit_date,
-        r.type as report_type,
-        rs.opg_uuid as opg_uuid,
-        rs.created_on as report_submission_created_on,
-        c1.case_number AS case_number
-        FROM document as d
-        LEFT JOIN report as r on d.report_id = r.id
-        LEFT JOIN report_submission as rs on d.report_submission_id  = rs.id
-        LEFT JOIN client as c1 on r.client_id = c1.id
+        $whereClause = "
         WHERE synchronisation_status='QUEUED'
-        ORDER BY is_report_pdf DESC, report_submission_id ASC
-        LIMIT $limit;";
+        ";
+
+        $queuedDocumentsQuery = sprintf(self::DOCUMENTS_SQL, $whereClause, $limit);
 
         $conn = $this->getEntityManager()->getConnection();
 
         $docStmt = $conn->prepare($queuedDocumentsQuery);
         $result = $docStmt->executeQuery();
 
-        $documents = [];
+        $documents = $this->convertArray($result);
 
-        /** @var string[] $reportIds */
         $reportIds = [];
+        foreach ($documents as $document) {
+            /** @var ?int $reportId */
+            $reportId = $document['report_id'] ?? null;
 
-        // Get all queued documents
-        $results = $result->fetchAllAssociative();
-        foreach ($results as $row) {
-            $documents[$row['document_id']] = [
-                'document_id' => $row['document_id'],
-                'document_created_on' => $row['document_created_on'],
-                'report_submission_id' => $row['report_submission_id'],
-                'report_id' => $row['report_id'],
-                'report_start_date' => $row['report_start_date'],
-                'report_end_date' => $row['report_end_date'],
-                'report_submit_date' => $row['report_submit_date'],
-                'report_type' => $row['report_type'],
-                'is_report_pdf' => $row['is_report_pdf'],
-                'filename' => $row['filename'],
-                'storage_reference' => $row['storage_reference'],
-                'report_submission_uuid' => $row['opg_uuid'],
-                'case_number' => $row['case_number'],
-                'document_sync_attempts' => $row['document_sync_attempts'],
-            ];
-
-            /** @var string $reportId */
-            $reportId = $row['report_id'];
-
-            if (!empty($reportId)) {
-                $reportIds[] = $reportId;
+            if ($reportId !== null) {
+                $reportIds[] = (string) $reportId;
             }
         }
 
@@ -85,7 +81,7 @@ class DocumentRepository extends ServiceEntityRepository
             $reportIdsFilter = array_unique($reportIds);
             $reportIdsString = implode(",", $reportIdsFilter);
 
-            $sql = "SELECT * FROM report_submission WHERE report_id IN ({$reportIdsString}) ORDER BY created_on";
+            $sql = "SELECT * FROM report_submission WHERE report_id IN ($reportIdsString) ORDER BY created_on";
 
             $submissionStmt = $conn->prepare($sql);
             $result = $submissionStmt->executeQuery();
@@ -106,26 +102,7 @@ class DocumentRepository extends ServiceEntityRepository
 
     public function getResubmittableErrorDocumentsAndSetToQueued(string $limit)
     {
-        $resubmittableErrorDocumentsQuery = <<<SQL
-        SELECT d.id AS document_id,
-        d.created_on AS document_created_on,
-        d.report_submission_id AS report_submission_id,
-        d.is_report_pdf AS is_report_pdf,
-        d.filename AS filename,
-        d.storage_reference AS storage_reference,
-        d.report_id AS report_id,
-        d.sync_attempts AS document_sync_attempts,
-        r.start_date AS report_start_date,
-        r.end_date AS report_end_date,
-        r.submit_date AS report_submit_date,
-        r.type AS report_type,
-        rs.opg_uuid AS opg_uuid,
-        rs.created_on AS report_submission_created_on,
-        c1.case_number AS case_number
-        FROM document AS d
-        LEFT JOIN report AS r on d.report_id = r.id
-        LEFT JOIN report_submission AS rs on d.report_submission_id  = rs.id
-        LEFT JOIN client AS c1 on r.client_id = c1.id
+        $whereClause = "
         WHERE
             (
                 d.synchronisation_status='PERMANENT_ERROR'
@@ -143,37 +120,16 @@ class DocumentRepository extends ServiceEntityRepository
                 AND
                 rs.created_on < (CURRENT_DATE - 1)
             )
-        ORDER BY is_report_pdf DESC, report_submission_id ASC
-        LIMIT $limit;
-        SQL;
+        ";
+
+        $resubmittableErrorDocumentsQuery = sprintf(self::DOCUMENTS_SQL, $whereClause, $limit);
 
         $conn = $this->getEntityManager()->getConnection();
 
         $docStmt = $conn->prepare($resubmittableErrorDocumentsQuery);
         $result = $docStmt->executeQuery();
 
-        $documents = [];
-
-        // Get all queued documents
-        $results = $result->fetchAllAssociative();
-        foreach ($results as $row) {
-            $documents[$row['document_id']] = [
-                'document_id' => $row['document_id'],
-                'document_created_on' => $row['document_created_on'],
-                'report_submission_id' => $row['report_submission_id'],
-                'report_id' => $row['report_id'],
-                'report_start_date' => $row['report_start_date'],
-                'report_end_date' => $row['report_end_date'],
-                'report_submit_date' => $row['report_submit_date'],
-                'report_type' => $row['report_type'],
-                'is_report_pdf' => $row['is_report_pdf'],
-                'filename' => $row['filename'],
-                'storage_reference' => $row['storage_reference'],
-                'report_submission_uuid' => $row['opg_uuid'],
-                'case_number' => $row['case_number'],
-                'document_sync_attempts' => $row['document_sync_attempts'],
-            ];
-        }
+        $documents = $this->convertArray($result);
 
         if (count($documents) > 0) {
             $this->setErrorDocumentsToQueued($documents, $conn);
@@ -192,16 +148,16 @@ class DocumentRepository extends ServiceEntityRepository
         $permanentErrorStatus = Document::SYNC_STATUS_PERMANENT_ERROR;
 
         $queuedDocumentsQuery = "
-SELECT
-  COALESCE(SUM(CASE WHEN d.synchronisation_status = '{$queuedStatus}' AND rs.created_on < (NOW() AT TIME ZONE 'Europe/London') - INTERVAL '1 HOUR' THEN 1 ELSE 0 END), 0) AS queued_over_1_hour,
-  COALESCE(SUM(CASE WHEN d.synchronisation_status = '{$inProgressStatus}' AND rs.created_on < (NOW() AT TIME ZONE 'Europe/London') - INTERVAL '1 HOUR' THEN 1 ELSE 0 END), 0) AS in_progress_over_1_hour,
-  COALESCE(SUM(CASE WHEN d.synchronisation_status = '{$temporaryErrorStatus}' THEN 1 ELSE 0 END), 0) AS temporary_error_count,
-  COALESCE(SUM(CASE WHEN d.synchronisation_status = '{$permanentErrorStatus}' THEN 1 ELSE 0 END), 0) AS permanent_error_count
-FROM document d
-INNER JOIN report_submission rs ON d.report_submission_id = rs.id
-WHERE rs.archived is false
-AND d.synchronisation_status IN ('{$queuedStatus}', '{$permanentErrorStatus}', '{$temporaryErrorStatus}', '{$inProgressStatus}')
-";
+            SELECT
+              COALESCE(SUM(CASE WHEN d.synchronisation_status = '{$queuedStatus}' AND rs.created_on < (NOW() AT TIME ZONE 'Europe/London') - INTERVAL '1 HOUR' THEN 1 ELSE 0 END), 0) AS queued_over_1_hour,
+              COALESCE(SUM(CASE WHEN d.synchronisation_status = '{$inProgressStatus}' AND rs.created_on < (NOW() AT TIME ZONE 'Europe/London') - INTERVAL '1 HOUR' THEN 1 ELSE 0 END), 0) AS in_progress_over_1_hour,
+              COALESCE(SUM(CASE WHEN d.synchronisation_status = '{$temporaryErrorStatus}' THEN 1 ELSE 0 END), 0) AS temporary_error_count,
+              COALESCE(SUM(CASE WHEN d.synchronisation_status = '{$permanentErrorStatus}' THEN 1 ELSE 0 END), 0) AS permanent_error_count
+            FROM document d
+            INNER JOIN report_submission rs ON d.report_submission_id = rs.id
+            WHERE rs.archived is false
+            AND d.synchronisation_status IN ('{$queuedStatus}', '{$permanentErrorStatus}', '{$temporaryErrorStatus}', '{$inProgressStatus}')
+        ";
         $conn = $this->getEntityManager()->getConnection();
 
         $failedDocumentStmt = $conn->prepare($queuedDocumentsQuery);
@@ -233,10 +189,11 @@ AND d.synchronisation_status IN ('{$queuedStatus}', '{$permanentErrorStatus}', '
         $status = Document::SYNC_STATUS_PERMANENT_ERROR;
 
         $updateStatusQuery = "
-UPDATE document
-SET synchronisation_status = '$status', synchronisation_error = '$syncErrorMessage'
-WHERE report_submission_id IN ($idsString)
-AND is_report_pdf=false";
+            UPDATE document
+            SET synchronisation_status = '$status', synchronisation_error = '$syncErrorMessage'
+            WHERE report_submission_id IN ($idsString)
+            AND is_report_pdf=false
+        ";
 
         $conn = $this->getEntityManager()->getConnection();
         $stmt = $conn->prepare($updateStatusQuery);
@@ -331,7 +288,7 @@ AND is_report_pdf=false";
         // Extract the uuids from the submissions and assign to the queued documents data array
         foreach ($documents as $docIndex => $document) {
             if (is_null($document['report_submission_uuid'])) {
-                foreach ($reportSubmissions['reports'] as $reportId => $groupedSubmissions) {
+                foreach ($reportSubmissions['reports'] as $groupedSubmissions) {
                     foreach ($groupedSubmissions as $submission) {
                         if ($document['report_submission_id'] === $submission['id']) {
                             $documents[$docIndex]['report_submission_uuid'] = $submission['opg_uuid'];
@@ -380,12 +337,51 @@ AND is_report_pdf=false";
             $idsString = implode(',', $ids);
 
             $updateStatusQuery = "
-UPDATE document
-SET synchronisation_status = 'QUEUED', synchronisation_error = ''
-WHERE id IN ($idsString)";
+                UPDATE document
+                SET synchronisation_status = 'QUEUED', synchronisation_error = ''
+                WHERE id IN ($idsString)
+            ";
+
             $stmt = $connection->prepare($updateStatusQuery);
 
             $stmt->executeQuery();
         }
+    }
+
+    /**
+     * @return array<array<string, mixed>>
+     */
+    private function convertArray(Result $result): array
+    {
+        $results = $result->fetchAllAssociative();
+
+        $documents = [];
+
+        foreach ($results as $row) {
+            /** @var string $courtOrderUids */
+            $courtOrderUids = $row['court_order_uids'] ?? '';
+
+            $courtOrderUidsArray = explode(',', $courtOrderUids);
+
+            $documents[$row['document_id']] = [
+                'document_id' => $row['document_id'],
+                'document_created_on' => $row['document_created_on'],
+                'report_submission_id' => $row['report_submission_id'],
+                'report_id' => $row['report_id'],
+                'report_start_date' => $row['report_start_date'],
+                'report_end_date' => $row['report_end_date'],
+                'report_submit_date' => $row['report_submit_date'],
+                'report_type' => $row['report_type'],
+                'is_report_pdf' => $row['is_report_pdf'],
+                'filename' => $row['filename'],
+                'storage_reference' => $row['storage_reference'],
+                'report_submission_uuid' => $row['opg_uuid'],
+                'case_number' => $row['case_number'],
+                'document_sync_attempts' => $row['document_sync_attempts'],
+                'court_order_uids' => $courtOrderUidsArray,
+            ];
+        }
+
+        return $documents;
     }
 }
