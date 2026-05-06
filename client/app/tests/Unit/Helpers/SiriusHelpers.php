@@ -23,13 +23,14 @@ class SiriusHelpers extends KernelTestCase
         ?string $fileContents,
         ?string $s3Reference
     ): SiriusDocumentUpload {
-        $siriusReportPdfDocumentMetadata = new SiriusReportPdfDocumentMetadata()
-            ->setReportingPeriodFrom($startDate)
-            ->setReportingPeriodTo($endDate)
-            ->setYear(2018)
-            ->setDateSubmitted($submittedDate)
-            ->setType($orderType)
-            ->setSubmissionId($submissionId);
+        $siriusReportPdfDocumentMetadata = new SiriusReportPdfDocumentMetadata();
+
+        $siriusReportPdfDocumentMetadata->reportingPeriodFrom = $startDate;
+        $siriusReportPdfDocumentMetadata->reportingPeriodTo = $endDate;
+        $siriusReportPdfDocumentMetadata->year = 2018;
+        $siriusReportPdfDocumentMetadata->dateSubmitted = $submittedDate;
+        $siriusReportPdfDocumentMetadata->type = $orderType;
+        $siriusReportPdfDocumentMetadata->submissionId = $submissionId;
 
         $file = new SiriusDocumentFile()
             ->setName($fileName)
@@ -55,8 +56,9 @@ class SiriusHelpers extends KernelTestCase
         ?string $fileContents,
         ?string $s3Reference
     ): SiriusDocumentUpload {
-        $siriusSupportingDocumentMetadata = new SiriusSupportingDocumentMetadata()
-            ->setSubmissionId($submissionId);
+        $siriusSupportingDocumentMetadata = new SiriusSupportingDocumentMetadata();
+
+        $siriusSupportingDocumentMetadata->submissionId = $submissionId;
 
         $file = new SiriusDocumentFile()
             ->setName($fileName)
