@@ -1,7 +1,7 @@
 # -------------------------
 # 1) Go builder
 # -------------------------
-FROM golang:1.26.1-alpine3.23@sha256:2389ebfa5b7f43eeafbd6be0c3700cc46690ef842ad962f6c5bd6be49ed82039 AS gobuilder
+FROM golang:1.26.2-alpine3.23@sha256:f85330846cde1e57ca9ec309382da3b8e6ae3ab943d2739500e08c86393a21b1 AS gobuilder
 
 COPY sleep_mode /app/sleep_mode
 WORKDIR /app/sleep_mode
