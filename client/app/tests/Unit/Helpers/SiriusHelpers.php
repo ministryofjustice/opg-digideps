@@ -13,6 +13,9 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 class SiriusHelpers extends KernelTestCase
 {
+    /**
+     * @param string[] $courtOrderUids
+     */
     public static function generateSiriusReportPdfDocumentUpload(
         \DateTime $startDate,
         \DateTime $endDate,
@@ -53,6 +56,9 @@ class SiriusHelpers extends KernelTestCase
             ->setFile($file);
     }
 
+    /**
+     * @param string[] $courtOrderUids
+     */
     public static function generateSiriusSupportingDocumentUpload(
         int $submissionId,
         string $fileName,
