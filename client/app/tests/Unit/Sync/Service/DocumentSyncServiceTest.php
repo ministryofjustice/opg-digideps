@@ -582,6 +582,8 @@ class DocumentSyncServiceTest extends KernelTestCase
     /**
      * $expectations is structured like this:
      * [['args' => [arg1, arg2, arg3], 'return' => returnValue], ...]
+     *
+     * @param list<array{args: list<mixed>, return: mixed}> $expectations
      */
     private function setRestClientExpectations(array $expectations): void
     {
@@ -590,16 +592,19 @@ class DocumentSyncServiceTest extends KernelTestCase
         $this->restClient
             ->expects($matcher)
             ->method('apiCall')
-            ->willReturnCallback(function ($parameters) use ($matcher, $expectations) {
+            ->willReturnCallback(function (array $parameters) use ($matcher, $expectations) {
                 $invocation = $matcher->getInvocationCount();
 
                 if (!isset($expectations[$invocation])) {
                     throw new \LogicException('Unexpected number of invocations');
                 }
 
-                self::assertSame($expectations[$invocation]['args'], $parameters);
+                /** @var array{args: list<mixed>, return: mixed} $expectation */
+                $expectation = $expectations[$invocation];
 
-                return $expectations[$invocation]['return'];
+                self::assertSame($expectation['args'], $parameters);
+
+                return $expectation['return'];
             });
     }
 }
