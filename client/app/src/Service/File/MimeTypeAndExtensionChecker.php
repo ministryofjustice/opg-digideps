@@ -13,11 +13,12 @@ class MimeTypeAndExtensionChecker extends FileUtility
         $fileExtension = $uploadedFile->getClientOriginalExtension();
 
         $mimeType = $this->mimeTypeDetector->detectMimeType($uploadedFile->getPathName(), $fileBody);
+        $mappedType = $this->mimeMap[$mimeType ?? ''] ?? null;
 
-        if (is_array($this->mimeMap[$mimeType])) {
+        if (is_array($mappedType)) {
             $match = false;
 
-            foreach ($this->mimeMap[$mimeType] as $extension) {
+            foreach ($mappedType as $extension) {
                 $matched = $extension === $fileExtension;
                 $match = $matched;
                 if ($matched) {
@@ -28,6 +29,6 @@ class MimeTypeAndExtensionChecker extends FileUtility
             return $match;
         }
 
-        return $this->mimeMap[$mimeType] === $fileExtension;
+        return $mappedType === $fileExtension;
     }
 }

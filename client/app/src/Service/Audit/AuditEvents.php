@@ -380,7 +380,7 @@ final class AuditEvents
         $class = new \ReflectionClass(MailFactory::class);
         $constants = array_flip($class->getConstants());
 
-        $templateName = $constants[$email->getTemplate()];
+        $templateName = $constants[$email->getTemplate() ?? ''] ?? null;
 
         return [
             'logged_in_user_email' => ('anon.' == $loggedInUser) ? 'user not signed in' : $loggedInUser?->getEmail(),

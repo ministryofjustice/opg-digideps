@@ -46,7 +46,7 @@ class AssetOther extends Asset
             'Vehicles' => 'vehicle',
         ];
 
-        return $titleToTemplateMap[$this->getTitle()] ?? 'default';
+        return $titleToTemplateMap[$this->getTitle() ?? ''] ?? 'default';
     }
 
     public function getBehatIdentifier(): string

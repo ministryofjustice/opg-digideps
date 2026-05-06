@@ -1,77 +1,56 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Backend\Entity\Report;
 
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * MoneyTransfer.
- *
- * @ORM\Table(name="prof_deputy_prev_cost")
- *
- * @ORM\Entity
- */
+#[ORM\Table(name: 'prof_deputy_prev_cost')]
+#[ORM\Entity]
 class ProfDeputyPreviousCost
 {
     /**
      * @var int
-     *
-     * @JMS\Type("integer")
-     *
-     * @JMS\Groups({"prof-deputy-costs-prev"})
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     *
-     * @ORM\SequenceGenerator(sequenceName="prof_deputy_prev_cost_id_seq", allocationSize=1, initialValue=1)
      */
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['prof-deputy-costs-prev'])]
+    #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
+    #[ORM\SequenceGenerator(sequenceName: 'prof_deputy_prev_cost_id_seq', allocationSize: 1, initialValue: 1)]
     private $id;
 
     /**
      * @var Report
-     *
-     * @ORM\ManyToOne(targetEntity="OPG\Digideps\Backend\Entity\Report\Report", inversedBy="profDeputyPreviousCosts")
-     *
-     * @ORM\JoinColumn(name="report_id", referencedColumnName="id", onDelete="CASCADE")
      */
+    #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'profDeputyPreviousCosts')]
     private $report;
 
     /**
      * @var \DateTime
-     *
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     *
-     * @JMS\Groups({"prof-deputy-costs-prev"})
-     *
-     * @ORM\Column(name="start_date", type="datetime", nullable=true)
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['prof-deputy-costs-prev'])]
+    #[ORM\Column(name: 'start_date', type: 'datetime', nullable: true)]
     private $startDate;
 
     /**
      * @var \DateTime
-     *
-     * @JMS\Type("DateTime<'Y-m-d'>")
-     *
-     * @JMS\Groups({"prof-deputy-costs-prev"})
-     *
-     * @ORM\Column(name="end_date", type="datetime", nullable=true)
      */
+    #[JMS\Type("DateTime<'Y-m-d'>")]
+    #[JMS\Groups(['prof-deputy-costs-prev'])]
+    #[ORM\Column(name: 'end_date', type: 'datetime', nullable: true)]
     private $endDate;
 
     /**
      * @var float
-     *
-     * @JMS\Type("string")
-     *
-     * @JMS\Groups({"prof-deputy-costs-prev"})
-     *
-     * @ORM\Column(name="amount", type="decimal", precision=14, scale=2, nullable=true)
      */
+    #[JMS\Type('string')]
+    #[JMS\Groups(['prof-deputy-costs-prev'])]
+    #[ORM\Column(name: 'amount', type: 'decimal', precision: 14, scale: 2, nullable: true)]
     private $amount;
 
     /**

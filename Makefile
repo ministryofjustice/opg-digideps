@@ -139,18 +139,18 @@ disable-debug: ##@application Puts app in dev mode and disables debug (so the ap
 	  echo "$$c: debug disabled." ; \
 	done
 
-PHPSTAN-LEVEL := max
+PHPSTAN_LEVEL := max
 phpstan-api: ##@static-analysis Runs PHPStan against API. Defaults to max level but supports passing level as an arg e.g. level=1
-	docker compose -f docker-compose.yml -f docker-compose.override.yml run --no-deps --rm api-app vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=$(PHPSTAN-LEVEL)
+	docker compose -f docker-compose.yml -f docker-compose.override.yml run --no-deps --rm api-app vendor/bin/phpstan analyse --memory-limit=1G --level=$(PHPSTAN_LEVEL)
 
 phpstan-api-baseline:
-	docker compose -f docker-compose.yml -f docker-compose.override.yml run --no-deps --rm api-app vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=max --generate-baseline
+	docker compose -f docker-compose.yml -f docker-compose.override.yml run --no-deps --rm api-app vendor/bin/phpstan --memory-limit=1G --generate-baseline
 
 phpstan-client: ##@static-analysis Runs PHPStan against client. Defaults to max level but supports passing level as an arg e.g. level=1
-	docker compose -f docker-compose.yml -f docker-compose.override.yml run --no-deps --rm frontend-app vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=$(PHPSTAN-LEVEL)
+	docker compose -f docker-compose.yml -f docker-compose.override.yml run --no-deps --rm frontend-app vendor/bin/phpstan analyse --memory-limit=1G --level=$(PHPSTAN_LEVEL)
 
 phpstan-client-baseline:
-	docker compose -f docker-compose.yml -f docker-compose.override.yml run --no-deps --rm frontend-app vendor/phpstan/phpstan/phpstan analyse src --memory-limit=1G --level=max --generate-baseline
+	docker compose -f docker-compose.yml -f docker-compose.override.yml run --no-deps --rm frontend-app vendor/bin/phpstan --memory-limit=1G --generate-baseline
 
 get-audit-logs: ##@localstack Get audit log groups by passing event name e.g. get-audit-logs event_name=ROLE_CHANGED (see client/Audit/src/service/Audit/AuditEvents)
 	docker compose exec localstack awslocal logs get-log-events --log-group-name audit-local --log-stream-name $(event_name)

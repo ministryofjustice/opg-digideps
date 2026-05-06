@@ -291,10 +291,13 @@ class ReportService
     {
         $preRegistration = $this->preRegistrationRepository->findOneBy(['caseNumber' => $client->getCaseNumber()]);
 
+        $firstUser = $client->getUsers()->first();
+
         if (
             !($preRegistration instanceof PreRegistration)
             || count($client->getUsers()) < 1
-            || !$client->getUsers()->first()->isLayDeputy()
+            || !($firstUser instanceof User)
+            || !$firstUser->isLayDeputy()
         ) {
             return null;
         }
