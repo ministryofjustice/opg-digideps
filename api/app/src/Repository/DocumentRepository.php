@@ -65,7 +65,7 @@ class DocumentRepository extends ServiceEntityRepository
         $docStmt = $conn->prepare($queuedDocumentsQuery);
         $result = $docStmt->executeQuery();
 
-        $documents = $this->convertArray($result);
+        $documents = $this->convertDbResult($result);
 
         $reportIds = [];
         foreach ($documents as $document) {
@@ -129,7 +129,7 @@ class DocumentRepository extends ServiceEntityRepository
         $docStmt = $conn->prepare($resubmittableErrorDocumentsQuery);
         $result = $docStmt->executeQuery();
 
-        $documents = $this->convertArray($result);
+        $documents = $this->convertDbResult($result);
 
         if (count($documents) > 0) {
             $this->setErrorDocumentsToQueued($documents, $conn);
@@ -351,7 +351,7 @@ class DocumentRepository extends ServiceEntityRepository
     /**
      * @return array<array<string, mixed>>
      */
-    private function convertArray(Result $result): array
+    private function convertDbResult(Result $result): array
     {
         $results = $result->fetchAllAssociative();
 
@@ -360,7 +360,6 @@ class DocumentRepository extends ServiceEntityRepository
         foreach ($results as $row) {
             /** @var string $courtOrderUids */
             $courtOrderUids = $row['court_order_uids'] ?? '';
-
             $courtOrderUidsArray = explode(',', $courtOrderUids);
 
             $documents[$row['document_id']] = [
