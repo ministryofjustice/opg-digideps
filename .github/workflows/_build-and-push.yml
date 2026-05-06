@@ -257,9 +257,22 @@ jobs:
             echo "No existing scanned image found"
           fi
 
+      - name: check daily snyk scan
+        id: daily_snyk
+        env:
+          CACHE_HIT: ${{ steps.cache-docker.outputs.cache-hit }}
+        run: |
+          if [ "${CACHE_HIT}" == "true" ]; then
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "Docker cache was restored for today. Daily Snyk already covered."
+          else
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            echo "No Docker cache hit for today. Running daily Snyk."
+          fi
+
       - name: Run Snyk Scan
         id: snyk_scan
-        if: matrix.svc_name != 'mock-sirius' && steps.existing_image.outputs.exists != 'true'
+        if: matrix.svc_name != 'mock-sirius' && (steps.existing_image.outputs.exists != 'true' || steps.daily_snyk.outputs.run == 'true' || inputs.branch_name == 'staging')
         uses: ministryofjustice/opg-github-actions/actions/snyk-scan@ceeda9d30ec7f6705c819d0b7664b9a79df99a3b # v4.8.0
         with:
           SNYK_TEST_IMAGE: ${{ matrix.svc_name }}:latest
@@ -296,7 +309,7 @@ jobs:
           mask-password: "true"
 
       - name: retag existing scanned image
-        if: steps.existing_image.outputs.exists == 'true'
+        if: steps.existing_image.outputs.exists == 'true' && inputs.branch_name != 'staging'
         env:
           IMAGE_NAME: ${{ matrix.svc_name }}
           IMAGE_TAG: ${{ inputs.tag }}
@@ -353,7 +366,7 @@ jobs:
           docker tag "${IMAGE_NAME}:latest" "${ECR_REGISTRY}/${ECR_REGISTRY_ALIAS}/${IMAGE_NAME}:${IMAGE_TAG_DEV}"
 
       - name: tag and push container
-        if: steps.existing_image.outputs.exists != 'true'
+        if: steps.existing_image.outputs.exists != 'true' || inputs.branch_name == 'staging'
         env:
           ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
           ECR_REGISTRY_ALIAS: digideps
