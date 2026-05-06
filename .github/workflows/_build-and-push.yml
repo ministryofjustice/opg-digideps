@@ -215,7 +215,7 @@ jobs:
           role-duration-seconds: 900
           aws-region: eu-west-1
 
-      - uses: aws-actions/amazon-ecr-login@376925c9d111252e87ae59691e5a442dd100ef6a # v2.1.3
+      - uses: aws-actions/amazon-ecr-login@f2e9fc6c2b355c1890b65e6f6f0e2ac3e6e22f78 # v2.1.2
         id: login_ecr_pull
         with:
           registries: ${{ vars.MANAGEMENT_ACCOUNT }}
@@ -260,20 +260,34 @@ jobs:
       - name: check daily snyk scan
         id: daily_snyk
         env:
-          CACHE_HIT: ${{ steps.cache-docker.outputs.cache-hit }}
+          IMAGE_NAME: ${{ matrix.svc_name }}
         run: |
-          if [ "${CACHE_HIT}" == "true" ]; then
-            echo "run=false" >> "$GITHUB_OUTPUT"
-            echo "Docker cache was restored for today. Daily Snyk already covered."
+          TODAY="$(date +'%Y%m%d')"
+          OLD_FILE="/tmp/.buildx-cache/snyk-last-run-${IMAGE_NAME}.txt"
+          NEW_FILE="/tmp/.buildx-cache-new/snyk-last-run-${IMAGE_NAME}.txt"
+
+          mkdir -p /tmp/.buildx-cache-new
+
+          if [ -f "${OLD_FILE}" ]; then
+            LAST_RUN="$(cat "${OLD_FILE}")"
           else
+            LAST_RUN=""
+          fi
+
+          echo "${TODAY}" > "${NEW_FILE}"
+
+          if [ "${LAST_RUN}" != "${TODAY}" ]; then
             echo "run=true" >> "$GITHUB_OUTPUT"
-            echo "No Docker cache hit for today. Running daily Snyk."
+            echo "Last Snyk run was '${LAST_RUN}'. Running Snyk for ${TODAY}."
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "Snyk already ran today for ${IMAGE_NAME}."
           fi
 
       - name: Run Snyk Scan
         id: snyk_scan
         if: matrix.svc_name != 'mock-sirius' && (steps.existing_image.outputs.exists != 'true' || steps.daily_snyk.outputs.run == 'true' || inputs.branch_name == 'staging')
-        uses: ministryofjustice/opg-github-actions/actions/snyk-scan@2186f4ee10b7f2839e0c795dcd01c729e6d1d4c0 # v4.8.1
+        uses: ministryofjustice/opg-github-actions/actions/snyk-scan@ceeda9d30ec7f6705c819d0b7664b9a79df99a3b # v4.8.0
         with:
           SNYK_TEST_IMAGE: ${{ matrix.svc_name }}:latest
           SNYK_TOKEN: ${{ secrets.snyk_token }}
@@ -284,7 +298,7 @@ jobs:
 
       - name: Upload SNYK scan results to GitHub Security tab
         if: steps.snyk_scan.outcome == 'success' && hashFiles('test-results/snyk-results.sarif') != ''
-        uses: github/codeql-action/upload-sarif@0d579ffd059c29b07949a3cce3983f0780820c98 # v4.32.6
+        uses: github/codeql-action/upload-sarif@c793b717bc78562f491db7b0e93a3a178b099162 # v4.32.5
         with:
           sarif_file: test-results/snyk-results.sarif
           category: ${{ matrix.svc_name }}
@@ -302,7 +316,7 @@ jobs:
           role-duration-seconds: 900
           aws-region: eu-west-1
 
-      - uses: aws-actions/amazon-ecr-login@376925c9d111252e87ae59691e5a442dd100ef6a # v2.1.3
+      - uses: aws-actions/amazon-ecr-login@f2e9fc6c2b355c1890b65e6f6f0e2ac3e6e22f78 # v2.1.2
         id: login_ecr
         with:
           registries: ${{ vars.MANAGEMENT_ACCOUNT }}
