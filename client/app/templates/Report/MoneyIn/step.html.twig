@@ -26,7 +26,7 @@
     {% if step == 2 and transactionId %}
         {{ 'stepPage.moneyIn.editPageTitle' | trans(transOptions)  ~ ': ' ~ ('.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep) }}
     {% else %}
-        {{ 'stepPage.moneyIn.pageTitle' | trans(transOptions)  ~ ': ' ~ ('.entries.' in categoryString2ndStep ? (categoryString | lcfirst) : categoryString2ndStep) }}
+        {{ 'stepPage.moneyIn.pageTitle' | trans(transOptions) }}
     {% endif %}
 {% endblock %}
 
