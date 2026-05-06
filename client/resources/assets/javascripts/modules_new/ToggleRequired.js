@@ -8,7 +8,7 @@
  * See breakdown.html.twig for an example of usage.
  */
 const ToggleRequired = {
-  init: function(document) {
+  init: function (document) {
     const toggleRequireds = document.querySelectorAll('.js-toggle-required')
 
     toggleRequireds.forEach(toggleRequired => {
@@ -19,20 +19,20 @@ const ToggleRequired = {
       const optionalMessage = toggleRequired.getAttribute('data-optional-message')
 
       if (!(triggerElement && targetElement && optionalLabelSuffix && requiredMessage && optionalMessage)) {
-        console.error("ERROR: ToggleRequired element is misconfigured")
+        console.error('ERROR: ToggleRequired element is misconfigured')
         return
       }
 
       // span element inside the label for the "(optional)" suffix;
       // this is added/removed rather than hidden, as hiding it will mean
       // it is still visible to assistive technologies
-      let optionalSpan = document.createElement('span')
+      const optionalSpan = document.createElement('span')
       optionalSpan.innerText = optionalLabelSuffix
 
       // aria-live area for notifying assistive technologies when the
       // required/optional status of the target field changes;
       // this is permanently included on the page
-      let toggleMessage = document.createElement('span')
+      const toggleMessage = document.createElement('span')
       toggleMessage.setAttribute('aria-live', 'polite')
       toggleMessage.classList.add('visually-hidden')
 
@@ -60,12 +60,12 @@ const ToggleRequired = {
   // targetElement;
   // if it has no value, show "(optional)" in the targetElement's label and
   // remove the required attribute
-  makeHandler: function(triggerElement, targetElement) {
+  makeHandler: function (triggerElement, targetElement) {
     const targetLabelElement = targetElement.querySelector('label')
     const targetInputElement = targetElement.querySelector('input, textarea')
     const config = targetElement.toggleRequiredConfig
 
-    return function() {
+    return function () {
       const triggerValue = parseFloat(triggerElement.value.trim())
 
       if (!isNaN(triggerValue) && triggerValue !== 0) {
