@@ -4093,12 +4093,6 @@ parameters:
 			path: src/Entity/Report/AssetOther.php
 
 		-
-			message: '#^Binary operation "\*" between string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Entity/Report/AssetProperty.php
-
-		-
 			message: '#^Binary operation "/" between mixed and 100 results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
