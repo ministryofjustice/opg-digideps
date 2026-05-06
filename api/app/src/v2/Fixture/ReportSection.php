@@ -83,6 +83,7 @@ class ReportSection
         $action = new Action($report)
             ->setDoYouExpectFinancialDecisions('no')
             ->setDoYouHaveConcerns('no');
+
         $report->setAction($action);
     }
 

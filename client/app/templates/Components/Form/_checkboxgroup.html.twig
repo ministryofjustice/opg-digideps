@@ -1,3 +1,5 @@
+{% set legendText = legend.text ~ (not required ?  ' ' ~ ('optional' | trans({}, 'common')) : '') %}
+
 {% if useFormGroup %}
     <div id="{{ element.vars.id }}" class="govuk-form-group {% if not element.vars.valid %}govuk-form-group--error{% endif %} {% if formGroupClass is defined %} {{formGroupClass}}{% endif %}">
 {% endif %}
@@ -8,9 +10,9 @@
                 {% if legend.caption %}
                     <span class="govuk-caption-xl">{{ legend.caption }}</span>
                 {% endif %}
-                <h1 class="govuk-fieldset__heading">{{ legend.text }}</h1>
+                <h1 class="govuk-fieldset__heading">{{ legendText }}</h1>
             {% else %}
-                {{ legend.text }}
+                {{ legendText }}
             {% endif %}
         </legend>
 
@@ -66,7 +68,7 @@
                     {% set attr = attr | merge({'data-aria-controls': choiceElement.vars.id ~ '-conditional'}) %}
                 {% endif %}
 
-                {{ form_widget(choiceElement, {'attr': attr}) }}
+                {{ form_widget(choiceElement, {'attr': attr, 'required': required}) }}
 
                 <label class="govuk-label govuk-radios__label {{ labelClass }}" for="{{ choiceElement.vars.id }}">
                     {{ choiceElement.vars.label | trans({}, element.vars.choice_translation_domain ?: translationDomain)}}
