@@ -235,19 +235,27 @@ trait IngestTrait
         }
 
         $fileContents = file($csvFilePath);
-        $csvRows = [];
+        $rawRows = [];
         foreach ($fileContents as $row) {
-            $csvRows[] = str_getcsv($row, ',', '"', '');
+            $rawRows[] = str_getcsv($row, ',', '"', '');
         }
         unset($fileContents);
 
-        array_walk($csvRows, function (&$a) use ($csvRows): void {
-            $a = array_combine($csvRows[0], $a);
-        });
-        array_shift($csvRows); // remove column header
+        /** @var string[] $header */
+        $header = array_shift($rawRows); // remove column header
+
+        /** @var array<array<string, ?string>> $csvRows */
+        $csvRows = array_map(function ($row) use ($header): array {
+            return array_combine($header, $row);
+        }, $rawRows);
 
         foreach ($csvRows as $row) {
-            $email = empty($row['DeputyEmail']) ? null : substr(strstr($row['DeputyEmail'], '@'), 1);
+            /** @var ?string $email */
+            $email = $row['DeputyEmail'] ?? null;
+
+            if ($email !== null) {
+                $email = substr(strstr($email, '@'), 1);
+            }
 
             $this->entityUids['client_case_numbers'][] = $row['Case'] ?? null;
             $this->entityUids['sirius_case_numbers'][] = $row['Case'] ?? '';
