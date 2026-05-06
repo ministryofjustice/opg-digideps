@@ -19,7 +19,7 @@ final readonly class MissingReportDataFactory implements DataFactoryInterface
         private EntityManagerInterface $em,
         private MissingReportFinder $finder,
         private ReportService $reportService,
-        private LoggerInterface $logger,
+        private LoggerInterface $verboseLogger,
     ) {
     }
 
@@ -55,7 +55,7 @@ final readonly class MissingReportDataFactory implements DataFactoryInterface
     private function log(string $message, bool $dryRun): void
     {
         $dry = $dryRun ? '[Dry run] ' : '';
-        $this->logger->info("{$this->getName()}: {$dry}{$message}");
+        $this->verboseLogger->notice("{$this->getName()}: {$dry}{$message}");
     }
 
     private function createMissingReport(CourtOrder $courtOrder, bool $dryRun): void
