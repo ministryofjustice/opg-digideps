@@ -35,7 +35,7 @@ class Kernel extends BaseKernel implements CompilerPassInterface
 
     protected function configureContainer(ContainerBuilder $container, LoaderInterface $loader): void
     {
-        $container->setParameter('container.dumper.inline_class_loader', \PHP_VERSION_ID < 70400 || $this->debug);
+        $container->setParameter('container.dumper.inline_class_loader', $this->debug);
         $container->setParameter('container.dumper.inline_factories', true);
         $confDir = $this->getProjectDir() . '/config';
 

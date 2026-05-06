@@ -63,4 +63,4 @@ form:
     label: How much money was transferred?
     hint: ""
   description:
-    label: Description (optional)
+    label: Description

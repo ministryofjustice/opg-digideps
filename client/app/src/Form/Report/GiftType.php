@@ -22,12 +22,11 @@ class GiftType extends AbstractType
                 'invalid_message' => 'gifts.amount.type',
             ]);
 
-        $reportType = $options['report']->getType();
-
         if (!empty($options['report']->getBankAccountOptions()) && $options['report']->canLinkToBankAccounts()) {
             $builder->add('bankAccountId', FormTypes\ChoiceType::class, [
                 'choices' => $options['report']->getBankAccountOptions(),
                 'placeholder' => 'Please select',
+                'required' => false,
             ]);
         }
 
