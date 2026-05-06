@@ -26,6 +26,9 @@ class QueuedDocumentData
     private ?\DateTime $reportEndDate = null;
     private ?\DateTime $reportSubmitDate = null;
 
+    /** @var string[] */
+    private array $courtOrderUids = [];
+
     public function supportingDocumentCanBeSynced(): bool
     {
         return !$this->isReportPdf() && $this->getReportSubmissionUuid();
@@ -191,5 +194,23 @@ class QueuedDocumentData
         $this->documentSyncAttempts = $documentSyncAttempts;
 
         return $this;
+    }
+
+    /**
+     * @param string[] $courtOrderUids
+     */
+    public function setCourtOrderUids(array $courtOrderUids): static
+    {
+        $this->courtOrderUids = $courtOrderUids;
+
+        return $this;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getCourtOrderUids(): array
+    {
+        return $this->courtOrderUids;
     }
 }
