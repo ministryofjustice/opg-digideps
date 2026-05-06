@@ -235,16 +235,22 @@ trait IngestTrait
         }
 
         $fileContents = file($csvFilePath);
+        /**
+         * @var array<array<int|string, string>> $csvRows
+         */
         $csvRows = [];
         foreach ($fileContents as $row) {
             $csvRows[] = str_getcsv($row, ',', '"', '');
         }
         unset($fileContents);
 
-        array_walk($csvRows, function (&$a) use ($csvRows): void {
-            $a = array_combine($csvRows[0], $a);
+        /**
+         * @var array<string> $headers
+         */
+        $headers = array_shift($csvRows);
+        array_walk($csvRows, function (&$a) use ($headers): void {
+            $a = array_combine($headers, $a);
         });
-        array_shift($csvRows); // remove column header
 
         foreach ($csvRows as $row) {
             $email = empty($row['DeputyEmail']) ? null : substr(strstr($row['DeputyEmail'], '@'), 1);

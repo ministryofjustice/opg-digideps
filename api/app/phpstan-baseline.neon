@@ -24907,12 +24907,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$keys of function array_combine expects array\<int\|string\>, list\<string\|null\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
 			message: '#^Parameter \#1 \$needle of function PHPUnit\\Framework\\assertStringContainsString expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
