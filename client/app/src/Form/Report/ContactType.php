@@ -14,14 +14,15 @@ class ContactType extends AbstractType
         $builder->add('contactName', FormTypes\TextType::class, ['label' => 'Contact name'])
                 ->add('relationship', FormTypes\TextType::class, ['label' => 'Relationship to the client'])
                 ->add('explanation', FormTypes\TextareaType::class, ['label' => 'Reason for contact'])
-                ->add('address', FormTypes\TextType::class)
-                ->add('address2', FormTypes\TextType::class)
-                ->add('county', FormTypes\TextType::class)
-                ->add('postcode', FormTypes\TextType::class)
+                ->add('address', FormTypes\TextType::class, ['required' => false])
+                ->add('address2', FormTypes\TextType::class, ['required' => false])
+                ->add('county', FormTypes\TextType::class, ['required' => false])
+                ->add('postcode', FormTypes\TextType::class, ['required' => false])
                 ->add('id', FormTypes\HiddenType::class)
                 ->add('country', FormTypes\CountryType::class, [
-                      'preferred_choices' => ['GB'],
-                      'placeholder' => 'form.country.defaultOption',
+                    'preferred_choices' => ['GB'],
+                    'placeholder' => 'form.country.defaultOption',
+                    'required' => false,
                 ])
                 ->add('save', FormTypes\SubmitType::class, ['label' => 'save.label']);
     }

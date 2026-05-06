@@ -46,7 +46,7 @@ class AddUserType extends AbstractType
         $builder->add('email', FormTypes\TextType::class)
             ->add('firstname', FormTypes\TextType::class)
             ->add('lastname', FormTypes\TextType::class)
-            ->add('addressPostcode', FormTypes\TextType::class)
+            ->add('addressPostcode', FormTypes\TextType::class, ['required' => false])
             ->add('roleType', FormTypes\ChoiceType::class, [
                 'choices' => [
                     'addUserForm.roleType.deputy' => 'deputy',

@@ -13,8 +13,9 @@ class BankAccount implements BankAccountInterface
 
     /**
      * Keep in sync with api.
+     * @var string[] $types
      */
-    public static $types = [
+    public static array $types = [
         'current',
         'savings',
         'isa',

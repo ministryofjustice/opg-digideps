@@ -17,12 +17,12 @@
                 <span class="govuk-caption-xl">{{ label.caption }}</span>
             {% endif %}
             <label class="govuk-label govuk-label--xl {{ labelClass | default('') }}" for="{{ element.vars.id }}">
-                {{ label.text }}
+                {{ label.text }}{% if not extraAttrs.required %} {{ 'optional' | trans({}, 'common') }}{% endif %}
             </label>
         </h1>
     {% else %}
         <label for="{{ element.vars.id }}" class="govuk-label {{ labelClass | default('') }}">
-           {{ label.text }}
+           {{ label.text }}{% if not extraAttrs.required %} {{ 'optional' | trans({}, 'common') }}{% endif %}
             {% if jsEnabled != '' %}
                 <span class="govuk-visually-hidden">
                     Please note typing an amount in this field will reveal an additional input
@@ -64,25 +64,25 @@
 
     {% set attr = { 'class': class, 'rows': '5', 'aria-describedby': describedby } %}
     {% if dataModule %}
-        {% set attr = attr|merge({'data-module': dataModule}) %}
+        {% set attr = attr | merge({'data-module': dataModule}) %}
     {% endif %}
+
     {% if extraAttrs | length > 0 %}
-        {% set attr = attr|merge(extraAttrs) %}
+        {% set attr = attr | merge(extraAttrs) %}
     {% endif %}
-    {% if element.vars.valid %}
-        {{ form_widget(element, {
-            'attr': attr
-        }) }}
-    {% else %}
-        {{ form_widget(element, {
-            'attr': {
-                'class': class ~ ' govuk-' ~ inputType ~ '--error',
-                'aria-invalid': 'true',
-                'rows': '5',
-                'aria-describedby': describedby ~ ' ' ~ element.vars.id ~ '-error',
-            }
-        }) }}
+
+    {% if not element.vars.valid %}
+        {% set attr = attr | merge({
+            'class': class ~ ' govuk-' ~ inputType ~ '--error',
+            'aria-invalid': 'true',
+            'rows': '5',
+            'aria-describedby': describedby ~ ' ' ~ element.vars.id ~ '-error',
+        }) %}
     {% endif %}
+
+    {{ form_widget(element, {
+        'attr': attr
+    }) }}
 
     {% if displayCountdown is defined %}
         <div class="govuk-hint govuk-character-count__message" id="{{ element.vars.id }}-info">
