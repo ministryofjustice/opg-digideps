@@ -252,7 +252,7 @@ class FormFieldsExtension extends AbstractExtension
 
     /**
      * @param string $elementName used to pick the translation by appending ".label"
-     * @param array  $vars        [buttonClass => additional class. "disabled" supported]
+     * @param array  $vars [buttonClass => additional class. "disabled" supported]
      */
     public function renderFormSubmit(
         FormView $element,
@@ -389,6 +389,18 @@ class FormFieldsExtension extends AbstractExtension
 
         /** @var array $label */
         $label = $vars['label'] ?? [];
+        // Prepare extra attributes
+        /** @var array<string, string> $extraAttrs */
+        $extraAttrs = $vars['extraAttrs'] ?? [];
+
+        // Default to required attribute, unless field is explicitly marked as not required
+        /** @var array $elementVars */
+        $elementVars = $element->vars;
+
+        $extraAttrs['required'] = true;
+        if (isset($elementVars['required']) && ($elementVars['required'] === false)) {
+            unset($extraAttrs['required']);
+        }
 
         return [
             'labelDataTarget' => empty($vars['labelDataTarget']) ? null : $vars['labelDataTarget'],
@@ -411,7 +423,7 @@ class FormFieldsExtension extends AbstractExtension
                 'isPageHeading' => false,
                 'caption' => false,
             ], $label),
-            'extraAttrs' => $vars['extraAttrs'] ?? [],
+            'extraAttrs' => $extraAttrs,
         ];
     }
 

@@ -31,7 +31,7 @@
             <legend class="govuk-visually-hidden">{{ 'search' | trans({}, 'common') }}</legend>
             <div class="govuk-grid-row">
                 <div class="govuk-grid-column-one-third govuk-form-group">
-                    <label for="search" class="govuk-label">{{ 'page.searchForm.search.label' | trans }}</label>
+                    <label for="search" class="govuk-label">{{ 'page.searchForm.search.label' | trans }} {{ 'optional' | trans({}, 'common') }}</label>
                     <input type="text" id="search" name="q" value="{{ filters.q }}" class="govuk-input"/>
                     <input type="hidden" name="status" value="{{ filters.status }}"/>
                 </div>

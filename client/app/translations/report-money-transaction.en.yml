@@ -198,7 +198,7 @@ form:
       label: Description
       hint: ""
     optional:
-      label: Description (optional)
+      label: Description
   bankAccount:
     hint: ""
     moneyIn:
