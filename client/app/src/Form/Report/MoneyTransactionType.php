@@ -68,6 +68,7 @@ class MoneyTransactionType extends AbstractType
     {
         /** @var int $step */
         $step = $options['step'];
+        $step = (int) $step;
         /** @var AuthorizationCheckerInterface $authorizationChecker */
         $authorizationChecker = $options['authChecker'];
         /** @var string|null $selectedCategory */
