@@ -42,7 +42,7 @@ class MoneyTransactionType extends AbstractType
         /** @var array[] $categories */
         $categories = MoneyTransaction::$categories;
         foreach ($categories as $cat) {
-            /** @var int $categoryId */
+            /** @var string $categoryId */
             $categoryId = $cat[0];
             $type = $cat[3];
 
