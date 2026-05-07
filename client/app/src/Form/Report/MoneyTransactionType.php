@@ -12,25 +12,13 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class MoneyTransactionType extends AbstractType
 {
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    private $authorizationChecker;
+    private AuthorizationCheckerInterface $authorizationChecker;
 
-    /**
-     * @var int
-     */
-    private $step;
+    private int $step;
 
-    /**
-     * @var string in/out
-     */
-    private $type;
+    private string $type;
 
-    /**
-     * @var string
-     */
-    private $selectedCategory;
+    private ?string $selectedCategory;
 
     /**
      * @return array where keys and values are the categoriesID. e.g. [broadband=>null, fees=>null]
@@ -67,6 +55,7 @@ class MoneyTransactionType extends AbstractType
         /** @var array[] $categories */
         $categories = MoneyTransaction::$categories;
         foreach ($categories as $row) {
+            /** @var string $categoryId */
             $categoryId = $row[0];
             /** @var bool $hasDetails */
             $hasDetails = $row[1];
@@ -83,7 +72,7 @@ class MoneyTransactionType extends AbstractType
         $step = $options['step'];
         /** @var AuthorizationCheckerInterface $authorizationChecker */
         $authorizationChecker = $options['authChecker'];
-        /** @var string $selectedCategory */
+        /** @var string|null $selectedCategory */
         $selectedCategory = $options['selectedCategory'];
         /** @var string $type */
         $type = $options['type'];
