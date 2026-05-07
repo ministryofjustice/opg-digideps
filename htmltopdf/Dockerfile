@@ -1,4 +1,5 @@
-FROM python:3.14-alpine3.22@sha256:355522f4e6b640e9255e6b6830ef52f32ece54df43db93f61101f48c5d4c6658
+# Manually check PDFs generate when updating this
+FROM python:3.13.13-alpine3.23@sha256:420cd0bf0f3998275875e02ecd5808168cf0843cbb4d3c536432f729247b2acc
 
 WORKDIR /
 ENV PYTHONUNBUFFERED=1
