@@ -65,6 +65,12 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
         $this->purgeDatabase();
     }
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        self::purgeDatabase();
+    }
+
     public function testUploadNewDeputiesAreCreated()
     {
         $deputyships = OrgDeputyshipDTOTestHelper::generateSiriusOrgDeputyshipDtos(1, 0);
@@ -455,7 +461,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
             sprintf(
                 'Report associated to Client with case number "%s" had report type %s after upload which is the same as %s',
                 $caseNumber,
-                $client->getReports()->first()->getType(),
+                ($client->getReports()->first() ?: null)?->getType(),
                 $oldReportType
             )
         );
@@ -483,7 +489,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
             sprintf(
                 'Report associated to Client with case number "%s" had report type %s after upload which is the same as %s',
                 $caseNumber,
-                $client->getReports()->first()->getType(),
+                ($client->getReports()->first() ?: null)?->getType(),
                 $oldReportType
             )
         );
@@ -513,7 +519,7 @@ class OrgDeputyshipUploaderTest extends KernelTestCase
             sprintf(
                 'Report associated to Client with case number "%s" had report type %s after upload which is not the same as %s',
                 $caseNumber,
-                $client->getReports()->first()->getType(),
+                ($client->getReports()->first() ?: null)?->getType(),
                 $oldReportType
             )
         );

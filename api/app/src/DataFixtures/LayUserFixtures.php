@@ -190,7 +190,8 @@ class LayUserFixtures extends AbstractDataFixture
                 ->setAddress1('ABC Road')
                 ->setAddressPostcode('AB1 2CD')
                 ->setAddressCountry('GB')
-                ->setUser($user);
+                ->setUser($user)
+                ->setOrganisation(null);
 
             $manager->persist($this->deputy);
         }

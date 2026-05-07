@@ -4,9 +4,11 @@ namespace OPG\Digideps\Backend\Service;
 
 use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\CourtOrderRepository;
 use OPG\Digideps\Backend\Repository\DeputyRepository;
+use OPG\Digideps\Backend\Repository\OrganisationRepository;
 use OPG\Digideps\Backend\Utility\Query\Hydrator;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -57,8 +59,16 @@ class DeputyService
             'phone_main' => 'setPhoneMain',
         ]);
 
-        if (array_key_exists('email', $data) && !empty($data['email'])) {
-            $deputy->setEmail1($data['email']);
+        if (array_key_exists('email', $data)) {
+            $email = $data['email'];
+            if (is_string($email) && $email !== '') {
+                $deputy->setEmail1($email);
+                /**
+                 * @var OrganisationRepository $repository
+                 */
+                $repository = $this->em->getRepository(Organisation::class);
+                $deputy->setOrganisation($repository->findByEmailIdentifier($email));
+            }
         }
 
         if (array_key_exists('deputy_uid', $data) && !empty($data['deputy_uid'])) {
