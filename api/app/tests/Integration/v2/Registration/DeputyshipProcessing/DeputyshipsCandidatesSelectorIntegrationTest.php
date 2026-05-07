@@ -91,6 +91,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 
         $deputy = new Deputy();
         $deputy->setDeputyType(DeputyType::LAY);
+        $deputy->setOrganisation(null);
         $deputy->setFirstname('John');
         $deputy->setLastname('Snow');
         $deputy->setEmail1('john.snow@test.co.uk');
@@ -125,6 +126,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 
         $deputy = new Deputy();
         $deputy->setDeputyType(DeputyType::LAY);
+        $deputy->setOrganisation(null);
         $deputy->setFirstname('John');
         $deputy->setLastname('Snow');
         $deputy->setEmail1('john.snow@test.co.uk');
@@ -146,6 +148,7 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 
         $deputy = new Deputy();
         $deputy->setDeputyType(DeputyType::LAY);
+        $deputy->setOrganisation(null);
         $deputy->setFirstname('Stuart');
         $deputy->setLastname('One');
         $deputy->setEmail1('stuart.one@test.co.uk');

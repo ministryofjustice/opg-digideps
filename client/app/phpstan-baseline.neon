@@ -3913,12 +3913,6 @@ parameters:
 			path: src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:\$types has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:\$typesNotRequiringBankName has no type specified\.$#'
 			identifier: missingType.property
 			count: 1

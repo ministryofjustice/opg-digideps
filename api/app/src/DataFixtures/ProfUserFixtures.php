@@ -5,6 +5,7 @@ namespace OPG\Digideps\Backend\DataFixtures;
 use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
@@ -206,7 +207,7 @@ class ProfUserFixtures extends AbstractDataFixture
                 $deputy = $this->deputyRepository->findOneBy(['deputyUid' => $clientData['deputyUid']]);
                 if (null === $deputy) {
                     // Create named deputy if they don't exist
-                    $deputy = $this->createDeputy($deputyData, $clientData);
+                    $deputy = $this->createDeputy($deputyData, $clientData, $organisation);
 
                     $manager->persist($deputy);
                     $manager->flush($deputy);
@@ -275,7 +276,7 @@ class ProfUserFixtures extends AbstractDataFixture
         $manager->persist($report);
     }
 
-    private function createDeputy(mixed $deputyData, mixed $clientData)
+    private function createDeputy(mixed $deputyData, mixed $clientData, ?Organisation $organisation): Deputy
     {
         return new Deputy()
             ->setDeputyType(DeputyType::PRO)
@@ -285,7 +286,8 @@ class ProfUserFixtures extends AbstractDataFixture
             ->setEmail1($deputyData['id'] . $deputyData['email'])
             ->setAddress1('ABC Road')
             ->setAddressPostcode('AB1 2CD')
-            ->setAddressCountry('GB');
+            ->setAddressCountry('GB')
+            ->setOrganisation($organisation);
     }
 
     protected function getEnvironments()
