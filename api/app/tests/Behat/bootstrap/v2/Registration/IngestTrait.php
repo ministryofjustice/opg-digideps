@@ -253,8 +253,11 @@ trait IngestTrait
             /** @var ?string $email */
             $email = $row['DeputyEmail'] ?? null;
 
-            if ($email !== null) {
-                $email = substr(strstr($email, '@'), 1);
+            if (is_string($email)) {
+                $atSymbolPos = strstr($email, '@');
+                if ($atSymbolPos !== false) {
+                    $email = substr($atSymbolPos, 1);
+                }
             }
 
             $this->entityUids['client_case_numbers'][] = $row['Case'] ?? null;
