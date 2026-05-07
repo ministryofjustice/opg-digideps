@@ -16,6 +16,8 @@ use Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Psr\Log\LoggerInterface;
 
+use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
+
 readonly class ReportTypeUpdateFactory implements DataFactoryInterface
 {
     public function __construct(
@@ -32,7 +34,6 @@ readonly class ReportTypeUpdateFactory implements DataFactoryInterface
 
     /**
      * @return \Generator<Report>
-     * @throws QueryException
      */
     private function getChangedReports(): \Generator
     {
@@ -72,7 +73,9 @@ readonly class ReportTypeUpdateFactory implements DataFactoryInterface
     public function run(bool $dryRun): DataFactoryResult
     {
         $count = 0;
-        $errors = [];
+        $indeterminate = [];
+        $dangerous = [];
+
         foreach ($this->getChangedReports() as $report) {
             $reportId = $report->getId();
 
@@ -83,7 +86,7 @@ readonly class ReportTypeUpdateFactory implements DataFactoryInterface
             $possibleReportType = ReportTypeService::determineReportType($courtOrders);
 
             if ($possibleReportType === null) {
-                $errors[] = 'Unable to determine report type from CourtOrders associated with report: ' . $reportId;
+                $indeterminate[] = $reportId;
                 continue;
             }
 
@@ -92,10 +95,13 @@ readonly class ReportTypeUpdateFactory implements DataFactoryInterface
             }
 
             if (
-                $currentReportType !== null && $currentReportType->courtOrderKind === CourtOrderKind::Hybrid ||
-                $possibleReportType->courtOrderKind === CourtOrderKind::Hybrid
+                $currentReportType !== null &&
+                (
+                    $currentReportType->courtOrderKind === CourtOrderKind::Hybrid ||
+                    $possibleReportType->courtOrderKind === CourtOrderKind::Hybrid
+                )
             ) {
-                $errors[] = 'Possible dangerous change to or from Hybrid on report: ' . $reportId;
+                $dangerous[] = $reportId;
             }
 
             if (!$dryRun) {
@@ -104,13 +110,26 @@ readonly class ReportTypeUpdateFactory implements DataFactoryInterface
                 ++$count;
             } else {
                 $this->logger->info(
-                    "DRYRUN[ReportTypeUpdate]: Report with ID: {$reportId}. ReportType change from {$currentReportType} to {$possibleReportType}"
+                    "DRYRUN[{$this->getName()}]: Report with ID: $reportId; report type change from $currentReportType to $possibleReportType"
                 );
             }
         }
 
+        $numIndeterminate = count($indeterminate);
+        $numDangerous = count($dangerous);
+
+        $errors = [];
+        if ($numIndeterminate > 0) {
+            $errors[] = "Unable to determine report type for $numIndeterminate report IDs: " . implode(', ', $indeterminate);
+        }
+
+        // while we log this as an error, we apply the change to/from hybrid anyway
+        if ($numDangerous > 0) {
+            $errors[] = "Possible dangerous change of report type to/from hybrid for $numDangerous report IDs: " . implode(', ', $dangerous);
+        }
+
         return new DataFactoryResult(
-            messages: ['success' => ["Updated {$count} reportTypes"]],
+            messages: ['success' => ["Updated $count report types"]],
             errorMessages: ['errors' => $errors]
         );
     }

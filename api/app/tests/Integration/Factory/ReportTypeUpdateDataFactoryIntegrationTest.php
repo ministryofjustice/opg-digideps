@@ -14,7 +14,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 
-class ReportTypeUpdateFactoryIntegrationTest extends ApiIntegrationTestCase
+class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
 {
     private static ReportTypeUpdateFactory $sut;
     private static Fixtures $fixtures;
@@ -31,8 +31,8 @@ class ReportTypeUpdateFactoryIntegrationTest extends ApiIntegrationTestCase
 
     public function tearDown(): void
     {
-        self::$entityManager->flush();
-        self::$entityManager->clear();
+        parent::tearDown();
+        self::purgeDatabase();
     }
 
     public static function reportTypeChanges(): array
@@ -146,8 +146,8 @@ class ReportTypeUpdateFactoryIntegrationTest extends ApiIntegrationTestCase
             )
         );
 
-        $this->assertStringContainsString($data['updatedCount'], $dataFactoryResult->getMessages()['success'][0], 'Updated String Count');
-        $this->assertCount($data['errorCount'], $dataFactoryResult->getErrorMessages()['errors'], 'Error count');
+        $this->assertStringContainsString($data['updatedCount'], $dataFactoryResult->getMessages()['success'][0], 'Updated report types count');
+        $this->assertCount($data['errorCount'], $dataFactoryResult->getErrorMessages()['errors'], 'Expected error count did not match actual error count');
     }
 
     #[DataProvider('reportTypeChanges')]

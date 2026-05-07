@@ -118,7 +118,7 @@ class DeputyshipsIngestResultRecorder
     public function recordBuilderResult(DeputyshipBuilderResult $builderResult): void
     {
         // these messages are not output with logMessage() or logError() because there will be a lot of them
-        $this->logMessage('++++++++ ' . $builderResult->getMessage());
+        $this->logger->warning('++++++++ ' . $builderResult->getMessage());
 
         $errorMessage = $builderResult->getErrorMessage();
         if (!is_null($errorMessage)) {
