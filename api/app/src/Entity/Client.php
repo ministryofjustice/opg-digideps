@@ -229,7 +229,7 @@ class Client
         return $this->id;
     }
 
-    public function setCaseNumber(?string $caseNumber): self
+    public function setCaseNumber(?string $caseNumber): static
     {
         $this->caseNumber = $caseNumber ? strtolower($caseNumber) : null;
 
@@ -245,10 +245,8 @@ class Client
      * Set email.
      *
      * @param ?string $email
-     *
-     * @return Client
      */
-    public function setEmail($email)
+    public function setEmail($email): static
     {
         $this->email = (($email === null) ? null : strtolower($email));
 
@@ -269,10 +267,8 @@ class Client
      * Set phone.
      *
      * @param string $phone
-     *
-     * @return Client
      */
-    public function setPhone($phone)
+    public function setPhone($phone): static
     {
         $this->phone = $phone;
 
@@ -289,7 +285,7 @@ class Client
         return $this->phone;
     }
 
-    public function setAddress(?string $address)
+    public function setAddress(?string $address): static
     {
         $this->address = $address;
 
@@ -305,10 +301,8 @@ class Client
      * Set postcode.
      *
      * @param string $postcode
-     *
-     * @return Client
      */
-    public function setPostcode($postcode)
+    public function setPostcode($postcode): static
     {
         $this->postcode = $postcode;
 
@@ -329,10 +323,8 @@ class Client
      * Set firstname.
      *
      * @param string $firstname
-     *
-     * @return Client
      */
-    public function setFirstname($firstname)
+    public function setFirstname($firstname): static
     {
         $this->firstname = $firstname;
 
@@ -353,10 +345,8 @@ class Client
      * Set lastname.
      *
      * @param string $lastname
-     *
-     * @return Client
      */
-    public function setLastname($lastname)
+    public function setLastname($lastname): static
     {
         $this->lastname = $lastname;
 
@@ -375,10 +365,8 @@ class Client
 
     /**
      * Set courtDate.
-     *
-     * @return Client
      */
-    public function setCourtDate(?\DateTime $courtDate = null)
+    public function setCourtDate(?\DateTime $courtDate = null): static
     {
         $this->courtDate = $courtDate;
 
@@ -397,10 +385,8 @@ class Client
 
     /**
      * Add users.
-     *
-     * @return Client
      */
-    public function addUser(User $user)
+    public function addUser(User $user): static
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
@@ -429,10 +415,8 @@ class Client
 
     /**
      * @param Collection<int, User> $users
-     *
-     * @return $this
      */
-    public function setUsers($users)
+    public function setUsers($users): static
     {
         $this->users = $users;
 
@@ -455,10 +439,8 @@ class Client
 
     /**
      * Add reports.
-     *
-     * @return Client
      */
-    public function addReport(Report $report)
+    public function addReport(Report $report): static
     {
         if (!$this->reports->contains($report)) {
             $this->reports->add($report);
@@ -488,10 +470,8 @@ class Client
 
     /**
      * @param ArrayCollection<int, Report> $reports
-     *
-     * @return Client
      */
-    public function setReports($reports)
+    public function setReports($reports): static
     {
         $this->reports = $reports;
 
@@ -575,7 +555,7 @@ class Client
         return $this->getFirstname() . $space . $this->getLastname();
     }
 
-    public function setAddress2(?string $address2)
+    public function setAddress2(?string $address2): static
     {
         $this->address2 = $address2;
 
@@ -587,7 +567,7 @@ class Client
         return $this->address2;
     }
 
-    public function setAddress3(?string $address3)
+    public function setAddress3(?string $address3): static
     {
         $this->address3 = $address3;
 
@@ -599,7 +579,7 @@ class Client
         return $this->address3;
     }
 
-    public function setAddress4(?string $address4): Client
+    public function setAddress4(?string $address4): static
     {
         $this->address4 = $address4;
 
@@ -611,7 +591,7 @@ class Client
         return $this->address4;
     }
 
-    public function setAddress5(?string $address5): Client
+    public function setAddress5(?string $address5): static
     {
         $this->address5 = $address5;
 
@@ -627,10 +607,8 @@ class Client
      * Set country.
      *
      * @param string $country
-     *
-     * @return Client
      */
-    public function setCountry($country)
+    public function setCountry($country): static
     {
         $this->country = $country;
 
@@ -663,10 +641,7 @@ class Client
         return $this->dateOfBirth;
     }
 
-    /**
-     * @return $this
-     */
-    public function setDateOfBirth(?\DateTime $dateOfBirth = null)
+    public function setDateOfBirth(?\DateTime $dateOfBirth = null): static
     {
         $this->dateOfBirth = $dateOfBirth;
 
@@ -680,10 +655,8 @@ class Client
 
     /**
      * @param ArrayCollection<int, Note> $notes
-     *
-     * @return $this
      */
-    public function setNotes($notes)
+    public function setNotes($notes): static
     {
         $this->notes = $notes;
 
@@ -697,10 +670,8 @@ class Client
 
     /**
      * @param ArrayCollection<int, ClientContact> $clientContacts
-     *
-     * @return $this
      */
-    public function setClientContacts($clientContacts)
+    public function setClientContacts($clientContacts): static
     {
         $this->clientContacts = $clientContacts;
 
@@ -724,10 +695,7 @@ class Client
         return $this->deputy;
     }
 
-    /**
-     * @return Client
-     */
-    public function setDeputy(?Deputy $deputy)
+    public function setDeputy(?Deputy $deputy): static
     {
         $this->deputy = $deputy;
 
@@ -889,10 +857,7 @@ class Client
         return $this->organisation;
     }
 
-    /**
-     * @return $this
-     */
-    public function setOrganisation(?Organisation $organisation)
+    public function setOrganisation(?Organisation $organisation): static
     {
         $this->organisation = $organisation;
 
@@ -924,10 +889,8 @@ class Client
 
     /**
      * @param Collection<int, CourtOrder> $courtOrders
-     *
-     * @return $this
      */
-    public function setCourtOrders(Collection $courtOrders)
+    public function setCourtOrders(Collection $courtOrders): static
     {
         $this->courtOrders = $courtOrders;
 

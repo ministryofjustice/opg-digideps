@@ -102,6 +102,7 @@ class CourtOrderInviteService
         $invitedLayDeputy->setLastname($invitedDeputyDTO->lastname);
         $invitedLayDeputy->setEmail1($invitedDeputyDTO->email);
         $invitedLayDeputy->setDeputyUid($deputyUid);
+        $invitedLayDeputy->setOrganisation(null);
 
         // save stuff to db inside a transaction
         $this->entityManager->beginTransaction();
