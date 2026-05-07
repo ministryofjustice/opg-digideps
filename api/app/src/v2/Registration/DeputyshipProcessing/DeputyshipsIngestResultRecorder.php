@@ -172,13 +172,15 @@ class DeputyshipsIngestResultRecorder
 
         $message .= ' --- ' . implode('; ', $this->messages);
 
-        if ($success) {
-            $message .= ' --- ' . self::SUCCESS_MESSAGE;
-        } elseif (count($this->errorMessages) > 0) {
+        if (count($this->errorMessages) > 0) {
             $message .= ' --- ERRORS: ' . implode(' / ', $this->errorMessages);
         }
 
-        $this->logMessage($message);
+        if ($success) {
+            $message .= ' --- ' . self::SUCCESS_MESSAGE;
+        }
+
+        $this->logger->warning($message);
 
         return new DeputyshipsCSVIngestResult($success, $message);
     }

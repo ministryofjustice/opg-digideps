@@ -70,7 +70,7 @@ final class DeputyshipsIngestResultRecorderTest extends TestCase
         $this->sut->recordDeputyshipCandidatesResult($candidatesResult);
 
         $builderResult = self::createMock(DeputyshipBuilderResult::class);
-        $builderResult->expects($this->once())->method('getMessage')->willReturn('Test builder result 1');
+        $builderResult->expects($this->once())->method('getErrorMessage')->willReturn('Builder result error');
         $this->sut->recordBuilderResult($builderResult);
 
         $this->sut->recordCsvLoadResult(new DeputyshipsCSVLoaderResult('/tmp/deputyships.csv', true, 8));
@@ -79,7 +79,7 @@ final class DeputyshipsIngestResultRecorderTest extends TestCase
         $this->sut->recordPostCSVDataFactoryResult(new DataFactoryResult());
 
         $result = $this->sut->result();
-        self::assertStringContainsString('Test builder result 1', $result->message);
+        self::assertStringContainsString('Builder result error', $result->message);
     }
 
     public function testStartAndEndDateAndTimings(): void
