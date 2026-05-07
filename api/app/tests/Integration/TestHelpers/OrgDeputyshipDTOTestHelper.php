@@ -23,7 +23,7 @@ use Faker\Provider\en_GB\Address;
 
 class OrgDeputyshipDTOTestHelper
 {
-    public static function generateSiriusOrgDeputyshipCompressedJson(int $validCount, int $invalidCount)
+    public static function generateSiriusOrgDeputyshipCompressedJson(int $validCount, int $invalidCount): string
     {
         $deputyships = [];
 
@@ -45,7 +45,7 @@ class OrgDeputyshipDTOTestHelper
     /**
      * @return array
      */
-    public static function generateValidSiriusOrgDeputyshipArray()
+    public static function generateValidSiriusOrgDeputyshipArray(): array
     {
         $faker = Factory::create();
         $courtOrderMadeDate = \DateTimeImmutable::createFromMutable($faker->dateTimeThisYear());
@@ -82,7 +82,7 @@ class OrgDeputyshipDTOTestHelper
         ];
     }
 
-    private static function generateInvalidOrgDeputyshipArray()
+    private static function generateInvalidOrgDeputyshipArray(): array
     {
         $invalid = self::generateValidSiriusOrgDeputyshipArray();
         $invalid['DeputyEmail'] = '';
@@ -93,7 +93,7 @@ class OrgDeputyshipDTOTestHelper
     /**
      * @return OrgDeputyshipDto[]
      */
-    public static function generateSiriusOrgDeputyshipDtos(int $validCount, int $invalidCount)
+    public static function generateSiriusOrgDeputyshipDtos(int $validCount, int $invalidCount): array
     {
         $json = self::generateSiriusOrgDeputyshipDecompressedJson($validCount, $invalidCount);
         $dtos = [];
@@ -107,7 +107,7 @@ class OrgDeputyshipDTOTestHelper
         return $dtos;
     }
 
-    public static function generateSiriusOrgDeputyshipDecompressedJson(int $validCount, int $invalidCount)
+    public static function generateSiriusOrgDeputyshipDecompressedJson(int $validCount, int $invalidCount): string
     {
         $deputyships = [];
 
@@ -123,25 +123,25 @@ class OrgDeputyshipDTOTestHelper
             }
         }
 
-        return json_encode($deputyships);
+        return json_encode($deputyships) ?: '';
     }
 
-    public static function deputyWasCreated(OrgDeputyshipDto $orgDeputyship, DeputyRepository $deputyRepository)
+    public static function deputyWasCreated(OrgDeputyshipDto $orgDeputyship, DeputyRepository $deputyRepository): bool
     {
         return $deputyRepository->findOneBy(['deputyUid' => $orgDeputyship->getDeputyUid()]) instanceof Deputy;
     }
 
-    public static function organisationWasCreated(string $emailIdentifier, OrganisationRepository $orgRepo)
+    public static function organisationWasCreated(string $emailIdentifier, OrganisationRepository $orgRepo): bool
     {
         return $orgRepo->findOneBy(['emailIdentifier' => $emailIdentifier]) instanceof Organisation;
     }
 
-    public static function clientWasCreated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo)
+    public static function clientWasCreated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo): bool
     {
         return $clientRepo->findByCaseNumber($orgDeputyship->getCaseNumber()) instanceof Client;
     }
 
-    public static function clientAndOrgAreAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, OrganisationRepository $orgRepo)
+    public static function clientAndOrgAreAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, OrganisationRepository $orgRepo): bool
     {
         $client = $clientRepo->findByCaseNumber($orgDeputyship->getCaseNumber());
 
@@ -151,7 +151,7 @@ class OrgDeputyshipDTOTestHelper
         return $org->getClients()->contains($client) && $client->getOrganisation() === $org;
     }
 
-    public static function clientAndDeputyAreAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, DeputyRepository $deputyRepo)
+    public static function clientAndDeputyAreAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, DeputyRepository $deputyRepo): bool
     {
         $client = $clientRepo->findByCaseNumber($orgDeputyship->getCaseNumber());
         $deputy = $deputyRepo->findOneBy(['deputyUid' => $orgDeputyship->getDeputyUid()]);
@@ -159,7 +159,7 @@ class OrgDeputyshipDTOTestHelper
         return $client->getDeputy() === $deputy;
     }
 
-    public static function clientAndDeputyAreNotAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, DeputyRepository $deputyRepo)
+    public static function clientAndDeputyAreNotAssociated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo, DeputyRepository $deputyRepo): bool
     {
         $client = $clientRepo->findByCaseNumber($orgDeputyship->getCaseNumber());
         $deputy = $deputyRepo->findOneBy(['email1' => $orgDeputyship->getDeputyEmail()]);
@@ -167,27 +167,32 @@ class OrgDeputyshipDTOTestHelper
         return !($client->getDeputy() === $deputy);
     }
 
-    public static function clientHasAReportOfType(string $caseNumber, string $reportType, ClientRepository $clientRepo)
+    public static function clientHasAReportOfType(string $caseNumber, string $reportType, ClientRepository $clientRepo): bool
     {
         $client = $clientRepo->findByCaseNumber($caseNumber);
 
         return $client->getReports()->first()->getType() == $reportType;
     }
 
-    public static function reportTypeHasChanged(string $oldReportType, Client $client, ReportRepository $reportRepo)
+    public static function reportTypeHasChanged(string $oldReportType, Client $client, ReportRepository $reportRepo): bool
     {
         $report = $reportRepo->findOneBy(['client' => $client]);
 
         return $report->getType() !== $oldReportType;
     }
 
-    /**
-     * @return Deputy
-     */
-    public static function ensureDeputyInUploadExists(OrgDeputyshipDto $dto, EntityManager $em)
+    public static function ensureDeputyInUploadExists(OrgDeputyshipDto $dto, EntityManager $em): Deputy
     {
+        $deputyType = DeputyType::from($dto->getDeputyType());
+        $organisation = null;
+        $domain = explode('@', $dto->getDeputyEmail() ?? '', 2)[1] ?? null;
+
+        if ($deputyType !== DeputyType::LAY && $domain !== null) {
+            $organisation = self::ensureOrgInUploadExists($domain, $em);
+        }
+
         $deputy = new Deputy()
-            ->setDeputyType(DeputyType::from($dto->getDeputyType()))
+            ->setDeputyType($deputyType)
             ->setEmail1($dto->getDeputyEmail())
             ->setDeputyUid($dto->getDeputyUid())
             ->setFirstname($dto->getDeputyFirstname())
@@ -197,7 +202,8 @@ class OrgDeputyshipDTOTestHelper
             ->setAddress3($dto->getDeputyAddress3())
             ->setAddress4($dto->getDeputyAddress4())
             ->setAddress5($dto->getDeputyAddress5())
-            ->setAddressPostcode($dto->getDeputyPostcode());
+            ->setAddressPostcode($dto->getDeputyPostcode())
+            ->setOrganisation($organisation);
 
         $em->persist($deputy);
         $em->flush();
@@ -205,12 +211,15 @@ class OrgDeputyshipDTOTestHelper
         return $deputy;
     }
 
-    /**
-     * @return Organisation
-     */
-    public static function ensureOrgInUploadExists(string $orgIdentifier, EntityManager $em)
+    public static function ensureOrgInUploadExists(string $orgIdentifier, EntityManager $em): Organisation
     {
-        $organisation = new Organisation()
+        /**
+         * @var OrganisationRepository $repository
+         */
+        $repository = $em->getRepository(Organisation::class);
+        $organisation = $repository->findByEmailIdentifier($orgIdentifier) ?? new Organisation();
+
+        $organisation
             ->setName('Your Organisation')
             ->setEmailIdentifier($orgIdentifier)
             ->setIsActivated(false);
@@ -221,7 +230,7 @@ class OrgDeputyshipDTOTestHelper
         return $organisation;
     }
 
-    public static function ensureClientInUploadExists(OrgDeputyshipDto $dto, EntityManager $em)
+    public static function ensureClientInUploadExists(OrgDeputyshipDto $dto, EntityManager $em): Client
     {
         $client = new Client()
             ->setCaseNumber($dto->getCaseNumber())
@@ -235,7 +244,7 @@ class OrgDeputyshipDTOTestHelper
         return $client;
     }
 
-    public static function ensureClientInUploadExistsAndHasALayDeputy(OrgDeputyshipDto $dto, EntityManager $em)
+    public static function ensureClientInUploadExistsAndHasALayDeputy(OrgDeputyshipDto $dto, EntityManager $em): Client
     {
         $faker = Factory::create();
 
@@ -266,7 +275,7 @@ class OrgDeputyshipDTOTestHelper
         string $reportType = '103-5',
         string $startDate = '2019-11-01',
         string $endDate = '2020-10-31',
-    ) {
+    ): Report {
         $report = new Report($client, $reportType, new \DateTime($startDate), new \DateTime($endDate));
         $client->addReport($report);
 

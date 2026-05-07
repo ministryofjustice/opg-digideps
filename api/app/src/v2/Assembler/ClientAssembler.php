@@ -5,8 +5,10 @@ namespace OPG\Digideps\Backend\v2\Assembler;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\v2\Assembler\Report\ReportAssemblerInterface;
 use OPG\Digideps\Backend\v2\DTO\ClientDto;
+use OPG\Digideps\Backend\v2\DTO\DeputyDto;
 use OPG\Digideps\Backend\v2\DTO\DtoPropertySetterTrait;
 use OPG\Digideps\Backend\v2\DTO\OrganisationDto;
+use OPG\Digideps\Backend\v2\DTO\ReportDto;
 use OPG\Digideps\Backend\v2\DTO\UserDto;
 use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
 use OPG\Digideps\Backend\v2\Registration\DTO\OrgDeputyshipDto;
@@ -21,10 +23,7 @@ class ClientAssembler
     ) {
     }
 
-    /**
-     * @return ClientDto
-     */
-    public function assembleFromArray(array $data, ?OrganisationDto $orgDto = null)
+    public function assembleFromArray(array $data, ?OrganisationDto $orgDto = null): ClientDto
     {
         $dto = new ClientDto();
 
@@ -51,10 +50,7 @@ class ClientAssembler
         return $dto;
     }
 
-    /**
-     * @return ClientDto
-     */
-    public function assembleFromEntity(Client $client)
+    public function assembleFromEntity(Client $client): ClientDto
     {
         $dto = new ClientDto();
 
@@ -68,9 +64,9 @@ class ClientAssembler
     }
 
     /**
-     * @return array
+     * @return array<ReportDto>
      */
-    private function assembleClientReports(array $reports)
+    private function assembleClientReports(array $reports): array
     {
         $dtos = [];
 
@@ -81,12 +77,12 @@ class ClientAssembler
         return $dtos;
     }
 
-    private function assembleClientDeputy(array $deputy)
+    private function assembleClientDeputy(array $deputy): DeputyDto
     {
         return $this->deputyAssembler->assembleFromArray($deputy);
     }
 
-    public function assembleFromOrgDeputyshipDto(OrgDeputyshipDto $dto)
+    public function assembleFromOrgDeputyshipDto(OrgDeputyshipDto $dto): Client
     {
         $client = new Client()
             ->setCaseNumber($dto->getCaseNumber())
@@ -108,7 +104,7 @@ class ClientAssembler
         return $client;
     }
 
-    public function assembleFromLayDeputyshipDto(LayDeputyshipDto $dto)
+    public function assembleFromLayDeputyshipDto(LayDeputyshipDto $dto): Client
     {
         $client = new Client()
             ->setCaseNumber($dto->getCaseNumber())
@@ -130,7 +126,10 @@ class ClientAssembler
         return $client;
     }
 
-    private function assembleClientDeputies(array $deputies)
+    /**
+     * @return array<UserDto>
+     */
+    private function assembleClientDeputies(array $deputies): array
     {
         $dtos = [];
 
