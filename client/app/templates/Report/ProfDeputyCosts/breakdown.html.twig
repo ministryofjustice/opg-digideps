@@ -26,28 +26,37 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate'}}) }}
 
-    {% for profDeputyOtherCost in form.profDeputyOtherCosts %}
-        {% set jsEnabled = profDeputyOtherCost.moreDetails is defined ? ' js-details-expander'  : '' %}
-        <div class="{{ jsEnabled }}">
-            {{ form_row(profDeputyOtherCost.profDeputyOtherCostTypeId) }}
-            {{ form_input(profDeputyOtherCost.amount, 'amount', {
-                'inputPrefix' : '£',
-                'inputClass' : 'govuk-!-width-one-quarter js-format-currency',
-                'labelText': (page ~ '.form.entries.' ~ profDeputyOtherCost.profDeputyOtherCostTypeId.vars.value ~ '.label') | trans,
-                'jsEnabled': jsEnabled
-            }) }}
+        {% for profDeputyOtherCost in form.profDeputyOtherCosts %}
+            {% set toggleRequired = profDeputyOtherCost.moreDetails is defined %}
+            {% set transKey = page ~ '.form.entries.' ~ profDeputyOtherCost.profDeputyOtherCostTypeId.vars.value %}
 
-            {# this is testing the form field is defined. Not the entity property #}
-            {% if profDeputyOtherCost.moreDetails is defined %}
+            <div
+                {% if toggleRequired %}
+                    class="js-toggle-required"
+                    data-optional-label-suffix="{{ ' ' ~ ('optional' | trans({}, 'common')) }}"
+                    data-optional-message="{{ (transKey ~ '.isOptional') | trans }}"
+                    data-required-message="{{ (transKey ~ '.isRequired') | trans }}"
+                {% endif %}
+            >
+
+                {{ form_row(profDeputyOtherCost.profDeputyOtherCostTypeId) }}
+
+                {{ form_input(profDeputyOtherCost.amount, 'amount', {
+                    'inputPrefix' : '£',
+                    'inputClass' : 'govuk-!-width-one-quarter js-format-currency js-toggle-required-trigger',
+                    'labelText': (transKey ~ '.label') | trans
+                }) }}
+
+                {% if toggleRequired %}
                     {{ form_input(profDeputyOtherCost.moreDetails, 'moreDetails', {
-                        'labelText': (page ~ '.form.entries.' ~ profDeputyOtherCost.profDeputyOtherCostTypeId.vars.value ~ '.moreInformation') | trans,
-                        'formGroupClass': 'opg-indented-block hard--top js-hidden js-details-expandable'
+                        'labelText': (transKey ~ '.moreInformation') | trans,
+                        'formGroupClass': 'js-toggle-required-target'
                     }) }}
-            {% endif %}
-        </div>
-    {% endfor %}
+                {% endif %}
+            </div>
+        {% endfor %}
 
-    {{ macros.saveAndContinueButton(form.save) }}
+        {{ macros.saveAndContinueButton(form.save) }}
 
     {{ form_end(form) }}
 
