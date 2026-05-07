@@ -27,7 +27,6 @@ class MoneyTransactionType extends AbstractType
     {
         $ret = [];
 
-        /** @var array[] $categories */
         $categories = MoneyTransaction::$categories;
         foreach ($categories as $cat) {
             /** @var string $categoryId */
@@ -52,7 +51,6 @@ class MoneyTransactionType extends AbstractType
      */
     private function isDescriptionMandatory(): bool
     {
-        /** @var array[] $categories */
         $categories = MoneyTransaction::$categories;
         foreach ($categories as $row) {
             /** @var string $categoryId */
@@ -66,7 +64,7 @@ class MoneyTransactionType extends AbstractType
         return false;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         /** @var int $step */
         $step = $options['step'];
@@ -105,7 +103,6 @@ class MoneyTransactionType extends AbstractType
 
             /** @var Report $report */
             $report = $options['report'];
-            /** @var string $type */
             $type = $this->type;
             if (!empty($report->getBankAccountOptions()) && $report->canLinkToBankAccounts()) {
                 $builder->add('bankAccountId', FormTypes\ChoiceType::class, [
@@ -120,12 +117,12 @@ class MoneyTransactionType extends AbstractType
         $builder->add('save', FormTypes\SubmitType::class);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'account';
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'selectedCategory' => null,

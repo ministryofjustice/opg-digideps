@@ -156,8 +156,12 @@ class TransactionCsvGeneratorTest extends MockeryTestCase
                 $mock->setExplanation('explanation for expense ' . $counter);
                 break;
             case MoneyTransaction::class:
+                /**
+                 * @var int $index
+                 */
+                $index = min($counter, count(MoneyTransaction::$categories) - 1);
                 // Assign Category based on counter
-                $mock->setCategory(MoneyTransaction::$categories[min($counter, count(MoneyTransaction::$categories) - 1)][0]);
+                $mock->setCategory(MoneyTransaction::$categories[$index][0]);
                 $mock->setDescription('description for transaction ' . $counter);
 
                 break;
