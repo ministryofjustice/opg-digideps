@@ -6,6 +6,7 @@ namespace OPG\Digideps\Backend\v2\Assembler;
 
 use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\v2\DTO\DeputyDto;
 use OPG\Digideps\Backend\v2\DTO\DtoPropertySetterTrait;
 use OPG\Digideps\Backend\v2\Registration\DTO\OrgDeputyshipDto;
@@ -26,7 +27,7 @@ class DeputyAssembler
         return $dto;
     }
 
-    public function assembleFromOrgDeputyshipDto(OrgDeputyshipDto $dto)
+    public function assembleFromOrgDeputyshipDto(OrgDeputyshipDto $dto, ?Organisation $organisation)
     {
         if ($dto->deputyIsAnOrganisation()) {
             $deputyFirstName = $dto->getOrganisationName();
@@ -45,6 +46,7 @@ class DeputyAssembler
             ->setAddress3($dto->getDeputyAddress3())
             ->setAddress4($dto->getDeputyAddress4())
             ->setAddress5($dto->getDeputyAddress5())
-            ->setAddressPostcode($dto->getDeputyPostcode());
+            ->setAddressPostcode($dto->getDeputyPostcode())
+            ->setOrganisation($organisation);
     }
 }

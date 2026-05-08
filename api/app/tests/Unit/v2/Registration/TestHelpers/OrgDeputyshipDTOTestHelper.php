@@ -182,6 +182,7 @@ class OrgDeputyshipDTOTestHelper
     {
         $deputy = new Deputy()
             ->setDeputyType(DeputyType::LAY)
+            ->setOrganisation(null)
             ->setEmail1($dto->getDeputyEmail())
             ->setDeputyUid($dto->getDeputyUid())
             ->setFirstname($dto->getDeputyFirstname())

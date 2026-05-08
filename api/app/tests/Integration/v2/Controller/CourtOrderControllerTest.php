@@ -40,7 +40,7 @@ class CourtOrderControllerTest extends AbstractTestController
         $deputy->setDeputyUid('748723' . rand(1, 99999));
         $deputy->setFirstname('name' . time());
         $deputy->setLastname('surname' . time());
-
+        $deputy->setOrganisation(null);
         $deputy->setUser($user);
 
         self::$fixtures->persist($deputy);

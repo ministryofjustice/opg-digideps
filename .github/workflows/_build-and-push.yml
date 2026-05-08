@@ -185,6 +185,28 @@ jobs:
           fi
         working-directory: ${{ matrix.sub_folder }}
 
+      - name: calculate docker image checksum
+        id: image_checksum
+        env:
+          IMAGE_NAME: ${{ matrix.svc_name }}
+          PLATFORM: ${{ matrix.platform }}
+          TARGET_STAGE: ${{ matrix.target }}
+          BRANCH_NAME: ${{ inputs.branch_name }}
+        run: |
+          CHECKSUM="$(
+            {
+              docker image inspect "${IMAGE_NAME}:latest" \
+                --format '{{json .RootFS.Layers}}'
+              printf '%s\n' "${PLATFORM}"
+              printf '%s\n' "${TARGET_STAGE}"
+            } | sha256sum | awk '{print $1}'
+          )"
+
+          echo "checksum_tag=checksum-${CHECKSUM}" >> "$GITHUB_OUTPUT"
+          echo "branch_checksum_tag=${BRANCH_NAME}-checksum-${CHECKSUM}" >> "$GITHUB_OUTPUT"
+          echo "Image checksum tag: checksum-${CHECKSUM}"
+          echo "Branch checksum tag: ${BRANCH_NAME}-checksum-${CHECKSUM}"
+
       - name: configure OIDC AWS credentials for ECR pull
         uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
         with:
@@ -199,9 +221,76 @@ jobs:
           registries: ${{ vars.MANAGEMENT_ACCOUNT }}
           mask-password: "true"
 
+      - name: check existing scanned image
+        id: existing_image
+        env:
+          IMAGE_NAME: ${{ matrix.svc_name }}
+          CHECKSUM_TAG: ${{ steps.image_checksum.outputs.checksum_tag }}
+          BRANCH_CHECKSUM_TAG: ${{ steps.image_checksum.outputs.branch_checksum_tag }}
+        run: |
+          BRANCH_IMAGE_COUNT="$(aws ecr batch-get-image \
+            --repository-name "digideps/${IMAGE_NAME}" \
+            --image-ids imageTag="${BRANCH_CHECKSUM_TAG}" \
+            --query 'length(images)' \
+            --output text)"
+
+          if [ "${BRANCH_IMAGE_COUNT}" = "1" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "source_tag=${BRANCH_CHECKSUM_TAG}" >> "$GITHUB_OUTPUT"
+            echo "Existing scanned image found for this branch: ${BRANCH_CHECKSUM_TAG}"
+            exit 0
+          fi
+
+          SHARED_IMAGE_COUNT="$(aws ecr batch-get-image \
+            --repository-name "digideps/${IMAGE_NAME}" \
+            --image-ids imageTag="${CHECKSUM_TAG}" \
+            --query 'length(images)' \
+            --output text)"
+
+          if [ "${SHARED_IMAGE_COUNT}" = "1" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+            echo "source_tag=${CHECKSUM_TAG}" >> "$GITHUB_OUTPUT"
+            echo "Existing scanned image found from another branch: ${CHECKSUM_TAG}"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+            echo "source_tag=" >> "$GITHUB_OUTPUT"
+            echo "No existing scanned image found"
+          fi
+
+      - name: check daily snyk scan
+        id: daily_snyk
+        env:
+          IMAGE_NAME: ${{ matrix.svc_name }}
+          CHECKSUM_TAG: ${{ steps.image_checksum.outputs.checksum_tag }}
+        run: |
+          TODAY="$(date +'%Y%m%d')"
+          OLD_FILE="/tmp/.buildx-cache/snyk-last-run-${CHECKSUM_TAG}.txt"
+          NEW_FILE="/tmp/.buildx-cache-new/snyk-last-run-${CHECKSUM_TAG}.txt"
+
+          mkdir -p /tmp/.buildx-cache-new
+
+          if [ -f "${OLD_FILE}" ]; then
+            LAST_RUN="$(cat "${OLD_FILE}")"
+          else
+            LAST_RUN=""
+          fi
+
+          echo "${TODAY}" > "${NEW_FILE}"
+
+          echo "Image: ${IMAGE_NAME}"
+          echo "Checksum: ${CHECKSUM_TAG}"
+
+          if [ "${LAST_RUN}" != "${TODAY}" ]; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+            echo "Last Snyk run was '${LAST_RUN}'. Running Snyk scan today for ${IMAGE_NAME} (${CHECKSUM_TAG})"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "Snyk already ran today for ${IMAGE_NAME} (${CHECKSUM_TAG})"
+          fi
+
       - name: Run Snyk Scan
         id: snyk_scan
-        if: matrix.svc_name != 'mock-sirius'
+        if: matrix.svc_name != 'mock-sirius' && (steps.existing_image.outputs.exists != 'true' || steps.daily_snyk.outputs.run == 'true' || inputs.branch_name == 'staging')
         uses: ministryofjustice/opg-github-actions/actions/snyk-scan@2186f4ee10b7f2839e0c795dcd01c729e6d1d4c0 # v4.8.1
         with:
           SNYK_TEST_IMAGE: ${{ matrix.svc_name }}:latest
@@ -237,13 +326,54 @@ jobs:
           registries: ${{ vars.MANAGEMENT_ACCOUNT }}
           mask-password: "true"
 
+      - name: retag existing scanned image
+        if: steps.existing_image.outputs.exists == 'true' && inputs.branch_name != 'staging'
+        env:
+          IMAGE_NAME: ${{ matrix.svc_name }}
+          IMAGE_TAG: ${{ inputs.tag }}
+          SOURCE_TAG: ${{ steps.existing_image.outputs.source_tag }}
+          BRANCH_CHECKSUM_TAG: ${{ steps.image_checksum.outputs.branch_checksum_tag }}
+          BRANCH_NAME: ${{ inputs.branch_name }}
+        run: |
+          MANIFEST="$(aws ecr batch-get-image \
+            --repository-name "digideps/${IMAGE_NAME}" \
+            --image-ids imageTag="${SOURCE_TAG}" \
+            --query 'images[0].imageManifest' \
+            --output text)"
+
+          aws ecr put-image \
+            --repository-name "digideps/${IMAGE_NAME}" \
+            --image-tag "${IMAGE_TAG}" \
+            --image-manifest "${MANIFEST}" \
+            >/dev/null
+
+          aws ecr put-image \
+            --repository-name "digideps/${IMAGE_NAME}" \
+            --image-tag "${BRANCH_CHECKSUM_TAG}" \
+            --image-manifest "${MANIFEST}" \
+            >/dev/null || true
+
+          if [[ "${BRANCH_NAME}" == "main" ]]; then
+            aws ecr put-image \
+              --repository-name "digideps/${IMAGE_NAME}" \
+              --image-tag "latest" \
+              --image-manifest "${MANIFEST}" \
+              >/dev/null
+
+            aws ecr put-image \
+              --repository-name "digideps/${IMAGE_NAME}" \
+              --image-tag "main-${IMAGE_TAG}" \
+              --image-manifest "${MANIFEST}" \
+              >/dev/null
+          fi
+
       - name: show build tag
         env:
           IMAGE_TAG: ${{ inputs.tag }}
         run: echo "Tag to use - ${IMAGE_TAG}"
 
       - name: tag and push user research development container
-        if: matrix.svc_name == 'client-webserver' && inputs.branch_name == 'main'
+        if: matrix.svc_name == 'client-webserver' && inputs.branch_name == 'main' && steps.existing_image.outputs.exists != 'true'
         env:
           ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
           ECR_REGISTRY_ALIAS: digideps
@@ -254,14 +384,19 @@ jobs:
           docker tag "${IMAGE_NAME}:latest" "${ECR_REGISTRY}/${ECR_REGISTRY_ALIAS}/${IMAGE_NAME}:${IMAGE_TAG_DEV}"
 
       - name: tag and push container
+        if: steps.existing_image.outputs.exists != 'true' || inputs.branch_name == 'staging'
         env:
           ECR_REGISTRY: ${{ steps.login_ecr.outputs.registry }}
           ECR_REGISTRY_ALIAS: digideps
           IMAGE_TAG: ${{ inputs.tag }}
           IMAGE_NAME: ${{ matrix.svc_name }}
           BRANCH_NAME: ${{ inputs.branch_name }}
+          CHECKSUM_TAG: ${{ steps.image_checksum.outputs.checksum_tag }}
+          BRANCH_CHECKSUM_TAG: ${{ steps.image_checksum.outputs.branch_checksum_tag }}
         run: |
           docker tag "${IMAGE_NAME}:latest" "${ECR_REGISTRY}/${ECR_REGISTRY_ALIAS}/${IMAGE_NAME}:${IMAGE_TAG}"
+          docker tag "${IMAGE_NAME}:latest" "${ECR_REGISTRY}/${ECR_REGISTRY_ALIAS}/${IMAGE_NAME}:${CHECKSUM_TAG}"
+          docker tag "${IMAGE_NAME}:latest" "${ECR_REGISTRY}/${ECR_REGISTRY_ALIAS}/${IMAGE_NAME}:${BRANCH_CHECKSUM_TAG}"
           if [[ "${BRANCH_NAME}" == "main" ]]; then
             docker tag "${IMAGE_NAME}:latest" "${ECR_REGISTRY}/${ECR_REGISTRY_ALIAS}/${IMAGE_NAME}:latest"
             docker tag "${IMAGE_NAME}:latest" "${ECR_REGISTRY}/${ECR_REGISTRY_ALIAS}/${IMAGE_NAME}:main-${IMAGE_TAG}"
