@@ -3913,12 +3913,6 @@ parameters:
 			path: src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:\$types has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/BankAccount.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:\$typesNotRequiringBankName has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -4969,18 +4963,6 @@ parameters:
 			path: src/Entity/Report/MoneyShortCategory.php
 
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 3
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Cannot use array destructuring on mixed\.$#'
-			identifier: offsetAccess.nonArray
-			count: 3
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:getCategoriesGrouped\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -4989,12 +4971,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:getCategoriesGrouped\(\) has parameter \$typeFilter with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:getType\(\) should return string but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Entity/Report/MoneyTransaction.php
 
@@ -5053,12 +5029,6 @@ parameters:
 			path: src/Entity/Report/MoneyTransaction.php
 
 		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 3
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:\$bankAccount \(OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -5066,12 +5036,6 @@ parameters:
 
 		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:\$bankAccountId has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:\$categories has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: src/Entity/Report/MoneyTransaction.php
@@ -8381,6 +8345,12 @@ parameters:
 			identifier: missingType.property
 			count: 1
 			path: src/Form/Report/MoneyShortType.php
+
+		-
+			message: '#^Cannot cast mixed to int\.$#'
+			identifier: cast.int
+			count: 1
+			path: src/Form/Report/MoneyTransactionType.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
@@ -16705,18 +16675,6 @@ parameters:
 			path: tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
 
 		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Cannot access offset mixed on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:generateBankAccount\(\) has parameter \$counter with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -16834,12 +16792,6 @@ parameters:
 			message: '#^Parameter \#1 \$report of method OPG\\Digideps\\Frontend\\Service\\Csv\\TransactionsCsvGenerator\:\:generateTransactionsCsv\(\) expects OPG\\Digideps\\Frontend\\Entity\\ReportInterface, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
 
 		-
