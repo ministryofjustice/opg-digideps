@@ -12,11 +12,8 @@ use OPG\Digideps\Backend\Repository\ReportRepository;
 use OPG\Digideps\Backend\Service\ReportTypeService;
 use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Psr\Log\LoggerInterface;
-
-use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 
 readonly class ReportTypeUpdateFactory implements DataFactoryInterface
 {
