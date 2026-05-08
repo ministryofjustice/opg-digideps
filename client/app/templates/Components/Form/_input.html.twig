@@ -22,7 +22,7 @@
         </h1>
     {% else %}
         <label for="{{ element.vars.id }}" class="govuk-label {{ labelClass | default('') }}">
-           {{ label.text }}{% if not extraAttrs.required %} {{ 'optional' | trans({}, 'common') }}{% endif %}
+            {{ label.text }}{% if not extraAttrs.required %} {{ 'optional' | trans({}, 'common') }}{% endif %}
             {% if jsEnabled != '' %}
                 <span class="govuk-visually-hidden">
                     Please note typing an amount in this field will reveal an additional input
