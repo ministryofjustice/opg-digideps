@@ -24835,6 +24835,30 @@ parameters:
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
+			message: '#^Offset ''Case'' on non\-empty\-list\<string\|null\> on left side of \?\? does not exist\.$#'
+			identifier: nullCoalesce.offset
+			count: 2
+			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
+
+		-
+			message: '#^Offset ''DeputyEmail'' does not exist on non\-empty\-list\<string\|null\>\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
+
+		-
+			message: '#^Offset ''DeputyEmail'' on non\-empty\-list\<string\|null\> in empty\(\) does not exist\.$#'
+			identifier: empty.offset
+			count: 1
+			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
+
+		-
+			message: '#^Offset ''DeputyUid'' on non\-empty\-list\<string\|null\> on left side of \?\? does not exist\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
+
+		-
 			message: '#^Offset ''addressPostcode'' might not exist on array\|null\.$#'
 			identifier: offsetAccess.notFound
 			count: 1
@@ -24898,6 +24922,12 @@ parameters:
 			message: '#^Parameter \#1 \$haystack of function str_contains expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 5
+			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
+
+		-
+			message: '#^Parameter \#1 \$haystack of function strstr expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
@@ -39233,96 +39263,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: tests/Integration/Factory/MissingReport/MissingReportFinderTest.php
-
-		-
-			message: '#^Cannot call method clear\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Cannot call method get\(\) on Psr\\Container\\ContainerInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$action of class OPG\\Digideps\\Backend\\Entity\\StagingSelectedCandidate constructor expects OPG\\Digideps\\Backend\\v2\\Registration\\Enum\\DeputyshipCandidateAction, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of class Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures constructor expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$expectedCount of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$needle of method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$needle of method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \#2 \$orderUid of class OPG\\Digideps\\Backend\\Entity\\StagingSelectedCandidate constructor expects string, int given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \$courtOrderReportType of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createCourtOrder\(\) expects OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderReportType\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \$kind of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createCourtOrder\(\) expects OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderKind, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \$type of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createCourtOrder\(\) expects OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderType, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \$uid of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createCourtOrder\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Factory\\ReportTypeUpdateFactoryIntegrationTest\:\:\$sut \(OPG\\Digideps\\Backend\\Factory\\ReportTypeUpdateFactory\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
