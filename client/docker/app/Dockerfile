@@ -1,7 +1,7 @@
 ##############################
 # Stage 1: Base Composer Setup
 ##############################
-FROM composer:2.9.7@sha256:dc292c5c0f95f526b051d4c341bf08e7e2b18504c74625e3203d7f123050e318 AS composer
+FROM composer:2.9.7@sha256:02062f7719ec9433a9d4256cfba1c792db96dc9db60a4a92e48264c9e166b877 AS composer
 
 WORKDIR /app
 
