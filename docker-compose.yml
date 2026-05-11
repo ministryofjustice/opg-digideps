@@ -161,7 +161,7 @@ services:
 
   postgres:
     container_name: opg-digideps-postgres
-    image: postgres:14.22@sha256:bbb8851608e3ff4901156bf6a4bf90735a9d44ae014c03811bfdb2f9c354b18b
+    image: postgres:14.22@sha256:eba8ddbdd837ecfbb6ca8a26d8deec68a2f9b076660102ae641dba0f371c099b
     ports:
       - 5432:5432
     env_file:
@@ -169,11 +169,11 @@ services:
     restart: always
 
   redis-frontend:
-    image: redis:6.2.20@sha256:2a5e873bfae4bcc660b27f45c391d4a7a01799b65dea7286acc858e9c6c1e7d3
+    image: redis:6.2.21@sha256:5443f35e8fc8fc8496964b8e8ea39abaf99434d7e1741e514f7f56906b1c9ff0
     restart: always
 
   redis-api:
-    image: redis:6.2.20@sha256:2a5e873bfae4bcc660b27f45c391d4a7a01799b65dea7286acc858e9c6c1e7d3
+    image: redis:6.2.21@sha256:5443f35e8fc8fc8496964b8e8ea39abaf99434d7e1741e514f7f56906b1c9ff0
     restart: always
 
   file-scanner-rest:
@@ -260,7 +260,7 @@ services:
       - OPENAPI_MOCK_SPECIFICATION_URL=/app/deputy-reporting-openapi.yml
 
   mock-notify-api:
-    image: stoplight/prism:5.15.8@sha256:396175b353aac0b11d6faa5c1fb11363ec158032c40cb95825d95dc204082641
+    image: stoplight/prism:5.15.9@sha256:b5d38cea6fc64970e4756dd30611770587cc84d6f4f2a8f83bec72452b226ded
     ports:
       - 4010:4010
     command:
@@ -275,7 +275,7 @@ services:
       ]
 
   composer:
-    image: composer:2.9.7@sha256:dc292c5c0f95f526b051d4c341bf08e7e2b18504c74625e3203d7f123050e318
+    image: composer:2.9.7@sha256:d4ee82e9374726e237781aa32837a9933e288ca9ac11d30e6df3d9f27b174726
     command: ["install"]
 
   custom-sql-query:

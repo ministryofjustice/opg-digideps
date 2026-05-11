@@ -1,4 +1,4 @@
-FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:35a4455cd4153d7cd0ae1fcfa42451884ef19848202606f144d9a089376c7e6c
+FROM nginxinc/nginx-unprivileged:stable-alpine@sha256:9d4ab2b70ec4b86e8576f783066d178d4725dc8c4b3bd060cb09f6d058ba9291
 
 ARG PLATFORM=${PLATFORM:-amd64}
 ARG APP_HOST=${APP_HOST:-127.0.0.1}
