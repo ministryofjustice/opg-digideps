@@ -8755,12 +8755,6 @@ parameters:
 			path: api/app/src/Service/DataCompression.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Service\\DataImporter\\CsvToArray\:\:keepExpectedAndOptionalColumns\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Service/DataImporter/CsvToArray.php
-
-		-
 			message: '#^Parameter \#1 \$array of function array_diff expects an array of values castable to string, array given\.$#'
 			identifier: argument.type
 			count: 1

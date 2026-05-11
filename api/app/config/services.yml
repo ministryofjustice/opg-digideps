@@ -480,6 +480,10 @@ services:
             $name: "preCSVDataFactory"
             $dataFactories:
                 - [
+                      '@OPG\Digideps\Backend\Factory\LayPaProCsvUploadDataFactory',
+                      "active",
+                  ]
+                - [
                       '@OPG\Digideps\Backend\Factory\MissingDeputyDataFactory',
                       "active",
                   ]
