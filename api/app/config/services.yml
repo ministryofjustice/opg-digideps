@@ -488,6 +488,10 @@ services:
                       "active",
                   ]
                 - [
+                      '@OPG\Digideps\Backend\Factory\ImportClientDataFactory',
+                      "dry-run-only",
+                  ]
+                - [
                       '@OPG\Digideps\Backend\Factory\MissingDeputyDataFactory',
                       "active",
                   ]

@@ -131,11 +131,11 @@ class ImportDeputyDataFactory implements DataFactoryInterface
                     ');
                 }
             } catch (\Throwable $e) {
-                $this->errors[] = "Database error in ImportDeputyDataFactory: {$e->getMessage()}";
+                $this->errors[] = "Database error in {$this->getName()}: {$e->getMessage()}";
             }
         }
         if (!$this->endTransaction(count($this->errors) === 0)) {
-            $this->errors[] = "Database error in ImportDeputyDataFactory while ending transaction.";
+            $this->errors[] = "Database error in {$this->getName()} while ending transaction.";
         }
 
         $messages = [
@@ -148,7 +148,7 @@ class ImportDeputyDataFactory implements DataFactoryInterface
             $messages[] = " Linked {$postLinked} new entries in deputy.";
         }
         return new DataFactoryResult([
-            'success' => count($this->errors) === 0 ? $messages : [],
+            'counts' => $messages,
             'errors' => $this->errors,
         ]);
     }
