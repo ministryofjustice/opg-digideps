@@ -14,7 +14,7 @@ class CsvToArray
     ) {
     }
 
-    private function keepExpectedAndOptionalColumns(array $record)
+    private function keepExpectedAndOptionalColumns(array $record): array
     {
         $trimmedRecord = [];
 
@@ -34,7 +34,20 @@ class CsvToArray
      */
     public function create(string $filename): array
     {
+        return iterator_to_array($this->createAsIterator($filename));
+    }
+
+    /**
+     * See the create method for further documentation.
+     *
+     * @return \Iterator<int, array>
+     */
+    public function createAsIterator(string $filename): \Iterator
+    {
         try {
+            /**
+             * @var Reader<array> $reader
+             */
             $reader = Reader::from($filename);
             $reader->setHeaderOffset(0);
         } catch (UnavailableStream) {
@@ -52,7 +65,9 @@ class CsvToArray
             throw new \RuntimeException('Malformed row within file or invalid CSV');
         }
 
-        // only keep expected and optional columns
-        return array_map([$this, 'keepExpectedAndOptionalColumns'], iterator_to_array($records));
+        foreach ($records as $record) {
+            // only keep expected and optional columns
+            yield $this->keepExpectedAndOptionalColumns($record);
+        }
     }
 }
