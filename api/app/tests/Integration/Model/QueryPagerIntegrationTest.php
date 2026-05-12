@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\Model;
 
-use OPG\Digideps\Backend\Entity\StagingSelectedCandidate;
-use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use OPG\Digideps\Backend\Entity\Staging\StagingSelectedCandidate;
 use OPG\Digideps\Backend\Utility\Query\QueryPager;
 use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 
 class QueryPagerIntegrationTest extends ApiIntegrationTestCase
 {

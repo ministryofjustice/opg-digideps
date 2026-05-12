@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Repository;
 
-use OPG\Digideps\Backend\Entity\StagingSelectedCandidate;
-use OPG\Digideps\Backend\Utility\Query\QueryPager;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
+use OPG\Digideps\Backend\Entity\Staging\StagingSelectedCandidate;
+use OPG\Digideps\Backend\Utility\Query\QueryPager;
 
 /**
  * @extends ServiceEntityRepository<StagingSelectedCandidate>
