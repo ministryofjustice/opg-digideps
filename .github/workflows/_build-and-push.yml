@@ -70,8 +70,10 @@ jobs:
           docker compose -f "/tmp/opg-github-actions/docker-compose.yml" pull snyk
 
           mkdir -p /tmp/snyk-scanner-cache
-          docker compose -f "/tmp/opg-github-actions/docker-compose.yml" images -q snyk \
-            | xargs docker save -o /tmp/snyk-scanner-cache/snyk-scanner.tar
+
+          docker save \
+            -o /tmp/snyk-scanner-cache/snyk-scanner.tar \
+            311462405659.dkr.ecr.eu-west-1.amazonaws.com/shared/snyk:cli-1.1303.2-v0.3.0
 
   docker_build_scan_push:
     needs: prewarm_snyk_scanner
