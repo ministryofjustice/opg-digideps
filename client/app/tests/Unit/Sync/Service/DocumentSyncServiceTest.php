@@ -41,6 +41,13 @@ class DocumentSyncServiceTest extends KernelTestCase
     private string $fileName;
     private string $s3Reference;
 
+    private function makeDocument(): Document
+    {
+        $report = $this->createStub(Report::class);
+        $report->method('getId')->willReturn(123456789);
+        return new Document()->setReport($report);
+    }
+
     public function setUp(): void
     {
         $this->reportStartDate = new \DateTime('2018-05-14');
@@ -128,7 +135,7 @@ class DocumentSyncServiceTest extends KernelTestCase
                 false
             )
             ->shouldBeCalled()
-            ->willReturn(new Document());
+            ->willReturn($this->makeDocument());
 
         $sut = new DocumentSyncService(
             $this->siriusApiGatewayClient->reveal(),
@@ -208,7 +215,7 @@ class DocumentSyncServiceTest extends KernelTestCase
                 false
             )
             ->shouldBeCalled()
-            ->willReturn($this->serializer->serialize(new Document(), 'json'));
+            ->willReturn($this->serializer->serialize($this->makeDocument(), 'json'));
 
         $sut = new DocumentSyncService(
             $this->siriusApiGatewayClient->reveal(),
@@ -223,7 +230,7 @@ class DocumentSyncServiceTest extends KernelTestCase
 
     public function testSendSupportingDocumentSuccess(): void
     {
-        $document = new Document()->setId(6789);
+        $document = $this->makeDocument()->setId(6789);
 
         $expectedUuidUsedToSyncDoc = 'report-pdf-submission-uuid';
         $expectedSubmissionIdUsedForSync = 1234;
@@ -267,7 +274,7 @@ class DocumentSyncServiceTest extends KernelTestCase
                 false
             )
             ->shouldBeCalled()
-            ->willReturn(new Document());
+            ->willReturn($this->makeDocument());
 
         $sut = new DocumentSyncService(
             $this->siriusApiGatewayClient->reveal(),
@@ -303,7 +310,7 @@ class DocumentSyncServiceTest extends KernelTestCase
                 false
             )
             ->shouldBeCalled()
-            ->willReturn($this->serializer->serialize(new Document(), 'json'));
+            ->willReturn($this->serializer->serialize($this->makeDocument(), 'json'));
 
         $sut = new DocumentSyncService(
             $this->siriusApiGatewayClient->reveal(),
@@ -356,7 +363,7 @@ class DocumentSyncServiceTest extends KernelTestCase
                 false
             )
             ->shouldBeCalled()
-            ->willReturn($this->serializer->serialize(new Document(), 'json'));
+            ->willReturn($this->serializer->serialize($this->makeDocument(), 'json'));
 
         $sut = new DocumentSyncService(
             $this->siriusApiGatewayClient->reveal(),
@@ -431,7 +438,7 @@ class DocumentSyncServiceTest extends KernelTestCase
                 false
             )
             ->shouldBeCalled()
-            ->willReturn($this->serializer->serialize(new Document(), 'json'));
+            ->willReturn($this->serializer->serialize($this->makeDocument(), 'json'));
 
         $sut = new DocumentSyncService(
             $this->siriusApiGatewayClient->reveal(),
@@ -453,7 +460,7 @@ class DocumentSyncServiceTest extends KernelTestCase
 
     public function testSendDocumentInvalidFilenamesAreFixed(): void
     {
-        $document = new Document()->setId(6789);
+        $document = $this->makeDocument()->setId(6789);
 
         $expectedUuidUsedToSyncDoc = 'report-pdf-submission-uuid';
         $expectedSubmissionIdUsedForSync = 1234;
@@ -497,7 +504,7 @@ class DocumentSyncServiceTest extends KernelTestCase
                 false
             )
             ->shouldBeCalled()
-            ->willReturn(new Document());
+            ->willReturn($this->makeDocument());
 
         $sut = new DocumentSyncService(
             $this->siriusApiGatewayClient->reveal(),
@@ -510,7 +517,7 @@ class DocumentSyncServiceTest extends KernelTestCase
 
     public function testSendDocumentMissingFileExtensionThrowsError(): void
     {
-        $document = new Document()->setId(6789);
+        $document = $this->makeDocument()->setId(6789);
 
         $expectedUuidUsedToSyncDoc = 'report-pdf-submission-uuid';
         $expectedSubmissionIdUsedForSync = 1234;
@@ -547,7 +554,7 @@ class DocumentSyncServiceTest extends KernelTestCase
                 false
             )
             ->shouldBeCalled()
-            ->willReturn($this->serializer->serialize(new Document(), 'json'));
+            ->willReturn($this->serializer->serialize($this->makeDocument(), 'json'));
 
         $sut = new DocumentSyncService(
             $this->siriusApiGatewayClient->reveal(),
