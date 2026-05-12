@@ -26,7 +26,39 @@ on:
         required: true
 
 jobs:
+  prewarm_snyk_scanner:
+    strategy:
+      fail-fast: false
+      matrix:
+        runs_on:
+          - "ubuntu-24.04-arm"
+          - "ubuntu-latest"
+
+    runs-on: ${{ matrix.runs_on }}
+
+    steps:
+      - name: cache snyk scanner image
+        id: cache-snyk-scanner
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: /tmp/snyk-scanner-cache
+          key: snyk-scanner-image-${{ matrix.runs_on }}-9e8b7c2fb29c11e77b12913f74459fa48b11829f
+
+      - name: pull and save snyk scanner image
+        if: steps.cache-snyk-scanner.outputs.cache-hit != 'true'
+        run: |
+          git clone https://github.com/ministryofjustice/opg-github-actions.git /tmp/opg-github-actions
+          cd /tmp/opg-github-actions
+          git checkout 9e8b7c2fb29c11e77b12913f74459fa48b11829f
+
+          docker compose -f "/tmp/opg-github-actions/docker-compose.yml" pull snyk
+
+          mkdir -p /tmp/snyk-scanner-cache
+          docker compose -f "/tmp/opg-github-actions/docker-compose.yml" images -q snyk \
+            | xargs docker save -o /tmp/snyk-scanner-cache/snyk-scanner.tar
+
   docker_build_scan_push:
+    needs: prewarm_snyk_scanner
     strategy:
       fail-fast: false
       matrix:
@@ -288,23 +320,17 @@ jobs:
             echo "Snyk already ran today for ${IMAGE_NAME} (${CHECKSUM_TAG})"
           fi
 
-      - name: cache docker image store
+      - name: restore snyk scanner image cache
         if: matrix.svc_name != 'mock-sirius' && (steps.existing_image.outputs.exists != 'true' || steps.daily_snyk.outputs.run == 'true' || inputs.branch_name == 'staging')
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
-          path: /var/lib/docker
-          key: docker-image-store-${{ matrix.runs_on }}-${{ steps.cache-dates.outputs.cache_date_today }}
-          restore-keys: |
-            docker-image-store-${{ matrix.runs_on }}-
+          path: /tmp/snyk-scanner-cache
+          key: snyk-scanner-image-${{ matrix.runs_on }}-9e8b7c2fb29c11e77b12913f74459fa48b11829f
 
-      - name: pull snyk scanner image
+      - name: load snyk scanner image
         if: matrix.svc_name != 'mock-sirius' && (steps.existing_image.outputs.exists != 'true' || steps.daily_snyk.outputs.run == 'true' || inputs.branch_name == 'staging')
         run: |
-          git clone https://github.com/ministryofjustice/opg-github-actions.git /tmp/opg-github-actions
-          cd /tmp/opg-github-actions
-          git checkout 9e8b7c2fb29c11e77b12913f74459fa48b11829f
-
-          docker compose -f "/tmp/opg-github-actions/docker-compose.yml" pull snyk
+          docker load -i /tmp/snyk-scanner-cache/snyk-scanner.tar
 
       - name: Run Snyk Scan
         id: snyk_scan
