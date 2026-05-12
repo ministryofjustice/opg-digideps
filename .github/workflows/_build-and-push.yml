@@ -300,13 +300,11 @@ jobs:
       - name: pull snyk scanner image
         if: matrix.svc_name != 'mock-sirius' && (steps.existing_image.outputs.exists != 'true' || steps.daily_snyk.outputs.run == 'true' || inputs.branch_name == 'staging')
         run: |
-          ACTION_DIR="$(find "${GITHUB_WORKSPACE}/.." -path "*/opg-github-actions/actions/snyk-scan" -type d | head -n 1)"
-          COMPOSE_FILE="${ACTION_DIR}/../../docker-compose.yml"
+          git clone https://github.com/ministryofjustice/opg-github-actions.git /tmp/opg-github-actions
+          cd /tmp/opg-github-actions
+          git checkout 9e8b7c2fb29c11e77b12913f74459fa48b11829f
 
-          echo "Snyk action dir: ${ACTION_DIR}"
-          echo "Docker compose file: ${COMPOSE_FILE}"
-
-          docker compose -f "${COMPOSE_FILE}" pull snyk
+          docker compose -f "/tmp/opg-github-actions/docker-compose.yml" pull snyk
 
       - name: Run Snyk Scan
         id: snyk_scan
