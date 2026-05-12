@@ -152,7 +152,7 @@ class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
 
         self::$entityManager->flush();
 
-        $reports = self::$sut->getAllByDeterminant([$org[0]->getId()], 2, new ParameterBag(), 'reports', 'notStarted');
+        $reports = self::$sut->getAllByUser($user->getId(), new ParameterBag(), 'notStarted');
 
         self::assertCount(4, $reports);
         self::assertEquals($reports[0]['id'], $dualReport1->getId());

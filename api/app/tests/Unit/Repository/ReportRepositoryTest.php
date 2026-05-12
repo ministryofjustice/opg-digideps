@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Repository;
 
+use OPG\Digideps\Backend\Domain\Report\ReportAccessService;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Fee;
 use OPG\Digideps\Backend\Entity\Report\Report;
@@ -42,7 +43,7 @@ final class ReportRepositoryTest extends TestCase
             ->zeroOrMoreTimes()
             ->andReturn($mockClient);
 
-        $this->sut = new ReportRepository($mockManagerRegistry, $clientSearchFilter);
+        $this->sut = new ReportRepository($mockManagerRegistry, $clientSearchFilter, new ReportAccessService($this->createStub(EntityManagerInterface::class)));
     }
 
     /**
