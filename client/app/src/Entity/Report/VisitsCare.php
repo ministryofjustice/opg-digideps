@@ -254,15 +254,15 @@ class VisitsCare
 
     public function keepOnlyRelevantVisitsCareData(): bool
     {
-        if ('yes' == $this->doYouLiveWithClient) {
+        if ($this->doYouLiveWithClient == 'yes') {
             $this->howOftenDoYouContactClient = null;
         }
 
-        if ('no' == $this->doesClientReceivePaidCare) {
+        if ($this->doesClientReceivePaidCare == 'no') {
             $this->howIsCareFunded = null;
         }
 
-        if ('no' == $this->doesClientHaveACarePlan) {
+        if ($this->doesClientHaveACarePlan == 'no') {
             $this->whenWasCarePlanLastReviewed = null;
         }
 

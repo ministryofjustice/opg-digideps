@@ -90,7 +90,7 @@ class RestInputOuputFormatter
         }
 
         // if data is defined,
-        if ($groupsCheck && !empty($data['data']) && $this->containsEntity($data['data']) && false === $context->hasAttribute('groups')) {
+        if ($groupsCheck && !empty($data['data']) && $this->containsEntity($data['data']) && $context->hasAttribute('groups') === false) {
             throw new \RuntimeException($request->getMethod() . ' ' . $request->getUri() . ' missing JMS group');
         }
 
@@ -117,7 +117,7 @@ class RestInputOuputFormatter
             return false;
         }
 
-        return is_object($object) && false !== strpos(get_class($object), 'Entity');
+        return is_object($object) && strpos(get_class($object), 'Entity') !== false;
     }
 
     /**
@@ -166,7 +166,7 @@ class RestInputOuputFormatter
         }
 
         // simple timeout
-        if (419 === $code) {
+        if ($code === 419) {
             $level = 'info';
         }
 

@@ -597,7 +597,7 @@ class Fixtures
             $this->em->persist($satisfaction);
             $this->em->persist($researchType);
 
-            if (100 === $i) {
+            if ($i === 100) {
                 $this->em->flush();
                 $this->em->clear();
             }

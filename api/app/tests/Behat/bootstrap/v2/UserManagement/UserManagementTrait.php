@@ -58,7 +58,7 @@ trait UserManagementTrait
         $xpath = '//h2[@id="users-list-title"]/parent::div/p[@class="govuk-body"]';
         $userText = $this->getSession()->getPage()->find('xpath', $xpath)->getHtml();
 
-        $pluralUsers = 1 === $this->userCount ? 'user' : 'users';
+        $pluralUsers = $this->userCount === 1 ? 'user' : 'users';
         $userMessage = sprintf('found %d %s', $this->userCount, $pluralUsers);
         $this->assertStringEqualsString($userMessage, $userText, 'Users Found');
 
@@ -422,7 +422,7 @@ trait UserManagementTrait
     private function fillInAndSubmitUsers($email, $firstName, $lastName, $postcode, $roleType, $role)
     {
         $this->iAmOnAdminAddUserPage();
-        $selectType = 'deputy' == $roleType ? 'admin[roleNameDeputy]' : 'admin[roleNameStaff]';
+        $selectType = $roleType == 'deputy' ? 'admin[roleNameDeputy]' : 'admin[roleNameStaff]';
         $this->fillField('admin[email]', $email);
         $this->fillField('admin[firstname]', $firstName);
         $this->fillField('admin[lastname]', $lastName);

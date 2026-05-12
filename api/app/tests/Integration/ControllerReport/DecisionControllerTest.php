@@ -38,7 +38,7 @@ class DecisionControllerTest extends AbstractTestController
 
         self::fixtures()->flush()->clear();
 
-        if (null === self::$tokenAdmin) {
+        if (self::$tokenAdmin === null) {
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
         }
@@ -211,6 +211,6 @@ class DecisionControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $this->assertTrue(null === self::fixtures()->getRepo(Decision::class)->find(self::$decision1->getId()));
+        $this->assertTrue(self::fixtures()->getRepo(Decision::class)->find(self::$decision1->getId()) === null);
     }
 }

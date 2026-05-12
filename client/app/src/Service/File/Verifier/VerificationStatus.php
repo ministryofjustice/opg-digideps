@@ -24,7 +24,7 @@ class VerificationStatus
 
     public function getStatus(): int
     {
-        return self::FAILED === $this->status ? self::FAILED : self::PASSED;
+        return $this->status === self::FAILED ? self::FAILED : self::PASSED;
     }
 
     public function getError(): ?string

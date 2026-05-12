@@ -34,7 +34,7 @@ class DocumentSyncCommand extends Command
     {
         ini_set('memory_limit', '512M');
 
-        $isFeatureEnabled = ('1' === $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC));
+        $isFeatureEnabled = ($this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC) === '1');
 
         if (!$isFeatureEnabled) {
             $output->writeln('Feature disabled, sleeping');

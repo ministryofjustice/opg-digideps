@@ -60,7 +60,7 @@ class ReportStatusUpdaterCommand extends Command
                 $report->updateSectionsStatusCache($report->getAvailableSections());
             }
 
-            if (0 === $i % 100) {
+            if ($i % 100 === 0) {
                 $output->write(" $i ");
             }
             $em->flush();

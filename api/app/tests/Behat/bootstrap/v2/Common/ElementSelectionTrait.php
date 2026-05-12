@@ -57,7 +57,7 @@ trait ElementSelectionTrait
             $session->getSelectorsHandler()->selectorToXpath('xpath', $xpath)
         );
 
-        if (null === $element) {
+        if ($element === null) {
             throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
         }
 
@@ -80,7 +80,7 @@ trait ElementSelectionTrait
         $sectionLocator = sprintf("//*[text()[contains(., '%s')]]", $sectionText);
         $foundElements = $this->getSession()->getPage()->findAll('xpath', $sectionLocator);
 
-        if (0 === count($foundElements)) {
+        if (count($foundElements) === 0) {
             throw new BehatException(sprintf('No elements found on the page that contain the text "%s"', $sectionText));
         }
 
@@ -94,7 +94,7 @@ trait ElementSelectionTrait
             }
         }
 
-        if (0 === count($nodeElements)) {
+        if (count($nodeElements) === 0) {
             throw new BehatException(sprintf('No links found on the page that have the text "%s"', $linkText));
         }
 
@@ -115,7 +115,7 @@ trait ElementSelectionTrait
             $xpath
         );
 
-        if (null === $element) {
+        if ($element === null) {
             throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
         }
 
@@ -132,7 +132,7 @@ trait ElementSelectionTrait
             $session->getSelectorsHandler()->selectorToXpath('xpath', $xpath)
         );
 
-        if (null === $element) {
+        if ($element === null) {
             return false;
         }
 
@@ -149,7 +149,7 @@ trait ElementSelectionTrait
             $session->getSelectorsHandler()->selectorToXpath('xpath', $xpath)
         );
 
-        if (null === $element) {
+        if ($element === null) {
             throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
         }
 
@@ -176,7 +176,7 @@ trait ElementSelectionTrait
             $session->getSelectorsHandler()->selectorToXpath('xpath', $xpath)
         );
 
-        if (null === $values) {
+        if ($values === null) {
             throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
         }
 
@@ -200,7 +200,7 @@ trait ElementSelectionTrait
             $session->getSelectorsHandler()->selectorToXpath('xpath', $xpath)
         );
 
-        if (null === $values) {
+        if ($values === null) {
             throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
         }
 
@@ -213,12 +213,12 @@ trait ElementSelectionTrait
     // Can be used for cross browser tests to scroll so element is in viewport
     public function scrollToElement($element)
     {
-        if ('.' != substr($element, 0, 1) && '#' != substr($element, 0, 1)) {
+        if (substr($element, 0, 1) != '.' && substr($element, 0, 1) != '#') {
             $element = '#' . $element;
         }
 
         $driver = $this->getSession()->getDriver();
-        if ('Behat\Mink\Driver\Selenium2Driver' == get_class($driver)) {
+        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
             $javascript =
                 "var el = $('$element');"
                 . 'var elOffset = el.offset().top;'

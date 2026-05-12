@@ -40,7 +40,7 @@ class ValidatingFormTest extends TestCase
             $map[] = [$key, $this->makeFormStub($value)];
         }
         $form->method('get')->willReturnMap($map);
-        $form->method('has')->willReturnCallback(fn(string $key) => array_key_exists($key, $children));
+        $form->method('has')->willReturnCallback(fn (string $key) => array_key_exists($key, $children));
         return $form;
     }
 }

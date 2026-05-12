@@ -24,7 +24,7 @@ class RedisUserProvider implements UserProviderInterface, PasswordUpgraderInterf
     public function __construct(
         private readonly Client $redis,
         private readonly LoggerInterface $logger,
-        readonly array $options,
+        public readonly array $options,
         private readonly UserRepository $userRepository,
         private readonly string $workspace
     ) {
@@ -54,7 +54,7 @@ class RedisUserProvider implements UserProviderInterface, PasswordUpgraderInterf
 
     public function supportsClass(string $class): bool
     {
-        return 'OPG\Digideps\Backend\Entity\User' === $class || is_subclass_of($class, 'OPG\Digideps\Backend\Entity\User');
+        return $class === 'OPG\Digideps\Backend\Entity\User' || is_subclass_of($class, 'OPG\Digideps\Backend\Entity\User');
     }
 
     public function loadUserByUsername(string $username): ?User

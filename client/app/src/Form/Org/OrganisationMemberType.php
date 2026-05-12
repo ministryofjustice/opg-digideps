@@ -50,7 +50,7 @@ class OrganisationMemberType extends AbstractType
             $user = $event->getData();
             $form = $event->getForm();
 
-            if (!$user || null === $user->getId() || !$user->getActive()) {
+            if (!$user || $user->getId() === null || !$user->getActive()) {
                 $form->add('email', FormTypes\TextType::class, [
                     'required' => true,
                     'constraints' => [

@@ -54,9 +54,9 @@ class ReportSubmissionController extends AbstractController
         $ret = $this->restClient->get('/report-submission?' . http_build_query($currentFilters), 'array');
         $records = $this->restClient->arrayToEntities(ReportSubmission::class, $ret['records']);
 
-        $nOfdownloadableSubmissions = count(array_filter($records, fn($s) => $s->isDownloadable()));
+        $nOfdownloadableSubmissions = count(array_filter($records, fn ($s) => $s->isDownloadable()));
 
-        if ('archived' === $currentFilters['status']) {
+        if ($currentFilters['status'] === 'archived') {
             $postActions = [self::ACTION_DOWNLOAD];
         } else {
             $postActions = [self::ACTION_DOWNLOAD, self::ACTION_ARCHIVE];
@@ -67,7 +67,7 @@ class ReportSubmissionController extends AbstractController
 
         $isDocumentSyncEnabled = $parameterStoreService->getFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC);
 
-        if ('1' === $isDocumentSyncEnabled && User::ROLE_SUPER_ADMIN === $user->getRoleName()) {
+        if ($isDocumentSyncEnabled === '1' && $user->getRoleName() === User::ROLE_SUPER_ADMIN) {
             $postActions[] = self::ACTION_SYNCHRONISE;
         }
 
@@ -121,9 +121,9 @@ class ReportSubmissionController extends AbstractController
         /** @var ReportSubmission $submission */
         $submission = $client->get("report-submission/$submissionId", 'Report\\ReportSubmission');
 
-        $documents = array_values(array_filter($submission->getDocuments(), fn($document): bool => $document->getId() === $documentId));
+        $documents = array_values(array_filter($submission->getDocuments(), fn ($document): bool => $document->getId() === $documentId));
 
-        if (1 !== count($documents)) {
+        if (count($documents) !== 1) {
             throw $this->createNotFoundException('Document not found');
         }
 
@@ -232,7 +232,7 @@ class ReportSubmissionController extends AbstractController
 
     private static function getFiltersFromRequest(Request $request): array
     {
-        $order = 'new' === $request->get('status', 'new') ? 'DESC' : 'ASC';
+        $order = $request->get('status', 'new') === 'new' ? 'DESC' : 'ASC';
 
         return [
             'q' => $request->get('q'),

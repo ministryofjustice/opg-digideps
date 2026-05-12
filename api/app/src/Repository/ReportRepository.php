@@ -125,14 +125,14 @@ class ReportRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('r');
 
-        if (self::USER_DETERMINANT === $determinant) {
+        if ($determinant === self::USER_DETERMINANT) {
             $qb
-                ->select(('count' === $select) ? 'COUNT(DISTINCT r)' : 'r,c')
+                ->select(($select === 'count') ? 'COUNT(DISTINCT r)' : 'r,c')
                 ->leftJoin('r.client', 'c')
                 ->leftJoin('c.users', 'u')->where('u.id = ' . $orgIdsOrUserId);
         } else {
             $qb
-                ->select(('count' === $select) ? 'COUNT(DISTINCT r)' : 'r,c,o')
+                ->select(($select === 'count') ? 'COUNT(DISTINCT r)' : 'r,c,o')
                 ->leftJoin('r.client', 'c')
                 ->leftJoin('c.organisation', 'o')
                 ->where('o.isActivated = true')
@@ -150,21 +150,21 @@ class ReportRepository extends ServiceEntityRepository
 
         $endOfToday = new \DateTime('today midnight');
 
-        if (Report::STATUS_READY_TO_SUBMIT === $status) {
+        if ($status === Report::STATUS_READY_TO_SUBMIT) {
             $qb->andWhere('r.reportStatusCached = :status AND r.endDate < :endOfToday')
                 ->setParameter('status', $status)
                 ->setParameter('endOfToday', $endOfToday);
-        } elseif (Report::STATUS_NOT_FINISHED === $status) {
+        } elseif ($status === Report::STATUS_NOT_FINISHED) {
             $qb->andWhere('r.reportStatusCached = :status OR (r.reportStatusCached = :readyToSubmit AND r.endDate >= :endOfToday)')
                 ->setParameter('status', $status)
                 ->setParameter('readyToSubmit', Report::STATUS_READY_TO_SUBMIT)
                 ->setParameter('endOfToday', $endOfToday);
-        } elseif (Report::STATUS_NOT_STARTED === $status) {
+        } elseif ($status === Report::STATUS_NOT_STARTED) {
             $qb->andWhere('r.reportStatusCached = :status')
                 ->setParameter('status', $status);
         }
 
-        if ('count' === $select) {
+        if ($select === 'count') {
             return $qb->getQuery()->getSingleScalarResult();
         }
 
@@ -176,7 +176,7 @@ class ReportRepository extends ServiceEntityRepository
 
         $result = $qb->getQuery()->getArrayResult();
 
-        return 0 === count($result) ? null : $result;
+        return count($result) === 0 ? null : $result;
     }
 
     public function getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(int $limit): array
@@ -265,7 +265,7 @@ END deputy_type";
                 ->setParameter('endDate', $endDate->setTime(23, 59, 59));
         }
 
-        if ($deputyType && 'all' !== $deputyType) {
+        if ($deputyType && $deputyType !== 'all') {
             $types = match (strtoupper($deputyType)) {
                 'LAY' => Report::getAllLayTypes(),
                 'PROF' => Report::getAllProfTypes(),
@@ -273,7 +273,7 @@ END deputy_type";
                 default => [],
             };
 
-            if (null === $startDate && null === $endDate) {
+            if ($startDate === null && $endDate === null) {
                 $query->where('r.type IN (:deputyTypes)')
                     ->setParameter('deputyTypes', $types);
             } else {

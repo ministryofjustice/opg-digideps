@@ -78,7 +78,7 @@ class OrganisationType extends AbstractType
             $data = $event->getData();
             $field = 'emailAddress';
 
-            if (isset($data['emailIdentifierType']) && 'domain' === $data['emailIdentifierType']) {
+            if (isset($data['emailIdentifierType']) && $data['emailIdentifierType'] === 'domain') {
                 $field = 'emailDomain';
             }
 
@@ -95,9 +95,9 @@ class OrganisationType extends AbstractType
                 $data = $form->getData();
                 $type = $form->get('emailIdentifierType')->getData();
 
-                if ('domain' === $type) {
+                if ($type === 'domain') {
                     return ['Default', 'email-domain'];
-                } elseif ('address' === $type) {
+                } elseif ($type === 'address') {
                     return ['Default', 'email-address'];
                 }
 

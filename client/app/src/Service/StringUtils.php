@@ -16,21 +16,21 @@ class StringUtils
         $hours = intval(gmdate('H', $seconds));
         $minutes = intval(gmdate('i', $seconds));
 
-        $hoursString = $hours . ' ' . ((1 === $hours) ? 'hour' : 'hours');
-        $minutesString = $minutes . ' ' . ((1 === $minutes) ? 'minute' : 'minutes');
+        $hoursString = $hours . ' ' . (($hours === 1) ? 'hour' : 'hours');
+        $minutesString = $minutes . ' ' . (($minutes === 1) ? 'minute' : 'minutes');
 
         // less than a minute
-        if (0 === $hours && 0 === $minutes) {
+        if ($hours === 0 && $minutes === 0) {
             return 'less than a minute';
         }
 
         // X minutes
-        if (0 === $hours) {
+        if ($hours === 0) {
             return $minutesString;
         }
 
         // X hours
-        if (0 === $minutes) {
+        if ($minutes === 0) {
             return $hoursString;
         }
 

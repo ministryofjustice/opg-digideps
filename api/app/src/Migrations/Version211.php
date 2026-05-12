@@ -13,7 +13,7 @@ class Version211 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf('postgresql' != $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('ALTER TABLE report ADD prof_dc_how_charged VARCHAR(10) DEFAULT NULL');
         $this->addSql('ALTER TABLE report DROP prof_dc_hc_fixed');
@@ -25,7 +25,7 @@ class Version211 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf('postgresql' != $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() != 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('ALTER TABLE report ADD prof_dc_hc_fixed BOOLEAN DEFAULT NULL');
         $this->addSql('ALTER TABLE report ADD prof_dc_hc_assessed BOOLEAN DEFAULT NULL');

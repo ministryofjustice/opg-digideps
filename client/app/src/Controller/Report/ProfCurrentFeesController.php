@@ -40,7 +40,7 @@ class ProfCurrentFeesController extends AbstractController
     public function startAction(int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED != $report->getStatus()->getProfCurrentFeesState()['state']) {
+        if ($report->getStatus()->getProfCurrentFeesState()['state'] != Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('prof_service_fees_summary', ['reportId' => $reportId]);
         }
 
@@ -72,7 +72,7 @@ class ProfCurrentFeesController extends AbstractController
         }
 
         $backLink = $this->generateUrl('prof_current_fees', ['reportId' => $reportId]);
-        if ('summary' == $request->get('from')) {
+        if ($request->get('from') == 'summary') {
             $backLink = $this->generateUrl('prof_service_fees_summary', ['reportId' => $reportId]);
         }
 
@@ -99,7 +99,7 @@ class ProfCurrentFeesController extends AbstractController
 
         if ($feeId) {
             // edit
-            $profServiceFee = array_filter($report->getCurrentProfServiceFees(), fn($f): bool => $f->getId() == $feeId);
+            $profServiceFee = array_filter($report->getCurrentProfServiceFees(), fn ($f): bool => $f->getId() == $feeId);
             $profServiceFee = array_shift($profServiceFee);
         } else {
             // add
@@ -125,7 +125,7 @@ class ProfCurrentFeesController extends AbstractController
 
             $profServiceFee->setReport($report);
 
-            if (1 == $step) {
+            if ($step == 1) {
                 if (!empty($profServiceFee->getId())) {
                     // Update: update service type only
                     $this->restClient->put(
@@ -166,7 +166,7 @@ class ProfCurrentFeesController extends AbstractController
             }
 
             // Handle add another pattern
-            if ('saveAndAddAnother' === $buttonClicked->getName()) {
+            if ($buttonClicked->getName() === 'saveAndAddAnother') {
                 // use step 1 to begin the loop again
                 return $this->redirectToRoute(
                     'current_service_fee_step',
@@ -186,15 +186,15 @@ class ProfCurrentFeesController extends AbstractController
         }
 
         $backLink = null;
-        if (1 == $step) {
-            if ('exist' == $fromPage) {
+        if ($step == 1) {
+            if ($fromPage == 'exist') {
                 $backLink = $this->generateUrl('prof_current_fees_exist', ['reportId' => $reportId]);
             }
-            if ('summary' == $fromPage) {
+            if ($fromPage == 'summary') {
                 $backLink = $this->generateUrl('prof_service_fees_summary', ['reportId' => $reportId]);
             }
         }
-        if (2 == $step) {
+        if ($step == 2) {
             $backLink = $this->generateUrl('current_service_fee_step', [
                 'reportId' => $reportId,
                 'feeId' => $feeId,
@@ -237,7 +237,7 @@ class ProfCurrentFeesController extends AbstractController
         }
 
         $backLink = null;
-        if ('summary' == $request->get('from')) {
+        if ($request->get('from') == 'summary') {
             $backLink = $this->generateUrl('prof_service_fees_summary', ['reportId' => $reportId]);
         }
 
@@ -253,7 +253,7 @@ class ProfCurrentFeesController extends AbstractController
     public function summaryAction(int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED == $report->getStatus()->getProfCurrentFeesState()['state']) {
+        if ($report->getStatus()->getProfCurrentFeesState()['state'] == Status::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('prof_current_fees', ['reportId' => $reportId]));
         }
 

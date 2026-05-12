@@ -35,7 +35,7 @@ trait FormTrait
     public function theFormShouldBeValid()
     {
         $driver = $this->getSession()->getDriver();
-        if ('Behat\Mink\Driver\Selenium2Driver' != get_class($driver)) {
+        if (get_class($driver) != 'Behat\Mink\Driver\Selenium2Driver') {
             $this->assertResponseStatus(200);
         }
 
@@ -133,11 +133,11 @@ trait FormTrait
     {
         $currentYear = intval(date('Y'));
 
-        if ('current' === $yearType) {
+        if ($yearType === 'current') {
             $year = $currentYear;
-        } elseif ('previous' === $yearType) {
+        } elseif ($yearType === 'previous') {
             $year = $currentYear - 1;
-        } elseif ('next' === $yearType) {
+        } elseif ($yearType === 'next') {
             $year = $currentYear + 1;
         } else {
             throw new \RuntimeException("Invalid year type \"$yearType\"");

@@ -29,7 +29,7 @@ class CsvBuilder
     {
         $this->filePointer = fopen('php://temp/maxmemory:1048576', 'w');
 
-        if (false === $this->filePointer) {
+        if ($this->filePointer === false) {
             throw new \Exception('Failed to open temporary file');
         }
     }

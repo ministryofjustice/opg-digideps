@@ -14,7 +14,7 @@ class ForbiddenExceptionListener
         $exception = $exceptionEvent->getThrowable();
 
         if ($exception instanceof HttpException) {
-            if (Response::HTTP_FORBIDDEN == $exception->getStatusCode()) {
+            if ($exception->getStatusCode() == Response::HTTP_FORBIDDEN) {
                 $response = new RedirectResponse('/access-denied');
                 $exceptionEvent->setResponse($response);
                 $exceptionEvent->stopPropagation();

@@ -111,7 +111,7 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
 
     private function isLoginRouteWithRequiredData(Request $request): bool
     {
-        return '/auth/login' === $request->getPathInfo()
+        return $request->getPathInfo() === '/auth/login'
         && $request->isMethod('POST')
         && $this->requestHasToken($request);
     }

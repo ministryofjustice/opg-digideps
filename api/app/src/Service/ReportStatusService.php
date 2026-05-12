@@ -111,7 +111,7 @@ class ReportStatusService
     public function getBankAccountsState(): array
     {
         $bankAccounts = $this->report->getBankAccounts();
-        if (0 === count($bankAccounts)) {
+        if (count($bankAccounts) === 0) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
 
@@ -176,13 +176,13 @@ class ReportStatusService
     {
         $categoriesCount = count($this->report->getMoneyShortCategoriesInPresent());
         $transactionsExist = $this->report->getMoneyTransactionsShortInExist();
-        $noCategoriesChosen = ('Yes' === $this->report->getMoneyInExists() && 0 == $categoriesCount);
-        $moneyInNo1kItems = ($categoriesCount > 0 && 'no' == $transactionsExist);
-        $isCompleted = ('yes' == $transactionsExist && count($this->report->getMoneyTransactionsShortIn()) > 0);
+        $noCategoriesChosen = ($this->report->getMoneyInExists() === 'Yes' && $categoriesCount == 0);
+        $moneyInNo1kItems = ($categoriesCount > 0 && $transactionsExist == 'no');
+        $isCompleted = ($transactionsExist == 'yes' && count($this->report->getMoneyTransactionsShortIn()) > 0);
 
-        if ('No' === $this->report->getMoneyInExists() && $this->report->getReasonForNoMoneyIn()) {
+        if ($this->report->getMoneyInExists() === 'No' && $this->report->getReasonForNoMoneyIn()) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
-        } elseif ('No' === $this->report->getMoneyInExists()) {
+        } elseif ($this->report->getMoneyInExists() === 'No') {
             return ['state' => self::STATE_INCOMPLETE];
         }
 
@@ -208,13 +208,13 @@ class ReportStatusService
     {
         $categoriesCount = count($this->report->getMoneyShortCategoriesOutPresent());
         $transactionsExist = $this->report->getMoneyTransactionsShortOutExist();
-        $noCategoriesChosen = ('Yes' === $this->report->getMoneyOutExists() && 0 == $categoriesCount);
-        $moneyOutNo1kItems = ($categoriesCount > 0 && 'no' == $transactionsExist);
-        $isCompleted = ('yes' == $transactionsExist && count($this->report->getMoneyTransactionsShortOut()) > 0);
+        $noCategoriesChosen = ($this->report->getMoneyOutExists() === 'Yes' && $categoriesCount == 0);
+        $moneyOutNo1kItems = ($categoriesCount > 0 && $transactionsExist == 'no');
+        $isCompleted = ($transactionsExist == 'yes' && count($this->report->getMoneyTransactionsShortOut()) > 0);
 
-        if ('No' === $this->report->getMoneyOutExists() && $this->report->getReasonForNoMoneyOut()) {
+        if ($this->report->getMoneyOutExists() === 'No' && $this->report->getReasonForNoMoneyOut()) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
-        } elseif ('No' === $this->report->getMoneyOutExists()) {
+        } elseif ($this->report->getMoneyOutExists() === 'No') {
             return ['state' => self::STATE_INCOMPLETE];
         }
 
@@ -245,11 +245,11 @@ class ReportStatusService
 
         if (
             $this->report->isMissingMoneyOrAccountsOrClosingBalance()
-            || self::STATE_DONE != $this->getMoneyInState()['state']
-            || self::STATE_DONE != $this->getMoneyOutState()['state']
-            || self::STATE_DONE != $this->getGiftsState()['state']
-            || self::STATE_DONE != $this->getExpensesState()['state'] // won't be true if the section is not in the report type
-            || self::STATE_DONE != $this->getPaFeesExpensesState()['state'] // won't be true if the section is not in the report type
+            || $this->getMoneyInState()['state'] != self::STATE_DONE
+            || $this->getMoneyOutState()['state'] != self::STATE_DONE
+            || $this->getGiftsState()['state'] != self::STATE_DONE
+            || $this->getExpensesState()['state'] != self::STATE_DONE // won't be true if the section is not in the report type
+            || $this->getPaFeesExpensesState()['state'] != self::STATE_DONE // won't be true if the section is not in the report type
         ) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
@@ -270,7 +270,7 @@ class ReportStatusService
     #[JMS\Groups(['status'])]
     public function isReadyToSubmit(): bool
     {
-        return 0 === count($this->getRemainingSections());
+        return count($this->getRemainingSections()) === 0;
     }
 
     #[JMS\VirtualProperty]
@@ -301,8 +301,8 @@ class ReportStatusService
         if (empty($hasDebts)) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         } elseif (
-            'no' == $hasDebts
-            || ('yes' == $hasDebts
+            $hasDebts == 'no'
+            || ($hasDebts == 'yes'
                 && count($this->report->getDebtsWithValidAmount()) > 0)
                 && !empty($this->report->getDebtManagement())
         ) {
@@ -369,17 +369,17 @@ class ReportStatusService
         }
 
         // remaining costs are valid if answer is "no" or ("Yes" + at least one record)
-        $isRemainingValid = 'no' === $this->report->getProfDeputyCostsHasPrevious()
-            || ('yes' === $this->report->getProfDeputyCostsHasPrevious() && count($this->report->getProfDeputyPreviousCosts()));
+        $isRemainingValid = $this->report->getProfDeputyCostsHasPrevious() === 'no'
+            || ($this->report->getProfDeputyCostsHasPrevious() === 'yes' && count($this->report->getProfDeputyPreviousCosts()));
 
         $hasInterim = $this->report->getProfDeputyCostsHasInterim();
         // interim costs are valid if answer is "no" or ("Yes" + at least one record)
         $isInterimValid = $onlyFixedTicked
-            || 'no' === $hasInterim
-            || ('yes' === $hasInterim && count($this->report->getProfDeputyInterimCosts()));
+            || $hasInterim === 'no'
+            || ($hasInterim === 'yes' && count($this->report->getProfDeputyInterimCosts()));
 
         // skipped if "fixed" is not the only ticked
-        $isFixedRequired = $onlyFixedTicked || 'no' === $hasInterim;
+        $isFixedRequired = $onlyFixedTicked || $hasInterim === 'no';
         $isFixedValid = !$isFixedRequired || $this->report->getProfDeputyFixedCost();
 
         // If costs are only fixed, SCCO question is not required (DDPB-2506)
@@ -403,15 +403,15 @@ class ReportStatusService
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
-        if (null == $this->report->getProfDeputyCostsEstimateHowCharged()) {
+        if ($this->report->getProfDeputyCostsEstimateHowCharged() == null) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
 
-        if (Report::PROF_DEPUTY_COSTS_TYPE_FIXED === $this->report->getProfDeputyCostsEstimateHowCharged()) {
+        if ($this->report->getProfDeputyCostsEstimateHowCharged() === Report::PROF_DEPUTY_COSTS_TYPE_FIXED) {
             return ['state' => self::STATE_DONE, 'nOfRecords' => 0];
         }
 
-        return (null == $this->report->getProfDeputyCostsEstimateHasMoreInfo()) ?
+        return ($this->report->getProfDeputyCostsEstimateHasMoreInfo() == null) ?
             ['state' => self::STATE_INCOMPLETE, 'nOfRecords' => 0] :
             ['state' => self::STATE_DONE, 'nOfRecords' => 0];
     }
@@ -446,7 +446,7 @@ class ReportStatusService
     #[JMS\Groups(['status', 'more-info-state'])]
     public function getOtherInfoState(): array
     {
-        if (null === $this->report->getActionMoreInfo()) {
+        if ($this->report->getActionMoreInfo() === null) {
             return ['state' => self::STATE_NOT_STARTED, 'nOfRecords' => 0];
         }
 
@@ -460,9 +460,9 @@ class ReportStatusService
     {
         $numRecords = count($this->report->getDeputyDocuments());
 
-        if (null === $this->report->getWishToProvideDocumentation()) {
+        if ($this->report->getWishToProvideDocumentation() === null) {
             $status = ['state' => self::STATE_NOT_STARTED];
-        } elseif ('yes' === $this->report->getWishToProvideDocumentation() && 0 == $numRecords) {
+        } elseif ($this->report->getWishToProvideDocumentation() === 'yes' && $numRecords == 0) {
             $status = ['state' => self::STATE_INCOMPLETE];
         } else {
             $status = ['state' => self::STATE_DONE];
@@ -670,7 +670,7 @@ class ReportStatusService
         unset($sectionStatus['moneyTransfers']);
 
         return count(array_filter($sectionStatus, function ($e) {
-            return self::STATE_NOT_STARTED != $e;
+            return $e != self::STATE_NOT_STARTED;
         })) > 0;
     }
 

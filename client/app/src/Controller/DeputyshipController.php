@@ -47,7 +47,7 @@ class DeputyshipController extends AbstractController
 
         $numClients = count($clients);
 
-        if (1 === $numClients) {
+        if ($numClients === 1) {
             /** @var Client $client */
             $client = reset($clients);
 
@@ -55,7 +55,7 @@ class DeputyshipController extends AbstractController
         }
 
         if ($numClients > 1) {
-            usort($clients, fn($client1, $client2): int => strnatcmp((string) $client1->getFirstName(), (string) $client2->getFirstName()));
+            usort($clients, fn ($client1, $client2): int => strnatcmp((string) $client1->getFirstName(), (string) $client2->getFirstName()));
         }
 
         return ['clients' => $clients];

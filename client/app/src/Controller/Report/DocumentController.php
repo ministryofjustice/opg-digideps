@@ -60,7 +60,7 @@ class DocumentController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (Status::STATE_NOT_STARTED !== $report->getStatus()->getDocumentsState()['state']) {
+        if ($report->getStatus()->getDocumentsState()['state'] !== Status::STATE_NOT_STARTED) {
             $referer = $request->headers->get('referer');
 
             if (is_string($referer) && str_contains($referer, '/step/1')) {
@@ -105,7 +105,7 @@ class DocumentController extends AbstractController
             /* @var Report $data */
             $data = $form->getData();
 
-            if ('no' === $data->getWishToProvideDocumentation()) {
+            if ($data->getWishToProvideDocumentation() === 'no') {
                 if (count($data->getDeputyDocuments()) > 0) {
                     $translatedMessage = $this->translator->trans('summaryPage.setNoAttemptWithDocuments', [], 'report-documents');
 
@@ -115,7 +115,7 @@ class DocumentController extends AbstractController
                 }
             }
 
-            $redirectUrl = 'yes' == $data->getWishToProvideDocumentation()
+            $redirectUrl = $data->getWishToProvideDocumentation() == 'yes'
                 ? $this->generateUrl('report_documents', ['reportId' => $report->getId()])
                 : $this->generateUrl('report_documents_summary', ['reportId' => $report->getId()]);
 
@@ -148,7 +148,7 @@ class DocumentController extends AbstractController
             'action' => $formAction, 'report_submitted' => $report->isSubmitted(),
         ]);
 
-        if ('tooBig' == $request->get('error')) {
+        if ($request->get('error') == 'tooBig') {
             $message = $this->translator->trans('document.file.errors.maxSizeMessage', [], 'validators');
             $form->get('files')->addError(new FormError($message));
         }
@@ -224,7 +224,7 @@ class DocumentController extends AbstractController
         // submit the report to generate the submission entry only
         $this->restClient->put('report/' . $reportId . '/submit-documents', $report, ['submit']);
 
-        if ('true' === $request->get('successUploaded')) {
+        if ($request->get('successUploaded') === 'true') {
             $this->addFlash('fileUploadSuccess', 'Your uploaded files are now attached to this report.');
         }
 
@@ -253,7 +253,7 @@ class DocumentController extends AbstractController
         $formAction = $this->generateUrl('report_documents_reupload', ['reportId' => $reportId]);
         $form = $this->createForm(UploadType::class, null, ['action' => $formAction, 'report_submitted' => $report->isSubmitted()]);
 
-        if ('tooBig' == $request->get('error')) {
+        if ($request->get('error') == 'tooBig') {
             $message = $this->translator->trans('document.file.errors.maxSizeMessage', [], 'validators');
             $form->get('files')->addError(new FormError($message));
         }
@@ -354,7 +354,7 @@ class DocumentController extends AbstractController
             /** @var User $user */
             $user = $this->getUser();
 
-            if ('true' === $successfulUpload) {
+            if ($successfulUpload === 'true') {
                 $nextLink = $this->generateUrl('report_documents_submit_more_redirect', ['reportId' => $report->getId(), 'successUploaded' => $successfulUpload]);
             } else {
                 $nextLink = $this->generateUrl('report_documents_submit_more_redirect', ['reportId' => $report->getId()]);
@@ -375,14 +375,14 @@ class DocumentController extends AbstractController
     public function summaryAction(Request $request, int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED == $report->getStatus()->getDocumentsState()['state']) {
+        if ($report->getStatus()->getDocumentsState()['state'] == Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('documents', ['reportId' => $report->getId()]);
         }
 
         $fromPage = $request->get('from');
 
         return [
-            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
+            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'report' => $report,
             'backLink' => $this->generateUrl('report_documents', ['reportId' => $report->getId()]),
             'status' => $report->getStatus(),
@@ -452,10 +452,10 @@ class DocumentController extends AbstractController
         } else {
             $reportDocumentStatus = $report->getStatus()->getDocumentsState();
 
-            if ('reUploadPage' == $request->get('from')) {
+            if ($request->get('from') == 'reUploadPage') {
                 $returnUrl = $this->generateUrl('report_documents_reupload', ['reportId' => $document->getReportId()]);
             } elseif (array_key_exists('nOfRecords', $reportDocumentStatus) && is_numeric($reportDocumentStatus['nOfRecords']) && $reportDocumentStatus['nOfRecords'] > 1) {
-                $returnUrl = 'summaryPage' == $request->get('from')
+                $returnUrl = $request->get('from') == 'summaryPage'
                     ? $this->generateUrl('report_documents_summary', ['reportId' => $document->getReportId()])
                     : $this->generateUrl('report_documents', ['reportId' => $document->getReportId()]);
             } else {

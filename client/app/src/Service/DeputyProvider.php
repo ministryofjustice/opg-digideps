@@ -41,7 +41,7 @@ class DeputyProvider implements UserProviderInterface
             $this->logger->info(__METHOD__ . ': ' . $e);
 
             // rethrow 423 (brute-force/locked to grab timestamp)
-            if (423 == $e->getCode()) {
+            if ($e->getCode() == 423) {
                 throw $e;
             }
 
@@ -80,6 +80,6 @@ class DeputyProvider implements UserProviderInterface
 
     public function supportsClass(string $class): bool
     {
-        return User::class === $class;
+        return $class === User::class;
     }
 }

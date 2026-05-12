@@ -41,9 +41,9 @@ class OrganisationController extends AbstractController
     {
         $user = $this->userApi->getUserWithData(['user-organisations', 'organisation']);
 
-        if (0 === count($user->getOrganisations())) {
+        if (count($user->getOrganisations()) === 0) {
             throw $this->createNotFoundException();
-        } elseif (1 === count($user->getOrganisations())) {
+        } elseif (count($user->getOrganisations()) === 1) {
             $organisationId = $user->getOrganisations()[0]->getId();
 
             return $this->redirectToRoute('org_organisation_view', ['id' => $organisationId]);

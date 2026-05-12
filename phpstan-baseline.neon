@@ -3559,12 +3559,6 @@ parameters:
 			path: api/app/src/Entity/Deputy.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between null and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: api/app/src/Entity/Deputy.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Note\:\:__construct\(\) has parameter \$category with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -44781,12 +44775,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Controller\\Admin\\OrganisationController\:\:editAction\(\) has parameter \$id with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: client/app/src/Controller/Admin/OrganisationController.php
-
-		-
-			message: '#^PHPDoc tag @var has invalid value \(\$organisation Organisation\)\: Unexpected token "\$organisation", expected type at offset 9 on line 1$#'
-			identifier: phpDoc.parseError
 			count: 1
 			path: client/app/src/Controller/Admin/OrganisationController.php
 

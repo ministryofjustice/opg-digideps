@@ -1215,7 +1215,7 @@ class FixtureHelper
 
         $this->testRunId = $testRunId;
         $domain = $deputyEmail ? substr(strstr($deputyEmail, '@'), 1) : 't.uk';
-        $emailIdentifier = 't.uk' !== $domain ? $domain : sprintf('prof-%s-%s', $this->orgEmailIdentifier, $this->testRunId);
+        $emailIdentifier = $domain !== 't.uk' ? $domain : sprintf('prof-%s-%s', $this->orgEmailIdentifier, $this->testRunId);
 
         $organisation = $this->createOrganisation($this->testRunId, $emailIdentifier);
 

@@ -103,6 +103,6 @@ class MissingReportFinderTest extends ApiIntegrationTestCase
         $finder = new MissingReportFinder(self::$entityManager);
         $orders = [...$finder->findCourtOrdersWithMissingReports()];
         $this->assertCount(3, $orders);
-        $this->assertEqualsCanonicalizing([1, 4, 13], array_map(fn(CourtOrder $order) => $order->getId(), $orders));
+        $this->assertEqualsCanonicalizing([1, 4, 13], array_map(fn (CourtOrder $order) => $order->getId(), $orders));
     }
 }

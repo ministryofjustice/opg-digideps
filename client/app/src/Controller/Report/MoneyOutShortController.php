@@ -45,7 +45,7 @@ class MoneyOutShortController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (Status::STATE_NOT_STARTED != $report->getStatus()->getMoneyOutShortState()['state']) {
+        if ($report->getStatus()->getMoneyOutShortState()['state'] != Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('money_out_short_summary', ['reportId' => $reportId]);
         }
 
@@ -74,7 +74,7 @@ class MoneyOutShortController extends AbstractController
             $report->setMoneyOutExists($answer);
             $this->restClient->put('report/' . $reportId, $report, ['doesMoneyOutExist']);
 
-            if ('Yes' === $answer) {
+            if ($answer === 'Yes') {
                 $report->setReasonForNoMoneyOut(null);
                 $this->restClient->put('report/' . $reportId, $report, ['reasonForNoMoneyOut']);
 
@@ -150,7 +150,7 @@ class MoneyOutShortController extends AbstractController
     public function categoryAction(Request $request, int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $fromSummaryPage = 'summary' == $request->get('from');
+        $fromSummaryPage = $request->get('from') == 'summary';
 
         $form = $this->createForm(MoneyShortType::class, $report, ['field' => 'moneyShortCategoriesOut']);
         $form->handleRequest($request);
@@ -201,14 +201,14 @@ class MoneyOutShortController extends AbstractController
             ['field' => 'moneyTransactionsShortOutExist', 'translation_domain' => 'report-money-short']
         );
         $form->handleRequest($request);
-        $fromSummaryPage = 'summary' == $request->get('from');
+        $fromSummaryPage = $request->get('from') == 'summary';
 
         // retrieve soft deleted transaction ids if present and store money out short ids only
         $softDeletedTransactionIds = $this->restClient->get('/report/' . $reportId . '/money-transaction-short/get-soft-delete', 'array');
 
         $softDeletedMoneyOutShortTransactionIds = [];
         foreach ($softDeletedTransactionIds as $softDeletedTransactionId) {
-            if ('out' == $softDeletedTransactionId['type']) {
+            if ($softDeletedTransactionId['type'] == 'out') {
                 $softDeletedMoneyOutShortTransactionIds[] = $softDeletedTransactionId['id'];
             }
         }
@@ -220,13 +220,13 @@ class MoneyOutShortController extends AbstractController
             $this->restClient->put('report/' . $reportId, $data, ['money-transactions-short-out-exist']);
 
             // undelete items if they exist
-            if ('yes' === $data->getMoneyTransactionsShortOutExist() && !empty($softDeletedMoneyOutShortTransactionIds)) {
+            if ($data->getMoneyTransactionsShortOutExist() === 'yes' && !empty($softDeletedMoneyOutShortTransactionIds)) {
                 foreach ($softDeletedMoneyOutShortTransactionIds as $transactionId) {
                     $this->restClient->put('/report/' . $reportId . '/money-transaction-short/soft-delete/' . $transactionId, ['transactionSoftDelete']);
                 }
 
                 return $this->redirectToRoute('money_out_short_summary', ['reportId' => $reportId, 'from' => 'money_out_short_one_off_payments_exist']);
-            } elseif ('yes' === $data->getMoneyTransactionsShortOutExist() && !empty($data->getMoneyTransactionsShortOut()) && 'summary' == $fromSummaryPage) {
+            } elseif ($data->getMoneyTransactionsShortOutExist() === 'yes' && !empty($data->getMoneyTransactionsShortOut()) && $fromSummaryPage == 'summary') {
                 return $this->redirectToRoute('money_out_short_summary', ['reportId' => $reportId, 'from' => 'money_out_short_one_off_payments_exist']);
             }
 
@@ -253,7 +253,7 @@ class MoneyOutShortController extends AbstractController
         $record = new MoneyTransactionShort('out');
         $record->setReport($report);
 
-        $fromSummaryPage = 'summary' == $request->get('from');
+        $fromSummaryPage = $request->get('from') == 'summary';
 
         $form = $this->createForm(MoneyShortTransactionType::class, $record);
         $form->add('addAnother', AddAnotherThingType::class);
@@ -346,7 +346,7 @@ class MoneyOutShortController extends AbstractController
     {
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyOutShortState()['state'] && 'skip-step' != $fromPage) {
+        if ($report->getStatus()->getMoneyOutShortState()['state'] == Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('money_out_short', ['reportId' => $reportId]);
         }
 

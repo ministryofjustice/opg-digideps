@@ -70,11 +70,11 @@ class CourtOrderController extends AbstractController
         // structure of returned data can be found in api/app/src/Service/DeputyService.php, findReportsInfoByUid()
         $results = $this->deputyApi->findAllDeputyCourtOrdersForCurrentDeputy();
 
-        if (is_null($results) || 0 === count($results)) {
+        if (is_null($results) || count($results) === 0) {
             return $this->redirectToRoute('courtorders_waiting');
         }
 
-        if (1 === count($results)) {
+        if (count($results) === 1) {
             return $this->redirectToRoute('courtorder_by_uid', ['courtOrderUid' => $results[0]['courtOrderLink']]);
         }
 

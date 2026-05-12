@@ -47,18 +47,18 @@ class DeputyCostsReportUpdateHandler implements ReportUpdateHandlerInterface
             foreach ($report->getProfDeputyInterimCosts() as $ic) {
                 $this->em->remove($ic);
             }
-        } elseif ('yes' === $report->getProfDeputyCostsHasInterim()) {
+        } elseif ($report->getProfDeputyCostsHasInterim() === 'yes') {
             $report->setProfDeputyFixedCost(null);
         }
 
         if (!empty($data['prof_deputy_costs_has_interim']) && $data['prof_deputy_costs_has_interim']) {
             $report->setProfDeputyCostsHasInterim($data['prof_deputy_costs_has_interim']);
             // remove interim if changed to "no"
-            if ('no' === $data['prof_deputy_costs_has_interim']) {
+            if ($data['prof_deputy_costs_has_interim'] === 'no') {
                 foreach ($report->getProfDeputyInterimCosts() as $ic) {
                     $this->em->remove($ic);
                 }
-            } elseif ('yes' === $data['prof_deputy_costs_has_interim']) {
+            } elseif ($data['prof_deputy_costs_has_interim'] === 'yes') {
                 $report->setProfDeputyFixedCost(null);
             }
         }
