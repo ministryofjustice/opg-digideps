@@ -44,6 +44,22 @@ jobs:
           path: /tmp/snyk-scanner-cache
           key: snyk-scanner-image-${{ matrix.runs_on }}-9e8b7c2fb29c11e77b12913f74459fa48b11829f
 
+      - name: configure OIDC AWS credentials for ECR pull
+        if: steps.cache-snyk-scanner.outputs.cache-hit != 'true'
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.MANAGEMENT_ACCOUNT }}:role/digideps-gh-actions-ecr-pull
+          role-session-name: github-actions-ecr-pull
+          role-duration-seconds: 900
+          aws-region: eu-west-1
+
+      - name: login to ECR for snyk scanner pull
+        if: steps.cache-snyk-scanner.outputs.cache-hit != 'true'
+        uses: aws-actions/amazon-ecr-login@19d944daaa35f0fa1d3f7f8af1d3f2e5de25c5b7 # v2.1.4
+        with:
+          registries: ${{ vars.MANAGEMENT_ACCOUNT }}
+          mask-password: "true"
+
       - name: pull and save snyk scanner image
         if: steps.cache-snyk-scanner.outputs.cache-hit != 'true'
         run: |
