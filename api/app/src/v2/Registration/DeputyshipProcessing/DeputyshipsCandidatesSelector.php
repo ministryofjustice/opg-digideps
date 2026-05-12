@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing;
 
-use OPG\Digideps\Backend\Entity\StagingDeputyship;
-use OPG\Digideps\Backend\Entity\StagingSelectedCandidate;
-use OPG\Digideps\Backend\Repository\StagingDeputyshipRepository;
-use OPG\Digideps\Backend\Repository\StagingSelectedCandidateRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
+use OPG\Digideps\Backend\Entity\Staging\StagingDeputyship;
+use OPG\Digideps\Backend\Entity\Staging\StagingSelectedCandidate;
+use OPG\Digideps\Backend\Repository\StagingDeputyshipRepository;
+use OPG\Digideps\Backend\Repository\StagingSelectedCandidateRepository;
 use Psr\Log\LoggerInterface;
 
 class DeputyshipsCandidatesSelector
@@ -46,8 +46,9 @@ class DeputyshipsCandidatesSelector
     public function select(): DeputyshipCandidatesSelectorResult
     {
         // delete records from candidate table ready for new candidates
+        $qualified = StagingSelectedCandidate::class;
         $this->em->beginTransaction();
-        $this->em->createQuery('DELETE FROM OPG\Digideps\Backend\Entity\StagingSelectedCandidate sc')->execute();
+        $this->em->createQuery("DELETE FROM {$qualified} sc")->execute();
         $this->em->flush();
         $this->em->commit();
 
