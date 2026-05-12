@@ -2,9 +2,6 @@
 
 {% import '@App/Macros/macros.html.twig' as macros %}
 
-{% set adLoggedAsDeputy = app.session.get('_adId') %}
-{% set adName = app.session.get('_adFirstname') ~ ' ' ~ app.session.get('_adLastname') %}
-
 {% trans_default_domain "layout" %}
 
 {% if navSection is not defined %}
@@ -43,11 +40,6 @@
             </button>
             <ul id="navigation" class="govuk-service-navigation__list">
                 {% if is_granted('ROLE_LAY_DEPUTY') %}
-                    {% if adLoggedAsDeputy %}
-                        <li class="govuk-service-navigation__item">
-                            Logged as {{ adName }} (Assisted Digital)
-                        </li>
-                    {% endif %}
                     {{ _self.navLink(
                         'homepage',
                         'nav.reports',

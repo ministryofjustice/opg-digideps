@@ -15,7 +15,6 @@ home:
       email: Email
       active: Active
       regDate: Registration date
-    assistedState: Assisted
     loggedInState: (currenty logged)
     sendEmail: (Re)send activation email
     codepNameNotSet: Invited co-deputy
