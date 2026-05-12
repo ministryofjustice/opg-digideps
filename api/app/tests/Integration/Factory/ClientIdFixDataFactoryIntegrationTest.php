@@ -104,7 +104,7 @@ class ClientIdFixDataFactoryIntegrationTest extends ApiIntegrationTestCase
     {
         $sut = new ClientIdFixDataFactory(self::$entityManager);
 
-        $oldClientFields['setCaseNumber'] = $caseNumber;
+        $oldClientFields['setCaseNumber'] = $caseNumber . '1';
 
         $user = self::$fixtures->createUser();
 
@@ -124,7 +124,7 @@ class ClientIdFixDataFactoryIntegrationTest extends ApiIntegrationTestCase
         self::$entityManager->flush();
 
         // court order associated with old inactive client
-        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid, CourtOrderType::PFA, CourtOrderKind::Single, 'ACTIVE');
+        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid . '2', CourtOrderType::PFA, CourtOrderKind::Single, 'ACTIVE');
         $courtOrder->setClient($oldClient);
 
         // report also associated with old inactive client
