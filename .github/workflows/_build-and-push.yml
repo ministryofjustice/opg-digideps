@@ -288,6 +288,26 @@ jobs:
             echo "Snyk already ran today for ${IMAGE_NAME} (${CHECKSUM_TAG})"
           fi
 
+      - name: cache docker image store
+        if: matrix.svc_name != 'mock-sirius' && (steps.existing_image.outputs.exists != 'true' || steps.daily_snyk.outputs.run == 'true' || inputs.branch_name == 'staging')
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: /var/lib/docker
+          key: docker-image-store-${{ matrix.runs_on }}-${{ steps.cache-dates.outputs.cache_date_today }}
+          restore-keys: |
+            docker-image-store-${{ matrix.runs_on }}-
+
+      - name: pull snyk scanner image
+        if: matrix.svc_name != 'mock-sirius' && (steps.existing_image.outputs.exists != 'true' || steps.daily_snyk.outputs.run == 'true' || inputs.branch_name == 'staging')
+        run: |
+          ACTION_DIR="$(find "${GITHUB_WORKSPACE}/.." -path "*/opg-github-actions/actions/snyk-scan" -type d | head -n 1)"
+          COMPOSE_FILE="${ACTION_DIR}/../../docker-compose.yml"
+
+          echo "Snyk action dir: ${ACTION_DIR}"
+          echo "Docker compose file: ${COMPOSE_FILE}"
+
+          docker compose -f "${COMPOSE_FILE}" pull snyk
+
       - name: Run Snyk Scan
         id: snyk_scan
         if: matrix.svc_name != 'mock-sirius' && (steps.existing_image.outputs.exists != 'true' || steps.daily_snyk.outputs.run == 'true' || inputs.branch_name == 'staging')
