@@ -82,12 +82,12 @@ readonly class ReportTypeUpdateFactory implements DataFactoryInterface
             $currentReportType = ReportType::tryFrom($report->getType());
             $possibleReportType = ReportTypeService::determineReportType($courtOrders);
 
-            if ($possibleReportType === null) {
-                $indeterminate[] = $reportId;
+            if ((string) $currentReportType === (string) $possibleReportType) {
                 continue;
             }
 
-            if ((string) $currentReportType === (string) $possibleReportType) {
+            if ($possibleReportType === null) {
+                $indeterminate[] = $reportId;
                 continue;
             }
 
@@ -99,6 +99,7 @@ readonly class ReportTypeUpdateFactory implements DataFactoryInterface
                 )
             ) {
                 $dangerous[] = $reportId;
+                continue;
             }
 
             if (!$dryRun) {
@@ -106,8 +107,7 @@ readonly class ReportTypeUpdateFactory implements DataFactoryInterface
                 $this->entityManager->persist($report);
                 ++$count;
 
-                // batch flushes in 10s
-                if ($count % 10 === 0) {
+                if ($count % 128 === 0) {
                     $this->entityManager->flush();
                 }
             } else {
@@ -125,13 +125,13 @@ readonly class ReportTypeUpdateFactory implements DataFactoryInterface
         // just warn about them
         $numIndeterminate = count($indeterminate);
         if ($numIndeterminate > 0) {
-            $messages['indeterminate'] = "Unable to determine report type for $numIndeterminate report IDs: " . implode(', ', $indeterminate);
+            $messages['indeterminate'] = ["Unable to determine report type for $numIndeterminate report IDs: " . implode(', ', $indeterminate)];
         }
 
         // while we log this as a warning, we apply the change to/from hybrid anyway
         $numDangerous = count($dangerous);
         if ($numDangerous > 0) {
-            $messages['dangerous'] = "Possible dangerous change of report type to/from hybrid for $numDangerous report IDs: " . implode(', ', $dangerous);
+            $messages['dangerous'] = ["Possible dangerous change of report type to/from hybrid for $numDangerous report IDs: " . implode(', ', $dangerous)];
         }
 
         return new DataFactoryResult(

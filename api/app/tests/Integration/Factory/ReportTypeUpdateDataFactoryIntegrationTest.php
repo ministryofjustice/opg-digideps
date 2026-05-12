@@ -81,9 +81,9 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
                 'action' => DeputyshipCandidateAction::InsertOrderReport,
                 'deputyType' => DeputyType::LAY,
                 'existingReportType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
-                'expectedReportType' => Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
-                'updatedCount' => 1,
-                'errorCount' => 1,
+                'expectedReportType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
+                'updatedCount' => 0,
+                'errorCount' => 0,
             ]],
             'Hybrid to PFA - changedFromHybrid' =>  [[
                 'orderType' => CourtOrderType::PFA,
@@ -92,9 +92,9 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
                 'action' => DeputyshipCandidateAction::InsertOrderReport,
                 'deputyType' => DeputyType::LAY,
                 'existingReportType' => Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
-                'expectedReportType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
-                'updatedCount' => 1,
-                'errorCount' => 1,
+                'expectedReportType' => Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
+                'updatedCount' => 0,
+                'errorCount' => 0,
             ]],
             'No-change' => [[
                 'orderType' => CourtOrderType::PFA,
@@ -184,8 +184,16 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
             )
         );
 
-        $this->assertStringContainsString($updatedCount, $dataFactoryResult->getMessages()['success'][0], 'Updated report types count');
-        $this->assertCount($errorCount, $dataFactoryResult->getErrorMessages()['errors'], 'Expected error count did not match actual error count');
+        $this->assertStringContainsString(
+            "Updated $updatedCount report types",
+            $dataFactoryResult->getMessages()['success'][0],
+            'Number of report types updated did not match expectation'
+        );
+        $this->assertCount(
+            $errorCount,
+            $dataFactoryResult->getErrorMessages()['errors'],
+            'Expected error count did not match actual error count'
+        );
     }
 
     #[DataProvider('reportTypeChanges')]
@@ -196,7 +204,7 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
         $dataFactoryResult = self::$sut->run(true);
 
         /** @var string $expectedReportType */
-        $expectedReportType = $data['expectedReportType'];
+        $expectedReportType = $data['existingReportType'];
 
         /** @var string $existingReportType */
         $existingReportType = $data['existingReportType'];
