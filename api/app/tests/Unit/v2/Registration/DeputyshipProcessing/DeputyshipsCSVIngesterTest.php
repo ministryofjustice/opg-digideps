@@ -4,7 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\DeputyshipProcessing;
 
-use OPG\Digideps\Backend\Entity\StagingSelectedCandidate;
+use Doctrine\DBAL\Exception;
+use OPG\Digideps\Backend\Entity\Staging\StagingSelectedCandidate;
 use OPG\Digideps\Backend\Factory\DataFactoryInterface;
 use OPG\Digideps\Backend\Factory\DataFactoryResult;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipIngester;
@@ -18,7 +19,6 @@ use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoad
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoaderResult;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsIngestResultRecorder;
 use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipBuilderResultOutcome;
-use Doctrine\DBAL\Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 

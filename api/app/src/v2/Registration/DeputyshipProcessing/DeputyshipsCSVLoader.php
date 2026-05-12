@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing;
 
-use OPG\Digideps\Backend\Entity\StagingDeputyship;
-use OPG\Digideps\Backend\v2\CSV\CSVChunkerFactory;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Csv\Exception as CSVException;
 use League\Csv\UnavailableStream;
+use OPG\Digideps\Backend\Entity\Staging\StagingDeputyship;
+use OPG\Digideps\Backend\v2\CSV\CSVChunkerFactory;
 use Psr\Log\LoggerInterface;
 
 class DeputyshipsCSVLoader
