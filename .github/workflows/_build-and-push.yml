@@ -64,16 +64,20 @@ jobs:
         if: steps.cache-snyk-scanner.outputs.cache-hit != 'true'
         run: |
           git clone https://github.com/ministryofjustice/opg-github-actions.git /tmp/opg-github-actions
+
           cd /tmp/opg-github-actions
+
           git checkout 9e8b7c2fb29c11e77b12913f74459fa48b11829f
 
           docker compose -f "/tmp/opg-github-actions/docker-compose.yml" pull snyk
 
           mkdir -p /tmp/snyk-scanner-cache
 
-          docker save \
-            -o /tmp/snyk-scanner-cache/snyk-scanner.tar \
-            311462405659.dkr.ecr.eu-west-1.amazonaws.com/shared/snyk:cli-1.1303.2-v0.3.0
+          SNYK_IMAGE="$(docker compose -f "/tmp/opg-github-actions/docker-compose.yml" config | awk '$1 == "image:" {print $2; exit}')"
+
+          echo "Using Snyk image: ${SNYK_IMAGE}"
+
+          docker save -o /tmp/snyk-scanner-cache/snyk-scanner.tar "${SNYK_IMAGE}"
 
   docker_build_scan_push:
     needs: prewarm_snyk_scanner
