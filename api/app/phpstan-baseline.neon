@@ -3583,12 +3583,6 @@ parameters:
 			path: src/Entity/Deputy.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between null and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: src/Entity/Deputy.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Note\:\:__construct\(\) has parameter \$category with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1

@@ -17,7 +17,7 @@ class ReportUtils
     {
         $reportStartDate = clone $reportEndDate;
 
-        $isLeapDay = '29-Feb' == $reportStartDate->format('d-M');
+        $isLeapDay = $reportStartDate->format('d-M') == '29-Feb';
         $reportStartDate->sub(new \DateInterval('P1Y')); // One year behind end date
         if (!$isLeapDay) {
             $reportStartDate->add(new \DateInterval('P1D')); // + 1 day
@@ -41,11 +41,11 @@ class ReportUtils
         $pieces = explode($sep, $dateString);
 
         // prefix century if needed
-        if (2 === strlen($pieces[2])) {
+        if (strlen($pieces[2]) === 2) {
             $pieces[2] = ((string) $century) . $pieces[2];
         }
         // check format is d-M-Y
-        if ((int) $pieces[0] < 1 || (int) $pieces[0] > 31 || 3 !== strlen($pieces[1]) || 4 !== strlen($pieces[2])) {
+        if ((int) $pieces[0] < 1 || (int) $pieces[0] > 31 || strlen($pieces[1]) !== 3 || strlen($pieces[2]) !== 4) {
             return null;
         }
 
@@ -59,9 +59,9 @@ class ReportUtils
 
     public function determineReportType(string $reportType, string $orderType, string $role)
     {
-        if ('PA' == $role) {
+        if ($role == 'PA') {
             $realm = PreRegistration::REALM_PA;
-        } elseif ('LAY' == $role) {
+        } elseif ($role == 'LAY') {
             $realm = PreRegistration::REALM_LAY;
         } else {
             $realm = PreRegistration::REALM_PROF;

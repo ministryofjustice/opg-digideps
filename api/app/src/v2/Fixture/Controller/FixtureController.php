@@ -164,7 +164,7 @@ class FixtureController extends AbstractController
 
         $reportType = strtolower($fromRequest['reportType']);
 
-        if (User::TYPE_LAY === $fromRequest['deputyType']) {
+        if ($fromRequest['deputyType'] === User::TYPE_LAY) {
             $deputy = $this->generateDeputy($user);
             $courtOrder = $this->generateCourtOrder($client, $reportType);
 
@@ -176,13 +176,13 @@ class FixtureController extends AbstractController
             $report = $this->generateReport($fromRequest, $client);
             $this->em->persist($report);
 
-            if (User::TYPE_LAY === $fromRequest['deputyType']) {
+            if ($fromRequest['deputyType'] === User::TYPE_LAY) {
                 $courtOrder->addReport($report);
                 $this->em->persist($courtOrder);
             }
         }
 
-        if (User::TYPE_LAY === $fromRequest['deputyType']) {
+        if ($fromRequest['deputyType'] === User::TYPE_LAY) {
             $user->setIsPrimary(true);
             $user->addClient($client);
         } else {
@@ -403,7 +403,7 @@ class FixtureController extends AbstractController
 
         /** @var Organisation $organisation */
         $organisation = $this->organisationRepository->findOneBy(['name' => $orgName]);
-        if (null === $organisation) {
+        if ($organisation === null) {
             $organisation = $this->organisationFactory->createFromEmailIdentifier(
                 $orgName,
                 $fromRequest['deputyEmail'],
@@ -533,7 +533,7 @@ class FixtureController extends AbstractController
 
         $user = $this->userRepository->findOneBy(['email' => $email]);
 
-        if (null !== $user && $user instanceof User) {
+        if ($user !== null && $user instanceof User) {
             return $this->buildSuccessResponse(['id' => $user->getId()], 'User found');
         } else {
             return $this->buildNotFoundResponse("Could not find user with email address '$email'");
@@ -617,7 +617,7 @@ class FixtureController extends AbstractController
         /** @var User $deputy */
         $deputy = $this->userRepository->findOneBy(['email' => $fromRequest['deputyEmail']]);
 
-        if (null === $deputy) {
+        if ($deputy === null) {
             return $this->buildNotFoundResponse(sprintf("Could not find user with email address '%s'", $fromRequest['deputyEmail']));
         }
 

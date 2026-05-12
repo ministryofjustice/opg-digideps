@@ -402,7 +402,7 @@ trait AccountsSectionTrait
 
     public function iChooseAccountType(string $account, string $translatedOption)
     {
-        $formSectionName = 'other_no_sortcode' === $account ? null : 'account' . $this->countOfAccountsAdded;
+        $formSectionName = $account === 'other_no_sortcode' ? null : 'account' . $this->countOfAccountsAdded;
 
         $this->chooseOption(
             'account[accountType]',

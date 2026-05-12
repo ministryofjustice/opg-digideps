@@ -47,14 +47,14 @@ class StatPeriodType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $data = $event->getData();
 
-            if ('last-30' === $data['period']) {
+            if ($data['period'] === 'last-30') {
                 $startDate = new \DateTime('-30 days');
                 $data['startDate'] = ['day' => $startDate->format('d'), 'month' => $startDate->format('m'), 'year' => $startDate->format('Y')];
                 $data['endDate'] = ['day' => date('d'), 'month' => date('m'), 'year' => date('Y')];
-            } elseif ('this-year' === $data['period']) {
+            } elseif ($data['period'] === 'this-year') {
                 $data['startDate'] = ['day' => 1, 'month' => 1, 'year' => date('Y')];
                 $data['endDate'] = ['day' => date('d'), 'month' => date('m'), 'year' => date('Y')];
-            } elseif ('all-time' === $data['period']) {
+            } elseif ($data['period'] === 'all-time') {
                 $data['startDate'] = ['day' => 1, 'month' => 1, 'year' => 2000];
                 $data['endDate'] = ['day' => date('d'), 'month' => date('m'), 'year' => date('Y')];
             }

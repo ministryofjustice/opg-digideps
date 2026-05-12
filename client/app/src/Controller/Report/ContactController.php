@@ -41,7 +41,7 @@ class ContactController extends AbstractController
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $status = $report->getStatus()->getContactsState();
-        if (Status::STATE_NOT_STARTED != $status['state']) {
+        if ($status['state'] != Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('contacts_summary', ['reportId' => $reportId]);
         }
 
@@ -76,7 +76,7 @@ class ContactController extends AbstractController
         }
 
         $backLink = $this->generateUrl('contacts', ['reportId' => $reportId]);
-        if ('summary' == $request->query->getString('from', $request->getPayload()->getString('from'))) {
+        if ($request->query->getString('from', $request->getPayload()->getString('from')) == 'summary') {
             $backLink = $this->generateUrl('contacts_summary', ['reportId' => $reportId]);
         }
 
@@ -174,7 +174,7 @@ class ContactController extends AbstractController
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $status = $report->getStatus()->getContactsState();
-        if (Status::STATE_NOT_STARTED == $status['state']) {
+        if ($status['state'] == Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('contacts', ['reportId' => $reportId]);
         }
 

@@ -75,7 +75,7 @@ trait ContactsSectionTrait
         $this->fillInField('contact_postcode', $this->faker->postcode(), 'contactDetails');
         $this->chooseOption('contact_country', 'United Kingdom', 'contactDetails');
 
-        $selection = 'while' == $addAnother ? 'yes' : 'no';
+        $selection = $addAnother == 'while' ? 'yes' : 'no';
         $this->selectOption('contact[addAnother]', $selection);
 
         $this->pressButton('Save and continue');

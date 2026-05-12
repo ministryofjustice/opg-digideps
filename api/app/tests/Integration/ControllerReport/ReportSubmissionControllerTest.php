@@ -44,7 +44,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
             $document = new Document($report);
             $document->setFileName('file1.pdf')->setStorageReference('storageref1')->setReportSubmission($submission);
 
-            if (2 === $i) {
+            if ($i === 2) {
                 $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
             }
 
@@ -53,7 +53,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
 
         self::fixtures()->flush()->clear();
 
-        if (null === self::$tokenAdmin) {
+        if (self::$tokenAdmin === null) {
             self::$tokenSuperAdmin = $this->loginAsSuperAdmin();
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();

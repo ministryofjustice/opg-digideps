@@ -37,14 +37,14 @@ class ChecklistController extends RestController
         if (!empty($data['syncStatus'])) {
             $checklist->setSynchronisationStatus($data['syncStatus']);
 
-            if (Checklist::SYNC_STATUS_PERMANENT_ERROR == $data['syncStatus']) {
+            if ($data['syncStatus'] == Checklist::SYNC_STATUS_PERMANENT_ERROR) {
                 $errorMessage = is_array($data['syncError']) ? json_encode($data['syncError']) : $data['syncError'];
                 $checklist->setSynchronisationError($errorMessage);
             } else {
                 $checklist->setSynchronisationError(null);
             }
 
-            if (Checklist::SYNC_STATUS_SUCCESS == $data['syncStatus']) {
+            if ($data['syncStatus'] == Checklist::SYNC_STATUS_SUCCESS) {
                 $checklist->setSynchronisationTime(new \DateTime());
             }
         }

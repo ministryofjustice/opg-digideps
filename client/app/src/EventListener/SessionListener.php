@@ -35,7 +35,7 @@ class SessionListener
     public function onKernelRequest(RequestEvent $event)
     {
         // Only operate on the master request and when there is a session
-        if (HttpKernelInterface::MASTER_REQUEST !== $event->getRequestType()) {
+        if ($event->getRequestType() !== HttpKernelInterface::MASTER_REQUEST) {
             return 'no-master-request';
         }
         if (!$event->getRequest()->hasSession()) {

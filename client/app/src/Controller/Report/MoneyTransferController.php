@@ -50,7 +50,7 @@ class MoneyTransferController extends AbstractController
         }
 
         $status = $report->getStatus()->getMoneyTransferState();
-        if (Status::STATE_NOT_STARTED != $status['state']) {
+        if ($status['state'] != Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('money_transfers_summary', ['reportId' => $reportId]);
         }
 
@@ -83,7 +83,7 @@ class MoneyTransferController extends AbstractController
         }
 
         $backLink = $this->generateUrl('money_transfers', ['reportId' => $reportId]);
-        if ('summary' == $request->query->getString('from', $request->getPayload()->getString('from'))) {
+        if ($request->query->getString('from', $request->getPayload()->getString('from')) == 'summary') {
             $backLink = $this->generateUrl('money_transfers_summary', ['reportId' => $reportId]);
         }
 
@@ -180,7 +180,7 @@ class MoneyTransferController extends AbstractController
 
             $validatingForm = new ValidatingForm($form);
             $addAnother = $validatingForm->getStringOrNull('addAnother');
-            if ('yes' === $addAnother) {
+            if ($addAnother === 'yes') {
                 return $this->redirectToRoute('money_transfers_step', ['reportId' => $reportId, 'from' => 'another', 'step' => 1]);
             }
 
@@ -206,7 +206,7 @@ class MoneyTransferController extends AbstractController
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $status = $report->getStatus()->getMoneyTransferState();
-        if (Status::STATE_NOT_STARTED == $status['state']) {
+        if ($status['state'] == Status::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('money_transfers', ['reportId' => $reportId]));
         }
 

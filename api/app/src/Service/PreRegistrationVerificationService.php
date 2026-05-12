@@ -62,7 +62,7 @@ class PreRegistrationVerificationService
         /** @var PreRegistration[] $caseNumberMatches */
         $caseNumberMatches = $this->preRegistrationRepository->findByCaseNumber($detailsToMatchOn['caseNumber'] ?? '');
 
-        if (0 === count($caseNumberMatches)) {
+        if (count($caseNumberMatches) === 0) {
             $errorJson = json_encode([
                 'search_terms' => $detailsToMatchOn,
             ]);
@@ -100,7 +100,7 @@ class PreRegistrationVerificationService
             }
         }
 
-        if (0 === count($clientLastnameMatches)) {
+        if (count($clientLastnameMatches) === 0) {
             $matchingErrors['client_lastname'] = true;
             $clientLastnameMatches = $caseNumberMatches;
         }
@@ -118,7 +118,7 @@ class PreRegistrationVerificationService
             }
         }
 
-        if (0 === count($deputyLastnameMatches)) {
+        if (count($deputyLastnameMatches) === 0) {
             $matchingErrors['deputy_lastname'] = true;
             $deputyLastnameMatches = $clientLastnameMatches;
         }
@@ -136,7 +136,7 @@ class PreRegistrationVerificationService
             }
         }
 
-        if (0 === count($deputyFirstnameMatches)) {
+        if (count($deputyFirstnameMatches) === 0) {
             $matchingErrors['deputy_firstname'] = true;
             $deputyFirstnameMatches = $deputyLastnameMatches;
         }
@@ -161,7 +161,7 @@ class PreRegistrationVerificationService
                 $deputyPostcodeMatches = array_key_exists($normalisedPostcode, $preRegistrationByPostcode) ? $preRegistrationByPostcode[$normalisedPostcode] : [];
             }
 
-            if (0 === count($deputyPostcodeMatches)) {
+            if (count($deputyPostcodeMatches) === 0) {
                 $matchingErrors['deputy_postcode'] = true;
                 $deputyPostcodeMatches = $deputyFirstnameMatches;
             }

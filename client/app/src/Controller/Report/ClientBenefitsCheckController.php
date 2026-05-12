@@ -47,7 +47,7 @@ class ClientBenefitsCheckController extends AbstractController
 
         $status = $report->getStatus()->getClientBenefitsCheckState()['state'];
 
-        if (Status::STATE_NOT_STARTED != $status) {
+        if ($status != Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute(
                 'client_benefits_check_summary',
                 ['reportId' => $reportId]
@@ -85,7 +85,7 @@ class ClientBenefitsCheckController extends AbstractController
         $clientBenefitsCheck = $report->getClientBenefitsCheck() ?: new ClientBenefitsCheck();
         $clientBenefitsCheck->setReport($report);
 
-        if (3 === $step) {
+        if ($step === 3) {
             if (is_null($moneyTypeId)) {
                 $income = new MoneyReceivedOnClientsBehalf();
                 $clientBenefitsCheck->setTypesOfMoneyReceivedOnClientsBehalf(new ArrayCollection([$income]));
@@ -131,7 +131,7 @@ class ClientBenefitsCheckController extends AbstractController
                 $addAnother = $form->get('addAnother');
             }
 
-            if ($addAnother !== null && 'yes' === $addAnother->getData()) {
+            if ($addAnother !== null && $addAnother->getData() === 'yes') {
                 $redirectRoute = $this->generateUrl(
                     'client_benefits_check_step',
                     ['reportId' => $reportId, 'step' => 3]

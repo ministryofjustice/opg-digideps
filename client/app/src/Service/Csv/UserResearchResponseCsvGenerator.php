@@ -84,7 +84,7 @@ class UserResearchResponseCsvGenerator
         $types = [];
 
         foreach ($researchTypeArray as $propName => $value) {
-            if ($value && 'id' !== $propName) {
+            if ($value && $propName !== 'id') {
                 $types[] = $propName;
             }
         }

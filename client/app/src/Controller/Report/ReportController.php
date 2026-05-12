@@ -287,7 +287,7 @@ class ReportController extends AbstractController
         $currentUser = $this->getUser();
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if (true === $report->getSubmitted()) {
+            if ($report->getSubmitted() === true) {
                 if ($request->getSession() instanceof Session) {
                     $request->getSession()->getFlashBag()->add(
                         'error',
@@ -442,7 +442,7 @@ class ReportController extends AbstractController
         $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
         $pdfBinary = $reportSubmissionService->getPdfBinaryContent($report, devPreview: $request->query->getString('dev-preview') === 'QED');
 
-        if (false === $pdfBinary) {
+        if ($pdfBinary === false) {
             // unable to get the PDF for the report
             throw $this->createNotFoundException();
         }

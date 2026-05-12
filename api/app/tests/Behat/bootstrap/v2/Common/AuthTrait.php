@@ -189,7 +189,7 @@ trait AuthTrait
             $this->em->refresh($user) :
             throw new BehatException(sprintf('User with email %s not found', $email));
 
-        if ('expired' === $token) {
+        if ($token === 'expired') {
             $user->setTokenDate(new \DateTime('-2hours'));
             $this->em->persist($user);
             $this->em->flush($user);
@@ -197,9 +197,9 @@ trait AuthTrait
 
         $token = $user->getRegistrationToken();
 
-        $page = 'activation' === $pageType ? 'activate' : 'password-reset';
+        $page = $pageType === 'activation' ? 'activate' : 'password-reset';
 
-        if ('' === $admin || false === $admin) {
+        if ($admin === '' || $admin === false) {
             $this->visitPath('/logout');
             $this->visitPath("/user/$page/$token");
         } else {
@@ -337,7 +337,7 @@ trait AuthTrait
      */
     public function aLayDeputyTriesToLoginWithTheirEmailAddress($isPrimary)
     {
-        $this->loggedInUserDetails = 'primary' === $isPrimary ? $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser
+        $this->loggedInUserDetails = $isPrimary === 'primary' ? $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser
             : $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser;
 
         $userEmail = $this->loggedInUserDetails->getUserEmail();
@@ -465,7 +465,7 @@ trait AuthTrait
      */
     public function theyChooseTheirFirstClient($isPrimary)
     {
-        $clientId = 'primary' == $isPrimary ? $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId()
+        $clientId = $isPrimary == 'primary' ? $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId()
             : $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientId();
 
         $urlRegex = sprintf('/client\/%d\/edit#edit-client$/', $clientId);
@@ -499,7 +499,7 @@ trait AuthTrait
      */
     public function theyShouldBeOnThatClientSDashboard($isPrimary)
     {
-        if ('primary' == $isPrimary) {
+        if ($isPrimary == 'primary') {
             $clientId = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId();
             $clientFirstName = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientFirstName();
         } else {
@@ -516,7 +516,7 @@ trait AuthTrait
      */
     public function theyChooseTheirDischargedClient($isPrimary)
     {
-        if ('primary' == $isPrimary) {
+        if ($isPrimary == 'primary') {
             $clientId = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId();
         } else {
             $clientId = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientId();
@@ -538,7 +538,7 @@ trait AuthTrait
 
         $this->getActiveClientIds();
 
-        if (1 == $countOfClientAccounts) {
+        if ($countOfClientAccounts == 1) {
             $this->iVisitClientDetailsUrl($this->activeClientIds[0]);
 
             $this->clickLink('Discharge deputy');
@@ -564,7 +564,7 @@ trait AuthTrait
 
         foreach ($this->activeClientIds as $activeClientId) {
             $isClientStillActive = $this->em->getRepository(Client::class)->find($activeClientId);
-            if (null == $isClientStillActive->getDeletedAt()) {
+            if ($isClientStillActive->getDeletedAt() == null) {
                 $singleActiveClient = $activeClientId;
             }
         }
@@ -575,11 +575,11 @@ trait AuthTrait
     private function getActiveClientIds(): void
     {
         foreach ($this->fixtureUsers as $fixtureUser) {
-            if (null != $fixtureUser && 'ROLE_SUPER_ADMIN' != $fixtureUser->getUserRole()) {
+            if ($fixtureUser != null && $fixtureUser->getUserRole() != 'ROLE_SUPER_ADMIN') {
                 $clientId = $fixtureUser->getClientId();
                 $activeClient = $this->em->getRepository(Client::class)->find($clientId);
 
-                if (null == $activeClient->getDeletedAt()) {
+                if ($activeClient->getDeletedAt() == null) {
                     $this->activeClientIds[] = $clientId;
                 }
             }

@@ -41,7 +41,7 @@ trait CreateUpdateTimestamps
     #[ORM\PrePersist]
     public function setCreatedAtAutomatically()
     {
-        if (null === $this->getCreatedAt()) {
+        if ($this->getCreatedAt() === null) {
             $this->setCreatedAt(new \DateTime());
         }
     }

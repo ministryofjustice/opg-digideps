@@ -45,7 +45,7 @@ class PaFeeExpenseController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (Status::STATE_NOT_STARTED != $report->getStatus()->getPaFeesExpensesState()['state']) {
+        if ($report->getStatus()->getPaFeesExpensesState()['state'] != Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('pa_fee_expense_summary', ['reportId' => $reportId]);
         }
 
@@ -80,7 +80,7 @@ class PaFeeExpenseController extends AbstractController
             }
         }
 
-        $backRoute = 'summary' === $request->get('from') ? 'pa_fee_expense_summary' : 'pa_fee_expense';
+        $backRoute = $request->get('from') === 'summary' ? 'pa_fee_expense_summary' : 'pa_fee_expense';
         $backLink = $this->generateUrl($backRoute, ['reportId' => $reportId]);
 
         return [
@@ -105,7 +105,7 @@ class PaFeeExpenseController extends AbstractController
             $data = $validatingForm->getObjectOrThrow(null, Report::class);
 
             $this->restClient->put('report/' . $report->getId(), $data, ['fee']);
-            if ('summary' == $fromPage) {
+            if ($fromPage == 'summary') {
                 $this->addFlash('notice', $this->translator->trans('notices.fee.edited', domain: 'report-pa-fee-expense'));
 
                 return $this->redirectToRoute('pa_fee_expense_summary', ['reportId' => $reportId]);
@@ -116,7 +116,7 @@ class PaFeeExpenseController extends AbstractController
             return $this->redirectToRoute($nextRoute, ['reportId' => $reportId]);
         }
 
-        $backRoute = 'summary' === $request->get('from') ? 'pa_fee_expense_summary' : 'pa_fee_expense_fee_exist';
+        $backRoute = $request->get('from') === 'summary' ? 'pa_fee_expense_summary' : 'pa_fee_expense_fee_exist';
         $backLink = $this->generateUrl($backRoute, ['reportId' => $reportId]);
 
         return [
@@ -277,7 +277,7 @@ class PaFeeExpenseController extends AbstractController
     public function summaryAction(int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED == $report->getStatus()->getPaFeesExpensesState()['state']) {
+        if ($report->getStatus()->getPaFeesExpensesState()['state'] == Status::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('pa_fee_expense', ['reportId' => $reportId]));
         }
 

@@ -54,7 +54,7 @@ class ChecklistSyncCommand extends Command
 
     private function isFeatureEnabled(): bool
     {
-        return '1' === $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC);
+        return $this->parameterStore->getFeatureFlag(ParameterStoreService::FLAG_CHECKLIST_SYNC) === '1';
     }
 
     protected function configure(): void

@@ -20,7 +20,7 @@ final class Version233 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf('postgresql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('CREATE TABLE court_order (id SERIAL NOT NULL, client_id INT NOT NULL, type VARCHAR(4) NOT NULL, supervision_level VARCHAR(8), order_date DATE NOT NULL, case_number VARCHAR(16) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_E824C019EB6921 ON court_order (client_id)');
@@ -34,7 +34,7 @@ final class Version233 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf('postgresql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'postgresql\'.');
+        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
         $this->addSql('DROP TABLE court_order');
         $this->addSql('ALTER TABLE report DROP CONSTRAINT FK_C42F7784A8D7D89C');

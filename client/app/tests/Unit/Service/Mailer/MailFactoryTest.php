@@ -291,7 +291,7 @@ class MailFactoryTest extends TestCase
             'newStartDate' => '24 March 2018',
             'newEndDate' => '23 March 2019',
             'EndDatePlus1' => '24 March 2019',
-            'PFA' => '104' === substr($reportType, 0, 3) ? 'no' : 'yes',
+            'PFA' => substr($reportType, 0, 3) === '104' ? 'no' : 'yes',
             'lay' => 'yes',
         ];
 

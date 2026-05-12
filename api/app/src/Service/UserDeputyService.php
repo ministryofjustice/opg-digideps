@@ -49,7 +49,7 @@ class UserDeputyService
         foreach ($usersWithoutDeputies as $user) {
             $deputyUid = "{$user->getDeputyUid()}";
 
-            if ('' === $deputyUid) {
+            if ($deputyUid === '') {
                 // we can't process this user any further as they have no deputy UID
                 continue;
             }

@@ -28,7 +28,7 @@ class NoteVoter extends Voter
                 return true;
             case self::EDIT_NOTE:
                 // only vote on User objects inside this voter
-                if (self::EDIT_NOTE === $attribute && $subject instanceof Note) {
+                if ($attribute === self::EDIT_NOTE && $subject instanceof Note) {
                     return true;
                 }
                 break;

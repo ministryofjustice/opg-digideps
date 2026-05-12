@@ -188,7 +188,7 @@ trait MoneyInSectionTrait
 
         $transactionItemTableRows = $this->getSession()->getPage()->find('xpath', "//tr[contains(@class,'behat-region-transaction-')]");
 
-        if ('no' == $arg1) {
+        if ($arg1 == 'no') {
             $this->assertIsNull($transactionItemTableRows, 'transaction item rows are not rendered');
 
             $this->expectedResultsDisplayedSimplified(null, true, false, false, false);
@@ -229,7 +229,7 @@ trait MoneyInSectionTrait
     public function iShouldBeOnTheMoneyInSummaryPageAndSeeEntryDeleted()
     {
         $entryDeletedText = $this->getSession()->getPage()->find('css', '.opg-alert__message > .govuk-body')->getText();
-        assert('Entry deleted' == $entryDeletedText);
+        assert($entryDeletedText == 'Entry deleted');
     }
 
     /**

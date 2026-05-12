@@ -29,7 +29,7 @@ class NotifyClientMock extends Client
 
     public function sendEmail($emailAddress, $templateId, array $personalisation = [], $reference = '', $emailReplyToId = null, $oneClickUnsubscribeURL = null): array
     {
-        if ('break@publicguardian.gov.uk' === $emailAddress) {
+        if ($emailAddress === 'break@publicguardian.gov.uk') {
             throw new NotifyException('Intentional mock exception');
         } else {
             try {

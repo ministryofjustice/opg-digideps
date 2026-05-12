@@ -138,7 +138,7 @@ trait OrganisationManagementTrait
     {
         $this->iAmOnAdminOrganisationOverviewPage();
 
-        if (0 == $users) {
+        if ($users == 0) {
             $text = 'This organisation does not have any members';
             $this->assertPageContainsText($text);
         }

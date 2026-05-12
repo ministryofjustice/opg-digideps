@@ -111,6 +111,6 @@ class UserUpdatedSubscriber implements EventSubscriberInterface
 
     private function layDeputyDetailsChanged(UserUpdatedEvent $event)
     {
-        return User::ROLE_LAY_DEPUTY === $event->getPostUpdateUser()->getRoleName() && $this->userDetailsHaveChanged($event);
+        return $event->getPostUpdateUser()->getRoleName() === User::ROLE_LAY_DEPUTY && $this->userDetailsHaveChanged($event);
     }
 }

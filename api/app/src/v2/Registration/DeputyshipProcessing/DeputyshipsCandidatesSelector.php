@@ -38,7 +38,7 @@ class DeputyshipsCandidatesSelector
 
         unset($candidates);
 
-        if (0 === $numDeputyships % 10000) {
+        if ($numDeputyships % 10000 === 0) {
             $this->logger->info("Deputyship ingest progress: deputyships = $numDeputyships; candidates = $numCandidates");
         }
     }

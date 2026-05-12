@@ -113,7 +113,7 @@ trait ReportProfDeputyCostsTrait
      */
     public function hasProfDeputyCostsHowChargedFixedOnly()
     {
-        return Report::PROF_DEPUTY_COSTS_TYPE_FIXED == $this->getProfDeputyCostsHowCharged();
+        return $this->getProfDeputyCostsHowCharged() == Report::PROF_DEPUTY_COSTS_TYPE_FIXED;
     }
 
     /**
@@ -166,16 +166,16 @@ trait ReportProfDeputyCostsTrait
         $emptyCount = 0;
 
         foreach ($ics as $index => $ic) {
-            if (null === $ics[$index]->getDate() && null === $ics[$index]->getAmount()) {
+            if ($ics[$index]->getDate() === null && $ics[$index]->getAmount() === null) {
                 ++$emptyCount;
                 continue;
             }
 
-            if (null === $ics[$index]->getDate()) {
+            if ($ics[$index]->getDate() === null) {
                 $context->buildViolation('profDeputyInterimCost.date.notBlank')->atPath(sprintf('profDeputyInterimCosts[%s].date', $index))->addViolation();
             }
 
-            if (null === $ics[$index]->getAmount()) {
+            if ($ics[$index]->getAmount() === null) {
                 $context->buildViolation('profDeputyInterimCost.amount.notBlank')->atPath(sprintf('profDeputyInterimCosts[%s].amount', $index))->addViolation();
             }
         }

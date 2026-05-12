@@ -44,7 +44,7 @@ class GiftControllerTest extends AbstractTestController
 
         self::fixtures()->persist(self::$gift1, self::$gift2)->flush()->clear();
 
-        if (null === self::$tokenAdmin) {
+        if (self::$tokenAdmin === null) {
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
         }
@@ -199,7 +199,7 @@ class GiftControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $this->assertTrue(null === self::fixtures()->getRepo(Gift::class)->find(self::$gift1->getId()));
+        $this->assertTrue(self::fixtures()->getRepo(Gift::class)->find(self::$gift1->getId()) === null);
     }
 
     /**

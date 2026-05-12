@@ -176,7 +176,7 @@ class StatsController extends AbstractController
         foreach ($metrics as $metric) {
             $all = $this->restClient->get('stats?metric=' . $metric . $append, 'array');
 
-            if ('respondents' != $metric) {
+            if ($metric != 'respondents') {
                 $byRole = $this->restClient->get('stats?metric=' . $metric . '&dimension[]=deputyType' . $append, 'array');
                 $stats[$metric] = array_merge(
                     ['all' => $all[0]['amount']],
@@ -241,7 +241,7 @@ class StatsController extends AbstractController
                 /** @var ?\DateTime $endDate */
                 $endDate = $form->get('endDate')->getData();
 
-                if (null !== $startDate && null !== $endDate) {
+                if ($startDate !== null && $endDate !== null) {
                     $append .= "&startDate={$startDate->format('Y-m-d')}&endDate={$endDate->format('Y-m-d')}";
                 }
 
@@ -329,7 +329,7 @@ class StatsController extends AbstractController
                 /** @var ?\DateTime $endDate */
                 $endDate = $form->get('endDate')->getData();
 
-                if (null !== $startDate && null !== $endDate) {
+                if ($startDate !== null && $endDate !== null) {
                     $append .= "?startDate={$startDate->format('Y-m-d')}&endDate={$endDate->format('Y-m-d')}";
                 }
 

@@ -360,7 +360,7 @@ class ReportService
      */
     public function adjustReportStatus($status, \DateTime $endDate)
     {
-        if (Report::STATUS_READY_TO_SUBMIT == $status && !self::isDue($endDate)) {
+        if ($status == Report::STATUS_READY_TO_SUBMIT && !self::isDue($endDate)) {
             return Report::STATUS_NOT_FINISHED;
         }
 

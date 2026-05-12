@@ -53,7 +53,7 @@ class ClientHelpers
 
         $checkbit = (11 - ($sum % 11)) % 11;
 
-        if (10 === $checkbit) {
+        if ($checkbit === 10) {
             $checkbit = 'T';
         }
 

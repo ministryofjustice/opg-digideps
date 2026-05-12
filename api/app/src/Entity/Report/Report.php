@@ -500,7 +500,7 @@ class Report
             $expectedStartDate = clone $endDateLastReport;
             $expectedStartDate->modify('+1 day');
             $daysDiff = (int) $expectedStartDate->diff($this->startDate)->format('%a');
-            if (0 !== $daysDiff) {
+            if ($daysDiff !== 0) {
                 throw new \RuntimeException(sprintf('Incorrect start date. Last submitted report was on %s, therefore the new report is expected to start on %s, not on %s', $endDateLastReport->format('d/m/Y'), $expectedStartDate->format('d/m/Y'), $this->startDate->format('d/m/Y')));
             }
         }

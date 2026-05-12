@@ -45,7 +45,7 @@ class MoneyInShortController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (Status::STATE_NOT_STARTED != $report->getStatus()->getMoneyInShortState()['state']) {
+        if ($report->getStatus()->getMoneyInShortState()['state'] != Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId]);
         }
 
@@ -74,7 +74,7 @@ class MoneyInShortController extends AbstractController
             $report->setMoneyInExists($answer);
             $this->restClient->put('report/' . $reportId, $report, ['doesMoneyInExist']);
 
-            if ('Yes' === $answer) {
+            if ($answer === 'Yes') {
                 $report->setReasonForNoMoneyIn(null);
                 $this->restClient->put('report/' . $reportId, $report, ['reasonForNoMoneyIn']);
 
@@ -150,7 +150,7 @@ class MoneyInShortController extends AbstractController
     public function categoryAction(Request $request, int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $fromSummaryPage = 'summary' == $request->get('from');
+        $fromSummaryPage = $request->get('from') == 'summary';
 
         $form = $this->createForm(MoneyShortType::class, $report, ['field' => 'moneyShortCategoriesIn']);
         $form->handleRequest($request);
@@ -202,14 +202,14 @@ class MoneyInShortController extends AbstractController
             ['field' => 'moneyTransactionsShortInExist', 'translation_domain' => 'report-money-short']
         );
         $form->handleRequest($request);
-        $fromSummaryPage = 'summary' == $request->get('from');
+        $fromSummaryPage = $request->get('from') == 'summary';
 
         // retrieve soft deleted transaction ids if present and store money in short ids only
         $softDeletedTransactionIds = $this->restClient->get('/report/' . $reportId . '/money-transaction-short/get-soft-delete', 'array');
 
         $softDeletedMoneyInShortTransactionIds = [];
         foreach ($softDeletedTransactionIds as $softDeletedTransactionId) {
-            if ('in' == $softDeletedTransactionId['type']) {
+            if ($softDeletedTransactionId['type'] == 'in') {
                 $softDeletedMoneyInShortTransactionIds[] = $softDeletedTransactionId['id'];
             }
         }
@@ -220,14 +220,14 @@ class MoneyInShortController extends AbstractController
 
             $this->restClient->put("report/$reportId", $report, ['money-transactions-short-in-exist']);
 
-            if ('yes' === $report->getMoneyTransactionsShortInExist() && !empty($softDeletedMoneyInShortTransactionIds)) {
+            if ($report->getMoneyTransactionsShortInExist() === 'yes' && !empty($softDeletedMoneyInShortTransactionIds)) {
                 // undelete items if they exist
                 foreach ($softDeletedMoneyInShortTransactionIds as $transactionId) {
                     $this->restClient->put('/report/' . $reportId . '/money-transaction-short/soft-delete/' . $transactionId, ['transactionSoftDelete']);
                 }
 
                 return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId, 'from' => 'money_in_short_one_off_payments_exist']);
-            } elseif ('yes' === $report->getMoneyTransactionsShortInExist() && !empty($report->getMoneyTransactionsShortIn()) && 'summary' == $fromSummaryPage) {
+            } elseif ($report->getMoneyTransactionsShortInExist() === 'yes' && !empty($report->getMoneyTransactionsShortIn()) && $fromSummaryPage == 'summary') {
                 // covers scenarios where deputy clicks edit link from summary change but chooses not to change answer
                 return $this->redirectToRoute('money_in_short_summary', ['reportId' => $reportId, 'from' => 'money_in_short_one_off_payments_exist']);
             }
@@ -254,7 +254,7 @@ class MoneyInShortController extends AbstractController
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
         $record = new MoneyTransactionShort('in');
         $record->setReport($report);
-        $fromSummaryPage = 'summary' == $request->get('from');
+        $fromSummaryPage = $request->get('from') == 'summary';
 
         $form = $this->createForm(MoneyShortTransactionType::class, $record);
         $form->add('addAnother', AddAnotherThingType::class);
@@ -346,7 +346,7 @@ class MoneyInShortController extends AbstractController
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyInShortState()['state'] && 'skip-step' != $fromPage) {
+        if ($report->getStatus()->getMoneyInShortState()['state'] == Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('money_in_short', ['reportId' => $reportId]);
         }
         return [

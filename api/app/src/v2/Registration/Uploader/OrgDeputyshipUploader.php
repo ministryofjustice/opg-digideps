@@ -227,7 +227,7 @@ class OrgDeputyshipUploader
 
             // Temp fix for clients who have new deputy in same organisation
             if (!$this->clientHasSwitchedOrganisation($this->client)) {
-                if ($this->clientHasNewDeputy($this->client, $this->deputy) && OrgDeputyshipDto::DUAL_TYPE != $dto->getHybrid()) {
+                if ($this->clientHasNewDeputy($this->client, $this->deputy) && $dto->getHybrid() != OrgDeputyshipDto::DUAL_TYPE) {
                     $this->client->setDeputy($this->deputy);
 
                     $this->updated['clients'][] = $this->client->getId();
@@ -284,7 +284,7 @@ class OrgDeputyshipUploader
     private function clientHasNewDeputy(Client $client, Deputy $deputy): bool
     {
         return
-            null === $client->getDeputy()
+            $client->getDeputy() === null
             || $client->getDeputy()->getDeputyUid() !== $deputy->getDeputyUid();
     }
 
@@ -294,7 +294,7 @@ class OrgDeputyshipUploader
 
         if ($report) {
             if (!$report->getSubmitted() && empty($report->getUnSubmitDate())) {
-                if (OrgDeputyshipDto::DUAL_TYPE == $dto->getHybrid()) {
+                if ($dto->getHybrid() == OrgDeputyshipDto::DUAL_TYPE) {
                     if ($this->client->getDeputy()->getDeputyUid() == $dto->getDeputyUid()) {
                         if ($report->getType() !== $dto->getReportType()) {
                             $report->setType($dto->getReportType());
@@ -312,18 +312,18 @@ class OrgDeputyshipUploader
                 }
             }
 
-        //            if ($this->clientHasNewOrgAndDeputy($this->client, $this->deputy)) {
-        //                $report = new Report(
-        //                    $this->client,
-        //                    $dto->getReportType(),
-        //                    $dto->getReportStartDate(),
-        //                    $dto->getReportEndDate()
-        //                );
-        //
-        //                $this->client->addReport($report);
-        //
-        //                $this->added['reports'][] = $this->client->getCaseNumber().'-'.$dto->getReportEndDate()->format('Y-m-d');
-        //            }
+            //            if ($this->clientHasNewOrgAndDeputy($this->client, $this->deputy)) {
+            //                $report = new Report(
+            //                    $this->client,
+            //                    $dto->getReportType(),
+            //                    $dto->getReportStartDate(),
+            //                    $dto->getReportEndDate()
+            //                );
+            //
+            //                $this->client->addReport($report);
+            //
+            //                $this->added['reports'][] = $this->client->getCaseNumber().'-'.$dto->getReportEndDate()->format('Y-m-d');
+            //            }
         } else {
             $report = new Report(
                 $this->client,

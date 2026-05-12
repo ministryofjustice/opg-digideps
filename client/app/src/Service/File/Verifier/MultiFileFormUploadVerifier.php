@@ -31,12 +31,12 @@ class MultiFileFormUploadVerifier
         foreach ($files as $file) {
             $status = $this->verifyFiles($report, $file);
 
-            if (VerificationStatus::FAILED === $status->getStatus()) {
+            if ($status->getStatus() === VerificationStatus::FAILED) {
                 $form->get('files')->addError(new FormError($status->getError()));
             }
         }
 
-        return (0 === count($form->getErrors(true))) ? true : false;
+        return (count($form->getErrors(true)) === 0) ? true : false;
     }
 
     private function verifyFiles(Report $report, UploadedFile $file): VerificationStatus
@@ -46,7 +46,7 @@ class MultiFileFormUploadVerifier
 
         foreach ($this->verifiers as $verifier) {
             // Return on first error to prevent further validation.
-            if (VerificationStatus::FAILED === $status->getStatus()) {
+            if ($status->getStatus() === VerificationStatus::FAILED) {
                 return $status;
             }
 

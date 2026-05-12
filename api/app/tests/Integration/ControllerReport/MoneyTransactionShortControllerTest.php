@@ -50,7 +50,7 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
 
         self::fixtures()->flush()->clear();
 
-        if (null === self::$tokenAdmin) {
+        if (self::$tokenAdmin === null) {
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
         }
@@ -167,7 +167,7 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
         self::$report1 = self::fixtures()->getReportById(self::$report1->getId());
 
         $t = self::fixtures()->getRepo(MoneyTransactionShort::class)->find(self::$transaction3->getId());
-        $this->assertTrue(null === $t);
+        $this->assertTrue($t === null);
         $this->assertCount(0, self::$report1->getMoneyTransactionsShortOut());
         $this->assertEquals('no', self::$report1->getMoneyTransactionsShortOutExist());
     }

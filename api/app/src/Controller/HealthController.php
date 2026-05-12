@@ -50,7 +50,7 @@ class HealthController extends RestController
         } catch (\Throwable $e) {
             // customise error message if possible
             $returnMessage = 'Database generic error';
-            if ($e instanceof \PDOException && 7 === $e->getCode()) {
+            if ($e instanceof \PDOException && $e->getCode() === 7) {
                 $returnMessage = 'Database service not reachable (' . $e->getMessage() . ')';
             }
 

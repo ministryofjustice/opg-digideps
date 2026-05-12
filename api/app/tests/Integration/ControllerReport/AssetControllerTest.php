@@ -41,7 +41,7 @@ class AssetControllerTest extends AbstractTestController
 
         self::fixtures()->flush()->clear();
 
-        if (null === self::$tokenAdmin) {
+        if (self::$tokenAdmin === null) {
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
         }
@@ -227,7 +227,7 @@ class AssetControllerTest extends AbstractTestController
             'AuthToken' => self::$tokenDeputy,
         ]);
 
-        $this->assertTrue(null === self::fixtures()->getRepo(Asset::class)->find(self::$asset1->getId()));
+        $this->assertTrue(self::fixtures()->getRepo(Asset::class)->find(self::$asset1->getId()) === null);
 
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_ASSETS));
     }

@@ -12,7 +12,7 @@ trait LinksTrait
         $linksElementsFound = $this->getSession()->getPage()->findAll('xpath', '//a[text()="' . $text . '"]');
         $count = count($linksElementsFound);
 
-        if (0 === count($linksElementsFound)) {
+        if (count($linksElementsFound) === 0) {
             throw new \RuntimeException('Element not found');
         }
 
@@ -22,7 +22,7 @@ trait LinksTrait
 
         $href = $linksElementsFound[0]->getAttribute('href');
 
-        if (false === strpos($href, $expectedLink)) {
+        if (strpos($href, $expectedLink) === false) {
             throw new \Exception("Link: $href does not contain $expectedLink");
         }
     }
@@ -36,7 +36,7 @@ trait LinksTrait
     public function clickOnBehatLink($link)
     {
         // if multiple links are specified (comma-separated), click on all of them
-        if (false !== strpos($link, ',')) {
+        if (strpos($link, ',') !== false) {
             foreach (explode(',', $link) as $singleLink) {
                 $this->clickOnBehatLink(trim($singleLink));
             }
@@ -52,7 +52,7 @@ trait LinksTrait
         if (count($linksElementsFound) > 1) {
             throw new \RuntimeException("Found more than one $linkSelector element in the page ($count). Interrupted");
         }
-        if (0 === count($linksElementsFound)) {
+        if (count($linksElementsFound) === 0) {
             $this->clickOnHashLink($link);
 
             return;
@@ -69,7 +69,7 @@ trait LinksTrait
         if (count($linksElementsFound) > 1) {
             throw new \RuntimeException("Found more than a #$link element in the page. Interrupted");
         }
-        if (0 === count($linksElementsFound)) {
+        if (count($linksElementsFound) === 0) {
             throw new \RuntimeException("Element #$link not found. Interrupted");
         }
 
@@ -89,7 +89,7 @@ trait LinksTrait
 
         $linksElementsFound = $region->findAll('xpath', '//a[normalize-space(text())="' . $text . '"]');
         $count = count($linksElementsFound);
-        if (0 === $count) {
+        if ($count === 0) {
             throw new \RuntimeException('Element not found');
         }
 
@@ -109,7 +109,7 @@ trait LinksTrait
         if (count($regionsFound) > 1) {
             throw new \RuntimeException("Found more than one $regionSelector");
         }
-        if (0 === count($regionsFound)) {
+        if (count($regionsFound) === 0) {
             throw new \RuntimeException("Region $regionSelector not found.");
         }
 
@@ -130,7 +130,7 @@ trait LinksTrait
         if (count($linksElementsFound) > 1 && !$theFirst) {
             throw new \RuntimeException("Found more than 1 $link element inside $region . Interrupted");
         }
-        if (0 === count($linksElementsFound)) {
+        if (count($linksElementsFound) === 0) {
             throw new \RuntimeException("Element $link not found inside $region . Interrupted");
         }
 
@@ -163,7 +163,7 @@ trait LinksTrait
     {
         $row = $this->getSession()->getPage()->find('css', sprintf('table tr:contains("%s")', $rowText));
 
-        if (null === $row) {
+        if ($row === null) {
             throw new \Exception('Cannot find a table row with text: ' . $rowText);
         }
 
@@ -181,7 +181,7 @@ trait LinksTrait
         $linksElementsFound = $region->findAll('xpath', '//a[normalize-space(text())="' . $text . '"]');
         $count = count($linksElementsFound);
 
-        if (0 === $count) {
+        if ($count === 0) {
             throw new \RuntimeException('Element not found');
         }
 
@@ -191,7 +191,7 @@ trait LinksTrait
 
         $href = $linksElementsFound[0]->getAttribute('href');
 
-        if (false === strpos($href, $expectedLink)) {
+        if (strpos($href, $expectedLink) === false) {
             throw new \Exception("Link: $href does not contain $expectedLink");
         }
     }

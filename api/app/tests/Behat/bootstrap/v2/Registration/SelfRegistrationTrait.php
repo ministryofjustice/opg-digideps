@@ -303,7 +303,7 @@ trait SelfRegistrationTrait
      */
     public function anIncorrectCaseNumberLengthErrorIs($arg1)
     {
-        if ('not thrown' == $arg1) {
+        if ($arg1 == 'not thrown') {
             $this->assertPageContainsText(
                 sprintf(
                     "We've sent you a link to %s that you need to click to activate your deputy service account.",
@@ -471,7 +471,7 @@ trait SelfRegistrationTrait
      */
     public function theyRegisterToDeputiseForAClientWithValidDetailsThatIncludesADigitCaseNumber($caseNumLength)
     {
-        if (8 == $caseNumLength) {
+        if ($caseNumLength == 8) {
             $caseNumber = '1717171T';
         } else {
             $caseNumber = '1717171T00';
