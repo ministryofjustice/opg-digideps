@@ -105,6 +105,11 @@ readonly class ReportTypeUpdateFactory implements DataFactoryInterface
                 $report->setType((string) $possibleReportType);
                 $this->entityManager->persist($report);
                 ++$count;
+
+                // batch flushes in 10s
+                if ($count % 10 === 0) {
+                    $this->entityManager->flush();
+                }
             } else {
                 $this->logger->info(
                     "DRYRUN[{$this->getName()}]: Report with ID: $reportId; report type change from $currentReportType to $possibleReportType"
@@ -112,22 +117,26 @@ readonly class ReportTypeUpdateFactory implements DataFactoryInterface
             }
         }
 
-        $numIndeterminate = count($indeterminate);
-        $numDangerous = count($dangerous);
+        $this->entityManager->flush();
 
-        $errors = [];
+        $messages = ['success' => ["Updated $count report types"]];
+
+        // don't treat indeterminate or dangerous report type transitions as errors which will stop the ingest;
+        // just warn about them
+        $numIndeterminate = count($indeterminate);
         if ($numIndeterminate > 0) {
-            $errors[] = "Unable to determine report type for $numIndeterminate report IDs: " . implode(', ', $indeterminate);
+            $messages['indeterminate'] = "Unable to determine report type for $numIndeterminate report IDs: " . implode(', ', $indeterminate);
         }
 
-        // while we log this as an error, we apply the change to/from hybrid anyway
+        // while we log this as a warning, we apply the change to/from hybrid anyway
+        $numDangerous = count($dangerous);
         if ($numDangerous > 0) {
-            $errors[] = "Possible dangerous change of report type to/from hybrid for $numDangerous report IDs: " . implode(', ', $dangerous);
+            $messages['dangerous'] = "Possible dangerous change of report type to/from hybrid for $numDangerous report IDs: " . implode(', ', $dangerous);
         }
 
         return new DataFactoryResult(
-            messages: ['success' => ["Updated $count report types"]],
-            errorMessages: ['errors' => $errors]
+            messages: $messages,
+            errorMessages: ['errors' => []]
         );
     }
 }
