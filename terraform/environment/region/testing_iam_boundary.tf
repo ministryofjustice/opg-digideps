@@ -55,7 +55,7 @@ data "aws_iam_policy_document" "development_ci_assume" {
 
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:iam::631181914621:user/people/james.warren"]
+      identifiers = ["arn:aws:iam::631181914621:role/operator"]
     }
 
     actions = [

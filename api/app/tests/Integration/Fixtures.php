@@ -135,6 +135,7 @@ class Fixtures
         $deputy->setFirstname('name' . time());
         $deputy->setLastname('surname' . time());
         $deputy->setDeputyType(DeputyType::LAY);
+        $deputy->setOrganisation(null);
 
         foreach ($settersMap as $k => $v) {
             $deputy->$k($v);

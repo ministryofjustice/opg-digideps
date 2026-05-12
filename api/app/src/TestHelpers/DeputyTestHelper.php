@@ -25,7 +25,8 @@ class DeputyTestHelper
             ->setAddress3(is_null($user) ? $faker->county : $user->getAddress3())
             ->setAddressPostcode(is_null($user) ? $faker->postcode() : $user->getAddressPostcode())
             ->setPhoneMain(is_null($user) ? $faker->phoneNumber() : $user->getPhoneMain())
-            ->setDeputyType(DeputyType::LAY);
+            ->setDeputyType(DeputyType::LAY)
+            ->setOrganisation(null);
 
         if (!is_null($user)) {
             $deputy->setUser($user);

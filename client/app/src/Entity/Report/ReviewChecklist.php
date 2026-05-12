@@ -3,7 +3,6 @@
 namespace OPG\Digideps\Frontend\Entity\Report;
 
 use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
-use OPG\Digideps\Frontend\Entity\ReportInterface;
 use OPG\Digideps\Frontend\Entity\Traits\ModifyAudit;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Model\FullReviewChecklist;
@@ -62,7 +61,7 @@ class ReviewChecklist
     /**
      * Checklist constructor.
      */
-    public function __construct(ReportInterface $report)
+    public function __construct(Report $report)
     {
         $this->setReport($report);
     }
@@ -87,35 +86,24 @@ class ReviewChecklist
         return $this;
     }
 
-    public function getReport(): ReportInterface
+    public function getReport(): Report
     {
         return $this->report;
     }
 
-    /**
-     * @return $this
-     */
-    public function setReport(ReportInterface $report)
+    public function setReport(Report $report): static
     {
         $this->report = $report;
 
         return $this;
     }
 
-    /**
-     * @return FullReviewChecklist
-     */
     public function getAnswers(): ?FullReviewChecklist
     {
         return $this->answers ?: new FullReviewChecklist();
     }
 
-    /**
-     * @param array $answers
-     *
-     * @return $this
-     */
-    public function setAnswers(FullReviewChecklist $answers)
+    public function setAnswers(FullReviewChecklist $answers): static
     {
         $this->answers = $answers;
 
