@@ -6,6 +6,7 @@ namespace OPG\Digideps\Backend\Entity\Staging;
 
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
@@ -66,7 +67,7 @@ class StagingPaProIngest
         public readonly CourtOrderReportType $reportType,
         #[Column(name: 'order_type', type: 'string', length: 3, enumType: CourtOrderType::class)]
         public readonly CourtOrderType $orderType,
-        #[Id, Column(type: 'integer')]
+        #[Id, GeneratedValue, Column(type: 'integer')]
         public int $id = 0,
     ) {
     }
