@@ -47,21 +47,16 @@ class Redirector
         $user = $this->getLoggedUser();
 
         $isAdminUser = $this->authChecker->isGranted(User::ROLE_ADMIN);
-        $isAdUser = $this->authChecker->isGranted(User::ROLE_AD);
         $isLayDeputy = $this->authChecker->isGranted(User::ROLE_LAY_DEPUTY);
         $isDeputyOrg = !is_null($user) && $user->isDeputyOrg();
         $inPasswordCreateContext = $session->get('login-context') === 'password-create';
 
-        if ($inPasswordCreateContext && ($isAdminUser || $isAdUser || $isDeputyOrg)) {
+        if ($inPasswordCreateContext && ($isAdminUser || $isDeputyOrg)) {
             return $this->router->generate('user_details');
         }
 
         if ($isAdminUser) {
             return $this->router->generate('admin_homepage');
-        }
-
-        if ($isAdUser) {
-            return $this->router->generate('ad_homepage');
         }
 
         if ($isDeputyOrg) {
@@ -141,10 +136,6 @@ class Redirector
             // admin domain: redirect to specific admin/ad homepage, or login page (if not logged)
             if ($this->authChecker->isGranted(User::ROLE_ADMIN)) {
                 return $this->router->generate('admin_homepage');
-            }
-
-            if ($this->authChecker->isGranted(User::ROLE_AD)) {
-                return $this->router->generate('ad_homepage');
             }
 
             return $this->router->generate('login');

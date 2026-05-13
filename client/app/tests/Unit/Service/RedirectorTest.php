@@ -77,7 +77,6 @@ class RedirectorTest extends TestCase
         return [
             'admin password create' => [User::ROLE_ADMIN, false, false, false, null, true, ['login-context' => 'password-create'], 0, 0, 'user_details', [], '/user/details'],
             'admin homepage' => [User::ROLE_ADMIN, false, false, false, null, true, null, 0, 0, 'admin_homepage', [], '/admin/'],
-            'ad homepage' => [User::ROLE_AD, false, false, false, null, true, null, 0, 0, 'ad_homepage', [], '/ad/'],
             'non-admin password create' => [null, true, false, false, null, true, ['login-context' => 'password-create'], 0, 0, 'user_details', [], '/user/details'],
             'non-admin org dashboard' => [null, true, false, false, null, true, null, 0, 0, 'org_dashboard', [], '/org/'],
             'lay with multiple clients' => [User::ROLE_LAY_DEPUTY, false, false, false, null, true, null, 2, 1, 'courtorders_for_deputy', [], '/courtorder/choose-a-court-order'],
@@ -271,7 +270,6 @@ class RedirectorTest extends TestCase
     {
         return [
             ['admin', User::ROLE_ADMIN, 'admin_homepage', '/admin/'],
-            ['admin', User::ROLE_AD, 'ad_homepage', '/ad/'],
             ['admin', User::ROLE_LAY_DEPUTY, 'login', '/login'],
             ['prod', User::ROLE_ORG, 'org_dashboard', '/org/'],
             ['prod', User::ROLE_LAY_DEPUTY, null, false],

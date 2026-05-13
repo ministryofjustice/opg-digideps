@@ -24,7 +24,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
     public const string ROLE_ADMIN_MANAGER = 'ROLE_ADMIN_MANAGER';
 
     public const string ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
-    public const string ROLE_AD = 'ROLE_AD';
 
     public const string ROLE_PA = 'ROLE_PA';
     public const string ROLE_PA_NAMED = 'ROLE_PA_NAMED';
@@ -64,7 +63,6 @@ class User implements UserInterface, DeputyInterface, PasswordAuthenticatedUserI
         self::ROLE_ADMIN_MANAGER => 'Admin Manager',
         self::ROLE_SUPER_ADMIN => 'Super admin',
         self::ROLE_LAY_DEPUTY => 'Lay Deputy',
-        self::ROLE_AD => 'Assisted Digital',
         // pa
         self::ROLE_PA_NAMED => 'Public Authority (named)',
         self::ROLE_PA_ADMIN => 'Public Authority admin',

@@ -23,7 +23,7 @@ class SearchController extends AbstractController
     }
 
     #[Route(path: '/search', name: 'admin_client_search')]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     #[Template('@App/Admin/Client/Search/search.html.twig')]
     public function searchAction(Request $request): array|string|null
     {

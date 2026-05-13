@@ -26,7 +26,7 @@ class AjaxController extends AbstractController
     }
 
     #[Route(path: '/pre-registration-delete', name: 'pre_registration_delete_ajax')]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     public function deletePreRegistrationAjaxAction(): JsonResponse
     {
         try {
@@ -41,7 +41,7 @@ class AjaxController extends AbstractController
     }
 
     #[Route(path: '/pre-registration-add', name: 'pre_registration_add_ajax')]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     public function uploadUsersAjaxAction(Request $request, ClientInterface $redisClient): JsonResponse
     {
         $chunkId = 'chunk' . $request->get('chunk');

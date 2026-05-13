@@ -78,7 +78,7 @@ class AddUserType extends AbstractType
             $user = $event->getData();
             $form = $event->getForm();
 
-            if (in_array($user->getRoleName(), $staffRoles) || $user->getRoleName() === 'ROLE_AD') {
+            if (in_array($user->getRoleName(), $staffRoles)) {
                 $form->get('roleType')->setData('staff');
                 $form->get('roleNameStaff')->setData($user->getRoleName());
             } else {

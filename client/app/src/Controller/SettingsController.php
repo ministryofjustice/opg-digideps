@@ -135,7 +135,7 @@ class SettingsController extends AbstractController
     {
         $preUpdateDeputy = $this->userApi->getUserWithData(['user-clients', 'client']);
 
-        if ($this->isGranted(User::ROLE_ADMIN) || $this->isGranted(User::ROLE_AD)) {
+        if ($this->isGranted(User::ROLE_ADMIN)) {
             $form = $this->createForm(UserDetailsBasicType::class, clone $preUpdateDeputy, []);
             $jmsPutGroups = ['user_details_basic'];
         } elseif ($this->isGranted(User::ROLE_LAY_DEPUTY)) {

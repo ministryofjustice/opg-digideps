@@ -90,14 +90,10 @@ security:
         invalidate_session: false
 
   access_control:
-    # /admin accessible only from ADMIN, super users and AD users
-    - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_AD] }
+    # /admin accessible only from ADMIN, super users
+    - { path: ^/admin, roles: [ROLE_ADMIN] }
     # client settings not available to PA users
-    - {
-        path: ^/deputyship-details,
-        roles: [ROLE_LAY_DEPUTY, ROLE_ADMIN, ROLE_AD],
-      }
-    - { path: ^/ad, roles: [ROLE_AD] }
+    - { path: ^/deputyship-details, roles: [ROLE_LAY_DEPUTY, ROLE_ADMIN] }
     - { path: ^/pa/team/add, roles: [ROLE_ORG_NAMED, ROLE_ORG_ADMIN] }
     - { path: ^/pa/team/edit, roles: [ROLE_ORG] }
     - { path: ^/pa/, roles: [ROLE_ORG] }
@@ -109,7 +105,6 @@ security:
     - { path: ^/v2/*, roles: PUBLIC_ACCESS }
     - { path: ^/login, roles: PUBLIC_ACCESS }
     - { path: ^/logout, roles: PUBLIC_ACCESS }
-    - { path: ^/login-ad, roles: PUBLIC_ACCESS }
     - { path: ^/manage, roles: PUBLIC_ACCESS }
     - { path: ^/feedback, roles: PUBLIC_ACCESS }
     - { path: ^/register, roles: PUBLIC_ACCESS }

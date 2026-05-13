@@ -25,7 +25,7 @@ class ClientController extends AbstractController
     }
 
     #[Route(path: '/{id}/details', name: 'admin_client_details', requirements: ['id' => '\d+'])] // //TODO define Security group (AD to remove?)
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     #[Template('@App/Admin/Client/Client/details.html.twig')]
     public function detailsAction(int $id): RedirectResponse|array
     {
@@ -49,7 +49,7 @@ class ClientController extends AbstractController
     }
 
     #[Route(path: '/case-number/{caseNumber}/details', name: 'admin_client_by_case_number_details')]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     public function detailsByCaseNumberAction(string $caseNumber): RedirectResponse
     {
         $client = $this->clientApi->getByCaseNumber($caseNumber);
@@ -83,7 +83,7 @@ class ClientController extends AbstractController
     }
 
     #[Route(path: '/{id}/archived', name: 'admin_client_archived', requirements: ['id' => '\d+'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     #[Template('@App/Admin/Client/Client/archived.html.twig')]
     public function archivedAction(int $id): RedirectResponse|array
     {
