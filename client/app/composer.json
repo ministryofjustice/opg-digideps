@@ -12,7 +12,8 @@
     },
     "scripts": {
         "lint:phpstan": "phpstan",
-        "lint:phpstan:baseline": "phpstan && phpstan --generate-baseline"
+        "lint:phpstan:baseline": "phpstan && phpstan --generate-baseline",
+        "lint:phpstan:baseline:force": "phpstan --generate-baseline"
     },
     "autoload": {
         "psr-4": {

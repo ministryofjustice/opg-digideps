@@ -242,3 +242,8 @@ phpstan-regenerate:
 	(cd ./api/app && composer run lint:phpstan:baseline)
 	(cd ./client/app && composer run lint:phpstan:baseline)
 	composer run lint:phpstan:baseline
+
+phpstan-regenerate-force:
+	(cd ./api/app && composer run lint:phpstan:baseline:force)
+	(cd ./client/app && composer run lint:phpstan:baseline:force)
+	composer run lint:phpstan:baseline:force

@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\v2\Registration\DeputyshipProcessing;
 
-use OPG\Digideps\Backend\Entity\StagingDeputyship;
-use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
-use OPG\Digideps\Backend\v2\CSV\CSVChunkerFactory;
-use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
 use Doctrine\ORM\Exception\NotSupported;
 use League\Csv\Exception;
 use League\Csv\Reader;
 use League\Csv\UnavailableStream;
+use OPG\Digideps\Backend\Entity\Staging\StagingDeputyship;
+use OPG\Digideps\Backend\v2\CSV\CSVChunkerFactory;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
 use Psr\Log\LoggerInterface;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 
 class DeputyshipsCSVLoaderIntegrationIntegrationTest extends ApiIntegrationTestCase
 {

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\DeputyshipProcessing;
 
-use OPG\Digideps\Backend\Entity\StagingDeputyship;
-use OPG\Digideps\Backend\v2\CSV\CSVChunker;
-use OPG\Digideps\Backend\v2\CSV\CSVChunkerFactory;
-use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query;
 use League\Csv\Exception as CSVException;
+use OPG\Digideps\Backend\Entity\Staging\StagingDeputyship;
+use OPG\Digideps\Backend\v2\CSV\CSVChunker;
+use OPG\Digideps\Backend\v2\CSV\CSVChunkerFactory;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;

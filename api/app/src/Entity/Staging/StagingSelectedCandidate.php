@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace OPG\Digideps\Backend\Entity;
+namespace OPG\Digideps\Backend\Entity\Staging;
 
-use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 
 /**
  * Holds staging data taken from the data processed from the deputyship CSV file from Sirius.

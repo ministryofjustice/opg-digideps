@@ -8749,12 +8749,6 @@ parameters:
 			path: api/app/src/Service/DataCompression.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Service\\DataImporter\\CsvToArray\:\:keepExpectedAndOptionalColumns\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Service/DataImporter/CsvToArray.php
-
-		-
 			message: '#^Parameter \#1 \$array of function array_diff expects an array of values castable to string, array given\.$#'
 			identifier: argument.type
 			count: 1
@@ -40627,19 +40621,19 @@ parameters:
 			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipsCandidatesSelectorIntegrationTest.php
 
 		-
-			message: '#^Cannot access property \$deputyStatusOnOrder on OPG\\Digideps\\Backend\\Entity\\StagingDeputyship\|null\.$#'
+			message: '#^Cannot access property \$deputyStatusOnOrder on OPG\\Digideps\\Backend\\Entity\\Staging\\StagingDeputyship\|null\.$#'
 			identifier: property.nonObject
 			count: 1
 			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipsCandidatesSelectorIntegrationTest.php
 
 		-
-			message: '#^Cannot access property \$deputyUid on OPG\\Digideps\\Backend\\Entity\\StagingDeputyship\|null\.$#'
+			message: '#^Cannot access property \$deputyUid on OPG\\Digideps\\Backend\\Entity\\Staging\\StagingDeputyship\|null\.$#'
 			identifier: property.nonObject
 			count: 1
 			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipsCandidatesSelectorIntegrationTest.php
 
 		-
-			message: '#^Cannot access property \$orderUid on OPG\\Digideps\\Backend\\Entity\\StagingDeputyship\|null\.$#'
+			message: '#^Cannot access property \$orderUid on OPG\\Digideps\\Backend\\Entity\\Staging\\StagingDeputyship\|null\.$#'
 			identifier: property.nonObject
 			count: 2
 			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipsCandidatesSelectorIntegrationTest.php
@@ -43465,7 +43459,7 @@ parameters:
 			path: api/app/tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipCandidatesGroupTest.php
 
 		-
-			message: '#^Parameter \#1 \$candidates of class OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\DeputyshipCandidatesSelectorResult constructor expects Traversable\<mixed, array\<string, mixed\>\>, ArrayIterator\<int, OPG\\Digideps\\Backend\\Entity\\StagingSelectedCandidate&PHPUnit\\Framework\\MockObject\\MockObject\> given\.$#'
+			message: '#^Parameter \#1 \$candidates of class OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\DeputyshipCandidatesSelectorResult constructor expects Traversable\<mixed, array\<string, mixed\>\>, ArrayIterator\<int, OPG\\Digideps\\Backend\\Entity\\Staging\\StagingSelectedCandidate&PHPUnit\\Framework\\MockObject\\MockObject\> given\.$#'
 			identifier: argument.type
 			count: 2
 			path: api/app/tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipsCSVIngesterTest.php
