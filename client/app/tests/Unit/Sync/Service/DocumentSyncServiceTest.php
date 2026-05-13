@@ -259,8 +259,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             $expectedSubmissionIdUsedForSync,
             $this->fileName,
             null,
-            $this->s3Reference,
-            Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS
+            $this->s3Reference
         );
 
         $this->siriusApiGatewayClient
@@ -503,8 +502,7 @@ class DocumentSyncServiceTest extends KernelTestCase
             $expectedSubmissionIdUsedForSync,
             'test_.pdf',
             null,
-            $this->s3Reference,
-            Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS
+            $this->s3Reference
         );
 
         $this->siriusApiGatewayClient

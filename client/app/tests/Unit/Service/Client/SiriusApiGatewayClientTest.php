@@ -182,7 +182,9 @@ class SiriusApiGatewayClientTest extends KernelTestCase
      */
     public function testSendSupportingDocument()
     {
-        $this->setUpSupportingDocumentPactBuilder($this->caseRef, $this->reportPdfUuid);
+        $caseRef = '21242355';
+
+        $this->setUpSupportingDocumentPactBuilder($caseRef, $this->reportPdfUuid);
 
         $this->signer
             ->expects(self::once())
@@ -194,12 +196,11 @@ class SiriusApiGatewayClientTest extends KernelTestCase
             9876,
             $this->fileName,
             null,
-            $this->s3Reference,
-            '102'
+            $this->s3Reference
         );
 
         try {
-            $result = $this->sut->sendSupportingDocument($upload, $this->reportPdfUuid, $this->caseRef);
+            $result = $this->sut->sendSupportingDocument($upload, $this->reportPdfUuid, $caseRef);
         } catch (\Throwable $e) {
             $this->throwReadableFailureMessage($e);
         }
@@ -227,8 +228,6 @@ class SiriusApiGatewayClientTest extends KernelTestCase
                         'type' => 'supportingdocuments',
                         'attributes' => [
                             'submission_id' => $matcher->integer(9876),
-                            'digideps_report_type' => '102',
-                            'court_order_uids' => [],
                         ],
                         'file' => [
                             'name' => $this->fileName,

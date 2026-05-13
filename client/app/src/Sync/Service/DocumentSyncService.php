@@ -158,9 +158,7 @@ class DocumentSyncService
             $uploadType = 'reports';
         } else {
             $siriusDocumentMetadata = new SiriusSupportingDocumentMetadata();
-            $siriusDocumentMetadata->digidepsReportType = $documentData->getReportType();
             $siriusDocumentMetadata->submissionId = $documentData->getReportSubmissionId();
-            $siriusDocumentMetadata->courtOrderUids = $documentData->getCourtOrderUids();
 
             $uploadType = 'supportingdocuments';
         }

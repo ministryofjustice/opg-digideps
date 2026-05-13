@@ -56,20 +56,13 @@ class SiriusHelpers extends KernelTestCase
             ->setFile($file);
     }
 
-    /**
-     * @param string[] $courtOrderUids
-     */
     public static function generateSiriusSupportingDocumentUpload(
         int $submissionId,
         string $fileName,
         ?string $fileContents,
         ?string $s3Reference,
-        ?string $digidepsReportType,
-        array $courtOrderUids = [],
     ): SiriusDocumentUpload {
         $siriusSupportingDocumentMetadata = new SiriusSupportingDocumentMetadata();
-        $siriusSupportingDocumentMetadata->digidepsReportType = $digidepsReportType;
-        $siriusSupportingDocumentMetadata->courtOrderUids = $courtOrderUids;
         $siriusSupportingDocumentMetadata->submissionId = $submissionId;
 
         $file = new SiriusDocumentFile()

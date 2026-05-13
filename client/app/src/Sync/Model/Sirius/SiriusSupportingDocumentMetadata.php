@@ -10,10 +10,4 @@ namespace OPG\Digideps\Frontend\Sync\Model\Sirius;
 class SiriusSupportingDocumentMetadata implements SiriusMetadataInterface
 {
     public int $submissionId;
-
-    // the digideps-derived resource type: 102-4, 103-6, 104-5, 103-4-5 etc.
-    public ?string $digidepsReportType = null;
-
-    /** @var string[] */
-    public array $courtOrderUids = [];
 }
