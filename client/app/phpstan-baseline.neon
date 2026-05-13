@@ -4579,18 +4579,6 @@ parameters:
 			path: src/Entity/Report/MoneyShortCategory.php
 
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 3
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Cannot use array destructuring on mixed\.$#'
-			identifier: offsetAccess.nonArray
-			count: 3
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:getCategoriesGrouped\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -4599,12 +4587,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:getCategoriesGrouped\(\) has parameter \$typeFilter with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:getType\(\) should return string but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: src/Entity/Report/MoneyTransaction.php
 
@@ -4663,12 +4645,6 @@ parameters:
 			path: src/Entity/Report/MoneyTransaction.php
 
 		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 3
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:\$bankAccount \(OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -4676,12 +4652,6 @@ parameters:
 
 		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:\$bankAccountId has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:\$categories has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: src/Entity/Report/MoneyTransaction.php
@@ -7819,18 +7789,6 @@ parameters:
 			path: src/Form/Report/DecisionExistType.php
 
 		-
-			message: '#^Cannot call method canLinkToBankAccounts\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Form/Report/DeputyExpenseType.php
-
-		-
-			message: '#^Cannot call method getBankAccountOptions\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Form/Report/DeputyExpenseType.php
-
-		-
 			message: '#^Cannot call method getWishToProvideDocumentation\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -7847,18 +7805,6 @@ parameters:
 			identifier: method.nonObject
 			count: 2
 			path: src/Form/Report/FeeSingleType.php
-
-		-
-			message: '#^Cannot call method canLinkToBankAccounts\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Form/Report/GiftType.php
-
-		-
-			message: '#^Cannot call method getBankAccountOptions\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Form/Report/GiftType.php
 
 		-
 			message: '#^Cannot call method getDoesClientUndertakeSocialActivities\(\) on mixed\.$#'
@@ -7915,92 +7861,8 @@ parameters:
 			path: src/Form/Report/MoneyShortType.php
 
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 2
-			path: src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Cannot access offset 1 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Cannot access offset 3 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Cannot access offset 4 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Cannot call method canLinkToBankAccounts\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Cannot call method getBankAccountOptions\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: src/Form/Report/MoneyTransactionType.php
-
-		-
 			message: '#^Cannot cast mixed to int\.$#'
 			identifier: cast.int
-			count: 1
-			path: src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Form\\Report\\MoneyTransactionType\:\:isDescriptionMandatory\(\) should return bool but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Form\\Report\\MoneyTransactionType\:\:isDescriptionMandatory\(\) should return bool but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Parameter \#1 \$string of function ucfirst expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 1
-			path: src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Form\\Report\\MoneyTransactionType\:\:\$authorizationChecker \(Symfony\\Component\\Security\\Core\\Authorization\\AuthorizationCheckerInterface\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Form\\Report\\MoneyTransactionType\:\:\$selectedCategory \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Form\\Report\\MoneyTransactionType\:\:\$type \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: src/Form/Report/MoneyTransactionType.php
 
@@ -12235,84 +12097,6 @@ parameters:
 			path: src/Twig/ComponentsExtension.php
 
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Cannot access offset ''block_prefixes'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Cannot access offset ''errors'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Cannot access offset ''translation_domain'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Cannot access offset ''value'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Cannot access property \$vars on mixed\.$#'
-			identifier: property.nonObject
-			count: 4
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Cannot call method getMessage\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Parameter \#1 \$id of method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:trans\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Parameter \#2 \$parameters of method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:trans\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Parameter \#3 \$domain of method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:trans\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 9
-			path: src/Twig/FormFieldsExtension.php
-
-		-
 			message: '#^Binary operation "\." between ''The value '' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -16288,18 +16072,6 @@ parameters:
 			message: '#^Call to an undefined method object\:\:setExplanation\(\)\.$#'
 			identifier: method.notFound
 			count: 2
-			path: tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Cannot access offset mixed on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
 			path: tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
 
 		-

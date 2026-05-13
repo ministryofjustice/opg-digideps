@@ -66,19 +66,26 @@ class FormFieldsExtension extends AbstractExtension
      */
     public function renderFormInput(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null): void
     {
+        /** @var array $elementVars */
+        $elementVars = $element->vars;
+        /** @var array $blockPrefixes */
+        $blockPrefixes = $elementVars['block_prefixes'] ?? [];
         // generate input field html using variables supplied
         echo $this->environment->render(
             '@App/Components/Form/_input.html.twig',
             array_merge(
                 $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex),
-                ['multiline' => in_array('textarea', $element->vars['block_prefixes'] ?? [])]
+                ['multiline' => in_array('textarea', $blockPrefixes)]
             )
         );
     }
 
     public function renderPasswordInput(FormView $element, array $vars = []): void
     {
-        $domain = $element->parent->vars['translation_domain'];
+        /** @var array $elementVars */
+        $elementVars = $element->parent instanceof FormView ? $element->parent->vars : [];
+        /** @var string|null $domain */
+        $domain = $elementVars['translation_domain'];
         $vars['label'] = $this->translator->trans('signInForm.password.label', [], $domain);
         $vars['element'] = $element;
         echo $this->environment->render('@App/Components/Form/_password.html.twig', $vars);
@@ -87,7 +94,9 @@ class FormFieldsExtension extends AbstractExtension
     public function renderHiddenInput(FormView $element, array $vars = []): void
     {
         $vars['element'] = $element;
-        $vars['value'] = $element->vars['value'];
+        /** @var array $elementVars */
+        $elementVars = $element->vars;
+        $vars['value'] = $elementVars['value'];
         echo $this->environment->render('@App/Components/Form/_hidden.html.twig', $vars);
     }
 
@@ -96,11 +105,15 @@ class FormFieldsExtension extends AbstractExtension
      */
     public function renderCheckboxInput(FormView $element, string $elementName, array $vars = [], ?int $transIndex = null): void
     {
+        /** @var array $elementVars */
+        $elementVars = $element->vars;
+        /** @var array $blockPrefixes */
+        $blockPrefixes = $elementVars['block_prefixes'] ?? [];
         echo $this->environment->render(
             '@App/Components/Form/_checkbox.html.twig',
             array_merge(
                 $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex),
-                ['type' => in_array('radio', $element->vars['block_prefixes']) ? 'radio' : 'checkbox']
+                ['type' => in_array('radio', $blockPrefixes) ? 'radio' : 'checkbox']
             )
         );
     }
@@ -109,7 +122,10 @@ class FormFieldsExtension extends AbstractExtension
     {
         // enables getting the translation for hintText, labelClass and labelText
         $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
-        $domain = $element->parent->vars['translation_domain'];
+        /** @var array $elementVars */
+        $elementVars = $element->parent instanceof FormView ? $element->parent->vars : [];
+        /** @var string|null $domain */
+        $domain = $elementVars['translation_domain'];
 
         // sort hint text translation
         if (isset($vars['hintText'])) {
@@ -128,7 +144,8 @@ class FormFieldsExtension extends AbstractExtension
             if ($legendTextTrans != $translationKey . '.legend') {
                 $legendText = $legendTextTrans;
             } else {
-                $labelParams = isset($vars['labelParameters']) ? $vars['labelParameters'] : [];
+                /** @var array $labelParams */
+                $labelParams = $vars['labelParameters'] ?? [];
                 $legendTextTrans = $this->translator->trans($translationKey . '.label', $labelParams, $domain);
                 if ($legendTextTrans != $translationKey . '.label') {
                     $legendText = $legendTextTrans;
@@ -138,24 +155,27 @@ class FormFieldsExtension extends AbstractExtension
             }
         }
 
+        /** @var array $legend */
+        $legend = $vars['legend'] ?? [];
+
         // generate input field html using variables supplied
         echo $this->environment->render('@App/Components/Form/_checkboxgroup.html.twig', [
-            'classes' => isset($vars['classes']) ? $vars['classes'] : null,
-            'disabled' => isset($vars['disabled']) ? $vars['disabled'] : false,
-            'fieldSetClass' => isset($vars['fieldSetClass']) ? $vars['fieldSetClass'] : null,
-            'formGroupClass' => isset($vars['formGroupClass']) ? $vars['formGroupClass'] : null,
+            'classes' => $vars['classes'] ?? null,
+            'disabled' => $vars['disabled'] ?? false,
+            'fieldSetClass' => $vars['fieldSetClass'] ?? null,
+            'formGroupClass' => $vars['formGroupClass'] ?? null,
             'legend' => array_merge([
                 'text' => $legendText,
                 'isPageHeading' => false,
                 'caption' => false,
-            ], $vars['legend'] ?? []),
-            'legendClass' => isset($vars['legendClass']) ? $vars['legendClass'] : null,
-            'useFormGroup' => isset($vars['useFormGroup']) ? $vars['useFormGroup'] : true,
+            ], $legend),
+            'legendClass' => $vars['legendClass'] ?? null,
+            'useFormGroup' => $vars['useFormGroup'] ?? true,
             'hintText' => $hintText,
-            'hintLink' => isset($vars['hintLink']) ? $vars['hintLink'] : null,
+            'hintLink' => $vars['hintLink'] ?? null,
             'hintList' => empty($vars['hintList']) ? [] : $vars['hintList'],
             'element' => $element,
-            'vertical' => isset($vars['vertical']) ? $vars['vertical'] : false,
+            'vertical' => $vars['vertical'] ?? false,
             'items' => empty($vars['items']) ? [] : $vars['items'],
             'translationDomain' => $domain,
             'multitoggle' => empty($vars['multitoggle']) ? [] : $vars['multitoggle'],
@@ -172,7 +192,10 @@ class FormFieldsExtension extends AbstractExtension
         // generate input field html using variables supplied
         echo $this->environment->render(
             '@App/Components/Form/_select.html.twig',
-            $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex)
+            array_merge(
+                $this->getFormComponentTwigVariables($element, $elementName, $vars, $transIndex),
+                ['required' => $vars['required'] ?? true]
+            )
         );
     }
 
@@ -214,8 +237,7 @@ class FormFieldsExtension extends AbstractExtension
         $hintText = $this->getHintText($translationKey, $domain);
 
         // get legendText translation
-        $labelParams = [];
-        $legendText = $this->getLegendText($translationKey, $labelParams, $domain);
+        $legendText = $this->getLegendText($translationKey, [], $domain);
 
         /** @var array $legend */
         $legend = $vars['legend'] ?? [];
@@ -277,9 +299,11 @@ class FormFieldsExtension extends AbstractExtension
     {
         $formErrorMessages = $this->getErrorsFromFormViewRecursive($form);
 
+        /** @var array $vars */
+        $vars = $form->vars;
         $html = $this->environment->render('@App/Components/Alerts/_validation-summary.html.twig', [
             'formErrorMessages' => $formErrorMessages,
-            'formUncaughtErrors' => empty($form->vars['errors']) ? [] : $form->vars['errors'],
+            'formUncaughtErrors' => empty($vars['errors']) ? [] : $vars['errors'],
         ]);
 
         echo $html;
@@ -289,9 +313,12 @@ class FormFieldsExtension extends AbstractExtension
     {
         $ret = [];
         foreach ($elementsFormView as $elementFormView) {
-            $elementFormErrors = empty($elementFormView->vars['errors']) ? [] : $elementFormView->vars['errors'];
+            /** @var array $elementVars */
+            $elementVars = $elementFormView->vars;
+            /** @var FormError[] $elementFormErrors */
+            $elementFormErrors = empty($elementVars['errors']) ? [] : $elementVars['errors'];
             foreach ($elementFormErrors as $formError) { /* @var $error FormError */
-                $ret[] = ['elementId' => $elementFormView->vars['id'], 'message' => $formError->getMessage()];
+                $ret[] = ['elementId' => $elementVars['id'], 'message' => $formError->getMessage()];
             }
             $ret = array_merge(
                 $ret,
@@ -309,7 +336,10 @@ class FormFieldsExtension extends AbstractExtension
     {
         // lets get the translation for hintText, labelClass and labelText
         $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
-        $domain = $element->parent->vars['translation_domain'];
+        /** @var array $elementVars */
+        $elementVars = $element->parent instanceof FormView ? $element->parent->vars : [];
+        /** @var string|null $domain */
+        $domain = $elementVars['translation_domain'];
 
         if (isset($vars['hintText'])) {
             $hintText = $vars['hintText'];
@@ -321,7 +351,8 @@ class FormFieldsExtension extends AbstractExtension
         // sort hintList text translation
         $hintListArray = null;
         if (!empty($vars['hasHintList'])) {
-            $hintListParams = isset($vars['hintListParameters']) ? $vars['hintListParameters'] : [];
+            /** @var array $hintListParams */
+            $hintListParams = $vars['hintListParameters'] ?? [];
             $hintListTextTrans = $this->translator->trans($translationKey . '.hintList', $hintListParams, $domain);
             $hintListArray = array_filter(explode("\n", $hintListTextTrans));
         }
@@ -330,6 +361,7 @@ class FormFieldsExtension extends AbstractExtension
         if (isset($vars['labelText']) && $vars['labelText']) {
             $labelText = $vars['labelText'];
         } else {
+            /** @var array $labelParams */
             $labelParams = $vars['labelParameters'] ?? [];
             // label is translated directly here
             if ($translationKey != '') {
@@ -340,7 +372,9 @@ class FormFieldsExtension extends AbstractExtension
         }
 
         // inputPrefix
-        $inputPrefix = isset($vars['inputPrefix']) ? $this->translator->trans($vars['inputPrefix'], [], $domain) : null;
+        /** @var string $varsInputPrefix */
+        $varsInputPrefix = $vars['inputPrefix'] ?? null;
+        $inputPrefix = isset($vars['inputPrefix']) ? $this->translator->trans($varsInputPrefix, [], $domain) : null;
 
         $labelClass = $vars['labelClass'] ?? null;
         $inputClass = $vars['inputClass'] ?? null;
@@ -353,6 +387,8 @@ class FormFieldsExtension extends AbstractExtension
             $preInputText = $preInputTextTrans;
         }
 
+        /** @var array $label */
+        $label = $vars['label'] ?? [];
         // Prepare extra attributes
         /** @var array<string, string> $extraAttrs */
         $extraAttrs = $vars['extraAttrs'] ?? [];
@@ -386,7 +422,7 @@ class FormFieldsExtension extends AbstractExtension
                 'text' => $labelText,
                 'isPageHeading' => false,
                 'caption' => false,
-            ], $vars['label'] ?? []),
+            ], $label),
             'extraAttrs' => $extraAttrs,
         ];
     }
@@ -485,8 +521,10 @@ class FormFieldsExtension extends AbstractExtension
     private function getTranslationKeyAndDomain(FormView $element, string $elementName, ?int $transIndex = null): array
     {
         $translationKey = (!is_null($transIndex)) ? $transIndex . '.' . $elementName : $elementName;
+        /** @var array $elementVars */
+        $elementVars = $element->parent instanceof FormView ? $element->parent->vars : [];
         /** @var string $domain */
-        $domain = $element->parent->vars['translation_domain'];
+        $domain = $elementVars['translation_domain'];
         return ['translationKey' => $translationKey, 'domain' => $domain];
     }
 
