@@ -278,7 +278,8 @@ class LayPaProCsvUploadDataFactory implements DataFactoryInterface
                 $value = $static;
             } elseif ($email && str_contains($value, '@')) {
                 [$user, $domain] = explode('@', $value, 2);
-                $value = "{$this->anonymise($user)}@{$domain}";
+                $user = substr($this->anonymise($user), 0, 59 - strlen($domain));
+                $value = "{$user}@{$domain}";
             } else {
                 $value = $this->anonymise($value);
                 $value[0] = strtoupper($value[0]);
