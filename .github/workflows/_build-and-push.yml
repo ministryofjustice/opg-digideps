@@ -26,7 +26,76 @@ on:
         required: true
 
 jobs:
+  prewarm_snyk_scanner:
+    strategy:
+      fail-fast: false
+      matrix:
+        runs_on:
+          - "ubuntu-24.04-arm"
+          - "ubuntu-latest"
+
+    runs-on: ${{ matrix.runs_on }}
+
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: get opg github actions ref
+        id: opg_actions_ref
+        run: |
+          OPG_GITHUB_ACTIONS_LINE="$(grep -m 1 '^[[:space:]]*uses: ministryofjustice/opg-github-actions/actions/snyk-scan@' .github/workflows/_build-and-push.yml)"
+
+          OPG_GITHUB_ACTIONS_REF="$(echo "${OPG_GITHUB_ACTIONS_LINE}" | cut -d '@' -f 2 | awk '{print $1}')"
+
+          echo "ref=${OPG_GITHUB_ACTIONS_REF}" >> "$GITHUB_OUTPUT"
+
+          echo "Using OPG GitHub Actions ref: ${OPG_GITHUB_ACTIONS_REF}"
+
+      - name: cache snyk scanner image
+        id: cache-snyk-scanner
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: /tmp/snyk-scanner-cache
+          key: snyk-scanner-image-${{ matrix.runs_on }}-${{ steps.opg_actions_ref.outputs.ref }}
+
+      - name: configure OIDC AWS credentials for ECR pull
+        if: steps.cache-snyk-scanner.outputs.cache-hit != 'true'
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5.1.1
+        with:
+          role-to-assume: arn:aws:iam::${{ vars.MANAGEMENT_ACCOUNT }}:role/digideps-gh-actions-ecr-pull
+          role-session-name: github-actions-ecr-pull
+          role-duration-seconds: 900
+          aws-region: eu-west-1
+
+      - name: login to ECR for snyk scanner pull
+        if: steps.cache-snyk-scanner.outputs.cache-hit != 'true'
+        uses: aws-actions/amazon-ecr-login@19d944daaa35f0fa1d3f7f8af1d3f2e5de25c5b7 # v2.1.4
+        with:
+          registries: ${{ vars.MANAGEMENT_ACCOUNT }}
+          mask-password: "true"
+
+      - name: pull and save snyk scanner image
+        if: steps.cache-snyk-scanner.outputs.cache-hit != 'true'
+        env:
+          OPG_GITHUB_ACTIONS_REF: ${{ steps.opg_actions_ref.outputs.ref }}
+        run: |
+          git clone https://github.com/ministryofjustice/opg-github-actions.git /tmp/opg-github-actions
+
+          cd /tmp/opg-github-actions
+
+          git checkout "${OPG_GITHUB_ACTIONS_REF}"
+
+          docker compose -f "/tmp/opg-github-actions/docker-compose.yml" pull snyk
+
+          mkdir -p /tmp/snyk-scanner-cache
+
+          SNYK_IMAGE="$(docker compose -f "/tmp/opg-github-actions/docker-compose.yml" config | awk '$1 == "image:" {print $2; exit}')"
+
+          echo "Using Snyk image: ${SNYK_IMAGE}"
+
+          docker save -o /tmp/snyk-scanner-cache/snyk-scanner.tar "${SNYK_IMAGE}"
+
   docker_build_scan_push:
+    needs: prewarm_snyk_scanner
     strategy:
       fail-fast: false
       matrix:
@@ -287,6 +356,18 @@ jobs:
             echo "run=false" >> "$GITHUB_OUTPUT"
             echo "Snyk already ran today for ${IMAGE_NAME} (${CHECKSUM_TAG})"
           fi
+
+      - name: restore snyk scanner image cache
+        if: matrix.svc_name != 'mock-sirius' && (steps.existing_image.outputs.exists != 'true' || steps.daily_snyk.outputs.run == 'true' || inputs.branch_name == 'staging')
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: /tmp/snyk-scanner-cache
+          key: snyk-scanner-image-${{ matrix.runs_on }}-9e8b7c2fb29c11e77b12913f74459fa48b11829f
+
+      - name: load snyk scanner image
+        if: matrix.svc_name != 'mock-sirius' && (steps.existing_image.outputs.exists != 'true' || steps.daily_snyk.outputs.run == 'true' || inputs.branch_name == 'staging')
+        run: |
+          docker load -i /tmp/snyk-scanner-cache/snyk-scanner.tar
 
       - name: Run Snyk Scan
         id: snyk_scan
