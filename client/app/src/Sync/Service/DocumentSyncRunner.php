@@ -35,7 +35,7 @@ class DocumentSyncRunner
         );
 
         /** @var QueuedDocumentData[] $documents */
-        $documents = $this->serializer->deserialize($queuedDocumentData, 'OPG\Digideps\Frontend\Sync\Model\Sirius\QueuedDocumentData[]', 'json');
+        $documents = $this->serializer->deserialize($queuedDocumentData, QueuedDocumentData::class . '[]', 'json');
 
         $output->writeln(sprintf('%d documents to upload', count($documents)));
 

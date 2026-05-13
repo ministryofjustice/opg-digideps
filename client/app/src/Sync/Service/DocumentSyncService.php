@@ -137,32 +137,34 @@ class DocumentSyncService
             ->setS3Reference($documentData->getStorageReference());
 
         if ($documentData->isReportPdf()) {
-            $reportType = 'PF';
+            $simpleReportType = 'PF';
             if (in_array($documentData->getReportType(), [Report::TYPE_HEALTH_WELFARE, Report::TYPE_COMBINED_HIGH_ASSETS, Report::TYPE_COMBINED_LOW_ASSETS])) {
-                $reportType = 'HW';
+                $simpleReportType = 'HW';
             }
 
-            $siriusDocumentMetadata = new SiriusReportPdfDocumentMetadata()
-                ->setReportingPeriodFrom($documentData->getReportStartDate())
-                ->setReportingPeriodTo($this->determineEndDate($documentData))
-                ->setDateSubmitted($documentData->getReportSubmitDate())
-                ->setType($reportType)
-                ->setSubmissionId($documentData->getReportSubmissionId());
+            $siriusDocumentMetadata = new SiriusReportPdfDocumentMetadata();
+            $siriusDocumentMetadata->reportingPeriodFrom = $documentData->getReportStartDate();
+            $siriusDocumentMetadata->reportingPeriodTo = $this->determineEndDate($documentData);
+            $siriusDocumentMetadata->dateSubmitted = $documentData->getReportSubmitDate();
+            $siriusDocumentMetadata->type = $simpleReportType;
+            $siriusDocumentMetadata->digidepsReportType = $documentData->getReportType();
+            $siriusDocumentMetadata->submissionId = $documentData->getReportSubmissionId();
+            $siriusDocumentMetadata->courtOrderUids = $documentData->getCourtOrderUids();
 
             if (!is_null($documentData->getReportStartDate())) {
-                $siriusDocumentMetadata->setYear(intval($documentData->getReportStartDate()->format('Y')));
+                $siriusDocumentMetadata->year = (int) $documentData->getReportStartDate()->format('Y');
             }
 
-            $type = 'reports';
+            $uploadType = 'reports';
         } else {
-            $siriusDocumentMetadata = new SiriusSupportingDocumentMetadata()
-                ->setSubmissionId($documentData->getReportSubmissionId());
+            $siriusDocumentMetadata = new SiriusSupportingDocumentMetadata();
+            $siriusDocumentMetadata->submissionId = $documentData->getReportSubmissionId();
 
-            $type = 'supportingdocuments';
+            $uploadType = 'supportingdocuments';
         }
 
         return new SiriusDocumentUpload()
-            ->setType($type)
+            ->setType($uploadType)
             ->setAttributes($siriusDocumentMetadata)
             ->setFile($file);
     }

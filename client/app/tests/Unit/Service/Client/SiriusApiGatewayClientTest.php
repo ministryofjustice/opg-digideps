@@ -4,38 +4,33 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Frontend\Unit\Service\Client;
 
-use OPG\Digideps\Frontend\Service\AWS\RequestSigner;
-use OPG\Digideps\Frontend\Sync\Service\Client\Sirius\SiriusApiGatewayClient;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Request;
-use Tests\OPG\Digideps\Frontend\Unit\Helpers\SiriusHelpers;
+use OPG\Digideps\Frontend\Service\AWS\RequestSigner;
+use OPG\Digideps\Frontend\Sync\Service\Client\Sirius\SiriusApiGatewayClient;
 use PhpPact\Consumer\InteractionBuilder;
 use PhpPact\Consumer\Matcher\Matcher;
 use PhpPact\Consumer\Model\ConsumerRequest;
 use PhpPact\Consumer\Model\ProviderResponse;
 use PhpPact\Standalone\MockService\MockServerEnvConfig;
-use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
+use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Serializer\Serializer;
+use Tests\OPG\Digideps\Frontend\Unit\Helpers\SiriusHelpers;
 
 class SiriusApiGatewayClientTest extends KernelTestCase
 {
-    use ProphecyTrait;
-
     private string $caseRef;
     private string $reportPdfUuid;
-    private string $expectedSupportingDocumentUuid;
     private string $checklistPdfUuid;
     private string $expectedChecklistPdfUuid;
     private string $fileName;
     private string $fileContents;
     private string $s3Reference;
     private string $submitterEmail;
-    private RequestSigner|ObjectProphecy $signer;
-    private LoggerInterface|ObjectProphecy $logger;
+    private RequestSigner&MockObject $signer;
+    private LoggerInterface&MockObject $logger;
     private InteractionBuilder $builder;
     private SiriusApiGatewayClient $sut;
 
@@ -57,11 +52,10 @@ class SiriusApiGatewayClientTest extends KernelTestCase
 
         $this->caseRef = '1234567T';
         $this->reportPdfUuid = '33ea0382-cfc9-4776-9036-667eeb68fa4b';
-        $this->expectedSupportingDocumentUuid = '9c0cb55e-718d-4ffb-9599-f3164e12dbdb';
         $this->expectedChecklistPdfUuid = '9c0cb55e-718d-4ffb-9599-f3164e132ab5';
         $this->checklistPdfUuid = '9c0cb55e-718d-4ffb-9599-f3164e132ab5';
-        $this->signer = self::prophesize(RequestSigner::class);
-        $this->logger = self::prophesize(LoggerInterface::class);
+        $this->signer = self::createMock(RequestSigner::class);
+        $this->logger = self::createMock(LoggerInterface::class);
         $this->fileName = 'test.pdf';
         $this->fileContents = 'fake_contents';
         $this->submitterEmail = 'donald.draper@digital.justice.gov.uk';
@@ -69,10 +63,10 @@ class SiriusApiGatewayClientTest extends KernelTestCase
 
         $this->sut = new SiriusApiGatewayClient(
             $client,
-            $this->signer->reveal(),
+            $this->signer,
             'http://' . $baseUrl . ':' . $pactHostPort,
             $serializer,
-            $this->logger->reveal()
+            $this->logger
         );
     }
 
@@ -81,9 +75,16 @@ class SiriusApiGatewayClientTest extends KernelTestCase
      */
     public function testSendReportPdfDocument()
     {
-        $this->setUpReportPdfPactBuilder($this->caseRef);
+        $digidepsReportType = '102';
+        $courtOrderUids = ['11122233', '22332244'];
 
-        $this->signer->signRequest(Argument::type(Request::class), 'execute-api')->willReturnArgument(0);
+        $this->setUpReportPdfPactBuilder($this->caseRef, $digidepsReportType, $courtOrderUids);
+
+        $this->signer
+            ->expects(self::once())
+            ->method('signRequest')
+            ->with(self::isInstanceOf(Request::class), 'execute-api')
+            ->willReturnArgument(0);
 
         $reportStartDate = new \DateTime('2018-05-14');
         $reportEndDate = new \DateTime('2019-05-13');
@@ -98,7 +99,9 @@ class SiriusApiGatewayClientTest extends KernelTestCase
             $reportSubmissionId,
             $this->fileName,
             null,
-            $this->s3Reference
+            $this->s3Reference,
+            $digidepsReportType,
+            $courtOrderUids,
         );
 
         try {
@@ -115,7 +118,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
         );
     }
 
-    private function setUpReportPdfPactBuilder(string $caseRef)
+    private function setUpReportPdfPactBuilder(string $caseRef, string $digidepsReportType, array $courtOrderUids): void
     {
         $matcher = new Matcher();
         // Create your expected request from the consumer.
@@ -134,6 +137,8 @@ class SiriusApiGatewayClientTest extends KernelTestCase
                             'date_submitted' => $matcher->dateTimeISO8601('2019-06-20T00:00:00+01:00'),
                             'type' => $matcher->regex('PF', 'PF|HW'),
                             'submission_id' => $matcher->integer(9876),
+                            'digideps_report_type' => $digidepsReportType,
+                            'court_order_uids' => $courtOrderUids,
                         ],
                         'file' => [
                             'name' => $this->fileName,
@@ -152,8 +157,9 @@ class SiriusApiGatewayClientTest extends KernelTestCase
             ->setBody([
                 'data' => ['id' => $matcher->uuid($this->reportPdfUuid)],
             ]);
+
         $this->builder
-            ->uponReceiving('A submitted report')
+            ->uponReceiving('A submitted report ' . $caseRef)
             ->with($request)
             ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
     }
@@ -176,9 +182,15 @@ class SiriusApiGatewayClientTest extends KernelTestCase
      */
     public function testSendSupportingDocument()
     {
-        $this->setUpSupportingDocumentPactBuilder($this->caseRef, $this->reportPdfUuid);
+        $caseRef = '21242355';
 
-        $this->signer->signRequest(Argument::type(Request::class), 'execute-api')->willReturnArgument(0);
+        $this->setUpSupportingDocumentPactBuilder($caseRef, $this->reportPdfUuid);
+
+        $this->signer
+            ->expects(self::once())
+            ->method('signRequest')
+            ->with(self::isInstanceOf(Request::class), 'execute-api')
+            ->willReturnArgument(0);
 
         $upload = SiriusHelpers::generateSiriusSupportingDocumentUpload(
             9876,
@@ -188,7 +200,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
         );
 
         try {
-            $result = $this->sut->sendSupportingDocument($upload, $this->reportPdfUuid, $this->caseRef);
+            $result = $this->sut->sendSupportingDocument($upload, $this->reportPdfUuid, $caseRef);
         } catch (\Throwable $e) {
             $this->throwReadableFailureMessage($e);
         }
@@ -236,7 +248,7 @@ class SiriusApiGatewayClientTest extends KernelTestCase
             ]);
 
         $this->builder
-            ->uponReceiving('A submitted supporting document')
+            ->uponReceiving('A submitted supporting document ' . $caseRef)
             ->with($request)
             ->willRespondWith($response); // This has to be last. This is what makes an API request to the Mock Server to set the interaction.
     }
@@ -245,7 +257,11 @@ class SiriusApiGatewayClientTest extends KernelTestCase
     {
         $this->setUpChecklistPdfPostPactBuilder($this->caseRef, $this->reportPdfUuid);
 
-        $this->signer->signRequest(Argument::type(Request::class), 'execute-api')->willReturnArgument(0);
+        $this->signer
+            ->expects(self::once())
+            ->method('signRequest')
+            ->with(self::isInstanceOf(Request::class), 'execute-api')
+            ->willReturnArgument(0);
 
         $upload = SiriusHelpers::generateSiriusChecklistPdfUpload(
             $this->fileName,
@@ -321,7 +337,11 @@ class SiriusApiGatewayClientTest extends KernelTestCase
     {
         $this->setUpChecklistPdfPutPactBuilder($this->caseRef, $this->reportPdfUuid, $this->checklistPdfUuid);
 
-        $this->signer->signRequest(Argument::type(Request::class), 'execute-api')->willReturnArgument(0);
+        $this->signer
+            ->expects(self::once())
+            ->method('signRequest')
+            ->with(self::isInstanceOf(Request::class), 'execute-api')
+            ->willReturnArgument(0);
 
         $upload = SiriusHelpers::generateSiriusChecklistPdfUpload(
             $this->fileName,

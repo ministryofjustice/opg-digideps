@@ -5,86 +5,20 @@ declare(strict_types=1);
 namespace OPG\Digideps\Frontend\Sync\Model\Sirius;
 
 /**
- * This class is only serialized, which is why it has unused getters.
+ * This class is only serialized.
  */
 class SiriusReportPdfDocumentMetadata implements SiriusMetadataInterface
 {
-    private ?\DateTime $reportingPeriodFrom;
-    private ?\DateTime $reportingPeriodTo;
-    private ?\DateTime $dateSubmitted;
-    private int $year;
-    private ?int $submissionId;
-    private string $type;
+    public ?\DateTime $reportingPeriodFrom = null;
+    public ?\DateTime $reportingPeriodTo = null;
+    public ?\DateTime $dateSubmitted = null;
+    public ?int $year = null;
+    public ?int $submissionId = null;
+    public string $type;
 
-    public function getReportingPeriodFrom(): ?\DateTime
-    {
-        return $this->reportingPeriodFrom;
-    }
+    // the digideps-derived resource type: 102-4, 103-6, 104-5, 103-4-5 etc.
+    public ?string $digidepsReportType = null;
 
-    public function setReportingPeriodFrom(?\DateTime $reportingPeriodFrom): self
-    {
-        $this->reportingPeriodFrom = $reportingPeriodFrom;
-
-        return $this;
-    }
-
-    public function getReportingPeriodTo(): ?\DateTime
-    {
-        return $this->reportingPeriodTo;
-    }
-
-    public function setReportingPeriodTo(?\DateTime $reportingPeriodTo): self
-    {
-        $this->reportingPeriodTo = $reportingPeriodTo;
-
-        return $this;
-    }
-
-    public function getYear(): int
-    {
-        return $this->year;
-    }
-
-    public function setYear(int $year): self
-    {
-        $this->year = $year;
-
-        return $this;
-    }
-
-    public function getDateSubmitted(): ?\DateTime
-    {
-        return $this->dateSubmitted;
-    }
-
-    public function setDateSubmitted(?\DateTime $dateSubmitted): self
-    {
-        $this->dateSubmitted = $dateSubmitted;
-
-        return $this;
-    }
-
-    public function getType(): string
-    {
-        return $this->type;
-    }
-
-    public function setType(string $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
-    public function getSubmissionId(): ?int
-    {
-        return $this->submissionId;
-    }
-
-    public function setSubmissionId(?int $submissionId): self
-    {
-        $this->submissionId = $submissionId;
-
-        return $this;
-    }
+    /** @var string[] */
+    public array $courtOrderUids = [];
 }
