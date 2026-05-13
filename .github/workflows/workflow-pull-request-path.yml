@@ -211,22 +211,6 @@ jobs:
     needs:
       - workflow_variables
 
-  codecov:
-    name: upload to codecov
-    uses: ./.github/workflows/_codecov.yml
-    secrets:
-      codecov_token: ${{ secrets.CODECOV_TOKEN }}
-    needs:
-      - client_unit_tests
-      - api_phpstan
-      - client_phpstan
-      - miscellaneous_tests
-      - test_js
-      - api_unit_tests
-      - api_integration_tests_1
-      - api_integration_tests_2
-      - api_integration_tests_3
-
   terraform_plan_account_development:
     name: account plan terraform development
     uses: ./.github/workflows/_run-terraform.yml
@@ -470,7 +454,6 @@ jobs:
     runs-on: ubuntu-latest
     needs:
       - scale_services_down
-      - codecov
       - workflow_variables
       - smoke_tests
       - reset_database
