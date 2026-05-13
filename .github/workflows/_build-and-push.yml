@@ -341,7 +341,6 @@ jobs:
             echo "run=false" >> "$GITHUB_OUTPUT"
             echo "Snyk already ran today for ${IMAGE_NAME} (${CHECKSUM_TAG})"
           fi
-          echo "run=true" >> "$GITHUB_OUTPUT"
 
       - name: restore snyk scanner image cache
         if: matrix.svc_name != 'mock-sirius' && (steps.existing_image.outputs.exists != 'true' || steps.daily_snyk.outputs.run == 'true' || inputs.branch_name == 'staging')
