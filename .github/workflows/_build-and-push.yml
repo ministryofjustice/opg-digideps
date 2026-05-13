@@ -42,7 +42,7 @@ jobs:
       - name: get opg github actions ref
         id: opg_actions_ref
         run: |
-          OPG_GITHUB_ACTIONS_LINE="$(grep -m 1 'ministryofjustice/opg-github-actions/actions/snyk-scan@' .github/workflows/_build-and-push.yml)"
+          OPG_GITHUB_ACTIONS_LINE="$(grep -m 1 '^[[:space:]]*uses: ministryofjustice/opg-github-actions/actions/snyk-scan@' .github/workflows/_build-and-push.yml)"
 
           OPG_GITHUB_ACTIONS_REF="$(echo "${OPG_GITHUB_ACTIONS_LINE}" | cut -d '@' -f 2 | awk '{print $1}')"
 
