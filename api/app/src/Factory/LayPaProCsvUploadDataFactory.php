@@ -89,7 +89,7 @@ class LayPaProCsvUploadDataFactory implements DataFactoryInterface
         private readonly ParameterBagInterface $parameters,
         private readonly S3Client $s3,
     ) {
-        $this->production = $this->parameters->get('workspace') !== 'production';
+        $this->production = $this->parameters->get('workspace') === 'production';
         $this->errors = [];
     }
 
@@ -231,7 +231,7 @@ class LayPaProCsvUploadDataFactory implements DataFactoryInterface
                 try {
                     yield new StagingPaProIngest(
                         $item->getStringOrThrow('Case'),
-                        $this->process($item->getStringOrThrow('ClientFirstname')),
+                        $this->process($item->getStringOrThrow('ClientForename')),
                         $this->process($item->getStringOrThrow('ClientSurname')),
                         new \DateTimeImmutable($this->process($item->getStringOrDefault('ClientDateOfBirth', ''), '1953-06-02')),
                         $this->process($item->getStringOrDefault('ClientAddress1', '')),
@@ -244,7 +244,7 @@ class LayPaProCsvUploadDataFactory implements DataFactoryInterface
                         $item->getStringOrThrow('DeputyUid'),
                         $this->process($item->getStringOrThrow('DeputyEmail'), email: true),
                         $item->getStringOrDefault('DeputyOrganisation', ''),
-                        $this->process($item->getStringOrThrow('DeputyFirstname')),
+                        $this->process($item->getStringOrThrow('DeputyForename')),
                         $this->process($item->getStringOrThrow('DeputySurname')),
                         $this->process($item->getStringOrDefault('DeputyAddress1', '')),
                         $this->process($item->getStringOrDefault('DeputyAddress2', '')),
@@ -269,6 +269,9 @@ class LayPaProCsvUploadDataFactory implements DataFactoryInterface
     {
         if (!$this->production && $value !== '') {
             if ($static !== null) {
+                if (strlen($value) > 10) {
+                    throw new \DomainException("Value was expected to be at most 10 characters long. Got: {$value}");
+                }
                 $value = $static;
             } elseif ($email && str_contains($value, '@')) {
                 [$user, $domain] = explode('@', $value, 2);
