@@ -37,12 +37,25 @@ jobs:
     runs-on: ${{ matrix.runs_on }}
 
     steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: get opg github actions ref
+        id: opg_actions_ref
+        run: |
+          OPG_GITHUB_ACTIONS_LINE="$(grep -m 1 'ministryofjustice/opg-github-actions/actions/snyk-scan@' .github/workflows/_build-and-push.yml)"
+
+          OPG_GITHUB_ACTIONS_REF="$(echo "${OPG_GITHUB_ACTIONS_LINE}" | cut -d '@' -f 2 | awk '{print $1}')"
+
+          echo "ref=${OPG_GITHUB_ACTIONS_REF}" >> "$GITHUB_OUTPUT"
+
+          echo "Using OPG GitHub Actions ref: ${OPG_GITHUB_ACTIONS_REF}"
+
       - name: cache snyk scanner image
         id: cache-snyk-scanner
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: /tmp/snyk-scanner-cache
-          key: snyk-scanner-image-${{ matrix.runs_on }}-9e8b7c2fb29c11e77b12913f74459fa48b11829f
+          key: snyk-scanner-image-${{ matrix.runs_on }}-${{ steps.opg_actions_ref.outputs.ref }}
 
       - name: configure OIDC AWS credentials for ECR pull
         if: steps.cache-snyk-scanner.outputs.cache-hit != 'true'
@@ -62,12 +75,14 @@ jobs:
 
       - name: pull and save snyk scanner image
         if: steps.cache-snyk-scanner.outputs.cache-hit != 'true'
+        env:
+          OPG_GITHUB_ACTIONS_REF: ${{ steps.opg_actions_ref.outputs.ref }}
         run: |
           git clone https://github.com/ministryofjustice/opg-github-actions.git /tmp/opg-github-actions
 
           cd /tmp/opg-github-actions
 
-          git checkout 9e8b7c2fb29c11e77b12913f74459fa48b11829f
+          git checkout "${OPG_GITHUB_ACTIONS_REF}"
 
           docker compose -f "/tmp/opg-github-actions/docker-compose.yml" pull snyk
 
