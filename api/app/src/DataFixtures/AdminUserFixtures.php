@@ -27,12 +27,6 @@ class AdminUserFixtures extends AbstractDataFixture
             'roleType' => 'ROLE_SUPER_ADMIN',
         ],
         [
-            'firstName' => 'AD user',
-            'lastName' => 'ADsurname',
-            'email' => 'behat-ad@publicguardian.gov.uk',
-            'roleType' => 'ROLE_AD',
-        ],
-        [
             'firstName' => 'Case',
             'lastName' => 'Manager1',
             'email' => 'casemanager1@publicguardian.gov.uk',
