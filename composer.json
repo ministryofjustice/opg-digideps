@@ -8,7 +8,8 @@
     "reformat": "./vendor/bin/phpcbf -p .",
     "reformat:check": "./vendor/bin/phpcs -p .",
     "lint:phpstan": "phpstan",
-    "lint:phpstan:baseline": "phpstan && phpstan --generate-baseline"
+    "lint:phpstan:baseline": "phpstan && phpstan --generate-baseline",
+    "lint:phpstan:baseline:force": "phpstan --generate-baseline"
   },
   "require": {
     "php": "^8.4"

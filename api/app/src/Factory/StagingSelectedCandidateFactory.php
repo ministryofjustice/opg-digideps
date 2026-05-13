@@ -3,8 +3,8 @@
 namespace OPG\Digideps\Backend\Factory;
 
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Backend\Entity\StagingDeputyship;
-use OPG\Digideps\Backend\Entity\StagingSelectedCandidate;
+use OPG\Digideps\Backend\Entity\Staging\StagingDeputyship;
+use OPG\Digideps\Backend\Entity\Staging\StagingSelectedCandidate;
 use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 
 class StagingSelectedCandidateFactory

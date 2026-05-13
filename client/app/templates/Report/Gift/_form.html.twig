@@ -9,7 +9,7 @@
     }) }}
 
     {% if report.bankAccounts is not empty and report.canLinkToBankAccounts %}
-        {{ form_select(form.bankAccountId, 'form.bankAccount') }}
+        {{ form_select(form.bankAccountId, 'form.bankAccount', { required: false }) }}
     {% endif %}
 
     {% if form.addAnother %}
