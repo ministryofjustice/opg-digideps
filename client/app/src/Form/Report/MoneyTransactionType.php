@@ -3,6 +3,7 @@
 namespace OPG\Digideps\Frontend\Form\Report;
 
 use OPG\Digideps\Frontend\Entity\Report\MoneyTransaction;
+use OPG\Digideps\Frontend\Entity\Report\Report;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -11,34 +12,24 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class MoneyTransactionType extends AbstractType
 {
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    private $authorizationChecker;
+    private AuthorizationCheckerInterface $authorizationChecker;
 
-    /**
-     * @var int
-     */
-    private $step;
+    private int $step;
 
-    /**
-     * @var string in/out
-     */
-    private $type;
+    private string $type;
 
-    /**
-     * @var string
-     */
-    private $selectedCategory;
+    private ?string $selectedCategory;
 
     /**
      * @return array where keys and values are the categoriesID. e.g. [broadband=>null, fees=>null]
      */
-    private function getCategories()
+    private function getCategories(): array
     {
         $ret = [];
 
-        foreach (MoneyTransaction::$categories as $cat) {
+        $categories = MoneyTransaction::$categories;
+        foreach ($categories as $cat) {
+            /** @var string $categoryId */
             $categoryId = $cat[0];
             $type = $cat[3];
 
@@ -58,23 +49,35 @@ class MoneyTransactionType extends AbstractType
     /**
      * @return bool
      */
-    private function isDescriptionMandatory()
+    private function isDescriptionMandatory(): bool
     {
-        foreach (MoneyTransaction::$categories as $row) {
+        $categories = MoneyTransaction::$categories;
+        foreach ($categories as $row) {
+            /** @var string $categoryId */
             $categoryId = $row[0];
+            /** @var bool $hasDetails */
             $hasDetails = $row[1];
             if ($categoryId == $this->selectedCategory) {
                 return $hasDetails;
             }
         }
+        return false;
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $this->authorizationChecker = $options['authChecker'];
-        $this->step = (int) $options['step'];
-        $this->type = $options['type'];
-        $this->selectedCategory = $options['selectedCategory'];
+        $step = (int) $options['step'];
+        /** @var AuthorizationCheckerInterface $authorizationChecker */
+        $authorizationChecker = $options['authChecker'];
+        /** @var string|null $selectedCategory */
+        $selectedCategory = $options['selectedCategory'];
+        /** @var string $type */
+        $type = $options['type'];
+
+        $this->authorizationChecker = $authorizationChecker;
+        $this->step = $step;
+        $this->type = $type;
+        $this->selectedCategory = $selectedCategory;
 
         $builder->add('id', FormTypes\HiddenType::class);
 
@@ -97,11 +100,14 @@ class MoneyTransactionType extends AbstractType
                 'invalid_message' => 'moneyTransaction.form.amount.type',
             ]);
 
-            if (!empty($options['report']->getBankAccountOptions()) && $options['report']->canLinkToBankAccounts()) {
+            /** @var Report $report */
+            $report = $options['report'];
+            $type = $this->type;
+            if (!empty($report->getBankAccountOptions()) && $report->canLinkToBankAccounts()) {
                 $builder->add('bankAccountId', FormTypes\ChoiceType::class, [
-                    'choices' => $options['report']->getBankAccountOptions(),
+                    'choices' => $report->getBankAccountOptions(),
                     'placeholder' => 'Please select',
-                    'label' => 'form.bankAccount.money' . ucfirst($this->type) . '.label',
+                    'label' => 'form.bankAccount.money' . ucfirst($type) . '.label',
                     'required' => false,
                 ]);
             }
@@ -110,12 +116,12 @@ class MoneyTransactionType extends AbstractType
         $builder->add('save', FormTypes\SubmitType::class);
     }
 
-    public function getBlockPrefix()
+    public function getBlockPrefix(): string
     {
         return 'account';
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'selectedCategory' => null,

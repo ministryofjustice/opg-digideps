@@ -85,7 +85,7 @@ form:
   addAnother:
     label: Add another gift
   bankAccount:
-    label: Which bank account was the gift bought from? (optional)
+    label: Which bank account was the gift bought from?
     hint: ""
   save:
     label: Save gift

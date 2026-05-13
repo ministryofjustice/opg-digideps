@@ -33,9 +33,10 @@ class MoneyTransaction
      * Possible refactor would be moving some entities data into a shared library
      * ORDER is deprecated, re-order moving elements in the code.
      *
+     * @var array<array{string, bool, string, string}> $categories
      * @JMS\Exclude
      */
-    public static $categories = [
+    public static array $categories = [
         // category | hasMoreDetails | order | group | type (in/out) | allowed users (optional)
 
         // Money In
