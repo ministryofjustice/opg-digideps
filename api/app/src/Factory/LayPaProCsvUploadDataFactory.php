@@ -157,6 +157,9 @@ class LayPaProCsvUploadDataFactory implements DataFactoryInterface
             return null;
         }
         $localPath = "/tmp/{$awsPath}";
+        if (file_exists($localPath)) {
+            unlink($localPath);
+        }
 
         try {
             $this->s3->getObject([
