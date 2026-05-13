@@ -50,7 +50,7 @@ class MoneyOutController extends AbstractController
     public function startAction(int $reportId): RedirectResponse|array
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED != $report->getStatus()->getMoneyOutState()['state']) {
+        if ($report->getStatus()->getMoneyOutState()['state'] != Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('money_out_summary', ['reportId' => $reportId]);
         }
 
@@ -82,17 +82,17 @@ class MoneyOutController extends AbstractController
 
             $softDeletedMoneyOutTransactionIds = [];
             foreach ($softDeletedTransactionIds as $softDeletedTransactionId) {
-                if ('out' == $softDeletedTransactionId->getType()) {
+                if ($softDeletedTransactionId->getType() == 'out') {
                     $softDeletedMoneyOutTransactionIds[] = $softDeletedTransactionId->getId();
                 }
             }
 
-            if ('Yes' === $answer && 'summary' !== $fromPage) {
+            if ($answer === 'Yes' && $fromPage !== 'summary') {
                 $report->setReasonForNoMoneyOut(null);
                 $this->restClient->put("report/$reportId", $report, ['reasonForNoMoneyOut']);
 
                 return $this->redirectToRoute('money_out_step', ['reportId' => $reportId, 'step' => 1, 'from' => 'does_money_out_exist']);
-            } elseif ('Yes' === $answer && 'summary' === $fromPage) {
+            } elseif ($answer === 'Yes' && $fromPage === 'summary') {
                 $report->setReasonForNoMoneyOut(null);
                 $this->restClient->put("report/$reportId", $report, ['reasonForNoMoneyOut']);
 
@@ -103,7 +103,7 @@ class MoneyOutController extends AbstractController
 
                 return empty($softDeletedMoneyOutTransactionIds) ? $this->redirectToRoute('money_out_step', $moneyOutStepRedirectParameters)
                 : $this->redirectToRoute('money_out_summary', $moneyOutSummaryRedirectParameters);
-            } elseif ('No' === $answer && 'summary' === $fromPage) {
+            } elseif ($answer === 'No' && $fromPage === 'summary') {
                 $this->handleSoftDeletionOfMoneyTransactionItems($answer, $softDeletedMoneyOutTransactionIds, $report);
 
                 return $this->redirectToRoute('no_money_out_exists', ['reportId' => $reportId, 'from' => 'does_money_out_exist']);
@@ -125,7 +125,7 @@ class MoneyOutController extends AbstractController
     {
         $reportId = $report->getId();
 
-        if ('Yes' === $answer) {
+        if ($answer === 'Yes') {
             // undelete soft deleted items if present
             foreach ($softDeletedTransactionIds as $transactionId) {
                 $this->restClient->put('/report/' . $reportId . '/money-transaction/soft-delete/' . $transactionId, ['transactionSoftDelete']);
@@ -210,12 +210,12 @@ class MoneyOutController extends AbstractController
 
         $fromPage = $request->query->getString('from', $request->getPayload()->getString('from'));
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        if (Status::STATE_NOT_STARTED == $report->getStatus()->getMoneyOutState()['state'] && 'skip-step' != $fromPage) {
+        if ($report->getStatus()->getMoneyOutState()['state'] == Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('money_out', ['reportId' => $reportId]);
         }
 
         return [
-            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
+            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'report' => $report,
             'status' => $report->getStatus(),
         ];

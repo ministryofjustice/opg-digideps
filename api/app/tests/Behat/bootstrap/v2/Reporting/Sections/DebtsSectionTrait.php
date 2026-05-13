@@ -140,7 +140,7 @@ trait DebtsSectionTrait
         $fieldName = sprintf('debt[debts][%s][amount]', $this->debtTypeToFieldNameDictionary[$type]);
         $this->fillInFieldTrackTotal($fieldName, $amount, 'debts');
 
-        if ($fillMoreDetails && 'other' === $type) {
+        if ($fillMoreDetails && $type === 'other') {
             $this->fillInField('debt[debts][3][moreDetails]', $this->faker->text(60), 'debts');
         }
     }

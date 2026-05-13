@@ -58,7 +58,7 @@ class ContactController extends RestController
     {
         $contactData = $this->formatter->deserializeBodyContent($request);
 
-        if ('POST' == $request->getMethod()) {
+        if ($request->getMethod() == 'POST') {
             $this->formatter->validateArray($contactData, [
                 'report_id' => 'mustExist',
             ]);
@@ -116,7 +116,7 @@ class ContactController extends RestController
 
         $contacts = $this->em->getRepository(Contact::class)->findByReport($report);
 
-        if (0 == count($contacts)) {
+        if (count($contacts) == 0) {
             // throw new AppExceptions\NotFound("No contacts found for report id: $id", 404);
             return [];
         }

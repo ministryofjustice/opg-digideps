@@ -8,16 +8,16 @@ use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
-use Tests\OPG\Digideps\Backend\Integration\ApiTestTrait;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Deputy;
-use OPG\Digideps\Backend\Entity\StagingDeputyship;
+use OPG\Digideps\Backend\Entity\Staging\StagingDeputyship;
 use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
 use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVLoader;
 use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Tests\OPG\Digideps\Backend\Integration\ApiTestTrait;
 
 class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 {
@@ -168,10 +168,10 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
         $selectedCandidates = iterator_to_array($this->sut->select()->candidates);
 
         foreach ($selectedCandidates as $candidate) {
-            if (DeputyshipCandidateAction::InsertOrder === $candidate['action']) {
+            if ($candidate['action'] === DeputyshipCandidateAction::InsertOrder) {
                 static::assertEquals($stagingDeputyshipObject->orderUid, $candidate['orderUid']);
                 static::assertEquals($client->getId(), $candidate['clientId']);
-            } elseif (DeputyshipCandidateAction::InsertOrderDeputy === $candidate['action']) {
+            } elseif ($candidate['action'] === DeputyshipCandidateAction::InsertOrderDeputy) {
                 static::assertEquals($stagingDeputyshipObject->orderUid, $candidate['orderUid']);
                 static::assertEquals($stagingDeputyshipObject->deputyUid, $candidate['deputyUid']);
                 static::assertEquals($stagingDeputyshipObject->deputyStatusOnOrder, $candidate['deputyStatusOnOrder']);

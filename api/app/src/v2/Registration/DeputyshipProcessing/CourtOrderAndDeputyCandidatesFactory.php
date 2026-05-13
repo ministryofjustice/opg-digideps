@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing;
 
 use OPG\Digideps\Backend\Domain\Deputyship\DeputyshipProcessingLookupCache;
-use OPG\Digideps\Backend\Entity\StagingDeputyship;
-use OPG\Digideps\Backend\Entity\StagingSelectedCandidate;
+use OPG\Digideps\Backend\Entity\Staging\StagingDeputyship;
+use OPG\Digideps\Backend\Entity\Staging\StagingSelectedCandidate;
 use OPG\Digideps\Backend\Factory\StagingSelectedCandidateFactory;
 use OPG\Digideps\Backend\Repository\CourtOrderDeputyRepository;
 

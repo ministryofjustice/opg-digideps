@@ -804,7 +804,7 @@ trait IngestTrait
      */
     public function theDeputyNameShouldBe(string $firstOrLast, string $expectedName): void
     {
-        $expectedName = 'empty' === $expectedName ? '' : $expectedName;
+        $expectedName = $expectedName === 'empty' ? '' : $expectedName;
 
         $deputyUid = $this->entityUids['deputy_uids'][0];
 
@@ -1017,7 +1017,7 @@ trait IngestTrait
 
     protected function runCSVCommand(string $type, string $fileName): void
     {
-        $command = ('lay' === $type) ?
+        $command = ($type === 'lay') ?
             'digideps:api:process-lay-csv' :
             'digideps:api:process-org-csv';
 

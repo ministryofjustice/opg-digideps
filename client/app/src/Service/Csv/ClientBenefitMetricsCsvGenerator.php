@@ -29,7 +29,7 @@ class ClientBenefitMetricsCsvGenerator
         $dateLastCheckedFormatted = '';
 
         foreach ($clientBenefitResponses as $response) {
-            if (null !== $response['dateLastCheckedEntitlement']) {
+            if ($response['dateLastCheckedEntitlement'] !== null) {
                 $dateLastCheckedFormatted = new \DateTime($response['dateLastCheckedEntitlement'])->format('Y-m-d');
             }
 

@@ -34,7 +34,7 @@ class BankAccountType extends AbstractType
 
         $builder->add('id', FormTypes\HiddenType::class);
 
-        if (1 === $this->step) {
+        if ($this->step === 1) {
             $builder->add('accountType', FormTypes\ChoiceType::class, [
                 'choices' => self::getBankAccountChoices(),
                 'expanded' => true,
@@ -42,7 +42,7 @@ class BankAccountType extends AbstractType
             ]);
         }
 
-        if (2 === $this->step) {
+        if ($this->step === 2) {
             /** @var BankAccount $formData */
             $formData = $builder->getData();
 
@@ -64,7 +64,7 @@ class BankAccountType extends AbstractType
             ]);
         }
 
-        if (3 === $this->step) {
+        if ($this->step === 3) {
             $builder->add('openingBalance', FormTypes\NumberType::class, [
                 'scale' => 2,
                 'grouping' => true,

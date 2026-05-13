@@ -27,7 +27,7 @@ class AssetRepository extends ServiceEntityRepository
             throw new \InvalidArgumentException('Only "AssetProperty" or "AssetOther" assets are supported');
         }
 
-        $selectQuery = AssetOther::class === $assetType ? 'SUM(a.value)' : 'SUM(a.value * (a.ownedPercentage / 100))';
+        $selectQuery = $assetType === AssetOther::class ? 'SUM(a.value)' : 'SUM(a.value * (a.ownedPercentage / 100))';
 
         $query = $this
             ->getEntityManager()

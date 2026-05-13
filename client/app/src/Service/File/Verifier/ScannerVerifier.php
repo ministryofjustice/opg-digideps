@@ -50,7 +50,7 @@ class ScannerVerifier implements VerifierInterface
 
     private function buildErrorMessage(\Throwable $e): string
     {
-        $errorKey = (VirusFoundException::class === get_class($e)) ? 'virusFound' : 'generic';
+        $errorKey = (get_class($e) === VirusFoundException::class) ? 'virusFound' : 'generic';
 
         return $this
             ->translator

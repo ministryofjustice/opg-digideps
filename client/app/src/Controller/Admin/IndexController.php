@@ -111,7 +111,7 @@ class IndexController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // add user
             try {
-                if (!$this->isGranted(User::ROLE_SUPER_ADMIN) && User::ROLE_SUPER_ADMIN == $form->getData()->getRoleName()) {
+                if (!$this->isGranted(User::ROLE_SUPER_ADMIN) && $form->getData()->getRoleName() == User::ROLE_SUPER_ADMIN) {
                     throw new \RuntimeException('Cannot add admin from non-admin user');
                 }
 
@@ -250,7 +250,7 @@ class IndexController extends AbstractController
         try {
             $this->userApi->delete($user, AuditEvents::TRIGGER_ADMIN_BUTTON);
 
-            if (User::ROLE_ADMIN_MANAGER === $user->getRoleName()) {
+            if ($user->getRoleName() === User::ROLE_ADMIN_MANAGER) {
                 $this->dispatchAdminManagerDeletedEvent($user);
             }
 
@@ -287,9 +287,9 @@ class IndexController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            if ('lay' === $form->get('type')->getData()) {
+            if ($form->get('type')->getData() === 'lay') {
                 return new RedirectResponse($router->generate('pre_registration_upload'));
-            } elseif ('org' === $form->get('type')->getData()) {
+            } elseif ($form->get('type')->getData() === 'org') {
                 return new RedirectResponse($router->generate('admin_org_upload'));
             }
         }
@@ -313,7 +313,7 @@ class IndexController extends AbstractController
         $processForm->handleRequest($request);
 
         // AjaxController redirects to this page after working through chunks - check if it's completed to dispatch event
-        if ('1' === $request->get('complete')) {
+        if ($request->get('complete') === '1') {
             $this->dispatchCSVUploadEvent();
         }
 

@@ -39,13 +39,13 @@ class ConnectionWrapper extends Connection
 
     public function connect(): bool
     {
-        if (null !== $this->_conn) {
+        if ($this->_conn !== null) {
             return false;
         }
 
         $db_password = getenv(self::DATABASE_PASSWORD);
         // Where password isn't in env var, set one (will be set with real secret when it connects).
-        $this->params['password'] = (null == $db_password) ? 'initial_pw' : $db_password;
+        $this->params['password'] = ($db_password == null) ? 'initial_pw' : $db_password;
 
         try {
             $this->_conn = $this->_driver->connect($this->params);
@@ -58,7 +58,7 @@ class ConnectionWrapper extends Connection
             }
         }
 
-        if (false === $this->autoCommit) {
+        if ($this->autoCommit === false) {
             $this->beginTransaction();
         }
 
@@ -93,7 +93,7 @@ class ConnectionWrapper extends Connection
 
     public function setSecretsManagerClient($secretPrefix)
     {
-        if ('local/' == $secretPrefix) {
+        if ($secretPrefix == 'local/') {
             $endpoint = getenv(self::SECRETS_ENDPOINT);
             $this->secretClient = new SecretsManagerClient([
                 'region' => 'eu-west-1',

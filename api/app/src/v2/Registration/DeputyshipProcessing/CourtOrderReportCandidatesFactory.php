@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing;
 
-use OPG\Digideps\Backend\Entity\StagingSelectedCandidate;
-use OPG\Digideps\Backend\Factory\StagingSelectedCandidateFactory;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
+use OPG\Digideps\Backend\Entity\Staging\StagingSelectedCandidate;
+use OPG\Digideps\Backend\Factory\StagingSelectedCandidateFactory;
 
 /**
  * For creating candidates for relationships between deputyships and reports.

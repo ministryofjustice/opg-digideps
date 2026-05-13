@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Service\Mailer;
 
-use OPG\Digideps\Frontend\Entity as EntityDir;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
@@ -231,12 +230,12 @@ class MailFactory
             'caseNumber' => $deputy->getFirstClient()->getCaseNumber(),
             'fullName' => $deputy->getFullName(),
             'address' => $deputy->getAddress1(),
-            'address2' => null !== $deputy->getAddress2() ? $deputy->getAddress2() : 'Not provided',
-            'address3' => null !== $deputy->getAddress3() ? $deputy->getAddress3() : 'Not provided',
+            'address2' => $deputy->getAddress2() !== null ? $deputy->getAddress2() : 'Not provided',
+            'address3' => $deputy->getAddress3() !== null ? $deputy->getAddress3() : 'Not provided',
             'postcode' => $deputy->getAddressPostcode(),
             'countryName' => $countryName,
             'phone' => $deputy->getPhoneMain(),
-            'altPhoneNumber' => null !== $deputy->getPhoneAlternative() ? $deputy->getPhoneAlternative() : 'Not provided',
+            'altPhoneNumber' => $deputy->getPhoneAlternative() !== null ? $deputy->getPhoneAlternative() : 'Not provided',
             'email' => $deputy->getEmail(),
         ];
 
@@ -248,7 +247,7 @@ class MailFactory
     /**
      * @throws \Exception
      */
-    public function createReportSubmissionConfirmationEmail(User $user, EntityDir\ReportInterface $submittedReport, Report $newReport): Email
+    public function createReportSubmissionConfirmationEmail(User $user, Report $submittedReport, Report $newReport): Email
     {
         $email = new Email()
             ->setFromEmailNotifyID(self::NOTIFY_FROM_EMAIL_ID)
@@ -263,12 +262,12 @@ class MailFactory
         $notifyParams = [
             'clientFullname' => $submittedReport->getClient()->getFullname(),
             'deputyFullname' => $user->getFullName(),
-            'orgIntro' => 'default' == self::getRecipientRole($user) ? '' : $this->buildOrgIntroText($submittedReport->getClient()),
-            'startDate' => $submittedReport->getStartDate()->format(self::DATE_FORMAT),
+            'orgIntro' => self::getRecipientRole($user) == 'default' ? '' : $this->buildOrgIntroText($submittedReport->getClient()),
+            'startDate' => $submittedReport->getStartDate()?->format(self::DATE_FORMAT),
             'endDate' => $submittedReport->getEndDate()->format(self::DATE_FORMAT),
             'homepageURL' => $this->generateAbsoluteLink(self::AREA_DEPUTY, 'homepage'),
-            'newStartDate' => $newReport->getStartDate()->format(self::DATE_FORMAT),
-            'newEndDate' => $newReport->getEndDate()->format(self::DATE_FORMAT),
+            'newStartDate' => $newReport->getStartDate()?->format(self::DATE_FORMAT),
+            'newEndDate' => $newReport->getEndDate()?->format(self::DATE_FORMAT),
             'EndDatePlus1' => $dateSubmittableFrom->format(self::DATE_FORMAT),
             'PFA' => str_starts_with($submittedReport->getType(), '104') ? 'no' : 'yes',
             'lay' => $user->isLayDeputy() ? 'yes' : 'no',

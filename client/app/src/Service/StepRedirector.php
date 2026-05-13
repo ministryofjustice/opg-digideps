@@ -66,7 +66,7 @@ class StepRedirector
     public function getRedirectLinkAfterSaving(array $extraParams = []): string
     {
         // return to summary if coming from there, or it's the last step
-        if ('summary' === $this->fromPage) {
+        if ($this->fromPage === 'summary') {
             return $this->generateUrl($this->routeSummary, ['stepEdited' => $this->currentStep]);
         }
 
@@ -82,11 +82,11 @@ class StepRedirector
 
     public function getBackLink(): string
     {
-        if ('summary' === $this->fromPage) {
+        if ($this->fromPage === 'summary') {
             return $this->generateUrl($this->routeSummary, ['from' => 'skip-step']);
         }
 
-        if (1 === $this->currentStep) {
+        if ($this->currentStep === 1) {
             return $this->generateUrl($this->step1BackLink);
         }
 
@@ -98,7 +98,7 @@ class StepRedirector
 
     public function getSkipLink(): ?string
     {
-        if (!empty($this->fromPage) || 1 === $this->totalSteps) {
+        if (!empty($this->fromPage) || $this->totalSteps === 1) {
             return null;
         }
         if ($this->currentStep == $this->totalSteps) {

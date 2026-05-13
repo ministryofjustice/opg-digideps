@@ -30,7 +30,7 @@ class ClientController extends AbstractController
     public function detailsAction(int $id): RedirectResponse|array
     {
         $client = $this->clientApi->getWithUsersV2($id);
-        if (null !== $client->getArchivedAt()) {
+        if ($client->getArchivedAt() !== null) {
             return $this->redirectToRoute('admin_client_archived', ['id' => $client->getId()]);
         }
 
@@ -88,7 +88,7 @@ class ClientController extends AbstractController
     public function archivedAction(int $id): RedirectResponse|array
     {
         $client = $this->clientApi->getWithUsersV2($id);
-        if (null === $client->getArchivedAt()) {
+        if ($client->getArchivedAt() === null) {
             return $this->redirectToRoute('admin_client_details', ['id' => $client->getId()]);
         }
 
@@ -104,7 +104,7 @@ class ClientController extends AbstractController
     public function unarchiveAction(string $id): ?RedirectResponse
     {
         $client = $this->clientApi->getWithUsersV2(intval($id));
-        if (null === $client->getArchivedAt()) {
+        if ($client->getArchivedAt() === null) {
             return $this->redirectToRoute('admin_client_details', ['id' => $client->getId()]);
         }
 

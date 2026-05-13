@@ -29,7 +29,7 @@ class PreRegistrationController extends RestController
     {
         $result = $preRegistrationRepository->deleteAll();
 
-        return ['deletion-count' => null === $result ? 0 : $result];
+        return ['deletion-count' => $result === null ? 0 : $result];
     }
 
     /**
@@ -43,7 +43,7 @@ class PreRegistrationController extends RestController
         $user = $this->getUser();
 
         // truncate case number if length is 10 digits long
-        $clientData['case_number'] = 10 == strlen($clientData['case_number']) ? substr($clientData['case_number'], 0, -2) : $clientData['case_number'];
+        $clientData['case_number'] = strlen($clientData['case_number']) == 10 ? substr($clientData['case_number'], 0, -2) : $clientData['case_number'];
 
         $isMultiDeputyCase = $verificationService->isMultiDeputyCase($clientData['case_number']);
         $existingClient = $this->em->getRepository(Client::class)->findByCaseNumber($clientData['case_number']);
@@ -75,7 +75,7 @@ class PreRegistrationController extends RestController
             $user->getAddressPostcode()
         );
 
-        if (1 !== count($preregMatches)) {
+        if (count($preregMatches) !== 1) {
             // a deputy could not be uniquely identified due to matching first name, last name and postcode across more than one deputy record
             throw new \RuntimeException(json_encode(sprintf('A unique deputy record for case number %s could not be identified', $clientData['case_number'])), 462);
         }

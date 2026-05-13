@@ -73,7 +73,7 @@ class ReportService
 
         $newYearReport = null;
 
-        if ($currentReport instanceof Report && $currentReport->getUnSubmitDate()) {
+        if ($currentReport->getUnSubmitDate()) {
             $this->logger->warning("Creating next year report for client $clientId (existing unsubmitted report) at $now");
 
             // unsubmitted report
@@ -360,7 +360,7 @@ class ReportService
      */
     public function adjustReportStatus($status, \DateTime $endDate)
     {
-        if (Report::STATUS_READY_TO_SUBMIT == $status && !self::isDue($endDate)) {
+        if ($status == Report::STATUS_READY_TO_SUBMIT && !self::isDue($endDate)) {
             return Report::STATUS_NOT_FINISHED;
         }
 

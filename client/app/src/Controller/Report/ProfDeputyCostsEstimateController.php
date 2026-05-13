@@ -67,7 +67,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->persistUpdate("$reportId", $form->getData(), ['deputyCostsEstimateHowCharged']);
 
-            if ('summary' === $from) {
+            if ($from === 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
             }
 
@@ -104,7 +104,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->persistUpdate("$reportId", $form->getData(), ['prof-deputy-estimate-costs', 'prof-deputy-estimate-management-costs']);
 
-            if ('summary' === $from) {
+            if ($from === 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
                 $nextRoute = 'prof_deputy_costs_estimate_summary';
             } else {
@@ -115,7 +115,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
         }
 
         return [
-            'backLink' => $this->generateUrl('summary' === $from ? 'prof_deputy_costs_estimate_summary' : 'prof_deputy_costs_estimate_how_charged', ['reportId' => $reportId]),
+            'backLink' => $this->generateUrl($from === 'summary' ? 'prof_deputy_costs_estimate_summary' : 'prof_deputy_costs_estimate_how_charged', ['reportId' => $reportId]),
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -134,7 +134,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->persistUpdate("$reportId", $form->getData(), ['deputyCostsEstimateMoreInfo']);
 
-            if ('summary' === $from) {
+            if ($from === 'summary') {
                 $request->getSession()->getFlashBag()->add('notice', 'Answer edited');
             }
 
@@ -142,7 +142,7 @@ class ProfDeputyCostsEstimateController extends AbstractController
         }
 
         return [
-            'backLink' => $this->generateUrl('summary' === $from ? 'prof_deputy_costs_estimate_summary' : 'prof_deputy_costs_estimate_breakdown', ['reportId' => $reportId]),
+            'backLink' => $this->generateUrl($from === 'summary' ? 'prof_deputy_costs_estimate_summary' : 'prof_deputy_costs_estimate_breakdown', ['reportId' => $reportId]),
             'form' => $form->createView(),
             'report' => $report,
         ];
@@ -154,11 +154,11 @@ class ProfDeputyCostsEstimateController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (Status::STATE_NOT_STARTED == $report->getStatus()->getProfDeputyCostsEstimateState()['state']) {
+        if ($report->getStatus()->getProfDeputyCostsEstimateState()['state'] == Status::STATE_NOT_STARTED) {
             return $this->redirect($this->generateUrl('prof_deputy_costs_estimate', ['reportId' => $reportId]));
         }
 
-        $costBreakdown = Report::PROF_DEPUTY_COSTS_TYPE_FIXED === $report->getProfDeputyCostsEstimateHowCharged() ?
+        $costBreakdown = $report->getProfDeputyCostsEstimateHowCharged() === Report::PROF_DEPUTY_COSTS_TYPE_FIXED ?
             null : $report->generateActualSubmittedEstimateCosts();
 
         return [
@@ -202,15 +202,15 @@ class ProfDeputyCostsEstimateController extends AbstractController
             return 'prof_deputy_costs_estimate_breakdown';
         }
 
-        return ('summary' === $request->get('from') || Report::PROF_DEPUTY_COSTS_TYPE_FIXED === $updatedHowCharged) ?
+        return ($request->get('from') === 'summary' || $updatedHowCharged === Report::PROF_DEPUTY_COSTS_TYPE_FIXED) ?
             'prof_deputy_costs_estimate_summary' :
             'prof_deputy_costs_estimate_breakdown';
     }
 
     private function answerHasChangedFromFixedToNonFixed(string $originalHowChargedValue, string $updatedHowCharged): bool
     {
-        return Report::PROF_DEPUTY_COSTS_TYPE_FIXED === $originalHowChargedValue &&
-            Report::PROF_DEPUTY_COSTS_TYPE_FIXED !== $updatedHowCharged;
+        return $originalHowChargedValue === Report::PROF_DEPUTY_COSTS_TYPE_FIXED &&
+            $updatedHowCharged !== Report::PROF_DEPUTY_COSTS_TYPE_FIXED;
     }
 
     protected function getSectionId(): string

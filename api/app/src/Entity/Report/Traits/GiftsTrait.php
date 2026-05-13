@@ -9,7 +9,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Entity\Report\Gift;
-use OPG\Digideps\Backend\Entity\Report\Report;
 
 trait GiftsTrait
 {
@@ -70,7 +69,7 @@ trait GiftsTrait
      */
     public function giftsSectionCompleted()
     {
-        return count($this->getGifts()) > 0 || 'no' === $this->getGiftsExist();
+        return count($this->getGifts()) > 0 || $this->getGiftsExist() === 'no';
     }
 
     public function addGift(Gift $gift): static

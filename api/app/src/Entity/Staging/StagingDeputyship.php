@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OPG\Digideps\Backend\Entity;
+namespace OPG\Digideps\Backend\Entity\Staging;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -97,6 +97,6 @@ class StagingDeputyship
 
     public function deputyIsActiveOnOrder(): bool
     {
-        return 'ACTIVE' === $this->deputyStatusOnOrder;
+        return $this->deputyStatusOnOrder === 'ACTIVE';
     }
 }

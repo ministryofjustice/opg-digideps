@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\DeputyshipProcessing;
 
-use OPG\Digideps\Backend\Entity\StagingDeputyship;
-use OPG\Digideps\Backend\Entity\StagingSelectedCandidate;
+use Doctrine\DBAL\Exception;
+use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\EntityManagerInterface;
+use OPG\Digideps\Backend\Entity\Staging\StagingDeputyship;
+use OPG\Digideps\Backend\Entity\Staging\StagingSelectedCandidate;
 use OPG\Digideps\Backend\Repository\StagingDeputyshipRepository;
 use OPG\Digideps\Backend\Repository\StagingSelectedCandidateRepository;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrderAndDeputyCandidatesFactory;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCandidatesSelector;
 use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
-use Doctrine\DBAL\Exception;
-use Doctrine\ORM\AbstractQuery;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;

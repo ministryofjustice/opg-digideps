@@ -324,7 +324,7 @@ trait ReportProfDeputyCostsTrait
         if (
             !$this->getProfDeputyCostsHasPrevious()
             || (!$onlyFixedTicked && !$this->getProfDeputyCostsHasInterim())
-            || ($onlyFixedTicked && null === $this->getProfDeputyFixedCost())
+            || ($onlyFixedTicked && $this->getProfDeputyFixedCost() === null)
         ) {
             return null;
         }
@@ -334,11 +334,11 @@ trait ReportProfDeputyCostsTrait
         }
 
         // include fixed costs if interim answer is not a "no"
-        if ('yes' !== $this->getProfDeputyCostsHasInterim()) {
+        if ($this->getProfDeputyCostsHasInterim() !== 'yes') {
             $total += $this->getProfDeputyFixedCost();
         }
 
-        if ('yes' === $this->getProfDeputyCostsHasInterim()) {
+        if ($this->getProfDeputyCostsHasInterim() === 'yes') {
             foreach ($this->getProfDeputyInterimCosts() as $interimCost) {
                 $total += (float) $interimCost->getAmount();
             }
@@ -372,7 +372,7 @@ trait ReportProfDeputyCostsTrait
      */
     public function hasProfDeputyCostsHowChargedFixedOnly()
     {
-        return Report::PROF_DEPUTY_COSTS_TYPE_FIXED == $this->getProfDeputyCostsHowCharged();
+        return $this->getProfDeputyCostsHowCharged() == Report::PROF_DEPUTY_COSTS_TYPE_FIXED;
     }
 
     /**

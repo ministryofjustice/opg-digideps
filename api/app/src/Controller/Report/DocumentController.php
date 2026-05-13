@@ -148,7 +148,7 @@ class DocumentController extends RestController
         $this->em->flush();
 
         // update yesno question to null if its the last document to be removed
-        if (0 == count($report->getDeputyDocuments())) {
+        if (count($report->getDeputyDocuments()) == 0) {
             $report->setWishToProvideDocumentation(null);
         }
 
@@ -174,7 +174,7 @@ class DocumentController extends RestController
 
         $failedDocuments = $documentRepo->logFailedDocuments();
 
-        if (0 == count($failedDocuments)) {
+        if (count($failedDocuments) == 0) {
             $this->verboseLogger->error('Unsupported number of rows from document sync counts');
         } else {
             $this->verboseLogger->notice(
@@ -235,12 +235,12 @@ class DocumentController extends RestController
                 $errorMessage = is_array($data['syncError']) ? json_encode($data['syncError']) : $data['syncError'];
                 $document->setSynchronisationError($errorMessage);
 
-                if (Document::SYNC_STATUS_TEMPORARY_ERROR === $data['syncStatus']) {
+                if ($data['syncStatus'] === Document::SYNC_STATUS_TEMPORARY_ERROR) {
                     $document->incrementSyncAttempts();
                     $document->setSynchronisationStatus(Document::SYNC_STATUS_QUEUED);
                 }
 
-                if (Document::SYNC_STATUS_PERMANENT_ERROR === $data['syncStatus'] && $document->getSyncAttempts() >= 3) {
+                if ($data['syncStatus'] === Document::SYNC_STATUS_PERMANENT_ERROR && $document->getSyncAttempts() >= 3) {
                     $document->setSynchronisationError(self::RETRIES_FAILED_MESSAGE);
                     $document->resetSyncAttempts();
                 }
@@ -248,7 +248,7 @@ class DocumentController extends RestController
                 $document->setSynchronisationError(null);
             }
 
-            if (Document::SYNC_STATUS_SUCCESS === $data['syncStatus']) {
+            if ($data['syncStatus'] === Document::SYNC_STATUS_SUCCESS) {
                 $document->setSynchronisationTime(new \DateTime());
             }
         }

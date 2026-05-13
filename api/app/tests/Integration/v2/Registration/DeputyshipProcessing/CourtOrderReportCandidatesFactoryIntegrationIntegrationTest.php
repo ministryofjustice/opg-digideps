@@ -7,13 +7,13 @@ namespace Tests\OPG\Digideps\Backend\Integration\v2\Registration\DeputyshipProce
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
-use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;
-use OPG\Digideps\Backend\Entity\StagingDeputyship;
+use OPG\Digideps\Backend\Entity\Staging\StagingDeputyship;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
 use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 
 class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiIntegrationTestCase
 {
@@ -42,7 +42,7 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
     {
         // a 104 is not compatible with a hybrid or pfa deputyship
         $incompatibleReportType = '104';
-        if ('hw' === $orderType) {
+        if ($orderType === 'hw') {
             // a 102 is not compatible with a hybrid or hw deputyship
             $incompatibleReportType = '102';
         }
@@ -65,7 +65,7 @@ class CourtOrderReportCandidatesFactoryIntegrationIntegrationTest extends ApiInt
     {
         // make sure types are compatible
         $compatibleReportType = '102';
-        if ('hw' === $orderType) {
+        if ($orderType === 'hw') {
             $compatibleReportType = '104';
         }
 

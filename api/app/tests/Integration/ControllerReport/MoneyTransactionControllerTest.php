@@ -47,7 +47,7 @@ class MoneyTransactionControllerTest extends AbstractTestController
         self::fixtures()->persist(self::$t1, self::$t2, $t3, $t4);
         self::fixtures()->flush()->clear();
 
-        if (null === self::$tokenAdmin) {
+        if (self::$tokenAdmin === null) {
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
         }

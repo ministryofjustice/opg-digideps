@@ -10,7 +10,7 @@ class IntlService
 {
     public function getCountryNameByCountryCode(?string $countryCode): ?string
     {
-        if (null === $countryCode) {
+        if ($countryCode === null) {
             return 'Country not provided';
         }
 

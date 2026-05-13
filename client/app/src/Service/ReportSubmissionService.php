@@ -4,7 +4,6 @@ namespace OPG\Digideps\Frontend\Service;
 
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\Report\ReportSubmission;
-use OPG\Digideps\Frontend\Entity\ReportInterface;
 use OPG\Digideps\Frontend\Exception\ReportSubmissionDocumentsNotDownloadableException;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Frontend\Service\Csv\TransactionsCsvGenerator;
@@ -36,11 +35,11 @@ class ReportSubmissionService
     /**
      * Wrapper method for all documents generated for a report submission.
      */
-    public function generateReportDocuments(ReportInterface $report): void
+    public function generateReportDocuments(Report $report): void
     {
         $this->generateReportPdf($report);
 
-        if ($report instanceof Report && in_array($report->getType(), Report::HIGH_ASSETS_REPORT_TYPES)) {
+        if (in_array($report->getType(), Report::HIGH_ASSETS_REPORT_TYPES)) {
             if (
                 !empty($report->getGifts()) ||
                 !empty($report->getExpenses()) ||
@@ -61,11 +60,11 @@ class ReportSubmissionService
     /**
      * Generates the PDF of the report.
      */
-    public function generateReportPdf(ReportInterface $report, bool $overwrite = false): void
+    public function generateReportPdf(Report $report, bool $overwrite = false): void
     {
         $pdf = $this->getPdfBinaryContent($report, true);
 
-        if (false !== $pdf) {
+        if ($pdf !== false) {
             // store PDF (with summary info) as a document
             $this->fileUploader->uploadFileAndPersistDocument(
                 $report,
@@ -82,7 +81,7 @@ class ReportSubmissionService
     /**
      * Generate the HTML of the report and convert to PDF.
      */
-    public function getPdfBinaryContent(ReportInterface $report, bool $showSummary = false, bool $devPreview = false): string|false
+    public function getPdfBinaryContent(Report $report, bool $showSummary = false, bool $devPreview = false): string|false
     {
         $html = $this->templating->render($devPreview ? '@App/Report/Rendered/standalone.html.twig' : '@App/Report/Formatted/formatted_standalone.html.twig', [
             'report' => $report,
@@ -102,28 +101,22 @@ class ReportSubmissionService
      * @to-do move this into a checklist or pdf service
      * Generate the HTML of the report and convert to PDF
      *
-     * @param ReportInterface $report
      * @return string|false binary PDF content or false if PDF content is not available
      *
      * @throws Error
      */
-    public function getChecklistPdfBinaryContent(ReportInterface $report): string|false
+    public function getChecklistPdfBinaryContent(Report $report): string|false
     {
         $reviewChecklist = $this->restClient->get('report/' . $report->getId() . '/checklist', 'Report\\ReviewChecklist');
 
         // A null id indicates a reviewChecklist has not yet been submitted.
-        if (null === $reviewChecklist->getId()) {
+        if ($reviewChecklist->getId() === null) {
             $reviewChecklist = null;
-        }
-
-        $checklist = null;
-        if ($report instanceof Report) {
-            $checklist = $report->getChecklist();
         }
 
         $html = $this->templating->render('@App/Admin/Client/Report/Formatted/checklist_formatted_standalone.html.twig', [
             'report' => $report,
-            'lodgingChecklist' => $checklist,
+            'lodgingChecklist' => $report->getChecklist(),
             'reviewChecklist' => $reviewChecklist,
         ]);
 
@@ -153,7 +146,7 @@ class ReportSubmissionService
      */
     public function assertReportSubmissionIsDownloadable(ReportSubmission $reportSubmission)
     {
-        if (true !== $reportSubmission->isDownloadable()) {
+        if ($reportSubmission->isDownloadable() !== true) {
             throw new ReportSubmissionDocumentsNotDownloadableException(self::MSG_NOT_DOWNLOADABLE);
         }
 

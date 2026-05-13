@@ -74,7 +74,7 @@ class ReportSubmissionSummaryTransformer
     private function getDocumentId(ReportSubmission $reportSubmission)
     {
         foreach ($reportSubmission->getDocuments() as $document) {
-            if ($document->isReportPdf() && '.pdf' === substr($document->getFileName(), -4)) {
+            if ($document->isReportPdf() && substr($document->getFileName(), -4) === '.pdf') {
                 return $document->getFileName();
             }
         }

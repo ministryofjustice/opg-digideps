@@ -29,7 +29,7 @@ class DecisionController extends RestController
     {
         $data = $this->formatter->deserializeBodyContent($request);
 
-        if ('PUT' == $request->getMethod()) {
+        if ($request->getMethod() == 'PUT') {
             $this->formatter->validateArray($data, [
                 'id' => 'mustExist',
             ]);

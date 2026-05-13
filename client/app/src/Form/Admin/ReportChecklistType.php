@@ -132,7 +132,7 @@ class ReportChecklistType extends AbstractType
                 /** @var SubmitButton $button */
                 $button = $form->getClickedButton();
 
-                if (self::SUBMIT_AND_CONTINUE_ACTION == $button->getName()) {
+                if ($button->getName() == self::SUBMIT_AND_CONTINUE_ACTION) {
                     $ret[] = 'submit-common-checklist';
 
                     $sectionsToValidate = $this->report->getAvailableSections();

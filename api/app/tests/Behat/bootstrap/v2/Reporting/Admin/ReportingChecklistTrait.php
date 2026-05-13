@@ -146,7 +146,7 @@ trait ReportingChecklistTrait
         $this->iAmOnAdminReportChecklistSubmittedPage();
         $savedText = $this->getSession()->getPage()->find('css', '.opg-alert__message > p')->getText();
 
-        assert('Lodging checklist saved' == $savedText);
+        assert($savedText == 'Lodging checklist saved');
     }
 
     /**
@@ -154,7 +154,7 @@ trait ReportingChecklistTrait
      */
     public function ICannotSeeTheSpecificCostsSection(string $deputyType)
     {
-        if ('public authority pfa high' === $deputyType) {
+        if ($deputyType === 'public authority pfa high') {
             $hiddenItems = [
                 'lifestyle',
                 'profDeputyCosts',
@@ -165,11 +165,11 @@ trait ReportingChecklistTrait
                 foreach ($hiddenItems as $hiddenItem) {
                     if ($hiddenItem === $xPathitem) {
                         $link = $this->getSession()->getPage()->find('xpath', $xPathitem);
-                        assert(null === $link);
+                        assert($link === null);
                     }
                 }
             }
-        } elseif ('lay hw' === $deputyType) {
+        } elseif ($deputyType === 'lay hw') {
             $hiddenItems = [
                 'assetsAndDebts',
                 'moneyInOut',
@@ -184,11 +184,11 @@ trait ReportingChecklistTrait
                 foreach ($hiddenItems as $hiddenItem) {
                     if ($hiddenItem === $xPathitem) {
                         $link = $this->getSession()->getPage()->find('xpath', $xPathitem);
-                        assert(null === $link);
+                        assert($link === null);
                     }
                 }
             }
-        } elseif ('prof pfa high' === $deputyType) {
+        } elseif ($deputyType === 'prof pfa high') {
             $hiddenItems = [
                 'lifestyle',
                 'paFeesExpenses',
@@ -198,7 +198,7 @@ trait ReportingChecklistTrait
                 foreach ($hiddenItems as $hiddenItem) {
                     if ($hiddenItem === $xPathitem) {
                         $link = $this->getSession()->getPage()->find('xpath', $xPathitem);
-                        assert(null === $link);
+                        assert($link === null);
                     }
                 }
             }

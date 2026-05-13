@@ -42,7 +42,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
         $result = $query->getArrayResult();
 
-        return 0 === count($result) ? null : $result[0];
+        return count($result) === 0 ? null : $result[0];
     }
 
     public function findUserDataById(int $user_id): ?array
@@ -60,7 +60,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->executeQuery(['userId' => $user_id]);
 
         $result = $query->fetchAssociative();
-        return false === $result ? null : $result;
+        return $result === false ? null : $result;
     }
 
     public function findUsersByQueryParameters(Request $request): ?array
@@ -94,7 +94,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             return $this;
         }
 
-        $operand = false !== strpos($roleName, '%') ? 'LIKE' : '=';
+        $operand = strpos($roleName, '%') !== false ? 'LIKE' : '=';
 
         $this
             ->qb
@@ -129,7 +129,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             $searchTerms = explode(' ', $searchTerm);
             $includeClients = (bool) $request->get('include_clients');
 
-            if (1 === count($searchTerms)) {
+            if (count($searchTerms) === 1) {
                 $this->addBroadMatchFilter($searchTerm, $includeClients);
             } else {
                 $this->addFullNameBestMatchFilter($searchTerms[0], $searchTerms[1], $includeClients);
@@ -371,7 +371,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         // search filter
         if ($q) {
             $searchTerms = explode(' ', $q);
-            if (1 === count($searchTerms)) {
+            if (count($searchTerms) === 1) {
                 $this->addBroadMatchFilter($searchTerms[0], false);
             } else {
                 $this->addFullNameBestMatchFilter($searchTerms[0], $searchTerms[1], false);

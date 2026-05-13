@@ -18,10 +18,6 @@ class ClientIdFixDataFactoryIntegrationTest extends ApiIntegrationTestCase
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-
-        if (self::$entityManager === null) {
-            throw new \LogicException('Improper initialisation');
-        }
         self::$fixtures = new Fixtures(self::$entityManager);
     }
 
@@ -45,72 +41,7 @@ class ClientIdFixDataFactoryIntegrationTest extends ApiIntegrationTestCase
     #[DataProvider('oldClientFieldsProvider')]
     public function testRun(string $courtOrderUid, string $caseNumber, array $oldClientFields): void
     {
-        $entityManager = self::$entityManager !== null ? self::$entityManager : throw new \LogicException('Improper initialisation');
-
-        $sut = new ClientIdFixDataFactory($entityManager);
-
-        $oldClientFields['setCaseNumber'] = $caseNumber;
-
-        $user = self::$fixtures->createUser();
-
-        $oldClient = self::$fixtures->createClient(
-            $user,
-            $oldClientFields,
-        );
-
-        $newClient = self::$fixtures->createClient(
-            $user,
-            ['setCaseNumber' => $caseNumber],
-        );
-
-        $entityManager->persist($user);
-        $entityManager->persist($oldClient);
-        $entityManager->persist($newClient);
-        $entityManager->flush();
-
-        // court order associated with old inactive client
-        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid, CourtOrderType::PFA, CourtOrderKind::Single, 'ACTIVE');
-        $courtOrder->setClient($oldClient);
-
-        // report also associated with old inactive client
-        $report = self::$fixtures->createReport($oldClient);
-        $courtOrder->addReport($report);
-
-        $entityManager->persist($report);
-        $entityManager->persist($courtOrder);
-        $entityManager->flush();
-
-        // run
-        $dataFactoryResult = $sut->run(false);
-
-        // assertions
-        self::assertTrue($dataFactoryResult->isSuccessful());
-
-        // check the court order
-        $entityManager->refresh($courtOrder);
-
-        self::assertEquals(
-            $newClient,
-            $courtOrder->getClient(),
-            'court order should have been updated to new active client ID'
-        );
-
-        // check the report
-        $entityManager->refresh($report);
-
-        self::assertEquals(
-            $newClient,
-            $report->getClient(),
-            'report should have been updated to new active client ID'
-        );
-    }
-
-    #[DataProvider('oldClientFieldsProvider')]
-    public function testDryRun(string $courtOrderUid, string $caseNumber, array $oldClientFields): void
-    {
-        $entityManager = self::$entityManager !== null ? self::$entityManager : throw new \LogicException('Improper initialisation');
-
-        $sut = new ClientIdFixDataFactory($entityManager);
+        $sut = new ClientIdFixDataFactory(self::$entityManager);
 
         $oldClientFields['setCaseNumber'] = $caseNumber;
 
@@ -139,9 +70,70 @@ class ClientIdFixDataFactoryIntegrationTest extends ApiIntegrationTestCase
         $report = self::$fixtures->createReport($oldClient);
         $courtOrder->addReport($report);
 
-        $entityManager->persist($report);
-        $entityManager->persist($courtOrder);
-        $entityManager->flush();
+        self::$entityManager->persist($report);
+        self::$entityManager->persist($courtOrder);
+        self::$entityManager->flush();
+
+        // run
+        $dataFactoryResult = $sut->run(false);
+
+        // assertions
+        self::assertTrue($dataFactoryResult->isSuccessful());
+
+        // check the court order
+        self::$entityManager->refresh($courtOrder);
+
+        self::assertEquals(
+            $newClient,
+            $courtOrder->getClient(),
+            'court order should have been updated to new active client ID'
+        );
+
+        // check the report
+        self::$entityManager->refresh($report);
+
+        self::assertEquals(
+            $newClient,
+            $report->getClient(),
+            'report should have been updated to new active client ID'
+        );
+    }
+
+    #[DataProvider('oldClientFieldsProvider')]
+    public function testDryRun(string $courtOrderUid, string $caseNumber, array $oldClientFields): void
+    {
+        $sut = new ClientIdFixDataFactory(self::$entityManager);
+
+        $oldClientFields['setCaseNumber'] = $caseNumber . '1';
+
+        $user = self::$fixtures->createUser();
+
+        $oldClient = self::$fixtures->createClient(
+            $user,
+            $oldClientFields,
+        );
+
+        $newClient = self::$fixtures->createClient(
+            $user,
+            ['setCaseNumber' => $caseNumber],
+        );
+
+        self::$entityManager->persist($user);
+        self::$entityManager->persist($oldClient);
+        self::$entityManager->persist($newClient);
+        self::$entityManager->flush();
+
+        // court order associated with old inactive client
+        $courtOrder = self::$fixtures->createCourtOrder($courtOrderUid . '2', CourtOrderType::PFA, CourtOrderKind::Single, 'ACTIVE');
+        $courtOrder->setClient($oldClient);
+
+        // report also associated with old inactive client
+        $report = self::$fixtures->createReport($oldClient);
+        $courtOrder->addReport($report);
+
+        self::$entityManager->persist($report);
+        self::$entityManager->persist($courtOrder);
+        self::$entityManager->flush();
 
         // run
         $dataFactoryResult = $sut->run(true);
@@ -150,7 +142,7 @@ class ClientIdFixDataFactoryIntegrationTest extends ApiIntegrationTestCase
         self::assertTrue($dataFactoryResult->isSuccessful());
 
         // check the court order
-        $entityManager->refresh($courtOrder);
+        self::$entityManager->refresh($courtOrder);
 
         self::assertEquals(
             $oldClient,
@@ -159,7 +151,7 @@ class ClientIdFixDataFactoryIntegrationTest extends ApiIntegrationTestCase
         );
 
         // check the report
-        $entityManager->refresh($report);
+        self::$entityManager->refresh($report);
 
         self::assertEquals(
             $oldClient,

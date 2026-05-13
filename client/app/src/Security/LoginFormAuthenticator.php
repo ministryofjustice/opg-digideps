@@ -37,7 +37,7 @@ class LoginFormAuthenticator extends AbstractAuthenticator
 
     public function supports(Request $request): ?bool
     {
-        return '/login' === $request->getPathInfo() && $request->isMethod('POST');
+        return $request->getPathInfo() === '/login' && $request->isMethod('POST');
     }
 
     public function authenticate(Request $request): Passport
@@ -48,7 +48,7 @@ class LoginFormAuthenticator extends AbstractAuthenticator
         $password = $data['password'];
         $csrfToken = $data['_token'];
 
-        if ('' === $email || null === $email || '' === $password || null === $password) {
+        if ($email === '' || $email === null || $password === '' || $password === null) {
             throw new BadCredentialsException('Missing username or password');
         }
 

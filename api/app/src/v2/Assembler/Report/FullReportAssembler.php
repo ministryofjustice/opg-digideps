@@ -17,19 +17,16 @@ class FullReportAssembler implements ReportAssemblerInterface
     ) {
     }
 
-    /**
-     * @return ReportDto
-     */
-    public function assembleFromArray(array $data)
+    public function assembleFromArray(array $data): ReportDto
     {
         $reportDto = $this->reportSummaryAssembler->assembleFromArray($data);
 
-        if (null === $reportDto->getId()) {
+        if ($reportDto->getId() === null) {
             return $reportDto;
         }
 
         $reportEntity = $this->reportRepository->find($reportDto->getId());
-        if (null === $reportEntity) {
+        if ($reportEntity === null) {
             return $reportDto;
         }
 

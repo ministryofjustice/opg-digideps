@@ -44,7 +44,7 @@ class BankAccountController extends AbstractController
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $status = $report->getStatus()->getBankAccountsState();
-        if (Status::STATE_NOT_STARTED != $status['state']) {
+        if ($status['state'] != Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('bank_accounts_summary', ['reportId' => $reportId]);
         }
 
@@ -112,11 +112,11 @@ class BankAccountController extends AbstractController
 
         if ($submitBtn->isClicked() && $form->isSubmitted() && $form->isValid()) {
             // decide what data in the partial form needs to be passed to next step
-            if (1 === $step) {
+            if ($step === 1) {
                 $stepUrlData['type'] = $account->getAccountType();
             }
 
-            if (2 === $step) {
+            if ($step === 2) {
                 $stepUrlData['bank'] = $account->getBank();
                 $stepUrlData['number'] = $account->getAccountNumber();
                 $stepUrlData['sort-code'] = $account->getSortCode();
@@ -149,7 +149,7 @@ class BankAccountController extends AbstractController
             // redirect to add another if requested
             $validatingForm = new ValidatingForm($form);
             $addAnother = $validatingForm->getStringOrNull('addAnother');
-            if ('yes' === $addAnother) {
+            if ($addAnother === 'yes') {
                 return $this->redirectToRoute('bank_accounts_step', ['reportId' => $reportId, 'step' => 1]);
             }
 
@@ -173,7 +173,7 @@ class BankAccountController extends AbstractController
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
         $status = $report->getStatus()->getBankAccountsState();
-        if (Status::STATE_NOT_STARTED == $status['state']) {
+        if ($status['state'] == Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('bank_accounts', ['reportId' => $reportId]);
         }
 

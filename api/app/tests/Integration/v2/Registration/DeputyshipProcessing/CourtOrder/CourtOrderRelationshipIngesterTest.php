@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\v2\Registration\DeputyshipProcessing\CourtOrder;
 
+use Doctrine\ORM\Id\AbstractIdGenerator;
+use Doctrine\ORM\Id\AssignedGenerator;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
-use OPG\Digideps\Backend\Entity\StagingDeputyship;
-use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
+use OPG\Digideps\Backend\Entity\Staging\StagingDeputyship;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipIngester;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipReader;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder\CourtOrderRelationshipResult;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\Report\ReportReassembler;
-use Doctrine\ORM\Id\AbstractIdGenerator;
-use Doctrine\ORM\Id\AssignedGenerator;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 
 class CourtOrderRelationshipIngesterTest extends ApiIntegrationTestCase
 {
@@ -195,7 +195,7 @@ class CourtOrderRelationshipIngesterTest extends ApiIntegrationTestCase
             self::$entityManager
         );
         $results = [...$ingester->execute()];
-        usort($results, fn(CourtOrderRelationshipResult $left, CourtOrderRelationshipResult $right) => $left->getMessage() <=> $right->getMessage());
+        usort($results, fn (CourtOrderRelationshipResult $left, CourtOrderRelationshipResult $right) => $left->getMessage() <=> $right->getMessage());
 
         $this->assertCount(14, $results);
         $this->assertSame("Changes in CourtOrder 10: SiblingId changed from '110' -> '210'. Kind changed from 'hybrid' -> 'dual'.", $results[0]->getMessage());
@@ -214,6 +214,6 @@ class CourtOrderRelationshipIngesterTest extends ApiIntegrationTestCase
         $this->assertSame("Changes in CourtOrder 9: SiblingId changed from '109' -> ''. Kind changed from 'hybrid' -> 'single'.", $results[13]->getMessage());
 
         $closed = self::$entityManager->getRepository(CourtOrder::class)->findBy(['status' => 'CLOSED']);
-        $this->assertTrue(array_all($closed, fn(CourtOrder $order) => $order->getSibling() === null));
+        $this->assertTrue(array_all($closed, fn (CourtOrder $order) => $order->getSibling() === null));
     }
 }

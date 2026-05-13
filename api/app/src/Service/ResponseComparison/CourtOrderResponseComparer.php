@@ -131,11 +131,11 @@ class CourtOrderResponseComparer extends ResponseComparer
         // If this array contains multiple associative sub-arrays with "id" or "client_id"
         if (!empty($data) && is_array(reset($data))) {
             if (array_key_exists('id', reset($data))) {
-                usort($data, fn($a, $b) => $a['id'] <=> $b['id']);
+                usort($data, fn ($a, $b) => $a['id'] <=> $b['id']);
             } elseif (array_key_exists('client_id', reset($data))) {
-                usort($data, fn($a, $b) => $a['client_id'] <=> $b['client_id']);
+                usort($data, fn ($a, $b) => $a['client_id'] <=> $b['client_id']);
             } elseif (array_key_exists('deputy_uid', reset($data))) {
-                usort($data, fn($a, $b) => $a['deputy_uid'] <=> $b['deputy_uid']);
+                usort($data, fn ($a, $b) => $a['deputy_uid'] <=> $b['deputy_uid']);
             }
         }
 

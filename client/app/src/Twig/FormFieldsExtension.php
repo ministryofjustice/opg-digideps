@@ -364,7 +364,7 @@ class FormFieldsExtension extends AbstractExtension
             /** @var array $labelParams */
             $labelParams = $vars['labelParameters'] ?? [];
             // label is translated directly here
-            if ('' != $translationKey) {
+            if ($translationKey != '') {
                 $labelText = $this->translator->trans($translationKey . '.label', $labelParams, $domain);
             } else {
                 $labelText = '';
@@ -452,7 +452,7 @@ class FormFieldsExtension extends AbstractExtension
     private function getDateHintText(string $translationKey, string $domain, ?string $customHint = null): string
     {
         // Use custom hint if provided
-        if (null !== $customHint) {
+        if ($customHint !== null) {
             return $customHint;
         }
 

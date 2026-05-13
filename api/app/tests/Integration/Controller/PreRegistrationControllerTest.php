@@ -25,7 +25,7 @@ class PreRegistrationControllerTest extends AbstractTestController
 
         self::setupFixtures();
 
-        if (null === self::$tokenAdmin) {
+        if (self::$tokenAdmin === null) {
             self::$tokenAdmin = $this->loginAsAdmin();
             self::$tokenDeputy = $this->loginAsDeputy();
             self::$tokenProf = $this->loginAsProf();

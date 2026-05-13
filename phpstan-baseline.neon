@@ -3559,12 +3559,6 @@ parameters:
 			path: api/app/src/Entity/Deputy.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between null and string will always evaluate to true\.$#'
-			identifier: notIdentical.alwaysTrue
-			count: 1
-			path: api/app/src/Entity/Deputy.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Note\:\:__construct\(\) has parameter \$category with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -8755,12 +8749,6 @@ parameters:
 			path: api/app/src/Service/DataCompression.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Service\\DataImporter\\CsvToArray\:\:keepExpectedAndOptionalColumns\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Service/DataImporter/CsvToArray.php
-
-		-
 			message: '#^Parameter \#1 \$array of function array_diff expects an array of values castable to string, array given\.$#'
 			identifier: argument.type
 			count: 1
@@ -9257,12 +9245,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: api/app/src/Service/PreRegistrationVerificationService.php
-
-		-
-			message: '#^Instanceof between OPG\\Digideps\\Backend\\Entity\\Report\\Report and OPG\\Digideps\\Backend\\Entity\\Report\\Report will always evaluate to true\.$#'
-			identifier: instanceof.alwaysTrue
-			count: 1
-			path: api/app/src/Service/ReportService.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Service\\ReportService\:\:clonePersistentResources\(\) has no return type specified\.$#'
@@ -31051,31 +31033,13 @@ parameters:
 			path: api/app/tests/Integration/ApiIntegrationTestCase.php
 
 		-
-			message: '#^Cannot call method clear\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/ApiIntegrationTestCase.php
-
-		-
-			message: '#^Cannot call method close\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/ApiIntegrationTestCase.php
-
-		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/ApiIntegrationTestCase.php
-
-		-
 			message: '#^Cannot call method getContainer\(\) on Symfony\\Component\\HttpKernel\\KernelInterface\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: api/app/tests/Integration/ApiIntegrationTestCase.php
 
 		-
-			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\ApiIntegrationTestCase\:\:\$entityManager \(Doctrine\\ORM\\EntityManager\|null\) does not accept mixed\.$#'
+			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\ApiIntegrationTestCase\:\:\$entityManager \(Doctrine\\ORM\\EntityManager\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: api/app/tests/Integration/ApiIntegrationTestCase.php
@@ -38113,48 +38077,6 @@ parameters:
 			path: api/app/tests/Integration/Entity/ClientSoftDeleteableIntegrationTest.php
 
 		-
-			message: '#^Cannot call method clear\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: api/app/tests/Integration/Entity/ClientSoftDeleteableIntegrationTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 7
-			path: api/app/tests/Integration/Entity/ClientSoftDeleteableIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getFilters\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: api/app/tests/Integration/Entity/ClientSoftDeleteableIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getRepository\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Entity/ClientSoftDeleteableIntegrationTest.php
-
-		-
-			message: '#^Cannot call method remove\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: api/app/tests/Integration/Entity/ClientSoftDeleteableIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of class Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures constructor expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Entity/ClientSoftDeleteableIntegrationTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: api/app/tests/Integration/Entity/DeputyIntegrationTest.php
-
-		-
 			message: '#^Cannot call method getCourtOrderUid\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -38174,24 +38096,6 @@ parameters:
 
 		-
 			message: '#^Cannot call method getOrderType\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Entity/DeputyIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getRepository\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Entity/DeputyIntegrationTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: api/app/tests/Integration/Entity/DeputyIntegrationTest.php
-
-		-
-			message: '#^Cannot call method remove\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: api/app/tests/Integration/Entity/DeputyIntegrationTest.php
@@ -38239,69 +38143,9 @@ parameters:
 			path: api/app/tests/Integration/Entity/OrganisationSoftDeleteableIntegrationTest.php
 
 		-
-			message: '#^Cannot call method clear\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: api/app/tests/Integration/Entity/OrganisationSoftDeleteableIntegrationTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 7
-			path: api/app/tests/Integration/Entity/OrganisationSoftDeleteableIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getFilters\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: api/app/tests/Integration/Entity/OrganisationSoftDeleteableIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getRepository\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Entity/OrganisationSoftDeleteableIntegrationTest.php
-
-		-
-			message: '#^Cannot call method remove\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: api/app/tests/Integration/Entity/OrganisationSoftDeleteableIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of class Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures constructor expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Entity/OrganisationSoftDeleteableIntegrationTest.php
-
-		-
 			message: '#^Cannot call method add\(\) on DateTime\|false\.$#'
 			identifier: method.nonObject
 			count: 1
-			path: api/app/tests/Integration/Entity/Repository/ChecklistRepositoryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/ChecklistRepositoryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getRepository\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/ChecklistRepositoryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 5
-			path: api/app/tests/Integration/Entity/Repository/ChecklistRepositoryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method refresh\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 3
 			path: api/app/tests/Integration/Entity/Repository/ChecklistRepositoryIntegrationTest.php
 
 		-
@@ -38353,24 +38197,6 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/ChecklistRepositoryIntegrationTest.php
 
 		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/ClientRepositoryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getRepository\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/ClientRepositoryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/ClientRepositoryIntegrationTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\ClientRepositoryIntegrationTest\:\:testgetAllClientsAndReportsByDeputyUid\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -38380,18 +38206,6 @@ parameters:
 			message: '#^Parameter \#1 \$deputyUid of method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:getAllClientsAndReportsByDeputyUid\(\) expects int, int\|null given\.$#'
 			identifier: argument.type
 			count: 1
-			path: api/app/tests/Integration/Entity/Repository/ClientRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\ClientTestHelper\:\:generateClient\(\) expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 3
-			path: api/app/tests/Integration/Entity/Repository/ClientRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\UserTestHelper\:\:createAndPersistUser\(\) expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 2
 			path: api/app/tests/Integration/Entity/Repository/ClientRepositoryIntegrationTest.php
 
 		-
@@ -38413,45 +38227,9 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/CourtOrderRepositoryTest.php
 
 		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Integration/Entity/Repository/CourtOrderRepositoryTest.php
-
-		-
-			message: '#^Cannot call method getRepository\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/CourtOrderRepositoryTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 8
-			path: api/app/tests/Integration/Entity/Repository/CourtOrderRepositoryTest.php
-
-		-
 			message: '#^Offset 0 might not exist on array\|null\.$#'
 			identifier: offsetAccess.notFound
 			count: 4
-			path: api/app/tests/Integration/Entity/Repository/CourtOrderRepositoryTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of static method OPG\\Digideps\\Backend\\TestHelpers\\ClientTestHelper\:\:generateClient\(\) expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/tests/Integration/Entity/Repository/CourtOrderRepositoryTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of static method OPG\\Digideps\\Backend\\TestHelpers\\CourtOrderTestHelper\:\:generateCourtOrder\(\) expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 4
-			path: api/app/tests/Integration/Entity/Repository/CourtOrderRepositoryTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of static method OPG\\Digideps\\Backend\\TestHelpers\\ReportTestHelper\:\:generateReport\(\) expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 2
 			path: api/app/tests/Integration/Entity/Repository/CourtOrderRepositoryTest.php
 
 		-
@@ -38557,24 +38335,6 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
-			message: '#^Cannot call method clear\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Cannot call method close\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 8
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
 			message: '#^Cannot call method format\(\) on DateTimeInterface\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -38593,12 +38353,6 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
-			message: '#^Cannot call method getRepository\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
 			message: '#^Cannot call method getSynchronisationError\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -38614,18 +38368,6 @@ parameters:
 			message: '#^Cannot call method getUuid\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 23
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Cannot call method refresh\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 21
 			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
@@ -38707,6 +38449,18 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
+			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:persist\(\) expects object, mixed given\.$#'
+			identifier: argument.type
+			count: 11
+			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
+
+		-
+			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:refresh\(\) expects object, mixed given\.$#'
+			identifier: argument.type
+			count: 21
+			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
+
+		-
 			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:createAndSubmitAdditionalDocuments\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
 			identifier: argument.type
 			count: 4
@@ -38779,7 +38533,7 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
-			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:\$entityManager \(Doctrine\\ORM\\EntityManager\|null\) does not accept mixed\.$#'
+			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:\$entityManager \(Doctrine\\ORM\\EntityManager\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
@@ -38788,12 +38542,6 @@ parameters:
 			message: '#^Cannot call method addUser\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: api/app/tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 12
 			path: api/app/tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
 
 		-
@@ -38815,12 +38563,6 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
 
 		-
-			message: '#^Cannot call method getRepository\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
 			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(OPG\\Digideps\\Backend\\Entity\\Organisation\)\: int given\.$#'
 			identifier: argument.type
 			count: 1
@@ -38830,12 +38572,6 @@ parameters:
 			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(array\)\: mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: api/app/tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of class Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures constructor expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
 			path: api/app/tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
 
 		-
@@ -38923,21 +38659,9 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
 
 		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
-
-		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 6
-			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getRepository\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 2
 			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
 
 		-
@@ -38947,19 +38671,7 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
 
 		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 7
-			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method refresh\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of class Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures constructor expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManager\|null given\.$#'
+			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:refresh\(\) expects object, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
@@ -38995,27 +38707,9 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
 
 		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
-
-		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: api/app/tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getRepository\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 7
 			path: api/app/tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
 
 		-
@@ -39073,24 +38767,6 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
 
 		-
-			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\ReportTestHelper\:\:generateReport\(\) expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\UserTestHelper\:\:createAndPersistUser\(\) expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$entityManager of class OPG\\Digideps\\Backend\\TestHelpers\\ReportSubmissionHelper constructor expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/ReportSubmissionRepositoryIntegrationTest.php
-
-		-
 			message: '#^Parameter \#1 \$status of method OPG\\Digideps\\Backend\\Entity\\Report\\Document\:\:setSynchronisationStatus\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -39109,24 +38785,6 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/UserRepositoryTest.php
 
 		-
-			message: '#^Cannot call method clear\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/UserRepositoryTest.php
-
-		-
-			message: '#^Cannot call method close\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/UserRepositoryTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 11
-			path: api/app/tests/Integration/Entity/Repository/UserRepositoryTest.php
-
-		-
 			message: '#^Cannot call method getContainer\(\) on Symfony\\Component\\HttpKernel\\KernelInterface\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -39136,18 +38794,6 @@ parameters:
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 5
-			path: api/app/tests/Integration/Entity/Repository/UserRepositoryTest.php
-
-		-
-			message: '#^Cannot call method getRepository\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/UserRepositoryTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 21
 			path: api/app/tests/Integration/Entity/Repository/UserRepositoryTest.php
 
 		-
@@ -39205,27 +38851,9 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/UserRepositoryTest.php
 
 		-
-			message: '#^Parameter \#1 \$em of class Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures constructor expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManager\|null given\.$#'
+			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:persist\(\) expects object, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: api/app/tests/Integration/Entity/Repository/UserRepositoryTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\ClientTestHelper\:\:generateClient\(\) expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 4
-			path: api/app/tests/Integration/Entity/Repository/UserRepositoryTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\ReportTestHelper\:\:generateReport\(\) expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 4
-			path: api/app/tests/Integration/Entity/Repository/UserRepositoryTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\UserTestHelper\:\:createAndPersistUser\(\) expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 4
 			path: api/app/tests/Integration/Entity/Repository/UserRepositoryTest.php
 
 		-
@@ -39247,7 +38875,7 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/UserRepositoryTest.php
 
 		-
-			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\UserRepositoryTest\:\:\$entityManager \(Doctrine\\ORM\\EntityManager\|null\) does not accept mixed\.$#'
+			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\UserRepositoryTest\:\:\$entityManager \(Doctrine\\ORM\\EntityManager\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: api/app/tests/Integration/Entity/Repository/UserRepositoryTest.php
@@ -39301,136 +38929,16 @@ parameters:
 			path: api/app/tests/Integration/Entity/UserIntegrationTest.php
 
 		-
-			message: '#^Parameter \#1 \$entityManager of class OPG\\Digideps\\Backend\\TestHelpers\\ReportSubmissionHelper constructor expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Entity/UserIntegrationTest.php
-
-		-
 			message: '#^Parameter \#1 \$lastSubmission of method OPG\\Digideps\\Backend\\TestHelpers\\ReportSubmissionHelper\:\:submitAndPersistAdditionalSubmissions\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/Entity/UserIntegrationTest.php
 
 		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Factory/MissingReport/MissingReportFinderTest.php
-
-		-
-			message: '#^Cannot call method getClassMetaData\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Integration/Factory/MissingReport/MissingReportFinderTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: api/app/tests/Integration/Factory/MissingReport/MissingReportFinderTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Factory\\MissingReport\\MissingReportFinderTest\:\:testFindCourtOrdersWithMissingReports\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: api/app/tests/Integration/Factory/MissingReport/MissingReportFinderTest.php
-
-		-
-			message: '#^Parameter \#1 \$entityManager of class OPG\\Digideps\\Backend\\Factory\\MissingReport\\MissingReportFinder constructor expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Factory/MissingReport/MissingReportFinderTest.php
-
-		-
-			message: '#^Cannot call method clear\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Cannot call method get\(\) on Psr\\Container\\ContainerInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$action of class OPG\\Digideps\\Backend\\Entity\\StagingSelectedCandidate constructor expects OPG\\Digideps\\Backend\\v2\\Registration\\Enum\\DeputyshipCandidateAction, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of class Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures constructor expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$expectedCount of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$needle of method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$needle of method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \#2 \$orderUid of class OPG\\Digideps\\Backend\\Entity\\StagingSelectedCandidate constructor expects string, int given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \$courtOrderReportType of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createCourtOrder\(\) expects OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderReportType\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \$kind of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createCourtOrder\(\) expects OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderKind, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \$type of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createCourtOrder\(\) expects OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderType, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Parameter \$uid of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createCourtOrder\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
-
-		-
-			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Factory\\ReportTypeUpdateFactoryIntegrationTest\:\:\$sut \(OPG\\Digideps\\Backend\\Factory\\ReportTypeUpdateFactory\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/tests/Integration/Factory/ReportTypeUpdateIntegrationTest.php
 
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
@@ -39883,45 +39391,9 @@ parameters:
 			path: api/app/tests/Integration/Model/DeputyshipProcessingRawDbAccessIntegrationIntegrationTest.php
 
 		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Model/DeputyshipProcessingRawDbAccessIntegrationIntegrationTest.php
-
-		-
 			message: '#^Cannot call method flush\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 4
-			path: api/app/tests/Integration/Model/DeputyshipProcessingRawDbAccessIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method get\(\) on Psr\\Container\\ContainerInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Model/DeputyshipProcessingRawDbAccessIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getConnection\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Model/DeputyshipProcessingRawDbAccessIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Model/DeputyshipProcessingRawDbAccessIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method refresh\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: api/app/tests/Integration/Model/DeputyshipProcessingRawDbAccessIntegrationIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of class Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures constructor expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
 			path: api/app/tests/Integration/Model/DeputyshipProcessingRawDbAccessIntegrationIntegrationTest.php
 
 		-
@@ -39939,24 +39411,6 @@ parameters:
 		-
 			message: '#^Cannot access offset ''orderUid'' on array\<string, mixed\>\|object\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/tests/Integration/Model/QueryPagerIntegrationTest.php
-
-		-
-			message: '#^Cannot call method createQueryBuilder\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Model/QueryPagerIntegrationTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Model/QueryPagerIntegrationTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
 			count: 1
 			path: api/app/tests/Integration/Model/QueryPagerIntegrationTest.php
 
@@ -40057,51 +39511,9 @@ parameters:
 			path: api/app/tests/Integration/Security/UserVoterTest.php
 
 		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: api/app/tests/Integration/Service/CourtOrderServiceIntegrationTest.php
-
-		-
-			message: '#^Cannot call method get\(\) on Psr\\Container\\ContainerInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Service/CourtOrderServiceIntegrationTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 18
-			path: api/app/tests/Integration/Service/CourtOrderServiceIntegrationTest.php
-
-		-
 			message: '#^Offset ''reports'' might not exist on array\|null\.$#'
 			identifier: offsetAccess.notFound
 			count: 1
-			path: api/app/tests/Integration/Service/CourtOrderServiceIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\ClientTestHelper\:\:generateClient\(\) expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 3
-			path: api/app/tests/Integration/Service/CourtOrderServiceIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\ReportTestHelper\:\:generateReport\(\) expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 5
-			path: api/app/tests/Integration/Service/CourtOrderServiceIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\UserTestHelper\:\:createAndPersistUser\(\) expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 6
-			path: api/app/tests/Integration/Service/CourtOrderServiceIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of static method OPG\\Digideps\\Backend\\TestHelpers\\CourtOrderTestHelper\:\:generateCourtOrder\(\) expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 3
 			path: api/app/tests/Integration/Service/CourtOrderServiceIntegrationTest.php
 
 		-
@@ -40109,18 +39521,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/Service/CourtOrderServiceIntegrationTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Integration/Service/DeputyCaseServiceIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method get\(\) on Psr\\Container\\ContainerInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Service/DeputyCaseServiceIntegrationIntegrationTest.php
 
 		-
 			message: '#^Cannot call method getEmail\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
@@ -40131,30 +39531,6 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on array\<OPG\\Digideps\\Backend\\Entity\\User\>\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Service/DeputyCaseServiceIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getRepository\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Integration/Service/DeputyCaseServiceIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 6
-			path: api/app/tests/Integration/Service/DeputyCaseServiceIntegrationIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of class Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures constructor expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Service/DeputyCaseServiceIntegrationIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of static method OPG\\Digideps\\Backend\\TestHelpers\\ClientTestHelper\:\:generateClient\(\) expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/Service/DeputyCaseServiceIntegrationIntegrationTest.php
 
@@ -40174,12 +39550,6 @@ parameters:
 			message: '#^Cannot access offset ''type'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: api/app/tests/Integration/Service/DeputyServiceIntegrationTest.php
-
-		-
-			message: '#^Cannot call method get\(\) on Psr\\Container\\ContainerInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: api/app/tests/Integration/Service/DeputyServiceIntegrationTest.php
 
 		-
@@ -40207,12 +39577,6 @@ parameters:
 			path: api/app/tests/Integration/Service/DeputyServiceIntegrationTest.php
 
 		-
-			message: '#^Parameter \#1 \$em of class Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures constructor expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Service/DeputyServiceIntegrationTest.php
-
-		-
 			message: '#^Parameter \#2 \$array of static method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 3
@@ -40225,57 +39589,15 @@ parameters:
 			path: api/app/tests/Integration/Service/DeputyServiceIntegrationTest.php
 
 		-
-			message: '#^Parameter \$em of static method OPG\\Digideps\\Backend\\TestHelpers\\ClientTestHelper\:\:generateClient\(\) expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 4
-			path: api/app/tests/Integration/Service/DeputyServiceIntegrationTest.php
-
-		-
-			message: '#^Parameter \$em of static method OPG\\Digideps\\Backend\\TestHelpers\\CourtOrderTestHelper\:\:generateCourtOrder\(\) expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 5
-			path: api/app/tests/Integration/Service/DeputyServiceIntegrationTest.php
-
-		-
-			message: '#^Parameter \$em of static method OPG\\Digideps\\Backend\\TestHelpers\\ReportTestHelper\:\:generateReport\(\) expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 5
-			path: api/app/tests/Integration/Service/DeputyServiceIntegrationTest.php
-
-		-
-			message: '#^Parameter \$em of static method OPG\\Digideps\\Backend\\TestHelpers\\UserTestHelper\:\:createAndPersistUser\(\) expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 4
-			path: api/app/tests/Integration/Service/DeputyServiceIntegrationTest.php
-
-		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
 			path: api/app/tests/Integration/Service/LayRegistrationServiceIntegrationIntegrationTest.php
 
 		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Integration/Service/LayRegistrationServiceIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method get\(\) on Psr\\Container\\ContainerInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Service/LayRegistrationServiceIntegrationIntegrationTest.php
-
-		-
 			message: '#^Cannot call method getReports\(\) on object\|null\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: api/app/tests/Integration/Service/LayRegistrationServiceIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getRepository\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: api/app/tests/Integration/Service/LayRegistrationServiceIntegrationIntegrationTest.php
 
 		-
@@ -40291,34 +39613,10 @@ parameters:
 			path: api/app/tests/Integration/Service/LayRegistrationServiceIntegrationIntegrationTest.php
 
 		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: api/app/tests/Integration/Service/LayRegistrationServiceIntegrationIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of class Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures constructor expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Service/LayRegistrationServiceIntegrationIntegrationTest.php
-
-		-
 			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: api/app/tests/Integration/Service/LayRegistrationServiceIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Service/UserDeputyServiceIntegrationTest.php
-
-		-
-			message: '#^Cannot call method get\(\) on Psr\\Container\\ContainerInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Service/UserDeputyServiceIntegrationTest.php
 
 		-
 			message: '#^Cannot call method getDeputyUid\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
@@ -40345,25 +39643,7 @@ parameters:
 			path: api/app/tests/Integration/Service/UserDeputyServiceIntegrationTest.php
 
 		-
-			message: '#^Cannot call method getRepository\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Service/UserDeputyServiceIntegrationTest.php
-
-		-
 			message: '#^Cannot call method getUser\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Service/UserDeputyServiceIntegrationTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: api/app/tests/Integration/Service/UserDeputyServiceIntegrationTest.php
-
-		-
-			message: '#^Cannot call method refresh\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: api/app/tests/Integration/Service/UserDeputyServiceIntegrationTest.php
@@ -40384,24 +39664,6 @@ parameters:
 			message: '#^Cannot access offset ''reportType'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: api/app/tests/Integration/Stats/Query/ClientsQueryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Stats/Query/ClientsQueryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Integration/Stats/Query/ClientsQueryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of class OPG\\Digideps\\Backend\\Service\\Stats\\Query\\ClientsQuery constructor expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 2
 			path: api/app/tests/Integration/Stats/Query/ClientsQueryIntegrationTest.php
 
 		-
@@ -40429,24 +39691,6 @@ parameters:
 			path: api/app/tests/Integration/Stats/Query/QueryIntegrationTest.php
 
 		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Stats/Query/QueryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Stats/Query/QueryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of class Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\UsersQuery constructor expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 5
-			path: api/app/tests/Integration/Stats/Query/QueryIntegrationTest.php
-
-		-
 			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\<mixed\>\|ArrayAccess\<\(int\|string\), mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -40471,18 +39715,6 @@ parameters:
 			path: api/app/tests/Integration/Stats/Query/RegisteredDeputiesQueryIntegrationTest.php
 
 		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Stats/Query/RegisteredDeputiesQueryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Stats/Query/RegisteredDeputiesQueryIntegrationTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Stats\\Query\\RegisteredDeputiesQueryIntegrationTest\:\:givenUsersExistWithRole\(\) has parameter \$count with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -40492,12 +39724,6 @@ parameters:
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Stats\\Query\\RegisteredDeputiesQueryIntegrationTest\:\:givenUsersExistWithRole\(\) has parameter \$roleName with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
-			path: api/app/tests/Integration/Stats/Query/RegisteredDeputiesQueryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of class OPG\\Digideps\\Backend\\Service\\Stats\\Query\\RegisteredDeputiesQuery constructor expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 3
 			path: api/app/tests/Integration/Stats/Query/RegisteredDeputiesQueryIntegrationTest.php
 
 		-
@@ -40531,18 +39757,6 @@ parameters:
 			path: api/app/tests/Integration/Stats/Query/ReportsSubmittedQueryIntegrationTest.php
 
 		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Stats/Query/ReportsSubmittedQueryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: api/app/tests/Integration/Stats/Query/ReportsSubmittedQueryIntegrationTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Stats\\Query\\ReportsSubmittedQueryIntegrationTest\:\:givenXreportSubmissionsOfTypeBelongToDeputy\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -40564,12 +39778,6 @@ parameters:
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Stats\\Query\\ReportsSubmittedQueryIntegrationTest\:\:givenXreportSubmissionsOfTypeBelongToDeputy\(\) has parameter \$reportType with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
-			path: api/app/tests/Integration/Stats/Query/ReportsSubmittedQueryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of class OPG\\Digideps\\Backend\\Service\\Stats\\Query\\ReportsSubmittedQuery constructor expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 2
 			path: api/app/tests/Integration/Stats/Query/ReportsSubmittedQueryIntegrationTest.php
 
 		-
@@ -40609,36 +39817,6 @@ parameters:
 			path: api/app/tests/Integration/Stats/Query/RespondentsQueryIntegrationTest.php
 
 		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Integration/Stats/Query/RespondentsQueryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getRepository\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Stats/Query/RespondentsQueryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: api/app/tests/Integration/Stats/Query/RespondentsQueryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method remove\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Stats/Query/RespondentsQueryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of class OPG\\Digideps\\Backend\\Service\\Stats\\Query\\RespondentsQuery constructor expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Stats/Query/RespondentsQueryIntegrationTest.php
-
-		-
 			message: '#^Unsafe call to private method Tests\\OPG\\Digideps\\Backend\\Integration\\Stats\\Query\\RespondentsQueryIntegrationTest\:\:givenSatisfactionScoreForReportOfTypeAndRole\(\) through static\:\:\.$#'
 			identifier: staticClassAccess.privateMethod
 			count: 5
@@ -40660,36 +39838,6 @@ parameters:
 			message: '#^Cannot access offset ''reportType'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: api/app/tests/Integration/Stats/Query/SatisfactionQueryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Stats/Query/SatisfactionQueryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getRepository\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Stats/Query/SatisfactionQueryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: api/app/tests/Integration/Stats/Query/SatisfactionQueryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method remove\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Stats/Query/SatisfactionQueryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of class OPG\\Digideps\\Backend\\Service\\Stats\\Query\\SatisfactionQuery constructor expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 3
 			path: api/app/tests/Integration/Stats/Query/SatisfactionQueryIntegrationTest.php
 
 		-
@@ -41461,100 +40609,10 @@ parameters:
 			path: api/app/tests/Integration/v2/Registration/Controller/OrgDeputyshipControllerTest.php
 
 		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/CourtOrder/CourtOrderRelationshipIngesterTest.php
-
-		-
-			message: '#^Cannot call method getClassMetaData\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/CourtOrder/CourtOrderRelationshipIngesterTest.php
-
-		-
-			message: '#^Cannot call method getConnection\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/CourtOrder/CourtOrderRelationshipIngesterTest.php
-
-		-
-			message: '#^Cannot call method getRepository\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/CourtOrder/CourtOrderRelationshipIngesterTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 5
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/CourtOrder/CourtOrderRelationshipIngesterTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\v2\\Registration\\DeputyshipProcessing\\CourtOrder\\CourtOrderRelationshipIngesterTest\:\:testExecute\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/CourtOrder/CourtOrderRelationshipIngesterTest.php
-
-		-
-			message: '#^Parameter \#3 \$entityManager of class OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\CourtOrder\\CourtOrderRelationshipIngester constructor expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/CourtOrder/CourtOrderRelationshipIngesterTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 12
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/CourtOrderReportCandidatesFactoryIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method get\(\) on Psr\\Container\\ContainerInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/CourtOrderReportCandidatesFactoryIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 17
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/CourtOrderReportCandidatesFactoryIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method createQueryBuilder\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipCandidateConverterIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipCandidateConverterIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method get\(\) on Psr\\Container\\ContainerInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipCandidateConverterIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 5
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipCandidateConverterIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getRepository\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipsCSVLoaderIntegrationIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of class OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\DeputyshipsCSVLoader constructor expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipsCSVLoaderIntegrationIntegrationTest.php
 
 		-
 			message: '#^Call to an undefined method object\:\:getManager\(\)\.$#'
@@ -41563,55 +40621,25 @@ parameters:
 			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipsCandidatesSelectorIntegrationTest.php
 
 		-
-			message: '#^Cannot access property \$deputyStatusOnOrder on OPG\\Digideps\\Backend\\Entity\\StagingDeputyship\|null\.$#'
+			message: '#^Cannot access property \$deputyStatusOnOrder on OPG\\Digideps\\Backend\\Entity\\Staging\\StagingDeputyship\|null\.$#'
 			identifier: property.nonObject
 			count: 1
 			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipsCandidatesSelectorIntegrationTest.php
 
 		-
-			message: '#^Cannot access property \$deputyUid on OPG\\Digideps\\Backend\\Entity\\StagingDeputyship\|null\.$#'
+			message: '#^Cannot access property \$deputyUid on OPG\\Digideps\\Backend\\Entity\\Staging\\StagingDeputyship\|null\.$#'
 			identifier: property.nonObject
 			count: 1
 			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipsCandidatesSelectorIntegrationTest.php
 
 		-
-			message: '#^Cannot access property \$orderUid on OPG\\Digideps\\Backend\\Entity\\StagingDeputyship\|null\.$#'
+			message: '#^Cannot access property \$orderUid on OPG\\Digideps\\Backend\\Entity\\Staging\\StagingDeputyship\|null\.$#'
 			identifier: property.nonObject
-			count: 2
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipsCandidatesSelectorIntegrationTest.php
-
-		-
-			message: '#^Cannot call method clear\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipsCandidatesSelectorIntegrationTest.php
-
-		-
-			message: '#^Cannot call method close\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipsCandidatesSelectorIntegrationTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 5
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipsCandidatesSelectorIntegrationTest.php
-
-		-
-			message: '#^Cannot call method get\(\) on Psr\\Container\\ContainerInterface\|null\.$#'
-			identifier: method.nonObject
 			count: 2
 			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipsCandidatesSelectorIntegrationTest.php
 
 		-
 			message: '#^Cannot call method getContainer\(\) on Symfony\\Component\\HttpKernel\\KernelInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipsCandidatesSelectorIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getRepository\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipsCandidatesSelectorIntegrationTest.php
@@ -41623,31 +40651,13 @@ parameters:
 			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipsCandidatesSelectorIntegrationTest.php
 
 		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 9
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipsCandidatesSelectorIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\ClientTestHelper\:\:generateClient\(\) expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipsCandidatesSelectorIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of method OPG\\Digideps\\Backend\\TestHelpers\\ReportTestHelper\:\:generateReport\(\) expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipsCandidatesSelectorIntegrationTest.php
-
-		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\v2\\Registration\\DeputyshipProcessing\\DeputyshipsCandidatesSelectorIntegrationTest\:\:\$sut \(OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\DeputyshipsCandidatesSelector\) does not accept OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\DeputyshipsCandidatesSelector\|null\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipsCandidatesSelectorIntegrationTest.php
 
 		-
-			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\v2\\Registration\\DeputyshipProcessing\\DeputyshipsCandidatesSelectorIntegrationTest\:\:\$entityManager \(Doctrine\\ORM\\EntityManager\|null\) does not accept mixed\.$#'
+			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\v2\\Registration\\DeputyshipProcessing\\DeputyshipsCandidatesSelectorIntegrationTest\:\:\$entityManager \(Doctrine\\ORM\\EntityManager\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: api/app/tests/Integration/v2/Registration/DeputyshipProcessing/DeputyshipsCandidatesSelectorIntegrationTest.php
@@ -41689,30 +40699,6 @@ parameters:
 			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
 
 		-
-			message: '#^Cannot call method clear\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 12
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
-			message: '#^Cannot call method close\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 12
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
-			message: '#^Cannot call method get\(\) on Psr\\Container\\ContainerInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
 			message: '#^Cannot call method getAddress1\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -41746,24 +40732,6 @@ parameters:
 			message: '#^Cannot call method getEmailIdentifier\(\) on OPG\\Digideps\\Backend\\Entity\\Organisation\|null\.$#'
 			identifier: method.nonObject
 			count: 4
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
-			message: '#^Cannot call method getRepository\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 15
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 14
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
-			message: '#^Cannot call method refresh\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 8
 			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
 
 		-
@@ -41917,12 +40885,6 @@ parameters:
 			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
 
 		-
-			message: '#^Parameter \#1 \$em of class OPG\\Digideps\\Backend\\v2\\Registration\\Uploader\\OrgDeputyshipUploader constructor expects Doctrine\\ORM\\EntityManagerInterface, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
 			message: '#^Parameter \#1 \$needle of static method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -41932,36 +40894,6 @@ parameters:
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 9
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
-			message: '#^Parameter \#2 \$em of static method Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\OrgDeputyshipDTOTestHelper\:\:ensureAReportExistsAndIsAssociatedWithClient\(\) expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 3
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
-			message: '#^Parameter \#2 \$em of static method Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\OrgDeputyshipDTOTestHelper\:\:ensureClientInUploadExists\(\) expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 13
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
-			message: '#^Parameter \#2 \$em of static method Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\OrgDeputyshipDTOTestHelper\:\:ensureClientInUploadExistsAndHasALayDeputy\(\) expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
-			message: '#^Parameter \#2 \$em of static method Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\OrgDeputyshipDTOTestHelper\:\:ensureDeputyInUploadExists\(\) expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 13
-			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
-			message: '#^Parameter \#2 \$em of static method Tests\\OPG\\Digideps\\Backend\\Integration\\TestHelpers\\OrgDeputyshipDTOTestHelper\:\:ensureOrgInUploadExists\(\) expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 6
 			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
 
 		-
@@ -42013,40 +40945,10 @@ parameters:
 			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
 
 		-
-			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\v2\\Registration\\Uploader\\OrgDeputyshipUploaderTest\:\:\$entityManager \(Doctrine\\ORM\\EntityManager\|null\) does not accept mixed\.$#'
+			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\v2\\Registration\\Uploader\\OrgDeputyshipUploaderTest\:\:\$entityManager \(Doctrine\\ORM\\EntityManager\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: api/app/tests/Integration/v2/Registration/Uploader/OrgDeputyshipUploaderTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Integration/v2/Service/CourtOrderServiceIntegrationTest.php
-
-		-
-			message: '#^Cannot call method get\(\) on Psr\\Container\\ContainerInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/v2/Service/CourtOrderServiceIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getRepository\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/v2/Service/CourtOrderServiceIntegrationTest.php
-
-		-
-			message: '#^Cannot call method persist\(\) on Doctrine\\ORM\\EntityManager\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Integration/v2/Service/CourtOrderServiceIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$em of class Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures constructor expects Doctrine\\ORM\\EntityManager, Doctrine\\ORM\\EntityManager\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/v2/Service/CourtOrderServiceIntegrationTest.php
 
 		-
 			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\v2\\Service\\CourtOrderServiceIntegrationTest\:\:\$sut \(OPG\\Digideps\\Backend\\Domain\\CourtOrder\\CourtOrderService\) does not accept mixed\.$#'
@@ -44557,7 +43459,7 @@ parameters:
 			path: api/app/tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipCandidatesGroupTest.php
 
 		-
-			message: '#^Parameter \#1 \$candidates of class OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\DeputyshipCandidatesSelectorResult constructor expects Traversable\<mixed, array\<string, mixed\>\>, ArrayIterator\<int, OPG\\Digideps\\Backend\\Entity\\StagingSelectedCandidate&PHPUnit\\Framework\\MockObject\\MockObject\> given\.$#'
+			message: '#^Parameter \#1 \$candidates of class OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\DeputyshipCandidatesSelectorResult constructor expects Traversable\<mixed, array\<string, mixed\>\>, ArrayIterator\<int, OPG\\Digideps\\Backend\\Entity\\Staging\\StagingSelectedCandidate&PHPUnit\\Framework\\MockObject\\MockObject\> given\.$#'
 			identifier: argument.type
 			count: 2
 			path: api/app/tests/Unit/v2/Registration/DeputyshipProcessing/DeputyshipsCSVIngesterTest.php
@@ -45871,12 +44773,6 @@ parameters:
 			path: client/app/src/Controller/Admin/OrganisationController.php
 
 		-
-			message: '#^PHPDoc tag @var has invalid value \(\$organisation Organisation\)\: Unexpected token "\$organisation", expected type at offset 9 on line 1$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: client/app/src/Controller/Admin/OrganisationController.php
-
-		-
 			message: '#^Parameter \#1 \$message of class Symfony\\Component\\Form\\FormError constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -46753,6 +45649,12 @@ parameters:
 			path: client/app/src/Controller/Report/DocumentController.php
 
 		-
+			message: '#^Cannot call method getStatus\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: client/app/src/Controller/Report/DocumentController.php
+
+		-
 			message: '#^Cannot call method getStorageReference\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -46762,6 +45664,12 @@ parameters:
 			message: '#^Cannot call method getWishToProvideDocumentation\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
+			path: client/app/src/Controller/Report/DocumentController.php
+
+		-
+			message: '#^Cannot call method isSubmitted\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null\.$#'
+			identifier: method.nonObject
+			count: 1
 			path: client/app/src/Controller/Report/DocumentController.php
 
 		-
@@ -47402,12 +46310,6 @@ parameters:
 
 		-
 			message: '#^Cannot call method add\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Controller/Report/VisitsCareController.php
-
-		-
-			message: '#^Cannot call method keepOnlyRelevantVisitsCareData\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: client/app/src/Controller/Report/VisitsCareController.php
@@ -48103,30 +47005,6 @@ parameters:
 			path: client/app/src/Entity/PreRegistration.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Entity/Report/Action.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Action\:\:getReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/Action.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Action\:\:getReportId\(\) should return int but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/Action.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Action\:\:setReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/Action.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Action\:\:\$doYouExpectFinancialDecisions has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -48151,32 +47029,8 @@ parameters:
 			path: client/app/src/Entity/Report/Action.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Action\:\:\$report has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Entity/Report/Action.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Entity/Report/Asset.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Asset\:\:getId\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/Asset.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Asset\:\:getReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/Asset.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Asset\:\:getReportId\(\) should return int but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: client/app/src/Entity/Report/Asset.php
 
@@ -48199,12 +47053,6 @@ parameters:
 			path: client/app/src/Entity/Report/Asset.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Asset\:\:setReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/Asset.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Asset\:\:setValue\(\) has parameter \$value with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -48212,12 +47060,6 @@ parameters:
 
 		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Asset\:\:\$id has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Entity/Report/Asset.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Asset\:\:\$report has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: client/app/src/Entity/Report/Asset.php
@@ -48583,12 +47425,6 @@ parameters:
 			path: client/app/src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Entity/Report/BankAccount.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:getAccountNumber\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -48645,18 +47481,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:getOpeningBalance\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:getReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:getReportId\(\) should return int but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: client/app/src/Entity/Report/BankAccount.php
 
@@ -48769,12 +47593,6 @@ parameters:
 			path: client/app/src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/BankAccount.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:setSortCode\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -48847,12 +47665,6 @@ parameters:
 			path: client/app/src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:\$report has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Entity/Report/BankAccount.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\:\:\$sortCode \(string\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -48879,24 +47691,6 @@ parameters:
 		-
 			message: '#^Cannot call method getDoYouHaveConcerns\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:getReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:getReportId\(\) should return int but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: client/app/src/Entity/Report/Checklist.php
 
@@ -48933,12 +47727,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:setProfCostsReasonableAndProportionate\(\) has parameter \$profCostsReasonableAndProportionate with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: client/app/src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:setReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: client/app/src/Entity/Report/Checklist.php
 
@@ -48985,12 +47773,6 @@ parameters:
 			path: client/app/src/Entity/Report/Checklist.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:\$report has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Entity/Report/Checklist.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ChecklistInformation\:\:__construct\(\) has parameter \$information with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -49021,32 +47803,8 @@ parameters:
 			path: client/app/src/Entity/Report/ClientBenefitsCheck.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Entity/Report/ClientBenefitsCheck.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ClientBenefitsCheck\:\:getReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/ClientBenefitsCheck.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ClientBenefitsCheck\:\:getReportId\(\) should return int but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/ClientBenefitsCheck.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ClientBenefitsCheck\:\:getTypesOfMoneyReceivedOnClientsBehalf\(\) return type with generic class Doctrine\\Common\\Collections\\ArrayCollection does not specify its types\: TKey, T$#'
 			identifier: missingType.generics
-			count: 1
-			path: client/app/src/Entity/Report/ClientBenefitsCheck.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ClientBenefitsCheck\:\:setReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: client/app/src/Entity/Report/ClientBenefitsCheck.php
 
@@ -49057,22 +47815,10 @@ parameters:
 			path: client/app/src/Entity/Report/ClientBenefitsCheck.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\ClientBenefitsCheck\:\:\$report has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Entity/Report/ClientBenefitsCheck.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\ClientBenefitsCheck\:\:\$typesOfMoneyReceivedOnClientsBehalf with generic class Doctrine\\Common\\Collections\\ArrayCollection does not specify its types\: TKey, T$#'
 			identifier: missingType.generics
 			count: 1
 			path: client/app/src/Entity/Report/ClientBenefitsCheck.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Entity/Report/Contact.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:getAddress\(\) has no return type specified\.$#'
@@ -49131,18 +47877,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:getRelationship\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/Contact.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:getReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/Contact.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:getReportId\(\) should return int but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: client/app/src/Entity/Report/Contact.php
 
@@ -49267,12 +48001,6 @@ parameters:
 			path: client/app/src/Entity/Report/Contact.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:setReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/Contact.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:\$address has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -49333,12 +48061,6 @@ parameters:
 			path: client/app/src/Entity/Report/Contact.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Contact\:\:\$report has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Entity/Report/Contact.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Debt\:\:__construct\(\) has parameter \$debtTypeId with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -49375,50 +48097,8 @@ parameters:
 			path: client/app/src/Entity/Report/Debt.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
+			message: '#^Cannot call method getDocuments\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Entity/Report/Decision.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Decision\:\:getReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/Decision.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Decision\:\:getReportId\(\) should return int but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/Decision.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Decision\:\:setReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/Decision.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Decision\:\:\$report has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Entity/Report/Decision.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Entity/Report/Document.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Document\:\:getReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/Document.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Document\:\:getReportId\(\) should return int but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: client/app/src/Entity/Report/Document.php
 
@@ -49429,37 +48109,7 @@ parameters:
 			path: client/app/src/Entity/Report/Document.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Document\:\:setReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/Document.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Document\:\:\$report has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Entity/Report/Document.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Entity/Report/Expense.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Expense\:\:getAmount\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/Expense.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Expense\:\:getReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/Expense.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Expense\:\:getReportId\(\) should return int but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: client/app/src/Entity/Report/Expense.php
@@ -49478,12 +48128,6 @@ parameters:
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Expense\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/Expense.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Expense\:\:setReport\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: client/app/src/Entity/Report/Expense.php
@@ -49519,30 +48163,6 @@ parameters:
 			path: client/app/src/Entity/Report/Expense.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Expense\:\:\$report has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Entity/Report/Expense.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Entity/Report/Fee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Fee\:\:getReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/Fee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Fee\:\:getReportId\(\) should return int but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/Fee.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Fee\:\:setAmount\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -49573,12 +48193,6 @@ parameters:
 			path: client/app/src/Entity/Report/Fee.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Fee\:\:setReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/Fee.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Fee\:\:\$feeTypeId has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -49591,31 +48205,7 @@ parameters:
 			path: client/app/src/Entity/Report/Fee.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Fee\:\:\$report has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Entity/Report/Fee.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Entity/Report/Gift.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Gift\:\:getAmount\(\) should return string but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/Gift.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Gift\:\:getReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/Gift.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Gift\:\:getReportId\(\) should return int but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: client/app/src/Entity/Report/Gift.php
@@ -49634,12 +48224,6 @@ parameters:
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Gift\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/Gift.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Gift\:\:setReport\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: client/app/src/Entity/Report/Gift.php
@@ -49675,30 +48259,6 @@ parameters:
 			path: client/app/src/Entity/Report/Gift.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Gift\:\:\$report has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Entity/Report/Gift.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Entity/Report/Lifestyle.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Lifestyle\:\:getReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/Lifestyle.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Lifestyle\:\:getReportId\(\) should return int but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/Lifestyle.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Lifestyle\:\:setActivityDetailsNo\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -49729,12 +48289,6 @@ parameters:
 			path: client/app/src/Entity/Report/Lifestyle.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Lifestyle\:\:setReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/Lifestyle.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Lifestyle\:\:\$activityDetailsNo has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -49759,18 +48313,6 @@ parameters:
 			path: client/app/src/Entity/Report/Lifestyle.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Lifestyle\:\:\$report has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Entity/Report/Lifestyle.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Entity/Report/MentalCapacity.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:getHasCapacityChanged\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -49791,18 +48333,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:getMentalAssessmentDate\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/MentalCapacity.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:getReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/MentalCapacity.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:getReportId\(\) should return int but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: client/app/src/Entity/Report/MentalCapacity.php
 
@@ -49843,12 +48373,6 @@ parameters:
 			path: client/app/src/Entity/Report/MentalCapacity.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:setReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/MentalCapacity.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:\$hasCapacityChanged has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
@@ -49868,12 +48392,6 @@ parameters:
 
 		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:\$mentalAssessmentDate has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Entity/Report/MentalCapacity.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MentalCapacity\:\:\$report has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: client/app/src/Entity/Report/MentalCapacity.php
@@ -50221,24 +48739,6 @@ parameters:
 			path: client/app/src/Entity/Report/ProfDeputyPreviousCost.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfServiceFee\:\:getReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfServiceFee\:\:getReportId\(\) should return int but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/ProfServiceFee.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfServiceFee\:\:setAmountCharged\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -50281,12 +48781,6 @@ parameters:
 			path: client/app/src/Entity/Report/ProfServiceFee.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfServiceFee\:\:setReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/ProfServiceFee.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ProfServiceFee\:\:setServiceTypeId\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -50319,12 +48813,6 @@ parameters:
 		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\ProfServiceFee\:\:\$paymentReceivedDate \(DateTime\) does not accept mixed\.$#'
 			identifier: assign.propertyType
-			count: 1
-			path: client/app/src/Entity/Report/ProfServiceFee.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\ProfServiceFee\:\:\$report has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: client/app/src/Entity/Report/ProfServiceFee.php
 
@@ -51163,32 +49651,8 @@ parameters:
 			path: client/app/src/Entity/Report/ReportSubmissionSummary.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Entity/Report/ReviewChecklist.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ReviewChecklist\:\:getReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\ReportInterface but returns mixed\.$#'
+			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ReviewChecklist\:\:getReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null\.$#'
 			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/ReviewChecklist.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ReviewChecklist\:\:getReportId\(\) should return int but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/ReviewChecklist.php
-
-		-
-			message: '#^PHPDoc tag @param for parameter \$answers with type array is incompatible with native type OPG\\Digideps\\Frontend\\Model\\FullReviewChecklist\.$#'
-			identifier: parameter.phpDocType
-			count: 1
-			path: client/app/src/Entity/Report/ReviewChecklist.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\ReviewChecklist\:\:\$report has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: client/app/src/Entity/Report/ReviewChecklist.php
 
@@ -51469,12 +49933,6 @@ parameters:
 			path: client/app/src/Entity/Report/UnsubmittedSection.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Entity/Report/VisitsCare.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\VisitsCare\:\:getDoYouLiveWithClient\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -51505,18 +49963,6 @@ parameters:
 			path: client/app/src/Entity/Report/VisitsCare.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\VisitsCare\:\:getReport\(\) should return OPG\\Digideps\\Frontend\\Entity\\Report\\Report but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/VisitsCare.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\VisitsCare\:\:getReportId\(\) should return int but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Entity/Report/VisitsCare.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\VisitsCare\:\:getWhoIsDoingTheCaring\(\) should return string but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -51530,12 +49976,6 @@ parameters:
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\VisitsCare\:\:setId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/VisitsCare.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\VisitsCare\:\:setReport\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: client/app/src/Entity/Report/VisitsCare.php
@@ -51571,34 +50011,10 @@ parameters:
 			path: client/app/src/Entity/Report/VisitsCare.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\VisitsCare\:\:\$report has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Entity/Report/VisitsCare.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\VisitsCare\:\:\$whoIsDoingTheCaring has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: client/app/src/Entity/Report/VisitsCare.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\ReportInterface\:\:createAttachmentName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/ReportInterface.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\ReportInterface\:\:createAttachmentName\(\) has parameter \$format with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/src/Entity/ReportInterface.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\ReportInterface\:\:getId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/ReportInterface.php
 
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
@@ -53959,6 +52375,12 @@ parameters:
 			path: client/app/src/Security/ClientVoter.php
 
 		-
+			message: '#^Cannot call method getClient\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: client/app/src/Security/DocumentVoter.php
+
+		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -55573,30 +53995,6 @@ parameters:
 			path: client/app/src/Service/Csv/TransactionsCsvGenerator.php
 
 		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Entity\\ReportInterface\:\:getExpenses\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/src/Service/Csv/TransactionsCsvGenerator.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Entity\\ReportInterface\:\:getGifts\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/src/Service/Csv/TransactionsCsvGenerator.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Entity\\ReportInterface\:\:getMoneyTransactionsIn\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/src/Service/Csv/TransactionsCsvGenerator.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Entity\\ReportInterface\:\:getMoneyTransactionsOut\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/src/Service/Csv/TransactionsCsvGenerator.php
-
-		-
 			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Entity\\Report\\Expense\|OPG\\Digideps\\Frontend\\Entity\\Report\\Gift\|OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:getCategory\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -56239,12 +54637,6 @@ parameters:
 			path: client/app/src/Service/File/S3FileUploader.php
 
 		-
-			message: '#^Parameter \#1 \$value of function intval expects array\|bool\|float\|GMP\|int\|resource\|SimpleXMLElement\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: client/app/src/Service/File/S3FileUploader.php
-
-		-
 			message: '#^Parameter \#2 \$body of method OPG\\Digideps\\Frontend\\Service\\File\\S3FileUploader\:\:uploadFileAndPersistDocument\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -56257,20 +54649,8 @@ parameters:
 			path: client/app/src/Service/File/S3FileUploader.php
 
 		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Service/File/S3FileUploader.php
-
-		-
 			message: '#^Parameter \#3 \$fileName of method OPG\\Digideps\\Frontend\\Service\\File\\S3FileUploader\:\:uploadFileAndPersistDocument\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: client/app/src/Service/File/S3FileUploader.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Service\\File\\S3FileUploader\:\:\$options is never read, only written\.$#'
-			identifier: property.onlyWritten
 			count: 1
 			path: client/app/src/Service/File/S3FileUploader.php
 
@@ -56527,12 +54907,6 @@ parameters:
 			path: client/app/src/Service/File/Verifier/ConstraintVerifier.php
 
 		-
-			message: '#^Parameter \#1 \$document of method OPG\\Digideps\\Frontend\\Service\\File\\Verifier\\VerifierInterface\:\:verify\(\) expects OPG\\Digideps\\Frontend\\Entity\\Report\\Document, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Service/File/Verifier/MultiFileFormUploadVerifier.php
-
-		-
 			message: '#^Parameter \#1 \$message of class Symfony\\Component\\Form\\FormError constructor expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -56683,18 +55057,6 @@ parameters:
 			path: client/app/src/Service/Mailer/MailFactory.php
 
 		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Entity\\ReportInterface\:\:getEndDate\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/src/Service/Mailer/MailFactory.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Entity\\ReportInterface\:\:getStartDate\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/src/Service/Mailer/MailFactory.php
-
-		-
 			message: '#^Cannot access offset ''clients'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -56727,13 +55089,7 @@ parameters:
 		-
 			message: '#^Cannot call method format\(\) on DateTime\|null\.$#'
 			identifier: method.nonObject
-			count: 2
-			path: client/app/src/Service/Mailer/MailFactory.php
-
-		-
-			message: '#^Cannot call method format\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
+			count: 1
 			path: client/app/src/Service/Mailer/MailFactory.php
 
 		-
@@ -57109,12 +55465,6 @@ parameters:
 			path: client/app/src/Service/ReportFeeService.php
 
 		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Entity\\ReportInterface\:\:hasSection\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: client/app/src/Service/ReportSectionsLinkService.php
-
-		-
 			message: '#^Cannot access offset ''section'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -57125,18 +55475,6 @@ parameters:
 			identifier: return.type
 			count: 1
 			path: client/app/src/Service/ReportSectionsLinkService.php
-
-		-
-			message: '#^Binary operation "\." between ''Unable to generate…'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: client/app/src/Service/ReportSubmissionService.php
-
-		-
-			message: '#^Binary operation "\." between ''report/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: client/app/src/Service/ReportSubmissionService.php
 
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
@@ -57158,18 +55496,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$id of method OPG\\Digideps\\Frontend\\Service\\ReportSubmissionService\:\:getReportSubmissionById\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Service/ReportSubmissionService.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Service/ReportSubmissionService.php
-
-		-
-			message: '#^Parameter \#3 \$fileName of method OPG\\Digideps\\Frontend\\Service\\File\\S3FileUploader\:\:uploadFileAndPersistDocument\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/src/Service/ReportSubmissionService.php
@@ -57919,6 +56245,12 @@ parameters:
 			path: client/app/src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
 
 		-
+			message: '#^Cannot call method getClient\(\) on OPG\\Digideps\\Frontend\\Entity\\Report\\Report\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: client/app/src/Validator/Constraints/ClientBenefitsCheck/ClientBenefitsCheckValidator.php
+
+		-
 			message: '#^Cannot call method getMoneyType\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -58287,36 +56619,6 @@ parameters:
 		-
 			message: '#^Access to an undefined property Symfony\\Component\\Validator\\Constraint\:\:\$message\.$#'
 			identifier: property.notFound
-			count: 1
-			path: client/app/src/Validator/Constraints/ProfDeputyCostsEstimate/CostBreakdownNotGreaterThanTotalValidator.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: client/app/src/Validator/Constraints/ProfDeputyCostsEstimate/CostBreakdownNotGreaterThanTotalValidator.php
-
-		-
-			message: '#^Binary operation "\+\=" between \(float\|int\) and mixed results in an error\.$#'
-			identifier: assignOp.invalid
-			count: 1
-			path: client/app/src/Validator/Constraints/ProfDeputyCostsEstimate/CostBreakdownNotGreaterThanTotalValidator.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Entity\\ReportInterface\:\:getProfDeputyEstimateCosts\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/src/Validator/Constraints/ProfDeputyCostsEstimate/CostBreakdownNotGreaterThanTotalValidator.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Entity\\ReportInterface\:\:getProfDeputyManagementCostAmount\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/src/Validator/Constraints/ProfDeputyCostsEstimate/CostBreakdownNotGreaterThanTotalValidator.php
-
-		-
-			message: '#^Cannot call method getAmount\(\) on mixed\.$#'
-			identifier: method.nonObject
 			count: 1
 			path: client/app/src/Validator/Constraints/ProfDeputyCostsEstimate/CostBreakdownNotGreaterThanTotalValidator.php
 
@@ -61921,12 +60223,6 @@ parameters:
 			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:generateMockReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:generateMockReport\(\) has parameter \$dueDate with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -62011,26 +60307,8 @@ parameters:
 			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
 
 		-
-			message: '#^Parameter \#1 \$report of method OPG\\Digideps\\Frontend\\Service\\Csv\\TransactionsCsvGenerator\:\:generateTransactionsCsv\(\) expects OPG\\Digideps\\Frontend\\Entity\\ReportInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:\$mockReport has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:\$mockTranslator has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
 
@@ -63931,12 +62209,6 @@ parameters:
 			path: client/app/tests/Unit/Service/ReportSectionLinksServiceTest.php
 
 		-
-			message: '#^Call to an undefined method Mockery\\MockInterface\|OPG\\Digideps\\Frontend\\Entity\\ReportInterface\:\:shouldReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: client/app/tests/Unit/Service/ReportSectionLinksServiceTest.php
-
-		-
 			message: '#^Cannot call method andReturn\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 30
@@ -63976,12 +62248,6 @@ parameters:
 			message: '#^Parameter \#1 \$data of function http_build_query expects array\|object, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: client/app/tests/Unit/Service/ReportSectionLinksServiceTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method OPG\\Digideps\\Frontend\\Service\\ReportSectionsLinkService\:\:getSectionParams\(\) expects OPG\\Digideps\\Frontend\\Entity\\ReportInterface, Mockery\\MockInterface\|OPG\\Digideps\\Frontend\\Entity\\ReportInterface given\.$#'
-			identifier: argument.type
-			count: 4
 			path: client/app/tests/Unit/Service/ReportSectionLinksServiceTest.php
 
 		-
@@ -64081,12 +62347,6 @@ parameters:
 			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
 
 		-
-			message: '#^Parameter \#1 \$report of method OPG\\Digideps\\Frontend\\Service\\ReportSubmissionService\:\:getPdfBinaryContent\(\) expects OPG\\Digideps\\Frontend\\Entity\\ReportInterface, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
 			message: '#^Parameter \#1 \$reportSubmission of method OPG\\Digideps\\Frontend\\Service\\ReportSubmissionService\:\:assertReportSubmissionIsDownloadable\(\) expects OPG\\Digideps\\Frontend\\Entity\\Report\\ReportSubmission, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -64172,12 +62432,6 @@ parameters:
 
 		-
 			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSubmissionServiceTest\:\:\$mockPdfGenerator has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\ReportSubmissionServiceTest\:\:\$mockReport has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: client/app/tests/Unit/Service/ReportSubmissionServiceTest.php
@@ -65791,12 +64045,6 @@ parameters:
 			path: client/app/tests/Unit/Validator/Constraints/ClientBenefitsCheck/ReportClientBenefitsCheckValidatorTest.php
 
 		-
-			message: '#^Cannot call method setTypesOfMoneyReceivedOnClientsBehalf\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/tests/Unit/Validator/Constraints/ClientBenefitsCheck/ReportClientBenefitsCheckValidatorTest.php
-
-		-
 			message: '#^Cannot call method setWhenLastCheckedEntitlementTo\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 3
@@ -65947,12 +64195,6 @@ parameters:
 			path: client/app/tests/Unit/Validator/Constraints/ClientBenefitsCheck/ReportClientBenefitsCheckValidatorTest.php
 
 		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Validator\\Constraints\\ClientBenefitsCheck\\ReportClientBenefitsCheckValidatorTest\:\:\$reportClientBenefitsCheck \(OPG\\Digideps\\Frontend\\Entity\\Report\\ClientBenefitsCheck\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: client/app/tests/Unit/Validator/Constraints/ClientBenefitsCheck/ReportClientBenefitsCheckValidatorTest.php
-
-		-
 			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\MockBuilder\<Symfony\\Component\\Validator\\Context\\ExecutionContext\>\:\:setMethods\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -66025,18 +64267,6 @@ parameters:
 			path: client/app/tests/Unit/Validator/Constraints/CommonPasswordValidatorTest.php
 
 		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Entity\\ReportInterface\:\:setProfDeputyEstimateCosts\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/tests/Unit/Validator/Constraints/ProfDeputyCostsEstimate/CostBreakdownNotGreaterThanTotalValidatorTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Entity\\ReportInterface\:\:setProfDeputyManagementCostAmount\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/tests/Unit/Validator/Constraints/ProfDeputyCostsEstimate/CostBreakdownNotGreaterThanTotalValidatorTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Validator\\Constraints\\ProfDeputyCostsEstimate\\CostBreakdownNotGreaterThanTotalValidatorTest\:\:invokeTest\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -66050,12 +64280,6 @@ parameters:
 
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Validator\\Constraints\\ProfDeputyCostsEstimate\\CostBreakdownNotGreaterThanTotalValidatorTest\:\:setIndividualBreakdownCosts\(\) has parameter \$costBeta with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/tests/Unit/Validator/Constraints/ProfDeputyCostsEstimate/CostBreakdownNotGreaterThanTotalValidatorTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Validator\\Constraints\\ProfDeputyCostsEstimate\\CostBreakdownNotGreaterThanTotalValidatorTest\:\:setTotalCostEstimate\(\) has parameter \$totalCost with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: client/app/tests/Unit/Validator/Constraints/ProfDeputyCostsEstimate/CostBreakdownNotGreaterThanTotalValidatorTest.php

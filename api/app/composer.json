@@ -14,7 +14,8 @@
     },
     "scripts": {
         "lint:phpstan": "phpstan",
-        "lint:phpstan:baseline": "phpstan && phpstan --generate-baseline"
+        "lint:phpstan:baseline": "phpstan && phpstan --generate-baseline",
+        "lint:phpstan:baseline:force": "phpstan --generate-baseline"
     },
     "autoload": {
         "psr-4": {
@@ -82,6 +83,7 @@
         "fakerphp/faker": "^1.24.1",
         "friends-of-behat/symfony-extension": "^2.6.2",
         "guzzlehttp/guzzle": "^7.10",
+        "jangregor/phpstan-prophecy": "^2.3",
         "liuggio/fastest": "^1.13",
         "ministryofjustice/mink-extension": "^2.7.3",
         "mockery/mockery": "^1.6.12",

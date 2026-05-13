@@ -220,7 +220,7 @@ AND d.synchronisation_status IN ('{$queuedStatus}', '{$permanentErrorStatus}', '
             ];
             ++$i;
         }
-        if (1 != count($failedCounts)) {
+        if (count($failedCounts) != 1) {
             return [];
         }
 
@@ -311,7 +311,7 @@ AND is_report_pdf=false";
         foreach ($reportSubmissions['reports'] as $reportId => $groupedSubmissions) {
             foreach ($groupedSubmissions as $key => $reportSubmission) {
                 // We only want to pass on UUIDs associated with a submission containing a report PDF to create correct folders in Sirius
-                if (!is_null($reportSubmission['opg_uuid']) && true === $reportSubmission['contains_report_pdf']) {
+                if (!is_null($reportSubmission['opg_uuid']) && $reportSubmission['contains_report_pdf'] === true) {
                     $lastUuid = $reportSubmission['opg_uuid'];
                     $lastReportId = $reportSubmission['report_id'];
                     continue;

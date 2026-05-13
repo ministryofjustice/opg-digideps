@@ -310,7 +310,7 @@ class LayUserFixtures extends AbstractDataFixture
 
         // create court order and populate linked tables for non-hybrid reports (excluding duplicate clients)
         $courtOrder = null;
-        if (!str_contains($data['id'], '-4') || 'Lay-Duplicate-Client' != $data['id']) {
+        if (!str_contains($data['id'], '-4') || $data['id'] != 'Lay-Duplicate-Client') {
             $courtOrder = $this->populateCourtOrderTable($data, $manager, $iteration, $offset, $client, $report);
         }
 
@@ -424,8 +424,8 @@ class LayUserFixtures extends AbstractDataFixture
                 $manager->persist($coDeputy);
             }
 
-        // create non-hybrid co-deputy account and associate with court order
-        } elseif ($data['coDeputy'] && 'Lay-OPG103-Co' == $data['id'] && !is_null($user2) && !is_null($courtOrder)) {
+            // create non-hybrid co-deputy account and associate with court order
+        } elseif ($data['coDeputy'] && $data['id'] == 'Lay-OPG103-Co' && !is_null($user2) && !is_null($courtOrder)) {
             $coDeputy = clone $this->deputy;
 
             $coDeputy->setDeputyUid((string) $user2->getDeputyUid());

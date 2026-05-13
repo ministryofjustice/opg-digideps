@@ -53,9 +53,9 @@ trait AuthenticationTrait
         $token = $this->getSession()->getPage()->getContent();
         $this->visitAdminPath('/logout');
 
-        $page = 'activation' === $pageType ? 'activate' : 'password-reset';
+        $page = $pageType === 'activation' ? 'activate' : 'password-reset';
 
-        if ('' === $admin || false === $admin) {
+        if ($admin === '' || $admin === false) {
             $this->visitPath("/user/$page/$token");
         } else {
             $this->visitAdminPath("/user/$page/$token");
@@ -79,7 +79,7 @@ trait AuthenticationTrait
     public function theFollowingPagesShouldReturnTheFollowingStatus($area, TableNode $table)
     {
         foreach ($table->getRowsHash() as $url => $expectedReturnCode) {
-            'admin' == $area ? $this->visitAdminPath($url) : $this->visitPath($url);
+            $area == 'admin' ? $this->visitAdminPath($url) : $this->visitPath($url);
             $actual = $this->getSession()->getStatusCode();
             if (intval($expectedReturnCode) !== intval($actual)) {
                 throw new \RuntimeException("$url: Current response status code is $actual, but $expectedReturnCode expected.");

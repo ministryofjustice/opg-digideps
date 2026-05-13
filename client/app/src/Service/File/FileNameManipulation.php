@@ -42,7 +42,7 @@ class FileNameManipulation extends FileUtility
         // lowercase file extension
         $originalFileExtension = $uploadedFile->getClientOriginalExtension();
 
-        if ('' == $originalFileExtension) {
+        if ($originalFileExtension == '') {
             return $uploadedFile;
         }
 

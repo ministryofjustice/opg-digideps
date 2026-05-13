@@ -20,7 +20,7 @@ trait ReportTrait
      */
     public function iSubmitCurrentOrPreviousTheReport(string $currentOrPrevious): void
     {
-        $reportId = 'current' === $currentOrPrevious
+        $reportId = $currentOrPrevious === 'current'
             ? $this->loggedInUserDetails->getCurrentReportId()
             : $this->loggedInUserDetails->getPreviousReportId();
 
@@ -506,7 +506,7 @@ trait ReportTrait
 
         $newDate = new \DateTime($dateString);
 
-        $reportIdToUpdate = 'current' === $currentOrPrevious ? $this->loggedInUserDetails->getCurrentReportId() : $this->loggedInUserDetails->getPreviousReportId();
+        $reportIdToUpdate = $currentOrPrevious === 'current' ? $this->loggedInUserDetails->getCurrentReportId() : $this->loggedInUserDetails->getPreviousReportId();
 
         /** @var Report $reportToUpdate */
         $reportToUpdate = $this->em->getRepository(Report::class)->find($reportIdToUpdate);
@@ -516,7 +516,7 @@ trait ReportTrait
         $this->em->persist($reportToUpdate);
         $this->em->flush();
 
-        if ('current' === $currentOrPrevious) {
+        if ($currentOrPrevious === 'current') {
             $this->loggedInUserDetails->setCurrentReportDueDate($newDate);
             $this->loggedInUserDetails->setCurrentReportEndDate($newDate);
         } else {

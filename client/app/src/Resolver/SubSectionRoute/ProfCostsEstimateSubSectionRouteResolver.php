@@ -42,7 +42,7 @@ class ProfCostsEstimateSubSectionRouteResolver
      */
     private function sectionNotStarted($state)
     {
-        return Status::STATE_NOT_STARTED === $state;
+        return $state === Status::STATE_NOT_STARTED;
     }
 
     /**
@@ -52,7 +52,7 @@ class ProfCostsEstimateSubSectionRouteResolver
      */
     private function sectionIsComplete($state)
     {
-        return Status::STATE_DONE === $state;
+        return $state === Status::STATE_DONE;
     }
 
     /**
@@ -62,7 +62,7 @@ class ProfCostsEstimateSubSectionRouteResolver
      */
     private function breakdownSubsectionIsIncomplete(Report $report, $state)
     {
-        return Status::STATE_INCOMPLETE === $state && empty($report->getProfDeputyEstimateCosts());
+        return $state === Status::STATE_INCOMPLETE && empty($report->getProfDeputyEstimateCosts());
     }
 
     /**
@@ -72,6 +72,6 @@ class ProfCostsEstimateSubSectionRouteResolver
      */
     private function moreInfoSubsectionIsIncomplete(Report $report, $state)
     {
-        return Status::STATE_INCOMPLETE === $state && null === $report->getProfDeputyCostsEstimateHasMoreInfo();
+        return $state === Status::STATE_INCOMPLETE && $report->getProfDeputyCostsEstimateHasMoreInfo() === null;
     }
 }

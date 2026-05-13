@@ -15,7 +15,7 @@ class UnauthorizedExceptionListener
         $exception = $exceptionEvent->getThrowable();
 
         if ($exception instanceof HttpException) {
-            if (Response::HTTP_UNAUTHORIZED == $exception->getStatusCode()) {
+            if ($exception->getStatusCode() == Response::HTTP_UNAUTHORIZED) {
                 $url = '/login?from=api&lastPage=' . urlencode($request->getRequestUri());
 
                 $response = new RedirectResponse($url);

@@ -11,31 +11,23 @@ trait HasReportTrait
      * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\Report")
      * @JMS\Groups({"report-object"})
      */
-    private $report;
+    private ?Report $report = null;
 
     /**
      * @JMS\VirtualProperty
      * @JMS\Groups({"report-id"})
-     *
-     * @return int
      */
-    public function getReportId()
+    public function getReportId(): ?int
     {
-        return $this->report ? $this->report->getId() : null;
+        return $this->report?->getId();
     }
 
-    /**
-     * @return Report
-     */
-    public function getReport()
+    public function getReport(): ?Report
     {
         return $this->report;
     }
 
-    /**
-     * @param Report $report
-     */
-    public function setReport($report)
+    public function setReport(Report $report): static
     {
         $this->report = $report;
 

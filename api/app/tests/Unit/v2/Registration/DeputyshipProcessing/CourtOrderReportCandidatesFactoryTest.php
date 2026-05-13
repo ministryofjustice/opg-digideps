@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\DeputyshipProcessing;
 
-use OPG\Digideps\Backend\Entity\StagingSelectedCandidate;
-use OPG\Digideps\Backend\Factory\StagingSelectedCandidateFactory;
-use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Doctrine\ORM\EntityManagerInterface;
+use OPG\Digideps\Backend\Entity\Staging\StagingSelectedCandidate;
+use OPG\Digideps\Backend\Factory\StagingSelectedCandidateFactory;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrderReportCandidatesFactory;
 use PHPUnit\Framework\TestCase;
 
 final class CourtOrderReportCandidatesFactoryTest extends TestCase

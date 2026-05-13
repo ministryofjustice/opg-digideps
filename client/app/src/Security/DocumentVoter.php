@@ -22,8 +22,8 @@ class DocumentVoter extends Voter
     protected function supports(string $attribute, mixed $subject): bool
     {
         return
-            self::ADD_DOCUMENT === $attribute ||
-            self::DELETE_DOCUMENT === $attribute;
+            $attribute === self::ADD_DOCUMENT ||
+            $attribute === self::DELETE_DOCUMENT;
     }
 
     /**
@@ -50,7 +50,6 @@ class DocumentVoter extends Voter
             case self::DELETE_DOCUMENT:
                 return
                     $subject instanceof Document &&
-                    $subject->getReport() instanceof Report &&
                     (
                         $subject->getReport()->getClient()->hasUser($loggedInUser) ||
                         $subject->getReport()->getClient()->userBelongsToClientsOrganisation($loggedInUser)

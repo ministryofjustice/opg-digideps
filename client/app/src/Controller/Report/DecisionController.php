@@ -44,7 +44,7 @@ class DecisionController extends AbstractController
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (Status::STATE_NOT_STARTED != $report->getStatus()->getDecisionsState()['state']) {
+        if ($report->getStatus()->getDecisionsState()['state'] != Status::STATE_NOT_STARTED) {
             return $this->redirectToRoute('decisions_summary', ['reportId' => $reportId]);
         }
 
@@ -58,10 +58,10 @@ class DecisionController extends AbstractController
     public function mentalCapacityAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $fromSummaryPage = 'summary' == $request->get('from');
+        $fromSummaryPage = $request->get('from') == 'summary';
 
         $mc = $report->getMentalCapacity();
-        if (null == $mc) {
+        if ($mc == null) {
             $mc = new MentalCapacity();
         }
 
@@ -93,10 +93,10 @@ class DecisionController extends AbstractController
     public function mentalAssessmentAction(Request $request, int $reportId): array|RedirectResponse
     {
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
-        $fromSummaryPage = 'summary' == $request->get('from');
+        $fromSummaryPage = $request->get('from') == 'summary';
 
         $mc = $report->getMentalCapacity();
-        if (null == $mc) {
+        if ($mc == null) {
             $mc = new MentalCapacity();
         }
 
@@ -138,7 +138,7 @@ class DecisionController extends AbstractController
             $significantDecisionsMade = $form['significantDecisionsMade'];
             $answer = $significantDecisionsMade->getData();
 
-            if ('Yes' == $answer) {
+            if ($answer == 'Yes') {
                 $report->setReasonForNoDecisions(null);
 
                 $this->updateReport($report, $reportId);
@@ -157,7 +157,7 @@ class DecisionController extends AbstractController
         }
 
         $backLink = $this->generateUrl('decisions_mental_assessment', ['reportId' => $reportId]);
-        if ('summary' == $request->get('from')) {
+        if ($request->get('from') == 'summary') {
             $backLink = $this->generateUrl('decisions_summary', ['reportId' => $reportId]);
         }
 
@@ -255,14 +255,14 @@ class DecisionController extends AbstractController
         $fromPage = $request->get('from');
         $report = $this->reportApi->getReportIfNotSubmitted($reportId, self::$jmsGroups);
 
-        if (Status::STATE_NOT_STARTED == $report->getStatus()->getDecisionsState()['state'] && 'skip-step' != $fromPage) {
+        if ($report->getStatus()->getDecisionsState()['state'] == Status::STATE_NOT_STARTED && $fromPage != 'skip-step') {
             return $this->redirectToRoute('decisions', ['reportId' => $reportId]);
         }
 
         $numberOfDecisions = count($report->getDecisions());
 
         return [
-            'comingFromLastStep' => 'skip-step' == $fromPage || 'last-step' == $fromPage,
+            'comingFromLastStep' => $fromPage == 'skip-step' || $fromPage == 'last-step',
             'report' => $report,
             'status' => $report->getStatus(),
             'numOfDecisions' => $numberOfDecisions,

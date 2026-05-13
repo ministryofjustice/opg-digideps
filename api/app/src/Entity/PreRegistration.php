@@ -47,7 +47,7 @@ class PreRegistration
         $this->typeOfReport = $row['ReportType'] ?? null;
         $this->orderDate = isset($row['MadeDate']) ? new \DateTime($row['MadeDate']) : null;
         $this->orderType = $row['OrderType'] ?? null;
-        $this->isCoDeputy = isset($row['CoDeputy']) ? 'yes' === $row['CoDeputy'] : null;
+        $this->isCoDeputy = isset($row['CoDeputy']) ? $row['CoDeputy'] === 'yes' : null;
         $this->hybrid = $row['Hybrid'] ?? null;
 
         $this->updatedAt = null;
@@ -163,7 +163,7 @@ class PreRegistration
         $reportType = substr($reportType, 3);
         $orderType = trim(strtolower($orderType));
 
-        if (Report::TYPE_HEALTH_WELFARE !== $reportType && 'hw' === $orderType) {
+        if ($reportType !== Report::TYPE_HEALTH_WELFARE && $orderType === 'hw') {
             $fullReportType = sprintf('%s-4', $reportType);
         } else {
             $fullReportType = $reportType;

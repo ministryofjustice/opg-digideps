@@ -69,13 +69,13 @@ class DeputyshipCandidatesConverter
         foreach ($candidatesGroup->getIterator() as $candidate) {
             $action = $candidate['action'];
 
-            if (DeputyshipCandidateAction::InsertOrderDeputy === $action) {
+            if ($action === DeputyshipCandidateAction::InsertOrderDeputy) {
                 $result = $this->dbAccess->insertOrderDeputy($courtOrderId, $candidate);
-            } elseif (DeputyshipCandidateAction::InsertOrderReport === $action) {
+            } elseif ($action === DeputyshipCandidateAction::InsertOrderReport) {
                 $result = $this->dbAccess->insertOrderReport($courtOrderId, $candidate);
-            } elseif (DeputyshipCandidateAction::UpdateOrderStatus === $action) {
+            } elseif ($action === DeputyshipCandidateAction::UpdateOrderStatus) {
                 $result = $this->dbAccess->updateOrderStatus($courtOrderId, $candidate);
-            } elseif (DeputyshipCandidateAction::UpdateDeputyStatus === $action) {
+            } elseif ($action === DeputyshipCandidateAction::UpdateDeputyStatus) {
                 $result = $this->dbAccess->updateDeputyStatus($courtOrderId, $candidate);
             }
 

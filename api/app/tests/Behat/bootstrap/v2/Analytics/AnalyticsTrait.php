@@ -94,7 +94,7 @@ trait AnalyticsTrait
     {
         foreach ($this->metricXPaths as $metric => $xpath) {
             $actualValue = str_replace('%', '', trim(strval($this->getSession()->getPage()->find('xpath', $xpath)->getHtml())));
-            $realActualValue = '-' == $actualValue ? 0 : intval($actualValue);
+            $realActualValue = $actualValue == '-' ? 0 : intval($actualValue);
             $expectedValue = $this->expectedMetrics[$metric];
             $this->assertIntEqualsInt($expectedValue, $realActualValue, 'Analytics Values - ' . $metric);
         }
@@ -175,7 +175,7 @@ trait AnalyticsTrait
         $xpath = '//div[@class="moj-page-header-actions"]//a';
         $downloadLinks = $this->getSession()->getPage()->findAll('xpath', $xpath);
 
-        if (1 != count($downloadLinks)) {
+        if (count($downloadLinks) != 1) {
             throw new BehatException(sprintf('Number of download file option should be 1. Currently: %s', strval(count($downloadLinks))));
         }
 
@@ -292,7 +292,7 @@ trait AnalyticsTrait
     public function shouldHaveNoIssuesDownloadingFile()
     {
         $responseStatus = $this->getSession()->getStatusCode();
-        if (200 != $responseStatus) {
+        if ($responseStatus != 200) {
             throw new BehatException(sprintf('%s, returned a %s response', $this->currentLinkText, strval($responseStatus)));
         }
     }

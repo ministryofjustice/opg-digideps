@@ -19,7 +19,7 @@ class ClamAvAvailability extends ServiceAvailabilityAbstract
     {
         try {
             $response = $this->fileScannerClient->get('/health-check');
-            if (200 !== $response->getStatusCode()) {
+            if ($response->getStatusCode() !== 200) {
                 throw new \RuntimeException('returned HTTP code ' . $response->getStatusCode());
             }
 

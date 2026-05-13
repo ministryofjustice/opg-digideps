@@ -132,7 +132,7 @@ class CsvToArray
                     throw new \RuntimeException('Empty header in CSV file');
                 }
                 $index = array_search($expectedColumn, $header);
-                if (false !== $index && !empty($row)) {
+                if ($index !== false && !empty($row)) {
                     if (!array_key_exists($index, $row)) {
                         throw new \RuntimeException("Can't find $expectedColumn column in line $rowNumber");
                     }
@@ -141,7 +141,7 @@ class CsvToArray
             }
             foreach ($this->optionalColumns as $optionalColumn) {
                 $index = array_search($optionalColumn, $header);
-                if (false !== $index) {
+                if ($index !== false) {
                     // fix for CSV with last two columns being empty and not having commas
                     if (!isset($row[$index])) {
                         $row[$index] = '';
@@ -157,7 +157,7 @@ class CsvToArray
 
     public function __destruct()
     {
-        if (false !== $this->handle) {
+        if ($this->handle !== false) {
             fclose($this->handle);
         }
     }

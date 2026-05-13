@@ -73,7 +73,7 @@ trait CourtOrderTrait
         $deputy = $this->getDeputyForLoggedInUser();
 
         for ($i = 0; $i < $numOfCourtOrders; $i++) {
-            if (0 === $i) {
+            if ($i === 0) {
                 // use the user's existing client
                 $client = $this->em->getRepository(Client::class)->find(['id' => $this->loggedInUserDetails->getClientId()]);
                 $report = $client->getCurrentReport();
@@ -85,7 +85,7 @@ trait CourtOrderTrait
 
                 // create a new report
                 $type = Report::TYPE_HEALTH_WELFARE;
-                if (CourtOrderType::PFA === $orderType) {
+                if ($orderType === CourtOrderType::PFA) {
                     $type = Report::TYPE_PROPERTY_AND_AFFAIRS_HIGH_ASSETS;
                 }
 
@@ -151,7 +151,7 @@ trait CourtOrderTrait
      */
     public function iVisitTheCourtOrderPageThatIAmAssociatedWith($arg1)
     {
-        if ('I am' === $arg1) {
+        if ($arg1 === 'I am') {
             $this->visitFrontendPath(sprintf('/courtorder/%s', $this->courtOrder->getCourtOrderUid()));
         } else {
             $clientTestHelper = ClientTestHelper::create();
@@ -175,7 +175,7 @@ trait CourtOrderTrait
      */
     public function iVisitThePagesOfTheCourtOrderThatAssociatedWith($firstOrSecond, $arg)
     {
-        if ('first' == $firstOrSecond && 'I am' == $arg) {
+        if ($firstOrSecond == 'first' && $arg == 'I am') {
             $this->visitFrontendPath(sprintf('/courtorder/%s', $this->courtOrders[0]->getCourtOrderUid()));
         } else {
             $this->visitFrontendPath(sprintf('/courtorder/%s', $this->courtOrders[1]->getCourtOrderUid()));
