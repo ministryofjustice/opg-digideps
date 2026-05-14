@@ -34,9 +34,22 @@
       "prCreation": "immediate"
     },
     {
+      "description": ["Docker Minor Dependency Exclusions - PHP"],
+      "matchUpdateTypes": ["minor"],
+      "matchDatasources": ["docker"],
+      "matchDepNames": ["php"],
+      "enabled": false
+    },
+    {
+      "description": ["Disable Docker digest-only updates"],
+      "matchManagers": ["dockerfile", "docker-compose"],
+      "matchUpdateTypes": ["digest"],
+      "enabled": false
+    },
+    {
       "groupName": "Docker image updates",
       "matchManagers": ["dockerfile", "docker-compose"],
-      "matchUpdateTypes": ["minor", "patch", "digest"],
+      "matchUpdateTypes": ["minor", "patch"],
       "labels": ["dependencies", "docker"],
       "schedule": ["before 9am on Monday"],
       "minimumReleaseAge": "7 days"
@@ -69,8 +82,9 @@
       "groupName": "PHP dependency updates",
       "matchManagers": ["composer"],
       "matchUpdateTypes": ["minor", "patch"],
-      "labels": ["dependencies", "php"],
-      "matchPackageNames": ["!php"],
+      "labels": ["dependencies"],
+      "matchDepTypes": ["dependencies", "require"],
+      "matchFileNames": ["**/composer.json"],
       "schedule": ["before 9am on Monday"],
       "minimumReleaseAge": "7 days"
     },
@@ -102,16 +116,6 @@
       "matchDatasources": ["docker"],
       "matchPackageNames": ["python"],
       "matchUpdateTypes": ["minor"],
-      "enabled": false
-    },
-    {
-      "matchManagers": ["composer"],
-      "matchDepTypes": ["platform"],
-      "enabled": false
-    },
-    {
-      "matchManagers": ["composer"],
-      "matchPackageNames": ["php"],
       "enabled": false
     }
   ]
