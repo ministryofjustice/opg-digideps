@@ -38,7 +38,7 @@ class ReportSubmissionController extends AbstractController
     }
 
     #[Route(path: '/documents/list', name: 'admin_documents', methods: ['GET', 'POST'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     #[Template('@App/Admin/ReportSubmission/index.html.twig')]
     public function indexAction(Request $request, ParameterStoreService $parameterStoreService): Response|array
     {
@@ -87,7 +87,7 @@ class ReportSubmissionController extends AbstractController
     }
 
     #[Route(path: '/documents/list/download', name: 'admin_documents_download', methods: ['GET'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     public function downloadDocuments(Request $request): Response
     {
         $reportSubmissionIds =
@@ -113,7 +113,7 @@ class ReportSubmissionController extends AbstractController
     }
 
     #[Route(path: '/documents/{submissionId}/{documentId}/download', name: 'admin_document_download', methods: ['GET'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     public function downloadIndividualDocument(int $submissionId, int $documentId): Response
     {
         $client = $this->restClient;
@@ -146,7 +146,7 @@ class ReportSubmissionController extends AbstractController
     }
 
     #[Route(path: '/documents/list/download_ready', name: 'admin_documents_download_ready', methods: ['GET'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     #[Template('@App/Admin/ReportSubmission/download-ready.html.twig')]
     public function downloadReady(Request $request): array
     {

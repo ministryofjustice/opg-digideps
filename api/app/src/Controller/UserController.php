@@ -40,7 +40,7 @@ class UserController extends RestController
     }
 
     #[Route(path: '', methods: ['POST'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or is_granted('ROLE_ORG_NAMED') or is_granted('ROLE_ORG_ADMIN')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_ORG_NAMED') or is_granted('ROLE_ORG_ADMIN')"))]
     public function add(Request $request): User
     {
         $data = $this->formatter->deserializeBodyContent($request, [
@@ -77,7 +77,6 @@ class UserController extends RestController
         if (
             $loggedInUser->getId() != $requestedUser->getId()
             && !$this->isGranted(User::ROLE_ADMIN)
-            && !$this->isGranted(User::ROLE_AD)
             && !$this->isGranted(User::ROLE_ORG_NAMED)
             && !$this->isGranted(User::ROLE_ORG_ADMIN)
         ) {
@@ -246,7 +245,6 @@ class UserController extends RestController
         // only allow admins to access any user, otherwise the user can only see himself
         if (
             !$this->isGranted(User::ROLE_ADMIN)
-            && !$this->isGranted(User::ROLE_AD)
             && !$requestedUserIsLogged
         ) {
             if (
@@ -327,7 +325,7 @@ class UserController extends RestController
     }
 
     #[Route(path: '/get-all', methods: ['GET'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     public function getAll(Request $request): ?array
     {
         $this->formatter->setJmsSerialiserGroups(['user']);

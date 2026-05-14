@@ -63,7 +63,7 @@ class IndexController extends AbstractController
     }
 
     #[Route(path: '/', name: 'admin_homepage')]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     #[Template('@App/Admin/Index/index.html.twig')]
     public function indexAction(Request $request): array
     {
@@ -101,7 +101,7 @@ class IndexController extends AbstractController
     }
 
     #[Route(path: '/user-add', name: 'admin_add_user')]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     #[Template('@App/Admin/Index/addUser.html.twig')]
     public function addUserAction(Request $request): array|RedirectResponse
     {
@@ -152,7 +152,7 @@ class IndexController extends AbstractController
      * @throws \Throwable
      */
     #[Route(path: '/edit-user', name: 'admin_editUser', methods: ['GET', 'POST'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     #[Template('@App/Admin/Index/editUser.html.twig')]
     public function editUserAction(Request $request, TranslatorInterface $translator): array|Response
     {
@@ -229,7 +229,7 @@ class IndexController extends AbstractController
     }
 
     #[Route(path: '/delete-confirm/{id}', name: 'admin_delete_confirm', methods: ['GET'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     #[Template('@App/Admin/Index/deleteConfirm.html.twig')]
     public function deleteConfirmAction(int $id): array
     {
@@ -242,7 +242,7 @@ class IndexController extends AbstractController
     }
 
     #[Route(path: '/delete/{id}', name: 'admin_delete', methods: ['GET'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     public function deleteAction(int $id): RedirectResponse
     {
         $user = $this->userApi->get($id, ['user', 'client', 'client-reports', 'report']);
@@ -268,7 +268,7 @@ class IndexController extends AbstractController
     }
 
     #[Route(path: '/upload', name: 'admin_upload')]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     #[Template('@App/Admin/Index/upload.html.twig')]
     public function uploadAction(Request $request, RouterInterface $router): array|RedirectResponse
     {
@@ -442,7 +442,7 @@ class IndexController extends AbstractController
     }
 
     #[Route(path: '/send-activation-link/{email}', name: 'admin_send_activation_link')]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     public function sendUserActivationLinkAction(string $email, LoggerInterface $logger): Response
     {
         try {

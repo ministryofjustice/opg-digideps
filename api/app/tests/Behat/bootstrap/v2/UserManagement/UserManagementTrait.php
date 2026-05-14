@@ -154,7 +154,7 @@ trait UserManagementTrait
 
     private function setFixtureUserEmailsAndCount()
     {
-        $this->userCount = 10;
+        $this->userCount = 9;
         $this->userEmails = [
             'search-test-lay-' . $this->testRunId . '@t.uk',
             'search-test-pa-n-' . $this->testRunId . '@t.uk',
@@ -164,7 +164,6 @@ trait UserManagementTrait
             'search-test-admin-' . $this->testRunId . '@t.uk',
             'search-test-manager-' . $this->testRunId . '@t.uk',
             'search-test-super-' . $this->testRunId . '@t.uk',
-            'search-test-ad-' . $this->testRunId . '@t.uk',
         ];
     }
 

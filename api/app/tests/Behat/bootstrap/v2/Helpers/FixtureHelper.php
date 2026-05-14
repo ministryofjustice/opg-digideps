@@ -1126,7 +1126,6 @@ class FixtureHelper
             ['typeSuffix' => 'admin', 'role' => User::ROLE_ADMIN],
             ['typeSuffix' => 'manager', 'role' => User::ROLE_ADMIN_MANAGER],
             ['typeSuffix' => 'super', 'role' => User::ROLE_SUPER_ADMIN],
-            ['typeSuffix' => 'ad', 'role' => User::ROLE_AD],
         ];
 
         foreach ($userRoles as $userRole) {

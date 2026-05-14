@@ -36,7 +36,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public const string ROLE_DEPUTY = 'ROLE_DEPUTY';
     public const string ROLE_LAY_DEPUTY = 'ROLE_LAY_DEPUTY';
-    public const string ROLE_AD = 'ROLE_AD';
 
     public const string ROLE_ORG_NAMED = 'ROLE_ORG_NAMED';
     public const string ROLE_ORG_ADMIN = 'ROLE_ORG_ADMIN';
