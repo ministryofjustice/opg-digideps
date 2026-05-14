@@ -240,7 +240,7 @@ class FixtureHelper
         return $user;
     }
 
-    public function generateClient(User $user, ?Organisation $org = null, ?string $caseNumber = null): Client
+    public function generateClient(?User $user = null, ?Organisation $org = null, ?string $caseNumber = null): Client
     {
         return $this->clientTestHelper->generateClient($this->em, $user, $org, $caseNumber);
     }
@@ -1281,7 +1281,7 @@ class FixtureHelper
         return $this->fixtureParams['legacy_password_hash'];
     }
 
-    public function createAndPersistCourtOrder(CourtOrderType $orderType, Client $client, Deputy $deputy, ?Report $report = null, ?string $courtOrderUid = null): CourtOrder
+    public function createAndPersistCourtOrder(CourtOrderType $orderType, Client $client, ?Deputy $deputy = null, ?Report $report = null, ?string $courtOrderUid = null): CourtOrder
     {
         $faker = Factory::create('en_GB');
         if (is_null($courtOrderUid)) {
@@ -1344,5 +1344,10 @@ class FixtureHelper
         $this->em->flush();
 
         return $expense;
+    }
+
+    public function createDeputy(?string $email = null, ?string $deputyUid = null, ?User $user = null): Deputy
+    {
+        return $this->deputyTestHelper::generateDeputy($email, $deputyUid, $user);
     }
 }
