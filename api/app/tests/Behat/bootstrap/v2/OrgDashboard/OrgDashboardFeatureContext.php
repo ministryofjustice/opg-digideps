@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\OrgDashboard;
 
+use Aws\Panorama\PanoramaClient;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\ClientRepository;
+use OPG\Digideps\Backend\Repository\DeputyRepository;
+use OPG\Digideps\Backend\Repository\OrganisationRepository;
 use OPG\Digideps\Backend\Repository\ReportRepository;
 use Tests\OPG\Digideps\Backend\Behat\v2\ClientManagement\ClientManagementTrait;
 use Tests\OPG\Digideps\Backend\Behat\v2\Common\BaseFeatureContext;
@@ -63,55 +67,70 @@ class OrgDashboardFeatureContext extends BaseFeatureContext
      * @Given there are :numReports reports which are :reportStatus associated with :orgName
      * @Given there is :numReports report which is :reportStatus associated with :orgName
      *
-     * Set up one or more reports associated with an organisation
+     * Set up one or more reports associated with an organisation, creating a named deputy if necessary.
+     *
+     * $reportStatus = one of "notStarted", "notFinished", "readyToSubmit"
      */
     public function reportsAssociatedWithOrganisation(int $numReports, string $reportStatus, string $orgname): void
     {
-        $org = $this->orgs[$orgname];
+        /** @var OrganisationRepository $orgRepository */
+        $orgRepository = $this->em->getRepository(Organisation::class);
 
-        /** @var ClientRepository $clientRepo */
-        $clientRepo = $this->em->getRepository(Client::class);
-
-        /** @var ReportRepository $reportRepo $i */
-        $reportRepo = $this->em->getRepository(Report::class);
+        // find org by name (assumption: it's been created by previous behat steps)
+        /** @var Organisation $org */
+        $org = $orgRepository->findOneBy(['name' => $orgname]);
+        if ($org === null) {
+            throw new \RuntimeException("Organisation with name $orgname was not found");
+        }
 
         for ($i = 1; $i <= $numReports; $i++) {
             $id = "$this->testRunId-$this->counter";
             $this->counter++;
 
-            /** @var ?Report $report */
-            $report = null;
+            // create client on org
+            $client = $this->fixtureHelper->generateClient(org: $org);
+            $this->em->persist($client);
 
-            if ($reportStatus === "notStarted") {
-                // NB we don't want to retrieve the report and update its status, as it always updates to "notFinished"
-                $userDetails = $this->fixtureHelper->createLayCombinedHighAssetsNotStarted($id);
-            } elseif ($reportStatus === "readyToSubmit") {
-                $userDetails = $this->fixtureHelper->createLayCombinedHighAssetsCompleted($id);
-                $report = $reportRepo->find($userDetails['currentReportId']);
-            } elseif ($reportStatus === "notFinished") {
-                $userDetails = $this->fixtureHelper->createLayCombinedHighAssetsNotStarted($id);
+            // create court order on client
+            $courtOrder = $this->fixtureHelper->createAndPersistCourtOrder(CourtOrderType::PFA, $client);
 
-                // we set one section so that the report status is "notFinished" and not "notStarted"
-                $report = $reportRepo->find($userDetails['currentReportId']);
+            // create named deputy in org, associate with court order, and add to org
+            // (NB we don't create a user for any of these deputies as they are named deputies)
+            $deputyEmail = "org-named-deputy-" . $id . '@' . $org->getEmailIdentifier();
+            $deputy = $this->fixtureHelper->createDeputy($deputyEmail);
+            $deputy->associateWithCourtOrder($courtOrder);
+            $deputy->setOrganisation($org);
+            $this->em->persist($deputy);
+
+            // create report on client
+            $report = $this->reportTestHelper->generateReport($this->em, $client, '102', dateChecks: false);
+
+            if ($reportStatus === "notFinished") {
+                // complete one section so that the report status is "notFinished" and *not* "notStarted"
                 $report->setActionMoreInfo('no');
+            } elseif ($reportStatus === "readyToSubmit") {
+                // complete the whole report
+                $this->reportTestHelper->completeReport($report, $this->em);
+            } elseif ($reportStatus !== "notStarted") {
+                throw new \LogicException("invalid report status: $reportStatus");
             }
 
-            if (!is_null($report)) {
+            // don't update the report status if "notStarted", as it always updates to "notFinished"
+            // even though no sections have been completed
+            if ($reportStatus !== "notStarted") {
                 $report->updateSectionsStatusCache();
-                $this->em->persist($report);
             }
 
-            $clientId = $userDetails['clientId'];
+            $this->em->persist($report);
 
-            /** @var Client $client */
-            $client = $clientRepo->find($clientId);
+            // associate report with court order
+            $courtOrder->addReport($report);
+            $this->em->persist($courtOrder);
 
-            $org->addClient($client);
-            $client->setOrganisation($org);
+            $this->em->flush();
         }
 
         $this->em->persist($org);
-        $this->em->persist($client);
         $this->em->flush();
     }
 
