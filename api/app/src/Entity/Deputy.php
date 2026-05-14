@@ -67,8 +67,8 @@ class Deputy
 
     #[JMS\Type('string')]
     #[JMS\Groups(['report-submitted-by', 'deputy'])]
-    #[ORM\Column(name: 'email1', type: 'string', length: 60, unique: false, nullable: false)]
-    private string $email1;
+    #[ORM\Column(name: 'email1', type: 'string', length: 60, unique: false, nullable: true)]
+    private ?string $email1 = null;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['report-submitted-by', 'deputy'])]
@@ -214,7 +214,7 @@ class Deputy
 
     public function getEmail1(): string
     {
-        return $this->email1;
+        return $this->email1 ?? '';
     }
 
     public function setEmail1(string $email1): self
