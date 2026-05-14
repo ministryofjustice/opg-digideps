@@ -3,6 +3,7 @@
 namespace OPG\Digideps\Backend\Security;
 
 use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Domain\Report\ReportAccessService;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\Organisation;
@@ -19,7 +20,7 @@ class ReportVoter extends Voter
 {
     public const string ACCESS = 'access';
 
-    public function __construct(private readonly Security $security)
+    public function __construct(private readonly Security $security, private readonly ReportAccessService $reportAccessService)
     {
     }
 
@@ -60,33 +61,6 @@ class ReportVoter extends Voter
             return true;
         }
 
-        //One court order for Single and Dual. Two for Hybrid.
-        return array_all($report->getActiveCourtOrders(), fn($courtOrder) => $this->canAccessCourtOrder($courtOrder, $user));
-    }
-
-    private function canAccessCourtOrder(CourtOrder $courtOrder, User $user): bool
-    {
-        foreach ($courtOrder->getActiveDeputies() as $deputy) {
-            if ($this->userIsDeputy($user, $deputy)) {
-                //User is a deputy directly on the court order.
-                return true;
-            } elseif ($this->userIsInOrganisation($user, $deputy->getOrganisation())) {
-                //User is not Lay and in the same organisation as the deputy.
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private function userIsDeputy(User $user, Deputy $deputy): bool
-    {
-        $deputyUid = ($user->getDeputyUid() ?? $user->getDeputy()?->getDeputyUid());
-        return $deputy->getDeputyUid() === "{$deputyUid}";
-    }
-
-    private function userIsInOrganisation(User $user, ?Organisation $organisation): bool
-    {
-        //Ideally $user->getDeputy()->getDeputyType() !== DeputyType::LAY but that might be to flaky still;
-        return !$user->isLayDeputy() && $organisation !== null && in_array($organisation->getId(), $user->getOrganisationIds());
+        return in_array($report->getId(), $this->reportAccessService->getVisibleReportIdsGivenUserId($user->getId()));
     }
 }
