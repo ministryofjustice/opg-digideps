@@ -279,7 +279,7 @@ class FixtureHelper
         $user->setRegistrationDate($startDate);
 
         if ($completed) {
-            $this->reportTestHelper->completeLayReport($report, $this->em);
+            $this->reportTestHelper->completeReport($report, $this->em);
         }
 
         if ($submitted) {
@@ -362,7 +362,7 @@ class FixtureHelper
         $user->setRegistrationDate($startDate);
 
         if ($completed) {
-            $this->reportTestHelper->completeLayReport($report, $this->em);
+            $this->reportTestHelper->completeReport($report, $this->em);
         }
 
         if ($submitted) {
