@@ -48,7 +48,7 @@ class ReportTestHelper
         return $report;
     }
 
-    public static function completeLayReport(Report $report, EntityManagerInterface $em): void
+    public static function completeReport(Report $report, EntityManagerInterface $em): void
     {
         self::completeDecisions($report);
         self::completeContacts($report);
