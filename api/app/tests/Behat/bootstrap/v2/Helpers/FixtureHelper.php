@@ -379,11 +379,17 @@ class FixtureHelper
 
         $courtOrderUid = '' . mt_rand(10000000, 99999999);
         $structuredReportType = ReportType::tryFrom($reportType);
+        $courtOrderType = $structuredReportType?->courtOrderType;
+
+        if ($courtOrderType === null) {
+            throw new \LogicException("invalid report type: $reportType");
+        }
+
         $this->courtOrderTestHelper->generateCourtOrder(
             em: $this->em,
             client: $client,
             courtOrderUid: $courtOrderUid,
-            type: $structuredReportType->courtOrderType,
+            type: $courtOrderType,
             report: $report,
             deputy: $deputy
         );

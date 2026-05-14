@@ -64,65 +64,6 @@ class OrgDashboardFeatureContext extends BaseFeatureContext
     }
 
     /**
-     * @Given there are :numReports reports which are :reportStatus associated with :orgName OLD
-     * @Given there is :numReports report which is :reportStatus associated with :orgName OLD
-     *
-     * Set up one or more reports associated with an organisation
-     *
-     * $reportStatus = one of "notStarted", "notFinished", "readyToSubmit"
-     */
-    public function reportsAssociatedWithOrganisationOLD(int $numReports, string $reportStatus, string $orgname): void
-    {
-        $org = $this->orgs[$orgname];
-
-        /** @var ClientRepository $clientRepo */
-        $clientRepo = $this->em->getRepository(Client::class);
-
-        /** @var ReportRepository $reportRepo $i */
-        $reportRepo = $this->em->getRepository(Report::class);
-
-        for ($i = 1; $i <= $numReports; $i++) {
-            $id = "$this->testRunId-$this->counter";
-            $this->counter++;
-
-            if ($reportStatus === "notStarted" || $reportStatus === "notFinished") {
-                $userDetails = $this->fixtureHelper->createPaNamedHealthWelfareNotStarted($id);
-            } elseif ($reportStatus === "readyToSubmit") {
-                $userDetails = $this->fixtureHelper->createPaNamedHealthWelfareCompleted($id);
-            } else {
-                throw new \LogicException("invalid report status: $reportStatus");
-            }
-
-            /** @var ?Report $report */
-            $report = $reportRepo->find($userDetails['currentReportId']);
-
-            // complete one section so that the report status is "notFinished" and not "notStarted"
-            if ($reportStatus === "notFinished") {
-                $report->setActionMoreInfo('no');
-            }
-
-            // don't update the report status if "notStarted", as it always updates to "notFinished"
-            // even though no sections have been completed
-            if ($reportStatus !== "notStarted") {
-                $report->updateSectionsStatusCache();
-                $this->em->persist($report);
-            }
-
-            $clientId = $userDetails['clientId'];
-
-            /** @var Client $client */
-            $client = $clientRepo->find($clientId);
-
-            $org->addClient($client);
-            $client->setOrganisation($org);
-        }
-
-        $this->em->persist($org);
-        $this->em->persist($client);
-        $this->em->flush();
-    }
-
-    /**
      * @Given there are :numReports reports which are :reportStatus associated with :orgName
      * @Given there is :numReports report which is :reportStatus associated with :orgName
      *
