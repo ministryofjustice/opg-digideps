@@ -485,6 +485,10 @@ services:
                   ]
                 - [
                       '@OPG\Digideps\Backend\Factory\ImportDeputyDataFactory',
+                      "active",
+                  ]
+                - [
+                      '@OPG\Digideps\Backend\Factory\ImportClientDataFactory',
                       "dry-run-only",
                   ]
                 - [
