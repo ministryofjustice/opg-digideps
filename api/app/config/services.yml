@@ -485,7 +485,7 @@ services:
                   ]
                 - [
                       '@OPG\Digideps\Backend\Factory\ImportDeputyDataFactory',
-                      "dry-run-only",
+                      "active",
                   ]
                 - [
                       '@OPG\Digideps\Backend\Factory\MissingDeputyDataFactory',
