@@ -1,9 +1,180 @@
+{% set client = report.client %}
 {% set transOptions = {'%client%': report.client.firstname | striptags } %}
 {% set reportTypeHeading = ('-4' == report.get104TransSuffix) ? 'property and financial, and health and welfare' : ('104' in report.type) ? 'health and welfare' : 'property and financial'  %}
+{# "default(app.user)" is left only to avoid breaking the page before the migration (that adds user.submittedBy) is executed  #}
+{% set submittedBy = report.submittedBy | default(app.user) %}
+{# for PROF users, deputy is always the named deputy #}
+{% set deputy = submittedBy.isDeputyOrg and client.getDeputy ? client.getDeputy : submittedBy %}
 
-<div id="wrapper">
-    <div class="formatted-report">
-        <div id="report-header">Office of the Public Guardian</div>
-        <h1 class="push--bottom">Deputy report for {{ reportTypeHeading }} decisions</h1>
+<h1 class="govuk-heading-l">Deputy report for {{ reportTypeHeading }} decisions</h1>
+
+<h2 class="govuk-heading-m">Deputy and client information</h2>
+
+<div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">
+            Report information
+        </h2>
+    </div>
+    <div class="govuk-summary-card__content">
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    {{ 'caseNumber' | trans({}, 'common' ) }}
+                </dt>
+                <dd class="govuk-summary-list__value govuk-!-width-one-half">
+                    {{ client.getCaseNumber }}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    {{ 'reportingStartDate' | trans({}, 'common' ) }}
+                </dt>
+                <dd class="value govuk-!-width-one-half">
+                    {{ report.startDate | date("d/m/Y") }}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    {{ 'reportingEndDate' | trans({}, 'common' ) }}
+                </dt>
+                <dd class="value govuk-!-width-one-half">
+                    {{ report.endDate | date("d/m/Y") }}
+                </dd>
+            </div>
+        </dl>
+    </div>
+</div>
+<div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">
+            Deputy details
+        </h2>
+    </div>
+    <div class="govuk-summary-card__content">
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    {{ 'firstNames' | trans({}, 'common' ) }}
+                </dt>
+                <dd class="govuk-summary-list__value govuk-!-width-one-half">
+                    {{ deputy.firstname}}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    {{ 'lastName' | trans({}, 'common' ) }}
+                </dt>
+                <dd class="govuk-summary-list__value govuk-!-width-one-half">
+                    {{ deputy.lastname}}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    {{ 'address' | trans({}, 'common' ) }}
+                </dt>
+                <dd class="value address-value behat-region-deputy-address govuk-!-width-one-half">
+                    {% if deputy.address1 is not empty %}
+                        {{ deputy.address1 }}<br/>
+                    {% endif %}
+                    {% if deputy.address2 is not empty %}
+                        {{ deputy.address2 }}<br/>
+                    {% endif %}
+                    {% if deputy.address3 is not empty %}
+                        {{ deputy.address3 }}<br/>
+                    {% endif %}
+                    {% if deputy.address4 is not empty %}
+                        {{ deputy.address4 }}<br/>
+                    {% endif %}
+                    {% if deputy.address5 is not empty %}
+                        {{ deputy.address5 }}<br/>
+                    {% endif %}
+                    {% if deputy.addressPostcode is not empty %}
+                        {{ deputy.addressPostcode }}<br/>
+                    {% endif %}
+                    {% if deputy.addressCountry is not empty %}
+                        {{ deputy.addressCountry | country_name }}
+                    {% endif %}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    {{ 'telephoneNumber' | trans({}, 'common' ) }}
+                </dt>
+                <dd class="value behat-region-deputy-phone govuk-!-width-one-half">
+                    {% if deputy.phoneMain %}
+                        {{ deputy.phoneMain }}
+                    {% else %}
+                        {{ submittedBy.phoneMain  }}
+                    {% endif %}
+                    {% if deputy.phoneAlternative %}
+                        <br/>{{ deputy.phoneAlternative }}
+                    {% endif %}
+                </dd>
+            </div>
+        </dl>
+    </div>
+</div>
+<div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title">
+            Client details
+        </h2>
+    </div>
+    <div class="govuk-summary-card__content">
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    {{ 'firstNames' | trans({}, 'common' ) }}
+                </dt>
+                <dd class="govuk-summary-list__value govuk-!-width-one-half">
+                    {{ client.firstname}}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    {{ 'lastName' | trans({}, 'common' ) }}
+                </dt>
+                <dd class="govuk-summary-list__value govuk-!-width-one-half">
+                    {{ client.lastname}}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    {{ 'address' | trans({}, 'common' ) }}
+                </dt>
+                <dd class="value address-value govuk-!-width-one-half">
+                    {% if client.address is not empty %}
+                        {{ client.address }}<br/>
+                    {% endif %}
+                    {% if client.address2 is not empty %}
+                        {{ client.address2 }}<br/>
+                    {% endif %}
+                    {% if client.address3 is not empty %}
+                        {{ client.address3 }}<br/>
+                    {% endif %}
+                    {% if client.address4 is not empty %}
+                        {{ client.address4 }}<br/>
+                    {% endif %}
+                    {% if client.address5 is not empty %}
+                        {{ client.address5 }}<br/>
+                    {% endif %}
+                    {% if client.postcode is not empty %}
+                        {{ client.postcode }}<br/>
+                    {% endif %}
+                    {% if client.country is not empty %}
+                        {{ client.country | country_name }}
+                    {% endif %}
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                    {{ 'telephoneNumber' | trans({}, 'common' ) }}
+                </dt>
+                <dd class="value govuk-!-width-one-half">
+                    {{client.phone}}
+                </dd>
+            </div>
+        </dl>
     </div>
 </div>

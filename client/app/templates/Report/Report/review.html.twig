@@ -44,25 +44,30 @@
         {% include '@App/Report/Report/_review_buttons.html.twig' %}
 
     </div>
-    <div>
-        <span class="opg-text--secondary">{{ 'pdfDraftSentence' | trans() }}</span>
-        {% include '@App/Report/Report/_pdf_download_link.html.twig' %}
-    </div>
 
-
-    <div class="push--bottom">
-        <div class="opg-border--secondary">
-            {% if devPreview == false %}
-                {% include '@App/Report/Formatted/formatted_body.html.twig' %}
-            {% else %}
-                {% include '@App/Report/Rendered/body.html.twig' %}
-            {% endif %}
+    {% if devPreview == false %}
+        <div>
+            <span class="opg-text--secondary">{{ 'pdfDraftSentence' | trans() }}</span>
+            {% include '@App/Report/Report/_pdf_download_link.html.twig' %}
         </div>
-    </div>
 
-    <div class="govuk-!-padding-bottom-4">
-        {% include '@App/Report/Report/_pdf_download_link.html.twig' %}
-    </div>
+        <div class="push--bottom">
+            <div class="opg-border--secondary">
+                {% include '@App/Report/Formatted/formatted_body.html.twig' %}
+            </div>
+        </div>
+
+        <div class="govuk-!-padding-bottom-4">
+            {% include '@App/Report/Report/_pdf_download_link.html.twig' %}
+        </div>
+
+    {% else %}
+        <div class="push--bottom">
+            <div class="opg-border--primary">
+                {% include '@App/Report/Rendered/body.html.twig' %}
+            </div>
+        </div>
+    {% endif %}
 
     {% include '@App/Report/Report/_review_buttons.html.twig' %}
 
