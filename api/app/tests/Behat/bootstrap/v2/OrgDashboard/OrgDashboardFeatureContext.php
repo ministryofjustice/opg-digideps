@@ -64,6 +64,8 @@ class OrgDashboardFeatureContext extends BaseFeatureContext
      * @Given there is :numReports report which is :reportStatus associated with :orgName
      *
      * Set up one or more reports associated with an organisation
+     *
+     * $reportStatus = one of "notStarted", "notFinished", "readyToSubmit"
      */
     public function reportsAssociatedWithOrganisation(int $numReports, string $reportStatus, string $orgname): void
     {
@@ -79,24 +81,25 @@ class OrgDashboardFeatureContext extends BaseFeatureContext
             $id = "$this->testRunId-$this->counter";
             $this->counter++;
 
-            /** @var ?Report $report */
-            $report = null;
-
-            if ($reportStatus === "notStarted") {
-                // NB we don't want to retrieve the report and update its status, as it always updates to "notFinished"
-                $userDetails = $this->fixtureHelper->createLayCombinedHighAssetsNotStarted($id);
+            if ($reportStatus === "notStarted" || $reportStatus === "notFinished") {
+                $userDetails = $this->fixtureHelper->createPaNamedHealthWelfareNotStarted($id);
             } elseif ($reportStatus === "readyToSubmit") {
-                $userDetails = $this->fixtureHelper->createLayCombinedHighAssetsCompleted($id);
-                $report = $reportRepo->find($userDetails['currentReportId']);
-            } elseif ($reportStatus === "notFinished") {
-                $userDetails = $this->fixtureHelper->createLayCombinedHighAssetsNotStarted($id);
+                $userDetails = $this->fixtureHelper->createPaNamedHealthWelfareCompleted($id);
+            } else {
+                throw new \LogicException("invalid report status: $reportStatus");
+            }
 
-                // we set one section so that the report status is "notFinished" and not "notStarted"
-                $report = $reportRepo->find($userDetails['currentReportId']);
+            /** @var ?Report $report */
+            $report = $reportRepo->find($userDetails['currentReportId']);
+
+            // complete one section so that the report status is "notFinished" and not "notStarted"
+            if ($reportStatus === "notFinished") {
                 $report->setActionMoreInfo('no');
             }
 
-            if (!is_null($report)) {
+            // don't update the report status if "notStarted", as it always updates to "notFinished"
+            // even though no sections have been completed
+            if ($reportStatus !== "notStarted") {
                 $report->updateSectionsStatusCache();
                 $this->em->persist($report);
             }
