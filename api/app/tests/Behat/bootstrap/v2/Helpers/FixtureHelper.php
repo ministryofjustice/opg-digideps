@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Behat\v2\Helpers;
 
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Domain\Report\ReportType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Deputy;
@@ -368,6 +369,24 @@ class FixtureHelper
         if ($submitted) {
             $this->reportTestHelper->submitReport($report, $this->em);
         }
+
+        $this->em->persist($report);
+
+        // additional deputy <-> court order <-> report set up;
+        // required to enable admin users to see reports in the dashboard etc.
+        $deputy->setOrganisation($organisation);
+        $this->em->persist($deputy);
+
+        $courtOrderUid = '' . mt_rand(10000000, 99999999);
+        $structuredReportType = ReportType::tryFrom($reportType);
+        $this->courtOrderTestHelper->generateCourtOrder(
+            em: $this->em,
+            client: $client,
+            courtOrderUid: $courtOrderUid,
+            type: $structuredReportType->courtOrderType,
+            report: $report,
+            deputy: $deputy
+        );
 
         $this->em->persist($deputy);
         $this->em->persist($user);
@@ -1213,14 +1232,14 @@ class FixtureHelper
         }
 
         $this->testRunId = $testRunId;
+
         $domain = $deputyEmail ? substr(strstr($deputyEmail, '@'), 1) : 't.uk';
         $emailIdentifier = $domain !== 't.uk' ? $domain : sprintf('prof-%s-%s', $this->orgEmailIdentifier, $this->testRunId);
-
         $organisation = $this->createOrganisation($this->testRunId, $emailIdentifier);
 
         $userEmail = sprintf('%s-%s@%s', $emailPrefix, $this->testRunId, $domain);
-
         $user = $this->userTestHelper->createUser(null, $userRole, $userEmail);
+        $this->em->persist($user);
 
         $this->addOrgClientsDeputyAndReportsToOrgDeputy(
             $user,
