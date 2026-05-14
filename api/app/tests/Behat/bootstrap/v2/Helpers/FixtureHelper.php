@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Behat\v2\Helpers;
 
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Domain\Report\ReportType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Deputy;
@@ -240,7 +241,7 @@ class FixtureHelper
         return $user;
     }
 
-    public function generateClient(User $user, ?Organisation $org = null, ?string $caseNumber = null): Client
+    public function generateClient(?User $user = null, ?Organisation $org = null, ?string $caseNumber = null): Client
     {
         return $this->clientTestHelper->generateClient($this->em, $user, $org, $caseNumber);
     }
@@ -279,7 +280,7 @@ class FixtureHelper
         $user->setRegistrationDate($startDate);
 
         if ($completed) {
-            $this->reportTestHelper->completeLayReport($report, $this->em);
+            $this->reportTestHelper->completeReport($report, $this->em);
         }
 
         if ($submitted) {
@@ -362,12 +363,36 @@ class FixtureHelper
         $user->setRegistrationDate($startDate);
 
         if ($completed) {
-            $this->reportTestHelper->completeLayReport($report, $this->em);
+            $this->reportTestHelper->completeReport($report, $this->em);
         }
 
         if ($submitted) {
             $this->reportTestHelper->submitReport($report, $this->em);
         }
+
+        $this->em->persist($report);
+
+        // additional deputy <-> court order <-> report set up;
+        // required to enable admin users to see reports in the dashboard etc.
+        $deputy->setOrganisation($organisation);
+        $this->em->persist($deputy);
+
+        $courtOrderUid = '' . mt_rand(10000000, 99999999);
+        $structuredReportType = ReportType::tryFrom($reportType);
+        $courtOrderType = $structuredReportType?->courtOrderType;
+
+        if ($courtOrderType === null) {
+            throw new \LogicException("invalid report type: $reportType");
+        }
+
+        $this->courtOrderTestHelper->generateCourtOrder(
+            em: $this->em,
+            client: $client,
+            courtOrderUid: $courtOrderUid,
+            type: $courtOrderType,
+            report: $report,
+            deputy: $deputy
+        );
 
         $this->em->persist($deputy);
         $this->em->persist($user);
@@ -1213,14 +1238,14 @@ class FixtureHelper
         }
 
         $this->testRunId = $testRunId;
+
         $domain = $deputyEmail ? substr(strstr($deputyEmail, '@'), 1) : 't.uk';
         $emailIdentifier = $domain !== 't.uk' ? $domain : sprintf('prof-%s-%s', $this->orgEmailIdentifier, $this->testRunId);
-
         $organisation = $this->createOrganisation($this->testRunId, $emailIdentifier);
 
         $userEmail = sprintf('%s-%s@%s', $emailPrefix, $this->testRunId, $domain);
-
         $user = $this->userTestHelper->createUser(null, $userRole, $userEmail);
+        $this->em->persist($user);
 
         $this->addOrgClientsDeputyAndReportsToOrgDeputy(
             $user,
@@ -1281,7 +1306,7 @@ class FixtureHelper
         return $this->fixtureParams['legacy_password_hash'];
     }
 
-    public function createAndPersistCourtOrder(CourtOrderType $orderType, Client $client, Deputy $deputy, ?Report $report = null, ?string $courtOrderUid = null): CourtOrder
+    public function createAndPersistCourtOrder(CourtOrderType $orderType, Client $client, ?Deputy $deputy = null, ?Report $report = null, ?string $courtOrderUid = null): CourtOrder
     {
         $faker = Factory::create('en_GB');
         if (is_null($courtOrderUid)) {
@@ -1344,5 +1369,10 @@ class FixtureHelper
         $this->em->flush();
 
         return $expense;
+    }
+
+    public function createDeputy(?string $email = null, ?string $deputyUid = null, ?User $user = null): Deputy
+    {
+        return $this->deputyTestHelper::generateDeputy($email, $deputyUid, $user);
     }
 }

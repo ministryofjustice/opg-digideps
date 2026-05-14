@@ -15715,12 +15715,6 @@ parameters:
 			path: tests/Unit/Service/Client/Sirius/SiriusHealthCheckClientTest.php
 
 		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\MethodProphecy\|Psr\\Http\\Message\\RequestInterface\:\:willReturnArgument\(\)\.$#'
-			identifier: method.notFound
-			count: 4
-			path: tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
 			message: '#^Cannot call method getBody\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -15740,12 +15734,6 @@ parameters:
 
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\SiriusApiGatewayClientTest\:\:setUpChecklistPdfPutPactBuilder\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\SiriusApiGatewayClientTest\:\:setUpReportPdfPactBuilder\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
@@ -15787,12 +15775,6 @@ parameters:
 			path: tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
 
 		-
-			message: '#^Parameter \#1 \$request of method OPG\\Digideps\\Frontend\\Service\\AWS\\RequestSigner\:\:signRequest\(\) expects GuzzleHttp\\Psr7\\Request, Prophecy\\Argument\\Token\\TypeToken given\.$#'
-			identifier: argument.type
-			count: 4
-			path: tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
 			message: '#^Parameter \#1 \$upload of method OPG\\Digideps\\Frontend\\Sync\\Service\\Client\\Sirius\\SiriusApiGatewayClient\:\:postChecklistPdf\(\) expects OPG\\Digideps\\Frontend\\Sync\\Model\\Sirius\\SiriusDocumentUpload, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -15801,30 +15783,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$upload of method OPG\\Digideps\\Frontend\\Sync\\Service\\Client\\Sirius\\SiriusApiGatewayClient\:\:putChecklistPdf\(\) expects OPG\\Digideps\\Frontend\\Sync\\Model\\Sirius\\SiriusDocumentUpload, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\SiriusApiGatewayClientTest\:\:\$expectedSupportingDocumentUuid is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\SiriusApiGatewayClientTest\:\:\$logger with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\SiriusApiGatewayClientTest\:\:\$signer \(OPG\\Digideps\\Frontend\\Service\\AWS\\RequestSigner\|Prophecy\\Prophecy\\ObjectProphecy\) is never assigned OPG\\Digideps\\Frontend\\Service\\AWS\\RequestSigner so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\SiriusApiGatewayClientTest\:\:\$signer with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
 			count: 1
 			path: tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
 
@@ -18595,140 +18553,14 @@ parameters:
 			path: tests/Unit/Sync/Service/DocumentSyncRunnerTest.php
 
 		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\|Prophecy\\Prophecy\\ObjectProphecy\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 8
-			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Sync\\Service\\Client\\Sirius\\SiriusApiGatewayClient\|Prophecy\\Prophecy\\ObjectProphecy\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 8
-			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Sync\\Service\\SiriusApiErrorTranslator\|Prophecy\\Prophecy\\ObjectProphecy\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 8
-			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\MethodProphecy\|Psr\\Http\\Message\\ResponseInterface\:\:shouldBeCalled\(\)\.$#'
-			identifier: method.notFound
-			count: 6
-			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\MethodProphecy\|Psr\\Http\\Message\\ResponseInterface\:\:shouldNotBeCalled\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Cannot call method shouldBeCalled\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 9
-			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on Prophecy\\Prophecy\\MethodProphecy\|string\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 9
-			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Parameter \#1 \$errorString of method OPG\\Digideps\\Frontend\\Sync\\Service\\SiriusApiErrorTranslator\:\:translateApiError\(\) expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 3
-			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Parameter \#1 \$siriusApiGatewayClient of class OPG\\Digideps\\Frontend\\Sync\\Service\\DocumentSyncService constructor expects OPG\\Digideps\\Frontend\\Sync\\Service\\Client\\Sirius\\SiriusApiGatewayClient, object given\.$#'
-			identifier: argument.type
-			count: 8
-			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Parameter \#1 \$upload of method OPG\\Digideps\\Frontend\\Sync\\Service\\Client\\Sirius\\SiriusApiGatewayClient\:\:sendSupportingDocument\(\) expects OPG\\Digideps\\Frontend\\Sync\\Model\\Sirius\\SiriusDocumentUpload, Prophecy\\Argument\\Token\\AnyValuesToken given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Parameter \#2 \$restClient of class OPG\\Digideps\\Frontend\\Sync\\Service\\DocumentSyncService constructor expects OPG\\Digideps\\Frontend\\Service\\Client\\RestClient, object given\.$#'
-			identifier: argument.type
-			count: 8
-			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
 			message: '#^Parameter \#3 \$body of class GuzzleHttp\\Psr7\\Response constructor expects Psr\\Http\\Message\\StreamInterface\|resource\|string\|null, string\|false given\.$#'
 			identifier: argument.type
 			count: 6
 			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
 
 		-
-			message: '#^Parameter \#3 \$errorTranslator of class OPG\\Digideps\\Frontend\\Sync\\Service\\DocumentSyncService constructor expects OPG\\Digideps\\Frontend\\Sync\\Service\\SiriusApiErrorTranslator, object given\.$#'
-			identifier: argument.type
-			count: 8
-			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Service\\DocumentSyncServiceTest\:\:\$errorTranslator \(OPG\\Digideps\\Frontend\\Sync\\Service\\SiriusApiErrorTranslator\|Prophecy\\Prophecy\\ObjectProphecy\) is never assigned OPG\\Digideps\\Frontend\\Sync\\Service\\SiriusApiErrorTranslator so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Service\\DocumentSyncServiceTest\:\:\$errorTranslator with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Service\\DocumentSyncServiceTest\:\:\$fileNameFixer is unused\.$#'
-			identifier: property.unused
-			count: 1
-			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Service\\DocumentSyncServiceTest\:\:\$fileNameFixer with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Service\\DocumentSyncServiceTest\:\:\$restClient \(OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\|Prophecy\\Prophecy\\ObjectProphecy\) is never assigned OPG\\Digideps\\Frontend\\Service\\Client\\RestClient so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Service\\DocumentSyncServiceTest\:\:\$restClient with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
 			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Service\\DocumentSyncServiceTest\:\:\$serializer \(JMS\\Serializer\\SerializerInterface\) does not accept object\.$#'
 			identifier: assign.propertyType
-			count: 1
-			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Service\\DocumentSyncServiceTest\:\:\$siriusApiGatewayClient \(OPG\\Digideps\\Frontend\\Sync\\Service\\Client\\Sirius\\SiriusApiGatewayClient\|Prophecy\\Prophecy\\ObjectProphecy\) is never assigned OPG\\Digideps\\Frontend\\Sync\\Service\\Client\\Sirius\\SiriusApiGatewayClient so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Service\\DocumentSyncServiceTest\:\:\$siriusApiGatewayClient with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
 			count: 1
 			path: tests/Unit/Sync/Service/DocumentSyncServiceTest.php
 

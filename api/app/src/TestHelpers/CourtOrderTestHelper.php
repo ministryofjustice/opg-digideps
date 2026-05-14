@@ -42,9 +42,11 @@ class CourtOrderTestHelper
 
         if (!is_null($deputy)) {
             $deputy->associateWithCourtOrder($courtOrder, $deputyIsActive);
+            $em->persist($deputy);
         }
 
         $em->persist($courtOrder);
+
         $em->flush();
 
         return $courtOrder;
