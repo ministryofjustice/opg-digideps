@@ -500,7 +500,7 @@ class FixtureController extends AbstractController
     }
 
     #[Route(path: '/createAdmin', methods: ['POST'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN')"))]
     public function createAdmin(Request $request): JsonResponse
     {
         if (!$this->fixturesEnabled) {
@@ -524,7 +524,7 @@ class FixtureController extends AbstractController
     }
 
     #[Route(path: '/getUserIDByEmail/{email}', methods: ['GET'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN')"))]
     public function getUserIDByEmail(string $email): JsonResponse
     {
         if (!$this->fixturesEnabled) {
@@ -544,7 +544,7 @@ class FixtureController extends AbstractController
      * Used for creating non-prof/pa users only as Org ID is required for those types.
      */
     #[Route(path: '/createUser', methods: ['POST'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN', 'ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     public function createUser(Request $request): JsonResponse
     {
         if (!$this->fixturesEnabled) {
@@ -594,7 +594,7 @@ class FixtureController extends AbstractController
     }
 
     #[Route(path: '/createClientAttachDeputy', methods: ['POST'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN', 'ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     public function createClientAndAttachToDeputy(Request $request): JsonResponse
     {
         if (!$this->fixturesEnabled) {
@@ -630,7 +630,7 @@ class FixtureController extends AbstractController
     }
 
     #[Route(path: '/createClientAttachOrgs', methods: ['POST'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN', 'ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     public function createClientAndAttachToOrgs(Request $request): JsonResponse
     {
         if (!$this->fixturesEnabled) {
@@ -721,7 +721,7 @@ class FixtureController extends AbstractController
     }
 
     #[Route(path: '/create-pre-registration', methods: ['POST'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN', 'ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     public function createPreRegistration(Request $request): JsonResponse
     {
         if (!$this->fixturesEnabled) {

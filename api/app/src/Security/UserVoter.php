@@ -125,7 +125,6 @@ class UserVoter extends Voter
             case User::ROLE_SUPER_ADMIN:
                 return true;
             case User::ROLE_ADMIN:
-            case User::ROLE_AD:
             case User::ROLE_ADMIN_MANAGER:
                 if ($editee->isSuperAdmin() || $editee->isAdminManager()) {
                     return false;

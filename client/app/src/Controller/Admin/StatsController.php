@@ -53,7 +53,7 @@ class StatsController extends AbstractController
     }
 
     #[Route(path: '', name: 'admin_stats')]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     #[Template('@App/Admin/Stats/stats.html.twig')]
     public function stats(
         Request $request,
@@ -153,7 +153,7 @@ class StatsController extends AbstractController
     }
 
     #[Route(path: '/metrics', name: 'admin_metrics')]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     #[Template('@App/Admin/Stats/metrics.html.twig')]
     public function metricsAction(Request $request): array|Response
     {

@@ -309,7 +309,7 @@ class ReportController extends AbstractController
      * @throws \Exception
      */
     #[Route(path: 'manage', name: 'admin_report_manage')]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     #[Template('@App/Admin/Client/Report/manage.html.twig')]
     public function manageAction(Request $request, string $id): RedirectResponse|array
     {
@@ -420,7 +420,7 @@ class ReportController extends AbstractController
      * @throws \Exception
      */
     #[Route(path: 'manage-confirm', name: 'admin_report_manage_confirm')]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     #[Template('@App/Admin/Client/Report/manageConfirm.html.twig')]
     public function manageConfirmAction(Request $request, $id): RedirectResponse|array
     {
@@ -503,7 +503,7 @@ class ReportController extends AbstractController
      * @throws \Exception
      */
     #[Route(path: 'manage-close-report-confirm', name: 'admin_report_manage_close_report_confirm')]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     #[Template('@App/Admin/Client/Report/manageCloseReportConfirm.html.twig')]
     public function manageCloseReportConfirmAction(Request $request, string $id): RedirectResponse|array
     {

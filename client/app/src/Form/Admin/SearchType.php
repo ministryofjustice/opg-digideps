@@ -20,7 +20,6 @@ class SearchType extends AbstractType
                     User::ROLE_ADMIN_MANAGER => 'Admin Manager',
                     User::ROLE_ADMIN => 'Admin',
                     User::ROLE_LAY_DEPUTY => 'Lay Deputy',
-                    User::ROLE_AD => 'Assisted Digital',
                     'ROLE_PA%' => 'All Public Authority Deputies',
                     User::ROLE_PA_NAMED => 'Public Authority Deputies (Named) ',
                     'ROLE_PROF%' => 'All Professional Deputies',

@@ -269,7 +269,7 @@ class FixtureController extends AbstractController
     }
 
     #[Route(path: '/complete-sections/{reportType}/{reportId}', name: 'fixtures_complete_report_sections', requirements: ['id' => '\d+'], methods: ['GET'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     public function completeReportSectionsAction(Request $request, string $reportType, int $reportId): JsonResponse
     {
         if (!$this->fixturesEnabled) {
@@ -286,7 +286,7 @@ class FixtureController extends AbstractController
     }
 
     #[Route(path: '/createAdmin', name: 'fixtures_create_admin', methods: ['GET'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN')"))]
     public function createAdmin(Request $request): Response
     {
         if (!$this->fixturesEnabled) {
@@ -307,7 +307,7 @@ class FixtureController extends AbstractController
     }
 
     #[Route(path: '/getUserIDByEmail/{email}', name: 'fixtures_get_user_id_by_email', methods: ['GET'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN') or is_granted('ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_SUPER_ADMIN') or is_granted('ROLE_ADMIN')"))]
     public function getUserIDByEmail(string $email): Response
     {
         if (!$this->fixturesEnabled) {
@@ -327,7 +327,7 @@ class FixtureController extends AbstractController
     }
 
     #[Route(path: '/createUser', name: 'fixtures_create_user', methods: ['GET'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN', 'ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     public function createUser(Request $request): Response
     {
         if (!$this->fixturesEnabled) {
@@ -369,7 +369,7 @@ class FixtureController extends AbstractController
      * @throws \Throwable
      */
     #[Route(path: '/createClientAttachDeputy', name: 'fixtures_create_client_attach_deputy', methods: ['GET'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN', 'ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     public function createClientAndAttachToDeputy(Request $request): Response
     {
         if (!$this->fixturesEnabled) {
@@ -402,7 +402,7 @@ class FixtureController extends AbstractController
      * @throws \Throwable
      */
     #[Route(path: '/createClientAttachOrgs', name: 'fixtures_create_client_attach_org', methods: ['GET'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN', 'ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     public function createClientAndAttachToOrg(Request $request): Response
     {
         if (!$this->fixturesEnabled) {
@@ -433,7 +433,7 @@ class FixtureController extends AbstractController
     }
 
     #[Route(path: '/user-registration-token', name: 'fixtures_get_user_registration_token', methods: ['GET'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN', 'ROLE_AD')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN')"))]
     public function getUserRegistrationToken(Request $request): Response
     {
         if (!$this->fixturesEnabled) {

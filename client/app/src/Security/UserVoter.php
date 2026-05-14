@@ -130,7 +130,6 @@ class UserVoter extends Voter
             case User::ROLE_SUPER_ADMIN:
                 return true;
             case User::ROLE_ADMIN:
-            case User::ROLE_AD:
             case User::ROLE_ADMIN_MANAGER:
                 if ($subject->isSuperAdmin() || $subject->isAdminManager()) {
                     return false;
@@ -193,7 +192,6 @@ class UserVoter extends Voter
         switch ($actor->getRoleName()) {
             case User::ROLE_SUPER_ADMIN:
             case User::ROLE_ADMIN:
-            case User::ROLE_AD:
             case User::ROLE_ADMIN_MANAGER:
             case User::ROLE_PA:
             case User::ROLE_PA_NAMED:

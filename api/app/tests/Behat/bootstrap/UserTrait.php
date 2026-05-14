@@ -11,7 +11,6 @@ trait UserTrait
         'super admin' => 'ROLE_SUPER_ADMIN',
         'admin' => 'ROLE_ADMIN',
         'lay deputy' => 'ROLE_LAY_DEPUTY',
-        'ad' => 'ROLE_AD',
         'pa named' => 'ROLE_PA_NAMED',
         'prof named' => 'ROLE_PROF_NAMED',
     ];
@@ -97,7 +96,7 @@ trait UserTrait
 
     private function assertValidRole(string $roleName): void
     {
-        $allowedRoles = ['ADMIN', 'AD', 'LAY', 'PA', 'PA_TEAM_MEMBER', 'PA_ADMIN', 'PROF', 'PROF_TEAM_MEMBER', 'PROF_ADMIN'];
+        $allowedRoles = ['ADMIN', 'LAY', 'PA', 'PA_TEAM_MEMBER', 'PA_ADMIN', 'PROF', 'PROF_TEAM_MEMBER', 'PROF_ADMIN'];
 
         if (!in_array($roleName, $allowedRoles)) {
             throw new \Exception(sprintf("DeputyType should be one of %s; '%s' provided", implode(', ', $allowedRoles), $roleName));

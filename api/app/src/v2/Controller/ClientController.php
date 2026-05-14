@@ -33,7 +33,7 @@ class ClientController extends RestController
     }
 
     #[Route(path: '/{id}', requirements: ['id' => '\d+'], methods: ['GET'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or is_granted('ROLE_DEPUTY')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_DEPUTY')"))]
     public function getById(int $id): JsonResponse
     {
         if (null === ($data = $this->repository->getArrayById($id))) {
@@ -64,7 +64,7 @@ class ClientController extends RestController
     }
 
     #[Route(path: '/case-number/{caseNumber}', methods: ['GET'])]
-    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_AD') or is_granted('ROLE_DEPUTY')"))]
+    #[IsGranted(attribute: new Expression("is_granted('ROLE_ADMIN') or is_granted('ROLE_DEPUTY')"))]
     public function getByCaseNumber(string $caseNumber): JsonResponse
     {
         if (null === ($data = $this->repository->getArrayByCaseNumber($caseNumber))) {
