@@ -427,7 +427,7 @@ trait IVisitFrontendTrait
      */
     public function iPreviewAndCheckTheReportUsingTheNewTemplate(): void
     {
-        $reportId = ($this->loggedInUserDetails->getCurrentReportId());
+        $reportId = $this->loggedInUserDetails?->getCurrentReportId();
         if ($reportId !== null) {
             $this->visitFrontendPath($this->getNewReportReviewUrl($reportId));
         } else {

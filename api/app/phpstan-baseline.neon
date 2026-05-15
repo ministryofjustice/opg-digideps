@@ -16155,7 +16155,7 @@ parameters:
 		-
 			message: '#^Cannot call method getCurrentReportId\(\) on Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\UserDetails\|null\.$#'
 			identifier: method.nonObject
-			count: 43
+			count: 42
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
 		-
