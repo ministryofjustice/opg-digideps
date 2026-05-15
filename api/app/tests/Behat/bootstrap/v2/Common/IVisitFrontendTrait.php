@@ -423,10 +423,15 @@ trait IVisitFrontendTrait
 
     /**
      * @When I preview and check the report using the new template
+     * @throws BehatException
      */
     public function iPreviewAndCheckTheReportUsingTheNewTemplate(): void
     {
         $reportId = ($this->loggedInUserDetails->getCurrentReportId());
-        $this->visitFrontendPath($this->getNewReportReviewUrl($reportId));
+        if ($reportId !== null) {
+            $this->visitFrontendPath($this->getNewReportReviewUrl($reportId));
+        } else {
+            throw new BehatException('No active report ID found for the logged in user, cannot visit the new report review page');
+        }
     }
 }
