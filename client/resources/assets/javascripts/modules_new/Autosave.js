@@ -7,10 +7,13 @@
  */
 const Autosave = {
   init: function (document) {
+    // enable referencing Autosave prototype in other functions
+    const that = this
+
     const autosaveForms = document.querySelectorAll('form.js-autosave')
 
     autosaveForms.forEach(autosaveForm => {
-      const saveButton = autosaveForm.querySelector('button.js-autosave-save-progress-button')
+      const saveProgressButton = autosaveForm.querySelector('button.js-autosave-save-progress-button')
 
       // Form elements which, when they change, don't trigger an autosave.
       //
@@ -21,15 +24,24 @@ const Autosave = {
       // button is explicitly pressed (preserving current behaviour on
       // the checklist page, for example).
       const ignoredElements = autosaveForm.querySelectorAll('.js-autosave-ignore')
+      const ignoredElementNames = Array.from(ignoredElements).map(el => el.name)
 
-      const handler = this.makeHandler(autosaveForm, saveButton, ignoredElements)
+      // this handler will save all fields (current behaviour)
+      const clickHandler = this.makeHandler(autosaveForm, saveProgressButton, [], [])
+      saveProgressButton.addEventListener('click', clickHandler)
 
-      saveButton.addEventListener('click', handler)
-      autosaveForm.addEventListener('change', handler)
+      // this handler will not save ignored fields
+      const autosaveHandler = this.makeHandler(autosaveForm, saveProgressButton, ignoredElements, ignoredElementNames)
+      autosaveForm.addEventListener('change', autosaveHandler)
+
+      // periodically save every 30s; this will not save ignored fields
+      setInterval(() => {
+        that.autosave(saveProgressButton, autosaveForm, ignoredElementNames)
+      }, 30000)
     })
   },
 
-  makeHandler: function (autosaveForm, saveProgressButton, ignoredElements) {
+  makeHandler: function (autosaveForm, saveProgressButton, ignoredElements, ignoredElementNames) {
     return async (e) => {
       let ignoredElement = false
 
@@ -45,23 +57,34 @@ const Autosave = {
 
       if (!ignoredElement) {
         e.preventDefault()
-        saveProgressButton.disabled = true
-
-        const formData = new FormData(autosaveForm)
-
-        // the name of the "save progress" button has to be part of the payload
-        // so that the controller can route the request correctly
-        formData.set(saveProgressButton.name, saveProgressButton.value)
-
-        try {
-          await fetch(autosaveForm.action, {
-            method: 'POST',
-            body: formData
-          })
-        } finally {
-          saveProgressButton.disabled = false
-        }
+        await this.autosave(saveProgressButton, autosaveForm, ignoredElementNames)
       }
+    }
+  },
+
+  autosave: async function (saveProgressButton, autosaveForm, ignoredElementNames) {
+    saveProgressButton.disabled = true
+
+    const formData = new FormData(autosaveForm)
+
+    // the name of the "save progress" button has to be part of the payload
+    // so that the controller can route the request correctly
+    formData.set(saveProgressButton.name, saveProgressButton.value)
+
+    // for safety's sake, remove the values of ignored elements from
+    // the payload (for the checklist, this prevents a new "further information"
+    // entry being created by timed autosaves)
+    ignoredElementNames.forEach((name) => {
+      formData.delete(name)
+    })
+
+    try {
+      await fetch(autosaveForm.action, {
+        method: 'POST',
+        body: formData
+      })
+    } finally {
+      saveProgressButton.disabled = false
     }
   }
 }
