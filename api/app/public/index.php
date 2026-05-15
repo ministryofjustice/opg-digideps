@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 require dirname(__DIR__) . '/vendor/autoload.php';
 require dirname(__DIR__) . '/src/Kernel.php';
 
-if ($_SERVER['APP_DEBUG']) {
+if ($_SERVER['APP_DEBUG'] ?? false) {
     umask(0000);
 
     /*

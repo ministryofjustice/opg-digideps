@@ -3817,11 +3817,11 @@
     },
     {
       "name": "phpstan/phpstan",
-      "version": "2.1.49",
+      "version": "2.1.50",
       "dist": {
         "type": "zip",
-        "url": "https://api.github.com/repos/phpstan/phpstan/zipball/d0082955396e7f5ba19cf298224b85e1099f0ed8",
-        "reference": "d0082955396e7f5ba19cf298224b85e1099f0ed8",
+        "url": "https://api.github.com/repos/phpstan/phpstan/zipball/d452086fb4cf648c6b2d8cf3b639351f79e4f3e2",
+        "reference": "d452086fb4cf648c6b2d8cf3b639351f79e4f3e2",
         "shasum": ""
       },
       "require": {
@@ -3866,7 +3866,7 @@
           "type": "github"
         }
       ],
-      "time": "2026-04-16T21:10:58+00:00"
+      "time": "2026-04-17T13:10:32+00:00"
     },
     {
       "name": "phpstan/phpstan-phpunit",
@@ -3926,21 +3926,22 @@
     },
     {
       "name": "phpunit/php-code-coverage",
-      "version": "14.1.2",
+      "version": "14.1.8",
       "source": {
         "type": "git",
         "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
-        "reference": "c9023486f88a48dd870361591bd7caef6d2406c3"
+        "reference": "031856c28c060e1c1d1fc94d256e3ffbe4230c91"
       },
       "dist": {
         "type": "zip",
-        "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/c9023486f88a48dd870361591bd7caef6d2406c3",
-        "reference": "c9023486f88a48dd870361591bd7caef6d2406c3",
+        "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/031856c28c060e1c1d1fc94d256e3ffbe4230c91",
+        "reference": "031856c28c060e1c1d1fc94d256e3ffbe4230c91",
         "shasum": ""
       },
       "require": {
         "ext-dom": "*",
         "ext-libxml": "*",
+        "ext-mbstring": "*",
         "ext-xmlwriter": "*",
         "nikic/php-parser": "^5.7.0",
         "php": ">=8.4",
@@ -3991,7 +3992,7 @@
       "support": {
         "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
         "security": "https://github.com/sebastianbergmann/php-code-coverage/security/policy",
-        "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/14.1.2"
+        "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/14.1.8"
       },
       "funding": [
         {
@@ -4011,7 +4012,7 @@
           "type": "tidelift"
         }
       ],
-      "time": "2026-04-15T08:27:13+00:00"
+      "time": "2026-05-09T12:06:52+00:00"
     },
     {
       "name": "phpunit/php-file-iterator",
@@ -4308,16 +4309,16 @@
     },
     {
       "name": "phpunit/phpunit",
-      "version": "13.1.6",
+      "version": "13.1.8",
       "source": {
         "type": "git",
         "url": "https://github.com/sebastianbergmann/phpunit.git",
-        "reference": "c3c414ea438e5a37d00697eaea43e6e05e201a42"
+        "reference": "f49a2b5e51ffb33421745368cc099cf66830d71b"
       },
       "dist": {
         "type": "zip",
-        "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c3c414ea438e5a37d00697eaea43e6e05e201a42",
-        "reference": "c3c414ea438e5a37d00697eaea43e6e05e201a42",
+        "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/f49a2b5e51ffb33421745368cc099cf66830d71b",
+        "reference": "f49a2b5e51ffb33421745368cc099cf66830d71b",
         "shasum": ""
       },
       "require": {
@@ -4331,7 +4332,7 @@
         "phar-io/manifest": "^2.0.4",
         "phar-io/version": "^3.2.1",
         "php": ">=8.4.1",
-        "phpunit/php-code-coverage": "^14.1.2",
+        "phpunit/php-code-coverage": "^14.1.6",
         "phpunit/php-file-iterator": "^7.0.0",
         "phpunit/php-invoker": "^7.0.0",
         "phpunit/php-text-template": "^6.0.0",
@@ -4387,7 +4388,7 @@
       "support": {
         "issues": "https://github.com/sebastianbergmann/phpunit/issues",
         "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-        "source": "https://github.com/sebastianbergmann/phpunit/tree/13.1.6"
+        "source": "https://github.com/sebastianbergmann/phpunit/tree/13.1.8"
       },
       "funding": [
         {
@@ -4395,7 +4396,7 @@
           "type": "other"
         }
       ],
-      "time": "2026-04-17T12:52:50+00:00"
+      "time": "2026-05-01T04:22:45+00:00"
     },
     {
       "name": "sebastian/cli-parser",
