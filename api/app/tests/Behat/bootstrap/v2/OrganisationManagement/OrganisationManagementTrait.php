@@ -148,7 +148,7 @@ trait OrganisationManagementTrait
 
         $tableValues = [];
         if (count($listSummaryRowItems) > 0) {
-            foreach ($listSummaryRowItems as $listSummaryRowItemKey => $listSummaryRowItem) {
+            foreach ($listSummaryRowItems as $listSummaryRowItem) {
                 $xpath = '//dt|//dd';
                 $descriptionDataItems = $listSummaryRowItem->findAll('xpath', $xpath);
 
@@ -246,7 +246,7 @@ trait OrganisationManagementTrait
 
         $organisation = array_pop($this->organisations);
 
-        $organisation['Name'] = $organisation['Name'] . ' Edit';
+        $organisation['Name'] .= ' Edit';
 
         $this->organisations[] = $organisation;
 
