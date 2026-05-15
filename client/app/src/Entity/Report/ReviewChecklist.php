@@ -14,72 +14,36 @@ class ReviewChecklist
     use HasReportTrait;
     use ModifyAudit;
 
-    /**
-     * @var int
-     *
-     * @JMS\Type("integer")
-     */
-    private $id;
+    #[JMS\Type('integer')]
+    private int $id;
 
-    /**
-     * @var FullReviewChecklist
-     *
-     * @JMS\Type("OPG\Digideps\Frontend\Model\FullReviewChecklist")\
-     * @Assert\Valid
-     */
-    private $answers;
+    #[Assert\Valid]
+    #[JMS\Type('OPG\Digideps\Frontend\Model\FullReviewChecklist')]
+    private ?FullReviewChecklist $answers = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.finalDecision.notBlank")
-     */
-    private $decision;
+    #[JMS\Type('string')]
+    private ?string $decision = null;
 
-    /**
-     * @var User
-     *
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
-     */
-    protected $submittedBy;
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
+    protected ?User $submittedBy = null;
 
-    /**
-     * @var \DateTime
-     *
-     * @JMS\Type("DateTime")
-     */
-    protected $submittedOn;
+    #[JMS\Type('DateTime')]
+    protected ?\DateTime $submittedOn = null;
 
-    /**
-     * @var bool
-     *
-     * @JMS\Type("boolean")
-     */
-    protected $isSubmitted = false;
+    #[JMS\Type('boolean')]
+    protected bool $isSubmitted = false;
 
-    /**
-     * Checklist constructor.
-     */
     public function __construct(Report $report)
     {
         $this->setReport($report);
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return $this
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
         $this->id = $id;
 
@@ -110,36 +74,24 @@ class ReviewChecklist
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getDecision(): ?string
     {
         return $this->decision;
     }
 
-    /**
-     * @return $this
-     */
-    public function setDecision(string $decision)
+    public function setDecision(?string $decision): static
     {
         $this->decision = $decision;
 
         return $this;
     }
 
-    /**
-     * @return User
-     */
     public function getSubmittedBy(): ?User
     {
         return $this->submittedBy;
     }
 
-    /**
-     * @return $this
-     */
-    public function setSubmittedBy(User $submittedBy)
+    public function setSubmittedBy(User $submittedBy): static
     {
         $this->submittedBy = $submittedBy;
         $this->isSubmitted = true;
@@ -147,18 +99,12 @@ class ReviewChecklist
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
     public function getSubmittedOn(): ?\DateTime
     {
         return $this->submittedOn;
     }
 
-    /**
-     * @return $this
-     */
-    public function setSubmittedOn(\DateTime $submittedOn)
+    public function setSubmittedOn(\DateTime $submittedOn): static
     {
         $this->submittedOn = $submittedOn;
         $this->isSubmitted = true;
@@ -166,18 +112,12 @@ class ReviewChecklist
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function getIsSubmitted()
+    public function getIsSubmitted(): bool
     {
         return $this->isSubmitted;
     }
 
-    /**
-     * @return $this
-     */
-    public function setIsSubmitted(bool $isSubmitted)
+    public function setIsSubmitted(bool $isSubmitted): static
     {
         $this->isSubmitted = $isSubmitted;
 
