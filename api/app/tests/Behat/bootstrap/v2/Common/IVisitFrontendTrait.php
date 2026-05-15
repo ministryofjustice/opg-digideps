@@ -420,4 +420,13 @@ trait IVisitFrontendTrait
 
         $this->visitFrontendPath($this->getOrgSettingsUserAccountUrl(strval($organisation->getId())));
     }
+
+    /**
+     * @When I preview and check the report using the new template
+     */
+    public function iPreviewAndCheckTheReportUsingTheNewTemplate(): void
+    {
+        $reportId = ($this->loggedInUserDetails->getCurrentReportId());
+        $this->visitFrontendPath($this->getNewReportReviewUrl($reportId));
+    }
 }
