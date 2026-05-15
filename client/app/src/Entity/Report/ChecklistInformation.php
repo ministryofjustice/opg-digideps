@@ -1,96 +1,64 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
 use OPG\Digideps\Frontend\Entity\Traits\CreationAudit;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * Checklist Information
- */
 class ChecklistInformation
 {
     use CreationAudit;
 
-    /**
-     * @var int
-     *
-     * @JMS\Type("integer")
-     * @JMS\Groups({"checklist-information"})
-     */
-    private $id;
+    #[JMS\Type('integer')]
+    #[JMS\Groups(['checklist-information'])]
+    private int $id;
 
-    /**
-     * @var Checklist
-     *
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\Report\Checklist")
-     * @JMS\Groups({"checklist-information-checklist"})
-     *
-     */
-    private $checklist;
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\Report\Checklist')]
+    #[JMS\Groups(['checklist-information-checklist'])]
+    private Checklist $checklist;
 
-    /**
-     *
-     * @var string
-     *
-     * @JMS\Type("string")
-     * @JMS\Groups({"checklist-information"})
-     */
-    private $information;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['checklist-information'])]
+    private string $information;
 
-    public function __construct(Checklist $checklist, $information)
+    public function __construct(Checklist $checklist, string $information)
     {
         $this->setChecklist($checklist);
         $this->setInformation(trim($information));
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param  int   $id
-     * @return $this
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
         $this->id = $id;
         return $this;
     }
 
-    /**
-     * @return Checklist
-     */
-    public function getChecklist()
+    public function getChecklist(): Checklist
     {
         return $this->checklist;
     }
 
-    /**
-     * @param Checklist $checklist
-     */
-    public function setChecklist($checklist)
+    public function setChecklist(Checklist $checklist): static
     {
         $this->checklist = $checklist;
+        return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getInformation()
+    public function getInformation(): string
     {
         return $this->information;
     }
 
-    /**
-     * @param string $information
-     */
-    public function setInformation($information)
+    public function setInformation(string $information): static
     {
         $this->information = $information;
+        return $this;
     }
 }
