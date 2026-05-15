@@ -144,7 +144,7 @@ class CourtOrderResponseComparer extends ResponseComparer
 
     private function normalizeArrayForComparison(array $data): array
     {
-        array_walk_recursive($data, function (&$value) {
+        array_walk_recursive($data, function (&$value): void {
             if (is_numeric($value)) {
                 $value = (string) $value; // normalize numbers to string
             }

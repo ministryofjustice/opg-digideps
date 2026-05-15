@@ -94,8 +94,8 @@ trait DbTrait
         if (!$fields) {
             throw new \InvalidArgumentException(__METHOD__ . ' array with at least one element expected');
         }
-        $columns = join(',', array_keys($fields));
-        $values = "'" . join("', '", array_values($fields)) . "'";
+        $columns = implode(',', array_keys($fields));
+        $values = "'" . implode("', '", array_values($fields)) . "'";
         $query = sprintf("INSERT INTO {$table} ({$columns}) VALUES({$values})");
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
         exec($command);
