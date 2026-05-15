@@ -37,8 +37,12 @@
 
     <div class="push--bottom">
         {% if report.submitted == false %}
-            <p class="govuk-body">{{ (page ~ '.para1') | trans() }}</p>
-            <p class="govuk-body">{{ (page ~ '.para2') | trans() }}</p>
+        <p class="govuk-body">{{ (page ~ '.para1') | trans() }}</p>
+            {% if devPreview == false %}
+                <p class="govuk-body">{{ (page ~ '.para2') | trans() }}</p>
+            {% else %}
+                <p class="govuk-body">{{ (page ~ '.newTemplatePara2') | trans() }}</p>
+            {% endif %}
         {% endif %}
 
         {% include '@App/Report/Report/_review_buttons.html.twig' %}
