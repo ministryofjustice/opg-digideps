@@ -5,87 +5,42 @@ declare(strict_types=1);
 namespace OPG\Digideps\Frontend\Model;
 
 use JMS\Serializer\Annotation as JMS;
-use Symfony\Component\Validator\Constraints as Assert;
 
 class FullReviewChecklist
 {
-    /**
-     * @var string
-     * @JMS\Groups({"full-review-checklist"})
-     * @JMS\Type("string")
-     * @Assert\Choice({"yes", "no", "na"})
-     * @Assert\NotBlank
-     */
-    public $fullBankStatementsExist;
+    #[JMS\Groups(['full-review-checklist'])]
+    #[JMS\Type('string')]
+    public ?string $fullBankStatementsExist = null;
 
-    /**
-     * @var string
-     * @JMS\Groups({"full-review-checklist"})
-     * @JMS\Type("string")
-     * @Assert\Choice({"yes", "no", "na"})
-     * @Assert\NotBlank
-     */
-    public $anyLodgingConcerns;
+    #[JMS\Groups(['full-review-checklist'])]
+    #[JMS\Type('string')]
+    public ?string $anyLodgingConcerns = null;
 
-    /**
-     * @var string
-     * @JMS\Groups({"full-review-checklist"})
-     * @JMS\Type("string")
-     * @Assert\Choice({"yes", "no", "na"})
-     * @Assert\NotBlank
-     */
-    public $spendingAcceptable;
+    #[JMS\Groups(['full-review-checklist'])]
+    #[JMS\Type('string')]
+    public ?string $spendingAcceptable = null;
 
-    /**
-     * @var string
-     * @JMS\Groups({"full-review-checklist"})
-     * @JMS\Type("string")
-     * @Assert\Choice({"yes", "no", "na"})
-     * @Assert\NotBlank
-     */
-    public $expensesReasonable;
+    #[JMS\Groups(['full-review-checklist'])]
+    #[JMS\Type('string')]
+    public ?string $expensesReasonable = null;
 
-    /**
-     * @var string
-     * @JMS\Groups({"full-review-checklist"})
-     * @JMS\Type("string")
-     * @Assert\Choice({"yes", "no", "na"})
-     * @Assert\NotBlank
-     */
-    public $giftingReasonable;
+    #[JMS\Groups(['full-review-checklist'])]
+    #[JMS\Type('string')]
+    public ?string $giftingReasonable = null;
 
-    /**
-     * @var string
-     * @JMS\Groups({"full-review-checklist"})
-     * @JMS\Type("string")
-     * @Assert\Choice({"yes", "no", "na"})
-     * @Assert\NotBlank
-     */
-    public $debtManageable;
+    #[JMS\Groups(['full-review-checklist'])]
+    #[JMS\Type('string')]
+    public ?string $debtManageable = null;
 
-    /**
-     * @var string
-     * @JMS\Groups({"full-review-checklist"})
-     * @JMS\Type("string")
-     * @Assert\Choice({"yes", "no", "na"})
-     * @Assert\NotBlank
-     */
-    public $anySpendingConcerns;
+    #[JMS\Groups(['full-review-checklist'])]
+    #[JMS\Type('string')]
+    public ?string $anySpendingConcerns = null;
 
-    /**
-     * @var string
-     * @JMS\Groups({"full-review-checklist"})
-     * @JMS\Type("string")
-     * @Assert\Choice({"yes", "no"})
-     * @Assert\NotBlank
-     */
-    public $needReferral;
+    #[JMS\Groups(['full-review-checklist'])]
+    #[JMS\Type('string')]
+    public ?string $needReferral = null;
 
-    /**
-     * @var string
-     * @JMS\Groups({"full-review-checklist"})
-     * @JMS\Type("string")
-     * @Assert\Type("string")
-     */
-    public $decisionExplanation;
+    #[JMS\Groups(['full-review-checklist'])]
+    #[JMS\Type('string')]
+    public ?string $decisionExplanation = null;
 }
