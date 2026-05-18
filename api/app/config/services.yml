@@ -36,6 +36,8 @@ parameters:
         - "yahoo.com"
         - "yahoo.co.uk"
         - "example.com"
+        - "blueyonder.co.uk"
+        - "btopenworld.com"
 
 services:
     em:
