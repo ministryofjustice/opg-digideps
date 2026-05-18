@@ -244,6 +244,7 @@ trait OrganisationManagementTrait
 
         $this->pressButton('Edit organisation');
 
+        /** @var String[] $organisation */
         $organisation = array_pop($this->organisations);
 
         $organisation['Name'] .= ' Edit';

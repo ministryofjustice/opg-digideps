@@ -12,7 +12,7 @@ class FixDefaultSchemaListener implements EventSubscriber
         return ['postGenerateSchema'];
     }
 
-    public function postGenerateSchema(GenerateSchemaEventArgs $args)
+    public function postGenerateSchema(GenerateSchemaEventArgs $args): void
     {
         $schema = $args->getSchema();
 

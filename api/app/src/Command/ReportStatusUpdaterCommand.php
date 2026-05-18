@@ -69,5 +69,7 @@ class ReportStatusUpdaterCommand extends Command
         $em->flush();
 
         $output->writeln('Done');
+
+        return 0;
     }
 }

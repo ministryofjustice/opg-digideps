@@ -63,6 +63,7 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
 
         return new SelfValidatingPassport(
             new UserBadge($postAuthToken->getUserIdentifier(), function ($userEmail): User {
+                /** @var ?User $user */
                 $user = $this->userRepository->findOneBy(['email' => strtolower($userEmail)]);
 
                 if ($user === null) {
