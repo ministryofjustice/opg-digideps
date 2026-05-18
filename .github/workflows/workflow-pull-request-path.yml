@@ -88,7 +88,7 @@ jobs:
 
       - name: generate semver tag and release
         id: semver_tag
-        uses: ministryofjustice/opg-github-actions/actions/semver@821b6f92327f0f195276860676aa8133d63f39dd # v4.5.1
+        uses: ministryofjustice/opg-github-actions/actions/semver@b605e1e2c94b399e8139c4c2be2c8730700e0004 # v4.5.2
         with:
           prerelease: true
           default_bump: ${{ steps.semver_bump.outputs.default_bump }}
@@ -102,7 +102,7 @@ jobs:
           echo "Build Identifier: ${BUILD}"
           echo "Container Tag: ${TAG}"
 
-      - uses: actions/labeler@634933edcd8ababfe52f92936142cc22ac488b1b # v6.0.1
+      - uses: actions/labeler@f27b608878404679385c85cfa523b85ccb86e213 # v6.1.0
         if: github.event_name == 'pull_request'
         with:
           configuration-path: .github/labeller.yml
