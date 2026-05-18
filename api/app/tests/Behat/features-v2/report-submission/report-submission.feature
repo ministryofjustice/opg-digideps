@@ -1,4 +1,4 @@
-@v2 @v2_sequential_2 @report-submissions
+@v2 @v2_sequential_6 @report-submissions
 Feature: Report submissions dashboard
 
     @super-admin
