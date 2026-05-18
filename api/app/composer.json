@@ -6,7 +6,7 @@
     "config": {
         "sort-packages": true,
         "platform": {
-            "php": "8.4.18"
+            "php": "8.4.21"
         },
         "allow-plugins": {
             "symfony/flex": true
@@ -29,7 +29,6 @@
         }
     },
     "require": {
-        "php": "^8.4",
         "aws/aws-sdk-php": "^3.368.0",
         "digideps/common": "^1.0",
         "doctrine/doctrine-bundle": "^2.18.1",
