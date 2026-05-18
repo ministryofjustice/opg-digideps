@@ -6,7 +6,9 @@ namespace OPG\Digideps\Backend\Domain\Report;
 
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autoconfigure;
 
+#[Autoconfigure(public: true)]
 final class ReportAccessService
 {
     /**
