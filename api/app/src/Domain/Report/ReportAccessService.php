@@ -55,7 +55,6 @@ final class ReportAccessService
                 ON ou.organisation_id = o.id
             WHERE
                 (d.user_id = ? OR ou.user_id = ?)
-                AND (r.submitted = FALSE OR r.submitted IS NULL)
                 AND c.archived_at IS NULL
                 AND c.deleted_at IS NULL
         ";

@@ -121,15 +121,17 @@ class ReportRepository extends ServiceEntityRepository
 
     private function getAllByUserIdQuery(int $userId, ParameterBag $query, string $select, string $status): ?QueryBuilder
     {
-        $qb = $this->createQueryBuilder('r')
-            ->select(($select === 'count') ? 'COUNT(DISTINCT r)' : 'r,c,o')
-            ->leftJoin('r.client', 'c')
-            ->leftJoin('c.organisation', 'o')
-            ->where('o.isActivated = true');
         $reportIds = $this->reportAccessService->getVisibleReportIdsGivenUserId($userId);
         if (count($reportIds) === 0) {
             return null;
         }
+
+        $qb = $this->createQueryBuilder('r')
+            ->select(($select === 'count') ? 'COUNT(DISTINCT r)' : 'r,c,o')
+            ->leftJoin('r.client', 'c')
+            ->leftJoin('c.organisation', 'o')
+            ->where('o.isActivated = true')
+            ->andWhere('r.submitted = false OR r.submitted is null');
         $qb->andWhere($qb->expr()->in('r.id', $reportIds));
 
         if ($searchTerm = $query->get('q')) {
