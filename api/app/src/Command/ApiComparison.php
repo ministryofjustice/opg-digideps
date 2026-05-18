@@ -152,7 +152,7 @@ class ApiComparison extends Command
             )
         );
 
-        $result = preg_replace_callback('/\{[^}]+\}/', function () use (&$ids) {
+        $result = preg_replace_callback('/\{[^}]+\}/', function () use (&$ids): string {
             return (string) array_shift($ids);
         }, $route);
 
