@@ -44,7 +44,7 @@ final readonly class ReportAccessServiceStaticAccess
     public static function getVisibleReportIdsGivenUserId(?int $userId): array
     {
         /**
-         * @var Kernel $kernel ;
+         * @var Kernel $kernel
          */
         global $kernel;
         /**
