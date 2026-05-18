@@ -5,6 +5,9 @@
     "description": "The \"Symfony Standard Edition\" distribution",
     "config": {
         "sort-packages": true,
+        "platform": {
+            "php": "8.4.21"
+        },
         "allow-plugins": {
             "php-http/discovery": true,
             "pact-foundation/composer-downloads-plugin": false
@@ -26,11 +29,10 @@
         }
     },
     "require": {
-        "php": "^8.4",
         "ext-dom": "*",
         "ext-zip": "*",
         "alphagov/notifications-php-client": "^7.0.0",
-        "aws/aws-sdk-php": "3.371.4",
+        "aws/aws-sdk-php": "3.371.5",
         "digideps/common": "^1.0",
         "doctrine/annotations": "^2.0.2",
         "doctrine/collections": "^2.6.0",
