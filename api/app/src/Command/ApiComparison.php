@@ -164,7 +164,7 @@ class ApiComparison extends Command
     private function extractNonUserIds(array $row): array
     {
         try {
-            $extracted_ids = array_values(array_filter($row, fn ($key) => $key !== 'user_id', ARRAY_FILTER_USE_KEY));
+            $extracted_ids = array_values(array_filter($row, fn ($key): bool => $key !== 'user_id', ARRAY_FILTER_USE_KEY));
         } catch (\Throwable $e) {
             throw new \RuntimeException('Error extracting ids from row: ' . $e->getMessage(), 0, $e);
         }
@@ -231,7 +231,7 @@ class ApiComparison extends Command
                     $resultLegacy,
                     $resultNew,
                     $this->baseurl,
-                    fn (string $url) => $this->getApiResponse($authToken, $url)
+                    fn (string $url): \Psr\Http\Message\ResponseInterface => $this->getApiResponse($authToken, $url)
                 );
 
                 if (!$compareResult['matching']) {

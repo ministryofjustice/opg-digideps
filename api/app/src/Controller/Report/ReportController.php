@@ -728,7 +728,7 @@ class ReportController extends RestController
 
     #[Route(path: '/{id}/submit-documents', requirements: ['id' => '\d+'], methods: ['PUT'])]
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
-    public function submitDocuments(int $id)
+    public function submitDocuments(int $id): array
     {
         /* @var Report $currentReport */
         $currentReport = $this->findEntityBy(Report::class, $id, 'Report not found');
@@ -777,7 +777,7 @@ class ReportController extends RestController
         return ['checklist' => $checklist->getId()];
     }
 
-    private function populateChecklistEntity($checklist, $checklistData)
+    private function populateChecklistEntity(Checklist $checklist, array $checklistData): Checklist
     {
         $this->hydrateEntityWithArrayData($checklist, $checklistData, [
             'accounts_balance' => 'setAccountsBalance',
@@ -818,7 +818,7 @@ class ReportController extends RestController
      */
     #[Route(path: '/{report_id}/checked', requirements: ['report_id' => '\d+'], methods: ['PUT'])]
     #[IsGranted(attribute: 'ROLE_ADMIN')]
-    public function updateChecklist(Request $request, int $report_id)
+    public function updateChecklist(Request $request, int $report_id): array
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -857,7 +857,7 @@ class ReportController extends RestController
      */
     #[Route(path: '/{report_id}/checklist', requirements: ['report_id' => '\d+'], methods: ['GET'])]
     #[IsGranted(attribute: 'ROLE_ADMIN')]
-    public function getChecklist(int $report_id)
+    public function getChecklist(int $report_id): ?ReviewChecklist
     {
         $this->formatter->setJmsSerialiserGroups(['checklist', 'last-modified', 'user']);
 
@@ -871,7 +871,7 @@ class ReportController extends RestController
      */
     #[Route(path: '/{report_id}/checklist', requirements: ['report_id' => '\d+'], methods: ['POST', 'PUT'])]
     #[IsGranted(attribute: 'ROLE_ADMIN')]
-    public function upsertChecklist(Request $request, int $report_id)
+    public function upsertChecklist(Request $request, int $report_id): array
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -935,7 +935,7 @@ class ReportController extends RestController
     }
 
     #[Route(path: '/{reportId}/refresh-cache', name: 'refresh_report_cache', methods: ['POST'])]
-    public function refreshReportCache(Request $request, int $reportId)
+    public function refreshReportCache(Request $request, int $reportId): Report
     {
         $groups = $request->query->has('groups')
             ? $request->query->all('groups') : ['report', 'client', 'client-report'];
