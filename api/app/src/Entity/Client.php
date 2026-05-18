@@ -9,9 +9,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as JMS;
+use OPG\Digideps\Backend\Domain\Report\ReportAccessService;
+use OPG\Digideps\Backend\Domain\Report\ReportAccessServiceStaticAccess;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
 use OPG\Digideps\Backend\Entity\Traits\IsSoftDeleteableEntity;
+use OPG\Digideps\Backend\Kernel;
 use OPG\Digideps\Backend\Repository\ClientRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -56,6 +59,7 @@ class Client
      */
     #[JMS\Groups(['client-reports'])]
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Report>')]
+    #[JMS\Accessor(getter: 'getFilteredReports')]
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Report::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['submitDate' => 'DESC'])]
     private $reports;
@@ -895,5 +899,14 @@ class Client
         $this->courtOrders = $courtOrders;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, Report>
+     */
+    public function getFilteredReports(?int $userId = null): Collection
+    {
+        $reportIds = ReportAccessServiceStaticAccess::getVisibleReportIdsGivenUserId($userId);
+        return $this->reports->filter(fn(Report $report) => in_array($report->getId(), $reportIds));
     }
 }
