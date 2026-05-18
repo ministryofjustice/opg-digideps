@@ -6,13 +6,22 @@
  * the "save progress" button is disabled.
  */
 const Autosave = {
-  init: function (document) {
-    // enable referencing Autosave prototype in other functions
+  fetchFunction: null,
+  autosaveForms: [],
+
+  init: function (
+    document,
+    fetchFunction = fetch,
+    autosavePeriodSecs = 30
+  ) {
+    this.fetchFunction = fetchFunction
+    this.autosaveForms = document.querySelectorAll('form.js-autosave')
+
+    // enable referencing Autosave prototype in other functions which
+    // replace "this" in their scope (e.g. forEach, setInterval)
     const that = this
 
-    const autosaveForms = document.querySelectorAll('form.js-autosave')
-
-    autosaveForms.forEach(autosaveForm => {
+    this.autosaveForms.forEach(autosaveForm => {
       const saveProgressButton = autosaveForm.querySelector('button.js-autosave-save-progress-button')
 
       // Form elements which, when they change, don't trigger an autosave.
@@ -24,21 +33,25 @@ const Autosave = {
       // button is explicitly pressed (preserving current behaviour on
       // the checklist page, for example).
       const ignoredElements = autosaveForm.querySelectorAll('.js-autosave-ignore')
-      const ignoredElementNames = Array.from(ignoredElements).map(el => el.name)
+      const ignoredElementNames = Array.from(ignoredElements).map((el) => el.name)
 
       // this handler will save all fields (current behaviour)
-      const clickHandler = this.makeHandler(autosaveForm, saveProgressButton, [], [])
+      const clickHandler = that.makeHandler(autosaveForm, saveProgressButton, [], [])
       saveProgressButton.addEventListener('click', clickHandler)
 
       // this handler will not save ignored fields
-      const autosaveHandler = this.makeHandler(autosaveForm, saveProgressButton, ignoredElements, ignoredElementNames)
-      autosaveForm.addEventListener('change', autosaveHandler)
+      const nonIgnoredHandler = that.makeHandler(autosaveForm, saveProgressButton, ignoredElements, ignoredElementNames)
+      autosaveForm.addEventListener('change', nonIgnoredHandler)
 
       // periodically save every 30s; this will not save ignored fields
-      setInterval(() => {
+      const autosaveIntervalId = setInterval(() => {
         that.autosave(saveProgressButton, autosaveForm, ignoredElementNames)
-      }, 30000)
+      }, autosavePeriodSecs * 1000)
+
+      autosaveForm.setAttribute('autosave-interval-id', autosaveIntervalId)
     })
+
+    return that
   },
 
   makeHandler: function (autosaveForm, saveProgressButton, ignoredElements, ignoredElementNames) {
@@ -79,7 +92,7 @@ const Autosave = {
     })
 
     try {
-      await fetch(autosaveForm.action, {
+      await this.fetchFunction(autosaveForm.action, {
         method: 'POST',
         body: formData
       })
