@@ -41,7 +41,6 @@ final class ReportAccessService
                 ON r.id = cor.report_id
             JOIN court_order co
                 ON co.id = cor.court_order_id
-                AND co.status = 'ACTIVE'
             JOIN court_order_deputy cod
                 ON co.id = cod.court_order_id
                 AND cod.is_active
