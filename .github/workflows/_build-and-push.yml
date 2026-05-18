@@ -68,7 +68,7 @@ jobs:
 
       - name: login to ECR for snyk scanner pull
         if: steps.cache-snyk-scanner.outputs.cache-hit != 'true'
-        uses: aws-actions/amazon-ecr-login@19d944daaa35f0fa1d3f7f8af1d3f2e5de25c5b7 # v2.1.4
+        uses: aws-actions/amazon-ecr-login@fa648b43de3d4d023bcb3f89ed6940096949c419 # v2.1.5
         with:
           registries: ${{ vars.MANAGEMENT_ACCOUNT }}
           mask-password: "true"
@@ -284,7 +284,7 @@ jobs:
           role-duration-seconds: 900
           aws-region: eu-west-1
 
-      - uses: aws-actions/amazon-ecr-login@19d944daaa35f0fa1d3f7f8af1d3f2e5de25c5b7 # v2.1.4
+      - uses: aws-actions/amazon-ecr-login@fa648b43de3d4d023bcb3f89ed6940096949c419 # v2.1.5
         id: login_ecr_pull
         with:
           registries: ${{ vars.MANAGEMENT_ACCOUNT }}
@@ -383,7 +383,7 @@ jobs:
 
       - name: Upload SNYK scan results to GitHub Security tab
         if: steps.snyk_scan.outcome == 'success' && hashFiles('test-results/snyk-results.sarif') != ''
-        uses: github/codeql-action/upload-sarif@b1bff81932f5cdfc8695c7752dcee935dcd061c8 # v4.33.0
+        uses: github/codeql-action/upload-sarif@c6f931105cb2c34c8f901cc885ba1e2e259cf745 # v4.34.0
         with:
           sarif_file: test-results/snyk-results.sarif
           category: ${{ matrix.svc_name }}
@@ -401,7 +401,7 @@ jobs:
           role-duration-seconds: 900
           aws-region: eu-west-1
 
-      - uses: aws-actions/amazon-ecr-login@19d944daaa35f0fa1d3f7f8af1d3f2e5de25c5b7 # v2.1.4
+      - uses: aws-actions/amazon-ecr-login@fa648b43de3d4d023bcb3f89ed6940096949c419 # v2.1.5
         id: login_ecr
         with:
           registries: ${{ vars.MANAGEMENT_ACCOUNT }}
