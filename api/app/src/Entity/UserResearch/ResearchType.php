@@ -22,7 +22,7 @@ class ResearchType
 
         $this->id = $id ?? Uuid::uuid4();
 
-        $setters = array_map(function ($response) {
+        $setters = array_map(function ($response): string {
             return sprintf('set%s', ucfirst($response));
         }, $formResponses);
 
