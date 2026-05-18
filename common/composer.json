@@ -4,8 +4,12 @@
   "type": "library",
   "license": "MIT",
   "minimum-stability": "stable",
+  "config": {
+    "platform": {
+      "php": "8.4.21"
+    }
+  },
   "require": {
-    "php": "^8.4.2",
     "jms/serializer-bundle": "^5.5.2",
     "symfony/form": "^6.4.35",
     "symfony/validator": "^6.4.35",

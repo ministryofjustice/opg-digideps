@@ -5,6 +5,9 @@
     "description": "The \"Symfony Standard Edition\" distribution",
     "config": {
         "sort-packages": true,
+        "platform": {
+            "php": "8.4.21"
+        },
         "allow-plugins": {
             "php-http/discovery": true,
             "pact-foundation/composer-downloads-plugin": false
@@ -26,7 +29,6 @@
         }
     },
     "require": {
-        "php": "^8.4.2",
         "ext-dom": "*",
         "ext-zip": "*",
         "alphagov/notifications-php-client": "^7.0.0",
