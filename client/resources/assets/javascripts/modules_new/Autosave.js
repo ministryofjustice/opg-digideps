@@ -11,8 +11,8 @@ const Autosave = {
 
   init: function (
     document,
-    fetchFunction = fetch,
-    autosavePeriodSecs = 30
+    autosavePeriodSecs = 30,
+    fetchFunction = fetch
   ) {
     this.fetchFunction = fetchFunction
     this.autosaveForms = document.querySelectorAll('form.js-autosave')
