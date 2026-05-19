@@ -43,7 +43,8 @@ const Autosave = {
       const nonIgnoredHandler = that.makeHandler(autosaveForm, saveProgressButton, ignoredElements, ignoredElementNames)
       autosaveForm.addEventListener('change', nonIgnoredHandler)
 
-      // periodically save every 30s; this will not save ignored fields
+      // periodically save every autosavePeriodSecs seconds; this will not save
+      // ignored fields
       const autosaveIntervalId = setInterval(() => {
         that.autosave(saveProgressButton, autosaveForm, ignoredElementNames)
       }, autosavePeriodSecs * 1000)
