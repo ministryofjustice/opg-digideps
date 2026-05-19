@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\Reporting\Sections;
 
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Report;
+use OPG\Digideps\Backend\Entity\User;
 use Tests\OPG\Digideps\Backend\Behat\v2\Common\BaseFeatureContext;
 
 class ReportingSectionsFeatureContext extends BaseFeatureContext
@@ -38,6 +40,9 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
     public function createSubmittedReportForClient(int $clientId, string $type, \DateTime $submitDate): Report
     {
         $client = $this->em->getRepository(Client::class)->find($clientId);
+        $user = $this->em->getRepository(User::class)->find($this->loggedInUserDetails?->getUserId() ?? 0);
+        $deputy = $user->getDeputy() ?? $this->fixtureHelper->createDeputy($user->getEmail(), user: $user);
+        $this->em->persist($deputy);
 
         $report = $this->reportTestHelper->generateReport(
             $this->em,
@@ -45,6 +50,8 @@ class ReportingSectionsFeatureContext extends BaseFeatureContext
             type: $type,
             dateChecks: false,
         );
+
+        $this->fixtureHelper->createAndPersistCourtOrder(CourtOrderType::PFA, $client, $deputy, $report);
 
         $report->setSubmitted(true);
         $report->setSubmitDate($submitDate);

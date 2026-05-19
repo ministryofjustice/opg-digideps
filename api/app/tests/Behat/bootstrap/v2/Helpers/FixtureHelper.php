@@ -366,9 +366,7 @@ class FixtureHelper
             $this->reportTestHelper->completeReport($report, $this->em);
         }
 
-        if ($submitted) {
-            $this->reportTestHelper->submitReport($report, $this->em);
-        }
+        $currentReport = $submitted ? $this->reportTestHelper->submitReport($report, $this->em) : null;
 
         $this->em->persist($report);
 
@@ -385,7 +383,7 @@ class FixtureHelper
             throw new \LogicException("invalid report type: $reportType");
         }
 
-        $this->courtOrderTestHelper->generateCourtOrder(
+        $courtOrder = $this->courtOrderTestHelper->generateCourtOrder(
             em: $this->em,
             client: $client,
             courtOrderUid: $courtOrderUid,
@@ -394,16 +392,24 @@ class FixtureHelper
             deputy: $deputy
         );
 
+        if ($currentReport !== null) {
+            $courtOrder->addReport($currentReport);
+            $this->em->persist($courtOrder);
+            $this->em->persist($currentReport);
+        }
+
         $this->em->persist($deputy);
         $this->em->persist($user);
         $this->em->persist($client);
         $this->em->persist($report);
         $this->em->persist($organisation);
 
-        if ($submitted and isset($satisfactionScore)) {
+        if ($submitted && isset($satisfactionScore)) {
             $satisfaction = $this->setSatisfaction($report, $user, $satisfactionScore);
             $this->em->persist($satisfaction);
         }
+
+        $this->em->flush();
     }
 
     public function getLoggedInUserDetails(string $email): array

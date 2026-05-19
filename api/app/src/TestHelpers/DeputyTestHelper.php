@@ -16,7 +16,7 @@ class DeputyTestHelper
         $faker = Factory::create('en_GB');
 
         $deputy = new Deputy()
-            ->setDeputyUid($deputyUid ?: '' . $faker->randomNumber(8))
+            ->setDeputyUid((string)($user?->getDeputyUid() ?? $deputyUid ?? $faker->randomNumber(8)))
             ->setFirstname(is_null($user) ? $faker->firstName() : $user->getFirstName())
             ->setLastname(is_null($user) ? $faker->lastName() : $user->getLastName())
             ->setEmail1($email ?: $faker->safeEmail() . rand(1, 100000))

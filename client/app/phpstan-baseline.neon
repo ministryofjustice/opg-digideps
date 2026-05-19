@@ -8575,39 +8575,9 @@ parameters:
 			path: src/Service/Client/GovUK/BankHolidaysAPIClient.php
 
 		-
-			message: '#^Access to an undefined property OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\ClientApi\:\:\$logger\.$#'
-			identifier: property.notFound
-			count: 1
-			path: src/Service/Client/Internal/ClientApi.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Service\\Client\\RestClientInterface\:\:delete\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/Service/Client/Internal/ClientApi.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Service\\Client\\RestClientInterface\:\:get\(\)\.$#'
-			identifier: method.notFound
-			count: 5
-			path: src/Service/Client/Internal/ClientApi.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Service\\Client\\RestClientInterface\:\:put\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: src/Service/Client/Internal/ClientApi.php
-
-		-
 			message: '#^Cannot call method getUser\(\) on Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface\|null\.$#'
 			identifier: method.nonObject
 			count: 4
-			path: src/Service/Client/Internal/ClientApi.php
-
-		-
-			message: '#^Cannot call method log\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: src/Service/Client/Internal/ClientApi.php
 
 		-
@@ -8665,7 +8635,19 @@ parameters:
 			path: src/Service/Client/Internal/ClientApi.php
 
 		-
+			message: '#^Parameter \#2 \$mixed of method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:put\(\) expects array\|object\|string, Symfony\\Component\\Security\\Core\\User\\UserInterface\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Service/Client/Internal/ClientApi.php
+
+		-
 			message: '#^Parameter \#3 \$changedBy of class OPG\\Digideps\\Frontend\\Event\\ClientUpdatedEvent constructor expects Symfony\\Component\\Security\\Core\\User\\UserInterface, Symfony\\Component\\Security\\Core\\User\\UserInterface\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Service/Client/Internal/ClientApi.php
+
+		-
+			message: '#^Parameter \#3 \$jmsGroups of method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:get\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Service/Client/Internal/ClientApi.php
