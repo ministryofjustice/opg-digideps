@@ -23,7 +23,10 @@ class CSVDeputyshipProcessing
     ) {
     }
 
-    public function layProcessing(array $data, ?int $chunkId)
+    /**
+     * @return mixed[]
+     */
+    public function layProcessing(array $data, ?int $chunkId): array
     {
         $assembler = $this->layFactory->create();
         $uploadCollection = $assembler->assembleFromArray($data);
@@ -64,7 +67,7 @@ class CSVDeputyshipProcessing
         return $this->layUploader->handleNewMultiClients($multiclientApplyDbChanges);
     }
 
-    public function orgProcessing(array $data)
+    public function orgProcessing(array $data): array
     {
         $rowCount = count($data);
 

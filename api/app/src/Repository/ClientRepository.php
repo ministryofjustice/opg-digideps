@@ -28,7 +28,7 @@ class ClientRepository extends ServiceEntityRepository
      *
      * @return Client[]|array
      */
-    public function searchClients($query = '', $orderBy = 'lastname', $sortOrder = 'ASC', $limit = 100, $offset = 0)
+    public function searchClients($query = '', string $orderBy = 'lastname', $sortOrder = 'ASC', $limit = 100, $offset = 0)
     {
         /** @var SoftDeleteableFilter $filter */
         $filter = $this->_em->getFilters()->getFilter('softdeleteable');
@@ -54,7 +54,7 @@ class ClientRepository extends ServiceEntityRepository
     /**
      * @throws Exception
      */
-    public function saveUserToClient(User $user, int $clientId)
+    public function saveUserToClient(User $user, int $clientId): void
     {
         $conn = $this->getEntityManager()->getConnection();
 
@@ -178,7 +178,7 @@ class ClientRepository extends ServiceEntityRepository
         $offset,
         $limit,
         $id,
-    ) {
+    ): array {
         // BASE QUERY BUILDER with filters (for both count and results)
         $qb = $this->createQueryBuilder('c');
         $qb->andWhere('c.organisation = :id');

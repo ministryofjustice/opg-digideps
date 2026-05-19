@@ -4,23 +4,14 @@ namespace OPG\Digideps\Backend\v2\DTO;
 
 class StatusDto
 {
-    /** @var string */
-    private $status;
+    private string $status;
 
-    /**
-     * @return string
-     */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
 
-    /**
-     * @param string $status
-     *
-     * @return StatusDto
-     */
-    public function setStatus($status)
+    public function setStatus(string $status): static
     {
         $this->status = $status;
 

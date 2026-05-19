@@ -205,19 +205,19 @@ class ReportSection
         $this->completeDeputyExpenses($report);
     }
 
-    private function completeProfDeputyCosts(Report $report)
+    private function completeProfDeputyCosts(Report $report): void
     {
         $this->completeDeputyExpenses($report);
     }
 
-    private function completeProfDeputyCostsEstimate(Report $report)
+    private function completeProfDeputyCostsEstimate(Report $report): void
     {
         if ($report->isProfReport()) {
             $report->setProfDeputyCostsEstimateHowCharged(Report::PROF_DEPUTY_COSTS_TYPE_FIXED);
         }
     }
 
-    private function completePaFeeExpense(Report $report)
+    private function completePaFeeExpense(Report $report): void
     {
         $this->completeDeputyExpenses($report);
     }
