@@ -1603,12 +1603,6 @@ parameters:
 			path: api/app/src/Controller/Report/ReportController.php
 
 		-
-			message: '#^Parameter \#1 \$reportData of method OPG\\Digideps\\Backend\\Controller\\Report\\ReportController\:\:transformReports\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/ReportController.php
-
-		-
 			message: '#^Parameter \#1 \$sectionIds of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:updateSectionsStatusCache\(\) expects array\<string\>\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -7533,7 +7527,7 @@ parameters:
 		-
 			message: '#^Possibly invalid array key type mixed\.$#'
 			identifier: offsetAccess.invalidOffset
-			count: 3
+			count: 2
 			path: api/app/src/Repository/DocumentRepository.php
 
 		-
@@ -7643,12 +7637,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: api/app/src/Repository/PreRegistrationRepository.php
-
-		-
-			message: '#^Binary operation "\." between ''u\.id \= '' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: api/app/src/Repository/ReportRepository.php
 
 		-
 			message: '#^Cannot access offset ''checklist_id'' on mixed\.$#'
@@ -14707,12 +14695,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:generateClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -14767,19 +14749,7 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
 
 		-
-			message: '#^Parameter \#3 \$deputy of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
-			identifier: argument.type
-			count: 4
-			path: api/app/tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
-
-		-
 			message: '#^Parameter \$client of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
-
-		-
-			message: '#^Parameter \$deputy of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
@@ -21199,12 +21169,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:generateClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 6
@@ -21295,12 +21259,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
 
 		-
-			message: '#^Parameter \#3 \$deputy of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
-			identifier: argument.type
-			count: 4
-			path: api/app/tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
-
-		-
 			message: '#^Parameter \#3 \$email of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\CourtOrder\\CourtOrderFeatureContext\:\:fillInSelfRegistrationFieldsAndSubmit\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -21356,12 +21314,6 @@ parameters:
 
 		-
 			message: '#^Parameter \$client of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
-
-		-
-			message: '#^Parameter \$deputy of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
@@ -22951,12 +22903,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/OrgDashboard/OrgDashboardFeatureContext.php
 
 		-
-			message: '#^Cannot call method setActionMoreInfo\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/OrgDashboard/OrgDashboardFeatureContext.php
-
-		-
 			message: '#^Cannot call method setDeletedAt\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -23265,18 +23211,6 @@ parameters:
 		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\OrgDashboard\\OrgDashboardFeatureContext\:\:\$organisationEmail \(string\) does not accept string\|null\.$#'
 			identifier: assign.propertyType
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/OrgDashboard/OrgDashboardFeatureContext.php
-
-		-
-			message: '#^Variable \$client might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/OrgDashboard/OrgDashboardFeatureContext.php
-
-		-
-			message: '#^Variable \$userDetails might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/OrgDashboard/OrgDashboardFeatureContext.php
 
@@ -24805,30 +24739,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
-			message: '#^Offset ''Case'' on non\-empty\-list\<string\|null\> on left side of \?\? does not exist\.$#'
-			identifier: nullCoalesce.offset
-			count: 2
-			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
-			message: '#^Offset ''DeputyEmail'' does not exist on non\-empty\-list\<string\|null\>\.$#'
-			identifier: offsetAccess.notFound
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
-			message: '#^Offset ''DeputyEmail'' on non\-empty\-list\<string\|null\> in empty\(\) does not exist\.$#'
-			identifier: empty.offset
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
-			message: '#^Offset ''DeputyUid'' on non\-empty\-list\<string\|null\> on left side of \?\? does not exist\.$#'
-			identifier: nullCoalesce.offset
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
 			message: '#^Offset ''addressPostcode'' might not exist on array\|null\.$#'
 			identifier: offsetAccess.notFound
 			count: 1
@@ -24895,19 +24805,7 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$haystack of function strstr expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
 			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
-			message: '#^Parameter \#1 \$keys of function array_combine expects array\<int\|string\>, list\<string\|null\> given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
@@ -24970,18 +24868,6 @@ parameters:
 			message: '#^Parameter \#1 \$string of function substr expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
-			message: '#^Parameter \#1 \$string of function substr expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:generateClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
-			identifier: argument.type
-			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
@@ -25069,12 +24955,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
-			message: '#^Parameter \#3 \$deputy of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
-			identifier: argument.type
-			count: 4
-			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
 			message: '#^Parameter \#3 \$email of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Registration\\RegistrationFeatureContext\:\:fillInSelfRegistrationFieldsAndSubmit\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -25118,12 +24998,6 @@ parameters:
 
 		-
 			message: '#^Parameter \$client of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
-			message: '#^Parameter \$deputy of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
@@ -25741,12 +25615,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:generateClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -25789,12 +25657,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
 
 		-
-			message: '#^Parameter \#3 \$deputy of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
-			identifier: argument.type
-			count: 4
-			path: api/app/tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
-
-		-
 			message: '#^Parameter \#4 \$translatedOption of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\BaseFeatureContext\:\:tickCheckbox\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -25802,12 +25664,6 @@ parameters:
 
 		-
 			message: '#^Parameter \$client of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
-
-		-
-			message: '#^Parameter \$deputy of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
@@ -26437,12 +26293,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:generateClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -26497,12 +26347,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
-			message: '#^Parameter \#3 \$deputy of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
-			identifier: argument.type
-			count: 4
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
 			message: '#^Parameter \#3 \$subject of function preg_replace expects array\<float\|int\|string\>\|string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -26516,12 +26360,6 @@ parameters:
 
 		-
 			message: '#^Parameter \$client of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Parameter \$deputy of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
@@ -27859,6 +27697,12 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
 
 		-
+			message: '#^Cannot call method getDeputy\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: api/app/tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
+
+		-
 			message: '#^Cannot call method getDeputyEmail\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -27878,6 +27722,12 @@ parameters:
 
 		-
 			message: '#^Cannot call method getDeputyPhone\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: api/app/tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
+
+		-
+			message: '#^Cannot call method getEmail\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
@@ -29456,6 +29306,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array\<int, mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
+
+		-
+			message: '#^Parameter \#2 \$client of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
@@ -31873,12 +31729,6 @@ parameters:
 			path: api/app/tests/Integration/Controller/ClientControllerTest.php
 
 		-
-			message: '#^Cannot access offset ''current_report'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/tests/Integration/Controller/ClientControllerTest.php
-
-		-
 			message: '#^Cannot access offset ''firstname'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
@@ -31887,13 +31737,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 7
-			path: api/app/tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''reports'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
+			count: 6
 			path: api/app/tests/Integration/Controller/ClientControllerTest.php
 
 		-
@@ -31983,7 +31827,7 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 22
+			count: 21
 			path: api/app/tests/Integration/Controller/ClientControllerTest.php
 
 		-
@@ -32127,7 +31971,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 2
 			path: api/app/tests/Integration/Controller/ClientControllerTest.php
 
 		-
@@ -32192,12 +32036,6 @@ parameters:
 
 		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:\$pa1Client1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:\$pa1Client1Report1 has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: api/app/tests/Integration/Controller/ClientControllerTest.php
@@ -38539,32 +38377,8 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
-			message: '#^Cannot call method addUser\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getEmailIdentifier\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
 			message: '#^Cannot call method getId\(\) on OPG\\Digideps\\Backend\\Entity\\Organisation\|null\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 11
-			path: api/app/tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(OPG\\Digideps\\Backend\\Entity\\Organisation\)\: int given\.$#'
-			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
 
@@ -38572,42 +38386,6 @@ parameters:
 			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(array\)\: mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: api/app/tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$email of method OPG\\Digideps\\Backend\\Repository\\OrganisationRepository\:\:findByEmailIdentifier\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$id of method OPG\\Digideps\\Backend\\Repository\\OrganisationRepository\:\:hasActiveEntities\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 7
-			path: api/app/tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$orgId of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:deleteOrganisation\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$organisation of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setOrganisation\(\) expects OPG\\Digideps\\Backend\\Entity\\Organisation\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 9
-			path: api/app/tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#2 \$arrays of function array_diff expects an array of values castable to string, array\<int, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#2 \$orgId of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:addClientToOrganisation\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: api/app/tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
 
 		-
@@ -38631,7 +38409,7 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
 
 		-
@@ -38641,27 +38419,9 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
 
 		-
-			message: '#^Cannot access offset 1 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
-
-		-
-			message: '#^Cannot access offset 2 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
-
-		-
-			message: '#^Cannot access offset 3 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
-
-		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 6
+			count: 2
 			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
 
 		-
@@ -38674,18 +38434,6 @@ parameters:
 			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:refresh\(\) expects object, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
 			identifier: argument.type
 			count: 1
-			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#2 \$orgId of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:addClientToOrganisation\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 3
 			path: api/app/tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
 
 		-
@@ -40227,7 +39975,7 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 23
+			count: 22
 			path: api/app/tests/Integration/v2/Controller/OrganisationControllerTest.php
 
 		-
@@ -40437,7 +40185,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$orgId of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:addUserToOrganisation\(\) expects int, mixed given\.$#'
 			identifier: argument.type
-			count: 4
+			count: 3
 			path: api/app/tests/Integration/v2/Controller/OrganisationControllerTest.php
 
 		-
@@ -44135,126 +43883,6 @@ parameters:
 			identifier: missingType.parameter
 			count: 1
 			path: client/app/src/Controller/AbstractController.php
-
-		-
-			message: '#^Binary operation "\." between ''ad'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: client/app/src/Controller/Admin/AdController.php
-
-		-
-			message: '#^Binary operation "\." between ''user/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: client/app/src/Controller/Admin/AdController.php
-
-		-
-			message: '#^Call to an undefined method Symfony\\Component\\HttpFoundation\\Session\\SessionInterface\:\:getFlashBag\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/src/Controller/Admin/AdController.php
-
-		-
-			message: '#^Cannot call method add\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Controller/Admin/AdController.php
-
-		-
-			message: '#^Cannot call method getEmail\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Controller/Admin/AdController.php
-
-		-
-			message: '#^Cannot call method getFirstname\(\) on Symfony\\Component\\Security\\Core\\User\\UserInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Controller/Admin/AdController.php
-
-		-
-			message: '#^Cannot call method getId\(\) on Symfony\\Component\\Security\\Core\\User\\UserInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: client/app/src/Controller/Admin/AdController.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: client/app/src/Controller/Admin/AdController.php
-
-		-
-			message: '#^Cannot call method getId\(\) on string\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Controller/Admin/AdController.php
-
-		-
-			message: '#^Cannot call method getLastname\(\) on Symfony\\Component\\Security\\Core\\User\\UserInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Controller/Admin/AdController.php
-
-		-
-			message: '#^Cannot call method getRoleName\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: client/app/src/Controller/Admin/AdController.php
-
-		-
-			message: '#^Cannot call method setAdManaged\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: client/app/src/Controller/Admin/AdController.php
-
-		-
-			message: '#^Cannot call method setEmail\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Controller/Admin/AdController.php
-
-		-
-			message: '#^Parameter \#1 \$email of method OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\UserApi\:\:recreateToken\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Controller/Admin/AdController.php
-
-		-
-			message: '#^Parameter \#1 \$message of class Symfony\\Component\\Form\\FormError constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Controller/Admin/AdController.php
-
-		-
-			message: '#^Parameter \#1 \$string of function rtrim expects string, array\|bool\|float\|int\|string\|UnitEnum\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Controller/Admin/AdController.php
-
-		-
-			message: '#^Parameter \#2 \$mixed of method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:post\(\) expects array\|object\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Controller/Admin/AdController.php
-
-		-
-			message: '#^Parameter \#2 \$mixed of method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:put\(\) expects array\|object\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Controller/Admin/AdController.php
-
-		-
-			message: '#^Part \$filter \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: client/app/src/Controller/Admin/AdController.php
-
-		-
-			message: '#^Part \$what \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: client/app/src/Controller/Admin/AdController.php
 
 		-
 			message: '#^Binary operation "\." between ''chunk'' and mixed results in an error\.$#'
@@ -48427,18 +48055,6 @@ parameters:
 			path: client/app/src/Entity/Report/MoneyShortCategory.php
 
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 3
-			path: client/app/src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Cannot use array destructuring on mixed\.$#'
-			identifier: offsetAccess.nonArray
-			count: 3
-			path: client/app/src/Entity/Report/MoneyTransaction.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:getCategoriesGrouped\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -48447,12 +48063,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:getCategoriesGrouped\(\) has parameter \$typeFilter with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: client/app/src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:getType\(\) should return string but returns mixed\.$#'
-			identifier: return.type
 			count: 1
 			path: client/app/src/Entity/Report/MoneyTransaction.php
 
@@ -48511,12 +48121,6 @@ parameters:
 			path: client/app/src/Entity/Report/MoneyTransaction.php
 
 		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 3
-			path: client/app/src/Entity/Report/MoneyTransaction.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:\$bankAccount \(OPG\\Digideps\\Frontend\\Entity\\Report\\BankAccount\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -48524,12 +48128,6 @@ parameters:
 
 		-
 			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:\$bankAccountId has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: client/app/src/Entity/Report/MoneyTransaction.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\MoneyTransaction\:\:\$categories has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: client/app/src/Entity/Report/MoneyTransaction.php
@@ -51031,12 +50629,6 @@ parameters:
 			path: client/app/src/Exception/RestClientException.php
 
 		-
-			message: '#^Parameter \#1 \$array of function array_flip expects array\<int\|string\>, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Form/Ad/AddUserType.php
-
-		-
 			message: '#^Binary operation "\." between ''addUserForm…'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 2
@@ -51069,7 +50661,7 @@ parameters:
 		-
 			message: '#^Cannot call method getRoleName\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 4
+			count: 3
 			path: client/app/src/Form/Admin/AddUserType.php
 
 		-
@@ -51673,18 +51265,6 @@ parameters:
 			path: client/app/src/Form/Report/DecisionExistType.php
 
 		-
-			message: '#^Cannot call method canLinkToBankAccounts\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Form/Report/DeputyExpenseType.php
-
-		-
-			message: '#^Cannot call method getBankAccountOptions\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: client/app/src/Form/Report/DeputyExpenseType.php
-
-		-
 			message: '#^Cannot call method getWishToProvideDocumentation\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -51701,18 +51281,6 @@ parameters:
 			identifier: method.nonObject
 			count: 2
 			path: client/app/src/Form/Report/FeeSingleType.php
-
-		-
-			message: '#^Cannot call method canLinkToBankAccounts\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Form/Report/GiftType.php
-
-		-
-			message: '#^Cannot call method getBankAccountOptions\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: client/app/src/Form/Report/GiftType.php
 
 		-
 			message: '#^Cannot call method getDoesClientUndertakeSocialActivities\(\) on mixed\.$#'
@@ -51769,92 +51337,8 @@ parameters:
 			path: client/app/src/Form/Report/MoneyShortType.php
 
 		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 2
-			path: client/app/src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: client/app/src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Cannot access offset 1 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: client/app/src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Cannot access offset 3 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: client/app/src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Cannot access offset 4 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: client/app/src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Cannot call method canLinkToBankAccounts\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Cannot call method getBankAccountOptions\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: client/app/src/Form/Report/MoneyTransactionType.php
-
-		-
 			message: '#^Cannot cast mixed to int\.$#'
 			identifier: cast.int
-			count: 1
-			path: client/app/src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Form\\Report\\MoneyTransactionType\:\:isDescriptionMandatory\(\) should return bool but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: client/app/src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Form\\Report\\MoneyTransactionType\:\:isDescriptionMandatory\(\) should return bool but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: client/app/src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Parameter \#1 \$string of function ucfirst expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Possibly invalid array key type mixed\.$#'
-			identifier: offsetAccess.invalidOffset
-			count: 1
-			path: client/app/src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Form\\Report\\MoneyTransactionType\:\:\$authorizationChecker \(Symfony\\Component\\Security\\Core\\Authorization\\AuthorizationCheckerInterface\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: client/app/src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Form\\Report\\MoneyTransactionType\:\:\$selectedCategory \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: client/app/src/Form/Report/MoneyTransactionType.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Form\\Report\\MoneyTransactionType\:\:\$type \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: client/app/src/Form/Report/MoneyTransactionType.php
 
@@ -52681,39 +52165,9 @@ parameters:
 			path: client/app/src/Service/Client/GovUK/BankHolidaysAPIClient.php
 
 		-
-			message: '#^Access to an undefined property OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\ClientApi\:\:\$logger\.$#'
-			identifier: property.notFound
-			count: 1
-			path: client/app/src/Service/Client/Internal/ClientApi.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Service\\Client\\RestClientInterface\:\:delete\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/src/Service/Client/Internal/ClientApi.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Service\\Client\\RestClientInterface\:\:get\(\)\.$#'
-			identifier: method.notFound
-			count: 5
-			path: client/app/src/Service/Client/Internal/ClientApi.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Service\\Client\\RestClientInterface\:\:put\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: client/app/src/Service/Client/Internal/ClientApi.php
-
-		-
 			message: '#^Cannot call method getUser\(\) on Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface\|null\.$#'
 			identifier: method.nonObject
 			count: 4
-			path: client/app/src/Service/Client/Internal/ClientApi.php
-
-		-
-			message: '#^Cannot call method log\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: client/app/src/Service/Client/Internal/ClientApi.php
 
 		-
@@ -52771,7 +52225,19 @@ parameters:
 			path: client/app/src/Service/Client/Internal/ClientApi.php
 
 		-
+			message: '#^Parameter \#2 \$mixed of method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:put\(\) expects array\|object\|string, Symfony\\Component\\Security\\Core\\User\\UserInterface\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: client/app/src/Service/Client/Internal/ClientApi.php
+
+		-
 			message: '#^Parameter \#3 \$changedBy of class OPG\\Digideps\\Frontend\\Event\\ClientUpdatedEvent constructor expects Symfony\\Component\\Security\\Core\\User\\UserInterface, Symfony\\Component\\Security\\Core\\User\\UserInterface\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Service/Client/Internal/ClientApi.php
+
+		-
+			message: '#^Parameter \#3 \$jmsGroups of method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:get\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/src/Service/Client/Internal/ClientApi.php
@@ -56075,84 +55541,6 @@ parameters:
 			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: client/app/src/Twig/ComponentsExtension.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: client/app/src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Cannot access offset ''block_prefixes'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: client/app/src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Cannot access offset ''errors'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: client/app/src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: client/app/src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Cannot access offset ''translation_domain'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
-			path: client/app/src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Cannot access offset ''value'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: client/app/src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Cannot access property \$vars on mixed\.$#'
-			identifier: property.nonObject
-			count: 4
-			path: client/app/src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Cannot call method getMessage\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: client/app/src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Parameter \#1 \$id of method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:trans\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: client/app/src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Parameter \#2 \$parameters of method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:trans\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: client/app/src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$arrays of function array_merge expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: client/app/src/Twig/FormFieldsExtension.php
-
-		-
-			message: '#^Parameter \#3 \$domain of method Symfony\\Contracts\\Translation\\TranslatorInterface\:\:trans\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 9
-			path: client/app/src/Twig/FormFieldsExtension.php
 
 		-
 			message: '#^Binary operation "\." between ''The value '' and mixed results in an error\.$#'
@@ -59953,12 +59341,6 @@ parameters:
 			path: client/app/tests/Unit/Service/Client/Sirius/SiriusHealthCheckClientTest.php
 
 		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\MethodProphecy\|Psr\\Http\\Message\\RequestInterface\:\:willReturnArgument\(\)\.$#'
-			identifier: method.notFound
-			count: 4
-			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
 			message: '#^Cannot call method getBody\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -59978,12 +59360,6 @@ parameters:
 
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\SiriusApiGatewayClientTest\:\:setUpChecklistPdfPutPactBuilder\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\SiriusApiGatewayClientTest\:\:setUpReportPdfPactBuilder\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
@@ -60025,12 +59401,6 @@ parameters:
 			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
 
 		-
-			message: '#^Parameter \#1 \$request of method OPG\\Digideps\\Frontend\\Service\\AWS\\RequestSigner\:\:signRequest\(\) expects GuzzleHttp\\Psr7\\Request, Prophecy\\Argument\\Token\\TypeToken given\.$#'
-			identifier: argument.type
-			count: 4
-			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
 			message: '#^Parameter \#1 \$upload of method OPG\\Digideps\\Frontend\\Sync\\Service\\Client\\Sirius\\SiriusApiGatewayClient\:\:postChecklistPdf\(\) expects OPG\\Digideps\\Frontend\\Sync\\Model\\Sirius\\SiriusDocumentUpload, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -60039,30 +59409,6 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$upload of method OPG\\Digideps\\Frontend\\Sync\\Service\\Client\\Sirius\\SiriusApiGatewayClient\:\:putChecklistPdf\(\) expects OPG\\Digideps\\Frontend\\Sync\\Model\\Sirius\\SiriusDocumentUpload, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\SiriusApiGatewayClientTest\:\:\$expectedSupportingDocumentUuid is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\SiriusApiGatewayClientTest\:\:\$logger with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\SiriusApiGatewayClientTest\:\:\$signer \(OPG\\Digideps\\Frontend\\Service\\AWS\\RequestSigner\|Prophecy\\Prophecy\\ObjectProphecy\) is never assigned OPG\\Digideps\\Frontend\\Service\\AWS\\RequestSigner so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Client\\SiriusApiGatewayClientTest\:\:\$signer with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
 			count: 1
 			path: client/app/tests/Unit/Service/Client/SiriusApiGatewayClientTest.php
 
@@ -60187,18 +59533,6 @@ parameters:
 			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
 
 		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Cannot access offset mixed on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Service\\Csv\\TransactionCsvGeneratorTest\:\:generateBankAccount\(\) has parameter \$counter with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -60304,12 +59638,6 @@ parameters:
 			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
-
-		-
-			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: client/app/tests/Unit/Service/Csv/TransactionCsvGeneratorTest.php
 
 		-
@@ -62863,75 +62191,9 @@ parameters:
 			path: client/app/tests/Unit/Sync/Service/DocumentSyncRunnerTest.php
 
 		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\|Prophecy\\Prophecy\\ObjectProphecy\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 8
-			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Sync\\Service\\Client\\Sirius\\SiriusApiGatewayClient\|Prophecy\\Prophecy\\ObjectProphecy\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 8
-			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Sync\\Service\\SiriusApiErrorTranslator\|Prophecy\\Prophecy\\ObjectProphecy\:\:reveal\(\)\.$#'
-			identifier: method.notFound
-			count: 8
-			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\MethodProphecy\|Psr\\Http\\Message\\ResponseInterface\:\:shouldBeCalled\(\)\.$#'
-			identifier: method.notFound
-			count: 6
-			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Call to an undefined method Prophecy\\Prophecy\\MethodProphecy\|Psr\\Http\\Message\\ResponseInterface\:\:shouldNotBeCalled\(\)\.$#'
+			message: '#^Call to an undefined method PHPUnit\\Framework\\MockObject\\Rule\\InvokedCount\:\:getInvocationCount\(\)\.$#'
 			identifier: method.notFound
 			count: 1
-			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Cannot call method shouldBeCalled\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 9
-			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on Prophecy\\Prophecy\\MethodProphecy\|string\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 9
-			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Parameter \#1 \$errorString of method OPG\\Digideps\\Frontend\\Sync\\Service\\SiriusApiErrorTranslator\:\:translateApiError\(\) expects string, string\|false given\.$#'
-			identifier: argument.type
-			count: 3
-			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Parameter \#1 \$siriusApiGatewayClient of class OPG\\Digideps\\Frontend\\Sync\\Service\\DocumentSyncService constructor expects OPG\\Digideps\\Frontend\\Sync\\Service\\Client\\Sirius\\SiriusApiGatewayClient, object given\.$#'
-			identifier: argument.type
-			count: 8
-			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Parameter \#1 \$upload of method OPG\\Digideps\\Frontend\\Sync\\Service\\Client\\Sirius\\SiriusApiGatewayClient\:\:sendSupportingDocument\(\) expects OPG\\Digideps\\Frontend\\Sync\\Model\\Sirius\\SiriusDocumentUpload, Prophecy\\Argument\\Token\\AnyValuesToken given\.$#'
-			identifier: argument.type
-			count: 2
-			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Parameter \#2 \$restClient of class OPG\\Digideps\\Frontend\\Sync\\Service\\DocumentSyncService constructor expects OPG\\Digideps\\Frontend\\Service\\Client\\RestClient, object given\.$#'
-			identifier: argument.type
-			count: 8
 			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
 
 		-
@@ -62941,62 +62203,14 @@ parameters:
 			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
 
 		-
-			message: '#^Parameter \#3 \$errorTranslator of class OPG\\Digideps\\Frontend\\Sync\\Service\\DocumentSyncService constructor expects OPG\\Digideps\\Frontend\\Sync\\Service\\SiriusApiErrorTranslator, object given\.$#'
-			identifier: argument.type
-			count: 8
-			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Service\\DocumentSyncServiceTest\:\:\$errorTranslator \(OPG\\Digideps\\Frontend\\Sync\\Service\\SiriusApiErrorTranslator\|Prophecy\\Prophecy\\ObjectProphecy\) is never assigned OPG\\Digideps\\Frontend\\Sync\\Service\\SiriusApiErrorTranslator so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Service\\DocumentSyncServiceTest\:\:\$errorTranslator with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Service\\DocumentSyncServiceTest\:\:\$fileNameFixer is unused\.$#'
-			identifier: property.unused
-			count: 1
-			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Service\\DocumentSyncServiceTest\:\:\$fileNameFixer with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
-			count: 1
-			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Service\\DocumentSyncServiceTest\:\:\$restClient \(OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\|Prophecy\\Prophecy\\ObjectProphecy\) is never assigned OPG\\Digideps\\Frontend\\Service\\Client\\RestClient so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Service\\DocumentSyncServiceTest\:\:\$restClient with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
 			count: 1
 			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
 
 		-
 			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Service\\DocumentSyncServiceTest\:\:\$serializer \(JMS\\Serializer\\SerializerInterface\) does not accept object\.$#'
 			identifier: assign.propertyType
-			count: 1
-			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Service\\DocumentSyncServiceTest\:\:\$siriusApiGatewayClient \(OPG\\Digideps\\Frontend\\Sync\\Service\\Client\\Sirius\\SiriusApiGatewayClient\|Prophecy\\Prophecy\\ObjectProphecy\) is never assigned OPG\\Digideps\\Frontend\\Sync\\Service\\Client\\Sirius\\SiriusApiGatewayClient so it can be removed from the property type\.$#'
-			identifier: property.unusedType
-			count: 1
-			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Frontend\\Unit\\Sync\\Service\\DocumentSyncServiceTest\:\:\$siriusApiGatewayClient with generic class Prophecy\\Prophecy\\ObjectProphecy does not specify its types\: T$#'
-			identifier: missingType.generics
 			count: 1
 			path: client/app/tests/Unit/Sync/Service/DocumentSyncServiceTest.php
 

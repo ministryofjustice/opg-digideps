@@ -600,26 +600,23 @@ class ReportController extends RestController
     #[IsGranted(attribute: 'ROLE_ORG')]
     public function getAllByUser(Request $request): array
     {
-        /** @var User $user */
-        $user = $this->getUser();
-
-        return $this->getResponseByDeterminant($request, $user->getId(), ReportRepository::USER_DETERMINANT);
+        return $this->getResponseByUser($request);
     }
 
     /**
      * @throws NonUniqueResultException
      */
-    private function getResponseByDeterminant(Request $request, int|array $orgIdsOrUserId, int $determinant): array
+    private function getResponseByUser(Request $request): array
     {
         /** @var User $user */
         $user = $this->getUser();
 
-        $data = $this->repository->getAllByDeterminant($orgIdsOrUserId, $determinant, $request->query, 'reports', $request->query->get('status'));
+        $data = $this->repository->getAllByUserId($user->getId(), $request->query, $request->query->getString('status'));
         $this->updateReportStatusCache($user->getId());
 
         $result = [];
-        $result['reports'] = ($data === null) ? [] : $this->transformReports($data);
-        $result['counts'] = $this->getReportCountsByStatus($request, $orgIdsOrUserId, $determinant);
+        $result['reports'] = $this->transformReports($data);
+        $result['counts'] = $this->getReportCountsByStatus($request, $user->getId());
 
         return $result;
     }
@@ -685,12 +682,12 @@ class ReportController extends RestController
     /**
      * @throws \Exception
      */
-    private function getReportCountsByStatus(Request $request, int|array $orgIdsOrUserId, int $determinant): array
+    private function getReportCountsByStatus(Request $request, int $userId): array
     {
         $counts = [
-            Report::STATUS_NOT_STARTED => $this->getCountOfReportsByStatus(Report::STATUS_NOT_STARTED, $orgIdsOrUserId, $determinant, $request),
-            Report::STATUS_NOT_FINISHED => $this->getCountOfReportsByStatus(Report::STATUS_NOT_FINISHED, $orgIdsOrUserId, $determinant, $request),
-            Report::STATUS_READY_TO_SUBMIT => $this->getCountOfReportsByStatus(Report::STATUS_READY_TO_SUBMIT, $orgIdsOrUserId, $determinant, $request),
+            Report::STATUS_NOT_STARTED => $this->getCountOfReportsByStatus(Report::STATUS_NOT_STARTED, $userId, $request),
+            Report::STATUS_NOT_FINISHED => $this->getCountOfReportsByStatus(Report::STATUS_NOT_FINISHED, $userId, $request),
+            Report::STATUS_READY_TO_SUBMIT => $this->getCountOfReportsByStatus(Report::STATUS_READY_TO_SUBMIT, $userId, $request),
         ];
 
         $counts['total'] = array_sum($counts);
@@ -701,11 +698,11 @@ class ReportController extends RestController
     /**
      * @throws NonUniqueResultException
      */
-    private function getCountOfReportsByStatus(string $status, int|array $id, int $determinant, Request $request): mixed
+    private function getCountOfReportsByStatus(string $status, int $userId, Request $request): int
     {
         return $this
             ->repository
-            ->getAllByDeterminant($id, $determinant, $request->query, 'count', $status);
+            ->getAllByUserIdCount($userId, $request->query, $status);
     }
 
     /**
@@ -723,7 +720,7 @@ class ReportController extends RestController
             throw new NotFoundHttpException('No organisations found for user');
         }
 
-        return $this->getResponseByDeterminant($request, $organisationIds, ReportRepository::ORG_DETERMINANT);
+        return $this->getResponseByUser($request);
     }
 
     #[Route(path: '/{id}/submit-documents', requirements: ['id' => '\d+'], methods: ['PUT'])]
