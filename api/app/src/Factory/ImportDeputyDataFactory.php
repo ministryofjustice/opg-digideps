@@ -75,11 +75,14 @@ class ImportDeputyDataFactory implements DataFactoryInterface
                         SET
                             email1 = COALESCE(ssd.deputy_email, d.email1),
                             deputy_type = COALESCE(ssd.deputy_type, d.deputy_type),
-                            organisation_id = COALESCE(o.id, d.organisation_id),
+                            organisation_id = CASE
+                                WHEN COALESCE(ssd.deputy_type, d.deputy_type) = 'LAY' THEN NULL
+                                ELSE COALESCE(o.id, d.organisation_id)
+                            END,
                             user_id = COALESCE(u.id, d.user_id)
                         FROM staging.sirius_deputy ssd
                         LEFT JOIN organisation o
-                            ON ssd.deputy_email LIKE CONCAT('%@', o.email_identifier)
+                            ON ssd.deputy_email LIKE CONCAT('%@', o.email_identifier) OR ssd.deputy_email = o.email_identifier
                         LEFT JOIN dd_user u
                             ON u.deputy_uid = ssd.deputy_uid::BIGINT
                         WHERE d.id = ssd.local_id
