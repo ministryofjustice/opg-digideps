@@ -382,7 +382,47 @@ class ReportController extends AbstractController
             'reportStatus' => $status,
             'backLink' => $backLink,
             'feeTotals' => $report->getFeeTotals(),
-            'devPreview' => $request->query->getString('dev-preview') === 'QED'
+        ];
+    }
+
+    /**
+     * Used for active and archived report.
+     *
+     * @throws \Exception
+     */
+    #[Route(path: '/report/{reportId}/review/new', name: 'report_review_new')]
+    #[Template('@App/Report/Report/review_new.html.twig')]
+    public function reviewNewAction(Request $request, int $reportId): RedirectResponse|array
+    {
+        $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
+
+        // check status
+        $status = $report->getStatus();
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if ($user->isDeputyOrg()) {
+            $backLink = $this->clientApi->generateClientProfileLink($report->getClient());
+        } else {
+            $backLink = $this->generateUrl('courtorders_for_deputy');
+        }
+
+        if (!$report->isSubmitted()) {
+            // Redirect deputy to doc re-upload page if docs do not exist in S3
+            $documentsNotInS3 = $this->checkIfDocumentsExistInS3($report);
+
+            if (!empty($documentsNotInS3)) {
+                return $this->redirectToRoute('report_documents_reupload', ['reportId' => $reportId]);
+            }
+        }
+
+        return [
+            'user' => $this->getUser(),
+            'report' => $report,
+            'reportStatus' => $status,
+            'backLink' => $backLink,
+            'feeTotals' => $report->getFeeTotals(),
         ];
     }
 
