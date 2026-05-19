@@ -1,4 +1,4 @@
-@v2 @v2_admin @admin-management @admin-edit-myself
+@v2 @v2_admin_2 @admin-management @admin-edit-myself
 Feature: Admin - An admin user edits their details
 
   @super-admin

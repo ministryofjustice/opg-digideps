@@ -1,4 +1,4 @@
-@v2 @v2_admin @admin-management
+@v2 @v2_admin_2 @admin-management
 Feature: Admin - Admin users delete admin users
 
   @super-admin @admin-manager @admin
