@@ -38,10 +38,42 @@ describe('Form autosave', () => {
     expect(options.method).toBe('POST')
     expect(options.body).toBeInstanceOf(FormData)
 
-    // check that the body contains the value of the name field but not
+    // check that the body contains the value of the personName field but not
     // the value of the ignored textarea
     expect(options.body.get('personName')).toBe(personName)
     expect(options.body.get('description')).toBe(null)
+  })
+
+  it('should save all fields on form submit button press', () => {
+    const personName = 'Freda'
+    const description = 'Some description of a person'
+
+    fetchMock.mockResponse(JSON.stringify({ status: 200 }))
+
+    Autosave.init(document, 30, fetchMock)
+
+    // set a value for the personName (but don't trigger the change event)
+    const nameInput = document.querySelector('input[name="personName"]')
+    nameInput.value = personName
+
+    // set the value for the textarea
+    const descriptionInput = document.querySelector('textarea[name="description"]')
+    descriptionInput.value = description
+
+    // press save button
+    document.querySelector('button.js-autosave-save-progress-button')
+      .dispatchEvent(new Event('click'))
+
+    // confirm that the fetch function was called twice
+    expect(fetchMock).toHaveBeenCalled()
+
+    // check the properties of the saved data, which should include the description
+    const [_, options] = fetchMock.mock.calls[0]
+
+    // check that the body contains the value of the personName field *and*
+    // the value of the textarea (which is ignored until the save button is pressed)
+    expect(options.body.get('personName')).toBe(personName)
+    expect(options.body.get('description')).toBe(description)
   })
 
   it('should save even if change events are not triggered', async () => {
