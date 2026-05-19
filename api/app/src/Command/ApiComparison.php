@@ -231,7 +231,7 @@ class ApiComparison extends Command
                     $resultLegacy,
                     $resultNew,
                     $this->baseurl,
-                    fn (string $url): \Psr\Http\Message\ResponseInterface => $this->getApiResponse($authToken, $url)
+                    fn (string $url): ResponseInterface => $this->getApiResponse($authToken, $url)
                 );
 
                 if (!$compareResult['matching']) {

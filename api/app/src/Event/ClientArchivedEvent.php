@@ -12,9 +12,9 @@ class ClientArchivedEvent extends Event
 {
     public const string NAME = 'client.archived';
 
-    private \OPG\Digideps\Backend\Entity\User $currentUser;
+    private User $currentUser;
 
-    private \OPG\Digideps\Backend\Entity\Client $client;
+    private Client $client;
 
     private string $trigger;
 
