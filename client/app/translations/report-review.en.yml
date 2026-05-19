@@ -5,6 +5,12 @@ page:
 
 supportTitleTop: "startYear to endYear report"
 
+preview:
+  htmlTitle: Preview report - Complete the deputy report | GOV.UK
+  pageTitle: Preview report
+  para1: Use this section to check the details of the report are correct.
+  para2: When all sections are completed you will be able to continue the report submission process.
+
 review:
   htmlTitle: Review report - Complete the deputy report | GOV.UK
   pageTitle: Check your report
@@ -13,3 +19,7 @@ review:
   continueToConfirmDetailsButton: Confirm contact details
   continueToReportDeclarationButton: Continue to declaration
   continueToDeclarationButton: Continue to declaration and submission
+
+submitted:
+  htmlTitle: Submitted report - Complete the deputy report | GOV.UK
+  pageTitle: Submitted report
