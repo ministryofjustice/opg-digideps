@@ -1316,7 +1316,7 @@ class FixtureHelper
     {
         $faker = Factory::create('en_GB');
         if (is_null($courtOrderUid)) {
-            $courtOrderUid = '700000' . $faker->randomNumber(4);
+            $courtOrderUid = '7' . $faker->randomNumber(9);
         }
 
         return $this->courtOrderTestHelper::generateCourtOrder($this->em, $client, $courtOrderUid, 'ACTIVE', $orderType, $report, $deputy);
