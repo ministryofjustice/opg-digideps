@@ -896,4 +896,9 @@ class Client
 
         return $this;
     }
+
+    public function filterReports(int ...$reportIds): void
+    {
+        $this->reports = $this->reports->filter(fn(Report $report) => in_array($report->getId(), $reportIds));
+    }
 }
