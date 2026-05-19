@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Repository;
 
+use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\QueryBuilder;
+use OPG\Digideps\Backend\Domain\Report\ReportAccessService;
 use OPG\Digideps\Backend\Entity\Report\Debt as ReportDebt;
 use OPG\Digideps\Backend\Entity\Report\Fee as ReportFee;
 use OPG\Digideps\Backend\Entity\Report\MoneyShortCategory as ReportMoneyShortCategory;
@@ -13,7 +17,6 @@ use OPG\Digideps\Backend\Service\Search\ClientSearchFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\AbstractQuery;
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
@@ -24,11 +27,11 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class ReportRepository extends ServiceEntityRepository
 {
-    public const int USER_DETERMINANT = 1;
-    public const int ORG_DETERMINANT = 2;
-
-    public function __construct(ManagerRegistry $registry, private readonly ClientSearchFilter $filter)
-    {
+    public function __construct(
+        ManagerRegistry $registry,
+        private readonly ClientSearchFilter $filter,
+        private readonly ReportAccessService $reportAccessService,
+    ) {
         parent::__construct($registry, Report::class);
     }
 
@@ -116,33 +119,20 @@ class ReportRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    /**
-     * @return array|mixed|null
-     *
-     * @throws NonUniqueResultException
-     */
-    public function getAllByDeterminant(mixed $orgIdsOrUserId, int $determinant, ParameterBag $query, string $select, ?string $status)
+    private function getAllByUserIdQuery(int $userId, ParameterBag $query, string $select, string $status): ?QueryBuilder
     {
-        $qb = $this->createQueryBuilder('r');
-
-        if ($determinant === self::USER_DETERMINANT) {
-            $qb
-                ->select(($select === 'count') ? 'COUNT(DISTINCT r)' : 'r,c')
-                ->leftJoin('r.client', 'c')
-                ->leftJoin('c.users', 'u')->where('u.id = ' . $orgIdsOrUserId);
-        } else {
-            $qb
-                ->select(($select === 'count') ? 'COUNT(DISTINCT r)' : 'r,c,o')
-                ->leftJoin('r.client', 'c')
-                ->leftJoin('c.organisation', 'o')
-                ->where('o.isActivated = true')
-                ->andWhere($qb->expr()->in('o.id', ':orgIdsOrUserId'))
-                ->setParameter(':orgIdsOrUserId', $orgIdsOrUserId);
+        $reportIds = $this->reportAccessService->getVisibleReportIdsGivenUserId($userId);
+        if (count($reportIds) === 0) {
+            return null;
         }
 
-        $qb
-            ->andWhere('c.archivedAt IS NULL')
+        $qb = $this->createQueryBuilder('r')
+            ->select(($select === 'count') ? 'COUNT(DISTINCT r)' : 'r,c,o')
+            ->leftJoin('r.client', 'c')
+            ->leftJoin('c.organisation', 'o')
+            ->where('o.isActivated = true')
             ->andWhere('r.submitted = false OR r.submitted is null');
+        $qb->andWhere($qb->expr()->in('r.id', $reportIds));
 
         if ($searchTerm = $query->get('q')) {
             $this->filter->handleSearchTermFilter($searchTerm, $qb, 'c');
@@ -164,19 +154,25 @@ class ReportRepository extends ServiceEntityRepository
                 ->setParameter('status', $status);
         }
 
-        if ($select === 'count') {
-            return $qb->getQuery()->getSingleScalarResult();
-        }
+        return $qb;
+    }
 
-        $qb
-            ->setFirstResult($query->get('offset', 0))
-            ->setMaxResults($query->get('limit', 15))
-            ->addOrderBy('r.dueDate', 'ASC')
-            ->addOrderBy('c.caseNumber', 'ASC');
+    public function getAllByUserIdCount(int $userId, ParameterBag $query, string $status): int
+    {
+        $qb = $this->getAllByUserIdQuery($userId, $query, 'count', $status);
+        $count = $qb?->getQuery()->getSingleScalarResult() ?? 0;
+        return (int)$count;
+    }
 
-        $result = $qb->getQuery()->getArrayResult();
-
-        return count($result) === 0 ? null : $result;
+    public function getAllByUserId(int $userId, ParameterBag $query, string $status): array
+    {
+        return $this->getAllByUserIdQuery($userId, $query, 'reports', $status)
+            ?->setFirstResult($query->get('offset', 0))
+            ?->setMaxResults($query->get('limit', 15))
+            ?->addOrderBy('r.dueDate', 'ASC')
+            ?->addOrderBy('c.caseNumber', 'ASC')
+            ?->getQuery()
+            ?->getArrayResult() ?? [];
     }
 
     public function getReportsIdsWithQueuedChecklistsAndSetChecklistsToInProgress(int $limit): array

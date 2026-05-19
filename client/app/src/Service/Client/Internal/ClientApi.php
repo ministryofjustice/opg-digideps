@@ -9,7 +9,8 @@ use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Event\ClientDeletedEvent;
 use OPG\Digideps\Frontend\Event\ClientUpdatedEvent;
 use OPG\Digideps\Frontend\EventDispatcher\ObservableEventDispatcher;
-use OPG\Digideps\Frontend\Service\Client\RestClientInterface;
+use OPG\Digideps\Frontend\Service\Client\RestClient;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -26,11 +27,12 @@ class ClientApi
     private const string GET_ALL_CLIENTS_BY_DEPUTY_UID = 'client/get-all-clients-by-deputy-uid/%s';
 
     public function __construct(
-        private readonly RestClientInterface $restClient,
+        private readonly RestClient $restClient,
         private readonly RouterInterface $router,
         private readonly UserApi $userApi,
         private readonly TokenStorageInterface $tokenStorage,
         private readonly ObservableEventDispatcher $eventDispatcher,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
