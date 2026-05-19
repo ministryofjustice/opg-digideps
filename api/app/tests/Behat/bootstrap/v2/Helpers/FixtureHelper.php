@@ -1379,6 +1379,6 @@ class FixtureHelper
 
     public function createDeputy(?string $email = null, ?string $deputyUid = null, ?User $user = null): Deputy
     {
-        return $this->deputyTestHelper::generateDeputy($email, $deputyUid, $user);
+        return $this->deputyTestHelper::generateDeputy($email, $deputyUid, $user, $this->em);
     }
 }
