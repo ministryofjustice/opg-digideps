@@ -252,7 +252,7 @@ class FixtureHelper
         $deputyObject = $this->em->getRepository(Deputy::class)->findOneBy(['deputyUid' => $user->getDeputyUid()]);
 
         if (is_null($deputyObject)) {
-            $deputyObject = $this->deputyTestHelper->generateDeputy($user->getEmail(), strval($user->getDeputyUid()), $user);
+            $deputyObject = $this->deputyTestHelper->generateDeputy($user->getEmail(), strval($user->getDeputyUid()), $user, em: $this->em);
         }
 
         $deputyObject->setUser($user);
@@ -348,7 +348,7 @@ class FixtureHelper
     ) {
         $client = $this->clientTestHelper->generateClient($this->em, $user, $organisation, $caseNumber);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $reportType, $startDate);
-        $deputy = $this->deputyTestHelper->generateDeputy($deputyEmail, $deputyUid);
+        $deputy = $this->deputyTestHelper->generateDeputy($deputyEmail, $deputyUid, em: $this->em);
 
         $client->addReport($report);
         $client->setOrganisation($organisation);
@@ -1326,7 +1326,7 @@ class FixtureHelper
     {
         $user = $this->userTestHelper::createUser();
 
-        $deputy = $this->deputyTestHelper::generateDeputy(user: $user);
+        $deputy = $this->deputyTestHelper::generateDeputy(user: $user, em: $this->em);
         $deputy->associateWithCourtOrder($courtOrder);
 
         // if this is null, the user counts as "awaiting registration"

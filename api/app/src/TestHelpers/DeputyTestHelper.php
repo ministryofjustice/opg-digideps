@@ -37,6 +37,7 @@ class DeputyTestHelper
 
         if (!is_null($user)) {
             $deputy->setUser($user);
+            $user->setDeputyUid((int)$deputy->getDeputyUid());
         }
 
         return $deputy;
