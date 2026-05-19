@@ -1,4 +1,4 @@
-@v2 @v2_reporting_2 @money-out-short
+@v2 @v2_reporting_3 @money-out-short
 Feature: Money Out Short - Lay users
 
     @lay-pfa-low-not-started

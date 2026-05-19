@@ -1,4 +1,4 @@
-@v2 @v2_reporting_1 @report-review
+@v2 @v2_reporting_3 @report-review
 Feature: Report review
 
   @lay-pfa-high-submitted

@@ -1,4 +1,4 @@
-@v2 @v2_reporting_2 @money-transfers
+@v2 @v2_reporting_3 @money-transfers
 Feature: Money Transfers
 
     @lay-pfa-high-completed

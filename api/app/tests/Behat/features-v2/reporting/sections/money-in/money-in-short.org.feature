@@ -1,4 +1,4 @@
-@v2 @v2_reporting_2 @money-in-low-assets @money-in
+@v2 @v2_reporting_3 @money-in-low-assets @money-in
 Feature: Money in Low Assets - Org users
 
     @prof-pfa-low-not-started

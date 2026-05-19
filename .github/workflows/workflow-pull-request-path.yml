@@ -363,6 +363,23 @@ jobs:
       timeout: "1200"
       override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_2,--profile,v2-tests-browserkit"
 
+  end_to_end_tests_3:
+    name: end to end tests frontend 3
+    uses: ./.github/workflows/_run-task.yml
+    needs:
+      - workflow_variables
+      - reset_database
+      - scale_services_up
+    secrets:
+      ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
+    with:
+      workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
+      account_name: development
+      task_name: "integration_test_v2"
+      timeout: "1200"
+      override: "sh,./tests/Behat/run-tests-parallel.sh,--tags,@v2_reporting_3,--profile,v2-tests-browserkit"
+
   end_to_end_tests_admin:
     name: end to end tests admin
     uses: ./.github/workflows/_run-task.yml
@@ -497,6 +514,7 @@ jobs:
       - end_to_end_tests_admin_2
       - end_to_end_tests_1
       - end_to_end_tests_2
+      - end_to_end_tests_3
     with:
       replicas: 1
       acu: 4
@@ -518,6 +536,7 @@ jobs:
       - end_to_end_tests_sequential_5
       - end_to_end_tests_1
       - end_to_end_tests_2
+      - end_to_end_tests_3
       - end_to_end_tests_admin
       - end_to_end_tests_admin_2
     env:
