@@ -1441,12 +1441,6 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: '#^Parameter \#1 \$reportData of method OPG\\Digideps\\Backend\\Controller\\Report\\ReportController\:\:transformReports\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
 			message: '#^Parameter \#1 \$sectionIds of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:updateSectionsStatusCache\(\) expects array\<string\>\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -1544,12 +1538,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#4 \$amount of class OPG\\Digideps\\Backend\\Entity\\Report\\ProfDeputyOtherCost constructor expects float, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: '#^Parameter \#5 \$status of method OPG\\Digideps\\Backend\\Repository\\ReportRepository\:\:getAllByDeterminant\(\) expects string\|null, bool\|float\|int\|string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Controller/Report/ReportController.php
@@ -6599,12 +6587,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: src/Repository/PreRegistrationRepository.php
-
-		-
-			message: '#^Binary operation "\." between ''u\.id \= '' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Repository/ReportRepository.php
 
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
@@ -13315,12 +13297,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:generateClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -13375,19 +13351,7 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
 
 		-
-			message: '#^Parameter \#3 \$deputy of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
-			identifier: argument.type
-			count: 4
-			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
-
-		-
 			message: '#^Parameter \$client of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
-
-		-
-			message: '#^Parameter \$deputy of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Behat/bootstrap/v2/ACL/ACLFeatureContext.php
@@ -19807,12 +19771,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:generateClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 6
@@ -19903,12 +19861,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
 
 		-
-			message: '#^Parameter \#3 \$deputy of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
-			identifier: argument.type
-			count: 4
-			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
-
-		-
 			message: '#^Parameter \#3 \$email of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\CourtOrder\\CourtOrderFeatureContext\:\:fillInSelfRegistrationFieldsAndSubmit\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -19964,12 +19916,6 @@ parameters:
 
 		-
 			message: '#^Parameter \$client of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
-
-		-
-			message: '#^Parameter \$deputy of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Behat/bootstrap/v2/CourtOrder/CourtOrderFeatureContext.php
@@ -21559,12 +21505,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/OrgDashboard/OrgDashboardFeatureContext.php
 
 		-
-			message: '#^Cannot call method setActionMoreInfo\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/OrgDashboard/OrgDashboardFeatureContext.php
-
-		-
 			message: '#^Cannot call method setDeletedAt\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -21873,18 +21813,6 @@ parameters:
 		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\OrgDashboard\\OrgDashboardFeatureContext\:\:\$organisationEmail \(string\) does not accept string\|null\.$#'
 			identifier: assign.propertyType
-			count: 1
-			path: tests/Behat/bootstrap/v2/OrgDashboard/OrgDashboardFeatureContext.php
-
-		-
-			message: '#^Variable \$client might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: tests/Behat/bootstrap/v2/OrgDashboard/OrgDashboardFeatureContext.php
-
-		-
-			message: '#^Variable \$userDetails might not be defined\.$#'
-			identifier: variable.undefined
 			count: 1
 			path: tests/Behat/bootstrap/v2/OrgDashboard/OrgDashboardFeatureContext.php
 
@@ -23539,12 +23467,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:generateClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -23629,12 +23551,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
-			message: '#^Parameter \#3 \$deputy of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
-			identifier: argument.type
-			count: 4
-			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
 			message: '#^Parameter \#3 \$email of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Registration\\RegistrationFeatureContext\:\:fillInSelfRegistrationFieldsAndSubmit\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -23678,12 +23594,6 @@ parameters:
 
 		-
 			message: '#^Parameter \$client of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
-			message: '#^Parameter \$deputy of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
@@ -24301,12 +24211,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:generateClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -24349,12 +24253,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
 
 		-
-			message: '#^Parameter \#3 \$deputy of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
-			identifier: argument.type
-			count: 4
-			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
-
-		-
 			message: '#^Parameter \#4 \$translatedOption of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\BaseFeatureContext\:\:tickCheckbox\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -24362,12 +24260,6 @@ parameters:
 
 		-
 			message: '#^Parameter \$client of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
-
-		-
-			message: '#^Parameter \$deputy of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
@@ -24997,12 +24889,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:generateClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -25057,12 +24943,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
 
 		-
-			message: '#^Parameter \#3 \$deputy of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
-			identifier: argument.type
-			count: 4
-			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
 			message: '#^Parameter \#3 \$subject of function preg_replace expects array\<float\|int\|string\>\|string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -25076,12 +24956,6 @@ parameters:
 
 		-
 			message: '#^Parameter \$client of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
-
-		-
-			message: '#^Parameter \$deputy of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, OPG\\Digideps\\Backend\\Entity\\Deputy\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Behat/bootstrap/v2/ReportSubmission/ReportSubmissionFeatureContext.php
@@ -26419,6 +26293,12 @@ parameters:
 			path: tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
 
 		-
+			message: '#^Cannot call method getDeputy\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
+
+		-
 			message: '#^Cannot call method getDeputyEmail\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -26438,6 +26318,12 @@ parameters:
 
 		-
 			message: '#^Cannot call method getDeputyPhone\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
+
+		-
+			message: '#^Cannot call method getEmail\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
@@ -28016,6 +27902,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array\<int, mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
+
+		-
+			message: '#^Parameter \#2 \$client of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
@@ -30289,12 +30181,6 @@ parameters:
 			path: tests/Integration/Controller/ClientControllerTest.php
 
 		-
-			message: '#^Cannot access offset ''current_report'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
 			message: '#^Cannot access offset ''firstname'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
@@ -30303,13 +30189,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 7
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''reports'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
+			count: 6
 			path: tests/Integration/Controller/ClientControllerTest.php
 
 		-
@@ -30399,7 +30279,7 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 22
+			count: 21
 			path: tests/Integration/Controller/ClientControllerTest.php
 
 		-
@@ -30543,7 +30423,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 2
 			path: tests/Integration/Controller/ClientControllerTest.php
 
 		-
@@ -30608,12 +30488,6 @@ parameters:
 
 		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:\$pa1Client1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:\$pa1Client1Report1 has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: tests/Integration/Controller/ClientControllerTest.php
@@ -36907,32 +36781,8 @@ parameters:
 			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
-			message: '#^Cannot call method addUser\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getEmailIdentifier\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
 			message: '#^Cannot call method getId\(\) on OPG\\Digideps\\Backend\\Entity\\Organisation\|null\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 11
-			path: tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(OPG\\Digideps\\Backend\\Entity\\Organisation\)\: int given\.$#'
-			identifier: argument.type
 			count: 1
 			path: tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
 
@@ -36940,42 +36790,6 @@ parameters:
 			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(array\)\: mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$email of method OPG\\Digideps\\Backend\\Repository\\OrganisationRepository\:\:findByEmailIdentifier\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$id of method OPG\\Digideps\\Backend\\Repository\\OrganisationRepository\:\:hasActiveEntities\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 7
-			path: tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$orgId of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:deleteOrganisation\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$organisation of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setOrganisation\(\) expects OPG\\Digideps\\Backend\\Entity\\Organisation\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 9
-			path: tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#2 \$arrays of function array_diff expects an array of values castable to string, array\<int, mixed\> given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#2 \$orgId of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:addClientToOrganisation\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: tests/Integration/Entity/Repository/OrganisationRepositoryIntegrationTest.php
 
 		-
@@ -36999,7 +36813,7 @@ parameters:
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
 
 		-
@@ -37009,27 +36823,9 @@ parameters:
 			path: tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
 
 		-
-			message: '#^Cannot access offset 1 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
-
-		-
-			message: '#^Cannot access offset 2 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
-
-		-
-			message: '#^Cannot access offset 3 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
-
-		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 6
+			count: 2
 			path: tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
 
 		-
@@ -37042,18 +36838,6 @@ parameters:
 			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:refresh\(\) expects object, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
 			identifier: argument.type
 			count: 1
-			path: tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#2 \$orgId of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:addClientToOrganisation\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 3
 			path: tests/Integration/Entity/Repository/ReportRepositoryIntegrationTest.php
 
 		-
@@ -38547,7 +38331,7 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 23
+			count: 22
 			path: tests/Integration/v2/Controller/OrganisationControllerTest.php
 
 		-
@@ -38757,7 +38541,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$orgId of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:addUserToOrganisation\(\) expects int, mixed given\.$#'
 			identifier: argument.type
-			count: 4
+			count: 3
 			path: tests/Integration/v2/Controller/OrganisationControllerTest.php
 
 		-
