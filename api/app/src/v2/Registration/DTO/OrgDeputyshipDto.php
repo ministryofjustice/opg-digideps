@@ -103,7 +103,7 @@ class OrgDeputyshipDto
     /**
      * @return \DateTime
      */
-    public function getCourtDate()
+    public function getCourtDate(): ?\DateTime
     {
         return $this->courtDate;
     }
