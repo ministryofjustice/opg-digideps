@@ -10,11 +10,38 @@ describe('Form autosave', () => {
 
     document.body.innerHTML = `
       <form class="js-autosave" action="/save/form">
-        <input type="text" name="field1">
-        <input type="text" name="field2" class="js-autosave-ignore">
+        <input type="text" name="personName">
+        <textarea name="description" class="js-autosave-ignore"></textarea>
         <button class="js-autosave-save-progress-button">Save progress</button>
       </form>
     `
+  })
+
+  it('should save on form element value change', () => {
+    const personName = 'Bill'
+
+    fetchMock.mockResponse(JSON.stringify({ status: 200 }))
+
+    Autosave.init(document, 30, fetchMock)
+
+    // change a value in a text input; event must bubble to reach the listener
+    // attached to the parent form
+    const nameInput = document.querySelector('input[name="personName"]')
+    nameInput.value = personName
+    nameInput.dispatchEvent(new Event('change', { bubbles: true }))
+
+    // confirm that the fetch function was called
+    expect(fetchMock).toHaveBeenCalled()
+
+    const [url, options] = fetchMock.mock.calls[0]
+    expect(url).toContain('/save/form')
+    expect(options.method).toBe('POST')
+    expect(options.body).toBeInstanceOf(FormData)
+
+    // check that the body contains the value of the name field but not
+    // the value of the ignored textarea
+    expect(options.body.get('personName')).toBe(personName)
+    expect(options.body.get('description')).toBe(null)
   })
 
   it('should save even if change events are not triggered', async () => {
