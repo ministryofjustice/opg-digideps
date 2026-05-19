@@ -27697,6 +27697,12 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
 
 		-
+			message: '#^Cannot call method getDeputy\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: api/app/tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
+
+		-
 			message: '#^Cannot call method getDeputyEmail\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -27716,6 +27722,12 @@ parameters:
 
 		-
 			message: '#^Cannot call method getDeputyPhone\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: api/app/tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
+
+		-
+			message: '#^Cannot call method getEmail\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
@@ -29294,6 +29306,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array\<int, mixed\> given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
+
+		-
+			message: '#^Parameter \#2 \$client of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:createAndPersistCourtOrder\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, OPG\\Digideps\\Backend\\Entity\\Client\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
@@ -31711,12 +31729,6 @@ parameters:
 			path: api/app/tests/Integration/Controller/ClientControllerTest.php
 
 		-
-			message: '#^Cannot access offset ''current_report'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/tests/Integration/Controller/ClientControllerTest.php
-
-		-
 			message: '#^Cannot access offset ''firstname'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
@@ -31725,13 +31737,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 7
-			path: api/app/tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Cannot access offset ''reports'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
+			count: 6
 			path: api/app/tests/Integration/Controller/ClientControllerTest.php
 
 		-
@@ -31821,7 +31827,7 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 22
+			count: 21
 			path: api/app/tests/Integration/Controller/ClientControllerTest.php
 
 		-
@@ -31965,7 +31971,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 2
 			path: api/app/tests/Integration/Controller/ClientControllerTest.php
 
 		-
@@ -32030,12 +32036,6 @@ parameters:
 
 		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:\$pa1Client1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:\$pa1Client1Report1 has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: api/app/tests/Integration/Controller/ClientControllerTest.php
@@ -52165,39 +52165,9 @@ parameters:
 			path: client/app/src/Service/Client/GovUK/BankHolidaysAPIClient.php
 
 		-
-			message: '#^Access to an undefined property OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\ClientApi\:\:\$logger\.$#'
-			identifier: property.notFound
-			count: 1
-			path: client/app/src/Service/Client/Internal/ClientApi.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Service\\Client\\RestClientInterface\:\:delete\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: client/app/src/Service/Client/Internal/ClientApi.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Service\\Client\\RestClientInterface\:\:get\(\)\.$#'
-			identifier: method.notFound
-			count: 5
-			path: client/app/src/Service/Client/Internal/ClientApi.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Frontend\\Service\\Client\\RestClientInterface\:\:put\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: client/app/src/Service/Client/Internal/ClientApi.php
-
-		-
 			message: '#^Cannot call method getUser\(\) on Symfony\\Component\\Security\\Core\\Authentication\\Token\\TokenInterface\|null\.$#'
 			identifier: method.nonObject
 			count: 4
-			path: client/app/src/Service/Client/Internal/ClientApi.php
-
-		-
-			message: '#^Cannot call method log\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: client/app/src/Service/Client/Internal/ClientApi.php
 
 		-
@@ -52255,7 +52225,19 @@ parameters:
 			path: client/app/src/Service/Client/Internal/ClientApi.php
 
 		-
+			message: '#^Parameter \#2 \$mixed of method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:put\(\) expects array\|object\|string, Symfony\\Component\\Security\\Core\\User\\UserInterface\|null given\.$#'
+			identifier: argument.type
+			count: 2
+			path: client/app/src/Service/Client/Internal/ClientApi.php
+
+		-
 			message: '#^Parameter \#3 \$changedBy of class OPG\\Digideps\\Frontend\\Event\\ClientUpdatedEvent constructor expects Symfony\\Component\\Security\\Core\\User\\UserInterface, Symfony\\Component\\Security\\Core\\User\\UserInterface\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: client/app/src/Service/Client/Internal/ClientApi.php
+
+		-
+			message: '#^Parameter \#3 \$jmsGroups of method OPG\\Digideps\\Frontend\\Service\\Client\\RestClient\:\:get\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: client/app/src/Service/Client/Internal/ClientApi.php
@@ -58570,6 +58552,12 @@ parameters:
 			message: '#^Cannot call method with\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 5
+			path: client/app/tests/Unit/Service/Client/Internal/ClientApiTest.php
+
+		-
+			message: '#^Class OPG\\Digideps\\Frontend\\Service\\Client\\Internal\\ClientApi constructor invoked with 5 parameters, 6 required\.$#'
+			identifier: arguments.count
+			count: 1
 			path: client/app/tests/Unit/Service/Client/Internal/ClientApiTest.php
 
 		-

@@ -68,7 +68,7 @@ class ReportTestHelper
         self::completeClientBenefitsCheck($report);
     }
 
-    public static function submitReport(Report $report, EntityManagerInterface $em, ?User $submittedBy = null, ?\DateTime $submitDate = null): void
+    public static function submitReport(Report $report, EntityManagerInterface $em, ?User $submittedBy = null, ?\DateTime $submitDate = null): Report
     {
         if (is_null($submittedBy)) {
             if ($report->getClient()->getOrganisation()) {
@@ -142,6 +142,8 @@ class ReportTestHelper
 
         $em->persist($client);
         $em->persist($newReport);
+
+        return $newReport;
     }
 
     /**
