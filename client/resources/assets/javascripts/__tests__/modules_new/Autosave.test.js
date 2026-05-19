@@ -68,7 +68,7 @@ describe('Form autosave', () => {
     expect(fetchMock).toHaveBeenCalled()
 
     // check the properties of the saved data, which should include the description
-    const [_, options] = fetchMock.mock.calls[0]
+    const options = fetchMock.mock.calls[0][1]
 
     // check that the body contains the value of the personName field *and*
     // the value of the textarea (which is ignored until the save button is pressed)
