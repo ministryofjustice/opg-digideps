@@ -1,4 +1,4 @@
-@v2 @v2_sequential_5 @report-submissions @attaching-further-documents
+@v2 @v2_sequential_4 @report-submissions @attaching-further-documents
 Feature: Attaching Further Documents
 
     @lay-pfa-high-submitted @super-admin

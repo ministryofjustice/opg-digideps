@@ -1,4 +1,4 @@
-@v2 @v2_admin @reporting-checklist-lay
+@v2 @v2_admin_2 @reporting-checklist-lay
 Feature: Reporting Checklists - Lay reporting checklist
 
     @admin @lay-combined-high-submitted
