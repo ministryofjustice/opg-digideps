@@ -350,8 +350,7 @@ class ReportController extends AbstractController
      * @throws \Exception
      */
     #[Route(path: '/report/{reportId}/review', name: 'report_review')]
-    #[Template('@App/Report/Report/review.html.twig')]
-    public function reviewAction(Request $request, int $reportId): RedirectResponse|array
+    public function reviewAction(Request $request, int $reportId): Response
     {
         $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
 
@@ -376,54 +375,17 @@ class ReportController extends AbstractController
             }
         }
 
-        return [
+        $template = $request->query->getString('dev-preview') === 'QED'
+            ? '@App/Report/Report/review_new.html.twig'
+            : '@App/Report/Report/review.html.twig';
+
+        return $this->render($template, [
             'user' => $this->getUser(),
             'report' => $report,
             'reportStatus' => $status,
             'backLink' => $backLink,
             'feeTotals' => $report->getFeeTotals(),
-        ];
-    }
-
-    /**
-     * Used for active and archived report.
-     *
-     * @throws \Exception
-     */
-    #[Route(path: '/report/{reportId}/review/new', name: 'report_review_new')]
-    #[Template('@App/Report/Report/review_new.html.twig')]
-    public function reviewNewAction(Request $request, int $reportId): RedirectResponse|array
-    {
-        $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
-
-        // check status
-        $status = $report->getStatus();
-
-        /** @var User $user */
-        $user = $this->getUser();
-
-        if ($user->isDeputyOrg()) {
-            $backLink = $this->clientApi->generateClientProfileLink($report->getClient());
-        } else {
-            $backLink = $this->generateUrl('courtorders_for_deputy');
-        }
-
-        if (!$report->isSubmitted()) {
-            // Redirect deputy to doc re-upload page if docs do not exist in S3
-            $documentsNotInS3 = $this->checkIfDocumentsExistInS3($report);
-
-            if (!empty($documentsNotInS3)) {
-                return $this->redirectToRoute('report_documents_reupload', ['reportId' => $reportId]);
-            }
-        }
-
-        return [
-            'user' => $this->getUser(),
-            'report' => $report,
-            'reportStatus' => $status,
-            'backLink' => $backLink,
-            'feeTotals' => $report->getFeeTotals(),
-        ];
+        ]);
     }
 
     private function checkIfDocumentsExistInS3(Report $report): array
