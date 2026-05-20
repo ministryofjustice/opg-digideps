@@ -5,6 +5,8 @@
 {# for PROF users, deputy is always the named deputy #}
 {% set deputy = submittedBy.isDeputyOrg and client.getDeputy ? client.getDeputy : submittedBy %}
 
-<h1 class="govuk-heading-l">Deputy report for {{ reportTypeHeading }} decisions</h1>
+<div id="wrapper">
+    <h1 class="govuk-heading-l">Deputy report for {{ reportTypeHeading }} decisions</h1>
 
-{% include '@App/Report/Rendered/_client_and_deputy_information.html.twig' %}
+    {% include '@App/Report/Rendered/_client_and_deputy_information.html.twig' %}
+</div>
