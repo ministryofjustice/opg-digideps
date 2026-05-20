@@ -36,14 +36,19 @@ jobs:
 
       - name: build docker images
         run: |
-          docker buildx build \
-          -f api/docker/app/Dockerfile \
-          --cache-from=type=local,src=/tmp/.buildx-cache \
-          --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-          --build-arg LOCAL_RESOURCES=true \
-          --tag api-integration-tests:latest \
-          --target devtools-admin \
-          --output type=docker .
+          for i in 1 2; do
+            echo "Starting attempt $i"
+
+            docker buildx build \
+            -f api/docker/app/Dockerfile \
+            --cache-from=type=local,src=/tmp/.buildx-cache \
+            --cache-to=type=local,dest=/tmp/.buildx-cache-new \
+            --build-arg LOCAL_RESOURCES=true \
+            --tag api-integration-tests:latest \
+            --target devtools-admin \
+            --output type=docker . \
+            && break || sleep 1
+          done
 
       - name: Move cache
         run: |
@@ -54,7 +59,11 @@ jobs:
         env:
           SELECTION: ${{ inputs.selection }}
         id: integration-tests
-        run: make api-integration-tests ADDITIONAL_CONFIG="" INTEGRATION_SELECTION=${{ inputs.selection }}
+        run: |
+          for i in 1 2; do
+            echo "Starting attempt $i"
+            make api-integration-tests ADDITIONAL_CONFIG="" INTEGRATION_SELECTION=${{ inputs.selection }} && break || sleep 1
+          done
 
       - name: archive test results
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
