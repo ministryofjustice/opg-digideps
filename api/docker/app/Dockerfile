@@ -43,6 +43,8 @@ EXPOSE 443
 
 ENV TIMEOUT=20
 
+RUN false
+
 RUN apk --no-cache add \
     postgresql-dev \
     postgresql-client \
