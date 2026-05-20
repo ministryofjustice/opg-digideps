@@ -31,6 +31,11 @@ on:
         required: true
         type: string
         description: "Account to get credentials for"
+      tf_role:
+        required: false
+        type: string
+        description: "Role to use for account resources"
+        default: "digideps-ci"
 
 jobs:
   terraform_workflow:
@@ -95,6 +100,7 @@ jobs:
         run: terraform init -input=false
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
+          TF_VAR_DEFAULT_ROLE_BOUNDARIED: ${{ inputs.tf_role }}
         working-directory: terraform/${{ inputs.terraform_path }}
 
       - name: terraform init for environment
@@ -106,6 +112,7 @@ jobs:
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
           TF_VAR_OPG_DOCKER_TAG: ${{ inputs.container_version }}
+          TF_VAR_DEFAULT_ROLE_BOUNDARIED: ${{ inputs.tf_role }}
         run: |
           terraform workspace show
           terraform plan -input=false -parallelism=30 -lock-timeout=5m
@@ -116,6 +123,7 @@ jobs:
         env:
           TF_WORKSPACE: ${{ inputs.workspace }}
           TF_VAR_OPG_DOCKER_TAG: ${{ inputs.container_version }}
+          TF_VAR_DEFAULT_ROLE_BOUNDARIED: ${{ inputs.tf_role }}
           CI: true
         run: |
           terraform apply -lock-timeout=300s -input=false -auto-approve -parallelism=30
