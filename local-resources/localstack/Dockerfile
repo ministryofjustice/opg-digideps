@@ -11,4 +11,4 @@ RUN chmod 544 /etc/localstack/init/ready.d/init.sh
 COPY ./local-resources/localstack/wait/healthcheck.sh /scripts/wait/healthcheck.sh
 RUN chmod 544 /scripts/wait/healthcheck.sh
 
-RUN apt-get -y install jq
+RUN apt-get update && apt-get install -y jq
