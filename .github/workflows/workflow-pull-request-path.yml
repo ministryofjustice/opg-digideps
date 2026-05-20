@@ -224,6 +224,7 @@ jobs:
       terraform_path: account
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
       account_name: development
+      tf_role: digideps-ci-boundaried
 
   terraform_apply_environment:
     name: environment apply terraform
@@ -241,6 +242,7 @@ jobs:
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
       account_name: development
       pull_request_path: true
+      tf_role: digideps-ci-boundaried
 
   ecr_scan_results:
     name: ecr scan results
