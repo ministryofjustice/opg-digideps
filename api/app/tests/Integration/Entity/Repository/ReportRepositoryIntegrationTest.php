@@ -2,6 +2,8 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Checklist;
@@ -127,11 +129,13 @@ class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
 
     public function testReportsAreSortedByDueDate(): void
     {
-        // create organisation
-        $org = self::$fixtures->createOrganisations(1);
-
         // create clients and add to org
         $user = self::$fixtures->createUser(roleName: User::ROLE_PROF);
+
+        // create organisation
+        $org = self::$fixtures->createOrganisations(1, $user)[0];
+
+        $deputy = self::$fixtures->createDeputy(user: $user);
 
         $client1 = self::$fixtures->createClient($user);
         $client2 = self::$fixtures->createClient($user);
@@ -139,20 +143,23 @@ class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
 
         self::$entityManager->flush();
 
-        self::$fixtures->addClientToOrganisation($client1->getId(), $org[0]->getId());
-        self::$fixtures->addClientToOrganisation($client2->getId(), $org[0]->getId());
-        self::$fixtures->addClientToOrganisation($clientDual->getId(), $org[0]->getId());
+        self::$fixtures->addClientToOrganisation($client1->getId(), $org->getId());
+        self::$fixtures->addClientToOrganisation($client2->getId(), $org->getId());
+        self::$fixtures->addClientToOrganisation($clientDual->getId(), $org->getId());
 
+        $courtOrder1 = self::$fixtures->createCourtOrder('UID' . rand(1, 999999), CourtOrderType::PFA, CourtOrderKind::Single, 'ACTIVE', deputy: $deputy, client: $client1);
+        $courtOrder2 = self::$fixtures->createCourtOrder('UID' . rand(1, 999999), CourtOrderType::PFA, CourtOrderKind::Single, 'ACTIVE', deputy: $deputy, client: $client2);
         // create reports for clients
-        $report1 = self::$fixtures->createReport($client1)->setDueDate(new \DateTime('2025-08-01'))->setEndDate(new \DateTime('2025-07-10'));
-        $report2 = self::$fixtures->createReport($client2)->setDueDate(new \DateTime('2025-03-01'))->setEndDate(new \DateTime('2025-02-10'));
+        $report1 = self::$fixtures->createReport($client1, courtOrder: $courtOrder1)->setDueDate(new \DateTime('2025-08-01'))->setEndDate(new \DateTime('2025-07-10'));
+        $report2 = self::$fixtures->createReport($client2, courtOrder: $courtOrder2)->setDueDate(new \DateTime('2025-03-01'))->setEndDate(new \DateTime('2025-02-10'));
 
-        $dualReport1 = self::$fixtures->createReport($clientDual)->setDueDate(new \DateTime('2025-02-01'))->setEndDate(new \DateTime('2025-01-10'));
-        $dualReport2 = self::$fixtures->createReport($clientDual)->setDueDate(new \DateTime('2025-06-01'))->setEndDate(new \DateTime('2025-05-10'));
+        $courtOrderDual = self::$fixtures->createCourtOrder('UID' . rand(1, 999999), CourtOrderType::PFA, CourtOrderKind::Dual, 'ACTIVE', deputy: $deputy, client: $clientDual);
+        $dualReport1 = self::$fixtures->createReport($clientDual, courtOrder: $courtOrderDual)->setDueDate(new \DateTime('2025-02-01'))->setEndDate(new \DateTime('2025-01-10'));
+        $dualReport2 = self::$fixtures->createReport($clientDual, courtOrder: $courtOrderDual)->setDueDate(new \DateTime('2025-06-01'))->setEndDate(new \DateTime('2025-05-10'));
 
-        self::$entityManager->flush();
+        self::$fixtures->flush();
 
-        $reports = self::$sut->getAllByDeterminant([$org[0]->getId()], 2, new ParameterBag(), 'reports', 'notStarted');
+        $reports = self::$sut->getAllByUserId($user->getId(), new ParameterBag(), 'notStarted');
 
         self::assertCount(4, $reports);
         self::assertEquals($reports[0]['id'], $dualReport1->getId());

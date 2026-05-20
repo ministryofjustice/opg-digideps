@@ -7,6 +7,8 @@ use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Entity\CourtOrderDeputy;
+use OPG\Digideps\Backend\Entity\Note;
 use OPG\Digideps\Backend\Entity\Report\Asset;
 use OPG\Digideps\Backend\Entity\Report\AssetOther;
 use OPG\Digideps\Backend\Entity\Report\AssetProperty;
@@ -18,8 +20,10 @@ use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Expense;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\VisitsCare;
+use OPG\Digideps\Backend\Entity\Satisfaction;
+use OPG\Digideps\Backend\Entity\UserResearch\ResearchType;
+use OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse;
 use OPG\Digideps\Common\Validating\ValidatingArray;
-use OPG\Digideps\Backend\Entity as EntityDir;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Deputy;
@@ -124,13 +128,10 @@ class Fixtures
         return $client;
     }
 
-    /**
-     * @return Deputy
-     */
-    public function createDeputy(array $settersMap = [])
+    public function createDeputy(array $settersMap = [], ?User $user = null): Deputy
     {
         $deputy = new Deputy();
-        $deputy->setDeputyUid('UID' . rand(1, 999999));
+        $deputy->setDeputyUid((string)rand(100000, 999999));
         $deputy->setEmail1('temp' . microtime(true) . rand(100, 99999) . '@temp.com');
         $deputy->setFirstname('name' . time());
         $deputy->setLastname('surname' . time());
@@ -139,6 +140,12 @@ class Fixtures
 
         foreach ($settersMap as $k => $v) {
             $deputy->$k($v);
+        }
+
+        if ($user !== null) {
+            $deputy->setUser($user);
+            $user->setDeputyUid(intval($deputy->getDeputyUid()));
+            $this->em->persist($user);
         }
 
         $this->em->persist($deputy);
@@ -241,6 +248,7 @@ class Fixtures
     public function createReport(
         Client $client,
         array $settersMap = [],
+        ?CourtOrder $courtOrder = null
     ): Report {
         $validatedSettersMap = new ValidatingArray($settersMap);
         // should be created via ReportService, but this is a fixture, so better to keep it simple
@@ -250,6 +258,11 @@ class Fixtures
             $validatedSettersMap->getObjectOrNull('setStartDate', \DateTime::class) ?? new \DateTime('now'),
             $validatedSettersMap->getObjectOrNull('setEndDate', \DateTime::class) ?? new \DateTime('+12 months -1 day'),
         );
+
+        if ($courtOrder !== null) {
+            $courtOrder->addReport($report);
+            $this->em->persist($courtOrder);
+        }
 
         foreach ($settersMap as $k => $v) {
             $report->$k($v);
@@ -362,12 +375,9 @@ class Fixtures
         return $decision;
     }
 
-    /**
-     * @return EntityDir\Note
-     */
-    public function createNote(Client $client, User $createdBy, $cat, $title, $content)
+    public function createNote(Client $client, User $createdBy, $cat, $title, $content): Note
     {
-        $note = new EntityDir\Note($client, $cat, $title, $content);
+        $note = new Note($client, $cat, $title, $content);
         $note->setCreatedBy($createdBy);
 
         $this->em->persist($note);
@@ -376,13 +386,13 @@ class Fixtures
     }
 
     /**
-     * @throws ORMException
+     * @return array<Organisation>
      */
-    public function createOrganisations(int $amount): array
+    public function createOrganisations(int $amount, User ...$users): array
     {
         $orgs = [];
         for ($i = 1; $i <= $amount; ++$i) {
-            $orgs[] = $this->createOrganisation(sprintf('Org %d', $i), sprintf(rand(1, 99999) . 'org_email_%d', $i), true);
+            $orgs[] = $this->createOrganisation(sprintf('Org %d', $i), sprintf(rand(1, 99999) . 'org_email_%d', $i), true, ...$users);
         }
 
         return $orgs;
@@ -391,12 +401,16 @@ class Fixtures
     /**
      * @throws ORMException
      */
-    public function createOrganisation(string $name, string $identifier, bool $isActive): Organisation
+    public function createOrganisation(string $name, string $identifier, bool $isActive, User ...$users): Organisation
     {
         $org = new Organisation();
         $org->setName($name);
         $org->setEmailIdentifier($identifier);
         $org->setIsActivated($isActive);
+
+        foreach ($users as $user) {
+            $org->addUser($user);
+        }
 
         $this->em->persist($org);
 
@@ -573,16 +587,16 @@ class Fixtures
         foreach ($range as $i) {
             $rs = $this->createReportSubmission();
 
-            $researchType = new EntityDir\UserResearch\ResearchType(['surveys']);
+            $researchType = new ResearchType(['surveys']);
 
-            $userResearchResponse = new EntityDir\UserResearch\UserResearchResponse()
+            $userResearchResponse = new UserResearchResponse()
                 ->setCreated(new \DateTime())
                 ->setDeputyshipLength('oneToFive')
                 ->setUser($rs->getCreatedBy())
                 ->setHasAccessToVideoCallDevice(true)
                 ->setResearchType($researchType);
 
-            $satisfaction = new EntityDir\Satisfaction()
+            $satisfaction = new Satisfaction()
                 ->setReport($rs->getReport())
                 ->setDeputyrole(User::ROLE_LAY_DEPUTY)
                 ->setCreated(new \DateTime())
@@ -607,7 +621,7 @@ class Fixtures
         $this->em->clear();
     }
 
-    public function createCourtOrder(string $uid, CourtOrderType $type, CourtOrderKind $kind, string $status, \DateTime $madeDate = new \DateTime(), ?CourtOrderReportType $courtOrderReportType = null): CourtOrder
+    public function createCourtOrder(string $uid, CourtOrderType $type, CourtOrderKind $kind, string $status, \DateTime $madeDate = new \DateTime(), ?CourtOrderReportType $courtOrderReportType = null, ?Deputy $deputy = null, ?Client $client = null): CourtOrder
     {
         $courtOrder = new CourtOrder();
         $courtOrder->setCourtOrderUid($uid);
@@ -617,6 +631,15 @@ class Fixtures
         $courtOrder->setStatus($status);
         $courtOrder->setOrderMadeDate($madeDate);
 
+        if ($deputy !== null) {
+            $relationship = new CourtOrderDeputy()->setDeputy($deputy)->setCourtOrder($courtOrder)->setIsActive(true);
+            $this->em->persist($relationship);
+        }
+        if ($client !== null) {
+            $courtOrder->setClient($client);
+        }
+
+        $this->em->persist($courtOrder);
         return $courtOrder;
     }
 

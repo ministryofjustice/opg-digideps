@@ -52,7 +52,7 @@ class OrganisationControllerTest extends AbstractTestController
         self::fixtures()->flush()->clear();
 
         self::$profUser = self::fixtures()->getRepo(User::class)->findOneByEmail('prof@example.org');
-        self::fixtures()->addUserToOrganisation(self::$profUser->getId(), end(self::$orgs)->getId());
+        self::fixtures()->addUserToOrganisation(self::$profUser->getId(), self::$orgs[3]->getId());
         self::fixtures()->flush()->clear();
 
         self::$em = self::fixtures()->getEntityManager();

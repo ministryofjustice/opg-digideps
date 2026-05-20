@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace OPG\Digideps\Backend\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
+use OPG\Digideps\Backend\Domain\Report\ReportAccessService;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Event\ClientArchivedEvent;
 use OPG\Digideps\Backend\EventDispatcher\ObservableEventDispatcher;
+use OPG\Digideps\Backend\Exception\UnauthorisedException;
 use OPG\Digideps\Backend\Repository\ClientRepository;
 use OPG\Digideps\Backend\Service\Audit\AuditEvents;
 use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
@@ -28,6 +30,7 @@ class ClientController extends RestController
         private readonly RestFormatter $formatter,
         private readonly ObservableEventDispatcher $eventDispatcher,
         private readonly TokenStorageInterface $tokenStorage,
+        private readonly ReportAccessService $reportAccessService,
     ) {
         parent::__construct($em);
     }
@@ -119,6 +122,8 @@ class ClientController extends RestController
             }
         }
 
+        $this->filterClientReports($client);
+
         return $client;
     }
 
@@ -143,7 +148,9 @@ class ClientController extends RestController
 
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
-        return $this->findEntityBy(Client::class, $id);
+        $client = $this->findEntityBy(Client::class, $id);
+        $this->filterClientReports($client);
+        return $client;
     }
 
     #[Route(path: '/{id}/archive', name: 'client_archive', requirements: ['id' => '\d+'], methods: ['PUT'])]
@@ -248,5 +255,15 @@ class ClientController extends RestController
         $this->formatter->setJmsSerialiserGroups($serialisedGroups);
 
         return $this->repository->getAllClientsAndReportsByDeputyUid($deputyUid);
+    }
+
+    public function filterClientReports(Client $client): void
+    {
+        $user = $this->getUser();
+        if (!($user instanceof User)) {
+            throw new UnauthorisedException("No user where there should be one");
+        }
+        $reportIds = $this->reportAccessService->getVisibleReportIdsGivenUserId($user->getId());
+        $client->filterReports(...$reportIds);
     }
 }

@@ -13,6 +13,7 @@ use OPG\Digideps\Frontend\Service\Client\RestClient;
 use OPG\Digideps\Frontend\TestHelpers\ClientHelpers;
 use OPG\Digideps\Frontend\TestHelpers\UserHelpers;
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
@@ -41,7 +42,8 @@ class ClientApiTest extends TestCase
             $this->router,
             $this->userApi,
             $this->tokenStorage,
-            $this->eventDispatcher
+            $this->eventDispatcher,
+            $this->createStub(LoggerInterface::class),
         );
     }
 

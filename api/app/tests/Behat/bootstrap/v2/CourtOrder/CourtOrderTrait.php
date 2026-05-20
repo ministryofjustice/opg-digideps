@@ -158,7 +158,7 @@ trait CourtOrderTrait
             $deputyTestHelper = new DeputyTestHelper();
 
             $client = $clientTestHelper->generateClient($this->em);
-            $deputy = $deputyTestHelper->generateDeputy();
+            $deputy = $deputyTestHelper->generateDeputy(em: $this->em);
             $this->em->persist($client);
             $this->em->persist($deputy);
             $this->em->flush();
