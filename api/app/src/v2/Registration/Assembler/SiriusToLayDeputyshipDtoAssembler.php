@@ -52,7 +52,6 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
             new LayDeputyshipDto()
                 ->setCaseNumber($data['Case'])
                 ->setClientFirstname($data['ClientFirstname'] ?: null)
-                /* @phpstan-ignore argument.type */
                 ->setClientSurname($data['ClientSurname'])
                 ->setClientAddress1($data['ClientAddress1'] ?: null)
                 ->setClientAddress2($data['ClientAddress2'] ?: null)

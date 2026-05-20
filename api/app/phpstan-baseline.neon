@@ -6589,12 +6589,6 @@ parameters:
 			path: src/Repository/PreRegistrationRepository.php
 
 		-
-			message: '#^Cannot access offset ''checklist_id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Repository/ReportRepository.php
-
-		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -9662,6 +9656,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$clientPostcode of method OPG\\Digideps\\Backend\\v2\\Registration\\DTO\\LayDeputyshipDto\:\:setClientPostcode\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/v2/Registration/Assembler/SiriusToLayDeputyshipDtoAssembler.php
+
+		-
+			message: '#^Parameter \#1 \$clientSurname of method OPG\\Digideps\\Backend\\v2\\Registration\\DTO\\LayDeputyshipDto\:\:setClientSurname\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/v2/Registration/Assembler/SiriusToLayDeputyshipDtoAssembler.php
@@ -23470,12 +23470,6 @@ parameters:
 			message: '#^Parameter \#1 \$string of function substr expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
-
-		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:generateClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
-			identifier: argument.type
-			count: 1
 			path: tests/Behat/bootstrap/v2/Registration/RegistrationFeatureContext.php
 
 		-
