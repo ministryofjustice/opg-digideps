@@ -30,16 +30,12 @@ jobs:
         uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
         with:
           working-directory: client/resources
+
       - name: Build assets
         run: |
-          # Install NPM dependencies
-          npm ci
-          npm run lint
-          npm audit --production
+          make build-js
+          ls -alt client/resources/public
 
-          # Build assets
-          NODE_ENV=production npm run build
-        working-directory: client/resources
       - name: archive dist
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
