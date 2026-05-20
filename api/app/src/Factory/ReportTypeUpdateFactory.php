@@ -31,13 +31,18 @@ readonly class ReportTypeUpdateFactory implements DataFactoryInterface
     /**
      * @return \Generator<Report>
      */
-    private function getAllReports(): \Generator
+    private function getAllReportsOnActiveCourtOrders(): \Generator
     {
         $rsm = new ResultSetMappingBuilder($this->entityManager);
         $rsm->addRootEntityFromClassMetadata(Report::class, 'r');
 
         /** @var Report[] $result */
-        $result = $this->entityManager->createNativeQuery('SELECT * FROM report', $rsm)->getResult();
+        $result = $this->entityManager->createNativeQuery(<<<SQL
+            SELECT DISTINCT r.* FROM report r
+            INNER JOIN court_order_report cor ON cor.report_id = r.id
+            INNER JOIN court_order co ON co.id = cor.court_order_id
+            WHERE co.status = 'ACTIVE'
+        SQL, $rsm)->getResult();
 
         foreach ($result as $report) {
             yield $report;
@@ -50,7 +55,7 @@ readonly class ReportTypeUpdateFactory implements DataFactoryInterface
         $indeterminate = [];
         $dangerous = [];
 
-        foreach ($this->getAllReports() as $report) {
+        foreach ($this->getAllReportsOnActiveCourtOrders() as $report) {
             $reportId = $report->getId();
 
             /** @var CourtOrder[] $courtOrders */
