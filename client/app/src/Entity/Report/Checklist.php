@@ -112,7 +112,7 @@ class Checklist implements SynchronisableInterface
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.openClosingBalancesMatch.notBlank", groups={"submit-balance-checklist"})
+     * @Assert\NotBlank(message="checklist.openClosingBalancesMatch.notBlank", groups={"submit-bankAccounts-checklist"})
      */
     private $openClosingBalancesMatch;
 
