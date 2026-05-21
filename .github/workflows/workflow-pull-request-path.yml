@@ -251,12 +251,30 @@ jobs:
       - terraform_apply_environment
       - workflow_variables
 
+  restart_point:
+    runs-on: ubuntu-latest
+    name: restart point
+    needs:
+      - workflow_variables
+      - terraform_apply_environment
+      - client_unit_tests
+      - api_phpstan
+      - client_phpstan
+      - miscellaneous_tests
+      - test_js
+      - api_unit_tests
+    steps:
+      - id: restart_point
+        run: |
+          echo "Restart workflow from here if you want to rerun the end to end tests"
+
   wait_for_ecs_services:
     name: wait for all ecs services to stabilise
     uses: ./.github/workflows/_wait-for-ecs-services.yml
     needs:
       - workflow_variables
       - terraform_apply_environment
+      - restart_point
     secrets:
       ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY_ALLOW_LIST_REPOSITORY }}
     with:
@@ -265,33 +283,13 @@ jobs:
       account_name: development
       timeout: "15"
 
-  restart_point:
-    runs-on: ubuntu-latest
-    name: restart point
-    needs:
-      - workflow_variables
-      - terraform_apply_environment
-      - wait_for_ecs_services
-      - client_unit_tests
-      - api_phpstan
-      - client_phpstan
-      - miscellaneous_tests
-      - test_js
-      - api_unit_tests
-      - api_integration_tests_1
-      - api_integration_tests_2
-      - api_integration_tests_3
-    steps:
-      - id: restart_point
-        run: |
-          echo "Restart workflow from here if you want to rerun the end to end tests"
-
   scale_services_up:
     name: scale up services
     uses: ./.github/workflows/_scale-services.yml
     needs:
       - workflow_variables
       - restart_point
+      - wait_for_ecs_services
     with:
       replicas: 10
       acu: 16
@@ -463,6 +461,9 @@ jobs:
       - end_to_end_tests_1
       - end_to_end_tests_2
       - end_to_end_tests_admin
+      - api_integration_tests_1
+      - api_integration_tests_2
+      - api_integration_tests_3
     env:
       START_TIME: ${{ needs.workflow_variables.outputs.start_time }}
     steps:

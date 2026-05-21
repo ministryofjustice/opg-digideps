@@ -6,7 +6,7 @@ COPY client/resources/deps-builder.js .
 COPY client/resources/assets assets
 
 # Install NPM dependencies
-RUN npm ci
+RUN npm ci --ignore-scripts
 RUN npm audit --production
 
 FROM node-base AS testing
@@ -15,5 +15,6 @@ RUN npm ci --include=dev
 
 FROM node-base AS build
 
-# Build assets
+RUN npm ci --ignore-scripts
+RUN npm audit --production
 RUN NODE_ENV=production npm run build

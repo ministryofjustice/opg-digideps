@@ -60,6 +60,7 @@ trait PageUrlsTrait
     private string $orgDashboardUrl = '/org';
     private string $postSubmissionUserResearchUrl = '/report/%s/post_submission_user_research';
     private string $reportOverviewUrl = '/%s/%s/overview';
+    private string $newReportReviewUrl = '/report/%s/review?dev-preview=QED';
     private string $reportSubmittedUrl = '/report/%s/submitted';
     private string $userResearchSubmittedUrl = '/report/%s/post_submission_user_research/submitted';
     private string $visitsAndCareSectionUrl = '/%s/%s/visits-care';
@@ -91,6 +92,11 @@ trait PageUrlsTrait
     // Fixtures
     private string $adminFixturesUrl = '/admin/fixtures';
     private string $courtOrdersFixtureUrl = '/admin/fixtures/court-orders?%s';
+
+    public function getNewReportReviewUrl(int $reportId): string
+    {
+        return sprintf($this->newReportReviewUrl, $reportId);
+    }
 
     public function getReportSubmittedUrl(int $reportId): string
     {
