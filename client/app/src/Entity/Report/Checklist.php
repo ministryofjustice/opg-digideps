@@ -680,7 +680,7 @@ class Checklist implements SynchronisableInterface
      *
      * @return $this
      */
-    public function setFutureSignificantDecisions($futureSignificantDecisions)
+    public function setFutureSignificantDecisions(string $futureSignificantDecisions): static
     {
         $this->futureSignificantDecisions = $futureSignificantDecisions;
 
@@ -740,7 +740,7 @@ class Checklist implements SynchronisableInterface
      *
      * @return $this
      */
-    public function setPaymentsMatchCostCertificate($paymentsMatchCostCertificate)
+    public function setPaymentsMatchCostCertificate(string $paymentsMatchCostCertificate): static
     {
         $this->paymentsMatchCostCertificate = $paymentsMatchCostCertificate;
 
@@ -756,11 +756,11 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param $profCostsReasonableAndProportionate
+     * @param string $profCostsReasonableAndProportionate
      *
      * @return $this
      */
-    public function setProfCostsReasonableAndProportionate($profCostsReasonableAndProportionate)
+    public function setProfCostsReasonableAndProportionate(string $profCostsReasonableAndProportionate): static
     {
         $this->profCostsReasonableAndProportionate = $profCostsReasonableAndProportionate;
 
@@ -776,13 +776,13 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param $hasDeputyOverchargedFromPreviousEstimates
+     * @param string $hasDeputyOverchargedFromPreviousEstimates
      *
      * @return $this
      */
     public function setHasDeputyOverchargedFromPreviousEstimates(
-        $hasDeputyOverchargedFromPreviousEstimates
-    ) {
+        string $hasDeputyOverchargedFromPreviousEstimates
+    ): static {
         $this->hasDeputyOverchargedFromPreviousEstimates = $hasDeputyOverchargedFromPreviousEstimates;
 
         return $this;
@@ -797,13 +797,13 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param $nextBillingEstimatesSatisfactory
+     * @param string $nextBillingEstimatesSatisfactory
      *
      * @return $this
      */
     public function setNextBillingEstimatesSatisfactory(
-        $nextBillingEstimatesSatisfactory
-    ) {
+        string $nextBillingEstimatesSatisfactory
+    ): static {
         $this->nextBillingEstimatesSatisfactory = $nextBillingEstimatesSatisfactory;
 
         return $this;
@@ -860,7 +860,7 @@ class Checklist implements SynchronisableInterface
     /**
      * @param ChecklistInformation[] $checklistInformation
      */
-    public function setChecklistInformation(array $checklistInformation)
+    public function setChecklistInformation(array $checklistInformation): void
     {
         $this->checklistInformation = $checklistInformation;
     }
@@ -874,9 +874,9 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param string $furtherInformation
+     * @param string $furtherInformationReceived
      */
-    public function setFurtherInformationReceived($furtherInformationReceived)
+    public function setFurtherInformationReceived(string $furtherInformationReceived): void
     {
         $this->furtherInformationReceived = $furtherInformationReceived;
     }

@@ -14,7 +14,7 @@ class ReportChecklistTypeTest extends TypeTestCase
     /**
      * @dataProvider formValuesProvider
      */
-    public function testSubmitValidData(?string $costValues, bool $deputyDetails)
+    public function testSubmitValidData(string $costValues, bool $deputyDetails)
     {
         $report = new Report();
         $report->setAvailableSections(['profDeputyCosts']);

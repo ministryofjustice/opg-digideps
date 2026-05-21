@@ -23,7 +23,7 @@ class Action
      *
      * @Assert\NotBlank(message="action.doYouExpectFinancialDecisions.notBlank", groups={"action-expect-decisions-choice"})
      */
-    private $doYouExpectFinancialDecisions;
+    private string $doYouExpectFinancialDecisions;
 
     /**
      * @JMS\Type("string")
@@ -70,19 +70,18 @@ class Action
     }
 
     /**
-     * @return mixed
+     * @return string
      */
-    public function getDoYouExpectFinancialDecisions()
+    public function getDoYouExpectFinancialDecisions(): string
     {
         return $this->doYouExpectFinancialDecisions;
     }
 
     /**
-     * @param mixed $doYouExpectFinancialDecisions
-     *
-     * @return Action
+     * @param string $doYouExpectFinancialDecisions
+     * @return $this
      */
-    public function setDoYouExpectFinancialDecisions($doYouExpectFinancialDecisions)
+    public function setDoYouExpectFinancialDecisions(string $doYouExpectFinancialDecisions): static
     {
         $this->doYouExpectFinancialDecisions = $doYouExpectFinancialDecisions;
 
