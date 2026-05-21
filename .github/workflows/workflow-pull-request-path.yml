@@ -133,6 +133,13 @@ jobs:
     name: PHP Style check
     uses: ./.github/workflows/_phpcs.yml
 
+  iac_scan:
+    name: Scan Infrastructure as Code
+    uses: ./.github/workflows/_snyk-iac-scan.yml
+    needs: [workflow_variables]
+    secrets:
+      snyk_token: ${{ secrets.SNYK_OPG_ORG_TOKEN }}
+
   docker_build_scan_push:
     name: build, scan and push
     uses: ./.github/workflows/_build-and-push.yml
@@ -263,6 +270,7 @@ jobs:
       - miscellaneous_tests
       - test_js
       - api_unit_tests
+      - iac_scan
     steps:
       - id: restart_point
         run: |
