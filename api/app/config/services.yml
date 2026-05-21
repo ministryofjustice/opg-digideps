@@ -509,7 +509,7 @@ services:
                       "dry-run-only",
                   ]
                 - [
-                      '@OPG\Digideps\Backend\Factory\ReportTypeUpdateFactory',
+                      '@OPG\Digideps\Backend\Factory\UpdateReportTypeDataFactory',
                       "dry-run-only",
                   ]
 

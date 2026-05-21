@@ -14,7 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Psr\Log\LoggerInterface;
 
-readonly class ReportTypeUpdateFactory implements DataFactoryInterface
+readonly class UpdateReportTypeDataFactory implements DataFactoryInterface
 {
     public function __construct(
         public EntityManagerInterface $entityManager,
