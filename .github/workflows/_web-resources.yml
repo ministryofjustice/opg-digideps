@@ -12,12 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: create nvmrc file
-        run: grep "FROM node:" Dockerfile | awk -F' ' '{print $2}' | sed 's/^node:\(.*\)-.*/\1/' > .nvmrc
-        working-directory: client/docker/resources
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
-        with:
-          node-version-file: "client/docker/resources/.nvmrc"
+
       - name: cache node modules
         id: cache-npm
         uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
@@ -26,20 +21,10 @@ jobs:
         with:
           path: client/resources/public
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json', '**/webpack.config.js') }}
-      - name: SLSA
-        uses: ministryofjustice/devsecops-actions/sca/slsa@4cd163be7859cd130800d6719d925318826038ea
-        with:
-          working-directory: client/resources
-      - name: Build assets
-        run: |
-          # Install NPM dependencies
-          npm ci
-          npm run lint
-          npm audit --production
 
-          # Build assets
-          NODE_ENV=production npm run build
-        working-directory: client/resources
+      - name: Build assets
+        run: make build-js
+
       - name: archive dist
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:

@@ -1,9 +1,12 @@
+{% set client = report.client %}
 {% set transOptions = {'%client%': report.client.firstname | striptags } %}
 {% set reportTypeHeading = ('-4' == report.get104TransSuffix) ? 'property and financial, and health and welfare' : ('104' in report.type) ? 'health and welfare' : 'property and financial'  %}
+{% set submittedBy = report.submittedBy | default(app.user) %}
+{# for PROF users, deputy is always the named deputy #}
+{% set deputy = submittedBy.isDeputyOrg and client.getDeputy ? client.getDeputy : submittedBy %}
 
 <div id="wrapper">
-    <div class="formatted-report">
-        <div id="report-header">Office of the Public Guardian</div>
-        <h1 class="push--bottom">Deputy report for {{ reportTypeHeading }} decisions</h1>
-    </div>
+    <h1 class="govuk-heading-l">Deputy report for {{ reportTypeHeading }} decisions</h1>
+
+    {% include '@App/Report/Rendered/_client_and_deputy_information.html.twig' %}
 </div>
