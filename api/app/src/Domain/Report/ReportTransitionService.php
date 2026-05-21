@@ -15,13 +15,12 @@ use OPG\Digideps\Backend\Service\ReportService;
 final readonly class ReportTransitionService
 {
     public function __construct(
-        private EntityManagerInterface $em,
         private ReportService $reportService
     ) {
     }
 
     /**
-     * NB this persists any affected entities but does not flush them to the db
+     * NB this creates the entities but doesn't persist them
      */
     public function transitionReport(Report $report, ?ReportType $oldReportType, ReportType $newReportType): ?ReportTransitionResult
     {
@@ -64,10 +63,13 @@ final readonly class ReportTransitionService
             $result = $this->dualToSingle($report);
         }
 
-        $this->em->persist($report);
-
         if ($result === null) {
-            $result = new ReportTransitionResult(messages: ["Report transitioned successfully"], transitioned: true);
+            // this was a simple change to the report's type with no other effects
+            $result = new ReportTransitionResult(
+                messages: ["Report transitioned successfully"],
+                transitioned: true,
+                updatedReports: [$report]
+            );
         }
 
         return $result;
@@ -95,32 +97,24 @@ final readonly class ReportTransitionService
         /** @var array<CourtOrder> $courtOrders */
         $courtOrders = $report->getActiveCourtOrders();
 
-        $error = $this->verifyPfaAndHwCourtOrders($courtOrders);
+        [$pfaCourtOrder, $hwCourtOrder, $error] = $this->verifyPfaAndHwCourtOrders($courtOrders);
         if ($error !== null) {
             $result->errorMessages[] = $error;
             return $result;
         }
 
+        // both court orders must have the same report we're splitting as their most-recent (hybrid) report
         $reportId = $report->getId();
-        $keyedCourtOrders = [];
-        foreach ($courtOrders as $courtOrder) {
-            // both court orders must have the same report we're splitting as their most-recent (hybrid) report
-            if ($courtOrder->getLatestReport()?->getId() !== $reportId) {
-                $result->errorMessages[] = "Report $reportId is not the latest report for court order " . $courtOrder->getCourtOrderUid();
-            }
-
-            $keyedCourtOrders[$courtOrder->getOrderType()->value] = $courtOrder;
-        }
-
-        if ($result->hasError()) {
+        if (
+            $pfaCourtOrder->getLatestReport()?->getId() !== $reportId ||
+            $hwCourtOrder->getLatestReport()?->getId() !== $reportId
+        ) {
+            $result->errorMessages[] = "Report $reportId is not the latest report for both court orders " .
+                $hwCourtOrder->getCourtOrderUid() . ' and ' . $pfaCourtOrder->getCourtOrderUid();
             return $result;
         }
 
-        $pfaCourtOrder = $keyedCourtOrders[CourtOrderType::PFA->value];
-        $hwCourtOrder = $keyedCourtOrders[CourtOrderType::HW->value];
-
         $newReport = $this->reportService->createReportFromOrder($hwCourtOrder);
-        $this->em->persist($newReport);
 
         // TODO populate $newReport from existing hybrid $report?
 
@@ -132,10 +126,9 @@ final readonly class ReportTransitionService
         $hwCourtOrder->setOrderReportType($hwCourtOrder->getDesiredReportType()->courtOrderReportType);
         $pfaCourtOrder->setOrderReportType($pfaCourtOrder->getDesiredReportType()->courtOrderReportType);
 
-        $this->em->persist($hwCourtOrder);
-        $this->em->persist($pfaCourtOrder);
-
         $result->transitioned = true;
+        $result->updatedCourtOrders = [$hwCourtOrder, $pfaCourtOrder];
+        $result->updatedReports = [$report, $newReport];
         $result->messages = ["Converted hybrid report $reportId to dual reports $reportId and {$newReport->getId()}"];
 
         return $result;
@@ -162,7 +155,7 @@ final readonly class ReportTransitionService
         $firstCourtOrder = $report->getCourtOrders()->first();
         $client = $firstCourtOrder?->getClient();
         if ($client === null) {
-            $result->errorMessages[] = "Could not find client for report {$report->getId()}";
+            $result->errorMessages = ["Could not find client for report {$report->getId()}"];
             return $result;
         }
 
@@ -171,40 +164,32 @@ final readonly class ReportTransitionService
             fn (CourtOrder $courtOrder) => $courtOrder->getStatus() === 'ACTIVE'
         );
 
-        $error = $this->verifyPfaAndHwCourtOrders($clientActiveCourtOrders);
+        [$pfaCourtOrder, $hwCourtOrder, $error] = $this->verifyPfaAndHwCourtOrders($clientActiveCourtOrders);
         if ($error !== null) {
-            $result->errorMessages[] = $error;
+            $result->errorMessages = [$error];
             return $result;
         }
 
         // we're going to keep the pfa report, and get rid of the hw one
-        $hwCourtOrder = null;
-        $pfaCourtOrder = null;
-        $hybridReport = null;
-        $defunctReport = null;
         $changedReportFound = false;
         $reportId = $report->getId();
-        foreach ($clientActiveCourtOrders as $courtOrder) {
+        foreach ([$pfaCourtOrder, $hwCourtOrder] as $courtOrder) {
+            // we need both orders to have a latest report
             $latestReport = $courtOrder->getLatestReport();
 
             if ($latestReport === null) {
                 $result->errorMessages[] = 'Could not find latest report for court order ' . $courtOrder->getCourtOrderUid();
-            } elseif ($courtOrder->getOrderType() === CourtOrderType::PFA) {
-                $pfaCourtOrder = $courtOrder;
-                $hybridReport = $latestReport;
-            } elseif ($courtOrder->getOrderType() === CourtOrderType::HW) {
-                $hwCourtOrder = $courtOrder;
-                $defunctReport = $latestReport;
             }
 
-            // track whether one of the two reports we are looking at is the one transitioning
+            // track whether one of the two latest reports on these court orders is the one transitioning;
+            // if not, we don't want to apply this change
             if ($latestReport?->getId() === $reportId) {
                 $changedReportFound = true;
             }
         }
 
         if (!$changedReportFound) {
-            $result->errorMessages[] = "Changed report is not the latest report on either of the linked court orders";
+            $result->errorMessages[] = "Changed report is not the latest report on either of the client's linked court orders";
         }
 
         if ($result->hasError()) {
@@ -218,22 +203,22 @@ final readonly class ReportTransitionService
 
         // TODO delete $defunctReport altogether?
 
-        $defunctReportId = $defunctReport->getId();
-        $hybridReportId = $hybridReport->getId();
+        $hybridReport = $pfaCourtOrder->getLatestReport();
+        $defunctReport = $hwCourtOrder->getLatestReport();
 
         $hwCourtOrder->removeReport($defunctReport);
         $hwCourtOrder->addReport($hybridReport);
 
         $pfaCourtOrder->setOrderReportType($reportType->courtOrderReportType);
         $hwCourtOrder->setOrderReportType($reportType->courtOrderReportType);
+
         $hybridReport->setType("$reportType");
 
-        $this->em->persist($hybridReport);
-        $this->em->persist($pfaCourtOrder);
-        $this->em->persist($hwCourtOrder);
-
         $result->transitioned = true;
-        $result->messages = ["Merged report $defunctReportId into hybrid report $hybridReportId"];
+        $result->updatedCourtOrders = [$pfaCourtOrder, $hwCourtOrder];
+        $result->updatedReports = [$hybridReport];
+        $result->removedReports = [$defunctReport];
+        $result->messages = ["Merged report {$defunctReport->getId()} into hybrid report {$hybridReport->getId()}"];
 
         return $result;
     }
@@ -255,19 +240,28 @@ final readonly class ReportTransitionService
      * NB these court orders don't have to be active at this point
      *
      * @param iterable<CourtOrder> $courtOrders
-     * @returns null if there were no issues, or error message if court orders could not be verified
+     * @returns array [hwCourtOrder, pfaCourtOrder, ?string error]
      */
-    private function verifyPfaAndHwCourtOrders(iterable $courtOrders): ?string
+    private function verifyPfaAndHwCourtOrders(iterable $courtOrders): array
     {
-        /** @var array<string> $courtOrderTypes */
-        $courtOrderTypes = array_map(
-            fn (CourtOrder $courtOrder) => $courtOrder->getOrderType()->value,
-            iterator_to_array($courtOrders)
-        );
+        $courtOrderTypes = [];
+        $pfaCourtOrder = null;
+        $hwCourtOrder = null;
+
+        foreach ($courtOrders as $courtOrder) {
+            $orderType = $courtOrder->getOrderType();
+
+            $courtOrderTypes[] = $orderType->value;
+            if ($orderType === CourtOrderType::PFA) {
+                $pfaCourtOrder = $courtOrder;
+            } elseif ($orderType === CourtOrderType::HW) {
+                $hwCourtOrder = $courtOrder;
+            }
+        }
 
         $numCourtOrderTypes = count($courtOrderTypes);
         if ($numCourtOrderTypes !== 2) {
-            return "Incorrect number of court orders: expected 2, but found $numCourtOrderTypes";
+            return [null, null, "Incorrect number of court orders: expected 2, but found $numCourtOrderTypes"];
         }
 
         $expected = [CourtOrderType::HW->value, CourtOrderType::PFA->value];
@@ -277,9 +271,9 @@ final readonly class ReportTransitionService
         uasort($expected, $sorter);
 
         if ($courtOrderTypes !== $expected) {
-            return 'Invalid pair of court orders: expected HW + PFA, but types were ' . implode(', ', $courtOrderTypes);
+            return [null, null, 'Invalid pair of court orders: expected HW + PFA, but types were ' . implode(', ', $courtOrderTypes)];
         }
 
-        return null;
+        return [$pfaCourtOrder, $hwCourtOrder, null];
     }
 }
