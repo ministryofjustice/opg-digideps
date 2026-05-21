@@ -13,9 +13,10 @@ locals {
 }
 
 resource "aws_iam_role" "resilience_tests" {
-  assume_role_policy = data.aws_iam_policy_document.ecs_task_assume_policy.json
-  name               = "resilience-tests.${local.environment}"
-  tags               = var.default_tags
+  assume_role_policy   = data.aws_iam_policy_document.ecs_task_assume_policy.json
+  name                 = "resilience-tests.${local.environment}"
+  permissions_boundary = data.aws_iam_policy.default_boundary.arn
+  tags                 = var.default_tags
 }
 
 data "aws_iam_policy_document" "resilience_tests" {

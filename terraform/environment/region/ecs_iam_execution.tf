@@ -1,8 +1,9 @@
 # Shared IAM for ECS task execution role
 resource "aws_iam_role" "execution_role" {
-  name               = "execution_role.${local.environment}"
-  assume_role_policy = data.aws_iam_policy_document.execution_role_assume_policy.json
-  tags               = var.default_tags
+  name                 = "execution_role.${local.environment}"
+  permissions_boundary = data.aws_iam_policy.default_boundary.arn
+  assume_role_policy   = data.aws_iam_policy_document.execution_role_assume_policy.json
+  tags                 = var.default_tags
 }
 
 resource "aws_iam_role_policy" "execution_role" {
@@ -17,9 +18,10 @@ resource "aws_iam_role_policy" "execution_role_secrets" {
 
 # Shared IAM for ECS task for DB accessible execution role
 resource "aws_iam_role" "execution_role_db" {
-  name               = "execution_role_db.${local.environment}"
-  assume_role_policy = data.aws_iam_policy_document.execution_role_assume_policy.json
-  tags               = var.default_tags
+  name                 = "execution_role_db.${local.environment}"
+  permissions_boundary = data.aws_iam_policy.default_boundary.arn
+  assume_role_policy   = data.aws_iam_policy_document.execution_role_assume_policy.json
+  tags                 = var.default_tags
 }
 
 resource "aws_iam_role_policy" "execution_role_db" {

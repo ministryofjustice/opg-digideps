@@ -37,3 +37,7 @@ data "aws_iam_policy_document" "ecs_task_logs" {
 data "aws_iam_role" "ecs_autoscaling_service_role" {
   name = "AWSServiceRoleForApplicationAutoScaling_ECSService"
 }
+
+data "aws_iam_policy" "default_boundary" {
+  name = "digideps-non-ci-boundary"
+}

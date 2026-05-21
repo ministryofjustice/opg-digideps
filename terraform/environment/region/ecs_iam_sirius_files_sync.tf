@@ -1,7 +1,8 @@
 resource "aws_iam_role" "sirius_files_sync" {
-  assume_role_policy = data.aws_iam_policy_document.sirius_files_task_role_assume_policy.json
-  name               = "sirius-files-sync.${local.environment}"
-  tags               = var.default_tags
+  assume_role_policy   = data.aws_iam_policy_document.sirius_files_task_role_assume_policy.json
+  name                 = "sirius-files-sync.${local.environment}"
+  permissions_boundary = data.aws_iam_policy.default_boundary.arn
+  tags                 = var.default_tags
 }
 
 # ===== assume role policy (not the standard role one we use for most roles)

@@ -350,8 +350,7 @@ class ReportController extends AbstractController
      * @throws \Exception
      */
     #[Route(path: '/report/{reportId}/review', name: 'report_review')]
-    #[Template('@App/Report/Report/review.html.twig')]
-    public function reviewAction(Request $request, int $reportId): RedirectResponse|array
+    public function reviewAction(Request $request, int $reportId): Response
     {
         $report = $this->reportApi->getReport($reportId, self::$reportGroupsAll);
 
@@ -376,14 +375,17 @@ class ReportController extends AbstractController
             }
         }
 
-        return [
+        $template = $request->query->getString('dev-preview') === 'QED'
+            ? '@App/Report/Report/review_new.html.twig'
+            : '@App/Report/Report/review.html.twig';
+
+        return $this->render($template, [
             'user' => $this->getUser(),
             'report' => $report,
             'reportStatus' => $status,
             'backLink' => $backLink,
             'feeTotals' => $report->getFeeTotals(),
-            'devPreview' => $request->query->getString('dev-preview') === 'QED'
-        ];
+        ]);
     }
 
     private function checkIfDocumentsExistInS3(Report $report): array

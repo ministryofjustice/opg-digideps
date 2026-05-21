@@ -5,9 +5,10 @@ data "aws_kms_alias" "source_default_key" {
 
 // CREATE BACKUP ROLE USED FOR LOCAL AND CROSS ACCOUNT REPLICATION
 resource "aws_iam_role" "backup_role" {
-  name               = "digideps-backup-role.${local.environment}"
-  description        = "IAM Role for s3 replication in ${local.environment}"
-  assume_role_policy = data.aws_iam_policy_document.backup_role_policy.json
+  name                 = "digideps-backup-role.${local.environment}"
+  permissions_boundary = data.aws_iam_policy.default_boundary.arn
+  description          = "IAM Role for s3 replication in ${local.environment}"
+  assume_role_policy   = data.aws_iam_policy_document.backup_role_policy.json
 }
 
 // CREATE INSTANCE PROFILE

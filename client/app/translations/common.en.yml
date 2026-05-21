@@ -69,6 +69,8 @@ courtOrderNo: Court order no.
 courtOrderNumber: Court order number
 courtOrderDate: Court order date
 reportDueDate: Report due date
+reportingStartDate: Reporting start date
+reportingEndDate: Reporting end date
 reportStatus: Report status
 organisation: Organisation
 organisations: Organisations
@@ -103,6 +105,7 @@ reportType: Report type
 type: Type
 defaultDateHintText: For example, 18 4 2017
 deletedUser: Deleted User
+telephoneNumber: Telephone number
 
 # Statuses
 notCreated: Not created

@@ -1,8 +1,9 @@
 # Event Task Runner Role and Permissions
 resource "aws_iam_role" "events_task_runner" {
-  name               = "events-task-runner.${local.environment}"
-  assume_role_policy = data.aws_iam_policy_document.events_task_runner.json
-  tags               = var.default_tags
+  name                 = "events-task-runner.${local.environment}"
+  assume_role_policy   = data.aws_iam_policy_document.events_task_runner.json
+  permissions_boundary = data.aws_iam_policy.default_boundary.arn
+  tags                 = var.default_tags
 }
 
 data "aws_iam_policy_document" "events_task_runner" {
