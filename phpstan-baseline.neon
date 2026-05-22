@@ -85,12 +85,6 @@ parameters:
 			path: api/app/src/Command/ProcessLayCSVCommand.php
 
 		-
-			message: '#^Parameter \#1 \$processingOutput of method OPG\\Digideps\\Backend\\Command\\ProcessLayCSVCommand\:\:storeOutput\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Command/ProcessLayCSVCommand.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -163,12 +157,6 @@ parameters:
 			path: api/app/src/Command/ProcessOrgCSVCommand.php
 
 		-
-			message: '#^Parameter \#1 \$processingOutput of method OPG\\Digideps\\Backend\\Command\\ProcessOrgCSVCommand\:\:storeOutput\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Command/ProcessOrgCSVCommand.php
-
-		-
 			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -205,12 +193,6 @@ parameters:
 			path: api/app/src/Command/ProcessOrgCSVCommand.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Command\\ReportStatusUpdaterCommand\:\:execute\(\) should return int but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: api/app/src/Command/ReportStatusUpdaterCommand.php
-
-		-
 			message: '#^Part \$limit \(mixed\) of encapsed string cannot be cast to string\.$#'
 			identifier: encapsedStringPart.nonString
 			count: 1
@@ -221,18 +203,6 @@ parameters:
 			identifier: booleanAnd.rightAlwaysTrue
 			count: 1
 			path: api/app/src/Command/ReportStatusUpdaterCommand.php
-
-		-
-			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Command/ResyncResubmittableErrorChecklists.php
-
-		-
-			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Command/ResyncResubmittableErrorDocuments.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Command\\UserCleanupCommand\:\:deleteInactivateUsers\(\) should return int but returns mixed\.$#'
@@ -268,18 +238,6 @@ parameters:
 			message: '#^Cannot call method set\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: api/app/src/Controller/AuthController.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Controller\\AuthController\:\:getLoggedUser\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Controller/AuthController.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Controller\\AuthController\:\:logout\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
 			path: api/app/src/Controller/AuthController.php
 
 		-
@@ -379,12 +337,6 @@ parameters:
 			path: api/app/src/Controller/CoDeputyController.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Controller\\CoDeputyController\:\:update\(\) has parameter \$id with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Controller/CoDeputyController.php
-
-		-
 			message: '#^Parameter \#1 \$email of method OPG\\Digideps\\Backend\\Entity\\User\:\:setEmail\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -410,12 +362,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/CoDeputyController.php
-
-		-
-			message: '#^Parameter \#2 \$criteriaOrId of method OPG\\Digideps\\Backend\\Controller\\RestController\:\:findEntityBy\(\) expects array\|int, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/Controller/CoDeputyController.php
@@ -1033,20 +979,8 @@ parameters:
 			path: api/app/src/Controller/Report/MoneyTransactionShortController.php
 
 		-
-			message: '#^Parameter \#1 \$sectionIds of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:updateSectionsStatusCache\(\) expects array\<string\>\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: api/app/src/Controller/Report/MoneyTransactionShortController.php
-
-		-
 			message: '#^Parameter \#1 \$type of static method OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransactionShort\:\:factory\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/MoneyTransactionShortController.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Controller\\Report\\MoneyTransactionShortController\:\:\$sectionIds has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: api/app/src/Controller/Report/MoneyTransactionShortController.php
 
@@ -1063,12 +997,6 @@ parameters:
 			path: api/app/src/Controller/Report/MoneyTransferController.php
 
 		-
-			message: '#^Parameter \#1 \$sectionIds of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:updateSectionsStatusCache\(\) expects array\<string\>\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: api/app/src/Controller/Report/MoneyTransferController.php
-
-		-
 			message: '#^Parameter \#2 \$criteriaOrId of method OPG\\Digideps\\Backend\\Controller\\RestController\:\:findEntityBy\(\) expects array\|int, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -1077,12 +1005,6 @@ parameters:
 		-
 			message: '#^Parameter \#3 \$subject of function preg_replace expects array\<float\|int\|string\>\|string, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/MoneyTransferController.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Controller\\Report\\MoneyTransferController\:\:\$sectionIds has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: api/app/src/Controller/Report/MoneyTransferController.php
 
@@ -1315,33 +1237,9 @@ parameters:
 			path: api/app/src/Controller/Report/ReportController.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/src/Controller/Report/ReportController.php
-
-		-
 			message: '#^Cannot call method handle\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
-			path: api/app/src/Controller/Report/ReportController.php
-
-		-
-			message: '#^Cannot call method setLastModifiedBy\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/src/Controller/Report/ReportController.php
-
-		-
-			message: '#^Cannot call method setSubmittedBy\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/src/Controller/Report/ReportController.php
-
-		-
-			message: '#^Cannot call method setSubmittedOn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
 			path: api/app/src/Controller/Report/ReportController.php
 
 		-
@@ -1354,54 +1252,6 @@ parameters:
 			message: '#^Method Doctrine\\Persistence\\ObjectManager\:\:flush\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
 			count: 5
-			path: api/app/src/Controller/Report/ReportController.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Controller\\Report\\ReportController\:\:getChecklist\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Controller/Report/ReportController.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Controller\\Report\\ReportController\:\:populateChecklistEntity\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Controller/Report/ReportController.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Controller\\Report\\ReportController\:\:populateChecklistEntity\(\) has parameter \$checklist with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Controller/Report/ReportController.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Controller\\Report\\ReportController\:\:populateChecklistEntity\(\) has parameter \$checklistData with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Controller/Report/ReportController.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Controller\\Report\\ReportController\:\:refreshReportCache\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Controller/Report/ReportController.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Controller\\Report\\ReportController\:\:submitDocuments\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Controller/Report/ReportController.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Controller\\Report\\ReportController\:\:updateChecklist\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Controller/Report/ReportController.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Controller\\Report\\ReportController\:\:upsertChecklist\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
 			path: api/app/src/Controller/Report/ReportController.php
 
 		-
@@ -1444,12 +1294,6 @@ parameters:
 			message: '#^Parameter \#1 \$balanceMismatchExplanation of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setBalanceMismatchExplanation\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: api/app/src/Controller/Report/ReportController.php
-
-		-
-			message: '#^Parameter \#1 \$checklist of class OPG\\Digideps\\Backend\\Entity\\Report\\ChecklistInformation constructor expects OPG\\Digideps\\Backend\\Entity\\Report\\Checklist, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: api/app/src/Controller/Report/ReportController.php
 
 		-
@@ -1528,12 +1372,6 @@ parameters:
 			message: '#^Parameter \#1 \$noTransfersToAdd of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setNoTransfersToAdd\(\) expects bool, mixed given\.$#'
 			identifier: argument.type
 			count: 1
-			path: api/app/src/Controller/Report/ReportController.php
-
-		-
-			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 2
 			path: api/app/src/Controller/Report/ReportController.php
 
 		-
@@ -1681,12 +1519,6 @@ parameters:
 			path: api/app/src/Controller/Report/ReportController.php
 
 		-
-			message: '#^Parameter \#2 \$data of method OPG\\Digideps\\Backend\\Controller\\RestController\:\:hydrateEntityWithArrayData\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/ReportController.php
-
-		-
 			message: '#^Parameter \#2 \$endDate of method OPG\\Digideps\\Backend\\Service\\ReportService\:\:adjustReportStatus\(\) expects DateTime, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -1761,12 +1593,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Controller\\Report\\ReportSubmissionController\:\:getPreRegistrationData\(\) should return array but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: api/app/src/Controller/Report/ReportSubmissionController.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Controller\\Report\\ReportSubmissionController\:\:setUndownloadable\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: api/app/src/Controller/Report/ReportSubmissionController.php
 
@@ -1927,12 +1753,6 @@ parameters:
 			path: api/app/src/Controller/RestController.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Controller\\RestController\:\:hydrateEntityWithArrayData\(\) has parameter \$object with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Controller/RestController.php
-
-		-
 			message: '#^Parameter \#1 \$array of function array_column expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -1940,12 +1760,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$criteria of method Doctrine\\ORM\\EntityRepository\<T of object\>\:\:findOneBy\(\) expects array\<string, mixed\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/RestController.php
-
-		-
-			message: '#^Parameter \#1 \$object of static method OPG\\Digideps\\Backend\\Utility\\Query\\Hydrator\:\:hydrateEntityWithArrayData\(\) expects object, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/Controller/RestController.php
@@ -2215,27 +2029,21 @@ parameters:
 			path: api/app/src/DBAL/ConnectionWrapper.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\DBAL\\ConnectionWrapper\:\:refreshPassword\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/DBAL/ConnectionWrapper.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DBAL\\ConnectionWrapper\:\:setSecretsManagerClient\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/DBAL/ConnectionWrapper.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\DBAL\\ConnectionWrapper\:\:setSecretsManagerClient\(\) has parameter \$secretPrefix with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: api/app/src/DBAL/ConnectionWrapper.php
 
 		-
+			message: '#^Parameter \#1 \$params of method Doctrine\\DBAL\\Driver\:\:connect\(\) expects array\{application_name\?\: string, charset\?\: string, dbname\?\: string, defaultTableOptions\?\: array\<string, mixed\>, default_dbname\?\: string, driver\?\: ''ibm_db2''\|''mysqli''\|''oci8''\|''pdo_mysql''\|''pdo_oci''\|''pdo_pgsql''\|''pdo_sqlite''\|''pdo_sqlsrv''\|''pgsql''\|''sqlite3''\|''sqlsrv'', driverClass\?\: class\-string\<Doctrine\\DBAL\\Driver\>, driverOptions\?\: array\<mixed\>, \.\.\.\}, array given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/DBAL/ConnectionWrapper.php
+
+		-
 			message: '#^Parameter \#1 \$params of method Doctrine\\DBAL\\Driver\:\:connect\(\) expects array\{application_name\?\: string, charset\?\: string, dbname\?\: string, defaultTableOptions\?\: array\<string, mixed\>, default_dbname\?\: string, driver\?\: ''ibm_db2''\|''mysqli''\|''oci8''\|''pdo_mysql''\|''pdo_oci''\|''pdo_pgsql''\|''pdo_sqlite''\|''pdo_sqlsrv''\|''pgsql''\|''sqlite3''\|''sqlsrv'', driverClass\?\: class\-string\<Doctrine\\DBAL\\Driver\>, driverOptions\?\: array\<mixed\>, \.\.\.\}, non\-empty\-array given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: api/app/src/DBAL/ConnectionWrapper.php
 
 		-
@@ -2243,30 +2051,6 @@ parameters:
 			identifier: variable.undefined
 			count: 1
 			path: api/app/src/DBAL/ConnectionWrapper.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\AbstractDataFixture\:\:doLoad\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/DataFixtures/AbstractDataFixture.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: api/app/src/DataFixtures/AdminUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\AdminUserFixtures\:\:addUser\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/DataFixtures/AdminUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\AdminUserFixtures\:\:doLoad\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/DataFixtures/AdminUserFixtures.php
 
 		-
 			message: '#^Parameter \#1 \$data of method OPG\\Digideps\\Backend\\DataFixtures\\AdminUserFixtures\:\:addUser\(\) expects array, mixed given\.$#'
@@ -2299,18 +2083,6 @@ parameters:
 			path: api/app/src/DataFixtures/AdminUserFixtures.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\DataFixtures\\AdminUserFixtures\:\:\$adminData has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/DataFixtures/AdminUserFixtures.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
 			message: '#^Binary operation "\." between mixed and ''\-User\-'' results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -2332,30 +2104,6 @@ parameters:
 			message: '#^Cannot call method setDate\(\) on DateTime\|null\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\LayUserFixtures\:\:addUser\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\LayUserFixtures\:\:doLoad\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\LayUserFixtures\:\:handleHybridCoDeputyAndMultiClients\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\LayUserFixtures\:\:populateCourtOrderTable\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
 			path: api/app/src/DataFixtures/LayUserFixtures.php
 
 		-
@@ -2461,18 +2209,6 @@ parameters:
 			path: api/app/src/DataFixtures/LayUserFixtures.php
 
 		-
-			message: '#^Parameter \#5 \$courtOrder of method OPG\\Digideps\\Backend\\DataFixtures\\LayUserFixtures\:\:handleHybridCoDeputyAndMultiClients\(\) expects OPG\\Digideps\\Backend\\Entity\\CourtOrder\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\DataFixtures\\LayUserFixtures\:\:\$userData has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/DataFixtures/LayUserFixtures.php
-
-		-
 			message: '#^Variable \$duplicateUser might not be defined\.$#'
 			identifier: variable.undefined
 			count: 4
@@ -2481,13 +2217,7 @@ parameters:
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
-			count: 3
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Binary operation "\." between ''Client '' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
+			count: 2
 			path: api/app/src/DataFixtures/PAUserFixtures.php
 
 		-
@@ -2505,216 +2235,30 @@ parameters:
 		-
 			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 5
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''caseNumber'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''clients'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''count'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
 			path: api/app/src/DataFixtures/PAUserFixtures.php
 
 		-
 			message: '#^Cannot access offset ''deputyUid'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: api/app/src/DataFixtures/PAUserFixtures.php
 
 		-
 			message: '#^Cannot access offset ''email'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 1
 			path: api/app/src/DataFixtures/PAUserFixtures.php
 
 		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 7
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''isDeputy'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''orderType'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''orgName'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''reportType'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''roleName'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''users'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
+			count: 2
 			path: api/app/src/DataFixtures/PAUserFixtures.php
 
 		-
 			message: '#^Cannot call method addClient\(\) on OPG\\Digideps\\Backend\\Entity\\Organisation\|null\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot call method flush\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot call method format\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot call method getExpectedReportEndDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot call method getExpectedReportStartDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot call method persist\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 5
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot call method setDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot call method setDeputy\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Cannot call method setOrganisation\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\PAUserFixtures\:\:createClient\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\PAUserFixtures\:\:createClient\(\) has parameter \$clientData with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\PAUserFixtures\:\:createClient\(\) has parameter \$iteration with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\PAUserFixtures\:\:createFixture\(\) has parameter \$data with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\PAUserFixtures\:\:createFixture\(\) has parameter \$manager with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\PAUserFixtures\:\:createReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\PAUserFixtures\:\:createReport\(\) has parameter \$client with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\PAUserFixtures\:\:createReport\(\) has parameter \$clientData with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\PAUserFixtures\:\:createReport\(\) has parameter \$manager with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\PAUserFixtures\:\:createUser\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\PAUserFixtures\:\:createUser\(\) has parameter \$iteration with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\PAUserFixtures\:\:createUser\(\) has parameter \$userData with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\PAUserFixtures\:\:doLoad\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$client of class OPG\\Digideps\\Backend\\Entity\\Report\\Report constructor expects OPG\\Digideps\\Backend\\Entity\\Client, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: api/app/src/DataFixtures/PAUserFixtures.php
 
@@ -2749,12 +2293,6 @@ parameters:
 			path: api/app/src/DataFixtures/PAUserFixtures.php
 
 		-
-			message: '#^Parameter \#1 \$num of function abs expects float\|int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
 			message: '#^Parameter \#1 \$reportType of static method OPG\\Digideps\\Backend\\Entity\\PreRegistration\:\:getReportTypeByOrderType\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -2779,57 +2317,15 @@ parameters:
 			path: api/app/src/DataFixtures/PAUserFixtures.php
 
 		-
-			message: '#^Parameter \#1 \$user of method OPG\\Digideps\\Backend\\Entity\\Organisation\:\:addUser\(\) expects OPG\\Digideps\\Backend\\Entity\\User, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$value of function intval expects array\|bool\|float\|GMP\|int\|resource\|SimpleXMLElement\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 4
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
 			message: '#^Parameter \#2 \$orderType of static method OPG\\Digideps\\Backend\\Entity\\PreRegistration\:\:getReportTypeByOrderType\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/DataFixtures/PAUserFixtures.php
 
 		-
-			message: '#^Parameter \#2 \$replace of function substr_replace expects array\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Parameter \#3 \$startDate of class OPG\\Digideps\\Backend\\Entity\\Report\\Report constructor expects DateTime, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Parameter \#4 \$endDate of class OPG\\Digideps\\Backend\\Entity\\Report\\Report constructor expects DateTime, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\DataFixtures\\PAUserFixtures\:\:\$fixtureData has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/DataFixtures/PAUserFixtures.php
-
-		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
-			count: 3
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Binary operation "\." between ''Client '' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
+			count: 2
 			path: api/app/src/DataFixtures/ProfUserFixtures.php
 
 		-
@@ -2847,222 +2343,30 @@ parameters:
 		-
 			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 5
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''caseNumber'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''clients'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''count'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
 			path: api/app/src/DataFixtures/ProfUserFixtures.php
 
 		-
 			message: '#^Cannot access offset ''deputyUid'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: api/app/src/DataFixtures/ProfUserFixtures.php
 
 		-
 			message: '#^Cannot access offset ''email'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
+			count: 1
 			path: api/app/src/DataFixtures/ProfUserFixtures.php
 
 		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 7
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''isDeputy'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''orderType'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''orgName'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''reportType'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''roleName'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''users'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
+			count: 2
 			path: api/app/src/DataFixtures/ProfUserFixtures.php
 
 		-
 			message: '#^Cannot call method addClient\(\) on OPG\\Digideps\\Backend\\Entity\\Organisation\|null\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot call method flush\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot call method format\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot call method getExpectedReportEndDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot call method getExpectedReportStartDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot call method persist\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 5
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot call method setDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot call method setDeputy\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Cannot call method setOrganisation\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\ProfUserFixtures\:\:createClient\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\ProfUserFixtures\:\:createClient\(\) has parameter \$clientData with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\ProfUserFixtures\:\:createClient\(\) has parameter \$iteration with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\ProfUserFixtures\:\:createFixture\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\ProfUserFixtures\:\:createFixture\(\) has parameter \$data with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\ProfUserFixtures\:\:createFixture\(\) has parameter \$manager with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\ProfUserFixtures\:\:createReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\ProfUserFixtures\:\:createReport\(\) has parameter \$client with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\ProfUserFixtures\:\:createReport\(\) has parameter \$clientData with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\ProfUserFixtures\:\:createReport\(\) has parameter \$manager with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\ProfUserFixtures\:\:createUser\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\ProfUserFixtures\:\:createUser\(\) has parameter \$iteration with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\ProfUserFixtures\:\:createUser\(\) has parameter \$userData with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\ProfUserFixtures\:\:doLoad\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$client of class OPG\\Digideps\\Backend\\Entity\\Report\\Report constructor expects OPG\\Digideps\\Backend\\Entity\\Client, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: api/app/src/DataFixtures/ProfUserFixtures.php
 
@@ -3097,12 +2401,6 @@ parameters:
 			path: api/app/src/DataFixtures/ProfUserFixtures.php
 
 		-
-			message: '#^Parameter \#1 \$num of function abs expects float\|int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
 			message: '#^Parameter \#1 \$reportType of static method OPG\\Digideps\\Backend\\Entity\\PreRegistration\:\:getReportTypeByOrderType\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -3127,116 +2425,14 @@ parameters:
 			path: api/app/src/DataFixtures/ProfUserFixtures.php
 
 		-
-			message: '#^Parameter \#1 \$user of method OPG\\Digideps\\Backend\\Entity\\Organisation\:\:addUser\(\) expects OPG\\Digideps\\Backend\\Entity\\User, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$value of function intval expects array\|bool\|float\|GMP\|int\|resource\|SimpleXMLElement\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 4
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
 			message: '#^Parameter \#2 \$orderType of static method OPG\\Digideps\\Backend\\Entity\\PreRegistration\:\:getReportTypeByOrderType\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Parameter \#2 \$replace of function substr_replace expects array\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Parameter \#3 \$startDate of class OPG\\Digideps\\Backend\\Entity\\Report\\Report constructor expects DateTime, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Parameter \#4 \$endDate of class OPG\\Digideps\\Backend\\Entity\\Report\\Report constructor expects DateTime, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\DataFixtures\\ProfUserFixtures\:\:\$fixtureData has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: api/app/src/DataFixtures/TestUserFixtures.php
 
 		-
 			message: '#^Binary operation "\." between mixed and ''@example\.org'' results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 1
-			path: api/app/src/DataFixtures/TestUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''co\-deputy'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/TestUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''deputyUid'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/TestUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: api/app/src/DataFixtures/TestUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''isPrimary'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/TestUserFixtures.php
-
-		-
-			message: '#^Cannot access offset ''roleName'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/TestUserFixtures.php
-
-		-
-			message: '#^Cannot call method persist\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/DataFixtures/TestUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\TestUserFixtures\:\:addUser\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/DataFixtures/TestUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\TestUserFixtures\:\:addUser\(\) has parameter \$data with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/DataFixtures/TestUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\TestUserFixtures\:\:addUser\(\) has parameter \$manager with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/DataFixtures/TestUserFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\TestUserFixtures\:\:doLoad\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: api/app/src/DataFixtures/TestUserFixtures.php
 
@@ -3271,20 +2467,8 @@ parameters:
 			path: api/app/src/DataFixtures/TestUserFixtures.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\DataFixtures\\TestUserFixtures\:\:\$userData has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/DataFixtures/TestUserFixtures.php
-
-		-
 			message: '#^Cannot access offset ''account_password'' on array\|bool\|float\|int\|string\|UnitEnum\|null\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/DataFixtures/UserPasswordFixtures.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\DataFixtures\\UserPasswordFixtures\:\:doLoad\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: api/app/src/DataFixtures/UserPasswordFixtures.php
 
@@ -6367,12 +5551,6 @@ parameters:
 			path: api/app/src/Entity/UserResearch/ResearchType.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\EventDispatcher\\ObservableEventDispatcher\:\:dispatch\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/EventDispatcher/ObservableEventDispatcher.php
-
-		-
 			message: '#^Cannot call method getMoneyTransfers\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -6381,24 +5559,6 @@ parameters:
 		-
 			message: '#^Cannot call method setNoTransfersToAdd\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: api/app/src/EventListener/DoctrineListener.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\EventListener\\DoctrineListener\:\:prePersist\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/EventListener/DoctrineListener.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\EventListener\\DoctrineListener\:\:preRemove\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/EventListener/DoctrineListener.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\EventListener\\DoctrineListener\:\:preUpdate\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: api/app/src/EventListener/DoctrineListener.php
 
@@ -6457,12 +5617,6 @@ parameters:
 			path: api/app/src/EventListener/DoctrineListener.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\EventListener\\FixDefaultSchemaListener\:\:postGenerateSchema\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/EventListener/FixDefaultSchemaListener.php
-
-		-
 			message: '#^Binary operation "\." between ''application/'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -6475,44 +5629,8 @@ parameters:
 			path: api/app/src/EventListener/RestInputOuputFormatter.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\EventListener\\RestInputOuputFormatter\:\:addContextModifier\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/EventListener/RestInputOuputFormatter.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\EventListener\\RestInputOuputFormatter\:\:addResponseModifier\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/EventListener/RestInputOuputFormatter.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\EventListener\\RestInputOuputFormatter\:\:containsEntity\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/EventListener/RestInputOuputFormatter.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\EventListener\\RestInputOuputFormatter\:\:containsEntity\(\) has parameter \$object with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/EventListener/RestInputOuputFormatter.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\EventListener\\RestInputOuputFormatter\:\:onKernelException\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/EventListener/RestInputOuputFormatter.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\EventListener\\RestInputOuputFormatter\:\:onKernelRequest\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/EventListener/RestInputOuputFormatter.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\EventListener\\RestInputOuputFormatter\:\:onKernelView\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: api/app/src/EventListener/RestInputOuputFormatter.php
 
@@ -6541,40 +5659,16 @@ parameters:
 			path: api/app/src/EventListener/RestInputOuputFormatter.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\EventSubscriber\\ClientArchivedSubscriber\:\:logEvent\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/EventSubscriber/ClientArchivedSubscriber.php
-
-		-
 			message: '#^Parameter \#2 \$caseNumber of method OPG\\Digideps\\Backend\\Service\\Audit\\AuditEvents\:\:clientArchived\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/EventSubscriber/ClientArchivedSubscriber.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\EventSubscriber\\UserRetentionPolicyCommandSubscriber\:\:logEvent\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/EventSubscriber/UserRetentionPolicyCommandSubscriber.php
-
-		-
 			message: '#^Parameter \#2 \$context of method Psr\\Log\\LoggerInterface\:\:notice\(\) expects array\<mixed\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/EventSubscriber/UserRetentionPolicyCommandSubscriber.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Exception\\BusinessRulesException\:\:getData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Exception/BusinessRulesException.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Exception\\BusinessRulesException\:\:setData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Exception/BusinessRulesException.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Exception\\BusinessRulesException\:\:setData\(\) has parameter \$data with no type specified\.$#'
@@ -6589,46 +5683,10 @@ parameters:
 			path: api/app/src/Exception/BusinessRulesException.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Exception\\BusinessRulesException\:\:\$data has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Exception/BusinessRulesException.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Exception\\HasDataInterface\:\:getData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Exception/HasDataInterface.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Exception\\HasDataInterface\:\:setData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Exception/HasDataInterface.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Exception\\HasDataInterface\:\:setData\(\) has parameter \$data with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Exception/HasDataInterface.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Backend\\Exception\\InvalidRegistrationTokenException\:\:\$code has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: api/app/src/Exception/InvalidRegistrationTokenException.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Exception\\UnauthorisedException\:\:getData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Exception/UnauthorisedException.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Exception\\UnauthorisedException\:\:setData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Exception/UnauthorisedException.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Exception\\UnauthorisedException\:\:setData\(\) has parameter \$data with no type specified\.$#'
@@ -6638,12 +5696,6 @@ parameters:
 
 		-
 			message: '#^Property OPG\\Digideps\\Backend\\Exception\\UnauthorisedException\:\:\$code has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: api/app/src/Exception/UnauthorisedException.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Exception\\UnauthorisedException\:\:\$data has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: api/app/src/Exception/UnauthorisedException.php
@@ -6943,12 +5995,6 @@ parameters:
 			path: api/app/src/FixtureFactory/LoadTestFactory.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\FixtureFactory\\LoadTestFactory\:\:createUsersClientsReports\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/FixtureFactory/LoadTestFactory.php
-
-		-
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -7010,6 +6056,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$clientPostcode of method OPG\\Digideps\\Backend\\v2\\Registration\\DTO\\LayDeputyshipDto\:\:setClientPostcode\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/FixtureFactory/PreRegistrationFactory.php
+
+		-
+			message: '#^Parameter \#1 \$clientSurname of method OPG\\Digideps\\Backend\\v2\\Registration\\DTO\\LayDeputyshipDto\:\:setClientSurname\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/FixtureFactory/PreRegistrationFactory.php
@@ -7135,12 +6187,6 @@ parameters:
 			path: api/app/src/FixtureFactory/UserFactory.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\FixtureFactory\\UserFactory\:\:createCoDeputy\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/FixtureFactory/UserFactory.php
-
-		-
 			message: '#^Parameter \#1 \$active of method OPG\\Digideps\\Backend\\Entity\\User\:\:setActive\(\) expects bool, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -7207,30 +6253,6 @@ parameters:
 			path: api/app/src/FixtureFactory/UserFactory.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Kernel\:\:__construct\(\) has parameter \$debug with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Kernel.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Kernel\:\:__construct\(\) has parameter \$environment with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Kernel.php
-
-		-
-			message: '#^Parameter \#1 \$environment of method Symfony\\Component\\HttpKernel\\Kernel\:\:__construct\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Kernel.php
-
-		-
-			message: '#^Parameter \#2 \$debug of method Symfony\\Component\\HttpKernel\\Kernel\:\:__construct\(\) expects bool, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Kernel.php
-
-		-
 			message: '#^Class OPG\\Digideps\\Backend\\Repository\\AssetRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: T$#'
 			identifier: missingType.generics
 			count: 1
@@ -7255,12 +6277,6 @@ parameters:
 			path: api/app/src/Repository/ChecklistRepository.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Repository\\ChecklistRepository\:\:getResubmittableErrorChecklistsAndSetToQueued\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Repository/ChecklistRepository.php
-
-		-
 			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, list given\.$#'
 			identifier: argument.type
 			count: 1
@@ -7279,12 +6295,6 @@ parameters:
 			path: api/app/src/Repository/ClientBenefitsCheckRepository.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Repository\\ClientBenefitsCheckRepository\:\:persistAndFlush\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Repository/ClientBenefitsCheckRepository.php
-
-		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\Query\\Filter\\SQLFilter\:\:disableForEntity\(\)\.$#'
 			identifier: method.notFound
 			count: 2
@@ -7299,12 +6309,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:findByCaseNumber\(\) should return OPG\\Digideps\\Backend\\Entity\\Client\|null but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: api/app/src/Repository/ClientRepository.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:findByFiltersWithCounts\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: api/app/src/Repository/ClientRepository.php
 
@@ -7363,12 +6367,6 @@ parameters:
 			path: api/app/src/Repository/ClientRepository.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:saveUserToClient\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Repository/ClientRepository.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:searchClients\(\) should return array\<OPG\\Digideps\\Backend\\Entity\\Client\> but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -7419,7 +6417,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
+			count: 3
 			path: api/app/src/Repository/DocumentRepository.php
 
 		-
@@ -7465,49 +6463,7 @@ parameters:
 			path: api/app/src/Repository/DocumentRepository.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Repository\\DocumentRepository\:\:flagSubmissionsContainingReportPdfs\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Repository/DocumentRepository.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Repository\\DocumentRepository\:\:getQueuedDocumentsAndSetToInProgress\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Repository/DocumentRepository.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Repository\\DocumentRepository\:\:getResubmittableErrorDocumentsAndSetToQueued\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Repository/DocumentRepository.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Repository\\DocumentRepository\:\:groupSubmissionsByReportId\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Repository/DocumentRepository.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Repository\\DocumentRepository\:\:logFailedDocuments\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Repository/DocumentRepository.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Repository\\DocumentRepository\:\:updateSupportingDocumentStatusByReportSubmissionIds\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Repository/DocumentRepository.php
-
-		-
-			message: '#^Parameter \#1 \$reportSubmissions of method OPG\\Digideps\\Backend\\Repository\\DocumentRepository\:\:assignUuidsToAdditionalDocumentSubmissions\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Repository/DocumentRepository.php
-
-		-
-			message: '#^Parameter \#1 \$reportSubmissions of method OPG\\Digideps\\Backend\\Repository\\DocumentRepository\:\:groupSubmissionsByReportId\(\) expects array, mixed given\.$#'
+			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, Closure\(array\)\: mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/Repository/DocumentRepository.php
@@ -7533,12 +6489,6 @@ parameters:
 		-
 			message: '#^Class OPG\\Digideps\\Backend\\Repository\\MoneyReceivedOnClientsBehalfRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: T$#'
 			identifier: missingType.generics
-			count: 1
-			path: api/app/src/Repository/MoneyReceivedOnClientsBehalfRepository.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Repository\\MoneyReceivedOnClientsBehalfRepository\:\:delete\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: api/app/src/Repository/MoneyReceivedOnClientsBehalfRepository.php
 
@@ -7639,12 +6589,6 @@ parameters:
 			path: api/app/src/Repository/PreRegistrationRepository.php
 
 		-
-			message: '#^Cannot access offset ''checklist_id'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/Repository/ReportRepository.php
-
-		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -7671,6 +6615,12 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Repository\\ReportRepository\:\:getClientIdsByAllSubmittedLayReportsWithin12Months\(\) should return array\<string\> but returns mixed\.$#'
 			identifier: return.type
+			count: 1
+			path: api/app/src/Repository/ReportRepository.php
+
+		-
+			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(int\)\: mixed\)\|null, Closure\(array\)\: mixed given\.$#'
+			identifier: argument.type
 			count: 1
 			path: api/app/src/Repository/ReportRepository.php
 
@@ -7815,18 +6765,6 @@ parameters:
 		-
 			message: '#^Class OPG\\Digideps\\Backend\\Repository\\UserRepository extends generic class Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository but does not specify its types\: T$#'
 			identifier: missingType.generics
-			count: 1
-			path: api/app/src/Repository/UserRepository.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Repository\\UserRepository\:\:addBroadMatchFilter\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: api/app/src/Repository/UserRepository.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Repository\\UserRepository\:\:addFullNameBestMatchFilter\(\) should return string but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: api/app/src/Repository/UserRepository.php
 
@@ -10105,12 +9043,6 @@ parameters:
 			path: api/app/src/TestHelpers/DeputyTestHelper.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\TestHelpers\\OrganisationTestHelper\:\:createOrganisation\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/TestHelpers/OrganisationTestHelper.php
-
-		-
 			message: '#^Cannot call method modify\(\) on DateTimeInterface\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -10118,12 +9050,6 @@ parameters:
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\TestHelpers\\ReportSubmissionHelper\:\:generateAndPersistSubmittedReportSubmission\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/TestHelpers/ReportSubmissionHelper.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\TestHelpers\\ReportSubmissionHelper\:\:submitAndPersistAdditionalSubmissions\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: api/app/src/TestHelpers/ReportSubmissionHelper.php
@@ -10231,22 +9157,10 @@ parameters:
 			path: api/app/src/Transformer/ReportSubmission/ReportSubmissionSummaryTransformer.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Transformer\\ReportSubmission\\ReportSubmissionSummaryTransformer\:\:outputDate\(\) has parameter \$date with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Transformer/ReportSubmission/ReportSubmissionSummaryTransformer.php
-
-		-
 			message: '#^Parameter \#1 \$reportSubmission of method OPG\\Digideps\\Backend\\Transformer\\ReportSubmission\\ReportSubmissionSummaryTransformer\:\:generateDataRow\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/Transformer/ReportSubmission/ReportSubmissionSummaryTransformer.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Assembler\\ClientAssembler\:\:setPropertiesFromData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/v2/Assembler/ClientAssembler.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\v2\\Assembler\\ClientAssembler\:\:setPropertiesFromData\(\) has parameter \$dto with no type specified\.$#'
@@ -10297,18 +9211,6 @@ parameters:
 			path: api/app/src/v2/Assembler/ClientAssembler.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Assembler\\DeputyAssembler\:\:assembleFromOrgDeputyshipDto\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/v2/Assembler/DeputyAssembler.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Assembler\\DeputyAssembler\:\:setPropertiesFromData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/v2/Assembler/DeputyAssembler.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\v2\\Assembler\\DeputyAssembler\:\:setPropertiesFromData\(\) has parameter \$dto with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -10335,12 +9237,6 @@ parameters:
 		-
 			message: '#^Cannot access offset ''organisation'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/v2/Assembler/OrganisationAssembler.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Assembler\\OrganisationAssembler\:\:setPropertiesFromData\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: api/app/src/v2/Assembler/OrganisationAssembler.php
 
@@ -10375,12 +9271,6 @@ parameters:
 			path: api/app/src/v2/Assembler/OrganisationAssembler.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Assembler\\Report\\ReportSummaryAssembler\:\:setPropertiesFromData\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/v2/Assembler/Report/ReportSummaryAssembler.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\v2\\Assembler\\Report\\ReportSummaryAssembler\:\:setPropertiesFromData\(\) has parameter \$dto with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -10395,12 +9285,6 @@ parameters:
 		-
 			message: '#^Left side of && is always true\.$#'
 			identifier: booleanAnd.leftAlwaysTrue
-			count: 1
-			path: api/app/src/v2/Assembler/UserAssembler.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Assembler\\UserAssembler\:\:setPropertiesFromData\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: api/app/src/v2/Assembler/UserAssembler.php
 
@@ -10495,12 +9379,6 @@ parameters:
 			path: api/app/src/v2/Controller/OrganisationController.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Controller\\OrganisationController\:\:getClients\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/src/v2/Controller/OrganisationController.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\v2\\Controller\\OrganisationController\:\:getMemberById\(\) should return OPG\\Digideps\\Backend\\Entity\\User\|null but returns mixed\.$#'
 			identifier: return.type
 			count: 1
@@ -10529,54 +9407,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: api/app/src/v2/Controller/OrganisationController.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\DTO\\ClientDto\:\:getOrganisation\(\) should return array but returns OPG\\Digideps\\Backend\\Entity\\Organisation\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/src/v2/DTO/ClientDto.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\DTO\\ClientDto\:\:setOrganisation\(\) has parameter \$organisation with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/v2/DTO/ClientDto.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\v2\\DTO\\ClientDto\:\:\$organisation \(OPG\\Digideps\\Backend\\Entity\\Organisation\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/v2/DTO/ClientDto.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\DTO\\OrganisationDto\:\:getTotalClientCount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/v2/DTO/OrganisationDto.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\DTO\\OrganisationDto\:\:getTotalUserCount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/v2/DTO/OrganisationDto.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\DTO\\OrganisationDto\:\:setTotalClientCount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/v2/DTO/OrganisationDto.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\DTO\\OrganisationDto\:\:setTotalUserCount\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/v2/DTO/OrganisationDto.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\v2\\DTO\\UserDto\:\:\$isPrimary \(bool\) does not accept bool\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/v2/DTO/UserDto.php
 
 		-
 			message: '#^Binary operation "\." between mixed and int\<1, 100\> results in an error\.$#'
@@ -10629,7 +9459,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''deputyEmail'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 4
+			count: 2
 			path: api/app/src/v2/Fixture/Controller/FixtureController.php
 
 		-
@@ -10651,12 +9481,6 @@ parameters:
 			path: api/app/src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: '#^Cannot access offset ''orgSizeUsers'' on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: '#^Cannot access offset ''phone'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -10665,42 +9489,6 @@ parameters:
 		-
 			message: '#^Cannot access offset ''postCode'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: '#^Cannot call method getAddressPostcode\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: '#^Cannot call method getDeputyUid\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: '#^Cannot call method getFirstName\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: '#^Cannot call method getLastname\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Fixture\\Controller\\FixtureController\:\:createCoDeputy\(\) should return OPG\\Digideps\\Backend\\Entity\\User but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Fixture\\Controller\\FixtureController\:\:createOrgAndAttachParticipants\(\) has parameter \$fromRequest with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: api/app/src/v2/Fixture/Controller/FixtureController.php
 
@@ -10729,12 +9517,6 @@ parameters:
 			path: api/app/src/v2/Fixture/Controller/FixtureController.php
 
 		-
-			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/v2/Fixture/Controller/FixtureController.php
-
-		-
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:remove\(\) expects object, object\|null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -10748,12 +9530,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$string of function substr expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: '#^Parameter \#1 \$user of method OPG\\Digideps\\Backend\\v2\\Fixture\\Controller\\FixtureController\:\:generateDeputy\(\) expects OPG\\Digideps\\Backend\\Entity\\User, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/v2/Fixture/Controller/FixtureController.php
@@ -10774,12 +9550,6 @@ parameters:
 			message: '#^Parameter \#2 \$end of function range expects float\|int\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: api/app/src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: '#^Parameter \#2 \$fromRequest of method OPG\\Digideps\\Backend\\v2\\Fixture\\Controller\\FixtureController\:\:buildDeputy\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: api/app/src/v2/Fixture/Controller/FixtureController.php
 
 		-
@@ -10809,24 +9579,6 @@ parameters:
 		-
 			message: '#^Cannot call method setMentalAssessmentDate\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: api/app/src/v2/Fixture/ReportSection.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Fixture\\ReportSection\:\:completePaFeeExpense\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/v2/Fixture/ReportSection.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Fixture\\ReportSection\:\:completeProfDeputyCosts\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/v2/Fixture/ReportSection.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Fixture\\ReportSection\:\:completeProfDeputyCostsEstimate\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: api/app/src/v2/Fixture/ReportSection.php
 
@@ -10903,6 +9655,12 @@ parameters:
 			path: api/app/src/v2/Registration/Assembler/SiriusToLayDeputyshipDtoAssembler.php
 
 		-
+			message: '#^Parameter \#1 \$clientSurname of method OPG\\Digideps\\Backend\\v2\\Registration\\DTO\\LayDeputyshipDto\:\:setClientSurname\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: api/app/src/v2/Registration/Assembler/SiriusToLayDeputyshipDtoAssembler.php
+
+		-
 			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -10969,12 +9727,6 @@ parameters:
 			path: api/app/src/v2/Registration/Assembler/SiriusToLayDeputyshipDtoAssembler.php
 
 		-
-			message: '#^Parameter \#1 \$key of function array_key_exists expects int\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/v2/Registration/Assembler/SiriusToLayDeputyshipDtoAssembler.php
-
-		-
 			message: '#^Parameter \#1 \$orderType of method OPG\\Digideps\\Backend\\v2\\Registration\\DTO\\LayDeputyshipDto\:\:setOrderType\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -10985,18 +9737,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: api/app/src/v2/Registration/Assembler/SiriusToLayDeputyshipDtoAssembler.php
-
-		-
-			message: '#^Parameter \#2 \$array of function implode expects array\<string\>, array given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/v2/Registration/Assembler/SiriusToLayDeputyshipDtoAssembler.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Registration\\Assembler\\SiriusToOrgDeputyshipDtoAssembler\:\:assembleMultipleDtosFromArray\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/v2/Registration/Assembler/SiriusToOrgDeputyshipDtoAssembler.php
 
 		-
 			message: '#^Parameter \#1 \$caseNumber of method OPG\\Digideps\\Backend\\v2\\Registration\\DTO\\OrgDeputyshipDto\:\:setCaseNumber\(\) expects string, mixed given\.$#'
@@ -11167,12 +9907,6 @@ parameters:
 			path: api/app/src/v2/Registration/Assembler/SiriusToOrgDeputyshipDtoAssembler.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Registration\\Controller\\LayDeputyshipUploadController\:\:upload\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/src/v2/Registration/Controller/LayDeputyshipUploadController.php
-
-		-
 			message: '#^Parameter \#1 \$data of method OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\CSVDeputyshipProcessing\:\:layProcessing\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -11183,12 +9917,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: api/app/src/v2/Registration/Controller/LayDeputyshipUploadController.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Registration\\Controller\\OrgDeputyshipController\:\:create\(\) should return array but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/src/v2/Registration/Controller/OrgDeputyshipController.php
 
 		-
 			message: '#^Parameter \#1 \$data of method OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\CSVDeputyshipProcessing\:\:orgProcessing\(\) expects array, mixed given\.$#'
@@ -11245,20 +9973,8 @@ parameters:
 			path: api/app/src/v2/Registration/DTO/LayDeputyshipDto.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Registration\\DTO\\LayDeputyshipDto\:\:setClientSurname\(\) has parameter \$clientSurname with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/v2/Registration/DTO/LayDeputyshipDto.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Backend\\v2\\Registration\\DTO\\LayDeputyshipDto\:\:\$caseNumber \(string\|null\) is never assigned null so it can be removed from the property type\.$#'
 			identifier: property.unusedType
-			count: 1
-			path: api/app/src/v2/Registration/DTO/LayDeputyshipDto.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\v2\\Registration\\DTO\\LayDeputyshipDto\:\:\$clientSurname \(string\|null\) does not accept mixed\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: api/app/src/v2/Registration/DTO/LayDeputyshipDto.php
 
@@ -11299,12 +10015,6 @@ parameters:
 			path: api/app/src/v2/Registration/DTO/LayDeputyshipDtoCollection.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Registration\\DTO\\OrgDeputyshipDto\:\:getCourtDate\(\) should return DateTime but returns DateTime\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: api/app/src/v2/Registration/DTO/OrgDeputyshipDto.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Backend\\v2\\Registration\\DTO\\OrgDeputyshipDto\:\:\$clientAddress1 \(string\) does not accept string\|null\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -11341,25 +10051,7 @@ parameters:
 			path: api/app/src/v2/Registration/DeputyshipProcessing/CSVDeputyshipProcessing.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\CSVDeputyshipProcessing\:\:layProcessing\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/v2/Registration/DeputyshipProcessing/CSVDeputyshipProcessing.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Registration\\DeputyshipProcessing\\CSVDeputyshipProcessing\:\:orgProcessing\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/v2/Registration/DeputyshipProcessing/CSVDeputyshipProcessing.php
-
-		-
 			message: '#^Parameter \#1 \$collection of method OPG\\Digideps\\Backend\\v2\\Registration\\Uploader\\LayDeputyshipUploader\:\:upload\(\) expects OPG\\Digideps\\Backend\\v2\\Registration\\DTO\\LayDeputyshipDtoCollection, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/v2/Registration/DeputyshipProcessing/CSVDeputyshipProcessing.php
-
-		-
-			message: '#^Parameter \#1 \$deputyshipDtos of method OPG\\Digideps\\Backend\\v2\\Registration\\Uploader\\OrgDeputyshipUploader\:\:upload\(\) expects array\<OPG\\Digideps\\Backend\\v2\\Registration\\DTO\\OrgDeputyshipDto\>, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/v2/Registration/DeputyshipProcessing/CSVDeputyshipProcessing.php
@@ -11473,12 +10165,6 @@ parameters:
 			path: api/app/src/v2/Registration/Uploader/LayDeputyshipUploader.php
 
 		-
-			message: '#^Parameter \#1 \$data of method OPG\\Digideps\\Backend\\v2\\Registration\\Assembler\\SiriusToLayDeputyshipDtoAssembler\:\:assembleFromArray\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/v2/Registration/Uploader/LayDeputyshipUploader.php
-
-		-
 			message: '#^Parameter \#1 \$layDeputyshipDto of method OPG\\Digideps\\Backend\\v2\\Registration\\Uploader\\LayDeputyshipUploader\:\:createAndPersistNewPreRegistrationEntity\(\) expects OPG\\Digideps\\Backend\\v2\\Registration\\DTO\\LayDeputyshipDto, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -11533,12 +10219,6 @@ parameters:
 			path: api/app/src/v2/Registration/Uploader/OrgDeputyshipUploader.php
 
 		-
-			message: '#^Cannot call method format\(\) on DateTime\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
 			message: '#^Cannot call method getCaseNumber\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -11575,12 +10255,6 @@ parameters:
 			path: api/app/src/v2/Registration/Uploader/OrgDeputyshipUploader.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\v2\\Registration\\Uploader\\OrgDeputyshipUploader\:\:clientHasNewOrgAndDeputy\(\) is unused\.$#'
 			identifier: method.unused
 			count: 1
@@ -11608,12 +10282,6 @@ parameters:
 			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Deputy\:\:setFirstname\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 2
-			path: api/app/src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
-			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: api/app/src/v2/Registration/Uploader/OrgDeputyshipUploader.php
 
 		-
@@ -11653,56 +10321,8 @@ parameters:
 			path: api/app/src/v2/Registration/Uploader/OrgDeputyshipUploader.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\v2\\Registration\\Uploader\\OrgDeputyshipUploader\:\:\$deputy \(OPG\\Digideps\\Backend\\Entity\\Deputy\|null\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/v2/Registration/Uploader/OrgDeputyshipUploader.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Transformer\\ClientTransformer\:\:transformArchivedAt\(\) never returns null so it can be removed from the return type\.$#'
-			identifier: return.unusedType
-			count: 1
-			path: api/app/src/v2/Transformer/ClientTransformer.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Transformer\\ClientTransformer\:\:transformDeletedAt\(\) never returns null so it can be removed from the return type\.$#'
-			identifier: return.unusedType
-			count: 1
-			path: api/app/src/v2/Transformer/ClientTransformer.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Transformer\\ClientTransformer\:\:transformDeputies\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/v2/Transformer/ClientTransformer.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\v2\\Transformer\\ReportTransformer\:\:transformDate\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: api/app/src/v2/Transformer/ReportTransformer.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Transformer\\ReportTransformer\:\:transformDate\(\) has parameter \$format with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/v2/Transformer/ReportTransformer.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\v2\\Transformer\\ReportTransformer\:\:transformDate\(\) has parameter \$property with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/v2/Transformer/ReportTransformer.php
-
-		-
-			message: '#^Parameter \#1 \$format of method DateTime\:\:format\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/v2/Transformer/ReportTransformer.php
-
-		-
-			message: '#^Parameter \#1 \$string of function ucfirst expects string, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: api/app/src/v2/Transformer/ReportTransformer.php
 
@@ -12615,12 +11235,6 @@ parameters:
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\FeatureContext\:\:dbQueryRaw\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Behat/bootstrap/FeatureContext.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\FeatureContext\:\:dbQueryRaw\(\) has parameter \$table with no type specified\.$#'
-			identifier: missingType.parameter
 			count: 1
 			path: api/app/tests/Behat/bootstrap/FeatureContext.php
 
@@ -13879,12 +12493,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/FeatureContext.php
 
 		-
-			message: '#^Parameter \#2 \$array of function join expects array\<string\>, list given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Behat/bootstrap/FeatureContext.php
-
-		-
 			message: '#^Parameter \#2 \$arrays of function array_diff expects an array of values castable to string, array given\.$#'
 			identifier: argument.type
 			count: 1
@@ -14146,12 +12754,6 @@ parameters:
 			message: '#^Part \$startDate \(mixed\) of encapsed string cannot be cast to string\.$#'
 			identifier: encapsedStringPart.nonString
 			count: 2
-			path: api/app/tests/Behat/bootstrap/FeatureContext.php
-
-		-
-			message: '#^Part \$table \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 1
 			path: api/app/tests/Behat/bootstrap/FeatureContext.php
 
 		-
@@ -22659,7 +21261,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:persist\(\) expects object, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
 
 		-
@@ -23221,12 +21823,6 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/v2/OrganisationManagement/OrganisationManagementFeatureContext.php
 
 		-
-			message: '#^Binary operation "\." between mixed and '' Edit'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/OrganisationManagement/OrganisationManagementFeatureContext.php
-
-		-
 			message: '#^Cannot access offset ''Email'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
@@ -23241,7 +21837,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''Name'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 6
+			count: 4
 			path: api/app/tests/Behat/bootstrap/v2/OrganisationManagement/OrganisationManagementFeatureContext.php
 
 		-
@@ -31339,80 +29935,14 @@ parameters:
 			path: api/app/tests/Integration/Controller/AuthControllerTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AuthControllerTest\:\:endpointAuthChecks\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/Controller/AuthControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AuthControllerTest\:\:resetAttempts\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/Controller/AuthControllerTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AuthControllerTest\:\:resetAttempts\(\) has parameter \$key with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
 			path: api/app/tests/Integration/Controller/AuthControllerTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AuthControllerTest\:\:testBruteForceSameEmail\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/Controller/AuthControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AuthControllerTest\:\:testFailWrongAuthToken\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/Controller/AuthControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AuthControllerTest\:\:testLoginFailSecretPermissions\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/Controller/AuthControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AuthControllerTest\:\:testLoginFailWrongPassword\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/Controller/AuthControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AuthControllerTest\:\:testLoginSuccess\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/Controller/AuthControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AuthControllerTest\:\:testLoginTimeout\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/Controller/AuthControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AuthControllerTest\:\:testLogout\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/Controller/AuthControllerTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AuthControllerTest\:\:testLogout\(\) has parameter \$authToken with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: api/app/tests/Integration/Controller/AuthControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AuthControllerTest\:\:testMultipleAccountCanLoginAtTheSameTimeAndThereIsNoInterference\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/tests/Integration/Controller/AuthControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AuthControllerTest\:\:testPasswordHashNotInResponse\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: api/app/tests/Integration/Controller/AuthControllerTest.php
 
@@ -38041,12 +36571,6 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/ChecklistRepositoryIntegrationTest.php
 
 		-
-			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/ChecklistRepositoryIntegrationTest.php
-
-		-
 			message: '#^Parameter \#3 \$startDate of class OPG\\Digideps\\Backend\\Entity\\Report\\Report constructor expects DateTime, DateTime\|false given\.$#'
 			identifier: argument.type
 			count: 1
@@ -38105,12 +36629,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Integration/Entity/Repository/CourtOrderRepositoryTest.php
-
-		-
-			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
 			message: '#^Binary operation "\." between ''abc\-123\-'' and mixed results in an error\.$#'
@@ -38185,12 +36703,6 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
-			message: '#^Cannot access offset mixed on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 8
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
 			message: '#^Cannot call method format\(\) on DateTimeInterface\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -38205,7 +36717,7 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 15
+			count: 4
 			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
@@ -38217,13 +36729,13 @@ parameters:
 		-
 			message: '#^Cannot call method getSynchronisationStatus\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 18
+			count: 17
 			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
 			message: '#^Cannot call method getUuid\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 1
 			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
@@ -38245,20 +36757,8 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
-			message: '#^Cannot use array destructuring on mixed\.$#'
-			identifier: offsetAccess.nonArray
-			count: 2
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
 			message: '#^Instanceof between OPG\\Digideps\\Backend\\Entity\\Report\\Report and OPG\\Digideps\\Backend\\Entity\\Report\\Report will always evaluate to true\.$#'
 			identifier: instanceof.alwaysTrue
-			count: 1
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:createAndSubmitAdditionalDocuments\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
@@ -38299,12 +36799,6 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
-			message: '#^Parameter \#1 \$documents of method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:assertDataMatchesEntity\(\) expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 6
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
 			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:persist\(\) expects object, mixed given\.$#'
 			identifier: argument.type
 			count: 11
@@ -38313,7 +36807,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:refresh\(\) expects object, mixed given\.$#'
 			identifier: argument.type
-			count: 21
+			count: 16
 			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
@@ -38329,12 +36823,6 @@ parameters:
 			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
-			message: '#^Parameter \#1 \$value of function count expects array\|Countable, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
 			message: '#^Parameter \#2 \$document of method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:assertDataMatchesEntity\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Document, mixed given\.$#'
 			identifier: argument.type
 			count: 6
@@ -38343,7 +36831,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$submission of method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\DocumentRepositoryTest\:\:syncDocuments\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 6
+			count: 5
 			path: api/app/tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
 		-
@@ -40741,18 +39229,6 @@ parameters:
 			path: api/app/tests/Unit/Command/ProcessLayCSVCommandTest.php
 
 		-
-			message: '#^Cannot call method shouldBeCalled\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Unit/Command/ProcessLayCSVCommandTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Unit/Command/ProcessLayCSVCommandTest.php
-
-		-
 			message: '#^Parameter \#1 \$args of method Aws\\S3\\S3Client\:\:getObject\(\) expects array, Prophecy\\Argument\\Token\\AnyValueToken given\.$#'
 			identifier: argument.type
 			count: 3
@@ -40867,18 +39343,6 @@ parameters:
 			path: api/app/tests/Unit/Command/ProcessOrgCSVCommandTest.php
 
 		-
-			message: '#^Cannot call method shouldBeCalled\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Unit/Command/ProcessOrgCSVCommandTest.php
-
-		-
-			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Unit/Command/ProcessOrgCSVCommandTest.php
-
-		-
 			message: '#^Class OPG\\Digideps\\Backend\\Command\\ProcessOrgCSVCommand constructor invoked with 5 parameters, 4 required\.$#'
 			identifier: arguments.count
 			count: 1
@@ -40951,15 +39415,9 @@ parameters:
 			path: api/app/tests/Unit/Command/ProcessOrgCSVCommandTest.php
 
 		-
-			message: '#^Cannot call method shouldBeCalled\(\) on Prophecy\\Prophecy\\MethodProphecy\|null\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: api/app/tests/Unit/Command/UserRetentionPolicyCommandTest.php
-
-		-
 			message: '#^Cannot call method shouldBeCalled\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 11
+			count: 8
 			path: api/app/tests/Unit/Command/UserRetentionPolicyCommandTest.php
 
 		-
@@ -43039,12 +41497,6 @@ parameters:
 			path: api/app/tests/Unit/v2/Registration/Assembler/SiriusToOrgDeputyshipDtoAssemblerTest.php
 
 		-
-			message: '#^Cannot call method format\(\) on DateTime\|null\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: api/app/tests/Unit/v2/Registration/Assembler/SiriusToOrgDeputyshipDtoAssemblerTest.php
-
-		-
 			message: '#^Parameter \#2 \$datetime of static method DateTime\:\:createFromFormat\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -43611,12 +42063,6 @@ parameters:
 		-
 			message: '#^Cannot access offset 1 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: api/app/tests/Unit/v2/Transformer/OrganisationTransformerTest.php
-
-		-
-			message: '#^Parameter \#1 \$dto of method OPG\\Digideps\\Backend\\v2\\Transformer\\OrganisationTransformer\:\:transform\(\) expects OPG\\Digideps\\Backend\\v2\\DTO\\OrganisationDto, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: api/app/tests/Unit/v2/Transformer/OrganisationTransformerTest.php
 
