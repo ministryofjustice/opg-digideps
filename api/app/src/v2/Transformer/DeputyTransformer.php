@@ -9,7 +9,7 @@ class DeputyTransformer
     /**
      * @return array
      */
-    public function transform(DeputyDto $dto)
+    public function transform(DeputyDto $dto): array
     {
         $data = [
             'id' => $dto->getId(),

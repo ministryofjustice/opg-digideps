@@ -4,216 +4,132 @@ namespace OPG\Digideps\Backend\v2\DTO;
 
 class ReportDto
 {
-    /** @var int */
-    private $id;
+    private ?int $id = null;
+    private ?bool $submitted = null;
+    private ?\DateTime $dueDate = null;
+    private ?\DateTime $submitDate = null;
+    private ?\DateTime $unSubmitDate = null;
+    private ?\DateTime $startDate = null;
+    private ?\DateTime $endDate = null;
+    /** @var ?String[] $availableSections  */
+    private ?array $availableSections = null;
+    private ?StatusDto $status = null;
+    private ?string $type = null;
 
-    /** @var bool */
-    private $submitted;
-
-    /** @var \DateTime */
-    private $dueDate;
-
-    /** @var \DateTime */
-    private $submitDate;
-
-    /** @var \DateTime */
-    private $unSubmitDate;
-
-    /** @var \DateTime */
-    private $startDate;
-
-    /** @var \DateTime */
-    private $endDate;
-
-    /** @var array */
-    private $availableSections;
-
-    /** @var StatusDto */
-    private $status;
-
-    /** @var string */
-    private $type;
-
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return bool
-     */
-    public function getSubmitted()
+    public function getSubmitted(): ?bool
     {
         return $this->submitted;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDueDate()
+    public function getDueDate(): ?\DateTime
     {
         return $this->dueDate;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getSubmitDate()
+    public function getSubmitDate(): ?\DateTime
     {
         return $this->submitDate;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getUnSubmitDate()
+    public function getUnSubmitDate(): ?\DateTime
     {
         return $this->unSubmitDate;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getStartDate()
+    public function getStartDate(): ?\DateTime
     {
         return $this->startDate;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getEndDate()
+    public function getEndDate(): ?\DateTime
     {
         return $this->endDate;
     }
 
-    /**
-     * @return array
-     */
-    public function getAvailableSections()
+    public function getAvailableSections(): ?array
     {
         return $this->availableSections;
     }
 
-    /**
-     * @return StatusDto
-     */
-    public function getStatus()
+    public function getStatus(): ?StatusDto
     {
         return $this->status;
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): ?string
     {
         return $this->type;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return ReportDto
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @param bool $submitted
-     *
-     * @return ReportDto
-     */
-    public function setSubmitted($submitted)
+    public function setSubmitted(bool $submitted): static
     {
         $this->submitted = $submitted;
 
         return $this;
     }
 
-    /**
-     * @return ReportDto
-     */
-    public function setDueDate(\DateTime $dueDate)
+    public function setDueDate(\DateTime $dueDate): static
     {
         $this->dueDate = $dueDate;
 
         return $this;
     }
 
-    /**
-     * @return ReportDto
-     */
-    public function setSubmitDate(\DateTime $submitDate)
+    public function setSubmitDate(\DateTime $submitDate): static
     {
         $this->submitDate = $submitDate;
 
         return $this;
     }
 
-    /**
-     * @return ReportDto
-     */
-    public function setUnSubmitDate(\DateTime $unSubmitDate)
+    public function setUnSubmitDate(\DateTime $unSubmitDate): static
     {
         $this->unSubmitDate = $unSubmitDate;
 
         return $this;
     }
 
-    /**
-     * @return ReportDto
-     */
-    public function setStartDate(\DateTime $startDate)
+    public function setStartDate(\DateTime $startDate): static
     {
         $this->startDate = $startDate;
 
         return $this;
     }
 
-    /**
-     * @return ReportDto
-     */
-    public function setEndDate(\DateTime $endDate)
+    public function setEndDate(\DateTime $endDate): static
     {
         $this->endDate = $endDate;
 
         return $this;
     }
-
-    /**
-     * @param array $availableSections
-     *
-     * @return ReportDto
-     */
-    public function setAvailableSections($availableSections)
+    /** @param String[] $availableSections */
+    public function setAvailableSections(array $availableSections): static
     {
         $this->availableSections = $availableSections;
 
         return $this;
     }
 
-    /**
-     * @return ReportDto
-     */
-    public function setStatus(StatusDto $status)
+    public function setStatus(StatusDto $status): static
     {
         $this->status = $status;
 
         return $this;
     }
 
-    /**
-     * @return ReportDto
-     */
-    public function setType(string $type)
+    public function setType(string $type): static
     {
         $this->type = $type;
 

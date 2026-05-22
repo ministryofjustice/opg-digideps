@@ -152,7 +152,7 @@ class ApiComparison extends Command
             )
         );
 
-        $result = preg_replace_callback('/\{[^}]+\}/', function () use (&$ids) {
+        $result = preg_replace_callback('/\{[^}]+\}/', function () use (&$ids): string {
             return (string) array_shift($ids);
         }, $route);
 
@@ -164,7 +164,7 @@ class ApiComparison extends Command
     private function extractNonUserIds(array $row): array
     {
         try {
-            $extracted_ids = array_values(array_filter($row, fn ($key) => $key !== 'user_id', ARRAY_FILTER_USE_KEY));
+            $extracted_ids = array_values(array_filter($row, fn ($key): bool => $key !== 'user_id', ARRAY_FILTER_USE_KEY));
         } catch (\Throwable $e) {
             throw new \RuntimeException('Error extracting ids from row: ' . $e->getMessage(), 0, $e);
         }

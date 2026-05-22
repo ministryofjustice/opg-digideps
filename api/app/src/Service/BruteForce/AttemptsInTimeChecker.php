@@ -47,7 +47,7 @@ class AttemptsInTimeChecker
         foreach ($this->triggers as $trigger) {
             list($maxAttempts, $timeInterval) = $trigger;
 
-            $attemptsInInterval = count(array_filter($history, function ($attemptTimeStamp) use ($currentTimestamp, $timeInterval) {
+            $attemptsInInterval = count(array_filter($history, function ($attemptTimeStamp) use ($currentTimestamp, $timeInterval): bool {
                 return $attemptTimeStamp >= $currentTimestamp - $timeInterval;
             }));
             if ($attemptsInInterval >= $maxAttempts) {

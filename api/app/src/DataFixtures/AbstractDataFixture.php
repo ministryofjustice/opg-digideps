@@ -37,12 +37,12 @@ abstract class AbstractDataFixture implements FixtureInterface
      *
      * @param ObjectManager $manager the object manager
      */
-    abstract protected function doLoad(ObjectManager $manager);
+    abstract protected function doLoad(ObjectManager $manager): void;
 
     /**
      * Returns the environments the fixtures may be loaded in.
      *
-     * @return array the name of the environments
+     * @return String[] the name of the environments
      */
-    abstract protected function getEnvironments();
+    abstract protected function getEnvironments(): array;
 }
