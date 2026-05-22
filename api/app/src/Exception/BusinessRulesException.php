@@ -10,7 +10,7 @@ class BusinessRulesException extends \RuntimeException implements HasDataInterfa
 {
     protected $code = 409;
 
-    protected mixed $data;
+    protected mixed $data = null;
 
     public function getData(): mixed
     {

@@ -137,7 +137,7 @@ class RestInputOuputFormatter
     public function onKernelException(ExceptionEvent $event): void
     {
         $e = $event->getThrowable();
-        $hasDataReflection = ($e instanceof HasDataInterface) ? new \ReflectionProperty($e::class, 'data') : false;
+        $data = $e instanceof HasDataInterface && $e->getData() ? $e->getData() : '';
         $message = $e->getMessage();
         $code = (int) $e->getCode();
         $level = 'warning'; // defeault exception level, unless override
@@ -170,7 +170,7 @@ class RestInputOuputFormatter
 
         $data = [
             'success' => false,
-            'data' => ($hasDataReflection && $hasDataReflection->isInitialized($e)) ? $e->getData() : '',
+            'data' => $data,
             'message' => $message,
             'stacktrace' => ($this->debug) ?
                     sprintf('%s: %s', $e::class, substr($e->getTraceAsString(), 0, 64000))

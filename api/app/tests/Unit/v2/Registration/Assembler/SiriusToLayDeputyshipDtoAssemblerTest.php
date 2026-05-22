@@ -27,12 +27,15 @@ final class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
         $input = $this->getInput();
         unset($input[$itemToRemove]);
 
-        /* @phpstan-ignore argument.type */
+        /** @var class-string<\Throwable> $errorType */
         $this->expectException($errorType);
 
         $this->sut->assembleFromArray($input);
     }
 
+    /**
+     * @return array{string, class-string<\Throwable>}[]
+     */
     public static function getMissingDataVariations(): array
     {
         return [

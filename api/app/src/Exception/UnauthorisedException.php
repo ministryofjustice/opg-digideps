@@ -6,7 +6,7 @@ class UnauthorisedException extends \RuntimeException implements HasDataInterfac
 {
     protected $code = 403;
 
-    protected mixed $data;
+    protected mixed $data = null;
 
     public function getData(): mixed
     {
