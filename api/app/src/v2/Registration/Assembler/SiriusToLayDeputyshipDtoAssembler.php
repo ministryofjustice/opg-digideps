@@ -8,6 +8,7 @@ use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
 
 class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInterface
 {
+    /** @var String[] $requiredData  */
     private array $requiredData = [
         'Case',
         'ClientSurname',
@@ -22,8 +23,10 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
         'Hybrid',
     ];
 
+    /** @var String[] $missingColumns  */
     private array $missingColumns = [];
 
+    /** @param Mixed[] $data */
     public function assembleFromArray(array $data): LayDeputyshipDto
     {
         $this->collectMissingColumns($data);
@@ -40,6 +43,9 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
         return $this->buildDto($data);
     }
 
+    /**
+     * @param Mixed[] $data
+     */
     private function buildDto(array $data): LayDeputyshipDto
     {
         return
@@ -69,13 +75,14 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
                 ->setHybrid($data['Hybrid']);
     }
 
+    /** @param Mixed[] $data */
     private function collectMissingColumns(array $data): void
     {
         $this->missingColumns = [];
         foreach ($this->requiredData as $requiredColumn) {
-            $this->missingColumns[] = array_key_exists($requiredColumn, $data) && !empty($data[$requiredColumn]) ?
-                null :
-                $requiredColumn;
+            if (array_key_exists($requiredColumn, $data) && empty($data[$requiredColumn])) {
+                $this->missingColumns[] = $requiredColumn;
+            }
         }
 
         $this->missingColumns = array_filter($this->missingColumns);

@@ -159,7 +159,7 @@ class LayDeputyshipProcessor
         LayDeputyshipDto $layDeputyshipDto,
     ): array {
         $deputyUids = array_map(
-            function ($user) {
+            function (User $user): ?int {
                 return $user->getDeputyUid();
             },
             iterator_to_array($client->getUsers())

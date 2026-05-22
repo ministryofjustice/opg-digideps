@@ -9,7 +9,7 @@ class StatusTransformer
     /**
      * @return array
      */
-    public function transform(StatusDto $dto)
+    public function transform(StatusDto $dto): array
     {
         return [
             'status' => $dto->getStatus(),

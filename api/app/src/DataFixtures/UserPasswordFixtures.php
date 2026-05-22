@@ -19,7 +19,7 @@ class UserPasswordFixtures extends AbstractDataFixture implements OrderedFixture
         parent::__construct($kernel);
     }
 
-    public function doLoad(ObjectManager $manager)
+    public function doLoad(ObjectManager $manager): void
     {
         // Set all user passwords
         $userRepository = $manager->getRepository(User::class);
@@ -45,7 +45,8 @@ class UserPasswordFixtures extends AbstractDataFixture implements OrderedFixture
         return 11;
     }
 
-    protected function getEnvironments()
+    /** @Return String[] */
+    protected function getEnvironments(): array
     {
         return ['dev', 'test', 'local'];
     }

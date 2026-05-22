@@ -17,20 +17,17 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class RestInputOuputFormatter
 {
-    /**
-     * @var array
-     */
-    private $supportedFormats;
+    private array $supportedFormats;
 
     /**
      * @var \Closure[]
      */
-    private $responseModifiers = [];
+    private array $responseModifiers = [];
 
     /**
      * @var \Closure[]
      */
-    private $contextModifiers = [];
+    private array $contextModifiers = [];
 
     public function __construct(
         private readonly SerializerInterface $serializer,
@@ -42,10 +39,7 @@ class RestInputOuputFormatter
         $this->supportedFormats = array_values($supportedFormats);
     }
 
-    /**
-     * @return array
-     */
-    public function requestContentToArray(Request $request)
+    public function requestContentToArray(Request $request): array
     {
         $format = $request->getContentType();
 
@@ -71,7 +65,7 @@ class RestInputOuputFormatter
      *
      * @return Response
      */
-    private function arrayToResponse(array $data, Request $request, $groupsCheck = true)
+    private function arrayToResponse(array $data, Request $request, bool $groupsCheck = true): Response
     {
         $format = $request->getContentType();
 
@@ -105,7 +99,7 @@ class RestInputOuputFormatter
         return $response;
     }
 
-    private function containsEntity($object)
+    private function containsEntity($object): bool
     {
         if (is_array($object)) {
             foreach ($object as $subObject) {
@@ -117,14 +111,14 @@ class RestInputOuputFormatter
             return false;
         }
 
-        return is_object($object) && strpos(get_class($object), 'Entity') !== false;
+        return is_object($object) && str_contains($object::class, 'Entity');
     }
 
     /**
      * Attach the following with
      * services:.
      */
-    public function onKernelView(ViewEvent $event)
+    public function onKernelView(ViewEvent $event): void
     {
         $data = [
             'success' => true,
@@ -140,9 +134,10 @@ class RestInputOuputFormatter
     /**
      * Attach the following with.
      */
-    public function onKernelException(ExceptionEvent $event)
+    public function onKernelException(ExceptionEvent $event): void
     {
         $e = $event->getThrowable();
+        $data = $e instanceof HasDataInterface && $e->getData() ? $e->getData() : '';
         $message = $e->getMessage();
         $code = (int) $e->getCode();
         $level = 'warning'; // defeault exception level, unless override
@@ -175,10 +170,10 @@ class RestInputOuputFormatter
 
         $data = [
             'success' => false,
-            'data' => ($e instanceof HasDataInterface) ? $e->getData() : '',
+            'data' => $data,
             'message' => $message,
             'stacktrace' => ($this->debug) ?
-                    sprintf('%s: %s', get_class($e), substr($e->getTraceAsString(), 0, 64000))
+                    sprintf('%s: %s', $e::class, substr($e->getTraceAsString(), 0, 64000))
                     : 'enable debug mode to see it',
             'code' => $code,
         ];
@@ -189,7 +184,7 @@ class RestInputOuputFormatter
         $event->setResponse($response);
     }
 
-    public static function onKernelRequest(RequestEvent $event)
+    public static function onKernelRequest(RequestEvent $event): void
     {
         if (function_exists('xdebug_disable')) {
             xdebug_disable();
@@ -210,12 +205,12 @@ class RestInputOuputFormatter
         });
     }
 
-    public function addResponseModifier(\Closure $f)
+    public function addResponseModifier(\Closure $f): void
     {
         $this->responseModifiers[] = $f;
     }
 
-    public function addContextModifier(\Closure $f)
+    public function addContextModifier(\Closure $f): void
     {
         $this->contextModifiers[] = $f;
     }

@@ -139,10 +139,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function addBroadMatchFilter(string $searchTerm, bool $includeClients)
+    public function addBroadMatchFilter(string $searchTerm, bool $includeClients): void
     {
         $nameBasedQuery = '(lower(u.email) LIKE :qLike OR lower(u.firstname) LIKE :qLike OR lower(u.lastname) LIKE :qLike)';
 
@@ -154,10 +151,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->qb->andWhere($nameBasedQuery);
     }
 
-    /**
-     * @return string
-     */
-    public function addFullNameBestMatchFilter(string $firstName, string $otherName, bool $includeClients)
+    public function addFullNameBestMatchFilter(string $firstName, string $otherName, bool $includeClients): void
     {
         $nameBasedQuery = '(lower(u.firstname) LIKE :firstname AND (lower(u.firstname) LIKE :othername OR lower(u.lastname) LIKE :othername))';
 

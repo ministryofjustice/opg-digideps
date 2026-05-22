@@ -70,7 +70,7 @@ class ConnectionWrapper extends Connection
         return $this->isConnected();
     }
 
-    protected function refreshPassword()
+    protected function refreshPassword(): void
     {
         $secretPrefix = getenv(self::SECRETS_PREFIX);
         $secretName = sprintf('%sdatabase-password', $secretPrefix);
@@ -91,7 +91,7 @@ class ConnectionWrapper extends Connection
         $this->params['password'] = $secretValue;
     }
 
-    public function setSecretsManagerClient($secretPrefix)
+    public function setSecretsManagerClient($secretPrefix): void
     {
         if ($secretPrefix == 'local/') {
             $endpoint = getenv(self::SECRETS_ENDPOINT);

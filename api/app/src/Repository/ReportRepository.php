@@ -87,7 +87,7 @@ class ReportRepository extends ServiceEntityRepository
      *
      * @return int changed records
      */
-    public function addMoneyShortCategoriesIfMissing(Report $report)
+    public function addMoneyShortCategoriesIfMissing(Report $report): int
     {
         $ret = 0;
 
@@ -190,11 +190,11 @@ DQL;
             ->createQuery($dql)
             ->setParameter('status', SynchronisableInterface::SYNC_STATUS_QUEUED)
             ->setMaxResults($limit);
-
+        /** @var Int[] $result */
         $result = $query->getArrayResult();
 
         if (count($result)) {
-            $ids = array_map(function ($result) {
+            $ids = array_map(function (array $result) {
                 return $result['checklist_id'];
             }, $result);
 
