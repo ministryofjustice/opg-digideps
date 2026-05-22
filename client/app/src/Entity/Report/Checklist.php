@@ -728,9 +728,9 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPaymentsMatchCostCertificate()
+    public function getPaymentsMatchCostCertificate(): ?string
     {
         return $this->paymentsMatchCostCertificate;
     }
@@ -748,9 +748,9 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getProfCostsReasonableAndProportionate()
+    public function getProfCostsReasonableAndProportionate(): ?string
     {
         return $this->profCostsReasonableAndProportionate;
     }
@@ -768,9 +768,9 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getHasDeputyOverchargedFromPreviousEstimates()
+    public function getHasDeputyOverchargedFromPreviousEstimates(): ?string
     {
         return $this->hasDeputyOverchargedFromPreviousEstimates;
     }

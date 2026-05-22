@@ -3715,24 +3715,6 @@ parameters:
 			path: src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:getHasDeputyOverchargedFromPreviousEstimates\(\) should return string but returns string\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:getPaymentsMatchCostCertificate\(\) should return string but returns string\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:getProfCostsReasonableAndProportionate\(\) should return string but returns string\|null\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
 			message: '#^Parameter \#1 \$futureSignificantDecisions of method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:setFutureSignificantDecisions\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
