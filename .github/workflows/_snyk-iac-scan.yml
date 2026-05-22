@@ -1,0 +1,71 @@
+name: "Snyk IAC scan"
+
+defaults:
+  run:
+    shell: bash
+
+on:
+  workflow_call:
+    secrets:
+      snyk_token:
+        required: true
+
+permissions:
+  actions: none
+  checks: none
+  contents: write
+  deployments: none
+  id-token: write
+  issues: none
+  packages: none
+  pull-requests: read
+  repository-projects: none
+  security-events: write
+  statuses: none
+
+jobs:
+  snyk_iac_scan:
+    name: Run Snyk IAC scan
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: account
+            terraform_configuration_path: ./terraform/account/
+          - name: environment
+            terraform_configuration_path: ./terraform/environment/
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 # v6.0.0
+
+      - name: Configure OIDC AWS Credentials Pull
+        uses: aws-actions/configure-aws-credentials@7474bc4690e29a8392af63c5b98e7449536d5c3a # v4.3.1
+        with:
+          aws-region: eu-west-1
+          role-to-assume: arn:aws:iam::${{ vars.MANAGEMENT_ACCOUNT }}:role/digideps-gh-actions-ecr-pull
+          role-duration-seconds: 900
+          role-session-name: ga-ecr-pull-digideps
+
+      - uses: aws-actions/amazon-ecr-login@f2e9fc6c2b355c1890b65e6f6f0e2ac3e6e22f78 # v2.1.2
+        id: login-ecr
+        with:
+          registries: ${{ vars.MANAGEMENT_ACCOUNT }}
+          mask-password: "true"
+
+      - name: Snyk IaC ${{ matrix.name }}
+        id: snyk_iac
+        uses: ministryofjustice/opg-github-actions/actions/snyk-iac@9e8b7c2fb29c11e77b12913f74459fa48b11829f # v4.8.2
+        with:
+          iac_test_directory: "${{ matrix.terraform_configuration_path }}"
+          SNYK_TOKEN: ${{ secrets.snyk_token }}
+          snyk_test_args: "--severity-threshold=high"
+          snyk_policy_path: "${{ matrix.terraform_configuration_path }}.snyk"
+
+      - name: Upload Snyk IaC results to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@0d579ffd059c29b07949a3cce3983f0780820c98 # v4.32.6
+        if: always()
+        with:
+          category: "IaC-${{matrix.name}}"
+          sarif_file: "test-results/snyk.sarif"
