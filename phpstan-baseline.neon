@@ -2665,12 +2665,6 @@ parameters:
 			path: api/app/src/Entity/Client.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Client\:\:setArchivedAt\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Client.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Client\:\:setCreatedAtAutomatically\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -5379,12 +5373,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\User\:\:padDeputyNumber\(\) has parameter \$deputyNo with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\User\:\:setAdManaged\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: api/app/src/Entity/User.php
 
