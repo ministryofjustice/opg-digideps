@@ -319,10 +319,14 @@ class Checklist implements SynchronisableInterface
 
         // DDPB-2272: prefill answers based on report content
         $action = $report->getAction();
-        if ($answer = $action->getDoYouExpectFinancialDecisions()) {
+        /** @var string $answer */
+        $answer = $action->getDoYouExpectFinancialDecisions();
+        if ($answer) {
             $this->setFutureSignificantDecisions($answer);
         }
-        if ($answer = $action->getDoYouHaveConcerns()) {
+        /** @var string $answer */
+        $answer = $action->getDoYouHaveConcerns();
+        if ($answer) {
             $this->setHasDeputyRaisedConcerns($answer);
         }
     }
@@ -700,7 +704,7 @@ class Checklist implements SynchronisableInterface
      *
      * @return $this
      */
-    public function setHasDeputyRaisedConcerns($hasDeputyRaisedConcerns)
+    public function setHasDeputyRaisedConcerns(string $hasDeputyRaisedConcerns): static
     {
         $this->hasDeputyRaisedConcerns = $hasDeputyRaisedConcerns;
 

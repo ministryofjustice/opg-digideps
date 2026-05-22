@@ -3715,18 +3715,6 @@ parameters:
 			path: src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Parameter \#1 \$futureSignificantDecisions of method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:setFutureSignificantDecisions\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Parameter \#1 \$hasDeputyRaisedConcerns of method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:setHasDeputyRaisedConcerns\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ChecklistInformation\:\:__construct\(\) has parameter \$information with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
