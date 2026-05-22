@@ -207,31 +207,31 @@ class Checklist implements SynchronisableInterface
     private $caseWorkerSatisified;
 
     /**
-     * @var string
+     * @var null|string
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.paymentsMatchCostCertificate.notBlank", groups={"submit-profDeputyCosts-checklist"})
      */
-    private $paymentsMatchCostCertificate;
+    private ?string $paymentsMatchCostCertificate;
 
     /**
-     * @var string
+     * @var null|string
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.profCostsReasonableAndProportionate.notBlank", groups={"submit-profDeputyCosts-checklist"})
      */
-    private $profCostsReasonableAndProportionate;
+    private ?string $profCostsReasonableAndProportionate;
 
     /**
-     * @var string
+     * @var null|string
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
      * @Assert\NotBlank(message="checklist.hasDeputyOverchargedFromPreviousEstimates.notBlank", groups={"submit-profDeputyCosts-checklist"})
      */
-    private $hasDeputyOverchargedFromPreviousEstimates;
+    private ?string $hasDeputyOverchargedFromPreviousEstimates;
 
     /**
      * @var string
@@ -736,11 +736,11 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param string $paymentsMatchCostCertificate
+     * @param ?string $paymentsMatchCostCertificate
      *
      * @return $this
      */
-    public function setPaymentsMatchCostCertificate(string $paymentsMatchCostCertificate): static
+    public function setPaymentsMatchCostCertificate(?string $paymentsMatchCostCertificate): static
     {
         $this->paymentsMatchCostCertificate = $paymentsMatchCostCertificate;
 
@@ -756,11 +756,11 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param string $profCostsReasonableAndProportionate
+     * @param ?string $profCostsReasonableAndProportionate
      *
      * @return $this
      */
-    public function setProfCostsReasonableAndProportionate(string $profCostsReasonableAndProportionate): static
+    public function setProfCostsReasonableAndProportionate(?string $profCostsReasonableAndProportionate): static
     {
         $this->profCostsReasonableAndProportionate = $profCostsReasonableAndProportionate;
 
@@ -776,12 +776,12 @@ class Checklist implements SynchronisableInterface
     }
 
     /**
-     * @param string $hasDeputyOverchargedFromPreviousEstimates
+     * @param ?string $hasDeputyOverchargedFromPreviousEstimates
      *
      * @return $this
      */
     public function setHasDeputyOverchargedFromPreviousEstimates(
-        string $hasDeputyOverchargedFromPreviousEstimates
+        ?string $hasDeputyOverchargedFromPreviousEstimates
     ): static {
         $this->hasDeputyOverchargedFromPreviousEstimates = $hasDeputyOverchargedFromPreviousEstimates;
 

@@ -28,9 +28,9 @@ class ChecklistTest extends KernelTestCase
      * @dataProvider submitProfDeputyCostsChecklistValuesProvider
      */
     public function validationsSubmitProfDeputyCostsChecklist(
-        string $profCostsReasonableAndProportionate,
-        string $paymentsMatchCostCertificate,
-        string $hasDeputyOverchargedFromPreviousEstimates,
+        ?string $profCostsReasonableAndProportionate,
+        ?string $paymentsMatchCostCertificate,
+        ?string $hasDeputyOverchargedFromPreviousEstimates,
         int $expectedCountErrors
     ): void {
         $report = new Report();
