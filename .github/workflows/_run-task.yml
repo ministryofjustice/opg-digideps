@@ -53,7 +53,7 @@ jobs:
 
       - id: terraform_version
         name: get terraform version
-        uses: ministryofjustice/opg-github-actions/actions/terraform-version@b605e1e2c94b399e8139c4c2be2c8730700e0004 # v4.5.2
+        uses: ministryofjustice/opg-github-actions/actions/terraform-version@a2907c7c7be94301c965ace76a2cfa407ad6fc88 # v4.6.0
         with:
           terraform_directory: terraform/environment
 
@@ -78,7 +78,7 @@ jobs:
           chmod +x ecs-helper/ecs-runner
 
       - id: deploy-key
-        uses: "ministryofjustice/opg-github-actions/actions/github-deploy-key@9e8b7c2fb29c11e77b12913f74459fa48b11829f" # v4.8.2
+        uses: "ministryofjustice/opg-github-actions/actions/github-deploy-key@5fba2afe28b31b8c5eaf1fb4235e2d32aea24a1e" # v4.8.3
         with:
           deploy_key: ${{ secrets.ssh_private_key }}
 
