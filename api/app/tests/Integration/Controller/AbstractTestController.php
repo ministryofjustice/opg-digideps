@@ -2,21 +2,23 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
+use Doctrine\ORM\EntityManager;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
 use OPG\Digideps\Backend\Service\JWT\JWTService;
-use Tests\OPG\Digideps\Backend\Integration\Fixtures;
-use Doctrine\ORM\EntityManager;
 use Osteel\OpenApi\Testing\ValidatorBuilder;
 use Osteel\OpenApi\Testing\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Container;
+use Tests\OPG\Digideps\Backend\Fixture\FixtureService;
+use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 
 abstract class AbstractTestController extends WebTestCase
 {
     protected static EntityManager $em;
     protected static Fixtures $fixtures;
+    protected static FixtureService $fixtureService;
     protected static KernelBrowser $frameworkBundleClient;
     protected static string|false $deputySecret;
     protected static string|false $adminSecret;
@@ -40,6 +42,7 @@ abstract class AbstractTestController extends WebTestCase
         self::$frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false]);
 
         self::$em = static::getContainer()->get('em');
+        self::$fixtureService = static::getContainer()->get(FixtureService::class);
         self::$fixtures = new Fixtures(self::$em);
         self::$em->clear();
 
@@ -51,6 +54,11 @@ abstract class AbstractTestController extends WebTestCase
     public static function fixtures(): Fixtures
     {
         return self::$fixtures;
+    }
+
+    public static function fixtureService(): FixtureService
+    {
+        return self::$fixtureService;
     }
 
     /**
@@ -244,9 +252,9 @@ abstract class AbstractTestController extends WebTestCase
     /**
      * @return string token
      */
-    protected function loginAsPaAdmin()
+    protected function loginAsPaAdmin(string $email = 'pa_admin@example.org')
     {
-        return $this->login('pa_admin@example.org', 'DigidepsPass1234', self::$deputySecret);
+        return $this->login($email, 'DigidepsPass1234', self::$deputySecret);
     }
 
     /**
