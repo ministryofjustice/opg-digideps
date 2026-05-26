@@ -17,7 +17,11 @@ COPY common ../../common
 ##############################
 FROM composer AS composer-runtime
 RUN composer install --no-dev --prefer-dist --no-interaction --no-scripts;
-RUN cp -R ./vendor/digideps/common/ ./vendor/digideps/_ && rm ./vendor/digideps/common && mv ./vendor/digideps/_/ ./vendor/digideps/common
+RUN cp -R ./vendor/digideps/common/ ./vendor/digideps/_ \
+    && rm ./vendor/digideps/common \
+    && mv ./vendor/digideps/_/ ./vendor/digideps/common \
+    && rm -f ./vendor/digideps/common/vendor \
+    && rm -f ./vendor/digideps/common/composer.lock
 RUN composer check-platform-reqs
 RUN composer dump-autoload --optimize
 
