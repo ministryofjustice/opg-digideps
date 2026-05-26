@@ -21,6 +21,8 @@ final readonly class ReportTransitionService
 
     /**
      * NB this creates the entities but doesn't persist them
+     *
+     * @returns ?ReportTransitionResult returns null if the transition was not attempted (report types already match)
      */
     public function transitionReport(Report $report, ?ReportType $oldReportType, ReportType $newReportType): ?ReportTransitionResult
     {
@@ -66,7 +68,7 @@ final readonly class ReportTransitionService
         if ($result === null) {
             // this was a simple change to the report's type with no other effects
             $result = new ReportTransitionResult(
-                messages: ["Report transitioned successfully"],
+                messages: ["Report {$report->getId()} transitioned from $oldReportType to {$report->getType()}"],
                 transitioned: true,
                 updatedReports: [$report]
             );
