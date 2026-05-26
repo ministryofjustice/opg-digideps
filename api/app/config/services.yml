@@ -478,7 +478,7 @@ services:
     OPG\Digideps\Backend\Service\UserDeputyService:
         public: true
 
-    OPG\Digideps\Backend\Factory\ReportTypeUpdateFactory:
+    OPG\Digideps\Backend\Factory\UpdateReportTypeDataFactory:
         public: true
 
     preCSVDataFactory:
