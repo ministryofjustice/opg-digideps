@@ -21,6 +21,11 @@
     "phpunit/phpunit": "^13.1.6",
     "phpstan/phpstan-phpunit": "^2.0.16"
   },
+  "extra": {
+    "symfony": {
+      "require": "7.0.*"
+    }
+  },
   "scripts": {
     "lint:phpstan": "phpstan",
     "tests:unit": "phpunit"

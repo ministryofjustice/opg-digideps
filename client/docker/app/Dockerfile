@@ -17,9 +17,13 @@ COPY common ../../common
 ##############################
 FROM composer AS composer-runtime
 RUN composer install --no-dev --prefer-dist --no-interaction --no-scripts \
- && cp -R ./vendor/digideps/common/ ./vendor/digideps/_ && rm ./vendor/digideps/common && mv ./vendor/digideps/_/ ./vendor/digideps/common \
- && composer check-platform-reqs \
- && composer dump-autoload --optimize
+RUN cp -R ./vendor/digideps/common/ ./vendor/digideps/_ \
+    && rm ./vendor/digideps/common \
+    && mv ./vendor/digideps/_/ ./vendor/digideps/common \
+    && rm ./vendor/digideps/common/vendor \
+    && rm ./vendor/digideps/common/composer.lock \
+    && composer check-platform-reqs \
+    && composer dump-autoload --optimize
 
 ##############################
 # Stage 1b: Composer Devtools
