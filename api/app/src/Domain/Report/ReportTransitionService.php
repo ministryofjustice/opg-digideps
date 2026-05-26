@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Domain\Report;
 
-use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderPair;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Service\ReportService;
+
+use function PHPUnit\Framework\assertNotNull;
 
 final readonly class ReportTransitionService
 {
@@ -97,11 +97,17 @@ final readonly class ReportTransitionService
         /** @var array<CourtOrder> $courtOrders */
         $courtOrders = $report->getActiveCourtOrders();
 
-        [$pfaCourtOrder, $hwCourtOrder, $error] = $this->verifyPfaAndHwCourtOrders($courtOrders);
-        if ($error !== null) {
-            $result->errorMessages[] = $error;
+        $courtOrderPair = CourtOrderPair::create($courtOrders);
+        $pfaCourtOrder = $courtOrderPair->pfaCourtOrder;
+        $hwCourtOrder = $courtOrderPair->hwCourtOrder;
+
+        if (!$courtOrderPair->isValid()) {
+            $result->errorMessages = [$courtOrderPair->invalidReason ?? 'Unknown reason'];
             return $result;
         }
+
+        assertNotNull($pfaCourtOrder);
+        assertNotNull($hwCourtOrder);
 
         // both court orders must have the same report we're splitting as their most-recent (hybrid) report
         $reportId = $report->getId();
@@ -152,7 +158,7 @@ final readonly class ReportTransitionService
         $result = new ReportTransitionResult();
 
         // get active court orders on the report's client
-        $firstCourtOrder = $report->getCourtOrders()->first();
+        $firstCourtOrder = $report->getCourtOrders()->first() ?: null;
         $client = $firstCourtOrder?->getClient();
         if ($client === null) {
             $result->errorMessages = ["Could not find client for report {$report->getId()}"];
@@ -164,16 +170,21 @@ final readonly class ReportTransitionService
             fn (CourtOrder $courtOrder) => $courtOrder->getStatus() === 'ACTIVE'
         );
 
-        [$pfaCourtOrder, $hwCourtOrder, $error] = $this->verifyPfaAndHwCourtOrders($clientActiveCourtOrders);
-        if ($error !== null) {
-            $result->errorMessages = [$error];
+        $courtOrderPair = CourtOrderPair::create($clientActiveCourtOrders);
+        if (!$courtOrderPair->isValid()) {
+            $result->errorMessages = [$courtOrderPair->invalidReason ?? 'Unknown reason'];
             return $result;
         }
+
+        $hwCourtOrder = $courtOrderPair->hwCourtOrder;
+        $pfaCourtOrder = $courtOrderPair->pfaCourtOrder;
+        assertNotNull($hwCourtOrder);
+        assertNotNull($pfaCourtOrder);
 
         // we're going to keep the pfa report, and get rid of the hw one
         $changedReportFound = false;
         $reportId = $report->getId();
-        foreach ([$pfaCourtOrder, $hwCourtOrder] as $courtOrder) {
+        foreach ([$hwCourtOrder, $pfaCourtOrder] as $courtOrder) {
             // we need both orders to have a latest report
             $latestReport = $courtOrder->getLatestReport();
 
@@ -182,7 +193,7 @@ final readonly class ReportTransitionService
             }
 
             // track whether one of the two latest reports on these court orders is the one transitioning;
-            // if not, we don't want to apply this change
+            // if not, we don't want to apply this change now
             if ($latestReport?->getId() === $reportId) {
                 $changedReportFound = true;
             }
@@ -196,15 +207,17 @@ final readonly class ReportTransitionService
             return $result;
         }
 
+        $hybridReport = $pfaCourtOrder->getLatestReport();
+        $defunctReport = $hwCourtOrder->getLatestReport();
+        assertNotNull($hybridReport);
+        assertNotNull($defunctReport);
+
         // merge the hw report into the pfa report to make the hybrid report;
         // remove the hw report from the hw court order; attach the hw court order to the hybrid report
 
         // TODO copy data from $defunctReport into $hybridReport?
 
         // TODO delete $defunctReport altogether?
-
-        $hybridReport = $pfaCourtOrder->getLatestReport();
-        $defunctReport = $hwCourtOrder->getLatestReport();
 
         $hwCourtOrder->removeReport($defunctReport);
         $hwCourtOrder->addReport($hybridReport);
@@ -233,47 +246,5 @@ final readonly class ReportTransitionService
     {
         $result = new ReportTransitionResult();
         return $result;
-    }
-
-    /**
-     * Check that $courtOrders contains two court orders, one HW and one PFA;
-     * NB these court orders don't have to be active at this point
-     *
-     * @param iterable<CourtOrder> $courtOrders
-     * @returns array [hwCourtOrder, pfaCourtOrder, ?string error]
-     */
-    private function verifyPfaAndHwCourtOrders(iterable $courtOrders): array
-    {
-        $courtOrderTypes = [];
-        $pfaCourtOrder = null;
-        $hwCourtOrder = null;
-
-        foreach ($courtOrders as $courtOrder) {
-            $orderType = $courtOrder->getOrderType();
-
-            $courtOrderTypes[] = $orderType->value;
-            if ($orderType === CourtOrderType::PFA) {
-                $pfaCourtOrder = $courtOrder;
-            } elseif ($orderType === CourtOrderType::HW) {
-                $hwCourtOrder = $courtOrder;
-            }
-        }
-
-        $numCourtOrderTypes = count($courtOrderTypes);
-        if ($numCourtOrderTypes !== 2) {
-            return [null, null, "Incorrect number of court orders: expected 2, but found $numCourtOrderTypes"];
-        }
-
-        $expected = [CourtOrderType::HW->value, CourtOrderType::PFA->value];
-
-        $sorter = fn (string $a, string $b) => $a <=> $b;
-        uasort($courtOrderTypes, $sorter);
-        uasort($expected, $sorter);
-
-        if ($courtOrderTypes !== $expected) {
-            return [null, null, 'Invalid pair of court orders: expected HW + PFA, but types were ' . implode(', ', $courtOrderTypes)];
-        }
-
-        return [$pfaCourtOrder, $hwCourtOrder, null];
     }
 }
