@@ -20,8 +20,8 @@ RUN composer install --no-dev --prefer-dist --no-interaction --no-scripts \
 RUN cp -R ./vendor/digideps/common/ ./vendor/digideps/_ \
     && rm ./vendor/digideps/common \
     && mv ./vendor/digideps/_/ ./vendor/digideps/common \
-    && rm ./vendor/digideps/common/vendor \
-    && rm ./vendor/digideps/common/composer.lock \
+    && rm -f ./vendor/digideps/common/vendor \
+    && rm -f ./vendor/digideps/common/composer.lock \
     && composer check-platform-reqs \
     && composer dump-autoload --optimize
 
