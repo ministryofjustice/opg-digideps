@@ -16,7 +16,7 @@ COPY common ../../common
 # Stage 1a: Composer Runtime
 ##############################
 FROM composer AS composer-runtime
-RUN composer install --no-dev --prefer-dist --no-interaction --no-scripts \
+RUN composer install --no-dev --prefer-dist --no-interaction --no-scripts;
 RUN cp -R ./vendor/digideps/common/ ./vendor/digideps/_ \
     && rm ./vendor/digideps/common \
     && mv ./vendor/digideps/_/ ./vendor/digideps/common \
