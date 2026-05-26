@@ -23,7 +23,7 @@
   },
   "extra": {
     "symfony": {
-      "require": "7.0.*"
+      "require": "6.4.*"
     }
   },
   "scripts": {
