@@ -14,7 +14,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 
-class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
+class UpdateReportTypeDataFactoryIntegrationTest extends ApiIntegrationTestCase
 {
     private static UpdateReportTypeDataFactory $sut;
     private static Fixtures $fixtures;
