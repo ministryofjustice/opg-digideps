@@ -211,7 +211,7 @@ trait ClientBenefitsCheckSectionTrait
     {
         $this->iAmOnClientBenefitsCheckStep3Page();
 
-        $numOfMoneyTypes = $numOfMoneyTypes - 1;
+        $numOfMoneyTypes -= 1;
 
         for ($i = 0; $i <= $numOfMoneyTypes; $i++) {
             $this->fillInField(

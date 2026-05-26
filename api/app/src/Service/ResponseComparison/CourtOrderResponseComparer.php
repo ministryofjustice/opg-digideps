@@ -39,7 +39,7 @@ class CourtOrderResponseComparer extends ResponseComparer
 
     private function legacyResponseData(array $legacyDecoded): array
     {
-        $legacyNormalized = array_map(function ($row) {
+        $legacyNormalized = array_map(function ($row): array {
             return [
                 'idForNextApiCalls' => $row['id'] ?? null,
                 'caseNumber' => $row['case_number'] ?? null,
@@ -53,7 +53,7 @@ class CourtOrderResponseComparer extends ResponseComparer
 
     private function newResponseData(array $newDecoded): array
     {
-        $newNormalized = array_map(function ($row) {
+        $newNormalized = array_map(function ($row): array {
             return [
                 'idForNextApiCalls' => $row['courtOrder']['courtOrderLink'] ?? null,
                 'caseNumber'    => $row['client']['caseNumber'] ?? null,
@@ -144,7 +144,7 @@ class CourtOrderResponseComparer extends ResponseComparer
 
     private function normalizeArrayForComparison(array $data): array
     {
-        array_walk_recursive($data, function (&$value) {
+        array_walk_recursive($data, function (&$value): void {
             if (is_numeric($value)) {
                 $value = (string) $value; // normalize numbers to string
             }
@@ -173,7 +173,7 @@ class CourtOrderResponseComparer extends ResponseComparer
         $newNormalized = $this->newResponseData($newDecoded);
 
         // Sort arrays so order doesn’t matter
-        $sortFn = function ($a, $b) {
+        $sortFn = function ($a, $b): int {
             return [$a['caseNumber'], $a['firstName'], $a['lastName']]
                 <=> [$b['caseNumber'], $b['firstName'], $b['lastName']];
         };

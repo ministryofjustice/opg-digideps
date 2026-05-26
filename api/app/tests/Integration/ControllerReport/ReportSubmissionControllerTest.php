@@ -334,7 +334,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         $reportSubmission = new ReportSubmission($report, $user);
         self::fixtures()->persist($reportSubmission);
 
-        foreach ($documents as $i => $document) {
+        foreach ($documents as $document) {
             $record = self::fixtures()->createDocument($report, $document[0]);
             $record->setReportSubmission($reportSubmission);
 

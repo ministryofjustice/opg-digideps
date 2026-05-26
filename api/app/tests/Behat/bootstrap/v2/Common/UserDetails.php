@@ -62,7 +62,7 @@ class UserDetails
         $inputArrayKeys = array_keys($userDetails);
         $unexpectedKeys = [];
 
-        foreach ($inputArrayKeys as $index => $key) {
+        foreach ($inputArrayKeys as $key) {
             if (!in_array($key, $supportedArrayKeys)) {
                 $unexpectedKeys[] = $key;
             }

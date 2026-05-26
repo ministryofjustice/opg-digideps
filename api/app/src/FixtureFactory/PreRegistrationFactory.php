@@ -14,6 +14,7 @@ readonly class PreRegistrationFactory
     {
     }
 
+    /** @param Mixed[] $data */
     public function create(array $data): PreRegistration
     {
         $caseNumber = str_pad((string) rand(1, 99999999), 8, '0', STR_PAD_LEFT);

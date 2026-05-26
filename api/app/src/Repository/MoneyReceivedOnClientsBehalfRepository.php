@@ -15,7 +15,7 @@ class MoneyReceivedOnClientsBehalfRepository extends ServiceEntityRepository
         parent::__construct($registry, MoneyReceivedOnClientsBehalf::class);
     }
 
-    public function delete(string $id)
+    public function delete(string $id): void
     {
         $entity = $this->_em->find(MoneyReceivedOnClientsBehalf::class, $id);
 

@@ -14,7 +14,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class MoneyTransactionShortController extends RestController
 {
-    private $sectionIds = [
+    /** @var String[]  */
+    private array $sectionIds = [
         Report::SECTION_MONEY_IN_SHORT,
         Report::SECTION_MONEY_OUT_SHORT,
     ];

@@ -17,7 +17,7 @@ class UserAssembler
     /**
      * @return UserDto
      */
-    public function assembleFromArray(array $data)
+    public function assembleFromArray(array $data): UserDto
     {
         $dto = new UserDto();
 
@@ -33,7 +33,7 @@ class UserAssembler
     /**
      * @return UserDto
      */
-    public function assembleFromEntity(User $user)
+    public function assembleFromEntity(User $user): UserDto
     {
         $dto = new UserDto();
 
@@ -53,7 +53,7 @@ class UserAssembler
     /**
      * @return array
      */
-    private function assembleUserClients(array $clients)
+    private function assembleUserClients(array $clients): array
     {
         $dtos = [];
 
