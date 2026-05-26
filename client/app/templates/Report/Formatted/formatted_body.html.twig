@@ -51,8 +51,13 @@
             } %}
         {% endif %}
 
-        {% include '@App/Report/Formatted/_assets.html.twig' %}
-        {% include '@App/Report/Formatted/_debts.html.twig' %}
+        {% if report.hasSection('assets') %}
+            {% include '@App/Report/Formatted/_assets.html.twig' %}
+        {% endif %}
+
+        {% if report.hasSection('debts') %}
+            {% include '@App/Report/Formatted/_debts.html.twig' %}
+        {% endif %}
 
         {% if report.hasSection('moneyIn') %}
             <div class="section break-before" id="accounts-section">
@@ -125,7 +130,9 @@
             {% include '@App/Report/Formatted/_prof_deputy_costs_estimate.html.twig' %}
         {% endif %}
 
-        {% include '@App/Report/Formatted/_gifts.html.twig' %}
+        {% if report.hasSection('gifts') %}
+            {% include '@App/Report/Formatted/_gifts.html.twig' %}
+        {% endif %}
 
         {% if report.hasSection('balance') %}
             {% include '@App/Report/Formatted/Accounts/_final_summary.html.twig' %}
