@@ -75,7 +75,7 @@ trait DebtTrait
      */
     public function getDebtByTypeId($typeId)
     {
-        return $this->getDebts()->filter(function (Debt $debt) use ($typeId) {
+        return $this->getDebts()->filter(function (Debt $debt) use ($typeId): bool {
             return $debt->getDebtTypeId() == $typeId;
         })->first();
     }
@@ -129,7 +129,7 @@ trait DebtTrait
      */
     public function getDebtsWithValidAmount()
     {
-        $debtsWithAValidAmount = $this->getDebts()->filter(function ($debt) {
+        $debtsWithAValidAmount = $this->getDebts()->filter(function ($debt): bool {
             return !empty($debt->getAmount());
         });
 

@@ -207,7 +207,7 @@ trait ReportProfDeputyCostsTrait
      */
     public function getProfDeputyOtherCostByTypeId($typeId)
     {
-        $costs = $this->profDeputyOtherCosts->filter(function (ProfDeputyOtherCost $profDeputyOtherCost) use ($typeId) {
+        $costs = $this->profDeputyOtherCosts->filter(function (ProfDeputyOtherCost $profDeputyOtherCost) use ($typeId): bool {
             return $profDeputyOtherCost->getProfDeputyOtherCostTypeId() == $typeId;
         });
 

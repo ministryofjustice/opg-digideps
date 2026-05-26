@@ -21,18 +21,22 @@ class OrganisationAssembler
     /**
      * @return OrganisationDto
      */
-    public function assembleFromArray(array $data)
+    public function assembleFromArray(array $data): OrganisationDto
     {
         $dto = new OrganisationDto();
 
         $this->setPropertiesFromData($dto, $data);
 
         if (isset($data['users']) && is_array($data['users'])) {
-            $dto->setUsers($this->assembleOrganisationUsers($data['users']));
+            /** @var User[] $users */
+            $users = $this->assembleOrganisationUsers($data['users']);
+            $dto->setUsers($users);
         }
 
         if (isset($data['clients']) && is_array($data['clients'])) {
-            $dto->setClients($this->assembleOrganisationClients($data['clients']));
+            /** @var Client[] $clients */
+            $clients = $this->assembleOrganisationClients($data['clients']);
+            $dto->setClients($clients);
         }
 
         return $dto;
@@ -41,7 +45,7 @@ class OrganisationAssembler
     /**
      * @return OrganisationDto
      */
-    public function assembleFromEntity(Organisation $organisation)
+    public function assembleFromEntity(Organisation $organisation): OrganisationDto
     {
         $dto = new OrganisationDto();
 
@@ -58,7 +62,7 @@ class OrganisationAssembler
     /**
      * @return array
      */
-    private function assembleOrganisationUsers(iterable $users)
+    private function assembleOrganisationUsers(iterable $users): array
     {
         $dtos = [];
 
@@ -78,7 +82,7 @@ class OrganisationAssembler
      *
      * @return array
      */
-    private function assembleOrganisationClients(iterable $clients)
+    private function assembleOrganisationClients(iterable $clients): array
     {
         $dtos = [];
 

@@ -1326,7 +1326,7 @@ class FixtureHelper
     {
         $user = $this->userTestHelper::createUser();
 
-        $deputy = $this->deputyTestHelper::generateDeputy(user: $user, em: $this->em);
+        $deputy = $this->deputyTestHelper::generateDeputy(null, null, $user, $this->em);
         $deputy->associateWithCourtOrder($courtOrder);
 
         // if this is null, the user counts as "awaiting registration"
