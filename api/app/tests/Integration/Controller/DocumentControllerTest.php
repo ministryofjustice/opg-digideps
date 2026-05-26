@@ -4,11 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
+use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\DocumentRepository;
+use Tests\OPG\Digideps\Backend\Fixture\CourtOrderDescriptor;
+use Tests\OPG\Digideps\Backend\Fixture\DeputyDescriptor;
+use Tests\OPG\Digideps\Backend\Fixture\DeputySet;
+use Tests\OPG\Digideps\Backend\Fixture\Scenario;
 
 class DocumentControllerTest extends AbstractTestController
 {
@@ -28,8 +33,7 @@ class DocumentControllerTest extends AbstractTestController
     private static $tokenDeputy;
 
     // lay
-    private static $deputy1;
-    private static $client1;
+    private static User $user1;
 
     /** @var ReportSubmission */
     private static $reportSubmission1;
@@ -47,11 +51,16 @@ class DocumentControllerTest extends AbstractTestController
 
         self::setupFixtures();
 
-        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
-
-        self::$report1 = self::fixtures()->createReport(self::$client1);
-        self::$report2 = self::fixtures()->createReport(self::$client1);
+        ['persons' => ['users' => ['lay1' => self::$user1]], 'orders' => [[
+            'pfa' => ['reports' => [self::$report1]],
+            'hw' => ['reports' => [self::$report2]],
+        ]]] = self::$fixtureService->instantiateScenario(
+            new Scenario(new CourtOrderDescriptor(
+                new DeputySet(new DeputyDescriptor('lay1'), new DeputyDescriptor('lay2')),
+                single: false,
+                siblingDeputySet: new DeputySet(new DeputyDescriptor('lay1'), new DeputyDescriptor('lay3')),
+            ))
+        );
 
         self::$document1 = self::fixtures()->createDocument(self::$report1, 'file_name.pdf');
         self::$document2 = self::fixtures()->createDocument(self::$report1, 'another_file_name.pdf', false);
@@ -67,7 +76,7 @@ class DocumentControllerTest extends AbstractTestController
         self::fixtures()->flush();
 
         $this->repo = self::fixtures()->getRepo(Document::class);
-        self::$tokenDeputy = $this->loginAsDeputy();
+        self::$tokenDeputy = $this->loginAsDeputy(self::$user1->getEmail());
     }
 
     public static function tearDownAfterClass(): void
@@ -102,7 +111,7 @@ class DocumentControllerTest extends AbstractTestController
         $document = self::fixtures()->getRepo(Document::class)->find($data['id']);
 
         $this->assertEquals($data['id'], $document->getId());
-        $this->assertEquals(self::$deputy1->getId(), $document->getCreatedBy()->getId());
+        $this->assertEquals(self::$user1->getId(), $document->getCreatedBy()->getId());
         $this->assertInstanceof(\DateTime::class, $document->getCreatedOn());
         $this->assertEquals('s3StorageKey', $document->getStorageReference());
         $this->assertEquals('testfile.pdf', $document->getFilename());
