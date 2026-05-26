@@ -29803,6 +29803,12 @@ parameters:
 			path: tests/Integration/Controller/AbstractTestController.php
 
 		-
+			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AbstractTestController\:\:\$fixtureService \(Tests\\OPG\\Digideps\\Backend\\Fixture\\FixtureService\) does not accept object\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: tests/Integration/Controller/AbstractTestController.php
+
+		-
 			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AbstractTestController\:\:\$jwtService \(OPG\\Digideps\\Backend\\Service\\JWT\\JWTService\|null\) does not accept object\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -29887,12 +29893,6 @@ parameters:
 			path: tests/Integration/Controller/AuthControllerTest.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\User\>\:\:findOneByEmail\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Integration/Controller/ChecklistControllerTest.php
-
-		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 3
@@ -29923,25 +29923,7 @@ parameters:
 			path: tests/Integration/Controller/ChecklistControllerTest.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 6
-			path: tests/Integration/Controller/ChecklistControllerTest.php
-
-		-
-			message: '#^Constant API_TOKEN_DEPUTY not found\.$#'
-			identifier: constant.notFound
-			count: 3
-			path: tests/Integration/Controller/ChecklistControllerTest.php
-
-		-
 			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Controller/ChecklistControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Integration/Controller/ChecklistControllerTest.php
@@ -29949,36 +29931,6 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: tests/Integration/Controller/ChecklistControllerTest.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: tests/Integration/Controller/ChecklistControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ChecklistControllerTest\:\:\$checklist has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/Controller/ChecklistControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ChecklistControllerTest\:\:\$client has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/Controller/ChecklistControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ChecklistControllerTest\:\:\$deputy has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/Controller/ChecklistControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ChecklistControllerTest\:\:\$report has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: tests/Integration/Controller/ChecklistControllerTest.php
 
@@ -30153,7 +30105,7 @@ parameters:
 		-
 			message: '#^Binary operation "\." between ''/client/'' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 12
+			count: 10
 			path: tests/Integration/Controller/ClientControllerTest.php
 
 		-
@@ -30285,7 +30237,7 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 22
+			count: 17
 			path: tests/Integration/Controller/ClientControllerTest.php
 
 		-
@@ -30321,90 +30273,6 @@ parameters:
 		-
 			message: '#^Cannot call method getUsers\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:testArchiveClient\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:testArchiveClientAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:testDetailsAction\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:testGetAllAction\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:testUpdateDeputy\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:testUpsertAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:testUpsertPostLayDeputy\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:testUpsertPutLayDeputy\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:testUpsertPutPA\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:testfindById\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:testfindByIdAclAllowed\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:testfindByIdAclNotAllowed\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:testfindByIdAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:testfindByIdDischargedClientNotFound\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: tests/Integration/Controller/ClientControllerTest.php
 
@@ -30494,12 +30362,6 @@ parameters:
 
 		-
 			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:\$pa1Client1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\ClientControllerTest\:\:\$pa1Client1Report1 has no type specified\.$#'
 			identifier: missingType.property
 			count: 1
 			path: tests/Integration/Controller/ClientControllerTest.php
@@ -30685,12 +30547,6 @@ parameters:
 			path: tests/Integration/Controller/DeputyControllerTest.php
 
 		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\User\>\:\:findOneByEmail\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Integration/Controller/DocumentControllerTest.php
-
-		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 4
@@ -30729,7 +30585,7 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 1
 			path: tests/Integration/Controller/DocumentControllerTest.php
 
 		-
@@ -30757,12 +30613,6 @@ parameters:
 			path: tests/Integration/Controller/DocumentControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Controller/DocumentControllerTest.php
-
-		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertStringContainsString\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -30772,18 +30622,6 @@ parameters:
 			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: tests/Integration/Controller/DocumentControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\DocumentControllerTest\:\:\$client1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/Controller/DocumentControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\DocumentControllerTest\:\:\$deputy1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
 			path: tests/Integration/Controller/DocumentControllerTest.php
 
 		-
