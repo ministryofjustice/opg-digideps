@@ -42,7 +42,6 @@ class ManageActiveReportType extends AbstractType
                     new Constraints\Date(['message' => 'report.dueDate.invalidMessage', 'groups' => ['due_date_new']]),
                 ],
             ])
-            ->addEventSubscriber(new ReportTypeChoicesSubscriber($this->translator))
             ->add('save', SubmitType::class);
     }
 

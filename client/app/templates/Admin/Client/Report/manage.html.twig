@@ -23,6 +23,7 @@
 
     {{ (page ~ '.form.endDate.label') | trans }}
     {{ form_known_date(form.endDate, 'endDate') }}
+
     {% if report.isSubmitted %}
         <fieldset class="govuk-form-group {% if not form.unsubmittedSection.vars.valid %}govuk-form-group--error{% endif %}">
             <legend>
