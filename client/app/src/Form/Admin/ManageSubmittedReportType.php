@@ -3,7 +3,6 @@
 namespace OPG\Digideps\Frontend\Form\Admin;
 
 use OPG\Digideps\Frontend\Form\DateType;
-use OPG\Digideps\Frontend\Form\Subscriber\ReportTypeChoicesSubscriber;
 use OPG\Digideps\Frontend\Form\Traits\HasTranslatorTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type as FormTypes;
@@ -20,7 +19,6 @@ class ManageSubmittedReportType extends AbstractType
     {
         $builder
             ->add('id', FormTypes\HiddenType::class)
-            ->addEventSubscriber(new ReportTypeChoicesSubscriber($this->translator))
             ->add('unsubmittedSection', FormTypes\CollectionType::class, [
                 'entry_type' => UnsubmittedSectionType::class,
                 'entry_options' => ['constraints' => new Valid()],

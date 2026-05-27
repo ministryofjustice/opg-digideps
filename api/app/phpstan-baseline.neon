@@ -8749,12 +8749,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/AdminManagement/AdminManagementFeatureContext.php
 
 		-
-			message: '#^Call to function assert\(\) with false and string will always evaluate to false\.$#'
-			identifier: function.impossibleType
-			count: 5
-			path: tests/Behat/bootstrap/v2/AppNotification/AppNotificationFeatureContext.php
-
-		-
 			message: '#^Cannot access constant ADMIN_ROLES on Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\UserDetails\|null\.$#'
 			identifier: classConstant.nonObject
 			count: 1
@@ -9243,7 +9237,7 @@ parameters:
 		-
 			message: '#^Call to function assert\(\) with false and string will always evaluate to false\.$#'
 			identifier: function.impossibleType
-			count: 1
+			count: 6
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
 		-
