@@ -20,7 +20,6 @@ class ManageSubmittedReportType extends AbstractType
     {
         $builder
             ->add('id', FormTypes\HiddenType::class)
-            ->addEventSubscriber(new ReportTypeChoicesSubscriber($this->translator))
             ->add('unsubmittedSection', FormTypes\CollectionType::class, [
                 'entry_type' => UnsubmittedSectionType::class,
                 'entry_options' => ['constraints' => new Valid()],

@@ -381,7 +381,6 @@ class ReportController extends AbstractController
         $endDate = isset($form['endDate']) ? $form['endDate']->getData()->format('Y-m-d') : null;
 
         $request->getSession()->set('report-management-changes', [
-            'type' => $form['type']->getData(),
             'dueDate' => $this->determineNewDueDateFromForm($report, $form)->format('Y-m-d'),
             'dueDateChoice' => $form['dueDateChoice']->getData(),
             'dueDateCustom' => $customDueDate instanceof \DateTime ? $customDueDate->format('Y-m-d') : null,
@@ -441,7 +440,7 @@ class ReportController extends AbstractController
             }
 
             $this->populateReportFromSession($report, $sessionData);
-            $this->restClient->put('report/' . $report->getId(), $report, ['report_type', 'report_due_date']);
+            $this->restClient->put('report/' . $report->getId(), $report, ['report_due_date']);
 
             if ($form->has('confirm') && $form['confirm']->getData() === 'yes' && $report->isSubmitted()) {
                 /** @var User $user */
@@ -471,8 +470,7 @@ class ReportController extends AbstractController
     private function sufficientDataInSession(array $sessionData): bool
     {
         return
-            array_key_exists('type', $sessionData)
-            && array_key_exists('dueDateChoice', $sessionData)
+            array_key_exists('dueDateChoice', $sessionData)
             && array_key_exists('dueDateCustom', $sessionData)
             && array_key_exists('startDate', $sessionData)
             && array_key_exists('endDate', $sessionData)
