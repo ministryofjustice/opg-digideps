@@ -21,7 +21,7 @@ python-dateutil==2.9.0.post0
     # via botocore
 requests==2.34.0
     # via -r scripts/pipeline/ecrscan/requirements.in
-s3transfer==0.17.0
+s3transfer==0.16.1
     # via boto3
 six==1.17.0
     # via python-dateutil
