@@ -443,7 +443,6 @@ class ReportController extends AbstractController
         }
 
         $request->getSession()->set('report-management-changes', [
-            'type' => $form['type']->getData(),
             'dueDate' => $this->determineNewDueDateFromForm($report, $form)->format('Y-m-d'),
             'dueDateChoice' => $form['dueDateChoice']->getData(),
             'dueDateCustom' => $customDueDate instanceof \DateTime ? $customDueDate->format('Y-m-d') : null,
@@ -543,8 +542,7 @@ class ReportController extends AbstractController
     private function sufficientDataInSession(array $sessionData): bool
     {
         return
-            array_key_exists('type', $sessionData)
-            && array_key_exists('dueDateChoice', $sessionData)
+            array_key_exists('dueDateChoice', $sessionData)
             && array_key_exists('dueDateCustom', $sessionData)
             && array_key_exists('startDate', $sessionData)
             && array_key_exists('endDate', $sessionData)
