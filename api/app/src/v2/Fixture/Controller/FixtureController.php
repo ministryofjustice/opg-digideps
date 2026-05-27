@@ -124,7 +124,9 @@ class FixtureController extends AbstractController
             $orgClient = $this->clientFactory->createGenericOrgClient($deputy, $organisation, $fromRequest['courtDate']);
             $this->em->persist($orgClient);
 
-            $courtOrder = $this->generateCourtOrder($orgClient, strtolower($fromRequest['reportType']));
+            /** @var string $reportType */
+            $reportType = $fromRequest['reportType'];
+            $courtOrder = $this->generateCourtOrder($orgClient, strtolower($reportType));
             $deputy->associateWithCourtOrder($courtOrder);
             $this->em->persist($deputy);
 
@@ -218,7 +220,9 @@ class FixtureController extends AbstractController
         $deputy = $this->generateDeputy($user);
 
         $deputyPreRegistration = $this->generatePreRegistration($fromRequest, $client, $user);
-        $reportType = strtolower($fromRequest['reportType']);
+        /** @var string $reportType */
+        $reportType = $fromRequest['reportType'];
+        $reportType = strtolower($reportType);
         $courtOrder = $this->generateCourtOrder($client, $reportType);
 
         $deputy->associateWithCourtOrder($courtOrder);
