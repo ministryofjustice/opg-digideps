@@ -24,15 +24,6 @@
 
     <table class="push--bottom behat-region-report-review">
         <thead>
-            <tr>
-                <td>{{ (page ~ '.form.type.label') | trans }}</td>
-                <td>{{ submitted.type }}</td>
-                <td>
-                    <a href="{{ url('admin_report_manage', { 'id': report.id, 'data': submitted }) }}">
-                        {{ 'edit'|trans({}, 'common') }}
-                    </a>
-                </td>
-            </tr>
             {% if report.isSubmitted %}
                 <tr>
                     <td>{{ (page ~ '.form.startDate.label') | trans }}</td>
