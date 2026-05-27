@@ -2,12 +2,11 @@
 Feature: Report Management (applies to all admin roles)
 
     @super-admin @prof-admin-health-welfare-completed
-    Scenario: An admin user changes report type and due date for a in progress report
+    Scenario: An admin user changes report due date for a in progress report
         Given a Professional Deputy has completed a Pfa Low Assets report
         And a super admin user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
         And I manage the deputies 'completed' report
-        And I change the report type to 'Health and welfare'
         And I change the report due date to '3' weeks from now
         And I submit the new report details
         Then the report details should be updated
@@ -43,7 +42,7 @@ Feature: Report Management (applies to all admin roles)
         Then I should see the report sections the admin ticked as incomplete labelled as changes needed
 
     @admin @pa-admin-combined-high-submitted
-    Scenario: An admin user changes report type and due date for an un-submitted report
+    Scenario: An admin user changes report due date for an un-submitted report
         Given a Public Authority Deputy has submitted a Combined High Assets report
         And an admin user accesses the admin app
         When I visit the admin client details page associated with the deputy I'm interacting with
@@ -52,7 +51,6 @@ Feature: Report Management (applies to all admin roles)
         And I submit the new report details
         And I manage the deputies 'un-submitted' report
         And I change the report due date to '5' weeks from now
-        And I change the report type to 'Health and welfare'
         And I submit the new report details
         Then the report details should be updated
 
