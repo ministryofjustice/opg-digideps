@@ -98,7 +98,7 @@
         "symfony/maker-bundle": "^1.65.1",
         "symfony/mime": "^6.4.30",
         "symfony/phpunit-bridge": "^6.4.26",
-        "symfony/var-dumper": "^6.4.32"
+        "symfony/var-dumper": "^6.4.36"
     },
     "minimum-stability": "stable",
     "extra": {
