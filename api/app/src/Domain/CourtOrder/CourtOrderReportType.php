@@ -23,4 +23,16 @@ enum CourtOrderReportType: string
     {
         return substr($this->value, -1);
     }
+
+    /**
+     * Allows derivation from raw report types like 102 or '104'
+     */
+    public static function permissiveTryFrom(int|string $value): ?CourtOrderReportType
+    {
+        if (is_int($value) || !str_starts_with($value, 'OPG')) {
+            $value = "OPG$value";
+        }
+
+        return self::tryFrom($value);
+    }
 }
