@@ -3,7 +3,6 @@
 namespace OPG\Digideps\Frontend\Form\Admin;
 
 use OPG\Digideps\Frontend\Form\DateType;
-use OPG\Digideps\Frontend\Form\Subscriber\ReportTypeChoicesSubscriber;
 use OPG\Digideps\Frontend\Form\Traits\HasTranslatorTrait;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -42,7 +41,6 @@ class ManageActiveReportType extends AbstractType
                     new Constraints\Date(['message' => 'report.dueDate.invalidMessage', 'groups' => ['due_date_new']]),
                 ],
             ])
-            ->addEventSubscriber(new ReportTypeChoicesSubscriber($this->translator))
             ->add('save', SubmitType::class);
     }
 
