@@ -7,6 +7,7 @@ namespace Tests\OPG\Digideps\Backend\Integration\v2\Controller;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\User;
@@ -49,7 +50,9 @@ class CourtOrderControllerTest extends AbstractTestController
         return $deputy;
     }
 
-    // returns User $user (user for $deputy), CourtOrder $courtOrder (associated with $deputy), Deputy $deputy
+    /**
+     * @return array{User, CourtOrder} [$user for $deputy], $courtOrder associated with $deputy]
+     */
     private function addUserAndCourtOrderAndDeputy($emailAddress): array
     {
         // add a court order, and make the user a deputy on it

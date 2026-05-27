@@ -388,6 +388,7 @@ class OrganisationControllerTest extends AbstractTestController
     {
         $orgId = self::$orgs[0]->getId();
         $newUser = self::fixtures()->getRepo(User::class)->findOneBy([], ['id' => 'ASC']);
+        $this->assertNotNull($newUser);
 
         self::$frameworkBundleClient->request(
             'PUT',
@@ -603,6 +604,7 @@ class OrganisationControllerTest extends AbstractTestController
         $repo = self::fixtures()->getRepo(User::class);
 
         $newUser = $repo->findOneByEmail('prof@example.org');
+        $this->assertNotNull($newUser);
 
         self::fixtures()->addUserToOrganisation($newUser->getId(), $orgId);
         self::fixtures()->flush()->clear();

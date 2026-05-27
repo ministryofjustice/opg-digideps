@@ -3931,12 +3931,6 @@ parameters:
 			path: src/Entity/Report/Expense.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Fee\:\:getHasMoreDetails\(\) should return bool but returns mixed\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Report/Fee.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Fee\:\:setAmountAndDetails\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -6577,18 +6571,6 @@ parameters:
 			path: src/Repository/PreRegistrationRepository.php
 
 		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Repository/ReportRepository.php
-
-		-
-			message: '#^Cannot access offset 1 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: src/Repository/ReportRepository.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Repository\\ReportRepository\:\:findAllActiveReportsByCaseNumbersAndRole\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -6632,18 +6614,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$searchTerm of method OPG\\Digideps\\Backend\\Service\\Search\\ClientSearchFilter\:\:handleSearchTermFilter\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Repository/ReportRepository.php
-
-		-
-			message: '#^Parameter \#2 \$debtTypeId of class OPG\\Digideps\\Backend\\Entity\\Report\\Debt constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Repository/ReportRepository.php
-
-		-
-			message: '#^Parameter \#3 \$hasMoreDetails of class OPG\\Digideps\\Backend\\Entity\\Report\\Debt constructor expects bool, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Repository/ReportRepository.php
@@ -29569,12 +29539,6 @@ parameters:
 			path: tests/Integration/Controller/AbstractTestController.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AbstractTestController\:\:assertEndpointAllowedFor\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Controller/AbstractTestController.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AbstractTestController\:\:assertEndpointAllowedFor\(\) has parameter \$data with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -29599,12 +29563,6 @@ parameters:
 			path: tests/Integration/Controller/AbstractTestController.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AbstractTestController\:\:assertEndpointNeedsAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Controller/AbstractTestController.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AbstractTestController\:\:assertEndpointNeedsAuth\(\) has parameter \$authToken with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -29619,12 +29577,6 @@ parameters:
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AbstractTestController\:\:assertEndpointNeedsAuth\(\) has parameter \$uri with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: tests/Integration/Controller/AbstractTestController.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AbstractTestController\:\:assertEndpointNotAllowedFor\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: tests/Integration/Controller/AbstractTestController.php
 
@@ -29649,12 +29601,6 @@ parameters:
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AbstractTestController\:\:assertEndpointNotAllowedFor\(\) has parameter \$uri with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: tests/Integration/Controller/AbstractTestController.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AbstractTestController\:\:assertEndpointNotFoundFor\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: tests/Integration/Controller/AbstractTestController.php
 
@@ -30157,18 +30103,6 @@ parameters:
 			path: tests/Integration/Controller/ClientControllerTest.php
 
 		-
-			message: '#^Cannot call method clear\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Cannot call method find\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
 			message: '#^Cannot call method format\(\) on DateTime\|null\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -30254,12 +30188,6 @@ parameters:
 
 		-
 			message: '#^Cannot call method getPostcode\(\) on OPG\\Digideps\\Backend\\Entity\\Client\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/Controller/ClientControllerTest.php
-
-		-
-			message: '#^Cannot call method getRepo\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
 			path: tests/Integration/Controller/ClientControllerTest.php
@@ -30441,42 +30369,6 @@ parameters:
 		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: tests/Integration/Controller/DeputyControllerTest.php
-
-		-
-			message: '#^Cannot call method find\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/Controller/DeputyControllerTest.php
-
-		-
-			message: '#^Cannot call method getDeputyUid\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/Controller/DeputyControllerTest.php
-
-		-
-			message: '#^Cannot call method getEmail1\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/Controller/DeputyControllerTest.php
-
-		-
-			message: '#^Cannot call method getFirstname\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/Controller/DeputyControllerTest.php
-
-		-
-			message: '#^Cannot call method getLastname\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/Controller/DeputyControllerTest.php
-
-		-
-			message: '#^Cannot call method getRepo\(\) on mixed\.$#'
-			identifier: method.nonObject
 			count: 2
 			path: tests/Integration/Controller/DeputyControllerTest.php
 
@@ -30889,12 +30781,6 @@ parameters:
 			path: tests/Integration/Controller/NoteControllerTest.php
 
 		-
-			message: '#^Cannot call method clear\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Controller/NoteControllerTest.php
-
-		-
 			message: '#^Cannot call method getCategory\(\) on OPG\\Digideps\\Backend\\Entity\\Note\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -31105,36 +30991,6 @@ parameters:
 			path: tests/Integration/Controller/PreRegistrationControllerTest.php
 
 		-
-			message: '#^Cannot call method find\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 6
-			path: tests/Integration/Controller/PreRegistrationControllerTest.php
-
-		-
-			message: '#^Cannot call method findAll\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Controller/PreRegistrationControllerTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Controller/PreRegistrationControllerTest.php
-
-		-
-			message: '#^Cannot call method getDeputyUid\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Controller/PreRegistrationControllerTest.php
-
-		-
-			message: '#^Cannot call method getRepo\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 7
-			path: tests/Integration/Controller/PreRegistrationControllerTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\PreRegistrationControllerTest\:\:testCount\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -31192,12 +31048,6 @@ parameters:
 			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: tests/Integration/Controller/PreRegistrationControllerTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: tests/Integration/Controller/PreRegistrationControllerTest.php
 
 		-
@@ -31645,42 +31495,6 @@ parameters:
 			path: tests/Integration/Controller/SettingControllerTest.php
 
 		-
-			message: '#^Cannot call method find\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/Controller/SettingControllerTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Controller/SettingControllerTest.php
-
-		-
-			message: '#^Cannot call method getContent\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/Controller/SettingControllerTest.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/Controller/SettingControllerTest.php
-
-		-
-			message: '#^Cannot call method getRepo\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/Controller/SettingControllerTest.php
-
-		-
-			message: '#^Cannot call method isEnabled\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/Controller/SettingControllerTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\SettingControllerTest\:\:testgetOneByIdNotPresent\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -31765,33 +31579,9 @@ parameters:
 			path: tests/Integration/Controller/UserControllerTest.php
 
 		-
-			message: '#^Binary operation "\." between ''/user/agree\-terms…'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between ''/user/get\-by\-token/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between ''/user/recreate…'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
 			message: '#^Binary operation "\." between mixed and ''\-modified'' results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 6
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\User\>\:\:findOneByEmail\(\)\.$#'
-			identifier: method.notFound
-			count: 2
 			path: tests/Integration/Controller/UserControllerTest.php
 
 		-
@@ -31819,55 +31609,7 @@ parameters:
 			path: tests/Integration/Controller/UserControllerTest.php
 
 		-
-			message: '#^Cannot call method clear\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Cannot call method diff\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Cannot call method find\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Cannot call method findOneByEmail\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 6
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Cannot call method format\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
 			message: '#^Cannot call method getAddress1\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 5
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Cannot call method getAgreeTermsUse\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Cannot call method getAgreeTermsUseDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Cannot call method getCreatedBy\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 3
 			path: tests/Integration/Controller/UserControllerTest.php
@@ -31875,85 +31617,19 @@ parameters:
 		-
 			message: '#^Cannot call method getEmail\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 6
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Cannot call method getFirstname\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
+			count: 3
 			path: tests/Integration/Controller/UserControllerTest.php
 
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 26
+			count: 23
 			path: tests/Integration/Controller/UserControllerTest.php
 
 		-
 			message: '#^Cannot call method getLastname\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 6
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Cannot call method getRegistrationRoute\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Cannot call method getRegistrationToken\(\) on mixed\.$#'
-			identifier: method.nonObject
 			count: 3
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Cannot call method getRepo\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 10
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Cannot call method getTokenDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Cannot call method recreateRegistrationToken\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Cannot call method setAddress1\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Cannot call method setEmail\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Cannot call method setLastname\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Cannot call method setRegistrationToken\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Cannot call method setTokenDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
 			path: tests/Integration/Controller/UserControllerTest.php
 
 		-
@@ -32149,18 +31825,6 @@ parameters:
 			path: tests/Integration/Controller/UserControllerTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\UserControllerTest\:\:testRecreateTokenAcceptsClientSecret\(\) has parameter \$email with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\UserControllerTest\:\:testRecreateTokenAcceptsClientSecret\(\) has parameter \$passOrFail with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\UserControllerTest\:\:testRecreateTokenAcceptsClientSecret\(\) has parameter \$secret with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -32215,12 +31879,6 @@ parameters:
 			path: tests/Integration/Controller/UserControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$string of function strlen expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
 			message: '#^Parameter \#1 \$users of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setUsers\(\) expects Doctrine\\Common\\Collections\\Collection\<int, OPG\\Digideps\\Backend\\Entity\\User\>, array\{OPG\\Digideps\\Backend\\Entity\\User\} given\.$#'
 			identifier: argument.type
 			count: 1
@@ -32242,18 +31900,6 @@ parameters:
 			message: '#^Parameter \#3 \$clientSecret of method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\AbstractTestController\:\:login\(\) expects string\|false, mixed given\.$#'
 			identifier: argument.type
 			count: 2
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Parameter \#3 \$subject of function str_replace expects array\<string\>\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: tests/Integration/Controller/UserControllerTest.php
-
-		-
-			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: tests/Integration/Controller/UserControllerTest.php
 
 		-
@@ -32323,30 +31969,6 @@ parameters:
 			path: tests/Integration/Controller/UserResearchControllerTest.php
 
 		-
-			message: '#^Binary operation "\." between ''/account/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 5
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between ''/report/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 2
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between ''/report/account/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 2
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\User\>\:\:findOneByEmail\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
 			message: '#^Cannot access offset ''account_number'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
@@ -32389,73 +32011,7 @@ parameters:
 			path: tests/Integration/ControllerReport/AccountControllerTest.php
 
 		-
-			message: '#^Cannot call method clear\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Cannot call method find\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Cannot call method getBank\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Cannot call method getId\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 13
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Cannot call method getIsClosed\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Cannot call method getIsClosed\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Cannot call method getIsJointAccount\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Cannot call method getIsJointAccount\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Cannot call method getRepo\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
 			message: '#^Cannot call method getReport\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Cannot call method getUpdatedAt\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: tests/Integration/ControllerReport/AccountControllerTest.php
@@ -32491,18 +32047,6 @@ parameters:
 			path: tests/Integration/ControllerReport/AccountControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportFreshSectionStatus\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
 			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\|ArrayAccess, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -32515,99 +32059,9 @@ parameters:
 			path: tests/Integration/ControllerReport/AccountControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AccountControllerTest\:\:\$account1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AccountControllerTest\:\:\$account2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AccountControllerTest\:\:\$account3 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AccountControllerTest\:\:\$deputy1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AccountControllerTest\:\:\$deputy2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AccountControllerTest\:\:\$expense1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AccountControllerTest\:\:\$report1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AccountControllerTest\:\:\$report2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AccountControllerTest\:\:\$tokenAdmin has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AccountControllerTest\:\:\$tokenDeputy has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AccountControllerTest\:\:\$expense1 is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: tests/Integration/ControllerReport/AccountControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between ''/report/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 3
-			path: tests/Integration/ControllerReport/ActionControllerTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\User\>\:\:findOneByEmail\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Integration/ControllerReport/ActionControllerTest.php
-
-		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: tests/Integration/ControllerReport/ActionControllerTest.php
-
-		-
-			message: '#^Cannot call method clear\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: tests/Integration/ControllerReport/ActionControllerTest.php
 
 		-
@@ -32633,108 +32087,6 @@ parameters:
 			identifier: method.nonObject
 			count: 2
 			path: tests/Integration/ControllerReport/ActionControllerTest.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: tests/Integration/ControllerReport/ActionControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ActionControllerTest\:\:testupdate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ActionControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ActionControllerTest\:\:testupdateAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ActionControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ActionControllerTest\:\:testupdateAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ActionControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportFreshSectionStatus\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/ControllerReport/ActionControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/ControllerReport/ActionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ActionControllerTest\:\:\$client1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ActionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ActionControllerTest\:\:\$client2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ActionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ActionControllerTest\:\:\$deputy1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ActionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ActionControllerTest\:\:\$deputy2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ActionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ActionControllerTest\:\:\$report1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ActionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ActionControllerTest\:\:\$report2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ActionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ActionControllerTest\:\:\$tokenAdmin has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ActionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ActionControllerTest\:\:\$tokenDeputy has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ActionControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between ''/report/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 11
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 7
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\User\>\:\:findOneByEmail\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
 
 		-
 			message: '#^Cannot access offset ''address'' on mixed\.$#'
@@ -32779,104 +32131,8 @@ parameters:
 			path: tests/Integration/ControllerReport/AssetControllerTest.php
 
 		-
-			message: '#^Cannot call method clear\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
 			message: '#^Cannot call method format\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 24
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Cannot call method getTitle\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:testDelete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:testDeleteAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:testDeleteAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:testPostAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:testPostAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:testPostOther\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:testPostProperty\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:testgetAssets\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:testgetOneById\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:testgetOneByIdAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:testgetOneByIdAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportFreshSectionStatus\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: tests/Integration/ControllerReport/AssetControllerTest.php
 
@@ -32887,106 +32143,22 @@ parameters:
 			path: tests/Integration/ControllerReport/AssetControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
+			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:\$asset1 \(OPG\\Digideps\\Backend\\Entity\\Report\\AssetOther\) does not accept OPG\\Digideps\\Backend\\Entity\\Report\\Asset\.$#'
+			identifier: assign.propertyType
 			count: 1
 			path: tests/Integration/ControllerReport/AssetControllerTest.php
 
 		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:\$asset1 has no type specified\.$#'
-			identifier: missingType.property
+			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:\$asset2 \(OPG\\Digideps\\Backend\\Entity\\Report\\AssetOther\) does not accept OPG\\Digideps\\Backend\\Entity\\Report\\Asset\.$#'
+			identifier: assign.propertyType
 			count: 1
 			path: tests/Integration/ControllerReport/AssetControllerTest.php
 
 		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:\$asset2 has no type specified\.$#'
-			identifier: missingType.property
+			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:\$assetp1 \(OPG\\Digideps\\Backend\\Entity\\Report\\AssetProperty\) does not accept OPG\\Digideps\\Backend\\Entity\\Report\\Asset\.$#'
+			identifier: assign.propertyType
 			count: 1
 			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:\$assetp1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:\$client1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:\$client2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:\$deputy1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:\$deputy2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:\$report1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:\$report2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:\$tokenAdmin has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\AssetControllerTest\:\:\$tokenDeputy has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/AssetControllerTest.php
-
-		-
-			message: '#^Binary operation "\+" between array\{id\: mixed\} and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Binary operation "\+" between array\{report_id\: mixed\} and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between ''/report/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 3
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between ''/report/contact/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 6
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\User\>\:\:findOneByEmail\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
 
 		-
 			message: '#^Cannot access offset ''address'' on mixed\.$#'
@@ -33007,129 +32179,15 @@ parameters:
 			path: tests/Integration/ControllerReport/ContactControllerTest.php
 
 		-
-			message: '#^Cannot call method clear\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
 			message: '#^Cannot call method getAddress\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Contact\|null\.$#'
 			identifier: method.nonObject
 			count: 2
 			path: tests/Integration/ControllerReport/ContactControllerTest.php
 
 		-
-			message: '#^Cannot call method getAddress\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 19
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
 			message: '#^Cannot call method getReport\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Contact\|null\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:testDeleteContact\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:testDeleteContactAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:testDeleteContactAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:testgetContacts\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:testgetContactsAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:testgetContactsAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:testgetOneById\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:testgetOneByIdAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:testgetOneByIdAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:testupsertContactAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:testupsertContactAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:testupsertContactMissingParams\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:testupsertContactPost\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:testupsertContactPut\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportFreshSectionStatus\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: tests/Integration/ControllerReport/ContactControllerTest.php
 
 		-
@@ -33143,96 +32201,6 @@ parameters:
 			identifier: argument.type
 			count: 8
 			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:\$client1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:\$client2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:\$contact1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:\$contact2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:\$dataUpdate has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:\$deputy1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:\$deputy2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:\$report1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:\$report2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:\$tokenAdmin has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ContactControllerTest\:\:\$tokenDeputy has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ContactControllerTest.php
-
-		-
-			message: '#^Binary operation "\+" between array\{id\: mixed\} and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Binary operation "\+" between array\{report_id\: mixed\} and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between ''/report/decision/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 6
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\User\>\:\:findOneByEmail\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
 
 		-
 			message: '#^Cannot access offset ''decisions'' on mixed\.$#'
@@ -33259,117 +32227,15 @@ parameters:
 			path: tests/Integration/ControllerReport/DecisionControllerTest.php
 
 		-
-			message: '#^Cannot call method clear\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
 			message: '#^Cannot call method getDescription\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Decision\|null\.$#'
 			identifier: method.nonObject
 			count: 2
 			path: tests/Integration/ControllerReport/DecisionControllerTest.php
 
 		-
-			message: '#^Cannot call method getDescription\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 17
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
 			message: '#^Cannot call method getReport\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Decision\|null\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:testDeleteDecision\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:testDeleteDecisionAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:testDeleteDecisionAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:testgetDecisions\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:testgetOneById\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:testgetOneByIdAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:testgetOneByIdAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:testupsertDecisionAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:testupsertDecisionAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:testupsertDecisionMissingParams\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:testupsertDecisionPost\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:testupsertDecisionPut\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportFreshSectionStatus\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: tests/Integration/ControllerReport/DecisionControllerTest.php
 
 		-
@@ -33385,92 +32251,8 @@ parameters:
 			path: tests/Integration/ControllerReport/DecisionControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:\$client1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:\$client2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:\$dataUpdate has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:\$decision1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:\$decision2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:\$deputy1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:\$deputy2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:\$report1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:\$report2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:\$tokenAdmin has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\DecisionControllerTest\:\:\$tokenDeputy has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/DecisionControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between ''/report/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 16
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
 			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\User\>\:\:findOneByEmail\(\)\.$#'
-			identifier: method.notFound
 			count: 1
 			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
 
@@ -33511,18 +32293,6 @@ parameters:
 			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
 
 		-
-			message: '#^Cannot call method clear\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Cannot call method find\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
 			message: '#^Cannot call method getAmount\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Expense\|null\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -33531,7 +32301,7 @@ parameters:
 		-
 			message: '#^Cannot call method getExpenses\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 1
 			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
 
 		-
@@ -33541,32 +32311,8 @@ parameters:
 			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 18
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
 			message: '#^Cannot call method getPaidForAnything\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Cannot call method getRepo\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Cannot call method setPaidForAnything\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ExpenseControllerTest\:\:testDelete\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
 
@@ -33577,140 +32323,14 @@ parameters:
 			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ExpenseControllerTest\:\:testDeleteAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ExpenseControllerTest\:\:testPaidAnything\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ExpenseControllerTest\:\:testPostPutAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ExpenseControllerTest\:\:testPostPutAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ExpenseControllerTest\:\:testPostPutGetAll\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ExpenseControllerTest\:\:testgetOneById\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ExpenseControllerTest\:\:testgetOneByIdAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ExpenseControllerTest\:\:testgetOneByIdAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$id of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportById\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportFreshSectionStatus\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
 
 		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ExpenseControllerTest\:\:\$client1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ExpenseControllerTest\:\:\$client2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ExpenseControllerTest\:\:\$deputy1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ExpenseControllerTest\:\:\$deputy2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ExpenseControllerTest\:\:\$report1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ExpenseControllerTest\:\:\$report2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ExpenseControllerTest\:\:\$tokenAdmin has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ExpenseControllerTest\:\:\$tokenDeputy has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ExpenseControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between ''/report/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 16
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
 			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\User\>\:\:findOneByEmail\(\)\.$#'
-			identifier: method.notFound
 			count: 1
 			path: tests/Integration/ControllerReport/GiftControllerTest.php
 
@@ -33751,18 +32371,6 @@ parameters:
 			path: tests/Integration/ControllerReport/GiftControllerTest.php
 
 		-
-			message: '#^Cannot call method clear\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
 			message: '#^Cannot call method getAmount\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Gift\|null\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -33777,102 +32385,12 @@ parameters:
 		-
 			message: '#^Cannot call method getGifts\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 1
 			path: tests/Integration/ControllerReport/GiftControllerTest.php
 
 		-
 			message: '#^Cannot call method getGiftsExist\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 18
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Cannot call method setGiftsExist\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\GiftControllerTest\:\:testDelete\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\GiftControllerTest\:\:testDeleteAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\GiftControllerTest\:\:testDeleteAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\GiftControllerTest\:\:testGiftsExist\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\GiftControllerTest\:\:testPostPutAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\GiftControllerTest\:\:testPostPutAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\GiftControllerTest\:\:testPostPutGetAll\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\GiftControllerTest\:\:testgetOneById\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\GiftControllerTest\:\:testgetOneByIdAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\GiftControllerTest\:\:testgetOneByIdAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$id of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportById\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportFreshSectionStatus\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: tests/Integration/ControllerReport/GiftControllerTest.php
 
@@ -33883,75 +32401,9 @@ parameters:
 			path: tests/Integration/ControllerReport/GiftControllerTest.php
 
 		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\GiftControllerTest\:\:\$client1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\GiftControllerTest\:\:\$client2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\GiftControllerTest\:\:\$deputy1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\GiftControllerTest\:\:\$deputy2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\GiftControllerTest\:\:\$report1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\GiftControllerTest\:\:\$report2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\GiftControllerTest\:\:\$tokenAdmin has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\GiftControllerTest\:\:\$tokenDeputy has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/GiftControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between ''/report/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 3
-			path: tests/Integration/ControllerReport/MentalCapacityControllerTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\User\>\:\:findOneByEmail\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Integration/ControllerReport/MentalCapacityControllerTest.php
-
-		-
 			message: '#^Cannot access offset ''id'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
-			path: tests/Integration/ControllerReport/MentalCapacityControllerTest.php
-
-		-
-			message: '#^Cannot call method clear\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: tests/Integration/ControllerReport/MentalCapacityControllerTest.php
 
 		-
@@ -33973,112 +32425,10 @@ parameters:
 			path: tests/Integration/ControllerReport/MentalCapacityControllerTest.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: tests/Integration/ControllerReport/MentalCapacityControllerTest.php
-
-		-
 			message: '#^Cannot call method getMentalAssessmentDate\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\MentalCapacity\|null\.$#'
 			identifier: method.nonObject
 			count: 2
 			path: tests/Integration/ControllerReport/MentalCapacityControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MentalCapacityControllerTest\:\:testupdate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/MentalCapacityControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MentalCapacityControllerTest\:\:testupdateAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/MentalCapacityControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MentalCapacityControllerTest\:\:testupdateAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/MentalCapacityControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportFreshSectionStatus\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/ControllerReport/MentalCapacityControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/ControllerReport/MentalCapacityControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MentalCapacityControllerTest\:\:\$client1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MentalCapacityControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MentalCapacityControllerTest\:\:\$client2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MentalCapacityControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MentalCapacityControllerTest\:\:\$deputy1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MentalCapacityControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MentalCapacityControllerTest\:\:\$deputy2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MentalCapacityControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MentalCapacityControllerTest\:\:\$report1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MentalCapacityControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MentalCapacityControllerTest\:\:\$report2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MentalCapacityControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MentalCapacityControllerTest\:\:\$tokenAdmin has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MentalCapacityControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MentalCapacityControllerTest\:\:\$tokenDeputy has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MentalCapacityControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between ''/report/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 5
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 2
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\User\>\:\:findOneByEmail\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
 
 		-
 			message: '#^Cannot access offset ''money_transactions_in'' on mixed\.$#'
@@ -34111,12 +32461,6 @@ parameters:
 			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
 
 		-
-			message: '#^Cannot call method clear\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
 			message: '#^Cannot call method getAmount\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransaction\|null\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -34135,12 +32479,6 @@ parameters:
 			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 7
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
 			message: '#^Cannot call method setAmount\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 4
@@ -34150,36 +32488,6 @@ parameters:
 			message: '#^Cannot call method setDescription\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 4
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransactionControllerTest\:\:testAddEditTransaction\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransactionControllerTest\:\:testEditTransaction\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransactionControllerTest\:\:testGetTransactions\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportFreshSectionStatus\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
 			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
 
 		-
@@ -34193,72 +32501,6 @@ parameters:
 			identifier: argument.type
 			count: 2
 			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransactionControllerTest\:\:\$deputy1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransactionControllerTest\:\:\$deputy2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransactionControllerTest\:\:\$report1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransactionControllerTest\:\:\$report2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransactionControllerTest\:\:\$t1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransactionControllerTest\:\:\$t2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransactionControllerTest\:\:\$tokenAdmin has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransactionControllerTest\:\:\$tokenDeputy has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between ''/report/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 8
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 3
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\User\>\:\:findOneByEmail\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
 
 		-
 			message: '#^Cannot access offset ''money_transactions_short_in'' on mixed\.$#'
@@ -34281,12 +32523,6 @@ parameters:
 		-
 			message: '#^Cannot access offset 2 on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Cannot call method clear\(\) on mixed\.$#'
-			identifier: method.nonObject
 			count: 1
 			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
 
@@ -34327,12 +32563,6 @@ parameters:
 			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 15
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
 			message: '#^Cannot call method getMoneyTransactionsShortIn\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -34342,24 +32572,6 @@ parameters:
 			message: '#^Cannot call method getMoneyTransactionsShortInExist\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Cannot call method getMoneyTransactionsShortOut\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Cannot call method getMoneyTransactionsShortOutExist\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Cannot call method getMoneyTransactionsShortOutExist\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
 
 		-
@@ -34393,24 +32605,6 @@ parameters:
 			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$id of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportById\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportFreshSectionStatus\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
 			message: '#^Parameter \#2 \$array of method PHPUnit\\Framework\\Assert\:\:assertArrayHasKey\(\) expects array\|ArrayAccess, mixed given\.$#'
 			identifier: argument.type
 			count: 2
@@ -34421,78 +32615,6 @@ parameters:
 			identifier: argument.type
 			count: 2
 			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransactionShortControllerTest\:\:\$deputy1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransactionShortControllerTest\:\:\$deputy2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransactionShortControllerTest\:\:\$report1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransactionShortControllerTest\:\:\$report2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransactionShortControllerTest\:\:\$tokenAdmin has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransactionShortControllerTest\:\:\$tokenDeputy has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransactionShortControllerTest\:\:\$transaction1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransactionShortControllerTest\:\:\$transaction2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransactionShortControllerTest\:\:\$transaction3 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between ''/report/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 8
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 3
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\User\>\:\:findOneByEmail\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
 
 		-
 			message: '#^Cannot access offset ''accountFrom'' on mixed\.$#'
@@ -34537,12 +32659,6 @@ parameters:
 			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
 
 		-
-			message: '#^Cannot call method clear\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
 			message: '#^Cannot call method getAmount\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransfer\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -34569,7 +32685,7 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 28
+			count: 3
 			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
 
 		-
@@ -34613,132 +32729,6 @@ parameters:
 			identifier: method.nonObject
 			count: 2
 			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransferControllerTest\:\:testAddTransfer\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransferControllerTest\:\:testEditTransfer\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransferControllerTest\:\:testGetTransfers\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransferControllerTest\:\:testNoTransfers\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransferControllerTest\:\:testdeleteTransfer\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$id of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportById\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportFreshSectionStatus\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 3
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransferControllerTest\:\:\$account1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransferControllerTest\:\:\$account2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransferControllerTest\:\:\$account3 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransferControllerTest\:\:\$deputy1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransferControllerTest\:\:\$deputy2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransferControllerTest\:\:\$report1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransferControllerTest\:\:\$report2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransferControllerTest\:\:\$tokenAdmin has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransferControllerTest\:\:\$tokenDeputy has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransferControllerTest\:\:\$transfer1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\MoneyTransferControllerTest\:\:\$account3 is never read, only written\.$#'
-			identifier: property.onlyWritten
-			count: 1
-			path: tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between ''/report/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 25
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\User\>\:\:findOneByEmail\(\)\.$#'
-			identifier: method.notFound
-			count: 4
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
 			message: '#^Cannot access offset ''action_more_info'' on mixed\.$#'
@@ -34797,7 +32787,7 @@ parameters:
 		-
 			message: '#^Cannot access offset ''documents'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
+			count: 1
 			path: tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
@@ -34882,6 +32872,12 @@ parameters:
 			message: '#^Cannot access offset ''more_details'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 7
+			path: tests/Integration/ControllerReport/ReportControllerTest.php
+
+		-
+			message: '#^Cannot access offset ''pending'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
 			path: tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
@@ -34987,48 +32983,6 @@ parameters:
 			path: tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
-			message: '#^Cannot call method addClient\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Cannot call method clear\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Cannot call method format\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Cannot call method getAddressPostcode\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Cannot call method getAgreedBehalfDeputy\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Cannot call method getAgreedBehalfDeputyExplanation\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
 			message: '#^Cannot call method getChecklist\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\ChecklistInformation\|null\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -35059,21 +33013,9 @@ parameters:
 			path: tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
-			message: '#^Cannot call method getDeputyUid\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
 			message: '#^Cannot call method getEndDate\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
 			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Cannot call method getFirstname\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
 			path: tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
@@ -35085,13 +33027,13 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 1
 			path: tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 48
+			count: 1
 			path: tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
@@ -35101,49 +33043,13 @@ parameters:
 			path: tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
-			message: '#^Cannot call method getLastname\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Cannot call method getMoneyInExists\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Cannot call method getMoneyOutExists\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Cannot call method getMoneyShortCategories\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
 			message: '#^Cannot call method getReasonForNoMoneyIn\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
-			message: '#^Cannot call method getReportById\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
 			message: '#^Cannot call method getReportStatusCached\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Cannot call method getReportStatusCached\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: tests/Integration/ControllerReport/ReportControllerTest.php
@@ -35155,31 +33061,7 @@ parameters:
 			path: tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
-			message: '#^Cannot call method getSectionStatusesCached\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
 			message: '#^Cannot call method getStartDate\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Cannot call method getSubmitDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Cannot call method getSubmitted\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Cannot call method getSubmittedBy\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: tests/Integration/ControllerReport/ReportControllerTest.php
@@ -35191,152 +33073,8 @@ parameters:
 			path: tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
-			message: '#^Cannot call method setMoneyInExists\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Cannot cast mixed to string\.$#'
-			identifier: cast.string
-			count: 2
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
 			message: '#^Constant API_TOKEN_DEPUTY not found\.$#'
 			identifier: constant.notFound
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:testActions\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:testAdd\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:testAddAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:testAddAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:testAddChecklistWithFurtherInformation\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:testAddChecklistWithSaveProgress\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:testDebts\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:testGetById\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:testGetByIdAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:testGetByIdAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:testGetByIdAuthPa\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:testMoneyCategories\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:testMoneyInLowAssetDoesNotExist\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:testMoneyInLowAssetDoesNotExistWithReason\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:testMoneyOutHighAssetExists\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:testPaFeesEditResetAndTotals\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:testSubmit\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:testUnsubmit\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:testUpdate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:testUpdateAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:testUpdateAndCompleteChecklist\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:testUpdateAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: tests/Integration/ControllerReport/ReportControllerTest.php
 
@@ -35349,31 +33087,13 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$id of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportById\(\) expects int, mixed given\.$#'
 			identifier: argument.type
-			count: 13
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of class OPG\\Digideps\\Backend\\Entity\\Report\\Document constructor expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
 			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportFreshSectionStatus\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null given\.$#'
 			identifier: argument.type
-			count: 3
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 8
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$userId of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:addUserToOrganisation\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 3
+			count: 1
 			path: tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
@@ -35397,180 +33117,6 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 8
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$client1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$client2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$client3 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$clientEdit has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$deputy1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$deputy2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$pa1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$pa1Client1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$pa1Client1Report1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$pa1Client2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$pa1Client3 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$pa2Admin has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$pa2Client1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$pa2Client1Report1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$pa3Client1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$pa3Client1Report1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$pa3TeamMember has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$preRegistration1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$preRegistration3 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$report1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$report103 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$report2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$reportEdit has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$tokenAdmin has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$tokenDeputy has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$tokenPa has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$tokenPaAdmin has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\ReportControllerTest\:\:\$tokenPaTeamMember has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: tests/Integration/ControllerReport/ReportControllerTest.php
 
@@ -35701,12 +33247,6 @@ parameters:
 			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
 		-
-			message: '#^Cannot call method clear\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
-
-		-
 			message: '#^Cannot call method getEmail\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -35722,12 +33262,6 @@ parameters:
 			message: '#^Cannot call method getSynchronisedBy\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Document\|null\.$#'
 			identifier: method.nonObject
 			count: 2
-			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
-
-		-
-			message: '#^Cannot call method setCreatedOn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
 		-
@@ -35917,30 +33451,6 @@ parameters:
 			path: tests/Integration/ControllerReport/ReportSubmissionControllerTest.php
 
 		-
-			message: '#^Binary operation "\+" between array\{report_id\: mixed\} and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between ''/report/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 3
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Binary operation "\." between ''/report/visits\-care/'' and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 9
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\User\>\:\:findOneByEmail\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
 			message: '#^Cannot access offset ''do_you_live_with_client'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -35959,25 +33469,7 @@ parameters:
 			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
 
 		-
-			message: '#^Cannot call method clear\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Cannot call method find\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
 			message: '#^Cannot call method getDoYouLiveWithClient\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\VisitsCare\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Cannot call method getDoYouLiveWithClient\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
 			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
@@ -35989,182 +33481,14 @@ parameters:
 			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 18
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Cannot call method getRepo\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
 			message: '#^Cannot call method getReport\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\VisitsCare\|null\.$#'
 			identifier: method.nonObject
 			count: 2
 			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:testAdd\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:testAddUpdateAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:testAddUpdateAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:testDeleteVisitsCare\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:testDeleteVisitsCareAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:testDeleteVisitsCareAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:testUpdate\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:testgetOneById\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:testgetOneByIdAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:testgetOneByIdAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:testgetVisitsCares\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:testgetVisitsCaresAcl\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:testgetVisitsCaresAuth\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$report of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getReportFreshSectionStatus\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Report, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:\$client1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:\$client2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:\$dataUpdate has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:\$deputy1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:\$deputy2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:\$report1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:\$report2 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:\$tokenAdmin has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:\$tokenDeputy has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:\$visitsCare1 has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Integration\\ControllerReport\\VisitsCareControllerTest\:\:\$visitsCare2 has no type specified\.$#'
-			identifier: missingType.property
 			count: 1
 			path: tests/Integration/ControllerReport/VisitsCareControllerTest.php
 
@@ -36973,12 +34297,6 @@ parameters:
 			path: tests/Integration/Fixtures.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:clear\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Fixtures.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createAsset\(\) has parameter \$type with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -37051,12 +34369,6 @@ parameters:
 			path: tests/Integration/Fixtures.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:flush\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Fixtures.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:getConnection\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -37093,12 +34405,6 @@ parameters:
 			path: tests/Integration/Fixtures.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:persist\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Fixtures.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:pgCommand\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -37123,12 +34429,6 @@ parameters:
 			path: tests/Integration/Fixtures.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:remove\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Integration/Fixtures.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:restoreDb\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -37142,18 +34442,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$dql of method Doctrine\\ORM\\EntityManager\:\:createQuery\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Fixtures.php
-
-		-
-			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:flush\(\) expects array\<mixed\>\|object\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Fixtures.php
-
-		-
-			message: '#^Parameter \#1 \$entity of method Doctrine\\ORM\\EntityManager\:\:persist\(\) expects object, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Integration/Fixtures.php
@@ -37384,12 +34672,6 @@ parameters:
 			message: '#^Cannot access offset ''isActive'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
-			path: tests/Integration/Model/DeputyshipProcessingRawDbAccessIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 4
 			path: tests/Integration/Model/DeputyshipProcessingRawDbAccessIntegrationIntegrationTest.php
 
 		-
@@ -37951,36 +35233,6 @@ parameters:
 			path: tests/Integration/v2/Controller/CourtOrderControllerTest.php
 
 		-
-			message: '#^Cannot call method addReport\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/v2/Controller/CourtOrderControllerTest.php
-
-		-
-			message: '#^Cannot call method flush\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 7
-			path: tests/Integration/v2/Controller/CourtOrderControllerTest.php
-
-		-
-			message: '#^Cannot call method getCourtOrderUid\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: tests/Integration/v2/Controller/CourtOrderControllerTest.php
-
-		-
-			message: '#^Cannot call method getEmail\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/v2/Controller/CourtOrderControllerTest.php
-
-		-
-			message: '#^Cannot call method setClient\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/v2/Controller/CourtOrderControllerTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\v2\\Controller\\CourtOrderControllerTest\:\:addUserAndCourtOrderAndDeputy\(\) has parameter \$emailAddress with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -38017,19 +35269,7 @@ parameters:
 			path: tests/Integration/v2/Controller/CourtOrderControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$email of method Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\JsonHttpTestClient\:\:login\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/v2/Controller/CourtOrderControllerTest.php
-
-		-
 			message: '#^Parameter \#1 \$email of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createUser\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/v2/Controller/CourtOrderControllerTest.php
-
-		-
-			message: '#^Parameter \#1 \$user of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createClient\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Integration/v2/Controller/CourtOrderControllerTest.php
@@ -38053,18 +35293,6 @@ parameters:
 			path: tests/Integration/v2/Controller/CourtOrderControllerTest.php
 
 		-
-			message: '#^Parameter \$submittedBy of method OPG\\Digideps\\Backend\\TestHelpers\\ReportTestHelper\:\:submitReport\(\) expects OPG\\Digideps\\Backend\\Entity\\User\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/v2/Controller/CourtOrderControllerTest.php
-
-		-
-			message: '#^Part \$courtOrder\-\>getCourtOrderUid\(\) \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 3
-			path: tests/Integration/v2/Controller/CourtOrderControllerTest.php
-
-		-
 			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\v2\\Controller\\CourtOrderControllerTest\:\:\$fixtureHelper \(Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\) does not accept object\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -38077,19 +35305,7 @@ parameters:
 			path: tests/Integration/v2/Controller/OrganisationControllerTest.php
 
 		-
-			message: '#^Binary operation "\." between non\-falsy\-string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: tests/Integration/v2/Controller/OrganisationControllerTest.php
-
-		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityRepository\<OPG\\Digideps\\Backend\\Entity\\User\>\:\:findOneByEmail\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Integration/v2/Controller/OrganisationControllerTest.php
-
-		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Repository\\UserRepository\:\:findOneByEmail\(\)\.$#'
 			identifier: method.notFound
 			count: 1
 			path: tests/Integration/v2/Controller/OrganisationControllerTest.php
@@ -38161,12 +35377,6 @@ parameters:
 			path: tests/Integration/v2/Controller/OrganisationControllerTest.php
 
 		-
-			message: '#^Cannot call method clear\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 8
-			path: tests/Integration/v2/Controller/OrganisationControllerTest.php
-
-		-
 			message: '#^Cannot call method getEmailIdentifier\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -38175,13 +35385,13 @@ parameters:
 		-
 			message: '#^Cannot call method getId\(\) on OPG\\Digideps\\Backend\\Entity\\User\|null\.$#'
 			identifier: method.nonObject
-			count: 5
+			count: 4
 			path: tests/Integration/v2/Controller/OrganisationControllerTest.php
 
 		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 22
+			count: 20
 			path: tests/Integration/v2/Controller/OrganisationControllerTest.php
 
 		-
@@ -38373,7 +35583,7 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$userId of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:addUserToOrganisation\(\) expects int, mixed given\.$#'
 			identifier: argument.type
-			count: 2
+			count: 1
 			path: tests/Integration/v2/Controller/OrganisationControllerTest.php
 
 		-

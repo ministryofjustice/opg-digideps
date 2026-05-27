@@ -18,6 +18,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 
+/**
+ * @method null|User findOneByEmail(string $email)
+ */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
     /** @var QueryBuilder */

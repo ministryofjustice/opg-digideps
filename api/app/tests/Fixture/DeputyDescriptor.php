@@ -14,13 +14,17 @@ final readonly class DeputyDescriptor
     public function __construct(
         public string $deputyReference,
         public DeputyType $type = DeputyType::LAY,
-        public bool $isAdmin = false,
+        public UserType $userType = UserType::Deputy,
         public bool $hasLogin = true,
         public bool $isActive = true,
         public bool $isPrimary = true,
         public bool $isLoginActive = true,
         ?string $emailDomain = null,
     ) {
+        if (!$this->hasLogin && $this->userType !== UserType::Deputy) {
+            throw new \DomainException('Non deputy users must have a login.');
+        }
+
         $base = $emailDomain ?? 'default';
         $type = strtolower($this->type->value);
         $this->emailDomain = "{$base}.{$type}.digideps.test";
