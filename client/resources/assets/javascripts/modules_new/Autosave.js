@@ -12,7 +12,7 @@ const Autosave = {
   init: function (
     document,
     autosavePeriodSecs = 30,
-    fetchFunction = fetch
+    fetchFunction = window.fetch.bind(window)
   ) {
     this.fetchFunction = fetchFunction
     this.autosaveForms = document.querySelectorAll('form.js-autosave')
@@ -42,7 +42,7 @@ const Autosave = {
       // periodically save every autosavePeriodSecs seconds; this will not save
       // ignored fields
       const autosaveIntervalId = setInterval(() => {
-        this.autosave(saveProgressButton, autosaveForm, ignoredElementNames)
+        return this.autosave(saveProgressButton, autosaveForm, ignoredElementNames)
       }, autosavePeriodSecs * 1000)
 
       autosaveForm.setAttribute('autosave-interval-id', autosaveIntervalId)
