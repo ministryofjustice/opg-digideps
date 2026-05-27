@@ -22,7 +22,12 @@ final readonly class ReportTransitionService
     /**
      * NB this creates the entities but doesn't persist them
      *
-     * @return ?ReportTransitionResult returns null if the transition was not attempted (report types already match)
+     * @param Report $report The report being transitioned
+     * @param ?ReportType $oldReportType The current type of $report
+     * @param ReportType $newReportType the type to transition $report to
+     *
+     * @return ?ReportTransitionResult returns null if the transition was not attempted (report types already match),
+     * otherwise the results of the transition
      */
     public function transitionReport(Report $report, ?ReportType $oldReportType, ReportType $newReportType): ?ReportTransitionResult
     {
@@ -32,12 +37,12 @@ final readonly class ReportTransitionService
 
         $result = null;
 
-        $report->setType("$newReportType");
-
         $oldReportTypeOrderKind = $oldReportType?->courtOrderKind;
         $updatedReportTypeOrderKind = $newReportType->courtOrderKind;
 
-        // if we are doing any transitions involving hybrids
+        // if we are doing any hybrid/dual to <something else> transitions, we
+        // only need to act on the pfa: the hw can be inferred from that anyway
+        // and we don't want to repeat any work
         $isPfa = ($oldReportType?->courtOrderType === CourtOrderType::PFA);
 
         if (
@@ -66,7 +71,8 @@ final readonly class ReportTransitionService
 
         // we don't check if this is a PFA report here, as we
         // may have a single HW report transitioning to a dual
-        // (i.e. there may not be a PFA report yet)
+        // (i.e. there may not be a PFA report yet); so we have to
+        // act on all single -> dual transitions
         if (
             $oldReportTypeOrderKind === CourtOrderKind::Single &&
             $updatedReportTypeOrderKind === CourtOrderKind::Dual
@@ -136,8 +142,10 @@ final readonly class ReportTransitionService
         $hwCourtOrder->removeReport($report);
         $hwCourtOrder->addReport($newReport);
 
-        $hwCourtOrder->setOrderReportType($hwCourtOrder->getDesiredReportType()->courtOrderReportType);
-        $pfaCourtOrder->setOrderReportType($pfaCourtOrder->getDesiredReportType()->courtOrderReportType);
+        $hwCourtOrder->setOrderReportType($reportType->courtOrderReportType);
+        $hwCourtOrder->setOrderKind($reportType->courtOrderKind);
+        $pfaCourtOrder->setOrderReportType($reportType->courtOrderReportType);
+        $pfaCourtOrder->setOrderKind($reportType->courtOrderKind);
 
         $result->transitioned = true;
         $result->updatedCourtOrders = [$hwCourtOrder, $pfaCourtOrder];
@@ -177,7 +185,7 @@ final readonly class ReportTransitionService
         $courtOrderPair = CourtOrderPair::create($clientActiveCourtOrders);
         $dualError = $this->verifyDualCourtOrders($courtOrderPair, $report);
         if ($dualError !== null) {
-            $result->errorMessages[] = ['Dual -> Hybrid: ' . $dualError];
+            $result->errorMessages[] = 'Dual -> Hybrid: ' . $dualError;
             return $result;
         }
 
@@ -186,7 +194,7 @@ final readonly class ReportTransitionService
 
         $hybridReport = $courtOrderPair->pfaCourtOrder->getLatestReport();
         $defunctReport = $courtOrderPair->hwCourtOrder->getLatestReport();
-        assert($hybridReport !== null);
+        assert($hybridReport === $report);
         assert($defunctReport !== null);
 
         // TODO copy data from $defunctReport into $hybridReport?
@@ -199,7 +207,9 @@ final readonly class ReportTransitionService
         $courtOrderPair->hwCourtOrder->addReport($hybridReport);
 
         $courtOrderPair->hwCourtOrder->setOrderReportType($reportType->courtOrderReportType);
+        $courtOrderPair->hwCourtOrder->setOrderKind($reportType->courtOrderKind);
         $courtOrderPair->pfaCourtOrder->setOrderReportType($reportType->courtOrderReportType);
+        $courtOrderPair->pfaCourtOrder->setOrderKind($reportType->courtOrderKind);
 
         $hybridReport->setType("$reportType");
 
@@ -237,7 +247,7 @@ final readonly class ReportTransitionService
         $courtOrderPair = CourtOrderPair::create($clientActiveCourtOrders);
         $dualError = $this->verifyDualCourtOrders($courtOrderPair, $report);
         if ($dualError !== null) {
-            $result->errorMessages[] = ['Dual -> Single: ' . $dualError];
+            $result->errorMessages[] = 'Dual -> Single: ' . $dualError;
             return $result;
         }
 
@@ -262,6 +272,7 @@ final readonly class ReportTransitionService
                 // the report we want to keep
                 $report->setType("$reportType");
                 $courtOrder->setOrderReportType($reportType->courtOrderReportType);
+                $courtOrder->setOrderKind($reportType->courtOrderKind);
 
                 $result->updatedReports[] = $possiblyDefunctReport;
             } else {
@@ -277,9 +288,8 @@ final readonly class ReportTransitionService
 
         // if no report was removed, something went wrong somewhere
         if (!$result->transitioned) {
-            $result->errorMessages[] = [
-                "Dual -> Single: Could not remove report {$report->getId()}: no applicable court order found"
-            ];
+            $result->errorMessages[] = "Dual -> Single: Could not remove report {$report->getId()}: " .
+                "no applicable court order found";
         } else {
             $result->updatedCourtOrders = $affectedCourtOrders;
         }
@@ -291,6 +301,8 @@ final readonly class ReportTransitionService
      * Single -> Dual
      *
      * Unlike the other transitions, this may start from an HW report (the PFA might not exist yet).
+     * However, we assume that the transition to a Dual means that the court order for the other half of the dual
+     * *does* exist.
      *
      * @param ReportType $reportType The new type of the report which is being retained; the other half of the dual
      * will be the report for the *other* report type (e.g. if new type is PFA, a new report will be added to the HW
@@ -310,7 +322,7 @@ final readonly class ReportTransitionService
 
         $courtOrderPair = CourtOrderPair::create($clientActiveCourtOrders);
         if (!$courtOrderPair->isValid()) {
-            $result->errorMessages[] = ['Single -> Dual: ' . ($courtOrderPair->invalidReason ?? 'Unknown reason')];
+            $result->errorMessages[] = 'Single -> Dual: ' . ($courtOrderPair->invalidReason ?? 'Unknown reason');
             return $result;
         }
 
@@ -329,24 +341,24 @@ final readonly class ReportTransitionService
         // create a new report on the court order whose type does not match $report's
         foreach ($affectedCourtOrders as $courtOrder) {
             if (
-                $courtOrder->getOrderType() === CourtOrderType::tryFrom($report->getType()) &&
+                $courtOrder->getOrderType() === $reportType->courtOrderType &&
                 $courtOrder->getLatestReport() === $report
             ) {
-                // the court order for the existing single report
-                $courtOrder->setOrderReportType($reportType->courtOrderReportType);
+                // this is the court order for the existing single report
                 $report->setType("$reportType");
+                $courtOrder->setOrderReportType($reportType->courtOrderReportType);
+                $courtOrder->setOrderKind($reportType->courtOrderKind);
 
                 $result->updatedReports[] = $report;
             } else {
                 // the other active client on this court order which doesn't have a report yet: make a new one
                 $newReport = $this->reportService->createReportFromOrder($courtOrder);
-                $newOrderReportType = ReportType::tryFrom($newReport->getType())?->courtOrderReportType;
-
-                if ($newOrderReportType !== null) {
-                    $courtOrder->setOrderReportType($newOrderReportType);
-                }
 
                 $courtOrder->addReport($newReport);
+
+                $desiredType = $courtOrder->getDesiredReportType();
+                $courtOrder->setOrderReportType($desiredType->courtOrderReportType);
+                $courtOrder->setOrderKind($reportType->courtOrderKind);
 
                 $result->transitioned = true;
                 $result->updatedReports[] = $newReport;
@@ -356,9 +368,8 @@ final readonly class ReportTransitionService
         }
 
         if (!$result->transitioned) {
-            $result->errorMessages[] = [
-                "Single -> Dual: Could not add report {$report->getId()} to court order: no applicable court order found"
-            ];
+            $result->errorMessages[] = "Single -> Dual: Could not add report {$report->getId()} to court order: " .
+                "no applicable court order found";
         } else {
             $result->updatedCourtOrders = $affectedCourtOrders;
         }

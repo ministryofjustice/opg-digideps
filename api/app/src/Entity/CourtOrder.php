@@ -317,6 +317,7 @@ class CourtOrder
                 $deputyType
             );
         }
+
         return $this->desiredReportType;
     }
 }
