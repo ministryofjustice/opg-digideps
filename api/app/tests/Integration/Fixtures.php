@@ -327,10 +327,7 @@ class Fixtures
         return $sg;
     }
 
-    /**
-     * @return Asset
-     */
-    public function createAsset($type, Report $report, array $settersMap = [])
+    public function createAsset($type, Report $report, array $settersMap = []): Asset
     {
         $asset = Asset::factory($type);
         $asset->setReport($report);
@@ -458,21 +455,20 @@ class Fixtures
         $this->em->clear();
     }
 
-    public function flush()
+    public function flush(object ...$entities): static
     {
-        $args = func_get_args();
-        if (empty($args)) {
+        if (empty($entities)) {
             $this->em->flush();
         }
 
-        foreach ($args as $e) {
+        foreach ($entities as $e) {
             $this->em->flush($e);
         }
 
         return $this;
     }
 
-    public function remove()
+    public function remove(): static
     {
         $args = func_get_args();
         foreach ($args as $e) {
@@ -482,20 +478,17 @@ class Fixtures
         return $this;
     }
 
-    public function persist()
+    public function persist(object $entity, object ...$entities): static
     {
-        $args = func_get_args();
-        if (empty($args)) {
-            throw new \InvalidArgumentException('You must pass at least one object to persist');
-        }
-        foreach (func_get_args() as $e) {
+        $this->em->persist($entity);
+        foreach ($entities as $e) {
             $this->em->persist($e);
         }
 
         return $this;
     }
 
-    public function clear()
+    public function clear(): static
     {
         $this->em->clear();
 

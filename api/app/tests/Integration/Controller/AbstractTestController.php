@@ -161,17 +161,16 @@ abstract class AbstractTestController extends WebTestCase
         return $response->headers->get('AuthToken');
     }
 
-    protected function assertEndpointNeedsAuth($method, $uri, $authToken = 'WRONG')
+    protected function assertEndpointNeedsAuth($method, $uri, $authToken = 'WRONG'): void
     {
-        $response = $this->assertJsonRequest($method, $uri, [
+        $this->assertJsonRequest($method, $uri, [
             'mustFail' => true,
             'AuthToken' => $authToken,
             'assertResponseCode' => 419,
         ]);
-        $this->assertEquals(419, $response['code']);
     }
 
-    protected function assertEndpointNotAllowedFor($method, $uri, $token, $data = [])
+    protected function assertEndpointNotAllowedFor($method, $uri, $token, $data = []): void
     {
         $this->assertJsonRequest($method, $uri, [
             'mustFail' => true,
@@ -181,7 +180,7 @@ abstract class AbstractTestController extends WebTestCase
         ]);
     }
 
-    protected function assertEndpointNotFoundFor($method, $uri, $token, $data = [])
+    protected function assertEndpointNotFoundFor($method, $uri, $token, $data = []): void
     {
         $this->assertJsonRequest($method, $uri, [
             'mustFail' => true,
@@ -191,7 +190,7 @@ abstract class AbstractTestController extends WebTestCase
         ]);
     }
 
-    protected function assertEndpointAllowedFor($method, $uri, $token, $data = [])
+    protected function assertEndpointAllowedFor($method, $uri, $token, $data = []): void
     {
         $this->assertJsonRequest($method, $uri, [
             'mustSucceed' => true,
@@ -201,90 +200,57 @@ abstract class AbstractTestController extends WebTestCase
         ]);
     }
 
-    /**
-     * @return string token
-     */
-    protected function loginAsDeputy(string $email = 'deputy@example.org')
+    protected function loginAsDeputy(string $email = 'deputy@example.org'): string
     {
         return $this->login($email, 'DigidepsPass1234', self::$deputySecret);
     }
 
-    /**
-     * @return string token
-     */
-    protected function loginAsMultiClientPrimaryDeputy()
+    protected function loginAsMultiClientPrimaryDeputy(): string
     {
         return $this->login('multi-client-primary-deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
     }
 
-    /**
-     * @return string token
-     */
-    protected function loginAsMultiClientNonPrimaryDeputy()
+    protected function loginAsMultiClientNonPrimaryDeputy(): string
     {
         return $this->login('multi-client-non-primary-deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
     }
 
-    /**
-     * @return string token
-     */
-    protected function loginAsMainDeputy()
+    protected function loginAsMainDeputy(): string
     {
         return $this->login('main-deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
     }
 
-    /**
-     * @return string token
-     */
-    protected function loginAsCoDeputy()
+    protected function loginAsCoDeputy(): string
     {
         return $this->login('co-deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
     }
 
-    /**
-     * @return string token
-     */
-    protected function loginAsPa()
-    {
-        return $this->login('pa@example.org', 'DigidepsPass1234', self::$deputySecret);
-    }
-
-    /**
-     * @return string token
-     */
-    protected function loginAsPaAdmin(string $email = 'pa_admin@example.org')
+    protected function loginAsPa(string $email = 'pa@example.org'): string
     {
         return $this->login($email, 'DigidepsPass1234', self::$deputySecret);
     }
 
-    /**
-     * @return string token
-     */
-    protected function loginAsPaTeamMember()
+    protected function loginAsPaAdmin(string $email = 'pa_admin@example.org'): string
     {
-        return $this->login('pa_team_member@example.org', 'DigidepsPass1234', self::$deputySecret);
+        return $this->login($email, 'DigidepsPass1234', self::$deputySecret);
     }
 
-    /**
-     * @return string token
-     */
-    protected function loginAsProf()
+    protected function loginAsPaTeamMember(string $email = 'pa_team_member@example.org'): string
+    {
+        return $this->login($email, 'DigidepsPass1234', self::$deputySecret);
+    }
+
+    protected function loginAsProf(): string
     {
         return $this->login('prof@example.org', 'DigidepsPass1234', self::$deputySecret);
     }
 
-    /**
-     * @return string token
-     */
-    protected function loginAsAdmin()
+    protected function loginAsAdmin(): string
     {
         return $this->login('admin@example.org', 'DigidepsPass1234', self::$adminSecret);
     }
 
-    /**
-     * @return string token
-     */
-    protected function loginAsSuperAdmin()
+    protected function loginAsSuperAdmin(): string
     {
         return $this->login('super_admin@example.org', 'DigidepsPass1234', self::$adminSecret);
     }

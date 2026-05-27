@@ -7,6 +7,7 @@ namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Repository\UserRepository;
 
 class UserControllerTest extends AbstractTestController
 {
@@ -27,8 +28,13 @@ class UserControllerTest extends AbstractTestController
             self::$tokenDeputy = $this->loginAsDeputy();
         }
 
-        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-        self::$admin1 = self::fixtures()->getRepo(User::class)->findOneByEmail('admin@example.org');
+        /**
+         * @var UserRepository $repository
+         */
+        $repository = self::fixtures()->getRepo(User::class);
+
+        self::$deputy1 = $repository->findOneByEmail('deputy@example.org') ?? throw new \LogicException('Improper fixture setup');
+        self::$admin1 = $repository->findOneByEmail('admin@example.org') ?? throw new \LogicException('Improper fixture setup');
         self::$deputy2 = self::fixtures()->createUser();
 
         self::fixtures()->flush()->clear();
@@ -85,11 +91,12 @@ class UserControllerTest extends AbstractTestController
 
         $user = $this->fixtures()->clear()->getRepo(User::class)->find($return['data']['id']);
         $loggedInUser = $this->fixtures()->clear()->getRepo(User::class)->find($this->loggedInUserId);
-
+        $this->assertNotNull($user);
+        $this->assertNotNull($loggedInUser);
         $this->assertEquals('n', $user->getFirstname());
         $this->assertEquals('s', $user->getLastname());
         $this->assertEquals('n.s@example.org', $user->getEmail());
-        $this->assertEquals($loggedInUser->getId(), $user->getCreatedBy()->getId(), sprintf('The User that created this user was not as expected. Wanted user with ID: %s, Got: %g', $this->loggedInUserId, $user->getCreatedBy() ? $user->getCreatedBy()->getId() : null));
+        $this->assertEquals($loggedInUser->getId(), $user->getCreatedBy()?->getId(), sprintf('The User that created this user was not as expected. Wanted user with ID: %s, Got: %g', $this->loggedInUserId, $user->getCreatedBy()?->getId()));
         $this->assertEquals(User::ADMIN_INVITE, $user->getRegistrationRoute());
     }
 
@@ -129,7 +136,8 @@ class UserControllerTest extends AbstractTestController
             ],
         ]);
 
-        $user = self::fixtures()->clear()->getRepo(User::class)->find($deputyId); /* @var $user User */
+        $user = self::fixtures()->clear()->getRepo(User::class)->find($deputyId);
+        $this->assertNotNull($user);
 
         $this->assertEquals(self::$deputy1->getLastname() . '-modified', $user->getLastname());
         $this->assertEquals(self::$deputy1->getEmail() . '-modified', $user->getEmail());
@@ -138,7 +146,7 @@ class UserControllerTest extends AbstractTestController
         // restore previous data
         $user->setLastname(str_replace('-modified', '', $user->getLastname()));
         $user->setEmail(str_replace('-modified', '', $user->getEmail()));
-        $user->setAddress1(str_replace('-modified', '', $user->getAddress1()));
+        $user->setAddress1(str_replace('-modified', '', $user->getAddress1() ?? ''));
 
         self::fixtures()->flush($user);
     }
@@ -484,9 +492,14 @@ class UserControllerTest extends AbstractTestController
     /**
      * @dataProvider recreateTokenProviderForRole
      */
-    public function testRecreateTokenAcceptsClientSecret($secret, $email, $passOrFail)
+    public function testRecreateTokenAcceptsClientSecret($secret, string $email, bool $passOrFail)
     {
-        $deputy = self::fixtures()->clear()->getRepo(User::class)->findOneByEmail($email);
+        /**
+         * @var UserRepository $repository
+         */
+        $repository = self::fixtures()->clear()->getRepo(User::class);
+        $deputy = $repository->findOneByEmail($email);
+        $this->assertNotNull($deputy);
         $deputy->setRegistrationToken(null);
         $deputy->setTokenDate(new \DateTime('2014-12-30'));
         self::fixtures()->flush($deputy);
@@ -510,10 +523,15 @@ class UserControllerTest extends AbstractTestController
     {
         $url = '/user/recreate-token/deputy@example.org';
 
-        $deputy = self::fixtures()->clear()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-        $deputy->setRegistrationToken(null);
-        $deputy->setTokenDate(new \DateTime('2014-12-30'));
-        self::fixtures()->flush($deputy);
+        /**
+         * @var UserRepository $repository
+         */
+        $repository = self::fixtures()->clear()->getRepo(User::class);
+        $user = $repository->findOneByEmail('deputy@example.org');
+        $this->assertNotNull($user);
+        $user->setRegistrationToken(null);
+        $user->setTokenDate(new \DateTime('2014-12-30'));
+        self::fixtures()->flush($user);
 
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
@@ -521,9 +539,11 @@ class UserControllerTest extends AbstractTestController
         ]);
 
         // refresh deputy from db and chack token has been reset
-        $deputyRefreshed = self::fixtures()->clear()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-        $this->assertTrue(strlen($deputyRefreshed->getRegistrationToken()) > 5);
-        $this->assertEquals(0, $deputyRefreshed->getTokenDate()->diff(new \DateTime())->format('%a'));
+        self::fixtures()->clear();
+        $userRefreshed = $repository->findOneByEmail('deputy@example.org');
+        $this->assertNotNull($userRefreshed);
+        $this->assertTrue(strlen($userRefreshed->getRegistrationToken() ?? '') > 5);
+        $this->assertEquals(0, $userRefreshed->getTokenDate()->diff(new \DateTime())->format('%a'));
     }
 
     public function testGetByToken()
@@ -539,11 +559,16 @@ class UserControllerTest extends AbstractTestController
             'ClientSecret' => 'WRONG-CLIENT_SECRET',
         ]);
 
-        $deputy = self::fixtures()->clear()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-        $deputy->recreateRegistrationToken();
-        self::fixtures()->flush($deputy);
+        /**
+         * @var UserRepository $repository
+         */
+        $repository = self::fixtures()->clear()->getRepo(User::class);
+        $user = $repository->findOneByEmail('deputy@example.org');
+        $this->assertNotNull($user);
+        $user->recreateRegistrationToken();
+        self::fixtures()->flush($user);
 
-        $url = '/user/get-by-token/' . $deputy->getRegistrationToken();
+        $url = '/user/get-by-token/' . $user->getRegistrationToken();
 
         $data = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
@@ -554,11 +579,18 @@ class UserControllerTest extends AbstractTestController
 
     public function testAgreeTermsUse()
     {
+        /**
+         * @var UserRepository $repository
+         */
+        $repository = self::fixtures()->getRepo(User::class);
+
         // recreate reg token
-        $deputy = self::fixtures()->clear()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-        $deputy->recreateRegistrationToken();
-        self::fixtures()->flush($deputy);
-        $url = '/user/agree-terms-use/' . $deputy->getRegistrationToken();
+        self::fixtures()->clear();
+        $user = $repository->findOneByEmail('deputy@example.org');
+        $this->assertNotNull($user);
+        $user->recreateRegistrationToken();
+        self::fixtures()->flush($user);
+        $url = '/user/agree-terms-use/' . $user->getRegistrationToken();
 
         $this->assertJsonRequest('PUT', $url, [
             'mustFail' => true,
@@ -570,14 +602,16 @@ class UserControllerTest extends AbstractTestController
             'ClientSecret' => 'WRONG-CLIENT_SECRET',
         ]);
 
-        $data = $this->assertJsonRequest('PUT', $url, [
+        $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'ClientSecret' => API_TOKEN_DEPUTY,
         ])['data'];
 
-        $deputy = self::fixtures()->clear()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-        $this->assertTrue($deputy->getAgreeTermsUse());
-        $this->assertEquals(date('Y-m-d'), $deputy->getAgreeTermsUseDate()->format('Y-m-d'));
+        self::fixtures()->clear();
+        $user = $repository->findOneByEmail('deputy@example.org');
+        $this->assertNotNull($user);
+        $this->assertTrue($user->getAgreeTermsUse());
+        $this->assertEquals(date('Y-m-d'), $user->getAgreeTermsUseDate()->format('Y-m-d'));
     }
 
     public function testGetPrimaryAccount()

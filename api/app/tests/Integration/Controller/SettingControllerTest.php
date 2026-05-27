@@ -89,7 +89,7 @@ class SettingControllerTest extends AbstractTestController
             ],
         ]);
         $setting = self::fixtures()->clear()->getRepo(Setting::class)->find($id);
-        /* @var $setting Setting */
+        $this->assertNotNull($setting);
         $this->assertEquals($id, $setting->getId());
         $this->assertEquals($settingContent, $setting->getContent());
         $this->assertEquals(true, $setting->isEnabled());
@@ -104,7 +104,7 @@ class SettingControllerTest extends AbstractTestController
             ],
         ]);
         $setting = self::fixtures()->clear()->getRepo(Setting::class)->find($id);
-        /* @var $setting Setting */
+        $this->assertNotNull($setting);
         $this->assertEquals($id, $setting->getId());
         $this->assertEquals('snc2', $setting->getContent());
         $this->assertEquals(false, $setting->isEnabled());

@@ -5,50 +5,32 @@ namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 use OPG\Digideps\Backend\Entity\Report\Expense;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class ExpenseControllerTest extends AbstractTestController
 {
-    private static $deputy1;
-    private static $client1;
-    private static $report1;
-
-    /**
-     * @var Expense
-     */
-    private static $expense1;
-    /**
-     * @var Expense
-     */
-    private static $expense2;
-    private static $deputy2;
-    private static $client2;
-    private static $report2;
-    private static $tokenAdmin;
-    private static $tokenDeputy;
+    private static Report $report1;
+    private static Expense $expense1;
+    private static Expense $expense2;
+    private static Report $report2;
+    private static string $tokenAdmin;
+    private static string $tokenDeputy;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        // deputy1
-        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
-        self::$report1 = self::fixtures()->createReport(self::$client1);
-        self::$expense1 = self::fixtures()->createReportExpense('other', self::$report1, ['setExplanation' => 'e1', 'setAmount' => 1.1]);
+        ['persons' => ['users' => ['lay1' => $user1]], 'orders' => [['pfa' => ['reports' => [self::$report1]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
+        ['orders' => [['pfa' => ['reports' => [self::$report2]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
 
-        // deputy 2
-        self::$deputy2 = self::fixtures()->createUser();
-        self::$client2 = self::fixtures()->createClient(self::$deputy2);
-        self::$report2 = self::fixtures()->createReport(self::$client2);
+        self::$expense1 = self::fixtures()->createReportExpense('other', self::$report1, ['setExplanation' => 'e1', 'setAmount' => 1.1]);
         self::$expense2 = self::fixtures()->createReportExpense('other', self::$report2, ['setExplanation' => 'e2', 'setAmount' => 2.2]);
 
         self::fixtures()->flush()->clear();
 
-        if (self::$tokenAdmin === null) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
+        self::$tokenAdmin = $this->loginAsAdmin();
+        self::$tokenDeputy = $this->loginAsDeputy($user1->getEmail());
     }
 
     /**
@@ -61,7 +43,7 @@ class ExpenseControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    public function testgetOneByIdAuth()
+    public function testGetOneByIdAuth(): void
     {
         $url = '/report/' . self::$report1->getId() . '/expense/' . self::$expense1->getId();
 
@@ -69,13 +51,13 @@ class ExpenseControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
     }
 
-    public function testgetOneByIdAcl()
+    public function testGetOneByIdAcl(): void
     {
         $url2 = '/report/' . self::$report1->getId() . '/expense/' . self::$expense2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
-    public function testgetOneById()
+    public function testGetOneById(): void
     {
         $url = '/report/' . self::$report1->getId() . '/expense/' . self::$expense1->getId();
 
@@ -90,7 +72,7 @@ class ExpenseControllerTest extends AbstractTestController
         $this->assertEquals(self::$expense1->getAmount(), $data['amount']);
     }
 
-    public function testPostPutAuth()
+    public function testPostPutAuth(): void
     {
         $url = '/report/' . self::$report1->getId() . '/expense';
         $this->assertEndpointNeedsAuth('POST', $url);
@@ -101,7 +83,7 @@ class ExpenseControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
     }
 
-    public function testPostPutAcl()
+    public function testPostPutAcl(): void
     {
         $url2 = '/report/' . self::$report2->getId() . '/expense';
         $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy);
@@ -113,7 +95,7 @@ class ExpenseControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('PUT', $url3, self::$tokenDeputy);
     }
 
-    public function testPostPutGetAll()
+    public function testPostPutGetAll(): void
     {
         // POST
         $url = '/report/' . self::$report1->getId() . '/expense';
@@ -172,7 +154,7 @@ class ExpenseControllerTest extends AbstractTestController
         $this->assertEquals(3.31, $data['expenses'][1]['amount']);
     }
 
-    public function testDeleteAuth()
+    public function testDeleteAuth(): void
     {
         $url = '/report/' . self::$report1->getId() . '/expense/' . self::$expense1->getId();
 
@@ -192,7 +174,7 @@ class ExpenseControllerTest extends AbstractTestController
     /**
      * @depends testPostPutGetAll
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         $url = '/report/' . self::$report1->getId() . '/expense/' . self::$expense1->getId();
         $this->assertJsonRequest('DELETE', $url, [
@@ -207,9 +189,10 @@ class ExpenseControllerTest extends AbstractTestController
     /**
      * @depends testDelete
      */
-    public function testPaidAnything()
+    public function testPaidAnything(): void
     {
         $report = self::fixtures()->getReportById(self::$report1->getId());
+        $this->assertNotNull($report);
         $report->setPaidForAnything('yes');
 
         self::fixtures()->persist($report);

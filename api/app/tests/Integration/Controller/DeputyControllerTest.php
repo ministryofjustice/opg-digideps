@@ -64,6 +64,7 @@ class DeputyControllerTest extends AbstractTestController
 
         $deputy = self::$fixtures->clear()->getRepo(Deputy::class)->find($return['data']['id']);
 
+        $this->assertNotNull($deputy);
         $this->assertEquals($firstName, $deputy->getFirstname());
         $this->assertEquals($lastName, $deputy->getLastname());
         $this->assertEquals($email, $deputy->getEmail1());
@@ -92,6 +93,7 @@ class DeputyControllerTest extends AbstractTestController
 
         $deputy = self::$fixtures->clear()->getRepo(Deputy::class)->find($return['data']['id']);
 
+        $this->assertNotNull($deputy);
         $this->assertEquals($firstName, $deputy->getFirstname());
         $this->assertEquals($lastName, $deputy->getLastname());
         $this->assertEquals($email, $deputy->getEmail1());

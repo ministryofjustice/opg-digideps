@@ -16,6 +16,7 @@ final readonly class CourtOrderDescriptor
         public int $submittedReports = 0,
         public bool $active = true,
         public bool $single = true,
+        public bool $noReports = false,
         public ?DeputySet $siblingDeputySet = null,
     ) {
         if ($this->reportType === CourtOrderReportType::OPG104 && !$this->single) {

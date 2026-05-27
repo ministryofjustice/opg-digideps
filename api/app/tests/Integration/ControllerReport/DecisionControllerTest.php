@@ -5,43 +5,32 @@ namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 use OPG\Digideps\Backend\Entity\Report\Decision;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class DecisionControllerTest extends AbstractTestController
 {
-    private static $deputy1;
-    private static $client1;
-    private static $report1;
-    private static $decision1;
-    private static $deputy2;
-    private static $client2;
-    private static $report2;
-    private static $decision2;
-    private static $tokenAdmin;
-    private static $tokenDeputy;
+    private static Report $report1;
+    private static Decision $decision1;
+    private static Report $report2;
+    private static Decision $decision2;
+    private static string $tokenAdmin;
+    private static string $tokenDeputy;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        // deputy1
-        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
-        self::$report1 = self::fixtures()->createReport(self::$client1);
-        self::$decision1 = self::fixtures()->createDecision(self::$report1, ['setDescription' => 'description1']);
+        ['persons' => ['users' => ['lay1' => $user1]], 'orders' => [['pfa' => ['reports' => [self::$report1]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
+        ['orders' => [['pfa' => ['reports' => [self::$report2]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
 
-        // deputy 2
-        self::$deputy2 = self::fixtures()->createUser();
-        self::$client2 = self::fixtures()->createClient(self::$deputy2);
-        self::$report2 = self::fixtures()->createReport(self::$client2);
+        self::$decision1 = self::fixtures()->createDecision(self::$report1, ['setDescription' => 'description1']);
         self::$decision2 = self::fixtures()->createDecision(self::$report2);
 
         self::fixtures()->flush()->clear();
 
-        if (self::$tokenAdmin === null) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
+        self::$tokenAdmin = $this->loginAsAdmin();
+        self::$tokenDeputy = $this->loginAsDeputy($user1->getEmail());
     }
 
     /**
@@ -54,13 +43,13 @@ class DecisionControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    private $dataUpdate = [
+    private static array $dataUpdate = [
         'description' => 'description-changed',
         'client_involved_boolean' => true,
         'client_involved_details' => 'client_involved_details-changed',
     ];
 
-    public function testgetOneByIdAuth()
+    public function testGetOneByIdAuth(): void
     {
         $url = '/report/decision/' . self::$decision1->getId();
 
@@ -68,13 +57,13 @@ class DecisionControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
     }
 
-    public function testgetOneByIdAcl()
+    public function testGetOneByIdAcl(): void
     {
         $url2 = '/report/decision/' . self::$decision2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
-    public function testgetOneById()
+    public function testGetOneById(): void
     {
         $url = '/report/decision/' . self::$decision1->getId();
 
@@ -88,7 +77,7 @@ class DecisionControllerTest extends AbstractTestController
         $this->assertEquals(self::$decision1->getDescription(), $data['description']);
     }
 
-    public function testgetDecisions()
+    public function testGetDecisions(): void
     {
         $data = $this->assertJsonRequest(
             'GET',
@@ -101,7 +90,7 @@ class DecisionControllerTest extends AbstractTestController
         $this->assertEquals(self::$decision1->getDescription(), $data[0]['description']);
     }
 
-    public function testupsertDecisionAuth()
+    public function testUpsertDecisionAuth(): void
     {
         $url = '/report/decision';
         $this->assertEndpointNeedsAuth('POST', $url);
@@ -111,9 +100,9 @@ class DecisionControllerTest extends AbstractTestController
     }
 
     /**
-     * @depends testgetDecisions
+     * @depends testGetDecisions
      */
-    public function testupsertDecisionAcl()
+    public function testUpsertDecisionAcl(): void
     {
         $url2 = '/report/decision';
 
@@ -125,7 +114,7 @@ class DecisionControllerTest extends AbstractTestController
         ]);
     }
 
-    public function testupsertDecisionMissingParams()
+    public function testUpsertDecisionMissingParams(): void
     {
         $url = '/report/decision';
 
@@ -143,14 +132,14 @@ class DecisionControllerTest extends AbstractTestController
         $this->assertStringContainsString('client_involved_details', $errorMessage);
     }
 
-    public function testupsertDecisionPut()
+    public function testUpsertDecisionPut(): void
     {
         $url = '/report/decision';
 
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
-            'data' => ['id' => self::$decision1->getId()] + $this->dataUpdate,
+            'data' => ['id' => self::$decision1->getId()] + self::$dataUpdate,
         ]);
         $this->assertTrue($return['data']['id'] > 0);
 
@@ -163,14 +152,14 @@ class DecisionControllerTest extends AbstractTestController
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_DECISIONS));
     }
 
-    public function testupsertDecisionPost()
+    public function testUpsertDecisionPost(): void
     {
         $url = '/report/decision';
 
         $return = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
-            'data' => ['report_id' => self::$report1->getId()] + $this->dataUpdate,
+            'data' => ['report_id' => self::$report1->getId()] + self::$dataUpdate,
         ]);
         $this->assertTrue($return['data']['id'] > 0);
 
@@ -183,7 +172,7 @@ class DecisionControllerTest extends AbstractTestController
         // TODO assert other fields
     }
 
-    public function testDeleteDecisionAuth()
+    public function testDeleteDecisionAuth(): void
     {
         $url = '/report/decision/' . self::$decision1->getId();
 
@@ -191,7 +180,7 @@ class DecisionControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
     }
 
-    public function testDeleteDecisionAcl()
+    public function testDeleteDecisionAcl(): void
     {
         $url2 = '/report/decision/' . self::$decision2->getId();
 
@@ -201,9 +190,9 @@ class DecisionControllerTest extends AbstractTestController
     /**
      * Run this last to avoid corrupting the data.
      *
-     * @depends testgetDecisions
+     * @depends testGetDecisions
      */
-    public function testDeleteDecision()
+    public function testDeleteDecision(): void
     {
         $url = '/report/decision/' . self::$decision1->getId();
         $this->assertJsonRequest('DELETE', $url, [

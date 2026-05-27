@@ -89,15 +89,17 @@ final class FixtureService
         $orders = [];
 
         $current = $scenario;
+        $first = true;
         while ($current !== null) {
-            $pfa = $this->instantiateCourtOrder($client, $current, CourtOrderType::PFA, $persons);
-            $hw = $this->instantiateCourtOrder($client, $current, CourtOrderType::HW, $persons, $pfa);
+            $pfa = $this->instantiateCourtOrder($client, $current, $first, CourtOrderType::PFA, $persons);
+            $hw = $this->instantiateCourtOrder($client, $current, $first, CourtOrderType::HW, $persons, $pfa);
 
             $orders[] = array_filter([
                 'pfa' => $pfa,
                 'hw' => $hw
             ]);
             $current = $current->previous;
+            $first = false;
         }
         $this->flush();
 
@@ -113,7 +115,7 @@ final class FixtureService
      * @param Order|null $sibling
      * @return Order|null
      */
-    private function instantiateCourtOrder(Client $client, Scenario $scenario, CourtOrderType $type, array &$persons, ?array $sibling = null): ?array
+    private function instantiateCourtOrder(Client $client, Scenario $scenario, bool $first, CourtOrderType $type, array &$persons, ?array $sibling = null): ?array
     {
         $descriptor = $scenario->courtOrderDescriptor;
         if ($descriptor->single && (($type === CourtOrderType::HW && $descriptor->reportType !== CourtOrderReportType::OPG104) || ($type === CourtOrderType::PFA && $descriptor->reportType === CourtOrderReportType::OPG104))) {
@@ -122,18 +124,21 @@ final class FixtureService
         $deputySet = $sibling === null ? $descriptor->deputySet : $descriptor->siblingDeputySet ?? $scenario->courtOrderDescriptor->deputySet;
 
         $courtOrder = $this->persist($this->makeCourtOrder($descriptor, $client, $type));
+        /**
+         * @var null|User $primary;
+         */
+        $primary = null;
 
         foreach ($deputySet->descriptors as $deputyDescriptor) {
             $user = $persons['users'][$deputyDescriptor->deputyReference] ?? null;
             $deputy = $persons['deputies'][$deputyDescriptor->deputyReference] ?? null;
             $organisation = $persons['organisations'][$deputyDescriptor->emailDomain] ?? null;
 
-
             if ($deputyDescriptor->type !== DeputyType::LAY) {
                 $organisation ??= $this->makeOrganisation($deputyDescriptor, $client);
             }
 
-            if ($deputyDescriptor->isAdmin) {
+            if ($deputyDescriptor->userType !== UserType::Deputy) {
                 $user ??= $this->makeUser($deputyDescriptor, organisation: $organisation);
             } else {
                 $deputy ??= $this->makeDeputy($deputyDescriptor, $client, $organisation);
@@ -153,10 +158,15 @@ final class FixtureService
                 $persons['users'][$deputyDescriptor->deputyReference] = $user;
                 $user->addClient($client);
                 $this->persist($user);
+                if ($user->getIsPrimary()) {
+                    $primary ??= $user;
+                }
             }
         }
         $this->persist($client);
         $this->persist($courtOrder);
+        $this->flush();
+        $this->entityManager->refresh($courtOrder);
 
         /**
          * @var null|array<Report> $reports
@@ -166,14 +176,21 @@ final class FixtureService
         if ($sibling !== null) {
             $sibling['order']->setSibling($courtOrder);
             $courtOrder->setSibling($sibling['order']);
+            $this->persist($courtOrder);
             if ($courtOrder->getOrderKind() === CourtOrderKind::Hybrid) {
                 $reports = $sibling['reports'];
             }
         }
+
         if ($reports === null) {
             $reports = [];
-            for ($i = 0; $i <= $descriptor->submittedReports; $i++) {
-                $reports[] = $this->persist($this->makeReport($courtOrder, $reports[$i - 1] ?? null));
+            if (!$descriptor->noReports) {
+                for ($i = 0; $i <= $descriptor->submittedReports; $i++) {
+                    $reports[] = $this->persist($this->makeReport($courtOrder, $reports[$i - 1] ?? null, $primary));
+                }
+                if (!$first) {
+                    $this->makeReportSubmitted($reports[count($reports) - 1], $primary);
+                }
             }
         }
 
@@ -287,10 +304,25 @@ final class FixtureService
             ->setAddressPostcode($deputy?->getAddressPostcode() ?? $this->faker->postcode())
             ->setPhoneMain($deputy?->getPhoneMain() ?? $this->faker->phoneNumber())
             ->setPhoneAlternative($deputy?->getPhoneAlternative() ?? $this->faker->phoneNumber())
-            ->setRoleName(match ($descriptor->type) {
-                DeputyType::LAY => User::ROLE_LAY_DEPUTY,
-                DeputyType::PRO => $descriptor->isAdmin ? User::ROLE_PROF_ADMIN : User::ROLE_PROF_NAMED,
-                DeputyType::PA => $descriptor->isAdmin ? User::ROLE_PA_ADMIN : User::ROLE_PA_NAMED,
+            ->setRoleName(match ($descriptor->userType) {
+                UserType::Deputy =>  match ($descriptor->type) {
+                    DeputyType::LAY => User::ROLE_LAY_DEPUTY,
+                    DeputyType::PRO => User::ROLE_PROF_NAMED,
+                    DeputyType::PA => User::ROLE_PA_NAMED,
+                },
+                UserType::OrgAdmin => match ($descriptor->type) {
+                    DeputyType::LAY => throw new \DomainException('A lay cannot be a org admin.'),
+                    DeputyType::PRO => User::ROLE_PROF_ADMIN,
+                    DeputyType::PA => User::ROLE_PA_ADMIN,
+                },
+                UserType::OrgTeamMember => match ($descriptor->type) {
+                    DeputyType::LAY => throw new \DomainException('A lay cannot be a org admin.'),
+                    DeputyType::PRO => User::ROLE_PROF_TEAM_MEMBER,
+                    DeputyType::PA => User::ROLE_PA_TEAM_MEMBER,
+                },
+                UserType::Admin => User::ROLE_ADMIN,
+                UserType::AdminManager => User::ROLE_ADMIN_MANAGER,
+                UserType::SuperAdmin => User::ROLE_SUPER_ADMIN,
             })
             ->setActive($descriptor->isLoginActive)
             ->setIsPrimary($descriptor->isPrimary)
@@ -313,30 +345,50 @@ final class FixtureService
         return $this->persist($user);
     }
 
-    private function makeReport(CourtOrder $order, ?Report $previous = null): Report
+    private function makeReport(CourtOrder $order, ?Report $previous, ?User $submitter): Report
     {
         $startDate = clone $order->getOrderMadeDate();
         if ($previous !== null) {
             $startDate = (clone $previous->getEndDate())->add(new \DateInterval('P1D'));
-            $previous->setSubmitted(true);
-            $previous->setSubmitDate((clone $previous->getEndDate())->add(new \DateInterval('P15D')));
-            $this->persist(new ReportSubmission($previous, null));
-            $this->persist($previous);
+            $this->makeReportSubmitted($previous, $submitter);
         }
         $endDate = (clone $startDate)->add(new \DateInterval('P12M'))->sub(new \DateInterval('P1D'));
         $dueDate = (clone $endDate)->add(new \DateInterval('P1M'));
-        $report = new Report($order->getClient(), "{$order->getDesiredReportType()}", $startDate, $endDate, false)
+        $reportType = $order->getDesiredReportType();
+        $report = new Report($order->getClient(), "{$reportType}", $startDate, $endDate, false)
             ->setDueDate($dueDate)
             ->setSubmitted(false)
             ->setSubmitDate(null);
+        //foreach (ReportDebt::$debtTypeIds as [$id, $hasMoreInformation]) {
+        //    $debt = new ReportDebt($report, $id, $hasMoreInformation, null);
+        //    $this->persist($debt);
+        //}
+        //$cats = ReportMoneyShortCategory::getCategories('in') + ReportMoneyShortCategory::getCategories('out');
+        //foreach ($cats as $typeId => $_) {
+        //    $debt = new ReportMoneyShortCategory($report, $typeId, false);
+        //    $this->persist($debt);
+        //}
+        //if ($reportType->deputyType === DeputyType::PA) {
+        //    foreach (Fee::$feeTypeIds as $id => $_) {
+        //        $this->persist(new Fee($report, $id, null));
+        //    }
+        //}
         $order->addReport($report);
         return $report;
+    }
+
+    private function makeReportSubmitted(Report $report, ?User $submitter): void
+    {
+        $report->setSubmitted(true);
+        $report->setSubmitDate((clone $report->getEndDate())->add(new \DateInterval('P15D')));
+        $report->setSubmittedBy($submitter);
+        $this->persist(new ReportSubmission($report, $submitter));
+        $this->persist($report);
     }
 
     private function getCounter(): Counter
     {
         $id = Counter::FIXTURE_ID;
-        $repository = $this->entityManager->getRepository(Counter::class);
         $counter = $this->entityManager->getRepository(Counter::class)->find($id);
         if ($counter === null) {
             $this->entityManager->getConnection()->executeQuery("
