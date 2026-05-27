@@ -130,7 +130,7 @@ class ChecklistSyncService
             ->setFile($file);
     }
 
-    private function updateChecklist(int $id, string $status, ?string $message = null, ?string $uuid = null): void
+    private function updateChecklist(?int $id, string $status, ?string $message = null, ?string $uuid = null): void
     {
         $data = ['syncStatus' => $status];
 
@@ -190,7 +190,7 @@ class ChecklistSyncService
             ->setReportStartDate($report->getStartDate())
             ->setReportEndDate($report->getEndDate())
             ->setReportSubmissions($report->getReportSubmissions())
-            ->setSubmitterEmail($report->getChecklist()->getSubmittedBy()->getEmail())
+            ->setSubmitterEmail($report->getChecklist()->getSubmittedBy()?->getEmail())
             ->setReportType($report->determineReportType());
     }
 

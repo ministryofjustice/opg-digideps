@@ -8,7 +8,7 @@ class SiriusChecklistPdfDocumentMetadata implements SiriusMetadataInterface
 {
     private int $year;
     private ?int $submissionId;
-    private string $submitterEmail;
+    private ?string $submitterEmail;
     private string $type;
     private ?\DateTime $reportingPeriodFrom = null;
     private ?\DateTime $reportingPeriodTo = null;
@@ -37,12 +37,12 @@ class SiriusChecklistPdfDocumentMetadata implements SiriusMetadataInterface
         return $this;
     }
 
-    public function getSubmitterEmail(): string
+    public function getSubmitterEmail(): ?string
     {
         return $this->submitterEmail;
     }
 
-    public function setSubmitterEmail(string $submitterEmail): self
+    public function setSubmitterEmail(?string $submitterEmail): self
     {
         $this->submitterEmail = $submitterEmail;
 

@@ -77,10 +77,6 @@ class Action
         return $this->doYouExpectFinancialDecisions;
     }
 
-    /**
-     * @param mixed $doYouExpectFinancialDecisions
-     * @return $this
-     */
     public function setDoYouExpectFinancialDecisions(mixed $doYouExpectFinancialDecisions): static
     {
         $this->doYouExpectFinancialDecisions = $doYouExpectFinancialDecisions;

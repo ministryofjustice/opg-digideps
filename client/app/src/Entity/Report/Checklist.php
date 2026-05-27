@@ -20,7 +20,7 @@ class Checklist implements SynchronisableInterface
     use SynchronisableTrait;
 
     /**
-     * @var int
+     * @var ?int
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("integer")
@@ -37,7 +37,7 @@ class Checklist implements SynchronisableInterface
     private $reportingPeriodAccurate;
 
     /**
-     * @var string
+     * @var boolean
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("boolean")
@@ -46,7 +46,7 @@ class Checklist implements SynchronisableInterface
     private $contactDetailsUptoDate;
 
     /**
-     * @var string
+     * @var bool
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("boolean")
@@ -100,7 +100,7 @@ class Checklist implements SynchronisableInterface
     private $debtsManaged;
 
     /**
-     * @var string|null
+     * @var ?string
      * @JMS\Type("string")
      * @JMS\Groups({"report-checklist"})
      * @Assert\NotBlank(message="checklist.yesNoNa", groups={"submit-clientBenefitsCheck-checklist"})
@@ -207,7 +207,7 @@ class Checklist implements SynchronisableInterface
     private $caseWorkerSatisified;
 
     /**
-     * @var null|string
+     * @var ?string
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
@@ -216,7 +216,7 @@ class Checklist implements SynchronisableInterface
     private ?string $paymentsMatchCostCertificate;
 
     /**
-     * @var null|string
+     * @var ?string
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
@@ -225,7 +225,7 @@ class Checklist implements SynchronisableInterface
     private ?string $profCostsReasonableAndProportionate;
 
     /**
-     * @var null|string
+     * @var ?string
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("string")
@@ -283,7 +283,7 @@ class Checklist implements SynchronisableInterface
      * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
      * @JMS\Groups({"checklist-information"})
      *
-     * @var User
+     * @var ?User
      */
     protected $submittedBy;
 
@@ -304,7 +304,7 @@ class Checklist implements SynchronisableInterface
     protected $buttonClicked;
 
     /**
-     * @var string|null
+     * @var ?string
      * @JMS\Type("string")
      * @JMS\Groups({"report-checklist-uuid"})
      */
@@ -331,359 +331,215 @@ class Checklist implements SynchronisableInterface
         }
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return $this
-     */
-    public function setId($id)
+    public function setId(?int $id): static
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getReportingPeriodAccurate()
+    public function getReportingPeriodAccurate(): string
     {
         return $this->reportingPeriodAccurate;
     }
 
-    /**
-     * @param string $reportingPeriodAccurate
-     *
-     * @return $this
-     */
-    public function setReportingPeriodAccurate($reportingPeriodAccurate)
+    public function setReportingPeriodAccurate(string $reportingPeriodAccurate): static
     {
         $this->reportingPeriodAccurate = $reportingPeriodAccurate;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getContactDetailsUptoDate()
+    public function getContactDetailsUptoDate(): bool
     {
         return $this->contactDetailsUptoDate;
     }
 
-    /**
-     * @param string $contactDetailsUptoDate
-     *
-     * @return $this
-     */
-    public function setContactDetailsUptoDate($contactDetailsUptoDate)
+    public function setContactDetailsUptoDate(bool $contactDetailsUptoDate): static
     {
         $this->contactDetailsUptoDate = $contactDetailsUptoDate;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDeputyFullNameAccurateInSirius()
+    public function getDeputyFullNameAccurateInSirius(): bool
     {
         return $this->deputyFullNameAccurateInSirius;
     }
 
-    /**
-     * @param string $deputyFullNameAccurateInSirius
-     *
-     * @return $this
-     */
-    public function setDeputyFullNameAccurateInSirius($deputyFullNameAccurateInSirius)
+    public function setDeputyFullNameAccurateInSirius(bool $deputyFullNameAccurateInSirius): static
     {
         $this->deputyFullNameAccurateInSirius = $deputyFullNameAccurateInSirius;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDecisionsSatisfactory()
+    public function getDecisionsSatisfactory(): string
     {
         return $this->decisionsSatisfactory;
     }
 
-    /**
-     * @param string $decisionsSatisfactory
-     *
-     * @return $this
-     */
-    public function setDecisionsSatisfactory($decisionsSatisfactory)
+    public function setDecisionsSatisfactory(string $decisionsSatisfactory): static
     {
         $this->decisionsSatisfactory = $decisionsSatisfactory;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getConsultationsSatisfactory()
+    public function getConsultationsSatisfactory(): string
     {
         return $this->consultationsSatisfactory;
     }
 
-    /**
-     * @param string $consultationsSatisfactory
-     *
-     * @return $this
-     */
-    public function setConsultationsSatisfactory($consultationsSatisfactory)
+    public function setConsultationsSatisfactory(string $consultationsSatisfactory): static
     {
         $this->consultationsSatisfactory = $consultationsSatisfactory;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCareArrangements()
+    public function getCareArrangements(): string
     {
         return $this->careArrangements;
     }
 
-    /**
-     * @param string $careArrangements
-     *
-     * @return $this
-     */
-    public function setCareArrangements($careArrangements)
+    public function setCareArrangements(string $careArrangements): static
     {
         $this->careArrangements = $careArrangements;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAssetsDeclaredAndManaged()
+    public function getAssetsDeclaredAndManaged(): string
     {
         return $this->assetsDeclaredAndManaged;
     }
 
-    /**
-     * @param string $assetsDeclaredAndManaged
-     *
-     * @return $this
-     */
-    public function setAssetsDeclaredAndManaged($assetsDeclaredAndManaged)
+    public function setAssetsDeclaredAndManaged(string $assetsDeclaredAndManaged): static
     {
         $this->assetsDeclaredAndManaged = $assetsDeclaredAndManaged;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDebtsManaged()
+    public function getDebtsManaged(): string
     {
         return $this->debtsManaged;
     }
 
-    /**
-     * @param string $debtsManaged
-     *
-     * @return $this
-     */
-    public function setDebtsManaged($debtsManaged)
+    public function setDebtsManaged(string $debtsManaged): static
     {
         $this->debtsManaged = $debtsManaged;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getOpenClosingBalancesMatch()
+    public function getOpenClosingBalancesMatch(): string
     {
         return $this->openClosingBalancesMatch;
     }
 
-    /**
-     * @param string $openClosingBalancesMatch
-     *
-     * @return $this
-     */
-    public function setOpenClosingBalancesMatch($openClosingBalancesMatch)
+    public function setOpenClosingBalancesMatch(string $openClosingBalancesMatch): static
     {
         $this->openClosingBalancesMatch = $openClosingBalancesMatch;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAccountsBalance()
+    public function getAccountsBalance(): string
     {
         return $this->accountsBalance;
     }
 
-    /**
-     * @param string $accountsBalance
-     *
-     * @return $this
-     */
-    public function setAccountsBalance($accountsBalance)
+    public function setAccountsBalance(string $accountsBalance): static
     {
         $this->accountsBalance = $accountsBalance;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getMoneyMovementsAcceptable()
+    public function getMoneyMovementsAcceptable(): string
     {
         return $this->moneyMovementsAcceptable;
     }
 
-    /**
-     * @param string $moneyMovementsAcceptable
-     *
-     * @return $this
-     */
-    public function setMoneyMovementsAcceptable($moneyMovementsAcceptable)
+    public function setMoneyMovementsAcceptable(string $moneyMovementsAcceptable): static
     {
         $this->moneyMovementsAcceptable = $moneyMovementsAcceptable;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDeputyChargeAllowedByCourt()
+    public function getDeputyChargeAllowedByCourt(): string
     {
         return $this->deputyChargeAllowedByCourt;
     }
 
-    /**
-     * @param string $deputyChargeAllowedByCourt
-     *
-     * @return $this
-     */
-    public function setDeputyChargeAllowedByCourt($deputyChargeAllowedByCourt)
+    public function setDeputyChargeAllowedByCourt(string $deputyChargeAllowedByCourt): static
     {
         $this->deputyChargeAllowedByCourt = $deputyChargeAllowedByCourt;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getSatisfiedWithPaExpenses()
+    public function getSatisfiedWithPaExpenses(): string
     {
         return $this->satisfiedWithPaExpenses;
     }
 
-    /**
-     * @param string $satisfiedWithPaExpenses
-     *
-     * @return $this
-     */
-    public function setSatisfiedWithPaExpenses($satisfiedWithPaExpenses)
+    public function setSatisfiedWithPaExpenses(string $satisfiedWithPaExpenses): static
     {
         $this->satisfiedWithPaExpenses = $satisfiedWithPaExpenses;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getSatisfiedWithHealthAndLifestyle()
+    public function getSatisfiedWithHealthAndLifestyle(): string
     {
         return $this->satisfiedWithHealthAndLifestyle;
     }
 
-    /**
-     * @param string $satisfiedWithHealthAndLifestyle
-     *
-     * @return $this
-     */
-    public function setSatisfiedWithHealthAndLifestyle($satisfiedWithHealthAndLifestyle)
+    public function setSatisfiedWithHealthAndLifestyle(string $satisfiedWithHealthAndLifestyle): static
     {
         $this->satisfiedWithHealthAndLifestyle = $satisfiedWithHealthAndLifestyle;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getBondAdequate()
+    public function getBondAdequate(): string
     {
         return $this->bondAdequate;
     }
 
-    /**
-     * @param string $bondAdequate
-     *
-     * @return $this
-     */
-    public function setBondAdequate($bondAdequate)
+    public function setBondAdequate(string $bondAdequate): static
     {
         $this->bondAdequate = $bondAdequate;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getBondOrderMatchSirius()
+    public function getBondOrderMatchSirius(): string
     {
         return $this->bondOrderMatchSirius;
     }
 
-    /**
-     * @param string $bondOrderMatchSirius
-     *
-     * @return $this
-     */
-    public function setBondOrderMatchSirius($bondOrderMatchSirius)
+    public function setBondOrderMatchSirius(string $bondOrderMatchSirius): static
     {
         $this->bondOrderMatchSirius = $bondOrderMatchSirius;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getFutureSignificantDecisions()
+    public function getFutureSignificantDecisions(): string
     {
         return $this->futureSignificantDecisions;
     }
 
-    /**
-     * @param string $futureSignificantDecisions
-     *
-     * @return $this
-     */
     public function setFutureSignificantDecisions(string $futureSignificantDecisions): static
     {
         $this->futureSignificantDecisions = $futureSignificantDecisions;
@@ -691,19 +547,11 @@ class Checklist implements SynchronisableInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getHasDeputyRaisedConcerns()
+    public function getHasDeputyRaisedConcerns(): string
     {
         return $this->hasDeputyRaisedConcerns;
     }
 
-    /**
-     * @param string $hasDeputyRaisedConcerns
-     *
-     * @return $this
-     */
     public function setHasDeputyRaisedConcerns(string $hasDeputyRaisedConcerns): static
     {
         $this->hasDeputyRaisedConcerns = $hasDeputyRaisedConcerns;
@@ -711,39 +559,23 @@ class Checklist implements SynchronisableInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCaseWorkerSatisified()
+    public function getCaseWorkerSatisified(): string
     {
         return $this->caseWorkerSatisified;
     }
 
-    /**
-     * @param string $caseWorkerSatisified
-     *
-     * @return $this
-     */
-    public function setCaseWorkerSatisified($caseWorkerSatisified)
+    public function setCaseWorkerSatisified(string $caseWorkerSatisified): static
     {
         $this->caseWorkerSatisified = $caseWorkerSatisified;
 
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getPaymentsMatchCostCertificate(): ?string
     {
         return $this->paymentsMatchCostCertificate;
     }
 
-    /**
-     * @param ?string $paymentsMatchCostCertificate
-     *
-     * @return $this
-     */
     public function setPaymentsMatchCostCertificate(?string $paymentsMatchCostCertificate): static
     {
         $this->paymentsMatchCostCertificate = $paymentsMatchCostCertificate;
@@ -751,19 +583,11 @@ class Checklist implements SynchronisableInterface
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getProfCostsReasonableAndProportionate(): ?string
     {
         return $this->profCostsReasonableAndProportionate;
     }
 
-    /**
-     * @param ?string $profCostsReasonableAndProportionate
-     *
-     * @return $this
-     */
     public function setProfCostsReasonableAndProportionate(?string $profCostsReasonableAndProportionate): static
     {
         $this->profCostsReasonableAndProportionate = $profCostsReasonableAndProportionate;
@@ -771,19 +595,11 @@ class Checklist implements SynchronisableInterface
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
     public function getHasDeputyOverchargedFromPreviousEstimates(): ?string
     {
         return $this->hasDeputyOverchargedFromPreviousEstimates;
     }
 
-    /**
-     * @param ?string $hasDeputyOverchargedFromPreviousEstimates
-     *
-     * @return $this
-     */
     public function setHasDeputyOverchargedFromPreviousEstimates(
         ?string $hasDeputyOverchargedFromPreviousEstimates
     ): static {
@@ -792,19 +608,11 @@ class Checklist implements SynchronisableInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getNextBillingEstimatesSatisfactory()
+    public function getNextBillingEstimatesSatisfactory(): string
     {
         return $this->nextBillingEstimatesSatisfactory;
     }
 
-    /**
-     * @param string $nextBillingEstimatesSatisfactory
-     *
-     * @return $this
-     */
     public function setNextBillingEstimatesSatisfactory(
         string $nextBillingEstimatesSatisfactory
     ): static {
@@ -813,40 +621,24 @@ class Checklist implements SynchronisableInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getLodgingSummary()
+    public function getLodgingSummary(): string
     {
         return $this->lodgingSummary;
     }
 
-    /**
-     * @param string $lodgingSummary
-     *
-     * @return $this
-     */
-    public function setLodgingSummary($lodgingSummary)
+    public function setLodgingSummary(string $lodgingSummary): static
     {
         $this->lodgingSummary = $lodgingSummary;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getFinalDecision()
+    public function getFinalDecision(): string
     {
         return $this->finalDecision;
     }
 
-    /**
-     * @param string $finalDecision
-     *
-     * @return $this
-     */
-    public function setFinalDecision($finalDecision)
+    public function setFinalDecision(string $finalDecision): static
     {
         $this->finalDecision = $finalDecision;
 
@@ -869,94 +661,58 @@ class Checklist implements SynchronisableInterface
         $this->checklistInformation = $checklistInformation;
     }
 
-    /**
-     * @return string
-     */
-    public function getFurtherInformationReceived()
+    public function getFurtherInformationReceived(): string
     {
         return $this->furtherInformationReceived;
     }
 
-    /**
-     * @param string $furtherInformationReceived
-     */
     public function setFurtherInformationReceived(string $furtherInformationReceived): void
     {
         $this->furtherInformationReceived = $furtherInformationReceived;
     }
 
-    /**
-     * @return User
-     */
-    public function getSubmittedBy()
+    public function getSubmittedBy(): ?User
     {
         return $this->submittedBy;
     }
 
-    /**
-     * @param User $submittedBy
-     *
-     * @return $this
-     */
-    public function setSubmittedBy($submittedBy)
+    public function setSubmittedBy(?User $submittedBy): static
     {
         $this->submittedBy = $submittedBy;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getSubmittedOn()
+    public function getSubmittedOn(): ?\DateTime
     {
         return $this->submittedOn;
     }
 
-    /**
-     * @param \DateTime $submittedOn
-     *
-     * @return $this
-     */
-    public function setSubmittedOn($submittedOn)
+    public function setSubmittedOn(\DateTime $submittedOn): static
     {
         $this->submittedOn = $submittedOn;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getButtonClicked()
+    public function getButtonClicked(): string
     {
         return $this->buttonClicked;
     }
 
-    /**
-     * @param string $buttonClicked
-     *
-     * @return $this
-     */
-    public function setButtonClicked($buttonClicked)
+    public function setButtonClicked(string $buttonClicked): static
     {
         $this->buttonClicked = $buttonClicked;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getUuid(): ?string
     {
         return $this->uuid;
     }
 
-    /**
-     * @return $this
-     */
-    public function setUuid(?string $uuid)
+    public function setUuid(?string $uuid): static
     {
         $this->uuid = $uuid;
 

@@ -8,22 +8,22 @@ use OPG\Digideps\Frontend\Entity\Report\ReportSubmission;
 
 class QueuedChecklistData
 {
-    private int $checklistId;
+    private ?int $checklistId;
     private ?string $checklistUuid = null;
     private string $caseNumber;
     private string $checklistFileContents;
-    private string $submitterEmail;
+    private ?string $submitterEmail;
     private string $reportType;
     private ?\DateTime $reportStartDate = null;
     private ?\DateTime $reportEndDate = null;
     private ?array $reportSubmissions = null;
 
-    public function getChecklistId(): int
+    public function getChecklistId(): ?int
     {
         return $this->checklistId;
     }
 
-    public function setChecklistId(int $checklistId): self
+    public function setChecklistId(?int $checklistId): self
     {
         $this->checklistId = $checklistId;
 
@@ -117,12 +117,12 @@ class QueuedChecklistData
         return null;
     }
 
-    public function getSubmitterEmail(): string
+    public function getSubmitterEmail(): ?string
     {
         return $this->submitterEmail;
     }
 
-    public function setSubmitterEmail(string $submitterEmail): self
+    public function setSubmitterEmail(?string $submitterEmail): self
     {
         $this->submitterEmail = $submitterEmail;
 
