@@ -396,7 +396,7 @@ class FixtureController extends AbstractController
         ], $client);
     }
 
-    private function createOrgAndAttachParticipants($fromRequest, User $user, Client $client): void
+    private function createOrgAndAttachParticipants(array $fromRequest, User $user, Client $client): void
     {
         $uniqueOrgNameSegment = (preg_match('/\d+/', $fromRequest['deputyEmail'], $matches)) ? $matches[0] : rand(0, 9999);
         $orgName = sprintf('Org %s Ltd', $uniqueOrgNameSegment);

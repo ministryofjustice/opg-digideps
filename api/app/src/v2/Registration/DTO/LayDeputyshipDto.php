@@ -47,7 +47,7 @@ class LayDeputyshipDto
         return $this->clientSurname;
     }
 
-    public function setClientSurname($clientSurname): static
+    public function setClientSurname(?string $clientSurname): static
     {
         $this->clientSurname = $clientSurname;
 

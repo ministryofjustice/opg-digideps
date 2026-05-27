@@ -36,7 +36,7 @@ abstract class RestController extends AbstractController
         return $entity;
     }
 
-    protected function hydrateEntityWithArrayData($object, array $data, array $keySetters): void
+    protected function hydrateEntityWithArrayData(object $object, array $data, array $keySetters): void
     {
         Hydrator::hydrateEntityWithArrayData($object, $data, $keySetters);
     }

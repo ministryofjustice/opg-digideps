@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\FixtureFactory;
 
+use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
 use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
 use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
@@ -18,7 +19,7 @@ class LoadTestFactory
     /**
      * Use to persist entities to simulate a prod like databases in size (run in a test for a hacky way to fill the DB).
      */
-    public function createUsersClientsReports(int $recordsToMake)
+    public function createUsersClientsReports(int $recordsToMake): void
     {
         $oneYearAgo = new \DateTimeImmutable()->modify('-1 Year');
 

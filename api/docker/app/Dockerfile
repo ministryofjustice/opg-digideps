@@ -1,7 +1,7 @@
 ##############################
 # Stage 1: Composer Build
 ##############################
-FROM composer:2.9.7@sha256:02062f7719ec9433a9d4256cfba1c792db96dc9db60a4a92e48264c9e166b877 AS composer
+FROM composer:2.9.8@sha256:b09bccd91a78fe8a9ab4b33d707b862e8fe54fec17782e32683ad2a69c46867d AS composer
 
 WORKDIR /app
 
@@ -17,7 +17,11 @@ COPY common ../../common
 ##############################
 FROM composer AS composer-runtime
 RUN composer install --no-dev --prefer-dist --no-interaction --no-scripts;
-RUN cp -R ./vendor/digideps/common/ ./vendor/digideps/_ && rm ./vendor/digideps/common && mv ./vendor/digideps/_/ ./vendor/digideps/common
+RUN cp -R ./vendor/digideps/common/ ./vendor/digideps/_ \
+    && rm ./vendor/digideps/common \
+    && mv ./vendor/digideps/_/ ./vendor/digideps/common \
+    && rm -f ./vendor/digideps/common/vendor \
+    && rm -f ./vendor/digideps/common/composer.lock
 RUN composer check-platform-reqs
 RUN composer dump-autoload --optimize
 
