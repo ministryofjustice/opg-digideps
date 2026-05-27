@@ -260,7 +260,7 @@ services:
       - OPENAPI_MOCK_SPECIFICATION_URL=/app/deputy-reporting-openapi.yml
 
   mock-notify-api:
-    image: stoplight/prism:5.15.9@sha256:b5d38cea6fc64970e4756dd30611770587cc84d6f4f2a8f83bec72452b226ded
+    image: stoplight/prism:5.15.10@sha256:586d1f0f94f8d0eaf20b26b8b41f985f2a2d494bea297bd3988c3de3eb87094e
     ports:
       - 4010:4010
     command:
@@ -275,7 +275,7 @@ services:
       ]
 
   composer:
-    image: composer:2.9.7@sha256:02062f7719ec9433a9d4256cfba1c792db96dc9db60a4a92e48264c9e166b877
+    image: composer:2.9.8@sha256:b09bccd91a78fe8a9ab4b33d707b862e8fe54fec17782e32683ad2a69c46867d
     command: ["install"]
 
   custom-sql-query:
