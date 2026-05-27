@@ -9237,7 +9237,7 @@ parameters:
 		-
 			message: '#^Call to function assert\(\) with false and string will always evaluate to false\.$#'
 			identifier: function.impossibleType
-			count: 1
+			count: 6
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
 		-
