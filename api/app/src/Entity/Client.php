@@ -217,6 +217,7 @@ class Client
         $this->reports = new ArrayCollection();
         $this->notes = new ArrayCollection();
         $this->clientContacts = new ArrayCollection();
+        $this->courtOrders = new ArrayCollection();
     }
 
     /**
@@ -902,5 +903,11 @@ class Client
     public function filterReports(int ...$reportIds): void
     {
         $this->reports = $this->reports->filter(fn(Report $report) => in_array($report->getId(), $reportIds));
+    }
+
+    public function addCourtOrder(CourtOrder $courtOrder): static
+    {
+        $this->courtOrders->add($courtOrder);
+        return $this;
     }
 }
