@@ -15,18 +15,23 @@ use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Service\ReportService;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 final class ReportTransitionServiceTest extends TestCase
 {
+    private ReportService&MockObject $mockReportService;
     private ReportTransitionService $sut;
 
     protected function setUp(): void
     {
-        $mockReportService = $this->createStub(ReportService::class);
-        $this->sut = new ReportTransitionService($mockReportService);
+        $this->mockReportService = self::createMock(ReportService::class);
+        $this->sut = new ReportTransitionService($this->mockReportService);
     }
 
+    /**
+     * @param array<CourtOrder> $courtOrders
+     */
     private function makeReport(int $id, string $type, array $courtOrders): Report
     {
         $client = new Client();
@@ -77,13 +82,10 @@ final class ReportTransitionServiceTest extends TestCase
 
         $newHwReport = $this->makeReport(99, Report::LAY_HW_TYPE, []);
 
-        $mockReportService = $this->createMock(ReportService::class);
-        $mockReportService->expects($this->once())
+        $this->mockReportService->expects($this->once())
             ->method('createReportFromOrder')
             ->with($hwCourtOrder)
             ->willReturn($newHwReport);
-
-        $this->sut = new ReportTransitionService($mockReportService);
 
         $oldReportType = new ReportType(
             CourtOrderReportType::OPG102,
@@ -115,7 +117,7 @@ final class ReportTransitionServiceTest extends TestCase
         self::assertContains($pfaCourtOrder, $result->updatedCourtOrders);
         self::assertContains($hwCourtOrder, $result->updatedCourtOrders);
 
-        // The HW court order should now reference the new report (not the old hybrid one)
+        // the HW court order should now reference the new report (not the old hybrid one)
         self::assertTrue($hwCourtOrder->getReports()->contains($newHwReport));
         self::assertFalse($hwCourtOrder->getReports()->contains($hybridReport));
     }
@@ -321,5 +323,59 @@ final class ReportTransitionServiceTest extends TestCase
         self::assertNotNull($result);
         self::assertFalse($result->transitioned);
         self::assertNotEmpty($result->errorMessages);
+    }
+
+    /* SINGLE TO DUAL TESTS */
+
+    public function testSingleToDual(): void
+    {
+        $client = new Client();
+
+        $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, CourtOrderKind::Single, '400030001');
+        $pfaCourtOrder->setClient($client);
+
+        $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, CourtOrderKind::Single, '400020002');
+        $hwCourtOrder->setClient($client);
+
+        $client->setCourtOrders(new ArrayCollection([$pfaCourtOrder, $hwCourtOrder]));
+
+        // add a report to one of the single court orders
+        $transitioningReport = $this->makeReport(87, Report::LAY_PFA_HIGH_ASSETS_TYPE, [$pfaCourtOrder]);
+        $pfaCourtOrder->addReport($transitioningReport);
+
+        $oldReportType = new ReportType(
+            CourtOrderReportType::OPG102,
+            CourtOrderType::PFA,
+            CourtOrderKind::Single,
+            DeputyType::LAY
+        );
+
+        $newReportType = new ReportType(
+            CourtOrderReportType::OPG102,
+            CourtOrderType::PFA,
+            CourtOrderKind::Dual,
+            DeputyType::LAY
+        );
+
+        // mock creation of the new report
+        $newHwReport = $this->makeReport(72, Report::LAY_HW_TYPE, []);
+
+        $this->mockReportService->expects($this->once())
+            ->method('createReportFromOrder')
+            ->with($hwCourtOrder)
+            ->willReturn($newHwReport);
+
+        // act: transition the single to a dual
+        $this->sut->transitionReport($transitioningReport, $oldReportType, $newReportType);
+
+        // assert: the hw court order is marked as a dual and has a new report attached
+        self::assertEquals(CourtOrderKind::Dual, $hwCourtOrder->getOrderKind());
+        self::assertEquals($newHwReport, $hwCourtOrder->getLatestReport());
+        self::assertEquals(Report::LAY_HW_TYPE, $hwCourtOrder->getLatestReport()->getType());
+
+        // assert: the pfa court order is marked as a dual and has been updated to the new report type
+        self::assertEquals(CourtOrderKind::Dual, $pfaCourtOrder->getOrderKind());
+        self::assertEquals($newReportType->courtOrderReportType, $pfaCourtOrder->getOrderReportType());
+        self::assertEquals(Report::LAY_PFA_HIGH_ASSETS_TYPE, $pfaCourtOrder->getLatestReport()->getType());
     }
 }
