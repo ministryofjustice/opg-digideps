@@ -36,11 +36,9 @@ final class ReportTransitionServiceTest extends TestCase
     /**
      * @param array<CourtOrder> $courtOrders
      */
-    private function makeReport(int $id, string $type, array $courtOrders, ?\DateTime $startDate = null): Report
+    private function makeReport(int $id, string $type, array $courtOrders): Report
     {
-        if ($startDate === null) {
-            $startDate = new \DateTime();
-        }
+        $startDate = new \DateTime();
         $endDate = $startDate->add(new \DateInterval('P364D'));
 
         $client = new Client();
@@ -63,19 +61,72 @@ final class ReportTransitionServiceTest extends TestCase
 
     private function makeCourtOrder(
         CourtOrderType $type,
-        string $uid,
-        ?CourtOrderKind $kind = CourtOrderKind::Single
+        int $id,
+        ?CourtOrderKind $kind = CourtOrderKind::Single,
+        ?CourtOrderReportType $orderReportType = null,
     ): CourtOrder {
         $courtOrder = new CourtOrder();
-        $courtOrder->setCourtOrderUid($uid);
+        $courtOrder->setCourtOrderUid("{$id}0011");
         $courtOrder->setOrderType($type);
         $courtOrder->setOrderKind($kind);
         $courtOrder->setStatus('ACTIVE');
         $courtOrder->setOrderMadeDate(new \DateTime('2020-01-01'));
-        $courtOrder->setOrderReportType(
-            $type === CourtOrderType::PFA ? CourtOrderReportType::OPG102 : CourtOrderReportType::OPG104
-        );
+
+        if ($orderReportType === null) {
+            $orderReportType = ($type === CourtOrderType::PFA ? CourtOrderReportType::OPG102 : CourtOrderReportType::OPG104);
+        }
+
+        $courtOrder->setOrderReportType($orderReportType);
+
+        $idProp = new \ReflectionProperty(CourtOrder::class, 'id');
+        $idProp->setValue($courtOrder, $id);
+
         return $courtOrder;
+    }
+
+    /* DUAL TO HYBRID TESTS */
+
+    public function testDualToHybrid(): void
+    {
+        // pfa and hw both pre-exist; hw is sibling of the pfa
+        $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, 40, CourtOrderKind::Hybrid, CourtOrderReportType::OPG102);
+        $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 41);
+        $pfaCourtOrder->setSibling($hwCourtOrder);
+
+        // hw and pfa have separate (dual) reports
+        $pfaReport = $this->makeReport(42, Report::LAY_PFA_HIGH_ASSETS_TYPE, [$pfaCourtOrder]);
+        $hwReport = $this->makeReport(43, Report::LAY_HW_TYPE, [$hwCourtOrder]);
+
+        // old dual sibling is the hw court order
+        $this->mockCourtOrderRepository->expects(self::once())
+            ->method('find')
+            ->with($hwCourtOrder->getId())
+            ->willReturn($hwCourtOrder);
+
+        // hw and pfa remain paired but migrate to hybrid from dual
+        $courtOrderRelationshipChange = new CourtOrderRelationshipChange(
+            courtOrder: $pfaCourtOrder,
+            oldKind: CourtOrderKind::Dual,
+            oldSiblingId: $hwCourtOrder->getId(),
+        );
+
+        // act: transition the dual to a hybrid
+        $result = $this->sut->transitionReports($courtOrderRelationshipChange);
+
+        // assert: the transition was carried out without errors
+        self::assertNotNull($result);
+        self::assertEmpty($result->errorMessages);
+
+        // assert: the pfa report is retained as the hybrid
+        self::assertContains($pfaReport, $pfaCourtOrder->getReports());
+        self::assertContains($pfaReport, $hwCourtOrder->getReports());
+
+        // assert: the old dual report has had its type reset to hybrid
+        self::assertEquals(Report::LAY_COMBINED_HIGH_ASSETS_TYPE, $pfaCourtOrder->getLatestReport()->getType());
+        self::assertEquals(Report::LAY_COMBINED_HIGH_ASSETS_TYPE, $hwCourtOrder->getLatestReport()->getType());
+
+        // assert: the hw report has been removed from the hw court order
+        self::assertNotContains($hwReport, $hwCourtOrder->getReports());
     }
 
     /* SINGLE TO DUAL TESTS */
@@ -83,10 +134,10 @@ final class ReportTransitionServiceTest extends TestCase
     public function testSingleToDualPersistsExistingReport(): void
     {
         // pfa pre-exists
-        $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, '400030001', CourtOrderKind::Dual);
+        $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, 50, CourtOrderKind::Dual);
 
         // hw court order is a new sibling of pfa but not fully processed yet
-        $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, '400020002');
+        $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 52);
         $pfaCourtOrder->setSibling($hwCourtOrder);
 
         // add a report to the single court order
