@@ -37,7 +37,7 @@ class Checklist implements SynchronisableInterface
     private $reportingPeriodAccurate;
 
     /**
-     * @var boolean
+     * @var bool
      *
      * @JMS\Groups({"report-checklist"})
      * @JMS\Type("boolean")
