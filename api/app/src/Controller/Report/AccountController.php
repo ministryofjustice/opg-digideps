@@ -90,11 +90,11 @@ class AccountController extends RestController
 
         $report = $account->getReport();
 
-        $transferFilter = function ($transfer) use ($account) {
+        $transferFilter = function ($transfer) use ($account): bool {
             return $transfer->getFrom() === $account || $transfer->getTo() === $account;
         };
 
-        $paymentsFilter = function ($expense) use ($account) {
+        $paymentsFilter = function ($expense) use ($account): bool {
             return $expense->getBankAccount() === $account;
         };
 

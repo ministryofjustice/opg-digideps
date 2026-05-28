@@ -591,7 +591,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getOrganisations()
     {
-        return $this->organisations->filter(function ($organisation) {
+        return $this->organisations->filter(function ($organisation): bool {
             return $organisation->isActivated();
         });
     }
