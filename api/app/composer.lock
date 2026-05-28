@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d28346b9946283a06feae60f5e6ca030",
+    "content-hash": "e8af9f3467124068e9cb6b26495f9c33",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -223,7 +223,7 @@
             "dist": {
                 "type": "path",
                 "url": "../../common",
-                "reference": "b4c409bc086661a68ccc37413acad36ce149c1dd"
+                "reference": "5cc5009c5fc8eb7893950fc90d52b0ee2c745103"
             },
             "require": {
                 "jms/serializer-bundle": "^5.5.2",
@@ -235,7 +235,7 @@
                 "dg/bypass-finals": "^1.9.0",
                 "phpstan/phpstan": "^2.1.49",
                 "phpstan/phpstan-phpunit": "^2.0.16",
-                "phpunit/phpunit": "^13.1.8"
+                "phpunit/phpunit": "^13.1.9"
             },
             "type": "library",
             "extra": {
@@ -1772,16 +1772,16 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "7.10.2",
+            "version": "7.10.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "aed36fd5fb4844f284252a999d9abf35d3a9a1ae"
+                "reference": "47ba23c7a55247e2e1b7407aca90e9bbed0d9d86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/aed36fd5fb4844f284252a999d9abf35d3a9a1ae",
-                "reference": "aed36fd5fb4844f284252a999d9abf35d3a9a1ae",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/47ba23c7a55247e2e1b7407aca90e9bbed0d9d86",
+                "reference": "47ba23c7a55247e2e1b7407aca90e9bbed0d9d86",
                 "shasum": ""
             },
             "require": {
@@ -1879,7 +1879,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/guzzle/issues",
-                "source": "https://github.com/guzzle/guzzle/tree/7.10.2"
+                "source": "https://github.com/guzzle/guzzle/tree/7.10.3"
             },
             "funding": [
                 {
@@ -1895,7 +1895,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-05-20T11:58:52+00:00"
+            "time": "2026-05-20T22:59:19+00:00"
         },
         {
             "name": "guzzlehttp/promises",
