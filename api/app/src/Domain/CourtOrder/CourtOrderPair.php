@@ -10,6 +10,7 @@ use phpDocumentor\Reflection\Types\Iterable_;
 
 /**
  * Represents a pair of court orders, one hw and one pfa.
+ * The orders are designated as main and sibling: both are required.
  * If the pair is valid (i.e. there are two court orders, one of each type);
  * then $invalidReason is null; otherwise the reason for their invalidity
  * is stored there.
@@ -17,42 +18,31 @@ use phpDocumentor\Reflection\Types\Iterable_;
 final class CourtOrderPair
 {
     public function __construct(
-        public ?CourtOrder $pfaCourtOrder = null {
-        get {
-        return $this->pfaCourtOrder;
-        }
-        },
-        public ?CourtOrder $hwCourtOrder = null {
-        get {
-        return $this->hwCourtOrder;
-        }
-        },
-        public ?string $invalidReason = null {
-        get {
-        return $this->invalidReason;
-        }
-        }
+        public CourtOrder $mainCourtOrder,
+        public ?CourtOrder $siblingCourtOrder = null,
+        public ?CourtOrder $pfaCourtOrder = null,
+        public ?CourtOrder $hwCourtOrder = null,
+        public ?string $invalidReason = null
     ) {
     }
 
     /**
      * Check that $courtOrders contains two court orders, one HW and one PFA;
      * NB these court orders don't have to be active at this point
-     *
-     * @param iterable<?CourtOrder> $courtOrders
      */
-    public static function create(iterable $courtOrders): CourtOrderPair
+    public static function create(CourtOrder $mainCourtOrder, CourtOrder $siblingCourtOrder): CourtOrderPair
     {
         $courtOrderTypes = [];
         $pfaCourtOrder = $hwCourtOrder = null;
 
-        foreach ($courtOrders as $courtOrder) {
+        foreach ([$mainCourtOrder, $siblingCourtOrder] as $courtOrder) {
             $orderType = $courtOrder?->getOrderType();
             if ($orderType === null) {
                 continue;
             }
 
             $courtOrderTypes[] = $orderType->value;
+
             if ($orderType === CourtOrderType::PFA) {
                 $pfaCourtOrder = $courtOrder;
             } elseif ($orderType === CourtOrderType::HW) {
@@ -60,31 +50,29 @@ final class CourtOrderPair
             }
         }
 
-        $numCourtOrderTypes = count($courtOrderTypes);
-        if ($numCourtOrderTypes !== 2) {
-            return new CourtOrderPair(
-                invalidReason: "Incorrect number of court orders: expected 2, but found $numCourtOrderTypes"
-            );
-        }
-
         $expected = [CourtOrderType::HW->value, CourtOrderType::PFA->value];
 
         if (count(array_diff($courtOrderTypes, $expected)) > 0) {
             return new CourtOrderPair(
-                invalidReason: 'Invalid pair of court orders: expected ' . implode(', ', $expected) . ' but types were ' . implode(', ', $courtOrderTypes)
+                mainCourtOrder: $mainCourtOrder,
+                siblingCourtOrder: $siblingCourtOrder,
+                invalidReason: 'Invalid pair of court orders: expected ' . implode(', ', $expected) .
+                    ' but types were ' . implode(', ', $courtOrderTypes)
             );
         }
 
-        // check pfa and hw court orders are set
-        if ($hwCourtOrder === null || $pfaCourtOrder === null) {
-            return new CourtOrderPair(invalidReason: 'Invalid pair of court orders: one or both is null');
-        }
-
-        return new CourtOrderPair(pfaCourtOrder: $pfaCourtOrder, hwCourtOrder: $hwCourtOrder, invalidReason: null);
+        return new CourtOrderPair(
+            mainCourtOrder: $mainCourtOrder,
+            siblingCourtOrder: $siblingCourtOrder,
+            pfaCourtOrder: $pfaCourtOrder,
+            hwCourtOrder: $hwCourtOrder,
+            invalidReason: null
+        );
     }
 
     public function isValid(): bool
     {
-        return $this->invalidReason === null && $this->pfaCourtOrder !== null && $this->hwCourtOrder !== null;
+        return $this->invalidReason === null && $this->pfaCourtOrder !== null && $this->hwCourtOrder !== null
+            && $this->mainCourtOrder !== null && $this->siblingCourtOrder !== null;
     }
 }
