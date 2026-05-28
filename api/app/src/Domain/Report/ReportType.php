@@ -9,7 +9,7 @@ use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
 
-final readonly class ReportType implements \Stringable
+final class ReportType implements \Stringable
 {
     public function __construct(
         public CourtOrderReportType $courtOrderReportType,

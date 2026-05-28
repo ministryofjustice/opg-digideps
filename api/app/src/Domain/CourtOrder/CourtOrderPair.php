@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace OPG\Digideps\Backend\Domain\CourtOrder;
 
 use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Entity\Report\Report;
 use phpDocumentor\Reflection\Types\Iterable_;
 
 /**
@@ -38,7 +39,7 @@ final class CourtOrderPair
      * Check that $courtOrders contains two court orders, one HW and one PFA;
      * NB these court orders don't have to be active at this point
      *
-     * @param iterable<CourtOrder> $courtOrders
+     * @param iterable<?CourtOrder> $courtOrders
      */
     public static function create(iterable $courtOrders): CourtOrderPair
     {
@@ -46,7 +47,10 @@ final class CourtOrderPair
         $pfaCourtOrder = $hwCourtOrder = null;
 
         foreach ($courtOrders as $courtOrder) {
-            $orderType = $courtOrder->getOrderType();
+            $orderType = $courtOrder?->getOrderType();
+            if ($orderType === null) {
+                continue;
+            }
 
             $courtOrderTypes[] = $orderType->value;
             if ($orderType === CourtOrderType::PFA) {

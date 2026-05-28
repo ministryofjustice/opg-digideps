@@ -32,10 +32,15 @@ final class ReportTransitionServiceTest extends TestCase
     /**
      * @param array<CourtOrder> $courtOrders
      */
-    private function makeReport(int $id, string $type, array $courtOrders): Report
+    private function makeReport(int $id, string $type, array $courtOrders, ?\DateTime $startDate = null): Report
     {
+        if ($startDate === null) {
+            $startDate = new \DateTime();
+        }
+        $endDate = $startDate->add(new \DateInterval('P364D'));
+
         $client = new Client();
-        $report = new Report($client, $type, new \DateTime('2024-01-01'), new \DateTime('2024-12-31'), false);
+        $report = new Report($client, $type, $startDate, $endDate, false);
 
         // set the private id via reflection
         $idProp = new \ReflectionProperty(Report::class, 'id');
@@ -44,6 +49,10 @@ final class ReportTransitionServiceTest extends TestCase
         // populate the private courtOrders collection via reflection
         $courtOrdersProp = new \ReflectionProperty(Report::class, 'courtOrders');
         $courtOrdersProp->setValue($report, new ArrayCollection($courtOrders));
+
+        foreach ($courtOrders as $courtOrder) {
+            $courtOrder->addReport($report);
+        }
 
         return $report;
     }
@@ -74,15 +83,9 @@ final class ReportTransitionServiceTest extends TestCase
         $client = new Client();
         $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, CourtOrderKind::Hybrid, '100010203', $client);
         $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, CourtOrderKind::Hybrid, '100010204', $client);
-
         $hybridReport = $this->makeReport(42, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, [$pfaCourtOrder, $hwCourtOrder]);
 
-        // both court orders must reference the hybrid report as their latest report
-        $pfaCourtOrder->addReport($hybridReport);
-        $hwCourtOrder->addReport($hybridReport);
-
         $newHwReport = $this->makeReport(99, Report::LAY_HW_TYPE, []);
-
         $this->mockReportService->expects($this->once())
             ->method('createReportFromOrder')
             ->with($hwCourtOrder)
@@ -129,7 +132,6 @@ final class ReportTransitionServiceTest extends TestCase
         $client = new Client();
         $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, CourtOrderKind::Hybrid, 'pfa-uid-002', $client);
         $hybridReport = $this->makeReport(43, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, [$pfaCourtOrder]);
-        $pfaCourtOrder->addReport($hybridReport);
 
         $oldReportType = new ReportType(
             CourtOrderReportType::OPG102,
@@ -156,15 +158,12 @@ final class ReportTransitionServiceTest extends TestCase
     {
         $client = new Client();
         $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, CourtOrderKind::Hybrid, 'pfa-uid-003', $client);
+        $hybridReport = $this->makeReport(44, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, [$pfaCourtOrder]);
+
+        // add a different report to the hw court order; this will make the latest report on the hw court order
+        // a different report from the hybrid
         $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, CourtOrderKind::Hybrid, 'hw-uid-003', $client);
-
-        $hybridReport = $this->makeReport(44, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, [$pfaCourtOrder, $hwCourtOrder]);
-
-        // only add the hybrid report to the PFA court order; the HW court order gets a *different* report
-        $pfaCourtOrder->addReport($hybridReport);
-
-        $otherReport = $this->makeReport(45, Report::LAY_HW_TYPE, []);
-        $hwCourtOrder->addReport($otherReport);
+        $this->makeReport(45, Report::LAY_HW_TYPE, [$hwCourtOrder]);
 
         $oldReportType = new ReportType(
             CourtOrderReportType::OPG102,
@@ -218,14 +217,9 @@ final class ReportTransitionServiceTest extends TestCase
         $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, CourtOrderKind::Dual, '200010001', $client);
         $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, CourtOrderKind::Dual, '200010002', $client);
 
-        $client->setCourtOrders(new ArrayCollection([$pfaCourtOrder, $hwCourtOrder]));
-
         // PFA report is the one being transitioned (id=10); the HW report will be merged away (id=11)
         $pfaReport = $this->makeReport(10, Report::LAY_PFA_HIGH_ASSETS_TYPE, [$pfaCourtOrder]);
         $hwReport  = $this->makeReport(11, Report::LAY_HW_TYPE, [$hwCourtOrder]);
-
-        $pfaCourtOrder->addReport($pfaReport);
-        $hwCourtOrder->addReport($hwReport);
 
         [$oldReportType, $newReportType] = $this->makeDualToHybridReportTypes();
 
@@ -270,13 +264,9 @@ final class ReportTransitionServiceTest extends TestCase
         // client has two PFA orders (no HW) -> invalid
         $client = new Client();
         $pfaCourtOrder1 = $this->makeCourtOrder(CourtOrderType::PFA, CourtOrderKind::Dual, '300010001', $client);
-        $pfaCourtOrder2 = $this->makeCourtOrder(CourtOrderType::PFA, CourtOrderKind::Dual, '300010002', $client);
-
-        $client->setCourtOrders(new ArrayCollection([$pfaCourtOrder1, $pfaCourtOrder2]));
+        $this->makeCourtOrder(CourtOrderType::PFA, CourtOrderKind::Dual, '300010002', $client);
 
         $pfaReport = $this->makeReport(30, Report::LAY_PFA_HIGH_ASSETS_TYPE, [$pfaCourtOrder1]);
-        $pfaCourtOrder1->addReport($pfaReport);
-
 
         [$oldReportType, $newReportType] = $this->makeDualToHybridReportTypes();
 
@@ -289,23 +279,22 @@ final class ReportTransitionServiceTest extends TestCase
 
     public function testDualToHybridReturnsErrorWhenChangedReportIsNotLatestOnEitherOrder(): void
     {
+        $latestStartDate = new \DateTime();
+        $olderStartDate = $latestStartDate->sub(new \DateInterval('P365D'));
+
         // the transitioning report (id=40) is NOT the latest on either court order
         $client = new Client();
         $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, CourtOrderKind::Dual, '400010001', $client);
         $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, CourtOrderKind::Dual, '400010002', $client);
 
-        $client->setCourtOrders(new ArrayCollection([$pfaCourtOrder, $hwCourtOrder]));
-
         // transitioning report is linked to pfaCourtOrder but is NOT its latest
-        $transitioningReport = $this->makeReport(40, Report::LAY_PFA_HIGH_ASSETS_TYPE, [$pfaCourtOrder]);
+        $transitioningReport = $this->makeReport(40, Report::LAY_PFA_HIGH_ASSETS_TYPE, [$pfaCourtOrder], $olderStartDate);
 
-        // latest on PFA is a *different* report (id=41, started later)
-        $latestPfaReport = $this->makeReport(41, Report::LAY_PFA_HIGH_ASSETS_TYPE, []);
-        $pfaCourtOrder->addReport($latestPfaReport);
+        // latest on PFA is a *different* report (started later)
+        $this->makeReport(41, Report::LAY_PFA_HIGH_ASSETS_TYPE, [$pfaCourtOrder], $latestStartDate);
 
-        // latest on HW is also a different report (id=42)
-        $latestHwReport = $this->makeReport(42, Report::LAY_HW_TYPE, []);
-        $hwCourtOrder->addReport($latestHwReport);
+        // latest on HW is also a different report
+        $this->makeReport(42, Report::LAY_HW_TYPE, [$hwCourtOrder]);
 
         [$oldReportType, $newReportType] = $this->makeDualToHybridReportTypes();
 
@@ -324,11 +313,8 @@ final class ReportTransitionServiceTest extends TestCase
         $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, CourtOrderKind::Single, '400030001', $client);
         $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, CourtOrderKind::Single, '400020002', $client);
 
-        $client->setCourtOrders(new ArrayCollection([$pfaCourtOrder, $hwCourtOrder]));
-
         // add a report to one of the single court orders
         $transitioningReport = $this->makeReport(87, Report::LAY_PFA_HIGH_ASSETS_TYPE, [$pfaCourtOrder]);
-        $pfaCourtOrder->addReport($transitioningReport);
 
         $oldReportType = new ReportType(
             CourtOrderReportType::OPG102,
@@ -368,5 +354,48 @@ final class ReportTransitionServiceTest extends TestCase
         self::assertEquals($newReportType->courtOrderReportType, $pfaCourtOrder->getOrderReportType());
         self::assertEquals(Report::LAY_PFA_HIGH_ASSETS_TYPE, $pfaCourtOrder->getLatestReport()->getType());
         self::assertEquals($hwCourtOrder, $pfaCourtOrder->getSibling());
+    }
+
+    /* DUAL TO SINGLE TESTS */
+
+    public function testDualToSingle(): void
+    {
+        // two active court orders on one client
+        $client = new Client();
+        $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, CourtOrderKind::Dual, '400630001', $client);
+        $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, CourtOrderKind::Dual, '400620002', $client);
+
+        // add separate reports to the two court orders (dual); the pfa report is transitioning
+        $transitioningReport = $this->makeReport(991, Report::LAY_PFA_HIGH_ASSETS_TYPE, [$pfaCourtOrder]);
+        $defunctReport = $this->makeReport(992, Report::LAY_HW_TYPE, [$hwCourtOrder]);
+
+        // transition the pfa report to a single
+        $oldReportType = new ReportType(
+            CourtOrderReportType::OPG102,
+            CourtOrderType::PFA,
+            CourtOrderKind::Dual,
+            DeputyType::LAY
+        );
+
+        $newReportType = new ReportType(
+            CourtOrderReportType::OPG102,
+            CourtOrderType::PFA,
+            CourtOrderKind::Single,
+            DeputyType::LAY
+        );
+
+        $result = $this->sut->transitionReport($transitioningReport, $oldReportType, $newReportType);
+
+        // assert: hw report is marked for removal
+        self::assertContains($defunctReport, $result->removedReports);
+        self::assertNotContains($defunctReport, $hwCourtOrder->getReports());
+
+        // assert: pfa court order is now a single with no sibling
+        self::assertEquals(CourtOrderKind::Single, $pfaCourtOrder->getOrderKind());
+        self::assertNull($pfaCourtOrder->getSibling());
+
+        // assert: result shows transition outcome
+        self::assertTrue($result->transitioned);
+        self::assertContains($transitioningReport, $result->updatedReports);
     }
 }
