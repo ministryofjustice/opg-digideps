@@ -12,10 +12,8 @@ class Action
 
     /**
      * @JMS\Type("integer")
-     *
-     * @var int
      */
-    private $id;
+    private int $id;
 
     /**
      * @JMS\Type("string")
@@ -23,7 +21,7 @@ class Action
      *
      * @Assert\NotBlank(message="action.doYouExpectFinancialDecisions.notBlank", groups={"action-expect-decisions-choice"})
      */
-    private $doYouExpectFinancialDecisions;
+    private ?string $doYouExpectFinancialDecisions = null;
 
     /**
      * @JMS\Type("string")
@@ -31,7 +29,7 @@ class Action
      *
      * @Assert\NotBlank(message="action.doYouExpectFinancialDecisionsDetails.notBlank", groups={"action-expect-decisions-details"})
      */
-    private $doYouExpectFinancialDecisionsDetails;
+    private ?string $doYouExpectFinancialDecisionsDetails = null;
 
     /**
      * @JMS\Type("string")
@@ -39,7 +37,7 @@ class Action
      *
      * @Assert\NotBlank(message="action.doYouHaveConcerns.notBlank", groups={"action-have-concerns-choice"})
      */
-    private $doYouHaveConcerns;
+    private ?string $doYouHaveConcerns = null;
 
     /**
      * @JMS\Type("string")
@@ -47,7 +45,7 @@ class Action
      *
      * @Assert\NotBlank(message="action.doYouHaveConcernsDetails.notBlank", groups={"action-have-concerns-details"})
      */
-    private $doYouHaveConcernsDetails;
+    private ?string $doYouHaveConcernsDetails = null;
 
     public function getId(): int
     {
@@ -61,48 +59,48 @@ class Action
         return $this;
     }
 
-    public function getDoYouExpectFinancialDecisions(): mixed
+    public function getDoYouExpectFinancialDecisions(): ?string
     {
         return $this->doYouExpectFinancialDecisions;
     }
 
-    public function setDoYouExpectFinancialDecisions(mixed $doYouExpectFinancialDecisions): static
+    public function setDoYouExpectFinancialDecisions(?string $doYouExpectFinancialDecisions): static
     {
         $this->doYouExpectFinancialDecisions = $doYouExpectFinancialDecisions;
 
         return $this;
     }
 
-    public function getDoYouExpectFinancialDecisionsDetails(): mixed
+    public function getDoYouExpectFinancialDecisionsDetails(): ?string
     {
         return $this->doYouExpectFinancialDecisionsDetails;
     }
 
-    public function setDoYouExpectFinancialDecisionsDetails(mixed $doYouExpectFinancialDecisionsDetails): static
+    public function setDoYouExpectFinancialDecisionsDetails(?string $doYouExpectFinancialDecisionsDetails): static
     {
         $this->doYouExpectFinancialDecisionsDetails = $doYouExpectFinancialDecisionsDetails;
 
         return $this;
     }
 
-    public function getDoYouHaveConcerns(): mixed
+    public function getDoYouHaveConcerns(): ?string
     {
         return $this->doYouHaveConcerns;
     }
 
-    public function setDoYouHaveConcerns(mixed $doYouHaveConcerns): static
+    public function setDoYouHaveConcerns(?string $doYouHaveConcerns): static
     {
         $this->doYouHaveConcerns = $doYouHaveConcerns;
 
         return $this;
     }
 
-    public function getDoYouHaveConcernsDetails(): mixed
+    public function getDoYouHaveConcernsDetails(): ?string
     {
         return $this->doYouHaveConcernsDetails;
     }
 
-    public function setDoYouHaveConcernsDetails(mixed $doYouHaveConcernsDetails): static
+    public function setDoYouHaveConcernsDetails(?string $doYouHaveConcernsDetails): static
     {
         $this->doYouHaveConcernsDetails = $doYouHaveConcernsDetails;
 

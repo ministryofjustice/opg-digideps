@@ -258,12 +258,10 @@ class Checklist implements SynchronisableInterface
 
         // DDPB-2272: prefill answers based on report content
         $action = $report->getAction();
-        /** @var string $answer */
         $answer = $action->getDoYouExpectFinancialDecisions();
         if ($answer) {
             $this->setFutureSignificantDecisions($answer);
         }
-        /** @var string $answer */
         $answer = $action->getDoYouHaveConcerns();
         if ($answer) {
             $this->setHasDeputyRaisedConcerns($answer);
