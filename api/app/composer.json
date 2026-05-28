@@ -69,7 +69,7 @@
         "symfony/security-http": "^6.4.40",
         "symfony/serializer": "^6.4.30",
         "symfony/validator": "^6.4.30",
-        "symfony/yaml": "^6.4.40"
+        "symfony/yaml": "^7.0.0"
     },
     "require-dev": {
         "behat/behat": "^3.29",
