@@ -49,30 +49,19 @@ class Action
      */
     private $doYouHaveConcernsDetails;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return Action
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDoYouExpectFinancialDecisions()
+    public function getDoYouExpectFinancialDecisions(): mixed
     {
         return $this->doYouExpectFinancialDecisions;
     }
@@ -84,60 +73,36 @@ class Action
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDoYouExpectFinancialDecisionsDetails()
+    public function getDoYouExpectFinancialDecisionsDetails(): mixed
     {
         return $this->doYouExpectFinancialDecisionsDetails;
     }
 
-    /**
-     * @param mixed $doYouExpectFinancialDecisionsDetails
-     *
-     * @return Action
-     */
-    public function setDoYouExpectFinancialDecisionsDetails($doYouExpectFinancialDecisionsDetails)
+    public function setDoYouExpectFinancialDecisionsDetails(mixed $doYouExpectFinancialDecisionsDetails): static
     {
         $this->doYouExpectFinancialDecisionsDetails = $doYouExpectFinancialDecisionsDetails;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDoYouHaveConcerns()
+    public function getDoYouHaveConcerns(): mixed
     {
         return $this->doYouHaveConcerns;
     }
 
-    /**
-     * @param mixed $doYouHaveConcerns
-     *
-     * @return Action
-     */
-    public function setDoYouHaveConcerns($doYouHaveConcerns)
+    public function setDoYouHaveConcerns(mixed $doYouHaveConcerns): static
     {
         $this->doYouHaveConcerns = $doYouHaveConcerns;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDoYouHaveConcernsDetails()
+    public function getDoYouHaveConcernsDetails(): mixed
     {
         return $this->doYouHaveConcernsDetails;
     }
 
-    /**
-     * @param mixed $doYouHaveConcernsDetails
-     *
-     * @return Action
-     */
-    public function setDoYouHaveConcernsDetails($doYouHaveConcernsDetails)
+    public function setDoYouHaveConcernsDetails(mixed $doYouHaveConcernsDetails): static
     {
         $this->doYouHaveConcernsDetails = $doYouHaveConcernsDetails;
 
