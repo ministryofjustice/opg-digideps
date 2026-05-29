@@ -128,7 +128,7 @@ class ChecklistSyncCommandTest extends KernelTestCase
 
     private function ensureNChecklistsFailedToSync(int $numberOfChecklists): self
     {
-        $this->syncService->method('syncChecklistsByReports')->willReturn($numberOfChecklists);
+        $this->syncService->method('syncChecklistsByReports')->willReturn(['notSyncedCount' => $numberOfChecklists, 'reportIdsWithNullChecklists' => []]);
 
         return $this;
     }

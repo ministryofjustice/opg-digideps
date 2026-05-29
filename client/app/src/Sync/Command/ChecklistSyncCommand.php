@@ -41,8 +41,17 @@ class ChecklistSyncCommand extends Command
         $reports = $this->reportApi->getReportsWithQueuedChecklists($rowLimit);
         $output->writeln(sprintf('%d checklists to upload', count($reports)));
 
-        $notSyncedCount = $this->syncService->syncChecklistsByReports($reports);
+        ['notSyncedCount' => $notSyncedCount, 'reportIdsWithNullChecklists' => $reportIdsWithNullChecklist] = $this->syncService->syncChecklistsByReports($reports);
 
+        if (!empty($reportIdsWithNullChecklist)) {
+            $output->writeln(
+                sprintf(
+                    'sync_checklists_to_sirius - warning - %d reports have null checklists: %s',
+                    count($reportIdsWithNullChecklist),
+                    implode(', ', $reportIdsWithNullChecklist)
+                )
+            );
+        }
         if ($notSyncedCount > 0) {
             $output->writeln(sprintf('sync_checklists_to_sirius - failure - %d checklists failed to sync', $notSyncedCount));
         } else {
