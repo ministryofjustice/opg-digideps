@@ -72,7 +72,7 @@ class CourtOrder
 
     #[ORM\JoinColumn(name: 'sibling_id', referencedColumnName: 'id')]
     #[ORM\OneToOne(targetEntity: CourtOrder::class)]
-    private ?CourtOrder $sibling;
+    private ?CourtOrder $sibling = null;
 
     /**
      * @see CourtOrderKind
