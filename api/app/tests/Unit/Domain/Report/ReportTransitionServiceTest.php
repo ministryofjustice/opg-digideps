@@ -60,9 +60,13 @@ final class ReportTransitionServiceTest extends TestCase
     private function makeCourtOrder(
         CourtOrderType $type,
         int $id,
-        ?CourtOrderKind $kind = CourtOrderKind::Single,
+        ?CourtOrderKind $kind = null,
         ?CourtOrderReportType $orderReportType = null,
     ): CourtOrder {
+        if ($kind === null) {
+            $kind = CourtOrderKind::Single;
+        }
+
         $courtOrder = new CourtOrder();
         $courtOrder->setCourtOrderUid("{$id}0011");
         $courtOrder->setOrderType($type);
@@ -124,11 +128,11 @@ final class ReportTransitionServiceTest extends TestCase
 
         // assert: the hybrid report has been retained as the report on the pfa and has had its type reset
         self::assertEquals($hybridReport, $pfaCourtOrder->getLatestReport());
-        self::assertEquals(Report::LAY_PFA_HIGH_ASSETS_TYPE, $pfaCourtOrder->getLatestReport()->getType());
+        self::assertEquals(Report::LAY_PFA_HIGH_ASSETS_TYPE, $pfaCourtOrder->getLatestReport()?->getType());
 
         // assert: the newly-created report has been set as the latest report on the hw
         self::assertEquals($newHwReport, $hwCourtOrder->getLatestReport());
-        self::assertEquals(Report::LAY_HW_TYPE, $hwCourtOrder->getLatestReport()->getType());
+        self::assertEquals(Report::LAY_HW_TYPE, $hwCourtOrder->getLatestReport()?->getType());
 
         // assert: the hybrid report is no longer associated with the hw
         self::assertNotContains($hybridReport, $hwCourtOrder->getReports());
@@ -172,8 +176,8 @@ final class ReportTransitionServiceTest extends TestCase
         self::assertEquals($pfaReport, $hwCourtOrder->getLatestReport());
 
         // assert: the old dual report has had its type reset to hybrid
-        self::assertEquals(Report::LAY_COMBINED_HIGH_ASSETS_TYPE, $pfaCourtOrder->getLatestReport()->getType());
-        self::assertEquals(Report::LAY_COMBINED_HIGH_ASSETS_TYPE, $hwCourtOrder->getLatestReport()->getType());
+        self::assertEquals(Report::LAY_COMBINED_HIGH_ASSETS_TYPE, $pfaCourtOrder->getLatestReport()?->getType());
+        self::assertEquals(Report::LAY_COMBINED_HIGH_ASSETS_TYPE, $hwCourtOrder->getLatestReport()?->getType());
 
         // assert: the hw report has been removed from the hw court order
         self::assertNotContains($hwReport, $hwCourtOrder->getReports());
@@ -213,11 +217,11 @@ final class ReportTransitionServiceTest extends TestCase
         // assert: the hw court order has the new report attached
         $actualHwReport = $hwCourtOrder->getLatestReport();
         self::assertEquals($newHwReport, $actualHwReport);
-        self::assertEquals(Report::LAY_HW_TYPE, $actualHwReport->getType());
+        self::assertEquals(Report::LAY_HW_TYPE, $actualHwReport?->getType());
 
         // assert: the pfa court order's report has been retained
         $actualPfaReport = $pfaCourtOrder->getLatestReport();
         self::assertEquals($pfaReport, $actualPfaReport);
-        self::assertEquals(Report::LAY_PFA_HIGH_ASSETS_TYPE, $actualPfaReport->getType());
+        self::assertEquals(Report::LAY_PFA_HIGH_ASSETS_TYPE, $actualPfaReport?->getType());
     }
 }
