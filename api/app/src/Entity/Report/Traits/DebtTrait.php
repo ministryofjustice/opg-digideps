@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
+use Doctrine\Common\Collections\Collection;
 use OPG\Digideps\Backend\Entity\Report\Debt;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -11,12 +12,12 @@ use JMS\Serializer\Annotation as JMS;
 trait DebtTrait
 {
     /**
-     * @var Debt[]
+     * @var Collection<int, Debt>
      */
     #[JMS\Groups(['debt'])]
     #[ORM\OneToMany(mappedBy: 'report', targetEntity: Debt::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['id' => 'ASC'])]
-    private $debts;
+    private Collection $debts;
 
     /**
      * @var string yes|no|null
@@ -37,7 +38,7 @@ trait DebtTrait
     private $debtManagement;
 
     /**
-     * @param mixed $debts
+     * @param Collection<int,Debt> $debts
      */
     public function setDebts($debts)
     {
@@ -45,7 +46,7 @@ trait DebtTrait
     }
 
     /**
-     * @return Debt[]
+     * @return Collection<int, Debt>
      */
     public function getDebts()
     {
@@ -71,13 +72,13 @@ trait DebtTrait
     /**
      * @param string $typeId
      *
-     * @return Debt
+     * @return ?Debt
      */
     public function getDebtByTypeId($typeId)
     {
         return $this->getDebts()->filter(function (Debt $debt) use ($typeId): bool {
-            return $debt->getDebtTypeId() == $typeId;
-        })->first();
+            return $debt->getDebtTypeId() === $typeId;
+        })->first() ?: null;
     }
 
     public function addDebt(Debt $debt)
@@ -125,7 +126,7 @@ trait DebtTrait
     }
 
     /**
-     * @return Debt[]
+     * @return Collection<int, Debt>
      */
     public function getDebtsWithValidAmount()
     {

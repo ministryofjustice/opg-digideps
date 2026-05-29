@@ -37,7 +37,7 @@ trait GiftsTrait
     }
 
     /**
-     * @param string $giftsExist
+     * @param ?string $giftsExist
      */
     public function setGiftsExist($giftsExist)
     {

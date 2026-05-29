@@ -8,38 +8,46 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 #[ORM\Table(name: 'money_short_category')]
-#[ORM\Entity]
+#[ORM\Entity, ORM\HasLifecycleCallbacks]
 class MoneyShortCategory
 {
     /**
-     * @param string $type "in" or "out"
-     *
-     * @return array [ in =>  [typeId=>...], out=> [typeId=>...] ]
+     * @var array<string, array<string, array<never>>> $categories
      */
-    public static function getCategories(string $type)
+    private static array $categories = [
+        'in' => [
+            // typeId => options
+            'state_pension_and_benefit' => [],
+            'bequests' => [],
+            'income_from_invesments_dividends_rental' => [],
+            'sale_of_investments_property_assets' => [],
+            'salary_or_wages' => [],
+            'compensations_and_damages_awards' => [],
+            'personal_pension' => [],
+        ], 'out' => [
+            // typeId => options
+            'accomodation_costs' => [],
+            'care_fees' => [],
+            'holidays' => [],
+            'households_bills' => [],
+            'personal_allowance' => [],
+            'professional_fees' => [],
+            'new_investments' => [],
+            'travel_costs' => [],
+        ]];
+
+    /**
+     * @param ?string $type "in" or "out" or null for both
+     *
+     * @return array<string, array<never>> [typeId=>[]]
+     */
+    public static function getCategories(?string $type): array
     {
-        return [
-            'in' => [
-                // typeId => options
-                'state_pension_and_benefit' => [],
-                'bequests' => [],
-                'income_from_invesments_dividends_rental' => [],
-                'sale_of_investments_property_assets' => [],
-                'salary_or_wages' => [],
-                'compensations_and_damages_awards' => [],
-                'personal_pension' => [],
-            ],
-            'out' => [
-                // typeId => options
-                'accomodation_costs' => [],
-                'care_fees' => [],
-                'holidays' => [],
-                'households_bills' => [],
-                'personal_allowance' => [],
-                'professional_fees' => [],
-                'new_investments' => [],
-                'travel_costs' => [],
-            ]][$type];
+        return match($type) {
+            'in' => self::$categories['in'],
+            'out' => self::$categories['out'],
+            default => self::$categories['in'] + self::$categories['out'],
+        };
     }
 
     /**

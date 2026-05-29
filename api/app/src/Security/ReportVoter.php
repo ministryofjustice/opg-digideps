@@ -2,15 +2,10 @@
 
 namespace OPG\Digideps\Backend\Security;
 
-use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
 use OPG\Digideps\Backend\Domain\Report\ReportAccessService;
-use OPG\Digideps\Backend\Entity\CourtOrder;
-use OPG\Digideps\Backend\Entity\Deputy;
-use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;

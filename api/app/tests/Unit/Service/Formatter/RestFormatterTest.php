@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Service\Formatter;
 
+use OPG\Digideps\Backend\EventListener\RestInputOutputFormatter;
 use PHPUnit\Framework\Attributes\Test;
-use OPG\Digideps\Backend\EventListener\RestInputOuputFormatter;
 use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
 use OPG\Digideps\Backend\Service\Validator\RestArrayValidator;
 use PHPUnit\Framework\TestCase;
@@ -24,7 +24,7 @@ final class RestFormatterTest extends TestCase
 
     public function setUp(): void
     {
-        $this->inputOutputFormatter = self::prophesize(RestInputOuputFormatter::class);
+        $this->inputOutputFormatter = self::prophesize(RestInputOutputFormatter::class);
         $this->validator = self::prophesize(RestArrayValidator::class);
 
         $this->sut = new RestFormatter(

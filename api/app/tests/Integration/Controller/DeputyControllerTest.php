@@ -2,13 +2,8 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Deputy;
-use OPG\Digideps\Backend\Entity\User;
-use OPG\Digideps\Backend\TestHelpers\DeputyTestHelper;
-use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
 use Tests\OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Fixture\UserType;
 
