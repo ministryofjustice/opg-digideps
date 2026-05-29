@@ -15025,25 +15025,7 @@ parameters:
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\BaseFeatureContext\:\:anotherAdminManagerUserExists\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\BaseFeatureContext\:\:anotherAdminUserExists\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\BaseFeatureContext\:\:anotherClientHasSubmittedOneReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\BaseFeatureContext\:\:anotherSuperAdminUserExists\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
@@ -15315,12 +15297,6 @@ parameters:
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\BaseFeatureContext\:\:clickBasedOnText\(\) has parameter \$text with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Common\\BaseFeatureContext\:\:createAdditionalAdminUser\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
@@ -18094,12 +18070,6 @@ parameters:
 			message: '#^Parameter \#1 \$url of method Behat\\Mink\\Session\:\:visit\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
-			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
-
-		-
-			message: '#^Parameter \#1 \$user of static method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:buildAdminUserDetails\(\) expects OPG\\Digideps\\Backend\\Entity\\User, mixed given\.$#'
-			identifier: argument.type
-			count: 3
 			path: tests/Behat/bootstrap/v2/Common/BaseFeatureContext.php
 
 		-
@@ -20899,159 +20869,9 @@ parameters:
 			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
 
 		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
 			message: '#^Cannot call method addExpense\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
 			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method format\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getArchivedAt\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getBankAccounts\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getCaseNumber\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getClients\(\) on OPG\\Digideps\\Backend\\Entity\\Organisation\|false\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getCourtDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getCurrentReport\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getDeputy\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getDueDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getEmail\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getEmail1\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getEmail2\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getEmailIdentifier\(\) on OPG\\Digideps\\Backend\\Entity\\Organisation\|false\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getEndDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getFirstname\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 7
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getLastName\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getLastname\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getName\(\) on OPG\\Digideps\\Backend\\Entity\\Organisation\|false\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getPhoneAlternative\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getPhoneMain\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getReports\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getStartDate\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Cannot call method getType\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
 			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
 
 		-
@@ -21187,19 +21007,7 @@ parameters:
 			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
 
 		-
-			message: '#^Parameter \#1 \$client of static method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:buildClientAddressArray\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
 			message: '#^Parameter \#1 \$datetime of class DateTime constructor expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Parameter \#1 \$deputy of static method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:buildDeputyAddressArray\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
@@ -21253,25 +21061,25 @@ parameters:
 			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
 
 		-
-			message: '#^Parameter \#1 \$user of static method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:buildAdminUserDetails\(\) expects OPG\\Digideps\\Backend\\Entity\\User, mixed given\.$#'
+			message: '#^Parameter \#1 \$user of static method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelperBuilder\:\:buildAdminUserDetails\(\) expects OPG\\Digideps\\Backend\\Entity\\User, mixed given\.$#'
 			identifier: argument.type
 			count: 3
 			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
 
 		-
-			message: '#^Parameter \#1 \$user of static method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:buildOrgUserDetails\(\) expects OPG\\Digideps\\Backend\\Entity\\User, mixed given\.$#'
+			message: '#^Parameter \#1 \$user of static method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelperBuilder\:\:buildOrgUserDetails\(\) expects OPG\\Digideps\\Backend\\Entity\\User, mixed given\.$#'
 			identifier: argument.type
 			count: 24
 			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
 
 		-
-			message: '#^Parameter \#1 \$user of static method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:buildUserDetails\(\) expects OPG\\Digideps\\Backend\\Entity\\User, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
+			message: '#^Parameter \#1 \$user of static method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelperBuilder\:\:buildUserDetails\(\) expects OPG\\Digideps\\Backend\\Entity\\User, OPG\\Digideps\\Backend\\Entity\\User\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
 
 		-
-			message: '#^Parameter \#1 \$user of static method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\:\:buildUserDetails\(\) expects OPG\\Digideps\\Backend\\Entity\\User, mixed given\.$#'
+			message: '#^Parameter \#1 \$user of static method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelperBuilder\:\:buildUserDetails\(\) expects OPG\\Digideps\\Backend\\Entity\\User, mixed given\.$#'
 			identifier: argument.type
 			count: 2
 			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
@@ -21303,12 +21111,6 @@ parameters:
 		-
 			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
 			identifier: argument.type
-			count: 2
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
-
-		-
-			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
-			identifier: argument.type
 			count: 1
 			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
 
@@ -21319,22 +21121,196 @@ parameters:
 			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
 
 		-
+			message: '#^Cannot access offset 0 on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 3
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method format\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getArchivedAt\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getBankAccounts\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getCaseNumber\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getClients\(\) on OPG\\Digideps\\Backend\\Entity\\Organisation\|false\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getCourtDate\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getCurrentReport\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getDeputy\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getDueDate\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getEmail\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getEmail1\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getEmail2\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getEmailIdentifier\(\) on OPG\\Digideps\\Backend\\Entity\\Organisation\|false\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getEndDate\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getFirstname\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getId\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 7
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getLastName\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getLastname\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getName\(\) on OPG\\Digideps\\Backend\\Entity\\Organisation\|false\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getPhoneAlternative\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getPhoneMain\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getReports\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getStartDate\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Cannot call method getType\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 2
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Parameter \#1 \$client of static method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelperBuilder\:\:buildClientAddressArray\(\) expects OPG\\Digideps\\Backend\\Entity\\Client, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Parameter \#1 \$deputy of static method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelperBuilder\:\:buildDeputyAddressArray\(\) expects OPG\\Digideps\\Backend\\Entity\\Deputy, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Parameter \#2 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
+			message: '#^Parameter \#3 \.\.\.\$values of function sprintf expects bool\|float\|int\|string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
+
+		-
 			message: '#^Using nullsafe method call on non\-nullable type OPG\\Digideps\\Backend\\Entity\\Organisation\|false\. Use \-\> instead\.$#'
 			identifier: nullsafe.neverNull
 			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
 
 		-
 			message: '#^Using nullsafe method call on non\-nullable type OPG\\Digideps\\Backend\\Entity\\User\. Use \-\> instead\.$#'
 			identifier: nullsafe.neverNull
 			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
 
 		-
 			message: '#^Variable \$details might not be defined\.$#'
 			identifier: variable.undefined
 			count: 1
-			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelper.php
+			path: tests/Behat/bootstrap/v2/Helpers/FixtureHelperBuilder.php
 
 		-
 			message: '#^Cannot access offset 0 on mixed\.$#'
@@ -30415,12 +30391,6 @@ parameters:
 			path: tests/Integration/Controller/DeputyControllerTest.php
 
 		-
-			message: '#^Parameter \#2 \$deputyUid of static method OPG\\Digideps\\Backend\\TestHelpers\\DeputyTestHelper\:\:generateDeputy\(\) expects string\|null, int given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Controller/DeputyControllerTest.php
-
-		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -30429,12 +30399,6 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: tests/Integration/Controller/DeputyControllerTest.php
-
-		-
-			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\Controller\\DeputyControllerTest\:\:\$fixtureHelper \(Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\) does not accept object\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: tests/Integration/Controller/DeputyControllerTest.php
 
@@ -35233,12 +35197,6 @@ parameters:
 			path: tests/Integration/v2/Controller/CourtOrderControllerTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\v2\\Controller\\CourtOrderControllerTest\:\:addUserAndCourtOrderAndDeputy\(\) has parameter \$emailAddress with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Integration/v2/Controller/CourtOrderControllerTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\v2\\Controller\\CourtOrderControllerTest\:\:testGetByUidActionNoAuthFail\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -35269,12 +35227,6 @@ parameters:
 			path: tests/Integration/v2/Controller/CourtOrderControllerTest.php
 
 		-
-			message: '#^Parameter \#1 \$email of method Tests\\OPG\\Digideps\\Backend\\Integration\\Fixtures\:\:createUser\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/v2/Controller/CourtOrderControllerTest.php
-
-		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -35289,12 +35241,6 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$string of static method PHPUnit\\Framework\\Assert\:\:assertMatchesRegularExpression\(\) expects string, mixed given\.$#'
 			identifier: argument.type
-			count: 1
-			path: tests/Integration/v2/Controller/CourtOrderControllerTest.php
-
-		-
-			message: '#^Static property Tests\\OPG\\Digideps\\Backend\\Integration\\v2\\Controller\\CourtOrderControllerTest\:\:\$fixtureHelper \(Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Helpers\\FixtureHelper\) does not accept object\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: tests/Integration/v2/Controller/CourtOrderControllerTest.php
 

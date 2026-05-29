@@ -42,9 +42,21 @@ final class FixtureService
         private readonly int $flushAfter = 64,
     ) {
         $this->persistCounter = new Counter();
-        $this->counter = $this->getCounter();
         $this->faker = Factory::create('en_GB');
         $this->password = $passwordHasher->hashPassword(new User(), 'DigidepsPass1234');
+        $this->refreshCounter();
+    }
+
+    public function getId(): int
+    {
+        $this->refreshCounter();
+        return $this->counter->nextInt();
+    }
+
+    public function getUid(): string
+    {
+        $this->refreshCounter();
+        return $this->counter->nextString(8, '9');
     }
 
     /**
@@ -68,6 +80,18 @@ final class FixtureService
         $this->persistCounter->reset();
     }
 
+    public function instantiateOnlyUser(UserType $userType, DeputyType $deputyType, ?string $emailDomain = null, ?Deputy $deputy = null, ?Organisation $organisation = null): User
+    {
+        $this->refreshCounter();
+        $user = $this->persist($this->makeUser(new DeputyDescriptor('', $deputyType, $userType, emailDomain: $emailDomain), $deputy, $organisation));
+        if ($userType === UserType::Deputy && $deputy === null) {
+            $user->setDeputyUid((int)$this->counter->nextString(8, '9'));
+            $this->persist($user);
+        }
+        $this->flush();
+        return $user;
+    }
+
     /**
      * @param Persons $persons
      * @return array{client: Client, orders: array<OrderPair>, persons: Persons}
@@ -80,7 +104,7 @@ final class FixtureService
             'organisations' => [],
         ]
     ): array {
-        $this->counter = $this->getCounter();
+        $this->refreshCounter();
 
         $client = $this->persist($this->makeClient());
         /**
@@ -246,7 +270,7 @@ final class FixtureService
     {
         $deputy = new Deputy()
             ->setId($this->counter->nextInt())
-            ->setDeputyUid($this->counter->nextString(8))
+            ->setDeputyUid($this->counter->nextString(8, '9'))
             ->setDeputyType($descriptor->type)
             ->setFirstname($this->faker->firstName())
             ->setLastname($this->faker->lastName())
@@ -386,7 +410,7 @@ final class FixtureService
         $this->persist($report);
     }
 
-    private function getCounter(): Counter
+    private function refreshCounter(): void
     {
         $id = Counter::FIXTURE_ID;
         $counter = $this->entityManager->getRepository(Counter::class)->find($id);
@@ -403,6 +427,6 @@ final class FixtureService
             }
         }
         $this->entityManager->persist($counter);
-        return $counter;
+        $this->counter = $counter;
     }
 }
