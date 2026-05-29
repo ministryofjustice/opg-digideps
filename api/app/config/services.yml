@@ -536,3 +536,6 @@ services:
         arguments:
             $preCSVDataFactory: "@preCSVDataFactory"
             $postCSVDataFactory: "@postCSVDataFactory"
+
+    OPG\Digideps\Backend\Domain\Report\ReportTransitionService:
+        public: true
