@@ -30,16 +30,17 @@ final class CourtOrderPair
      * Check that $courtOrders contains two court orders, one HW and one PFA;
      * NB these court orders don't have to be active at this point
      */
-    public static function create(CourtOrder $mainCourtOrder, CourtOrder $siblingCourtOrder): CourtOrderPair
+    public static function create(CourtOrder $mainCourtOrder, ?CourtOrder $siblingCourtOrder): CourtOrderPair
     {
         $courtOrderTypes = [];
         $pfaCourtOrder = $hwCourtOrder = null;
 
         foreach ([$mainCourtOrder, $siblingCourtOrder] as $courtOrder) {
-            $orderType = $courtOrder?->getOrderType();
-            if ($orderType === null) {
+            if ($courtOrder === null) {
                 continue;
             }
+
+            $orderType = $courtOrder->getOrderType();
 
             $courtOrderTypes[] = $orderType->value;
 
@@ -72,7 +73,6 @@ final class CourtOrderPair
 
     public function isValid(): bool
     {
-        return $this->invalidReason === null && $this->pfaCourtOrder !== null && $this->hwCourtOrder !== null
-            && $this->mainCourtOrder !== null && $this->siblingCourtOrder !== null;
+        return $this->invalidReason === null && $this->pfaCourtOrder !== null && $this->hwCourtOrder !== null;
     }
 }

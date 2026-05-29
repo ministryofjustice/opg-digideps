@@ -35,7 +35,7 @@ final readonly class ReportTransitionService
         $oldCourtOrderKind = $courtOrderChange->oldKind;
         $newCourtOrderKind = $courtOrder->getOrderKind();
 
-        // find both court orders involved in the transition (all of the below result in two court orders, both with
+        // find both court orders involved in the transition (all the below result in two court orders, both with
         // reports, by the end of the transition)
         $courtOrderPair = CourtOrderPair::create($courtOrder, $courtOrder->getSibling());
         if (!$courtOrderPair->isValid()) {
@@ -81,11 +81,14 @@ final readonly class ReportTransitionService
             $result->errorMessages[] = 'Hybrid -> Dual: ' . $error;
             return $result;
         }
+        assert($oldSibling !== null);
 
         // work out which order's report is persisting and will remain associated with its current (hybrid) report;
         // the other court order will get a new report
         ['persistingReportCourtOrder' => $persistingCourtOrder, 'newReportCourtOrder' => $newReportCourtOrder] =
             $this->hybridToDualAssignCourtOrders($courtOrderPair, $courtOrderChange);
+        assert($persistingCourtOrder !== null);
+        assert($newReportCourtOrder !== null);
 
         // convert existing hybrid report into single on the persisting court order
         $persistingReport = $persistingCourtOrder->getLatestReport();
@@ -138,6 +141,7 @@ final readonly class ReportTransitionService
             $result->errorMessages[] = 'Dual -> hybrid: ' . $error;
             return $result;
         }
+        assert($oldSibling !== null);
 
         // figure out which report will persist (to become the hybrid report) and which becomes defunct
         ['persistingReport' => $persistingReport, 'defunctReport' => $defunctReport] =
@@ -159,15 +163,20 @@ final readonly class ReportTransitionService
         // remove the defunct report from both of the current court orders, and add the persisting report to both
         // (if not already present)
         foreach ($currentCourtOrders as $courtOrder) {
+            if ($courtOrder === null) {
+                continue;
+            }
+
             $courtOrder->removeReport($defunctReport);
 
             if (!$courtOrder->getReports()->contains($persistingReport)) {
                 $courtOrder->addReport($persistingReport);
             }
+
+            $result->updatedCourtOrders[] = $courtOrder;
         }
 
         $result->transitioned = true;
-        $result->updatedCourtOrders += $currentCourtOrders;
         $result->updatedReports[] = $persistingReport;
         $result->removedReports[] = $defunctReport;
         $result->messages[] = "Dual -> Hybrid: Merged defunct report {$defunctReport->getId()} " .
@@ -192,21 +201,11 @@ final readonly class ReportTransitionService
 
         // ensure that at least one order already has a report, and make sure that the other order has a report
         // (creating one if required)
-        $latestReportExists = false;
         $secondReportCreated = false;
+        $latestReportExists = false;
         foreach ($affectedCourtOrders as $courtOrder) {
             $latestReport = $courtOrder->getLatestReport();
-            if ($latestReport !== null) {
-                // court order which is the old single and already has a report
-                $latestReport->setType("{$courtOrder->getDesiredReportType()}");
-
-                $result->updatedReports[] = $latestReport;
-
-                $result->messages[] = 'Single -> Dual: Found latest report ' . $courtOrder->getLatestReport()->getId() .
-                    ' on court order ' . $courtOrder->getCourtOrderUid();
-
-                $latestReportExists = true;
-            } else {
+            if ($latestReport === null) {
                 // other court order on this client which doesn't have a report yet: make a new one
                 $newReport = $this->reportService->createReportFromOrder($courtOrder);
                 $courtOrder->addReport($newReport);
@@ -217,6 +216,16 @@ final readonly class ReportTransitionService
                     "{$newReport->getId()} to court order {$courtOrder->getCourtOrderUid()}";
 
                 $secondReportCreated = true;
+            } else {
+                // court order which is the old single and already has a report
+                $latestReport->setType("{$courtOrder->getDesiredReportType()}");
+
+                $result->updatedReports[] = $latestReport;
+
+                $result->messages[] = 'Single -> Dual: Found latest report ' . $latestReport->getId() .
+                    ' on court order ' . $courtOrder->getCourtOrderUid();
+
+                $latestReportExists = true;
             }
         }
 
@@ -244,7 +253,7 @@ final readonly class ReportTransitionService
     {
         // as this is a hybrid transitioning to a dual, the old sibling (part of the hybrid pair) should exist
         if ($oldSiblingId === null) {
-            return ['oldSibling' => null, 'errorMessage' => 'No sibling ID provided'];
+            return ['oldSibling' => null, 'error' => 'No sibling ID provided'];
         }
 
         $oldSibling = $this->courtOrderRepository->find($oldSiblingId);
@@ -266,31 +275,31 @@ final readonly class ReportTransitionService
         if ($courtOrderChange->hasSiblingIdChange()) {
             /*
              * When a dual case becomes hybrid through a new court order being added, the report from the persisting
-             * order should be maintained and then the hybrid view shown
+             * order should be maintained and the report from the sibling becomes defunct
              */
 
-            // different court order became a sibling
+            // different court order became a sibling during the transition
             $persistingReport = $courtOrderPair->mainCourtOrder->getLatestReport();
-            $defunctReport = $courtOrderPair->siblingCourtOrder->getLatestReport();
             $reportType = $courtOrderPair->mainCourtOrder->getDesiredReportType();
+            $defunctReport = $courtOrderPair->siblingCourtOrder?->getLatestReport();
         } else {
             /*
              * When a dual case becomes hybrid through a change to the deputies, the PFA report should be maintained
              * and the HW report removed; both court orders will be associated with the persisting report
              */
 
-            // both court orders exist already; the dual is becoming a hybrid due to deputy changes
-            $persistingReport = $courtOrderPair->pfaCourtOrder->getLatestReport();
-            $defunctReport = $courtOrderPair->hwCourtOrder->getLatestReport();
-            $reportType = $courtOrderPair->pfaCourtOrder->getDesiredReportType();
+            // both court orders exist already; the dual is becoming a hybrid due to deputy changes;
+            // the hw report becomes defunct
+            $persistingReport = $courtOrderPair->pfaCourtOrder?->getLatestReport();
+            $reportType = $courtOrderPair->pfaCourtOrder?->getDesiredReportType();
+            $defunctReport = $courtOrderPair->hwCourtOrder?->getLatestReport();
         }
 
-        $persistingReport?->setType("$reportType");
+        if ($reportType !== null) {
+            $persistingReport?->setType("$reportType");
+        }
 
-        return [
-            'persistingReport' => $persistingReport,
-            'defunctReport' => $defunctReport
-        ];
+        return ['persistingReport' => $persistingReport, 'defunctReport' => $defunctReport];
     }
 
     /**
