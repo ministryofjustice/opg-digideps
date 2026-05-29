@@ -119,7 +119,7 @@ services:
                     "@rest_handler.report.pa_fees_expenses_report_update_handler",
                 ]
 
-    OPG\Digideps\Backend\EventListener\RestInputOuputFormatter:
+    OPG\Digideps\Backend\EventListener\RestInputOutputFormatter:
         arguments:
             ["@jms_serializer", "@logger", ["json"], "json", "%kernel.debug%"]
         tags:
@@ -137,24 +137,6 @@ services:
                   name: kernel.event_listener,
                   event: kernel.request,
                   method: onKernelRequest,
-              }
-
-    OPG\Digideps\Backend\EventListener\DoctrineListener:
-        tags:
-            - {
-                  name: doctrine.event_listener,
-                  event: prePersist,
-                  method: prePersist,
-              }
-            - {
-                  name: doctrine.event_listener,
-                  event: preUpdate,
-                  method: preUpdate,
-              }
-            - {
-                  name: doctrine.event_listener,
-                  event: preRemove,
-                  method: preRemove,
               }
 
     OPG\Digideps\Backend\EventListener\FixDefaultSchemaListener:

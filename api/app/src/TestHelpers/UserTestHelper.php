@@ -46,6 +46,7 @@ class UserTestHelper
         ?int $deputyUid = null,
         ?string $firstName = null,
         ?string $lastName = null,
+        bool $active = true,
     ): User {
         $faker = Factory::create('en_GB');
 
@@ -72,8 +73,8 @@ class UserTestHelper
             ->setRoleName($roleName)
             ->setPhoneMain($faker->phoneNumber())
             ->setRegistrationDate(new \DateTime())
-            ->setLastLoggedIn(new \DateTime())
-            ->setActive(true)
+            ->setLastLoggedIn($active ? new \DateTime() : null)
+            ->setActive($active)
             ->setAddress1($faker->streetAddress())
             ->setAddressCountry('GB')
             ->setAddressPostcode($faker->postcode())

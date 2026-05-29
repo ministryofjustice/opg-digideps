@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\FixtureFactory;
 
-use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
 use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
 use OPG\Digideps\Backend\TestHelpers\UserTestHelper;

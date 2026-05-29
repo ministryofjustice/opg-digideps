@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Entity\Report;
 
+use Doctrine\ORM\Event\PreRemoveEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use OPG\Digideps\Backend\Entity\SynchronisableTrait;
 use OPG\Digideps\Backend\Entity\Traits\CreationAudit;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Repository\DocumentRepository;
 use OPG\Digideps\Backend\Entity\SynchronisableInterface;
+use OPG\Digideps\Backend\Repository\ReportSubmissionRepository;
 
 /**
  * Documents
@@ -17,7 +20,7 @@ use OPG\Digideps\Backend\Entity\SynchronisableInterface;
 #[ORM\Table(name: 'document')]
 #[ORM\Index(columns: ['report_id'], name: 'ix_document_report_id')]
 #[ORM\Index(columns: ['created_by'], name: 'ix_document_created_by')]
-#[ORM\Entity(repositoryClass: DocumentRepository::class)]
+#[ORM\Entity(repositoryClass: DocumentRepository::class), ORM\HasLifecycleCallbacks]
 #[ORM\Index(columns: ['report_id'], name: 'ix_document_report_id')]
 #[ORM\Index(columns: ['created_by'], name: 'ix_document_created_by')]
 class Document implements SynchronisableInterface
@@ -252,5 +255,23 @@ class Document implements SynchronisableInterface
     public function resetSyncAttempts(): void
     {
         $this->syncAttempts = 0;
+    }
+
+    #[ORM\PreUpdate]
+    public function onPreUpdate(PreUpdateEventArgs $eventArgs): void
+    {
+        if ($this->getReportSubmission() !== null) {
+            /** @var ReportSubmissionRepository $reportSubmissionRepo */
+            $reportSubmissionRepo = $eventArgs->getObjectManager()->getRepository(ReportSubmission::class);
+            $reportSubmissionRepo->updateArchivedStatus($this->getReportSubmission());
+        }
+    }
+
+    #[ORM\PreRemove]
+    public function onPreRemove(PreRemoveEventArgs $_): void
+    {
+        if ($this->getReport()->getDocuments()->count() === 1) {
+            $this->getReport()->setWishToProvideDocumentation(null);
+        }
     }
 }

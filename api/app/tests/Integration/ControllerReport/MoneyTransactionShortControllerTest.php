@@ -6,7 +6,6 @@ use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShort;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortIn;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortOut;
 use OPG\Digideps\Backend\Entity\Report\Report;
-use OPG\Digideps\Backend\Entity\User;
 use Tests\OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 

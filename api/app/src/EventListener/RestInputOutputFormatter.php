@@ -15,7 +15,7 @@ use Symfony\Component\HttpKernel\Event\ViewEvent;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class RestInputOuputFormatter
+class RestInputOutputFormatter
 {
     private array $supportedFormats;
 
