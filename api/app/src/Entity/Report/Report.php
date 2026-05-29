@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Entity\Report;
 
+use Doctrine\ORM\Event\PrePersistEventArgs;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Traits as ReportTraits;
@@ -204,16 +205,13 @@ class Report
         ];
     }
 
-    /**
-     * @var int
-     */
     #[JMS\Groups(['report', 'report-id'])]
     #[JMS\Type('integer')]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'report_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
     /**
      * @var string TYPE_ constants
@@ -361,7 +359,7 @@ class Report
     private $reportSubmissions;
 
     /**
-     * @var string
+     * @var ?string
      */
     #[JMS\Groups(['report', 'wish-to-provide-documentation'])]
     #[JMS\Type('string')]
@@ -369,7 +367,7 @@ class Report
     private $wishToProvideDocumentation;
 
     /**
-     * @var string yes/no
+     * @var ?string yes/no
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'current-prof-payments-received'])]
@@ -377,7 +375,7 @@ class Report
     private $currentProfPaymentsReceived;
 
     /**
-     * @var string yes/no
+     * @var ?string yes/no
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'report-prof-estimate-fees'])]
@@ -385,7 +383,7 @@ class Report
     private $previousProfFeesEstimateGiven;
 
     /**
-     * @var string
+     * @var ?string
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'report-prof-estimate-fees'])]
@@ -619,6 +617,20 @@ class Report
     public function getId()
     {
         return $this->id;
+    }
+
+    public function setId(int $id): static
+    {
+        if ($this->id === null) {
+            $this->id = $id;
+            $this->addMissingChildEntities();
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
+
+        return $this;
     }
 
     /**
@@ -1001,6 +1013,8 @@ class Report
     }
 
     /**
+     * @param ?string $wishToProvideDocumentation
+     *
      * @return $this
      */
     public function setWishToProvideDocumentation($wishToProvideDocumentation)
@@ -1011,7 +1025,7 @@ class Report
     }
 
     /**
-     * @return string
+     * @return ?string
      */
     public function getCurrentProfPaymentsReceived()
     {
@@ -1019,7 +1033,7 @@ class Report
     }
 
     /**
-     * @param string $currentProfPaymentsReceived
+     * @param ?string $currentProfPaymentsReceived
      */
     public function setCurrentProfPaymentsReceived($currentProfPaymentsReceived)
     {
@@ -1027,7 +1041,7 @@ class Report
     }
 
     /**
-     * @return string
+     * @return ?string
      */
     public function getPreviousProfFeesEstimateGiven()
     {
@@ -1035,7 +1049,7 @@ class Report
     }
 
     /**
-     * @param string $previousProfFeesEstimateGiven
+     * @param ?string $previousProfFeesEstimateGiven
      *
      * @return $this
      */
@@ -1047,7 +1061,7 @@ class Report
     }
 
     /**
-     * @return string
+     * @return ?string
      */
     public function getProfFeesEstimateSccoReason()
     {
@@ -1055,7 +1069,7 @@ class Report
     }
 
     /**
-     * @param string $profFeesEstimateSccoReason
+     * @param ?string $profFeesEstimateSccoReason
      *
      * @return $this
      */
@@ -1534,5 +1548,34 @@ class Report
         }
 
         return $active;
+    }
+
+    #[ORM\PrePersist]
+    public function onPrePersist(PrePersistEventArgs $_): void
+    {
+        if ($this->id === null) {
+            $this->addMissingChildEntities();
+        }
+    }
+
+    private function addMissingChildEntities(): void
+    {
+        if ($this->getDebts()->isEmpty()) {
+            foreach (Debt::$debtTypeIds as $row) {
+                new Debt($this, $row[0], $row[1], null);
+            }
+        }
+        if ($this->getFees()->isEmpty()) {
+            foreach (Fee::$feeTypeIds as $id => $row) {
+                new Fee($this, $id, null);
+            }
+        }
+        if ($this->getMoneyShortCategories()->isEmpty()) {
+            $this->moneyShortCategories = new ArrayCollection();
+
+            foreach (MoneyShortCategory::getCategories(null) as $typeId => $_) {
+                $this->moneyShortCategories->add(new MoneyShortCategory($this, $typeId, false));
+            }
+        }
     }
 }

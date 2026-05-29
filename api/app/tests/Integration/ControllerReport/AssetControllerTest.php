@@ -131,7 +131,7 @@ class AssetControllerTest extends AbstractTestController
         $this->assertInstanceOf(AssetOther::class, $asset);
         $this->assertEquals(123, $asset->getValue());
         $this->assertEquals('de', $asset->getDescription());
-        $this->assertEquals('01/01/2015', $asset->getValuationDate()->format('m/d/Y'));
+        $this->assertEquals('01/01/2015', $asset->getValuationDate()?->format('m/d/Y'));
         $this->assertEquals(self::$report1->getId(), $asset->getReport()->getId());
 
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_ASSETS));
