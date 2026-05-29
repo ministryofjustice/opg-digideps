@@ -25,3 +25,6 @@ services:
 
     Tests\OPG\Digideps\Backend\Behat\:
         resource: "../tests/Behat/bootstrap/*"
+
+    Tests\OPG\Digideps\Backend\Fixture\FixtureService:
+        public: true

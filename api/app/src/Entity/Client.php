@@ -788,9 +788,11 @@ class Client
         return $expectedReportEndDate->modify('+1year -1day');
     }
 
-    public function setArchivedAt(?\DateTime $archivedAt = null)
+    public function setArchivedAt(?\DateTime $archivedAt = null): static
     {
         $this->archivedAt = $archivedAt;
+
+        return $this;
     }
 
     /**

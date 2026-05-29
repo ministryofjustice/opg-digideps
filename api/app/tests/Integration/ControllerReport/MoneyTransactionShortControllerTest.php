@@ -7,35 +7,25 @@ use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortIn;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortOut;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class MoneyTransactionShortControllerTest extends AbstractTestController
 {
-    private static $deputy1;
-    private static $transaction1;
-    private static $transaction2;
-    private static $transaction3;
-    private static $report1;
-    private static $deputy2;
-    private static $report2;
-    private static $tokenAdmin;
-    private static $tokenDeputy;
+    private static Report $report1;
+    private static Report $report2;
+    private static MoneyTransactionShortIn $transaction1;
+    private static MoneyTransactionShortIn $transaction2;
+    private static MoneyTransactionShortOut $transaction3;
+    private static string $tokenAdmin;
+    private static string $tokenDeputy;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-
-        $client1 = self::fixtures()->createClient(self::$deputy1);
-        self::fixtures()->flush();
-
-        self::$report1 = self::fixtures()->createReport($client1);
-
-        // deputy 2
-        self::$deputy2 = self::fixtures()->createUser();
-        $client2 = self::fixtures()->createClient(self::$deputy2);
-        self::$report2 = self::fixtures()->createReport($client2);
+        ['persons' => ['users' => ['lay1' => $user1]], 'orders' => [['pfa' => ['reports' => [self::$report1]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
+        ['orders' => [['pfa' => ['reports' => [self::$report2]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
 
         // transactions. 2 in, 1 out. one out for report 2
         self::$transaction1 = $t1 = new MoneyTransactionShortIn(self::$report1);
@@ -46,14 +36,13 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
         $t3->setAmount(5000.59)->setDescription('d3');
         $t4 = new MoneyTransactionShortIn(self::$report2);
         $t4->setAmount(123)->setDescription('belongs to report2');
-        self::fixtures()->persist($t1, $t2, $t3, $t4);
 
+        self::fixtures()->persist($t1, $t2, $t3, $t4);
         self::fixtures()->flush()->clear();
 
-        if (self::$tokenAdmin === null) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
+
+        self::$tokenAdmin = $this->loginAsAdmin();
+        self::$tokenDeputy = $this->loginAsDeputy($user1->getEmail());
     }
 
     /**
@@ -68,8 +57,7 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
 
     public function testGetTransactions()
     {
-        $url = '/report/' . self::$report1->getId()
-            . '?' . http_build_query(['groups' => ['moneyTransactionsShortIn', 'moneyTransactionsShortOut']]);
+        $url = '/report/' . self::$report1->getId() . '?' . http_build_query(['groups' => ['moneyTransactionsShortIn', 'moneyTransactionsShortOut']]);
 
         // assert data is retrieved
         $data = $this->assertJsonRequest('GET', $url, [
@@ -164,7 +152,7 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
         ]);
 
         self::fixtures()->clear();
-        self::$report1 = self::fixtures()->getReportById(self::$report1->getId());
+        self::$report1 = self::fixtures()->getReportById(self::$report1->getId()) ?? throw new \LogicException('Bad fixture setup');
 
         $t = self::fixtures()->getRepo(MoneyTransactionShort::class)->find(self::$transaction3->getId());
         $this->assertTrue($t === null);

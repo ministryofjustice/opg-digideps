@@ -1519,6 +1519,9 @@ class Report
         return $this->courtOrders;
     }
 
+    /**
+     * @return array<CourtOrder>
+     */
     public function getActiveCourtOrders(): array
     {
         $active = [];

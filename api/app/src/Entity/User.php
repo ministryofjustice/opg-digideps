@@ -810,9 +810,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->adManaged;
     }
 
-    public function setAdManaged(?bool $adManaged)
+    public function setAdManaged(?bool $adManaged): static
     {
         $this->adManaged = $adManaged;
+
+        return $this;
     }
 
     /**

@@ -5,49 +5,33 @@ namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 use OPG\Digideps\Backend\Entity\Report\Gift;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class GiftControllerTest extends AbstractTestController
 {
-    private static $deputy1;
-    private static $client1;
-    private static $report1;
-    /**
-     * @var Gift
-     */
-    private static $gift1;
-    /**
-     * @var Gift
-     */
-    private static $gift2;
-    private static $deputy2;
-    private static $client2;
-    private static $report2;
-    private static $tokenAdmin;
-    private static $tokenDeputy;
+    private static Report $report1;
+    private static Gift $gift1;
+    private static Gift $gift2;
+    private static Report $report2;
+    private static string $tokenAdmin;
+    private static string $tokenDeputy;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        // deputy1
-        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
-        self::$report1 = self::fixtures()->createReport(self::$client1);
-        self::$gift1 = new Gift(self::$report1)->setExplanation('e1')->setAmount('1.10');
+        ['persons' => ['users' => ['lay1' => $user1]], 'orders' => [['pfa' => ['reports' => [self::$report1]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
+        ['orders' => [['pfa' => ['reports' => [self::$report2]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
 
-        // deputy 2
-        self::$deputy2 = self::fixtures()->createUser();
-        self::$client2 = self::fixtures()->createClient(self::$deputy2);
-        self::$report2 = self::fixtures()->createReport(self::$client2);
+        self::$gift1 = new Gift(self::$report1)->setExplanation('e1')->setAmount('1.10');
         self::$gift2 = new Gift(self::$report2)->setExplanation('e2')->setAmount('2.20');
 
-        self::fixtures()->persist(self::$gift1, self::$gift2)->flush()->clear();
+        self::fixtures()->persist(self::$gift1, self::$gift2);
+        self::fixtures()->flush()->clear();
 
-        if (self::$tokenAdmin === null) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
+        self::$tokenAdmin = $this->loginAsAdmin();
+        self::$tokenDeputy = $this->loginAsDeputy($user1->getEmail());
     }
 
     /**
@@ -60,7 +44,7 @@ class GiftControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    public function testgetOneByIdAuth()
+    public function testGetOneByIdAuth(): void
     {
         $url = '/report/' . self::$report1->getId() . '/gift/' . self::$gift1->getId();
 
@@ -68,13 +52,13 @@ class GiftControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
     }
 
-    public function testgetOneByIdAcl()
+    public function testGetOneByIdAcl(): void
     {
         $url2 = '/report/' . self::$report1->getId() . '/gift/' . self::$gift2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
-    public function testgetOneById()
+    public function testGetOneById(): void
     {
         $url = '/report/' . self::$report1->getId() . '/gift/' . self::$gift1->getId();
 
@@ -89,7 +73,7 @@ class GiftControllerTest extends AbstractTestController
         $this->assertEquals(self::$gift1->getAmount(), $data['amount']);
     }
 
-    public function testPostPutAuth()
+    public function testPostPutAuth(): void
     {
         $url = '/report/' . self::$report1->getId() . '/gift';
         $this->assertEndpointNeedsAuth('POST', $url);
@@ -100,7 +84,7 @@ class GiftControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
     }
 
-    public function testPostPutAcl()
+    public function testPostPutAcl(): void
     {
         $url2 = '/report/' . self::$report2->getId() . '/gift';
         $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy);
@@ -112,7 +96,7 @@ class GiftControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('PUT', $url3, self::$tokenDeputy);
     }
 
-    public function testPostPutGetAll()
+    public function testPostPutGetAll(): void
     {
         // POST
         $url = '/report/' . self::$report1->getId() . '/gift';
@@ -171,7 +155,7 @@ class GiftControllerTest extends AbstractTestController
         $this->assertEquals(3.31, $data['gifts'][1]['amount']);
     }
 
-    public function testDeleteAuth()
+    public function testDeleteAuth(): void
     {
         $url = '/report/' . self::$report1->getId() . '/gift/' . self::$gift1->getId();
 
@@ -179,7 +163,7 @@ class GiftControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
     }
 
-    public function testDeleteAcl()
+    public function testDeleteAcl(): void
     {
         $url2 = '/report/' . self::$report1->getId() . '/gift/' . self::$gift2->getId();
         $url3 = '/report/' . self::$report2->getId() . '/gift/' . self::$gift2->getId();
@@ -191,7 +175,7 @@ class GiftControllerTest extends AbstractTestController
     /**
      * @depends testPostPutGetAll
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         $url = '/report/' . self::$report1->getId() . '/gift/' . self::$gift1->getId();
         $this->assertJsonRequest('DELETE', $url, [
@@ -205,9 +189,10 @@ class GiftControllerTest extends AbstractTestController
     /**
      * @depends testDelete
      */
-    public function testGiftsExist()
+    public function testGiftsExist(): void
     {
         $report = self::fixtures()->getReportById(self::$report1->getId());
+        $this->assertNotNull($report);
         $report->setGiftsExist('yes');
 
         self::fixtures()->persist($report);
