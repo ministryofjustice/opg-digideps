@@ -2,21 +2,23 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
+use Doctrine\ORM\EntityManager;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
 use OPG\Digideps\Backend\Service\JWT\JWTService;
-use Tests\OPG\Digideps\Backend\Integration\Fixtures;
-use Doctrine\ORM\EntityManager;
 use Osteel\OpenApi\Testing\ValidatorBuilder;
 use Osteel\OpenApi\Testing\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\DependencyInjection\Container;
+use Tests\OPG\Digideps\Backend\Fixture\FixtureService;
+use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 
 abstract class AbstractTestController extends WebTestCase
 {
     protected static EntityManager $em;
     protected static Fixtures $fixtures;
+    protected static FixtureService $fixtureService;
     protected static KernelBrowser $frameworkBundleClient;
     protected static string|false $deputySecret;
     protected static string|false $adminSecret;
@@ -40,6 +42,7 @@ abstract class AbstractTestController extends WebTestCase
         self::$frameworkBundleClient = static::createClient(['environment' => 'test', 'debug' => false]);
 
         self::$em = static::getContainer()->get('em');
+        self::$fixtureService = static::getContainer()->get(FixtureService::class);
         self::$fixtures = new Fixtures(self::$em);
         self::$em->clear();
 
@@ -51,6 +54,11 @@ abstract class AbstractTestController extends WebTestCase
     public static function fixtures(): Fixtures
     {
         return self::$fixtures;
+    }
+
+    public static function fixtureService(): FixtureService
+    {
+        return self::$fixtureService;
     }
 
     /**
@@ -153,17 +161,16 @@ abstract class AbstractTestController extends WebTestCase
         return $response->headers->get('AuthToken');
     }
 
-    protected function assertEndpointNeedsAuth($method, $uri, $authToken = 'WRONG')
+    protected function assertEndpointNeedsAuth($method, $uri, $authToken = 'WRONG'): void
     {
-        $response = $this->assertJsonRequest($method, $uri, [
+        $this->assertJsonRequest($method, $uri, [
             'mustFail' => true,
             'AuthToken' => $authToken,
             'assertResponseCode' => 419,
         ]);
-        $this->assertEquals(419, $response['code']);
     }
 
-    protected function assertEndpointNotAllowedFor($method, $uri, $token, $data = [])
+    protected function assertEndpointNotAllowedFor($method, $uri, $token, $data = []): void
     {
         $this->assertJsonRequest($method, $uri, [
             'mustFail' => true,
@@ -173,7 +180,7 @@ abstract class AbstractTestController extends WebTestCase
         ]);
     }
 
-    protected function assertEndpointNotFoundFor($method, $uri, $token, $data = [])
+    protected function assertEndpointNotFoundFor($method, $uri, $token, $data = []): void
     {
         $this->assertJsonRequest($method, $uri, [
             'mustFail' => true,
@@ -183,7 +190,7 @@ abstract class AbstractTestController extends WebTestCase
         ]);
     }
 
-    protected function assertEndpointAllowedFor($method, $uri, $token, $data = [])
+    protected function assertEndpointAllowedFor($method, $uri, $token, $data = []): void
     {
         $this->assertJsonRequest($method, $uri, [
             'mustSucceed' => true,
@@ -193,90 +200,57 @@ abstract class AbstractTestController extends WebTestCase
         ]);
     }
 
-    /**
-     * @return string token
-     */
-    protected function loginAsDeputy(string $email = 'deputy@example.org')
+    protected function loginAsDeputy(string $email = 'deputy@example.org'): string
     {
         return $this->login($email, 'DigidepsPass1234', self::$deputySecret);
     }
 
-    /**
-     * @return string token
-     */
-    protected function loginAsMultiClientPrimaryDeputy()
+    protected function loginAsMultiClientPrimaryDeputy(): string
     {
         return $this->login('multi-client-primary-deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
     }
 
-    /**
-     * @return string token
-     */
-    protected function loginAsMultiClientNonPrimaryDeputy()
+    protected function loginAsMultiClientNonPrimaryDeputy(): string
     {
         return $this->login('multi-client-non-primary-deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
     }
 
-    /**
-     * @return string token
-     */
-    protected function loginAsMainDeputy()
+    protected function loginAsMainDeputy(): string
     {
         return $this->login('main-deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
     }
 
-    /**
-     * @return string token
-     */
-    protected function loginAsCoDeputy()
+    protected function loginAsCoDeputy(): string
     {
         return $this->login('co-deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
     }
 
-    /**
-     * @return string token
-     */
-    protected function loginAsPa()
+    protected function loginAsPa(string $email = 'pa@example.org'): string
     {
-        return $this->login('pa@example.org', 'DigidepsPass1234', self::$deputySecret);
+        return $this->login($email, 'DigidepsPass1234', self::$deputySecret);
     }
 
-    /**
-     * @return string token
-     */
-    protected function loginAsPaAdmin()
+    protected function loginAsPaAdmin(string $email = 'pa_admin@example.org'): string
     {
-        return $this->login('pa_admin@example.org', 'DigidepsPass1234', self::$deputySecret);
+        return $this->login($email, 'DigidepsPass1234', self::$deputySecret);
     }
 
-    /**
-     * @return string token
-     */
-    protected function loginAsPaTeamMember()
+    protected function loginAsPaTeamMember(string $email = 'pa_team_member@example.org'): string
     {
-        return $this->login('pa_team_member@example.org', 'DigidepsPass1234', self::$deputySecret);
+        return $this->login($email, 'DigidepsPass1234', self::$deputySecret);
     }
 
-    /**
-     * @return string token
-     */
-    protected function loginAsProf()
+    protected function loginAsProf(): string
     {
         return $this->login('prof@example.org', 'DigidepsPass1234', self::$deputySecret);
     }
 
-    /**
-     * @return string token
-     */
-    protected function loginAsAdmin()
+    protected function loginAsAdmin(): string
     {
         return $this->login('admin@example.org', 'DigidepsPass1234', self::$adminSecret);
     }
 
-    /**
-     * @return string token
-     */
-    protected function loginAsSuperAdmin()
+    protected function loginAsSuperAdmin(): string
     {
         return $this->login('super_admin@example.org', 'DigidepsPass1234', self::$adminSecret);
     }

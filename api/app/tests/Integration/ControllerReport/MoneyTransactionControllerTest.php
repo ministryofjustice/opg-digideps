@@ -5,36 +5,25 @@ namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransaction;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class MoneyTransactionControllerTest extends AbstractTestController
 {
-    private static $deputy1;
-    private static $report1;
-    private static $deputy2;
-    private static $report2;
-    private static $tokenAdmin;
-    private static $tokenDeputy;
-    private static $t1;
-    private static $t2;
+    private static Report $report1;
+    private static Report $report2;
+    private static string $tokenAdmin;
+    private static string $tokenDeputy;
+    private static MoneyTransaction $t1;
+    private static MoneyTransaction $t2;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
+        ['persons' => ['users' => ['lay1' => $user1]], 'orders' => [['pfa' => ['reports' => [self::$report1]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
+        ['orders' => [['pfa' => ['reports' => [self::$report2]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
 
-        $client1 = self::fixtures()->createClient(self::$deputy1);
-        self::fixtures()->flush();
-
-        self::$report1 = self::fixtures()->createReport($client1);
-
-        // deputy 2
-        self::$deputy2 = self::fixtures()->createUser();
-        $client2 = self::fixtures()->createClient(self::$deputy2);
-        self::$report2 = self::fixtures()->createReport($client2);
-
-        // transactions
         self::$t1 = new MoneyTransaction(self::$report1);
         self::$t1->setCategory('dividends')->setAmount(123.45)->setDescription('d1');
         self::$t2 = new MoneyTransaction(self::$report1);
@@ -47,10 +36,8 @@ class MoneyTransactionControllerTest extends AbstractTestController
         self::fixtures()->persist(self::$t1, self::$t2, $t3, $t4);
         self::fixtures()->flush()->clear();
 
-        if (self::$tokenAdmin === null) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
+        self::$tokenAdmin = $this->loginAsAdmin();
+        self::$tokenDeputy = $this->loginAsDeputy($user1->getEmail());
     }
 
     /**
@@ -63,7 +50,7 @@ class MoneyTransactionControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    public function testGetTransactions()
+    public function testGetTransactions(): void
     {
         $url = '/report/' . self::$report1->getId()
             . '?' . http_build_query(['groups' => ['transactionsIn', 'transactionsOut']]);
@@ -89,7 +76,7 @@ class MoneyTransactionControllerTest extends AbstractTestController
         $this->assertEquals('5000.59', $data['money_transactions_out'][2]['amount']);
     }
 
-    public function testAddEditTransaction()
+    public function testAddEditTransaction(): void
     {
         $url = '/report/' . self::$report1->getId() . '/money-transaction';
         $url2 = '/report/' . self::$report2->getId() . '/money-transaction';
@@ -118,7 +105,7 @@ class MoneyTransactionControllerTest extends AbstractTestController
         $this->assertEquals('dividends', $t->getCategory());
     }
 
-    public function testEditTransaction()
+    public function testEditTransaction(): void
     {
         $url = '/report/' . self::$report1->getId() . '/money-transaction/' . self::$t1->getId();
         $url2 = '/report/' . self::$report2->getId() . '/money-transaction/' . self::$t2->getId();

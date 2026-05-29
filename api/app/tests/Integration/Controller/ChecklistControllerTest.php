@@ -5,31 +5,21 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
 use OPG\Digideps\Backend\Entity\Report\Checklist;
-use OPG\Digideps\Backend\Entity\User;
+use OPG\Digideps\Backend\Entity\Report\Report;
+use Tests\OPG\Digideps\Backend\Fixture\Scenario;
 
 class ChecklistControllerTest extends AbstractTestController
 {
-    private static $deputy;
-    private static $client;
-    private static $report;
-    private static $checklist;
+    private static Report $report;
+    private static Checklist $checklist;
 
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
+        ['orders' => [['pfa' => ['reports' => [self::$report]]]]] = self::fixtureService()->instantiateScenario(Scenario::newSimpleLayScenario());
 
-        self::$deputy = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-        self::$client = self::fixtures()->createClient(self::$deputy, ['setFirstname' => 'CL']);
-        self::$report = self::fixtures()->createReport(self::$client);
-        self::$checklist = self::fixtures()->createChecklist(self::$report);
-        self::fixtures()->flush();
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        parent::tearDownAfterClass();
-
-        self::fixtures()->clear();
+        self::$checklist = self::fixtureService()->persist(new Checklist(self::$report));
+        self::fixtureService()->flush();
     }
 
     /**
@@ -56,7 +46,7 @@ class ChecklistControllerTest extends AbstractTestController
         $url = sprintf('/checklist/%s', self::$checklist->getId());
         $response = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
             'data' => ['syncStatus' => Checklist::SYNC_STATUS_SUCCESS],
         ]);
 
@@ -73,7 +63,7 @@ class ChecklistControllerTest extends AbstractTestController
         $url = sprintf('/checklist/%s', self::$checklist->getId());
         $response = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
             'data' => ['syncStatus' => Checklist::SYNC_STATUS_PERMANENT_ERROR, 'syncError' => 'Permanent error occurred'],
         ]);
 
@@ -90,7 +80,7 @@ class ChecklistControllerTest extends AbstractTestController
         $url = sprintf('/checklist/%s', self::$checklist->getId());
         $response = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
             'data' => ['uuid' => '1234-456789-0123'],
         ]);
 

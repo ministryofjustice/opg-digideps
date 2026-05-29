@@ -5,48 +5,32 @@ namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class AccountControllerTest extends AbstractTestController
 {
-    private static $deputy1;
-    private static $report1;
-    private static $account1;
-    private static $deputy2;
-    private static $report2;
-    private static $account2;
-    private static $account3;
-    private static $expense1;
-    private static $tokenAdmin;
-    private static $tokenDeputy;
+    private static Report $report1;
+    private static BankAccount $account1;
+    private static Report $report2;
+    private static BankAccount $account2;
+    private static BankAccount $account3;
+    private static string $tokenAdmin;
+    private static string $tokenDeputy;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        if (self::$tokenAdmin === null) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
+        ['persons' => ['users' => ['lay1' => $user1]], 'orders' => [['pfa' => ['reports' => [self::$report1]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
+        ['orders' => [['pfa' => ['reports' => [self::$report2]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
 
-        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-
-        $client1 = self::fixtures()->createClient(self::$deputy1);
-        self::fixtures()->flush();
-
-        self::$report1 = self::fixtures()->createReport($client1);
         self::$account1 = self::fixtures()->createAccount(self::$report1, ['setBank' => 'bank1']);
-
-        // deputy 2
-        self::$deputy2 = self::fixtures()->createUser();
-        $client2 = self::fixtures()->createClient(self::$deputy2);
-        self::$report2 = self::fixtures()->createReport($client2);
         self::$account2 = self::fixtures()->createAccount(self::$report2, ['setBank' => 'bank2']);
-
-        // create an expense attached to account1 meaning account 1 cannot be removed
         self::$account3 = self::fixtures()->createAccount(self::$report1, ['setBank' => 'bank3']);
 
-        self::$expense1 = self::fixtures()->createReportExpense(
+        // create an expense attached to account1 meaning account 1 cannot be removed
+        self::fixtures()->createReportExpense(
             'other',
             self::$report1,
             [
@@ -57,6 +41,9 @@ class AccountControllerTest extends AbstractTestController
         );
 
         self::fixtures()->flush()->clear();
+
+        self::$tokenAdmin = $this->loginAsAdmin();
+        self::$tokenDeputy = $this->loginAsDeputy($user1->getEmail());
     }
 
     /**
@@ -91,7 +78,7 @@ class AccountControllerTest extends AbstractTestController
 
         // assert account created with transactions
         /* @var $account BankAccount */
-        $account = self::fixtures()->getRepo(BankAccount::class)->find($return['data']['id']);
+        $account = self::fixtures()->getRepo(BankAccount::class)->find($return['data']['id']) ?? throw new \LogicException('Bad fixture setup');
         $this->assertNull($account->getUpdatedAt(), 'account.updatedAt must be null on creation');
         $this->assertFalse($account->getIsClosed());
         $this->assertNull($account->getIsJointAccount());
@@ -164,6 +151,7 @@ class AccountControllerTest extends AbstractTestController
         ])['data'];
 
         $account = self::fixtures()->clear()->getRepo(BankAccount::class)->find(self::$account1->getId());
+        $this->assertNotNull($account);
         $this->assertEquals('bank1-modified', $account->getBank());
         $this->assertTrue($account->getIsClosed());
         $this->assertEquals('yes', $account->getIsJointAccount());

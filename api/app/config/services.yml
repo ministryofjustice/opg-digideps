@@ -202,6 +202,12 @@ services:
         tags:
             - { name: security.voter }
 
+    OPG\Digideps\Backend\Security\ReportVoter:
+        class: OPG\Digideps\Backend\Security\ReportVoter
+        arguments: ["@security.helper"]
+        tags:
+            - { name: security.voter }
+
     OPG\Digideps\Backend\Security\UserVoter:
         class: OPG\Digideps\Backend\Security\UserVoter
         tags:

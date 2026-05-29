@@ -6,6 +6,7 @@ use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\User;
 use Ramsey\Uuid\Uuid;
+use Tests\OPG\Digideps\Backend\Fixture\Scenario;
 
 class ClientControllerTest extends AbstractTestController
 {
@@ -32,7 +33,6 @@ class ClientControllerTest extends AbstractTestController
     // pa
     private static $pa1;
     private static $pa1Client1;
-    //private static $pa1Client1Report1;
 
     private $updateDataLay = [
         'firstname' => 'Firstname',
@@ -115,7 +115,7 @@ class ClientControllerTest extends AbstractTestController
         // pa
         self::$pa1 = self::fixtures()->getRepo(User::class)->findOneByEmail('pa@example.org');
         self::$pa1Client1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client1', 'setCaseNumber' => 'pa000001']);
-        //self::$pa1Client1Report1 = self::fixtures()->createReport(self::$pa1Client1);
+        self::fixtures()->createReport(self::$pa1Client1);
 
         $org = self::fixtures()->createOrganisation('Example', '' . Uuid::uuid4() . '@example.org', true);
         self::fixtures()->flush();
@@ -135,7 +135,7 @@ class ClientControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    public function testUpsertAuth()
+    public function testUpsertAuth(): void
     {
         $url = '/client/upsert';
         $this->assertEndpointNeedsAuth('POST', $url);
@@ -145,7 +145,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
     }
 
-    public function testUpsertPostLayDeputy()
+    public function testUpsertPostLayDeputy(): void
     {
         $url = '/client/upsert';
 
@@ -162,7 +162,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
     }
 
-    public function testUpsertPutLayDeputy()
+    public function testUpsertPutLayDeputy(): void
     {
         $url = '/client/upsert';
 
@@ -190,7 +190,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals(self::$deputy1->getId(), $client->getUsers()->first()->getId());
     }
 
-    public function testUpsertPutPA()
+    public function testUpsertPutPA(): void
     {
         $url = '/client/upsert';
 
@@ -217,13 +217,13 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEquals('pa000001', $client->getCaseNumber()); // assert not changed
     }
 
-    public function testfindByIdAuth()
+    public function testFindByIdAuth(): void
     {
         $url = '/client/' . self::$client1->getId();
         $this->assertEndpointNeedsAuth('GET', $url);
     }
 
-    public function testfindByIdAclNotAllowed()
+    public function testFindByIdAclNotAllowed(): void
     {
         $url = '/client/' . self::$primaryAccountClient->getId();
 
@@ -233,14 +233,14 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenProf);
     }
 
-    public function testfindByIdDischargedClientNotFound()
+    public function testFindByIdDischargedClientNotFound(): void
     {
         $url = '/client/' . self::$primaryAccountDischargedClient->getId();
 
         $this->assertEndpointNotFoundFor('GET', $url, self::$tokenMultiClientPrimaryDeputy);
     }
 
-    public function testfindByIdAclAllowed()
+    public function testFindByIdAclAllowed(): void
     {
         $url = '/client/' . self::$primaryAccountClient->getId();
         $url2 = '/client/' . self::$nonPrimaryAccountClient->getId();
@@ -255,29 +255,35 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEndpointAllowedFor('GET', $url3, self::$tokenPa);
     }
 
-    public function testfindById()
+    public function testFindById(): void
     {
+        ['persons' => ['users' => ['lay1' => $layUser]], 'client' => $client] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
+
         // Lay
-        $url = '/client/' . self::$client1->getId();
+        $url = '/client/' . $client->getId();
+        $token = $this->loginAsDeputy($layUser->getEmail());
         $data = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
-            'AuthToken' => self::$tokenDeputy,
+            'AuthToken' => $token,
         ])['data'];
-        $this->assertEquals(self::$client1->getId(), $data['id']);
-        $this->assertEquals('deputy1Client1', $data['firstname']);
+        $this->assertEquals($client->getId(), $data['id']);
+        $this->assertEquals($client->getFirstname(), $data['firstname']);
+
+        ['persons' => ['users' => ['admin1' => $adminUser]], 'client' => $client, 'orders' => [['pfa' => ['reports' => [$report]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleAdminPaScenario());
 
         // PA
-        $url = '/client/' . self::$pa1Client1->getId() . '?' . http_build_query(['groups' => ['client', 'report-id', 'current-report']]);
+        $url = '/client/' . $client->getId() . '?' . http_build_query(['groups' => ['client', 'report-id', 'current-report']]);
+        $token = $this->loginAsPaAdmin($adminUser->getEmail());
         $data = $this->assertJsonRequest('GET', $url, [
             'mustSucceed' => true,
-            'AuthToken' => self::$tokenPa,
+            'AuthToken' => $token,
         ])['data'];
-        $this->assertEquals(self::$pa1Client1->getId(), $data['id']);
-        $this->assertEquals('pa1Client1', $data['firstname']);
-        //$this->assertEquals(self::$pa1Client1Report1->getId(), $data['current_report']['id']);
+        $this->assertEquals($client->getId(), $data['id']);
+        $this->assertEquals($client->getFirstname(), $data['firstname']);
+        $this->assertEquals($report->getId(), $data['current_report']['id']);
     }
 
-    public function testArchiveClientAuth()
+    public function testArchiveClientAuth(): void
     {
         $url = '/client/' . self::$pa1Client1->getId() . '/archive';
 
@@ -286,7 +292,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin);
     }
 
-    public function testArchiveClient()
+    public function testArchiveClient(): void
     {
         $url = '/client/' . self::$pa1Client1->getId() . '/archive';
         $this->assertEquals(1, count(self::$pa1Client1->getUsers()));
@@ -302,7 +308,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertInstanceOf(\DateTime::class, $client->getArchivedAt());
     }
 
-    public function testDetailsAction()
+    public function testDetailsAction(): void
     {
         $url = '/client/' . self::$client1->getId() . '/details';
 
@@ -323,10 +329,10 @@ class ClientControllerTest extends AbstractTestController
 
         $this->assertEquals('deputy1Client1', $data['firstname']);
         $this->assertCount(1, $data['users']);
-        //$this->assertCount(1, $data['reports']);
+        $this->assertCount(1, $data['reports']);
     }
 
-    public function testGetAllAction()
+    public function testGetAllAction(): void
     {
         $url = '/client/get-all';
 
@@ -348,7 +354,7 @@ class ClientControllerTest extends AbstractTestController
         $this->assertCount(7, $data);
     }
 
-    public function testUpdateDeputy()
+    public function testUpdateDeputy(): void
     {
         $url = '/client/' . self::$client2->getId() . '/update-deputy/' . self::$deputy3->getId();
 

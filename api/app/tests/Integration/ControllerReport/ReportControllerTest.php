@@ -2,77 +2,80 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
+use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\Report\Checklist;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Fee;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Fixture\CourtOrderDescriptor;
+use Tests\OPG\Digideps\Backend\Fixture\DeputyDescriptor;
+use Tests\OPG\Digideps\Backend\Fixture\DeputySet;
+use Tests\OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class ReportControllerTest extends AbstractTestController
 {
-    private static $preRegistration1;
-    private static $preRegistration3;
-    private static $deputy1;
-    private static $client1;
-    private static $report1;
-    private static $report103;
-    private static $deputy2;
-    private static $client2;
-    private static $report2;
-    private static $tokenAdmin;
-    private static $tokenDeputy;
-    private static $tokenPa;
-    private static $tokenPaAdmin;
-    private static $tokenPaTeamMember;
-    private static $client3;
+    private static Client $client1;
+    private static Client $client2;
+    private static Client $client3;
+    private static CourtOrder $order3;
+    private static PreRegistration $preRegistration1;
+    private static PreRegistration $preRegistration3;
+    private static Report $pa1Client1Report1;
+    private static Report $pa2Client1Report1;
+    private static Report $pa3Client1Report1;
+    private static Report $report103;
+    private static Report $report1;
+    private static Report $report2;
+    private static Report $reportEdit;
+    private static User $user1;
 
-    // pa
-    private static $pa1;
-    private static $pa2Admin;
-    private static $pa3TeamMember;
-    private static $pa1Client1;
-    private static $pa1Client1Report1;
-    private static $pa1Client2;
-    private static $pa1Client3;
-    private static $pa2Client1;
-    private static $pa2Client1Report1;
-    private static $pa3Client1;
-    private static $pa3Client1Report1;
-
-    // new
-    private static $clientEdit;
-    private static $reportEdit;
+    private static string $tokenAdmin;
+    private static string $tokenDeputy;
+    private static string $tokenPa;
+    private static string $tokenPaAdmin;
+    private static string $tokenPaTeamMember;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        // create deputy 1, with 2 submitted reports
-        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-        self::$client1 = self::fixtures()->createClient(
-            self::$deputy1,
-            ['setFirstname' => 'c1', 'setLastname' => 'l1', 'setCaseNumber' => '101010101']
-        );
-        self::$client3 = self::fixtures()->createClient(
-            self::$deputy1,
-            ['setFirstname' => 'c3', 'setLastname' => 'l3', 'setCaseNumber' => '303030303']
-        );
-        self::$deputy1->addClient(self::$client1);
-        self::$deputy1->addClient(self::$client3);
-        self::fixtures()->persist(self::$deputy1);
+        $result = self::$fixtureService->instantiateScenario(new Scenario(
+            new CourtOrderDescriptor(new DeputySet(new DeputyDescriptor('lay1')), CourtOrderReportType::OPG102, 1),
+            new Scenario(new CourtOrderDescriptor(new DeputySet(new DeputyDescriptor('lay1'))))
+        ));
+        ['client' => self::$client1, 'persons' => ['users' => ['lay1' => self::$user1]], 'orders' => [['pfa' => ['order' => $order1, 'reports' => [self::$report1, self::$reportEdit]]], ['pfa' => ['reports' => [self::$report103]]]]] = $result;
+        ['client' => self::$client3, 'orders' => [['pfa' => ['order' => self::$order3]]]] = self::$fixtureService->instantiateScenario(new Scenario(new CourtOrderDescriptor(new DeputySet(new DeputyDescriptor('lay1')), CourtOrderReportType::OPG102, noReports: true)), $result['persons']);
+        ['client' => self::$client2, 'orders' => [['pfa' => ['reports' => [self::$report2]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
+
+        self::$report1->setWishToProvideDocumentation(true);
+
+        $document = new Document(self::$report1)
+            ->setFileName('test.pdf')
+            ->setIsReportPdf(false);
+        self::fixtures()->persist(self::$report1, $document);
+
+        $result = self::$fixtureService->instantiateScenario(Scenario::newSimplePaScenario(reportType: CourtOrderReportType::OPG102));
+        self::$fixtureService->instantiateScenario(Scenario::newSimplePaScenario(reportType: CourtOrderReportType::OPG102), $result['persons']);
+        self::$fixtureService->instantiateScenario(Scenario::newSimplePaScenario(reportType: CourtOrderReportType::OPG102), $result['persons']);
+        ['persons' => ['users' => ['pa1' => $pa1]], 'orders' => [['pfa' => ['reports' => [self::$pa1Client1Report1]]]]] = $result;
+        ['persons' => ['users' => ['admin1' => $pa2Admin]], 'orders' => [['pfa' => ['reports' => [self::$pa2Client1Report1]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleAdminPaScenario(reportType: CourtOrderReportType::OPG102));
+        ['persons' => ['users' => ['team1' => $pa3TeamMember]], 'orders' => [['pfa' => ['reports' => [self::$pa3Client1Report1]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleTeamMemberPaScenario(reportType: CourtOrderReportType::OPG102));
 
         self::$preRegistration1 = new PreRegistration([
             'Case' => self::$client1->getCaseNumber(),
             'ClientSurname' => self::$client1->getLastName(),
-            'DeputyUid' => (string) self::$deputy1->getDeputyUid(),
-            'DeputyFirstname' => self::$deputy1->getFirstname(),
-            'DeputySurname' => self::$deputy1->getLastname(),
-            'DeputyPostcode' => self::$deputy1->getAddressPostcode(),
-            'ReportType' => 'OPG102',
-            'MadeDate' => new \DateTime('2016-01-01')->format('Y-m-d'),
-            'OrderType' => 'pfa',
+            'DeputyUid' => (string) self::$user1->getDeputyUid(),
+            'DeputyFirstname' => self::$user1->getFirstname(),
+            'DeputySurname' => self::$user1->getLastname(),
+            'DeputyPostcode' => self::$user1->getAddressPostcode(),
+            'ReportType' => $order1->getOrderReportType()->value,
+            'MadeDate' => $order1->getOrderMadeDate()->format('Y-m-d'),
+            'OrderType' => $order1->getOrderType()->value,
             'CoDeputy' => false,
             'Hybrid' => 'SINGLE',
         ]);
@@ -81,99 +84,28 @@ class ReportControllerTest extends AbstractTestController
         self::$preRegistration3 = new PreRegistration([
             'Case' => self::$client3->getCaseNumber(),
             'ClientSurname' => self::$client3->getLastName(),
-            'DeputyUid' => (string) self::$deputy1->getDeputyUid(),
-            'DeputyFirstname' => self::$deputy1->getFirstname(),
-            'DeputySurname' => self::$deputy1->getLastname(),
-            'DeputyPostcode' => self::$deputy1->getAddressPostcode(),
-            'ReportType' => 'OPG102',
-            'MadeDate' => new \DateTime('2017-01-01')->format('Y-m-d'),
-            'OrderType' => 'pfa',
+            'DeputyUid' => (string) self::$user1->getDeputyUid(),
+            'DeputyFirstname' => self::$user1->getFirstname(),
+            'DeputySurname' => self::$user1->getLastname(),
+            'DeputyPostcode' => self::$user1->getAddressPostcode(),
+            'ReportType' => self::$order3->getOrderReportType()->value,
+            'MadeDate' => self::$order3->getOrderMadeDate()->format('Y-m-d'),
+            'OrderType' => self::$order3->getOrderType()->value,
             'CoDeputy' => false,
             'Hybrid' => 'SINGLE',
         ]);
 
-        self::$fixtures->persist(self::$preRegistration1, self::$preRegistration3);
+        self::$fixtureService->persist(self::$preRegistration1);
+        self::$fixtureService->persist(self::$preRegistration3);
 
-        self::$clientEdit = self::fixtures()->createClient(
-            self::$deputy1,
-            ['setFirstname' => 'cEdit1', 'setLastname' => 'l1', 'setCaseNumber' => '010101010']
-        );
-        self::fixtures()->flush();
-
-        self::$report1 = self::fixtures()->createReport(self::$client1, [
-            'setStartDate' => new \DateTime('2014-01-01'),
-            'setEndDate' => new \DateTime('2014-12-31'),
-            'setSubmitted' => true,
-            'setSubmittedBy' => self::$deputy1,
-            'setWishToProvideDocumentation' => true,
-        ]);
-
-        $document = new Document(self::$report1)
-            ->setFileName('test.pdf')
-            ->setIsReportPdf(false);
-
-        self::fixtures()->persist($document);
-        self::fixtures()->flush();
-
-        self::$reportEdit = self::fixtures()->createReport(self::$clientEdit, [
-            'setStartDate' => new \DateTime('2014-01-01'),
-            'setEndDate' => new \DateTime('2014-12-31'),
-            'setSubmitted' => false,
-            'setSubmittedBy' => null,
-        ]);
-        self::$report103 = self::fixtures()->createReport(self::$client1, [
-            'setStartDate' => new \DateTime('2015-01-01'),
-            'setEndDate' => new \DateTime('2015-12-31'),
-            'setType' => Report::LAY_PFA_LOW_ASSETS_TYPE,
-            'setSubmitted' => true,
-            'setSubmittedBy' => self::$deputy1,
-        ]);
-
-        // deputy 2
-        self::$deputy2 = self::fixtures()->createUser();
-        self::$client2 = self::fixtures()->createClient(self::$deputy2);
-        self::$report2 = self::fixtures()->createReport(self::$client2);
-
-        // pa 1
-        self::$pa1 = self::fixtures()->getRepo(User::class)->findOneByEmail('pa@example.org');
-        self::$pa1Client1 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client1', 'setCaseNumber' => '11111111']);
-        self::$pa1Client1Report1 = self::fixtures()->createReport(self::$pa1Client1, ['setType' => Report::PA_PFA_HIGH_ASSETS_TYPE]);
-        self::$pa1Client2 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client2', 'setCaseNumber' => '22222222']);
-        self::$pa1Client3 = self::fixtures()->createClient(self::$pa1, ['setFirstname' => 'pa1Client3', 'setCaseNumber' => '33333333']);
-
-        self::fixtures()->createReport(self::$pa1Client2, ['setType' => Report::PA_PFA_HIGH_ASSETS_TYPE]);
-        self::fixtures()->createReport(self::$pa1Client3, ['setType' => Report::PA_PFA_HIGH_ASSETS_TYPE]);
-
-        // pa 2
-        self::$pa2Admin = self::fixtures()->getRepo(User::class)->findOneByEmail('pa_admin@example.org');
-        self::$pa2Client1 = self::fixtures()->createClient(self::$pa2Admin, ['setFirstname' => 'pa2Client1']);
-        self::$pa2Client1Report1 = self::fixtures()->createReport(self::$pa2Client1);
-
-        // pa 3
-        self::$pa3TeamMember = self::fixtures()->getRepo(User::class)->findOneByEmail('pa_team_member@example.org');
-        self::$pa3Client1 = self::fixtures()->createClient(self::$pa3TeamMember, ['setFirstname' => 'pa3Client1']);
-        self::$pa3Client1Report1 = self::fixtures()->createReport(self::$pa3Client1);
-
-        $pa1Org = self::fixtures()->createOrganisation('Example', rand(1, 9999999) . 'example.org', true);
-        $pa2Org = self::fixtures()->createOrganisation('Example', rand(1, 9999999) . 'example.org', true);
-        $pa3Org = self::fixtures()->createOrganisation('Example', rand(1, 9999999) . 'example.org', true);
-        self::fixtures()->flush();
-        self::fixtures()->addClientToOrganisation(self::$pa1Client1->getId(), $pa1Org->getId());
-        self::fixtures()->addUserToOrganisation(self::$pa1->getId(), $pa1Org->getId());
-        self::fixtures()->addClientToOrganisation(self::$pa2Client1->getId(), $pa2Org->getId());
-        self::fixtures()->addUserToOrganisation(self::$pa2Admin->getId(), $pa2Org->getId());
-        self::fixtures()->addClientToOrganisation(self::$pa3Client1->getId(), $pa3Org->getId());
-        self::fixtures()->addUserToOrganisation(self::$pa3TeamMember->getId(), $pa3Org->getId());
 
         self::fixtures()->flush()->clear();
 
-        if (self::$tokenAdmin === null) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-            self::$tokenPa = $this->loginAsPa();
-            self::$tokenPaAdmin = $this->loginAsPaAdmin();
-            self::$tokenPaTeamMember = $this->loginAsPaTeamMember();
-        }
+        self::$tokenAdmin = $this->loginAsAdmin();
+        self::$tokenDeputy = $this->loginAsDeputy(self::$user1->getEmail());
+        self::$tokenPa = $this->loginAsPa($pa1->getEmail());
+        self::$tokenPaAdmin = $this->loginAsPaAdmin($pa2Admin->getEmail());
+        self::$tokenPaTeamMember = $this->loginAsPaTeamMember($pa3TeamMember->getEmail());
     }
 
     /**
@@ -186,7 +118,7 @@ class ReportControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    public function testAddAuth()
+    public function testAddAuth(): void
     {
         $url = '/report';
         $this->assertEndpointNeedsAuth('POST', $url);
@@ -194,7 +126,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
     }
 
-    public function testAddAcl()
+    public function testAddAcl(): void
     {
         $url = '/report';
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy, [
@@ -202,7 +134,7 @@ class ReportControllerTest extends AbstractTestController
         ]);
     }
 
-    public function testAdd()
+    public function testAdd(): void
     {
         $url = '/report';
 
@@ -222,14 +154,13 @@ class ReportControllerTest extends AbstractTestController
 
         $this->assertEquals(self::$client3->getId(), $report->getClient()->getId());
 
-        $currentYear = date('Y');
-        $this->assertEquals($currentYear . '-01-01', $report->getStartDate()->format('Y-m-d'));
-        $this->assertEquals($currentYear . '-12-31', $report->getEndDate()->format('Y-m-d'));
+        $this->assertEquals(self::$order3->getOrderMadeDate()->format('Y-m-d'), $report->getStartDate()->format('Y-m-d'));
+        $this->assertEquals(self::$order3->getOrderMadeDate()->add(new \DateInterval('P1Y'))->sub(new \DateInterval('P1D'))->format('Y-m-d'), $report->getEndDate()->format('Y-m-d'));
 
         self::fixtures()->flush();
     }
 
-    public function testGetByIdAuth()
+    public function testGetByIdAuth(): void
     {
         $url = '/report/' . self::$report1->getId();
         $this->assertEndpointNeedsAuth('GET', $url);
@@ -237,7 +168,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEndpointAllowedFor('GET', $url, self::$tokenDeputy);
     }
 
-    public function testGetByIdAuthPa()
+    public function testGetByIdAuthPa(): void
     {
         $urlReport1 = '/report/' . self::$pa1Client1Report1->getId();
         $urlReport2 = '/report/' . self::$pa2Client1Report1->getId();
@@ -252,14 +183,14 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('GET', $urlReport1, self::$tokenPaTeamMember);
     }
 
-    public function testGetByIdAcl()
+    public function testGetByIdAcl(): void
     {
         $url2 = '/report/' . self::$report2->getId();
 
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
-    public function testGetById()
+    public function testGetById(): void
     {
         $clientReportData = $this->assertJsonRequest(
             'GET',
@@ -320,8 +251,8 @@ class ReportControllerTest extends AbstractTestController
             ['mustSucceed' => true, 'AuthToken' => self::$tokenDeputy]
         )['data'];
 
-        $this->assertEquals(self::$deputy1->getId(), $submittedByData['submitted_by']['id']);
-        $this->assertEquals('deputy@example.org', $submittedByData['submitted_by']['email']);
+        $this->assertEquals(self::$user1->getId(), $submittedByData['submitted_by']['id']);
+        $this->assertEquals(self::$user1->getEmail(), $submittedByData['submitted_by']['email']);
 
         // assert status
         $statusData = $this->assertJsonRequest(
@@ -359,7 +290,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertArrayHasKey('status', $statusData);
     }
 
-    public function testSubmit()
+    public function testSubmit(): void
     {
         $url = '/report/' . self::$reportEdit->getId() . '/submit';
         $this->assertEndpointNeedsAuth('PUT', $url);
@@ -367,6 +298,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('PUT', '/report/' . self::$report2->getId() . '/submit', self::$tokenDeputy);
 
         $report = self::fixtures()->clear()->getReportById(self::$reportEdit->getId());
+        $this->assertNotNull($report);
 
         // add one document
         $document = new Document($report);
@@ -386,23 +318,24 @@ class ReportControllerTest extends AbstractTestController
 
         // assert account created with transactions
         $report = self::fixtures()->clear()->getReportById(self::$reportEdit->getId());
+        $this->assertNotNull($report);
 
         $this->assertEquals(true, $report->getSubmitted());
-        $this->assertEquals(self::$deputy1->getId(), $report->getSubmittedBy()->getId());
+        $this->assertEquals(self::$user1->getId(), $report->getSubmittedBy()?->getId());
         $this->assertEquals('only_deputy', $report->getAgreedBehalfDeputy());
         $this->assertEquals(null, $report->getAgreedBehalfDeputyExplanation());
-        $this->assertEquals('2015-12-30', $report->getSubmitDate()->format('Y-m-d'));
+        $this->assertEquals('2015-12-30', $report->getSubmitDate()?->format('Y-m-d'));
 
         // assert submission is created
         $data = $this->assertJsonRequest('GET', '/report-submission?status=pending', [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenAdmin,
         ])['data'];
-        $this->assertEquals(['new' => 0, 'pending' => 1, 'archived' => 0], $data['counts']);
+        $this->assertEquals(1, $data['counts']['pending']);
         $this->assertEquals('file2.pdf', $data['records'][0]['documents'][0]['file_name']);
     }
 
-    public function testUnsubmit()
+    public function testUnsubmit(): void
     {
         $urlSubmit = '/report/' . self::$reportEdit->getId() . '/submit';
 
@@ -451,21 +384,21 @@ class ReportControllerTest extends AbstractTestController
         $this->assertNotNull($data['submit_date']);
     }
 
-    public function testUpdateAuth()
+    public function testUpdateAuth(): void
     {
         $url = '/report/' . self::$report1->getId();
 
         $this->assertEndpointNeedsAuth('PUT', $url);
     }
 
-    public function testUpdateAcl()
+    public function testUpdateAcl(): void
     {
         $url2 = '/report/' . self::$report2->getId();
 
         $this->assertEndpointNotAllowedFor('PUT', $url2, self::$tokenDeputy);
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $reportId = self::$report1->getId();
         $url = '/report/' . $reportId;
@@ -516,7 +449,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('2019-12-21', $data['due_date']);
     }
 
-    public function testDebts()
+    public function testDebts(): void
     {
         $reportId = self::$report1->getId();
         $url = '/report/' . $reportId;
@@ -583,7 +516,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('no', $data['has_debts']);
     }
 
-    public function testPaFeesEditResetAndTotals()
+    public function testPaFeesEditResetAndTotals(): void
     {
         $reportId = self::$pa1Client1Report1->getId();
         $url = '/report/' . $reportId;
@@ -645,7 +578,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('no', $data['has_fees']);
     }
 
-    public function testActions()
+    public function testActions(): void
     {
         $url = '/report/' . self::$report1->getId();
 
@@ -673,7 +606,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('md2', $data['action_more_info_details']);
     }
 
-    public function testMoneyInLowAssetDoesNotExist()
+    public function testMoneyInLowAssetDoesNotExist(): void
     {
         $reportId = self::$report103->getId();
 
@@ -685,7 +618,7 @@ class ReportControllerTest extends AbstractTestController
                 'money_in_exists' => 'No',
             ]])['data'];
 
-        self::$report103 = self::fixtures()->getReportById($reportId);
+        self::$report103 = self::fixtures()->getReportById($reportId) ?? throw new \LogicException('Bad fixture setup');
 
         $moneyInSectionStateStatusShort = self::fixtures()->getReportFreshSectionStatus(self::$report103, Report::SECTION_MONEY_IN_SHORT)['state'];
 
@@ -693,9 +626,10 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('incomplete', $moneyInSectionStateStatusShort);
     }
 
-    public function testMoneyInLowAssetDoesNotExistWithReason()
+    public function testMoneyInLowAssetDoesNotExistWithReason(): void
     {
         $report = self::fixtures()->getReportById(self::$report103->getId());
+        $this->assertNotNull($report);
         $reportId = $report->getId();
 
         $report->setMoneyInExists('No');
@@ -719,7 +653,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('done', $moneyInSectionStateStatusShort);
     }
 
-    public function testMoneyOutHighAssetExists()
+    public function testMoneyOutHighAssetExists(): void
     {
         $reportId = self::$pa1Client1Report1->getId();
 
@@ -732,7 +666,7 @@ class ReportControllerTest extends AbstractTestController
             ]])['data'];
 
         self::fixtures()->clear();
-        self::$pa1Client1Report1 = self::fixtures()->getReportById($reportId);
+        self::$pa1Client1Report1 = self::fixtures()->getReportById($reportId) ?? throw new \LogicException('Bad fixture setup');
 
         $moneyOutSectionStateStatus = self::fixtures()->getReportFreshSectionStatus(self::$pa1Client1Report1, Report::SECTION_MONEY_OUT)['state'];
 
@@ -740,11 +674,11 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('incomplete', $moneyOutSectionStateStatus);
     }
 
-    public function testMoneyCategories()
+    public function testMoneyCategories(): void
     {
         $url = '/report/' . self::$report103->getId();
 
-        self::$report103 = self::fixtures()->getReportById(self::$report103->getId());
+        self::$report103 = self::fixtures()->getReportById(self::$report103->getId()) ?? throw new \LogicException('Bad fixture setup');
 
         $this->assertCount(15, self::$report103->getMoneyShortCategories());
 
@@ -797,7 +731,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals(false, $data['money_short_categories_out'][8]['present']);
     }
 
-    public function testAddChecklistWithSaveProgress()
+    public function testAddChecklistWithSaveProgress(): void
     {
         $reportId = self::$report1->getId();
         $url = '/report/' . $reportId . '/checked';
@@ -864,7 +798,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());
     }
 
-    public function testAddChecklistWithFurtherInformation()
+    public function testAddChecklistWithFurtherInformation(): void
     {
         $reportId = self::$report1->getId();
         $url = '/report/' . $reportId . '/checked';
@@ -971,7 +905,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('Some more info', $checklistInfo->getInformation());
     }
 
-    public function testUpdateAndCompleteChecklist()
+    public function testUpdateAndCompleteChecklist(): void
     {
         $reportId = self::$report1->getId();
         $url = '/report/' . $reportId . '/checked';

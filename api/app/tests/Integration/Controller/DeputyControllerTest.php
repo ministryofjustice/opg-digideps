@@ -4,30 +4,16 @@ namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\TestHelpers\DeputyTestHelper;
 use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
-use Tests\OPG\Digideps\Backend\Behat\v2\Helpers\FixtureHelper;
+use Tests\OPG\Digideps\Backend\Fixture\Scenario;
+use Tests\OPG\Digideps\Backend\Fixture\UserType;
 
 class DeputyControllerTest extends AbstractTestController
 {
-    private static JsonHttpTestClient $client;
-    private static FixtureHelper $fixtureHelper;
-
-    public static function setUpBeforeClass(): void
-    {
-        parent::setUpBeforeClass();
-
-        self::$client = new JsonHttpTestClient(self::$frameworkBundleClient, self::$jwtService);
-        self::$fixtureHelper = static::getContainer()->get(FixtureHelper::class);
-    }
-
-    public function setUp(): void
-    {
-        parent::setup();
-    }
-
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
@@ -39,7 +25,7 @@ class DeputyControllerTest extends AbstractTestController
     {
         $url = '/deputy/add';
 
-        self::$client->assertEndpointNeedsAuth('POST', $url);
+        self::assertEndpointNeedsAuth('POST', $url);
     }
 
     public function testAdd()
@@ -48,9 +34,9 @@ class DeputyControllerTest extends AbstractTestController
         $lastName = 'Baggins';
         $email = 'deputy@example.org';
         $deputyUid = '7999999990';
-        $token = self::$client->login($email, 'DigidepsPass1234', self::$deputySecret);
+        $token = self::login($email, 'DigidepsPass1234', self::$deputySecret);
 
-        $return = self::$client->assertJsonRequest('POST', '/deputy/add', [
+        $return = self::assertJsonRequest('POST', '/deputy/add', [
             'data' => [
                 'firstname' => $firstName,
                 'lastname' => $lastName,
@@ -64,6 +50,7 @@ class DeputyControllerTest extends AbstractTestController
 
         $deputy = self::$fixtures->clear()->getRepo(Deputy::class)->find($return['data']['id']);
 
+        $this->assertNotNull($deputy);
         $this->assertEquals($firstName, $deputy->getFirstname());
         $this->assertEquals($lastName, $deputy->getLastname());
         $this->assertEquals($email, $deputy->getEmail1());
@@ -76,9 +63,9 @@ class DeputyControllerTest extends AbstractTestController
         $lastName = 'Baggins';
         $email = 'deputy@example.org';
         $deputyUid = '7999999990';
-        $token = self::$client->login($email, 'DigidepsPass1234', self::$deputySecret);
+        $token = self::login($email, 'DigidepsPass1234', self::$deputySecret);
 
-        $return = self::$client->assertJsonRequest('POST', '/deputy/add', [
+        $return = self::assertJsonRequest('POST', '/deputy/add', [
             'data' => [
                 'firstname' => $firstName,
                 'lastname' => $lastName,
@@ -92,6 +79,7 @@ class DeputyControllerTest extends AbstractTestController
 
         $deputy = self::$fixtures->clear()->getRepo(Deputy::class)->find($return['data']['id']);
 
+        $this->assertNotNull($deputy);
         $this->assertEquals($firstName, $deputy->getFirstname());
         $this->assertEquals($lastName, $deputy->getLastname());
         $this->assertEquals($email, $deputy->getEmail1());
@@ -100,48 +88,35 @@ class DeputyControllerTest extends AbstractTestController
 
     public function testDeputyReportUrlNeedsAuth()
     {
-        self::$client->assertEndpointNeedsAuth('GET', '/v2/deputy/7999999990/courtorders');
+        self::assertEndpointNeedsAuth('GET', '/v2/deputy/7999999990/courtorders');
     }
 
     public function testGetDeputyReportsNotFound()
     {
-        $email = 'n.s1@example.org';
-        $user = self::$fixtures->createUser(
-            email: $email,
-            roleName: User::ROLE_LAY_DEPUTY,
-            deputyUid: 7099999990
-        );
-        self::$fixtureHelper->setPassword($user);
+        $user = self::$fixtureService->instantiateOnlyUser(UserType::Deputy, DeputyType::LAY);
+
         // login to get token
-        $token = self::$client->login($email, 'DigidepsPass1234', self::$deputySecret);
+        $token = self::loginAsDeputy($user->getEmail());
+        $uid = self::$fixtureService->getUid();
 
         // make the API call
-        self::$client->assertJsonRequest(
+        self::assertJsonRequest(
             'GET',
-            '/v2/deputy/7000000000/courtorders',
+            "/v2/deputy/{$uid}/courtorders",
             ['AuthToken' => $token, 'mustFail' => true, 'assertResponseCode' => 404]
         );
     }
 
     public function testGetDeputyReportsEmptyResponse()
     {
-        // setup required user for auth
-        $email = 'n.s2@example.org';
-        $deputyUid = 7099999991;
-        $user = self::$fixtures->createUser(
-            email: $email,
-            roleName: User::ROLE_LAY_DEPUTY,
-            deputyUid: $deputyUid
-        );
-        self::$fixtureHelper->setPassword($user);
-
+        $user = self::$fixtureService->instantiateOnlyUser(UserType::Deputy, DeputyType::LAY);
         // login to get token
-        $token = self::$client->login($email, 'DigidepsPass1234', self::$deputySecret);
+        $token = self::loginAsDeputy($user->getEmail());
 
         // Make API call
-        $responseJson = self::$client->assertJsonRequest(
+        $responseJson = self::assertJsonRequest(
             'GET',
-            "/v2/deputy/{$deputyUid}/courtorders",
+            "/v2/deputy/{$user->getDeputyUid()}/courtorders",
             ['AuthToken' => $token, 'mustSucceed' => true]
         );
 
@@ -150,49 +125,15 @@ class DeputyControllerTest extends AbstractTestController
 
     public function testGetDeputyReportsReturnsResults()
     {
-        $email = 'n.s3@example.org';
-        $deputyUid = 7044444440;
-
-        // create user
-        $user = self::$fixtures->createUser(
-            email: $email,
-            roleName: User::ROLE_LAY_DEPUTY,
-            deputyUid: $deputyUid
-        );
-        self::$fixtureHelper->setPassword($user);
-
-        // generate deputy and set user
-        $deputy = DeputyTestHelper::generateDeputy($email, $deputyUid, $user);
-        self::$fixtures->persist($deputy);
-        self::$fixtures->flush();
-
-        // generate client and set deputy
-        $client = self::$fixtures->createClient($user);
-        $client->setDeputy($deputy);
-        self::$fixtures->persist($client);
-        self::$fixtures->flush();
-
-        // generate courtOrder and set client and deputy
-        $courtOrder = self::$fixtures->createCourtOrder('7055555550', CourtOrderType::PFA, CourtOrderKind::Single, 'ACTIVE');
-        $courtOrder->setClient($client);
-        $deputy->associateWithCourtOrder($courtOrder);
-        self::$fixtures->persist($courtOrder);
-        self::$fixtures->flush();
-
-        // generate and add a report to the court order
-        $startDate = new \DateTime();
-        $report = ReportTestHelper::generateReport(self::$em, $client, startDate: $startDate);
-        $courtOrder->addReport($report);
-        self::$fixtures->persist($courtOrder);
-        self::$fixtures->flush();
+        ['persons' => ['users' => ['lay1' => $user]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
 
         // login to get token
-        $token = self::$client->login($email, 'DigidepsPass1234', self::$deputySecret);
+        $token = self::loginAsDeputy($user->getEmail());
 
         // Make API call
-        $responseJson = self::$client->assertJsonRequest(
+        $responseJson = self::assertJsonRequest(
             'GET',
-            "/v2/deputy/{$deputyUid}/courtorders",
+            "/v2/deputy/{$user->getDeputyUid()}/courtorders",
             ['AuthToken' => $token, 'mustSucceed' => true]
         );
 
