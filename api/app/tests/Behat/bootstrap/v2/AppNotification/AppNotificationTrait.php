@@ -11,7 +11,7 @@ trait AppNotificationTrait
     /**
      * @When I visit the service notification page
      */
-    public function iVisitTheServiceNotificationPage()
+    public function iVisitTheServiceNotificationPage(): void
     {
         $this->iVisitTheAdminNotificationPage();
         $this->iAmOnAdminNotificationPage();
@@ -20,7 +20,7 @@ trait AppNotificationTrait
     /**
      * @When I set a service notification
      */
-    public function iSetAServiceNotification()
+    public function iSetAServiceNotification(): void
     {
         $this->fillField('setting[content]', 'Lorem ipsum');
         $this->selectOption('setting[enabled]', '1');
@@ -30,7 +30,7 @@ trait AppNotificationTrait
     /**
      * @When I set a service notification and see it on the login page
      */
-    public function iSetAServiceNotificationAndSeeItOnTheClientPage()
+    public function iSetAServiceNotificationAndSeeItOnTheClientPage(): void
     {
         $this->fillField('setting[content]', 'Lorem ipsum');
         $this->selectOption('setting[enabled]', '1');
@@ -46,7 +46,7 @@ trait AppNotificationTrait
     /**
      * @When I set a service notification without a message
      */
-    public function iSetAServiceNotificationWithoutAMessage()
+    public function iSetAServiceNotificationWithoutAMessage(): void
     {
         $this->fillField('setting[content]', '');
         $this->selectOption('setting[enabled]', '1');
@@ -56,7 +56,7 @@ trait AppNotificationTrait
     /**
      * @Then I should see the service message on the client login page
      */
-    public function iShouldSeeTheServiceMessageOnTheClientLoginPage()
+    public function iShouldSeeTheServiceMessageOnTheClientLoginPage(): void
     {
         $this->iVisitTheClientLoginPage();
         $this->iAmOnClientLoginPage();
@@ -68,7 +68,7 @@ trait AppNotificationTrait
     /**
      * @Then I turn off the service notification and can no longer see it on the client login page
      */
-    public function iTurnOffTheServiceNotificationAndCanNoLongerSeeItOnTheClientLoginPage()
+    public function iTurnOffTheServiceNotificationAndCanNoLongerSeeItOnTheClientLoginPage(): void
     {
         $this->loginToAdminAs($this->loggedInUserDetails->getUserEmail());
 
@@ -88,7 +88,7 @@ trait AppNotificationTrait
     /**
      * @Then I should see a validation error
      */
-    public function iShouldSeeAValidationError()
+    public function iShouldSeeAValidationError(): void
     {
         $this->assertOnErrorMessage($this->validationMsg);
     }
@@ -105,7 +105,7 @@ trait AppNotificationTrait
     /**
      * @Then I should see a banner confirming where the app is hosted
      */
-    public function iShouldSeeABannerConfirmingTheAppIAmUsing()
+    public function iShouldSeeABannerConfirmingTheAppIAmUsing(): void
     {
         $hostedEnvironment = $this->getHostedEnvironment();
         $this->iVisitAdminSearchUserPage();
@@ -117,7 +117,7 @@ trait AppNotificationTrait
     /**
      * @Then I should not see a banner confirming where the app is hosted
      */
-    public function iShouldNotSeeABannerConfirmingTheAppIAmUsing()
+    public function iShouldNotSeeABannerConfirmingTheAppIAmUsing(): void
     {
         $hostedEnvironment = $this->getHostedEnvironment();
 

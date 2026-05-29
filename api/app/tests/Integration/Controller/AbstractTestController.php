@@ -20,8 +20,8 @@ abstract class AbstractTestController extends WebTestCase
     protected static Fixtures $fixtures;
     protected static FixtureService $fixtureService;
     protected static KernelBrowser $frameworkBundleClient;
-    protected static string|false $deputySecret;
-    protected static string|false $adminSecret;
+    protected static string $deputySecret;
+    protected static string $adminSecret;
     protected static ?JWTService $jwtService;
     protected ?int $loggedInUserId = null;
     private ?ValidatorInterface $openapiValidator = null;
@@ -47,8 +47,8 @@ abstract class AbstractTestController extends WebTestCase
         self::$em->clear();
 
         self::$jwtService = static::getContainer()->get(JWTService::class);
-        self::$deputySecret = getenv('SECRETS_FRONT_KEY');
-        self::$adminSecret = getenv('SECRETS_ADMIN_KEY');
+        self::$deputySecret = getenv('SECRETS_FRONT_KEY') ?: '';
+        self::$adminSecret = getenv('SECRETS_ADMIN_KEY') ?: '';
     }
 
     public static function fixtures(): Fixtures
@@ -120,14 +120,7 @@ abstract class AbstractTestController extends WebTestCase
         return $return;
     }
 
-    /**
-     * @param string|false $clientSecret
-     *
-     * @return mixed token
-     *
-     * @throws \Exception
-     */
-    public function login(string $email, string $password, $clientSecret)
+    public function login(string $email, string $password, string $clientSecret): string
     {
         self::$frameworkBundleClient->request('GET', '/'); // warm up to get container
 
@@ -158,7 +151,7 @@ abstract class AbstractTestController extends WebTestCase
 
         $response = self::$frameworkBundleClient->getResponse();
 
-        return $response->headers->get('AuthToken');
+        return $response->headers->get('AuthToken') ?? throw new \LogicException('Fixture login unsuccessful');
     }
 
     protected function assertEndpointNeedsAuth($method, $uri, $authToken = 'WRONG'): void
@@ -268,7 +261,7 @@ abstract class AbstractTestController extends WebTestCase
         }
     }
 
-    private function getOpenApiSpecification()
+    private function getOpenApiSpecification(): ValidatorInterface
     {
         if ($this->openapiValidator === null) {
             $this->openapiValidator = ValidatorBuilder::fromYamlFile(__DIR__ . '/../../../openapi/specification.yaml')->getValidator();

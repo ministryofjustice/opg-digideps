@@ -35,14 +35,14 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'lastname' => 'Tolley',
                 'email' => 'behat-missingdata@example.org',
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
         ]);
     }
 
     /** @test */
     public function dontSaveInvalidUserToDB()
     {
-        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
         $this->assertJsonRequest('POST', '/selfregister', [
             'mustFail' => true,
@@ -55,7 +55,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'client_lastname' => '',
                 'case_number' => '12345678',
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
         ]);
 
         $user = self::fixtures()->getRepo(User::class)->findOneBy(['email' => 'behat-dontsaveme@example.org']);
@@ -65,7 +65,7 @@ class SelfRegisterControllerTest extends AbstractTestController
     /** @test */
     public function dontSaveUserToDBWithInvalidCaseNumber()
     {
-        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
         $response = $this->assertJsonRequest('POST', '/selfregister', [
             'mustFail' => true,
@@ -78,7 +78,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'client_lastname' => 'Morrison',
                 'case_number' => '123456789',
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
         ]);
 
         $user = self::fixtures()->getRepo(User::class)->findOneBy(['email' => 'dontsavewithinvalidcasenum@example.org']);
@@ -97,7 +97,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->fixtures()->persist($preRegistration);
         $this->fixtures()->flush($preRegistration);
 
-        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
         $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
             'mustSucceed' => true,
@@ -111,7 +111,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'client_lastname' => 'Cross-Tolley',
                 'case_number' => '12345678',
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
         ]);
 
         $id = $responseArray['data']['id'];
@@ -138,7 +138,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->fixtures()->persist($preRegistration);
         $this->fixtures()->flush($preRegistration);
 
-        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
         $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
             'mustSucceed' => true,
@@ -152,7 +152,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'case_number' => '1234567790',
                 'postcode' => 'SW1',
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
         ]);
 
         $id = $responseArray['data']['id'];
@@ -177,7 +177,7 @@ class SelfRegisterControllerTest extends AbstractTestController
      */
     public function userNotFoundinPreRegistration()
     {
-        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
         $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
             'mustFail' => true,
@@ -191,7 +191,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'client_lastname' => 'Cl',
                 'case_number' => '12345600',
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
         ]);
 
         $expectedErrorJson = json_encode([
@@ -219,7 +219,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->fixtures()->persist($preRegistration);
         $this->fixtures()->flush($preRegistration);
 
-        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
         $this->assertJsonRequest('POST', '/selfregister', [
             'mustSucceed' => true,
@@ -233,10 +233,10 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'client_lastname' => 'Cross-Tolley',
                 'case_number' => '12345678',
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
         ]);
 
-        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
         $this->assertJsonRequest('POST', '/selfregister', [
             'mustFail' => true,
@@ -253,7 +253,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'client_lastname' => 'Cross-Tolley',
                 'case_number' => '12345678', // already taken !
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
         ]);
     }
 
@@ -269,7 +269,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->fixtures()->persist($preRegistration);
         $this->fixtures()->flush();
 
-        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
         $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
             'mustFail' => true,
@@ -283,7 +283,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'client_lastname' => 'Cross-Tolley',
                 'case_number' => '97643164',
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
         ]);
 
         $expectedErrorJson = [
@@ -347,7 +347,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->fixtures()->persist($preRegistration);
         $this->fixtures()->flush();
 
-        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
         $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
             'mustFail' => true,
@@ -361,7 +361,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'client_lastname' => 'Douglas',
                 'case_number' => '97643164',
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
         ]);
 
         $expectedErrorJson = [
@@ -425,7 +425,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->fixtures()->persist($preRegistration);
         $this->fixtures()->flush();
 
-        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
         $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
             'mustFail' => true,
@@ -439,7 +439,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'client_lastname' => 'Douglas',
                 'case_number' => '97643164',
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
         ]);
 
         $expectedErrorJson = [
@@ -503,7 +503,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->fixtures()->persist($preRegistration);
         $this->fixtures()->flush();
 
-        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
         $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
             'mustFail' => true,
@@ -517,7 +517,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'client_lastname' => 'Douglas',
                 'case_number' => '97643164',
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
         ]);
 
         $expectedErrorJson = [
@@ -591,7 +591,7 @@ class SelfRegisterControllerTest extends AbstractTestController
     public function testDeputiesNonPrimaryAccountSetToFalse()
     {
         $this->generateDeputyPrimaryAccount();
-        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
         // create second deputy account
         $preRegistration2 = $this->generatePreRegistration('23456789', 'Jones', '700000019965', 'Zac', 'Tolley');
@@ -611,7 +611,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'client_lastname' => 'Jones',
                 'case_number' => '23456789',
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
         ]);
 
         $id = $responseArray['data']['id'];
@@ -629,7 +629,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->generateDeputyAndCoDeputyPreRegistration(null);
 
         // deputy logs in ang registers
-        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
         $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
             'mustSucceed' => true,
@@ -643,7 +643,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'client_lastname' => 'Cross-Tolley',
                 'case_number' => '12345678',
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
         ]);
 
         $deputyId = $responseArray['data']['id'];
@@ -672,7 +672,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'client_lastname' => 'Cross-Tolley',
                 'case_number' => '12345678',
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
         ]);
 
         $existingDeputyAccounts = $responseArray['data']['existingDeputyAccounts'];
@@ -691,7 +691,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->generateDeputyAndCoDeputyPreRegistration($deputyPrimaryAccountUid);
 
         // deputy logs in ang registers before inviting co-deputy
-        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
         $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
             'mustSucceed' => true,
@@ -705,7 +705,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'client_lastname' => 'Cross-Tolley',
                 'case_number' => '12345678',
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
         ]);
 
         $deputyId = $responseArray['data']['id'];
@@ -734,7 +734,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'client_lastname' => 'Cross-Tolley',
                 'case_number' => '12345678',
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
         ]);
 
         $existingDeputyAccounts = $responseArray['data']['existingDeputyAccounts'];
@@ -748,7 +748,7 @@ class SelfRegisterControllerTest extends AbstractTestController
     {
         $deputyPreRegistration = $this->generateDeputyAndCoDeputyPreRegistration(null);
 
-        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
         $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
             'mustSucceed' => true,
@@ -762,7 +762,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'client_lastname' => 'Cross-Tolley',
                 'case_number' => '12345678',
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
         ]);
 
         $deputyId = $responseArray['data']['id'];
@@ -789,7 +789,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'coDeputyUid' => '700000019951',
                 'existingDeputyAccounts' => null,
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
         ]);
 
         $response = $responseArray['data'];
@@ -802,7 +802,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->assertTrue($response['is_primary']);
     }
 
-    private function generateDeputyAndCoDeputyPreRegistration($deputyPrimaryUid)
+    private function generateDeputyAndCoDeputyPreRegistration($deputyPrimaryUid): PreRegistration
     {
         $deputyUid = intval('7' . str_pad((string) mt_rand(1, 99999999), 11, '0', STR_PAD_LEFT));
 
@@ -832,7 +832,7 @@ class SelfRegisterControllerTest extends AbstractTestController
         $this->fixtures()->persist($preRegistration);
         $this->fixtures()->flush($preRegistration);
 
-        $token = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+        $token = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
         $responseArray = $this->assertJsonRequest('POST', '/selfregister', [
             'mustSucceed' => true,
@@ -846,7 +846,7 @@ class SelfRegisterControllerTest extends AbstractTestController
                 'client_lastname' => 'Smith',
                 'case_number' => $casenumber,
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
         ]);
 
         return $responseArray['data']['deputy_uid'];

@@ -9,7 +9,7 @@ trait AuthenticationTrait
     /**
      * @Given I am logged in as :email with password :password
      */
-    public function iAmLoggedInAsWithPassword($email, $password)
+    public function iAmLoggedInAsWithPassword($email, $password): void
     {
         $this->visitPath('/logout');
         $this->visitPath('/login');
@@ -21,7 +21,7 @@ trait AuthenticationTrait
     /**
      * @Given I am logged in to admin as :email with password :password
      */
-    public function iAmLoggedInToAdminAsWithPassword($email, $password)
+    public function iAmLoggedInToAdminAsWithPassword($email, $password): void
     {
         $this->visitAdminPath('/logout');
 
@@ -37,7 +37,7 @@ trait AuthenticationTrait
      *
      * @Given I am on admin login page
      */
-    public function iAmAtAdminLogin()
+    public function iAmAtAdminLogin(): void
     {
         $this->visitAdminPath('/login');
     }
@@ -45,7 +45,7 @@ trait AuthenticationTrait
     /**
      * @When /^I open the (admin |)(activation|password reset) page for "(.+)"$/
      */
-    public function openActivationOrPasswordResetPage($admin, $pageType, $email)
+    public function openActivationOrPasswordResetPage($admin, $pageType, $email): void
     {
         $url = sprintf('/admin/fixtures/user-registration-token?email=%s', $email);
         $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'DigidepsPass1234');
@@ -65,7 +65,7 @@ trait AuthenticationTrait
     /**
      * @Then the URL :url should be forbidden
      */
-    public function theUrlShouldBeForbidden($url)
+    public function theUrlShouldBeForbidden($url): void
     {
         $previousUrl = $this->getSession()->getCurrentUrl();
         $this->visit($url);
@@ -76,7 +76,7 @@ trait AuthenticationTrait
     /**
      * @Then the following :area pages should return the following status:
      */
-    public function theFollowingPagesShouldReturnTheFollowingStatus($area, TableNode $table)
+    public function theFollowingPagesShouldReturnTheFollowingStatus($area, TableNode $table): void
     {
         foreach ($table->getRowsHash() as $url => $expectedReturnCode) {
             $area == 'admin' ? $this->visitAdminPath($url) : $this->visitPath($url);

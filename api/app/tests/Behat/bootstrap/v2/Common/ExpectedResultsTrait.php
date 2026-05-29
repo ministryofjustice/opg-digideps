@@ -32,7 +32,7 @@ trait ExpectedResultsTrait
         bool $sectionsHaveTotals = false,
         bool $hasGrandTotal = true,
         bool $debug = false
-    ) {
+    ): void {
         $this->tableHtml = '';
         $this->summarySectionItemsFound = [];
 
@@ -81,7 +81,7 @@ trait ExpectedResultsTrait
         }
     }
 
-    private function extractH3Contents()
+    private function extractH3Contents(): void
     {
         $h3s = $this->getSession()->getPage()->findAll('xpath', '//h3');
 
@@ -96,7 +96,7 @@ trait ExpectedResultsTrait
      *
      * @throws BehatException
      */
-    private function assertGrandTotal()
+    private function assertGrandTotal(): void
     {
         if (!empty($grandTotal = $this->getGrandTotal())) {
             $normalizedTotal = $this->normalizeIntToCurrencyString($grandTotal);
@@ -117,7 +117,7 @@ trait ExpectedResultsTrait
      *
      * @throws BehatException
      */
-    private function assertSectionTotal(string $sectionName)
+    private function assertSectionTotal(string $sectionName): void
     {
         if (!is_null($sectionTotal = $this->getSectionTotal($sectionName))) {
             $normalizedTotal = $this->normalizeIntToCurrencyString($sectionTotal);
@@ -142,7 +142,7 @@ trait ExpectedResultsTrait
     /**
      * Removes blank elements from the summary section items array to help with debugging and skip empty loops.
      */
-    private function removeEmptyElements()
+    private function removeEmptyElements(): void
     {
         $this->summarySectionItemsFound = array_filter(
             $this->summarySectionItemsFound,
@@ -153,7 +153,7 @@ trait ExpectedResultsTrait
     /**
      * Extracts text from elements contained under a description list (dl) element on the page.
      */
-    private function extractDescriptionListContents(NodeElement $element)
+    private function extractDescriptionListContents(NodeElement $element): void
     {
         if ($element->getTagName() == 'dl') {
             $xpath = '//dd';
@@ -195,7 +195,7 @@ trait ExpectedResultsTrait
     /**
      * Extracts text from elements contained under a table body (tbody) element on the page.
      */
-    private function extractTableBodyContents(NodeElement $element)
+    private function extractTableBodyContents(NodeElement $element): void
     {
         if ($element->getTagName() == 'tbody') {
             $xpath = '//th';
@@ -225,7 +225,7 @@ trait ExpectedResultsTrait
      * Extracts monetary values from div or tr > th elements that contain the strings 'Total' and '£' (for divs)
      * and 'Total' (for tr > th). This covers section totals and grand totals on summary pages.
      */
-    private function extractMonetaryTotals()
+    private function extractMonetaryTotals(): void
     {
         $totalElements = [];
 
@@ -253,7 +253,7 @@ trait ExpectedResultsTrait
      *
      * @throws BehatException
      */
-    private function assertSectionContainsExpectedResultsSimplified(string $sectionName, bool $partialMatch = false)
+    private function assertSectionContainsExpectedResultsSimplified(string $sectionName, bool $partialMatch = false): void
     {
         $sectionExists = array_key_exists($sectionName, $this->submittedAnswersByFormSections);
 
@@ -294,7 +294,7 @@ trait ExpectedResultsTrait
         }
     }
 
-    private function matchOnValue(bool $partialMatch, $fieldValue, $fieldName)
+    private function matchOnValue(bool $partialMatch, $fieldValue, $fieldName): void
     {
         if ($partialMatch) {
             $matches = array_filter($this->summarySectionItemsFound, function ($item) use ($fieldValue) {
@@ -343,7 +343,7 @@ MSG;
         throw new BehatException($failureMessage);
     }
 
-    private function formatFoundAndMissingAnswers()
+    private function formatFoundAndMissingAnswers(): array
     {
         $foundText = !empty($this->foundAnswers) ? json_encode($this->foundAnswers, JSON_PRETTY_PRINT) : 'No form values found';
         $missingText = json_encode($this->missingAnswers, JSON_PRETTY_PRINT);
@@ -387,7 +387,7 @@ MSG;
      *
      * @return mixed|string
      */
-    private function normalizeValue($value)
+    private function normalizeValue($value): mixed
     {
         if (is_numeric($value)) {
             $value = $this->normalizeIntToCurrencyString($value);
@@ -404,7 +404,7 @@ MSG;
      *
      * @return mixed|string
      */
-    public function normalizeIntToCurrencyString($fieldValue)
+    public function normalizeIntToCurrencyString($fieldValue): mixed
     {
         if (is_int($fieldValue)) {
             return sprintf('£%s.00', number_format($fieldValue));

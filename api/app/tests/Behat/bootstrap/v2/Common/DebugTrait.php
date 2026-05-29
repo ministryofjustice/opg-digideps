@@ -15,7 +15,7 @@ trait DebugTrait
     /**
      * @Then /^wtf$/
      */
-    public function wtf()
+    public function wtf(): void
     {
         $this->printLastResponse();
     }
@@ -25,7 +25,7 @@ trait DebugTrait
      *
      * @BeforeSuite
      */
-    public static function cleanDebugSnapshots()
+    public static function cleanDebugSnapshots(): void
     {
         $handle = opendir(self::$DEBUG_SNAPSHOT_DIR);
 
@@ -42,7 +42,7 @@ trait DebugTrait
      *
      * @AfterStep
      */
-    public function debugOnException(AfterStepScope $scope)
+    public function debugOnException(AfterStepScope $scope): void
     {
         if (
             ($result = $scope->getTestResult())
@@ -57,7 +57,7 @@ trait DebugTrait
     /**
      * @Then I save the page as :name
      */
-    public function debug(string $name, \Exception $ex)
+    public function debug(string $name, \Exception $ex): void
     {
         for ($i = 1; $i < 100; ++$i) {
             $iPadded = str_pad((string) $i, 2, '0', STR_PAD_LEFT);

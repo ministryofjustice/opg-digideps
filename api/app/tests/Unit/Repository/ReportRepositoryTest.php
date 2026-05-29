@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Repository;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use OPG\Digideps\Backend\Domain\Report\ReportAccessService;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Fee;
@@ -63,7 +64,7 @@ final class ReportRepositoryTest extends TestCase
 
     public function testAddFeesToReportIfMissingForPAUserWithFeesMissing(): void
     {
-        $this->mockReport->shouldReceive('getFees')->andReturn([]);
+        $this->mockReport->shouldReceive('getFees')->andReturn(new ArrayCollection([]));
 
         $this->mockReport->shouldReceive('addFee')->times(count(Fee::$feeTypeIds))->andReturnSelf();
 
@@ -74,7 +75,7 @@ final class ReportRepositoryTest extends TestCase
 
     public function testAddFeesToReportIfMissingForPAUserWithFeesNotMissing(): void
     {
-        $this->mockReport->shouldReceive('getFees')->andReturn(['foo']);
+        $this->mockReport->shouldReceive('getFees')->andReturn(new ArrayCollection(['foo']));
 
         $this->mockReport->shouldReceive('addFee')->never();
 

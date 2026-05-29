@@ -20,9 +20,18 @@ final class UserRetentionPolicyCommandTest extends KernelTestCase
 {
     use ProphecyTrait;
 
-    private UserRepository|ObjectProphecy $userRepository;
-    private ObjectProphecy|ObservableEventDispatcher $eventDispatcher;
-    private LoggerInterface|ObjectProphecy $logger;
+    /**
+     * @var ObjectProphecy<UserRepository> $userRepository
+     */
+    private ObjectProphecy $userRepository;
+    /**
+     * @var ObjectProphecy<ObservableEventDispatcher> $eventDispatcher
+     */
+    private ObjectProphecy $eventDispatcher;
+    /**
+     * @var ObjectProphecy<LoggerInterface> $logger
+     */
+    private ObjectProphecy $logger;
     private CommandTester $commandTester;
 
     public function setUp(): void

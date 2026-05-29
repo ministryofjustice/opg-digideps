@@ -391,7 +391,7 @@ trait DocumentsSectionTrait
     /**
      * @Then /^I should be redirected to the re\-upload page$/
      */
-    public function iShouldBeRedirectedToTheReUploadPage()
+    public function iShouldBeRedirectedToTheReUploadPage(): void
     {
         $this->iAmOnReUploadPage();
     }

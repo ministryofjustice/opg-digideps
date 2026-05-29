@@ -9,7 +9,7 @@ trait LinksPreviouslySavedTrait
     /**
      * @When I save the current URL as :urlId
      */
-    public function iSaveTheCurrentUrlAs($urlId)
+    public function iSaveTheCurrentUrlAs($urlId): void
     {
         self::$linksCache[$urlId] = $this->getSession()->getCurrentUrl();
     }
@@ -17,7 +17,7 @@ trait LinksPreviouslySavedTrait
     /**
      * @When I go to the URL previously saved as :urlId
      */
-    public function iGoToTheUrlPreviouslySavedAs($urlId)
+    public function iGoToTheUrlPreviouslySavedAs($urlId): void
     {
         $previouslySavedUrl = self::getPreviouslySavedLinkByUrlId($urlId);
         $this->visitPath($previouslySavedUrl);
@@ -26,7 +26,7 @@ trait LinksPreviouslySavedTrait
     /**
      * @When the current URL should match with the URL previously saved as :urlId
      */
-    public function theCurrentUrlShoulMatchWithTheUrlPreviouslySavedAs($urlId)
+    public function theCurrentUrlShoulMatchWithTheUrlPreviouslySavedAs($urlId): void
     {
         $previouslySavedUrl = self::getPreviouslySavedLinkByUrlId($urlId);
         $currentUrl = $this->getSession()->getCurrentUrl();
@@ -42,7 +42,7 @@ trait LinksPreviouslySavedTrait
      *
      * @throws \Exception
      */
-    private static function getPreviouslySavedLinkByUrlId($urlId)
+    private static function getPreviouslySavedLinkByUrlId($urlId): string
     {
         if (empty(self::$linksCache[$urlId])) {
             throw new \Exception("$urlId not saved");

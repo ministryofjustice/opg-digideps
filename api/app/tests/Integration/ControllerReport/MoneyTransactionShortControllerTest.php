@@ -104,7 +104,7 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
         $t = self::fixtures()->getRepo(MoneyTransactionShortIn::class)->find($data); /* @var $t MoneyTransactionShortIn */
         $this->assertEquals(123.45, $t->getAmount());
         $this->assertEquals('d', $t->getDescription());
-        $this->assertEquals('2014-04-05', $t->getDate()->format('Y-m-d'));
+        $this->assertEquals('2014-04-05', $t->getDate()?->format('Y-m-d'));
     }
 
     public function testEditTransaction()
@@ -131,7 +131,7 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
         $t = self::fixtures()->getRepo(MoneyTransactionShort::class)->find($data); /* @var $t MoneyTransactionShort */
         $this->assertEquals(124.46, $t->getAmount());
         $this->assertEquals('d-changed', $t->getDescription());
-        $this->assertEquals('2014-04-06', $t->getDate()->format('Y-m-d'));
+        $this->assertEquals('2014-04-06', $t->getDate()?->format('Y-m-d'));
     }
 
     public function testDelete()

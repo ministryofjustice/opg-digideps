@@ -9,20 +9,20 @@ use Behat\Step\When;
 trait ReportingSectionsTrait
 {
     #[When('I follow link back to report overview page')]
-    public function iNavigateBackToReportSection()
+    public function iNavigateBackToReportSection(): void
     {
         $this->iClickBasedOnAttributeTypeAndValue('a', 'data-action', 'report.overview');
         $this->iAmOnReportsOverviewPage();
     }
 
     #[When('I press report sub section back button')]
-    public function iPressReportSubSectionBackButton()
+    public function iPressReportSubSectionBackButton(): void
     {
         $this->clickLink('Back');
     }
 
     #[When('I view the report overview page')]
-    public function iGoToReportOverviewUrl()
+    public function iGoToReportOverviewUrl(): void
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
         $reportOverviewUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'overview');
@@ -30,7 +30,7 @@ trait ReportingSectionsTrait
     }
 
     #[When('I should see :section as :status')]
-    public function iShouldSeeSectionAs($section, $status)
+    public function iShouldSeeSectionAs($section, $status): void
     {
         $this->iAmOnReportsOverviewPage();
         $sectionFormatted = sprintf('/%s/%s/%s', $this->reportUrlPrefix, $this->loggedInUserDetails->getCurrentReportId(), $section);
@@ -63,7 +63,7 @@ trait ReportingSectionsTrait
     }
 
     #[When('I should not see :sectionName report section')]
-    public function iShouldNotSeeSection(string $sectionName)
+    public function iShouldNotSeeSection(string $sectionName): void
     {
         $this->iAmOnReportsOverviewPage();
         $sectionFormatted = sprintf('/%s/%s/%s', $this->reportUrlPrefix, $this->loggedInUserDetails->getCurrentReportId(), $sectionName);
@@ -82,7 +82,7 @@ trait ReportingSectionsTrait
         }
     }
 
-    private function getAllReportSections()
+    private function getAllReportSections(): array
     {
         $xpath = "//div[normalize-space(@class)='opg-overview-section']|//li[contains(@class, 'opg-overview-section')]";
 
@@ -90,7 +90,7 @@ trait ReportingSectionsTrait
     }
 
     #[Then('I should see text asking to answer the question')]
-    public function iSeeTextRequestingToAnswerQuestion()
+    public function iSeeTextRequestingToAnswerQuestion(): void
     {
         $table = $this->getSession()->getPage()->find('css', 'dl');
 
@@ -119,18 +119,18 @@ trait ReportingSectionsTrait
     }
 
     #[When('I choose to save and add another')]
-    public function iChooseToSaveAndAddAnother()
+    public function iChooseToSaveAndAddAnother(): void
     {
         $this->pressButton('Save and add another');
     }
 
     #[When('I choose to save and continue')]
-    public function iChooseToSaveAndContinue()
+    public function iChooseToSaveAndContinue(): void
     {
         $this->pressButton('Save and continue');
     }
 
-    public function moneyFormat($value)
+    public function moneyFormat($value): string
     {
         return number_format(floatval($value), 2, '.', ',');
     }

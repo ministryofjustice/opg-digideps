@@ -11,7 +11,7 @@ trait ACLTrait
     /**
      * @Then I should be able to access the :page
      */
-    public function iShouldBeAbleToAccessAnalyticsPage(string $page)
+    public function iShouldBeAbleToAccessAnalyticsPage(string $page): void
     {
         $linkText = 'Download %s';
         $this->assertLinkWithTextIsOnPage(sprintf($linkText, $page));
@@ -21,7 +21,7 @@ trait ACLTrait
         $this->canAccessSensitivePage();
     }
 
-    private function canAccessSensitivePage()
+    private function canAccessSensitivePage(): void
     {
         $this->assertIntEqualsInt(
             200,
@@ -30,7 +30,7 @@ trait ACLTrait
         );
     }
 
-    private function canNotAccessSensitivePage()
+    private function canNotAccessSensitivePage(): void
     {
         $this->assertIntEqualsInt(
             403,
@@ -42,7 +42,7 @@ trait ACLTrait
     /**
      * @Then I should not be able to access the :page
      */
-    public function iShouldNotBeAbleToAccessAnalyticsPage(string $page)
+    public function iShouldNotBeAbleToAccessAnalyticsPage(string $page): void
     {
         $this->iVisitAdminAnalyticsPage();
 
@@ -54,7 +54,7 @@ trait ACLTrait
         $this->canNotAccessSensitivePage();
     }
 
-    private function visitAnalyticsPage(string $pageName)
+    private function visitAnalyticsPage(string $pageName): void
     {
         $lowercasePageName = strtolower($pageName);
 
@@ -85,7 +85,7 @@ trait ACLTrait
     /**
      * @Then /^I should be able to access the \'([^\']*)\' page$/
      */
-    public function iShouldBeAbleToAccessThePage(string $page)
+    public function iShouldBeAbleToAccessThePage(string $page): void
     {
         $this->assertLinkWithTextIsOnPage($page);
 
@@ -100,7 +100,7 @@ trait ACLTrait
     /**
      * @Then /^I should not be able to access the \'([^\']*)\' page$/
      */
-    public function iShouldNotBeAbleToAccessThePage(string $page)
+    public function iShouldNotBeAbleToAccessThePage(string $page): void
     {
         $this->assertLinkWithTextIsNotOnPage($page);
 

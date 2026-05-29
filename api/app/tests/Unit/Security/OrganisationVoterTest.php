@@ -19,7 +19,10 @@ final class OrganisationVoterTest extends KernelTestCase
 
     private User $user;
     private Organisation $subject;
-    private ObjectProphecy|Security $security;
+    /**
+     * @var ObjectProphecy<Security> $security
+     */
+    private ObjectProphecy $security;
     private OrganisationVoter $sut;
 
     public function setUp(): void

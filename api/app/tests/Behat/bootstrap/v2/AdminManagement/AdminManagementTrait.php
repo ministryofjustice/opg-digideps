@@ -14,7 +14,7 @@ trait AdminManagementTrait
     /**
      * @Then I should be able to add a super admin user
      */
-    public function iShouldBeAbleToAddSuperAdmin()
+    public function iShouldBeAbleToAddSuperAdmin(): void
     {
         $this->selectOption('admin[roleType]', 'staff');
         $this->assertValueIsInSelect(User::ROLE_SUPER_ADMIN, 'admin[roleNameStaff]');
@@ -23,7 +23,7 @@ trait AdminManagementTrait
     /**
      * @Then I should be able to add an admin manager user
      */
-    public function iShouldBeAbleToAddAdminManager()
+    public function iShouldBeAbleToAddAdminManager(): void
     {
         $this->selectOption('admin[roleType]', 'staff');
         $this->assertValueIsInSelect(User::ROLE_ADMIN_MANAGER, 'admin[roleNameStaff]');
@@ -32,7 +32,7 @@ trait AdminManagementTrait
     /**
      * @Then I should be able to add an admin user
      */
-    public function iShouldBeAbleToAddAdmin()
+    public function iShouldBeAbleToAddAdmin(): void
     {
         $this->selectOption('admin[roleType]', 'staff');
         $this->assertValueIsInSelect(User::ROLE_ADMIN, 'admin[roleNameStaff]');
@@ -41,7 +41,7 @@ trait AdminManagementTrait
     /**
      * @Then I should not be able to add a super admin user
      */
-    public function iShouldNotBeAbleToAddSuperAdmin()
+    public function iShouldNotBeAbleToAddSuperAdmin(): void
     {
         $this->selectOption('admin[roleType]', 'staff');
         $this->assertValueIsNotInSelect(User::ROLE_SUPER_ADMIN, 'admin[roleNameStaff]');
@@ -50,7 +50,7 @@ trait AdminManagementTrait
     /**
      * @Then I should not be able to add an admin manager user
      */
-    public function iShouldNotBeAbleToAddAdminManager()
+    public function iShouldNotBeAbleToAddAdminManager(): void
     {
         $this->selectOption('admin[roleType]', 'staff');
         $this->assertValueIsNotInSelect(User::ROLE_ADMIN_MANAGER, 'admin[roleNameStaff]');
@@ -59,7 +59,7 @@ trait AdminManagementTrait
     /**
      * @When I enter valid details for a new super admin user
      */
-    public function iAddANewSuperAdminUser()
+    public function iAddANewSuperAdminUser(): void
     {
         $this->iVisitAdminAddUserPage();
         $this->setNewUserFormValues(User::ROLE_SUPER_ADMIN);
@@ -77,7 +77,7 @@ trait AdminManagementTrait
     /**
      * @When I enter valid details for a new admin manager user
      */
-    public function iAddANewAdminManagerUser()
+    public function iAddANewAdminManagerUser(): void
     {
         $this->iVisitAdminAddUserPage();
         $this->setNewUserFormValues(User::ROLE_ADMIN_MANAGER);
@@ -95,7 +95,7 @@ trait AdminManagementTrait
     /**
      * @When I enter valid details for a new admin user
      */
-    public function iAddANewAdminUser()
+    public function iAddANewAdminUser(): void
     {
         $this->iVisitAdminAddUserPage();
         $this->setNewUserFormValues(User::ROLE_ADMIN);
@@ -110,7 +110,7 @@ trait AdminManagementTrait
         }
     }
 
-    private function setNewUserFormValues(string $roleName)
+    private function setNewUserFormValues(string $roleName): void
     {
         $this->completedFormFields['text']['admin[email]'] = $this->faker->safeEmail();
         $this->completedFormFields['text']['admin[firstname]'] = $this->faker->firstName();
@@ -125,7 +125,7 @@ trait AdminManagementTrait
     /**
      * @When I submit the form
      */
-    public function iSubmitTheForm()
+    public function iSubmitTheForm(): void
     {
         $this->pressButton('Save user');
     }
@@ -133,7 +133,7 @@ trait AdminManagementTrait
     /**
      * @Then the new user should be added
      */
-    public function theNewUserShouldBeAdded()
+    public function theNewUserShouldBeAdded(): void
     {
         $this->iAmOnAdminUsersSearchPage();
         $this->assertOnAlertMessage('email has been sent to the user');
@@ -155,7 +155,7 @@ trait AdminManagementTrait
     /**
      * @When I attempt to delete an existing :role user
      */
-    public function iAttemptToDeleteExistingAdminUser($role)
+    public function iAttemptToDeleteExistingAdminUser($role): void
     {
         if (is_null($this->interactingWithUserDetails)) {
             switch (strtolower($role)) {
@@ -191,7 +191,7 @@ trait AdminManagementTrait
     /**
      * @Then the user should be deleted
      */
-    public function theUserShouldBeDeleted()
+    public function theUserShouldBeDeleted(): void
     {
         $email = $this->interactingWithUserDetails->getUserEmail();
         $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
@@ -202,7 +202,7 @@ trait AdminManagementTrait
     /**
      * @Then the user should not be deleted
      */
-    public function theUserShouldNotBeDeleted()
+    public function theUserShouldNotBeDeleted(): void
     {
         $email = $this->interactingWithUserDetails->getUserEmail();
         $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
@@ -213,7 +213,7 @@ trait AdminManagementTrait
     /**
      * @When I update my firstname and lastname
      */
-    public function updateMyFirstnameAndLastname()
+    public function updateMyFirstnameAndLastname(): void
     {
         $this->clickLink('Edit your details');
         $this->completedFormFields['user_details[firstname]'] = $this->faker->firstName();
@@ -229,7 +229,7 @@ trait AdminManagementTrait
     /**
      * @Then my details should be updated
      */
-    public function myDetailsShouldBeUpdated()
+    public function myDetailsShouldBeUpdated(): void
     {
         $locator = "//th[text()='Full name']/parent::tr";
         $fullnameTableRow = $this->getSession()->getPage()->find('xpath', $locator);
@@ -247,7 +247,7 @@ trait AdminManagementTrait
     /**
      * @When I attempt to update an existing :role users details
      */
-    public function iAttemptToUpdateExistingAdminUser($role)
+    public function iAttemptToUpdateExistingAdminUser($role): void
     {
         if (is_null($this->interactingWithUserDetails)) {
             switch (strtolower($role)) {
@@ -291,7 +291,7 @@ trait AdminManagementTrait
     /**
      * @Then the users details should be updated
      */
-    public function theUserShouldBeUpdated()
+    public function theUserShouldBeUpdated(): void
     {
         $this->assertOnAlertMessage('Your changes were saved');
         $id = $this->interactingWithUserDetails->getUserId();
@@ -329,7 +329,7 @@ trait AdminManagementTrait
     /**
      * @Then the users details should not be updated
      */
-    public function theUserShouldNotBeUpdated()
+    public function theUserShouldNotBeUpdated(): void
     {
         $email = $this->interactingWithUserDetails->getUserEmail();
         $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
@@ -366,7 +366,7 @@ trait AdminManagementTrait
     /**
      * @When I delete the existing admin user
      */
-    public function IDeletedTheExistingAdminUser()
+    public function IDeletedTheExistingAdminUser(): void
     {
         $this->iVisitAdminEditUserPageForTheAdminUser();
 

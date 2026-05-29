@@ -11,7 +11,7 @@ trait DecisionSectionTrait
     /**
      * @When /^I view and start the decisions report section$/
      */
-    public function iViewAndStartTheDecisionsReportSection()
+    public function iViewAndStartTheDecisionsReportSection(): void
     {
         $this->iViewDecisionsSection();
         $this->clickLink('Start decisions');
@@ -20,7 +20,7 @@ trait DecisionSectionTrait
     /**
      * @Given I view the decisions report section
      */
-    public function iViewDecisionsSection()
+    public function iViewDecisionsSection(): void
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
         $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'decisions');
@@ -38,7 +38,7 @@ trait DecisionSectionTrait
     /**
      * @Given /^I confirm that the clients mental capacity is the same$/
      */
-    public function iConfirmThatTheClientsMentalCapacityIsTheSame()
+    public function iConfirmThatTheClientsMentalCapacityIsTheSame(): void
     {
         $this->chooseOption('mental_capacity[hasCapacityChanged]', 'stayedSame', 'hasCapacityChanged', 'stayed the same');
         $this->pressButton('Save and continue');
@@ -48,7 +48,7 @@ trait DecisionSectionTrait
     /**
      * @Given /^I confirm the clients last assessment date$/
      */
-    public function iConfirmTheClientsLastAssessmentDate()
+    public function iConfirmTheClientsLastAssessmentDate(): void
     {
         $this->fillInField('mental_assessment[mentalAssessmentDate][month]', '01', 'mentalAssessmentDate');
 
@@ -61,7 +61,7 @@ trait DecisionSectionTrait
     /**
      * @Given I confirm that :response significant decisions have been made for the client
      */
-    public function iConfirmThatNoSignificantDecisionsHaveBeenMadeForTheClient(string $response)
+    public function iConfirmThatNoSignificantDecisionsHaveBeenMadeForTheClient(string $response): void
     {
         $this->chooseOption('decision_exist[significantDecisionsMade]', $response, 'significantDecisionsMade');
         $this->fillInField('decision_exist[reasonForNoDecisions]', 'test', 'reasonForNoDecisions');
@@ -71,7 +71,7 @@ trait DecisionSectionTrait
     /**
      * @Then /^the decisions summary page should contain the details I entered$/
      */
-    public function theDecisionsSummaryPageShouldContainTheDetailsIEntered()
+    public function theDecisionsSummaryPageShouldContainTheDetailsIEntered(): void
     {
         $this->iAmOnDecisionsSummaryPage();
 
@@ -158,14 +158,14 @@ trait DecisionSectionTrait
     /**
      * @When I edit an existing decision
      */
-    public function iEditAnExistingDecision()
+    public function iEditAnExistingDecision(): void
     {
         $this->iAmOnDecisionsSummaryPage();
 
         $this->getSession()->getPage()->find('css', '.behat-region-decisions')->clickLink('Edit');
     }
 
-    private function assertReasonForNoDecisionsIsNotVisible(bool $shouldNotBeVisible)
+    private function assertReasonForNoDecisionsIsNotVisible(bool $shouldNotBeVisible): void
     {
         $reasonForNoDecisionPath = './/label[text()[contains(.,"Reason for no decisions")]]/..';
 

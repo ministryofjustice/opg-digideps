@@ -169,8 +169,9 @@ class AccountControllerTest extends AbstractTestController
     public function testAccountDelete()
     {
         $account1Id = self::$account1->getId();
-        $account = self::fixtures()->getRepo(BankAccount::class)->find(self::$account1->getId()); /* @var $account BankAccount */
-        $report = $account->getReport();
+        $account = self::fixtures()->getRepo(BankAccount::class)->find(self::$account1->getId());
+        $report = $account?->getReport();
+        $this->assertNotNull($report);
         $report->setSectionStatusesCached([]);
         $url = '/account/' . $account1Id;
         $url2 = '/account/' . self::$account2->getId();

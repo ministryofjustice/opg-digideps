@@ -13,7 +13,7 @@ trait FormTrait
      *
      * @Then the form should be invalid
      */
-    public function theFormShouldBeInvalid()
+    public function theFormShouldBeInvalid(): void
     {
         $this->assertResponseStatus(200);
 
@@ -32,7 +32,7 @@ trait FormTrait
      *
      * @Then the form should be valid
      */
-    public function theFormShouldBeValid()
+    public function theFormShouldBeValid(): void
     {
         $driver = $this->getSession()->getDriver();
         if (get_class($driver) != 'Behat\Mink\Driver\Selenium2Driver') {
@@ -53,7 +53,7 @@ trait FormTrait
     /**
      * @return array of IDs of input/select/textarea elements inside a  .form-group.form-group-error CSS class
      */
-    private function getElementsIdsWithValidationErrors()
+    private function getElementsIdsWithValidationErrors(): array
     {
         $ret = [];
 
@@ -77,7 +77,7 @@ trait FormTrait
      *
      * @Then the following fields should have an error:
      */
-    public function theFollowingFieldsOnlyShouldHaveAnError(TableNode $table)
+    public function theFollowingFieldsOnlyShouldHaveAnError(TableNode $table): void
     {
         $foundIdsWithErrors = $this->getElementsIdsWithValidationErrors();
 
@@ -101,7 +101,7 @@ trait FormTrait
     /**
      * @Then /^the following fields should have the corresponding values:$/
      */
-    public function followingFieldsShouldHaveTheCorrespondingValues(TableNode $fields)
+    public function followingFieldsShouldHaveTheCorrespondingValues(TableNode $fields): void
     {
         foreach ($fields->getRowsHash() as $field => $value) {
             $this->assertFieldContains($field, $value);
@@ -111,7 +111,7 @@ trait FormTrait
     /**
      * @Then the following hidden fields should have the corresponding values:
      */
-    public function theFollowingHiddenFieldsShouldHaveTheCorrespondingValues(TableNode $fields)
+    public function theFollowingHiddenFieldsShouldHaveTheCorrespondingValues(TableNode $fields): void
     {
         foreach ($fields->getRowsHash() as $field => $value) {
             /** @var NodeElement $elementsFound */
@@ -129,7 +129,7 @@ trait FormTrait
     /**
      * @Then the :test field should contain the :yearType year
      */
-    public function fieldShouldContainYear($field, $yearType)
+    public function fieldShouldContainYear($field, $yearType): void
     {
         $currentYear = intval(date('Y'));
 
