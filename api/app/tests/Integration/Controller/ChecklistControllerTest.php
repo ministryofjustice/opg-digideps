@@ -16,9 +16,7 @@ class ChecklistControllerTest extends AbstractTestController
     public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
-        [
-            'orders' => [['pfa' => ['reports' => [self::$report]]]]
-        ] = self::fixtureService()->instantiateScenario(Scenario::newSimpleLayScenario());
+        ['orders' => [['pfa' => ['reports' => [self::$report]]]]] = self::fixtureService()->instantiateScenario(Scenario::newSimpleLayScenario());
 
         self::$checklist = self::fixtureService()->persist(new Checklist(self::$report));
         self::fixtureService()->flush();

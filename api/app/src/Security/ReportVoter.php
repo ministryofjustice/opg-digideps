@@ -9,7 +9,10 @@ use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Security;
 
@@ -20,8 +23,12 @@ class ReportVoter extends Voter
 {
     public const string ACCESS = 'access';
 
-    public function __construct(private readonly Security $security, private readonly ReportAccessService $reportAccessService)
-    {
+    public function __construct(
+        private readonly Security $security,
+        private readonly ReportAccessService $reportAccessService,
+        private readonly AuthorizationCheckerInterface $authorizationChecker,
+        private readonly LoggerInterface $logger,
+    ) {
     }
 
     protected function supports(string $attribute, mixed $subject): bool
@@ -61,6 +68,13 @@ class ReportVoter extends Voter
             return true;
         }
 
-        return in_array($report->getId(), $this->reportAccessService->getVisibleReportIdsGivenUserId($user->getId()));
+        $vote =  in_array($report->getId(), $this->reportAccessService->getVisibleReportIdsGivenUserId($user->getId()));
+
+        if (!$vote && $this->authorizationChecker->isGranted('edit', $report->getClient())) {
+            $this->logger->alert("Naughty access to report {$report->getId()} of client {$report->getClient()->getId()} by user {$user->getId()}");
+            return true;
+        }
+
+        return $vote;
     }
 }

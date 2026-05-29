@@ -12,8 +12,10 @@ use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Security\ReportVoter;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\Security;
 
@@ -33,7 +35,7 @@ class ReportVoterTest extends TestCase
         $connection->method('executeQuery')->willReturn($result);
         $em = $this->createMock(EntityManagerInterface::class);
         $em->method('getConnection')->willReturn($connection);
-        return new ReportVoter($security, new ReportAccessService($em));
+        return new ReportVoter($security, new ReportAccessService($em), $this->createStub(AuthorizationCheckerInterface::class), $this->createStub(LoggerInterface::class));
     }
 
     private function makeToken(?User $user): TokenInterface
@@ -84,13 +86,13 @@ class ReportVoterTest extends TestCase
 
     public function testSupportsAttribute(): void
     {
-        $this->assertTrue(new ReportVoter($this->createStub(Security::class), $this->createStub(ReportAccessService::class))->supportsAttribute(ReportVoter::ACCESS));
-        $this->assertFalse(new ReportVoter($this->createStub(Security::class), $this->createStub(ReportAccessService::class))->supportsAttribute('DELETE'));
+        $this->assertTrue(new ReportVoter($this->createStub(Security::class), $this->createStub(ReportAccessService::class), $this->createStub(AuthorizationCheckerInterface::class), $this->createStub(LoggerInterface::class))->supportsAttribute(ReportVoter::ACCESS));
+        $this->assertFalse(new ReportVoter($this->createStub(Security::class), $this->createStub(ReportAccessService::class), $this->createStub(AuthorizationCheckerInterface::class), $this->createStub(LoggerInterface::class))->supportsAttribute('DELETE'));
     }
 
     public function testSupportsType(): void
     {
-        $this->assertTrue(new ReportVoter($this->createStub(Security::class), $this->createStub(ReportAccessService::class))->supportsType(Report::class));
-        $this->assertFalse(new ReportVoter($this->createStub(Security::class), $this->createStub(ReportAccessService::class))->supportsType(Client::class));
+        $this->assertTrue(new ReportVoter($this->createStub(Security::class), $this->createStub(ReportAccessService::class), $this->createStub(AuthorizationCheckerInterface::class), $this->createStub(LoggerInterface::class))->supportsType(Report::class));
+        $this->assertFalse(new ReportVoter($this->createStub(Security::class), $this->createStub(ReportAccessService::class), $this->createStub(AuthorizationCheckerInterface::class), $this->createStub(LoggerInterface::class))->supportsType(Client::class));
     }
 }
