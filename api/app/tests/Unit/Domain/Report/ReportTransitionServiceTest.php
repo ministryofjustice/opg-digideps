@@ -8,9 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
-use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
 use OPG\Digideps\Backend\Domain\Report\ReportTransitionService;
-use OPG\Digideps\Backend\Domain\Report\ReportType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;
@@ -84,6 +82,58 @@ final class ReportTransitionServiceTest extends TestCase
         return $courtOrder;
     }
 
+    /* HYBRID TO DUAL TESTS */
+
+    public function testHybridToDual(): void
+    {
+        // pfa and hw both pre-exist; hw is sibling of the pfa
+        $pfaCourtOrder = $this->makeCourtOrder(CourtOrderType::PFA, 10, CourtOrderKind::Dual);
+        $hwCourtOrder = $this->makeCourtOrder(CourtOrderType::HW, 11, CourtOrderKind::Dual);
+        $pfaCourtOrder->setSibling($hwCourtOrder);
+
+        // hw and pfa have a single (hybrid) report before the transition
+        $hybridReport = $this->makeReport(12, Report::LAY_COMBINED_HIGH_ASSETS_TYPE, [$pfaCourtOrder, $hwCourtOrder]);
+
+        // old hybrid sibling is the hw court order
+        $this->mockCourtOrderRepository->expects(self::once())
+            ->method('find')
+            ->with($hwCourtOrder->getId())
+            ->willReturn($hwCourtOrder);
+
+        // new report is created for the hw as it splits to a dual
+        $newHwReport = $this->makeReport(13, Report::LAY_HW_TYPE, []);
+
+        $this->mockReportService->expects(self::once())
+            ->method('createReportFromOrder')
+            ->with($hwCourtOrder)
+            ->willReturn($newHwReport);
+
+        // hw and pfa remain paired but transition from hybrid to dual
+        $courtOrderRelationshipChange = new CourtOrderRelationshipChange(
+            courtOrder: $pfaCourtOrder,
+            oldKind: CourtOrderKind::Hybrid,
+            oldSiblingId: $hwCourtOrder->getId(),
+        );
+
+        // act: transition the hybrid to a dual
+        $result = $this->sut->transitionReports($courtOrderRelationshipChange);
+
+        // assert: the transition was carried out without errors
+        self::assertNotNull($result);
+        self::assertEmpty($result->errorMessages);
+
+        // assert: the hybrid report has been retained as the report on the pfa and has had its type reset
+        self::assertEquals($hybridReport, $pfaCourtOrder->getLatestReport());
+        self::assertEquals(Report::LAY_PFA_HIGH_ASSETS_TYPE, $pfaCourtOrder->getLatestReport()->getType());
+
+        // assert: the newly-created report has been set as the latest report on the hw
+        self::assertEquals($newHwReport, $hwCourtOrder->getLatestReport());
+        self::assertEquals(Report::LAY_HW_TYPE, $hwCourtOrder->getLatestReport()->getType());
+
+        // assert: the hybrid report is no longer associated with the hw
+        self::assertNotContains($hybridReport, $hwCourtOrder->getReports());
+    }
+
     /* DUAL TO HYBRID TESTS */
 
     public function testDualToHybrid(): void
@@ -118,8 +168,8 @@ final class ReportTransitionServiceTest extends TestCase
         self::assertEmpty($result->errorMessages);
 
         // assert: the pfa report is retained as the hybrid
-        self::assertContains($pfaReport, $pfaCourtOrder->getReports());
-        self::assertContains($pfaReport, $hwCourtOrder->getReports());
+        self::assertEquals($pfaReport, $pfaCourtOrder->getLatestReport());
+        self::assertEquals($pfaReport, $hwCourtOrder->getLatestReport());
 
         // assert: the old dual report has had its type reset to hybrid
         self::assertEquals(Report::LAY_COMBINED_HIGH_ASSETS_TYPE, $pfaCourtOrder->getLatestReport()->getType());
