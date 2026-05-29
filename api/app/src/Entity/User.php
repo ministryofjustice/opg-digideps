@@ -167,7 +167,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[JMS\Type('boolean')]
     #[JMS\Groups(['user', 'user-list'])]
     #[ORM\Column(name: 'active', type: 'boolean', nullable: true, options: ['default' => false])]
-    private $active;
+    private $active = false;
 
     /**
      * @var string
@@ -554,7 +554,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * Get tokenDate.
      *
-     * @return \DateTime
+     * @return ?\DateTime
      */
     public function getTokenDate()
     {
@@ -855,7 +855,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return \DateTime
+     * @return ?\DateTime
      */
     public function getAgreeTermsUseDate()
     {

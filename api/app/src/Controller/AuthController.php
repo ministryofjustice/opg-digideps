@@ -3,7 +3,7 @@
 namespace OPG\Digideps\Backend\Controller;
 
 use OPG\Digideps\Backend\Entity\User;
-use OPG\Digideps\Backend\EventListener\RestInputOuputFormatter;
+use OPG\Digideps\Backend\EventListener\RestInputOutputFormatter;
 use OPG\Digideps\Backend\Security\HeaderTokenAuthenticator;
 use OPG\Digideps\Backend\Security\RedisUserProvider;
 use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
@@ -37,7 +37,7 @@ class AuthController extends RestController
      */
     #[Route(path: '/login', name: 'api_login', methods: ['POST'])]
     public function login(
-        RestInputOuputFormatter $restInputOutputFormatter,
+        RestInputOutputFormatter $restInputOutputFormatter,
         EntityManagerInterface $em,
         ClientInterface $redis,
     ) {

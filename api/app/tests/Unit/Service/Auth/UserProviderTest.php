@@ -56,7 +56,7 @@ final class UserProviderTest extends TestCase
 
         $this->assertEquals($user, $this->userProvider->loadUserByUsername('token'));
 
-        $expireCalls = array_filter($this->redis->calls, fn($c) => $c[0] === 'expire' && $c[1] === 'token' && $c[2] === 7);
+        $expireCalls = array_filter($this->redis->calls, fn ($c) => $c[0] === 'expire' && $c[1] === 'token' && $c[2] === 7);
         $this->assertCount(1, $expireCalls, 'expire should be called once with the token and timeout');
     }
 
@@ -79,10 +79,10 @@ final class UserProviderTest extends TestCase
         $token2 = $this->userProvider->generateRandomTokenAndStore($user);
         $this->assertNotEquals($token, $token2, 'token must generate a new value when called for the 2nd time');
 
-        $setCalls = array_filter($this->redis->calls, fn($c) => $c[0] === 'set');
+        $setCalls = array_filter($this->redis->calls, fn ($c) => $c[0] === 'set');
         $this->assertGreaterThanOrEqual(1, count($setCalls));
 
-        $expireCalls = array_filter($this->redis->calls, fn($c) => $c[0] === 'expire');
+        $expireCalls = array_filter($this->redis->calls, fn ($c) => $c[0] === 'expire');
         $this->assertGreaterThanOrEqual(1, count($expireCalls));
     }
 
@@ -90,7 +90,7 @@ final class UserProviderTest extends TestCase
     {
         $this->userProvider->removeToken('token');
 
-        $setCalls = array_filter($this->redis->calls, fn($c) => $c[0] === 'set' && $c[1] === 'token' && $c[2] === null);
+        $setCalls = array_filter($this->redis->calls, fn ($c) => $c[0] === 'set' && $c[1] === 'token' && $c[2] === null);
         $this->assertCount(1, $setCalls);
     }
 }

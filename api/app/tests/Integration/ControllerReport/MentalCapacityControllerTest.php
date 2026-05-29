@@ -2,7 +2,6 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
-use OPG\Digideps\Backend\Entity\Report\Gift;
 use OPG\Digideps\Backend\Entity\Report\MentalCapacity;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use Tests\OPG\Digideps\Backend\Fixture\Scenario;

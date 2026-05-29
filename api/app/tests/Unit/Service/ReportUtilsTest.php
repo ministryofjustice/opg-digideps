@@ -94,7 +94,7 @@ final class ReportUtilsTest extends TestCase
         $endDate = new \DateTime($endDate);
         $startDate = $sut->generateReportStartDateFromEndDate($endDate);
 
-        $this->assertEquals($expectedStartDate, $startDate->format('Y-m-d'));
+        $this->assertEquals($expectedStartDate, $startDate?->format('Y-m-d'));
     }
 
     #[DataProvider('parseDateProvider')]
