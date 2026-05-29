@@ -16,6 +16,7 @@ import { Accordion, Button, CharacterCount, Checkboxes, ErrorSummary, ExitThisPa
 import EnableJavascript from './modules_new/EnableJavascript'
 import FormSingleSubmit from './modules_new/FormSingleSubmit'
 import ToggleRequired from './modules_new/ToggleRequired'
+import Autosave from './modules_new/Autosave'
 
 window.addEventListener('DOMContentLoaded', () => {
   // Session Timeout
@@ -56,6 +57,8 @@ window.addEventListener('DOMContentLoaded', () => {
   UploadFile.init(document)
 
   ToggleRequired.init(document)
+
+  Autosave.init(document, 30, window.fetch.bind(window))
 
   // Error summaries
   const errorSummaries = document.querySelector('#error-summary')
