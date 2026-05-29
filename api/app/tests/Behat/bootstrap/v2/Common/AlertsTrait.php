@@ -8,7 +8,7 @@ use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 trait AlertsTrait
 {
-    public function assertOnAlertMessage(string $alertMessage)
+    public function assertOnAlertMessage(string $alertMessage): void
     {
         $xpath = '//div[contains(@class, "opg-alert__message")]|//div[contains(@class, "opg-alert--info")]|//div[contains(@class, "govuk-error-summary")]';
         $alertDiv = $this->getSession()->getPage()->find('xpath', $xpath);

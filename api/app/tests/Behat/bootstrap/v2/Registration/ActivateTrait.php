@@ -17,7 +17,7 @@ trait ActivateTrait
     /**
      * @Given /^pre\-registration details exist to allow a lay deputy to register for the service$/
      */
-    public function preRegistrationDetailsExistToAllowALayDeputyToRegisterForTheService()
+    public function preRegistrationDetailsExistToAllowALayDeputyToRegisterForTheService(): void
     {
         $this->existingPreRegistration = $this->fixtureHelper->createPreRegistration();
     }
@@ -25,7 +25,7 @@ trait ActivateTrait
     /**
      * @Given pre-registration details exist with no unicode characters
      */
-    public function preRegistrationDetailsExistWithNoUnicodeCharacters()
+    public function preRegistrationDetailsExistWithNoUnicodeCharacters(): void
     {
         $this->existingPreRegistration = $this->fixtureHelper->createPreRegistration('OPG102', 'PFA', 'O\'Shea');
     }
@@ -34,7 +34,7 @@ trait ActivateTrait
      * @Given they create a :typeOfUser user with name details that match the pre-registration details
      * @Given a case manager creates an :typeOfUser user
      */
-    public function aCaseManagerCreatesALayDeputyUser(string $typeOfUser)
+    public function aCaseManagerCreatesALayDeputyUser(string $typeOfUser): void
     {
         $this->assertAdminLoggedIn();
         $this->iVisitAdminAddUserPage();
@@ -67,7 +67,7 @@ trait ActivateTrait
     /**
      * @When /^the user clicks the activate account link in their email$/
      */
-    public function theUserClicksTheActivateAccountLinkInTheirEmail()
+    public function theUserClicksTheActivateAccountLinkInTheirEmail(): void
     {
         $this->getSession()->reset();
         $this->clickActivationOrPasswordResetLinkInEmail(false, 'activation', $this->getUserForTestRun()['email'], 'active');
@@ -76,7 +76,7 @@ trait ActivateTrait
     /**
      * @Given /^they complete all except the last step in the registration flow$/
      */
-    public function theyCompleteAllExceptTheLastStepInTheRegistrationFlow()
+    public function theyCompleteAllExceptTheLastStepInTheRegistrationFlow(): void
     {
         $this->completeSetPasswordStep();
 
@@ -86,7 +86,7 @@ trait ActivateTrait
         }
     }
 
-    private function completeSetPasswordStep()
+    private function completeSetPasswordStep(): void
     {
         $this->fillInField('set_password_password_first', 'DigidepsPass1234');
         $this->fillInField('set_password_password_second', 'DigidepsPass1234');
@@ -95,7 +95,7 @@ trait ActivateTrait
         $this->pressButton('set_password_save');
     }
 
-    private function completeUserDetailsSection()
+    private function completeUserDetailsSection(): void
     {
         $this->fillInField('user_details_address1', '102 Petty France');
         $this->fillInField('user_details_addressCountry', 'GB');
@@ -104,7 +104,7 @@ trait ActivateTrait
         $this->pressButton('user_details_save');
     }
 
-    private function completeClientDetailsSection()
+    private function completeClientDetailsSection(): void
     {
         $this->fillInField('client_address', '1 South Parade');
         $this->fillInField('client_postcode', 'NG1 2HT');
@@ -122,7 +122,7 @@ trait ActivateTrait
         $this->pressButton('client_save');
     }
 
-    private function completeClientDetailsSectionUsingUnicode()
+    private function completeClientDetailsSectionUsingUnicode(): void
     {
         $this->fillInField('client_address', '1 South Parade');
         $this->fillInField('client_postcode', 'NG1 2HT');
@@ -143,7 +143,7 @@ trait ActivateTrait
     /**
      * @Then /^the partially registered users \'([^\']*)\' should \'([^\']*)\' set$/
      */
-    public function thePartiallyRegisteredUsersShouldSet(string $property, string $toBeOrNotToBe)
+    public function thePartiallyRegisteredUsersShouldSet(string $property, string $toBeOrNotToBe): void
     {
         $this->fillInField('admin_q', $this->getUserForTestRun()['email']);
         $this->pressButton('Search');
@@ -177,14 +177,14 @@ trait ActivateTrait
         }
     }
 
-    private function getColumnPositionByHeader(string $header)
+    private function getColumnPositionByHeader(string $header): int
     {
         $tableHeadsXpath = sprintf('//table/thead/tr/th[normalize-space()="%s"]/preceding-sibling::th', $header);
 
         return count($this->getSession()->getPage()->findAll('xpath', $tableHeadsXpath)) + 1;
     }
 
-    private function getTableCellByUniqueRowValueAndHeader(string $header, string $uniqueValueThatAppearsInRow)
+    private function getTableCellByUniqueRowValueAndHeader(string $header, string $uniqueValueThatAppearsInRow): string
     {
         $positionOfHeader = $this->getColumnPositionByHeader($header);
         $cellByHeaderXpath = sprintf('//td[normalize-space()="%s"]//parent::*/td[%s]', $uniqueValueThatAppearsInRow, $positionOfHeader);
@@ -212,7 +212,7 @@ trait ActivateTrait
         }
     }
 
-    public function completeOrgUserDetailsSection()
+    public function completeOrgUserDetailsSection(): void
     {
         $this->fillInField('user_details_jobTitle', $this->faker->jobTitle());
         $this->fillInField('user_details_phoneMain', $this->faker->phoneNumber());
@@ -223,7 +223,7 @@ trait ActivateTrait
     /**
      * @When /^a lay deputy provides details that match the pre\-registration details$/
      */
-    public function aLayDeputyProvidesDetailsThatMatchThePreRegistrationDetails()
+    public function aLayDeputyProvidesDetailsThatMatchThePreRegistrationDetails(): void
     {
         $this->newUsers += [$this->testRunId => ['type' => 'lay', 'email' => $this->faker->safeEmail()]];
 
@@ -246,7 +246,7 @@ trait ActivateTrait
     /**
      * @When /^the admin user invites a new user to their organisation$/
      */
-    public function theAdminUserInvitesANewUserToTheirOrganisation()
+    public function theAdminUserInvitesANewUserToTheirOrganisation(): void
     {
         $this->iVisitOrganisationAddUserPageForLoggedInUser();
 
@@ -264,7 +264,7 @@ trait ActivateTrait
     /**
      * @Given /^they complete the user registration flow using unicode characters$/
      */
-    public function theyCompleteTheUserRegistrationFlowUsingUnicodeCharacters()
+    public function theyCompleteTheUserRegistrationFlowUsingUnicodeCharacters(): void
     {
         $this->completeSetPasswordStep();
 

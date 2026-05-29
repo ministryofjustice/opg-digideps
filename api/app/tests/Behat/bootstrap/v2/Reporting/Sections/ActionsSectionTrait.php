@@ -9,7 +9,7 @@ trait ActionsSectionTrait
     /**
      * @Given I view the actions report section
      */
-    public function iViewActionsSection()
+    public function iViewActionsSection(): void
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
         $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'actions');
@@ -19,7 +19,7 @@ trait ActionsSectionTrait
     /**
      * @Given I view and start the actions report section
      */
-    public function iViewAndStartActionsSection()
+    public function iViewAndStartActionsSection(): void
     {
         $this->iViewActionsSection();
         $this->clickLink('Start actions');
@@ -28,7 +28,7 @@ trait ActionsSectionTrait
     /**
      * @Given I choose no and save on financial decision actions section
      */
-    public function iChooseNoOnFinancialDecisionActionsSection1()
+    public function iChooseNoOnFinancialDecisionActionsSection1(): void
     {
         $this->fillInActionsForm(
             'no',
@@ -39,7 +39,7 @@ trait ActionsSectionTrait
     /**
      * @Given I choose yes and save on financial decision actions section
      */
-    public function iChooseYesOnFinancialDecisionActionsSection1()
+    public function iChooseYesOnFinancialDecisionActionsSection1(): void
     {
         $this->fillInActionsForm(
             'yes',
@@ -52,7 +52,7 @@ trait ActionsSectionTrait
     /**
      * @Given I choose no and save on concerns actions section
      */
-    public function iChooseNoOnDoYouHaveConcernsActionsSection()
+    public function iChooseNoOnDoYouHaveConcernsActionsSection(): void
     {
         $this->fillInActionsForm(
             'no',
@@ -63,7 +63,7 @@ trait ActionsSectionTrait
     /**
      * @Given I choose yes and save on concerns actions section
      */
-    public function iChooseYesOnDoYouHaveConcernsActionsSection()
+    public function iChooseYesOnDoYouHaveConcernsActionsSection(): void
     {
         $this->fillInActionsForm(
             'yes',
@@ -76,7 +76,7 @@ trait ActionsSectionTrait
     /**
      * @Given I choose no and save on gifts actions section
      */
-    public function iChooseNoAndSaveOnGiftsActionsSection()
+    public function iChooseNoAndSaveOnGiftsActionsSection(): void
     {
         $this->fillInActionsForm(
             'no',
@@ -84,7 +84,7 @@ trait ActionsSectionTrait
         );
     }
 
-    public function fillInActionsForm($answer, $actionName, $comment = null, $commentName = null)
+    public function fillInActionsForm($answer, $actionName, $comment = null, $commentName = null): void
     {
         $this->chooseOption($actionName, $answer, 'actions');
 
@@ -98,7 +98,7 @@ trait ActionsSectionTrait
     /**
      * @Then I should see the expected action report section responses
      */
-    public function iSeeExpectedActionSectionResponses()
+    public function iSeeExpectedActionSectionResponses(): void
     {
         $this->expectedResultsDisplayedSimplified();
     }
@@ -106,7 +106,7 @@ trait ActionsSectionTrait
     /**
      * @Then I follow edit link on concerns question
      */
-    public function iFollowEditLinkConcernActionsPage()
+    public function iFollowEditLinkConcernActionsPage(): void
     {
         // this should be replaced with actual link click but could not identify it properly
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();

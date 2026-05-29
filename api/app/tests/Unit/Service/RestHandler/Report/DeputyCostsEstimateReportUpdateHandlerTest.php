@@ -202,7 +202,7 @@ final class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
     private function assertExistingProfDeputyEstimateCostIsUpdated(): void
     {
         $profDeputyEstimateCost = $this->report->getProfDeputyEstimateCostByTypeId('forms-documents');
-
+        $this->assertNotNull($profDeputyEstimateCost);
         $this->assertSame($this->report, $profDeputyEstimateCost->getReport());
         $this->assertEquals('33.98', $profDeputyEstimateCost->getAmount());
         $this->assertEquals(true, $profDeputyEstimateCost->getHasMoreDetails());
@@ -212,6 +212,7 @@ final class DeputyCostsEstimateReportUpdateHandlerTest extends TestCase
     private function assertNewProfDeputyEstimateCostIsCreated(): void
     {
         $profDeputyEstimateCost = $this->report->getProfDeputyEstimateCostByTypeId('contact-client');
+        $this->assertNotNull($profDeputyEstimateCost);
         $this->assertSame($this->report, $profDeputyEstimateCost->getReport());
         $this->assertEquals('30.32', $profDeputyEstimateCost->getAmount());
         $this->assertEquals(false, $profDeputyEstimateCost->getHasMoreDetails());

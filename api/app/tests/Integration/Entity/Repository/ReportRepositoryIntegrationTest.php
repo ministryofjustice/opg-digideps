@@ -189,7 +189,10 @@ class ReportRepositoryIntegrationTest extends ApiIntegrationTestCase
         self::$entityManager->refresh($client);
         self::$entityManager->refresh($client->getUsers()[0]);
 
-        $result = self::$sut->findAllActiveReportsByCaseNumbersAndRole(['4932965T'], $client->getUsers()[0]->getRoleName());
+        $roleName = $client->getUsers()[0]->getRoleName();
+        $this->assertNotNull($roleName);
+
+        $result = self::$sut->findAllActiveReportsByCaseNumbersAndRole(['4932965T'], $roleName);
         self::assertEquals($existingReport, $result[0]);
     }
 }

@@ -56,7 +56,7 @@ trait DeputyManagementTrait
      *
      * @Then the user :userEmail should be deleted
      */
-    public function userShouldBeDeleted($userEmail)
+    public function userShouldBeDeleted($userEmail): void
     {
         $this->visitAdminPath('/admin/fixtures/getUserIDByEmail/' . strtolower($userEmail));
 
@@ -72,7 +72,7 @@ trait DeputyManagementTrait
     /**
      * @Then I should be able to update the deputies firstname, lastname, postcode and email address
      */
-    public function iShouldBeAbleToUpdateFirstnameLastnamePostcodeEmail()
+    public function iShouldBeAbleToUpdateFirstnameLastnamePostcodeEmail(): void
     {
         $this->iShouldBeAbleToUpdateFirstnameLastnamePostcode();
 

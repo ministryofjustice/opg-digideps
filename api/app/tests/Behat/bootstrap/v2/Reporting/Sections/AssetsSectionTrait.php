@@ -26,7 +26,7 @@ trait AssetsSectionTrait
     /**
      * @When I visit and start the assets report section
      */
-    public function iViewAndStartAssetsSection()
+    public function iViewAndStartAssetsSection(): void
     {
         $this->iVisitAssetsSection();
         $this->clickLink('Start assets');
@@ -35,7 +35,7 @@ trait AssetsSectionTrait
     /**
      * @When I confirm the client has no assets
      */
-    public function iChooseNoOnAssetsExistSection()
+    public function iChooseNoOnAssetsExistSection(): void
     {
         $this->iAmOnAssetsExistPage();
 
@@ -46,7 +46,7 @@ trait AssetsSectionTrait
     /**
      * @When I confirm the client has assets
      */
-    public function iChooseYesOnAssetsExistSection()
+    public function iChooseYesOnAssetsExistSection(): void
     {
         $this->iAmOnAssetsExistPage();
 
@@ -57,7 +57,7 @@ trait AssetsSectionTrait
     /**
      * @When I add :numberOfAssets asset(s)
      */
-    public function iAddNumberOfAssets(int $numberOfAssets)
+    public function iAddNumberOfAssets(int $numberOfAssets): void
     {
         $this->iAmOnAssetTypePage();
 
@@ -95,7 +95,7 @@ trait AssetsSectionTrait
         }
     }
 
-    private function iFillAssetDescriptionAndValue(string $assetType)
+    private function iFillAssetDescriptionAndValue(string $assetType): void
     {
         $this->fillInFieldTrackTotal('asset[value]', mt_rand(5, 2000), 'asset-' . $assetType);
         $this->fillInField('asset[description]', $this->faker->sentence(5, 25), 'asset-' . $assetType);
@@ -104,7 +104,7 @@ trait AssetsSectionTrait
     /**
      * @When I add :numberOfProperties property asset(s)
      */
-    public function iAddNumberOfPropertyAsset(int $numberOfProperties)
+    public function iAddNumberOfPropertyAsset(int $numberOfProperties): void
     {
         try {
             $this->iAmOnAssetTypePage();
@@ -129,7 +129,7 @@ trait AssetsSectionTrait
         }
     }
 
-    private function iFillPropertyDetailsAndValue()
+    private function iFillPropertyDetailsAndValue(): void
     {
         $streetAddress = $this->faker->streetAddress;
         $streetAddress = str_replace(["\n", "\r"], ' ', $streetAddress);
@@ -161,7 +161,7 @@ trait AssetsSectionTrait
     /**
      * @Then I should see the expected assets report section responses
      */
-    public function iSeeExpectedAssetsSectionResponses()
+    public function iSeeExpectedAssetsSectionResponses(): void
     {
         $this->iAmOnAssetsSummaryPage();
 

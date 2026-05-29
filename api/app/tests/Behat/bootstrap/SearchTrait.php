@@ -7,7 +7,7 @@ trait SearchTrait
     /**
      * @Given I search in admin for a client with the term :searchTerm
      */
-    public function searchAdminForClientWithTerm($searchTerm)
+    public function searchAdminForClientWithTerm($searchTerm): void
     {
         $this->visitAdminPath('/admin/client/search');
         $this->fillField('search_clients_q', $searchTerm);
@@ -17,7 +17,7 @@ trait SearchTrait
     /**
      * @Given I search in admin for a deputy with the term :searchTerm
      */
-    public function searchAdminForDeputyWithTerm($searchTerm)
+    public function searchAdminForDeputyWithTerm($searchTerm): void
     {
         $this->visitAdminPath('/admin');
         $this->fillField('admin_q', $searchTerm);
@@ -27,7 +27,7 @@ trait SearchTrait
     /**
      * @Given I search in admin for a deputy with the term :searchTerm and filter role by :role
      */
-    public function searchAdminForDeputyWithTermAndRoleFilter($searchTerm, $role)
+    public function searchAdminForDeputyWithTermAndRoleFilter($searchTerm, $role): void
     {
         $this->visitAdminPath('/admin');
         $this->fillField('admin_q', $searchTerm);
@@ -38,7 +38,7 @@ trait SearchTrait
     /**
      * @Given I search in admin for a deputy with the term :searchTerm and include clients
      */
-    public function searchAdminForDeputyWithTermIncludeClients($searchTerm)
+    public function searchAdminForDeputyWithTermIncludeClients($searchTerm): void
     {
         $this->visitAdminPath('/admin');
         $this->fillField('admin_q', $searchTerm);
@@ -49,7 +49,7 @@ trait SearchTrait
     /**
      * @Given I search in admin for a deputy with the term :searchTerm and filter role by :role and include clients
      */
-    public function searchAdminForDeputyWithTermAndRoleFilterIncludeClients($searchTerm, $role)
+    public function searchAdminForDeputyWithTermAndRoleFilterIncludeClients($searchTerm, $role): void
     {
         $this->visitAdminPath('/admin');
         $this->fillField('admin_q', $searchTerm);
@@ -61,7 +61,7 @@ trait SearchTrait
     /**
      * @Given I search for a client with the term :searchTerm
      */
-    public function searchFrontendForClientWithTerm($searchTerm)
+    public function searchFrontendForClientWithTerm($searchTerm): void
     {
         $this->visitPath('/org');
         $this->fillField('search', $searchTerm);

@@ -35,7 +35,7 @@ trait AnalyticsTrait
     /**
      * @When reports exist that were submitted :numOfYears years ago
      */
-    public function reportsExistThatWereSubmittedYearsAgo(int $numOfYears)
+    public function reportsExistThatWereSubmittedYearsAgo(int $numOfYears): void
     {
         $this->dateRangeOfFixtures['from'] = $numOfYears;
         $this->dateRangeOfFixtures['to'] = $numOfYears - 1;
@@ -63,7 +63,7 @@ trait AnalyticsTrait
     /**
      * @When I add more clients, deputies and reports
      */
-    public function iAddMoreClientsDeputiesReports()
+    public function iAddMoreClientsDeputiesReports(): void
     {
         $fromYearsAgo = $this->dateRangeOfFixtures['from'];
 
@@ -90,7 +90,7 @@ trait AnalyticsTrait
     /**
      * @When I should see the correct metric values displayed
      */
-    public function iShouldSeeTheCorrectMetricValuesDisplayed()
+    public function iShouldSeeTheCorrectMetricValuesDisplayed(): void
     {
         foreach ($this->metricXPaths as $metric => $xpath) {
             $actualValue = str_replace('%', '', trim(strval($this->getSession()->getPage()->find('xpath', $xpath)->getHtml())));
@@ -103,7 +103,7 @@ trait AnalyticsTrait
     /**
      * @When there are existing reports submitted
      */
-    public function thereAreExistingReportsSubmitted()
+    public function thereAreExistingReportsSubmitted(): void
     {
         $this->expectedMetrics = [
             'feedBack' => 50,
@@ -125,7 +125,7 @@ trait AnalyticsTrait
     /**
      * @When I change reporting period to apply only to our generated data
      */
-    public function iChangeReportingPeriodToApplyOnlyToOurGeneratedData()
+    public function iChangeReportingPeriodToApplyOnlyToOurGeneratedData(): void
     {
         $fromYears = $this->dateRangeOfFixtures['from'];
         $toYears = $this->dateRangeOfFixtures['to'];
@@ -152,7 +152,7 @@ trait AnalyticsTrait
     /**
      * @When I should see the correct options in the actions dropdown
      */
-    public function iShouldSeeCorrectOptionsInActionsDropdown()
+    public function iShouldSeeCorrectOptionsInActionsDropdown(): void
     {
         $linkTextItems = [
             'Download DAT file',
@@ -170,7 +170,7 @@ trait AnalyticsTrait
     /**
      * @When I should only see the download DAT button
      */
-    public function iShouldOnlySeeDownloadDATButton()
+    public function iShouldOnlySeeDownloadDATButton(): void
     {
         $xpath = '//div[@class="moj-page-header-actions"]//a';
         $downloadLinks = $this->getSession()->getPage()->findAll('xpath', $xpath);
@@ -186,7 +186,7 @@ trait AnalyticsTrait
         }
     }
 
-    private function fillInAnalyticsStartEndDates()
+    private function fillInAnalyticsStartEndDates(): void
     {
         $fromDate = explode('-', strval(date('d-m-Y', strtotime('-2 year'))));
         $toDate = explode('-', strval(date('d-m-Y', strtotime('-7 day'))));
@@ -202,7 +202,7 @@ trait AnalyticsTrait
     /**
      * @When I try to download satisfaction report
      */
-    public function iTryDownloadSatisfactionReport()
+    public function iTryDownloadSatisfactionReport(): void
     {
         $this->iVisitAdminStatsReportsPage();
         $this->currentLinkText = 'Download satisfaction report';
@@ -219,7 +219,7 @@ trait AnalyticsTrait
     /**
      * @When I try to download user research report
      */
-    public function iTryDownloadUserResearchReport()
+    public function iTryDownloadUserResearchReport(): void
     {
         $this->iVisitAdminStatsReportsPage();
         $this->currentLinkText = 'Download user research report';
@@ -236,7 +236,7 @@ trait AnalyticsTrait
     /**
      * @When I try to download active lays report
      */
-    public function iTryDownloadActiveLaysReport()
+    public function iTryDownloadActiveLaysReport(): void
     {
         $this->iVisitAdminStatsReportsPage();
         $this->currentLinkText = 'Download active lays report';
@@ -252,7 +252,7 @@ trait AnalyticsTrait
     /**
      * @When I try to download the DAT file
      */
-    public function iTryDownloadDATReport()
+    public function iTryDownloadDATReport(): void
     {
         $this->iVisitAdminAnalyticsPage();
         $this->currentLinkText = 'Download DAT file';
@@ -271,7 +271,7 @@ trait AnalyticsTrait
     /**
      * @When I try to view the reports page
      */
-    public function iTryViewTheReportsPage()
+    public function iTryViewTheReportsPage(): void
     {
         $this->iVisitAdminAnalyticsPage();
         $this->currentLinkText = 'View reports';
@@ -289,7 +289,7 @@ trait AnalyticsTrait
      * @Then I should have no issues downloading the file
      * @Then I should have no issues viewing the page
      */
-    public function shouldHaveNoIssuesDownloadingFile()
+    public function shouldHaveNoIssuesDownloadingFile(): void
     {
         $responseStatus = $this->getSession()->getStatusCode();
         if ($responseStatus != 200) {

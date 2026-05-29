@@ -15,7 +15,10 @@ final class AuditEventsTest extends TestCase
 {
     use ProphecyTrait;
 
-    private ObjectProphecy|DateTimeProvider $dateTimeProvider;
+    /**
+     * @var ObjectProphecy<DateTimeProvider> $dateTimeProvider
+     */
+    private ObjectProphecy $dateTimeProvider;
     private \DateTime $now;
 
     public function setUp(): void

@@ -92,7 +92,7 @@ class SatisfactionControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin, $okayData);
     }
 
-    private function prepareReport()
+    private function prepareReport(): \OPG\Digideps\Backend\Entity\Report\Report
     {
         $reportTestHelper = ReportTestHelper::create();
         $em = static::getContainer()->get('em');

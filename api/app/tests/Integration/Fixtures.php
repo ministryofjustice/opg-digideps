@@ -51,7 +51,7 @@ class Fixtures
         $this->em = $em;
     }
 
-    public function getEntityManager()
+    public function getEntityManager(): EntityManager
     {
         return $this->em;
     }
@@ -64,7 +64,7 @@ class Fixtures
     /**
      * @return string
      */
-    private static function getPGExportCommand()
+    private static function getPGExportCommand(): string
     {
         $pgHost = getenv('PGHOST') ?: 'postgres';
         $pgPass = getenv('PGPASSWORD') ?: 'api';
@@ -156,7 +156,7 @@ class Fixtures
     /**
      * @return Client
      */
-    public function createClient(?User $user = null, array $settersMap = [])
+    public function createClient(?User $user = null, array $settersMap = []): Client
     {
         // add clent, cot, report, needed for assets
         $client = new Client();
@@ -179,7 +179,7 @@ class Fixtures
      *
      * @throws ORMException
      */
-    public function createDocument($report, string $filename, bool $isReportPdf = true)
+    public function createDocument($report, string $filename, bool $isReportPdf = true): Document
     {
         $doc = new Document($report);
         $doc->setFileName($filename);
@@ -190,7 +190,7 @@ class Fixtures
         return $doc;
     }
 
-    public function createChecklist(Report $report)
+    public function createChecklist(Report $report): Checklist
     {
         $cl = new Checklist($report);
         $this->em->persist($cl);
@@ -203,7 +203,7 @@ class Fixtures
      *
      * @throws ORMException
      */
-    public function createReportSubmission(?Report $report = null, ?User $user = null)
+    public function createReportSubmission(?Report $report = null, ?User $user = null): ReportSubmission
     {
         if (is_null($user)) {
             $user = $this->createUser(
@@ -276,7 +276,7 @@ class Fixtures
     /**
      * @return BankAccount
      */
-    public function createAccount(Report $report, array $settersMap = [])
+    public function createAccount(Report $report, array $settersMap = []): BankAccount
     {
         $ret = new BankAccount();
         $ret->setReport($report);
@@ -296,7 +296,7 @@ class Fixtures
     /**
      * @return Contact
      */
-    public function createContact(Report $report, array $settersMap = [])
+    public function createContact(Report $report, array $settersMap = []): Contact
     {
         $contact = new Contact();
         $contact->setReport($report);
@@ -313,7 +313,7 @@ class Fixtures
     /**
      * @return VisitsCare
      */
-    public function createVisitsCare(Report $report, array $settersMap = [])
+    public function createVisitsCare(Report $report, array $settersMap = []): VisitsCare
     {
         $sg = new VisitsCare();
         $sg->setReport($report);
@@ -343,7 +343,7 @@ class Fixtures
     /**
      * @return Expense
      */
-    public function createReportExpense($type, Report $report, array $settersMap = [])
+    public function createReportExpense($type, Report $report, array $settersMap = []): Expense
     {
         $record = new Expense($report);
         foreach ($settersMap as $k => $v) {
@@ -357,7 +357,7 @@ class Fixtures
     /**
      * @return Decision
      */
-    public function createDecision(Report $report, array $settersMap = [])
+    public function createDecision(Report $report, array $settersMap = []): Decision
     {
         $decision = new Decision();
         $decision->setReport($report);
@@ -417,7 +417,7 @@ class Fixtures
     /**
      * @throws ORMException
      */
-    public function addUserToOrganisation(int $userId, int $orgId)
+    public function addUserToOrganisation(int $userId, int $orgId): void
     {
         /** @var Organisation $org */
         $org = $this->em->getRepository(Organisation::class)->find($orgId);
@@ -514,7 +514,7 @@ class Fixtures
     /**
      * @return array
      */
-    public function getReportFreshSectionStatus(Report $report, string $section)
+    public function getReportFreshSectionStatus(Report $report, string $section): array
     {
         return $this->getReportById($report->getId())->getStatus()->getSectionStateNotCached($section);
     }
@@ -522,7 +522,7 @@ class Fixtures
     /**
      * @return User
      */
-    public function findUserByEmail(string $email)
+    public function findUserByEmail(string $email): User
     {
         return $this->getRepo(User::class)->findOneBy(['email' => $email]);
     }
@@ -535,12 +535,12 @@ class Fixtures
         return $this->getRepo(Deputy::class)->findOneBy(['deputyNo' => $deputyNo]);
     }
 
-    public function getConnection()
+    public function getConnection(): \Doctrine\DBAL\Connection
     {
         return $this->em->getConnection();
     }
 
-    private static function pgCommand($cmd)
+    private static function pgCommand($cmd): void
     {
         exec(self::getPGExportCommand() . $cmd);
     }
@@ -549,12 +549,12 @@ class Fixtures
     {
     }
 
-    public static function backupDb()
+    public static function backupDb(): void
     {
         self::pgCommand('pg_dump --clean > ' . self::PG_DUMP_PATH);
     }
 
-    public static function restoreDb()
+    public static function restoreDb(): void
     {
         if (!file_exists(self::PG_DUMP_PATH)) {
             throw new \RuntimeException(self::PG_DUMP_PATH . ' not found');
@@ -562,18 +562,18 @@ class Fixtures
         self::pgCommand('psql < ' . self::PG_DUMP_PATH);
     }
 
-    public static function deleteReportsData($additionalTables = [])
+    public static function deleteReportsData($additionalTables = []): void
     {
         $tables = array_merge(['document', 'pre_registration', 'deputy_case', 'report_submission', 'report', 'satisfaction'], $additionalTables);
         self::pgCommand('PGOPTIONS=\'--client-min-messages=warning\' psql -c "truncate table ' . implode(',', $tables) . '  RESTART IDENTITY cascade";');
     }
 
-    public function refresh($entity)
+    public function refresh($entity): void
     {
         $this->em->refresh($entity);
     }
 
-    public function createUserResearchResponse(int $howMany)
+    public function createUserResearchResponse(int $howMany): void
     {
         $range = range(1, $howMany);
 

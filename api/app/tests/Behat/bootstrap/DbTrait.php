@@ -10,7 +10,7 @@ trait DbTrait
     /**
      * @Then I save the application status into :status
      */
-    public static function iSaveTheApplicationStatusInto($status)
+    public static function iSaveTheApplicationStatusInto($status): void
     {
         $sqlFile = self::getSnapshotPath($status);
         // truncate cascade + insert. faster than drop + table recreate
@@ -24,7 +24,7 @@ trait DbTrait
     /**
      * @Then I load the application status from :status
      */
-    public static function iLoadtheApplicationStatusFrom($status)
+    public static function iLoadtheApplicationStatusFrom($status): void
     {
         $sqlFile = self::getSnapshotPath($status);
         if (!file_exists($sqlFile)) {
@@ -40,7 +40,7 @@ trait DbTrait
      *
      * @return string
      */
-    private static function getSnapshotPath($name)
+    private static function getSnapshotPath($name): string
     {
         return '/tmp/sql/behat-snapshot-'
                 . strtolower(preg_replace('/[^\w]+/', '-', $name))
@@ -50,7 +50,7 @@ trait DbTrait
     /**
      * @Given I reset the behat SQL snapshots
      */
-    public function deleteBehatSnapshots()
+    public function deleteBehatSnapshots(): void
     {
         foreach (glob('/tmp/sql/behat-snapshot-*.sql') as $file) { // iterate files
             if (is_file($file)) {
@@ -62,7 +62,7 @@ trait DbTrait
     /**
      * @BeforeScenario
      */
-    public function dbSnapshotBeforeScenario(BeforeScenarioScope $scope)
+    public function dbSnapshotBeforeScenario(BeforeScenarioScope $scope): void
     {
         if (!self::$autoDbSnapshot) {
             return;
@@ -77,7 +77,7 @@ trait DbTrait
     /**
      * @AfterScenario
      */
-    public function dbSnapshotAFterScenario(AfterScenarioScope $scope)
+    public function dbSnapshotAFterScenario(AfterScenarioScope $scope): void
     {
         if (!self::$autoDbSnapshot) {
             return;
@@ -90,7 +90,7 @@ trait DbTrait
     }
 
     /** @param String[] $fields */
-    public function dbQueryRaw(string $table, array $fields)
+    public function dbQueryRaw(string $table, array $fields): void
     {
         if (empty($fields)) {
             throw new \InvalidArgumentException(__METHOD__ . ' array with at least one element expected');
@@ -105,7 +105,7 @@ trait DbTrait
     /**
      * @Then I delete the :setting app setting
      */
-    public function IDeleteTheAppSetting($setting)
+    public function IDeleteTheAppSetting($setting): void
     {
         $query = "DELETE FROM setting where id='{$setting}'";
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
@@ -115,7 +115,7 @@ trait DbTrait
     /**
      * @Given I discharge the deputies from case :caseNumber
      */
-    public function iDischargeTheDeputiesFromCase($caseNumber)
+    public function iDischargeTheDeputiesFromCase($caseNumber): void
     {
         $query = "UPDATE client SET deleted_at = '2018-07-24 14:03:00' WHERE case_number = '{$caseNumber}'";
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
@@ -125,7 +125,7 @@ trait DbTrait
     /**
      * @Given I add the client with case number :caseNumber to be deputised by email :deputyEmail
      */
-    public function iAddTheClientWithCaseNumberToBeDeputisedByEmail($caseNumber, $deputyEmail)
+    public function iAddTheClientWithCaseNumberToBeDeputisedByEmail($caseNumber, $deputyEmail): void
     {
         $query = "INSERT INTO deputy_case (client_id, user_id) VALUES (
                     (SELECT id from client where case_number = '" . $caseNumber . "'),
@@ -138,7 +138,7 @@ trait DbTrait
     /**
      * @Given the organisation :organisationEmailIdentifier is active
      */
-    public function theOrganisationIsActive($organisationEmailIdentifier)
+    public function theOrganisationIsActive($organisationEmailIdentifier): void
     {
         $query = "UPDATE organisation SET is_activated = true WHERE email_identifier = '{$organisationEmailIdentifier}'";
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
@@ -148,7 +148,7 @@ trait DbTrait
     /**
      * @Given the organisation :organisationEmailIdentifier is inactive
      */
-    public function theOrganisationIsInactive($organisationEmailIdentifier)
+    public function theOrganisationIsInactive($organisationEmailIdentifier): void
     {
         $query = "UPDATE organisation SET is_activated = false WHERE email_identifier = '{$organisationEmailIdentifier}'";
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
@@ -158,7 +158,7 @@ trait DbTrait
     /**
      * @Given :userEmail has been added to the :organisationEmailIdentifier organisation
      */
-    public function hasBeenAddedToTheOrganisation($userEmail, $organisationEmailIdentifier)
+    public function hasBeenAddedToTheOrganisation($userEmail, $organisationEmailIdentifier): void
     {
         $query = "INSERT INTO organisation_user (user_id, organisation_id) VALUES
           (
@@ -172,7 +172,7 @@ trait DbTrait
     /**
      * @Given :userEmail has been removed from the :organisationEmailIdentifier organisation
      */
-    public function hasBeenRemovedFromTheOrganisation($userEmail, $organisationEmailIdentifier)
+    public function hasBeenRemovedFromTheOrganisation($userEmail, $organisationEmailIdentifier): void
     {
         $query = "DELETE FROM organisation_user WHERE organisation_id =
                     (SELECT id FROM organisation WHERE email_identifier = '{$organisationEmailIdentifier}')
@@ -184,7 +184,7 @@ trait DbTrait
     /**
      * @Given :userEmail has been removed from their organisation
      */
-    public function hasBeenRemovedFromTheirOrganisation($userEmail)
+    public function hasBeenRemovedFromTheirOrganisation($userEmail): void
     {
         $query = "DELETE FROM organisation_user WHERE user_id =
           (

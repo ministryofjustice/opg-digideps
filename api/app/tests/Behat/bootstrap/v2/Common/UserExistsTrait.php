@@ -13,7 +13,7 @@ trait UserExistsTrait
      *
      * @throws BehatException
      */
-    public function aLayDeputyExists()
+    public function aLayDeputyExists(): void
     {
         if (empty($this->layDeputyNotStartedHealthWelfareDetails)) {
             throw new BehatException('It looks like fixtures are not loaded - missing $layDeputyNotStartedHealthWelfareDetails');
@@ -27,7 +27,7 @@ trait UserExistsTrait
      *
      * @throws BehatException
      */
-    public function aLayDeputyExistsWithLegacyPasswordHash()
+    public function aLayDeputyExistsWithLegacyPasswordHash(): void
     {
         if (empty($this->layDeputyNotStartedPfaHighAssetsDetails)) {
             throw new BehatException('It looks like fixtures are not loaded - missing $layDeputyNotStartedPfaHighAssetsDetails');
@@ -39,7 +39,7 @@ trait UserExistsTrait
     /**
      * @Given /^a Professional Admin Deputy exists$/
      */
-    public function aProfessionalAdminDeputyExists()
+    public function aProfessionalAdminDeputyExists(): void
     {
         if (empty($this->profAdminCombinedHighNotStartedDetails)) {
             throw new BehatException('It looks like fixtures are not loaded - missing $profAdminCombinedHighNotStartedDetails');
@@ -51,7 +51,7 @@ trait UserExistsTrait
     /**
      * @Given /^a Professional Team Deputy exists$/
      */
-    public function aProfessionalTeamDeputyExists()
+    public function aProfessionalTeamDeputyExists(): void
     {
         if (empty($this->profTeamDeputyNotStartedHealthWelfareDetails)) {
             throw new BehatException('It looks like fixtures are not loaded - missing $profTeamDeputyNotStartedHealthWelfareDetails');

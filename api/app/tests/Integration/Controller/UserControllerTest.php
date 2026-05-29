@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Entity\User;
@@ -229,7 +230,7 @@ class UserControllerTest extends AbstractTestController
             ],
         ]);
 
-        $this->login('deputy@example.org', 'DigidepsPass1234ne', API_TOKEN_DEPUTY);
+        $this->login('deputy@example.org', 'DigidepsPass1234ne', self::$deputySecret);
     }
 
     /**
@@ -248,7 +249,7 @@ class UserControllerTest extends AbstractTestController
             ],
         ]);
 
-        $this->login('deputy@example.org', 'DigidepsPass1234pa', API_TOKEN_DEPUTY);
+        $this->login('deputy@example.org', 'DigidepsPass1234pa', self::$deputySecret);
     }
 
     /**
@@ -341,7 +342,7 @@ class UserControllerTest extends AbstractTestController
         self::fixtures()->flush();
 
         $client = self::fixtures()->createClient();
-        $client->setUsers([$deputy3]);
+        $client->setUsers(new ArrayCollection([$deputy3]));
         self::fixtures()->flush();
 
         $userToDeleteId = $deputy3->getId();
@@ -442,7 +443,7 @@ class UserControllerTest extends AbstractTestController
         ]);
     }
 
-    public static function recreateTokenProvider()
+    public static function recreateTokenProvider(): array
     {
         return [
             ['activate', 'activate your account'],
@@ -472,7 +473,7 @@ class UserControllerTest extends AbstractTestController
      *
      * @return array
      */
-    public static function recreateTokenProviderForRole()
+    public static function recreateTokenProviderForRole(): array
     {
         return [
             [API_TOKEN_ADMIN, 'admin@example.org', true],
@@ -543,7 +544,7 @@ class UserControllerTest extends AbstractTestController
         $userRefreshed = $repository->findOneByEmail('deputy@example.org');
         $this->assertNotNull($userRefreshed);
         $this->assertTrue(strlen($userRefreshed->getRegistrationToken() ?? '') > 5);
-        $this->assertSame('0', $userRefreshed->getTokenDate()?->diff(new \DateTime())->format('%a'));
+        $this->assertSame('0', $userRefreshed->getTokenDate()?->diff(new \DateTime())?->format('%a'));
     }
 
     public function testGetByToken()

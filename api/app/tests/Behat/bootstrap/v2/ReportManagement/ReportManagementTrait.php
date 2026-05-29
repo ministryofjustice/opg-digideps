@@ -48,7 +48,7 @@ trait ReportManagementTrait
     /**
      * @When I manage the deputies :reportStatus report
      */
-    public function iManageTheDeputiesSubmittedReport(string $reportStatus)
+    public function iManageTheDeputiesSubmittedReport(string $reportStatus): void
     {
         $this->iAmOnAdminClientDetailsPage();
         $this->reportStatus = $reportStatus;
@@ -67,7 +67,7 @@ trait ReportManagementTrait
     /**
      * @When I change the report type to :reportType
      */
-    public function iChangeReportTypeTo(string $reportType)
+    public function iChangeReportTypeTo(string $reportType): void
     {
         $this->iAmOnAdminManageReportPage();
         $this->assertInteractingWithUserIsSet();
@@ -125,7 +125,7 @@ trait ReportManagementTrait
     /**
      * @When I change the report due date to :numberOfWeeks weeks from now
      */
-    public function iChangeReportDueDateToWeeks(string $numberOfWeeks)
+    public function iChangeReportDueDateToWeeks(string $numberOfWeeks): void
     {
         $this->iAmOnAdminManageReportPage();
 
@@ -139,7 +139,7 @@ trait ReportManagementTrait
     /**
      * @When I submit the new report details
      */
-    public function iSubmitNewReportDetails()
+    public function iSubmitNewReportDetails(): void
     {
         $this->iAmOnAdminManageReportPage();
         $this->pressButton('Continue');
@@ -158,7 +158,7 @@ trait ReportManagementTrait
     /**
      * @Then the report details should be updated
      */
-    public function reportDetailsShouldBeUpdated()
+    public function reportDetailsShouldBeUpdated(): void
     {
         $this->iAmOnAdminClientDetailsPage();
 
@@ -207,7 +207,7 @@ trait ReportManagementTrait
     /**
      * @When I confirm all report sections are incomplete
      */
-    public function confirmAllReportSectionsIncomplete()
+    public function confirmAllReportSectionsIncomplete(): void
     {
         $this->iAmOnAdminManageReportPage();
         $roleType = $this->translateDeputyRole($this->interactingWithUserDetails->getUserRole());
@@ -240,7 +240,7 @@ trait ReportManagementTrait
         }
     }
 
-    private function determineCheckboxName(string $value, array $checkboxValuesAndTranslations)
+    private function determineCheckboxName(string $value, array $checkboxValuesAndTranslations): string
     {
         $checkboxDictionary = array_flip(array_keys($checkboxValuesAndTranslations));
 
@@ -250,7 +250,7 @@ trait ReportManagementTrait
     /**
      * @When I change the report :event date to :date
      */
-    public function iChangeReportEventToDate(string $event, string $date)
+    public function iChangeReportEventToDate(string $event, string $date): void
     {
         $this->iAmOnAdminManageReportPage();
 
@@ -286,7 +286,7 @@ trait ReportManagementTrait
     /**
      * @Then I should see the report sections the admin ticked as incomplete labelled as changes needed
      */
-    public function iShouldSeeReportSectionsLabelledAsChangesNeeded()
+    public function iShouldSeeReportSectionsLabelledAsChangesNeeded(): void
     {
         if ($this->reportStatus === 'completed') {
             $reportPeriod = sprintf(
@@ -325,7 +325,7 @@ trait ReportManagementTrait
     /**
      * @When I close the un-submitted report
      */
-    public function iCloseUnsubmittedReport()
+    public function iCloseUnsubmittedReport(): void
     {
         $this->iAmOnAdminClientDetailsPage();
 
@@ -355,7 +355,7 @@ trait ReportManagementTrait
     /**
      * @Then the report should should show as submitted
      */
-    public function theReportShouldShouldShowAsSubmitted()
+    public function theReportShouldShouldShowAsSubmitted(): void
     {
         $this->iAmOnAdminClientDetailsPage();
 
@@ -381,7 +381,7 @@ trait ReportManagementTrait
     /**
      * @Then the link to download the submitted report should be visible
      */
-    public function theLinkToDownloadTheSubmittedReportShouldBeVisible()
+    public function theLinkToDownloadTheSubmittedReportShouldBeVisible(): void
     {
         $this->iAmOnAdminClientDetailsPage();
 
@@ -400,7 +400,7 @@ trait ReportManagementTrait
     /**
      * @Then the link to download the submitted report should not be visible
      */
-    public function theLinkToDownloadTheSubmittedReportShouldNotBeVisible()
+    public function theLinkToDownloadTheSubmittedReportShouldNotBeVisible(): void
     {
         $this->iAmOnAdminClientDetailsPage();
 
@@ -419,7 +419,7 @@ trait ReportManagementTrait
     /**
      * @Given /^I should not see the client benefits check section in the checklist group$/
      */
-    public function iShouldNotSeeTheClientBenefitsCheckSectionInTheChecklistGroup()
+    public function iShouldNotSeeTheClientBenefitsCheckSectionInTheChecklistGroup(): void
     {
         $this->assertClientBenefitsCheckboxVisible(false);
     }
@@ -427,12 +427,12 @@ trait ReportManagementTrait
     /**
      * @Given /^I should see the client benefits check section in the checklist group$/
      */
-    public function iShouldSeeTheClientBenefitsCheckSectionInTheChecklistGroup()
+    public function iShouldSeeTheClientBenefitsCheckSectionInTheChecklistGroup(): void
     {
         $this->assertClientBenefitsCheckboxVisible(true);
     }
 
-    private function assertClientBenefitsCheckboxVisible(bool $shouldBeVisible)
+    private function assertClientBenefitsCheckboxVisible(bool $shouldBeVisible): void
     {
         $benefitsCheckXpath = './/label[text()[contains(.,"Client benefits check")]]/..';
 
@@ -464,7 +464,7 @@ trait ReportManagementTrait
     /**
      * @Given I set the due date of the report to a custom date
      */
-    public function iSetTheDueDateOfTheReportToACustomDate()
+    public function iSetTheDueDateOfTheReportToACustomDate(): void
     {
         $this->iAmOnAdminManageReportPage();
 

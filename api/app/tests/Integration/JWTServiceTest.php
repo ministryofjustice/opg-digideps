@@ -20,9 +20,18 @@ class JWTServiceTest extends TestCase
 {
     use ProphecyTrait;
 
-    private SecretManagerService|ObjectProphecy $secretsManager;
-    private LoggerInterface|ObjectProphecy $logger;
-    private DateTimeProvider|ObjectProphecy $dateTimeProvider;
+    /**
+     * @var ObjectProphecy<SecretManagerService> $secretsManager
+     */
+    private ObjectProphecy $secretsManager;
+    /**
+     * @var ObjectProphecy<LoggerInterface> $logger
+     */
+    private ObjectProphecy $logger;
+    /**
+     * @var ObjectProphecy<DateTimeProvider> $dateTimeProvider
+     */
+    private ObjectProphecy $dateTimeProvider;
     private string $publicKeyPem;
     private string $privateKeyPem;
 
@@ -118,7 +127,7 @@ class JWTServiceTest extends TestCase
         string $aud = 'urn:opg:registration_service',
         string $iss = 'urn:opg:digideps',
         string $jkuAddress = 'https://example.org',
-    ) {
+    ): string {
         $kid = openssl_digest($publicKey, 'sha256');
 
         $config = Configuration::forAsymmetricSigner(
@@ -142,7 +151,7 @@ class JWTServiceTest extends TestCase
         return $plainToken->toString();
     }
 
-    private function createUnsignedJWTString(string $publicKey, string $jkuAddress)
+    private function createUnsignedJWTString(string $publicKey, string $jkuAddress): string
     {
         $kid = openssl_digest($publicKey, 'sha256');
 
@@ -163,7 +172,7 @@ class JWTServiceTest extends TestCase
         return $plainToken->toString();
     }
 
-    private function createPemKeyPair()
+    private function createPemKeyPair(): array
     {
         $options = ['private_key_bits' => 2048, 'private_key_type' => OPENSSL_KEYTYPE_RSA];
         $keyPair = openssl_pkey_new($options);

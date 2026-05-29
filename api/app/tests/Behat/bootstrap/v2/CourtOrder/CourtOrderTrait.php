@@ -44,7 +44,7 @@ trait CourtOrderTrait
     /**
      * @Given I visit the court order page
      */
-    public function iVisitTheCourtOrderPage()
+    public function iVisitTheCourtOrderPage(): void
     {
         // create a court order if we don't already have one, associated with a random user
         // (not the logged in user)
@@ -111,7 +111,7 @@ trait CourtOrderTrait
     /**
      * @Given /^I am associated with a \'([^\']*)\' court order$/
      */
-    public function iAmAssociatedWithCourtOrderOfType($orderType)
+    public function iAmAssociatedWithCourtOrderOfType($orderType): void
     {
         $orderType = CourtOrderType::from($orderType);
         $clientId = $this->loggedInUserDetails->getClientId();
@@ -149,7 +149,7 @@ trait CourtOrderTrait
     /**
      * @When /^I visit the page of a court order that \'([^\']*)\' associated with$/
      */
-    public function iVisitTheCourtOrderPageThatIAmAssociatedWith($arg1)
+    public function iVisitTheCourtOrderPageThatIAmAssociatedWith($arg1): void
     {
         if ($arg1 === 'I am') {
             $this->visitFrontendPath(sprintf('/courtorder/%s', $this->courtOrder->getCourtOrderUid()));
@@ -173,7 +173,7 @@ trait CourtOrderTrait
     /**
      * @When /^I visit the court order page of the \'([^\']*)\' court order that \'([^\']*)\' associated with$/
      */
-    public function iVisitThePagesOfTheCourtOrderThatAssociatedWith($firstOrSecond, $arg)
+    public function iVisitThePagesOfTheCourtOrderThatAssociatedWith($firstOrSecond, $arg): void
     {
         if ($firstOrSecond == 'first' && $arg == 'I am') {
             $this->visitFrontendPath(sprintf('/courtorder/%s', $this->courtOrders[0]->getCourtOrderUid()));
@@ -185,7 +185,7 @@ trait CourtOrderTrait
     /**
      * @When /^I am discharged from the court order$/
      */
-    public function iAmDischargedFromTheCourtOrder()
+    public function iAmDischargedFromTheCourtOrder(): void
     {
         $courtOrderDeputy = $this->em
             ->getRepository(CourtOrderDeputy::class)
@@ -200,7 +200,7 @@ trait CourtOrderTrait
     /**
      * @When /^I visit the multiple court order page$/
      */
-    public function iVisitTheMultipleCourtOrderPage()
+    public function iVisitTheMultipleCourtOrderPage(): void
     {
         $this->visitFrontendPath('/courtorder/choose-a-court-order');
     }
@@ -208,7 +208,7 @@ trait CourtOrderTrait
     /**
      * @Then /^I should see \'([^\']*)\' court orders on the page$/
      */
-    public function iShouldSeeCourtOrdersOnThePage(int $arg1)
+    public function iShouldSeeCourtOrdersOnThePage(int $arg1): void
     {
         $this->iAmOnPage('{/courtorder/choose-a-court-order$}');
 
@@ -222,7 +222,7 @@ trait CourtOrderTrait
     /**
      * @Then /^I should see a message explaining that my account is being set up$/
      */
-    public function iShouldSeeAccountBeingSetUpMessage()
+    public function iShouldSeeAccountBeingSetUpMessage(): void
     {
         $this->assertStringContainsString('Your account is being set up', $this->getPageContent(), 'page should contain message about account being set up');
     }
@@ -230,7 +230,7 @@ trait CourtOrderTrait
     /**
      * @Given /^an unregistered co-deputy is associated with the court order$/
      */
-    public function anUnregisteredCoDeputyIsAssociatedWithTheCourtOrder()
+    public function anUnregisteredCoDeputyIsAssociatedWithTheCourtOrder(): void
     {
         // create deputy with null last_logged_in datetime, so they show as "awaiting registration"
         $this->coDeputy = $this->fixtureHelper->createDeputyOnOrder($this->courtOrder);
@@ -239,7 +239,7 @@ trait CourtOrderTrait
     /**
      * @Given /^a registered co-deputy is associated with the court order$/
      */
-    public function aRegisteredCoDeputyIsAssociatedWithTheCourtOrder()
+    public function aRegisteredCoDeputyIsAssociatedWithTheCourtOrder(): void
     {
         // create deputy with a last_logged_in datetime, so they show as "registered",
         // and associate with the court order (mimicking what will happen when we eventually do this via ingest)
@@ -249,7 +249,7 @@ trait CourtOrderTrait
     /**
      * @Given /^I should see that I am a registered deputy$/
      */
-    public function iShouldSeeIAmARegisteredDeputy()
+    public function iShouldSeeIAmARegisteredDeputy(): void
     {
         $coDeputyNameElts = $this->findAllCssElements('td[data-role="co-deputy-registered"]');
         $deputy = $this->getDeputyForLoggedInUser();
@@ -271,7 +271,7 @@ trait CourtOrderTrait
     /**
      * @Given /^I should see that the co-deputy is awaiting registration$/
      */
-    public function iShouldSeeCoDeputyAwaitingRegistrationOnCourtOrder()
+    public function iShouldSeeCoDeputyAwaitingRegistrationOnCourtOrder(): void
     {
         $coDeputyNameElts = $this->findAllCssElements('td[data-role="co-deputy-awaiting-registration"]');
         assertCount(1, $coDeputyNameElts);
@@ -281,7 +281,7 @@ trait CourtOrderTrait
     /**
      * @Given /^I should see that the invited co-deputy is awaiting registration$/
      */
-    public function iShouldSeeInvitedCoDeputyAwaitingRegistrationOnCourtOrder()
+    public function iShouldSeeInvitedCoDeputyAwaitingRegistrationOnCourtOrder(): void
     {
         $coDeputyNameElts = $this->findAllCssElements('td[data-role="co-deputy-awaiting-registration"]');
         assertCount(1, $coDeputyNameElts);
@@ -291,7 +291,7 @@ trait CourtOrderTrait
     /**
      * @Given /^I should see that the co-deputy is registered$/
      */
-    public function iShouldSeeCoDeputyRegisteredOnCourtOrder()
+    public function iShouldSeeCoDeputyRegisteredOnCourtOrder(): void
     {
         $coDeputyNameElts = $this->findAllCssElements('td[data-role="co-deputy-registered"]');
 

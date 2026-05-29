@@ -73,7 +73,7 @@ class MentalCapacityControllerTest extends AbstractTestController
         $mc = self::fixtures()->getRepo(MentalCapacity::class)->find($return['data']['id']); /* @var $mc MentalCapacity */
         $this->assertEquals(MentalCapacity::CAPACITY_CHANGED, $mc->getHasCapacityChanged());
         $this->assertEquals('ccd', $mc->getHasCapacityChangedDetails());
-        $this->assertEquals('2015-12-31', $mc->getMentalAssessmentDate()->format('Y-m-d'));
+        $this->assertEquals('2015-12-31', $mc->getMentalAssessmentDate()?->format('Y-m-d'));
 
         // update with choice not requiring details. (covers record existing and also data cleaned up ok)
         $return = $this->assertJsonRequest('PUT', $url, [
@@ -90,6 +90,6 @@ class MentalCapacityControllerTest extends AbstractTestController
         $mc = self::fixtures()->getRepo(MentalCapacity::class)->find($return['data']['id']); /* @var $mc MentalCapacity */
         $this->assertEquals(MentalCapacity::CAPACITY_STAYED_SAME, $mc->getHasCapacityChanged());
         $this->assertEquals(null, $mc->getHasCapacityChangedDetails());
-        $this->assertEquals('2016-01-01', $mc->getMentalAssessmentDate()->format('Y-m-d'));
+        $this->assertEquals('2016-01-01', $mc->getMentalAssessmentDate()?->format('Y-m-d'));
     }
 }

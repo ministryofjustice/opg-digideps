@@ -127,7 +127,8 @@ final class ReportServiceTest extends TestCase
         $this->assertTrue($report->getSubmitted());
 
         // assert reportsubmissions
-        $submission = $report->getReportSubmissions()->first();
+        $submission = $report->getReportSubmissions()->first() ?: null;
+        $this->assertNotNull($submission);
         $this->assertEquals($this->document1, $submission->getDocuments()->first());
         $this->assertEquals($report->getSubmittedBy(), $submission->getCreatedBy());
 
@@ -170,7 +171,8 @@ final class ReportServiceTest extends TestCase
         $this->assertNull($report->getUnsubmittedSectionsList());
 
         // assert reportsubmissions
-        $submission = $report->getReportSubmissions()->first();
+        $submission = $report->getReportSubmissions()->first() ?: null;
+        $this->assertNotNull($submission);
         $this->assertEquals($this->document1, $submission->getDocuments()->first());
         $this->assertEquals($report->getSubmittedBy(), $submission->getCreatedBy());
 
@@ -226,7 +228,7 @@ final class ReportServiceTest extends TestCase
         $this->em->shouldReceive('persist')->with(m::on(function ($bankAccount): bool {
             return $bankAccount instanceof BankAccount
                 && $bankAccount->getAccountNumber() === '1234'
-                && $bankAccount->getOpeningBalance() === $this->report->getBankAccounts()[0]->getClosingBalance()
+                && $bankAccount->getOpeningBalance() === $this->report->getBankAccounts()[0]?->getClosingBalance()
                 && is_null($bankAccount->getClosingBalance());
         }))->once();
 
@@ -235,16 +237,19 @@ final class ReportServiceTest extends TestCase
         $this->sut->clonePersistentResources($newReport, $this->report);
     }
 
-    #[DoesNotPerformAssertions]
     public function testDuplicateResourcesNotPersisted(): void
     {
         $client = $this->report->getClient();
         $newReport = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2016-01-01'), new \DateTime('2016-12-31'));
 
-        $newAsset = clone $this->report->getAssets()[0];
+        $oldAsset = $this->report->getAssets()[0];
+        $this->assertNotNull($oldAsset);
+        $newAsset = clone $oldAsset;
         $newReport->addAsset($newAsset);
 
-        $newAccount = clone $this->report->getBankAccounts()[0];
+        $oldAccount = $this->report->getBankAccounts()[0];
+        $this->assertNotNull($oldAccount);
+        $newAccount = clone $oldAccount;
         $newReport->addAccount($newAccount);
 
         // Since assets and accounts already exist, no DB functions should be called
@@ -264,8 +269,8 @@ final class ReportServiceTest extends TestCase
 
         $this->assertEmpty($this->report->getReportSubmissions());
         $currentReport = $this->sut->submitAdditionalDocuments($this->report, $this->user, new \DateTime('2016-01-15'));
-        $submission = $currentReport->getReportSubmissions()->first();
-
+        $submission = $currentReport->getReportSubmissions()->first() ?: null;
+        $this->assertNotNull($submission);
         $this->assertContains($submission, $this->report->getReportSubmissions());
         $this->assertEquals($this->document1, $submission->getDocuments()->first());
         $this->assertEquals($this->report->getSubmittedBy(), $submission->getCreatedBy());
@@ -298,7 +303,6 @@ final class ReportServiceTest extends TestCase
     {
         $preRegistration = new PreRegistration(['ReportType' => 'OPG103', 'OrderType' => 'pfa']);
 
-        /** @var ObjectProphecy|PreRegistrationRepository $preRegistrationRepo */
         $preRegistrationRepo = self::prophesize(PreRegistrationRepository::class);
         $preRegistrationRepo->findOneBy(['caseNumber' => '12345678'])->willReturn($preRegistration);
 

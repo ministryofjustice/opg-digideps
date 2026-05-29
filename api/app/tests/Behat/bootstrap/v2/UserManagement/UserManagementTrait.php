@@ -22,7 +22,7 @@ trait UserManagementTrait
     /**
      * @When I have created the appropriate search test users
      */
-    public function iHaveCreatedAppropriateSearchTestUsers()
+    public function iHaveCreatedAppropriateSearchTestUsers(): void
     {
         $this->fixtureHelper->createDataForAdminUserTests('search');
     }
@@ -30,7 +30,7 @@ trait UserManagementTrait
     /**
      * @When I search for one of the test users using partial name
      */
-    public function iSearchForOneOfTestUsersUsingPartialName()
+    public function iSearchForOneOfTestUsersUsingPartialName(): void
     {
         $this->iAmOnAdminUsersSearchPage();
         $this->fillField('admin_q', 'search-test-');
@@ -41,7 +41,7 @@ trait UserManagementTrait
     /**
      * @When I search for one of the test users using full name
      */
-    public function iSearchForOneOfTestUsersUsingFullName()
+    public function iSearchForOneOfTestUsersUsingFullName(): void
     {
         $this->iAmOnAdminUsersSearchPage();
         $this->fillField('admin_q', 'search-test-pa-n-' . $this->testRunId . '@t.uk');
@@ -76,7 +76,7 @@ trait UserManagementTrait
     /**
      * @When I search for one of the test users with the Lay filter
      */
-    public function iSearchForTestUsersWithTheFilter()
+    public function iSearchForTestUsersWithTheFilter(): void
     {
         $this->searchUserWithFilter('ROLE_LAY_DEPUTY', 'search-test-');
         $this->userCount = 2;
@@ -86,7 +86,7 @@ trait UserManagementTrait
     /**
      * @When I search for one of the test users with the Professional filter
      */
-    public function iSearchForTestUsersWithTheProfFilter()
+    public function iSearchForTestUsersWithTheProfFilter(): void
     {
         $this->searchUserWithFilter('ROLE_PROF%', 'search-test-');
         $this->userCount = 2;
@@ -96,7 +96,7 @@ trait UserManagementTrait
     /**
      * @When I search for one of the test users with the Professional Named filter
      */
-    public function iSearchForTestUsersWithTheProfNamedFilter()
+    public function iSearchForTestUsersWithTheProfNamedFilter(): void
     {
         $this->searchUserWithFilter('ROLE_PROF_NAMED', 'search-test-');
         $this->userCount = 1;
@@ -106,7 +106,7 @@ trait UserManagementTrait
     /**
      * @When I search for one of the test users with the Public Authority filter
      */
-    public function iSearchForTestUsersWithThePAFilter()
+    public function iSearchForTestUsersWithThePAFilter(): void
     {
         $this->searchUserWithFilter('ROLE_PA%', 'search-test-');
         $this->userCount = 2;
@@ -116,7 +116,7 @@ trait UserManagementTrait
     /**
      * @When I search for one of the test users with the Public Authority Named filter
      */
-    public function iSearchForTestUsersWithThePANamedFilter()
+    public function iSearchForTestUsersWithThePANamedFilter(): void
     {
         $this->searchUserWithFilter('ROLE_PA_NAMED', 'search-test-');
         $this->userCount = 1;
@@ -126,7 +126,7 @@ trait UserManagementTrait
     /**
      * @When I search for one of the test users with the Admin filter
      */
-    public function iSearchForTestUsersWithTheAdminFilter()
+    public function iSearchForTestUsersWithTheAdminFilter(): void
     {
         $this->searchUserWithFilter('ROLE_ADMIN', 'search-test-');
         $this->userCount = 1;
@@ -136,7 +136,7 @@ trait UserManagementTrait
     /**
      * @When I search for one of the test users with the Super Admin filter
      */
-    public function iSearchForTestUsersWithTheSuperFilter()
+    public function iSearchForTestUsersWithTheSuperFilter(): void
     {
         $this->searchUserWithFilter('ROLE_SUPER_ADMIN', 'search-test-');
         $this->userCount = 1;
@@ -146,13 +146,13 @@ trait UserManagementTrait
     /**
      * @When I search for one of the test users with the All Roles filter
      */
-    public function iSearchForTestUsersWithTheAllFilter()
+    public function iSearchForTestUsersWithTheAllFilter(): void
     {
         $this->searchUserWithFilter('', 'search-test-');
         $this->setFixtureUserEmailsAndCount();
     }
 
-    private function setFixtureUserEmailsAndCount()
+    private function setFixtureUserEmailsAndCount(): void
     {
         $this->userCount = 9;
         $this->userEmails = [
@@ -167,7 +167,7 @@ trait UserManagementTrait
         ];
     }
 
-    private function searchUserWithFilter(string $filterText, string $searchField)
+    private function searchUserWithFilter(string $filterText, string $searchField): void
     {
         $this->iAmOnAdminUsersSearchPage();
         $this->fillField('admin_q', $searchField);
@@ -180,7 +180,7 @@ trait UserManagementTrait
     /**
      * @When I add a new lay deputy user
      */
-    public function iAddNewLayDeputyUser()
+    public function iAddNewLayDeputyUser(): void
     {
         $this->pressButton('Add new user');
         $this->expectedUsers = [
@@ -206,7 +206,7 @@ trait UserManagementTrait
     /**
      * @When I search for the newly created user
      */
-    public function iSearchForNewlyCreatedUser()
+    public function iSearchForNewlyCreatedUser(): void
     {
         $this->searchUserWithFilter('', $this->expectedUsers[0]['email']);
     }
@@ -214,7 +214,7 @@ trait UserManagementTrait
     /**
      * @Then I can see the user as non active in search results
      */
-    public function iCanSeeTheUserAsNonActiveInSearchResults()
+    public function iCanSeeTheUserAsNonActiveInSearchResults(): void
     {
         $this->iAmOnAdminUsersSearchPage();
         $xpath = '//tbody/tr';
@@ -225,7 +225,7 @@ trait UserManagementTrait
         $this->assertStringContainsString('(Re)send activation email', $firstRow, 'Add user check - activation text');
     }
 
-    private function createArrayOfAddUsersFromArray($rolesArray)
+    private function createArrayOfAddUsersFromArray($rolesArray): void
     {
         foreach ($rolesArray as $key => $role) {
             $email = 'add-user-' . $this->userRole . '-' . $role['roleName'] . '-' . $this->testRunId . '@t.uk';
@@ -241,7 +241,7 @@ trait UserManagementTrait
         }
     }
 
-    private function createArrayOfEditUsersFromArray($rolesArray)
+    private function createArrayOfEditUsersFromArray($rolesArray): void
     {
         foreach ($rolesArray as $key => $role) {
             $email = 'edit-test-' . $role['roleName'] . '-' . $this->testRunId . '@t.uk';
@@ -257,7 +257,7 @@ trait UserManagementTrait
         }
     }
 
-    private function addUserInApplication()
+    private function addUserInApplication(): void
     {
         $this->userCount = 0;
         foreach ($this->expectedUsers as $addedUser) {
@@ -279,7 +279,7 @@ trait UserManagementTrait
     /**
      * @When I add invalid details in each of the fields
      */
-    public function iAddInvalidDetailsInEachField()
+    public function iAddInvalidDetailsInEachField(): void
     {
         $this->fillInAndSubmitUsers(
             'invalidemailwithoutatsymbol.com',
@@ -294,7 +294,7 @@ trait UserManagementTrait
     /**
      * @When I get the correct validation messages for invalid user
      */
-    public function iGetCorrectValidationMessagesForInvalidUser()
+    public function iGetCorrectValidationMessagesForInvalidUser(): void
     {
         $this->assertOnAlertMessage('This email is not valid');
         $this->assertOnAlertMessage('The first name cannot be longer than 50 letters');
@@ -302,7 +302,7 @@ trait UserManagementTrait
         $this->assertOnAlertMessage('The postcode cannot be longer than 10 characters');
     }
 
-    private function checkRolesExistToAdd($roles)
+    private function checkRolesExistToAdd($roles): void
     {
         $options = $this->getSession()->getPage()->findAll('xpath', '//option');
         $expectedOptions = [];
@@ -315,7 +315,7 @@ trait UserManagementTrait
         }
     }
 
-    private function setUniversalUserRoles()
+    private function setUniversalUserRoles(): void
     {
         $this->userRoles = [
             ['role' => 'ROLE_LAY_DEPUTY', 'roleName' => 'lay', 'roleType' => 'deputy'],
@@ -332,7 +332,7 @@ trait UserManagementTrait
     /**
      * @When I add each of the available user types for a super admin
      */
-    public function iAddEachUserTypeForSuperAdmin()
+    public function iAddEachUserTypeForSuperAdmin(): void
     {
         $this->userRole = 'super';
         $this->setUniversalUserRoles();
@@ -345,7 +345,7 @@ trait UserManagementTrait
     /**
      * @When I check we can add the appropriate user types for an admin manager
      */
-    public function iCheckCanAddEachUserTypeForAdminManager()
+    public function iCheckCanAddEachUserTypeForAdminManager(): void
     {
         $this->userRole = 'manager';
         $this->setUniversalUserRoles();
@@ -355,7 +355,7 @@ trait UserManagementTrait
     /**
      * @When I check we can add the appropriate user types for an admin
      */
-    public function iCheckCanAddEachUserTypeForAdmin()
+    public function iCheckCanAddEachUserTypeForAdmin(): void
     {
         $this->userRole = 'admin';
         $this->setUniversalUserRoles();
@@ -365,7 +365,7 @@ trait UserManagementTrait
     /**
      * @Then I see the appropriate user types available to add
      */
-    public function iSeeUserTypesAvailableToAddAsNewUser()
+    public function iSeeUserTypesAvailableToAddAsNewUser(): void
     {
         $this->checkRolesExistToAdd($this->userRoles);
         $this->clickLink('Cancel');
@@ -375,7 +375,7 @@ trait UserManagementTrait
     /**
      * @Then I should see each created users in the search window
      */
-    public function iSeeEachCreatedUsersInSearchWindow()
+    public function iSeeEachCreatedUsersInSearchWindow(): void
     {
         $this->searchUserWithFilter('', 'add-user-' . $this->userRole . '-');
         $this->iShouldSeeTheCorrectSearchResult();
@@ -384,7 +384,7 @@ trait UserManagementTrait
     /**
      * @When I resend activation email
      */
-    public function iResendActivationEmail()
+    public function iResendActivationEmail(): void
     {
         $this->iAmOnAdminUsersSearchPage();
         $this->clickLink('(Re)send activation email');
@@ -393,7 +393,7 @@ trait UserManagementTrait
     /**
      * @Then I see that activation link has been sent
      */
-    public function iSeeActivationLinkHasBeenSent()
+    public function iSeeActivationLinkHasBeenSent(): void
     {
         $xpath = '//body/p';
         $response = $this->getSession()->getPage()->find('xpath', $xpath)->getHtml();
@@ -403,7 +403,7 @@ trait UserManagementTrait
     /**
      * @Then I see that an activation email has been sent to the user
      */
-    public function iSeeActivationEmailHasBeenSent()
+    public function iSeeActivationEmailHasBeenSent(): void
     {
         $this->assertOnAlertMessage('An activation email has been sent to the user');
     }
@@ -413,12 +413,12 @@ trait UserManagementTrait
     /**
      * @When I have created the appropriate test users to edit
      */
-    public function iHaveCreatedTheAppropriateTestUsersToEdit()
+    public function iHaveCreatedTheAppropriateTestUsersToEdit(): void
     {
         $this->fixtureHelper->createDataForAdminUserTests('edit');
     }
 
-    private function fillInAndSubmitUsers($email, $firstName, $lastName, $postcode, $roleType, $role)
+    private function fillInAndSubmitUsers($email, $firstName, $lastName, $postcode, $roleType, $role): void
     {
         $this->iAmOnAdminAddUserPage();
         $selectType = $roleType == 'deputy' ? 'admin[roleNameDeputy]' : 'admin[roleNameStaff]';
@@ -434,7 +434,7 @@ trait UserManagementTrait
     /**
      * @When I edit each of the test users
      */
-    public function iEditEachOfTheTestUsers()
+    public function iEditEachOfTheTestUsers(): void
     {
         $this->generateEditExistingUserArray();
         foreach ($this->expectedUsers as $key => $addedUser) {
@@ -453,7 +453,7 @@ trait UserManagementTrait
     /**
      * @Then I should see the users have been correctly updated
      */
-    public function iShouldSeeUsersCorrectlyUpdated()
+    public function iShouldSeeUsersCorrectlyUpdated(): void
     {
         $this->iAmOnAdminUsersSearchPage();
         $this->searchUserWithFilter('', 'edit-test-');
@@ -469,7 +469,7 @@ trait UserManagementTrait
     /**
      * @When I navigate to the lay user for edit tests
      */
-    public function iNavigateToLayUserForEditTests()
+    public function iNavigateToLayUserForEditTests(): void
     {
         $this->iAmOnAdminUsersSearchPage();
         $layDeputy = $this->expectedUsers[0];
@@ -481,7 +481,7 @@ trait UserManagementTrait
     /**
      * @Then I see user details are displayed correctly
      */
-    public function iSeeUserDetailsAreDisplayedCorrectly()
+    public function iSeeUserDetailsAreDisplayedCorrectly(): void
     {
         $layDeputy = $this->expectedUsers[0];
         $firstName = $this->getSession()->getPage()->find('xpath', '//input[@id="admin_firstname"]')->getValue();
@@ -497,7 +497,7 @@ trait UserManagementTrait
     /**
      * @When I view the super admin user
      */
-    public function iViewSuperAdminUser()
+    public function iViewSuperAdminUser(): void
     {
         $this->iAmOnAdminUsersSearchPage();
         $this->searchUserWithFilter('', 'edit-test-super-' . $this->testRunId . '@t.uk');
@@ -507,7 +507,7 @@ trait UserManagementTrait
     /**
      * @When I view the admin manager user
      */
-    public function iViewAdminManagerUser()
+    public function iViewAdminManagerUser(): void
     {
         $this->iVisitAdminSearchUserPage();
         $this->iAmOnAdminUsersSearchPage();
@@ -519,7 +519,7 @@ trait UserManagementTrait
     /**
      * @When I view the admin user
      */
-    public function iViewAdminUser()
+    public function iViewAdminUser(): void
     {
         $this->iVisitAdminSearchUserPage();
         $this->iAmOnAdminUsersSearchPage();
@@ -530,7 +530,7 @@ trait UserManagementTrait
     /**
      * @Then I should not be able to edit that user
      */
-    public function iShouldNotBeAbleToEditThatUser()
+    public function iShouldNotBeAbleToEditThatUser(): void
     {
         $this->iAmOnAdminViewUserPage();
         $xpath = "//a[text()[contains(., 'Edit user')]]";
@@ -541,7 +541,7 @@ trait UserManagementTrait
     /**
      * @Then I should be able to delete that user
      */
-    public function iShouldBeAbleToDeleteThatUser()
+    public function iShouldBeAbleToDeleteThatUser(): void
     {
         $this->iAmOnAdminViewUserPage();
         $this->clickBasedOnText('Delete user');
@@ -551,7 +551,7 @@ trait UserManagementTrait
     /**
      * @Then I should be able to edit that user
      */
-    public function iShouldBeAbleToEditThatUser()
+    public function iShouldBeAbleToEditThatUser(): void
     {
         $this->iAmOnAdminViewUserPage();
         $this->clickBasedOnText('Edit user');
@@ -562,7 +562,7 @@ trait UserManagementTrait
     /**
      * @When I delete the admin manager
      */
-    public function iDeleteTheAdminManager()
+    public function iDeleteTheAdminManager(): void
     {
         $this->deleteAdmin('manager');
     }
@@ -570,7 +570,7 @@ trait UserManagementTrait
     /**
      * @When I delete the admin
      */
-    public function iDeleteTheAdmin()
+    public function iDeleteTheAdmin(): void
     {
         $this->deleteAdmin('admin');
     }
@@ -578,7 +578,7 @@ trait UserManagementTrait
     /**
      * @Then I no longer see the admin manager in search results
      */
-    public function iNoLongerSeeAdminManagerInSearchResults()
+    public function iNoLongerSeeAdminManagerInSearchResults(): void
     {
         $this->noResultsReturnedForUserType('manager');
     }
@@ -586,12 +586,12 @@ trait UserManagementTrait
     /**
      * @Then I no longer see the admin in search results
      */
-    public function iNoLongerSeeAdminInSearchResults()
+    public function iNoLongerSeeAdminInSearchResults(): void
     {
         $this->noResultsReturnedForUserType('admin');
     }
 
-    private function noResultsReturnedForUserType($userType)
+    private function noResultsReturnedForUserType($userType): void
     {
         $this->iVisitAdminSearchUserPage();
         $this->iAmOnAdminUsersSearchPage();
@@ -602,7 +602,7 @@ trait UserManagementTrait
         $this->assertStringDoesNotContainString($email, $tbody, 'Delete test - ' . $userType);
     }
 
-    private function deleteAdmin($userType)
+    private function deleteAdmin($userType): void
     {
         $this->iVisitAdminSearchUserPage();
         $this->iAmOnAdminUsersSearchPage();
@@ -615,7 +615,7 @@ trait UserManagementTrait
         $this->clickLink('Yes, I\'m sure');
     }
 
-    private function generateEditExistingUserArray()
+    private function generateEditExistingUserArray(): void
     {
         $this->userRoles = [
             ['role' => 'ROLE_LAY_DEPUTY', 'roleName' => 'lay', 'roleType' => 'deputy'],
@@ -628,13 +628,13 @@ trait UserManagementTrait
         $this->createArrayOfEditUsersFromArray($this->userRoles);
     }
 
-    private function iNavigateToEditUser()
+    private function iNavigateToEditUser(): void
     {
         $this->iAmOnAdminViewUserPage();
         $this->clickBasedOnText('Edit user');
     }
 
-    private function fillFieldsAndSubmitOnEditExistingUser($addedUser)
+    private function fillFieldsAndSubmitOnEditExistingUser($addedUser): void
     {
         $this->iAmOnAdminEditUserPage();
         $this->fillField('admin[email]', $addedUser['email']);
@@ -644,7 +644,7 @@ trait UserManagementTrait
         $this->pressButton('Update user');
     }
 
-    private function iClickOnFirstUserReturnedBySearch()
+    private function iClickOnFirstUserReturnedBySearch(): void
     {
         $this->iClickOnNthElementBasedOnRegex('/admin\/user\/[0-9].*$/', 0);
     }
@@ -652,7 +652,7 @@ trait UserManagementTrait
     /**
      * @When /^the user visits the forgotten your password page$/
      */
-    public function theUserVisitsTheForgottenYourPasswordPage()
+    public function theUserVisitsTheForgottenYourPasswordPage(): void
     {
         $this->visitsTheForgottenYourPasswordPage();
     }
@@ -660,7 +660,7 @@ trait UserManagementTrait
     /**
      * @Then /^I can only view my user details$/
      */
-    public function iCanOnlyViewMyUserDetails()
+    public function iCanOnlyViewMyUserDetails(): void
     {
         $orgUserEmail = $this->interactingWithUserDetails->getUserEmail();
 
@@ -683,7 +683,7 @@ trait UserManagementTrait
     /**
      * @Then /^I should be able to add a new user to the organisation$/
      */
-    public function iShouldBeAbleToAddANewUserToTheOrganisation()
+    public function iShouldBeAbleToAddANewUserToTheOrganisation(): void
     {
         $newUser = [
             'firstName' => $this->faker->firstName(),
@@ -707,7 +707,7 @@ trait UserManagementTrait
     /**
      * @Then /^I attempt to remove an org user$/
      */
-    public function iAttemptToRemoveAnOrgUser()
+    public function iAttemptToRemoveAnOrgUser(): void
     {
         $orgUsersArray = $this->getAllOrgUsers()['users'];
 
@@ -729,7 +729,7 @@ trait UserManagementTrait
     /**
      * @Then /^the user should be deleted from the organisation$/
      */
-    public function theUserShouldBeDeletedFromTheOrganisation()
+    public function theUserShouldBeDeletedFromTheOrganisation(): void
     {
         $orgUsersArray = $this->getAllOrgUsers()['users'];
 
@@ -753,7 +753,7 @@ trait UserManagementTrait
     /**
      * @Then /^I can view the other org user but I cannot \'([^\']*)\' them$/
      */
-    public function iCanViewTheOtherOrgUserButICannotThem($arg1)
+    public function iCanViewTheOtherOrgUserButICannotThem($arg1): void
     {
         $orgIdAndUsersArray = $this->getAllOrgUsers();
 
@@ -781,7 +781,7 @@ trait UserManagementTrait
     /**
      * @Given /^I click to edit the other org user$/
      */
-    public function iClickToEditTheOtherOrgUser()
+    public function iClickToEditTheOtherOrgUser(): void
     {
         // identify the id of the user to be edited
         $orgIdAndUsersArray = $this->getAllOrgUsers();
@@ -803,7 +803,7 @@ trait UserManagementTrait
         $this->getSession()->getPage()->find('xpath', $xpathLocator)->click();
     }
 
-    private function getAllOrgUsers()
+    private function getAllOrgUsers(): array
     {
         $orgEmailIdentifier = $this->loggedInUserDetails->getOrganisationEmailIdentifier();
 
@@ -821,7 +821,7 @@ trait UserManagementTrait
     /**
      * @When /^I edit the users account details$/
      */
-    public function iEditTheUsersAccountDetails()
+    public function iEditTheUsersAccountDetails(): void
     {
         $this->iAmonOrgSettingsEditAnotherUserPage();
         $this->fillInField('organisation_member[firstname]', $this->faker->lastName(), 'firstname');
@@ -831,7 +831,7 @@ trait UserManagementTrait
     /**
      * @Then /^the user should be updated$/
      */
-    public function theUserShouldBeUpdatedUserManagement()
+    public function theUserShouldBeUpdatedUserManagement(): void
     {
         $this->iAmOnOrgUserAccountsPage();
 
@@ -841,16 +841,16 @@ trait UserManagementTrait
     /**
      * @When I search for one of the org users using :whichName name
      */
-    public function iSearchForOneOfOrgUsersUsingName($whichName)
+    public function iSearchForOneOfOrgUsersUsingName($whichName): void
     {
         $user = is_null($this->interactingWithUserDetails) ? $this->profAdminCombinedHighNotStartedDetails : $this->interactingWithUserDetails;
 
         $searchName = $this->getSearchTerm($whichName);
 
-        $this->searchForUserBy($searchName, $user);
+        $this->searchForUserBy($searchName ?? '', $user);
     }
 
-    private function searchForUserBy(string $searchTerm, UserDetails $userDetailsInteractingWith)
+    private function searchForUserBy(string $searchTerm, UserDetails $userDetailsInteractingWith): void
     {
         $this->fillField('search_users_q', $searchTerm);
         $this->pressButton('Search');
@@ -862,7 +862,7 @@ trait UserManagementTrait
      * @Then I should see :occurrences user details in the user list results with the same :whichName name
      * @throws BehatException
      */
-    public function iShouldSeeBothUserDetailsInResults(int $occurrences, string $whichName)
+    public function iShouldSeeBothUserDetailsInResults(int $occurrences, string $whichName): void
     {
         $this->userCount = $occurrences;
 
@@ -872,23 +872,26 @@ trait UserManagementTrait
 
         $searchName = $this->getSearchTerm($whichName);
         $searchResultsFound = implode(',', $searchResults);
-        $userNamesFoundCount = substr_count($searchResultsFound, strtolower($searchName));
+        $userNamesFoundCount = substr_count($searchResultsFound, strtolower($searchName ?? ''));
 
-        if ($userNamesFoundCount < $this->userCount) {
+        if ($userNamesFoundCount < ($this->userCount ?? 0)) {
             throw new BehatException(sprintf('The user search results list did not contain the required occurrences of the users full name. Expected: "%s" (at least %s times), got (full HTML): %s', $searchName, $this->userCount, $userNamesFoundCount));
         }
 
-        $this->assertIntEqualsInt($this->userCount, $userNamesFoundCount, 'User rows visible');
+        $this->assertIntEqualsInt($this->userCount ?? 0, $userNamesFoundCount, 'User rows visible');
     }
 
-    private function assertUserCountSet()
+    private function assertUserCountSet(): void
     {
         if (is_null($this->userCount)) {
             throw new BehatException(sprintf("You're attempting to run a step definition that requires this->userCount to be set but its null. Set it and try again."));
         }
     }
 
-    private function getSearchResults()
+    /**
+     * @return array<string>
+     */
+    private function getSearchResults(): array
     {
         $xpath = '//tr/td[1]';
         $tableDataElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
@@ -902,7 +905,7 @@ trait UserManagementTrait
         return $formattedDataElements;
     }
 
-    private function getSearchTerm(string $whichName)
+    private function getSearchTerm(string $whichName): ?string
     {
         switch (strtolower($whichName)) {
             case 'first':

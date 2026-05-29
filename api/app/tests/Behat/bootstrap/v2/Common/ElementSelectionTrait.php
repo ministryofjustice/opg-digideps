@@ -10,7 +10,7 @@ use Behat\Mink\Element\NodeElement;
 trait ElementSelectionTrait
 {
     // Bring back list of items based on css selector with error handling
-    public function findAllCssElements($elementType)
+    public function findAllCssElements($elementType): array
     {
         $listOfElements = $this->getSession()->getPage()->findAll('css', $elementType);
 
@@ -22,7 +22,7 @@ trait ElementSelectionTrait
     }
 
     // Bring back list of items based on xpath selector with error handling
-    public function findAllXpathElements($xpath)
+    public function findAllXpathElements($xpath): array
     {
         $listOfElements = $this->getSession()->getPage()->findAll('xpath', $xpath);
 
@@ -34,7 +34,7 @@ trait ElementSelectionTrait
     }
 
     // Click on a specified occurrence of an href based on a regex you specify
-    public function iClickOnNthElementBasedOnRegex(string $regex, int $elementIndex)
+    public function iClickOnNthElementBasedOnRegex(string $regex, int $elementIndex): void
     {
         $linksArray = [];
         $links = $this->getSession()->getPage()->findAll('css', 'a');
@@ -64,7 +64,7 @@ trait ElementSelectionTrait
         $element->click();
     }
 
-    public function clickBasedOnText($text)
+    public function clickBasedOnText($text): void
     {
         $xpath = sprintf('//a[text()[contains(., \'%s\')]]', $text);
         $link = $this->getSession()->getPage()->find('xpath', $xpath);
@@ -106,7 +106,7 @@ trait ElementSelectionTrait
     }
 
     // Click on a link (a or button css ref for example) based on the value of it's attribute type.
-    public function iClickBasedOnAttributeTypeAndValue(string $elementType, string $attributeType, string $attributeValue)
+    public function iClickBasedOnAttributeTypeAndValue(string $elementType, string $attributeType, string $attributeValue): void
     {
         $xpath = sprintf("//%s[@%s='%s']", $elementType, $attributeType, $attributeValue);
 
@@ -123,7 +123,7 @@ trait ElementSelectionTrait
     }
 
     // Returns True if a particular element exists on a page based on parameters we pass in
-    public function elementExistsOnPage(string $elementType, string $attributeType, string $attributeValue)
+    public function elementExistsOnPage(string $elementType, string $attributeType, string $attributeValue): bool
     {
         $xpath = sprintf("//%s[@%s='%s']", $elementType, $attributeType, $attributeValue);
         $session = $this->getSession();
@@ -167,7 +167,7 @@ trait ElementSelectionTrait
     }
 
     // Select radio dialogue based on name
-    public function iSelectRadioBasedOnName(string $elementType, string $attributeType, string $attributeValue, string $name)
+    public function iSelectRadioBasedOnName(string $elementType, string $attributeType, string $attributeValue, string $name): void
     {
         $xpath = sprintf("//%s[@%s='%s']//input", $elementType, $attributeType, $attributeValue);
         $session = $this->getSession();
@@ -191,7 +191,7 @@ trait ElementSelectionTrait
     }
 
     // Select radio dialogue based on choice number
-    public function iSelectRadioBasedOnChoiceNumber(string $elementType, string $attributeType, string $attributeValue, int $choiceNumber)
+    public function iSelectRadioBasedOnChoiceNumber(string $elementType, string $attributeType, string $attributeValue, int $choiceNumber): void
     {
         $xpath = sprintf("//%s[@%s='%s']//input", $elementType, $attributeType, $attributeValue);
         $session = $this->getSession();
@@ -211,7 +211,7 @@ trait ElementSelectionTrait
     }
 
     // Can be used for cross browser tests to scroll so element is in viewport
-    public function scrollToElement($element)
+    public function scrollToElement($element): void
     {
         if (substr($element, 0, 1) != '.' && substr($element, 0, 1) != '#') {
             $element = '#' . $element;

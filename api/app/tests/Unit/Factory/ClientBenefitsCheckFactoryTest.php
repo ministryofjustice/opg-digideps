@@ -69,7 +69,6 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
         $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
         $this->set($report, $this->reportId);
 
-        /** @var ObjectProphecy|ReportRepository $reportRepo */
         $reportRepo = self::prophesize(ReportRepository::class);
         $em = self::prophesize(EntityManagerInterface::class);
 
@@ -151,7 +150,6 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
         $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
         $this->set($report, $this->reportId);
 
-        /** @var ObjectProphecy|ReportRepository $reportRepo */
         $reportRepo = self::prophesize(ReportRepository::class);
         $reportRepo->find($this->reportId)->shouldBeCalled()->willReturn($report);
 
@@ -188,7 +186,6 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
         $report = new Report(new Client(), Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime(), new \DateTime());
         $this->set($report, $this->reportId);
 
-        /** @var ObjectProphecy|ReportRepository $reportRepo */
         $reportRepo = self::prophesize(ReportRepository::class);
         $reportRepo->find($this->reportId)->shouldBeCalled()->willReturn($report);
 
@@ -204,7 +201,6 @@ final class ClientBenefitsCheckFactoryTest extends TestCase
 
         $existingMoney->setClientBenefitsCheck($existingClientBenefitsCheck);
 
-        /** @var EntityManagerInterface|ObjectProphecy $em */
         $em = self::prophesize(EntityManagerInterface::class);
         $em->remove($existingMoney)->shouldBeCalled();
         $em->flush()->shouldBeCalled();

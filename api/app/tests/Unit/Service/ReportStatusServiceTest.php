@@ -14,6 +14,7 @@ use OPG\Digideps\Backend\Entity\Report\Contact;
 use OPG\Digideps\Backend\Entity\Report\Debt;
 use OPG\Digideps\Backend\Entity\Report\Decision;
 use OPG\Digideps\Backend\Entity\Report\Document;
+use OPG\Digideps\Backend\Entity\Report\Lifestyle;
 use OPG\Digideps\Backend\Entity\Report\MentalCapacity;
 use OPG\Digideps\Backend\Entity\Report\MoneyShortCategory;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShort;
@@ -49,21 +50,21 @@ final class ReportStatusServiceTest extends TestCase
     private function getReportMocked(array $reportMethods = [], $hasBalance = true): Report
     {
         $report = m::mock(Report::class, $reportMethods + [
-                'getSectionStatusesCached' => [],
+                'getSectionStatusesCached' => new ArrayCollection([]),
                 'getBankAccounts' => new ArrayCollection([]),
-                'getBankAccountsIncomplete' => [],
-                'getExpenses' => [],
+                'getBankAccountsIncomplete' => new ArrayCollection([]),
+                'getExpenses' => new ArrayCollection([]),
                 'getPaidForAnything' => null,
                 'expensesSectionCompleted' => null,
-                'getGifts' => [],
+                'getGifts' => new ArrayCollection([]),
                 'giftsSectionCompleted' => null,
-                'getMoneyTransfers' => [],
+                'getMoneyTransfers' => new ArrayCollection([]),
                 'getNoTransfersToAdd' => null,
-                'getAssets' => [],
-                'getDecisions' => [],
+                'getAssets' => new ArrayCollection([]),
+                'getDecisions' => new ArrayCollection([]),
                 'getHasCapacityChanged' => null,
                 'getNoAssetToAdd' => null,
-                'getContacts' => [],
+                'getContacts' => new ArrayCollection([]),
                 'getReasonForNoContacts' => null,
                 'getSignificantDecisionsMade' => null,
                 'getReasonForNoDecisions' => null,
@@ -73,7 +74,7 @@ final class ReportStatusServiceTest extends TestCase
                     'getWhoIsDoingTheCaring' => null,
                     'getDoesClientHaveACarePlan' => null,
                 ]),
-                'getLifestyle' => m::mock(VisitsCare::class, [
+                'getLifestyle' => m::mock(Lifestyle::class, [
                     'getCareAppointments' => null,
                     'getDoesClientUndertakeSocialActivities' => null,
                 ]),
@@ -113,12 +114,12 @@ final class ReportStatusServiceTest extends TestCase
                 'paFeesExpensesNotStarted' => null,
                 'paFeesExpensesCompleted' => null,
                 'getProfDeputyCostsHowCharged' => null,
-                'hasProfDeputyCostsHowChargedFixedOnly' => null,
-                'getProfDeputyCostsHasPrevious' => null,
-                'getProfDeputyFixedCost' => null,
-                'getProfDeputyCostsHasInterim' => null,
+                'hasProfDeputyCostsHowChargedFixedOnly' => false,
+                'getProfDeputyCostsHasPrevious' => false,
+                'getProfDeputyFixedCost' => false,
+                'getProfDeputyCostsHasInterim' => false,
                 'getProfDeputyCostsAmountToScco' => null,
-                'hasProfDeputyOtherCosts' => null,
+                'hasProfDeputyOtherCosts' => false,
                 'isMissingMoneyOrAccountsOrClosingBalance' => true,
                 'getAvailableSections' => [ // 102 sections
                     'decisions', 'contacts', 'visitsCare', 'balance', 'bankAccounts',
@@ -149,15 +150,15 @@ final class ReportStatusServiceTest extends TestCase
 
     public static function lifestyleProvider(): array
     {
-        $empty = m::mock(VisitsCare::class, [
+        $empty = m::mock(Lifestyle::class, [
             'getCareAppointments' => null,
             'getDoesClientUndertakeSocialActivities' => null,
         ]);
-        $incomplete = m::mock(VisitsCare::class, [
+        $incomplete = m::mock(Lifestyle::class, [
             'getCareAppointments' => 'yes',
             'getDoesClientUndertakeSocialActivities' => null,
         ]);
-        $done = m::mock(VisitsCare::class, [
+        $done = m::mock(Lifestyle::class, [
             'getCareAppointments' => 'yes',
             'getDoesClientUndertakeSocialActivities' => 'yes',
         ]);
@@ -312,10 +313,10 @@ final class ReportStatusServiceTest extends TestCase
         ];
 
         $prevNo = ['getProfDeputyCostsHasPrevious' => 'no'];
-        $prevYes = ['getProfDeputyCostsHasPrevious' => 'yes', 'getProfDeputyPreviousCosts' => [1, 2]];
+        $prevYes = ['getProfDeputyCostsHasPrevious' => 'yes', 'getProfDeputyPreviousCosts' => new ArrayCollection([1, 2])];
 
         $interimNo = ['getProfDeputyCostsHasInterim' => 'no'];
-        $interimYes = ['getProfDeputyCostsHasInterim' => 'yes', 'getProfDeputyInterimCosts' => [1, 2]];
+        $interimYes = ['getProfDeputyCostsHasInterim' => 'yes', 'getProfDeputyInterimCosts' => new ArrayCollection([1, 2])];
 
         $fixed = ['getProfDeputyFixedCost' => 1];
         $scco = ['getProfDeputyCostsAmountToScco' => 1];
@@ -597,12 +598,12 @@ final class ReportStatusServiceTest extends TestCase
         return [
             [[], ReportStatusService::STATE_NOT_STARTED, false],
             // incomplete
-            [['getDecisions' => [$decision]], ReportStatusService::STATE_INCOMPLETE, false],
+            [['getDecisions' => new ArrayCollection([$decision])], ReportStatusService::STATE_INCOMPLETE, false],
             [['getSignificantDecisionsMade' => 'No'], ReportStatusService::STATE_INCOMPLETE, false],
             [['getMentalCapacity' => $mcComplete], ReportStatusService::STATE_INCOMPLETE, false],
-            [['getMentalCapacity' => $mcPartial, 'getDecisions' => [$decision]], ReportStatusService::STATE_INCOMPLETE, false],
+            [['getMentalCapacity' => $mcPartial, 'getDecisions' => new ArrayCollection([$decision])], ReportStatusService::STATE_INCOMPLETE, false],
             // done
-            [['getMentalCapacity' => $mcComplete, 'getDecisions' => [$decision]], ReportStatusService::STATE_DONE, true],
+            [['getMentalCapacity' => $mcComplete, 'getDecisions' => new ArrayCollection([$decision])], ReportStatusService::STATE_DONE, true],
             [['getMentalCapacity' => $mcComplete, 'getReasonForNoDecisions' => 'x'], ReportStatusService::STATE_DONE, true],
         ];
     }
@@ -614,7 +615,7 @@ final class ReportStatusServiceTest extends TestCase
         return [
             [[], ReportStatusService::STATE_NOT_STARTED, false],
             // done
-            [['getContacts' => [$contact]], ReportStatusService::STATE_DONE, true],
+            [['getContacts' => new ArrayCollection([$contact])], ReportStatusService::STATE_DONE, true],
             [['getReasonForNoContacts' => 'x'], ReportStatusService::STATE_DONE, true],
         ];
     }
@@ -752,10 +753,10 @@ final class ReportStatusServiceTest extends TestCase
         $asset = m::mock(Asset::class);
 
         return [
-            [['getAssets' => [], 'getNoAssetToAdd' => null], ReportStatusService::STATE_NOT_STARTED],
-            [['getAssets' => [$asset], 'getNoAssetToAdd' => null], ReportStatusService::STATE_DONE],
-            [['getAssets' => [$asset], 'getNoAssetToAdd' => true], ReportStatusService::STATE_DONE],
-            [['getAssets' => [], 'getNoAssetToAdd' => true], ReportStatusService::STATE_DONE],
+            [['getAssets' => new ArrayCollection([]), 'getNoAssetToAdd' => null], ReportStatusService::STATE_NOT_STARTED],
+            [['getAssets' => new ArrayCollection([$asset]), 'getNoAssetToAdd' => null], ReportStatusService::STATE_DONE],
+            [['getAssets' => new ArrayCollection([$asset]), 'getNoAssetToAdd' => true], ReportStatusService::STATE_DONE],
+            [['getAssets' => new ArrayCollection([]), 'getNoAssetToAdd' => true], ReportStatusService::STATE_DONE],
         ];
     }
 
@@ -783,9 +784,9 @@ final class ReportStatusServiceTest extends TestCase
         $noAccounts = new ArrayCollection([]);
 
         return [
-            [['getBankAccounts' => $bothAccounts, 'getMoneyTransfers' => [], 'getNoTransfersToAdd' => null], ReportStatusService::STATE_NOT_STARTED],
-            [['getBankAccounts' => $bothAccounts, 'getMoneyTransfers' => [$mt1], 'getNoTransfersToAdd' => null], ReportStatusService::STATE_DONE],
-            [['getBankAccounts' => $bothAccounts, 'getMoneyTransfers' => [], 'getNoTransfersToAdd' => true], ReportStatusService::STATE_DONE],
+            [['getBankAccounts' => $bothAccounts, 'getMoneyTransfers' => new ArrayCollection([]), 'getNoTransfersToAdd' => null], ReportStatusService::STATE_NOT_STARTED],
+            [['getBankAccounts' => $bothAccounts, 'getMoneyTransfers' => new ArrayCollection([$mt1]), 'getNoTransfersToAdd' => null], ReportStatusService::STATE_DONE],
+            [['getBankAccounts' => $bothAccounts, 'getMoneyTransfers' => new ArrayCollection([]), 'getNoTransfersToAdd' => true], ReportStatusService::STATE_DONE],
             // less than 2 accounts => done
             [['getBankAccounts' => $noAccounts], ReportStatusService::STATE_DONE],
             [['getBankAccounts' => new ArrayCollection([$account1])], ReportStatusService::STATE_DONE],
@@ -815,7 +816,7 @@ final class ReportStatusServiceTest extends TestCase
         $report->getAvailableSections()->shouldBeCalled()->willReturn([Report::SECTION_GIFTS]);
         $report->getSectionStatusesCached()->shouldBeCalled()->willReturn([]);
         $report->giftsSectionCompleted()->shouldBeCalled()->willReturn(true);
-        $report->getGifts()->shouldBeCalled()->willReturn(['a gift']);
+        $report->getGifts()->shouldBeCalled()->willReturn(new ArrayCollection(['a gift']));
 
         $report->isDue()->shouldBeCalled()->willReturn(true);
 
@@ -831,7 +832,7 @@ final class ReportStatusServiceTest extends TestCase
         $report->getAvailableSections()->shouldBeCalled()->willReturn([Report::SECTION_GIFTS]);
         $report->getSectionStatusesCached()->shouldBeCalled()->willReturn([]);
         $report->giftsSectionCompleted()->shouldBeCalled()->willReturn(true);
-        $report->getGifts()->shouldBeCalled()->willReturn(['a gift']);
+        $report->getGifts()->shouldBeCalled()->willReturn(new ArrayCollection(['a gift']));
 
         $report->isDue()->shouldBeCalled()->willReturn(false);
 
@@ -860,7 +861,7 @@ final class ReportStatusServiceTest extends TestCase
         $report->getAvailableSections()->shouldBeCalled()->willReturn([Report::SECTION_GIFTS]);
         $report->getSectionStatusesCached()->shouldBeCalled()->willReturn([]);
         $report->giftsSectionCompleted()->shouldBeCalled()->willReturn(true);
-        $report->getGifts()->shouldBeCalled()->willReturn(['a gift']);
+        $report->getGifts()->shouldBeCalled()->willReturn(new ArrayCollection(['a gift']));
 
         $sut = new ReportStatusService($report->reveal());
         $status = $sut->getStatusIgnoringDueDate();
