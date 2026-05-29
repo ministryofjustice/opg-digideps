@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
+use OPG\Digideps\Backend\Domain\Report\ReportTransitionService;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Staging\StagingDeputyship;
@@ -189,9 +190,15 @@ class CourtOrderRelationshipIngesterTest extends ApiIntegrationTestCase
 
         self::$entityManager->flush();
 
+        /** @var ReportTransitionService $reportTransitionService */
+        $reportTransitionService = self::$container->get(ReportTransitionService::class);
+
         $ingester = new CourtOrderRelationshipIngester(
             new CourtOrderRelationshipReader(self::$entityManager->getConnection()),
-            new ReportReassembler(),
+            new ReportReassembler(
+                $reportTransitionService,
+                self::$entityManager
+            ),
             self::$entityManager
         );
         $results = [...$ingester->execute()];
