@@ -13,7 +13,7 @@ class Kernel extends BaseKernel
 
     private const string CONFIG_EXTS = '.{php,xml,yaml,yml}';
 
-    public function __construct($environment, $debug)
+    public function __construct(string $environment, bool $debug)
     {
         date_default_timezone_set('Europe/London');
         parent::__construct($environment, $debug);

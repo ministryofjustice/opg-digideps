@@ -157,7 +157,7 @@ class ReportSubmissionController extends RestController
      * Called from ADMIN cron.
      */
     #[Route(path: '/{id}/set-undownloadable', requirements: ['id' => '\d+'], methods: ['PUT'])]
-    public function setUndownloadable(int $id, Request $request)
+    public function setUndownloadable(int $id, Request $request): bool
     {
         if (!$this->authService->isSecretValidForRole(User::ROLE_ADMIN, $request)) {
             throw new \RuntimeException(__METHOD__ . ' only accessible from ADMIN container.', 403);
@@ -179,7 +179,7 @@ class ReportSubmissionController extends RestController
      */
     #[Route(path: '/{id}/queue-documents', requirements: ['id' => '\d+'], methods: ['PUT'])]
     #[IsGranted(attribute: 'ROLE_SUPER_ADMIN')]
-    public function queueDocuments(int $id): true
+    public function queueDocuments(int $id): bool
     {
         /** @var ReportSubmission $reportSubmission */
         $reportSubmission = $this->em->getRepository(ReportSubmission::class)->find($id);

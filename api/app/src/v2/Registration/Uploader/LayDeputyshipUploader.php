@@ -103,6 +103,7 @@ class LayDeputyshipUploader
         $errors = [];
         $entityDetails = [];
 
+        /** @var Mixed[] $preReg */
         foreach ($preRegistrationNewClients as $preReg) {
             $dto = $this->layDeputyAssembler->assembleFromArray($preReg);
             $rowResult = $this->layDeputyProcessor->processLayDeputyship($dto, $multiclientApplyDbChanges);

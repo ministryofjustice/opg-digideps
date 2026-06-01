@@ -86,6 +86,7 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
             ->willReturn(new Result());
 
         $this->csvProcessing->layProcessing(Argument::any(), Argument::any())
+            /* @phpstan-ignore method.nonObject */
             ->shouldBeCalled()
             ->willReturn([
                 'added' => 1,

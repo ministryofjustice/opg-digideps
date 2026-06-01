@@ -24,7 +24,7 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
  */
 class DoctrineListener
 {
-    public function prePersist(LifecycleEventArgs $args)
+    public function prePersist(LifecycleEventArgs $args): void
     {
         $entity = $args->getEntity();
         $entityManager = $args->getEntityManager();
@@ -46,7 +46,7 @@ class DoctrineListener
         }
     }
 
-    public function preUpdate(LifecycleEventArgs $args)
+    public function preUpdate(LifecycleEventArgs $args): void
     {
         $entity = $args->getEntity();
         $entityManager = $args->getEntityManager();
@@ -58,7 +58,7 @@ class DoctrineListener
         }
     }
 
-    public function preRemove(LifecycleEventArgs $args)
+    public function preRemove(LifecycleEventArgs $args): void
     {
         $entity = $args->getEntity();
 

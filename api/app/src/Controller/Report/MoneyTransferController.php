@@ -14,7 +14,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class MoneyTransferController extends RestController
 {
-    private $sectionIds = [Report::SECTION_MONEY_TRANSFERS];
+    /** @var String[]  */
+    private array $sectionIds = [Report::SECTION_MONEY_TRANSFERS];
 
     public function __construct(private readonly EntityManagerInterface $em, private readonly RestFormatter $formatter)
     {

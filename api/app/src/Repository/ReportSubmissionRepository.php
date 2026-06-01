@@ -34,9 +34,9 @@ class ReportSubmissionRepository extends ServiceEntityRepository
         $createdByRole,
         $offset,
         $limit,
-        $orderBy = 'createdOn',
+        string $orderBy = 'createdOn',
         $order = 'ASC'
-    ) {
+    ): array {
         $statusFilters = [
             'new' => 'rs.archived = false AND NOT EXISTS (SELECT 1 FROM OPG\Digideps\Backend\Entity\Report\Document d WHERE d.reportSubmission = rs AND d.synchronisationStatus IS NOT NULL)',
             'pending' => 'rs.archived = false AND EXISTS (SELECT 1 FROM OPG\Digideps\Backend\Entity\Report\Document d WHERE d.reportSubmission = rs AND d.synchronisationStatus IS NOT NULL)',
@@ -235,7 +235,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
      *
      * @return \DateTime
      */
-    private function determineCreatedFromDate(?\DateTime $date = null)
+    private function determineCreatedFromDate(?\DateTime $date = null): \DateTime
     {
         $dateFormat = (date('N') == 1) ? 'last Friday midnight' : 'yesterday midnight';
 
@@ -245,7 +245,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
     /**
      * @return \DateTime
      */
-    private function determineCreatedToDate(?\DateTime $date = null)
+    private function determineCreatedToDate(?\DateTime $date = null): \DateTime
     {
         return ($date instanceof \DateTime) ? $date : new \DateTime();
     }

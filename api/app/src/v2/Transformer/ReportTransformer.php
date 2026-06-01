@@ -14,7 +14,7 @@ class ReportTransformer
     /**
      * @return array
      */
-    public function transform(ReportDto $dto)
+    public function transform(ReportDto $dto): array
     {
         $transformed = [
             'id' => $dto->getId(),
@@ -38,7 +38,7 @@ class ReportTransformer
         return $transformed;
     }
 
-    private function transformDate(ReportDto $dto, $property, $format)
+    private function transformDate(ReportDto $dto, string $property, string $format)
     {
         $getter = sprintf('get%s', ucfirst($property));
 

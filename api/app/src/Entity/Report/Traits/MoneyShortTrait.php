@@ -60,7 +60,7 @@ trait MoneyShortTrait
     #[JMS\Groups(['moneyShortCategoriesIn'])]
     public function getMoneyShortCategoriesIn(): Collection
     {
-        return $this->moneyShortCategories->filter(function ($e) {
+        return $this->moneyShortCategories->filter(function ($e): bool {
             return $e->getType() == 'in';
         });
     }
@@ -70,7 +70,7 @@ trait MoneyShortTrait
      */
     public function getMoneyShortCategoriesInPresent(): Collection
     {
-        return $this->getMoneyShortCategories()->filter(function ($e) {
+        return $this->getMoneyShortCategories()->filter(function ($e): bool {
             return $e->getType() == 'in' && $e->getPresent();
         });
     }
@@ -83,7 +83,7 @@ trait MoneyShortTrait
     #[JMS\Groups(['moneyShortCategoriesOut'])]
     public function getMoneyShortCategoriesOut(): Collection
     {
-        return $this->getMoneyShortCategories()->filter(function ($e) {
+        return $this->getMoneyShortCategories()->filter(function ($e): bool {
             return $e->getType() == 'out';
         });
     }
@@ -93,7 +93,7 @@ trait MoneyShortTrait
      */
     public function getMoneyShortCategoriesOutPresent(): Collection
     {
-        return $this->getMoneyShortCategories()->filter(function ($e) {
+        return $this->getMoneyShortCategories()->filter(function ($e): bool {
             return $e->getType() == 'out' && $e->getPresent();
         });
     }
@@ -111,7 +111,7 @@ trait MoneyShortTrait
      */
     public function getMoneyShortCategoryByTypeId(string $typeId)
     {
-        $categories = $this->moneyShortCategories->filter(function ($e) use ($typeId) {
+        $categories = $this->moneyShortCategories->filter(function ($e) use ($typeId): bool {
             return $e->getTypeId() == $typeId;
         });
 
@@ -142,7 +142,7 @@ trait MoneyShortTrait
     #[JMS\Groups(['moneyTransactionsShortIn'])]
     public function getMoneyTransactionsShortIn(): Collection
     {
-        return $this->moneyTransactionsShort->filter(function ($t) {
+        return $this->moneyTransactionsShort->filter(function ($t): bool {
             return $t instanceof MoneyTransactionShortIn;
         });
     }
@@ -155,7 +155,7 @@ trait MoneyShortTrait
     #[JMS\Groups(['moneyTransactionsShortOut'])]
     public function getMoneyTransactionsShortOut(): Collection
     {
-        return $this->moneyTransactionsShort->filter(function ($t) {
+        return $this->moneyTransactionsShort->filter(function ($t): bool {
             return $t instanceof MoneyTransactionShortOut;
         });
     }

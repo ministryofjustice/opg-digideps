@@ -5,43 +5,32 @@ namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 use OPG\Digideps\Backend\Entity\Report\Contact;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class ContactControllerTest extends AbstractTestController
 {
-    private static $deputy1;
-    private static $client1;
-    private static $report1;
-    private static $contact1;
-    private static $deputy2;
-    private static $client2;
-    private static $report2;
-    private static $contact2;
-    private static $tokenAdmin;
-    private static $tokenDeputy;
+    private static Report $report1;
+    private static Contact $contact1;
+    private static Report $report2;
+    private static Contact $contact2;
+    private static string $tokenAdmin;
+    private static string $tokenDeputy;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        // deputy1
-        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
-        self::$report1 = self::fixtures()->createReport(self::$client1);
-        self::$contact1 = self::fixtures()->createContact(self::$report1, ['setAddress' => 'address1']);
+        ['persons' => ['users' => ['lay1' => $user1]], 'orders' => [['pfa' => ['reports' => [self::$report1]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
+        ['orders' => [['pfa' => ['reports' => [self::$report2]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
 
-        // deputy 2
-        self::$deputy2 = self::fixtures()->createUser();
-        self::$client2 = self::fixtures()->createClient(self::$deputy2);
-        self::$report2 = self::fixtures()->createReport(self::$client2);
+        self::$contact1 = self::fixtures()->createContact(self::$report1, ['setAddress' => 'address1']);
         self::$contact2 = self::fixtures()->createContact(self::$report2);
 
         self::fixtures()->flush()->clear();
 
-        if (self::$tokenAdmin === null) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
+        self::$tokenAdmin = $this->loginAsAdmin();
+        self::$tokenDeputy = $this->loginAsDeputy($user1->getEmail());
     }
 
     /**
@@ -54,7 +43,7 @@ class ContactControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    private $dataUpdate = [
+    private static array $dataUpdate = [
         'contact_name' => 'contact_name-changed',
         'address' => 'address-changed',
         'address2' => 'address2-changed',
@@ -65,7 +54,7 @@ class ContactControllerTest extends AbstractTestController
         'relationship' => 'relationship-changed',
     ];
 
-    public function testgetOneByIdAuth()
+    public function testGetOneByIdAuth(): void
     {
         $url = '/report/contact/' . self::$contact1->getId();
 
@@ -73,13 +62,13 @@ class ContactControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
     }
 
-    public function testgetOneByIdAcl()
+    public function testGetOneByIdAcl(): void
     {
         $url2 = '/report/contact/' . self::$contact2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
-    public function testgetOneById()
+    public function testGetOneById(): void
     {
         $url = '/report/contact/' . self::$contact1->getId();
 
@@ -93,7 +82,7 @@ class ContactControllerTest extends AbstractTestController
         $this->assertEquals(self::$contact1->getAddress(), $data['address']);
     }
 
-    public function testgetContactsAuth()
+    public function testGetContactsAuth(): void
     {
         $url = '/report/' . self::$report1->getId() . '/contacts';
 
@@ -101,14 +90,14 @@ class ContactControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
     }
 
-    public function testgetContactsAcl()
+    public function testGetContactsAcl(): void
     {
         $url2 = '/report/' . self::$report2->getId() . '/contacts';
 
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
-    public function testgetContacts()
+    public function testGetContacts(): void
     {
         $url = '/report/' . self::$report1->getId() . '/contacts';
 
@@ -123,7 +112,7 @@ class ContactControllerTest extends AbstractTestController
         $this->assertEquals(self::$contact1->getAddress(), $data[0]['address']);
     }
 
-    public function testupsertContactAuth()
+    public function testUpsertContactAuth(): void
     {
         $url = '/report/contact';
         $this->assertEndpointNeedsAuth('POST', $url);
@@ -133,9 +122,9 @@ class ContactControllerTest extends AbstractTestController
     }
 
     /**
-     * @depends testgetContacts
+     * @depends testGetContacts
      */
-    public function testupsertContactAcl()
+    public function testUpsertContactAcl(): void
     {
         $url2 = '/report/contact';
 
@@ -147,7 +136,7 @@ class ContactControllerTest extends AbstractTestController
         ]);
     }
 
-    public function testupsertContactMissingParams()
+    public function testUpsertContactMissingParams(): void
     {
         $url = '/report/contact';
 
@@ -170,14 +159,14 @@ class ContactControllerTest extends AbstractTestController
         $this->assertStringContainsString('relationship', $errorMessage);
     }
 
-    public function testupsertContactPut()
+    public function testUpsertContactPut(): void
     {
         $url = '/report/contact';
 
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
-            'data' => ['id' => self::$contact1->getId()] + $this->dataUpdate,
+            'data' => ['id' => self::$contact1->getId()] + self::$dataUpdate,
         ]);
         $this->assertTrue($return['data']['id'] > 0);
 
@@ -190,14 +179,14 @@ class ContactControllerTest extends AbstractTestController
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_CONTACTS));
     }
 
-    public function testupsertContactPost()
+    public function testUpsertContactPost(): void
     {
         $url = '/report/contact';
 
         $return = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
-            'data' => ['report_id' => self::$report1->getId()] + $this->dataUpdate,
+            'data' => ['report_id' => self::$report1->getId()] + self::$dataUpdate,
         ]);
         $this->assertTrue($return['data']['id'] > 0);
 
@@ -210,7 +199,7 @@ class ContactControllerTest extends AbstractTestController
         // TODO assert other fields
     }
 
-    public function testDeleteContactAuth()
+    public function testDeleteContactAuth(): void
     {
         $url = '/report/contact/' . self::$contact1->getId();
 
@@ -218,7 +207,7 @@ class ContactControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
     }
 
-    public function testDeleteContactAcl()
+    public function testDeleteContactAcl(): void
     {
         $url2 = '/report/contact/' . self::$contact2->getId();
 
@@ -228,9 +217,9 @@ class ContactControllerTest extends AbstractTestController
     /**
      * Run this last to avoid corrupting the data.
      *
-     * @depends testgetContacts
+     * @depends testGetContacts
      */
-    public function testDeleteContact()
+    public function testDeleteContact(): void
     {
         $url = '/report/contact/' . self::$contact1->getId();
         $this->assertJsonRequest('DELETE', $url, [

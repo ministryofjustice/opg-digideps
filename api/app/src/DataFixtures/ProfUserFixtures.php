@@ -17,7 +17,8 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class ProfUserFixtures extends AbstractDataFixture
 {
-    private $fixtureData = [
+    /** @var array[]  */
+    private array $fixtureData = [
         [
             'users' => [
                 [
@@ -154,7 +155,7 @@ class ProfUserFixtures extends AbstractDataFixture
         parent::__construct($kernel);
     }
 
-    public function doLoad(ObjectManager $manager)
+    public function doLoad(ObjectManager $manager): void
     {
         // Loop through data sets.
         // Creates users, clients, organisation and deputies
@@ -165,11 +166,12 @@ class ProfUserFixtures extends AbstractDataFixture
         $manager->flush();
     }
 
-    private function createFixture($data, $manager)
+    private function createFixture(array $data, ObjectManager $manager): void
     {
         $deputyData = null;
         $organisation = null;
         // Create number of users for each user type
+        /** @var Mixed[] $userData */
         foreach ($data['users'] as $userData) {
             for ($i = 1; $i <= $userData['count']; ++$i) {
                 $fullEmail = $userData['id'] . '-' . $i . $userData['email'];
@@ -190,7 +192,7 @@ class ProfUserFixtures extends AbstractDataFixture
                     $organisation = $this->orgFactory->createFromFullEmail($userData['orgName'] ?? 'Org Name', $fullEmail, true);
 
                     $manager->persist($organisation);
-                    $manager->flush($organisation);
+                    $manager->flush();
                 }
 
                 // Add user to organisation
@@ -199,6 +201,7 @@ class ProfUserFixtures extends AbstractDataFixture
         }
 
         // Create number of clients for each client type
+        /** @var Mixed[] $clientData */
         foreach ($data['clients'] as $clientData) {
             for ($i = 1; $i <= $clientData['count']; ++$i) {
                 // Create client
@@ -210,7 +213,7 @@ class ProfUserFixtures extends AbstractDataFixture
                     $deputy = $this->createDeputy($deputyData, $clientData, $organisation);
 
                     $manager->persist($deputy);
-                    $manager->flush($deputy);
+                    $manager->flush();
                 }
 
                 // Set the named deputy on the client
@@ -228,7 +231,7 @@ class ProfUserFixtures extends AbstractDataFixture
         }
     }
 
-    private function createUser($userData, $iteration)
+    private function createUser(array $userData, int $iteration): User
     {
         return new User()
             ->setFirstname($userData['id'] . '-' . $iteration)
@@ -244,12 +247,12 @@ class ProfUserFixtures extends AbstractDataFixture
             ->setAgreeTermsUse(true);
     }
 
-    private function createClient($clientData, $iteration)
+    private function createClient(array $clientData, int $iteration): Client
     {
         $offset = strlen((string) abs($iteration));
 
         return new Client()
-            ->setCaseNumber(substr_replace($clientData['caseNumber'], $iteration, -$offset))
+            ->setCaseNumber(substr_replace($clientData['caseNumber'], (string) $iteration, -$offset))
             ->setFirstname($clientData['id'])
             ->setLastname('Client ' . $iteration)
             ->setEmail(strtolower($clientData['id']) . '-client-' . $iteration . '@example.com')
@@ -260,16 +263,17 @@ class ProfUserFixtures extends AbstractDataFixture
             ->setCourtDate(\DateTime::createFromFormat('d/m/Y', '01/11/2017'));
     }
 
-    private function createReport($clientData, $client, $manager)
+    private function createReport(array $clientData, Client $client, ObjectManager $manager): void
     {
         $realm = PreRegistration::REALM_PROF;
         $type = PreRegistration::getReportTypeByOrderType($clientData['reportType'], $clientData['orderType'], $realm);
 
+        /** @var \DateTime $startDate */
         $startDate = $client->getExpectedReportStartDate();
-        $startDate->setDate('2016', intval($startDate->format('m')), intval($startDate->format('d')));
-
+        $startDate->setDate(2016, intval($startDate->format('m')), intval($startDate->format('d')));
+        /** @var \DateTime $endDate */
         $endDate = $client->getExpectedReportEndDate();
-        $endDate->setDate('2017', intval($endDate->format('m')), intval($endDate->format('d')));
+        $endDate->setDate(2017, intval($endDate->format('m')), intval($endDate->format('d')));
 
         $report = new Report($client, $type, $startDate, $endDate);
 
@@ -290,7 +294,8 @@ class ProfUserFixtures extends AbstractDataFixture
             ->setOrganisation($organisation);
     }
 
-    protected function getEnvironments()
+    /** @return String[] */
+    protected function getEnvironments(): array
     {
         return ['dev', 'local'];
     }

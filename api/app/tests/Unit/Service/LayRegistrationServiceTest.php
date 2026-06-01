@@ -62,7 +62,7 @@ class LayRegistrationServiceTest extends TestCase
 
         $this->mockEntityManager->expects(self::any())
             ->method('persist')
-            ->willReturnCallback(function ($entity) {
+            ->willReturnCallback(function ($entity): void {
                 self::assertTrue(is_a($entity, Report::class) || is_a($entity, Client::class));
             });
 

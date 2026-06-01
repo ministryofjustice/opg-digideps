@@ -17,7 +17,10 @@ class ChecklistRepository extends ServiceEntityRepository
         parent::__construct($registry, Checklist::class);
     }
 
-    public function getResubmittableErrorChecklistsAndSetToQueued(string $limit)
+    /**
+     * @return mixed[]
+     */
+    public function getResubmittableErrorChecklistsAndSetToQueued(string $limit): array
     {
         $resubmittableErrorChecklistsQuery = "
 SELECT id as checklist_id

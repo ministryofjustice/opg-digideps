@@ -15,7 +15,7 @@ class ClientBenefitsCheckRepository extends ServiceEntityRepository
         parent::__construct($registry, ClientBenefitsCheck::class);
     }
 
-    public function persistAndFlush(ClientBenefitsCheck $clientBenefitsCheck)
+    public function persistAndFlush(ClientBenefitsCheck $clientBenefitsCheck): void
     {
         $this->_em->persist($clientBenefitsCheck);
         $this->_em->flush();

@@ -3,6 +3,7 @@
 namespace OPG\Digideps\Backend\v2\Assembler;
 
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\v2\Assembler\Report\ReportAssemblerInterface;
 use OPG\Digideps\Backend\v2\DTO\ClientDto;
 use OPG\Digideps\Backend\v2\DTO\DeputyDto;
@@ -23,7 +24,7 @@ class ClientAssembler
     ) {
     }
 
-    public function assembleFromArray(array $data, ?OrganisationDto $orgDto = null): ClientDto
+    public function assembleFromArray(array $data, Organisation|OrganisationDto|array|null $orgDto = null): ClientDto
     {
         $dto = new ClientDto();
 

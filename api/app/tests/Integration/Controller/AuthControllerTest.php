@@ -5,25 +5,22 @@ namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
+use PHPUnit\Framework\Attributes\Depends;
+use PHPUnit\Framework\Attributes\Test;
 
 class AuthControllerTest extends AbstractTestController
 {
     public static function tearDownAfterClass(): void
     {
         parent::tearDownAfterClass();
-
-        self::fixtures()->clear();
     }
 
-    /**
-     * @test
-     */
-    public function endpointAuthChecks()
+    #[Test] public function endpointAuthChecks(): void
     {
         $this->assertEndpointNeedsAuth('GET', '/auth/get-logged-user');
     }
 
-    public function testLoginFailWrongPassword()
+    #[Test] public function testLoginFailWrongPassword(): void
     {
         $this->resetAttempts('emailuser@mail.com-WRONG');
 
@@ -45,13 +42,13 @@ class AuthControllerTest extends AbstractTestController
         ]);
     }
 
-    private function resetAttempts($key)
+    private function resetAttempts($key): void
     {
         static::getContainer()->get(AttemptsInTimeChecker::class)->resetAttempts($key);
         static::getContainer()->get(AttemptsIncrementalWaitingChecker::class)->resetAttempts($key);
     }
 
-    public function testLoginFailSecretPermissions()
+    #[Test] public function testLoginFailSecretPermissions(): void
     {
         $this->resetAttempts('emailadmin@example.org');
 
@@ -73,7 +70,7 @@ class AuthControllerTest extends AbstractTestController
         ]);
     }
 
-    public function testFailWrongAuthToken()
+    #[Test] public function testFailWrongAuthToken(): void
     {
         $authToken = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
@@ -88,7 +85,7 @@ class AuthControllerTest extends AbstractTestController
         ]);
     }
 
-    public function testLoginSuccess()
+    #[Test] public function testLoginSuccess(): mixed
     {
         $authToken = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
@@ -104,10 +101,7 @@ class AuthControllerTest extends AbstractTestController
         return $authToken;
     }
 
-    /**
-     * @depends testLoginSuccess
-     */
-    public function testLogout($authToken)
+    #[Depends('testLoginSuccess')] public function testLogout($authToken): void
     {
         $this->assertJsonRequest('POST', '/auth/logout', [
             'mustSucceed' => true,
@@ -118,7 +112,7 @@ class AuthControllerTest extends AbstractTestController
         $this->assertEndpointNeedsAuth('GET', '/auth/get-logged-user');
     }
 
-    public function testMultipleAccountCanLoginAtTheSameTimeAndThereIsNoInterference()
+    #[Test] public function testMultipleAccountCanLoginAtTheSameTimeAndThereIsNoInterference(): void
     {
         $this->resetAttempts('emaildeputy@example.org');
         $this->resetAttempts('emailadmin@example.org');
@@ -154,7 +148,7 @@ class AuthControllerTest extends AbstractTestController
         $this->assertEquals('deputy@example.org', $data['email']);
     }
 
-    public function testLoginTimeout()
+    #[Test] public function testLoginTimeout(): void
     {
         $authToken = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
@@ -169,7 +163,7 @@ class AuthControllerTest extends AbstractTestController
         ]);
     }
 
-    public function testPasswordHashNotInResponse()
+    #[Test] public function testPasswordHashNotInResponse(): void
     {
         $authToken = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
 
@@ -183,7 +177,7 @@ class AuthControllerTest extends AbstractTestController
         $this->assertFalse(isset($data['password']), 'A password was returned when it should not have been returned');
     }
 
-    public function testBruteForceSameEmail()
+    #[Test] public function testBruteForceSameEmail(): void
     {
         $this->resetAttempts('emaildeputy@example.org');
 

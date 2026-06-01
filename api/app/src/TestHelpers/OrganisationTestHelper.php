@@ -6,7 +6,7 @@ use OPG\Digideps\Backend\Entity\Organisation;
 
 class OrganisationTestHelper
 {
-    public function createOrganisation(string $orgName, string $emailIdentifier)
+    public function createOrganisation(string $orgName, string $emailIdentifier): Organisation
     {
         return new Organisation()
             ->setName($orgName)

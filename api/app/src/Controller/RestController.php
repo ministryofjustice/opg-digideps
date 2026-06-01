@@ -9,6 +9,7 @@ use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Exception\NotFound;
+use OPG\Digideps\Backend\Security\ReportVoter;
 use OPG\Digideps\Backend\Utility\Query\Hydrator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -36,17 +37,15 @@ abstract class RestController extends AbstractController
         return $entity;
     }
 
-    protected function hydrateEntityWithArrayData($object, array $data, array $keySetters): void
+    protected function hydrateEntityWithArrayData(object $object, array $data, array $keySetters): void
     {
         Hydrator::hydrateEntityWithArrayData($object, $data, $keySetters);
     }
 
     protected function denyAccessIfReportDoesNotBelongToUser(Report $report): void
     {
-        if (!$this->isGranted('edit', $report->getClient())) {
-            if (!$this->checkIfUserHasAccessViaDeputyUid($report->getClient()->getId())) {
-                throw $this->createAccessDeniedException('Report does not belong to user');
-            }
+        if (!$this->isGranted(ReportVoter::ACCESS, $report)) {
+            throw $this->createAccessDeniedException('Report does not belong to user');
         }
     }
 

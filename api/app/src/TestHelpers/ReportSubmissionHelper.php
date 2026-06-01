@@ -24,7 +24,7 @@ class ReportSubmissionHelper
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    public function generateAndPersistReportSubmission()
+    public function generateAndPersistReportSubmission(): ReportSubmission
     {
         $client = new Client();
         $report = new ReportTestHelper()->generateReport($this->entityManager, $client, null, new \DateTime());
@@ -62,7 +62,7 @@ class ReportSubmissionHelper
         return $rs;
     }
 
-    public function submitAndPersistAdditionalSubmissions(ReportSubmission $lastSubmission)
+    public function submitAndPersistAdditionalSubmissions(ReportSubmission $lastSubmission): void
     {
         $existingReport = $lastSubmission->getReport();
 

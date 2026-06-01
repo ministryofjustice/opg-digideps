@@ -7,44 +7,34 @@ use OPG\Digideps\Backend\Entity\Report\AssetOther;
 use OPG\Digideps\Backend\Entity\Report\AssetProperty;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class AssetControllerTest extends AbstractTestController
 {
-    private static $deputy1;
-    private static $client1;
-    private static $report1;
-    private static $asset1;
-    private static $assetp1;
-    private static $deputy2;
-    private static $client2;
-    private static $report2;
-    private static $asset2;
-    private static $tokenAdmin;
-    private static $tokenDeputy;
+    private static Report $report1;
+    private static AssetOther $asset1;
+    private static AssetProperty $assetp1;
+    private static Report $report2;
+    private static AssetOther $asset2;
+    private static string $tokenAdmin;
+    private static string $tokenDeputy;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        // deputy1
-        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
-        self::$report1 = self::fixtures()->createReport(self::$client1);
+        ['persons' => ['users' => ['lay1' => $user1]], 'orders' => [['pfa' => ['reports' => [self::$report1]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
+        ['orders' => [['pfa' => ['reports' => [self::$report2]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
+
         self::$asset1 = self::fixtures()->createAsset('other', self::$report1, ['setTitle' => 'asset1']);
         self::$assetp1 = self::fixtures()->createAsset('property', self::$report1, ['setAddress' => 'ha1']);
-        // deputy 2
-        self::$deputy2 = self::fixtures()->createUser();
-        self::$client2 = self::fixtures()->createClient(self::$deputy2);
-        self::$report2 = self::fixtures()->createReport(self::$client2);
         self::$asset2 = self::fixtures()->createAsset('other', self::$report2, ['setTitle' => 'asset2']);
 
         self::fixtures()->flush()->clear();
 
-        if (self::$tokenAdmin === null) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
+        self::$tokenAdmin = $this->loginAsAdmin();
+        self::$tokenDeputy = $this->loginAsDeputy($user1->getEmail());
     }
 
     /**
@@ -57,7 +47,7 @@ class AssetControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    public function testgetAssets()
+    public function testGetAssets(): void
     {
         $data = $this->assertJsonRequest(
             'GET',
@@ -76,7 +66,7 @@ class AssetControllerTest extends AbstractTestController
         $this->assertEquals('property', $data[1]['type']);
     }
 
-    public function testgetOneByIdAuth()
+    public function testGetOneByIdAuth(): void
     {
         $url = '/report/' . self::$report1->getId() . '/asset/' . self::$asset1->getId();
 
@@ -84,13 +74,13 @@ class AssetControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
     }
 
-    public function testgetOneByIdAcl()
+    public function testGetOneByIdAcl(): void
     {
         $url2 = '/report/' . self::$report1->getId() . '/asset/' . self::$asset2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
-    public function testgetOneById()
+    public function testGetOneById(): void
     {
         $url = '/report/' . self::$report1->getId() . '/asset/' . self::$asset1->getId();
 
@@ -104,7 +94,7 @@ class AssetControllerTest extends AbstractTestController
         $this->assertEquals(self::$asset1->getTitle(), $data['title']);
     }
 
-    public function testPostAuth()
+    public function testPostAuth(): void
     {
         $url = '/report/' . self::$report1->getId() . '/asset';
 
@@ -112,14 +102,14 @@ class AssetControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin);
     }
 
-    public function testPostAcl()
+    public function testPostAcl(): void
     {
         $url2 = '/report/' . self::$report2->getId() . '/asset';
 
         $this->assertEndpointNotAllowedFor('POST', $url2, self::$tokenDeputy);
     }
 
-    public function testPostOther()
+    public function testPostOther(): void
     {
         $url = '/report/' . self::$report1->getId() . '/asset';
 
@@ -147,7 +137,7 @@ class AssetControllerTest extends AbstractTestController
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_ASSETS));
     }
 
-    public function testPostProperty()
+    public function testPostProperty(): void
     {
         $url = '/report/' . self::$report1->getId() . '/asset';
 
@@ -197,7 +187,7 @@ class AssetControllerTest extends AbstractTestController
         $this->assertEquals(250000.50, $asset->getValue());
     }
 
-    public function testDeleteAuth()
+    public function testDeleteAuth(): void
     {
         $url = '/report/' . self::$report1->getId() . '/asset/' . self::$asset1->getId();
 
@@ -205,7 +195,7 @@ class AssetControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenAdmin);
     }
 
-    public function testDeleteAcl()
+    public function testDeleteAcl(): void
     {
         $url2 = '/report/' . self::$report1->getId() . '/asset/' . self::$asset2->getId();
         $url3 = '/report/' . self::$report2->getId() . '/asset/' . self::$asset2->getId();
@@ -217,9 +207,9 @@ class AssetControllerTest extends AbstractTestController
     /**
      * Run this last to avoid corrupting the data.
      *
-     * @depends testgetAssets
+     * @depends testGetAssets
      */
-    public function testDelete()
+    public function testDelete(): void
     {
         $url = '/report/' . self::$report1->getId() . '/asset/' . self::$asset1->getId();
         $this->assertJsonRequest('DELETE', $url, [

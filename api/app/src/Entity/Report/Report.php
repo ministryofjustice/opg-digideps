@@ -946,7 +946,7 @@ class Report
     #[JMS\Groups(['documents'])]
     public function getUnsubmittedDocuments()
     {
-        return $this->getDeputyDocuments()->filter(function ($d) {
+        return $this->getDeputyDocuments()->filter(function ($d): bool {
             return empty($d->getReportSubmission());
         });
     }
@@ -962,7 +962,7 @@ class Report
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Document>')]
     public function getSubmittedDocuments()
     {
-        return $this->getDeputyDocuments()->filter(function ($d) {
+        return $this->getDeputyDocuments()->filter(function ($d): bool {
             return !empty($d->getReportSubmission());
         });
     }
@@ -1096,7 +1096,7 @@ class Report
      */
     public function getDeputyDocuments(): Collection
     {
-        return $this->getDocuments()->filter(function ($document) {
+        return $this->getDocuments()->filter(function ($document): bool {
             /* @var $document Document */
             return !($document->isAdminDocument() || $document->isReportPdf());
         });
@@ -1169,7 +1169,7 @@ class Report
 
         uasort(
             $values,
-            function ($a, $b) {
+            function ($a, $b): int {
                 return ($a->getId() > $b->getId()) ? -1 : 1;
             }
         );
@@ -1519,6 +1519,9 @@ class Report
         return $this->courtOrders;
     }
 
+    /**
+     * @return array<CourtOrder>
+     */
     public function getActiveCourtOrders(): array
     {
         $active = [];

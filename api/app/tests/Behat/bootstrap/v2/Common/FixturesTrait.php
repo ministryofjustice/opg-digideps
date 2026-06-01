@@ -12,6 +12,7 @@ use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
 use Tests\OPG\Digideps\Backend\Behat\v2\Helpers\FixtureHelper;
 use Behat\Gherkin\Node\TableNode;
+use Tests\OPG\Digideps\Backend\Behat\v2\Helpers\FixtureHelperBuilder;
 
 trait FixturesTrait
 {
@@ -139,28 +140,28 @@ trait FixturesTrait
     /**
      * @Given another super admin user exists
      */
-    public function anotherSuperAdminUserExists()
+    public function anotherSuperAdminUserExists(): void
     {
         $user = $this->createAdditionalAdminUser(User::ROLE_SUPER_ADMIN);
-        $this->interactingWithUserDetails = new UserDetails(FixtureHelper::buildAdminUserDetails($user));
+        $this->interactingWithUserDetails = new UserDetails(FixtureHelperBuilder::buildAdminUserDetails($user));
     }
 
     /**
      * @Given another admin manager user exists
      */
-    public function anotherAdminManagerUserExists()
+    public function anotherAdminManagerUserExists(): void
     {
         $user = $this->createAdditionalAdminUser(User::ROLE_ADMIN_MANAGER);
-        $this->interactingWithUserDetails = new UserDetails(FixtureHelper::buildAdminUserDetails($user));
+        $this->interactingWithUserDetails = new UserDetails(FixtureHelperBuilder::buildAdminUserDetails($user));
     }
 
     /**
      * @Given another admin user exists
      */
-    public function anotherAdminUserExists()
+    public function anotherAdminUserExists(): void
     {
         $user = $this->createAdditionalAdminUser(User::ROLE_ADMIN);
-        $this->interactingWithUserDetails = new UserDetails(FixtureHelper::buildAdminUserDetails($user));
+        $this->interactingWithUserDetails = new UserDetails(FixtureHelperBuilder::buildAdminUserDetails($user));
     }
 
     /**
@@ -179,7 +180,7 @@ trait FixturesTrait
         return $this->fixtureHelper->createAndPersistUser(User::ROLE_LAY_DEPUTY, $email, intval($deputyUid));
     }
 
-    private function createAdditionalAdminUser(string $roleName)
+    private function createAdditionalAdminUser(string $roleName): User
     {
         $email = sprintf('%s@t.uk', rand(0, 999999999));
 

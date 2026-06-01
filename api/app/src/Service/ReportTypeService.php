@@ -19,7 +19,7 @@ class ReportTypeService
         }
 
         $reportTypes = array_unique(
-            array_map(function (CourtOrder $courtOrder) {
+            array_map(function (CourtOrder $courtOrder): ReportType {
                 return $courtOrder->getDesiredReportType();
             }, $courtOrders)
         );

@@ -124,7 +124,15 @@ class FixtureController extends AbstractController
             $orgClient = $this->clientFactory->createGenericOrgClient($deputy, $organisation, $fromRequest['courtDate']);
             $this->em->persist($orgClient);
 
+            /** @var string $reportType */
+            $reportType = $fromRequest['reportType'];
+            $courtOrder = $this->generateCourtOrder($orgClient, strtolower($reportType));
+            $deputy->associateWithCourtOrder($courtOrder);
+            $this->em->persist($deputy);
+
             $report = $this->generateReport($fromRequest, $orgClient);
+            $courtOrder->addReport($report);
+            $this->em->persist($courtOrder);
             $this->em->persist($report);
             if ($number % 100 === 0) {
                 $this->em->flush();
@@ -180,13 +188,15 @@ class FixtureController extends AbstractController
                 $courtOrder->addReport($report);
                 $this->em->persist($courtOrder);
             }
+        } else {
+            $report = $this->reportRepository->findOneBy(['client' => $client]);
         }
 
         if ($fromRequest['deputyType'] === User::TYPE_LAY) {
             $user->setIsPrimary(true);
             $user->addClient($client);
         } else {
-            $this->createOrgAndAttachParticipants($fromRequest, $user, $client);
+            $this->createOrgAndAttachParticipants($fromRequest, $user, $client, $report);
         }
 
         return $user;
@@ -210,7 +220,9 @@ class FixtureController extends AbstractController
         $deputy = $this->generateDeputy($user);
 
         $deputyPreRegistration = $this->generatePreRegistration($fromRequest, $client, $user);
-        $reportType = strtolower($fromRequest['reportType']);
+        /** @var string $reportType */
+        $reportType = $fromRequest['reportType'];
+        $reportType = strtolower($reportType);
         $courtOrder = $this->generateCourtOrder($client, $reportType);
 
         $deputy->associateWithCourtOrder($courtOrder);
@@ -396,7 +408,7 @@ class FixtureController extends AbstractController
         ], $client);
     }
 
-    private function createOrgAndAttachParticipants($fromRequest, User $user, Client $client): void
+    private function createOrgAndAttachParticipants(array $fromRequest, User $user, Client $client, Report $report): void
     {
         $uniqueOrgNameSegment = (preg_match('/\d+/', $fromRequest['deputyEmail'], $matches)) ? $matches[0] : rand(0, 9999);
         $orgName = sprintf('Org %s Ltd', $uniqueOrgNameSegment);
@@ -424,11 +436,20 @@ class FixtureController extends AbstractController
             }
         }
 
+        $this->em->persist($organisation);
         $this->em->flush();
 
         if (!$this->deputyRepository->findOneBy(['email1' => $user->getEmail()])) {
             $deputy = $this->buildDeputy($user, $fromRequest);
+            $courtOrder = $this->generateCourtOrder($client, strtolower($fromRequest['reportType']));
+
+            $deputy->associateWithCourtOrder($courtOrder);
+            $deputy->setOrganisation($organisation);
+
             $this->em->persist($deputy);
+
+            $courtOrder->addReport($report);
+            $this->em->persist($courtOrder);
             $this->em->flush();
             $client->setDeputy($deputy);
         }
@@ -436,7 +457,6 @@ class FixtureController extends AbstractController
         $client->setOrganisation($organisation);
 
         $this->em->persist($client);
-        $this->em->persist($organisation);
         $this->em->flush();
         $this->em->clear();
     }

@@ -4,7 +4,7 @@ namespace OPG\Digideps\Backend\v2\DTO;
 
 trait DtoPropertySetterTrait
 {
-    private function setPropertiesFromData($dto, array $data, array $exclude = [])
+    private function setPropertiesFromData($dto, array $data, array $exclude = []): void
     {
         foreach ($data as $property => $value) {
             $setter = sprintf('set%s', ucfirst($property));

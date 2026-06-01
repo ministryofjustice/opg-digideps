@@ -113,6 +113,7 @@ class PreRegistrationControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
 
         Fixtures::deleteReportsData(['pre_registration']);
+        $this->assertNotNull($this->c1);
         $this->fixtures()->persist($this->c1)->flush($this->c1);
 
         // check count
@@ -255,7 +256,7 @@ class PreRegistrationControllerTest extends AbstractTestController
         $loggedInUser = $this->fixtures()->clear()->getRepo(User::class)->find($this->loggedInUserId);
 
         try {
-            $this->assertEquals(0, $loggedInUser->getDeputyUid());
+            $this->assertEquals(0, $loggedInUser?->getDeputyUid());
         } catch (\RuntimeException $e) {
             $expectedErrorMessage = 'A unique deputy record for case number 39393939 could not be identified';
             $this->assertEquals($expectedErrorMessage, $e->getMessage());

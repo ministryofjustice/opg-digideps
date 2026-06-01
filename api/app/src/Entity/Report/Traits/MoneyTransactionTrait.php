@@ -28,7 +28,7 @@ trait MoneyTransactionTrait
     #[JMS\Groups(['transactionsIn'])]
     public function getMoneyTransactionsIn()
     {
-        return $this->moneyTransactions->filter(function ($t) {
+        return $this->moneyTransactions->filter(function ($t): bool {
             return $t->getType() == 'in';
         });
     }
@@ -41,7 +41,7 @@ trait MoneyTransactionTrait
     #[JMS\Groups(['transactionsOut'])]
     public function getMoneyTransactionsOut(): Collection
     {
-        return $this->moneyTransactions->filter(function ($t) {
+        return $this->moneyTransactions->filter(function ($t): bool {
             return $t->getType() == 'out';
         });
     }

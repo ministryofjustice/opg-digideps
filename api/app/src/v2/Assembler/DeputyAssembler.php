@@ -18,7 +18,7 @@ class DeputyAssembler
     /**
      * @return DeputyDto
      */
-    public function assembleFromArray(array $data)
+    public function assembleFromArray(array $data): DeputyDto
     {
         $dto = new DeputyDto();
 
@@ -27,7 +27,7 @@ class DeputyAssembler
         return $dto;
     }
 
-    public function assembleFromOrgDeputyshipDto(OrgDeputyshipDto $dto, ?Organisation $organisation)
+    public function assembleFromOrgDeputyshipDto(OrgDeputyshipDto $dto, ?Organisation $organisation): Deputy
     {
         if ($dto->deputyIsAnOrganisation()) {
             $deputyFirstName = $dto->getOrganisationName();
