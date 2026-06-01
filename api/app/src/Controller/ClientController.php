@@ -262,8 +262,9 @@ class ClientController extends RestController
         $user = $this->getUser();
         if (!($user instanceof User)) {
             throw new UnauthorisedException("No user where there should be one");
+        } elseif (!$user->hasAdminRole()) {
+            $reportIds = $this->reportAccessService->getVisibleReportIdsGivenUserId($user->getId());
+            $client->filterReports(...$reportIds);
         }
-        $reportIds = $this->reportAccessService->getVisibleReportIdsGivenUserId($user->getId());
-        $client->filterReports(...$reportIds);
     }
 }

@@ -5,20 +5,17 @@ namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\VisitsCare;
 use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class VisitsCareControllerTest extends AbstractTestController
 {
-    private static $deputy1;
-    private static $client1;
-    private static $report1;
-    private static $visitsCare1;
-    private static $deputy2;
-    private static $client2;
-    private static $report2;
-    private static $visitsCare2;
-    private static $tokenAdmin;
-    private static $tokenDeputy;
+    private static Report $report1;
+    private static VisitsCare $visitsCare1;
+    private static Report $report2;
+    private static VisitsCare $visitsCare2;
+    private static string $tokenAdmin = '';
+    private static string $tokenDeputy = '';
 
     public function setUp(): void
     {
@@ -26,24 +23,16 @@ class VisitsCareControllerTest extends AbstractTestController
 
         self::$fixtures::deleteReportsData(['safeguarding']);
 
-        // deputy1
-        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
-        self::$client1 = self::fixtures()->createClient(self::$deputy1, ['setFirstname' => 'c1']);
-        self::$report1 = self::fixtures()->createReport(self::$client1);
-        self::$visitsCare1 = self::fixtures()->createVisitsCare(self::$report1, ['setDoYouLiveWithClient' => 'y']);
+        ['persons' => ['users' => ['lay1' => $user1]], 'orders' => [['pfa' => ['reports' => [self::$report1]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
+        ['orders' => [['pfa' => ['reports' => [self::$report2]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
 
-        // deputy 2
-        self::$deputy2 = self::fixtures()->createUser();
-        self::$client2 = self::fixtures()->createClient(self::$deputy2);
-        self::$report2 = self::fixtures()->createReport(self::$client2);
+        self::$visitsCare1 = self::fixtures()->createVisitsCare(self::$report1, ['setDoYouLiveWithClient' => 'y']);
         self::$visitsCare2 = self::fixtures()->createVisitsCare(self::$report2);
 
         self::fixtures()->flush()->clear();
 
-        if (self::$tokenAdmin === null) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
+        self::$tokenAdmin = $this->loginAsAdmin();
+        self::$tokenDeputy = $this->loginAsDeputy($user1->getEmail());
     }
 
     /**
@@ -56,13 +45,13 @@ class VisitsCareControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    private $dataUpdate = [
+    private static array $dataUpdate = [
         'do_you_live_with_client' => 'y-m',
         'how_often_do_you_visit' => 'ho-m',
         'how_often_do_you_contact_client' => 'hodycc',
     ];
 
-    public function testgetOneByIdAuth()
+    public function testGetOneByIdAuth(): void
     {
         $url = '/report/visits-care/' . self::$visitsCare1->getId();
 
@@ -71,18 +60,18 @@ class VisitsCareControllerTest extends AbstractTestController
     }
 
     /**
-     * @depends testgetOneByIdAuth
+     * @depends testGetOneByIdAuth
      */
-    public function testgetOneByIdAcl()
+    public function testGetOneByIdAcl(): void
     {
         $url2 = '/report/visits-care/' . self::$visitsCare2->getId();
         $this->assertEndpointNotAllowedFor('GET', $url2, self::$tokenDeputy);
     }
 
     /**
-     * @depends testgetOneByIdAcl
+     * @depends testGetOneByIdAcl
      */
-    public function testgetOneById()
+    public function testGetOneById(): void
     {
         $url = '/report/visits-care/' . self::$visitsCare1->getId();
 
@@ -97,9 +86,9 @@ class VisitsCareControllerTest extends AbstractTestController
     }
 
     /**
-     * @depends testgetOneById
+     * @depends testGetOneById
      */
-    public function testgetVisitsCaresAuth()
+    public function testGetVisitsCaresAuth(): void
     {
         $url = '/report/' . self::$report1->getId() . '/visits-care';
 
@@ -108,9 +97,9 @@ class VisitsCareControllerTest extends AbstractTestController
     }
 
     /**
-     * @depends testgetVisitsCaresAuth
+     * @depends testGetVisitsCaresAuth
      */
-    public function testgetVisitsCaresAcl()
+    public function testGetVisitsCaresAcl(): void
     {
         $url2 = '/report/' . self::$report2->getId() . '/visits-care';
 
@@ -118,9 +107,9 @@ class VisitsCareControllerTest extends AbstractTestController
     }
 
     /**
-     * @depends testgetVisitsCaresAcl
+     * @depends testGetVisitsCaresAcl
      */
-    public function testgetVisitsCares()
+    public function testGetVisitsCares(): void
     {
         $url = '/report/' . self::$report1->getId() . '/visits-care';
 
@@ -136,9 +125,9 @@ class VisitsCareControllerTest extends AbstractTestController
     }
 
     /**
-     * @depends testgetVisitsCares
+     * @depends testGetVisitsCares
      */
-    public function testAddUpdateAuth()
+    public function testAddUpdateAuth(): void
     {
         $url = '/report/visits-care';
         $this->assertEndpointNeedsAuth('POST', $url);
@@ -148,7 +137,7 @@ class VisitsCareControllerTest extends AbstractTestController
     /**
      * @depends testAddUpdateAuth
      */
-    public function testAddUpdateAcl()
+    public function testAddUpdateAcl(): void
     {
         $url2post = '/report/visits-care';
         $url2put = '/report/visits-care/' . self::$visitsCare2->getId();
@@ -162,14 +151,14 @@ class VisitsCareControllerTest extends AbstractTestController
     /**
      * @depends testAddUpdateAcl
      */
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $url = '/report/visits-care/' . self::$visitsCare1->getId();
 
         $return = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
-            'data' => $this->dataUpdate,
+            'data' => self::$dataUpdate,
         ]);
         $this->assertTrue($return['data']['id'] > 0);
 
@@ -187,7 +176,7 @@ class VisitsCareControllerTest extends AbstractTestController
     /**
      * @depends testAddUpdateAcl
      */
-    public function testDeleteVisitsCareAuth()
+    public function testDeleteVisitsCareAuth(): void
     {
         $url = '/report/visits-care/' . self::$visitsCare1->getId();
 
@@ -198,7 +187,7 @@ class VisitsCareControllerTest extends AbstractTestController
     /**
      * @depends testDeleteVisitsCareAuth
      */
-    public function testDeleteVisitsCareAcl()
+    public function testDeleteVisitsCareAcl(): void
     {
         $url2 = '/report/visits-care/' . self::$visitsCare2->getId();
 
@@ -210,7 +199,7 @@ class VisitsCareControllerTest extends AbstractTestController
      *
      * @depends testDeleteVisitsCareAcl
      */
-    public function testDeleteVisitsCare()
+    public function testDeleteVisitsCare(): void
     {
         $id = self::$visitsCare1->getId();
         $url = '/report/visits-care/' . $id;
@@ -228,7 +217,7 @@ class VisitsCareControllerTest extends AbstractTestController
      *
      * @depends testDeleteVisitsCare
      */
-    public function testAdd()
+    public function testAdd(): void
     {
         $id = self::$visitsCare1->getId();
         $url = '/report/visits-care/' . $id;
@@ -243,7 +232,7 @@ class VisitsCareControllerTest extends AbstractTestController
         $return = $this->assertJsonRequest('POST', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenDeputy,
-            'data' => ['report_id' => self::$report1->getId()] + $this->dataUpdate,
+            'data' => ['report_id' => self::$report1->getId()] + self::$dataUpdate,
         ]);
         $this->assertTrue($return['data']['id'] > 0);
 

@@ -275,6 +275,9 @@ class ReportSubmissionControllerTest extends AbstractTestController
      */
     private function updateReportSubmissionByIdWithNewDateTime(int $id, string $date)
     {
+        /**
+         * @var ReportSubmission $entity
+         */
         $entity = self::fixtures()->getRepo(ReportSubmission::class)->findOneById($id);
         $entity->setCreatedOn(new \DateTime($date));
 

@@ -17,9 +17,9 @@ class Fee
      * If the order or any key is added, update the ReportControllerTest, hardcoded on position and number
      *  in order to keep it simple.
      *
-     * @var array
+     * @var array<string, bool>
      */
-    public static $feeTypeIds = [
+    public static array $feeTypeIds = [
         'work-up-to-and-including-cot-made' => false,
         'annual-management-fee' => false,
         'annual-property-management-fee' => false,
