@@ -595,7 +595,7 @@ class Checklist implements SynchronisableInterface
         return $this->furtherInformationReceived;
     }
 
-    public function setFurtherInformationReceived(?string $furtherInformationReceived): void
+    public function setFurtherInformationReceived(?string $furtherInformationReceived): static
     {
         $this->furtherInformationReceived = $furtherInformationReceived;
 
