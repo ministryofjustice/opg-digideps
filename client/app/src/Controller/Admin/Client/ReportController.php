@@ -532,7 +532,7 @@ class ReportController extends AbstractController
 
         $checklist = $report->getChecklist();
         $checklist = empty($checklist) ? new Checklist($report) : $checklist;
-        $checklist->setFurtherInformationReceived($content ?: '');
+        $checklist->setFurtherInformationReceived($content);
 
         $httpMethod = empty($checklist->getId()) ? 'post' : 'put';
         $this->restClient->{$httpMethod}('report/' . $report->getId() . '/checked', $checklist, [
