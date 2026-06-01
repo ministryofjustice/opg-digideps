@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace OPG\Digideps\Frontend\Entity\Report;
 
 use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
@@ -12,6 +10,9 @@ use OPG\Digideps\Frontend\Entity\User;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * Checklist.
+ */
 class Checklist implements SynchronisableInterface
 {
     use HasReportTrait;
@@ -208,6 +209,10 @@ class Checklist implements SynchronisableInterface
 
     /**
      * @var ChecklistInformation[]
+     *
+     * @JMS\Groups({"checklist-information"})
+     *
+     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\ChecklistInformation>")
      */
     private array $checklistInformation = [];
 
@@ -244,6 +249,9 @@ class Checklist implements SynchronisableInterface
      */
     private ?string $uuid = null;
 
+    /**
+     * Checklist constructor.
+     */
     public function __construct(Report $report)
     {
         $this->setReport($report);
@@ -598,8 +606,6 @@ class Checklist implements SynchronisableInterface
     public function setFurtherInformationReceived(?string $furtherInformationReceived): static
     {
         $this->furtherInformationReceived = $furtherInformationReceived;
-
-        return $this;
     }
 
     public function getSubmittedBy(): ?User
@@ -638,12 +644,18 @@ class Checklist implements SynchronisableInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function getUuid(): ?string
     {
         return $this->uuid;
     }
 
-    public function setUuid(?string $uuid): static
+    /**
+     * @return $this
+     */
+    public function setUuid(?string $uuid)
     {
         $this->uuid = $uuid;
 
@@ -655,7 +667,7 @@ class Checklist implements SynchronisableInterface
         return $this->clientBenefitsChecked;
     }
 
-    public function setClientBenefitsChecked(?string $clientBenefitsChecked): static
+    public function setClientBenefitsChecked(?string $clientBenefitsChecked): Checklist
     {
         $this->clientBenefitsChecked = $clientBenefitsChecked;
 
