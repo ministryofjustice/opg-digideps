@@ -239,8 +239,6 @@ final class ReportTransitionServiceTest extends TestCase
             oldSiblingId: $hwCourtOrder->getId(),
         );
 
-        // neither hasKindChange() nor hasSiblingIdChange() returns true
-        // simulate this by having the object return false for both
         $this->mockCourtOrderRepository->expects(self::never())
             ->method('find');
 
