@@ -19,6 +19,18 @@ final readonly class ReportReassembler
 
     public function reassembleReport(CourtOrderRelationshipChange $change): CourtOrderRelationshipResult
     {
+        $transitionResult = $this->reportTransitionService->transitionReports($change);
+
+        foreach ($transitionResult->updatedReports as $updatedReport) {
+            $this->entityManager->persist($updatedReport);
+        }
+
+        foreach ($transitionResult->updatedCourtOrders as $updatedCourtOrder) {
+            $this->entityManager->persist($updatedCourtOrder);
+        }
+
+        $this->entityManager->flush();
+
         return new CourtOrderRelationshipResult($change);
     }
 }
