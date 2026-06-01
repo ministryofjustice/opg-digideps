@@ -2,269 +2,163 @@
 
 namespace OPG\Digideps\Backend\v2\DTO;
 
+use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\Organisation;
+use OPG\Digideps\Backend\Entity\Report\Report;
 
 class ClientDto
 {
-    /** @var int */
-    private $id;
+    private ?int $id = null;
+    private ?string $caseNumber = null;
+    private ?string $firstName = null;
+    private ?string $lastName = null;
+    private ?string $email = null;
+    private ?\DateTime $archivedAt = null;
+    private ?\DateTime $deletedAt = null;
+    private int $reportCount = 0;
+    private ?array $reports = null;
+    private Organisation|OrganisationDto|array|null $organisation = null;
+    private ?DeputyDto $deputy = null;
+    private ?array $deputies = null;
 
-    /** @var string */
-    private $caseNumber;
-
-    /** @var string */
-    private $firstName;
-
-    /** @var string */
-    private $lastName;
-
-    /** @var string */
-    private $email;
-
-    /** @var \DateTime */
-    private $archivedAt;
-
-    /** @var \DateTime */
-    private $deletedAt;
-
-    /** @var int */
-    private $reportCount = 0;
-
-    /** @var array */
-    private $reports;
-
-    /** @var Organisation */
-    private $organisation;
-
-    /** @var DeputyDto */
-    private $deputy;
-
-    /** @var array */
-    private $deputies;
-
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @return string
-     */
-    public function getCaseNumber()
+    public function getCaseNumber(): ?string
     {
         return $this->caseNumber;
     }
 
-    /**
-     * @return string
-     */
-    public function getFirstName()
+    public function getFirstName(): ?string
     {
         return $this->firstName;
     }
 
-    /**
-     * @return string
-     */
-    public function getLastName()
+    public function getLastName(): ?string
     {
         return $this->lastName;
     }
 
-    /**
-     * @return string
-     */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getArchivedAt()
+    public function getArchivedAt(): ?\DateTime
     {
         return $this->archivedAt;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDeletedAt()
+    public function getDeletedAt(): ?\DateTime
     {
         return $this->deletedAt;
     }
 
-    /**
-     * @return int
-     */
-    public function getReportCount()
+    public function getReportCount(): ?int
     {
         return $this->reportCount;
     }
 
-    /**
-     * @return array
-     */
-    public function getReports()
+    public function getReports(): ?array
     {
         return $this->reports;
     }
 
-    /**
-     * @return array
-     */
-    public function getOrganisation()
+    public function getOrganisation(): Organisation|OrganisationDto|array|null
     {
         return $this->organisation;
     }
 
-    /**
-     * @return DeputyDto
-     */
-    public function getDeputy()
+    public function getDeputy(): ?DeputyDto
     {
         return $this->deputy;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return ClientDto
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @param string $caseNumber
-     *
-     * @return ClientDto
-     */
-    public function setCaseNumber($caseNumber)
+    public function setCaseNumber(string $caseNumber): static
     {
         $this->caseNumber = $caseNumber;
 
         return $this;
     }
 
-    /**
-     * @param string $firstName
-     *
-     * @return ClientDto
-     */
-    public function setFirstName($firstName)
+    public function setFirstName(string $firstName): static
     {
         $this->firstName = $firstName;
 
         return $this;
     }
 
-    /**
-     * @param string $lastName
-     *
-     * @return ClientDto
-     */
-    public function setLastName($lastName)
+    public function setLastName(string $lastName): static
     {
         $this->lastName = $lastName;
 
         return $this;
     }
 
-    /**
-     * @param string $email
-     *
-     * @return ClientDto
-     */
-    public function setEmail($email)
+    public function setEmail(string $email): static
     {
         $this->email = strtolower($email);
 
         return $this;
     }
 
-    /**
-     * @param \DateTime $archivedAt
-     *
-     * @return ClientDto
-     */
-    public function setArchivedAt($archivedAt)
+    public function setArchivedAt(\DateTime $archivedAt): static
     {
         $this->archivedAt = $archivedAt;
 
         return $this;
     }
 
-    /**
-     * @param \DateTime $deletedAt
-     *
-     * @return ClientDto
-     */
-    public function setDeletedAt($deletedAt)
+    public function setDeletedAt(\DateTime $deletedAt): static
     {
         $this->deletedAt = $deletedAt;
 
         return $this;
     }
 
-    /**
-     * @param int $reportCount
-     *
-     * @return ClientDto
-     */
-    public function setReportCount($reportCount)
+    public function setReportCount(int $reportCount): static
     {
         $this->reportCount = $reportCount;
 
         return $this;
     }
 
-    /**
-     * @return ClientDto
-     */
-    public function setReports(array $reports)
+    public function setReports(array $reports): static
     {
         $this->reports = $reports;
 
         return $this;
     }
 
-    /**
-     * @return ClientDto
-     */
-    public function setOrganisation($organisation)
+    public function setOrganisation(Organisation|OrganisationDto|array|null $organisation): static
     {
         $this->organisation = $organisation;
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function setDeputy(DeputyDto $deputy)
+    public function setDeputy(DeputyDto $deputy): static
     {
         $this->deputy = $deputy;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getDeputies()
+    public function getDeputies(): ?array
     {
         return $this->deputies;
     }
 
-    public function setDeputies(array $deputies): ClientDto
+    public function setDeputies(array $deputies): static
     {
         $this->deputies = $deputies;
 

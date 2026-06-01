@@ -591,7 +591,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getOrganisations()
     {
-        return $this->organisations->filter(function ($organisation) {
+        return $this->organisations->filter(function ($organisation): bool {
             return $organisation->isActivated();
         });
     }
@@ -810,9 +810,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->adManaged;
     }
 
-    public function setAdManaged(?bool $adManaged)
+    public function setAdManaged(?bool $adManaged): static
     {
         $this->adManaged = $adManaged;
+
+        return $this;
     }
 
     /**

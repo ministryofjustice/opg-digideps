@@ -4,7 +4,7 @@ namespace OPG\Digideps\Backend\Exception;
 
 interface HasDataInterface
 {
-    public function getData();
+    public function getData(): mixed;
 
-    public function setData($data);
+    public function setData(mixed $data): void;
 }

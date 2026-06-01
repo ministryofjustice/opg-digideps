@@ -14,7 +14,7 @@ class UserTransformer
     /**
      * @return array
      */
-    public function transform(UserDto $dto, array $exclude = [])
+    public function transform(UserDto $dto, array $exclude = []): array
     {
         $data = [
             'id' => $dto->getId(),
@@ -39,7 +39,7 @@ class UserTransformer
     /**
      * @return array
      */
-    private function transformClients(array $clients)
+    private function transformClients(array $clients): array
     {
         if (empty($clients)) {
             return [];

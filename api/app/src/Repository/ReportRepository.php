@@ -87,7 +87,7 @@ class ReportRepository extends ServiceEntityRepository
      *
      * @return int changed records
      */
-    public function addMoneyShortCategoriesIfMissing(Report $report)
+    public function addMoneyShortCategoriesIfMissing(Report $report): int
     {
         $ret = 0;
 
@@ -179,9 +179,10 @@ class ReportRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
 
+        $qualified = Report::class;
         $dql = <<<DQL
 SELECT c.id as checklist_id, r.id as report_id
-FROM OPG\Digideps\Backend\Entity\Report\Report r
+FROM $qualified r
 JOIN r.checklist c
 WHERE c.synchronisationStatus = :status
 DQL;
@@ -190,11 +191,11 @@ DQL;
             ->createQuery($dql)
             ->setParameter('status', SynchronisableInterface::SYNC_STATUS_QUEUED)
             ->setMaxResults($limit);
-
+        /** @var Int[] $result */
         $result = $query->getArrayResult();
 
         if (count($result)) {
-            $ids = array_map(function ($result) {
+            $ids = array_map(function (array $result) {
                 return $result['checklist_id'];
             }, $result);
 

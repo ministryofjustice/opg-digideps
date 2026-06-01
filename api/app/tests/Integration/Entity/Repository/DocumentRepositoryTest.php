@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
+use Doctrine\ORM\Exception\ORMException;
 use Tests\OPG\Digideps\Backend\Integration\ApiTestTrait;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Document;
@@ -199,7 +200,10 @@ class DocumentRepositoryTest extends KernelTestCase
         self::$entityManager->flush();
     }
 
-    private function createAndSubmitAdditionalDocuments(Report $report, \DateTime $submittedOn)
+    /**
+     * @return Mixed[]
+     */
+    private function createAndSubmitAdditionalDocuments(Report $report, \DateTime $submittedOn): array
     {
         $additionalSubmission = $this->generateAndPersistReportSubmission($report, $submittedOn);
         $additionalSupportingDoc = $this->generateAndPersistDocument($report, false, 'QUEUED', $submittedOn, false);
@@ -338,46 +342,60 @@ class DocumentRepositoryTest extends KernelTestCase
 
     public function testGetQueuedDocumentsAndSetToInProgressSupportingDocumentUsesSubmissionUuid(): void
     {
+        /** @var Document $supportingDoc */
         [$_, $_, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
         $this->syncDocuments([$reportPdfDoc], $reportSubmission, 'abc-123-abc-123');
 
         $documents = self::$sut->getQueuedDocumentsAndSetToInProgress(100);
+        $specificDoc = $documents[$supportingDoc->getId()];
 
-        self::assertEquals('abc-123-abc-123', $documents[$supportingDoc->getId()]['report_submission_uuid']);
+        self::assertEquals('abc-123-abc-123', $specificDoc['report_submission_uuid']);
     }
 
     public function testAdditionalDocumentsSubmissionsUseOriginalSubmissionUUID(): void
     {
         [$_, $report, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
         $this->syncDocuments([$reportPdfDoc, $supportingDoc], $reportSubmission, null);
+        /**
+         * @var ReportSubmission $additionalSubmission
+         * @var Document $additionalSupportingDoc
+         */
         [$additionalSubmission, $additionalSupportingDoc] = $this->createAndSubmitAdditionalDocuments($report, $this->thirdJulyAm);
 
         self::$entityManager->flush();
 
         $documents = self::$sut->getQueuedDocumentsAndSetToInProgress(100);
+        $additionalDoc = $documents[$additionalSupportingDoc->getId()];
 
         self::$entityManager->refresh($additionalSupportingDoc);
 
         self::assertEquals(Document::SYNC_STATUS_IN_PROGRESS, $additionalSupportingDoc->getSynchronisationStatus());
-        self::assertEquals($reportSubmission->getUuid(), $documents[$additionalSupportingDoc->getId()]['report_submission_uuid']);
-        self::assertEquals($additionalSubmission->getId(), $documents[$additionalSupportingDoc->getId()]['report_submission_id']);
+        self::assertEquals($reportSubmission->getUuid(), $additionalDoc['report_submission_uuid']);
+        self::assertEquals($additionalSubmission->getId(), $additionalDoc['report_submission_id']);
     }
 
     public function testResubmissionsDoNotHaveOriginalSubmissionUUIDOnSubmission(): void
     {
         [$_, $report, $reportPdfDoc, $supportingDoc, $reportSubmission] = $this->createAndSubmitReportWithSupportingDoc($this->firstJulyAm);
         $this->syncDocuments([$reportPdfDoc, $supportingDoc], $reportSubmission, 'abc-123-abc-123');
+        /**
+         * @var Document $resubmissionReportPdfDoc
+         * @var Document $resubmissionSupportingDoc
+         * @var ReportSubmission $reportResubmission
+         */
         [$resubmissionReportPdfDoc, $resubmissionSupportingDoc, $reportResubmission] = $this->createAndSubmitResubmissionWithSupportingDoc($report, $this->secondJulyAm);
 
         $documents = self::$sut->getQueuedDocumentsAndSetToInProgress(100);
+        $resubmissionReportPdf = $documents[$resubmissionReportPdfDoc->getId()];
+        $resubmissionSupport = $documents[$resubmissionSupportingDoc->getId()];
 
         self::$entityManager->refresh($resubmissionReportPdfDoc);
         self::$entityManager->refresh($resubmissionSupportingDoc);
 
-        self::assertEquals(null, $documents[$resubmissionReportPdfDoc->getId()]['report_submission_uuid']);
-        self::assertEquals($reportResubmission->getId(), $documents[$resubmissionReportPdfDoc->getId()]['report_submission_id']);
-        self::assertEquals(null, $documents[$resubmissionSupportingDoc->getId()]['report_submission_uuid']);
-        self::assertEquals($reportResubmission->getId(), $documents[$resubmissionSupportingDoc->getId()]['report_submission_id']);
+        self::assertEquals(null, $resubmissionReportPdf['report_submission_uuid']);
+        self::assertEquals($reportResubmission->getId(), $resubmissionReportPdf['report_submission_id']);
+        self::assertEquals(null, $resubmissionSupport['report_submission_uuid']);
+        self::assertEquals($reportResubmission->getId(), $resubmissionSupport['report_submission_id']);
     }
 
     public function testAdditionalDocsOnResubmissionsUseResubmissionUUID(): void
@@ -388,18 +406,23 @@ class DocumentRepositoryTest extends KernelTestCase
         [$resubmissionReportPdfDoc, $resubmissionSupportingDoc, $reportResubmission] = $this->createAndSubmitResubmissionWithSupportingDoc($report, $this->thirdJulyAm);
         $this->syncDocuments([$resubmissionReportPdfDoc, $resubmissionSupportingDoc], $reportResubmission, 'def-456-def-456');
 
+        /**
+         * @var ReportSubmission $additionalSubmission,
+         * @var Document $additionalSupportingDoc
+         */
         [$additionalSubmission, $additionalSupportingDoc] = $this->createAndSubmitAdditionalDocuments($report, $this->thirdJulyPm);
 
         self::$entityManager->flush();
 
         $documents = self::$sut->getQueuedDocumentsAndSetToInProgress(100);
+        $additionalDoc = $documents[$additionalSupportingDoc->getId()];
 
         $this->syncDocuments([$additionalSupportingDoc], $additionalSubmission, 'def-456-def-456');
 
         self::$entityManager->refresh($additionalSubmission);
         self::$entityManager->refresh($additionalSupportingDoc);
 
-        self::assertEquals($additionalSubmission->getUuid(), $documents[$additionalSupportingDoc->getId()]['report_submission_uuid']);
+        self::assertEquals($additionalSubmission->getUuid(), $additionalDoc['report_submission_uuid']);
     }
 
     public function testUpdateSupportingDocumentStatusByReportSubmissionIds(): void

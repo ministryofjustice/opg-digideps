@@ -52,7 +52,10 @@ class DocumentRepository extends ServiceEntityRepository
         parent::__construct($registry, Document::class);
     }
 
-    public function getQueuedDocumentsAndSetToInProgress(int $limit)
+    /**
+     * @return mixed[]
+     */
+    public function getQueuedDocumentsAndSetToInProgress(int $limit): array
     {
         $whereClause = "
         WHERE synchronisation_status='QUEUED'
@@ -100,7 +103,10 @@ class DocumentRepository extends ServiceEntityRepository
         return [];
     }
 
-    public function getResubmittableErrorDocumentsAndSetToQueued(string $limit)
+    /**
+     * @return mixed[]
+     */
+    public function getResubmittableErrorDocumentsAndSetToQueued(string $limit): array
     {
         $whereClause = "
         WHERE
@@ -140,7 +146,10 @@ class DocumentRepository extends ServiceEntityRepository
         return [];
     }
 
-    public function logFailedDocuments()
+    /**
+     * @return mixed[]
+     */
+    public function logFailedDocuments(): array
     {
         $queuedStatus = Document::SYNC_STATUS_QUEUED;
         $inProgressStatus = Document::SYNC_STATUS_IN_PROGRESS;
@@ -183,7 +192,7 @@ class DocumentRepository extends ServiceEntityRepository
         return $failedCounts[0];
     }
 
-    public function updateSupportingDocumentStatusByReportSubmissionIds(array $reportSubmissionIds, ?string $syncErrorMessage = null)
+    public function updateSupportingDocumentStatusByReportSubmissionIds(array $reportSubmissionIds, ?string $syncErrorMessage = null): int
     {
         $idsString = implode(',', $reportSubmissionIds);
         $status = Document::SYNC_STATUS_PERMANENT_ERROR;
@@ -200,10 +209,10 @@ class DocumentRepository extends ServiceEntityRepository
 
         return $stmt->executeStatement();
     }
-
-    private function flagSubmissionsContainingReportPdfs(array $reportSubmissions, Connection $connection)
+    /** @param Mixed[] $reportSubmissions */
+    private function flagSubmissionsContainingReportPdfs(array $reportSubmissions, Connection $connection): array
     {
-        $submissionIds = array_map(function ($submission) {
+        $submissionIds = array_map(function (array $submission) {
             return $submission['id'];
         }, $reportSubmissions);
 
@@ -227,7 +236,7 @@ class DocumentRepository extends ServiceEntityRepository
         return $reportSubmissions;
     }
 
-    private function groupSubmissionsByReportId(array $reportSubmissions)
+    private function groupSubmissionsByReportId(array $reportSubmissions): array
     {
         $groupedReportSubmissions = ['reports' => []];
 

@@ -74,7 +74,7 @@ trait FeeExpensesTrait
      */
     public function getFeeByTypeId($typeId)
     {
-        return $this->getFees()->filter(function (Fee $fee) use ($typeId) {
+        return $this->getFees()->filter(function (Fee $fee) use ($typeId): bool {
             return $fee->getFeeTypeId() === $typeId;
         })->first() ?: null;
     }
@@ -119,7 +119,7 @@ trait FeeExpensesTrait
      */
     public function getFeesWithValidAmount()
     {
-        $fees = $this->getFees()->filter(function ($fee) {
+        $fees = $this->getFees()->filter(function ($fee): bool {
             return !empty($fee->getAmount());
         });
 

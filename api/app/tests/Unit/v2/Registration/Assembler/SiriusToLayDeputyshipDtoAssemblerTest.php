@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\Assembler;
 
+use phpDocumentor\Reflection\Types\ClassString;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use OPG\Digideps\Backend\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
@@ -21,30 +22,34 @@ final class SiriusToLayDeputyshipDtoAssemblerTest extends TestCase
 
     #[DataProvider('getMissingDataVariations')]
     #[Test]
-    public function assembleFromArrayThrowsExceptionIfGivenIncompleteData(string $itemToRemove): void
+    public function assembleFromArrayThrowsExceptionIfGivenIncompleteData(string $itemToRemove, string $errorType): void
     {
         $input = $this->getInput();
         unset($input[$itemToRemove]);
 
-        $this->expectException(\InvalidArgumentException::class);
+        /** @var class-string<\Throwable> $errorType */
+        $this->expectException($errorType);
 
         $this->sut->assembleFromArray($input);
     }
 
+    /**
+     * @return array{string, class-string<\Throwable>}[]
+     */
     public static function getMissingDataVariations(): array
     {
         return [
-            ['Case'],
-            ['ClientSurname'],
-            ['DeputyUid'],
-            ['DeputyFirstname'],
-            ['DeputySurname'],
-            ['DeputyPostcode'],
-            ['ReportType'],
-            ['MadeDate'],
-            ['OrderType'],
-            ['CoDeputy'],
-            ['Hybrid'],
+            ['Case', \TypeError::class],
+            ['ClientSurname', \InvalidArgumentException::class],
+            ['DeputyUid', \TypeError::class],
+            ['DeputyFirstname', \TypeError::class],
+            ['DeputySurname', \TypeError::class],
+            ['DeputyPostcode', \TypeError::class],
+            ['ReportType', \InvalidArgumentException::class],
+            ['MadeDate', \InvalidArgumentException::class],
+            ['OrderType', \InvalidArgumentException::class],
+            ['CoDeputy', \InvalidArgumentException::class],
+            ['Hybrid', \InvalidArgumentException::class],
         ];
     }
 

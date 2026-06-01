@@ -4,61 +4,30 @@ namespace OPG\Digideps\Backend\v2\DTO;
 
 class UserDto
 {
-    /** @var int */
-    private $id;
+    private ?int $id = null;
+    private ?string $firstName = null;
+    private ?string $lastName = null;
+    private ?string $email = null;
+    private ?string $roleName = null;
+    private ?string $address1 = null;
+    private ?string $address2 = null;
+    private ?string $address3 = null;
+    private ?string $addressPostcode = null;
+    private ?string $addressCountry = null;
+    private ?bool $active = null;
+    private ?string $jobTitle = null;
+    private ?string $phoneMain = null;
+    private ?\DateTime $lastLoggedIn = null;
+    private ?array $clients = null;
+    private ?int $deputyUid = null;
+    private ?bool $isPrimary = null;
 
-    /** @var string */
-    private $firstName;
-
-    /** @var string */
-    private $lastName;
-
-    /** @var string */
-    private $email;
-
-    /** @var string */
-    private $roleName;
-
-    /** @var string|null */
-    private $address1;
-
-    /** @var string|null */
-    private $address2;
-
-    /** @var string|null */
-    private $address3;
-
-    /** @var string|null */
-    private $addressPostcode;
-
-    /** @var string|null */
-    private $addressCountry;
-
-    /** @var bool */
-    private $active;
-
-    /** @var string */
-    private $jobTitle;
-
-    /** @var string */
-    private $phoneMain;
-
-    /** @var \DateTime */
-    private $lastLoggedIn;
-
-    /** @var array */
-    private $clients;
-
-    private ?int $deputyUid;
-
-    private bool $isPrimary;
-
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getFirstName(): string
+    public function getFirstName(): ?string
     {
         return $this->firstName;
     }
@@ -68,7 +37,7 @@ class UserDto
         return $this->lastName;
     }
 
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }
@@ -108,72 +77,49 @@ class UserDto
         return $this->clients;
     }
 
-    /**
-     * @param int $id
-     */
-    public function setId($id): UserDto
+    public function setId(int $id): UserDto
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @param \DateTime $lastLoggedIn
-     *
-     * @return UserDto
-     */
-    public function setLastLoggedIn($lastLoggedIn)
+    public function setLastLoggedIn(\DateTime $lastLoggedIn): static
     {
         $this->lastLoggedIn = $lastLoggedIn;
 
         return $this;
     }
 
-    /**
-     * @param string $firstName
-     */
-    public function setFirstName($firstName): UserDto
+    public function setFirstName(string $firstName): UserDto
     {
         $this->firstName = $firstName;
 
         return $this;
     }
 
-    /**
-     * @param string $lastName
-     */
-    public function setLastName($lastName): UserDto
+    public function setLastName(string $lastName): UserDto
     {
         $this->lastName = $lastName;
 
         return $this;
     }
 
-    /**
-     * @param string $email
-     */
-    public function setEmail($email): UserDto
+    public function setEmail(string $email): UserDto
     {
         $this->email = strtolower($email);
 
         return $this;
     }
 
-    /**
-     * @param string $roleName
-     */
-    public function setRoleName($roleName): UserDto
+    public function setRoleName(string $roleName): UserDto
     {
         $this->roleName = $roleName;
 
         return $this;
     }
 
-    /**
-     * @param ?string $addressPostcode
-     */
-    public function setAddressPostcode($addressPostcode): UserDto
+    public function setAddressPostcode(?string $addressPostcode): UserDto
     {
         $this->addressPostcode = $addressPostcode;
 
@@ -187,20 +133,14 @@ class UserDto
         return $this;
     }
 
-    /**
-     * @param string $jobTitle
-     */
-    public function setJobTitle($jobTitle): UserDto
+    public function setJobTitle(string $jobTitle): UserDto
     {
         $this->jobTitle = $jobTitle;
 
         return $this;
     }
 
-    /**
-     * @param string $phoneMain
-     */
-    public function setPhoneMain($phoneMain): UserDto
+    public function setPhoneMain(string $phoneMain): UserDto
     {
         $this->phoneMain = $phoneMain;
 

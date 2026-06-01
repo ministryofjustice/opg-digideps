@@ -37,7 +37,7 @@ class CoDeputyController extends RestController
 
     #[Route(path: '{id}', methods: ['PUT'])]
     #[IsGranted(attribute: 'ROLE_DEPUTY')]
-    public function update(Request $request, $id): array
+    public function update(Request $request, array|int $id): array
     {
         $user = $this->findEntityBy(User::class, $id, 'User not found');
 

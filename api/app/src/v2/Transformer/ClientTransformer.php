@@ -18,7 +18,7 @@ class ClientTransformer
     /**
      * @return array
      */
-    public function transform(ClientDto $dto, array $exclude = [], ?array $org = null)
+    public function transform(ClientDto $dto, array $exclude = [], ?array $org = null): array
     {
         $transformed = [
             'id' => $dto->getId(),
@@ -69,7 +69,7 @@ class ClientTransformer
     /**
      * @return array
      */
-    private function transformReports(array $reports)
+    private function transformReports(array $reports): array
     {
         if (empty($reports)) {
             return [];
@@ -89,12 +89,31 @@ class ClientTransformer
     /**
      * @return array
      */
-    private function transformDeputy(DeputyDto $deputy)
+    private function transformDeputy(DeputyDto $deputy): array
     {
         return $this->deputyTransformer->transform($deputy);
     }
 
-    private function transformDeputies(array $userDtos)
+    /**
+     * @return array{
+     *     id: (int | null),
+     *     firstname: (string | null),
+     *     lastname: (string | null),
+     *     email: (string | null),
+     *     role_name: (string | null),
+     *     address1: (string | null),
+     *     address2: (string | null),
+     *     address3: (string | null),
+     *     address_postcode: (string | null),
+     *     address_country: (string | null),
+     *     active: (bool | null),
+     *     job_title: (string | null),
+     *     phone_main: (string | null),
+     *     last_logged_in: (mixed | null),
+     *     deputy_uid: (int | null),
+     *     is_primary: (bool | null)}[]
+     */
+    private function transformDeputies(array $userDtos): array
     {
         if (empty($userDtos)) {
             return [];

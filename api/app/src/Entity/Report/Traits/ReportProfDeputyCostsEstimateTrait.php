@@ -101,7 +101,7 @@ trait ReportProfDeputyCostsEstimateTrait
     public function getProfDeputyEstimateCostByTypeId($typeId)
     {
         return $this->getProfDeputyEstimateCosts()->filter(
-            function (ProfDeputyEstimateCost $profDeputyEstimateCost) use ($typeId) {
+            function (ProfDeputyEstimateCost $profDeputyEstimateCost) use ($typeId): bool {
                 return $profDeputyEstimateCost->getProfDeputyEstimateCostTypeId() == $typeId;
             }
         )->first();

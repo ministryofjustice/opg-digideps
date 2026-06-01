@@ -40,7 +40,6 @@ class FixtureHelper
     private string $testRunId = '';
     private string $orgName = 'Test Org';
     private string $orgEmailIdentifier = 'test-org.uk';
-    public const string S3_BUCKETNAME = 'S3_BUCKETNAME';
 
     public function __construct(
         private EntityManagerInterface $em,
@@ -56,155 +55,6 @@ class FixtureHelper
         $this->organisationTestHelper = new OrganisationTestHelper();
         $this->deputyTestHelper = new DeputyTestHelper();
         $this->courtOrderTestHelper = new CourtOrderTestHelper();
-    }
-
-    public static function buildUserDetails(User $user): array
-    {
-        $client = $user->isLayDeputy() ? $user->getFirstClient() : $user?->getOrganisations()[0]?->getClients()[0];
-
-        if ($client) {
-            $currentReport = $client->getCurrentReport();
-            $currentReportType = $currentReport?->getType();
-            $previousReport = $client->getReports()[0];
-        } else {
-            $currentReport = null;
-            $currentReportType = null;
-            $previousReport = null;
-        }
-
-        $userDetails = [
-            'userId' => $user->getId(),
-            'userEmail' => $user->getEmail(),
-            'userRole' => $user->getRoleName(),
-            'userFirstName' => $user->getFirstname(),
-            'userLastName' => $user->getLastname(),
-            'userFullName' => $user->getFullName(),
-            'userFullAddressArray' => self::buildUserAddressArray($user),
-            'userPhone' => $user->getPhoneMain(),
-            'clientId' => $client?->getId(),
-            'clientFirstName' => $client?->getFirstname(),
-            'clientLastName' => $client?->getLastname(),
-            'clientFullAddressArray' => $client ? self::buildClientAddressArray($client) : null,
-            'clientEmail' => $client?->getEmail(),
-            'clientCaseNumber' => $client?->getCaseNumber(),
-            'clientArchivedAt' => $client?->getArchivedAt(),
-            'currentReportId' => $currentReport?->getId(),
-            'currentReportType' => $currentReportType,
-            'currentReport' => 'report',
-            'currentReportDueDate' => $currentReport?->getDueDate(),
-            'currentReportStartDate' => $currentReport?->getStartDate(),
-            'currentReportEndDate' => $currentReport?->getEndDate(),
-            'currentReportBankAccountId' => $currentReport?->getBankAccounts()[0]?->getId(),
-            'courtDate' => $client ? $client->getCourtDate()?->format('j F Y') : null,
-        ];
-
-        if ($previousReport && $currentReport && $previousReport->getId() !== $currentReport->getId()) {
-            $userDetails = array_merge(
-                $userDetails,
-                [
-                    'previousReportId' => $previousReport->getId(),
-                    'previousReportType' => $previousReport->getType(),
-                    'previousReport' => 'report',
-                    'previousReportDueDate' => $previousReport->getDueDate(),
-                    'previousReportStartDate' => $previousReport->getStartDate(),
-                    'previousReportEndDate' => $previousReport->getEndDate(),
-                    'previousReportBankAccountId' => $previousReport->getBankAccounts()[0]->getId(),
-                ]
-            );
-        }
-
-        return $userDetails;
-    }
-
-    public static function buildOrgUserDetails(User $user): array
-    {
-        $organisation = $user->getOrganisations()->first();
-        $deputy = $organisation?->getClients()[0]->getDeputy();
-
-        if ($deputy) {
-            $details = [
-                'organisationName' => $organisation->getName(),
-                'organisationEmailIdentifier' => $organisation->getEmailIdentifier(),
-                'deputyName' => sprintf(
-                    '%s %s',
-                    $deputy->getFirstname(),
-                    $deputy->getLastName()
-                ),
-                'deputyFullAddressArray' => self::buildDeputyAddressArray($deputy),
-                'deputyPhone' => $deputy->getPhoneMain(),
-                'deputyPhoneAlt' => $deputy->getPhoneAlternative(),
-                'deputyEmail' => $deputy->getEmail1(),
-                'deputyEmailAlt' => $deputy->getEmail2(),
-            ];
-        }
-
-        return array_merge(self::buildUserDetails($user), $details);
-    }
-
-    public static function buildAdminUserDetails(User $user): array
-    {
-        return [
-            'userId' => $user->getId(),
-            'userEmail' => $user->getEmail(),
-            'userRole' => $user->getRoleName(),
-            'userFirstName' => $user->getFirstname(),
-            'userLastName' => $user->getLastname(),
-            'userFullName' => $user->getFullName(),
-            'userFullAddressArray' => self::buildUserAddressArray($user),
-        ];
-    }
-
-    private static function buildUserAddressArray(User $user): array
-    {
-        return array_filter(
-            [
-                'address1' => $user->getAddress1(),
-                'address2' => $user->getAddress2(),
-                'address3' => $user->getAddress3(),
-                'addressPostcode' => $user->getAddressPostcode(),
-                'addressCountry' => $user->getAddressCountry(),
-            ],
-            function ($value, $key) {
-                return !is_null($value);
-            },
-            ARRAY_FILTER_USE_BOTH
-        );
-    }
-
-    private static function buildClientAddressArray(Client $client): array
-    {
-        return array_filter(
-            [
-                'address1' => $client->getAddress(),
-                'address2' => $client->getAddress2(),
-                'address3' => $client->getAddress3(),
-                'addressPostcode' => $client->getPostcode(),
-                'addressCountry' => $client->getCountry(),
-            ],
-            function ($value, $key) {
-                return !is_null($value);
-            },
-            ARRAY_FILTER_USE_BOTH
-        );
-    }
-
-    private static function buildDeputyAddressArray(Deputy $deputy): array
-    {
-        return array_filter(
-            [
-                'address1' => $deputy->getAddress1(),
-                'address2' => $deputy->getAddress2(),
-                'address3' => $deputy->getAddress3(),
-                'address4' => $deputy->getAddress4(),
-                'address5' => $deputy->getAddress5(),
-                'addressPostcode' => $deputy->getAddressPostcode(),
-                'addressCountry' => $deputy->getAddressCountry(),
-            ],
-            function ($value, $key) {
-                return !is_null($value);
-            },
-            ARRAY_FILTER_USE_BOTH
-        );
     }
 
     public function createUser(
@@ -284,8 +134,8 @@ class FixtureHelper
         }
 
         if ($submitted) {
-            $this->storeFileInS3(getenv(self::S3_BUCKETNAME), 'dd_doc_1234_9876543219876');
-            $this->storeFileInS3(getenv(self::S3_BUCKETNAME), 'dd_doc_1234_123456789123456');
+            $this->storeFileInS3(getenv(FixtureHelperBuilder::S3_BUCKETNAME), 'dd_doc_1234_9876543219876');
+            $this->storeFileInS3(getenv(FixtureHelperBuilder::S3_BUCKETNAME), 'dd_doc_1234_123456789123456');
             $this->reportTestHelper->submitReport($report, $this->em);
         }
 
@@ -316,7 +166,7 @@ class FixtureHelper
 
     public function deleteFilesFromS3(string $storageReference): void
     {
-        $this->s3Client->deleteMatchingObjects(getenv(self::S3_BUCKETNAME), $storageReference);
+        $this->s3Client->deleteMatchingObjects(getenv(FixtureHelperBuilder::S3_BUCKETNAME), $storageReference);
     }
 
     private function setSatisfaction(Report $report, User $deputy, int $satisfactionScore): Satisfaction
@@ -416,7 +266,7 @@ class FixtureHelper
     {
         $user = $this->em->getRepository(User::class)->findOneBy(['email' => strtolower($email)]);
 
-        return self::buildUserDetails($user);
+        return FixtureHelperBuilder::buildUserDetails($user);
     }
 
     public function duplicateClient(int $clientId, ?bool $sameFirstName = true, ?bool $sameLastName = true)
@@ -466,7 +316,7 @@ class FixtureHelper
             $deputyUid
         );
 
-        return self::buildUserDetails($user);
+        return FixtureHelperBuilder::buildUserDetails($user);
     }
 
     public function createLayPfaHighAssetsCompleted(string $testRunId): array
@@ -480,7 +330,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildUserDetails($user);
+        return FixtureHelperBuilder::buildUserDetails($user);
     }
 
     public function createLayPfaHighAssetsSubmitted(string $testRunId): array
@@ -494,7 +344,7 @@ class FixtureHelper
             true
         );
 
-        return self::buildUserDetails($user);
+        return FixtureHelperBuilder::buildUserDetails($user);
     }
 
     public function createLayPfaLowAssetsNotStarted(string $testRunId): array
@@ -508,7 +358,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildUserDetails($user);
+        return FixtureHelperBuilder::buildUserDetails($user);
     }
 
     public function createProfPfaLowAssetsNotStarted(string $testRunId): array
@@ -522,7 +372,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildUserDetails($user);
+        return FixtureHelperBuilder::buildUserDetails($user);
     }
 
     public function createLayPfaLowAssetsCompleted(string $testRunId): array
@@ -536,7 +386,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildUserDetails($user);
+        return FixtureHelperBuilder::buildUserDetails($user);
     }
 
     public function createProfPfaLowAssetsCompleted(string $testRunId): array
@@ -550,7 +400,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildUserDetails($user);
+        return FixtureHelperBuilder::buildUserDetails($user);
     }
 
     public function createLayHealthWelfareNotStarted(string $testRunId): array
@@ -564,7 +414,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildUserDetails($user);
+        return FixtureHelperBuilder::buildUserDetails($user);
     }
 
     public function createLayHealthWelfareCompleted(string $testRunId): array
@@ -578,7 +428,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildUserDetails($user);
+        return FixtureHelperBuilder::buildUserDetails($user);
     }
 
     public function createLayHealthWelfareSubmitted(string $testRunId): array
@@ -592,7 +442,7 @@ class FixtureHelper
             true
         );
 
-        return self::buildUserDetails($user);
+        return FixtureHelperBuilder::buildUserDetails($user);
     }
 
     public function createLayCombinedHighAssetsNotStarted(string $testRunId): array
@@ -606,7 +456,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildUserDetails($user);
+        return FixtureHelperBuilder::buildUserDetails($user);
     }
 
     public function createLayCombinedHighAssetsCompleted(string $testRunId): array
@@ -620,7 +470,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildUserDetails($user);
+        return FixtureHelperBuilder::buildUserDetails($user);
     }
 
     public function createLayCombinedHighAssetsSubmitted(string $testRunId): array
@@ -634,7 +484,7 @@ class FixtureHelper
             true
         );
 
-        return self::buildUserDetails($user);
+        return FixtureHelperBuilder::buildUserDetails($user);
     }
 
     public function createProfNamedHealthWelfareNotStarted(string $testRunId): array
@@ -648,7 +498,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createProfNamedHealthWelfareCompleted(string $testRunId): array
@@ -662,7 +512,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createProfNamedHealthWelfareSubmitted(string $testRunId): array
@@ -676,7 +526,7 @@ class FixtureHelper
             true
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createPaNamedHealthWelfareNotStarted(string $testRunId): array
@@ -690,7 +540,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createPaNamedHealthWelfareCompleted(string $testRunId): array
@@ -704,7 +554,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createPaNamedHealthWelfareSubmitted(string $testRunId): array
@@ -718,7 +568,7 @@ class FixtureHelper
             true
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createPaAdminCombinedHighNotStarted(string $testRunId): array
@@ -732,7 +582,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createPaAdminCombinedHighCompleted(string $testRunId): array
@@ -746,7 +596,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createPaAdminCombinedHighSubmitted(string $testRunId): array
@@ -760,7 +610,7 @@ class FixtureHelper
             true
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createProfAdminCombinedHighNotStarted(string $testRunId): array
@@ -774,7 +624,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createProfAdminCombinedHighCompleted(string $testRunId): array
@@ -788,7 +638,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createProfAdminCombinedHighSubmitted(string $testRunId): array
@@ -802,7 +652,7 @@ class FixtureHelper
             true
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createProfNamedPfaHighNotStarted(string $testRunId): array
@@ -816,7 +666,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createProfNamedPfaHighSubmitted(string $testRunId): array
@@ -830,7 +680,7 @@ class FixtureHelper
             true
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createPaNamedPfaHighNotStarted(string $testRunId): array
@@ -844,7 +694,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createPaNamedPfaHighSubmitted(string $testRunId): array
@@ -858,7 +708,7 @@ class FixtureHelper
             true
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createProfTeamHealthWelfareNotStarted(string $testRunId): array
@@ -872,7 +722,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createProfTeamHealthWelfareCompleted(string $testRunId): array
@@ -886,7 +736,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createLayReportNotStarted(string $testRunId, ?string $caseNumber = null, ?int $deputyUid = null): array
@@ -906,7 +756,7 @@ class FixtureHelper
             $deputyUid
         );
 
-        return self::buildUserDetails($user);
+        return FixtureHelperBuilder::buildUserDetails($user);
     }
 
     public function createProfAdminNotStarted(
@@ -927,7 +777,7 @@ class FixtureHelper
             $deputyUid
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createProfAdminCompleted(
@@ -948,7 +798,7 @@ class FixtureHelper
             $deputyNumber
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createProfAdminSubmitted(
@@ -963,7 +813,7 @@ class FixtureHelper
             true
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createPAAdminHealthWelfareNotStarted(string $testRunId): array
@@ -977,7 +827,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createPAAdminHealthWelfareCompleted(string $testRunId): array
@@ -991,7 +841,7 @@ class FixtureHelper
             false
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createPAAdminHealthWelfareSubmitted(string $testRunId): array
@@ -1005,7 +855,7 @@ class FixtureHelper
             true,
         );
 
-        return self::buildOrgUserDetails($user);
+        return FixtureHelperBuilder::buildOrgUserDetails($user);
     }
 
     public function createLayPfaHighAssetsNotStartedLegacyPasswordHash(string $testRunId, ?string $caseNumber = null): array
@@ -1023,7 +873,7 @@ class FixtureHelper
             true
         );
 
-        return self::buildUserDetails($user);
+        return FixtureHelperBuilder::buildUserDetails($user);
     }
 
     public function createLayPfaHighAssetsNonPrimaryUser(string $testRunId, ?string $caseNumber = null, ?int $deputyUid = null): array
@@ -1043,7 +893,7 @@ class FixtureHelper
             $deputyUid
         );
 
-        return self::buildUserDetails($user);
+        return FixtureHelperBuilder::buildUserDetails($user);
     }
 
     public function createAdmin(string $testRunId): array
@@ -1054,7 +904,7 @@ class FixtureHelper
             'admin'
         );
 
-        return self::buildAdminUserDetails($user);
+        return FixtureHelperBuilder::buildAdminUserDetails($user);
     }
 
     public function createAdminManager(string $testRunId): array
@@ -1065,7 +915,7 @@ class FixtureHelper
             'admin-manager'
         );
 
-        return self::buildAdminUserDetails($user);
+        return FixtureHelperBuilder::buildAdminUserDetails($user);
     }
 
     public function createSuperAdmin(string $testRunId): array
@@ -1076,7 +926,7 @@ class FixtureHelper
             'super-admin'
         );
 
-        return self::buildAdminUserDetails($user);
+        return FixtureHelperBuilder::buildAdminUserDetails($user);
     }
 
     public function createDataForAnalytics(string $testRunId, $timeAgo, $satisfactionScore): array
@@ -1326,7 +1176,7 @@ class FixtureHelper
     {
         $user = $this->userTestHelper::createUser();
 
-        $deputy = $this->deputyTestHelper::generateDeputy(user: $user, em: $this->em);
+        $deputy = $this->deputyTestHelper::generateDeputy(null, null, $user, $this->em);
         $deputy->associateWithCourtOrder($courtOrder);
 
         // if this is null, the user counts as "awaiting registration"

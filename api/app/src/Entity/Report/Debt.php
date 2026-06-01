@@ -18,7 +18,7 @@ class Debt
      * Hold debts type
      * 1st value = id, 2nd value = hasMoreInformation.
      *
-     * @var array
+     * @var array<array{string, bool}>
      */
     public static $debtTypeIds = [
         ['care-fees', false],

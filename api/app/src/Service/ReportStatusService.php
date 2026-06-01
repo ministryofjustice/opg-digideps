@@ -505,7 +505,7 @@ class ReportStatusService
     {
         $doneStatuses = [self::STATE_DONE, self::STATE_EXPLAINED, self::STATE_LOW_ASSETS_DONE];
 
-        return array_filter($this->getSectionStatus(), function ($sectionStatus) use ($doneStatuses) {
+        return array_filter($this->getSectionStatus(), function ($sectionStatus) use ($doneStatuses): bool {
             return !in_array($sectionStatus, $doneStatuses);
         });
     }
@@ -669,7 +669,7 @@ class ReportStatusService
         unset($sectionStatus['balance']);
         unset($sectionStatus['moneyTransfers']);
 
-        return count(array_filter($sectionStatus, function ($e) {
+        return count(array_filter($sectionStatus, function ($e): bool {
             return $e != self::STATE_NOT_STARTED;
         })) > 0;
     }

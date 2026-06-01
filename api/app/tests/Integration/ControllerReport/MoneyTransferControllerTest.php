@@ -2,34 +2,30 @@
 
 namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransfer;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
+use Tests\OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
 class MoneyTransferControllerTest extends AbstractTestController
 {
-    private static $deputy1;
-    private static $report1;
-    private static $account1;
-    private static $deputy2;
-    private static $report2;
-    private static $account2;
-    private static $account3;
-    private static $transfer1;
-    private static $tokenAdmin;
-    private static $tokenDeputy;
+    private static Report $report1;
+    private static BankAccount $account1;
+    private static Report $report2;
+    private static BankAccount $account2;
+    private static MoneyTransfer $transfer1;
+    private static string $tokenAdmin;
+    private static string $tokenDeputy;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        self::$deputy1 = self::fixtures()->getRepo(User::class)->findOneByEmail('deputy@example.org');
+        ['persons' => ['users' => ['lay1' => $user1]], 'orders' => [['pfa' => ['reports' => [self::$report1]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
+        ['orders' => [['pfa' => ['reports' => [self::$report2]]]]] = self::$fixtureService->instantiateScenario(Scenario::newSimpleLayScenario());
 
-        $client1 = self::fixtures()->createClient(self::$deputy1);
-        self::fixtures()->flush();
-
-        self::$report1 = self::fixtures()->createReport($client1);
         self::$account1 = self::fixtures()->createAccount(self::$report1, ['setBank' => 'bank1']);
         self::$account2 = self::fixtures()->createAccount(self::$report1, ['setBank' => 'bank2']);
 
@@ -48,18 +44,12 @@ class MoneyTransferControllerTest extends AbstractTestController
             ->setTo(self::$account2);
         self::fixtures()->persist($transfer2);
 
-        // deputy 2
-        self::$deputy2 = self::fixtures()->createUser();
-        $client2 = self::fixtures()->createClient(self::$deputy2);
-        self::$report2 = self::fixtures()->createReport($client2);
-        self::$account3 = self::fixtures()->createAccount(self::$report2, ['setBank' => 'bank3']);
+        self::fixtures()->createAccount(self::$report2, ['setBank' => 'bank3']);
 
         self::fixtures()->flush()->clear();
 
-        if (self::$tokenAdmin === null) {
-            self::$tokenAdmin = $this->loginAsAdmin();
-            self::$tokenDeputy = $this->loginAsDeputy();
-        }
+        self::$tokenAdmin = $this->loginAsAdmin();
+        self::$tokenDeputy = $this->loginAsDeputy($user1->getEmail());
     }
 
     /**
@@ -72,7 +62,7 @@ class MoneyTransferControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    public function testGetTransfers()
+    public function testGetTransfers(): void
     {
         $url = '/report/' . self::$report1->getId()
             . '?' . http_build_query(['groups' => ['money-transfer', 'account']]);
@@ -92,7 +82,7 @@ class MoneyTransferControllerTest extends AbstractTestController
         $this->assertEquals('bank2', $data[1]['accountTo']['bank']);
     }
 
-    public function testAddTransfer()
+    public function testAddTransfer(): void
     {
         $url = '/report/' . self::$report1->getId() . '/money-transfers';
         $url2 = '/report/' . self::$report2->getId() . '/money-transfers';
@@ -126,7 +116,7 @@ class MoneyTransferControllerTest extends AbstractTestController
         $this->assertEquals(self::$account2->getId(), $t->getTo()->getId());
     }
 
-    public function testEditTransfer()
+    public function testEditTransfer(): void
     {
         $url = '/report/' . self::$report1->getId() . '/money-transfers/' . self::$transfer1->getId();
         $url2 = '/report/' . self::$report2->getId() . '/money-transfers/' . self::$transfer1->getId();
@@ -162,7 +152,7 @@ class MoneyTransferControllerTest extends AbstractTestController
      * @depends testGetTransfers
      * @depends testEditTransfer
      */
-    public function testdeleteTransfer()
+    public function testDeleteTransfer(): void
     {
         $url = '/report/' . self::$report1->getId() . '/money-transfers/' . self::$transfer1->getId();
         $url2 = '/report/' . self::$report2->getId() . '/money-transfers/99';
@@ -185,9 +175,9 @@ class MoneyTransferControllerTest extends AbstractTestController
     }
 
     /**
-     * @depends testdeleteTransfer
+     * @depends testDeleteTransfer
      */
-    public function testNoTransfers()
+    public function testNoTransfers(): void
     {
         /* @var $report Report */
         $report = self::fixtures()->getRepo(Report::class)->find(self::$report1->getId());

@@ -62,14 +62,15 @@ class HeaderTokenAuthenticator extends AbstractAuthenticator
         }
 
         return new SelfValidatingPassport(
-            new UserBadge($postAuthToken->getUserIdentifier(), function ($userEmail) {
+            new UserBadge($postAuthToken->getUserIdentifier(), function ($userEmail): User {
+                /** @var ?User $user */
                 $user = $this->userRepository->findOneBy(['email' => strtolower($userEmail)]);
 
-                if ($user instanceof User) {
-                    return $user;
+                if ($user === null) {
+                    throw new UserNotFoundException('User not found');
                 }
 
-                throw new UserNotFoundException('User not found');
+                return $user;
             })
         );
     }

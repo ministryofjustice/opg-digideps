@@ -82,9 +82,8 @@
       "groupName": "PHP dependency updates",
       "matchManagers": ["composer"],
       "matchUpdateTypes": ["minor", "patch"],
-      "labels": ["dependencies"],
+      "labels": ["dependencies", "php"],
       "matchDepTypes": ["dependencies", "require"],
-      "matchFileNames": ["**/composer.json"],
       "schedule": ["before 9am on Monday"],
       "minimumReleaseAge": "7 days"
     },
@@ -92,6 +91,7 @@
       "groupName": "Python dependency updates",
       "matchManagers": ["pip_requirements", "pip-compile"],
       "matchUpdateTypes": ["minor", "patch"],
+      "rangeStrategy": "bump",
       "labels": ["dependencies", "python"],
       "schedule": ["before 9am on Monday"],
       "minimumReleaseAge": "7 days"

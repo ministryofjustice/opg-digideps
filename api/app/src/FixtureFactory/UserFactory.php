@@ -46,22 +46,16 @@ class UserFactory
 
     private function convertRoleName(string $roleName): string
     {
-        switch ($roleName) {
-            case 'LAY':
-                return 'ROLE_LAY_DEPUTY';
-            case 'ADMIN':
-                return 'ROLE_ADMIN';
-            case 'PA_TEAM_MEMBER':
-                return 'ROLE_PA_TEAM_MEMBER';
-            case 'PA_ADMIN':
-                return 'ROLE_PA_ADMIN';
-            case 'PROF_TEAM_MEMBER':
-                return 'ROLE_PROF_TEAM_MEMBER';
-            case 'PROF_ADMIN':
-                return 'ROLE_PROF_ADMIN';
-            default:
-                return 'ROLE_' . $roleName . '_NAMED';
-        }
+        return match ($roleName) {
+            'LAY' => 'ROLE_LAY_DEPUTY',
+            'AD' => 'ROLE_AD',
+            'ADMIN' => 'ROLE_ADMIN',
+            'PA_TEAM_MEMBER' => 'ROLE_PA_TEAM_MEMBER',
+            'PA_ADMIN' => 'ROLE_PA_ADMIN',
+            'PROF_TEAM_MEMBER' => 'ROLE_PROF_TEAM_MEMBER',
+            'PROF_ADMIN' => 'ROLE_PROF_ADMIN',
+            default => 'ROLE_' . $roleName . '_NAMED',
+        };
     }
 
     /**
@@ -83,9 +77,6 @@ class UserFactory
         return $user;
     }
 
-    /**
-     * @return User
-     */
     public function createGenericOrgUser(Organisation $organisation, int $number): User
     {
         $email = sprintf('%s.%s.%s.%s@%s', 'Test', 'Org', rand(1, 100000), $number, $organisation->getEmailIdentifier());
@@ -108,7 +99,7 @@ class UserFactory
         return $user;
     }
 
-    public function createCoDeputy(User $originalDeputy, Client $client, array $data)
+    public function createCoDeputy(User $originalDeputy, Client $client, array $data): User
     {
         $user2 = clone $originalDeputy;
         $user2->setLastname($user2->getLastname() . '-2')

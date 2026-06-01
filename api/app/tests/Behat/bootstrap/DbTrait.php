@@ -89,13 +89,14 @@ trait DbTrait
         self::iSaveTheApplicationStatusInto($snapshotName);
     }
 
-    public function dbQueryRaw($table, array $fields)
+    /** @param String[] $fields */
+    public function dbQueryRaw(string $table, array $fields)
     {
-        if (!$fields) {
+        if (empty($fields)) {
             throw new \InvalidArgumentException(__METHOD__ . ' array with at least one element expected');
         }
-        $columns = join(',', array_keys($fields));
-        $values = "'" . join("', '", array_values($fields)) . "'";
+        $columns = implode(',', array_keys($fields));
+        $values = "'" . implode("', '", $fields) . "'";
         $query = sprintf("INSERT INTO {$table} ({$columns}) VALUES({$values})");
         $command = sprintf('psql %s -c "%s"', self::$dbName, $query);
         exec($command);

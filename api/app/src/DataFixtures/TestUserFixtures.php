@@ -7,7 +7,8 @@ use Doctrine\Persistence\ObjectManager;
 
 class TestUserFixtures extends AbstractDataFixture
 {
-    private $userData = [
+    /** @var array[]  */
+    private array $userData = [
         [
             'id' => 'deputy',
             'roleName' => 'ROLE_LAY_DEPUTY',
@@ -62,7 +63,7 @@ class TestUserFixtures extends AbstractDataFixture
         ],
     ];
 
-    public function doLoad(ObjectManager $manager)
+    public function doLoad(ObjectManager $manager): void
     {
         // Add users from array
         foreach ($this->userData as $data) {
@@ -72,7 +73,7 @@ class TestUserFixtures extends AbstractDataFixture
         $manager->flush();
     }
 
-    private function addUser($data, $manager)
+    private function addUser(array $data, ObjectManager $manager): void
     {
         // Create user
         $user = new User()
@@ -93,7 +94,8 @@ class TestUserFixtures extends AbstractDataFixture
         $manager->persist($user);
     }
 
-    protected function getEnvironments()
+    /** @return String[] */
+    protected function getEnvironments(): array
     {
         return ['test'];
     }

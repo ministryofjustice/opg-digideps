@@ -15,7 +15,7 @@ class ReportSubmissionSummaryTransformer
     /**
      * @return array
      */
-    public function transform(array $reportSubmissions)
+    public function transform(array $reportSubmissions): array
     {
         $ret = [];
 
@@ -42,7 +42,7 @@ class ReportSubmissionSummaryTransformer
     /**
      * @return int
      */
-    private function getId(ReportSubmission $reportSubmission)
+    private function getId(ReportSubmission $reportSubmission): int
     {
         return $reportSubmission->getId();
     }
@@ -83,7 +83,7 @@ class ReportSubmissionSummaryTransformer
     /**
      * @return string
      */
-    private function getReportType()
+    private function getReportType(): string
     {
         return 'Reports';
     }
@@ -91,7 +91,7 @@ class ReportSubmissionSummaryTransformer
     /**
      * @return string
      */
-    private function getFormType()
+    private function getFormType(): string
     {
         return 'Reports General';
     }
@@ -99,7 +99,7 @@ class ReportSubmissionSummaryTransformer
     /**
      * @return string|null
      */
-    private function outputDate($date)
+    private function outputDate(?\DateTime $date)
     {
         return ($date instanceof \DateTime) ? $date->format('Y-m-d') : null;
     }

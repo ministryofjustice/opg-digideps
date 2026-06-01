@@ -58,7 +58,7 @@ abstract class Query
      */
     protected function checkDimensions(array $dimensions)
     {
-        foreach ($dimensions as $index => $dimensionName) {
+        foreach ($dimensions as $dimensionName) {
             if (!in_array($dimensionName, $this->getSupportedDimensions())) {
                 throw new \Exception("Metric does not support \"$dimensionName\" dimension");
             }

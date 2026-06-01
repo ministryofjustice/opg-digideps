@@ -12,14 +12,11 @@ class ClientArchivedEvent extends Event
 {
     public const string NAME = 'client.archived';
 
-    /** @var User */
-    private $currentUser;
+    private User $currentUser;
 
-    /** @var Client */
-    private $client;
+    private Client $client;
 
-    /** @var string */
-    private $trigger;
+    private string $trigger;
 
     /**
      * ClientDeletedEvent constructor.

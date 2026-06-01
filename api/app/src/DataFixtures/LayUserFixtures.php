@@ -16,7 +16,7 @@ use Doctrine\Persistence\ObjectManager;
 
 class LayUserFixtures extends AbstractDataFixture
 {
-    private $userData = [
+    private array $userData = [
         [
             'id' => 'Lay-OPG102',
             'courtOrderUid' => '700000001100',
@@ -131,7 +131,7 @@ class LayUserFixtures extends AbstractDataFixture
 
     private array $deputyUids = [];
 
-    public function doLoad(ObjectManager $manager)
+    public function doLoad(ObjectManager $manager): void
     {
         // Add users from array
         foreach ($this->userData as $data) {
@@ -143,7 +143,7 @@ class LayUserFixtures extends AbstractDataFixture
         $manager->flush();
     }
 
-    private function addUser(array $data, ObjectManager $manager, int $iteration)
+    private function addUser(array $data, ObjectManager $manager, int $iteration): void
     {
         $offset = strlen((string) abs($iteration));
 
@@ -327,7 +327,7 @@ class LayUserFixtures extends AbstractDataFixture
         int $offset,
         Client $client,
         ?Report $report,
-    ) {
+    ): CourtOrder {
         $courtOrder = new CourtOrder();
         $courtOrderUid = substr_replace($data['courtOrderUid'], (string) $iteration, -$offset);
 
@@ -366,7 +366,7 @@ class LayUserFixtures extends AbstractDataFixture
         Client $client2,
         ?Report $report,
         ?Report $multiClientSecondReport,
-    ) {
+    ): void {
         if (str_ends_with($data['id'], '-4') || str_ends_with($data['id'], '-4-Co')) {
             // Populate court order table and link tables
             $courtOrderPfa = new CourtOrder();
@@ -463,7 +463,8 @@ class LayUserFixtures extends AbstractDataFixture
         }
     }
 
-    protected function getEnvironments()
+    /** @return String[] */
+    protected function getEnvironments(): array
     {
         return ['dev', 'local'];
     }

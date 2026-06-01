@@ -14,6 +14,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[Route(path: '/auth')]
 class AuthController extends RestController
@@ -83,7 +84,7 @@ class AuthController extends RestController
     }
 
     #[Route(path: '/logout', methods: ['POST'])]
-    public function logout(RedisUserProvider $userProvider)
+    public function logout(RedisUserProvider $userProvider): void
     {
         $authToken = $this->tokenStorage->getToken();
 
@@ -94,7 +95,7 @@ class AuthController extends RestController
      * Test endpoint used for testing to check auth permissions.
      */
     #[Route(path: '/get-logged-user', methods: ['GET'])]
-    public function getLoggedUser()
+    public function getLoggedUser(): UserInterface
     {
         $this->restFormatter->setJmsSerialiserGroups(['user', 'user-login']);
         $user = $this->tokenStorage->getToken()?->getUser();

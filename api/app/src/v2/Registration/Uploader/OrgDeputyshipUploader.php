@@ -257,7 +257,7 @@ class OrgDeputyshipUploader
     {
         return $client->getCourtDate()
             && $client->getCaseNumber() === $dto->getCaseNumber()
-            && $client->getCourtDate()->format('Ymd') !== $dto->getCourtDate()->format('Ymd');
+            && $client->getCourtDate()->format('Ymd') !== $dto->getCourtDate()?->format('Ymd');
     }
 
     private function clientHasNewOrgAndDeputy(Client $client, Deputy $deputy): bool
@@ -334,7 +334,7 @@ class OrgDeputyshipUploader
 
             $this->client->addReport($report);
 
-            $this->added['reports'][] = $this->client->getCaseNumber() . '-' . $dto->getReportEndDate()->format('Y-m-d');
+            $this->added['reports'][] = $this->client->getCaseNumber() . '-' . $dto->getReportEndDate()?->format('Y-m-d');
         }
 
         $this->em->persist($report);
@@ -355,11 +355,11 @@ class OrgDeputyshipUploader
     {
         $missingData = [];
 
-        if (empty($dto->getReportEndDate())) {
+        if (!$dto->getReportEndDate() instanceof \DateTime) {
             $missingData[] = 'LastReportDay';
         }
 
-        if (empty($dto->getCourtDate())) {
+        if (!$dto->getCourtDate() instanceof \DateTime) {
             $missingData[] = 'MadeDate';
         }
 

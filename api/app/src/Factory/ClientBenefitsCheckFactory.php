@@ -89,7 +89,7 @@ class ClientBenefitsCheckFactory
                 if (is_null($moneyTypeData['id'])) {
                     $moneyType = new MoneyReceivedOnClientsBehalf();
                 } else {
-                    $moneyType = $clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->filter(function (MoneyReceivedOnClientsBehalfInterface $money) use ($moneyTypeData) {
+                    $moneyType = $clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->filter(function (MoneyReceivedOnClientsBehalfInterface $money) use ($moneyTypeData): bool {
                         return $money->getId()->toString() === $moneyTypeData['id'];
                     })->first();
 

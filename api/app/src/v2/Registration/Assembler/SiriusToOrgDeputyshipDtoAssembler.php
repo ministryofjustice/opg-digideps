@@ -13,7 +13,10 @@ class SiriusToOrgDeputyshipDtoAssembler
     {
     }
 
-    public function assembleMultipleDtosFromArray(array $rows)
+    /**
+     * @return OrgDeputyshipDto[]
+     */
+    public function assembleMultipleDtosFromArray(array $rows): array
     {
         $dtos = [];
 

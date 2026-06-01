@@ -13,14 +13,18 @@
     "jms/serializer-bundle": "^5.5.2",
     "symfony/form": "^6.4.35",
     "symfony/validator": "^6.4.35",
-    "monolog/monolog": "^3.10.0",
-    "symfony/http-kernel": "^7.4"
+    "monolog/monolog": "^3.10.0"
   },
   "require-dev": {
     "dg/bypass-finals": "^1.9.0",
-    "phpstan/phpstan": "^2.1.49",
-    "phpunit/phpunit": "^13.1.6",
+    "phpstan/phpstan": "^2.1.50",
+    "phpunit/phpunit": "^13.1.9",
     "phpstan/phpstan-phpunit": "^2.0.16"
+  },
+  "extra": {
+    "symfony": {
+      "require": "6.4.*"
+    }
   },
   "scripts": {
     "lint:phpstan": "phpstan",

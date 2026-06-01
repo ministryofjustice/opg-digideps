@@ -275,6 +275,9 @@ class ReportSubmissionControllerTest extends AbstractTestController
      */
     private function updateReportSubmissionByIdWithNewDateTime(int $id, string $date)
     {
+        /**
+         * @var ReportSubmission $entity
+         */
         $entity = self::fixtures()->getRepo(ReportSubmission::class)->findOneById($id);
         $entity->setCreatedOn(new \DateTime($date));
 
@@ -334,7 +337,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         $reportSubmission = new ReportSubmission($report, $user);
         self::fixtures()->persist($reportSubmission);
 
-        foreach ($documents as $i => $document) {
+        foreach ($documents as $document) {
             $record = self::fixtures()->createDocument($report, $document[0]);
             $record->setReportSubmission($reportSubmission);
 

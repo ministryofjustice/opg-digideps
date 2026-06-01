@@ -40,11 +40,16 @@ final class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
         $sut = new SiriusToOrgDeputyshipDtoAssembler($reportUtils->reveal());
 
         $dto = $sut->assembleSingleDtoFromArray($siriusArray);
+        $dateTimeDob = $dto->getClientDateOfBirth() ?? new \DateTime();
+        $dateTimeCourt = $dto->getCourtDate() ?? new \DateTime();
+        $dateTimeReportStart = $dto->getReportStartDate() ?? new \DateTime();
+        $dateTimeReportEnd = $dto->getReportEndDate() ?? new \DateTime();
+
 
         self::assertEquals($siriusArray['Case'], $dto->getCaseNumber());
         self::assertEquals($siriusArray['ClientForename'], $dto->getClientFirstname());
         self::assertEquals($siriusArray['ClientSurname'], $dto->getClientLastname());
-        self::assertEquals($expectedClientDateOfBirth->format('Y-m-d'), $dto->getClientDateOfBirth()->format('Y-m-d'));
+        self::assertEquals($expectedClientDateOfBirth->format('Y-m-d'), $dateTimeDob->format('Y-m-d'));
         self::assertEquals($siriusArray['ClientAddress1'], $dto->getClientAddress1());
         self::assertEquals($siriusArray['ClientAddress2'], $dto->getClientAddress2());
         self::assertEquals($siriusArray['ClientAddress3'], $dto->getClientAddress3());
@@ -61,9 +66,9 @@ final class SiriusToOrgDeputyshipDtoAssemblerTest extends TestCase
         self::assertEquals($siriusArray['DeputyAddress4'], $dto->getDeputyAddress4());
         self::assertEquals($siriusArray['DeputyAddress5'], $dto->getDeputyAddress5());
         self::assertEquals($siriusArray['DeputyPostcode'], $dto->getDeputyPostcode());
-        self::assertEquals($expectedMadeDate->format('Y-m-d'), $dto->getCourtDate()->format('Y-m-d'));
-        self::assertEquals($expectedReportStartDate->format('Y-m-d'), $dto->getReportStartDate()->format('Y-m-d'));
-        self::assertEquals($expectedReportEndDate->format('Y-m-d'), $dto->getReportEndDate()->format('Y-m-d'));
+        self::assertEquals($expectedMadeDate->format('Y-m-d'), $dateTimeCourt->format('Y-m-d'));
+        self::assertEquals($expectedReportStartDate->format('Y-m-d'), $dateTimeReportStart->format('Y-m-d'));
+        self::assertEquals($expectedReportEndDate->format('Y-m-d'), $dateTimeReportEnd->format('Y-m-d'));
         self::assertEquals('102-5', $dto->getReportType());
         self::assertEquals($siriusArray['Hybrid'], $dto->getHybrid());
     }

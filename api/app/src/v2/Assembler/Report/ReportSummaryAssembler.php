@@ -9,10 +9,7 @@ class ReportSummaryAssembler implements ReportAssemblerInterface
 {
     use DtoPropertySetterTrait;
 
-    /**
-     * @return ReportDto
-     */
-    public function assembleFromArray(array $data)
+    public function assembleFromArray(array $data): ReportDto
     {
         $dto = new ReportDto();
 

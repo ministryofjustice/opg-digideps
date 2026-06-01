@@ -78,6 +78,7 @@ final class ProcessOrgCSVCommandTest extends KernelTestCase
             ->willReturn(new Result());
 
         $this->csvProcessing->orgProcessing(Argument::any())
+            /* @phpstan-ignore method.nonObject */
             ->shouldBeCalled()
             ->willReturn([
                 'errors' => [

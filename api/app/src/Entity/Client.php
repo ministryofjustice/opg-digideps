@@ -483,7 +483,7 @@ class Client
      */
     public function getReportByEndDate(\DateTime $endDate): ?Report
     {
-        $report = $this->reports->filter(function ($report) use ($endDate) {
+        $report = $this->reports->filter(function ($report) use ($endDate): bool {
             return $endDate->format('Y-m-d') == $report->getEndDate()->format('Y-m-d');
         })->first();
 
@@ -503,12 +503,12 @@ class Client
      */
     public function getSubmittedReports(): Collection
     {
-        $reports = $this->reports->filter(function (Report $report) {
+        $reports = $this->reports->filter(function (Report $report): bool {
             return $report->getSubmitted() === true;
         })->toArray();
 
         // Sort by submitted date so the most recently submitted are first
-        uasort($reports, function ($first, $second) {
+        uasort($reports, function ($first, $second): int {
             return $first->getSubmitDate() < $second->getSubmitDate() ? 1 : -1;
         });
 
@@ -788,9 +788,11 @@ class Client
         return $expectedReportEndDate->modify('+1year -1day');
     }
 
-    public function setArchivedAt(?\DateTime $archivedAt = null)
+    public function setArchivedAt(?\DateTime $archivedAt = null): static
     {
         $this->archivedAt = $archivedAt;
+
+        return $this;
     }
 
     /**
