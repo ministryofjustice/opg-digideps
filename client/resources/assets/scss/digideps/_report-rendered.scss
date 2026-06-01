@@ -1,0 +1,24 @@
+// ==========================================================================
+// REPORT RENDERING
+// Report rendering for on-screen display
+
+.report-preview .govuk-summary-card__content .govuk-table:last-child {
+  margin-bottom: 0;
+}
+.report-preview
+  .govuk-summary-card__content
+  .govuk-table:last-child
+  tbody
+  tr:last-child
+  *:is(th, td) {
+  border-bottom: none;
+}
+.report-preview .govuk-summary-card__content .govuk-table:nth-child(n + 2) {
+  margin-top: 60px;
+}
+.report-preview
+  .govuk-summary-card__content
+  .govuk-summary-list__row
+  .govuk-summary-list__value {
+  padding-right: 20px !important;
+}
