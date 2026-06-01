@@ -9,11 +9,13 @@ final readonly class CourtOrderRelationshipResult
     private string $message;
     private string $errorMessage;
 
-    public function __construct(private CourtOrderRelationshipChange $change)
-    {
-        $this->message = "Changes in CourtOrder {$this->change->courtOrder->getId()}:"
-            . ($this->change->hasSiblingIdChange() ? " SiblingId changed from '{$this->change->oldSiblingId}' -> '{$this->change->courtOrder->getSibling()?->getId()}'." : '')
-            . ($this->change->hasKindChange() ? " Kind changed from '{$this->change->oldKind?->value}' -> '{$this->change->courtOrder->getOrderKind()->value}'." : '');
+    public function __construct(
+        CourtOrderRelationshipChange $change,
+    ) {
+        $this->message = "Changes in CourtOrder {$change->courtOrder->getId()}:"
+            . ($change->hasSiblingIdChange() ? " SiblingId changed from '$change->oldSiblingId' -> '$change->newSiblingId'." : '')
+            . ($change->hasKindChange() ? " Kind changed from '{$change->oldKind?->value}' -> '{$change->newKind->value}'." : '');
+
         $this->errorMessage = '';
     }
 

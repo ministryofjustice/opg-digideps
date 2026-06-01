@@ -16,6 +16,7 @@ class CourtOrderRelationshipChangeTest extends TestCase
         $sibling = $this->createStub(CourtOrder::class);
         $sibling->method('getId')->willReturn(66);
         $courtOrder = $this->createStub(CourtOrder::class);
+        $courtOrder->method('getOrderKind')->willReturn(CourtOrderKind::Dual);
         $courtOrder->method('getSibling')->willReturn($sibling);
         $change = new CourtOrderRelationshipChange($courtOrder, CourtOrderKind::Dual, 99);
         $this->assertTrue($change->hasSiblingIdChange());
@@ -33,6 +34,7 @@ class CourtOrderRelationshipChangeTest extends TestCase
     {
         $courtOrder = $this->createStub(CourtOrder::class);
         $courtOrder->method('getOrderKind')->willReturn(CourtOrderKind::Hybrid);
+        $courtOrder->method('getSibling')->willReturn(null);
         $change = new CourtOrderRelationshipChange($courtOrder, CourtOrderKind::Dual, 99);
         $this->assertTrue($change->hasKindChange());
         $change = new CourtOrderRelationshipChange($courtOrder, CourtOrderKind::Hybrid, 99);
