@@ -51,6 +51,7 @@ final readonly class CourtOrderRelationshipIngester
         $current->setOrderKind($relationship->kind);
         $this->entityManager->persist($current);
         $this->entityManager->flush();
+
         return new CourtOrderRelationshipChange($current, $oldKind, $oldSiblingId);
     }
 
