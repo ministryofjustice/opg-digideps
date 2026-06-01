@@ -19,7 +19,12 @@ final readonly class ReportReassembler
 
     public function reassembleReport(CourtOrderRelationshipChange $change): CourtOrderRelationshipResult
     {
+        $result = new CourtOrderRelationshipResult($change);
+
         $transitionResult = $this->reportTransitionService->transitionReports($change);
+        if ($transitionResult === null) {
+            return $result;
+        }
 
         foreach ($transitionResult->updatedReports as $updatedReport) {
             $this->entityManager->persist($updatedReport);
@@ -31,6 +36,6 @@ final readonly class ReportReassembler
 
         $this->entityManager->flush();
 
-        return new CourtOrderRelationshipResult($change);
+        return $result;
     }
 }

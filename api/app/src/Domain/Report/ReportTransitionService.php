@@ -203,9 +203,6 @@ final readonly class ReportTransitionService
         $secondReportCreated = false;
         $latestReportExists = false;
         foreach ($affectedCourtOrders as $courtOrder) {
-            // both court orders will be dual kind
-            $courtOrder->setOrderKind(CourtOrderKind::Dual);
-
             $latestReport = $courtOrder->getLatestReport();
             if ($latestReport === null) {
                 // other court order on this client which doesn't have a report yet: make a new one
@@ -324,8 +321,6 @@ final readonly class ReportTransitionService
          * and the other court order should have a new report
          */
         if ($courtOrderChange->hasSiblingIdChange()) {
-            $courtOrderPair->mainCourtOrder->setOrderKind(CourtOrderKind::Dual);
-            $courtOrderPair->siblingCourtOrder?->setOrderKind(CourtOrderKind::Dual);
             return [
                 'persistingReportCourtOrder' => $courtOrderPair->mainCourtOrder,
                 'newReportCourtOrder' => $courtOrderPair->siblingCourtOrder
@@ -337,8 +332,6 @@ final readonly class ReportTransitionService
          * creates the change) the hybrid should be changed to the PFA report and the HW should be given a
          * new report
          */
-        $courtOrderPair->pfaCourtOrder?->setOrderKind(CourtOrderKind::Dual);
-        $courtOrderPair->hwCourtOrder?->setOrderKind(CourtOrderKind::Dual);
         return [
             'persistingReportCourtOrder' => $courtOrderPair->pfaCourtOrder,
             'newReportCourtOrder' => $courtOrderPair->hwCourtOrder
