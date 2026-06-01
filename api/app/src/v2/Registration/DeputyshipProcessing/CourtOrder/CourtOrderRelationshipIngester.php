@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder;
 
 use OPG\Digideps\Backend\Entity\CourtOrder;
+use OPG\Digideps\Backend\Repository\CourtOrderRepository;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\Report\ReportReassembler;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\EntityRepository;
 
 final readonly class CourtOrderRelationshipIngester
 {
@@ -34,10 +34,7 @@ final readonly class CourtOrderRelationshipIngester
             ->where("co.status <> 'ACTIVE'")->getDQL())->execute();
     }
 
-    /**
-     * @param EntityRepository<CourtOrder> $repository
-     */
-    private function processRelationship(CourtOrderRelationship $relationship, EntityRepository $repository): ?CourtOrderRelationshipChange
+    private function processRelationship(CourtOrderRelationship $relationship, CourtOrderRepository $repository): ?CourtOrderRelationshipChange
     {
         $current = $repository->find($relationship->courtOrderId);
         if ($current !== null && ($current->getOrderKind() !== $relationship->kind || $current->getSibling()?->getId() !== $relationship->siblingId)) {
@@ -46,10 +43,7 @@ final readonly class CourtOrderRelationshipIngester
         return null;
     }
 
-    /**
-     * @param EntityRepository<CourtOrder> $repository
-     */
-    private function updateCourtOrder(CourtOrder $current, CourtOrderRelationship $relationship, EntityRepository $repository): CourtOrderRelationshipChange
+    private function updateCourtOrder(CourtOrder $current, CourtOrderRelationship $relationship, CourtOrderRepository $repository): CourtOrderRelationshipChange
     {
         $oldSiblingId = $current->getSibling()?->getId();
         $oldKind = $current->getOrderKind();
@@ -65,6 +59,7 @@ final readonly class CourtOrderRelationshipIngester
      */
     private function updateCourtOrders(): \Generator
     {
+        /** @var CourtOrderRepository $repository */
         $repository = $this->entityManager->getRepository(CourtOrder::class);
 
         foreach ($this->groupByClientId($this->relationshipReader->read()) as $relationships) {
