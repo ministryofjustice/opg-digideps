@@ -26,6 +26,11 @@ final readonly class ReportReassembler
             return $result;
         }
 
+        if ($transitionResult->hasErrors()) {
+            $result->appendError(implode('; ', $transitionResult->errorMessages));
+            return $result;
+        }
+
         foreach ($transitionResult->updatedReports as $updatedReport) {
             $this->entityManager->persist($updatedReport);
         }
@@ -35,6 +40,8 @@ final readonly class ReportReassembler
         }
 
         $this->entityManager->flush();
+
+        $result->appendMessage(implode('; ', $transitionResult->messages));
 
         return $result;
     }
