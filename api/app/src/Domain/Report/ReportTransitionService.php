@@ -6,6 +6,7 @@ namespace OPG\Digideps\Backend\Domain\Report;
 
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderPair;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\CourtOrderRepository;
@@ -45,14 +46,19 @@ final readonly class ReportTransitionService
         assert($courtOrderPair->pfaCourtOrder !== null);
         assert($courtOrderPair->hwCourtOrder !== null);
 
-        if ($oldCourtOrderKind === CourtOrderKind::Hybrid && $newCourtOrderKind === CourtOrderKind::Dual) {
+        // if we are working from a dual or hybrid to hybrid or dual respectively, we only need to work from
+        // one side of the pair, so constrain transitions to the PFA side
+        $isPfa = ($courtOrderChange->courtOrder->getOrderType() === CourtOrderType::PFA);
+
+        if ($isPfa && $oldCourtOrderKind === CourtOrderKind::Hybrid && $newCourtOrderKind === CourtOrderKind::Dual) {
             $result = $this->hybridToDual($courtOrderPair, $courtOrderChange);
         }
 
-        if ($oldCourtOrderKind === CourtOrderKind::Dual && $newCourtOrderKind === CourtOrderKind::Hybrid) {
+        if ($isPfa && $oldCourtOrderKind === CourtOrderKind::Dual && $newCourtOrderKind === CourtOrderKind::Hybrid) {
             $result = $this->dualToHybrid($courtOrderPair, $courtOrderChange);
         }
 
+        // in single to dual scenarios, we have to work from HW or PFA, as there is only one source court order
         if ($oldCourtOrderKind === CourtOrderKind::Single && $newCourtOrderKind === CourtOrderKind::Dual) {
             $result = $this->singleToDual($courtOrderPair);
         }
