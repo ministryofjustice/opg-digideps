@@ -16,7 +16,9 @@
         <table class="govuk-table">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header govuk-!-width-one-half">{{ ('mentalCapacity.form.hasCapacityChanged.label' ~ append104) | trans(transOptions,transDomain) }}</th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-half">
+                        {{ ('mentalCapacity.form.hasCapacityChanged.label' ~ append104) | trans(transOptions,transDomain) }}
+                    </th>
                     <td class="govuk-table__cell govuk-!-width-one-half">
                         {% if report.mentalCapacity.hasCapacityChanged == 'stayedSame' %}
                             Stayed the same
@@ -29,14 +31,18 @@
                 </tr>
                 {% if report.mentalCapacity and report.mentalCapacity.hasCapacityChanged == 'changed' %}
                     <tr class="govuk-table__row">
-                        <th scope="col" class="govuk-table__header govuk-!-width-one-third">{{ (page ~ '.capacityChangeDetails') | trans({},transDomain) }}</th>
+                        <th scope="col" class="govuk-table__header govuk-!-width-one-third">
+                            {{ (page ~ '.capacityChangeDetails') | trans({},transDomain) }}
+                        </th>
                         <td class="govuk-table__cell govuk-!-width-one-half">
                             {{ report.mentalCapacity.hasCapacityChangedDetails | nl2br }}
                         </td>
                     </tr>
                 {% endif %}
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header govuk-!-width-one-half">{{ 'mentalCapacity.form.mentalAssessmentDate.legend' | trans(transOptions,transDomain) }}</th>
+                    <th scope="row" class="govuk-table__header govuk-!-width-one-half">
+                        {{ 'mentalCapacity.form.mentalAssessmentDate.legend' | trans(transOptions,transDomain) }}
+                    </th>
                     <td class="govuk-table__cell govuk-!-width-one-half">
                         {% if report.mentalCapacity.mentalAssessmentDate %}
                             {{ report.mentalCapacity.mentalAssessmentDate | date("m/Y") }}
@@ -46,12 +52,16 @@
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <th scope="row" class="govuk-table__header govuk-!-width-one-half">{{ 'existPage.form.hasDecisions.label' | trans(transOptions,transDomain) }}</th>
+                    <th scope="row" class="govuk-table__header govuk-!-width-one-half">
+                        {{ 'existPage.form.hasDecisions.label' | trans(transOptions,transDomain) }}
+                    </th>
                     <td class="govuk-table__cell govuk-!-width-one-half">{{ report.significantDecisionsMade }}</td>
                 </tr>
                 {% if report.reasonForNoDecisions %}
                     <tr class="govuk-table__row">
-                        <th scope="row" class="govuk-table__header govuk-!-width-one-half">{{ (page ~ '.reasonNoDecisions') | trans(transOptions,transDomain) }}</th>
+                        <th scope="row" class="govuk-table__header govuk-!-width-one-half">
+                            {{ (page ~ '.reasonNoDecisions') | trans(transOptions,transDomain) }}
+                        </th>
                         <td class="govuk-table__cell govuk-!-width-one-half">{{ report.reasonForNoDecisions | nl2br }}</td>
                     </tr>
                 {% endif %}
@@ -71,17 +81,29 @@
             <table class="govuk-table">
                 <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">{{ (page ~ '.decisionTableColumnHeading1') | trans(transOptions,transDomain) }}</th>
-                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">{{ (page ~ '.decisionTableColumnHeading2') | trans(transOptions,transDomain) }}</th>
-                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">{{ (page ~ '.decisionTableColumnHeading3') | trans(transOptions,transDomain) }}</th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">
+                        {{ (page ~ '.decisionTableColumnHeading1') | trans(transOptions,transDomain) }}
+                    </th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">
+                        {{ (page ~ '.decisionTableColumnHeading2') | trans(transOptions,transDomain) }}
+                    </th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">
+                        {{ (page ~ '.decisionTableColumnHeading3') | trans(transOptions,transDomain) }}
+                    </th>
                 </tr>
                 </thead>
                 <tbody class="govuk-table__body">
                     {% for decision in report.decisions %}
                         <tr class="govuk-table__row">
-                            <td class="govuk-table__cell govuk-!-width-one-third">{{ decision.description }}</td>
-                            <td class="govuk-table__cell govuk-!-width-one-third">{{ decision.clientInvolvedBoolean ? 'Yes' : 'No' }}</td>
-                            <td class="govuk-table__cell govuk-!-width-one-third">{{ decision.clientInvolvedDetails | nl2br }}</td>
+                            <td class="govuk-table__cell govuk-!-width-one-third">
+                                {{ decision.description }}
+                            </td>
+                            <td class="govuk-table__cell govuk-!-width-one-third">
+                                {{ decision.clientInvolvedBoolean ? 'Yes' : 'No' }}
+                            </td>
+                            <td class="govuk-table__cell govuk-!-width-one-third">
+                                {{ decision.clientInvolvedDetails | nl2br }}
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>
