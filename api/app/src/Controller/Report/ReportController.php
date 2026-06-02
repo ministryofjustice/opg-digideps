@@ -917,7 +917,6 @@ class ReportController extends RestController
             throw new UnauthorisedException('client secret not accepted.');
         }
 
-        /** @var array $data */
         $data = $this->formatter->deserializeBodyContent($request);
 
         /** @var ReportRepository $reportRepo */
