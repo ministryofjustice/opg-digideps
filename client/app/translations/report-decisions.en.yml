@@ -96,7 +96,7 @@ summaryPage:
     In this section, we ask about %client%'s mental capacity and the significant decisions you've made for %client% over the reporting period.
   htmlTitle: "Decisions - Complete the deputy report | GOV.UK"
   pageTitle: Decisions
-  capacityChangeDetails: Mental capacity changes details
+  capacityChangeDetails: Mental capacity change details
   addButton: Add significant decision
   reasonNoDecisions: Reason for no decisions
   listOfDecisions: List of significant decisions
