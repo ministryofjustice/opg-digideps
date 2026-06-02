@@ -26,19 +26,25 @@ final readonly class ReportTransitionService
 
     public function transitionReports(CourtOrderRelationshipChange $courtOrderChange): ?ReportTransitionResult
     {
-        if (!($courtOrderChange->hasKindChange() || $courtOrderChange->hasSiblingIdChange())) {
+        if (
+            !($courtOrderChange->hasKindChange() || $courtOrderChange->hasSiblingIdChange()) ||
+            $courtOrderChange->currentSiblingId === null
+        ) {
             return null;
         }
 
         $result = new ReportTransitionResult();
 
-        $courtOrder = $courtOrderChange->courtOrder;
-        $oldCourtOrderKind = $courtOrderChange->oldKind;
-        $newCourtOrderKind = $courtOrder->getOrderKind();
+        $courtOrder = $this->courtOrderRepository->find($courtOrderChange->courtOrderId);
+        if ($courtOrder === null) {
+            $result->errorMessages[] = 'Could not find main transition court order with ID ' . $courtOrderChange->courtOrderId;
+            return $result;
+        }
 
-        // find both court orders involved in the transition (all the below result in two court orders, both with
-        // reports, by the end of the transition)
-        $courtOrderPair = CourtOrderPair::create($courtOrder, $courtOrder->getSibling());
+        $currentSiblingCourtOrder = $this->courtOrderRepository->find($courtOrderChange->currentSiblingId);
+
+        // find both court orders involved in the transition and validate their state
+        $courtOrderPair = CourtOrderPair::create($courtOrder, $currentSiblingCourtOrder);
         if (!$courtOrderPair->isValid()) {
             $result->errorMessages[] = $courtOrderPair->invalidReason ?? 'Unknown reason';
             return $result;
@@ -48,7 +54,10 @@ final readonly class ReportTransitionService
 
         // if we are working from a dual or hybrid to hybrid or dual respectively, we only need to work from
         // one side of the pair, so constrain transitions to the PFA side
-        $isPfa = ($courtOrderChange->courtOrder->getOrderType() === CourtOrderType::PFA);
+        $isPfa = ($courtOrder->getOrderType() === CourtOrderType::PFA);
+
+        $oldCourtOrderKind = $courtOrderChange->oldKind;
+        $newCourtOrderKind = $courtOrderChange->currentKind;
 
         if ($isPfa && $oldCourtOrderKind === CourtOrderKind::Hybrid && $newCourtOrderKind === CourtOrderKind::Dual) {
             $result = $this->hybridToDual($courtOrderPair, $courtOrderChange);
@@ -82,7 +91,7 @@ final readonly class ReportTransitionService
         // pair, and to be associated with the same report as the persisting court order; if the sibling is null,
         // the hybrid we're transitioning from is already invalid
         $oldSiblingId = $courtOrderChange->oldSiblingId;
-        ['oldSibling' => $oldSibling, 'error' => $error] = $this->getOldSibling($oldSiblingId);
+        ['oldSibling' => $oldSibling, 'error' => $error] = $this->getOldSibling($courtOrderPair, $oldSiblingId);
         if ($error !== null) {
             $result->errorMessages[] = 'Hybrid -> Dual: ' . $error;
             return $result;
@@ -137,7 +146,7 @@ final readonly class ReportTransitionService
 
         // if this originated from a dual, there must be an old sibling
         $oldSiblingId = $courtOrderChange->oldSiblingId;
-        ['oldSibling' => $oldSibling, 'error' => $error] = $this->getOldSibling($oldSiblingId);
+        ['oldSibling' => $oldSibling, 'error' => $error] = $this->getOldSibling($courtOrderPair, $oldSiblingId);
         if ($error !== null) {
             $result->errorMessages[] = 'Dual -> hybrid: ' . $error;
             return $result;
@@ -248,13 +257,19 @@ final readonly class ReportTransitionService
     /**
      * @return array{oldSibling: ?CourtOrder, error: ?string}
      */
-    private function getOldSibling(?int $oldSiblingId): array
+    private function getOldSibling(CourtOrderPair $courtOrderPair, ?int $oldSiblingId): array
     {
         // as this is a hybrid transitioning to a dual, the old sibling (part of the hybrid pair) should exist
         if ($oldSiblingId === null) {
             return ['oldSibling' => null, 'error' => 'No sibling ID provided'];
         }
 
+        // sibling hasn't changed
+        if ($oldSiblingId === $courtOrderPair->siblingCourtOrder->getId()) {
+            return ['oldSibling' => $courtOrderPair->siblingCourtOrder, 'error' => null];
+        }
+
+        // sibling has changed
         $oldSibling = $this->courtOrderRepository->find($oldSiblingId);
 
         if ($oldSibling === null) {
