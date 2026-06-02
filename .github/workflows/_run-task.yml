@@ -41,6 +41,11 @@ on:
         required: false
         default: false
         type: boolean
+      retry_on_fail:
+        description: "Retry on fail"
+        required: false
+        default: false
+        type: boolean
 
 env:
   HELPER_VERSION: "0.10.4"
@@ -118,15 +123,27 @@ jobs:
           TASK_NAME: ${{ inputs.task_name }}
           TIMEOUT: ${{ inputs.timeout }}
           HIDE_LOGS: ${{ inputs.hide_logs }}
+          RETRY_ON_FAIL: ${{ inputs.retry_on_fail }}
         run: |
           echo "${TASK_NAME}"
           echo "${TIMEOUT}"
           echo "${OVERRIDE}"
-          if [ -z "${OVERRIDE}" ]; then
-            ../../ecs-helper/ecs-runner -task "${TASK_NAME}" -timeout "${TIMEOUT}" -assumeRoleFromTFOut false -hideLogs "${HIDE_LOGS}"
-          else
-            ../../ecs-helper/ecs-runner -task "${TASK_NAME}" -timeout "${TIMEOUT}" -override "${OVERRIDE}" -assumeRoleFromTFOut false -hideLogs "${HIDE_LOGS}"
+
+          run_task() {
+            if [ -z "${OVERRIDE}" ]; then
+              ../../ecs-helper/ecs-runner -task "${TASK_NAME}" -timeout "${TIMEOUT}" -assumeRoleFromTFOut false -hideLogs "${HIDE_LOGS}"
+            else
+              ../../ecs-helper/ecs-runner -task "${TASK_NAME}" -timeout "${TIMEOUT}" -override "${OVERRIDE}" -assumeRoleFromTFOut false -hideLogs "${HIDE_LOGS}"
+            fi
+          }
+          run_task
+          EXIT_CODE=$?
+          if [ "$EXIT_CODE" -ne 0 ] && [ "${RETRY_ON_FAIL}" = "true" ]; then
+            echo "First attempt failed, retrying once..."
+            run_task
+            EXIT_CODE=$?
           fi
+          exit $EXIT_CODE
         working-directory: terraform/environment
 
       - name: Unset AWS variables
