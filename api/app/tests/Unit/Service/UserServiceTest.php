@@ -14,7 +14,7 @@ use OPG\Digideps\Backend\v2\DTO\InviteeDto;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Mockery\MockInterface;
-use Tests\OPG\Digideps\Backend\Unit\MockeryStub as m;
+use Mockery as m;
 use PHPUnit\Framework\TestCase;
 
 use function PHPUnit\Framework\assertInstanceOf;

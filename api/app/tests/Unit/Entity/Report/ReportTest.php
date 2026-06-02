@@ -25,7 +25,7 @@ use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Mockery\MockInterface;
-use Tests\OPG\Digideps\Backend\Unit\MockeryStub as m;
+use Mockery as m;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 final class ReportTest extends KernelTestCase
