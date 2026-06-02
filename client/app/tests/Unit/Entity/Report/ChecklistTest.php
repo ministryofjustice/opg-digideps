@@ -17,18 +17,21 @@ class ChecklistTest extends KernelTestCase
     public function setUp(): void
     {
         $this->validator = Validation::createValidatorBuilder()
-            ->enableAttributeMapping()
+            ->enableAnnotationMapping(true)
+            ->addDefaultDoctrineAnnotationReader()
             ->getValidator();
     }
 
     /**
+     * @test
+     *
      * @dataProvider submitProfDeputyCostsChecklistValuesProvider
      */
-    public function testValidationsSubmitProfDeputyCostsChecklist(
-        ?string $profCostsReasonableAndProportionate,
-        ?string $paymentsMatchCostCertificate,
-        ?string $hasDeputyOverchargedFromPreviousEstimates,
-        int $expectedCountErrors
+    public function validationsSubmitProfDeputyCostsChecklist(
+        $profCostsReasonableAndProportionate,
+        $paymentsMatchCostCertificate,
+        $hasDeputyOverchargedFromPreviousEstimates,
+        $expectedCountErrors
     ): void {
         $report = new Report();
 
