@@ -9,48 +9,20 @@ use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Security\RedisUserProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Predis\Client;
 use Psr\Log\LoggerInterface;
-
-/**
- * Hand-rolled fake for Predis\Client since get/set/expire are magic methods
- * and cannot be configured via PHPUnit's mock builder.
- */
-class FakeRedisClient extends Client
-{
-    public array $store = [];
-    public array $calls = [];
-
-    public function get($key): mixed
-    {
-        $this->calls[] = ['get', $key];
-        return $this->store[$key] ?? null;
-    }
-
-    public function set($key, $value): void
-    {
-        $this->calls[] = ['set', $key, $value];
-        $this->store[$key] = $value;
-    }
-
-    public function expire($key, $seconds): int
-    {
-        $this->calls[] = ['expire', $key, $seconds];
-        return 1;
-    }
-}
+use Tests\OPG\Digideps\Backend\Unit\Service\BruteForce\PredisMock;
 
 final class UserProviderTest extends TestCase
 {
     private UserRepository&MockObject $repo;
-    private FakeRedisClient $redis;
+    private PredisMock $redis;
     private LoggerInterface&MockObject $logger;
     private RedisUserProvider $userProvider;
 
     public function setUp(): void
     {
         $this->repo = $this->createMock(UserRepository::class);
-        $this->redis = new FakeRedisClient();
+        $this->redis = new PredisMock();
         $this->logger = $this->createMock(LoggerInterface::class);
         $options = ['timeout_seconds' => 7];
 
@@ -67,7 +39,7 @@ final class UserProviderTest extends TestCase
 
     public function testloadUserByUsernameDbNotFound(): void
     {
-        $this->redis->store['token'] = 1;
+        $this->redis->set('token', 1);
         $this->repo->method('find')->with(1)->willReturn(null);
         $this->logger->expects($this->once())->method('warning')->with($this->matchesRegularExpression('/not found/'));
         $this->expectException(\RuntimeException::class);
@@ -78,7 +50,7 @@ final class UserProviderTest extends TestCase
     public function testloadUserByUsernameFound(): void
     {
         $user = $this->createMock(User::class);
-        $this->redis->store['token'] = 1;
+        $this->redis->set('token', 1);
         $this->repo->method('find')->with(1)->willReturn($user);
         $this->logger->expects($this->never())->method('warning');
 
