@@ -603,7 +603,7 @@ class Checklist implements SynchronisableInterface
         return $this->furtherInformationReceived;
     }
 
-    public function setFurtherInformationReceived(?string $furtherInformationReceived): static
+    public function setFurtherInformationReceived(?string $furtherInformationReceived): void
     {
         $this->furtherInformationReceived = $furtherInformationReceived;
     }
@@ -644,18 +644,12 @@ class Checklist implements SynchronisableInterface
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getUuid(): ?string
     {
         return $this->uuid;
     }
 
-    /**
-     * @return $this
-     */
-    public function setUuid(?string $uuid)
+    public function setUuid(?string $uuid): static
     {
         $this->uuid = $uuid;
 
@@ -667,7 +661,7 @@ class Checklist implements SynchronisableInterface
         return $this->clientBenefitsChecked;
     }
 
-    public function setClientBenefitsChecked(?string $clientBenefitsChecked): Checklist
+    public function setClientBenefitsChecked(?string $clientBenefitsChecked): static
     {
         $this->clientBenefitsChecked = $clientBenefitsChecked;
 
