@@ -10,21 +10,23 @@ use Predis\Client;
 class PredisMock extends Client
 {
     private array $data = [];
+
+    /** @var array<array> $calls */
     public array $calls = [];
 
-    public function set($key, $value): void
+    public function set(string $key, mixed $value): void
     {
         $this->calls[] = ['set', $key];
         $this->data[$key] = $value;
     }
 
-    public function get($key)
+    public function get(string $key): mixed
     {
         $this->calls[] = ['get', $key];
         return $this->data[$key] ?? null;
     }
 
-    public function expire($key, $seconds): void
+    public function expire(string $key, int $seconds): void
     {
         $this->calls[] = ['expire', $key, $seconds];
         if (!isset($this->data[$key])) {

@@ -18,7 +18,7 @@ trait MoneyTransferTrait
     private $moneyTransfers;
 
     /**
-     * @var bool deputy declaration saying there are no transfers. Required (true/false) if no transfers are added
+     * @var ?bool deputy declaration saying there are no transfers. Required (true/false) if no transfers are added
      */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['report', 'money-transfer'])]

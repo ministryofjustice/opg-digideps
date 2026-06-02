@@ -79,7 +79,7 @@ class ReportRepository extends ServiceEntityRepository
     /**
      * Called from doctrine listener.
      *
-     * @return Collection<ReportMoneyShortCategory>
+     * @return Collection<int, ReportMoneyShortCategory>
      */
     public function getMissingMoneyShortCategories(Report $report): Collection
     {
