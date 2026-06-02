@@ -91,10 +91,13 @@
       "groupName": "Python dependency updates",
       "matchManagers": ["pip_requirements", "pip-compile"],
       "matchUpdateTypes": ["minor", "patch"],
-      "rangeStrategy": "bump",
       "labels": ["dependencies", "python"],
       "schedule": ["before 9am on Monday"],
       "minimumReleaseAge": "7 days"
+    },
+    {
+      "matchManagers": ["pip_requirements", "pip-compile"],
+      "rangeStrategy": "bump"
     },
     {
       "groupName": "Golang dependency updates",
