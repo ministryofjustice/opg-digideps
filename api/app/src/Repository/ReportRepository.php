@@ -49,8 +49,7 @@ class ReportRepository extends ServiceEntityRepository
         }
 
         foreach (ReportDebt::$debtTypeIds as $row) {
-            $debt = new ReportDebt($report, $row[0], $row[1], null);
-            $this->_em->persist($debt);
+            new ReportDebt($report, $row[0], $row[1], null);
             ++$ret;
         }
 
@@ -74,8 +73,7 @@ class ReportRepository extends ServiceEntityRepository
         }
 
         foreach (ReportFee::$feeTypeIds as $id => $row) {
-            $debt = new ReportFee($report, $id, null);
-            $this->_em->persist($debt);
+            new ReportFee($report, $id, null);
             ++$ret;
         }
 
@@ -85,24 +83,21 @@ class ReportRepository extends ServiceEntityRepository
     /**
      * Called from doctrine listener.
      *
-     * @return int changed records
+     * @return array<ReportMoneyShortCategory>
      */
-    public function addMoneyShortCategoriesIfMissing(Report $report): int
+    public function addMoneyShortCategoriesIfMissing(Report $report): array
     {
-        $ret = 0;
-
         if (count($report->getMoneyShortCategories()) > 0) {
-            return $ret;
+            return [];
         }
 
+        $missingCategories = [];
         $cats = ReportMoneyShortCategory::getCategories('in') + ReportMoneyShortCategory::getCategories('out');
         foreach ($cats as $typeId => $options) {
-            $debt = new ReportMoneyShortCategory($report, $typeId, false);
-            $this->_em->persist($debt);
-            ++$ret;
+            $missingCategories[] = new ReportMoneyShortCategory($report, $typeId, false);
         }
 
-        return $ret;
+        return $missingCategories;
     }
 
     public function findAllActiveReportsByCaseNumbersAndRole(array $caseNumbers, string $role)

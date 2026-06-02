@@ -33,7 +33,6 @@ class DoctrineListener
             /** @var ReportRepository $reportRepo */
             $reportRepo = $entityManager->getRepository(Report::class);
             $reportRepo->addDebtsToReportIfMissing($entity);
-            $reportRepo->addMoneyShortCategoriesIfMissing($entity);
             $reportRepo->addFeesToReportIfMissing($entity);
         }
 
@@ -43,6 +42,22 @@ class DoctrineListener
 
         if ($entity instanceof MoneyTransactionShortOut && !$entity->getId()) {
             $entity->getReport()->setMoneyTransactionsShortOutExist('yes');
+        }
+    }
+
+    public function postPersist(LifecycleEventArgs $args): void
+    {
+        $entity = $args->getEntity();
+        $entityManager = $args->getEntityManager();
+
+        if ($entity instanceof Report) {
+            /** @var ReportRepository $reportRepo */
+            $reportRepo = $entityManager->getRepository(Report::class);
+            $missingCategories = $reportRepo->addMoneyShortCategoriesIfMissing($entity);
+            foreach ($missingCategories as $missingCategory) {
+                $entityManager->persist($missingCategory);
+            }
+            $entityManager->flush();
         }
     }
 
