@@ -79,7 +79,7 @@ trait AssetTrait
     /**
      * Set noAssetToAdd.
      *
-     * @param bool $noAssetToAdd
+     * @param ?bool $noAssetToAdd
      *
      * @return Report
      */
@@ -93,7 +93,7 @@ trait AssetTrait
     /**
      * Get noAssetToAdd.
      *
-     * @return bool
+     * @return ?bool
      */
     public function getNoAssetToAdd()
     {

@@ -2,6 +2,9 @@
 
 namespace OPG\Digideps\Backend\EventListener;
 
+use Doctrine\ORM\Event\PrePersistEventArgs;
+use Doctrine\ORM\Event\PreRemoveEventArgs;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use OPG\Digideps\Backend\Entity\Report\Asset;
 use OPG\Digideps\Backend\Entity\Report\Contact;
 use OPG\Digideps\Backend\Entity\Report\Decision;
@@ -16,7 +19,6 @@ use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Repository\ReportRepository;
 use OPG\Digideps\Backend\Repository\ReportSubmissionRepository;
-use Doctrine\ORM\Event\LifecycleEventArgs;
 
 /**
  * Consider moving this to service classes, and unit test triggers.
@@ -24,16 +26,17 @@ use Doctrine\ORM\Event\LifecycleEventArgs;
  */
 class DoctrineListener
 {
-    public function prePersist(LifecycleEventArgs $args): void
+    public function prePersist(PrePersistEventArgs $args): void
     {
-        $entity = $args->getEntity();
-        $entityManager = $args->getEntityManager();
+        $entity = $args->getObject();
+        $entityManager = $args->getObjectManager();
 
         if ($entity instanceof Report && !$entity->getId()) {
             /** @var ReportRepository $reportRepo */
             $reportRepo = $entityManager->getRepository(Report::class);
             $reportRepo->addDebtsToReportIfMissing($entity);
             $reportRepo->addFeesToReportIfMissing($entity);
+            $entity->setMoneyShortCategories($reportRepo->getMissingMoneyShortCategories($entity));
         }
 
         if ($entity instanceof MoneyTransactionShortIn && !$entity->getId()) {
@@ -45,26 +48,10 @@ class DoctrineListener
         }
     }
 
-    public function postPersist(LifecycleEventArgs $args): void
+    public function preUpdate(PreUpdateEventArgs $args): void
     {
-        $entity = $args->getEntity();
-        $entityManager = $args->getEntityManager();
-
-        if ($entity instanceof Report) {
-            /** @var ReportRepository $reportRepo */
-            $reportRepo = $entityManager->getRepository(Report::class);
-            $missingCategories = $reportRepo->addMoneyShortCategoriesIfMissing($entity);
-            foreach ($missingCategories as $missingCategory) {
-                $entityManager->persist($missingCategory);
-            }
-            $entityManager->flush();
-        }
-    }
-
-    public function preUpdate(LifecycleEventArgs $args): void
-    {
-        $entity = $args->getEntity();
-        $entityManager = $args->getEntityManager();
+        $entity = $args->getObject();
+        $entityManager = $args->getObjectManager();
 
         if ($entity instanceof Document && !is_null($entity->getReportSubmission())) {
             /** @var ReportSubmissionRepository $reportSubmissionRepo */
@@ -73,9 +60,9 @@ class DoctrineListener
         }
     }
 
-    public function preRemove(LifecycleEventArgs $args): void
+    public function preRemove(PreRemoveEventArgs $args): void
     {
-        $entity = $args->getEntity();
+        $entity = $args->getObject();
 
         if ($entity instanceof MoneyTransactionShortIn) {
             $report = $entity->getReport();

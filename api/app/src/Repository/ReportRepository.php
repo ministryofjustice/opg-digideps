@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Repository;
 
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Connection;
+use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry;
 use OPG\Digideps\Backend\Domain\Report\ReportAccessService;
 use OPG\Digideps\Backend\Entity\Report\Debt as ReportDebt;
 use OPG\Digideps\Backend\Entity\Report\Fee as ReportFee;
@@ -14,12 +19,6 @@ use OPG\Digideps\Backend\Entity\Report\MoneyShortCategory as ReportMoneyShortCat
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\SynchronisableInterface;
 use OPG\Digideps\Backend\Service\Search\ClientSearchFilter;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\Connection;
-use Doctrine\ORM\AbstractQuery;
-use Doctrine\ORM\ORMException;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -56,9 +55,6 @@ class ReportRepository extends ServiceEntityRepository
         return $ret;
     }
 
-    /**
-     * @throws ORMException
-     */
     public function addFeesToReportIfMissing(Report $report): ?int
     {
         if (!$report->isPAreport()) {
@@ -83,18 +79,20 @@ class ReportRepository extends ServiceEntityRepository
     /**
      * Called from doctrine listener.
      *
-     * @return array<ReportMoneyShortCategory>
+     * @return Collection<ReportMoneyShortCategory>
      */
-    public function addMoneyShortCategoriesIfMissing(Report $report): array
+    public function getMissingMoneyShortCategories(Report $report): Collection
     {
+        $missingCategories = new ArrayCollection();
+
         if (count($report->getMoneyShortCategories()) > 0) {
-            return [];
+            return $missingCategories;
         }
 
-        $missingCategories = [];
+
         $cats = ReportMoneyShortCategory::getCategories('in') + ReportMoneyShortCategory::getCategories('out');
         foreach ($cats as $typeId => $options) {
-            $missingCategories[] = new ReportMoneyShortCategory($report, $typeId, false);
+            $missingCategories->add(new ReportMoneyShortCategory($report, $typeId, false));
         }
 
         return $missingCategories;

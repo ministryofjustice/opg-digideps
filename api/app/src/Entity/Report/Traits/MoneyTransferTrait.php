@@ -44,7 +44,7 @@ trait MoneyTransferTrait
     }
 
     /**
-     * @return bool
+     * @return ?bool
      */
     public function getNoTransfersToAdd()
     {
@@ -52,7 +52,7 @@ trait MoneyTransferTrait
     }
 
     /**
-     * @param bool $noTransfersToAdd
+     * @param ?bool $noTransfersToAdd
      */
     public function setNoTransfersToAdd($noTransfersToAdd)
     {
