@@ -46,6 +46,11 @@ final class ReportRepositoryTest extends TestCase
         $this->sut = new ReportRepository($mockManagerRegistry, $clientSearchFilter, new ReportAccessService($this->createStub(EntityManagerInterface::class)));
     }
 
+    public function tearDown(): void
+    {
+        m::close();
+    }
+
     /**
      * @throws ORMException
      */
@@ -56,25 +61,17 @@ final class ReportRepositoryTest extends TestCase
         $this->assertNull($this->sut->addFeesToReportIfMissing($this->mockReport));
     }
 
-    /**
-     * @throws ORMException
-     */
     public function testAddFeesToReportIfMissingForPAUserWithFeesMissing(): void
     {
         $this->mockReport->shouldReceive('getFees')->andReturn([]);
 
         $this->mockReport->shouldReceive('addFee')->times(count(Fee::$feeTypeIds))->andReturnSelf();
 
-        $this->mockEm->shouldReceive('persist')->times(count(Fee::$feeTypeIds));
-
         $this->mockReport->shouldReceive('isPAReport')->andReturn(true);
 
         $this->assertEquals(7, $this->sut->addFeesToReportIfMissing($this->mockReport));
     }
 
-    /**
-     * @throws ORMException
-     */
     public function testAddFeesToReportIfMissingForPAUserWithFeesNotMissing(): void
     {
         $this->mockReport->shouldReceive('getFees')->andReturn(['foo']);

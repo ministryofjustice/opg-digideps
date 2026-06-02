@@ -22,11 +22,11 @@ trait AssetTrait
     private $assets;
 
     /**
-     * @var bool deputy declaration saying there are no assets. Required (true/false) if no assets are added
+     * @var ?bool deputy declaration saying there are no assets. Required (true/false) if no assets are added
      */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['report'])]
-    #[ORM\Column(name: 'no_asset_to_add', type: 'boolean', options: ['default' => false], nullable: true)]
+    #[ORM\Column(name: 'no_asset_to_add', type: 'boolean', nullable: true, options: ['default' => false])]
     private $noAssetToAdd;
 
     /**
@@ -79,7 +79,7 @@ trait AssetTrait
     /**
      * Set noAssetToAdd.
      *
-     * @param bool $noAssetToAdd
+     * @param ?bool $noAssetToAdd
      *
      * @return Report
      */
@@ -93,7 +93,7 @@ trait AssetTrait
     /**
      * Get noAssetToAdd.
      *
-     * @return bool
+     * @return ?bool
      */
     public function getNoAssetToAdd()
     {
