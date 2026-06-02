@@ -23,7 +23,7 @@ final class QueryFactoryTest extends TestCase
         $this->factory = new QueryFactory($em);
     }
 
-    public function testDown(): void
+    public function tearDown(): void
     {
         m::close();
     }
