@@ -22,7 +22,7 @@ describe('Form autosave', () => {
 
     fetchMock.mockResponse(JSON.stringify({ status: 200 }))
 
-    Autosave.init(document, 30, fetchMock)
+    Autosave.init(document, fetchMock, 30)
 
     // change a value in a text input; event must bubble to reach the listener
     // attached to the parent form
@@ -50,7 +50,7 @@ describe('Form autosave', () => {
 
     fetchMock.mockResponse(JSON.stringify({ status: 200 }))
 
-    Autosave.init(document, 30, fetchMock)
+    Autosave.init(document, fetchMock, 30)
 
     // set a value for the personName (but don't trigger the change event)
     const nameInput = document.querySelector('input[name="personName"]')
@@ -76,10 +76,10 @@ describe('Form autosave', () => {
     expect(options.body.get('description')).toBe(description)
   })
 
-  it('should save even if change events are not triggered', async () => {
+  it('should save periodically even if change events are not triggered', async () => {
     fetchMock.mockResponse(JSON.stringify({ status: 200 }))
 
-    const autosaver = Autosave.init(document, 0.1, fetchMock)
+    const autosaver = Autosave.init(document, fetchMock, 0.1)
 
     // add a timer to stop the autosave on the form from running for too long
     const form = autosaver.autosaveForms[0]
