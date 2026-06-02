@@ -10,7 +10,7 @@ use OPG\Digideps\Backend\Security\RedisUserProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
-use Tests\OPG\Digideps\Backend\Unit\Service\BruteForce\PredisMock;
+use Tests\OPG\Digideps\Backend\Unit\Service\PredisMock;
 
 final class UserProviderTest extends TestCase
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\OPG\Digideps\Backend\Unit\Service\BruteForce;
+namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
 use Predis\Client;
 

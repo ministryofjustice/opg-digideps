@@ -6,6 +6,7 @@ namespace Tests\OPG\Digideps\Backend\Unit\Service\BruteForce;
 
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
 use PHPUnit\Framework\TestCase;
+use Tests\OPG\Digideps\Backend\Unit\Service\PredisMock;
 
 final class AttemptsIncrementalWaitingCheckerTest extends TestCase
 {

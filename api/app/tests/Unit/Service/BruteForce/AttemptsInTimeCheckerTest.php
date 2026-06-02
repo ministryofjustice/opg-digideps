@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Service\BruteForce;
 
-use PHPUnit\Framework\Attributes\DataProvider;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Tests\OPG\Digideps\Backend\Unit\Service\PredisMock;
 
 final class AttemptsInTimeCheckerTest extends TestCase
 {
