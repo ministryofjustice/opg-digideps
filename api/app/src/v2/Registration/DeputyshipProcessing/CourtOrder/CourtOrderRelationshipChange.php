@@ -5,29 +5,27 @@ declare(strict_types=1);
 namespace OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CourtOrder;
 
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
+use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Entity\CourtOrder;
 
-final class CourtOrderRelationshipChange
+final readonly class CourtOrderRelationshipChange
 {
-    public CourtOrderKind $newKind;
-    public ?int $newSiblingId = null;
-
     public function __construct(
-        public readonly CourtOrder $courtOrder,
-        public readonly ?CourtOrderKind $oldKind = null,
-        public readonly ?int $oldSiblingId = null
+        public int $courtOrderId,
+        public CourtOrderKind $currentKind,
+        public ?int $currentSiblingId = null,
+        public ?CourtOrderKind $oldKind = null,
+        public ?int $oldSiblingId = null
     ) {
-        $this->newKind = $this->courtOrder->getOrderKind();
-        $this->newSiblingId = $this->courtOrder->getSibling()?->getId();
     }
 
     public function hasSiblingIdChange(): bool
     {
-        return $this->newSiblingId !== $this->oldSiblingId;
+        return $this->currentSiblingId !== $this->oldSiblingId;
     }
 
     public function hasKindChange(): bool
     {
-        return $this->newKind !== $this->oldKind;
+        return $this->currentKind !== $this->oldKind;
     }
 }

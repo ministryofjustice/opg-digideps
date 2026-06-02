@@ -25,4 +25,9 @@ final class ReportTransitionResult
         public array $removedReports = [],
     ) {
     }
+
+    public function hasErrors(): bool
+    {
+        return count($this->errorMessages) > 0;
+    }
 }

@@ -52,7 +52,13 @@ final readonly class CourtOrderRelationshipIngester
         $this->entityManager->persist($current);
         $this->entityManager->flush();
 
-        return new CourtOrderRelationshipChange($current, $oldKind, $oldSiblingId);
+        return new CourtOrderRelationshipChange(
+            $current->getId(),
+            $current->getOrderKind(),
+            $current->getSibling()?->getId(),
+            $oldKind,
+            $oldSiblingId
+        );
     }
 
     /**
@@ -72,6 +78,8 @@ final readonly class CourtOrderRelationshipIngester
                 }
             }
             $this->entityManager->flush();
+            $this->entityManager->clear();
+
             $results = $this->updateReports($changes);
             $this->entityManager->flush();
             $this->entityManager->clear();

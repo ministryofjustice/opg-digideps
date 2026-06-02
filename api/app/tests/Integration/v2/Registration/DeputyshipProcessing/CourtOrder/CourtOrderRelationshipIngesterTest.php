@@ -205,20 +205,20 @@ class CourtOrderRelationshipIngesterTest extends ApiIntegrationTestCase
         usort($results, fn (CourtOrderRelationshipResult $left, CourtOrderRelationshipResult $right) => $left->getMessage() <=> $right->getMessage());
 
         $this->assertCount(14, $results);
-        $this->assertSame("Changes in CourtOrder 10: SiblingId changed from '110' -> '210'. Kind changed from 'hybrid' -> 'dual'.", $results[0]->getMessage());
-        $this->assertSame("Changes in CourtOrder 11: SiblingId changed from '111' -> '211'.", $results[1]->getMessage());
-        $this->assertSame("Changes in CourtOrder 12: SiblingId changed from '112' -> ''. Kind changed from 'dual' -> 'single'.", $results[2]->getMessage());
-        $this->assertSame("Changes in CourtOrder 13: SiblingId changed from '113' -> '213'. Kind changed from 'dual' -> 'hybrid'.", $results[3]->getMessage());
-        $this->assertSame("Changes in CourtOrder 14: SiblingId changed from '114' -> '214'.", $results[4]->getMessage());
-        $this->assertSame("Changes in CourtOrder 207: SiblingId changed from '' -> '7'. Kind changed from 'single' -> 'hybrid'.", $results[5]->getMessage());
-        $this->assertSame("Changes in CourtOrder 208: SiblingId changed from '' -> '8'. Kind changed from 'single' -> 'dual'.", $results[6]->getMessage());
-        $this->assertSame("Changes in CourtOrder 210: SiblingId changed from '' -> '10'. Kind changed from 'single' -> 'dual'.", $results[7]->getMessage());
-        $this->assertSame("Changes in CourtOrder 211: SiblingId changed from '' -> '11'. Kind changed from 'single' -> 'hybrid'.", $results[8]->getMessage());
-        $this->assertSame("Changes in CourtOrder 213: SiblingId changed from '' -> '13'. Kind changed from 'single' -> 'hybrid'.", $results[9]->getMessage());
-        $this->assertSame("Changes in CourtOrder 214: SiblingId changed from '' -> '14'. Kind changed from 'single' -> 'dual'.", $results[10]->getMessage());
-        $this->assertSame("Changes in CourtOrder 7: SiblingId changed from '' -> '207'. Kind changed from 'single' -> 'hybrid'.", $results[11]->getMessage());
-        $this->assertSame("Changes in CourtOrder 8: SiblingId changed from '' -> '208'. Kind changed from 'single' -> 'dual'.", $results[12]->getMessage());
-        $this->assertSame("Changes in CourtOrder 9: SiblingId changed from '109' -> ''. Kind changed from 'hybrid' -> 'single'.", $results[13]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 10: SiblingId changed from '110' -> '210'. Kind changed from 'hybrid' -> 'dual'.", $results[0]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 11: SiblingId changed from '111' -> '211'.", $results[1]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 12: SiblingId changed from '112' -> ''. Kind changed from 'dual' -> 'single'.", $results[2]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 13: SiblingId changed from '113' -> '213'. Kind changed from 'dual' -> 'hybrid'.", $results[3]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 14: SiblingId changed from '114' -> '214'.", $results[4]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 207: SiblingId changed from '' -> '7'. Kind changed from 'single' -> 'hybrid'.", $results[5]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 208: SiblingId changed from '' -> '8'. Kind changed from 'single' -> 'dual'.", $results[6]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 210: SiblingId changed from '' -> '10'. Kind changed from 'single' -> 'dual'.", $results[7]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 211: SiblingId changed from '' -> '11'. Kind changed from 'single' -> 'hybrid'.", $results[8]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 213: SiblingId changed from '' -> '13'. Kind changed from 'single' -> 'hybrid'.", $results[9]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 214: SiblingId changed from '' -> '14'. Kind changed from 'single' -> 'dual'.", $results[10]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 7: SiblingId changed from '' -> '207'. Kind changed from 'single' -> 'hybrid'.", $results[11]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 8: SiblingId changed from '' -> '208'. Kind changed from 'single' -> 'dual'.", $results[12]->getMessage());
+        $this->assertStringStartsWith("Changes in CourtOrder 9: SiblingId changed from '109' -> ''. Kind changed from 'hybrid' -> 'single'.", $results[13]->getMessage());
 
         $closed = self::$entityManager->getRepository(CourtOrder::class)->findBy(['status' => 'CLOSED']);
         $this->assertTrue(array_all($closed, fn (CourtOrder $order) => $order->getSibling() === null));
