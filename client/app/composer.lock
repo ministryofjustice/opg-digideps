@@ -342,7 +342,7 @@
             "dist": {
                 "type": "path",
                 "url": "../../common",
-                "reference": "5cc5009c5fc8eb7893950fc90d52b0ee2c745103"
+                "reference": "3c3573458bdaeaef62dac5d4eb50135b0db82005"
             },
             "require": {
                 "jms/serializer-bundle": "^5.5.2",
@@ -352,7 +352,7 @@
             },
             "require-dev": {
                 "dg/bypass-finals": "^1.9.0",
-                "phpstan/phpstan": "^2.1.49",
+                "phpstan/phpstan": "^2.1.52",
                 "phpstan/phpstan-phpunit": "^2.0.16",
                 "phpunit/phpunit": "^13.1.9"
             },
@@ -11592,11 +11592,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.1.50",
+            "version": "2.1.51",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/d452086fb4cf648c6b2d8cf3b639351f79e4f3e2",
-                "reference": "d452086fb4cf648c6b2d8cf3b639351f79e4f3e2",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/dc3b523c45e714c70de2ac5113b958223b55dc59",
+                "reference": "dc3b523c45e714c70de2ac5113b958223b55dc59",
                 "shasum": ""
             },
             "require": {
@@ -11641,7 +11641,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-04-17T13:10:32+00:00"
+            "time": "2026-04-21T18:22:01+00:00"
         },
         {
             "name": "phpstan/phpstan-mockery",
@@ -13565,5 +13565,5 @@
     "platform-overrides": {
         "php": "8.4.21"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
