@@ -23,6 +23,11 @@ final class QueryFactoryTest extends TestCase
         $this->factory = new QueryFactory($em);
     }
 
+    public function testDown(): void
+    {
+        m::close();
+    }
+
     public static function metricNameProvider(): array
     {
         return [['satisfaction'], ['reportsSubmitted'], ['clients'], ['registeredDeputies']];

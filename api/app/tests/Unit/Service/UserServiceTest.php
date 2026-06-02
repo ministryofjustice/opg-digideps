@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
-use PHPUnit\Framework\Attributes\DataProvider;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityRepository;
+use Mockery as m;
+use Mockery\MockInterface;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\ClientRepository;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Service\UserService;
 use OPG\Digideps\Backend\v2\DTO\InviteeDto;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
-use Mockery\MockInterface;
-use Mockery as m;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 use function PHPUnit\Framework\assertInstanceOf;
