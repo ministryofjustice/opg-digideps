@@ -120,7 +120,7 @@ final class ReportTransitionServiceTest extends TestCase
         $courtOrderRelationshipChange = new CourtOrderRelationshipChange(
             courtOrderId: $pfaCourtOrder->getId(),
             currentKind: $pfaCourtOrder->getOrderKind(),
-            currentSiblingId: $pfaCourtOrder->getSibling()->getId(),
+            currentSiblingId: $hwCourtOrder->getId(),
             oldKind: CourtOrderKind::Hybrid,
             oldSiblingId: $hwCourtOrder->getId(),
         );
@@ -156,7 +156,7 @@ final class ReportTransitionServiceTest extends TestCase
         $courtOrderRelationshipChange = new CourtOrderRelationshipChange(
             courtOrderId: $pfaCourtOrder->getId(),
             currentKind: $pfaCourtOrder->getOrderKind(),
-            currentSiblingId: $pfaCourtOrder->getSibling()->getId(),
+            currentSiblingId: $hwCourtOrder->getId(),
             oldKind: CourtOrderKind::Dual,
             oldSiblingId: $hwCourtOrder->getId(),
         );
@@ -197,7 +197,7 @@ final class ReportTransitionServiceTest extends TestCase
         $courtOrderRelationshipChange = new CourtOrderRelationshipChange(
             courtOrderId: $pfaCourtOrder->getId(),
             currentKind: $pfaCourtOrder->getOrderKind(),
-            currentSiblingId: $pfaCourtOrder->getSibling()->getId(),
+            currentSiblingId: $hwCourtOrder->getId(),
             oldKind: CourtOrderKind::Single,
             oldSiblingId: null
         );
@@ -224,7 +224,7 @@ final class ReportTransitionServiceTest extends TestCase
         $courtOrderChange = new CourtOrderRelationshipChange(
             courtOrderId: $pfaCourtOrder->getId(),
             currentKind: $pfaCourtOrder->getOrderKind(),
-            currentSiblingId: $pfaCourtOrder->getSibling()->getId(),
+            currentSiblingId: $hwCourtOrder->getId(),
             oldKind: CourtOrderKind::Dual,
             oldSiblingId: $hwCourtOrder->getId(),
         );
@@ -274,7 +274,7 @@ final class ReportTransitionServiceTest extends TestCase
         $courtOrderChange = new CourtOrderRelationshipChange(
             courtOrderId: $pfaCourtOrder->getId(),
             currentKind: $pfaCourtOrder->getOrderKind(),
-            currentSiblingId: $pfaCourtOrder->getSibling()->getId(),
+            currentSiblingId: $hwCourtOrder->getId(),
             oldKind: CourtOrderKind::Hybrid,
             oldSiblingId: null,
         );
@@ -299,7 +299,7 @@ final class ReportTransitionServiceTest extends TestCase
         $courtOrderChange = new CourtOrderRelationshipChange(
             courtOrderId: $pfaCourtOrder->getId(),
             currentKind: $pfaCourtOrder->getOrderKind(),
-            currentSiblingId: $pfaCourtOrder->getSibling()->getId(),
+            currentSiblingId: $hwCourtOrder->getId(),
             oldKind: CourtOrderKind::Hybrid,
             oldSiblingId: 999,
         );
@@ -323,7 +323,7 @@ final class ReportTransitionServiceTest extends TestCase
         $courtOrderChange = new CourtOrderRelationshipChange(
             courtOrderId: $pfaCourtOrder->getId(),
             currentKind: $pfaCourtOrder->getOrderKind(),
-            currentSiblingId: $pfaCourtOrder->getSibling()->getId(),
+            currentSiblingId: $hwCourtOrder->getId(),
             oldKind: CourtOrderKind::Hybrid,
             oldSiblingId: $hwCourtOrder->getId(),
         );
@@ -352,7 +352,7 @@ final class ReportTransitionServiceTest extends TestCase
         $courtOrderChange = new CourtOrderRelationshipChange(
             courtOrderId: $pfaCourtOrder->getId(),
             currentKind: $pfaCourtOrder->getOrderKind(),
-            currentSiblingId: $pfaCourtOrder->getSibling()->getId(),
+            currentSiblingId: $hwCourtOrder->getId(),
             oldKind: CourtOrderKind::Dual,
             oldSiblingId: null,
         );
@@ -377,7 +377,7 @@ final class ReportTransitionServiceTest extends TestCase
         $courtOrderChange = new CourtOrderRelationshipChange(
             courtOrderId: $pfaCourtOrder->getId(),
             currentKind: $pfaCourtOrder->getOrderKind(),
-            currentSiblingId: $pfaCourtOrder->getSibling()->getId(),
+            currentSiblingId: $hwCourtOrder->getId(),
             oldKind: CourtOrderKind::Dual,
             oldSiblingId: $hwCourtOrder->getId(),
         );
@@ -403,7 +403,7 @@ final class ReportTransitionServiceTest extends TestCase
         $courtOrderChange = new CourtOrderRelationshipChange(
             courtOrderId: $pfaCourtOrder->getId(),
             currentKind: $pfaCourtOrder->getOrderKind(),
-            currentSiblingId: $pfaCourtOrder->getSibling()->getId(),
+            currentSiblingId: $hwCourtOrder->getId(),
             oldKind: CourtOrderKind::Single,
             oldSiblingId: null,
         );
@@ -429,7 +429,7 @@ final class ReportTransitionServiceTest extends TestCase
         $courtOrderChange = new CourtOrderRelationshipChange(
             courtOrderId: $pfaCourtOrder->getId(),
             currentKind: $pfaCourtOrder->getOrderKind(),
-            currentSiblingId: $pfaCourtOrder->getSibling()->getId(),
+            currentSiblingId: $hwCourtOrder->getId(),
             oldKind: CourtOrderKind::Single,
             oldSiblingId: null,
         );
@@ -458,7 +458,7 @@ final class ReportTransitionServiceTest extends TestCase
         $courtOrderChange = new CourtOrderRelationshipChange(
             courtOrderId: $pfaCourtOrder->getId(),
             currentKind: $pfaCourtOrder->getOrderKind(),
-            currentSiblingId: $pfaCourtOrder->getSibling()->getId(),
+            currentSiblingId: $newHwCourtOrder->getId(),
             oldKind: CourtOrderKind::Dual,
             oldSiblingId: $oldHwCourtOrder->getId(),
         );
@@ -494,7 +494,7 @@ final class ReportTransitionServiceTest extends TestCase
         $courtOrderChange = new CourtOrderRelationshipChange(
             courtOrderId: $pfaCourtOrder->getId(),
             currentKind: $pfaCourtOrder->getOrderKind(),
-            currentSiblingId: $pfaCourtOrder->getSibling()->getId(),
+            currentSiblingId: $newHwCourtOrder->getId(),
             oldKind: CourtOrderKind::Hybrid,
             oldSiblingId: $oldHwCourtOrder->getId(),
         );

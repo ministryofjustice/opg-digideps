@@ -264,12 +264,12 @@ final readonly class ReportTransitionService
             return ['oldSibling' => null, 'error' => 'No sibling ID provided'];
         }
 
-        // sibling hasn't changed
-        if ($oldSiblingId === $courtOrderPair->siblingCourtOrder->getId()) {
+        // sibling hasn't changed: old sibling is the same as the current sibling
+        if ($oldSiblingId === $courtOrderPair->siblingCourtOrder?->getId()) {
             return ['oldSibling' => $courtOrderPair->siblingCourtOrder, 'error' => null];
         }
 
-        // sibling has changed
+        // sibling has changed, so get the old one
         $oldSibling = $this->courtOrderRepository->find($oldSiblingId);
 
         if ($oldSibling === null) {
