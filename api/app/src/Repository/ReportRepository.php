@@ -179,10 +179,9 @@ class ReportRepository extends ServiceEntityRepository
     {
         $em = $this->getEntityManager();
 
-        $qualified = Report::class;
         $dql = <<<DQL
 SELECT c.id as checklist_id, r.id as report_id
-FROM $qualified r
+FROM OPG\Digideps\Backend\Entity\Report\Report r
 JOIN r.checklist c
 WHERE c.synchronisationStatus = :status
 DQL;
