@@ -6,7 +6,6 @@ namespace Tests\OPG\Digideps\Backend\Unit\Service\BruteForce;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsInTimeChecker;
-use Tests\OPG\Digideps\Backend\Unit\MockeryStub as m;
 use PHPUnit\Framework\TestCase;
 
 final class AttemptsInTimeCheckerTest extends TestCase
@@ -61,10 +60,5 @@ final class AttemptsInTimeCheckerTest extends TestCase
 
         $this->object->resetAttempts($this->key);
         $this->assertFalse($this->object->maxAttemptsReached($this->key));
-    }
-
-    public function tearDown(): void
-    {
-        m::close();
     }
 }

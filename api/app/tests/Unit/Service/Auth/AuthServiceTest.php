@@ -4,14 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Service\Auth;
 
-use Mockery\MockInterface;
 use OPG\Digideps\Backend\Entity\User;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Service\Auth\AuthService;
 use OPG\Digideps\Backend\Service\JWT\JWTService;
-use Tests\OPG\Digideps\Backend\Unit\MockeryStub as m;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,17 +31,17 @@ final class AuthServiceTest extends TestCase
     ];
 
     private RoleHierarchy $roleHierarchy;
-    private MockInterface|UserRepository $userRepo;
-    private MockInterface|LoggerInterface $logger;
-    private MockInterface|UserPasswordHasherInterface $passwordHasher;
-    private MockInterface|JWTService $JWTService;
+    private MockObject&UserRepository $userRepo;
+    private MockObject&LoggerInterface $logger;
+    private MockObject&UserPasswordHasherInterface $passwordHasher;
+    private MockObject&JWTService $JWTService;
 
     public function setUp(): void
     {
-        $this->userRepo = m::stub(UserRepository::class);
-        $this->logger = m::mock(LoggerInterface::class);
-        $this->passwordHasher = m::stub(UserPasswordHasherInterface::class);
-        $this->JWTService = m::mock(JWTService::class);
+        $this->userRepo = $this->createMock(UserRepository::class);
+        $this->logger = $this->createMock(LoggerInterface::class);
+        $this->passwordHasher = $this->createMock(UserPasswordHasherInterface::class);
+        $this->JWTService = $this->createMock(JWTService::class);
 
         $hierarchy = [
             'ROLE_SUPER_ADMIN' => ['ROLE_ADMIN'],
@@ -97,49 +96,53 @@ final class AuthServiceTest extends TestCase
 
     public function testGetUserByEmailAndPasswordUserNotFound(): void
     {
-        $this->userRepo->shouldReceive('findOneBy')->with(['email' => 'email@example.org'])->andReturn(null);
-        $this->logger->shouldReceive('info')->with(\Mockery::pattern('/not found/'))->once();
+        $this->userRepo->method('findOneBy')->with(['email' => 'email@example.org'])->willReturn(null);
+        $this->logger->expects($this->once())->method('info')->with($this->matchesRegularExpression('/not found/'));
 
         $this->assertEquals(false, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }
 
     public function testGetUserByEmailAndPasswordMismatchPassword(): void
     {
-        $user = m::stub(User::class, [
-                'getSalt' => 'salt',
-                'getPassword' => 'encodedPassword',
-        ]);
-        $this->userRepo->shouldReceive('findOneBy')->with(['email' => 'email@example.org'])->andReturn($user);
+        $user = $this->createMock(User::class);
+        $user->method('getSalt');
+        $user->method('getPassword')->willReturn('encodedPassword');
 
-        $this->passwordHasher->shouldReceive('isPasswordValid')->with($user, 'plainPassword')->andReturn(false);
-
-        $this->logger->shouldReceive('info')->with(\Mockery::pattern('/password mismatch/'))->once();
+        $this->userRepo->method('findOneBy')->with(['email' => 'email@example.org'])->willReturn($user);
+        $this->passwordHasher->method('isPasswordValid')->with($user, 'plainPassword')->willReturn(false);
+        $this->logger->expects($this->once())->method('info')->with($this->matchesRegularExpression('/password mismatch/'));
 
         $this->assertEquals(null, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }
 
     public function testGetUserByEmailAndPasswordCorrect(): void
     {
-        $user = m::stub(User::class, [
-                'getSalt' => 'salt',
-                'getPassword' => 'encodedPassword',
-        ]);
-        $this->userRepo->shouldReceive('findOneBy')->with(['email' => 'email@example.org'])->andReturn($user);
+        $user = $this->createMock(User::class);
+        $user->method('getSalt');
+        $user->method('getPassword')->willReturn('encodedPassword');
 
-        $this->passwordHasher->shouldReceive('isPasswordValid')->with($user, 'plainPassword')->andReturn(true);
+        $this->userRepo->method('findOneBy')->with(['email' => 'email@example.org'])->willReturn($user);
+        $this->passwordHasher->method('isPasswordValid')->with($user, 'plainPassword')->willReturn(true);
 
         $this->assertEquals($user, $this->authService->getUserByEmailAndPassword('email@example.org', 'plainPassword'));
     }
 
     public function testGetUserByToken(): void
     {
-        $user = m::mock(User::class);
+        $user = $this->createMock(User::class);
 
-        $this->userRepo->shouldReceive('findOneBy')->with(['registrationToken' => 'token'])->andReturn($user);
+        $this->userRepo->method('findOneBy')
+            ->with(['registrationToken' => 'token'])
+            ->willReturn($user);
 
         $this->assertEquals($user, $this->authService->getUserByToken('token'));
+    }
 
-        $this->userRepo->shouldReceive('findOneBy')->with(['registrationToken' => 'wrongtoken'])->andReturn(null);
+    public function testGetUserByInvalidToken(): void
+    {
+        $this->userRepo->method('findOneBy')
+            ->with(['registrationToken' => 'wrongtoken'])
+            ->willReturn(null);
 
         $this->assertEquals(null, $this->authService->getUserByToken('wrongtoken'));
     }
@@ -177,7 +180,7 @@ final class AuthServiceTest extends TestCase
     #[Test]
     public function jWTIsValid(): void
     {
-        $this->JWTService->shouldReceive('verify')->with('not-a.real-jwt')->andReturn(true);
+        $this->JWTService->method('verify')->with('not-a.real-jwt')->willReturn(true);
 
         $request = new Request();
         $request->headers->set(AuthService::HEADER_JWT, 'not-a.real-jwt');
@@ -203,10 +206,5 @@ final class AuthServiceTest extends TestCase
             'JWT header does not exist' => [$requestNoHeader],
             'JWT header exists but is null' => [$requestHeaderNull],
         ];
-    }
-
-    public function tearDown(): void
-    {
-        m::close();
     }
 }

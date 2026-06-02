@@ -38,23 +38,29 @@ final class UserServiceTest extends TestCase
         $client->setCaseNumber('12345678');
         $client->setCourtDate(new \DateTime('2014-06-06'));
 
-        $email = 'test@tester.co.uk';
-
         $this->em = m::mock(EntityManager::class);
         $this->clientRepository = m::mock(ClientRepository::class);
         $this->userRepository = m::mock(UserRepository::class);
 
-        $this->em->shouldReceive('getRepository')->andReturnUsing(function ($arg) use ($email) {
-            switch ($arg) {
-                case User::class:
-                    return m::mock(EntityRepository::class)->shouldReceive('findOneBy')
-                        ->with(['email' => $email])
-                        ->andReturn(null)
-                        ->getMock();
+        $this->em->shouldReceive('getRepository')->andReturnUsing(
+            function ($arg) {
+                if ($arg !== User::class) {
+                    return null;
+                }
+
+                return m::mock(EntityRepository::class)->shouldReceive('findOneBy')
+                    ->with(['email' => 'test@tester.co.uk'])
+                    ->andReturn(null)
+                    ->getMock();
             }
-        });
+        );
 
         $this->sut = new UserService($this->em, $this->clientRepository, $this->userRepository);
+    }
+
+    public function tearDown(): void
+    {
+        m::close();
     }
 
     /**

@@ -5,149 +5,77 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
 use OPG\Digideps\Backend\Entity\PreRegistration;
-use PHPUnit\Framework\Attributes\Test;
 use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Service\PreRegistrationVerificationService;
-use Mockery as m;
-use Prophecy\PhpUnit\ProphecyTrait;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Serializer\SerializerInterface;
 
-final class PreRegistrationVerificationServiceTest extends WebTestCase
+final class PreRegistrationVerificationServiceTest extends TestCase
 {
-    use ProphecyTrait;
-
     private PreRegistrationVerificationService $preRegistrationVerificationService;
 
-    public static function setUpBeforeClass(): void
-    {
-        static::createClient(['environment' => 'test', 'debug' => false]);
+    private function makePreReg(
+        string $caseNumber,
+        string $clientLastname,
+        string $deputySurname,
+        string $deputyPostCode,
+        string $deputyUid,
+    ): PreRegistration&MockObject {
+        $mock = $this->createMock(PreRegistration::class);
+        $mock->method('getCaseNumber')->willReturn($caseNumber);
+        $mock->method('getClientLastname')->willReturn($clientLastname);
+        $mock->method('getDeputyFirstname')->willReturn('DFirs');
+        $mock->method('getDeputySurname')->willReturn($deputySurname);
+        $mock->method('getDeputyPostCode')->willReturn($deputyPostCode);
+        $mock->method('getDeputyUid')->willReturn($deputyUid);
+
+        return $mock;
     }
 
     public function setUp(): void
     {
-        $crLayHasPC = m::mock(PreRegistration::class)
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('11111111')
-            ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('CSurn')
-            ->shouldReceive('getDeputyFirstname')->withNoArgs()->andReturn('DFirs')
-            ->shouldReceive('getDeputySurname')->withNoArgs()->andReturn('DSurn')
-            ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('DPC123')
-            ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('Dep1')
-            ->getMock();
+        $crLayHasPC   = $this->makePreReg('11111111', 'CSurn', 'DSurn', 'DPC123', 'Dep1');
+        $crLayNoPC    = $this->makePreReg('22222222', 'CSurn', 'DSurn', '', 'MLDA');
+        $preRegMLD1A  = $this->makePreReg('33333333', 'CSurn', 'MLDUnique', 'MLD1AA', 'MLDA');
+        $preRegMLD1B  = $this->makePreReg('33333333', 'CSurn', 'Sibling', 'MLD1BB', 'MLDB');
+        $preRegMLD1C  = $this->makePreReg('33333333', 'CSurn', 'Sibling', 'MLD1BB', 'MLDC');
+        $preRegMLD2A  = $this->makePreReg('44444444', 'CSurn', 'Sibling', 'MLD2AA', 'MLDA');
+        $preRegMLD2B  = $this->makePreReg('44444444', 'CSurn', 'Sibling', '', 'MLDB');
+        $singleLayDep = $this->makePreReg('55555555', 'Smith', 'Jones', 'ABC 123', '10000001');
 
-        $crLayNoPC = m::mock(PreRegistration::class)
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('22222222')
-            ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('CSurn')
-            ->shouldReceive('getDeputyFirstname')->withNoArgs()->andReturn('DFirs')
-            ->shouldReceive('getDeputySurname')->withNoArgs()->andReturn('DSurn')
-            ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('')
-            ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('MLDA')
-            ->getMock();
+        $mockPreRegRepo = $this->createMock(PreRegistrationRepository::class);
+        $mockPreRegRepo->method('findByCaseNumber')->willReturnMap([
+            ['11111111', [$crLayHasPC]],
+            ['22222222', [$crLayNoPC]],
+            ['33333333', [$preRegMLD1A, $preRegMLD1B, $preRegMLD1C]],
+            ['44444444', [$preRegMLD2A, $preRegMLD2B]],
+            ['55555555', [$singleLayDep]],
+            ['12345678', []],
+            ['WRONG678', []],
+        ]);
 
-        // Group MLD1 has a postcode for each of the three deputies
-        $preRegMLD1A = m::mock(PreRegistration::class)
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('33333333')
-            ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('CSurn')
-            ->shouldReceive('getDeputyFirstname')->withNoArgs()->andReturn('DFirs')
-            ->shouldReceive('getDeputySurname')->withNoArgs()->andReturn('MLDUnique')
-            ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('MLD1AA')
-            ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('MLDA')
-            ->getMock();
-
-        $preRegMLD1B = m::mock(PreRegistration::class)
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('33333333')
-            ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('CSurn')
-            ->shouldReceive('getDeputyFirstname')->withNoArgs()->andReturn('DFirs')
-            ->shouldReceive('getDeputySurname')->withNoArgs()->andReturn('Sibling')
-            ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('MLD1BB')
-            ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('MLDB')
-            ->getMock();
-
-        $preRegMLD1C = m::mock(PreRegistration::class)
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('33333333')
-            ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('CSurn')
-            ->shouldReceive('getDeputyFirstname')->withNoArgs()->andReturn('DFirs')
-            ->shouldReceive('getDeputySurname')->withNoArgs()->andReturn('Sibling')
-            ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('MLD1BB')
-            ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('MLDC')
-            ->getMock();
-
-        // Group MLD2 has a missing postcode for one of the two deputies
-        $preRegMLD2A = m::mock(PreRegistration::class)
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('44444444')
-            ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('CSurn')
-            ->shouldReceive('getDeputyFirstname')->withNoArgs()->andReturn('DFirs')
-            ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('MLD2AA')
-            ->shouldReceive('getDeputySurname')->withNoArgs()->andReturn('Sibling')
-            ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('MLDA')
-            ->getMock();
-
-        $preRegMLD2B = m::mock(PreRegistration::class)
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('44444444')
-            ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('CSurn')
-            ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('')
-            ->shouldReceive('getDeputyFirstname')->withNoArgs()->andReturn('DFirs')
-            ->shouldReceive('getDeputySurname')->withNoArgs()->andReturn('Sibling')
-            ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('MLDB')
-            ->getMock();
-
-        $singleLayDeputy = m::mock(PreRegistration::class)
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('getCaseNumber')->withNoArgs()->andReturn('55555555')
-            ->shouldReceive('getClientLastname')->withNoArgs()->andReturn('Smith')
-            ->shouldReceive('getDeputyFirstname')->withNoArgs()->andReturn('DFirs')
-            ->shouldReceive('getDeputySurname')->withNoArgs()->andReturn('Jones')
-            ->shouldReceive('getDeputyPostCode')->withNoArgs()->andReturn('ABC 123')
-            ->shouldReceive('getDeputyUid')->withNoArgs()->andReturn('10000001')
-            ->getMock();
-
-        $mockPreRegRepo = m::mock(PreRegistrationRepository::class)
-            ->shouldIgnoreMissing(true)
-            ->shouldReceive('findByCaseNumber')->with('11111111')->andReturn([$crLayHasPC])
-            ->shouldReceive('findByCaseNumber')->with('22222222')->andReturn([$crLayNoPC])
-            ->shouldReceive('findByCaseNumber')->with('33333333')->andReturn([$preRegMLD1A, $preRegMLD1B, $preRegMLD1C])
-            ->shouldReceive('findByCaseNumber')->with('44444444')->andReturn([$preRegMLD2A, $preRegMLD2B])
-            ->shouldReceive('findByCaseNumber')->with('55555555')->andReturn([$singleLayDeputy])
-            ->shouldReceive('findByCaseNumber')->with('12345678')->andReturn([])
-            ->shouldReceive('findByCaseNumber')->with('WRONG678')->andReturn([])
-            ->getMock();
-
-        $mockUserRepo = m::mock(UserRepository::class);
-
-        $serializer = $this->createMock(SerializerInterface::class);
+        $mockUserRepo = $this->createMock(UserRepository::class);
+        $serializer   = $this->createMock(SerializerInterface::class);
 
         $this->preRegistrationVerificationService = new PreRegistrationVerificationService($serializer, $mockPreRegRepo, $mockUserRepo);
     }
 
-    public function tearDown(): void
-    {
-        m::close();
-    }
 
-    #[Test]
-    public function isMultiDeputyCase(): void
+    public function testIsMultiDeputyCase(): void
     {
         $this->assertFalse($this->preRegistrationVerificationService->isMultiDeputyCase('11111111'));
         $this->assertTrue($this->preRegistrationVerificationService->isMultiDeputyCase('33333333'));
         $this->assertTrue($this->preRegistrationVerificationService->isMultiDeputyCase('44444444'));
     }
 
-    #[Test]
-    public function validateCaseInsensitive(): void
+    public function testValidateCaseInsensitive(): void
     {
         $this->assertCount(1, $this->preRegistrationVerificationService->validate('11111111', 'csurn', 'DFIRS', 'DSURN', 'dPc123'));
     }
 
-    #[Test]
-    public function validateNonMLDWithPostcode(): void
+    public function testValidateNonMLDWithPostcode(): void
     {
         $this->assertCount(1, $this->preRegistrationVerificationService->validate('11111111', 'CSurn', 'Dfirs', 'DSurn', 'DPC123'));
 
@@ -226,26 +154,22 @@ final class PreRegistrationVerificationServiceTest extends WebTestCase
         }
     }
 
-    #[Test]
-    public function validateNonMLDWithNoPostcode(): void
+    public function testValidateNonMLDWithNoPostcode(): void
     {
         $this->assertCount(1, $this->preRegistrationVerificationService->validate('22222222', 'CSurn', 'DFirs', 'DSurn', ''));
     }
 
-    #[Test]
-    public function validateMLDUnique(): void
+    public function testValidateMLDUnique(): void
     {
         $this->assertCount(1, $this->preRegistrationVerificationService->validate('33333333', 'CSurn', 'DFirs', 'MLDUnique', 'MLD1AA'));
     }
 
-    #[Test]
-    public function validateSameAddressMLDSiblings(): void
+    public function testValidateSameAddressMLDSiblings(): void
     {
         $this->assertCount(2, $this->preRegistrationVerificationService->validate('33333333', 'CSurn', 'DFirs', 'Sibling', 'MLD1BB'));
     }
 
-    #[Test]
-    public function validateMLDSiblingsMissingPostcode(): void
+    public function testValidateMLDSiblingsMissingPostcode(): void
     {
         // if all MLD postcodes are in preRegistration, the postcode check is run
         try {

@@ -11,10 +11,6 @@ class PredisMock extends Client
 {
     private $data;
 
-    public function __construct()
-    {
-    }
-
     public function set($key, $value): void
     {
         $this->data[$key] = $value;
@@ -22,7 +18,7 @@ class PredisMock extends Client
 
     public function get($key)
     {
-        return isset($this->data[$key]) ? $this->data[$key] : null;
+        return $this->data[$key] ?? null;
     }
 
     public function expire($key, $seconds): void

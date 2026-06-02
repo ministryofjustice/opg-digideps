@@ -54,6 +54,11 @@ final class ReportTest extends KernelTestCase
         $this->em = $kernel->getContainer()->get('doctrine')->getManager();
     }
 
+    public function tearDown(): void
+    {
+        m::close();
+    }
+
     public function testDueDate(): void
     {
         $startDate = new \DateTime('2017-01-01');
