@@ -8,14 +8,11 @@
 const Autosave = {
   fetchFunction: null,
   autosaveForms: [],
+  isAutosaving: false,
 
-  init: function (
-    document,
-    autosavePeriodSecs = 30,
-    fetchFunction = fetch
-  ) {
-    this.fetchFunction = fetchFunction
+  init: function (document, fetchFunction, autosavePeriodSecs = 30) {
     this.autosaveForms = document.querySelectorAll('form.js-autosave')
+    this.fetchFunction = fetchFunction
 
     this.autosaveForms.forEach((autosaveForm) => {
       const saveProgressButton = autosaveForm.querySelector('button.js-autosave-save-progress-button')
@@ -52,7 +49,7 @@ const Autosave = {
   },
 
   makeHandler: function (autosaveForm, saveProgressButton, ignoredElements, ignoredElementNames) {
-    return async (e) => {
+    return (e) => {
       // if the event is a change event and came from an ignored element,
       // don't do anything
       if (e.type === 'change' && ignoredElements.some((el) => el === e.target)) {
@@ -60,11 +57,16 @@ const Autosave = {
       }
 
       e.preventDefault()
-      await this.autosave(saveProgressButton, autosaveForm, ignoredElementNames)
+      this.autosave(saveProgressButton, autosaveForm, ignoredElementNames)
     }
   },
 
   autosave: async function (saveProgressButton, autosaveForm, ignoredElementNames) {
+    if (this.isAutosaving) {
+      return false
+    }
+
+    this.isAutosaving = true
     saveProgressButton.disabled = true
 
     const formData = new FormData(autosaveForm)
@@ -80,14 +82,28 @@ const Autosave = {
       formData.delete(name)
     })
 
+    const doneCallback = (function (response) {
+      // check whether the response was a redirect to the login page;
+      // if so, the autosave failed, and the user needs to sign in again:
+      // redirect them to the login URL in the response
+      if (response instanceof Response && response.redirected && response.url.includes('/login')) {
+        window.location.href = response.url
+      }
+
+      this.isAutosaving = false
+      saveProgressButton.disabled = false
+    }).bind(this)
+
     try {
       await this.fetchFunction(autosaveForm.action, {
         method: 'POST',
         body: formData
-      })
+      }).then(doneCallback)
     } finally {
-      saveProgressButton.disabled = false
+      doneCallback()
     }
+
+    return true
   }
 }
 
