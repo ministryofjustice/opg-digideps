@@ -8,6 +8,10 @@ resource "aws_instance" "ssm_ec2" {
   user_data_base64            = base64encode(file("${path.module}/boot.sh"))
   user_data_replace_on_change = true
   associate_public_ip_address = false
+  disable_api_termination     = true
+  metadata_options {
+    http_tokens = "required"
+  }
 
   tags = merge(var.tags, {
     Name        = "ssm-${var.name}-instance",
@@ -32,7 +36,7 @@ resource "aws_security_group_rule" "https_ssm_egress" {
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
+  cidr_blocks       = ["10.172.0.0/16"]
   security_group_id = aws_security_group.ssm_instance_sg.id
 }
 
