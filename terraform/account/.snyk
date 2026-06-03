@@ -1,0 +1,12 @@
+ignore:
+  SNYK-CC-TF-127:
+    - '*':
+        reason: "MFA delete intentionally disabled to avoid breaking service accounts"
+
+  SNYK-CC-TF-45:
+    - '*':
+        reason: "S3 access logging intentionally disabled because this bucket is development-only and only contains dev data"
+
+  SNYK-CC-TF-55:
+    - '*':
+        reason: "SNS encryption intentionally not enabled because Can't do cross region SNS encryption"
