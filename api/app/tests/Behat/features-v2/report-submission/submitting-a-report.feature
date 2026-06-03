@@ -43,13 +43,23 @@ Feature: Submitting a report
         And I submit my report
         Then my report should be submitted
 
-  @lay-pfa-high-completed
-  Scenario: Submitting a completed report using new template
-    Given a Lay Deputy has a completed report
-    And I visit the report overview page
-    When I preview and check the report using the new template
-    And I continue to declaration and submission
-    And I confirm I agree to the declaration
-    And I confirm I am the sole deputy
-    And I submit my report
-    Then my report should be submitted
+    @lay-pfa-high-completed
+    Scenario: Submitting a completed report using new template
+      Given a Lay Deputy has a completed report
+      And I visit the report overview page
+      When I preview and check the report using the new template
+      And I continue to declaration and submission
+      And I confirm I agree to the declaration
+      And I confirm I am the sole deputy
+      And I submit my report
+      Then my report should be submitted
+
+    @prof-pfa-low-completed
+    Scenario: Submitting a completed report for a Prof displays next years report on the dashboard
+      Given a Professional Admin has completed a Pfa Low Assets report
+      And I visit the report overview page
+      Given I follow the submission process to the declaration page for current report
+      And I fill in the declaration page and submit the report
+      Then my report should be submitted
+      And I visit the org dashboard page
+      Then there should be 1 reports on the org dashboard page
