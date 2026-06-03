@@ -318,6 +318,7 @@ jobs:
       account_name: development
       task_name: "reset_database"
       timeout: "500"
+      retry_on_fail: true
 
   smoke_tests:
     name: smoke tests
@@ -334,6 +335,7 @@ jobs:
       account_name: development
       task_name: "smoke_tests"
       timeout: "900"
+      retry_on_fail: true
 
   end_to_end_tests_1:
     name: end to end tests frontend 1

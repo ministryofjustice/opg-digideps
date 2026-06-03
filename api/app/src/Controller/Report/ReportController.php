@@ -356,7 +356,10 @@ class ReportController extends RestController
         }
 
         if (array_key_exists('no_asset_to_add', $data)) {
-            $report->setNoAssetToAdd($data['no_asset_to_add']);
+            /** @var ?bool $noAssetToAdd */
+            $noAssetToAdd = $data['no_asset_to_add'];
+            $report->setNoAssetToAdd($noAssetToAdd);
+
             if ($report->getNoAssetToAdd()) {
                 foreach ($report->getAssets() as $asset) {
                     $this->em->remove($asset);
@@ -375,7 +378,10 @@ class ReportController extends RestController
                     $this->em->remove($e);
                 }
             }
-            $report->setNoTransfersToAdd($data['no_transfers_to_add']);
+
+            /** @var ?bool $noTransfersToAdd */
+            $noTransfersToAdd = $data['no_transfers_to_add'];
+            $report->setNoTransfersToAdd($noTransfersToAdd);
             $report->updateSectionsStatusCache([
                 Report::SECTION_MONEY_TRANSFERS,
             ]);

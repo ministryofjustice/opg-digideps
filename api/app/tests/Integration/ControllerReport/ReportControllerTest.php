@@ -676,9 +676,9 @@ class ReportControllerTest extends AbstractTestController
 
     public function testMoneyCategories(): void
     {
-        $url = '/report/' . self::$report103->getId();
-
         self::$report103 = self::fixtures()->getReportById(self::$report103->getId()) ?? throw new \LogicException('Bad fixture setup');
+
+        $url = '/report/' . self::$report103->getId();
 
         $this->assertCount(15, self::$report103->getMoneyShortCategories());
 

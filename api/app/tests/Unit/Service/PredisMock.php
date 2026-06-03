@@ -2,31 +2,33 @@
 
 declare(strict_types=1);
 
-namespace Tests\OPG\Digideps\Backend\Unit\Service\BruteForce;
+namespace Tests\OPG\Digideps\Backend\Unit\Service;
 
 use Predis\Client;
 
 // create a simple predis Mock to just return keys
 class PredisMock extends Client
 {
-    private $data;
+    private array $data = [];
 
-    public function __construct()
-    {
-    }
+    /** @var array<array> $calls */
+    public array $calls = [];
 
-    public function set($key, $value): void
+    public function set(string $key, mixed $value): void
     {
+        $this->calls[] = ['set', $key];
         $this->data[$key] = $value;
     }
 
-    public function get($key)
+    public function get(string $key): mixed
     {
-        return isset($this->data[$key]) ? $this->data[$key] : null;
+        $this->calls[] = ['get', $key];
+        return $this->data[$key] ?? null;
     }
 
-    public function expire($key, $seconds): void
+    public function expire(string $key, int $seconds): void
     {
+        $this->calls[] = ['expire', $key, $seconds];
         if (!isset($this->data[$key])) {
             throw new \InvalidArgumentException("key $key not set");
         }

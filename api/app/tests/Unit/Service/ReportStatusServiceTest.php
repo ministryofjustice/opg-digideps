@@ -33,6 +33,11 @@ final class ReportStatusServiceTest extends TestCase
 
     private Report&MockObject $report;
 
+    public function tearDown(): void
+    {
+        m::close();
+    }
+
     #[DataProvider('decisionsProvider')]
     #[Test]
     public function decisions(array $mocks, string $state): void
