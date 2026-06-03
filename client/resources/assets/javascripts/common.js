@@ -58,7 +58,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   ToggleRequired.init(document)
 
-  Autosave.init(document, window.fetch.bind(window), 30)
+  Autosave.init(window, 30)
 
   // Error summaries
   const errorSummaries = document.querySelector('#error-summary')

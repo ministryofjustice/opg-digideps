@@ -9,9 +9,16 @@ const Autosave = {
   fetchFunction: null,
   autosaveForms: [],
   isAutosaving: false,
+  window: null,
 
-  init: function (document, fetchFunction, autosavePeriodSecs = 30) {
-    this.autosaveForms = document.querySelectorAll('form.js-autosave')
+  init: function (window, autosavePeriodSecs, fetchFunction) {
+    this.window = window
+    this.isAutosaving = false
+    this.autosaveForms = window.document.querySelectorAll('form.js-autosave')
+
+    if (fetchFunction === undefined) {
+      fetchFunction = window.fetch.bind(window)
+    }
     this.fetchFunction = fetchFunction
 
     this.autosaveForms.forEach((autosaveForm) => {
@@ -49,7 +56,7 @@ const Autosave = {
   },
 
   makeHandler: function (autosaveForm, saveProgressButton, ignoredElements, ignoredElementNames) {
-    return (e) => {
+    return async (e) => {
       // if the event is a change event and came from an ignored element,
       // don't do anything
       if (e.type === 'change' && ignoredElements.some((el) => el === e.target)) {
@@ -57,7 +64,8 @@ const Autosave = {
       }
 
       e.preventDefault()
-      this.autosave(saveProgressButton, autosaveForm, ignoredElementNames)
+
+      return this.autosave(saveProgressButton, autosaveForm, ignoredElementNames)
     }
   },
 
@@ -83,15 +91,15 @@ const Autosave = {
     })
 
     const doneCallback = (function (response) {
+      this.isAutosaving = false
+      saveProgressButton.disabled = false
+
       // check whether the response was a redirect to the login page;
       // if so, the autosave failed, and the user needs to sign in again:
       // redirect them to the login URL in the response
-      if (response instanceof Response && response.redirected && response.url.includes('/login')) {
-        window.location.href = response.url
+      if (response && response.redirected && response.url.includes('/login')) {
+        this.window.location.href = response.url
       }
-
-      this.isAutosaving = false
-      saveProgressButton.disabled = false
     }).bind(this)
 
     try {
@@ -99,7 +107,7 @@ const Autosave = {
         method: 'POST',
         body: formData
       }).then(doneCallback)
-    } finally {
+    } catch (e) {
       doneCallback()
     }
 
