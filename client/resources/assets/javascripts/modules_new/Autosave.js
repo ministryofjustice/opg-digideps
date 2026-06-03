@@ -90,7 +90,7 @@ const Autosave = {
       formData.delete(name)
     })
 
-    const doneCallback = (function (response) {
+    const doneCallback = function (response) {
       this.isAutosaving = false
       saveProgressButton.disabled = false
 
@@ -100,7 +100,7 @@ const Autosave = {
       if (response && response.redirected && response.url.includes('/login')) {
         this.window.location.href = response.url
       }
-    }).bind(this)
+    }.bind(this)
 
     try {
       await this.fetchFunction(autosaveForm.action, {
