@@ -1,7 +1,8 @@
 # Create role for running experiments
 resource "aws_iam_role" "fault_injection_simulator" {
-  name               = "fault-injection-simulator-${local.environment}"
-  assume_role_policy = data.aws_iam_policy_document.fault_injection_simulator_assume.json
+  name                 = "fault-injection-simulator-${local.environment}"
+  permissions_boundary = data.aws_iam_policy.default_boundary.arn
+  assume_role_policy   = data.aws_iam_policy_document.fault_injection_simulator_assume.json
 }
 
 data "aws_iam_policy_document" "fault_injection_simulator_assume" {
@@ -66,8 +67,9 @@ data "aws_iam_policy_document" "fault_injection_simulator_create_fis_service_lin
 
 # Create role for registering instance
 resource "aws_iam_role" "ssm_register_instance" {
-  name               = "ssm-register-instance-${local.environment}"
-  assume_role_policy = data.aws_iam_policy_document.ssm_register_instance_assume.json
+  name                 = "ssm-register-instance-${local.environment}"
+  permissions_boundary = data.aws_iam_policy.default_boundary.arn
+  assume_role_policy   = data.aws_iam_policy_document.ssm_register_instance_assume.json
 }
 
 data "aws_iam_policy_document" "ssm_register_instance_assume" {
