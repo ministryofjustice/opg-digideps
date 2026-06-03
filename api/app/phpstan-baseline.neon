@@ -1363,18 +1363,6 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
-			message: '#^Parameter \#1 \$noAssetToAdd of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setNoAssetToAdd\(\) expects bool, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
-			message: '#^Parameter \#1 \$noTransfersToAdd of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setNoTransfersToAdd\(\) expects bool, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
 			message: '#^Parameter \#1 \$object of method Doctrine\\Persistence\\ObjectManager\:\:remove\(\) expects object, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -5179,18 +5167,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$noAssetToAdd \(bool\) does not accept null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$noTransfersToAdd \(bool\) does not accept null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$profDeputyCostsEstimateHowCharged \(string\) does not accept mixed\.$#'
 			identifier: assign.propertyType
 			count: 1
@@ -5570,12 +5546,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$giftsExist of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setGiftsExist\(\) expects string, null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/EventListener/DoctrineListener.php
-
-		-
-			message: '#^Parameter \#1 \$noAssetToAdd of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setNoAssetToAdd\(\) expects bool, null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/EventListener/DoctrineListener.php
@@ -36823,72 +36793,6 @@ parameters:
 			path: tests/Unit/Factory/OrganisationFactoryTest.php
 
 		-
-			message: '#^Cannot call method andReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Unit/MockeryStub.php
-
-		-
-			message: '#^Cannot call method shouldReceive\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Unit/MockeryStub.php
-
-		-
-			message: '#^Cannot call method withArgs\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/MockeryStub.php
-
-		-
-			message: '#^Cannot call method withNoArgs\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Unit/MockeryStub.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Unit\\MockeryStub\:\:chainMock\(\) has parameter \$andReturn with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Unit/MockeryStub.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Unit\\MockeryStub\:\:chainMock\(\) has parameter \$mock with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Unit/MockeryStub.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Unit\\MockeryStub\:\:mockShouldReceiveAndReturn\(\) has parameter \$andReturn with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Unit/MockeryStub.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Unit\\MockeryStub\:\:mockShouldReceiveAndReturn\(\) has parameter \$mock with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Unit/MockeryStub.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Unit\\MockeryStub\:\:stub\(\) should return Mockery\\MockInterface&T but returns class\-string\<T\>\|Mockery\\MockInterface\.$#'
-			identifier: return.type
-			count: 1
-			path: tests/Unit/MockeryStub.php
-
-		-
-			message: '#^Parameter \#2 \$shouldReceive of static method Tests\\OPG\\Digideps\\Backend\\Unit\\MockeryStub\:\:mockShouldReceiveAndReturn\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Unit/MockeryStub.php
-
-		-
-			message: '#^Variable \$lastMock might not be defined\.$#'
-			identifier: variable.undefined
-			count: 1
-			path: tests/Unit/MockeryStub.php
-
-		-
 			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:expects\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -36921,7 +36825,7 @@ parameters:
 		-
 			message: '#^Call to an undefined method Doctrine\\ORM\\EntityManager\|Mockery\\MockInterface\:\:shouldReceive\(\)\.$#'
 			identifier: method.notFound
-			count: 2
+			count: 1
 			path: tests/Unit/Repository/ReportRepositoryTest.php
 
 		-
@@ -37339,60 +37243,6 @@ parameters:
 			path: tests/Unit/Service/Audit/AuditEventsTest.php
 
 		-
-			message: '#^Call to an undefined method Mockery\\MockInterface\|OPG\\Digideps\\Backend\\Repository\\UserRepository\:\:shouldReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 5
-			path: tests/Unit/Service/Auth/AuthServiceTest.php
-
-		-
-			message: '#^Call to an undefined method Mockery\\MockInterface\|OPG\\Digideps\\Backend\\Service\\JWT\\JWTService\:\:shouldReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/Service/Auth/AuthServiceTest.php
-
-		-
-			message: '#^Call to an undefined method Mockery\\MockInterface\|Psr\\Log\\LoggerInterface\:\:shouldReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: tests/Unit/Service/Auth/AuthServiceTest.php
-
-		-
-			message: '#^Call to an undefined method Mockery\\MockInterface\|Symfony\\Component\\PasswordHasher\\Hasher\\UserPasswordHasherInterface\:\:shouldReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 2
-			path: tests/Unit/Service/Auth/AuthServiceTest.php
-
-		-
-			message: '#^Parameter \#1 \$logger of class OPG\\Digideps\\Backend\\Service\\Auth\\AuthService constructor expects Psr\\Log\\LoggerInterface, Mockery\\MockInterface\|Psr\\Log\\LoggerInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Auth/AuthServiceTest.php
-
-		-
-			message: '#^Parameter \#2 \$userRepository of class OPG\\Digideps\\Backend\\Service\\Auth\\AuthService constructor expects OPG\\Digideps\\Backend\\Repository\\UserRepository, Mockery\\MockInterface\|OPG\\Digideps\\Backend\\Repository\\UserRepository given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Auth/AuthServiceTest.php
-
-		-
-			message: '#^Parameter \#5 \$JWTService of class OPG\\Digideps\\Backend\\Service\\Auth\\AuthService constructor expects OPG\\Digideps\\Backend\\Service\\JWT\\JWTService, Mockery\\MockInterface\|OPG\\Digideps\\Backend\\Service\\JWT\\JWTService given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Auth/AuthServiceTest.php
-
-		-
-			message: '#^Parameter \#6 \$passwordHasher of class OPG\\Digideps\\Backend\\Service\\Auth\\AuthService constructor expects Symfony\\Component\\PasswordHasher\\Hasher\\UserPasswordHasherInterface, Mockery\\MockInterface\|Symfony\\Component\\PasswordHasher\\Hasher\\UserPasswordHasherInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/Auth/AuthServiceTest.php
-
-		-
-			message: '#^Method Mockery\\Expectation\:\:atLeast\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 2
-			path: tests/Unit/Service/Auth/UserProviderTest.php
-
-		-
 			message: '#^Cannot call method maxAttemptsReached\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -37403,60 +37253,6 @@ parameters:
 			identifier: offsetAccess.nonArray
 			count: 1
 			path: tests/Unit/Service/BruteForce/AttemptsInTimeCheckerTest.php
-
-		-
-			message: '#^Cannot access offset mixed on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 3
-			path: tests/Unit/Service/BruteForce/PredisMock.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\BruteForce\\PredisMock\:\:expire\(\) has parameter \$key with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Unit/Service/BruteForce/PredisMock.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\BruteForce\\PredisMock\:\:expire\(\) has parameter \$seconds with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Unit/Service/BruteForce/PredisMock.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\BruteForce\\PredisMock\:\:get\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Service/BruteForce/PredisMock.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\BruteForce\\PredisMock\:\:get\(\) has parameter \$key with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Unit/Service/BruteForce/PredisMock.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\BruteForce\\PredisMock\:\:set\(\) has parameter \$key with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Unit/Service/BruteForce/PredisMock.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\BruteForce\\PredisMock\:\:set\(\) has parameter \$value with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Unit/Service/BruteForce/PredisMock.php
-
-		-
-			message: '#^Part \$key \(mixed\) of encapsed string cannot be cast to string\.$#'
-			identifier: encapsedStringPart.nonString
-			count: 1
-			path: tests/Unit/Service/BruteForce/PredisMock.php
-
-		-
-			message: '#^Property Tests\\OPG\\Digideps\\Backend\\Unit\\Service\\BruteForce\\PredisMock\:\:\$data has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: tests/Unit/Service/BruteForce/PredisMock.php
 
 		-
 			message: '#^Call to an undefined method Aws\\Result\|Prophecy\\Prophecy\\MethodProphecy\:\:willThrow\(\)\.$#'
@@ -37715,72 +37511,6 @@ parameters:
 			identifier: missingType.generics
 			count: 1
 			path: tests/Unit/Service/OrganisationRestHandlerTest.php
-
-		-
-			message: '#^Call to an undefined method Mockery\\Expectation\:\:shouldReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 9
-			path: tests/Unit/Service/PreRegistrationVerificationServiceTest.php
-
-		-
-			message: '#^Cannot call method andReturn\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 46
-			path: tests/Unit/Service/PreRegistrationVerificationServiceTest.php
-
-		-
-			message: '#^Cannot call method getMock\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 9
-			path: tests/Unit/Service/PreRegistrationVerificationServiceTest.php
-
-		-
-			message: '#^Cannot call method shouldReceive\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 37
-			path: tests/Unit/Service/PreRegistrationVerificationServiceTest.php
-
-		-
-			message: '#^Cannot call method with\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 6
-			path: tests/Unit/Service/PreRegistrationVerificationServiceTest.php
-
-		-
-			message: '#^Cannot call method withNoArgs\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 40
-			path: tests/Unit/Service/PreRegistrationVerificationServiceTest.php
-
-		-
-			message: '#^Parameter \#2 \$preRegistrationRepository of class OPG\\Digideps\\Backend\\Service\\PreRegistrationVerificationService constructor expects OPG\\Digideps\\Backend\\Repository\\PreRegistrationRepository, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/PreRegistrationVerificationServiceTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityManager\|Mockery\\MockInterface\:\:shouldNotReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: tests/Unit/Service/ReportServiceTest.php
-
-		-
-			message: '#^Call to an undefined method Doctrine\\ORM\\EntityManager\|Mockery\\MockInterface\:\:shouldReceive\(\)\.$#'
-			identifier: method.notFound
-			count: 19
-			path: tests/Unit/Service/ReportServiceTest.php
-
-		-
-			message: '#^Call to an undefined method Mockery\\Expectation\:\:willReturn\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/Service/ReportServiceTest.php
-
-		-
-			message: '#^Call to an undefined method Mockery\\MockInterface\|OPG\\Digideps\\Backend\\Repository\\PreRegistrationRepository\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/Service/ReportServiceTest.php
 
 		-
 			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Repository\\PreRegistrationRepository\|Prophecy\\Prophecy\\ObjectProphecy\:\:reveal\(\)\.$#'
