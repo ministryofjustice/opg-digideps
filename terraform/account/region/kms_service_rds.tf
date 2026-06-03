@@ -74,7 +74,9 @@ data "aws_iam_policy_document" "kms_rds" {
       "kms:GenerateDataKey*",
       "kms:CreateGrant",
       "kms:ListGrants",
-      "kms:RevokeGrant"
+      "kms:RevokeGrant",
+      "kms:Encrypt",
+      "kms:ReEncryptTo"
     ]
     resources = ["*"]
 
