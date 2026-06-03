@@ -1,6 +1,6 @@
-import { beforeEach, describe, expect, it } from "@jest/globals";
-import fetchMock from "jest-fetch-mock";
-import Autosave from "../../modules_new/Autosave";
+import { beforeEach, describe, expect, it } from '@jest/globals'
+import fetchMock from 'jest-fetch-mock'
+import Autosave from '../../modules_new/Autosave'
 
 fetchMock.enableMocks()
 
@@ -109,7 +109,7 @@ describe('Form autosave', () => {
       return Promise.resolve({ redirected: true, url: loginUrl })
     }
 
-    let mockWindow = {
+    const mockWindow = {
       document: document,
       location: {
         href: null
