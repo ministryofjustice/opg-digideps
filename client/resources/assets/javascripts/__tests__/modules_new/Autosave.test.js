@@ -1,8 +1,11 @@
-import { beforeEach, describe, expect, it } from '@jest/globals'
-import fetchMock from 'jest-fetch-mock'
-import Autosave from '../../modules_new/Autosave'
+import { beforeEach, describe, expect, it } from "@jest/globals";
+import fetchMock from "jest-fetch-mock";
+import Autosave from "../../modules_new/Autosave";
 
 fetchMock.enableMocks()
+
+// provides a way to ensure all promises are resolved before continuing
+const flushPromises = () => new Promise((resolve) => setTimeout(resolve, 0))
 
 describe('Form autosave', () => {
   beforeEach(() => {
@@ -22,7 +25,7 @@ describe('Form autosave', () => {
 
     fetchMock.mockResponse(JSON.stringify({ status: 200 }))
 
-    Autosave.init(document, fetchMock, 30)
+    Autosave.init(window, 30, fetchMock)
 
     // change a value in a text input; event must bubble to reach the listener
     // attached to the parent form
@@ -50,7 +53,7 @@ describe('Form autosave', () => {
 
     fetchMock.mockResponse(JSON.stringify({ status: 200 }))
 
-    Autosave.init(document, fetchMock, 30)
+    Autosave.init(window, 30, fetchMock)
 
     // set a value for the personName (but don't trigger the change event)
     const nameInput = document.querySelector('input[name="personName"]')
@@ -79,7 +82,7 @@ describe('Form autosave', () => {
   it('should save periodically even if change events are not triggered', async () => {
     fetchMock.mockResponse(JSON.stringify({ status: 200 }))
 
-    const autosaver = Autosave.init(document, fetchMock, 0.1)
+    const autosaver = Autosave.init(window, 0.1, fetchMock)
 
     // add a timer to stop the autosave on the form from running for too long
     const form = autosaver.autosaveForms[0]
@@ -97,5 +100,35 @@ describe('Form autosave', () => {
     expect(url).toContain('/save/form')
     expect(options.method).toBe('POST')
     expect(options.body).toBeInstanceOf(FormData)
+  })
+
+  it('should redirect the user to the login page if their session has expired', async () => {
+    const loginUrl = '/login'
+
+    const redirectingFetch = async () => {
+      return Promise.resolve({ redirected: true, url: loginUrl })
+    }
+
+    let mockWindow = {
+      document: document,
+      location: {
+        href: null
+      }
+    }
+
+    Autosave.init(mockWindow, 30, redirectingFetch)
+
+    // change a value in a text input; event must bubble to reach the listener
+    // attached to the parent form
+    const nameInput = document.querySelector('input[name="personName"]')
+    nameInput.value = 'Bill'
+    nameInput.dispatchEvent(new Event('change', { bubbles: true }))
+
+    // flush all pending promises so the async autosave callback completes
+    await flushPromises()
+
+    // confirm that the window's location was changed to the login URL
+    expect(mockWindow.location.href).not.toBe(null)
+    expect(mockWindow.location.href).toBe(loginUrl)
   })
 })
