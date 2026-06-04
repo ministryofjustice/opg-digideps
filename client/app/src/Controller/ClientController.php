@@ -123,6 +123,8 @@ class ClientController extends AbstractController
             return $this->redirectToRoute($route);
         }
         /** @var ?Client $client */
+
+        // TODO select the relevant client by case number, not just the first client!
         $client = $this->clientApi->getFirstClient();
         $existingClientId = 0;
         if (!empty($client)) {
@@ -155,11 +157,13 @@ class ClientController extends AbstractController
 
                 $client->setId($response['id']);
 
-                if (empty($client->getCurrentReport())) {
-                    $report = new Report();
-                    $report->setClient($client);
-                    $this->restClient->post('report', $report);
-                }
+                // TODO don't create report here
+//                if (empty($client->getCurrentReport())) {
+//                    $report = new Report();
+//                    $report->setClient($client);
+//                    $this->restClient->post('report', $report);
+//                }
+                // END: TODO don't create report
 
                 $currentUser = $this->userApi->getUserWithData();
 
