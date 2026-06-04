@@ -89,13 +89,15 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 
         self::$entityManager->persist($courtOrder);
 
-        $deputy = new Deputy();
-        $deputy->setDeputyType(DeputyType::LAY);
+        $deputy = new Deputy(
+            '700761111002',
+            DeputyType::LAY,
+            'John',
+            'Snow'
+        );
         $deputy->setOrganisation(null);
-        $deputy->setFirstname('John');
         $deputy->setLastname('Snow');
         $deputy->setEmail1('john.snow@test.co.uk');
-        $deputy->setDeputyUid('700761111002');
 
         self::$entityManager->persist($deputy);
 
@@ -124,13 +126,14 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
 
         self::$entityManager->persist($courtOrder);
 
-        $deputy = new Deputy();
-        $deputy->setDeputyType(DeputyType::LAY);
+        $deputy = new Deputy(
+            '700761111003',
+            DeputyType::LAY,
+            'John',
+            'Snow'
+        );
         $deputy->setOrganisation(null);
-        $deputy->setFirstname('John');
-        $deputy->setLastname('Snow');
         $deputy->setEmail1('john.snow@test.co.uk');
-        $deputy->setDeputyUid('700761111003');
         self::$entityManager->persist($deputy);
 
         self::$entityManager->flush();
@@ -146,13 +149,14 @@ class DeputyshipsCandidatesSelectorIntegrationTest extends KernelTestCase
     {
         $stagingDeputyshipObject = self::$entityManager->getRepository(StagingDeputyship::class)->findOneBy(['orderUid' => '700000001104', 'deputyUid' => '700761111004']);
 
-        $deputy = new Deputy();
-        $deputy->setDeputyType(DeputyType::LAY);
+        $deputy = new Deputy(
+            '700761111004',
+            DeputyType::LAY,
+            'Stuart',
+            'One'
+        );
         $deputy->setOrganisation(null);
-        $deputy->setFirstname('Stuart');
-        $deputy->setLastname('One');
         $deputy->setEmail1('stuart.one@test.co.uk');
-        $deputy->setDeputyUid('700761111004');
         self::$entityManager->persist($deputy);
 
         $client = ClientTestHelper::create()->generateClient(self::$entityManager, null, null, '61111002');

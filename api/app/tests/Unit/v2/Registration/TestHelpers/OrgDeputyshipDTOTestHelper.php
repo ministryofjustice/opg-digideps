@@ -180,13 +180,14 @@ class OrgDeputyshipDTOTestHelper
 
     public static function ensureDeputyInUploadExists(OrgDeputyshipDto $dto, EntityManager $em): Deputy
     {
-        $deputy = new Deputy()
-            ->setDeputyType(DeputyType::LAY)
+        $deputy = new Deputy(
+            $dto->getDeputyUid(),
+            DeputyType::LAY,
+            $dto->getDeputyFirstname() ?? '',
+            $dto->getDeputyLastname()
+        )
             ->setOrganisation(null)
             ->setEmail1($dto->getDeputyEmail())
-            ->setDeputyUid($dto->getDeputyUid())
-            ->setFirstname($dto->getDeputyFirstname())
-            ->setLastname($dto->getDeputyLastname())
             ->setAddress1($dto->getDeputyAddress1())
             ->setAddress2($dto->getDeputyAddress2())
             ->setAddress3($dto->getDeputyAddress3())

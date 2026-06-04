@@ -180,11 +180,7 @@ class LayUserFixtures extends AbstractDataFixture
 
         if (!in_array($deputyUid, $this->deputyUids)) {
             $this->deputyUids[] = $deputyUid;
-            $this->deputy = new Deputy()
-                ->setDeputyType(DeputyType::LAY)
-                ->setFirstname($data['id'])
-                ->setLastname('User ' . $iteration)
-                ->setDeputyUid($deputyUid)
+            $this->deputy = new Deputy($deputyUid, DeputyType::LAY, $data['id'], 'User ' . $iteration)
                 ->setEmail1(strtolower($data['id']) . '-user-' . $iteration . '@publicguardian.gov.uk')
                 ->setPhoneMain('07911111111111')
                 ->setAddress1('ABC Road')
