@@ -85,6 +85,7 @@ class UserRegistrationService
         $user->setDeputyUid(intval($preregMatches[0]->getDeputyUid()));
         $user->setPreRegisterValidatedDate(new \DateTime('now'));
         $user->setRegistrationRoute(User::SELF_REGISTER);
+        $user->setActive(true);
 
         if (!$this->preRegistrationVerificationService->deputyUidHasOtherUserAccounts($preregMatches[0]->getDeputyUid())) {
             $user->setIsPrimary(true);
