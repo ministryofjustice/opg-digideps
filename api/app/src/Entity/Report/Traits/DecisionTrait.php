@@ -61,7 +61,7 @@ trait DecisionTrait
     /**
      * Set reasonForNoDecisions.
      *
-     * @param string $reasonForNoDecisions
+     * @param ?string $reasonForNoDecisions
      *
      * @return Report
      */

@@ -282,8 +282,9 @@ class ChecklistSyncServiceTest extends TestCase
             )
             ->willReturn($this->getSuccessfulResponse());
 
-        $notSyncedCount = $this->sut->syncChecklistsByReports($reports);
+        ['notSyncedCount' => $notSyncedCount, 'reportIdsWithNullChecklists' => $reportIdsWithNullChecklist] = $this->sut->syncChecklistsByReports($reports);
         self::assertEquals(0, $notSyncedCount, sprintf('Expected $notSyncedCount to be %s, but it was %s', 0, $notSyncedCount));
+        self::assertEquals([], $reportIdsWithNullChecklist, sprintf('Expected $reportIdsWithNullChecklist to be %s, but it was %s', json_encode([]), json_encode($reportIdsWithNullChecklist)));
     }
 
     public function testSyncChecklistsByReportsChecklistsWithPDFErrorsAreSkipped(): void
@@ -347,8 +348,9 @@ class ChecklistSyncServiceTest extends TestCase
             )
             ->willReturn($this->getSuccessfulResponse());
 
-        $notSyncedCount = $this->sut->syncChecklistsByReports($reports);
-        self::assertEquals(1, $notSyncedCount, sprintf('Expected $notSyncedCount to be %s, but it was %s', 1, $notSyncedCount));
+        ['notSyncedCount' => $notSyncedCount, 'reportIdsWithNullChecklists' => $reportIdsWithNullChecklist] = $this->sut->syncChecklistsByReports($reports);
+        self::assertEquals(1, $notSyncedCount, sprintf('Expected $notSyncedCount to be %s, but it was %s', 0, $notSyncedCount));
+        self::assertEquals([], $reportIdsWithNullChecklist, sprintf('Expected $reportIdsWithNullChecklist to be %s, but it was %s', json_encode([]), json_encode($reportIdsWithNullChecklist)));
     }
 
     public function testSyncChecklistsByReportsSiriusSyncErrorChecklistsAreSkipped(): void
@@ -417,8 +419,9 @@ class ChecklistSyncServiceTest extends TestCase
                 )
             );
 
-        $notSyncedCount = $this->sut->syncChecklistsByReports($reports);
+        ['notSyncedCount' => $notSyncedCount, 'reportIdsWithNullChecklists' => $reportIdsWithNullChecklist] = $this->sut->syncChecklistsByReports($reports);
         self::assertEquals(1, $notSyncedCount, sprintf('Expected $notSyncedCount to be %s, but it was %s', 1, $notSyncedCount));
+        self::assertEquals([], $reportIdsWithNullChecklist, sprintf('Expected $reportIdsWithNullChecklist to be %s, but it was %s', json_encode([]), json_encode($reportIdsWithNullChecklist)));
     }
 
     private function generateSubmittedReports(): array

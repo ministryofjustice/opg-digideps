@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Entity\Report;
 
+use Doctrine\ORM\Event\PreRemoveEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Entity\AssetInterface;
 
-#[ORM\Entity]
-#[ORM\HasLifecycleCallbacks]
+#[ORM\Entity, ORM\HasLifecycleCallbacks]
 class AssetProperty extends Asset implements AssetInterface
 {
     public const string OCCUPANTS_OTHER = 'other';
@@ -384,5 +384,13 @@ class AssetProperty extends Asset implements AssetInterface
                 && $asset->getPostcode() === $this->getPostcode();
         }
         return false;
+    }
+
+    #[ORM\PreRemove]
+    public function onPreRemove(PreRemoveEventArgs $_): void
+    {
+        if ($this->getReport()->getAssets()->count() === 1) {
+            $this->getReport()->setNoAssetToAdd(null);
+        }
     }
 }

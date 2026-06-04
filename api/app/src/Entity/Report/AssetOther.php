@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Entity\Report;
 
+use Doctrine\ORM\Event\PreRemoveEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Entity\AssetInterface;
 
-#[ORM\Entity]
+#[ORM\Entity, ORM\HasLifecycleCallbacks]
 class AssetOther extends Asset implements AssetInterface
 {
     /**
@@ -28,7 +29,7 @@ class AssetOther extends Asset implements AssetInterface
     private $description;
 
     /**
-     * @var \DateTime
+     * @var ?\DateTime
      */
     #[JMS\Type('DateTime')]
     #[JMS\Groups(['asset'])]
@@ -62,7 +63,7 @@ class AssetOther extends Asset implements AssetInterface
     /**
      * Set valuationDate.
      *
-     * @param \DateTime $valuationDate
+     * @param ?\DateTime $valuationDate
      *
      * @return Asset
      */
@@ -76,7 +77,7 @@ class AssetOther extends Asset implements AssetInterface
     /**
      * Get valuationDate.
      *
-     * @return \DateTime
+     * @return ?\DateTime
      */
     public function getValuationDate()
     {
@@ -122,5 +123,13 @@ class AssetOther extends Asset implements AssetInterface
     public function isEqual(AssetInterface $asset): bool
     {
         return $asset instanceof AssetOther && $asset->getDescription() === $this->getDescription();
+    }
+
+    #[ORM\PreRemove]
+    public function onPreRemove(PreRemoveEventArgs $_): void
+    {
+        if ($this->getReport()->getAssets()->count() === 1) {
+            $this->getReport()->setNoAssetToAdd(null);
+        }
     }
 }

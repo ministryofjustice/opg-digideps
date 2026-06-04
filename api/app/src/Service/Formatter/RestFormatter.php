@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Service\Formatter;
 
-use OPG\Digideps\Backend\EventListener\RestInputOuputFormatter;
+use OPG\Digideps\Backend\EventListener\RestInputOutputFormatter;
 use OPG\Digideps\Backend\Service\Validator\RestArrayValidator;
 use Symfony\Component\HttpFoundation\Request;
 
 class RestFormatter
 {
-    public function __construct(private readonly RestInputOuputFormatter $formatter, private readonly RestArrayValidator $validator)
+    public function __construct(private readonly RestInputOutputFormatter $formatter, private readonly RestArrayValidator $validator)
     {
     }
 

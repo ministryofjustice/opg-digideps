@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Entity\Report;
 
+use Doctrine\ORM\Event\PreRemoveEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
 
 #[ORM\Table(name: 'contact')]
-#[ORM\Entity]
-#[ORM\HasLifecycleCallbacks]
+#[ORM\Entity, ORM\HasLifecycleCallbacks]
 class Contact
 {
     use CreateUpdateTimestamps;
@@ -349,5 +349,13 @@ class Contact
     public function getCountry()
     {
         return $this->country;
+    }
+
+    #[ORM\PreRemove]
+    public function onPreRemove(PreRemoveEventArgs $_): void
+    {
+        if ($this->getReport()->getContacts()->count() === 1) {
+            $this->getReport()->setReasonForNoContacts(null);
+        }
     }
 }

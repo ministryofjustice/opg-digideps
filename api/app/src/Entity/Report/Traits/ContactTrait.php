@@ -18,7 +18,7 @@ trait ContactTrait
     private $contacts;
 
     /**
-     * @var string deputy reason for not having contacts. Required if no contacts are added
+     * @var ?string deputy reason for not having contacts. Required if no contacts are added
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report'])]
@@ -58,7 +58,7 @@ trait ContactTrait
     /**
      * Set reasonForNoContact.
      *
-     * @param string $reasonForNoContacts
+     * @param ?string $reasonForNoContacts
      *
      * @return Report
      */
@@ -72,7 +72,7 @@ trait ContactTrait
     /**
      * Get reasonForNoContacts.
      *
-     * @return string
+     * @return ?string
      */
     public function getReasonForNoContacts()
     {
