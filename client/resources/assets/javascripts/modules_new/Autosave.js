@@ -105,7 +105,12 @@ const Autosave = {
     await this.fetchFunction(autosaveForm.action, {
       method: 'POST',
       body: formData
-    }).finally(doneCallback)
+    })
+      .then(doneCallback)
+      .catch(() => {
+        this.isAutosaving = false
+        saveProgressButton.disabled = false
+      })
 
     return true
   }
