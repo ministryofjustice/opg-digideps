@@ -7,7 +7,10 @@ use Doctrine\ORM\Tools\Event\GenerateSchemaEventArgs;
 
 class FixDefaultSchemaListener implements EventSubscriber
 {
-    public function getSubscribedEvents()
+    /**
+     * @return array<string>
+     */
+    public function getSubscribedEvents(): array
     {
         return ['postGenerateSchema'];
     }

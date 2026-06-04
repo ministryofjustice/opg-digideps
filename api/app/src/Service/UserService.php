@@ -57,7 +57,7 @@ class UserService
      *
      * @throws OptimisticLockException
      */
-    public function editUser(User $originalUser, User $updatedUser)
+    public function editUser(User $originalUser, User $updatedUser): void
     {
         $this
             ->throwExceptionIfUpdatedEmailExists($originalUser, $updatedUser)
@@ -66,10 +66,7 @@ class UserService
         $this->em->flush();
     }
 
-    /**
-     * @return UserService
-     */
-    private function throwExceptionIfUpdatedEmailExists(User $originalUser, User $updatedUser)
+    private function throwExceptionIfUpdatedEmailExists(User $originalUser, User $updatedUser): UserService
     {
         if ($originalUser->getEmail() != $updatedUser->getEmail()) {
             $this->exceptionIfEmailExist($updatedUser->getEmail());
@@ -81,7 +78,7 @@ class UserService
     /**
      * @return UserService
      */
-    private function throwExceptionIfUserChangesRoleType(User $originalUser, User $updatedUser)
+    private function throwExceptionIfUserChangesRoleType(User $originalUser, User $updatedUser): UserService
     {
         $adminBefore = in_array($originalUser->getRoleName(), User::$adminRoles);
         $adminAfter = in_array($updatedUser->getRoleName(), User::$adminRoles);
@@ -93,7 +90,7 @@ class UserService
         return $this;
     }
 
-    private function exceptionIfEmailExist($email)
+    private function exceptionIfEmailExist($email): void
     {
         if ($this->userRepository->findOneBy(['email' => $email])) {
             throw new \RuntimeException("User with email {$email} already exists.", 422);

@@ -16,7 +16,7 @@ class ResyncResubmittableErrorChecklists extends Command
         parent::__construct();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
             $updatedChecklists = $this->checklistRepository->getResubmittableErrorChecklistsAndSetToQueued('100');

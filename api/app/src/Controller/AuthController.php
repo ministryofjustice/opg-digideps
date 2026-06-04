@@ -40,7 +40,7 @@ class AuthController extends RestController
         RestInputOutputFormatter $restInputOutputFormatter,
         EntityManagerInterface $em,
         ClientInterface $redis,
-    ) {
+    ): User {
         try {
             // See LoginRequestAuthenticator and RegistrationTokenAuthenticator for checks. User is set in token storage on successful authentication via Symfony event
             $token = $this->tokenStorage->getToken();

@@ -11,7 +11,7 @@ class RestArrayValidator
      *
      * @throws \InvalidArgumentException
      */
-    public function validateArray(array $data, array $assertions = [])
+    public function validateArray(array $data, array $assertions = []): void
     {
         $errors = [];
 
