@@ -18,6 +18,12 @@ final class EntityTest extends TestCase
         $this->testEntity($deputy);
     }
 
+    public function testReportValidOnConstruction(): void
+    {
+        $report = new Report(new Client(), '102', new \DateTime(), new \DateTime(), false);
+        $this->testEntity($report);
+    }
+
     private function testEntity(object $entity): void
     {
         $errors = [];

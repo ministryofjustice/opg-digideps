@@ -163,7 +163,7 @@ class DocumentRepositoryTest extends KernelTestCase
         self::assertEquals($document->isReportPdf(), $documents[$docId]['is_report_pdf']);
         self::assertEquals($document->getStorageReference(), $documents[$docId]['storage_reference']);
         self::assertEquals($report->getStartDate()->format('Y-m-d'), $documents[$docId]['report_start_date']);
-        self::assertEquals($report->getSubmitDate()->format('Y-m-d H:i:s'), $documents[$docId]['report_submit_date']);
+        self::assertEquals($report->getSubmitDate()?->format('Y-m-d H:i:s'), $documents[$docId]['report_submit_date']);
         self::assertEquals($submission->getUuid(), $documents[$docId]['report_submission_uuid']);
 
         if ($report instanceof Report) {

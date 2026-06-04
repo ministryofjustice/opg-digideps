@@ -29,7 +29,7 @@ trait MoneyShortTrait
     private Collection $moneyTransactionsShort;
 
     /**
-     * @var ?string 'yes'|'no'|null
+     * 'yes'|'no'|null
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['moneyShortCategoriesIn'])]
@@ -37,7 +37,7 @@ trait MoneyShortTrait
     private ?string $moneyTransactionsShortInExist = null;
 
     /**
-     * @var ?string 'yes'|'no'|null
+     * 'yes'|'no'|null
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['moneyShortCategoriesOut'])]
@@ -101,15 +101,12 @@ trait MoneyShortTrait
     /**
      *  @param Collection<int, MoneyShortCategory> $moneyShortCategories
      */
-    public function setMoneyShortCategories(Collection $moneyShortCategories)
+    public function setMoneyShortCategories(Collection $moneyShortCategories): void
     {
         $this->moneyShortCategories = $moneyShortCategories;
     }
 
-    /**
-     * @return ?MoneyShortCategory
-     */
-    public function getMoneyShortCategoryByTypeId(string $typeId)
+    public function getMoneyShortCategoryByTypeId(string $typeId): ?MoneyShortCategory
     {
         $categories = $this->moneyShortCategories->filter(function ($e) use ($typeId): bool {
             return $e->getTypeId() == $typeId;
@@ -124,14 +121,6 @@ trait MoneyShortTrait
     public function getMoneyTransactionsShort(): Collection
     {
         return $this->moneyTransactionsShort;
-    }
-
-    /**
-     * @param Collection<int, MoneyTransactionShort> $moneyTransactionsShort
-     */
-    public function setMoneyTransactionsShort(Collection $moneyTransactionsShort): void
-    {
-        $this->moneyTransactionsShort = $moneyTransactionsShort;
     }
 
     /**
@@ -153,7 +142,7 @@ trait MoneyShortTrait
     #[JMS\Groups(['moneyTransactionsShortOut'])]
     public function getMoneyTransactionsShortOut(): Collection
     {
-        return $this->moneyTransactionsShort->filter(fn (MoneyTransactionShort $t): bool => $t instanceof MoneyTransactionShortOut);
+        return $this->moneyTransactionsShort->filter(fn (MoneyTransactionShort $t): bool => $t instanceof MoneyTransactionShortOut && $t->isDeleted());
     }
 
     public function getMoneyTransactionsShortInExist(): ?string
@@ -171,7 +160,7 @@ trait MoneyShortTrait
         return $this->moneyTransactionsShortOutExist;
     }
 
-    public function setMoneyTransactionsShortOutExist(string $moneyTransactionsShortOutExist): void
+    public function setMoneyTransactionsShortOutExist(?string $moneyTransactionsShortOutExist): void
     {
         $this->moneyTransactionsShortOutExist = $moneyTransactionsShortOutExist;
     }
