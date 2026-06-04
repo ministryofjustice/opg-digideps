@@ -4,7 +4,7 @@ import Autosave from '../../modules_new/Autosave'
 
 fetchMock.enableMocks()
 
-// provides a way to ensure all promises are resolved before continuing
+// ensure all promises are resolved before continuing
 const flushPromises = () => new Promise((resolve) => setTimeout(resolve, 0))
 
 describe('Form autosave', () => {
