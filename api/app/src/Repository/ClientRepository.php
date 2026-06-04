@@ -28,7 +28,7 @@ class ClientRepository extends ServiceEntityRepository
      *
      * @return Client[]|array
      */
-    public function searchClients($query = '', string $orderBy = 'lastname', $sortOrder = 'ASC', $limit = 100, $offset = 0)
+    public function searchClients($query = '', string $orderBy = 'lastname', $sortOrder = 'ASC', $limit = 100, $offset = 0): array
     {
         /** @var SoftDeleteableFilter $filter */
         $filter = $this->_em->getFilters()->getFilter('softdeleteable');
@@ -98,7 +98,7 @@ class ClientRepository extends ServiceEntityRepository
     /**
      * @return array<mixed>|null
      */
-    public function getArrayByCaseNumber($caseNumber)
+    public function getArrayByCaseNumber($caseNumber): ?array
     {
         $table = Client::class;
         $query = $this
@@ -225,7 +225,7 @@ class ClientRepository extends ServiceEntityRepository
      * @return mixed|null
      * @throws Exception
      */
-    public function findExistingDeputyCases(string $caseNumber, string $deputyUid, ?string $excludeEmail = null)
+    public function findExistingDeputyCases(string $caseNumber, string $deputyUid, ?string $excludeEmail = null): mixed
     {
         $deputyCaseQuery = '
                 SELECT dc.client_id, dc.user_id

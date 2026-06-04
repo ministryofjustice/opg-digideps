@@ -12,9 +12,6 @@ class ReportSubmissionSummaryTransformer
     {
     }
 
-    /**
-     * @return array
-     */
     public function transform(array $reportSubmissions): array
     {
         $ret = [];
@@ -39,9 +36,6 @@ class ReportSubmissionSummaryTransformer
         ];
     }
 
-    /**
-     * @return int
-     */
     private function getId(ReportSubmission $reportSubmission): int
     {
         return $reportSubmission->getId();
@@ -55,7 +49,7 @@ class ReportSubmissionSummaryTransformer
     /**
      * @return string|null
      */
-    private function getDateReceived(ReportSubmission $reportSubmission)
+    private function getDateReceived(ReportSubmission $reportSubmission): ?string
     {
         return $this->outputDate($reportSubmission->getCreatedOn());
     }
@@ -63,21 +57,19 @@ class ReportSubmissionSummaryTransformer
     /**
      * @return string|null
      */
-    private function getScanDate()
+    private function getScanDate(): ?string
     {
         return $this->outputDate($this->dateTimeProvider->getDateTime());
     }
 
-    /**
-     * @return string|null
-     */
-    private function getDocumentId(ReportSubmission $reportSubmission)
+    private function getDocumentId(ReportSubmission $reportSubmission): ?string
     {
         foreach ($reportSubmission->getDocuments() as $document) {
             if ($document->isReportPdf() && substr($document->getFileName(), -4) === '.pdf') {
                 return $document->getFileName();
             }
         }
+        return null;
     }
 
     /**
@@ -99,7 +91,7 @@ class ReportSubmissionSummaryTransformer
     /**
      * @return string|null
      */
-    private function outputDate(?\DateTime $date)
+    private function outputDate(?\DateTime $date): ?string
     {
         return ($date instanceof \DateTime) ? $date->format('Y-m-d') : null;
     }

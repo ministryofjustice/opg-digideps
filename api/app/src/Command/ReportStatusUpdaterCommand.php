@@ -24,7 +24,7 @@ class ReportStatusUpdaterCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('digideps:report-status-update')
@@ -32,7 +32,7 @@ class ReportStatusUpdaterCommand extends Command
             ->setDescription('update report status when missing');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $limit = $input->getOption('limit');
         $em = $this->entityManager;

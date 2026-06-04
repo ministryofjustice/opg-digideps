@@ -36,7 +36,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
      *
      * @return array|null
      */
-    public function findUserArrayById($id)
+    public function findUserArrayById($id): ?array
     {
         $query = $this
             ->getEntityManager()
@@ -398,7 +398,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ];
     }
 
-    public function findDeputyUidsForClient(int $clientId)
+    public function findDeputyUidsForClient(int $clientId): array|float|int|string
     {
         $query = $this
             ->getEntityManager()

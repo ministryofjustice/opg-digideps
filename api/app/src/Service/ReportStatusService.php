@@ -37,7 +37,7 @@ class ReportStatusService
     /**
      * @return $this
      */
-    public function setUseStatusCache($useStatusCache)
+    public function setUseStatusCache($useStatusCache): static
     {
         $this->useStatusCache = $useStatusCache;
 
@@ -383,7 +383,7 @@ class ReportStatusService
         $isFixedValid = !$isFixedRequired || $this->report->getProfDeputyFixedCost();
 
         // If costs are only fixed, SCCO question is not required (DDPB-2506)
-        $isSccoValid = $onlyFixedTicked || $this->report->getProfDeputyCostsAmountToScco();
+        $isSccoValid = $onlyFixedTicked || (float)$this->report->getProfDeputyCostsAmountToScco();
 
         $hasSubmittedOtherCostsForm = $this->report->hasProfDeputyOtherCosts();
 
@@ -515,7 +515,7 @@ class ReportStatusService
      * @return array [ state=>STATE_NOT_STARTED/DONE/INCOMPLETE, nOfRecords=> ]
      */
     #[JMS\Exclude]
-    public function getSectionStateNotCached($section)
+    public function getSectionStateNotCached($section): array
     {
         switch ($section) {
             case Report::SECTION_DECISIONS:
@@ -602,7 +602,7 @@ class ReportStatusService
     #[JMS\VirtualProperty]
     #[JMS\Type('array')]
     #[JMS\Groups(['status', 'lifestyle-state'])]
-    public function getLifestyleState()
+    public function getLifestyleState(): array
     {
         $lifestyle = $this->report->getLifestyle();
         $answers = $lifestyle ? [

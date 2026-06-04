@@ -91,7 +91,7 @@ class OrganisationRestHandler
      * @throws \Exception
      * @throws ORMException
      */
-    public function delete(int $id)
+    public function delete(int $id): bool
     {
         if (null === ($organisation = $this->orgRepository->find($id))) {
             throw new \Exception();

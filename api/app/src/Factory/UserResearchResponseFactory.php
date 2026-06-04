@@ -10,7 +10,7 @@ class UserResearchResponseFactory
     /**
      * @return mixed
      */
-    public function generateFromFormData(array $formData)
+    public function generateFromFormData(array $formData): mixed
     {
         $userResearchResponse = new UserResearchResponse()
             ->setDeputyshipLength($formData['deputyshipLength'])

@@ -59,7 +59,7 @@ class ClientVoter extends Voter
     /**
      * @return bool
      */
-    private function canManage(Client $client, User $user)
+    private function canManage(Client $client, User $user): bool
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;

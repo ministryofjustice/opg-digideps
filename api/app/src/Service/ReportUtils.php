@@ -10,10 +10,8 @@ class ReportUtils
     /**
      * Generates and returns the report start date from a given end date.
      * -365 days + 1 if note a leap day (otherwise we get 2nd March).
-     *
-     * @return ?\DateTime $reportStartDate
      */
-    public function generateReportStartDateFromEndDate(?\DateTime $reportEndDate)
+    public function generateReportStartDateFromEndDate(?\DateTime $reportEndDate): ?\DateTime
     {
         $reportStartDate = clone $reportEndDate;
 
@@ -32,10 +30,8 @@ class ReportUtils
      *
      * @param string $dateString e.g. 16-Dec-2014
      * @param string $century    e.g. 20/19 Prefix added to 2-digits year
-     *
-     * @return \DateTime|null
      */
-    public function parseCsvDate($dateString, $century)
+    public function parseCsvDate($dateString, $century): ?\DateTime
     {
         $sep = '-';
         $pieces = explode($sep, $dateString);
@@ -57,7 +53,7 @@ class ReportUtils
         return $ret;
     }
 
-    public function determineReportType(string $reportType, string $orderType, string $role)
+    public function determineReportType(string $reportType, string $orderType, string $role): string
     {
         if ($role == 'PA') {
             $realm = PreRegistration::REALM_PA;
@@ -70,7 +66,7 @@ class ReportUtils
         return PreRegistration::getReportTypeByOrderType($reportType, $orderType, $realm);
     }
 
-    public function padCasRecNumber(string $number)
+    public function padCasRecNumber(string $number): string
     {
         return str_pad($number, 8, '0', STR_PAD_LEFT);
     }

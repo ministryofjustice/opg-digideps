@@ -18,7 +18,7 @@ class ClientArchivedSubscriber implements EventSubscriberInterface
     ) {
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             ClientArchivedEvent::NAME => 'logEvent',

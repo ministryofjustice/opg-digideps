@@ -378,7 +378,6 @@ class ReportController extends RestController
                     $this->em->remove($e);
                 }
             }
-
             /** @var ?bool $noTransfersToAdd */
             $noTransfersToAdd = $data['no_transfers_to_add'];
             $report->setNoTransfersToAdd($noTransfersToAdd);

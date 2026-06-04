@@ -8,25 +8,17 @@ namespace OPG\Digideps\Backend\Service;
 class CsvUploader
 {
     /**
-     * @param mixed $data
-     *
-     * @return string
-     *
      * @deprecated Use OPG\Digideps\Backend\Service\DataCompression
      */
-    public static function compressData($data)
+    public static function compressData(array $data): string
     {
         return base64_encode(gzcompress(json_encode($data), 9));
     }
 
     /**
-     * @param mixed $data
-     *
-     * @return string|array
-     *
      * @deprecated Use OPG\Digideps\Backend\Service\DataCompression
      */
-    public static function decompressData($data)
+    public static function decompressData(string $data): array
     {
         return json_decode(gzuncompress(base64_decode($data)), true);
     }

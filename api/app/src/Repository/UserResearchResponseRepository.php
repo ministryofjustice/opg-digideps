@@ -35,7 +35,7 @@ class UserResearchResponseRepository extends ServiceEntityRepository
      *
      * @return int|mixed|string
      */
-    public function getAllFilteredByDate(\DateTime $from, \DateTime $to)
+    public function getAllFilteredByDate(\DateTime $from, \DateTime $to): mixed
     {
         $qb = $this
             ->createQueryBuilder('urr')

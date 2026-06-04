@@ -53,7 +53,7 @@ class OrganisationVoter extends Voter
     /**
      * @return bool
      */
-    private function canManage(Organisation $organisation, User $user)
+    private function canManage(Organisation $organisation, User $user): bool
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;

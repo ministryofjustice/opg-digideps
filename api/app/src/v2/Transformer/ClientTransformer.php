@@ -53,7 +53,7 @@ class ClientTransformer
     /**
      * @return string|null
      */
-    private function transformArchivedAt(ClientDto $dto)
+    private function transformArchivedAt(ClientDto $dto): ?string
     {
         return $dto->getArchivedAt() instanceof \DateTime ? $dto->getArchivedAt()->format('Y-m-d H:i:s') : null;
     }
@@ -61,7 +61,7 @@ class ClientTransformer
     /**
      * @return string|null
      */
-    private function transformDeletedAt(ClientDto $dto)
+    private function transformDeletedAt(ClientDto $dto): ?string
     {
         return $dto->getDeletedAt() instanceof \DateTime ? $dto->getDeletedAt()->format('Y-m-d H:i:s') : null;
     }
