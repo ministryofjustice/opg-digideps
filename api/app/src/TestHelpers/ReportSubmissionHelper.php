@@ -69,6 +69,10 @@ class ReportSubmissionHelper
         if ($existingReport === null) {
             throw new \LogicException('Report submission was created without a report');
         }
+        $submissionDate = $existingReport->getSubmitDate();
+        if ($submissionDate === null) {
+            throw new \LogicException('Report submission date is not set yet there is a submission');
+        }
 
         $client = $existingReport->getClient();
 
@@ -76,7 +80,7 @@ class ReportSubmissionHelper
             $this->entityManager,
             $client,
             $existingReport->getType(),
-            $existingReport->getSubmitDate()->modify('+366 days')
+            $submissionDate->modify('+366 days')
         );
 
         $client->addReport($report);
