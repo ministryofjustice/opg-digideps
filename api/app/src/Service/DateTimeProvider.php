@@ -9,7 +9,7 @@ class DateTimeProvider
      *
      * @return \DateTime
      */
-    public function getDateTime($dateTime = 'now')
+    public function getDateTime($dateTime = 'now'): \DateTime
     {
         return new \DateTime($dateTime);
     }

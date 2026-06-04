@@ -127,7 +127,7 @@ class UserRegistrationService
     /**
      * @throws \Exception
      */
-    private function saveUserAndClient(User $user, Client $client)
+    private function saveUserAndClient(User $user, Client $client): void
     {
         $connection = $this->em->getConnection();
         $connection->beginTransaction();
@@ -151,7 +151,7 @@ class UserRegistrationService
         }
     }
 
-    private function populateUser(User $user, SelfRegisterData $selfRegisterData)
+    private function populateUser(User $user, SelfRegisterData $selfRegisterData): void
     {
         $user->setFirstname($selfRegisterData->getFirstname() ?? '');
         $user->setLastname($selfRegisterData->getLastname() ?? '');
@@ -161,7 +161,7 @@ class UserRegistrationService
         $user->setRoleName(User::ROLE_LAY_DEPUTY);
     }
 
-    private function populateClient(Client $client, SelfRegisterData $selfRegisterData)
+    private function populateClient(Client $client, SelfRegisterData $selfRegisterData): void
     {
         $client->setFirstname($selfRegisterData->getClientFirstname() ?? '');
         $client->setLastname($selfRegisterData->getClientLastname() ?? '');

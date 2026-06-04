@@ -155,7 +155,7 @@ class RegistrationTokenAuthenticator extends AbstractAuthenticator
         return isset($body['token']);
     }
 
-    public function setBruteForceKey(string $bruteForceKey)
+    public function setBruteForceKey(string $bruteForceKey): void
     {
         $this->bruteForceKey = $bruteForceKey;
     }

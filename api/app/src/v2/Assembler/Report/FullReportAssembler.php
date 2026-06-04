@@ -36,10 +36,7 @@ class FullReportAssembler implements ReportAssemblerInterface
         return $reportDto;
     }
 
-    /**
-     * @return StatusDto
-     */
-    public function assembleReportStatus(Report $report)
+    public function assembleReportStatus(Report $report): StatusDto
     {
         return $this->statusDtoAssembler->assembleFromReport($report);
     }
