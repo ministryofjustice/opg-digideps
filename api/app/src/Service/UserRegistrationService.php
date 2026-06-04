@@ -31,14 +31,14 @@ class UserRegistrationService
     {
         $caseNumber = $selfRegisterData->getCaseNumber() ?? '';
 
-        $isMultiDeputyCase = $this->preRegistrationVerificationService->isMultiDeputyCase($caseNumber);
+//        $isMultiDeputyCase = $this->preRegistrationVerificationService->isMultiDeputyCase($caseNumber);
         $existingClient = $this->em->getRepository(Client::class)->findByCaseNumber($caseNumber);
 
         // ward off non-fee-paying codeps trying to self-register
-        if ($isMultiDeputyCase && ($existingClient instanceof Client) && $existingClient->hasDeputies()) {
-            // if client exists with case number, the first codep already registered.
-            throw new \RuntimeException(json_encode('Co-deputy cannot self register.') ?: '', 403);
-        }
+//        if ($isMultiDeputyCase && ($existingClient instanceof Client) && $existingClient->hasDeputies()) {
+//            // if client exists with case number, the first codep already registered.
+//            throw new \RuntimeException(json_encode('Co-deputy cannot self register.') ?: '', 403);
+//        }
 
         // Check the user doesn't already exist
         $existingUser = $this->em->getRepository(User::class)->findOneByEmail($selfRegisterData->getEmail());
@@ -48,24 +48,26 @@ class UserRegistrationService
         }
 
         // Check the client is unique and has no deputies attached
-        if ($existingClient instanceof Client) {
-            if ($existingClient->hasDeputies() || $existingClient->getOrganisation() instanceof Organisation) {
-                $message = sprintf('User registration: Case number %s already used', $existingClient->getCaseNumber());
-                throw new \RuntimeException(json_encode($message) ?: '', 425);
-            } else {
-                // soft delete client
-                $this->em->remove($existingClient);
-                $this->em->flush();
-            }
-        }
+//        if ($existingClient instanceof Client) {
+//            if ($existingClient->hasDeputies() || $existingClient->getOrganisation() instanceof Organisation) {
+//                $message = sprintf('User registration: Case number %s already used', $existingClient->getCaseNumber());
+//                throw new \RuntimeException(json_encode($message) ?: '', 425);
+//            } else {
+//                // soft delete client
+//                $this->em->remove($existingClient);
+//                $this->em->flush();
+//            }
+//        }
 
-        // proceed with brand new deputy and client
+        // proceed with deputy and client
         $user = new User();
         $user->recreateRegistrationToken();
         $this->populateUser($user, $selfRegisterData);
 
-        $client = new Client();
-        $this->populateClient($client, $selfRegisterData);
+        if (!($existingClient instanceof Client)) {
+            $existingClient = new Client();
+            $this->populateClient($existingClient, $selfRegisterData);
+        }
 
         // if validation fails, this throws a runtime exception which propagates to callers of this method
         $preregMatches = $this->preRegistrationVerificationService->validate(
@@ -91,7 +93,7 @@ class UserRegistrationService
             $user->setIsPrimary(true);
         }
 
-        $this->saveUserAndClient($user, $client);
+        $this->saveUserAndClient($user, $existingClient);
 
         return $user;
     }
