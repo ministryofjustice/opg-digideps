@@ -33,7 +33,7 @@ class UserRetentionPolicyCommand extends Command
         parent::__construct();
     }
 
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setDescription('Deletes inactive admin user accounts')

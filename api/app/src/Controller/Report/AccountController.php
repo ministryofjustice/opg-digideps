@@ -148,7 +148,7 @@ class AccountController extends RestController
 
         if ($account->requiresBankName()) {
             if (array_key_exists('bank', $data)) {
-                $account->setBank($data['bank']);
+                $account->setBank(is_string($data['bank']) ? $data['bank'] : null);
             }
         } else {
             $account->setBank(null);
@@ -167,7 +167,7 @@ class AccountController extends RestController
         }
 
         if (array_key_exists('opening_balance', $data)) {
-            $account->setOpeningBalance($data['opening_balance']);
+            $account->setOpeningBalance(is_numeric($data['opening_balance']) ? (string)$data['opening_balance'] : null);
         }
 
         if (array_key_exists('is_closed', $data)) {
@@ -175,11 +175,11 @@ class AccountController extends RestController
         }
 
         if (array_key_exists('closing_balance', $data)) {
-            $account->setClosingBalance($data['closing_balance']);
+            $account->setClosingBalance(is_numeric($data['closing_balance']) ? (string)$data['closing_balance'] : null);
         }
 
         if (array_key_exists('is_joint_account', $data)) {
-            $account->setIsJointAccount($data['is_joint_account']);
+            $account->setIsJointAccount(is_string($data['is_joint_account']) ? $data['is_joint_account'] : null);
         }
     }
 }

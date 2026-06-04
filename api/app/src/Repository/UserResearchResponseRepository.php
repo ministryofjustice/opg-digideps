@@ -29,13 +29,7 @@ class UserResearchResponseRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
-    /**
-     * @param \DateTime|null $from
-     * @param \DateTime|null $to
-     *
-     * @return int|mixed|string
-     */
-    public function getAllFilteredByDate(\DateTime $from, \DateTime $to)
+    public function getAllFilteredByDate(\DateTime $from, \DateTime $to): array
     {
         $qb = $this
             ->createQueryBuilder('urr')

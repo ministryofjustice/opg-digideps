@@ -16,7 +16,7 @@ class ResyncResubmittableErrorDocuments extends Command
         parent::__construct();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
             $updatedDocuments = $this->documentRepository->getResubmittableErrorDocumentsAndSetToQueued('100');

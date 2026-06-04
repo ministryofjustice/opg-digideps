@@ -18,7 +18,10 @@ class UserRetentionPolicyCommandSubscriber implements EventSubscriberInterface
     ) {
     }
 
-    public static function getSubscribedEvents()
+    /**
+     *  @return array<string, string>
+     */
+    public static function getSubscribedEvents(): array
     {
         return [
             UserRetentionPolicyCommandEvent::NAME => 'logEvent',

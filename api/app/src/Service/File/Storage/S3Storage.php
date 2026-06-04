@@ -139,7 +139,7 @@ class S3Storage implements StorageInterface
         return $objectsToDelete;
     }
 
-    private function handleS3DeletionErrors(array $s3Result)
+    private function handleS3DeletionErrors(array $s3Result): void
     {
         if (array_key_exists('Errors', $s3Result) && count($s3Result['Errors']) > 0) {
             foreach ($s3Result['Errors'] as $s3Error) {
@@ -184,7 +184,7 @@ class S3Storage implements StorageInterface
      *
      * @throws \Exception
      */
-    public function appendTagset($key, $newTagset)
+    public function appendTagset($key, $newTagset): void
     {
         $this->log('info', "Appending Purge tag for $key to S3");
         if (empty($key)) {
@@ -226,7 +226,7 @@ class S3Storage implements StorageInterface
      * @param $level
      * @param $message
      */
-    private function log($level, $message)
+    private function log($level, $message): void
     {
         // echo $message."\n"; //enable for debugging reasons. Tail the log with log-level=info otherwise
 

@@ -110,7 +110,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
      *
      * @return ReportSubmission[]
      */
-    public function findDownloadableOlderThan(\DateTime $olderThan, $limit)
+    public function findDownloadableOlderThan(\DateTime $olderThan, $limit): array
     {
         $qb = $this->createQueryBuilder('rs');
         $qb
@@ -202,7 +202,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
         ?\DateTime $toDate = null,
         string $orderBy = 'createdOn',
         string $order = 'ASC'
-    ) {
+    ): array {
         /** @var SoftDeleteableFilter $filter */
         $filter = $this->_em->getFilters()->getFilter('softdeleteable');
         $filter->disableForEntity(Client::class);
@@ -250,7 +250,7 @@ class ReportSubmissionRepository extends ServiceEntityRepository
         return ($date instanceof \DateTime) ? $date : new \DateTime();
     }
 
-    public function findOneByIdUnfiltered($id)
+    public function findOneByIdUnfiltered($id): ?object
     {
         $this->_em->getFilters()->getFilter('softdeleteable')->disableForEntity(Client::class); // disable softdelete for createdBy, needed from admin area
         $reportSubmission = $this->find($id);
