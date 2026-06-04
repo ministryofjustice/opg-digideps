@@ -3715,96 +3715,6 @@ parameters:
 			path: src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Cannot call method getDoYouExpectFinancialDecisions\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Cannot call method getDoYouHaveConcerns\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:setChecklistInformation\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:setFurtherInformationReceived\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:setFurtherInformationReceived\(\) has parameter \$furtherInformationReceived with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:setHasDeputyOverchargedFromPreviousEstimates\(\) has parameter \$hasDeputyOverchargedFromPreviousEstimates with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:setNextBillingEstimatesSatisfactory\(\) has parameter \$nextBillingEstimatesSatisfactory with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:setProfCostsReasonableAndProportionate\(\) has parameter \$profCostsReasonableAndProportionate with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^PHPDoc tag @param references unknown parameter\: \$furtherInformation$#'
-			identifier: parameter.notFound
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Parameter \#1 \$futureSignificantDecisions of method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:setFutureSignificantDecisions\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Parameter \#1 \$hasDeputyRaisedConcerns of method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:setHasDeputyRaisedConcerns\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:\$furtherInformationReceived \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:\$hasDeputyOverchargedFromPreviousEstimates \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:\$nextBillingEstimatesSatisfactory \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:\$profCostsReasonableAndProportionate \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Checklist.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ChecklistInformation\:\:__construct\(\) has parameter \$information with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -4916,12 +4826,6 @@ parameters:
 
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:feesValid\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Report\:\:getAction\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -12697,36 +12601,6 @@ parameters:
 			path: tests/Unit/Entity/Report/ChecklistTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Entity\\Report\\ChecklistTest\:\:validationsSubmitProfDeputyCostsChecklist\(\) has parameter \$expectedCountErrors with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Unit/Entity/Report/ChecklistTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Entity\\Report\\ChecklistTest\:\:validationsSubmitProfDeputyCostsChecklist\(\) has parameter \$hasDeputyOverchargedFromPreviousEstimates with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Unit/Entity/Report/ChecklistTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Entity\\Report\\ChecklistTest\:\:validationsSubmitProfDeputyCostsChecklist\(\) has parameter \$paymentsMatchCostCertificate with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Unit/Entity/Report/ChecklistTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Entity\\Report\\ChecklistTest\:\:validationsSubmitProfDeputyCostsChecklist\(\) has parameter \$profCostsReasonableAndProportionate with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: tests/Unit/Entity/Report/ChecklistTest.php
-
-		-
-			message: '#^Parameter \#1 \$paymentsMatchCostCertificate of method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:setPaymentsMatchCostCertificate\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Entity/Report/ChecklistTest.php
-
-		-
 			message: '#^Method Symfony\\Component\\Validator\\ValidatorBuilder\:\:enableAnnotationMapping\(\) invoked with 1 parameter, 0 required\.$#'
 			identifier: arguments.count
 			count: 1
@@ -13904,12 +13778,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$deputyFullNameAccurateInSirius of method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:setDeputyFullNameAccurateInSirius\(\) expects string, bool given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Form/Admin/ReportChecklistTypeTest.php
-
-		-
-			message: '#^Parameter \#1 \$paymentsMatchCostCertificate of method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:setPaymentsMatchCostCertificate\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Unit/Form/Admin/ReportChecklistTypeTest.php

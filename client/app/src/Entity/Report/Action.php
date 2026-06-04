@@ -12,10 +12,8 @@ class Action
 
     /**
      * @JMS\Type("integer")
-     *
-     * @var int
      */
-    private $id;
+    private int $id;
 
     /**
      * @JMS\Type("string")
@@ -23,7 +21,7 @@ class Action
      *
      * @Assert\NotBlank(message="action.doYouExpectFinancialDecisions.notBlank", groups={"action-expect-decisions-choice"})
      */
-    private $doYouExpectFinancialDecisions;
+    private ?string $doYouExpectFinancialDecisions = null;
 
     /**
      * @JMS\Type("string")
@@ -31,7 +29,7 @@ class Action
      *
      * @Assert\NotBlank(message="action.doYouExpectFinancialDecisionsDetails.notBlank", groups={"action-expect-decisions-details"})
      */
-    private $doYouExpectFinancialDecisionsDetails;
+    private ?string $doYouExpectFinancialDecisionsDetails = null;
 
     /**
      * @JMS\Type("string")
@@ -39,7 +37,7 @@ class Action
      *
      * @Assert\NotBlank(message="action.doYouHaveConcerns.notBlank", groups={"action-have-concerns-choice"})
      */
-    private $doYouHaveConcerns;
+    private ?string $doYouHaveConcerns = null;
 
     /**
      * @JMS\Type("string")
@@ -47,102 +45,62 @@ class Action
      *
      * @Assert\NotBlank(message="action.doYouHaveConcernsDetails.notBlank", groups={"action-have-concerns-details"})
      */
-    private $doYouHaveConcernsDetails;
+    private ?string $doYouHaveConcernsDetails = null;
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return Action
-     */
-    public function setId($id)
+    public function setId(int $id): static
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDoYouExpectFinancialDecisions()
+    public function getDoYouExpectFinancialDecisions(): ?string
     {
         return $this->doYouExpectFinancialDecisions;
     }
 
-    /**
-     * @param mixed $doYouExpectFinancialDecisions
-     *
-     * @return Action
-     */
-    public function setDoYouExpectFinancialDecisions($doYouExpectFinancialDecisions)
+    public function setDoYouExpectFinancialDecisions(?string $doYouExpectFinancialDecisions): static
     {
         $this->doYouExpectFinancialDecisions = $doYouExpectFinancialDecisions;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDoYouExpectFinancialDecisionsDetails()
+    public function getDoYouExpectFinancialDecisionsDetails(): ?string
     {
         return $this->doYouExpectFinancialDecisionsDetails;
     }
 
-    /**
-     * @param mixed $doYouExpectFinancialDecisionsDetails
-     *
-     * @return Action
-     */
-    public function setDoYouExpectFinancialDecisionsDetails($doYouExpectFinancialDecisionsDetails)
+    public function setDoYouExpectFinancialDecisionsDetails(?string $doYouExpectFinancialDecisionsDetails): static
     {
         $this->doYouExpectFinancialDecisionsDetails = $doYouExpectFinancialDecisionsDetails;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDoYouHaveConcerns()
+    public function getDoYouHaveConcerns(): ?string
     {
         return $this->doYouHaveConcerns;
     }
 
-    /**
-     * @param mixed $doYouHaveConcerns
-     *
-     * @return Action
-     */
-    public function setDoYouHaveConcerns($doYouHaveConcerns)
+    public function setDoYouHaveConcerns(?string $doYouHaveConcerns): static
     {
         $this->doYouHaveConcerns = $doYouHaveConcerns;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getDoYouHaveConcernsDetails()
+    public function getDoYouHaveConcernsDetails(): ?string
     {
         return $this->doYouHaveConcernsDetails;
     }
 
-    /**
-     * @param mixed $doYouHaveConcernsDetails
-     *
-     * @return Action
-     */
-    public function setDoYouHaveConcernsDetails($doYouHaveConcernsDetails)
+    public function setDoYouHaveConcernsDetails(?string $doYouHaveConcernsDetails): static
     {
         $this->doYouHaveConcernsDetails = $doYouHaveConcernsDetails;
 

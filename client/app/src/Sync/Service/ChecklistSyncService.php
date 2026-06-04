@@ -153,16 +153,25 @@ class ChecklistSyncService
         );
     }
 
-    public function syncChecklistsByReports(array $reports): int
+    /**
+     * @return array{notSyncedCount: int, reportIdsWithNullChecklists: array<int>}
+     */
+    public function syncChecklistsByReports(array $reports): array
     {
         $notSyncedCount = 0;
-
+        $reportIdsWithNullChecklists = [];
         /** @var Report $report */
         foreach ($reports as $report) {
+            $checklistId = $report->getChecklist()->getId();
+            if ($checklistId === null) {
+                $reportIdsWithNullChecklists[] = $report->getId();
+            }
             try {
                 $content = $this->pdfGenerator->generate($report);
             } catch (PdfGenerationFailedException $e) {
-                $this->updateChecklistWithError($report, $e);
+                if ($checklistId !== null) {
+                    $this->updateChecklistWithError($checklistId, $e);
+                }
                 ++$notSyncedCount;
                 continue;
             }
@@ -170,14 +179,18 @@ class ChecklistSyncService
             try {
                 $queuedChecklistData = $this->buildChecklistData($report, $content);
                 $uuid = $this->sync($queuedChecklistData);
-                $this->updateChecklistWithSuccess($report, $uuid);
+                if ($checklistId !== null) {
+                    $this->updateChecklist($checklistId, Checklist::SYNC_STATUS_SUCCESS, null, $uuid);
+                }
             } catch (SiriusDocumentSyncFailedException $e) {
-                $this->updateChecklistWithError($report, $e);
+                if ($checklistId !== null) {
+                    $this->updateChecklistWithError($checklistId, $e);
+                }
                 ++$notSyncedCount;
             }
         }
 
-        return $notSyncedCount;
+        return ['notSyncedCount' => $notSyncedCount, 'reportIdsWithNullChecklists' => $reportIdsWithNullChecklists];
     }
 
     protected function buildChecklistData(Report $report, string $content): QueuedChecklistData
@@ -190,17 +203,12 @@ class ChecklistSyncService
             ->setReportStartDate($report->getStartDate())
             ->setReportEndDate($report->getEndDate())
             ->setReportSubmissions($report->getReportSubmissions())
-            ->setSubmitterEmail($report->getChecklist()->getSubmittedBy()->getEmail())
+            ->setSubmitterEmail($report->getChecklist()->getSubmittedBy()?->getEmail())
             ->setReportType($report->determineReportType());
     }
 
-    protected function updateChecklistWithError(Report $report, \Throwable $e): void
+    protected function updateChecklistWithError(int $checklistId, \Throwable $e): void
     {
-        $this->updateChecklist($report->getChecklist()->getId(), Checklist::SYNC_STATUS_PERMANENT_ERROR, $e->getMessage());
-    }
-
-    protected function updateChecklistWithSuccess(Report $report, ?string $uuid): void
-    {
-        $this->updateChecklist($report->getChecklist()->getId(), Checklist::SYNC_STATUS_SUCCESS, null, $uuid);
+        $this->updateChecklist($checklistId, Checklist::SYNC_STATUS_PERMANENT_ERROR, $e->getMessage());
     }
 }
