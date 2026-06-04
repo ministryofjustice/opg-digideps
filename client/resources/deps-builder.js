@@ -67,7 +67,6 @@ const bundleJS = async function (entryPoints, outFile) {
 Promise
   .all([
     bundleJS(["./assets/javascripts/common.js"], "common.js"),
-    bundleJS(["./assets/javascripts/pages/clientBenefitsCheckForm.js"], "clientBenefitsCheckForm.js"),
     bundleJS(["./node_modules/jquery/dist/jquery.min.js"], "jquery.min.js")
   ])
   .then(r => {

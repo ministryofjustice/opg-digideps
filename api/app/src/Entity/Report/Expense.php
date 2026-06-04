@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Entity\Report;
 
+use Doctrine\ORM\Event\PreRemoveEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Entity\Report\Traits\HasBankAccountTrait;
@@ -14,7 +15,7 @@ use OPG\Digideps\Backend\Entity\Report\Traits\HasBankAccountTrait;
  * - PA Fees outside practice direction.
  */
 #[ORM\Table(name: 'expense')]
-#[ORM\Entity]
+#[ORM\Entity, ORM\HasLifecycleCallbacks]
 class Expense
 {
     use HasBankAccountTrait;
@@ -130,5 +131,13 @@ class Expense
     public function setReport($report)
     {
         $this->report = $report;
+    }
+
+    #[ORM\PreRemove]
+    public function onPreRemove(PreRemoveEventArgs $_): void
+    {
+        if ($this->getReport()->getExpenses()->count() === 1) {
+            $this->getReport()->setPaidForAnything(null);
+        }
     }
 }

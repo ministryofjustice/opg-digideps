@@ -543,7 +543,7 @@ class UserControllerTest extends AbstractTestController
         $userRefreshed = $repository->findOneByEmail('deputy@example.org');
         $this->assertNotNull($userRefreshed);
         $this->assertTrue(strlen($userRefreshed->getRegistrationToken() ?? '') > 5);
-        $this->assertEquals(0, $userRefreshed->getTokenDate()->diff(new \DateTime())->format('%a'));
+        $this->assertSame('0', $userRefreshed->getTokenDate()?->diff(new \DateTime())->format('%a'));
     }
 
     public function testGetByToken()
@@ -611,7 +611,7 @@ class UserControllerTest extends AbstractTestController
         $user = $repository->findOneByEmail('deputy@example.org');
         $this->assertNotNull($user);
         $this->assertTrue($user->getAgreeTermsUse());
-        $this->assertEquals(date('Y-m-d'), $user->getAgreeTermsUseDate()->format('Y-m-d'));
+        $this->assertEquals(date('Y-m-d'), $user->getAgreeTermsUseDate()?->format('Y-m-d'));
     }
 
     public function testGetPrimaryAccount()

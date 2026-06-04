@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Integration\Entity\Repository;
 
-use Doctrine\ORM\Exception\ORMException;
 use Tests\OPG\Digideps\Backend\Integration\ApiTestTrait;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Report\Document;

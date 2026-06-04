@@ -2,9 +2,7 @@
 
 namespace OPG\Digideps\Backend\v2\DTO;
 
-use OPG\Digideps\Backend\Entity\Deputy;
 use OPG\Digideps\Backend\Entity\Organisation;
-use OPG\Digideps\Backend\Entity\Report\Report;
 
 class ClientDto
 {
