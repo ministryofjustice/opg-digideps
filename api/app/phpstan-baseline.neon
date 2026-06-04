@@ -1171,6 +1171,12 @@ parameters:
 			path: src/Controller/Report/ReportController.php
 
 		-
+			message: '#^Parameter \#1 \$agreedBehalfDeputyExplanation of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setAgreedBehalfDeputyExplanation\(\) expects string\|null, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Report/ReportController.php
+
+		-
 			message: '#^Parameter \#1 \$amount of method OPG\\Digideps\\Backend\\Entity\\Report\\Debt\:\:setAmount\(\) expects string, null given\.$#'
 			identifier: argument.type
 			count: 1
@@ -4395,13 +4401,13 @@ parameters:
 		-
 			message: '#^Cannot call method add\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 3
+			count: 2
 			path: src/Entity/Report/Report.php
 
 		-
 			message: '#^Cannot call method contains\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 1
 			path: src/Entity/Report/Report.php
 
 		-
@@ -4429,18 +4435,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Cannot call method getFinancialSummary\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Cannot call method getReportSummary\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Cannot call method removeElement\(\) on mixed\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -4460,12 +4454,6 @@ parameters:
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:addDebt\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:addDocument\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -4507,19 +4495,7 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:getAgreedBehalfDeputyExplanation\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:getCalculatedBalance\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:getClientId\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -4556,12 +4532,6 @@ parameters:
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:getHasFees\(\) should return float but returns string\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:getId\(\) should return int but returns int\|null\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -4621,20 +4591,14 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:getReportSubmissions\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:getSectionStatusesCached\(\) should return array but returns mixed\.$#'
 			identifier: return.type
 			count: 1
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:getSubmittedBy\(\) has no return type specified\.$#'
-			identifier: missingType.return
+			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:getSectionsSettings\(\) should return array\<string, array\<string\>\> but returns array\<string, array\>\.$#'
+			identifier: return.type
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -4646,42 +4610,6 @@ parameters:
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:getTotalsOffset\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:has106Flag\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:hasSamePeriodAs\(\) should return string but returns bool\.$#'
-			identifier: return.type
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:isDue\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:isMissingMoneyOrAccountsOrClosingBalance\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:isPAreport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:isProfReport\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -4711,43 +4639,13 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setAgreedBehalfDeputy\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setAgreedBehalfDeputyExplanation\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setAgreedBehalfDeputyExplanation\(\) has parameter \$agreedBehalfDeputyExplanation with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setBalanceMismatchExplanation\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setChecklist\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setCreatedAtAutomatically\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setCurrentProfPaymentsReceived\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -4772,12 +4670,6 @@ parameters:
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setHasDebts\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setMentalCapacity\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -4897,12 +4789,6 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setReviewChecklist\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setSectionStatusesCached\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -4910,12 +4796,6 @@ parameters:
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setUpdatedAtAutomatically\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:updateDueDateBasedOnEndDate\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -4939,25 +4819,7 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Parameter \#2 \$haystack of function in_array expects array, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$agreedBehalfDeputyExplanation \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$assets \(Doctrine\\Common\\Collections\\Collection\<int, OPG\\Digideps\\Backend\\Entity\\AssetInterface\>\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$checklist \(OPG\\Digideps\\Backend\\Entity\\Report\\Checklist\) does not accept null\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -4969,26 +4831,8 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$documents with generic class Doctrine\\Common\\Collections\\ArrayCollection does not specify its types\: TKey, T$#'
-			identifier: missingType.generics
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$hasDebts has no type specified\.$#'
 			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$moneyInExists \(string\) does not accept string\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$moneyOutExists \(string\) does not accept string\|null\.$#'
-			identifier: assign.propertyType
 			count: 1
 			path: src/Entity/Report/Report.php
 
@@ -5035,37 +4879,7 @@ parameters:
 			path: src/Entity/Report/Report.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$reasonForNoMoneyIn \(string\) does not accept string\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$reasonForNoMoneyOut \(string\) does not accept string\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$reportSubmissions has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$sectionStatusesCached \(string\) does not accept string\|false\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$significantDecisionsMade \(string\) does not accept string\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Report/Report.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:\$unSubmitDate \(DateTime\) does not accept DateTime\|null\.$#'
 			identifier: assign.propertyType
 			count: 1
 			path: src/Entity/Report/Report.php
@@ -8477,18 +8291,6 @@ parameters:
 			identifier: argument.type
 			count: 1
 			path: src/TestHelpers/DeputyTestHelper.php
-
-		-
-			message: '#^Cannot call method modify\(\) on DateTimeInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/TestHelpers/ReportSubmissionHelper.php
-
-		-
-			message: '#^Parameter \#4 \$startDate of method OPG\\Digideps\\Backend\\TestHelpers\\ReportTestHelper\:\:generateReport\(\) expects DateTime\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/TestHelpers/ReportSubmissionHelper.php
 
 		-
 			message: '#^Cannot call method setAmount\(\) on mixed\.$#'
@@ -18727,12 +18529,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
 
 		-
-			message: '#^Cannot call method format\(\) on DateTimeInterface\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
-
-		-
 			message: '#^Cannot call method getAttribute\(\) on Behat\\Mink\\Element\\NodeElement\|null\.$#'
 			identifier: method.nonObject
 			count: 3
@@ -23179,12 +22975,6 @@ parameters:
 			path: tests/Integration/ControllerReport/ReportControllerTest.php
 
 		-
-			message: '#^Cannot call method getId\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/ControllerReport/ReportControllerTest.php
-
-		-
 			message: '#^Cannot call method getInformation\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\ChecklistInformation\|null\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -23731,12 +23521,6 @@ parameters:
 			path: tests/Integration/Entity/OrganisationSoftDeleteableIntegrationTest.php
 
 		-
-			message: '#^Cannot call method add\(\) on DateTime\|false\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Entity/Repository/ChecklistRepositoryIntegrationTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Integration\\Entity\\Repository\\ChecklistRepositoryIntegrationTest\:\:createAndSubmitReportWithChecklist\(\) has parameter \$error with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -23749,12 +23533,6 @@ parameters:
 			path: tests/Integration/Entity/Repository/ChecklistRepositoryIntegrationTest.php
 
 		-
-			message: '#^Parameter \#1 \$createdOn of method OPG\\Digideps\\Backend\\Entity\\Report\\ReportSubmission\:\:setCreatedOn\(\) expects DateTime\|null, DateTime\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Entity/Repository/ChecklistRepositoryIntegrationTest.php
-
-		-
 			message: '#^Parameter \#1 \$error of method OPG\\Digideps\\Backend\\Entity\\Report\\Checklist\:\:setSynchronisationError\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -23762,18 +23540,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$status of method OPG\\Digideps\\Backend\\Entity\\Report\\Checklist\:\:setSynchronisationStatus\(\) expects string\|null, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Entity/Repository/ChecklistRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#1 \$submitDate of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setSubmitDate\(\) expects DateTimeInterface\|null, DateTime\|false given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/Entity/Repository/ChecklistRepositoryIntegrationTest.php
-
-		-
-			message: '#^Parameter \#3 \$startDate of class OPG\\Digideps\\Backend\\Entity\\Report\\Report constructor expects DateTime, DateTime\|false given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Integration/Entity/Repository/ChecklistRepositoryIntegrationTest.php
@@ -23901,12 +23667,6 @@ parameters:
 		-
 			message: '#^Cannot access offset ''storage_reference'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
-			count: 1
-			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
-
-		-
-			message: '#^Cannot call method format\(\) on DateTimeInterface\|null\.$#'
-			identifier: method.nonObject
 			count: 1
 			path: tests/Integration/Entity/Repository/DocumentRepositoryTest.php
 
@@ -26695,24 +26455,6 @@ parameters:
 			path: tests/Unit/Service/OrganisationRestHandlerTest.php
 
 		-
-			message: '#^Cannot call method first\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 6
-			path: tests/Unit/Service/ReportServiceTest.php
-
-		-
-			message: '#^Cannot call method getCreatedBy\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: tests/Unit/Service/ReportServiceTest.php
-
-		-
-			message: '#^Cannot call method getDocuments\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 3
-			path: tests/Unit/Service/ReportServiceTest.php
-
-		-
 			message: '#^Cannot call method getEndDate\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -26744,12 +26486,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$assets of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:addAsset\(\) expects OPG\\Digideps\\Backend\\Entity\\Report\\Asset, OPG\\Digideps\\Backend\\Entity\\AssetInterface given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Service/ReportServiceTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertContains\(\) expects iterable, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Unit/Service/ReportServiceTest.php
