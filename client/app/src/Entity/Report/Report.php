@@ -927,7 +927,7 @@ class Report implements StartEndDateComparableInterface
         $this->lifestyle = $lifestyle;
     }
 
-    public function getAction()
+    public function getAction(): Action
     {
         return $this->action ?: new Action();
     }

@@ -47,7 +47,7 @@ class ReportChecklistTypeTest extends TypeTestCase
         $this->assertEquals($expected, $formDataObject);
     }
 
-    public function formValuesProvider()
+    public function formValuesProvider(): array
     {
         return [
             'Yes' => ['yes', false],
