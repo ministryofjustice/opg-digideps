@@ -5,6 +5,7 @@ namespace OPG\Digideps\Backend\Service;
 use OPG\Digideps\Backend\Entity\AssetInterface;
 use OPG\Digideps\Backend\Entity\BankAccountInterface;
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\Report\Asset;
 use OPG\Digideps\Backend\Entity\Report\AssetOther as ReportAssetOther;
@@ -63,6 +64,8 @@ class ReportService
 
         $this->em->persist($submission);
 
+        /** @var CourtOrder[] $courtOrders */
+        $courtOrders = $currentReport->getCourtOrders()->toArray();
         $client = $currentReport->getClient();
         $clientId = $client->getId();
         $now = new \DateTime()->format('Y-m-d H:i:s');
@@ -93,6 +96,15 @@ class ReportService
             $this->logger->warning("Creating next year report for client $clientId (NO existing report) at $now");
 
             $newYearReport = $this->createNextYearReport($currentReport);
+        }
+
+        if (!is_null($newYearReport)) {
+            foreach ($courtOrders as $courtOrder) {
+                if ($courtOrder->getStatus() === 'ACTIVE') {
+                    $courtOrder->addReport($newYearReport);
+                    $this->em->persist($courtOrder);
+                }
+            }
         }
 
         $this->em->flush(); // single transaction for report.submitted flags + new year report creation
