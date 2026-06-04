@@ -13,7 +13,7 @@ module "database" {
   master_password                     = data.aws_secretsmanager_secret_version.database_password.secret_string
   instance_count                      = var.account.db.aurora_instance_count
   instance_class                      = "db.t3.medium"
-  preferred_backup_window             = var.account.environment.name == "preproduction" ? "22:00-00:00" : "23:00-23:30"
+  preferred_backup_window             = var.account.environment.name == "preproduction" ? "" : "23:00-23:30"
   kms_key_id                          = data.aws_kms_alias.rds_encryption_key.target_key_arn
   skip_final_snapshot                 = var.account.db.deletion_protection ? false : true
   vpc_security_group_ids              = [module.api_rds_security_group.id]
