@@ -277,37 +277,7 @@ parameters:
 			path: src/Controller/ClientController.php
 
 		-
-			message: '#^Parameter \#1 \$query of method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:searchClients\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
 			message: '#^Parameter \#2 \$criteriaOrId of method OPG\\Digideps\\Backend\\Controller\\RestController\:\:findEntityBy\(\) expects array\|int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: '#^Parameter \#2 \$orderBy of method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:searchClients\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: '#^Parameter \#3 \$sortOrder of method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:searchClients\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: '#^Parameter \#4 \$limit of method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:searchClients\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: '#^Parameter \#5 \$offset of method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:searchClients\(\) expects int, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Controller/ClientController.php
@@ -2059,12 +2029,6 @@ parameters:
 			path: src/DataFixtures/LayUserFixtures.php
 
 		-
-			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Deputy\:\:setFirstname\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/DataFixtures/LayUserFixtures.php
-
-		-
 			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\User\:\:setFirstname\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -2122,6 +2086,12 @@ parameters:
 			message: '#^Parameter \#2 \$replace of function substr_replace expects array\|string, int given\.$#'
 			identifier: argument.type
 			count: 6
+			path: src/DataFixtures/LayUserFixtures.php
+
+		-
+			message: '#^Parameter \#3 \$firstname of class OPG\\Digideps\\Backend\\Entity\\Deputy constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
 			path: src/DataFixtures/LayUserFixtures.php
 
 		-
@@ -2197,19 +2167,13 @@ parameters:
 			path: src/DataFixtures/PAUserFixtures.php
 
 		-
-			message: '#^Parameter \#1 \$deputyUid of method OPG\\Digideps\\Backend\\Entity\\Deputy\:\:setDeputyUid\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$deputyUid of class OPG\\Digideps\\Backend\\Entity\\Deputy constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/DataFixtures/PAUserFixtures.php
 
 		-
 			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setFirstname\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/DataFixtures/PAUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Deputy\:\:setFirstname\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/DataFixtures/PAUserFixtures.php
@@ -2246,6 +2210,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$orderType of static method OPG\\Digideps\\Backend\\Entity\\PreRegistration\:\:getReportTypeByOrderType\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/DataFixtures/PAUserFixtures.php
+
+		-
+			message: '#^Parameter \#3 \$firstname of class OPG\\Digideps\\Backend\\Entity\\Deputy constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/DataFixtures/PAUserFixtures.php
@@ -2305,19 +2275,13 @@ parameters:
 			path: src/DataFixtures/ProfUserFixtures.php
 
 		-
-			message: '#^Parameter \#1 \$deputyUid of method OPG\\Digideps\\Backend\\Entity\\Deputy\:\:setDeputyUid\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$deputyUid of class OPG\\Digideps\\Backend\\Entity\\Deputy constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/DataFixtures/ProfUserFixtures.php
 
 		-
 			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setFirstname\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/DataFixtures/ProfUserFixtures.php
-
-		-
-			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Deputy\:\:setFirstname\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/DataFixtures/ProfUserFixtures.php
@@ -2354,6 +2318,12 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$orderType of static method OPG\\Digideps\\Backend\\Entity\\PreRegistration\:\:getReportTypeByOrderType\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/DataFixtures/ProfUserFixtures.php
+
+		-
+			message: '#^Parameter \#3 \$firstname of class OPG\\Digideps\\Backend\\Entity\\Deputy constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/DataFixtures/ProfUserFixtures.php
@@ -2649,12 +2619,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Deputy\:\:setUpdatedAtAutomatically\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Entity/Deputy.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Deputy\:\:\$clients is never written, only read\.$#'
-			identifier: property.onlyRead
 			count: 1
 			path: src/Entity/Deputy.php
 
@@ -7363,6 +7327,12 @@ parameters:
 			path: src/Service/DeputyService.php
 
 		-
+			message: '#^Parameter \#1 \$deputyUid of class OPG\\Digideps\\Backend\\Entity\\Deputy constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Service/DeputyService.php
+
+		-
 			message: '#^Parameter \#1 \$deputyUid of method OPG\\Digideps\\Backend\\Entity\\Deputy\:\:setDeputyUid\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -7376,6 +7346,18 @@ parameters:
 
 		-
 			message: '#^Parameter \#2 \$string of function explode expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Service/DeputyService.php
+
+		-
+			message: '#^Parameter \#3 \$firstname of class OPG\\Digideps\\Backend\\Entity\\Deputy constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Service/DeputyService.php
+
+		-
+			message: '#^Parameter \#4 \$lastname of class OPG\\Digideps\\Backend\\Entity\\Deputy constructor expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Service/DeputyService.php
@@ -8665,12 +8647,6 @@ parameters:
 			path: src/v2/Assembler/DeputyAssembler.php
 
 		-
-			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Deputy\:\:setFirstname\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/v2/Assembler/DeputyAssembler.php
-
-		-
 			message: '#^Parameter \#1 \$object_or_class of function method_exists expects object\|string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -8950,12 +8926,6 @@ parameters:
 			message: '#^Parameter \#1 \$data of method OPG\\Digideps\\Backend\\v2\\Fixture\\Controller\\FixtureController\:\:buildSuccessResponse\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 3
-			path: src/v2/Fixture/Controller/FixtureController.php
-
-		-
-			message: '#^Parameter \#1 \$deputyUid of method OPG\\Digideps\\Backend\\Entity\\Deputy\:\:setDeputyUid\(\) expects string, int given\.$#'
-			identifier: argument.type
-			count: 1
 			path: src/v2/Fixture/Controller/FixtureController.php
 
 		-
@@ -25159,12 +25129,6 @@ parameters:
 			path: tests/Integration/TestHelpers/OrgDeputyshipDTOTestHelper.php
 
 		-
-			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Deputy\:\:setFirstname\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Integration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
 			message: '#^Parameter \#1 \$row of method OPG\\Digideps\\Backend\\v2\\Registration\\Assembler\\SiriusToOrgDeputyshipDtoAssembler\:\:assembleSingleDtoFromArray\(\) expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 1
@@ -27506,12 +27470,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#1 \$email1 of method OPG\\Digideps\\Backend\\Entity\\Deputy\:\:setEmail1\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
-
-		-
-			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Deputy\:\:setFirstname\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: tests/Unit/v2/Registration/TestHelpers/OrgDeputyshipDTOTestHelper.php
