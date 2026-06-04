@@ -26,7 +26,7 @@ use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
-use Tests\OPG\Digideps\Backend\Unit\MockeryStub as m;
+use Mockery as m;
 
 final class ReportServiceTest extends TestCase
 {
@@ -37,10 +37,10 @@ final class ReportServiceTest extends TestCase
     private AssetProperty $asset1;
     private Report $report;
     private Document $document1;
-    private MockInterface|EntityManager $em;
+    private MockInterface&EntityManager $em;
     private LoggerInterface&MockObject $mockLogger;
     private ReportFactory&MockObject $mockReportFactory;
-    private PreRegistrationRepository|MockInterface $mockPreRegistrationRepository;
+    private PreRegistrationRepository&MockObject $mockPreRegistrationRepository;
     private ReportService $sut;
 
     public function setUp(): void
@@ -68,11 +68,13 @@ final class ReportServiceTest extends TestCase
         $this->em = m::mock(EntityManager::class);
 
         $this->em->shouldReceive('getRepository')->andReturnUsing(function ($arg) {
-            if ($arg == PreRegistration::class) {
-                $this->mockPreRegistrationRepository = self::createMock(PreRegistrationRepository::class);
-
-                return $this->mockPreRegistrationRepository;
+            if ($arg !== PreRegistration::class) {
+                return null;
             }
+
+            $this->mockPreRegistrationRepository = self::createMock(PreRegistrationRepository::class);
+
+            return $this->mockPreRegistrationRepository;
         });
 
         $this->mockReportFactory = $this->createMock(ReportFactory::class);

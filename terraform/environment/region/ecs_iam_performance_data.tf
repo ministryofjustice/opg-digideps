@@ -1,7 +1,8 @@
 resource "aws_iam_role" "performance_data" {
-  name               = "performance-data.${local.environment}"
-  assume_role_policy = data.aws_iam_policy_document.ecs_task_assume_policy.json
-  tags               = var.default_tags
+  name                 = "performance-data.${local.environment}"
+  permissions_boundary = data.aws_iam_policy.default_boundary.arn
+  assume_role_policy   = data.aws_iam_policy_document.ecs_task_assume_policy.json
+  tags                 = var.default_tags
 }
 
 data "aws_iam_policy_document" "performance_data" {

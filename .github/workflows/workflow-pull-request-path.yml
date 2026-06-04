@@ -231,6 +231,7 @@ jobs:
       terraform_path: account
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
       account_name: development
+      tf_role: digideps-ci-boundary
 
   terraform_apply_environment:
     name: environment apply terraform
@@ -248,6 +249,7 @@ jobs:
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
       account_name: development
       pull_request_path: true
+      tf_role: digideps-ci-boundary
 
   ecr_scan_results:
     name: ecr scan results
@@ -318,6 +320,7 @@ jobs:
       account_name: development
       task_name: "reset_database"
       timeout: "500"
+      retry_on_fail: true
 
   smoke_tests:
     name: smoke tests
@@ -334,6 +337,7 @@ jobs:
       account_name: development
       task_name: "smoke_tests"
       timeout: "900"
+      retry_on_fail: true
 
   end_to_end_tests_1:
     name: end to end tests frontend 1

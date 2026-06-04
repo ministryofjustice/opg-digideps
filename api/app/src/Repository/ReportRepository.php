@@ -4,9 +4,14 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Repository;
 
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Connection;
+use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry;
 use OPG\Digideps\Backend\Domain\Report\ReportAccessService;
 use OPG\Digideps\Backend\Entity\Report\Debt as ReportDebt;
 use OPG\Digideps\Backend\Entity\Report\Fee as ReportFee;
@@ -14,12 +19,6 @@ use OPG\Digideps\Backend\Entity\Report\MoneyShortCategory as ReportMoneyShortCat
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\SynchronisableInterface;
 use OPG\Digideps\Backend\Service\Search\ClientSearchFilter;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\Connection;
-use Doctrine\ORM\AbstractQuery;
-use Doctrine\ORM\ORMException;
-use Doctrine\ORM\Query\ResultSetMappingBuilder;
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -49,17 +48,13 @@ class ReportRepository extends ServiceEntityRepository
         }
 
         foreach (ReportDebt::$debtTypeIds as $row) {
-            $debt = new ReportDebt($report, $row[0], $row[1], null);
-            $this->_em->persist($debt);
+            new ReportDebt($report, $row[0], $row[1], null);
             ++$ret;
         }
 
         return $ret;
     }
 
-    /**
-     * @throws ORMException
-     */
     public function addFeesToReportIfMissing(Report $report): ?int
     {
         if (!$report->isPAreport()) {
@@ -74,8 +69,7 @@ class ReportRepository extends ServiceEntityRepository
         }
 
         foreach (ReportFee::$feeTypeIds as $id => $row) {
-            $debt = new ReportFee($report, $id, null);
-            $this->_em->persist($debt);
+            new ReportFee($report, $id, null);
             ++$ret;
         }
 
@@ -85,24 +79,23 @@ class ReportRepository extends ServiceEntityRepository
     /**
      * Called from doctrine listener.
      *
-     * @return int changed records
+     * @return Collection<int, ReportMoneyShortCategory>
      */
-    public function addMoneyShortCategoriesIfMissing(Report $report): int
+    public function getMissingMoneyShortCategories(Report $report): Collection
     {
-        $ret = 0;
+        $missingCategories = new ArrayCollection();
 
         if (count($report->getMoneyShortCategories()) > 0) {
-            return $ret;
+            return $missingCategories;
         }
+
 
         $cats = ReportMoneyShortCategory::getCategories('in') + ReportMoneyShortCategory::getCategories('out');
         foreach ($cats as $typeId => $options) {
-            $debt = new ReportMoneyShortCategory($report, $typeId, false);
-            $this->_em->persist($debt);
-            ++$ret;
+            $missingCategories->add(new ReportMoneyShortCategory($report, $typeId, false));
         }
 
-        return $ret;
+        return $missingCategories;
     }
 
     public function findAllActiveReportsByCaseNumbersAndRole(array $caseNumbers, string $role)

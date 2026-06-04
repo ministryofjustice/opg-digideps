@@ -1,7 +1,8 @@
 resource "aws_iam_role" "front" {
-  assume_role_policy = data.aws_iam_policy_document.task_role_assume_policy.json
-  name               = "front.${local.environment}"
-  tags               = var.default_tags
+  assume_role_policy   = data.aws_iam_policy_document.task_role_assume_policy.json
+  name                 = "front.${local.environment}"
+  permissions_boundary = data.aws_iam_policy.default_boundary.arn
+  tags                 = var.default_tags
 }
 
 resource "aws_iam_role_policy" "front_s3" {
