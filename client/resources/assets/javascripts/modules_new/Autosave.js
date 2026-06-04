@@ -102,14 +102,10 @@ const Autosave = {
       }
     }.bind(this)
 
-    try {
-      await this.fetchFunction(autosaveForm.action, {
-        method: 'POST',
-        body: formData
-      }).then(doneCallback)
-    } catch (e) {
-      doneCallback()
-    }
+    await this.fetchFunction(autosaveForm.action, {
+      method: 'POST',
+      body: formData
+    }).finally(doneCallback)
 
     return true
   }
