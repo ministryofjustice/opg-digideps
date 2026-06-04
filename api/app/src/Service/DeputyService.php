@@ -41,8 +41,28 @@ class DeputyService
 
     public function populateDeputy(array $data, ?Deputy $deputy = null): Deputy
     {
+        $deputyUid = $data['deputy_uid'] ?? null;
+        $deputyType = null;
+
+
+        if (array_key_exists('role_name', $data) && !empty($data['role_name'])) {
+            if (str_contains($data['role_name'], 'LAY')) {
+                $deputyType = DeputyType::LAY;
+            } elseif (str_contains($data['role_name'], 'PROF')) {
+                $deputyType = DeputyType::PRO;
+            } elseif (str_contains($data['role_name'], 'PA')) {
+                $deputyType = DeputyType::PA;
+            }
+        }
+
+
         if (is_null($deputy)) {
-            $deputy = new Deputy();
+            $deputy = new Deputy(
+                $deputyUid,
+                $deputyType ?? DeputyType::LAY,
+                $data['firstname'],
+                $data['lastname']
+            );
         }
 
         Hydrator::hydrateEntityWithArrayData($deputy, $data, [
@@ -71,18 +91,12 @@ class DeputyService
             }
         }
 
-        if (array_key_exists('deputy_uid', $data) && !empty($data['deputy_uid'])) {
-            $deputy->setDeputyUid($data['deputy_uid']);
+        if ($deputyUid !== null) {
+            $deputy->setDeputyUid($deputyUid);
         }
 
-        if (array_key_exists('role_name', $data) && !empty($data['role_name'])) {
-            if (str_contains($data['role_name'], 'LAY')) {
-                $deputy->setDeputyType(DeputyType::LAY);
-            } elseif (str_contains($data['role_name'], 'PROF')) {
-                $deputy->setDeputyType(DeputyType::PRO);
-            } elseif (str_contains($data['role_name'], 'PA')) {
-                $deputy->setDeputyType(DeputyType::PA);
-            }
+        if ($deputyType !== null) {
+            $deputy->setDeputyType($deputyType);
         }
 
         return $deputy;
