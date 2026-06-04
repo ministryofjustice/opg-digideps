@@ -23509,6 +23509,12 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
 
 		-
+			message: '#^Using nullsafe method call on non\-nullable type DateTime\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 2
+			path: api/app/tests/Integration/ControllerReport/MoneyTransactionShortControllerTest.php
+
+		-
 			message: '#^Cannot access offset ''accountFrom'' on mixed\.$#'
 			identifier: offsetAccess.nonOffsetAccessible
 			count: 2
@@ -23551,19 +23557,7 @@ parameters:
 			path: api/app/tests/Integration/ControllerReport/MoneyTransferControllerTest.php
 
 		-
-			message: '#^Cannot call method getAmount\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransfer\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
 			message: '#^Cannot call method getAmount\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Cannot call method getFrom\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransfer\|null\.$#'
 			identifier: method.nonObject
 			count: 1
 			path: api/app/tests/Integration/ControllerReport/MoneyTransferControllerTest.php
@@ -23584,18 +23578,6 @@ parameters:
 			message: '#^Cannot call method getMoneyTransfers\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
 			identifier: method.nonObject
 			count: 3
-			path: api/app/tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Cannot call method getReport\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransfer\|null\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: api/app/tests/Integration/ControllerReport/MoneyTransferControllerTest.php
-
-		-
-			message: '#^Cannot call method getTo\(\) on OPG\\Digideps\\Backend\\Entity\\Report\\MoneyTransfer\|null\.$#'
-			identifier: method.nonObject
-			count: 1
 			path: api/app/tests/Integration/ControllerReport/MoneyTransferControllerTest.php
 
 		-
@@ -26917,12 +26899,6 @@ parameters:
 			path: api/app/tests/Unit/Command/UserRetentionPolicyCommandTest.php
 
 		-
-			message: '#^Cannot unset property Tests\\OPG\\Digideps\\Backend\\Unit\\Entity\\Abstracts\\EntityTester\:\:\$entity because it might have hooks in a subclass\.$#'
-			identifier: unset.possiblyHookedProperty
-			count: 1
-			path: api/app/tests/Unit/Entity/Abstracts/EntityTester.php
-
-		-
 			message: '#^Cannot call method format\(\) on DateTime\|null\.$#'
 			identifier: method.nonObject
 			count: 2
@@ -27667,7 +27643,7 @@ parameters:
 			path: api/app/tests/Unit/Service/ReportServiceTest.php
 
 		-
-			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertContains\(\) expects iterable, array\|Countable\|EmptyIterator\|float\|int\|string\|false\|null given\.$#'
+			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertContains\(\) expects iterable, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/tests/Unit/Service/ReportServiceTest.php
