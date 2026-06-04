@@ -103,22 +103,22 @@ final class ReportServiceTest extends TestCase
         $report = $this->report;
 
         /** @var ReportService|MockInterface $reportService */
-        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
+        $reportService = m::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
 
         // mocks
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('flush');
         // assert persists on report and submission record
-        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($report): bool {
+        $this->em->shouldReceive('persist')->with(m::on(function ($report): bool {
             return $report instanceof Report;
         }));
         // assert persists on report and submission record
-        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($report): bool {
+        $this->em->shouldReceive('persist')->with(m::on(function ($report): bool {
             return $report instanceof ReportSubmission;
         }));
 
         // clonePersistentResources should be called
-        $reportService->shouldReceive('clonePersistentResources')->with(\Mockery::type(Report::class), $report);
+        $reportService->shouldReceive('clonePersistentResources')->with(m::type(Report::class), $report);
 
         $report->setAgreedBehalfDeputy('only_deputy');
         $newYearReport = $reportService->submit($report, $this->user, new \DateTime('2016-01-15'));
@@ -148,12 +148,12 @@ final class ReportServiceTest extends TestCase
         $client->addReport($nextReport);
 
         /** @var ReportService|MockInterface $reportService */
-        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
+        $reportService = m::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
 
         // mocks
         $this->em->shouldReceive('detach');
         // assert persists on report and submission record
-        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($report): bool {
+        $this->em->shouldReceive('persist')->with(m::on(function ($report): bool {
             return $report instanceof ReportSubmission;
         }));
         $this->em->shouldReceive('flush')->with()->once(); // last in createNextYearReport
@@ -186,7 +186,7 @@ final class ReportServiceTest extends TestCase
         $report->setAgreedBehalfDeputy('only_deputy');
 
         /** @var ReportService|MockInterface $reportService */
-        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
+        $reportService = m::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
 
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');
@@ -217,13 +217,13 @@ final class ReportServiceTest extends TestCase
 
         // Assert asset is cloned
         $this->em->shouldReceive('detach')->once();
-        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($asset): bool {
+        $this->em->shouldReceive('persist')->with(m::on(function ($asset): bool {
             return $asset instanceof AssetProperty
                 && $asset->getAddress() === 'SW1';
         }))->once();
 
         // Assert bank account is cloned, with opening/closing balance modified
-        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($bankAccount): bool {
+        $this->em->shouldReceive('persist')->with(m::on(function ($bankAccount): bool {
             return $bankAccount instanceof BankAccount
                 && $bankAccount->getAccountNumber() === '1234'
                 && $bankAccount->getOpeningBalance() === $this->report->getBankAccounts()[0]->getClosingBalance()
@@ -257,7 +257,7 @@ final class ReportServiceTest extends TestCase
 
     public function testSubmitAdditionalDocuments(): void
     {
-        $this->em->shouldReceive('persist')->with(\Mockery::on(function ($report): bool {
+        $this->em->shouldReceive('persist')->with(m::on(function ($report): bool {
             return $report instanceof ReportSubmission;
         }));
         $this->em->shouldReceive('flush')->with()->once();
@@ -348,7 +348,7 @@ final class ReportServiceTest extends TestCase
         $user = $this->user->setActive(false);
 
         /** @var ReportService|MockInterface $reportService */
-        $reportService = \Mockery::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
+        $reportService = m::mock(ReportService::class, [$this->em, $this->mockReportFactory, $this->mockLogger])->makePartial();
 
         $this->em->shouldReceive('detach');
         $this->em->shouldReceive('persist');

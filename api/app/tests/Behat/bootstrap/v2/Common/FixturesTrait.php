@@ -10,7 +10,6 @@ use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
-use Tests\OPG\Digideps\Backend\Behat\v2\Helpers\FixtureHelper;
 use Behat\Gherkin\Node\TableNode;
 use Tests\OPG\Digideps\Backend\Behat\v2\Helpers\FixtureHelperBuilder;
 

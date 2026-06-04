@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Entity\Report;
 
+use Doctrine\ORM\Event\PreRemoveEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 #[ORM\Table(name: 'money_transfer')]
-#[ORM\Entity]
+#[ORM\Entity, ORM\HasLifecycleCallbacks]
 class MoneyTransfer
 {
     /**
@@ -129,7 +130,7 @@ class MoneyTransfer
         return $this;
     }
 
-    public function getReport()
+    public function getReport(): Report
     {
         return $this->report;
     }
@@ -172,5 +173,13 @@ class MoneyTransfer
         $this->description = $description;
 
         return $this;
+    }
+
+    #[ORM\PreRemove]
+    public function onPreRemove(PreRemoveEventArgs $_): void
+    {
+        if ($this->getReport()->getMoneyTransfers()->count() === 1) {
+            $this->getReport()->setNoTransfersToAdd(null);
+        }
     }
 }

@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Entity\Report;
 
+use Doctrine\ORM\Event\PreRemoveEventArgs;
 use OPG\Digideps\Backend\Entity\Report\Traits\HasBankAccountTrait;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
 #[ORM\Table(name: 'gift')]
-#[ORM\Entity]
+#[ORM\Entity, ORM\HasLifecycleCallbacks]
 class Gift
 {
     use HasBankAccountTrait;
@@ -122,5 +123,13 @@ class Gift
     public function setReport($report)
     {
         $this->report = $report;
+    }
+
+    #[ORM\PreRemove]
+    public function onPreRemove(PreRemoveEventArgs $_): void
+    {
+        if ($this->getReport()->getGifts()->count() === 1) {
+            $this->getReport()->setGiftsExist(null);
+        }
     }
 }

@@ -135,29 +135,25 @@ trait MoneyShortTrait
     }
 
     /**
-     * @return Collection<int, MoneyTransactionShort>
+     * @return Collection<int, MoneyTransactionShortIn>
      */
     #[JMS\VirtualProperty]
     #[JMS\SerializedName('money_transactions_short_in')]
     #[JMS\Groups(['moneyTransactionsShortIn'])]
     public function getMoneyTransactionsShortIn(): Collection
     {
-        return $this->moneyTransactionsShort->filter(function ($t): bool {
-            return $t instanceof MoneyTransactionShortIn;
-        });
+        return $this->moneyTransactionsShort->filter(fn (MoneyTransactionShort $t): bool => $t instanceof MoneyTransactionShortIn);
     }
 
     /**
-     * @return Collection<int, MoneyTransactionShort>
+     * @return Collection<int, MoneyTransactionShortOut>
      */
     #[JMS\VirtualProperty]
     #[JMS\SerializedName('money_transactions_short_out')]
     #[JMS\Groups(['moneyTransactionsShortOut'])]
     public function getMoneyTransactionsShortOut(): Collection
     {
-        return $this->moneyTransactionsShort->filter(function ($t): bool {
-            return $t instanceof MoneyTransactionShortOut;
-        });
+        return $this->moneyTransactionsShort->filter(fn (MoneyTransactionShort $t): bool => $t instanceof MoneyTransactionShortOut);
     }
 
     public function getMoneyTransactionsShortInExist(): ?string

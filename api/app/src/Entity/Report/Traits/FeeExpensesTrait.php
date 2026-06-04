@@ -31,7 +31,7 @@ trait FeeExpensesTrait
     private $reasonForNoFees;
 
     /**
-     * @var string yes|no|null
+     * @var ?string yes|no|null
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['expenses'])]
@@ -152,7 +152,7 @@ trait FeeExpensesTrait
     }
 
     /**
-     * @param string $paidForAnything
+     * @param ?string $paidForAnything
      *
      * @return Report
      */
