@@ -33,68 +33,116 @@ data "aws_iam_policy_document" "kms_rds_merged" {
   ]
 }
 
+
 data "aws_iam_policy_document" "kms_rds" {
+
+  # ----------------------------
+  # Allow Key to be used for Encryption
+  # ----------------------------
   statement {
-    sid    = "AllowRDSUseOfKeyInThisAccount"
+    sid    = "AllowKeyToBeUsedForEncryption"
     effect = "Allow"
+
     actions = [
-      "kms:Encrypt",
-      "kms:Decrypt",
       "kms:ReEncrypt*",
       "kms:GenerateDataKey*",
-      "kms:DescribeKey"
+      "kms:Encrypt",
+      "kms:DescribeKey",
+      "kms:CreateGrant"
     ]
-    resources = ["*"]
+
+    resources = [
+      "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
+    ]
 
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
+      identifiers = ["*"]
     }
 
-    condition {
-      test     = "StringEquals"
-      variable = "kms:ViaService"
-      values   = ["rds.${data.aws_region.current.name}.amazonaws.com"]
-    }
-
+    # kms:CallerAccount
     condition {
       test     = "StringEquals"
       variable = "kms:CallerAccount"
-      values   = [data.aws_caller_identity.current.account_id]
+      values = [
+        data.aws_caller_identity.current.account_id,
+        local.backup_account_id
+      ]
+    }
+
+    # kms:ViaService
+    condition {
+      test     = "StringLike"
+      variable = "kms:ViaService"
+      values = [
+        "rds.*.amazonaws.com",
+        "backup.*.amazonaws.com"
+      ]
+    }
+
+    # aws:PrincipalArn
+    condition {
+      test     = "StringLike"
+      variable = "aws:PrincipalArn"
+      values = [
+        aws_iam_role.vault_backup_role.arn,
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
+        "arn:aws:iam::${local.backup_account_id}:role/aws-service-role/backup.amazonaws.com/AWSServiceRoleForBackup"
+      ]
     }
   }
 
+
+  # ----------------------------
+  # Allow Key to be used for Decryption
+  # ----------------------------
   statement {
-    sid    = "AllowDestinationAccountUseOfSourceKeyForAWSBackupCopy"
+    sid    = "AllowKeyToBeUsedForDecryption"
     effect = "Allow"
+
     actions = [
-      "kms:Decrypt",
       "kms:DescribeKey",
-      "kms:ReEncryptFrom",
-      "kms:GenerateDataKey*",
-      "kms:CreateGrant",
-      "kms:ListGrants",
-      "kms:RevokeGrant",
-      "kms:Encrypt",
-      "kms:ReEncryptTo"
+      "kms:Decrypt"
     ]
-    resources = ["*"]
+
+    resources = [
+      "arn:aws:kms:*:${data.aws_caller_identity.current.account_id}:key/*"
+    ]
 
     principals {
       type        = "AWS"
-      identifiers = ["arn:aws:iam::${local.backup_account_id}:root"]
+      identifiers = ["*"]
     }
 
-    condition {
-      test     = "Bool"
-      variable = "kms:GrantIsForAWSResource"
-      values   = ["true"]
-    }
-
+    # kms:CallerAccount
     condition {
       test     = "StringEquals"
+      variable = "kms:CallerAccount"
+      values = [
+        data.aws_caller_identity.current.account_id,
+        local.backup_account_id
+      ]
+    }
+
+    # kms:ViaService
+    condition {
+      test     = "StringLike"
       variable = "kms:ViaService"
-      values   = ["backup.${data.aws_region.current.name}.amazonaws.com"]
+      values = [
+        "rds.*.amazonaws.com",
+        "backup.*.amazonaws.com"
+      ]
+    }
+
+    # aws:PrincipalArn
+    condition {
+      test     = "StringLike"
+      variable = "aws:PrincipalArn"
+      values = [
+        aws_iam_role.vault_backup_role.arn,
+        "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/breakglass",
+        "arn:aws:iam::${local.backup_account_id}:role/aws-service-role/backup.amazonaws.com/AWSServiceRoleForBackup"
+      ]
     }
   }
 }
