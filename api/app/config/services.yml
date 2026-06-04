@@ -479,7 +479,7 @@ services:
                   ]
                 - [
                       '@OPG\Digideps\Backend\Factory\ImportClientDataFactory',
-                      "dry-run-only",
+                      "active",
                   ]
                 - [
                       '@OPG\Digideps\Backend\Factory\MissingDeputyDataFactory',
@@ -506,11 +506,11 @@ services:
                   ]
                 - [
                       '@OPG\Digideps\Backend\Factory\MissingReport\MissingReportDataFactory',
-                      "dry-run-only",
+                      "active",
                   ]
                 - [
                       '@OPG\Digideps\Backend\Factory\UpdateReportTypeDataFactory',
-                      "dry-run-only",
+                      "active",
                   ]
 
     OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\DeputyshipsCSVIngester:
