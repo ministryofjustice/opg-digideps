@@ -24,6 +24,12 @@ final class EntityTest extends TestCase
         $this->testEntity($report);
     }
 
+    public function testClientValidOnConstruction(): void
+    {
+        $client = new Client();
+        $this->testEntity($client);
+    }
+
     private function testEntity(object $entity): void
     {
         $errors = [];
@@ -31,10 +37,18 @@ final class EntityTest extends TestCase
         foreach ($reflection->getProperties() as $property) {
             try {
                 $_ = $property->getValue($entity);
+                if ($property->getType() === null) {
+                    $errors[] = [
+                        $property->getName(),
+                        $property->getDeclaringClass()->getName(),
+                        ''
+                    ];
+                }
             } catch (\Throwable $throwable) {
                 $errors[] = [
                     $property->getName(),
-                    $property->getDeclaringClass()->getName()
+                    $property->getDeclaringClass()->getName(),
+                    "{$property->getType()}"
                 ];
             }
         }

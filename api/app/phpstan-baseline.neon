@@ -2029,7 +2029,7 @@ parameters:
 			path: src/DataFixtures/LayUserFixtures.php
 
 		-
-			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setFirstname\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setFirstname\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/DataFixtures/LayUserFixtures.php
@@ -2179,7 +2179,7 @@ parameters:
 			path: src/DataFixtures/PAUserFixtures.php
 
 		-
-			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setFirstname\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setFirstname\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/DataFixtures/PAUserFixtures.php
@@ -2287,7 +2287,7 @@ parameters:
 			path: src/DataFixtures/ProfUserFixtures.php
 
 		-
-			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setFirstname\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setFirstname\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/DataFixtures/ProfUserFixtures.php
@@ -2515,18 +2515,6 @@ parameters:
 			path: src/Entity/Client.php
 
 		-
-			message: '#^Binary operation "\." between string and mixed results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Client\:\:getClientContacts\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Client.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Client\:\:getExpectedReportEndDate\(\) has parameter \$year with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -2539,36 +2527,6 @@ parameters:
 			path: src/Entity/Client.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Client\:\:getFullName\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Client\:\:getFullName\(\) has parameter \$space with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Client\:\:getNotes\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Client\:\:removeReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Client\:\:removeUser\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Client.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Client\:\:setCreatedAtAutomatically\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -2577,18 +2535,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Client\:\:setUpdatedAtAutomatically\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Client\:\:\$caseNumber \(string\) does not accept string\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Client\:\:\$id is never written, only read\.$#'
-			identifier: property.onlyRead
 			count: 1
 			path: src/Entity/Client.php
 
@@ -5443,25 +5389,25 @@ parameters:
 			path: src/FixtureFactory/ClientFactory.php
 
 		-
-			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setFirstname\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setFirstname\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/FixtureFactory/ClientFactory.php
 
 		-
-			message: '#^Parameter \#1 \$lastname of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setLastname\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$lastname of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setLastname\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/FixtureFactory/ClientFactory.php
 
 		-
-			message: '#^Parameter \#1 \$phone of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setPhone\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$phone of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setPhone\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/FixtureFactory/ClientFactory.php
 
 		-
-			message: '#^Parameter \#1 \$postcode of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setPostcode\(\) expects string, mixed given\.$#'
+			message: '#^Parameter \#1 \$postcode of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setPostcode\(\) expects string\|null, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/FixtureFactory/ClientFactory.php
@@ -8407,19 +8353,7 @@ parameters:
 			path: src/v2/Assembler/ClientAssembler.php
 
 		-
-			message: '#^Parameter \#1 \$firstname of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setFirstname\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/v2/Assembler/ClientAssembler.php
-
-		-
 			message: '#^Parameter \#1 \$object_or_class of function method_exists expects object\|string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/v2/Assembler/ClientAssembler.php
-
-		-
-			message: '#^Parameter \#1 \$postcode of method OPG\\Digideps\\Backend\\Entity\\Client\:\:setPostcode\(\) expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/v2/Assembler/ClientAssembler.php
@@ -17215,12 +17149,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
-
-		-
 			message: '#^Parameter \#1 \$array of function array_key_first expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 3
@@ -18091,12 +18019,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/Reporting/Admin/ReportingAdminFeatureContext.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: tests/Behat/bootstrap/v2/Reporting/Admin/ReportingAdminFeatureContext.php
-
-		-
 			message: '#^Offset ''addressPostcode'' might not exist on array\|null\.$#'
 			identifier: offsetAccess.notFound
 			count: 1
@@ -18843,12 +18765,6 @@ parameters:
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Reporting\\Sections\\ReportingSectionsFeatureContext\:\:thereShouldBeOneOffPaymentsDisplayedOnTheSummaryPage\(\) has parameter \$arg1 with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
 
