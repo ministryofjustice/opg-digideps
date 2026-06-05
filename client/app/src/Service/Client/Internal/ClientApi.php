@@ -142,9 +142,9 @@ class ClientApi
         return $response;
     }
 
-    public function getByCaseNumber(string $caseNumber)
+    public function getByCaseNumber(string $caseNumber): ?Client
     {
-        return $this->restClient->get(sprintf(self::GET_CLIENT_BY_CASE_NUMBER_V2, $caseNumber), 'Client');
+        return $this->restClient->get(sprintf(self::GET_CLIENT_BY_CASE_NUMBER_V2, $caseNumber), Client::class);
     }
 
     public function unarchiveClient(string $id): void
