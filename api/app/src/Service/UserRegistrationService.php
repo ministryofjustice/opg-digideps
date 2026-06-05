@@ -30,15 +30,7 @@ class UserRegistrationService
     public function selfRegisterUser(SelfRegisterData $selfRegisterData): User
     {
         $caseNumber = $selfRegisterData->getCaseNumber() ?? '';
-
-//        $isMultiDeputyCase = $this->preRegistrationVerificationService->isMultiDeputyCase($caseNumber);
         $existingClient = $this->em->getRepository(Client::class)->findByCaseNumber($caseNumber);
-
-        // ward off non-fee-paying codeps trying to self-register
-//        if ($isMultiDeputyCase && ($existingClient instanceof Client) && $existingClient->hasDeputies()) {
-//            // if client exists with case number, the first codep already registered.
-//            throw new \RuntimeException(json_encode('Co-deputy cannot self register.') ?: '', 403);
-//        }
 
         // Check the user doesn't already exist
         $existingUser = $this->em->getRepository(User::class)->findOneByEmail($selfRegisterData->getEmail());
@@ -46,18 +38,6 @@ class UserRegistrationService
             $message = sprintf('User with email %s already exists.', $existingUser->getEmail());
             throw new \RuntimeException(json_encode($message) ?: '', 422);
         }
-
-        // Check the client is unique and has no deputies attached
-//        if ($existingClient instanceof Client) {
-//            if ($existingClient->hasDeputies() || $existingClient->getOrganisation() instanceof Organisation) {
-//                $message = sprintf('User registration: Case number %s already used', $existingClient->getCaseNumber());
-//                throw new \RuntimeException(json_encode($message) ?: '', 425);
-//            } else {
-//                // soft delete client
-//                $this->em->remove($existingClient);
-//                $this->em->flush();
-//            }
-//        }
 
         // proceed with deputy and client
         $user = new User();

@@ -9,7 +9,9 @@ use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Form\CoDeputyInviteType;
 use OPG\Digideps\Frontend\Service\Client\Internal\ClientApi;
 use OPG\Digideps\Frontend\Service\Client\Internal\DeputyApi;
+use OPG\Digideps\Frontend\Service\Client\Internal\UserApi;
 use OPG\Digideps\Frontend\Service\CourtOrderService;
+use OPG\Digideps\Frontend\Service\Redirector;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,6 +26,8 @@ class CourtOrderController extends AbstractController
         private readonly CourtOrderService $courtOrderService,
         private readonly ClientApi $clientApi,
         private readonly DeputyApi $deputyApi,
+        private readonly UserApi $userApi,
+        private readonly Redirector $redirector,
     ) {
     }
 
@@ -67,6 +71,12 @@ class CourtOrderController extends AbstractController
     #[Template('@App/Index/choose-a-court-order.html.twig')]
     public function getAllDeputyCourtOrders(): Response|array
     {
+        $user = $this->userApi->getUserWithData();
+        $route = $this->redirector->getCorrectRouteIfDifferent($user, 'courtorders_for_deputy');
+        if ($route !== false) {
+            return $this->redirectToRoute($route);
+        }
+
         // structure of returned data can be found in api/app/src/Service/DeputyService.php, findReportsInfoByUid()
         $results = $this->deputyApi->findAllDeputyCourtOrdersForCurrentDeputy();
 
