@@ -85,6 +85,7 @@ class ImportDeputyDataFactory implements DataFactoryInterface
                             ON ssd.deputy_email LIKE CONCAT('%@', o.email_identifier) OR ssd.deputy_email = o.email_identifier
                         LEFT JOIN dd_user u
                             ON u.deputy_uid = ssd.deputy_uid::BIGINT
+                            AND u.is_primary IS true
                         WHERE d.id = ssd.local_id
                     ");
                     $inserted = $this->execute("
