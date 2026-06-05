@@ -516,9 +516,11 @@ class Checklist implements SynchronisableInterface
     /**
      * @param ChecklistInformation[] $checklistInformation
      */
-    public function setChecklistInformation(array $checklistInformation): void
+    public function setChecklistInformation(array $checklistInformation): static
     {
         $this->checklistInformation = $checklistInformation;
+
+        return $this;
     }
 
     public function getFurtherInformationReceived(): ?string
@@ -526,7 +528,7 @@ class Checklist implements SynchronisableInterface
         return $this->furtherInformationReceived;
     }
 
-    public function setFurtherInformationReceived(?string $furtherInformationReceived): void
+    public function setFurtherInformationReceived(?string $furtherInformationReceived): static
     {
         $this->furtherInformationReceived = $furtherInformationReceived;
 
