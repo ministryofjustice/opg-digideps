@@ -20,6 +20,7 @@ use OPG\Digideps\Frontend\Service\Redirector;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Attribute\Template;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -191,55 +192,7 @@ class ClientController extends AbstractController
                     throw $e;
                 }
 
-                switch ((int) $e->getCode()) {
-                    case 400:
-                        $form->addError(new FormError($translator->trans('formErrors.matching', [], 'register')));
-                        break;
-
-                    case 403:
-                        $form->addError(new FormError($translator->trans('formErrors.coDepCaseAlreadyRegistered', [], 'register')));
-                        break;
-
-                    case 425:
-                        $form->addError(new FormError($translator->trans('formErrors.caseNumberAlreadyUsed', [], 'register')));
-                        break;
-
-                    case 460:
-                        $form->addError(new FormError($translator->trans('matchingErrors.caseNumber', [], 'register')));
-                        break;
-
-                    case 461:
-                        $decodedError = json_decode((string) $e->getData()['message'], true);
-
-                        if ($decodedError['matching_errors']['client_lastname']) {
-                            $form->addError(new FormError($translator->trans('matchingErrors.clientLastname', [], 'register')));
-                        }
-                        if ($decodedError['matching_errors']['deputy_lastname']) {
-                            $form->addError(new FormError($translator->trans('matchingErrors.deputyLastname', [], 'register')));
-                        }
-                        if ($decodedError['matching_errors']['deputy_firstname']) {
-                            $form->addError(new FormError($translator->trans('matchingErrors.deputyFirstname', [], 'register')));
-                        }
-                        if ($decodedError['matching_errors']['deputy_postcode']) {
-                            $form->addError(new FormError($translator->trans('matchingErrors.deputyPostcode', [], 'register')));
-                        }
-                        if (
-                            $decodedError['matching_errors']['deputy_lastname']
-                            || $decodedError['matching_errors']['deputy_firstname']
-                            || $decodedError['matching_errors']['deputy_postcode']
-                        ) {
-                            $form->addError(new FormError('Please click back'));
-                        }
-
-                        break;
-
-                    case 462:
-                        $form->addError(new FormError($translator->trans('formErrors.deputyNotUniquelyIdentified', [], 'register')));
-                        break;
-
-                    default:
-                        $form->addError(new FormError($translator->trans('formErrors.generic', [], 'register')));
-                }
+                $this->addRegistrationFormErrors($form, $translator, $e);
 
                 $logger->error(__METHOD__ . ': ' . $e->getMessage() . ', code: ' . $e->getCode());
             }
@@ -251,5 +204,46 @@ class ClientController extends AbstractController
             'client' => $client,
             'backLink' => $this->generateUrl('user_details'),
         ];
+    }
+
+    private function addRegistrationFormErrors(FormInterface $form, TranslatorInterface $translator, RestClientException $e): void
+    {
+        $addError = fn (string $key) => $form->addError(new FormError($translator->trans($key, [], 'register')));
+
+        $errorCodeMap = [
+            400 => 'formErrors.matching',
+            403 => 'formErrors.coDepCaseAlreadyRegistered',
+            425 => 'formErrors.caseNumberAlreadyUsed',
+            460 => 'matchingErrors.caseNumber',
+            462 => 'formErrors.deputyNotUniquelyIdentified',
+        ];
+
+        $code = (int) $e->getCode();
+
+        if (isset($errorCodeMap[$code])) {
+            $addError($errorCodeMap[$code]);
+        } elseif ($code === 461) {
+            $decodedError = json_decode((string) $e->getData()['message'], true);
+            $matchingErrors = $decodedError['matching_errors'];
+
+            $fieldErrorMap = [
+                'client_lastname'  => 'matchingErrors.clientLastname',
+                'deputy_lastname'  => 'matchingErrors.deputyLastname',
+                'deputy_firstname' => 'matchingErrors.deputyFirstname',
+                'deputy_postcode'  => 'matchingErrors.deputyPostcode',
+            ];
+
+            foreach ($fieldErrorMap as $field => $translationKey) {
+                if ($matchingErrors[$field]) {
+                    $addError($translationKey);
+                }
+            }
+
+            if ($matchingErrors['deputy_lastname'] || $matchingErrors['deputy_firstname'] || $matchingErrors['deputy_postcode']) {
+                $form->addError(new FormError('Please click back'));
+            }
+        } else {
+            $addError('formErrors.generic');
+        }
     }
 }
