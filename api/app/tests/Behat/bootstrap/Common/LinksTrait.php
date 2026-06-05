@@ -2,6 +2,8 @@
 
 namespace Tests\OPG\Digideps\Backend\Behat\Common;
 
+use Behat\Mink\Element\NodeElement;
+
 trait LinksTrait
 {
     /**
@@ -101,7 +103,7 @@ trait LinksTrait
         $linksElementsFound[0]->click();
     }
 
-    private function findRegion($region): \Behat\Mink\Element\NodeElement
+    private function findRegion($region): NodeElement
     {
         // find region
         $regionSelector = '#' . $region . ', ' . self::behatElementToCssSelector($region, 'region');

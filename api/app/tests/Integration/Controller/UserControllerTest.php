@@ -48,7 +48,7 @@ class UserControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    public function testAddAuth()
+    public function testAddAuth(): void
     {
         $url = '/user';
 
@@ -57,7 +57,7 @@ class UserControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy);
     }
 
-    public function testAddMissingParams()
+    public function testAddMissingParams(): void
     {
         $url = '/user';
 
@@ -75,7 +75,7 @@ class UserControllerTest extends AbstractTestController
         $this->assertStringContainsString('lastname', $errorMessage);
     }
 
-    public function testAdd()
+    public function testAdd(): void
     {
         self::$tokenAdmin = $this->loginAsAdmin();
 
@@ -101,14 +101,14 @@ class UserControllerTest extends AbstractTestController
         $this->assertEquals(User::ADMIN_INVITE, $user->getRegistrationRoute());
     }
 
-    public function testUpdateAuth()
+    public function testUpdateAuth(): void
     {
         $url = '/user/' . self::$deputy1->getId();
 
         $this->assertEndpointNeedsAuth('PUT', $url);
     }
 
-    public function testUpdateAcl()
+    public function testUpdateAcl(): void
     {
         $url = '/user/' . self::$deputy1->getId();
         $url2 = '/user/' . self::$deputy2->getId();
@@ -121,7 +121,7 @@ class UserControllerTest extends AbstractTestController
         $this->assertEndpointAllowedFor('PUT', $url2, self::$tokenAdmin);
     }
 
-    public function testUpdate()
+    public function testUpdate(): void
     {
         $deputyId = self::$deputy1->getId();
         $url = '/user/' . $deputyId;
@@ -152,7 +152,7 @@ class UserControllerTest extends AbstractTestController
         self::fixtures()->flush($user);
     }
 
-    public function testUpdateNotPermittedToChangeType()
+    public function testUpdateNotPermittedToChangeType(): void
     {
         $deputyId = self::$deputy1->getId();
         $url = '/user/' . $deputyId;
@@ -171,41 +171,41 @@ class UserControllerTest extends AbstractTestController
         $this->assertEquals('Cannot change realm of user\'s role', $output['message']);
     }
 
-    public function testIsPasswordCorrectAuth()
+    public function testIsPasswordCorrectAuth(): void
     {
         $url = '/user/' . self::$deputy2->getId() . '/is-password-correct';
 
         $this->assertEndpointNeedsAuth('POST', $url);
     }
 
-    public function testIsPasswordCorrectAcl()
+    public function testIsPasswordCorrectAcl(): void
     {
         $url = '/user/' . self::$deputy2->getId() . '/is-password-correct';
 
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenDeputy);
     }
 
-    public function testIsPasswordCorrect()
+    public function testIsPasswordCorrect(): void
     {
         $url = '/user/' . self::$deputy1->getId() . '/is-password-correct';
         $this->assertEndpointNeedsAuth('POST', $url);
     }
 
-    public function testChangePasswordAuth()
+    public function testChangePasswordAuth(): void
     {
         $url = '/user/' . self::$deputy1->getId() . '/set-password';
 
         $this->assertEndpointNeedsAuth('PUT', $url, ['password' => 'adfikhdbfsk']);
     }
 
-    public function testChangePasswordAcl()
+    public function testChangePasswordAcl(): void
     {
         $url = '/user/' . self::$deputy2->getId() . '/set-password';
 
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenDeputy, ['password' => 'ashjbasdfjhb']);
     }
 
-    public function testChangePasswordMissingParams()
+    public function testChangePasswordMissingParams(): void
     {
         $url = '/user/' . self::$deputy1->getId() . '/set-password';
 
@@ -218,7 +218,7 @@ class UserControllerTest extends AbstractTestController
         $this->assertStringContainsString('password', $errorMessage);
     }
 
-    public function testChangePasswordNoEmail()
+    public function testChangePasswordNoEmail(): void
     {
         $url = '/user/' . self::$deputy1->getId() . '/set-password';
 
@@ -236,7 +236,7 @@ class UserControllerTest extends AbstractTestController
     /**
      * @depends testChangePasswordNoEmail
      */
-    public function testChangePasswordEmailActivate()
+    public function testChangePasswordEmailActivate(): void
     {
         $url = '/user/' . self::$deputy1->getId() . '/set-password';
 
@@ -255,7 +255,7 @@ class UserControllerTest extends AbstractTestController
     /**
      * @depends testChangePasswordEmailActivate
      */
-    public function testChangePasswordEmailReset()
+    public function testChangePasswordEmailReset(): void
     {
         $url = '/user/' . self::$deputy1->getId() . '/set-password';
 
@@ -269,28 +269,28 @@ class UserControllerTest extends AbstractTestController
         ]);
     }
 
-    public function testChangeEmailAuth()
+    public function testChangeEmailAuth(): void
     {
         $url = '/user/' . self::$deputy1->getId() . '/update-email';
 
         $this->assertEndpointNeedsAuth('PUT', $url);
     }
 
-    public function testChangeEmailAcl()
+    public function testChangeEmailAcl(): void
     {
         $url = '/user/' . self::$deputy2->getId() . '/update-email';
 
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenDeputy);
     }
 
-    public function testGetOneByIdAuth()
+    public function testGetOneByIdAuth(): void
     {
         $url = '/user/' . self::$deputy1->getId();
 
         $this->assertEndpointNeedsAuth('GET', $url);
     }
 
-    public function testGetOneByIdAcl()
+    public function testGetOneByIdAcl(): void
     {
         $url1 = '/user/' . self::$deputy1->getId();
         $url2 = '/user/' . self::$deputy2->getId();
@@ -307,7 +307,7 @@ class UserControllerTest extends AbstractTestController
         $this->assertEndpointAllowedFor('GET', $url3, self::$tokenAdmin);
     }
 
-    public function testGetOneById()
+    public function testGetOneById(): void
     {
         $url = '/user/' . self::$deputy1->getId();
 
@@ -321,21 +321,21 @@ class UserControllerTest extends AbstractTestController
         $this->assertEquals('deputy@example.org', $return['data']['email']);
     }
 
-    public function testDeleteAuth()
+    public function testDeleteAuth(): void
     {
         $url = '/user/' . self::$deputy1->getId();
 
         $this->assertEndpointNeedsAuth('DELETE', $url);
     }
 
-    public function testDeleteAcl()
+    public function testDeleteAcl(): void
     {
         $url = '/user/' . self::$deputy1->getId();
 
         $this->assertEndpointNotAllowedFor('DELETE', $url, self::$tokenDeputy);
     }
 
-    public function testDeletePermittedForSuperAdmin()
+    public function testDeletePermittedForSuperAdmin(): void
     {
         $deputy3 = self::fixtures()->createUser();
         $deputy3->setRoleName(User::ROLE_LAY_DEPUTY);
@@ -358,7 +358,7 @@ class UserControllerTest extends AbstractTestController
         $this->assertTrue($client->getDeletedAt() === null);
     }
 
-    public function testDeleteNotPermittedForAdmin()
+    public function testDeleteNotPermittedForAdmin(): void
     {
         $deputy3 = self::fixtures()->createUser();
         $deputy3->setRoleName(User::ROLE_LAY_DEPUTY);
@@ -376,7 +376,7 @@ class UserControllerTest extends AbstractTestController
     }
 
     // DDLS-860 - deleting a user with associated court orders via admin UI, which calls DELETE /user/<id>
-    public function testDeleteWithAssociatedCourtOrders()
+    public function testDeleteWithAssociatedCourtOrders(): void
     {
         $user = self::fixtures()->createUser();
         $user->setRoleName(User::ROLE_LAY_DEPUTY);
@@ -406,21 +406,21 @@ class UserControllerTest extends AbstractTestController
         ]);
     }
 
-    public function testGetAllAuth()
+    public function testGetAllAuth(): void
     {
         $url = '/user/get-all';
 
         $this->assertEndpointNeedsAuth('GET', $url);
     }
 
-    public function testGetAllAcl()
+    public function testGetAllAcl(): void
     {
         $url = '/user/get-all';
 
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenDeputy);
     }
 
-    public function testGetAll()
+    public function testGetAll(): void
     {
         $url = '/user/get-all';
 
@@ -432,7 +432,7 @@ class UserControllerTest extends AbstractTestController
         $this->assertTrue(count($return['data']) > 2);
     }
 
-    public function testRecreateTokenMissingClientSecret()
+    public function testRecreateTokenMissingClientSecret(): void
     {
         $url = '/user/recreate-token/mail@example.org';
 
@@ -451,7 +451,7 @@ class UserControllerTest extends AbstractTestController
         ];
     }
 
-    public function testRecreateTokenWrongClientSecret()
+    public function testRecreateTokenWrongClientSecret(): void
     {
         $this->assertJsonRequest('PUT', '/user/recreate-token/mail@example.org', [
             'mustFail' => true,
@@ -460,7 +460,7 @@ class UserControllerTest extends AbstractTestController
         ]);
     }
 
-    public function testRecreateTokenUserNotFound()
+    public function testRecreateTokenUserNotFound(): void
     {
         $this->assertJsonRequest('PUT', '/user/recreate-token/WRONGUSER@example.org', [
             'mustFail' => true,
@@ -493,7 +493,7 @@ class UserControllerTest extends AbstractTestController
     /**
      * @dataProvider recreateTokenProviderForRole
      */
-    public function testRecreateTokenAcceptsClientSecret($secret, string $email, bool $passOrFail)
+    public function testRecreateTokenAcceptsClientSecret($secret, string $email, bool $passOrFail): void
     {
         /**
          * @var UserRepository $repository
@@ -520,7 +520,7 @@ class UserControllerTest extends AbstractTestController
         }
     }
 
-    public function testRecreateTokenEmailActivate()
+    public function testRecreateTokenEmailActivate(): void
     {
         $url = '/user/recreate-token/deputy@example.org';
 
@@ -547,7 +547,7 @@ class UserControllerTest extends AbstractTestController
         $this->assertSame('0', $userRefreshed->getTokenDate()?->diff(new \DateTime())?->format('%a'));
     }
 
-    public function testGetByToken()
+    public function testGetByToken(): void
     {
         $this->assertJsonRequest('GET', '/user/get-by-token/123abcd', [
             'mustFail' => true,
@@ -578,7 +578,7 @@ class UserControllerTest extends AbstractTestController
         $this->assertEquals('deputy@example.org', $data['email']);
     }
 
-    public function testAgreeTermsUse()
+    public function testAgreeTermsUse(): void
     {
         /**
          * @var UserRepository $repository
@@ -615,7 +615,7 @@ class UserControllerTest extends AbstractTestController
         $this->assertEquals(date('Y-m-d'), $user->getAgreeTermsUseDate()?->format('Y-m-d'));
     }
 
-    public function testGetPrimaryAccount()
+    public function testGetPrimaryAccount(): void
     {
         $url = '/user/get-primary-user-account/567890098765';
 

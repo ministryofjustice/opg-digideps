@@ -33,6 +33,7 @@ use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
 use OPG\Digideps\Backend\Entity\User;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMException;
+use Doctrine\DBAL\Connection;
 
 /**
  * Used for unit testing.
@@ -535,7 +536,7 @@ class Fixtures
         return $this->getRepo(Deputy::class)->findOneBy(['deputyNo' => $deputyNo]);
     }
 
-    public function getConnection(): \Doctrine\DBAL\Connection
+    public function getConnection(): Connection
     {
         return $this->em->getConnection();
     }

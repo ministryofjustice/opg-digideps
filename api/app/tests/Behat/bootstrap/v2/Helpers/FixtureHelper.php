@@ -269,9 +269,9 @@ class FixtureHelper
         return FixtureHelperBuilder::buildUserDetails($user);
     }
 
-    public function duplicateClient(int $clientId, ?bool $sameFirstName = true, ?bool $sameLastName = true): ?Client
+    public function duplicateClient(int $clientId, ?bool $sameFirstName = true, ?bool $sameLastName = true): Client
     {
-        $client = clone $this->em->getRepository(Client::class)->find($clientId);
+        $client = clone ($this->em->getRepository(Client::class)->find($clientId) ?? throw new \LogicException("Bad fixture: Client with id {$clientId} does not exist"));
         $client->setCaseNumber(ClientTestHelper::createValidCaseNumber());
 
         if (!$sameFirstName) {

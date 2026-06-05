@@ -5,6 +5,7 @@ namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 use OPG\Digideps\Backend\Entity\Satisfaction;
 use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
 use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
+use OPG\Digideps\Backend\Entity\Report\Report;
 
 class SatisfactionControllerTest extends AbstractTestController
 {
@@ -92,7 +93,7 @@ class SatisfactionControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('POST', $url, self::$tokenAdmin, $okayData);
     }
 
-    private function prepareReport(): \OPG\Digideps\Backend\Entity\Report\Report
+    private function prepareReport(): Report
     {
         $reportTestHelper = ReportTestHelper::create();
         $em = static::getContainer()->get('em');
