@@ -49,6 +49,7 @@ class CourtOrderController extends AbstractController
     public function getOrderByUid(string $courtOrderUid): array
     {
         $courtOrder = $this->courtOrderService->getByUid($courtOrderUid);
+
         /** @var Client $client */
         $client = $this->clientApi->getById($courtOrder->getClient()->getId());
 

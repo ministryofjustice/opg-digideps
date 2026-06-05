@@ -82,7 +82,6 @@ class ReportController extends RestController
         $client = $this->findEntityBy(Client::class, $reportData['client']['id']);
         $this->denyAccessIfClientDoesNotBelongToUser($client);
 
-        /** @var PreRegistration[] $preRegistrationRecord */
         $preRegistrationRecord = $this->preRegRepository->findByCaseNumber($client->getCaseNumber());
         $orderStartDate = $preRegistrationRecord[0]->getOrderDate();
 
