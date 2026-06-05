@@ -59,7 +59,6 @@ class PreRegistrationVerificationService
      */
     private function getCaseNumberMatches(array $detailsToMatchOn): array
     {
-        /** @var PreRegistration[] $caseNumberMatches */
         $caseNumberMatches = $this->preRegistrationRepository->findByCaseNumber($detailsToMatchOn['caseNumber'] ?? '');
 
         if (count($caseNumberMatches) === 0) {
