@@ -56,7 +56,7 @@ class ConnectionWrapperTest extends TestCase
         $this->assertTrue($this->connection->isConnected());
     }
 
-    private function updateLocalstackSecret(string $secretName, string $newPassword)
+    private function updateLocalstackSecret(string $secretName, string $newPassword): void
     {
         // Use the Secrets Manager client to update the secret value in localstack
         $secretClient = new SecretsManagerClient([
@@ -71,7 +71,7 @@ class ConnectionWrapperTest extends TestCase
         ]);
     }
 
-    private function updatePostgresMasterPassword(string $oldPassword, string $newPassword)
+    private function updatePostgresMasterPassword(string $oldPassword, string $newPassword): void
     {
         // Update the PostgreSQL master password
         $dbParams = [

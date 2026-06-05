@@ -8,7 +8,7 @@ use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 trait ErrorsTrait
 {
-    public function assertOnErrorMessage(string $errorMessage)
+    public function assertOnErrorMessage(string $errorMessage): void
     {
         $errorDiv = $this->getSession()->getPage()->find('css', 'div#error-summary');
         $flashDiv = $this->getSession()->getPage()->find('css', 'div.opg-alert--error');

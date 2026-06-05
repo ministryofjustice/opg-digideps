@@ -20,7 +20,7 @@ trait UserTrait
      *
      * @Given the following admins exist:
      */
-    public function adminsExist(TableNode $table)
+    public function adminsExist(TableNode $table): void
     {
         foreach ($table as $inputs) {
             $this->assertValidInputs($inputs);
@@ -82,7 +82,7 @@ trait UserTrait
      *
      * @Given I delete the following users:
      */
-    public function deleteUsers(TableNode $table)
+    public function deleteUsers(TableNode $table): void
     {
         foreach ($table as $inputs) {
             $email = $inputs['email'];
@@ -106,7 +106,7 @@ trait UserTrait
     /**
      * @Given I change the user :userId token to :token dated last week
      */
-    public function iChangeTheUserToken($userId, $token)
+    public function iChangeTheUserToken($userId, $token): void
     {
         $tokenDate = new \DateTime('-7days')->format('Y-m-d');
         $query = sprintf('UPDATE dd_user SET registration_token = \'%s\', token_date = \'%s\' WHERE email = \'%s\'', $token, $tokenDate, $userId);
@@ -118,7 +118,7 @@ trait UserTrait
     /**
      * @When I activate the user :email with password :password
      */
-    public function iActivateTheUserAndSetThePasswordTo($email, $password)
+    public function iActivateTheUserAndSetThePasswordTo($email, $password): void
     {
         $this->visit('/logout');
         $this->openActivationOrPasswordResetPage(false, 'activation', $email);
@@ -134,7 +134,7 @@ trait UserTrait
     /**
      * @When I activate the admin user :email with password :password
      */
-    public function iActivateTheAdminUserAndSetThePasswordTo($email, $password)
+    public function iActivateTheAdminUserAndSetThePasswordTo($email, $password): void
     {
         $this->visitAdminPath('/logout');
         $this->openActivationOrPasswordResetPage(true, 'activation', $email);
@@ -149,7 +149,7 @@ trait UserTrait
     /**
      * @When I activate the named deputy :email with password :password
      */
-    public function iActivateTheNamedDeputyAndSetThePasswordTo($email, $password)
+    public function iActivateTheNamedDeputyAndSetThePasswordTo($email, $password): void
     {
         $this->visit('/logout');
         $this->openActivationOrPasswordResetPage(false, 'activation', $email);
@@ -174,7 +174,7 @@ trait UserTrait
     /**
      * @When I fill in the password fields with :password
      */
-    public function iFillThePasswordFieldsWith($password)
+    public function iFillThePasswordFieldsWith($password): void
     {
         $this->fillField('set_password_password_first', $password);
         $this->fillField('set_password_password_second', $password);
@@ -183,7 +183,7 @@ trait UserTrait
     /**
      * @When I fill in the reset password fields with :password
      */
-    public function iFillTheResetPasswordFieldsWith($password)
+    public function iFillTheResetPasswordFieldsWith($password): void
     {
         $this->fillField('reset_password_password_first', $password);
         $this->fillField('reset_password_password_second', $password);
@@ -192,7 +192,7 @@ trait UserTrait
     /**
      * @When I set the user details to:
      */
-    public function iSetTheUserDetailsTo(TableNode $table)
+    public function iSetTheUserDetailsTo(TableNode $table): void
     {
         $this->visit('/user/details');
         $rows = $table->getRowsHash();
@@ -228,7 +228,7 @@ trait UserTrait
     /**
      * @When I set the client details to:
      */
-    public function iSetTheClientDetailsTo(TableNode $table)
+    public function iSetTheClientDetailsTo(TableNode $table): void
     {
         $this->visit('/client/add');
         $rows = $table->getRowsHash();
@@ -263,7 +263,7 @@ trait UserTrait
     /**
      * @When I set the client details with:
      */
-    public function iSetTheClientDetailsWith(TableNode $table)
+    public function iSetTheClientDetailsWith(TableNode $table): void
     {
         $this->visit('/client/add');
         $rows = $table->getRowsHash();

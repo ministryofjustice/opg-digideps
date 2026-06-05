@@ -11,7 +11,7 @@ trait AdditionalInformationSectionTrait
     /**
      * @Given I view the additional information report section
      */
-    public function iViewAdditionalInformationSection()
+    public function iViewAdditionalInformationSection(): void
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
         $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'any-other-info');
@@ -29,7 +29,7 @@ trait AdditionalInformationSectionTrait
     /**
      * @Given I view and start the additional information report section
      */
-    public function iViewAndStartAdditionalInformationSection()
+    public function iViewAndStartAdditionalInformationSection(): void
     {
         $this->iViewAdditionalInformationSection();
 
@@ -39,7 +39,7 @@ trait AdditionalInformationSectionTrait
     /**
      * @Given there is additional information to add
      */
-    public function thereIsAdditionalInformationToAdd()
+    public function thereIsAdditionalInformationToAdd(): void
     {
         $this->chooseOption('more_info[actionMoreInfo]', 'yes', 'additionalInfo');
         $this->fillInField('more_info_actionMoreInfoDetails', $this->faker->text(200), 'additionalInfo');
@@ -50,7 +50,7 @@ trait AdditionalInformationSectionTrait
     /**
      * @Given there is no additional information to add
      */
-    public function thereIsNoAdditionalInformationToAdd()
+    public function thereIsNoAdditionalInformationToAdd(): void
     {
         $this->chooseOption('more_info[actionMoreInfo]', 'no', 'additionalInfo');
         $this->pressButton('Save and continue');
@@ -59,7 +59,7 @@ trait AdditionalInformationSectionTrait
     /**
      * @Then the additional information summary page should contain the details I entered
      */
-    public function additionalInformationSummaryPageContainsExpectedText()
+    public function additionalInformationSummaryPageContainsExpectedText(): void
     {
         $this->iAmOnAnyOtherInfoSummaryPage();
         $this->expectedResultsDisplayedSimplified();

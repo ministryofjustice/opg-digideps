@@ -31,11 +31,26 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
 {
     use ProphecyTrait;
 
-    private ObjectProphecy|UserRepository $userRepo;
-    private ObjectProphecy|TokenStorageInterface $tokenStorage;
-    private ObjectProphecy|AuthService $authService;
-    private ObjectProphecy|AttemptsInTimeChecker $attemptsInTimeChecker;
-    private ObjectProphecy|AttemptsIncrementalWaitingChecker $incrementalWaitingTimeChecker;
+    /**
+     * @var ObjectProphecy<UserRepository> $userRepo
+     */
+    private ObjectProphecy $userRepo;
+    /**
+     * @var ObjectProphecy<TokenStorageInterface> $tokenStorage
+     */
+    private ObjectProphecy $tokenStorage;
+    /**
+     * @var ObjectProphecy<AuthService> $authService
+     */
+    private ObjectProphecy $authService;
+    /**
+     * @var ObjectProphecy<AttemptsInTimeChecker> $attemptsInTimeChecker
+     */
+    private ObjectProphecy $attemptsInTimeChecker;
+    /**
+     * @var ObjectProphecy<AttemptsIncrementalWaitingChecker> $incrementalWaitingTimeChecker
+     */
+    private ObjectProphecy $incrementalWaitingTimeChecker;
     private RegistrationTokenAuthenticator $sut;
 
     public function setUp(): void
@@ -357,9 +372,9 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
         $expectedBruteForceKey = 'token_abc';
 
         $this->attemptsInTimeChecker->registerAttempt($expectedBruteForceKey)
-            ->willReturn(null);
+            ->willReturn($this->attemptsInTimeChecker);
         $this->incrementalWaitingTimeChecker->registerAttempt($expectedBruteForceKey)
-            ->willReturn(null);
+            ->willReturn($this->incrementalWaitingTimeChecker);
         $this->incrementalWaitingTimeChecker->isFrozen($expectedBruteForceKey)
             ->willReturn(false);
 

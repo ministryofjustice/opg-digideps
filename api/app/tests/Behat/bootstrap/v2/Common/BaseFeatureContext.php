@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Behat\v2\Common;
 
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Service\File\Storage\S3Storage;
 use OPG\Digideps\Backend\Service\ParameterStoreService;
 use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
@@ -146,7 +147,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario
      */
-    public function initialiseFixtureDetails()
+    public function initialiseFixtureDetails(): void
     {
         $this->faker = Factory::create('en_GB');
         $this->testRunId = (string) (time() + rand());
@@ -181,7 +182,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-pfa-high-not-started
      */
-    public function createPfaHighNotStarted(?BeforeScenarioScope $scenario = null, ?string $caseNumber = null)
+    public function createPfaHighNotStarted(?BeforeScenarioScope $scenario = null, ?string $caseNumber = null): void
     {
         $userDetails = $this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId, $caseNumber);
         $this->fixtureUsers[] = $this->layDeputyNotStartedPfaHighAssetsDetails = new UserDetails($userDetails);
@@ -190,7 +191,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-pfa-high-completed
      */
-    public function createPfaHighCompleted()
+    public function createPfaHighCompleted(): void
     {
         $userDetails = $this->fixtureHelper->createLayPfaHighAssetsCompleted($this->testRunId);
         $this->fixtureUsers[] = $this->layDeputyCompletedPfaHighAssetsDetails = new UserDetails($userDetails);
@@ -199,7 +200,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-pfa-high-submitted
      */
-    public function createPfaHighSubmitted()
+    public function createPfaHighSubmitted(): void
     {
         $userDetails = $this->fixtureHelper->createLayPfaHighAssetsSubmitted($this->testRunId);
         $this->fixtureUsers[] = $this->layDeputySubmittedPfaHighAssetsDetails = new UserDetails($userDetails);
@@ -208,7 +209,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-pfa-low-not-started
      */
-    public function createPfaLowNotStarted()
+    public function createPfaLowNotStarted(): void
     {
         $userDetails = $this->fixtureHelper->createLayPfaLowAssetsNotStarted($this->testRunId);
         $this->fixtureUsers[] = $this->layDeputyNotStartedPfaLowAssetsDetails = new UserDetails($userDetails);
@@ -217,7 +218,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-pfa-low-not-started
      */
-    public function createProfPfaLowNotStarted()
+    public function createProfPfaLowNotStarted(): void
     {
         $userDetails = $this->fixtureHelper->createProfPfaLowAssetsNotStarted($this->testRunId);
         $this->fixtureUsers[] = $this->profAdminDeputyNotStartedPfaLowAssetsDetails = new UserDetails($userDetails);
@@ -226,7 +227,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-pfa-low-completed
      */
-    public function createPfaLowCompleted()
+    public function createPfaLowCompleted(): void
     {
         $userDetails = $this->fixtureHelper->createLayPfaLowAssetsCompleted($this->testRunId);
         $this->fixtureUsers[] = $this->layDeputyCompletedPfaLowAssetsDetails = new UserDetails($userDetails);
@@ -235,7 +236,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-pfa-low-completed
      */
-    public function createProfPfaLowCompleted()
+    public function createProfPfaLowCompleted(): void
     {
         $userDetails = $this->fixtureHelper->createProfPfaLowAssetsCompleted($this->testRunId);
         $this->fixtureUsers[] = $this->profAdminDeputyCompletedPfaLowAssetsDetails = new UserDetails($userDetails);
@@ -244,7 +245,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-health-welfare-not-started
      */
-    public function createHealthWelfareNotStarted()
+    public function createHealthWelfareNotStarted(): void
     {
         $userDetails = $this->fixtureHelper->createLayHealthWelfareNotStarted($this->testRunId);
         $this->fixtureUsers[] = $this->layDeputyNotStartedHealthWelfareDetails = new UserDetails($userDetails);
@@ -253,7 +254,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-health-welfare-completed
      */
-    public function createHealthWelfareCompleted()
+    public function createHealthWelfareCompleted(): void
     {
         $userDetails = $this->fixtureHelper->createLayHealthWelfareCompleted($this->testRunId);
         $this->fixtureUsers[] = $this->layDeputyCompletedHealthWelfareDetails = new UserDetails($userDetails);
@@ -262,7 +263,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-combined-high-not-started
      */
-    public function createLayCombinedHighNotStarted()
+    public function createLayCombinedHighNotStarted(): void
     {
         $userDetails = $this->fixtureHelper->createLayCombinedHighAssetsNotStarted($this->testRunId);
         $this->fixtureUsers[] = $this->layDeputyNotStartedCombinedHighDetails = new UserDetails($userDetails);
@@ -271,7 +272,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-combined-high-completed
      */
-    public function createLayCombinedHighCompleted()
+    public function createLayCombinedHighCompleted(): void
     {
         $userDetails = $this->fixtureHelper->createLayCombinedHighAssetsCompleted($this->testRunId);
         $this->fixtureUsers[] = $this->layDeputyCompletedCombinedHighDetails = new UserDetails($userDetails);
@@ -280,7 +281,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-combined-high-submitted
      */
-    public function createLayCombinedHighSubmitted(?BeforeScenarioScope $obj, ?string $testRunId = null)
+    public function createLayCombinedHighSubmitted(?BeforeScenarioScope $obj, ?string $testRunId = null): UserDetails
     {
         $userDetails = new UserDetails($this->fixtureHelper->createLayCombinedHighAssetsSubmitted($testRunId ?: $this->testRunId));
         $this->fixtureUsers[] = $this->layDeputySubmittedCombinedHighDetails = $userDetails;
@@ -291,7 +292,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-health-welfare-submitted
      */
-    public function createHealthWelfareSubmitted()
+    public function createHealthWelfareSubmitted(): void
     {
         $userDetails = $this->fixtureHelper->createLayHealthWelfareSubmitted($this->testRunId);
         $this->fixtureUsers[] = $this->layDeputySubmittedHealthWelfareDetails = new UserDetails($userDetails);
@@ -300,7 +301,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-named-hw-not-started
      */
-    public function createProfNamedHealthWelfareNotStarted()
+    public function createProfNamedHealthWelfareNotStarted(): void
     {
         $userDetails = $this->fixtureHelper->createProfNamedHealthWelfareNotStarted($this->testRunId);
         $this->fixtureUsers[] = $this->profNamedDeputyNotStartedHealthWelfareDetails = new UserDetails($userDetails);
@@ -309,7 +310,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-named-hw-completed
      */
-    public function createProfNamedHealthWelfareCompleted()
+    public function createProfNamedHealthWelfareCompleted(): void
     {
         $userDetails = $this->fixtureHelper->createProfNamedHealthWelfareCompleted($this->testRunId);
         $this->fixtureUsers[] = $this->profNamedDeputyCompletedHealthWelfareDetails = new UserDetails($userDetails);
@@ -318,7 +319,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-named-hw-submitted
      */
-    public function createProfNamedHealthWelfareSubmitted()
+    public function createProfNamedHealthWelfareSubmitted(): void
     {
         $userDetails = $this->fixtureHelper->createProfNamedHealthWelfareSubmitted($this->testRunId);
         $this->fixtureUsers[] = $this->profNamedDeputySubmittedHealthWelfareDetails = new UserDetails($userDetails);
@@ -327,7 +328,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-named-pfa-high-not-started
      */
-    public function createProfNamedPfaHighNotStarted()
+    public function createProfNamedPfaHighNotStarted(): void
     {
         $userDetails = $this->fixtureHelper->createProfNamedPfaHighNotStarted($this->testRunId);
         $this->fixtureUsers[] = $this->profNamedDeputyNotStartedPfaHighDetails = new UserDetails($userDetails);
@@ -336,7 +337,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-named-pfa-high-submitted
      */
-    public function createProfNamedPfaHighSubmitted()
+    public function createProfNamedPfaHighSubmitted(): void
     {
         $userDetails = $this->fixtureHelper->createProfNamedPfaHighSubmitted($this->testRunId);
         $this->fixtureUsers[] = $this->profNamedDeputySubmittedPfaHighDetails = new UserDetails($userDetails);
@@ -345,7 +346,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @pa-named-pfa-high-not-started
      */
-    public function createPaNamedPfaHighNotStarted()
+    public function createPaNamedPfaHighNotStarted(): void
     {
         $userDetails = $this->fixtureHelper->createPaNamedPfaHighNotStarted($this->testRunId);
         $this->fixtureUsers[] = $this->publicAuthorityNamedNotStartedPfaHighDetails = new UserDetails($userDetails);
@@ -354,7 +355,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @pa-named-pfa-high-submitted
      */
-    public function createPaNamedPfaHighSubmitted()
+    public function createPaNamedPfaHighSubmitted(): void
     {
         $userDetails = $this->fixtureHelper->createPaNamedPfaHighSubmitted($this->testRunId);
         $this->fixtureUsers[] = $this->publicAuthorityNamedSubmittedPfaHighDetails = new UserDetails($userDetails);
@@ -363,7 +364,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-team-hw-not-started
      */
-    public function createProfTeamHealthWelfareNotStarted()
+    public function createProfTeamHealthWelfareNotStarted(): void
     {
         $userDetails = $this->fixtureHelper->createProfTeamHealthWelfareNotStarted($this->testRunId);
         $this->fixtureUsers[] = $this->profTeamDeputyNotStartedHealthWelfareDetails = new UserDetails($userDetails);
@@ -372,7 +373,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-team-hw-completed
      */
-    public function createProfTeamHealthWelfareCompleted()
+    public function createProfTeamHealthWelfareCompleted(): void
     {
         $userDetails = $this->fixtureHelper->createProfTeamHealthWelfareCompleted($this->testRunId);
         $this->fixtureUsers[] = $this->profTeamDeputyCompletedHealthWelfareDetails = new UserDetails($userDetails);
@@ -381,7 +382,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-admin-health-welfare-not-started
      */
-    public function createProfAdminNotStarted(?BeforeScenarioScope $scenario = null, ?string $deputyEmail = null, ?string $caseNumber = null, ?string $deputyUid = null)
+    public function createProfAdminNotStarted(?BeforeScenarioScope $scenario = null, ?string $deputyEmail = null, ?string $caseNumber = null, ?string $deputyUid = null): void
     {
         $userDetails = $this->fixtureHelper->createProfAdminNotStarted($this->testRunId, $deputyEmail, $caseNumber, $deputyUid);
         $this->fixtureUsers[] = $this->profAdminDeputyHealthWelfareNotStartedDetails = new UserDetails($userDetails);
@@ -390,7 +391,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-admin-health-welfare-completed
      */
-    public function createProfAdminCompleted(?BeforeScenarioScope $scenario = null, ?string $deputyEmail = null, ?string $caseNumber = null, ?string $deputyUid = null)
+    public function createProfAdminCompleted(?BeforeScenarioScope $scenario = null, ?string $deputyEmail = null, ?string $caseNumber = null, ?string $deputyUid = null): void
     {
         $userDetails = $this->fixtureHelper->createProfAdminCompleted($this->testRunId, $deputyEmail, $caseNumber, $deputyUid);
         $this->fixtureUsers[] = $this->profAdminDeputyHealthWelfareCompletedDetails = new UserDetails($userDetails);
@@ -399,7 +400,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-admin-health-welfare-submitted
      */
-    public function createProfAdminSubmitted()
+    public function createProfAdminSubmitted(): void
     {
         $userDetails = $this->fixtureHelper->createProfAdminSubmitted($this->testRunId);
         $this->fixtureUsers[] = $this->profAdminDeputyHealthWelfareSubmittedDetails = new UserDetails($userDetails);
@@ -408,7 +409,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @pa-named-health-welfare-not-started
      */
-    public function createPaNamedNotStarted()
+    public function createPaNamedNotStarted(): void
     {
         $userDetails = $this->fixtureHelper->createPaNamedHealthWelfareNotStarted($this->testRunId);
         $this->fixtureUsers[] = $this->publicAuthorityNamedDeputyNotStartedDetails = new UserDetails($userDetails);
@@ -417,7 +418,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @pa-named-health-welfare-completed
      */
-    public function createPaNamedCompleted()
+    public function createPaNamedCompleted(): void
     {
         $userDetails = $this->fixtureHelper->createPaNamedHealthWelfareCompleted($this->testRunId);
         $this->fixtureUsers[] = $this->publicAuthorityNamedDeputyCompletedDetails = new UserDetails($userDetails);
@@ -426,7 +427,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @pa-named-health-welfare-submitted
      */
-    public function createPaNamedSubmitted()
+    public function createPaNamedSubmitted(): void
     {
         $userDetails = $this->fixtureHelper->createPaNamedHealthWelfareSubmitted($this->testRunId);
         $this->fixtureUsers[] = $this->publicAuthorityNamedDeputySubmittedDetails = new UserDetails($userDetails);
@@ -435,7 +436,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @pa-admin-combined-high-not-started
      */
-    public function createPaAdminCombinedHighNotStarted()
+    public function createPaAdminCombinedHighNotStarted(): void
     {
         $userDetails = $this->fixtureHelper->createPaAdminCombinedHighNotStarted($this->testRunId);
         $this->fixtureUsers[] = $this->publicAuthorityAdminCombinedHighNotStartedDetails = new UserDetails($userDetails);
@@ -444,7 +445,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @pa-admin-combined-high-completed
      */
-    public function createPaAdminCombinedHighCompleted()
+    public function createPaAdminCombinedHighCompleted(): void
     {
         $userDetails = $this->fixtureHelper->createPaAdminCombinedHighCompleted($this->testRunId);
         $this->fixtureUsers[] = $this->publicAuthorityAdminCombinedHighCompletedDetails = new UserDetails($userDetails);
@@ -453,7 +454,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @pa-admin-combined-high-submitted
      */
-    public function createPaAdminCombinedHighSubmitted()
+    public function createPaAdminCombinedHighSubmitted(): void
     {
         $userDetails = $this->fixtureHelper->createPaAdminCombinedHighSubmitted($this->testRunId);
         $this->fixtureUsers[] = $this->publicAuthorityAdminCombinedHighSubmittedDetails = new UserDetails($userDetails);
@@ -462,7 +463,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-admin-combined-high-not-started
      */
-    public function createProfAdminCombinedHighNotStarted()
+    public function createProfAdminCombinedHighNotStarted(): void
     {
         $userDetails = $this->fixtureHelper->createProfAdminCombinedHighNotStarted($this->testRunId);
         $this->fixtureUsers[] = $this->profAdminCombinedHighNotStartedDetails = new UserDetails($userDetails);
@@ -471,7 +472,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-admin-combined-high-completed
      */
-    public function createProfAdminCombinedHighCompleted()
+    public function createProfAdminCombinedHighCompleted(): void
     {
         $userDetails = $this->fixtureHelper->createProfAdminCombinedHighCompleted($this->testRunId);
         $this->fixtureUsers[] = $this->profAdminCombinedHighCompletedDetails = new UserDetails($userDetails);
@@ -480,7 +481,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @prof-admin-combined-high-submitted
      */
-    public function createProfAdminCombinedHighSubmitted()
+    public function createProfAdminCombinedHighSubmitted(): void
     {
         $userDetails = $this->fixtureHelper->createProfAdminCombinedHighSubmitted($this->testRunId);
         $this->fixtureUsers[] = $this->profAdminCombinedHighSubmittedDetails = new UserDetails($userDetails);
@@ -489,7 +490,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @pa-admin-health-welfare-not-started
      */
-    public function createPAAdminNotStarted()
+    public function createPAAdminNotStarted(): void
     {
         $userDetails = $this->fixtureHelper->createPAAdminHealthWelfareNotStarted($this->testRunId);
         $this->fixtureUsers[] = $this->paAdminDeputyNotStartedDetails = new UserDetails($userDetails);
@@ -498,7 +499,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @pa-admin-health-welfare-completed
      */
-    public function createPAAdminCompleted()
+    public function createPAAdminCompleted(): void
     {
         $userDetails = $this->fixtureHelper->createPAAdminHealthWelfareCompleted($this->testRunId);
         $this->fixtureUsers[] = $this->paAdminDeputyCompletedDetails = new UserDetails($userDetails);
@@ -507,7 +508,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @pa-admin-health-welfare-submitted
      */
-    public function createPAAdminSubmitted()
+    public function createPAAdminSubmitted(): void
     {
         $userDetails = $this->fixtureHelper->createPAAdminHealthWelfareSubmitted($this->testRunId);
         $this->fixtureUsers[] = $this->paAdminDeputySubmittedDetails = new UserDetails($userDetails);
@@ -516,7 +517,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @admin
      */
-    public function createAdmin()
+    public function createAdmin(): void
     {
         $userDetails = $this->fixtureHelper->createAdmin($this->testRunId);
         $this->fixtureUsers[] = $this->adminDetails = new UserDetails($userDetails);
@@ -525,7 +526,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @admin-manager
      */
-    public function createAdminManager()
+    public function createAdminManager(): void
     {
         $userDetails = $this->fixtureHelper->createAdminManager($this->testRunId);
         $this->fixtureUsers[] = $this->adminManagerDetails = new UserDetails($userDetails);
@@ -534,7 +535,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @super-admin
      */
-    public function createSuperAdmin()
+    public function createSuperAdmin(): void
     {
         $userDetails = $this->fixtureHelper->createSuperAdmin($this->testRunId);
         $this->fixtureUsers[] = $this->superAdminDetails = new UserDetails($userDetails);
@@ -543,7 +544,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-pfa-high-not-started-legacy-password-hash
      */
-    public function createPfaHighNotStartedLegacyPasswordHash(?BeforeScenarioScope $scenario = null, ?string $caseNumber = null)
+    public function createPfaHighNotStartedLegacyPasswordHash(?BeforeScenarioScope $scenario = null, ?string $caseNumber = null): void
     {
         $userDetails = $this->fixtureHelper->createLayPfaHighAssetsNotStartedLegacyPasswordHash($this->testRunId, $caseNumber);
         $this->fixtureUsers[] = $this->layDeputyNotStartedPfaHighAssetsDetails = new UserDetails($userDetails);
@@ -559,13 +560,13 @@ class BaseFeatureContext extends MinkContext
         return getenv('NONADMIN_HOST');
     }
 
-    public function visitFrontendPath(string $path)
+    public function visitFrontendPath(string $path): void
     {
         $siteUrl = $this->getSiteUrl();
         $this->visitPath($siteUrl . $path);
     }
 
-    public function visitAdminPath(string $path)
+    public function visitAdminPath(string $path): void
     {
         $adminUrl = $this->getAdminUrl();
         $this->visitPath($adminUrl . $path);
@@ -585,7 +586,10 @@ class BaseFeatureContext extends MinkContext
         return $this->getSession()->getCurrentUrl();
     }
 
-    public function createAdditionalDataForAnalytics(string $timeAgo, int $runNumber, int $satisfactionScore)
+    /**
+     * @return array<User>
+     */
+    public function createAdditionalDataForAnalytics(string $timeAgo, int $runNumber, int $satisfactionScore): array
     {
         $rndKey = mt_rand(0, 99999);
 
@@ -595,7 +599,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-pfa-high-not-started-multi-client-deputy
      */
-    public function createLayPfaHighNotStartedMultiClientDeputy()
+    public function createLayPfaHighNotStartedMultiClientDeputy(): void
     {
         $deputyUid = 123456789000 + rand(1, 999);
         $primaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId, null, $deputyUid));
@@ -619,7 +623,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-pfa-high-started-multi-client-deputy-primary-client-discharged-two-active-clients
      */
-    public function createLayPfaHighNotStartedMultiClientDeputyWithActiveAndDischargedClients()
+    public function createLayPfaHighNotStartedMultiClientDeputyWithActiveAndDischargedClients(): void
     {
         $deputyUid = 123456789000 + rand(1, 999);
 
@@ -646,7 +650,7 @@ class BaseFeatureContext extends MinkContext
     /**
      * @BeforeScenario @lay-pfa-high-not-started-multi-client-deputy-secondary-client-discharged-one-active-client
      */
-    public function createLayPfaHighNotStartedMultiClientDeputyWithOneActiveClientAndSecondaryDischargedClient()
+    public function createLayPfaHighNotStartedMultiClientDeputyWithOneActiveClientAndSecondaryDischargedClient(): void
     {
         $deputyUid = 123456789000 + rand(1, 999);
         $primaryUserDetails = new UserDetails($this->fixtureHelper->createLayPfaHighAssetsNotStarted($this->testRunId, null, $deputyUid));

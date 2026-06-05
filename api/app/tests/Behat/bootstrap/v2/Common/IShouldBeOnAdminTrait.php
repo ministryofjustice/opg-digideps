@@ -7,7 +7,7 @@ trait IShouldBeOnAdminTrait
     /**
      * @Then I should be on the admin clients search page
      */
-    public function iAmOnAdminClientsSearchPage()
+    public function iAmOnAdminClientsSearchPage(): true
     {
         return $this->iAmOnPage('/admin\/client\/search$/');
     }
@@ -15,7 +15,7 @@ trait IShouldBeOnAdminTrait
     /**
      * @Then I should be on the admin client details page
      */
-    public function iAmOnAdminClientDetailsPage()
+    public function iAmOnAdminClientDetailsPage(): true
     {
         return $this->iAmOnPage('/admin\/client\/.*\/details$/');
     }
@@ -23,7 +23,7 @@ trait IShouldBeOnAdminTrait
     /**
      * @Then I should be on the admin client discharge page
      */
-    public function iAmOnAdminClientDischargePage()
+    public function iAmOnAdminClientDischargePage(): true
     {
         return $this->iAmOnPage('/admin\/client\/.*\/discharge/');
     }
@@ -31,7 +31,7 @@ trait IShouldBeOnAdminTrait
     /**
      * @Then I should be on the admin users search page
      */
-    public function iAmOnAdminUsersSearchPage()
+    public function iAmOnAdminUsersSearchPage(): true
     {
         return $this->iAmOnPage('/admin\//');
     }
@@ -39,7 +39,7 @@ trait IShouldBeOnAdminTrait
     /**
      * @Then I should be on the admin upload users page
      */
-    public function iAmOnAdminUploadUsersPage()
+    public function iAmOnAdminUploadUsersPage(): true
     {
         return $this->iAmOnPage('/admin\/upload/');
     }
@@ -47,7 +47,7 @@ trait IShouldBeOnAdminTrait
     /**
      * @Then I should be on the admin org csv upload page
      */
-    public function iAmOnAdminOrgCsvUploadPage()
+    public function iAmOnAdminOrgCsvUploadPage(): true
     {
         return $this->iAmOnPage('/admin\/org-csv-upload/');
     }
@@ -55,7 +55,7 @@ trait IShouldBeOnAdminTrait
     /**
      * @Then I should be on the admin lay csv upload page
      */
-    public function iAmOnAdminLayCsvUploadPage()
+    public function iAmOnAdminLayCsvUploadPage(): true
     {
         return $this->iAmOnPage('/admin\/pre-registration-upload/');
     }
@@ -63,7 +63,7 @@ trait IShouldBeOnAdminTrait
     /**
      * @Then I should be on the admin view user page
      */
-    public function iAmOnAdminViewUserPage()
+    public function iAmOnAdminViewUserPage(): true
     {
         return $this->iAmOnPage('/admin\/user\/[0-9].*/');
     }
@@ -71,7 +71,7 @@ trait IShouldBeOnAdminTrait
     /**
      * @Then I should be on the admin add user page
      */
-    public function iAmOnAdminAddUserPage()
+    public function iAmOnAdminAddUserPage(): true
     {
         return $this->iAmOnPage('/admin\/user-add$/');
     }
@@ -79,7 +79,7 @@ trait IShouldBeOnAdminTrait
     /**
      * @Then I should be on the admin edit user page
      */
-    public function iAmOnAdminEditUserPage()
+    public function iAmOnAdminEditUserPage(): true
     {
         return $this->iAmOnPage('/admin\/edit-user.*$/');
     }
@@ -87,7 +87,7 @@ trait IShouldBeOnAdminTrait
     /**
      * @Then I should be on the admin delete confirm user page
      */
-    public function iAmOnAdminDeleteConfirmUserPage()
+    public function iAmOnAdminDeleteConfirmUserPage(): true
     {
         return $this->iAmOnPage('/admin\/delete-confirm\/[0-9].*$/');
     }
@@ -95,7 +95,7 @@ trait IShouldBeOnAdminTrait
     /**
      * @Then I should be on the admin organisation search page
      */
-    public function iAmOnAdminOrganisationSearchPage()
+    public function iAmOnAdminOrganisationSearchPage(): true
     {
         return $this->iAmOnPage('/admin\/organisations\//');
     }
@@ -103,7 +103,7 @@ trait IShouldBeOnAdminTrait
     /**
      * @Then I should be on the admin add organisation page
      */
-    public function iAmOnAdminAddOrganisationPage()
+    public function iAmOnAdminAddOrganisationPage(): true
     {
         return $this->iAmOnPage('/admin\/organisations\/add$/');
     }
@@ -111,7 +111,7 @@ trait IShouldBeOnAdminTrait
     /**
      * @Then I should be on the admin organisation overview page
      */
-    public function iAmOnAdminOrganisationOverviewPage()
+    public function iAmOnAdminOrganisationOverviewPage(): true
     {
         return $this->iAmOnPage('/admin\/organisations\/.*$/');
     }
@@ -119,7 +119,7 @@ trait IShouldBeOnAdminTrait
     /**
      * @Then I should be on the add user to organisation page
      */
-    public function iAmOnAddUserToOrganisationPage()
+    public function iAmOnAddUserToOrganisationPage(): true
     {
         return $this->iAmOnPage('/admin\/organisations\/.*\/add-user$/');
     }
@@ -127,7 +127,7 @@ trait IShouldBeOnAdminTrait
     /**
      * @Then I should be on the admin stats page
      */
-    public function iAmOnAdminStatsPage()
+    public function iAmOnAdminStatsPage(): true
     {
         return $this->iAmOnPage('/admin\/stats$/');
     }
@@ -135,7 +135,7 @@ trait IShouldBeOnAdminTrait
     /**
      * @Then I should be on the admin stats user research page
      */
-    public function iAmOnAdminStatsUserResearchPage()
+    public function iAmOnAdminStatsUserResearchPage(): true
     {
         return $this->iAmOnPage('/admin\/stats\/user-research$/');
     }
@@ -143,22 +143,22 @@ trait IShouldBeOnAdminTrait
     /**
      * @Then I should be on the admin stats satisfaction page
      */
-    public function iAmOnAdminStatsSatisfactionPage()
+    public function iAmOnAdminStatsSatisfactionPage(): true
     {
         return $this->iAmOnPage('/admin\/stats\/satisfaction$/');
     }
 
-    public function iAmOnAdminManageReportPage()
+    public function iAmOnAdminManageReportPage(): true
     {
         return $this->iAmOnPage('/admin\/report\/.*\/manage$/');
     }
 
-    public function iAmOnAdminManageReportConfirmPage()
+    public function iAmOnAdminManageReportConfirmPage(): true
     {
         return $this->iAmOnPage('/admin\/report\/.*\/manage-confirm$/');
     }
 
-    public function iAmOnAdminManageCloseReportConfirmPage()
+    public function iAmOnAdminManageCloseReportConfirmPage(): true
     {
         return $this->iAmOnPage('/admin\/report\/.*\/manage-close-report-confirm$/');
     }
@@ -166,7 +166,7 @@ trait IShouldBeOnAdminTrait
     /**
      * @Then I should be on the admin report checklist page
      */
-    public function iAmOnAdminReportChecklistPage()
+    public function iAmOnAdminReportChecklistPage(): true
     {
         return $this->iAmOnPage('/admin\/report\/.*\/checklist$/');
     }
@@ -174,22 +174,22 @@ trait IShouldBeOnAdminTrait
     /**
      * @Then I should be on the admin report checklist submitted page
      */
-    public function iAmOnAdminReportChecklistSubmittedPage()
+    public function iAmOnAdminReportChecklistSubmittedPage(): true
     {
         return $this->iAmOnPage('/admin\/report\/.*\/checklist-submitted$/');
     }
 
-    public function iAmOnAdminReportSubmissionsPage()
+    public function iAmOnAdminReportSubmissionsPage(): true
     {
         return $this->iAmOnPage('/admin\/documents\/list/');
     }
 
-    public function iAmOnAdminAnalyticsPage()
+    public function iAmOnAdminAnalyticsPage(): true
     {
         return $this->iAmOnPage('/admin\/stats\/metrics$/');
     }
 
-    public function iAmOnAdminNotificationPage()
+    public function iAmOnAdminNotificationPage(): true
     {
         return $this->iAmOnPage('/admin\/settings\/service-notification$/');
     }
@@ -197,17 +197,17 @@ trait IShouldBeOnAdminTrait
     /**
      * @Then I should be on the admin stats reports page
      */
-    public function iAmOnAdminStatsReportsPage()
+    public function iAmOnAdminStatsReportsPage(): true
     {
         return $this->iAmOnPage('/admin\/stats\/reports$/');
     }
 
-    public function iAmOnAdminClientUnarchivePage()
+    public function iAmOnAdminClientUnarchivePage(): true
     {
         return $this->iAmOnPage('/admin\/client\/.*\/unarchive.*$/');
     }
 
-    public function iAmOnAdminClientArchivedPage()
+    public function iAmOnAdminClientArchivedPage(): true
     {
         return $this->iAmOnPage('/admin\/client\/.*\/archived.*$/');
     }

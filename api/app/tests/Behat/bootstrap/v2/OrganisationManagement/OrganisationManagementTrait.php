@@ -13,7 +13,7 @@ trait OrganisationManagementTrait
     /**
      * @When I add an organisation
      */
-    public function iAddAnActiveOrganisation()
+    public function iAddAnActiveOrganisation(): void
     {
         $orgName = 'My Organisation ' . $this->testRunId;
 
@@ -31,7 +31,7 @@ trait OrganisationManagementTrait
     /**
      * @Then I should see the organisation
      */
-    public function iSeeOrganisationInSearch()
+    public function iSeeOrganisationInSearch(): void
     {
         $this->iAmOnAdminOrganisationSearchPage();
 
@@ -57,7 +57,7 @@ trait OrganisationManagementTrait
     /**
      * @When I view the organisation
      */
-    public function iViewOrganisation()
+    public function iViewOrganisation(): void
     {
         $this->iAmOnAdminOrganisationSearchPage();
 
@@ -78,7 +78,7 @@ trait OrganisationManagementTrait
     /**
      * @Then I should see the organisation is empty
      */
-    public function iSeeEmptyOrganisation()
+    public function iSeeEmptyOrganisation(): void
     {
         $this->assertOverviewPage(0, 0);
     }
@@ -86,7 +86,7 @@ trait OrganisationManagementTrait
     /**
      * @When I add :number professional users to the organisation
      */
-    public function iAddProfUsersToOrganisation($numberOfUsers)
+    public function iAddProfUsersToOrganisation($numberOfUsers): void
     {
         $users = $this->createAdditionalProfHealthWelfareUsers(intval($numberOfUsers));
 
@@ -105,7 +105,7 @@ trait OrganisationManagementTrait
     /**
      * @When I add a lay user to the organisation
      */
-    public function iAddLayUserToOrganisation()
+    public function iAddLayUserToOrganisation(): void
     {
         $this->iAmOnAdminOrganisationOverviewPage();
         $this->pressButton('Add user');
@@ -119,7 +119,7 @@ trait OrganisationManagementTrait
     /**
      *@Then I should see an unsuitable role error
      */
-    public function iShouldSeeUnsuitableRoleError()
+    public function iShouldSeeUnsuitableRoleError(): void
     {
         $this->assertPageContainsText('User has unsuitable role to be in this organisation');
         $this->clickLink('Back');
@@ -128,13 +128,13 @@ trait OrganisationManagementTrait
     /**
      *@Then I should see the organisation has :number users
      */
-    public function iShouldSeeUsersInOrganisation($numberOfUsers)
+    public function iShouldSeeUsersInOrganisation($numberOfUsers): void
     {
         $this->iAmOnAdminOrganisationOverviewPage();
         $this->assertOverviewPage(intval($numberOfUsers), 0);
     }
 
-    private function assertOverviewPage(int $users, int $clients)
+    private function assertOverviewPage(int $users, int $clients): void
     {
         $this->iAmOnAdminOrganisationOverviewPage();
 
@@ -165,7 +165,7 @@ trait OrganisationManagementTrait
     /**
      * @Then I should not see the organisation
      */
-    public function iDoNotSeeOrganisationInSearch()
+    public function iDoNotSeeOrganisationInSearch(): void
     {
         $this->iAmOnAdminOrganisationSearchPage();
 
@@ -194,7 +194,7 @@ trait OrganisationManagementTrait
     /**
      * @When I delete the organisation
      */
-    public function iDeleteTheOrganisation()
+    public function iDeleteTheOrganisation(): void
     {
         $this->iAmOnAdminOrganisationSearchPage();
 
@@ -222,7 +222,7 @@ trait OrganisationManagementTrait
     /**
      * @Then I should not be able to delete the organisation
      */
-    public function iShouldNotBeAbleToDeleteTheOrganisation()
+    public function iShouldNotBeAbleToDeleteTheOrganisation(): void
     {
         $this->iAmOnAdminOrganisationSearchPage();
 
@@ -238,7 +238,7 @@ trait OrganisationManagementTrait
     /**
      * @When I edit the organisation name
      */
-    public function iEditOrganisationName()
+    public function iEditOrganisationName(): void
     {
         $this->iAmOnAdminOrganisationOverviewPage();
 

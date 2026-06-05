@@ -147,7 +147,7 @@ class DeputyshipFeatureContext extends BaseFeatureContext
     /**
      * @Then they should be redirected to the page for their single client
      */
-    public function deputyIsRedirectedToTheirSingleClient()
+    public function deputyIsRedirectedToTheirSingleClient(): void
     {
         assert(str_contains($this->getCurrentUrl(), '/deputyship-details/client/' . $this->deputyHasASingleClient_id));
 

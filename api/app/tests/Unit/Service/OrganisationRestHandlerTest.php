@@ -26,12 +26,22 @@ final class OrganisationRestHandlerTest extends TestCase
 {
     use ProphecyTrait;
 
-    private ObjectProphecy|EntityManager $em;
-    private ObjectProphecy|ValidatorInterface $validator;
-    private ObjectProphecy|OrganisationRepository $orgRepository;
-    private ObjectProphecy|OrganisationFactory $orgFactory;
-    private ObjectProphecy|UserRepository $userRepository;
-    private array $sharedDomains;
+    /**
+     * @var ObjectProphecy<EntityManager>
+     */
+    private ObjectProphecy $em;
+    /**
+     * @var ObjectProphecy<ValidatorInterface> $validator
+     */
+    private ObjectProphecy $validator;
+    /**
+     * @var ObjectProphecy<OrganisationRepository> $orgRepository
+     */
+    private ObjectProphecy $orgRepository;
+    /**
+     * @var ObjectProphecy<OrganisationFactory> $orgFactory
+     */
+    private ObjectProphecy $orgFactory;
     private OrganisationRestHandler $sut;
 
     public function setUp(): void
@@ -39,16 +49,16 @@ final class OrganisationRestHandlerTest extends TestCase
         $this->em = self::prophesize(EntityManager::class);
         $this->validator = self::prophesize(ValidatorInterface::class);
         $this->orgRepository = self::prophesize(OrganisationRepository::class);
-        $this->userRepository = self::prophesize(UserRepository::class);
+        $userRepository = self::prophesize(UserRepository::class);
         $this->orgFactory = self::prophesize(OrganisationFactory::class);
-        $this->sharedDomains = ['gmail.com'];
+        $sharedDomains = ['gmail.com'];
         $this->sut = new OrganisationRestHandler(
             $this->em->reveal(),
             $this->validator->reveal(),
             $this->orgRepository->reveal(),
-            $this->userRepository->reveal(),
+            $userRepository->reveal(),
             $this->orgFactory->reveal(),
-            $this->sharedDomains
+            $sharedDomains
         );
     }
 

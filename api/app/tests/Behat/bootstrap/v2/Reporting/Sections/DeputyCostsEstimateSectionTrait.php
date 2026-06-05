@@ -14,7 +14,7 @@ trait DeputyCostsEstimateSectionTrait
     /**
      * @When I navigate to and start the deputy costs estimates report section
      */
-    public function iNavigateToAndStartDeputyCostsEstimatesSection()
+    public function iNavigateToAndStartDeputyCostsEstimatesSection(): void
     {
         $this->iVisitReportOverviewPage();
         $this->iAmOnReportsOverviewPage();
@@ -26,7 +26,7 @@ trait DeputyCostsEstimateSectionTrait
     /**
      * @When I choose fixed costs
      */
-    public function iChooseFixedCosts()
+    public function iChooseFixedCosts(): void
     {
         $this->iAmOnDeputyCostsEstimateChargesPage();
         $this->chooseOption('deputy_costs_estimate[profDeputyCostsEstimateHowCharged]', 'fixed', 'deputyCostType', 'fixed costs');
@@ -36,7 +36,7 @@ trait DeputyCostsEstimateSectionTrait
     /**
      * @When I choose assessed costs
      */
-    public function iChooseAssessedCosts()
+    public function iChooseAssessedCosts(): void
     {
         $this->iAmOnDeputyCostsEstimateChargesPage();
         $this->chooseOption('deputy_costs_estimate[profDeputyCostsEstimateHowCharged]', 'assessed', 'deputyCostType', 'assessed costs');
@@ -46,7 +46,7 @@ trait DeputyCostsEstimateSectionTrait
     /**
      * @When I choose fixed and assessed costs
      */
-    public function iChooseFixedAndAssessedCosts()
+    public function iChooseFixedAndAssessedCosts(): void
     {
         $this->iAmOnDeputyCostsEstimateChargesPage();
         $this->chooseOption('deputy_costs_estimate[profDeputyCostsEstimateHowCharged]', 'both', 'deputyCostType', 'both fixed and assessed costs');
@@ -56,7 +56,7 @@ trait DeputyCostsEstimateSectionTrait
     /**
      * @When I check that if I choose nothing for costs type
      */
-    public function iChooseNothingForCostsType()
+    public function iChooseNothingForCostsType(): void
     {
         $this->iAmOnDeputyCostsEstimateChargesPage();
         $this->pressButton('Save and continue');
@@ -65,7 +65,7 @@ trait DeputyCostsEstimateSectionTrait
     /**
      * @Then I get a cost type validation error
      */
-    public function iGetCostsTypeValidationError()
+    public function iGetCostsTypeValidationError(): void
     {
         $this->iAmOnDeputyCostsEstimateChargesPage();
         $this->assertOnAlertMessage($this->noOptionSelectedError);
@@ -76,7 +76,7 @@ trait DeputyCostsEstimateSectionTrait
     /**
      * @When I fill in the estimated assessed amounts correctly
      */
-    public function iFillInEstimatedAssessedCostsCorrectly()
+    public function iFillInEstimatedAssessedCostsCorrectly(): void
     {
         $this->iAmOnDeputyCostsEstimateBreakdownPage();
         $this->fillInField('deputy_estimate_costs[profDeputyManagementCostAmount]', 1234, 'managementTotalCost');
@@ -90,7 +90,7 @@ trait DeputyCostsEstimateSectionTrait
     /**
      * @When I fill in the estimated fixed and assessed costs correctly
      */
-    public function iFillInEstimatedFixedAssessedCostsCorrectly()
+    public function iFillInEstimatedFixedAssessedCostsCorrectly(): void
     {
         $this->iAmOnDeputyCostsEstimateBreakdownPage();
         $this->fillInField('deputy_estimate_costs[profDeputyManagementCostAmount]', 2789, 'managementTotalCost');
@@ -102,7 +102,7 @@ trait DeputyCostsEstimateSectionTrait
     /**
      * @When I enter invalid values for expected costs
      */
-    public function iEnterInvalidValuesForExpectedCosts()
+    public function iEnterInvalidValuesForExpectedCosts(): void
     {
         $this->iAmOnDeputyCostsEstimateBreakdownPage();
         $this->pressButton('Save and continue');
@@ -116,7 +116,7 @@ trait DeputyCostsEstimateSectionTrait
     /**
      * @Then I get an expected costs validation error
      */
-    public function iGetExpectedCostsValidationError()
+    public function iGetExpectedCostsValidationError(): void
     {
         $this->iAmOnDeputyCostsEstimateBreakdownPage();
         $this->assertOnAlertMessage($this->totalAmountLessThanSumOfOtherAmountsError);
@@ -129,7 +129,7 @@ trait DeputyCostsEstimateSectionTrait
     /**
      * @When I have information that would explain these estimated costs
      */
-    public function iHaveInformationThatWouldExplainEstimatedCosts()
+    public function iHaveInformationThatWouldExplainEstimatedCosts(): void
     {
         $this->iAmOnDeputyCostsEstimateMoreInfoPage();
         $this->selectOption('deputy_costs_estimate[profDeputyCostsEstimateHasMoreInfo]', 'yes');
@@ -140,7 +140,7 @@ trait DeputyCostsEstimateSectionTrait
     /**
      * @When I do not have information that would explain these estimated costs
      */
-    public function iHaveNoInformationThatWouldExplainEstimatedCosts()
+    public function iHaveNoInformationThatWouldExplainEstimatedCosts(): void
     {
         $this->iAmOnDeputyCostsEstimateMoreInfoPage();
         $this->chooseOption(
@@ -155,7 +155,7 @@ trait DeputyCostsEstimateSectionTrait
     /**
      * @When I do not enter an option to explain estimated costs
      */
-    public function iDoNotEnterOptionToExplainEstimatedCosts()
+    public function iDoNotEnterOptionToExplainEstimatedCosts(): void
     {
         $this->iAmOnDeputyCostsEstimateMoreInfoPage();
         $this->pressButton('Save and continue');
@@ -164,7 +164,7 @@ trait DeputyCostsEstimateSectionTrait
     /**
      * @Then I get an explain estimated costs validation error
      */
-    public function iGetAnExplainEstimatedCostsValidationError()
+    public function iGetAnExplainEstimatedCostsValidationError(): void
     {
         $this->iAmOnDeputyCostsEstimateMoreInfoPage();
         $this->assertOnAlertMessage($this->yesNoNotSelectedError);
@@ -173,7 +173,7 @@ trait DeputyCostsEstimateSectionTrait
     /**
      * @When I follow link to deputy costs estimate
      */
-    public function iFollowLinkToDeputyCostsEstimate()
+    public function iFollowLinkToDeputyCostsEstimate(): void
     {
         $this->iAmOnReportsOverviewPage();
         $urlRegex = '/report\/.*\/prof-deputy-costs-estimate$/';
@@ -183,7 +183,7 @@ trait DeputyCostsEstimateSectionTrait
     /**
      * @When I edit how i will charge for my services
      */
-    public function iEditHowIWillChargeForMyServices()
+    public function iEditHowIWillChargeForMyServices(): void
     {
         $this->iAmOnDeputyCostsEstimateSummaryPage();
         $formSectionName = 'deputyCostType';
@@ -203,7 +203,7 @@ trait DeputyCostsEstimateSectionTrait
     /**
      * @When I edit how much I expect to charge
      */
-    public function iEditHowMuchIExpectToCharge()
+    public function iEditHowMuchIExpectToCharge(): void
     {
         $this->iAmOnDeputyCostsEstimateSummaryPage();
         $formSectionName = 'managementTotalCost';
@@ -220,7 +220,7 @@ trait DeputyCostsEstimateSectionTrait
     /**
      * @When I edit information that will explain expected costs
      */
-    public function iEditInformationThatExplainsExpectedCosts()
+    public function iEditInformationThatExplainsExpectedCosts(): void
     {
         $this->iAmOnDeputyCostsEstimateSummaryPage();
         $formSectionName = 'moreInfo';
@@ -235,7 +235,7 @@ trait DeputyCostsEstimateSectionTrait
     /**
      * @When I edit the costs breakdown
      */
-    public function iEditCostsBreakdown()
+    public function iEditCostsBreakdown(): void
     {
         $this->iAmOnDeputyCostsEstimateSummaryPage();
         $formSectionName = 'managementCosts';
@@ -251,7 +251,7 @@ trait DeputyCostsEstimateSectionTrait
     /**
      * @Then the deputy costs estimate summary page should contain the details I entered
      */
-    public function deputyCostsEstimateSummaryPageContainsEnteredDetails()
+    public function deputyCostsEstimateSummaryPageContainsEnteredDetails(): void
     {
         $this->iAmOnDeputyCostsEstimateSummaryPage();
 

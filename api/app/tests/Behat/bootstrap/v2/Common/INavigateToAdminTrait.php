@@ -7,7 +7,7 @@ trait INavigateToAdminTrait
     /**
      * @When I navigate to the admin clients search page
      */
-    public function iNavigateToAdminClientsSearchPage()
+    public function iNavigateToAdminClientsSearchPage(): void
     {
         $this->clickLink('Clients');
         $this->iAmOnAdminClientsSearchPage();
@@ -16,7 +16,7 @@ trait INavigateToAdminTrait
     /**
      * @When I navigate to the admin add user page
      */
-    public function iNavigateToAdminAddUserPage()
+    public function iNavigateToAdminAddUserPage(): void
     {
         $this->pressButton('Add new user');
         $this->iAmOnAdminAddUserPage();
@@ -25,7 +25,7 @@ trait INavigateToAdminTrait
     /**
      * @When I navigate to my admin user profile page
      */
-    public function iNavigateToAdminUserProfilePage()
+    public function iNavigateToAdminUserProfilePage(): void
     {
         $this->clickLink('Your details');
         $mainElement = $this->getSession()->getPage()->find('xpath', '//main');
@@ -35,7 +35,7 @@ trait INavigateToAdminTrait
     /**
      * @When I navigate to the add a new user page
      */
-    public function iNavigateToAddNewUser()
+    public function iNavigateToAddNewUser(): void
     {
         $this->iAmOnAdminUsersSearchPage();
         $this->clickLink('Add new user');
@@ -44,7 +44,7 @@ trait INavigateToAdminTrait
     /**
      * @When I navigate to the admin analytics page
      */
-    public function iNavigateToAdminAnalyticsSearchPage()
+    public function iNavigateToAdminAnalyticsSearchPage(): void
     {
         $this->clickLink('Analytics');
         $this->iAmOnAdminAnalyticsPage();
@@ -53,7 +53,7 @@ trait INavigateToAdminTrait
     /**
      * @When I navigate to the upload users page
      */
-    public function iNavigateToAdminUploadUsersPage()
+    public function iNavigateToAdminUploadUsersPage(): void
     {
         $this->clickLink('Upload users');
     }
@@ -61,7 +61,7 @@ trait INavigateToAdminTrait
     /**
      * @When I navigate to the organisations page
      */
-    public function iNavigateToOrganisationsPage()
+    public function iNavigateToOrganisationsPage(): void
     {
         $this->clickLink('Organisations');
         $this->iAmOnAdminOrganisationSearchPage();
@@ -70,7 +70,7 @@ trait INavigateToAdminTrait
     /**
      * @When I navigate to the add organisation page
      */
-    public function iNavigateToAddOrganisationPage()
+    public function iNavigateToAddOrganisationPage(): void
     {
         $this->pressButton('Add a new organisation');
         $this->iAmOnAdminAddOrganisationPage();
@@ -79,7 +79,7 @@ trait INavigateToAdminTrait
     /**
      * @When I navigate to the report checklist page
      */
-    public function iNavigateToTheReportChecklistPage()
+    public function iNavigateToTheReportChecklistPage(): void
     {
         $this->clickLink('Checklist');
         $this->iAmOnAdminReportChecklistPage();
@@ -88,7 +88,7 @@ trait INavigateToAdminTrait
     /**
      * @When I navigate to the admin report submissions page
      */
-    public function iNavigateToAdminReportSubmissionsPage()
+    public function iNavigateToAdminReportSubmissionsPage(): void
     {
         $this->clickLink('Submissions');
         $this->iAmOnAdminReportSubmissionsPage();

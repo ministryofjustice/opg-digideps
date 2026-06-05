@@ -3037,30 +3037,6 @@ parameters:
 			path: src/Entity/PreRegistration.php
 
 		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Action\:\:\$doYouExpectFinancialDecisions has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Action\:\:\$doYouExpectFinancialDecisionsDetails has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Action\:\:\$doYouHaveConcerns has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Frontend\\Entity\\Report\\Action\:\:\$doYouHaveConcernsDetails has no type specified\.$#'
-			identifier: missingType.property
-			count: 1
-			path: src/Entity/Report/Action.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\Asset\:\:getId\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -13759,26 +13735,8 @@ parameters:
 			path: tests/Unit/EventSubscriber/UserUpdatedSubscriberTest.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Form\\Admin\\ReportChecklistTypeTest\:\:formValuesProvider\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Form/Admin/ReportChecklistTypeTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Form\\Admin\\ReportChecklistTypeTest\:\:testSubmitValidData\(\) has no return type specified\.$#'
 			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Form/Admin/ReportChecklistTypeTest.php
-
-		-
-			message: '#^Parameter \#1 \$contactDetailsUptoDate of method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:setContactDetailsUptoDate\(\) expects string, bool given\.$#'
-			identifier: argument.type
-			count: 1
-			path: tests/Unit/Form/Admin/ReportChecklistTypeTest.php
-
-		-
-			message: '#^Parameter \#1 \$deputyFullNameAccurateInSirius of method OPG\\Digideps\\Frontend\\Entity\\Report\\Checklist\:\:setDeputyFullNameAccurateInSirius\(\) expects string, bool given\.$#'
-			identifier: argument.type
 			count: 1
 			path: tests/Unit/Form/Admin/ReportChecklistTypeTest.php
 

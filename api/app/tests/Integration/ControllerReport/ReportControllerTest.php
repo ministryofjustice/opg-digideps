@@ -776,8 +776,8 @@ class ReportControllerTest extends AbstractTestController
         // assert creation
         $report = self::fixtures()->getReportById($reportId);
 
-        /* @var Checklist $checklist */
         $checklist = $report->getChecklist();
+        $this->assertNotNull($checklist);
 
         $this->assertEquals($checklistId, $checklist->getId());
         $this->assertEquals('yes', $checklist->getReportingPeriodAccurate());
@@ -842,11 +842,13 @@ class ReportControllerTest extends AbstractTestController
 
         // add new report checklist
         $report = self::fixtures()->getReportById($reportId);
+        $checklist = $report->getChecklist();
+        $this->assertNotNull($checklist);
         $checklistId = $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => true,
             'AuthToken' => self::$tokenAdmin,
             'data' => [
-                'id' => $report->getChecklist()->getId(),
+                'id' => $checklist->getId(),
                 'button_clicked' => 'saveFurtherInformation',
                 'save_further_information' => '', // Save further information
                 'further_information_received' => 'Some more info',
@@ -870,10 +872,10 @@ class ReportControllerTest extends AbstractTestController
         ])['data']['checklist'];
 
         // assert creation
-        /* @var $report Report */
         $report = self::fixtures()->getReportById($reportId);
-        /* @var $checklist Checklist */
+        $this->assertNotNull($report);
         $checklist = $report->getChecklist();
+        $this->assertNotNull($checklist);
         $this->assertEquals($checklistId, $checklist->getId());
         $this->assertEquals('yes', $checklist->getReportingPeriodAccurate());
         $this->assertEquals('1', $checklist->getContactDetailsUptoDate());
@@ -950,12 +952,15 @@ class ReportControllerTest extends AbstractTestController
 
         // assert submit fails due to missing fields
         $report = self::fixtures()->getReportById($reportId);
+        $this->assertNotNull($report);
+        $checklist = $report->getChecklist();
+        $this->assertNotNull($checklist);
 
         $this->assertJsonRequest('PUT', $url, [
             'mustSucceed' => false,
             'AuthToken' => self::$tokenAdmin,
             'data' => [
-                'id' => $report->getChecklist()->getId(),
+                'id' => $checklist->getId(),
                 'button_clicked' => 'saveAndDownload',
             ],
         ]);
@@ -968,7 +973,7 @@ class ReportControllerTest extends AbstractTestController
             'mustSucceed' => true,
             'AuthToken' => self::$tokenAdmin,
             'data' => [
-                'id' => $report->getChecklist()->getId(),
+                'id' => $checklist->getId(),
                 'button_clicked' => 'saveAndDownload',
                 'lodging_summary' => 'All complete',
                 'final_decision' => 'for-review',
@@ -977,7 +982,9 @@ class ReportControllerTest extends AbstractTestController
 
         // assert creation
         $report = self::fixtures()->getReportById($reportId);
+        $this->assertNotNull($report);
         $checklist = $report->getChecklist();
+        $this->assertNotNull($checklist);
 
         $this->assertEquals($checklistId, $checklist->getId());
         $this->assertEquals('yes', $checklist->getReportingPeriodAccurate());

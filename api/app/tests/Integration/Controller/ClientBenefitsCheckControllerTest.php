@@ -6,6 +6,7 @@ namespace Tests\OPG\Digideps\Backend\Integration\Controller;
 
 use OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck;
 use OPG\Digideps\Backend\Entity\Report\MoneyReceivedOnClientsBehalf;
+use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\TestHelpers\ClientTestHelper;
 use OPG\Digideps\Backend\TestHelpers\ReportTestHelper;
 
@@ -90,7 +91,7 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
         foreach ($deputyTokens as $deputyToken) {
             $report = $this->prepareReport(true);
 
-            $url = sprintf('/report/client-benefits-check/%s', $report->getClientBenefitsCheck()->getId());
+            $url = sprintf('/report/client-benefits-check/%s', $report->getClientBenefitsCheck()?->getId());
             $this->assertEndpointAllowedFor('GET', $url, $deputyToken);
         }
     }
@@ -100,7 +101,7 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
     {
         $report = $this->prepareReport(true);
 
-        $url = sprintf('/report/client-benefits-check/%s', $report->getClientBenefitsCheck()->getId());
+        $url = sprintf('/report/client-benefits-check/%s', $report->getClientBenefitsCheck()?->getId());
         $this->assertEndpointNotAllowedFor('GET', $url, self::$tokenAdmin);
     }
 
@@ -111,10 +112,12 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
 
         foreach ($deputyTokens as $deputyToken) {
             $report = $this->prepareReport(true);
-            $url = sprintf('/report/client-benefits-check/%s', $report->getClientBenefitsCheck()->getId());
+            $clientBenefitsCheck = $report->getClientBenefitsCheck();
+            $this->assertNotNull($clientBenefitsCheck);
+            $url = sprintf('/report/client-benefits-check/%s', $clientBenefitsCheck->getId());
 
             $this->okayData['report_id'] = $report->getId();
-            $this->okayData['types_of_income_received_on_clients_behalf'][0]['id'] = $report->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf()->first()->getId();
+            $this->okayData['types_of_income_received_on_clients_behalf'][0]['id'] = $clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->first()->getId();
             $this->okayData['types_of_income_received_on_clients_behalf'][1] = [
                 'id' => null,
                 'created' => '2021-10-20',
@@ -132,10 +135,12 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
     public function updateHasSuitablePermissionsNotAllowed()
     {
         $report = $this->prepareReport(true);
-        $url = sprintf('/report/client-benefits-check/%s', $report->getClientBenefitsCheck()->getId());
+        $clientBenefitsCheck = $report->getClientBenefitsCheck();
+        $this->assertNotNull($clientBenefitsCheck);
+        $url = sprintf('/report/client-benefits-check/%s', $clientBenefitsCheck->getId());
 
         $this->okayData['report_id'] = $report->getId();
-        $this->okayData['types_of_income_received_on_clients_behalf'][0]['id'] = $report->getClientBenefitsCheck()->getTypesOfMoneyReceivedOnClientsBehalf()->first()->getId();
+        $this->okayData['types_of_income_received_on_clients_behalf'][0]['id'] = $clientBenefitsCheck->getTypesOfMoneyReceivedOnClientsBehalf()->first()->getId();
         $this->okayData['types_of_income_received_on_clients_behalf'][1] = [
             'id' => null,
             'created' => '2021-10-20',
@@ -148,7 +153,7 @@ class ClientBenefitsCheckControllerTest extends AbstractTestController
         $this->assertEndpointNotAllowedFor('PUT', $url, self::$tokenAdmin, $this->okayData);
     }
 
-    private function prepareReport(bool $withClientBenefitsCheck = false)
+    private function prepareReport(bool $withClientBenefitsCheck = false): Report
     {
         $reportTestHelper = ReportTestHelper::create();
         $em = static::getContainer()->get('em');

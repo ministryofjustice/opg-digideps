@@ -23,9 +23,18 @@ final class HeaderTokenAuthenticatorTest extends TestCase
     use ProphecyTrait;
 
     private HeaderTokenAuthenticator $sut;
-    private ObjectProphecy|Client $redisClient;
-    private ObjectProphecy|UserRepository $userRepository;
-    private ObjectProphecy|LoggerInterface $logger;
+    /**
+     * @var ObjectProphecy<Client> $redisClient
+     */
+    private ObjectProphecy $redisClient;
+    /**
+     * @var ObjectProphecy<UserRepository> $userRepository
+     */
+    private ObjectProphecy $userRepository;
+    /**
+     * @var ObjectProphecy<LoggerInterface> $logger
+     */
+    private ObjectProphecy $logger;
 
     public function setUp(): void
     {
@@ -65,7 +74,7 @@ final class HeaderTokenAuthenticatorTest extends TestCase
         $this->redisClient->get('AuthTokenValue')->willReturn(serialize($postAuthToken));
 
         $passport = new SelfValidatingPassport(
-            new UserBadge($postAuthToken->getUserIdentifier(), function ($userEmail): User {
+            new UserBadge($postAuthToken->getUserIdentifier(), function (string $userEmail): User {
                 $user = $this->userRepository->findOneBy(['email' => strtolower($userEmail)]);
 
                 if ($user instanceof User) {

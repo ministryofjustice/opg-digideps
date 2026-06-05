@@ -177,7 +177,7 @@ class AssetControllerTest extends AbstractTestController
         $this->assertEquals(187500, $asset->getMortgageOutstandingAmount());
         $this->assertEquals(true, $asset->getHasCharges());
         $this->assertEquals(true, $asset->getIsRentedOut());
-        $this->assertEquals('12/31/2015', $asset->getRentAgreementEndDate()->format('m/d/Y'));
+        $this->assertEquals('12/31/2015', $asset->getRentAgreementEndDate()?->format('m/d/Y'));
         $this->assertEquals(1200, $asset->getRentIncomeMonth());
         $this->assertEquals('london road', $asset->getAddress());
         $this->assertEquals('gold house', $asset->getAddress2());

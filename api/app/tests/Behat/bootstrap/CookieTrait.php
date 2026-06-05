@@ -7,7 +7,7 @@ trait CookieTrait
     /**
      * @Given I have a cookie policy set
      */
-    public function iHaveACookiePolicySet()
+    public function iHaveACookiePolicySet(): void
     {
         $policy = [];
         $this->getSession()->setCookie('cookie_policy', json_encode($policy));
@@ -16,7 +16,7 @@ trait CookieTrait
     /**
      * @Then I should not have a cookie policy
      */
-    public function iShouldNotHaveACookiePolicy()
+    public function iShouldNotHaveACookiePolicy(): void
     {
         $policy = json_decode($this->getSession()->getCookie('cookie_policy'));
         if (!is_null($policy)) {
@@ -27,7 +27,7 @@ trait CookieTrait
     /**
      * @Then I should have a cookie policy with usage enabled
      */
-    public function iShouldHaveACookiePolicyWithUsageEnabled()
+    public function iShouldHaveACookiePolicyWithUsageEnabled(): void
     {
         $policy = json_decode($this->getSession()->getCookie('cookie_policy'));
         if (!$policy->usage) {
@@ -38,7 +38,7 @@ trait CookieTrait
     /**
      * @Then I should have a cookie policy with usage disabled
      */
-    public function iShouldHaveACookiePolicyWithUsageDisabled()
+    public function iShouldHaveACookiePolicyWithUsageDisabled(): void
     {
         $policy = json_decode($this->getSession()->getCookie('cookie_policy'));
         if ($policy->usage) {

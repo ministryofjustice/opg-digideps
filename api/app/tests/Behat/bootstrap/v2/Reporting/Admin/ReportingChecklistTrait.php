@@ -49,7 +49,7 @@ trait ReportingChecklistTrait
     /**
      * @When I navigate to the clients search page
      */
-    public function iNavigateToTheClientsSearchPage()
+    public function iNavigateToTheClientsSearchPage(): void
     {
         $this->iVisitAdminClientSearchPage();
         $this->iAmOnAdminClientsSearchPage();
@@ -58,7 +58,7 @@ trait ReportingChecklistTrait
     /**
      * @When I search for the client I'm interacting with
      */
-    public function iSearchForTheClient()
+    public function iSearchForTheClient(): void
     {
         $this->assertInteractingWithUserIsSet();
         $this->searchAdminForClientWithTerm($this->interactingWithUserDetails->getClientCaseNumber());
@@ -67,7 +67,7 @@ trait ReportingChecklistTrait
     /**
      * @When I click the clients details page link
      */
-    public function iClickTheClientsDetailsPageLink()
+    public function iClickTheClientsDetailsPageLink(): void
     {
         $this->iClickOnNthElementBasedOnRegex('/admin\/client\/.*\/details$/', 0);
 
@@ -77,7 +77,7 @@ trait ReportingChecklistTrait
     /**
      * @When I navigate to the clients report checklist page
      */
-    public function iNavigateToTheClientsReportChecklistPage()
+    public function iNavigateToTheClientsReportChecklistPage(): void
     {
         $this->iNavigateToTheReportChecklistPage();
     }
@@ -85,7 +85,7 @@ trait ReportingChecklistTrait
     /**
      * @When I submit the checklist without filling it in
      */
-    public function iSubmitTheChecklistWithoutFillingItIn()
+    public function iSubmitTheChecklistWithoutFillingItIn(): void
     {
         $this->pressButton('report_checklist_submitAndContinue');
     }
@@ -93,7 +93,7 @@ trait ReportingChecklistTrait
     /**
      * @When I submit the checklist with the form filled in
      */
-    public function iSubmitTheChecklistWithTheFormFilledIn()
+    public function iSubmitTheChecklistWithTheFormFilledIn(): void
     {
         $reportType = $this->interactingWithUserDetails->getCurrentReportType();
 
@@ -131,7 +131,7 @@ trait ReportingChecklistTrait
     /**
      * @Then I should see all the validation errors
      */
-    public function iShouldSeeAllTheValidationErrors()
+    public function iShouldSeeAllTheValidationErrors(): void
     {
         foreach ($this->formErrors as $error) {
             $this->assertOnErrorMessage($error);
@@ -141,7 +141,7 @@ trait ReportingChecklistTrait
     /**
      * @Then I should be redirected to the checklist submitted page
      */
-    public function iShouldBeRedirectedToTheChecklistSubmittedPage()
+    public function iShouldBeRedirectedToTheChecklistSubmittedPage(): void
     {
         $this->iAmOnAdminReportChecklistSubmittedPage();
         $savedText = $this->getSession()->getPage()->find('css', '.opg-alert__message > p')->getText();
@@ -152,7 +152,7 @@ trait ReportingChecklistTrait
     /**
      * @Then I can only see the :deputyType specific section
      */
-    public function ICannotSeeTheSpecificCostsSection(string $deputyType)
+    public function ICannotSeeTheSpecificCostsSection(string $deputyType): void
     {
         if ($deputyType === 'public authority pfa high') {
             $hiddenItems = [
@@ -208,7 +208,7 @@ trait ReportingChecklistTrait
     /**
      * @Then /^the checklist status should be \'([^\']*)\'$/
      */
-    public function theChecklistStatusShouldBe(string $status)
+    public function theChecklistStatusShouldBe(string $status): void
     {
         $this->iAmOnAdminReportChecklistPage();
 
@@ -228,7 +228,7 @@ trait ReportingChecklistTrait
     /**
      * @Given /^I run the checklist-sync command$/
      */
-    public function iRunTheChecklistSyncCommand()
+    public function iRunTheChecklistSyncCommand(): void
     {
         $this->visitAdminPath('/admin/behat/run-checklist-sync-command');
 
@@ -240,7 +240,7 @@ trait ReportingChecklistTrait
     /**
      * @Then the checklist details should show :expectedDetails
      */
-    public function theChecklistDetailsShouldShow(string $expectedDetails)
+    public function theChecklistDetailsShouldShow(string $expectedDetails): void
     {
         $this->iAmOnAdminReportChecklistPage();
 
@@ -255,7 +255,7 @@ trait ReportingChecklistTrait
     /**
      * @Then the checklist details should show my admin details
      */
-    public function theChecklistDetailsShouldShowMyAdminDetails()
+    public function theChecklistDetailsShouldShowMyAdminDetails(): void
     {
         $expectedDetails = sprintf('%s, Admin', $this->adminDetails->getUserFullName());
         $this->theChecklistDetailsShouldShow($expectedDetails);

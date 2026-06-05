@@ -17,7 +17,6 @@ use OPG\Digideps\Backend\Service\File\Storage\FileUploadFailedException;
 use OPG\Digideps\Backend\Service\File\Storage\S3Storage;
 use PHPUnit\Framework\TestCase;
 use Prophecy\PhpUnit\ProphecyTrait;
-use Prophecy\Prophecy\ObjectProphecy;
 use Psr\Log\LoggerInterface;
 
 final class S3StorageTest extends TestCase
@@ -387,7 +386,6 @@ final class S3StorageTest extends TestCase
     {
         $key = 'nonExistentFile.png';
 
-        /** @var ObjectProphecy|S3Client $awsClient */
         $awsClient = self::prophesize(S3Client::class);
         $s3Exception = new S3Exception(
             'The specified key does not exist.',
@@ -410,7 +408,6 @@ final class S3StorageTest extends TestCase
     {
         $key = 'nonExistentFile.png';
 
-        /** @var ObjectProphecy|S3Client $awsClient */
         $awsClient = self::prophesize(S3Client::class);
         $s3Exception = new S3Exception(
             'Access Denied.',
@@ -433,7 +430,6 @@ final class S3StorageTest extends TestCase
     {
         $key = 'nonExistentFile.png';
 
-        /** @var ObjectProphecy|S3Client $awsClient */
         $awsClient = self::prophesize(S3Client::class);
         $s3Exception = new S3Exception(
             'Some other error message',

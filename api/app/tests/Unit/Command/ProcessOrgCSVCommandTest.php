@@ -26,12 +26,27 @@ final class ProcessOrgCSVCommandTest extends KernelTestCase
 {
     use ProphecyTrait;
 
-    private ObjectProphecy|S3Client $s3;
-    private ObjectProphecy|ParameterBagInterface $params;
+    /**
+     * @var ObjectProphecy<S3Client> $s3
+     */
+    private ObjectProphecy $s3;
+    /**
+     * @var ObjectProphecy<ParameterBagInterface> $params
+     */
+    private ObjectProphecy $params;
     private string $csvFilename;
-    private LoggerInterface|ObjectProphecy $logger;
-    private ObjectProphecy|CSVDeputyshipProcessing $csvProcessing;
-    private ObjectProphecy|PreRegistrationRepository $preReg;
+    /**
+     * @var ObjectProphecy<LoggerInterface> $logger
+     */
+    private ObjectProphecy $logger;
+    /**
+     * @var ObjectProphecy<CSVDeputyshipProcessing> $csvProcessing
+     */
+    private ObjectProphecy $csvProcessing;
+    /**
+     * @var ObjectProphecy<PreRegistrationRepository> $preReg
+     */
+    private ObjectProphecy $preReg;
     private MockInterface&CsvToArray $csvArray;
     private CommandTester $commandTester;
 

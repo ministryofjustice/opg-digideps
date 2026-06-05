@@ -152,22 +152,18 @@ class UserRepositoryTest extends KernelTestCase
     {
         $userHelper = UserTestHelper::create();
         $usersToAdd = [];
-        $usersToAdd[] = $adminUserMoreThan60Days = $userHelper->createUser(null, User::ROLE_ADMIN);
-        $usersToAdd[] = $superAdminUserMoreThan60Days = $userHelper->createUser(null, User::ROLE_SUPER_ADMIN);
-        $usersToAdd[] = $adminManagerUserMoreThan60Days = $userHelper->createUser(null, User::ROLE_ADMIN_MANAGER);
+        $usersToAdd[] = $adminUserMoreThan60Days = $userHelper->createUser(null, User::ROLE_ADMIN, active: false);
+        $usersToAdd[] = $superAdminUserMoreThan60Days = $userHelper->createUser(null, User::ROLE_SUPER_ADMIN, active: false);
+        $usersToAdd[] = $adminManagerUserMoreThan60Days = $userHelper->createUser(null, User::ROLE_ADMIN_MANAGER, active: false);
         $usersToAdd[] = $adminUserLessThan60Days = $userHelper->createUser(null, User::ROLE_ADMIN);
-        $usersToAdd[] = $nonAdminUserLessThan60Days = $userHelper->createUser();
+        $usersToAdd[] = $nonAdminUserLessThan60Days = $userHelper->createUser(active: false);
 
         $adminUserMoreThan60Days->setRegistrationDate(new \DateTime('-61 days'));
-        $adminUserMoreThan60Days->setLastLoggedIn();
         $superAdminUserMoreThan60Days->setRegistrationDate(new \DateTime('-61 days'));
-        $superAdminUserMoreThan60Days->setLastLoggedIn();
         $adminManagerUserMoreThan60Days->setRegistrationDate(new \DateTime('-61 days'));
-        $adminManagerUserMoreThan60Days->setLastLoggedIn();
         $adminUserLessThan60Days->setRegistrationDate(new \DateTime('-5 days'));
         $adminUserLessThan60Days->setLastLoggedIn(new \DateTime());
         $nonAdminUserLessThan60Days->setRegistrationDate(new \DateTime('-61 days'));
-        $nonAdminUserLessThan60Days->setLastLoggedIn();
 
         foreach ($usersToAdd as $user) {
             self::$entityManager->persist($user);
@@ -194,13 +190,12 @@ class UserRepositoryTest extends KernelTestCase
         $usersToAdd[] = $activeAdminUser = $userHelper->createUser(null, User::ROLE_ADMIN);
         $usersToAdd[] = $activeSuperAdminUser = $userHelper->createUser(null, User::ROLE_SUPER_ADMIN);
         $usersToAdd[] = $activeAdminManagerUser = $userHelper->createUser(null, User::ROLE_ADMIN_MANAGER);
-        $usersToAdd[] = $inactiveAdminManagerUser = $userHelper->createUser(null, User::ROLE_ADMIN_MANAGER);
+        $usersToAdd[] = $inactiveAdminManagerUser = $userHelper->createUser(null, User::ROLE_ADMIN_MANAGER, active: false);
         $usersToAdd[] = $activeDeputyUser = $userHelper->createUser();
 
         $activeAdminUser->setLastLoggedIn(new \DateTime());
         $activeSuperAdminUser->setLastLoggedIn(new \DateTime());
         $activeAdminManagerUser->setLastLoggedIn(new \DateTime());
-        $inactiveAdminManagerUser->setLastLoggedIn();
         $activeDeputyUser->setLastLoggedIn(new \DateTime());
 
         foreach ($usersToAdd as $user) {

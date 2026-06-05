@@ -33,17 +33,17 @@ class UserIntegrationTest extends ApiIntegrationTestCase
 
         self::assertEquals(
             2,
-            $submittedSubmissions[0]->getReport()->getClient()->getUsers()[0]->getNumberOfSubmittedReports()
+            $submittedSubmissions[0]->getReport()?->getClient()?->getUsers()[0]?->getNumberOfSubmittedReports()
         );
 
         self::assertEquals(
             1,
-            $submittedSubmissions[1]->getReport()->getClient()->getUsers()[0]->getNumberOfSubmittedReports()
+            $submittedSubmissions[1]->getReport()?->getClient()?->getUsers()[0]?->getNumberOfSubmittedReports()
         );
 
         self::assertEquals(
             0,
-            $notSubmittedSubmission->getReport()->getClient()->getUsers()[0]->getNumberOfSubmittedReports()
+            $notSubmittedSubmission->getReport()?->getClient()?->getUsers()[0]?->getNumberOfSubmittedReports()
         );
     }
 }

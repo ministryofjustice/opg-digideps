@@ -13,7 +13,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the lay start page
      */
-    public function iVisitLayStartPage()
+    public function iVisitLayStartPage(): void
     {
         $this->visitFrontendPath($this->getLayStartPageUrl());
     }
@@ -21,7 +21,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the report overview page
      */
-    public function iVisitReportOverviewPage()
+    public function iVisitReportOverviewPage(): void
     {
         $this->visitFrontendPath($this->getReportOverviewUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -29,7 +29,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the report submitted page
      */
-    public function iVisitReportSubmissionPage()
+    public function iVisitReportSubmissionPage(): void
     {
         if (is_null($this->loggedInUserDetails->getPreviousReportId())) {
             throw new BehatException("Logged in user doesn't have a previous report ID associated with them. Try using a user that has submitted a report instead.");
@@ -42,7 +42,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the short money out report section
      */
-    public function iVisitMoneyOutShortSection()
+    public function iVisitMoneyOutShortSection(): void
     {
         $this->visitFrontendPath($this->getMoneyOutShortSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -50,7 +50,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the short money out summary section
      */
-    public function iVisitMoneyOutShortSummarySection()
+    public function iVisitMoneyOutShortSummarySection(): void
     {
         $this->visitFrontendPath($this->getMoneyOutShortSectionSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -58,7 +58,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the money out report section
      */
-    public function iVisitMoneyOutSection()
+    public function iVisitMoneyOutSection(): void
     {
         $this->visitFrontendPath($this->getMoneyOutSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -66,7 +66,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the money out summary section
      */
-    public function iVisitMoneyOutSummarySection()
+    public function iVisitMoneyOutSummarySection(): void
     {
         $this->visitFrontendPath($this->getMoneyOutSectionSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -74,7 +74,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the accounts report section
      */
-    public function iVisitAccountsSection()
+    public function iVisitAccountsSection(): void
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
         $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'bank-accounts');
@@ -84,7 +84,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the accounts summary section
      */
-    public function iVisitAccountsSummarySection()
+    public function iVisitAccountsSummarySection(): void
     {
         $this->visitFrontendPath($this->getAccountsSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -92,7 +92,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the health and lifestyle report section
      */
-    public function iVisitHealthAndLifestyleSection()
+    public function iVisitHealthAndLifestyleSection(): void
     {
         $this->visitFrontendPath($this->getHealthAndLifestyleSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -100,7 +100,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the health and lifestyle summary section
      */
-    public function iVisitHealthAndLifestyleSummarySection()
+    public function iVisitHealthAndLifestyleSummarySection(): void
     {
         $this->visitFrontendPath($this->getHealthAndLifestyleSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -108,7 +108,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the debts report section
      */
-    public function iVisitDebtsSection()
+    public function iVisitDebtsSection(): void
     {
         $this->visitFrontendPath($this->getDebtsSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -116,7 +116,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the debts summary report section
      */
-    public function iVisitDebtsSummarySection()
+    public function iVisitDebtsSummarySection(): void
     {
         $this->visitFrontendPath($this->getDebtsSummarySectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -124,7 +124,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the assets report section
      */
-    public function iVisitAssetsSection()
+    public function iVisitAssetsSection(): void
     {
         $this->visitFrontendPath($this->getAssetsSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -132,7 +132,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the assets summary report section
      */
-    public function iVisitAssetsSummarySection()
+    public function iVisitAssetsSummarySection(): void
     {
         $this->visitFrontendPath($this->getAssetsSummarySectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -141,7 +141,7 @@ trait IVisitFrontendTrait
      * @When I visit the org dashboard page
      * @When they visit the org dashboard page
      */
-    public function iVisitOrgDashboard()
+    public function iVisitOrgDashboard(): void
     {
         $this->visitFrontendPath($this->getOrgDashboardUrl());
     }
@@ -149,7 +149,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the deputy costs report section
      */
-    public function iVisitDeputyCostsSection()
+    public function iVisitDeputyCostsSection(): void
     {
         $this->visitFrontendPath($this->getDeputyCostsUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -157,7 +157,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the money in short report section
      */
-    public function iVisitMoneyInShortSection()
+    public function iVisitMoneyInShortSection(): void
     {
         $this->visitFrontendPath($this->getMoneyInShortSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -165,7 +165,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the short money in summary section
      */
-    public function iVisitMoneyInShortSummarySection()
+    public function iVisitMoneyInShortSummarySection(): void
     {
         $this->visitFrontendPath($this->getMoneyInShortSectionSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -173,7 +173,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the any other information report section
      */
-    public function iVisitAnyOtherInfoSection()
+    public function iVisitAnyOtherInfoSection(): void
     {
         $this->visitFrontendPath($this->getAnyOtherInfoUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -181,7 +181,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the any other information summary report section
      */
-    public function iVisitAnyOtherInfoSummarySection()
+    public function iVisitAnyOtherInfoSummarySection(): void
     {
         $this->visitFrontendPath($this->getAnyOtherInfoSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -189,7 +189,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the actions report section
      */
-    public function iVisitActionsSection()
+    public function iVisitActionsSection(): void
     {
         $this->visitFrontendPath($this->getActionsSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -197,7 +197,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the actions summary report section
      */
-    public function iVisitActionsSummarySection()
+    public function iVisitActionsSummarySection(): void
     {
         $this->visitFrontendPath($this->getActionsSummarySectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -205,7 +205,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the contacts report section
      */
-    public function iVisitContactsSection()
+    public function iVisitContactsSection(): void
     {
         $this->visitFrontendPath($this->getContactsSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -213,7 +213,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the contacts summary report section
      */
-    public function iVisitTheContactsSummaryReportSection()
+    public function iVisitTheContactsSummaryReportSection(): void
     {
         $this->visitFrontendPath($this->getContactsSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -221,7 +221,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the decisions report section
      */
-    public function iVisitDecisionsSection()
+    public function iVisitDecisionsSection(): void
     {
         $this->visitFrontendPath($this->getDecisionsSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -229,7 +229,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the decisions summary report section
      */
-    public function iVisitTheDecisionsSummaryReportSection()
+    public function iVisitTheDecisionsSummaryReportSection(): void
     {
         $this->visitFrontendPath($this->getDecisionsSummarySectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -237,7 +237,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the deputy expenses report section
      */
-    public function iVisitDeputyExpensesSection()
+    public function iVisitDeputyExpensesSection(): void
     {
         $this->visitFrontendPath($this->getDeputyExpensesSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -245,7 +245,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the deputy expenses summary report section
      */
-    public function iVisitDeputyExpensesSummarySection()
+    public function iVisitDeputyExpensesSummarySection(): void
     {
         $this->visitFrontendPath($this->getDeputyExpensesSummarySectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -253,7 +253,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the documents report section
      */
-    public function iVisitDocumentsSection()
+    public function iVisitDocumentsSection(): void
     {
         $this->visitFrontendPath($this->getDocumentsSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -261,7 +261,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the documents summary report section
      */
-    public function iVisitDocumentsSummarySection()
+    public function iVisitDocumentsSummarySection(): void
     {
         $this->visitFrontendPath($this->getDocumentsSummarySectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -269,7 +269,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the gifts report section
      */
-    public function iVisitGiftsSection()
+    public function iVisitGiftsSection(): void
     {
         $this->visitFrontendPath($this->getGiftsSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -277,7 +277,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the gifts summary report section
      */
-    public function iVisitGiftsSummarySection()
+    public function iVisitGiftsSummarySection(): void
     {
         $this->visitFrontendPath($this->getGiftsSummarySectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -285,7 +285,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the money transfers report section
      */
-    public function iVisitMoneyTransfersSection()
+    public function iVisitMoneyTransfersSection(): void
     {
         $this->visitFrontendPath($this->getMoneyTransfersSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -293,7 +293,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the visits and care report section
      */
-    public function iVisitVisitsAndCareSection()
+    public function iVisitVisitsAndCareSection(): void
     {
         $this->visitFrontendPath($this->getVisitsAndCareSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -301,7 +301,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the visits and care summary report section
      */
-    public function iVisitTheVisitAndCareSummaryReportSection()
+    public function iVisitTheVisitAndCareSummaryReportSection(): void
     {
         $this->visitFrontendPath($this->getVisitsAndCareSectionSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -309,7 +309,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the money in report section
      */
-    public function iVisitMoneyInSection()
+    public function iVisitMoneyInSection(): void
     {
         $this->visitFrontendPath($this->getMoneyInSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -317,7 +317,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the money in summary report section
      */
-    public function iVisitMoneyInSummarySection()
+    public function iVisitMoneyInSummarySection(): void
     {
         $this->visitFrontendPath($this->getMoneyInSummarySectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -325,7 +325,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the deputy fees and expenses section
      */
-    public function iVisitDeputyFeesAndExpensesSection()
+    public function iVisitDeputyFeesAndExpensesSection(): void
     {
         $this->visitFrontendPath($this->getDeputyFeesAndExpensesSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -333,7 +333,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the deputy costs estimate report section
      */
-    public function iVisitDeputyCostsEstimateSection()
+    public function iVisitDeputyCostsEstimateSection(): void
     {
         $this->visitFrontendPath($this->getDeputyCostsEstimateSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -341,7 +341,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the client login page
      */
-    public function iVisitTheClientLoginPage()
+    public function iVisitTheClientLoginPage(): void
     {
         $this->visitFrontendPath($this->getClientLoginPageUrl());
     }
@@ -349,7 +349,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the income benefits report section
      */
-    public function iVisitIncomeBenefitsSection()
+    public function iVisitIncomeBenefitsSection(): void
     {
         $this->visitFrontendPath($this->getIncomeBenefitsSectionUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -357,7 +357,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the income benefits summary section
      */
-    public function iVisitIncomeBenefitsSummarySection()
+    public function iVisitIncomeBenefitsSummarySection(): void
     {
         $this->visitFrontendPath($this->getIncomeBenefitsSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -365,7 +365,7 @@ trait IVisitFrontendTrait
     /**
      * @When I visit the client benefits check summary page
      */
-    public function iVisitClientBenefitsCheckSummaryPage()
+    public function iVisitClientBenefitsCheckSummaryPage(): void
     {
         $this->visitFrontendPath($this->getClientBenefitsCheckSummaryUrl($this->loggedInUserDetails->getCurrentReportId()));
     }
@@ -373,7 +373,7 @@ trait IVisitFrontendTrait
     /**
      * @Given /^I visit the documents step 2 page$/
      */
-    public function iVisitTheDocumentsStep2Page()
+    public function iVisitTheDocumentsStep2Page(): void
     {
         $this->visitFrontendPath($this->getDocumentsStep2Url($this->loggedInUserDetails->getPreviousReportId()));
     }
@@ -381,7 +381,7 @@ trait IVisitFrontendTrait
     /**
      * @Given /^I visit the activate user page for the user I am interacting with$/
      */
-    public function iVisitTheActivateUserPageInteractingUser()
+    public function iVisitTheActivateUserPageInteractingUser(): void
     {
         $activationToken = $this->em->getRepository(User::class)->findOneBy(
             ['email' => strtolower($this->interactingWithUserDetails->getUserEmail())]
@@ -393,7 +393,7 @@ trait IVisitFrontendTrait
     /**
      * @Given /^I visit the frontend availability page$/
      */
-    public function iVisitTheFrontendAvailabilityPage()
+    public function iVisitTheFrontendAvailabilityPage(): void
     {
         $this->visitFrontendPath($this->getServiceHealthUrl());
     }
@@ -401,7 +401,7 @@ trait IVisitFrontendTrait
     /**
      * @Given /^ visits the forgotten your password page$/
      */
-    public function visitsTheForgottenYourPasswordPage()
+    public function visitsTheForgottenYourPasswordPage(): void
     {
         $this->visitFrontendPath($this->getForgottenYourPasswordUrl());
     }
@@ -409,7 +409,7 @@ trait IVisitFrontendTrait
     /**
      * @Given /^I visit the organisation settings user account page for the logged in user$/
      */
-    public function iVisitTheOrganisationSettingsUserAccountsPageForTheLoggedInUser()
+    public function iVisitTheOrganisationSettingsUserAccountsPageForTheLoggedInUser(): void
     {
         $emailIdentifier = $this->loggedInUserDetails->getOrganisationEmailIdentifier();
         $organisation = $this->em->getRepository(Organisation::class)->findOneBy(['emailIdentifier' => $emailIdentifier]);

@@ -15,7 +15,7 @@ trait RegionTrait
      *
      * @Then I should not see the :element :type
      */
-    public function iShouldNotSeeTheBehatElement($element, $type)
+    public function iShouldNotSeeTheBehatElement($element, $type): void
     {
         $this->assertResponseStatus(200);
 
@@ -32,7 +32,7 @@ trait RegionTrait
      *
      * @Then I should see the :element :type
      */
-    public function iShouldSeeTheBehatElement($element, $type)
+    public function iShouldSeeTheBehatElement($element, $type): void
     {
         $regionCss = self::behatElementToCssSelector($element, $type);
         $found = count($this->getSession()->getPage()->findAll('css', $regionCss));
@@ -46,7 +46,7 @@ trait RegionTrait
      *
      * @Then I should see the :element :type exactly :n times
      */
-    public function iShouldSeeTheBehatElementNTimes($element, $type, $n)
+    public function iShouldSeeTheBehatElementNTimes($element, $type, $n): void
     {
         $regionCss = self::behatElementToCssSelector($element, $type);
         $linksElementsFound = $this->getSession()->getPage()->findAll('css', $regionCss);
@@ -58,7 +58,7 @@ trait RegionTrait
     /**
      * @Then I should see :text in the :region region
      */
-    public function iShouldSeeInTheRegion($text, $region)
+    public function iShouldSeeInTheRegion($text, $region): void
     {
         // assert only one region is present
         $regionCss = self::behatElementToCssSelector($region, 'region');
@@ -73,7 +73,7 @@ trait RegionTrait
     /**
      * @Then I should see the :region region in the :parentRegion region
      */
-    public function iShouldSeeTheRegionInTheRegion($regionId, $parentRegionId)
+    public function iShouldSeeTheRegionInTheRegion($regionId, $parentRegionId): void
     {
         $parentRegionCss = self::behatElementToCssSelector($parentRegionId, 'region');
         $parentRegion = $this->getSession()->getPage()->find('css', $parentRegionCss);
@@ -93,7 +93,7 @@ trait RegionTrait
     /**
      * @Then each text should be present in the corresponding region:
      */
-    public function eachTextShouldBePresentCorrespondingRegion(TableNode $fields)
+    public function eachTextShouldBePresentCorrespondingRegion(TableNode $fields): void
     {
         $errorMessages = [];
         foreach ($fields->getRowsHash() as $text => $region) {
@@ -112,14 +112,14 @@ trait RegionTrait
     /**
      * @Then I should not see :text in the :region region
      */
-    public function iShouldNotSeeInTheRegion($text, $region)
+    public function iShouldNotSeeInTheRegion($text, $region): void
     {
         $this->assertResponseStatus(200);
 
         $this->assertSession()->elementTextNotContains('css', self::behatElementToCssSelector($region, 'region'), $text);
     }
 
-    public static function behatElementToCssSelector($element, $type)
+    public static function behatElementToCssSelector($element, $type): string
     {
         return '.behat-' . $type . '-' . preg_replace('/\s+/', '-', $element);
     }
