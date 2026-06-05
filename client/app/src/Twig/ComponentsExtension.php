@@ -215,8 +215,8 @@ class ComponentsExtension extends AbstractExtension
     {
         if ($user->isDeputyOrg() || in_array($user->getRoleName(), [User::ROLE_ADMIN, User::ROLE_SUPER_ADMIN, User::ROLE_ADMIN_MANAGER])) {
             $availableStepIds = ['password', 'user_details'];
-        } elseif ($user->getIsCoDeputy() || $user->getRegistrationRoute() === User::CO_DEPUTY_INVITE) {
-            $availableStepIds = ['password', 'codep_verify'];
+        } elseif ($user->getIsCoDeputy()) {
+            $availableStepIds = ['password', 'user_details'];
         } else {
             $availableStepIds = ['password', 'user_details', 'client_details'];
         }

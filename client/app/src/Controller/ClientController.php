@@ -2,6 +2,7 @@
 
 namespace OPG\Digideps\Frontend\Controller;
 
+use OPG\Digideps\Common\Validating\ValidatingForm;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\User;
@@ -116,60 +117,31 @@ class ClientController extends AbstractController
         LoggerInterface $logger,
     ): array|RedirectResponse {
         // redirect if user has missing details or is on wrong page
-        $user = $this->userApi->getUserWithData();
+        $currentUser = $this->userApi->getUserWithData();
 
-        $route = $redirector->getCorrectRouteIfDifferent($user, 'client_add');
-
+        $route = $redirector->getCorrectRouteIfDifferent($currentUser, 'client_add');
         if (is_string($route)) {
             return $this->redirectToRoute($route);
         }
-        /** @var ?Client $client */
 
         // TODO select the relevant client by case number, not just the first client!
-        $client = $this->clientApi->getFirstClient();
-        $existingClientId = 0;
-        if (!empty($client)) {
-            // update existing client
-            $existingClientId = $client->getId();
+        $client = $this->clientApi->getFirstClient(['user', 'user-clients', 'client', 'report-id', 'current-report']);
 
-            /** @var Client $client */
-            $client = $this->restClient->get('client/' . $client->getId(), 'Client', ['client', 'report-id', 'current-report']);
-            $client_validated = true;
-        } else {
-            // new client
-            $client = new Client();
-            $client_validated = false;
-        }
+        // TODO bomb out if we have no client here - the skeleton for it should have been created during self registration
 
         $form = $this->createForm(ClientType::class, $client);
-
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
+            $validatingForm = new ValidatingForm($form);
+
             try {
-                // validate against pre-registration data
-                if (!$client_validated) {
-                    $this->preRegistrationApi->verify($client);
-                    $response = $this->clientApi->create($form->getData());
-                } else {
-                    $upsertData = $form->getData();
-                    $upsertData->setId($existingClientId);
-                    $response = $this->clientApi->update($client, $upsertData, AuditEvents::TRIGGER_DEPUTY_USER_EDIT_CLIENT_DURING_REGISTRATION);
-                }
-
-                $client->setId($response['id']);
-
-                // TODO don't create report here
-//                if (empty($client->getCurrentReport())) {
-//                    $report = new Report();
-//                    $report->setClient($client);
-//                    $this->restClient->post('report', $report);
-//                }
-                // END: TODO don't create report
-
-                $currentUser = $this->userApi->getUserWithData();
+                $upsertData = $validatingForm->getObjectOrThrow(null, Client::class);
+                $upsertData->setId($client->getId());
+                $this->clientApi->update($client, $upsertData, AuditEvents::TRIGGER_DEPUTY_USER_EDIT_CLIENT_DURING_REGISTRATION);
 
                 $deputyResponse = $this->deputyApi->createDeputyFromUser($currentUser);
-                $this->clientApi->updateDeputy($response['id'], $deputyResponse['id']);
+                $this->clientApi->updateDeputy($client->getId(), $deputyResponse['id']);
 
                 $event = new RegistrationSucceededEvent($currentUser);
                 $this->eventDispatcher->dispatch($event, RegistrationSucceededEvent::DEPUTY);
@@ -200,7 +172,7 @@ class ClientController extends AbstractController
 
         return [
             'form' => $form->createView(),
-            'client_validated' => $client_validated,
+            'client_validated' => true,
             'client' => $client,
             'backLink' => $this->generateUrl('user_details'),
         ];

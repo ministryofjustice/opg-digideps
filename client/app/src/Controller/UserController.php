@@ -196,9 +196,9 @@ class UserController extends AbstractController
     public function detailsAction(Request $request, Redirector $redirector): RedirectResponse|array
     {
         $user = $this->userApi->getUserWithData();
+        $client = $this->clientApi->getFirstClient();
 
-        $client_validated = $this->clientApi->getFirstClient() instanceof Client
-            && !$user->isDeputyOrg();
+        $client_validated = $client instanceof Client && !$user->isDeputyOrg();
 
         [$formType, $jmsPutGroups] = match ($user->getRoleName()) {
             User::ROLE_LAY_DEPUTY => [UserDetailsFullType::class, ['user_details_full']],
@@ -220,8 +220,8 @@ class UserController extends AbstractController
 
             $this->restClient->put('user/' . $user->getId(), $data, $jmsPutGroups);
 
-            // lay deputies are redirected to adding a client (Step.3)
-            if ($user->isLayDeputy()) {
+            // lay deputies are redirected to adding a client if the client is missing any data
+            if ($user->isLayDeputy() && ($client == null || $client->isIncomplete())) {
                 return $this->redirectToRoute('client_add');
             }
 

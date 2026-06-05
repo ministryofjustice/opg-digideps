@@ -2,12 +2,12 @@
 
 namespace OPG\Digideps\Frontend\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use OPG\Digideps\Frontend\Entity\Traits\ActiveAudit;
 use OPG\Digideps\Frontend\Entity\Traits\IsSoftDeleteableEntity;
 use OPG\Digideps\Frontend\Validator\Constraints as AppAssert;
-use Doctrine\Common\Collections\ArrayCollection;
-use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -131,7 +131,7 @@ class Client
      *
      * @Assert\Length(max=200, maxMessage="client.address.maxMessage", groups={"lay-deputy-client", "pa-client"})
      *
-     * @var string
+     * @var ?string
      */
     private $address;
 
@@ -584,7 +584,7 @@ class Client
     }
 
     /**
-     * @return string
+     * @return ?string
      */
     public function getAddress()
     {
@@ -1032,5 +1032,15 @@ class Client
         }
 
         return $submittedReports;
+    }
+
+    /**
+     * A Client is considered incomplete (from the frontend's point of view) if the user still needs to provide
+     * additional data about them. The fields we care about are the ones validated by the UserDetailsBasicType form
+     * and its subclasses.
+     */
+    public function isIncomplete(): bool
+    {
+        return $this->getPostcode() === null || $this->getAddress() === null || $this->getCourtDate() === null;
     }
 }
