@@ -375,7 +375,7 @@ jobs:
       - name: Run Snyk Scan
         id: snyk_scan
         if: matrix.svc_name != 'mock-sirius' && (steps.existing_image.outputs.exists != 'true' || steps.daily_snyk.outputs.run == 'true' || inputs.branch_name == 'staging')
-        uses: ministryofjustice/opg-github-actions/actions/snyk-scan@5fba2afe28b31b8c5eaf1fb4235e2d32aea24a1e # v4.8.3
+        uses: ministryofjustice/opg-github-actions/actions/snyk-scan@83663a5235330cc2193319b25d559885610c6bd5 # v4.8.4
         with:
           SNYK_TEST_IMAGE: ${{ matrix.svc_name }}:latest
           SNYK_TOKEN: ${{ secrets.snyk_token }}
@@ -386,7 +386,7 @@ jobs:
 
       - name: Upload SNYK scan results to GitHub Security tab
         if: steps.snyk_scan.outcome == 'success' && hashFiles('test-results/snyk-results.sarif') != ''
-        uses: github/codeql-action/upload-sarif@38697555549f1db7851b81482ff19f1fa5c4fedc # v4.34.1
+        uses: github/codeql-action/upload-sarif@b8bb9f28b8d3f992092362369c57161b755dea45 # v4.35.0
         with:
           sarif_file: test-results/snyk-results.sarif
           category: ${{ matrix.svc_name }}
