@@ -4,7 +4,6 @@
 {% set submittedBy = report.submittedBy | default(app.user) %}
 {# for PROF users, deputy is always the named deputy #}
 {% set deputy = submittedBy.isDeputyOrg and client.getDeputy ? client.getDeputy : submittedBy %}
-{% set contacts = report.getContacts %}
 
 <div class="report-preview">
     <h1 class="govuk-heading-l">Deputy report for {{ reportTypeHeading }} decisions</h1>
@@ -26,4 +25,11 @@
             'transDomain': 'report-contacts'
         } %}
     {% endif %}
+
+    {% include '@App/Report/Rendered/_visits_care.html.twig' with {
+        'visitsCare': report.visitsCare,
+        'transOptions': transOptions,
+        'transDomain': 'report-visits-care'
+    } %}
+
 </div>
