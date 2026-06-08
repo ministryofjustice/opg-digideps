@@ -22,7 +22,7 @@ app_secrets_list = [
 def get_session(account_id):
     # Check if the CI environment variable is set
     if "CI" in os.environ:
-        role_to_assume = f"arn:aws:iam::{account_id}:role/digideps-ci"
+        role_to_assume = f"arn:aws:iam::{account_id}:role/digideps-ci-boundary"
     else:
         role_to_assume = f"arn:aws:iam::{account_id}:role/operator"
 
