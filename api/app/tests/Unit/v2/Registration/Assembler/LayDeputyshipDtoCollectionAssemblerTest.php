@@ -75,9 +75,9 @@ final class LayDeputyshipDtoCollectionAssemblerTest extends TestCase
             ->expects($this->exactly(count($input)))
             ->method('assembleFromArray')
             ->willReturnCallback(
-                fn ($param): ?LayDeputyshipDto =>
+                fn ($param): LayDeputyshipDto =>
                     match ($param) {
-                        ['alpha' => 'not-valid-enough-to-create-a-DTO'] => null,
+                        ['alpha' => 'not-valid-enough-to-create-a-DTO'] => throw new \InvalidArgumentException(''),
                         ['beta' => 'beta-data'] => new LayDeputyshipDto(),
                         default => throw new \Exception('Did not expect input ' . print_r($param, true)),
                     }

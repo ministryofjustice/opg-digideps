@@ -327,7 +327,6 @@ final class FixtureService
             ->setAddressCountry(null)
             ->setAddressPostcode($deputy?->getAddressPostcode() ?? $this->faker->postcode())
             ->setPhoneMain($deputy?->getPhoneMain() ?? $this->faker->phoneNumber())
-            ->setPhoneAlternative($deputy?->getPhoneAlternative() ?? $this->faker->phoneNumber())
             ->setRoleName(match ($descriptor->userType) {
                 UserType::Deputy =>  match ($descriptor->type) {
                     DeputyType::LAY => User::ROLE_LAY_DEPUTY,
@@ -350,9 +349,7 @@ final class FixtureService
             })
             ->setActive($descriptor->isLoginActive)
             ->setIsPrimary($descriptor->isPrimary)
-            ->setUserResearchResponse(null)
             ->setAgreeTermsUse(true)
-            ->setAdManaged(false)
             ->setPassword($this->password)
             ->setRegistrationDate(new \DateTime()->sub(new \DateInterval('P1Y')))
         ;
@@ -380,23 +377,10 @@ final class FixtureService
         $dueDate = (clone $endDate)->add(new \DateInterval('P1M'));
         $reportType = $order->getDesiredReportType();
         $report = new Report($order->getClient(), "{$reportType}", $startDate, $endDate, false)
+            ->setId($this->counter->nextInt())
             ->setDueDate($dueDate)
             ->setSubmitted(false)
             ->setSubmitDate(null);
-        //foreach (ReportDebt::$debtTypeIds as [$id, $hasMoreInformation]) {
-        //    $debt = new ReportDebt($report, $id, $hasMoreInformation, null);
-        //    $this->persist($debt);
-        //}
-        //$cats = ReportMoneyShortCategory::getCategories('in') + ReportMoneyShortCategory::getCategories('out');
-        //foreach ($cats as $typeId => $_) {
-        //    $debt = new ReportMoneyShortCategory($report, $typeId, false);
-        //    $this->persist($debt);
-        //}
-        //if ($reportType->deputyType === DeputyType::PA) {
-        //    foreach (Fee::$feeTypeIds as $id => $_) {
-        //        $this->persist(new Fee($report, $id, null));
-        //    }
-        //}
         $order->addReport($report);
         return $report;
     }

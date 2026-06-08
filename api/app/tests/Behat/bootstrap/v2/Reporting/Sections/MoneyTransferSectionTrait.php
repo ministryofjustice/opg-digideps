@@ -9,7 +9,7 @@ trait MoneyTransferSectionTrait
     /**
      * @Then /^I should not be able to add a transfer due to having fewer than two accounts$/
      */
-    public function iShouldNotBeAbleToAddATransferDueToHavingFewerThanTwoAccounts()
+    public function iShouldNotBeAbleToAddATransferDueToHavingFewerThanTwoAccounts(): void
     {
         $expectedMessage = 'You do not need to complete this section if you have fewer than two bank accounts.';
         $this->assertElementContainsText('body', $expectedMessage);
@@ -18,7 +18,7 @@ trait MoneyTransferSectionTrait
     /**
      * @Given /^I confirm that I have a transfer to add$/
      */
-    public function iConfirmThatIHaveATransferToAdd()
+    public function iConfirmThatIHaveATransferToAdd(): void
     {
         $this->pressButton('Start money transfers');
 
@@ -33,7 +33,7 @@ trait MoneyTransferSectionTrait
     /**
      * @Then /^I add the transfer details between two accounts with "add another" selected$/
      */
-    public function iAddTheTransferDetailsBetweenTwoAccountsWithAddAnother()
+    public function iAddTheTransferDetailsBetweenTwoAccountsWithAddAnother(): void
     {
         $this->selectOption('money_transfers_type[accountFromId]', '(****1234)');
         $this->selectOption('money_transfers_type[accountToId]', 'account-1 - Current account (****1111)');
@@ -45,7 +45,7 @@ trait MoneyTransferSectionTrait
     /**
      * @Then /^I add the transfer details between two accounts with a description of (\d+) characters$/
      */
-    public function iAddTheTransferDetailsBetweenTwoAccountsWithADescriptionOfCharacters($arg1)
+    public function iAddTheTransferDetailsBetweenTwoAccountsWithADescriptionOfCharacters($arg1): void
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $randomString = '';
@@ -66,7 +66,7 @@ trait MoneyTransferSectionTrait
     /**
      * @Then /^I add the transfer details between two accounts$/
      */
-    public function iAddTheTransferDetailsBetweenTwoAccounts()
+    public function iAddTheTransferDetailsBetweenTwoAccounts(): void
     {
         $this->selectOption('money_transfers_type[accountFromId]', '(****1234)');
         $this->selectOption('money_transfers_type[accountToId]', 'account-1 - Current account (****1111)');
@@ -75,7 +75,7 @@ trait MoneyTransferSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    private function addAnotherTransfer($anotherFlag)
+    private function addAnotherTransfer($anotherFlag): void
     {
         $this->chooseOption('money_transfers_type[addAnother]', $anotherFlag);
     }
@@ -83,7 +83,7 @@ trait MoneyTransferSectionTrait
     /**
      * @Then /^I should see the transfer listed on the money transfers summary page$/
      */
-    public function iShouldSeeTheExpectedResultsOnMoneyTransfersSummaryPage()
+    public function iShouldSeeTheExpectedResultsOnMoneyTransfersSummaryPage(): void
     {
         $this->iAmOnMoneyTransfersSummaryPage();
 
@@ -111,7 +111,7 @@ trait MoneyTransferSectionTrait
     /**
      * @Then /^I remove the money transfer I just added$/
      */
-    public function iRemoveTheMoneyTransferIJustAdded()
+    public function iRemoveTheMoneyTransferIJustAdded(): void
     {
         $this->clickLink('Remove');
         $this->iShouldBeOnTheMoneyTransferDeletePage();
@@ -148,7 +148,7 @@ trait MoneyTransferSectionTrait
     /**
      * @Then /^I should be on the money transfers starting page and see entry deleted$/
      */
-    public function iShouldBeOnTheMoneyTransfersStartingPageAndSeeEntryDeleted()
+    public function iShouldBeOnTheMoneyTransfersStartingPageAndSeeEntryDeleted(): void
     {
         $this->iAmOnPage(sprintf('/%s\/.*\/money-transfers.*$/', $this->reportUrlPrefix));
 

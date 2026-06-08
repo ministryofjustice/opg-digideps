@@ -35,7 +35,7 @@ class MailEntry
     /**
      * @param string $line
      */
-    protected function processLine($line)
+    protected function processLine($line): void
     {
         preg_match('#(\w+): (.+)#i', $line, $m);
         if (empty($m[2])) {
@@ -59,7 +59,7 @@ class MailEntry
     /**
      * @return string
      */
-    public function getSubject()
+    public function getSubject(): string
     {
         return $this->subject;
     }
@@ -67,7 +67,7 @@ class MailEntry
     /**
      * @return string
      */
-    public function getTo()
+    public function getTo(): string
     {
         return $this->to;
     }
@@ -75,7 +75,7 @@ class MailEntry
     /**
      * @return string
      */
-    public function getRaw()
+    public function getRaw(): string
     {
         return $this->raw;
     }

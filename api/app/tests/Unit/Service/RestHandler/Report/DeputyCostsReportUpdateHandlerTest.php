@@ -114,11 +114,11 @@ final class DeputyCostsReportUpdateHandlerTest extends TestCase
 
     public function testUpdateCostAmountToScco(): void
     {
-        $data['prof_deputy_costs_reason_beyond_estimate'] = 'some reason';
+        $data['prof_deputy_costs_reason_beyond_estimate'] = '234.56';
 
         $this->invokeHandler($data);
 
-        $this->assertReportFieldValueIsEqualTo('profDeputyCostsReasonBeyondEstimate', 'some reason');
+        $this->assertReportFieldValueIsEqualTo('profDeputyCostsReasonBeyondEstimate', '234.56');
     }
 
     private function generateValidInterimCosts(): array
@@ -175,8 +175,8 @@ final class DeputyCostsReportUpdateHandlerTest extends TestCase
 
     private function assertNewProfDeputyInterimCostIsCreated(): void
     {
-        $profDeputyCost = $this->report->getProfDeputyInterimCosts()->first();
-        $this->assertSame($this->report, $profDeputyCost->getReport());
+        $profDeputyCost = $this->report->getProfDeputyInterimCosts()->first() ?: null;
+        $this->assertSame($this->report, $profDeputyCost?->getReport());
         $this->assertEquals('30.32', $profDeputyCost->getAmount());
     }
 }

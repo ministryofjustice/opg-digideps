@@ -43,7 +43,7 @@ class OrgDeputyshipControllerTest extends AbstractTestController
         $this->assertResponseHasArrayKeys(self::$frameworkBundleClient->getResponse());
     }
 
-    private function assertResponseHasArrayKeys(Response $response)
+    private function assertResponseHasArrayKeys(Response $response): void
     {
         $decodedResponseContent = json_decode($response->getContent(), true)['data'];
 

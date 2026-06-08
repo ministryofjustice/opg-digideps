@@ -577,7 +577,7 @@ trait DeputyCostsSectionTrait
     }
 
     #[When('I don\'t provide any interim cost details')]
-    public function iDontProvideAnyInterimCostDetails()
+    public function iDontProvideAnyInterimCostDetails(): void
     {
         $this->iAmOnDeputyCostsInterimPage();
 

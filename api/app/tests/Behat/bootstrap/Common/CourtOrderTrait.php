@@ -9,7 +9,7 @@ trait CourtOrderTrait
     /**
      * @Given the following court orders exist:
      */
-    public function theFollowingCourtOrdersExist(TableNode $table)
+    public function theFollowingCourtOrdersExist(TableNode $table): void
     {
         $this->iAmLoggedInToAdminAsWithPassword('super-admin@publicguardian.gov.uk', 'DigidepsPass1234');
 

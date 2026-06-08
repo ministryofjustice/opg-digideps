@@ -6,7 +6,6 @@ use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShort;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortIn;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransactionShortOut;
 use OPG\Digideps\Backend\Entity\Report\Report;
-use OPG\Digideps\Backend\Entity\User;
 use Tests\OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
@@ -55,7 +54,7 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
         self::fixtures()->clear();
     }
 
-    public function testGetTransactions()
+    public function testGetTransactions(): void
     {
         $url = '/report/' . self::$report1->getId() . '?' . http_build_query(['groups' => ['moneyTransactionsShortIn', 'moneyTransactionsShortOut']]);
 
@@ -78,7 +77,7 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
         $this->assertEquals('5000.59', $data['money_transactions_short_out'][2]['amount']);
     }
 
-    public function testAddEditTransaction()
+    public function testAddEditTransaction(): void
     {
         $url = '/report/' . self::$report1->getId() . '/money-transaction-short';
         $url2 = '/report/' . self::$report2->getId() . '/money-transaction-short';
@@ -105,10 +104,10 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
         $t = self::fixtures()->getRepo(MoneyTransactionShortIn::class)->find($data); /* @var $t MoneyTransactionShortIn */
         $this->assertEquals(123.45, $t->getAmount());
         $this->assertEquals('d', $t->getDescription());
-        $this->assertEquals('2014-04-05', $t->getDate()->format('Y-m-d'));
+        $this->assertEquals('2014-04-05', $t->getDate()?->format('Y-m-d'));
     }
 
-    public function testEditTransaction()
+    public function testEditTransaction(): void
     {
         $url = '/report/' . self::$report1->getId() . '/money-transaction-short/' . self::$transaction1->getId();
         $url2 = '/report/' . self::$report2->getId() . '/money-transaction-short/' . self::$transaction2->getId();
@@ -132,10 +131,10 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
         $t = self::fixtures()->getRepo(MoneyTransactionShort::class)->find($data); /* @var $t MoneyTransactionShort */
         $this->assertEquals(124.46, $t->getAmount());
         $this->assertEquals('d-changed', $t->getDescription());
-        $this->assertEquals('2014-04-06', $t->getDate()->format('Y-m-d'));
+        $this->assertEquals('2014-04-06', $t->getDate()?->format('Y-m-d'));
     }
 
-    public function testDelete()
+    public function testDelete(): void
     {
         $url = '/report/' . self::$report1->getId() . '/money-transaction-short/' . self::$transaction3->getId();
         $url2 = '/report/' . self::$report2->getId() . '/money-transfers/99';
@@ -160,7 +159,7 @@ class MoneyTransactionShortControllerTest extends AbstractTestController
         $this->assertEquals('no', self::$report1->getMoneyTransactionsShortOutExist());
     }
 
-    public function testExist()
+    public function testExist(): void
     {
         $report = self::fixtures()->getReportById(self::$report1->getId());
         $this->assertTrue(count($report->getMoneyTransactionsShortIn()) > 0);
