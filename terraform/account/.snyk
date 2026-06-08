@@ -16,3 +16,9 @@ ignore:
   SNYK-CC-AWS-428:
     - '*':
         reason: "VPC endpoint policy intentionally omitted. Access is restricted by security groups and IAM. Adding policy could break the VPC without constantly updating it."
+  SNYK-CC-TF-125:
+    - 'resource > aws_dynamodb_table[blocked_ips_table]':
+        reason: "Point-in-time recovery intentionally disabled as table only contains transient data"
+  SNYK-CC-AWS-422:
+    - 'resource > aws_sns_topic[availability-alert]':
+        reason: "Customer managed KMS key intentionally not used."

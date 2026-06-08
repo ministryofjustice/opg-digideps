@@ -11,10 +11,6 @@ resource "aws_dynamodb_table" "workspace_cleanup_table" {
     type = "S"
   }
 
-  point_in_time_recovery {
-    enabled = true
-  }
-
   ttl {
     attribute_name = "ExpiresTTL"
     enabled        = true
