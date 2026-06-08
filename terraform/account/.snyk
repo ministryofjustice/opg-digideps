@@ -16,6 +16,3 @@ ignore:
   SNYK-CC-AWS-428:
     - '*':
         reason: "VPC endpoint policy intentionally omitted. Access is restricted by security groups and IAM. Adding policy could break the VPC without constantly updating it."
-  SNYK-CC-AWS-428:
-    - '*':
-        reason: "S3 VPC endpoint policy intentionally omitted. Access is controlled by IAM and route table association. Adding a restrictive policy risks breaking S3."
