@@ -7,7 +7,7 @@ trait CourtOrderManagementTrait
     /**
      * @When a super admin discharges the deputy from :caseNumber
      */
-    public function aSuperAdminDischargesDeputyFromClient($caseNumber)
+    public function aSuperAdminDischargesDeputyFromClient($caseNumber): void
     {
         $this->iAmLoggedInToAdminAsWithPassword('super-admin@publicguardian.gov.uk', 'DigidepsPass1234');
         $this->visitAdminPath("/admin/client/case-number/$caseNumber/details");
@@ -20,7 +20,7 @@ trait CourtOrderManagementTrait
     /**
      * @Then a court order should exist between :deputy and :caseNumber
      */
-    public function aCourtOrderShouldExistBetweenAnd($deputy, $caseNumber)
+    public function aCourtOrderShouldExistBetweenAnd($deputy, $caseNumber): void
     {
         $result = null;
 

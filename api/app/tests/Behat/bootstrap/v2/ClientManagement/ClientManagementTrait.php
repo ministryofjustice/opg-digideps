@@ -18,7 +18,7 @@ trait ClientManagementTrait
     /**
      * @When I search for an existing client by their first name
      */
-    public function iSearchForExistingClientByFirstName()
+    public function iSearchForExistingClientByFirstName(): void
     {
         $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyHealthWelfareNotStartedDetails : $this->interactingWithUserDetails;
         $this->searchForClientBy($user->getClientFirstName(), $user);
@@ -27,7 +27,7 @@ trait ClientManagementTrait
     /**
      * @When I search for an existing client by their last name
      */
-    public function iSearchForExistingClientByLastName()
+    public function iSearchForExistingClientByLastName(): void
     {
         $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyHealthWelfareNotStartedDetails : $this->interactingWithUserDetails;
         $this->searchForClientBy($user->getClientLastName(), $user);
@@ -36,7 +36,7 @@ trait ClientManagementTrait
     /**
      * @When I search for an existing client by their full name
      */
-    public function iSearchForExistingClientByFullName()
+    public function iSearchForExistingClientByFullName(): void
     {
         $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyHealthWelfareNotStartedDetails : $this->interactingWithUserDetails;
         $fullName = sprintf('%s %s', $user->getClientFirstName(), $user->getClientLastName());
@@ -46,7 +46,7 @@ trait ClientManagementTrait
     /**
      * @When I search for an existing client by their case number
      */
-    public function iSearchForExistingClientByCaseNumber()
+    public function iSearchForExistingClientByCaseNumber(): void
     {
         $user = is_null($this->interactingWithUserDetails) ? $this->profAdminDeputyHealthWelfareNotStartedDetails : $this->interactingWithUserDetails;
         $this->searchForClientBy($user->getClientCaseNumber(), $user);
@@ -55,13 +55,13 @@ trait ClientManagementTrait
     /**
      * @When I search for an non-existent client
      */
-    public function iSearchForNonExistentClient()
+    public function iSearchForNonExistentClient(): void
     {
         $user = $this->adminDetails;
         $this->searchForClientBy('Björk Guðmundsdóttir', $user);
     }
 
-    private function searchForClientBy(string $searchTerm, UserDetails $userDetailsInteractingWith)
+    private function searchForClientBy(string $searchTerm, UserDetails $userDetailsInteractingWith): void
     {
         $this->fillField('search_clients_q', $searchTerm);
         $this->pressButton('Search');
@@ -72,7 +72,7 @@ trait ClientManagementTrait
     /**
      * @Then I should see the clients details in the client list results
      */
-    public function iShouldSeeClientDetailsInResults()
+    public function iShouldSeeClientDetailsInResults(): void
     {
         $this->clientCount = 1;
         $this->iShouldSeeNClientsWithSameName('full');
@@ -81,13 +81,13 @@ trait ClientManagementTrait
     /**
      * @Then I should see :occurances clients details in the client list results with the same :whichName name
      */
-    public function iShouldSeeBothClientDetailsInResults(int $occurances, string $whichname)
+    public function iShouldSeeBothClientDetailsInResults(int $occurances, string $whichname): void
     {
         $this->clientCount = $occurances;
         $this->iShouldSeeNClientsWithSameName($whichname);
     }
 
-    private function iShouldSeeNClientsWithSameName(string $whichName)
+    private function iShouldSeeNClientsWithSameName(string $whichName): void
     {
         $this->assertClientCountSet();
 
@@ -121,7 +121,7 @@ trait ClientManagementTrait
     /**
      * @Then I should see the correct count of clients in the client list results
      */
-    public function iShouldSeeCorrectCountOfClients()
+    public function iShouldSeeCorrectCountOfClients(): void
     {
         $this->assertClientCountSet();
 
@@ -135,7 +135,7 @@ trait ClientManagementTrait
         }
     }
 
-    private function assertClientCountSet()
+    private function assertClientCountSet(): void
     {
         if (is_null($this->clientCount)) {
             throw new BehatException(sprintf("You're attempting to run a step definition that requires this->clientCount to be set but its null. Set it and try again."));
@@ -145,7 +145,7 @@ trait ClientManagementTrait
     /**
      * @Then I should see No Clients Found in the client list results
      */
-    public function iShouldSeeNoClientsFound()
+    public function iShouldSeeNoClientsFound(): void
     {
         $searchResultsHtml = $this->getSearchResultHtml();
         $noClientsFound = str_contains($searchResultsHtml, 'No clients found');
@@ -155,7 +155,7 @@ trait ClientManagementTrait
         }
     }
 
-    private function getSearchResultHtml()
+    private function getSearchResultHtml(): string
     {
         $searchResultsDiv = $this->getSession()->getPage()->find('css', 'div.client-list');
 
@@ -177,7 +177,7 @@ MESSAGE;
     /**
      * @Then I should see the clients court order number
      */
-    public function iShouldSeeCourtOrderNumber()
+    public function iShouldSeeCourtOrderNumber(): void
     {
         $this->assertInteractingWithUserIsSet();
 
@@ -193,7 +193,7 @@ MESSAGE;
     /**
      * @Then I should see the Lay deputies name, address and contact details
      */
-    public function iShouldSeeLayDeputyDetails()
+    public function iShouldSeeLayDeputyDetails(): void
     {
         $this->assertInteractingWithUserIsSet();
 
@@ -228,7 +228,7 @@ MESSAGE;
     /**
      * @Then I should see the Primary Lay deputies name, address and contact details
      */
-    public function iShouldSeePrimaryLayDeputyDetails()
+    public function iShouldSeePrimaryLayDeputyDetails(): void
     {
         $pageContent = $this->getSession()->getPage()->find('css', 'main#main-content')->getHtml();
 
@@ -261,7 +261,7 @@ MESSAGE;
     /**
      * @Then I should see the reports associated with the client
      */
-    public function iShouldSeeDeputyReports()
+    public function iShouldSeeDeputyReports(): void
     {
         $this->assertInteractingWithUserIsSet();
 
@@ -287,7 +287,7 @@ MESSAGE;
     /**
      * @Then I should see the organisation the deputy belongs to
      */
-    public function iShouldSeeDeputyOrganisation()
+    public function iShouldSeeDeputyOrganisation(): void
     {
         $this->assertInteractingWithUserIsSet();
 
@@ -305,7 +305,7 @@ MESSAGE;
     /**
      * @Then I should see the name and email of the named deputy
      */
-    public function iShouldSeeNamedDeputyNameAndEmail()
+    public function iShouldSeeNamedDeputyNameAndEmail(): void
     {
         $this->assertInteractingWithUserIsSet();
 
@@ -330,7 +330,7 @@ MESSAGE;
     /**
      * @When I attempt to discharge the client
      */
-    public function iAttemptToDischargeTheClient()
+    public function iAttemptToDischargeTheClient(): void
     {
         $this->assertInteractingWithUserIsSet();
 
@@ -346,7 +346,7 @@ MESSAGE;
     /**
      * @Then the client should be discharged
      */
-    public function theClientShouldBeDischarged()
+    public function theClientShouldBeDischarged(): void
     {
         $this->assertInteractingWithUserIsSet();
 
@@ -377,7 +377,7 @@ MESSAGE;
     /**
      * @Then the client should not be discharged
      */
-    public function theClientShouldNotBeDischarged()
+    public function theClientShouldNotBeDischarged(): void
     {
         $this->assertInteractingWithUserIsSet();
 
@@ -396,7 +396,7 @@ MESSAGE;
     /**
      * @Given /^the client does not have a named deputy associated with them$/
      */
-    public function theClientDoesNotHaveANamedDeputyAssociatedWithThem()
+    public function theClientDoesNotHaveANamedDeputyAssociatedWithThem(): void
     {
         $this->assertInteractingWithUserIsSet();
 
@@ -410,7 +410,7 @@ MESSAGE;
     /**
      * @When I attempt to un-archive the client
      */
-    public function iAttemptToUnarchiveTheClient()
+    public function iAttemptToUnarchiveTheClient(): void
     {
         $this->assertInteractingWithUserIsSet();
 
@@ -426,7 +426,7 @@ MESSAGE;
     /**
      * @When an org deputy has an archived client
      */
-    public function theDeputyHasAnArchivedClient()
+    public function theDeputyHasAnArchivedClient(): void
     {
         $this->assertInteractingWithUserIsSet();
         $clientId = $this->interactingWithUserDetails->getClientId();
@@ -443,7 +443,7 @@ MESSAGE;
     /**
      * @Then the client should be unarchived
      */
-    public function theClientShouldBeUnarchived()
+    public function theClientShouldBeUnarchived(): void
     {
         $this->iAmOnAdminClientDetailsPage();
     }
@@ -451,7 +451,7 @@ MESSAGE;
     /**
      * @Then the client should not be unarchived
      */
-    public function theClientShouldNotBeUnarchived()
+    public function theClientShouldNotBeUnarchived(): void
     {
         $this->iVisitAdminClientDetailsPageForDeputyInteractingWith();
 
@@ -462,7 +462,7 @@ MESSAGE;
     /**
      * @Given /^the deputy I am interacting with has been discharged$/
      */
-    public function theDeputyHasBeenDischarged()
+    public function theDeputyHasBeenDischarged(): void
     {
         $this->assertInteractingWithUserIsSet();
 
@@ -480,7 +480,7 @@ MESSAGE;
     /**
      * @Given /^I select the first client from the Choose a Client page$/
      */
-    public function iSelectTheFirstClient()
+    public function iSelectTheFirstClient(): void
     {
         $firstClientId = $this->loggedInUserDetails->getClientId();
         $this->visitPath('/client/' . $firstClientId);
@@ -489,7 +489,7 @@ MESSAGE;
     /**
      * @When /^I select the "([^"]*)" link I should see the details of the chosen client$/
      */
-    public function iSelectTheLinkIShouldSeeTheDetailsOfTheChosenClient($link)
+    public function iSelectTheLinkIShouldSeeTheDetailsOfTheChosenClient($link): void
     {
         $this->clickLink($link);
 
@@ -503,7 +503,7 @@ MESSAGE;
     /**
      * @Given /^I click on the button to edit my client's details$/
      */
-    public function IClickOnTheButtonToEditMyClientsDetails()
+    public function IClickOnTheButtonToEditMyClientsDetails(): void
     {
         $clientName = $this->loggedInUserDetails->getClientFirstName();
         $this->clickLink(sprintf('Edit %s\'s details', $clientName));
@@ -537,7 +537,7 @@ MESSAGE;
     /**
      * @Given /^I can see a count of active and discharged clients on the organisations page$/
      */
-    public function iCanSeeTheActiveAndDishargedClientCountOnTheOrganisationsPage()
+    public function iCanSeeTheActiveAndDishargedClientCountOnTheOrganisationsPage(): void
     {
         $this->visitAdminPath('/admin/organisations');
 

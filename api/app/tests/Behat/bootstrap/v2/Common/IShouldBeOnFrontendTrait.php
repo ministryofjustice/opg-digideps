@@ -8,7 +8,7 @@ use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 trait IShouldBeOnFrontendTrait
 {
-    public function iAmOnPage(string $urlRegex)
+    public function iAmOnPage(string $urlRegex): true
     {
         $currentUrl = $this->getCurrentUrl();
         $onExpectedPage = preg_match($urlRegex, $currentUrl);
@@ -650,7 +650,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I should be on client login page
      */
-    public function iAmOnClientLoginPage()
+    public function iAmOnClientLoginPage(): true
     {
         return $this->iAmOnPage('/login.*$/');
     }
@@ -658,7 +658,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I am on state benefits page
      */
-    public function iAmOnStateBenefitsPage()
+    public function iAmOnStateBenefitsPage(): true
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/income-benefits\/step\/1.*$/', $this->reportUrlPrefix));
     }
@@ -666,7 +666,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I am on pensions and other income page
      */
-    public function iAmOnStatePensionPage()
+    public function iAmOnStatePensionPage(): true
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/income-benefits\/step\/2.*$/', $this->reportUrlPrefix));
     }
@@ -674,7 +674,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I am on other regular income page
      */
-    public function iAmOnOtherRegularIncomePage()
+    public function iAmOnOtherRegularIncomePage(): true
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/income-benefits\/step\/3.*$/', $this->reportUrlPrefix));
     }
@@ -682,7 +682,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I am on damages and compensation page
      */
-    public function iAmOnDamagesAndCompensationPage()
+    public function iAmOnDamagesAndCompensationPage(): true
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/income-benefits\/step\/4.*$/', $this->reportUrlPrefix));
     }
@@ -690,7 +690,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then I am on one off payments page
      */
-    public function iAmOnOneOffPaymentsPage()
+    public function iAmOnOneOffPaymentsPage(): true
     {
         return $this->iAmOnPage(sprintf('/%s\/.*\/income-benefits\/step\/5.*$/', $this->reportUrlPrefix));
     }
@@ -775,17 +775,17 @@ trait IShouldBeOnFrontendTrait
         return $this->iAmOnPage(sprintf('/%s\/.*\/decisions\/summary.*$/', $this->reportUrlPrefix));
     }
 
-    public function iAmOnOrgSettingsPage()
+    public function iAmOnOrgSettingsPage(): true
     {
         return $this->iAmOnPage('/org\/settings.*$/');
     }
 
-    public function iAmOnOrgUserAccountsPage()
+    public function iAmOnOrgUserAccountsPage(): true
     {
         return $this->iAmOnPage('/org\/settings\/organisation.*$/');
     }
 
-    public function iAmOnOrgSettingsEditAnotherUserPage()
+    public function iAmOnOrgSettingsEditAnotherUserPage(): true
     {
         return $this->iAmOnPage('/org\/settings\/organisation\/.*\/edit\/.*.*$/');
     }
@@ -820,12 +820,12 @@ trait IShouldBeOnFrontendTrait
         return $this->iAmOnPage(sprintf('/%s\/.*\/money-out-short\/oneOffPaymentsExist.*$/', $this->reportUrlPrefix));
     }
 
-    public function iAmOnYourDetailsPage()
+    public function iAmOnYourDetailsPage(): true
     {
         return $this->iAmOnPage('/deputyship-details/');
     }
 
-    public function iAmOnClientDetailsPage()
+    public function iAmOnClientDetailsPage(): true
     {
         return $this->iAmOnPage('#deputyship-details/client#');
     }
@@ -833,7 +833,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then /^they should be on the add your client page$/
      */
-    public function theyShouldBeOnTheAddYourClientPage()
+    public function theyShouldBeOnTheAddYourClientPage(): true
     {
         return $this->iAmOnPage('#client/add$#');
     }
@@ -841,7 +841,7 @@ trait IShouldBeOnFrontendTrait
     /**
      * @Then /^I should be on the court order page$/
      */
-    public function iShouldBeOnTheCourtOrderPage()
+    public function iShouldBeOnTheCourtOrderPage(): true
     {
         return $this->iAmOnPage('|/courtorder/\d+$|');
     }

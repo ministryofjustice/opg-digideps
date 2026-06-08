@@ -11,7 +11,7 @@ trait FeedbackTrait
     /**
      * @When I provide some post-submission feedback
      */
-    public function iProvidePostSubmissionFeedback()
+    public function iProvidePostSubmissionFeedback(): void
     {
         try {
             $this->iAmOnReportSubmittedPage();
@@ -34,7 +34,7 @@ trait FeedbackTrait
     /**
      * @When I provide valid user research responses
      */
-    public function iProvideValidUserResearchResponses()
+    public function iProvideValidUserResearchResponses(): void
     {
         try {
             $this->iAmOnPostSubmissionUserResearchPage();

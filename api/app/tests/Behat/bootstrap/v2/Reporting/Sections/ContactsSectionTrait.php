@@ -13,7 +13,7 @@ trait ContactsSectionTrait
     /**
      * @Given I view and start the contacts report section
      */
-    public function iViewAndStartContactsSection()
+    public function iViewAndStartContactsSection(): void
     {
         $this->iViewContactsSection();
 
@@ -23,7 +23,7 @@ trait ContactsSectionTrait
     /**
      * @Given I view the contacts report section
      */
-    public function iViewContactsSection()
+    public function iViewContactsSection(): void
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
         $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'contacts');
@@ -41,7 +41,7 @@ trait ContactsSectionTrait
     /**
      * @Given there are no contacts to add
      */
-    public function thereAreNoContactsToAdd()
+    public function thereAreNoContactsToAdd(): void
     {
         $this->chooseOption('contact_exist[hasContacts]', 'no', 'hasContacts');
         $this->fillInField('contact_exist_reasonForNoContacts', $this->faker->text(30), 'hasContacts');
@@ -52,7 +52,7 @@ trait ContactsSectionTrait
     /**
      * @Given there are contacts to add
      */
-    public function thereAreContactsToAdd()
+    public function thereAreContactsToAdd(): void
     {
         $this->chooseOption('contact_exist[hasContacts]', 'yes', 'hasContacts');
         $this->pressButton('Save and continue');
@@ -64,7 +64,7 @@ trait ContactsSectionTrait
     /**
      * @When /^I enter valid contact details "(without|while)" wanting to add another$/
      */
-    public function iEnterValidContactDetails($addAnother)
+    public function iEnterValidContactDetails($addAnother): void
     {
         $this->fillInField('contact_contactName', $this->faker->name(), 'contactDetails');
         $this->fillInField('contact_relationship', $this->faker->text(50), 'contactDetails');
@@ -84,7 +84,7 @@ trait ContactsSectionTrait
     /**
      * @Then the contacts summary page should contain the details I entered
      */
-    public function contactSummaryPageContainsExpectedText()
+    public function contactSummaryPageContainsExpectedText(): void
     {
         $this->expectedResultsDisplayedSimplified('hasContacts');
 

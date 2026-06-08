@@ -14,7 +14,7 @@ trait ReportOverviewTrait
     /**
      * @Then I should see the correct client details
      */
-    public function iShouldSeeClientDetails()
+    public function iShouldSeeClientDetails(): void
     {
         $this->extractSectionHeadersAndContents();
 
@@ -50,7 +50,7 @@ trait ReportOverviewTrait
     /**
      * @Then I should see the correct deputy details
      */
-    public function iShouldSeeDeputyDetails()
+    public function iShouldSeeDeputyDetails(): void
     {
         $this->extractSectionHeadersAndContents();
 
@@ -131,7 +131,7 @@ trait ReportOverviewTrait
         );
     }
 
-    private function extractSectionHeadersAndContents()
+    private function extractSectionHeadersAndContents(): void
     {
         // Finding all section headings (via buttons) and section contents
         $buttonsXPath = "//button[contains(@class, 'govuk-accordion__section-button')]";

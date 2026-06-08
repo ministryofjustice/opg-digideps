@@ -18,7 +18,7 @@ trait DeputyExpensesSectionTrait
     /**
      * @When I navigate to and start the deputy expenses report section
      */
-    public function iNavigateToAndStartDeputyExpensesSection()
+    public function iNavigateToAndStartDeputyExpensesSection(): void
     {
         $this->iVisitReportOverviewPage();
         $this->clickLink('edit-deputy_expenses');
@@ -37,7 +37,7 @@ trait DeputyExpensesSectionTrait
     /**
      * @When I view the deputy expenses report section
      */
-    public function iViewDeputyExpensesSection()
+    public function iViewDeputyExpensesSection(): void
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
         $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'deputy-expenses');
@@ -56,7 +56,7 @@ trait DeputyExpensesSectionTrait
     /**
      * @When I view and start the deputy expenses report section
      */
-    public function iViewAndStartDeputyExpensesSection()
+    public function iViewAndStartDeputyExpensesSection(): void
     {
         $this->iViewDeputyExpensesSection();
         $this->clickLink('Start deputy expenses');
@@ -65,7 +65,7 @@ trait DeputyExpensesSectionTrait
     /**
      * @When I have no expenses to declare
      */
-    public function iHaveNoExpenses()
+    public function iHaveNoExpenses(): void
     {
         $this->chooseOption('yes_no[paidForAnything]', 'no', 'anyExpensesClaimed');
         $this->pressButton('Save and continue');
@@ -74,7 +74,7 @@ trait DeputyExpensesSectionTrait
     /**
      * @When I have expenses to declare
      */
-    public function iHaveExpenses()
+    public function iHaveExpenses(): void
     {
         $this->chooseOption('yes_no[paidForAnything]', 'yes', 'anyExpensesClaimed');
         $this->pressButton('Save and continue');
@@ -83,7 +83,7 @@ trait DeputyExpensesSectionTrait
     /**
      * @When I enter valid expense details
      */
-    public function iEnterValidExpenses()
+    public function iEnterValidExpenses(): void
     {
         $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails');
         $this->fillInFieldTrackTotal('expenses_single[amount]', 981, 'expenseDetails');
@@ -92,7 +92,7 @@ trait DeputyExpensesSectionTrait
     /**
      * @When I declare another expense
      */
-    public function iDeclareAnotherExpenses()
+    public function iDeclareAnotherExpenses(): void
     {
         $this->chooseOption('expenses_single[addAnother]', 'yes');
         $this->pressButton('Save and continue');
@@ -105,7 +105,7 @@ trait DeputyExpensesSectionTrait
     /**
      * @When there are no further expenses to add
      */
-    public function noFurtherExpensesToAdd()
+    public function noFurtherExpensesToAdd(): void
     {
         $this->fillInField('expenses_single[addAnother]', 'no');
         $this->pressButton('Save and continue');
@@ -114,7 +114,7 @@ trait DeputyExpensesSectionTrait
     /**
      * @Then the expenses summary page should contain the details I entered
      */
-    public function expensesSummaryPageContainsEnteredDetails()
+    public function expensesSummaryPageContainsEnteredDetails(): void
     {
         $this->expectedResultsDisplayedSimplified('anyExpensesClaimed');
 
@@ -126,7 +126,7 @@ trait DeputyExpensesSectionTrait
     /**
      * @When I enter the wrong type of values
      */
-    public function iEnterWrongValueTypes()
+    public function iEnterWrongValueTypes(): void
     {
         $this->fillInField('expenses_single[explanation]', 764.98, 'expenseDetails');
         $this->fillInField('expenses_single[amount]', $this->faker->sentence(12), 'expenseDetails');
@@ -136,7 +136,7 @@ trait DeputyExpensesSectionTrait
     /**
      * @Then I should see 'type validation' errors
      */
-    public function iShouldSeeTypeValidationError()
+    public function iShouldSeeTypeValidationError(): void
     {
         $this->assertOnErrorMessage($this->notANumberError);
     }
@@ -144,7 +144,7 @@ trait DeputyExpensesSectionTrait
     /**
      * @When I don't enter any values
      */
-    public function iDoNotEnterValues()
+    public function iDoNotEnterValues(): void
     {
         $this->pressButton('Save and continue');
     }
@@ -152,7 +152,7 @@ trait DeputyExpensesSectionTrait
     /**
      * @Then I should see 'missing values' errors
      */
-    public function iShouldSeeMissingValuesErrors()
+    public function iShouldSeeMissingValuesErrors(): void
     {
         $this->assertOnErrorMessage($this->missingAmountError);
         $this->assertOnErrorMessage($this->missingDescriptionError);
@@ -161,7 +161,7 @@ trait DeputyExpensesSectionTrait
     /**
      * @When I enter an expense amount that is too high
      */
-    public function iEnterValueToHigh()
+    public function iEnterValueToHigh(): void
     {
         $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails');
         $this->fillInField('expenses_single[amount]', 100000000000.01, 'expenseDetails');
@@ -172,7 +172,7 @@ trait DeputyExpensesSectionTrait
     /**
      * @When I enter an expense amount that is too low
      */
-    public function iEnterValueToLow()
+    public function iEnterValueToLow(): void
     {
         $this->fillInField('expenses_single[explanation]', $this->faker->sentence(12), 'expenseDetails');
         $this->fillInField('expenses_single[amount]', 0, 'expenseDetails');
@@ -183,7 +183,7 @@ trait DeputyExpensesSectionTrait
     /**
      * @Then I should see an 'amount out of range' error
      */
-    public function iShouldSeeAmountOutOfRangeError()
+    public function iShouldSeeAmountOutOfRangeError(): void
     {
         $this->assertOnErrorMessage($this->outOfRangeError);
     }
@@ -191,7 +191,7 @@ trait DeputyExpensesSectionTrait
     /**
      * @When I edit the expense details
      */
-    public function iEditTheExpense()
+    public function iEditTheExpense(): void
     {
         $answers = $this->getSectionAnswers('expenseDetails')[0];
 
@@ -204,7 +204,7 @@ trait DeputyExpensesSectionTrait
     /**
      * @When I remove an expense I declared
      */
-    public function iRemoveAnExpense()
+    public function iRemoveAnExpense(): void
     {
         $this->removeAnswerFromSection(
             'expenses_single[amount]',
@@ -217,7 +217,7 @@ trait DeputyExpensesSectionTrait
     /**
      * @When I add an expense from the expense summary page
      */
-    public function iAddExpenseFromSummaryPage()
+    public function iAddExpenseFromSummaryPage(): void
     {
         $this->clickLink('Add a deputy expense');
 
@@ -229,7 +229,7 @@ trait DeputyExpensesSectionTrait
     /**
      * @When I change my mind and answer no to expenses to declare
      */
-    public function iChangeMindAnswerNoToExpensesToDeclare()
+    public function iChangeMindAnswerNoToExpensesToDeclare(): void
     {
         $descriptionTableRow = $this->getSession()->getPage()->find('css', '.behat-region-paid-for-anything .behat-link-edit');
         $descriptionTableRow->click();

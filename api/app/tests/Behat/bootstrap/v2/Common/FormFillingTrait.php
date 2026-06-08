@@ -24,7 +24,7 @@ trait FormFillingTrait
      *                                     becomes £21.00). To override this, or add any other formatting, pass this
      *                                     argument tot he function
      */
-    public function fillInField(string $field, $value, ?string $formSectionName = null, ?string $formattedValue = null)
+    public function fillInField(string $field, $value, ?string $formSectionName = null, ?string $formattedValue = null): void
     {
         if ($formSectionName) {
             $this->addToSubmittedAnswersByFormSections($formSectionName, $field, $value, $formattedValue);
@@ -41,7 +41,7 @@ trait FormFillingTrait
      * @param string|null $formSectionName define with any name you like - only include if you want to assert on the
      *                                     value entered on a summary page at the end of the form flow
      */
-    public function fillInDateFields(string $fieldName, ?int $day, ?int $month, ?int $year, ?string $formSectionName = null)
+    public function fillInDateFields(string $fieldName, ?int $day, ?int $month, ?int $year, ?string $formSectionName = null): void
     {
         $fullDate = '';
 
@@ -81,7 +81,7 @@ trait FormFillingTrait
         string $fieldName,
         string $fullSortCode,
         ?string $formSectionName = null
-    ) {
+    ): void {
         $sortCodeParts = explode('-', $fullSortCode);
 
         $firstDigitsField = sprintf('%s[sort_code_part_1]', $fieldName);
@@ -108,7 +108,7 @@ trait FormFillingTrait
      * @param string|null $formSectionName define with any name you like - only include if you want to assert on the
      *                                     value entered on a summary page at the end of the form flow
      */
-    public function fillInFieldTrackTotal(string $field, int $value, ?string $formSectionName = null)
+    public function fillInFieldTrackTotal(string $field, int $value, ?string $formSectionName = null): void
     {
         $this->fillInField($field, $value, $formSectionName);
 
@@ -135,7 +135,7 @@ trait FormFillingTrait
      *
      *                                      Only provide this if you are asserting on the translation on the summary page.
      */
-    public function chooseOption(string $select, $option, ?string $formSectionName = null, ?string $translatedOption = null)
+    public function chooseOption(string $select, $option, ?string $formSectionName = null, ?string $translatedOption = null): void
     {
         $this->selectOption($select, $option);
 
@@ -161,7 +161,7 @@ trait FormFillingTrait
      *
      *                                       Only provide this if you are asserting on the translation on the summary page.
      */
-    public function tickCheckbox(string $checkboxGroupName, $option, ?string $formSectionName = null, ?string $translatedOption = null)
+    public function tickCheckbox(string $checkboxGroupName, $option, ?string $formSectionName = null, ?string $translatedOption = null): void
     {
         $this->checkOption($option);
 
@@ -189,7 +189,7 @@ trait FormFillingTrait
     /**
      * @return mixed
      */
-    public function getSectionAnswers(string $formSectionName)
+    public function getSectionAnswers(string $formSectionName): mixed
     {
         return $this->submittedAnswersByFormSections[$formSectionName] ?? null;
     }
@@ -202,17 +202,17 @@ trait FormFillingTrait
     /**
      * @return int|float|null
      */
-    public function getGrandTotal()
+    public function getGrandTotal(): float|int|null
     {
         return $this->submittedAnswersByFormSections['totals']['grandTotal'] ?? null;
     }
 
-    public function removeSection(string $formSectionName)
+    public function removeSection(string $formSectionName): void
     {
         unset($this->submittedAnswersByFormSections[$formSectionName]);
     }
 
-    public function removeSectionAnswerGroup(string $formSectionName, int $answerGroupToRemove, string $fieldToRemove, bool $fullGroup = true)
+    public function removeSectionAnswerGroup(string $formSectionName, int $answerGroupToRemove, string $fieldToRemove, bool $fullGroup = true): void
     {
         if ($fullGroup) {
             unset($this->submittedAnswersByFormSections[$formSectionName][$answerGroupToRemove]);
@@ -221,14 +221,14 @@ trait FormFillingTrait
         }
     }
 
-    public function removeSectionTotal(string $formSectionName)
+    public function removeSectionTotal(string $formSectionName): void
     {
         if ($this->submittedAnswersByFormSections['totals'][$formSectionName] ?? null) {
             unset($this->submittedAnswersByFormSections['totals'][$formSectionName]);
         }
     }
 
-    public function addToSectionTotal(string $formSectionName, $amountToAdd)
+    public function addToSectionTotal(string $formSectionName, $amountToAdd): void
     {
         if (isset($this->submittedAnswersByFormSections['totals'][$formSectionName])) {
             $this->submittedAnswersByFormSections['totals'][$formSectionName] += $amountToAdd;
@@ -237,12 +237,12 @@ trait FormFillingTrait
         }
     }
 
-    public function addToGrandTotal($amountToAdd)
+    public function addToGrandTotal($amountToAdd): void
     {
         $this->submittedAnswersByFormSections['totals']['grandTotal'] += $amountToAdd;
     }
 
-    public function subtractFromSectionTotal(string $formSectionName, $amountToSubtract)
+    public function subtractFromSectionTotal(string $formSectionName, $amountToSubtract): void
     {
         if (isset($this->submittedAnswersByFormSections['totals'][$formSectionName])) {
             $this->submittedAnswersByFormSections['totals'][$formSectionName] -= $amountToSubtract;
@@ -251,14 +251,14 @@ trait FormFillingTrait
         }
     }
 
-    public function addToSubmittedAnswersByFormSections($formSectionName, $field, $value, ?string $formattedValue = null)
+    public function addToSubmittedAnswersByFormSections($formSectionName, $field, $value, ?string $formattedValue = null): void
     {
         $answerGroup = $this->determineAnswerGroup($formSectionName, $field);
 
         $this->submittedAnswersByFormSections[$formSectionName][$answerGroup][$field] = $formattedValue ?: $value;
     }
 
-    public function subtractFromGrandTotal($amountToSubtract)
+    public function subtractFromGrandTotal($amountToSubtract): void
     {
         $this->submittedAnswersByFormSections['totals']['grandTotal'] -= $amountToSubtract;
     }
@@ -286,7 +286,7 @@ trait FormFillingTrait
         string $formSectionName,
         bool $fullGroup = true,
         ?string $removeButtonText = null
-    ) {
+    ): void {
         $answers = $this->getSectionAnswers($formSectionName);
 
         $answerGroupToRemove = null;
@@ -384,7 +384,7 @@ trait FormFillingTrait
      *
      * @throws BehatException
      */
-    public function editFieldAnswerInSection(NodeElement $summaryRowToEdit, string $fieldName, $newValue, string $formSectionName, bool $fullGroup = true)
+    public function editFieldAnswerInSection(NodeElement $summaryRowToEdit, string $fieldName, $newValue, string $formSectionName, bool $fullGroup = true): void
     {
         $this->removeAnswerFromSection($fieldName, $formSectionName, $fullGroup);
 
@@ -410,7 +410,7 @@ trait FormFillingTrait
      *
      * @throws ElementNotFoundException
      */
-    public function editSelectAnswerInSection(NodeElement $summaryRowToEdit, string $selectName, string $newSelectOption, string $formSectionName, ?string $translatedValue = null, bool $fullGroup = true)
+    public function editSelectAnswerInSection(NodeElement $summaryRowToEdit, string $selectName, string $newSelectOption, string $formSectionName, ?string $translatedValue = null, bool $fullGroup = true): void
     {
         $this->removeAnswerFromSection($selectName, $formSectionName, $fullGroup);
 
@@ -426,7 +426,7 @@ trait FormFillingTrait
         $this->pressButton('Save and continue');
     }
 
-    public function removeAllAnswers()
+    public function removeAllAnswers(): void
     {
         unset($this->submittedAnswersByFormSections);
     }
@@ -434,7 +434,7 @@ trait FormFillingTrait
     /**
      * Call this function after executing a step that triggers an ajax request to refresh the page.
      */
-    public function waitForAjaxAndRefresh()
+    public function waitForAjaxAndRefresh(): void
     {
         while ($refresh = $this->getSession()->getPage()->find('css', 'meta[http-equiv="refresh"]')) {
             $content = $refresh->getAttribute('content');
@@ -444,7 +444,7 @@ trait FormFillingTrait
         }
     }
 
-    public function updateExpectedAnswerInSection($select, $formSectionName, $newAnswer)
+    public function updateExpectedAnswerInSection($select, $formSectionName, $newAnswer): void
     {
         $answerGroup = $this->determineAnswerGroup($formSectionName, $select);
         $this->submittedAnswersByFormSections[$formSectionName][$answerGroup][$select] = $newAnswer;

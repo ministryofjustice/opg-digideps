@@ -9,7 +9,7 @@ trait OrganisationManagementTrait
     /**
      * @Given the following organisations exist:
      */
-    public function organisationsExist(TableNode $table)
+    public function organisationsExist(TableNode $table): void
     {
         $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'DigidepsPass1234');
 
@@ -36,7 +36,7 @@ trait OrganisationManagementTrait
     /**
      * @Given the following users are in the organisations:
      */
-    public function usersAreInOrgs(TableNode $table)
+    public function usersAreInOrgs(TableNode $table): void
     {
         $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'DigidepsPass1234');
 
@@ -57,7 +57,7 @@ trait OrganisationManagementTrait
     /**
      * @Given the following users clients are in the users organisation:
      */
-    public function usersClientsAreInUsersOrg(TableNode $table)
+    public function usersClientsAreInUsersOrg(TableNode $table): void
     {
         $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'DigidepsPass1234');
 
@@ -73,7 +73,7 @@ trait OrganisationManagementTrait
     /**
      * @Given the :orgName organisation is activated
      */
-    public function theOrgIsActivated(string $orgName)
+    public function theOrgIsActivated(string $orgName): void
     {
         $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'DigidepsPass1234');
 

@@ -169,7 +169,7 @@ class FixtureHelper
         $this->s3Client->deleteMatchingObjects(getenv(FixtureHelperBuilder::S3_BUCKETNAME), $storageReference);
     }
 
-    private function setSatisfaction(Report $report, User $deputy, int $satisfactionScore): Satisfaction
+    private function setSatisfaction(Report $report, User $user, int $satisfactionScore): Satisfaction
     {
         $submitDate = clone $report->getStartDate();
         $submitDate->modify('+1 year');
@@ -178,7 +178,7 @@ class FixtureHelper
         $satisfaction->setComments('random comment');
         $satisfaction->setReport($report);
         $satisfaction->setReporttype($report->getType());
-        $satisfaction->setDeputyrole($deputy->getRoleName());
+        $satisfaction->setDeputyrole($user->getRoleName());
         $satisfaction->setCreated($submitDate);
 
         return $satisfaction;
@@ -195,7 +195,7 @@ class FixtureHelper
         ?string $deputyEmail = null,
         ?string $caseNumber = null,
         ?string $deputyUid = null,
-    ) {
+    ): void {
         $client = $this->clientTestHelper->generateClient($this->em, $user, $organisation, $caseNumber);
         $report = $this->reportTestHelper->generateReport($this->em, $client, $reportType, $startDate);
         $deputy = $this->deputyTestHelper->generateDeputy($deputyEmail, $deputyUid, em: $this->em);
@@ -269,9 +269,9 @@ class FixtureHelper
         return FixtureHelperBuilder::buildUserDetails($user);
     }
 
-    public function duplicateClient(int $clientId, ?bool $sameFirstName = true, ?bool $sameLastName = true)
+    public function duplicateClient(int $clientId, ?bool $sameFirstName = true, ?bool $sameLastName = true): Client
     {
-        $client = clone $this->em->getRepository(Client::class)->find($clientId);
+        $client = clone ($this->em->getRepository(Client::class)->find($clientId) ?? throw new \LogicException("Bad fixture: Client with id {$clientId} does not exist"));
         $client->setCaseNumber(ClientTestHelper::createValidCaseNumber());
 
         if (!$sameFirstName) {
@@ -288,7 +288,7 @@ class FixtureHelper
         return $client;
     }
 
-    public function changeCaseNumber(int $clientId, string $newCaseNumber)
+    public function changeCaseNumber(int $clientId, string $newCaseNumber): ?Client
     {
         $client = $this->em->getRepository(Client::class)->find($clientId);
         $client->setCaseNumber($newCaseNumber);
@@ -929,6 +929,9 @@ class FixtureHelper
         return FixtureHelperBuilder::buildAdminUserDetails($user);
     }
 
+    /**
+     * @return array<User>
+     */
     public function createDataForAnalytics(string $testRunId, $timeAgo, $satisfactionScore): array
     {
         $startDate = new \DateTime($timeAgo);
@@ -1061,7 +1064,7 @@ class FixtureHelper
         return $user;
     }
 
-    private function createAdminUser(string $testRunId, $userRole, $emailPrefix)
+    private function createAdminUser(string $testRunId, $userRole, $emailPrefix): User
     {
         if (!$this->fixturesEnabled) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
@@ -1088,7 +1091,7 @@ class FixtureHelper
         ?string $deputyUid = null,
         ?\DateTime $startDate = null,
         ?int $satisfactionScore = null,
-    ) {
+    ): User {
         if (!$this->fixturesEnabled) {
             throw new BehatException('Prod mode enabled - cannot create fixture users');
         }
@@ -1121,7 +1124,7 @@ class FixtureHelper
         return $user;
     }
 
-    public function setPassword($user, $legacyPasswordHash = false)
+    public function setPassword($user, $legacyPasswordHash = false): void
     {
         if ($legacyPasswordHash) {
             $user->setPassword($this->fixtureParams['legacy_password_hash']);
@@ -1174,13 +1177,16 @@ class FixtureHelper
 
     public function createDeputyOnOrder(CourtOrder $courtOrder, ?\DateTime $lastLoggedIn = null): Deputy
     {
-        $user = $this->userTestHelper::createUser();
+        $user = $this->userTestHelper::createUser(active: false);
 
         $deputy = $this->deputyTestHelper::generateDeputy(null, null, $user, $this->em);
         $deputy->associateWithCourtOrder($courtOrder);
 
         // if this is null, the user counts as "awaiting registration"
-        $user->setLastLoggedIn($lastLoggedIn);
+        if ($lastLoggedIn !== null) {
+            $user->setLastLoggedIn($lastLoggedIn);
+        }
+
 
         $this->em->persist($user);
         $this->em->persist($deputy);

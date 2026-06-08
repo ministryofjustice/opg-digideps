@@ -2,12 +2,14 @@
 
 namespace Tests\OPG\Digideps\Backend\Behat\Common;
 
+use Behat\Mink\Element\NodeElement;
+
 trait LinksTrait
 {
     /**
      * @Then the :text link url should contain ":expectedLink"
      */
-    public function linkWithTextContains($text, $expectedLink)
+    public function linkWithTextContains($text, $expectedLink): void
     {
         $linksElementsFound = $this->getSession()->getPage()->findAll('xpath', '//a[text()="' . $text . '"]');
         $count = count($linksElementsFound);
@@ -33,7 +35,7 @@ trait LinksTrait
      *
      * @When I click on ":link"
      */
-    public function clickOnBehatLink($link)
+    public function clickOnBehatLink($link): void
     {
         // if multiple links are specified (comma-separated), click on all of them
         if (strpos($link, ',') !== false) {
@@ -63,7 +65,7 @@ trait LinksTrait
         $linksElementsFound[0]->click();
     }
 
-    private function clickOnHashLink($link)
+    private function clickOnHashLink($link): void
     {
         $linksElementsFound = $this->getSession()->getPage()->findAll('css', '#' . $link);
         if (count($linksElementsFound) > 1) {
@@ -83,7 +85,7 @@ trait LinksTrait
      *
      * @When I press :text in the :region region
      */
-    public function clickOnLinkWithTextInRegion($text, $region)
+    public function clickOnLinkWithTextInRegion($text, $region): void
     {
         $region = $this->findRegion($region);
 
@@ -101,7 +103,7 @@ trait LinksTrait
         $linksElementsFound[0]->click();
     }
 
-    private function findRegion($region)
+    private function findRegion($region): NodeElement
     {
         // find region
         $regionSelector = '#' . $region . ', ' . self::behatElementToCssSelector($region, 'region');
@@ -121,7 +123,7 @@ trait LinksTrait
      *
      * @When I click on :link in the :region region
      */
-    public function clickLinkInsideElement($link, $region, $theFirst = false)
+    public function clickLinkInsideElement($link, $region, $theFirst = false): void
     {
         $linkSelector = self::behatElementToCssSelector($link, 'link');
 
@@ -141,7 +143,7 @@ trait LinksTrait
     /**
      * @When I click on the first :link in the :region region
      */
-    public function clickFirstLinkInsideElement($link, $region)
+    public function clickFirstLinkInsideElement($link, $region): void
     {
         $this->clickLinkInsideElement($link, $region, true);
     }
@@ -149,7 +151,7 @@ trait LinksTrait
     /**
      * @Given /^I follow meta refresh$/
      */
-    public function iFollowMetaRefresh()
+    public function iFollowMetaRefresh(): void
     {
         while ($refresh = $this->getSession()->getPage()->find('css', 'meta[http-equiv="refresh"]')) {
             $content = $refresh->getAttribute('content');
@@ -174,7 +176,7 @@ trait LinksTrait
      * @Then the :text link, in the :region region, url should contain ":expectedLink"
      * @Then the :text link, in the :region, url should contain ":expectedLink"
      */
-    public function linkWithTextInRegionContains($text, $expectedLink, $region)
+    public function linkWithTextInRegionContains($text, string $expectedLink, $region): void
     {
         $region = $this->findRegion($region);
 
@@ -191,7 +193,7 @@ trait LinksTrait
 
         $href = $linksElementsFound[0]->getAttribute('href');
 
-        if (strpos($href, $expectedLink) === false) {
+        if (!str_contains($href ?? '', $expectedLink)) {
             throw new \Exception("Link: $href does not contain $expectedLink");
         }
     }

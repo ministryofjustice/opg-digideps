@@ -11,7 +11,7 @@ trait ReportSectionNavigationTrait
     /**
      * @Then the previous section should be :sectionName
      */
-    public function previousSectionShouldBe(string $sectionName)
+    public function previousSectionShouldBe(string $sectionName): void
     {
         $anchor = $this->getSession()->getPage()->find('named', ['link', 'Navigate to previous part']);
 
@@ -29,7 +29,7 @@ trait ReportSectionNavigationTrait
     /**
      * @Then the next section should be :sectionName
      */
-    public function nextSectionShouldBe(string $sectionName)
+    public function nextSectionShouldBe(string $sectionName): void
     {
         $anchor = $this->getSession()->getPage()->find('named', ['link', 'Navigate to next part']);
 
@@ -47,7 +47,7 @@ trait ReportSectionNavigationTrait
     /**
      * @Given /^the link to the report overview page should display the correct reporting years$/
      */
-    public function theLinkToTheReportOverviewPageShouldDisplayTheCorrectReportingYears()
+    public function theLinkToTheReportOverviewPageShouldDisplayTheCorrectReportingYears(): void
     {
         $startYear = $this->interactingWithUserDetails->getCurrentReportStartDate()->format('Y');
         $endYear = $this->interactingWithUserDetails->getCurrentReportEndDate()->format('Y');

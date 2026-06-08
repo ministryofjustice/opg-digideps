@@ -12,7 +12,7 @@ trait FormStepTrait
     /**
      * @Then the step cannot be submitted without making a selection
      */
-    public function theStepCannotBeSubmittedWithoutMakingASelection()
+    public function theStepCannotBeSubmittedWithoutMakingASelection(): void
     {
         $this->iSubmitTheStep();
         $this->theFormShouldBeInvalid(); // from FormTrait
@@ -21,7 +21,7 @@ trait FormStepTrait
     /**
      * @Then the step with the following values :what be submitted:
      */
-    public function theStepWithTheFollowingValuesCanCannotBeSubmitted(TableNode $table, $what)
+    public function theStepWithTheFollowingValuesCanCannotBeSubmitted(TableNode $table, $what): void
     {
         // similar to "fillFields" but takes note of fields wih "ERR"
         $expectedErrors = [];
@@ -53,7 +53,7 @@ trait FormStepTrait
     /**
      * @Given I choose :what when asked for adding another record
      */
-    public function iChooseWhenAskingToAddAnotherRecord($what)
+    public function iChooseWhenAskingToAddAnotherRecord($what): void
     {
         // check that "add another" has validation (could be tested just once as it's the same form)
         $this->iSubmitTheStep();
@@ -74,7 +74,7 @@ trait FormStepTrait
     /**
      * @Then I submit the step
      */
-    public function iSubmitTheStep()
+    public function iSubmitTheStep(): void
     {
         $this->clickOnBehatLink('save-and-continue');
     }
@@ -82,7 +82,7 @@ trait FormStepTrait
     /**
      * @Then I go back from the step
      */
-    public function iGoBackFromTheStep()
+    public function iGoBackFromTheStep(): void
     {
         $this->clickOnBehatLink('step-back');
     }

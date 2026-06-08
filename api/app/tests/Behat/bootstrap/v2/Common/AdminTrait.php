@@ -16,7 +16,7 @@ trait AdminTrait
     /**
      * @When I enter the wrong type of values
      */
-    public function iEnterWrongValueTypes()
+    public function iEnterWrongValueTypes(): void
     {
         $this->fillField('admin[firstname]', $this->faker->firstName());
         $this->fillField('admin[lastname]', $this->faker->lastName());
@@ -28,7 +28,7 @@ trait AdminTrait
     /**
      * @Then I should see 'type validation' errors
      */
-    public function iShouldSeeTypeValidationError()
+    public function iShouldSeeTypeValidationError(): void
     {
         $this->assertOnErrorMessage($this->invalidEmail);
         $this->assertOnErrorMessage($this->invalidPostcode);
@@ -37,7 +37,7 @@ trait AdminTrait
     /**
      * @When I enter empty values
      */
-    public function iDoNotEnterValues()
+    public function iDoNotEnterValues(): void
     {
         $this->fillField('admin[firstname]', '');
         $this->fillField('admin[lastname]', '');
@@ -50,7 +50,7 @@ trait AdminTrait
     /**
      * @Then I should see 'missing values' errors
      */
-    public function iShouldSeeMissingValuesErrors()
+    public function iShouldSeeMissingValuesErrors(): void
     {
         $this->assertOnErrorMessage($this->missingFirstNameError);
         $this->assertOnErrorMessage($this->missingLastNameError);

@@ -32,7 +32,7 @@ final class ReportTest extends KernelTestCase
 {
     private MockInterface&Client $client;
     private array $validReportCtorArgs;
-    private MockInterface|Report $report;
+    private Report $report;
     private MockInterface&Gift $gift1;
     private MockInterface&Gift $gift2;
     private MockInterface&Expense $expense1;
@@ -110,12 +110,11 @@ final class ReportTest extends KernelTestCase
         $this->report->setType(Report::LAY_PFA_LOW_ASSETS_TYPE);
         $this->assertEquals(0, $this->report->getMoneyInTotal());
         $this->assertEquals(0, $this->report->getMoneyOutTotal());
-        $this->report->setMoneyTransactionsShort(new ArrayCollection([
-            new MoneyTransactionShortIn($this->report)->setAmount(10),
-            new MoneyTransactionShortIn($this->report)->setAmount(20),
-            new MoneyTransactionShortOut($this->report)->setAmount(30),
-            new MoneyTransactionShortOut($this->report)->setAmount(40),
-        ]));
+        $this->report->getMoneyTransactionsShort()->clear();
+        $this->report->getMoneyTransactionsShort()->add(new MoneyTransactionShortIn($this->report)->setAmount(10));
+        $this->report->getMoneyTransactionsShort()->add(new MoneyTransactionShortIn($this->report)->setAmount(20));
+        $this->report->getMoneyTransactionsShort()->add(new MoneyTransactionShortOut($this->report)->setAmount(30));
+        $this->report->getMoneyTransactionsShort()->add(new MoneyTransactionShortOut($this->report)->setAmount(40));
         $this->assertEquals(10 + 20, $this->report->getMoneyInTotal());
         $this->assertEquals(30 + 40, $this->report->getMoneyOutTotal());
     }
@@ -162,8 +161,8 @@ final class ReportTest extends KernelTestCase
         $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('account-interest')->setAmount(20)); // in
         $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('rent')->setAmount(15)); // out
         $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('rent')->setAmount(15)); // out
-        $this->report->setGifts([$this->gift1, $this->gift2]);
-        $this->report->setExpenses([$this->expense1, $this->expense2]);
+        $this->report->setGifts(new ArrayCollection([$this->gift1, $this->gift2]));
+        $this->report->setExpenses(new ArrayCollection([$this->expense1, $this->expense2]));
 
         $calculatedBalance = 1 + 20 + 20 - 15 - 15 - 11 - 22;
 
@@ -218,8 +217,8 @@ final class ReportTest extends KernelTestCase
         $this->report->addAccount(new BankAccount()->setBank('bank1')->setOpeningBalance(1000)->setClosingBalance(2000));
         $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('account-interest')->setAmount(1500)); // in
         $this->report->addMoneyTransaction(new MoneyTransaction($this->report)->setCategory('rent')->setAmount(400)); // out
-        $this->report->setGifts([$this->gift1, $this->gift2]);
-        $this->report->setExpenses([$this->expense1, $this->expense2]);
+        $this->report->setGifts(new ArrayCollection([$this->gift1, $this->gift2]));
+        $this->report->setExpenses(new ArrayCollection([$this->expense1, $this->expense2]));
 
         $exepectedTotalOffset = 67; // 1000 - 2000 + 1500 - 400 - 11 - 22
         $this->assertEquals($exepectedTotalOffset, $this->report->getTotalsOffset());
@@ -232,12 +231,12 @@ final class ReportTest extends KernelTestCase
         $this->assertEquals(true, $this->report->getTotalsMatch());
     }
 
-    public function testgetFeesTotal(): void
+    public function testGetFeesTotal(): void
     {
         $fee1 = m::mock(Fee::class, ['getAmount' => 2]);
         $reportWith = function ($fees) {
             return m::mock(Report::class . '[getFees]', $this->validReportCtorArgs)
-                ->shouldReceive('getFees')->andReturn($fees)
+                ->shouldReceive('getFees')->andReturn(new ArrayCollection($fees))
                 ->getMock();
         };
 
@@ -245,13 +244,13 @@ final class ReportTest extends KernelTestCase
         $this->assertEquals(2 + 2, $reportWith([$fee1, $fee1])->getFeesTotal());
     }
 
-    public function testgetExpensesTotal(): void
+    public function testGetExpensesTotal(): void
     {
         $exp1 = m::mock(Expense::class, ['getAmount' => 1]);
 
         $reportWith = function ($expenses) {
             return m::mock(Report::class . '[getExpenses]', $this->validReportCtorArgs)
-                ->shouldReceive('getExpenses')->andReturn($expenses)
+                ->shouldReceive('getExpenses')->andReturn(new ArrayCollection($expenses))
                 ->getMock();
         };
 
@@ -259,7 +258,7 @@ final class ReportTest extends KernelTestCase
         $this->assertEquals(1 + 1, $reportWith([$exp1, $exp1])->getExpensesTotal());
     }
 
-    public function testgetAssetsTotalValue(): void
+    public function testGetAssetsTotalValue(): void
     {
         $this->assertEquals(0, $this->report->getAssetsTotalValue());
 
@@ -394,7 +393,7 @@ final class ReportTest extends KernelTestCase
         $this->assertArrayHasKey('nameOneLine', $currentReportPreviousData['financial-summary']['accounts'][$bankAccount1->getId()]);
         $this->assertEquals(
             $currentReportPreviousData['financial-summary']['closing-balance-total'],
-            $bankAccount1->getClosingBalance() + $bankAccount2->getClosingBalance()
+            (float)$bankAccount1->getClosingBalance() + (float)$bankAccount2->getClosingBalance()
         );
     }
 

@@ -7,7 +7,7 @@ trait UserOrganisationTrait
     /**
      * @Given :userEmail has been added to the :organisationEmailIdentifier organisation
      */
-    public function hasBeenAddedToTheOrganisation($userEmail, $organisationEmailIdentifier)
+    public function hasBeenAddedToTheOrganisation($userEmail, $organisationEmailIdentifier): void
     {
         $query = "INSERT INTO organisation_user (user_id, organisation_id) VALUES
           (
@@ -21,7 +21,7 @@ trait UserOrganisationTrait
     /**
      * @Given :userEmail has been removed from the :organisationEmailIdentifier organisation
      */
-    public function hasBeenRemovedFromTheOrganisation($userEmail, $organisationEmailIdentifier)
+    public function hasBeenRemovedFromTheOrganisation($userEmail, $organisationEmailIdentifier): void
     {
         $query = "DELETE FROM organisation_user WHERE organisation_id =
                     (SELECT id FROM organisation WHERE email_identifier = '{$organisationEmailIdentifier}')

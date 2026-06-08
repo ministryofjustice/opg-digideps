@@ -52,7 +52,7 @@ trait AssetTrait
     /**
      * @return Collection<int, AssetInterface>
      */
-    public function getAssets(): Collection|array
+    public function getAssets(): Collection
     {
         return $this->assets;
     }

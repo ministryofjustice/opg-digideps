@@ -74,7 +74,7 @@ trait ReportTrait
     /**
      * @Given the :usertype report should be submittable
      */
-    public function theReportShouldBeSubmittable($usertype = 'lay')
+    public function theReportShouldBeSubmittable($usertype = 'lay'): void
     {
         $usertype = strtolower(trim($usertype));
         $this->assertUrlRegExp('#/overview#');
@@ -93,7 +93,7 @@ trait ReportTrait
     /**
      * @Given I have the :startDate to :endDate report between :deputy and :client
      */
-    public function iHaveTheReportBetweenDeputyAndClient($startDate, $endDate, $deputy, $client)
+    public function iHaveTheReportBetweenDeputyAndClient($startDate, $endDate, $deputy, $client): void
     {
         $this->iAmLoggedInAsWithPassword($deputy . '@behat-test.com', 'DigidepsPass1234');
         $this->enterReport($client, $startDate, $endDate);
@@ -112,7 +112,7 @@ trait ReportTrait
     /**
      * @Given I am viewing the :startDate to :endDate report for :client
      */
-    public function iAmViewingTheToReport($startDate, $endDate, $client)
+    public function iAmViewingTheToReport($startDate, $endDate, $client): void
     {
         $this->enterReport($client, $startDate, $endDate);
 
@@ -130,7 +130,7 @@ trait ReportTrait
     /**
      * @Given the :section section on the report has been completed
      */
-    public function theSectionOnTheReportHasBeenCompleted($section)
+    public function theSectionOnTheReportHasBeenCompleted($section): void
     {
         $this->logInAndEnterReport();
         $this->completeSections($section);
@@ -139,7 +139,7 @@ trait ReportTrait
     /**
      * @Then the report should have the :type sections
      */
-    public function theReportShouldHaveTheSections($type)
+    public function theReportShouldHaveTheSections($type): void
     {
         $this->logInAndEnterReport();
 
@@ -172,7 +172,7 @@ trait ReportTrait
     /**
      * @Then the :section section on the report should be completed
      */
-    public function theSectionOnTheReportShouldBeCompleted($section)
+    public function theSectionOnTheReportShouldBeCompleted($section): void
     {
         $this->logInAndEnterReport();
         $this->iShouldSeeTheBehatElement($section . '-state-done', 'region');
@@ -181,7 +181,7 @@ trait ReportTrait
     /**
      * @Given /^the report has been unsubmitted/
      */
-    public function theReportHasBeenUnsubmitted()
+    public function theReportHasBeenUnsubmitted(): void
     {
         $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'DigidepsPass1234');
 
@@ -192,7 +192,7 @@ trait ReportTrait
     /**
      * @Then the report should be unsubmitted
      */
-    public function theReportShouldBeUnsubmitted()
+    public function theReportShouldBeUnsubmitted(): void
     {
         $this->iAmLoggedInToAdminAsWithPassword('casemanager@publicguardian.gov.uk', 'DigidepsPass1234');
 
@@ -207,7 +207,7 @@ trait ReportTrait
     /**
      * @Then the report URL ":url" for ":reportId" should not be accessible
      */
-    public function theReportUrlForShouldNotBeAccessible($url, $reportId)
+    public function theReportUrlForShouldNotBeAccessible($url, $reportId): void
     {
         $report = self::$reportsCache[$reportId];
         $fullUrl = '/' . $report['type'] . '/' . $report['id'] . '/' . $url;
@@ -221,7 +221,7 @@ trait ReportTrait
     /**
      * Check the response status was one of the provided codes.
      */
-    private function assertResponseStatusIn($codes)
+    private function assertResponseStatusIn($codes): void
     {
         $actualCode = $this->getSession()->getStatusCode();
 
@@ -233,7 +233,7 @@ trait ReportTrait
     /**
      * @Given the report has been submitted
      */
-    public function theReportHasBeenSubmitted()
+    public function theReportHasBeenSubmitted(): void
     {
         $this->theReportHasBeenCompleted();
 
@@ -248,7 +248,7 @@ trait ReportTrait
     /**
      * @Given /^the report has been completed$/
      */
-    public function theReportHasBeenCompleted()
+    public function theReportHasBeenCompleted(): void
     {
         $reportType = self::$currentReportCache['reportType'];
 
@@ -258,7 +258,7 @@ trait ReportTrait
     /**
      * @When I attached a supporting document :imageName to the completed report
      */
-    public function iAttachedASupportingDocumentToTheCompletedReport(string $imageName)
+    public function iAttachedASupportingDocumentToTheCompletedReport(string $imageName): void
     {
         $reportType = self::$currentReportCache['reportType'];
         $reportId = self::$currentReportCache['reportId'];
@@ -273,7 +273,7 @@ trait ReportTrait
         $this->attachDocument($imageName);
     }
 
-    private function attachDocument(string $imageName)
+    private function attachDocument(string $imageName): void
     {
         $this->attachFileToField('report_document_upload_files', $imageName);
         $this->pressButton('Upload');
@@ -300,7 +300,7 @@ trait ReportTrait
         $this->pressButton('report_declaration[save]');
     }
 
-    private function completeSections(string $sections, string $reportType = 'report')
+    private function completeSections(string $sections, string $reportType = 'report'): void
     {
         $this->iAmLoggedInToAdminAsWithPassword('admin@publicguardian.gov.uk', 'DigidepsPass1234');
 
@@ -336,7 +336,7 @@ trait ReportTrait
         $this->visit("$reportType/$reportId/overview");
     }
 
-    private function completeReport(string $reportType)
+    private function completeReport(string $reportType): void
     {
         $this->logInAndEnterReport();
 
@@ -344,7 +344,7 @@ trait ReportTrait
         $sectionNames = [];
         foreach ($sections as $section) {
             $sectionId = $section->getAttribute('id');
-            $sectionNames[] = substr($sectionId, strpos($sectionId, '-') + 1);
+            $sectionNames[] = substr($sectionId, strpos($sectionId ?? '', '-') + 1);
         }
 
         if ($matches = array_keys($sectionNames, 'report-preview')) {

@@ -30,7 +30,7 @@ class AuthControllerTest extends AbstractTestController
                 'email' => 'user@mail.com-WRONG',
                 'password' => 'password-WRONG',
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
             'assertCode' => 498,
             'assertResponseCode' => 498,
         ]);
@@ -58,7 +58,7 @@ class AuthControllerTest extends AbstractTestController
                 'email' => 'admin@example.org',
                 'password' => 'DigidepsPass1234',
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
             'assertCode' => 403,
             'assertResponseCode' => 403,
         ]);
@@ -72,7 +72,7 @@ class AuthControllerTest extends AbstractTestController
 
     #[Test] public function testFailWrongAuthToken(): void
     {
-        $authToken = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+        $authToken = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
         $this->assertTrue(strlen($authToken) > 5, "Token $authToken not valid");
 
@@ -87,7 +87,7 @@ class AuthControllerTest extends AbstractTestController
 
     #[Test] public function testLoginSuccess(): mixed
     {
-        $authToken = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+        $authToken = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
         // assert succeed with token
         $data = $this->assertJsonRequest('GET', '/auth/get-logged-user', [
@@ -117,8 +117,8 @@ class AuthControllerTest extends AbstractTestController
         $this->resetAttempts('emaildeputy@example.org');
         $this->resetAttempts('emailadmin@example.org');
 
-        $authTokenDeputy = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
-        $authTokenAdmin = $this->login('admin@example.org', 'DigidepsPass1234', API_TOKEN_ADMIN);
+        $authTokenDeputy = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
+        $authTokenAdmin = $this->login('admin@example.org', 'DigidepsPass1234', self::$adminSecret);
 
         // assert deputy can access
         $data = $this->assertJsonRequest('GET', '/auth/get-logged-user', [
@@ -150,7 +150,7 @@ class AuthControllerTest extends AbstractTestController
 
     #[Test] public function testLoginTimeout(): void
     {
-        $authToken = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+        $authToken = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
         // manually expire token in REDIS
         static::getContainer()->get('predis')->expire($authToken, 0);
@@ -165,7 +165,7 @@ class AuthControllerTest extends AbstractTestController
 
     #[Test] public function testPasswordHashNotInResponse(): void
     {
-        $authToken = $this->login('deputy@example.org', 'DigidepsPass1234', API_TOKEN_DEPUTY);
+        $authToken = $this->login('deputy@example.org', 'DigidepsPass1234', self::$deputySecret);
 
         // assert succeed with token
         $data = $this->assertJsonRequest('GET', '/auth/get-logged-user', [
@@ -191,7 +191,7 @@ class AuthControllerTest extends AbstractTestController
                     'email' => 'deputy@example.org',
                     'password' => 'password-WRONG',
                 ],
-                'ClientSecret' => API_TOKEN_DEPUTY,
+                'ClientSecret' => self::$deputySecret,
                 'assertCode' => $expectedReturnCode,
                 'assertResponseCode' => $expectedReturnCode,
             ]);
@@ -204,7 +204,7 @@ class AuthControllerTest extends AbstractTestController
                 'email' => 'deputy@example.org',
                 'password' => 'DigidepsPass1234',
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
             'assertResponseCode' => 200,
         ])['data'];
         $this->assertEquals('deputy@example.org', $data['email']);
@@ -224,7 +224,7 @@ class AuthControllerTest extends AbstractTestController
                     'email' => 'deputy@example.org',
                     'password' => 'password-WRONG',
                 ],
-                'ClientSecret' => API_TOKEN_DEPUTY,
+                'ClientSecret' => self::$deputySecret,
                 'assertCode' => $expectedReturnCode,
                 'assertResponseCode' => $expectedReturnCode,
             ]);
@@ -237,7 +237,7 @@ class AuthControllerTest extends AbstractTestController
                 'email' => 'deputy@example.org',
                 'password' => 'DigidepsPass1234',
             ],
-            'ClientSecret' => API_TOKEN_DEPUTY,
+            'ClientSecret' => self::$deputySecret,
             'assertCode' => 423,
             'assertResponseCode' => 423,
         ])['data'];

@@ -9,7 +9,7 @@ trait HealthAndLifestyleTrait
     /**
      * @When I view and start the health and lifestyle report section
      */
-    public function iViewAndStartHealthLifestyleSection()
+    public function iViewAndStartHealthLifestyleSection(): void
     {
         $this->iVisitHealthAndLifestyleSection();
         $this->clickLink('Start health and lifestyle');
@@ -18,7 +18,7 @@ trait HealthAndLifestyleTrait
     /**
      * @When I skip both lifestyle sections
      */
-    public function iSkipBothLifeStyleSections()
+    public function iSkipBothLifeStyleSections(): void
     {
         $this->iAmOnLifestyleDetailsPage();
         $this->clickLink('Skip this question for now');
@@ -30,7 +30,7 @@ trait HealthAndLifestyleTrait
     /**
      * @When I fill in details about clients health and care appointments
      */
-    public function iFillInDetailsHealthCareAppointments()
+    public function iFillInDetailsHealthCareAppointments(): void
     {
         $this->iAmOnLifestyleDetailsPage();
 
@@ -41,7 +41,7 @@ trait HealthAndLifestyleTrait
     /**
      * @When I confirm that client takes part in no leisure or social activities
      */
-    public function iConfirmClientTakesPartNoLeisureOrSocialActivities()
+    public function iConfirmClientTakesPartNoLeisureOrSocialActivities(): void
     {
         $this->takesPartLeisureSocial('no');
     }
@@ -49,7 +49,7 @@ trait HealthAndLifestyleTrait
     /**
      * @When I confirm that client takes part in leisure and social activities
      */
-    public function iConfirmClientTakesPartLeisureAndSocialActivities()
+    public function iConfirmClientTakesPartLeisureAndSocialActivities(): void
     {
         $this->takesPartLeisureSocial('yes');
     }
@@ -57,7 +57,7 @@ trait HealthAndLifestyleTrait
     /**
      * @When I edit the lifestyle section answers as client takes part in activities
      */
-    public function iEditLifestyleSectionAnswersYes()
+    public function iEditLifestyleSectionAnswersYes(): void
     {
         $this->removeAnswerFromSection(
             'lifestyle[doesClientUndertakeSocialActivities]',
@@ -78,7 +78,7 @@ trait HealthAndLifestyleTrait
     /**
      * @When I edit the lifestyle section answers as client doesn't take part in activities
      */
-    public function iEditLifestyleSectionAnswersNo()
+    public function iEditLifestyleSectionAnswersNo(): void
     {
         $this->removeAnswerFromSection(
             'lifestyle[doesClientUndertakeSocialActivities]',
@@ -99,7 +99,7 @@ trait HealthAndLifestyleTrait
     /**
      * @When I do not enter any appointment details
      */
-    public function iDoNotEnterAnyAppointmentDetails()
+    public function iDoNotEnterAnyAppointmentDetails(): void
     {
         $this->iAmOnLifestyleDetailsPage();
         $this->pressButton('Save and continue');
@@ -108,7 +108,7 @@ trait HealthAndLifestyleTrait
     /**
      * @When I do not enter any leisure and activity details
      */
-    public function iDoNotEnterAnyLeisureActivityDetails()
+    public function iDoNotEnterAnyLeisureActivityDetails(): void
     {
         $this->iAmOnLifestyleActivitiesPage();
         $this->pressButton('Save and continue');
@@ -117,7 +117,7 @@ trait HealthAndLifestyleTrait
     /**
      * @When I receive the expected lifestyle activities validation message
      */
-    public function iReceiveExpectedLifestyleActivitiesValidationMessage()
+    public function iReceiveExpectedLifestyleActivitiesValidationMessage(): void
     {
         $expectedMessage = "Please select either 'Yes' or 'No'";
         $this->assertOnAlertMessage($expectedMessage);
@@ -136,7 +136,7 @@ trait HealthAndLifestyleTrait
     /**
      * @When I receive the expected lifestyle appointments validation message
      */
-    public function iReceiveExpectedLifestyleAppointmentsValidationMessage()
+    public function iReceiveExpectedLifestyleAppointmentsValidationMessage(): void
     {
         $expectedMessage = "Please describe client's health and provide details of any care appointments attended";
         $this->assertOnAlertMessage($expectedMessage);
@@ -146,14 +146,14 @@ trait HealthAndLifestyleTrait
     /**
      * @Then I should see the expected lifestyle section summary
      */
-    public function iShouldSeeTheExpectedLifestyleSummary()
+    public function iShouldSeeTheExpectedLifestyleSummary(): void
     {
         $this->iAmOnLifestyleSummaryPage();
 
         $this->expectedResultsDisplayedSimplified();
     }
 
-    private function takesPartLeisureSocial($takesPart)
+    private function takesPartLeisureSocial($takesPart): void
     {
         $this->iAmOnLifestyleActivitiesPage();
 
