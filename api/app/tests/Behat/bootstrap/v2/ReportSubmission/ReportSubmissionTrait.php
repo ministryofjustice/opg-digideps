@@ -396,4 +396,14 @@ trait ReportSubmissionTrait
             sprintf('Expected to see single standard report row, but found %s rows', count($rows))
         );
     }
+
+    #[Then('there should be :numReports report on the org dashboard page')]
+    #[Then('there should be :numReports reports on the org dashboard page')]
+    public function thereShouldBeNReports(int $numReports): void
+    {
+        $rows = $this->findAllCssElements('.behat-region-client');
+
+        $actualNumReports = count($rows);
+        $this->assertIntEqualsInt($numReports, $actualNumReports, "expected $numReports reports, got $actualNumReports");
+    }
 }

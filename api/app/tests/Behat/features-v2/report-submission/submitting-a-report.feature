@@ -62,4 +62,4 @@ Feature: Submitting a report
       And I fill in the declaration page and submit the report
       Then my report should be submitted
       And I visit the org dashboard page
-      Then there should be 1 reports on the org dashboard page
+      Then there should be 1 report on the org dashboard page

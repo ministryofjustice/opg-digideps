@@ -33,7 +33,7 @@
                     </a>
                 </td>
             </tr>
-            {% if report.isSubmitted %}
+
                 <tr>
                     <td>{{ (page ~ '.form.startDate.label') | trans }}</td>
                     <td>{{ submitted.startDate | date("j F Y")  }}</td>
@@ -52,6 +52,7 @@
                         </a>
                     </td>
                 </tr>
+            {% if report.isSubmitted %}
                 <tr>
                     <td>{{ (page ~ '.form.markSections.label') | trans }}</td>
                     <td>
