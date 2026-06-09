@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Frontend\Unit\Mapper\ReportSatisfaction;
 
+use OPG\Digideps\Frontend\Entity\Report\Satisfaction;
 use OPG\Digideps\Frontend\Mapper\DateRangeQuery;
 use OPG\Digideps\Frontend\Mapper\ReportSatisfaction\ReportSatisfactionSummaryMapper;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
@@ -12,17 +13,9 @@ use PHPUnit\Framework\TestCase;
 
 class ReportSatisfactionSummaryMapperTest extends TestCase
 {
-    /** @var ReportSatisfactionSummaryMapper */
-    private $sut;
-
-    /** @var DateRangeQuery */
-    private $query;
-
-    /** @var RestClient | MockObject */
-    private $restClient;
-
-    /** @var mixed */
-    private $result;
+    private ReportSatisfactionSummaryMapper $sut;
+    private DateRangeQuery $query;
+    private RestClient&MockObject $restClient;
 
     public function setUp(): void
     {
@@ -39,7 +32,6 @@ class ReportSatisfactionSummaryMapperTest extends TestCase
 
         $this->assertRestClientIsCalledWithDefaultQueryParameters();
         $this->assertRestClientPopulatesAnArrayOfExpectedEntities();
-        $this->invokeMapper();
         $this->assertMapperReturnsResultFromRestClient();
     }
 
@@ -53,34 +45,30 @@ class ReportSatisfactionSummaryMapperTest extends TestCase
 
         $this->assertRestClientIsCalledWithCustomQueryParameters();
         $this->assertRestClientPopulatesAnArrayOfExpectedEntities();
-        $this->invokeMapper();
         $this->assertMapperReturnsResultFromRestClient();
     }
 
-    private function assertRestClientIsCalledWithDefaultQueryParameters()
+    private function assertRestClientIsCalledWithDefaultQueryParameters(): void
     {
         $this
             ->restClient
             ->expects($this->once())
             ->method('get')
             ->with('/satisfaction/satisfaction_data?orderBy=id&order=DESC', $this->anything())
-            ->willReturn('returned-from-rest-client');
+            ->willReturn(['returned-from-rest-client']);
     }
 
-    private function assertRestClientIsCalledWithCustomQueryParameters()
+    private function assertRestClientIsCalledWithCustomQueryParameters(): void
     {
         $this
             ->restClient
             ->expects($this->once())
             ->method('get')
             ->with($this->buildExpectedUrl(), $this->anything())
-            ->willReturn('returned-from-rest-client');
+            ->willReturn(['returned-from-rest-client']);
     }
 
-    /**
-     * @return string
-     */
-    private function buildExpectedUrl()
+    private function buildExpectedUrl(): string
     {
         return sprintf('/satisfaction/satisfaction_data?%s', http_build_query([
             'orderBy' => $this->query->getOrderBy(),
@@ -90,22 +78,17 @@ class ReportSatisfactionSummaryMapperTest extends TestCase
         ]));
     }
 
-    private function assertRestClientPopulatesAnArrayOfExpectedEntities()
+    private function assertRestClientPopulatesAnArrayOfExpectedEntities(): void
     {
         $this
             ->restClient
             ->expects($this->once())
             ->method('get')
-            ->with($this->anything(), 'Report\Satisfaction[]');
+            ->with($this->anything(), Satisfaction::class . '[]');
     }
 
-    private function assertMapperReturnsResultFromRestClient()
+    private function assertMapperReturnsResultFromRestClient(): void
     {
-        $this->assertEquals($this->result, 'returned-from-rest-client');
-    }
-
-    private function invokeMapper()
-    {
-        $this->result = $this->sut->getBy($this->query);
+        $this->assertEquals(['returned-from-rest-client'], $this->sut->getBy($this->query));
     }
 }
