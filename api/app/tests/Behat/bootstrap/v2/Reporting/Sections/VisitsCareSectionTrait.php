@@ -9,7 +9,7 @@ trait VisitsCareSectionTrait
     /**
      * @Given I view the visits and care report section
      */
-    public function iViewVisitsCareSection()
+    public function iViewVisitsCareSection(): void
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
         $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'visits-care');
@@ -19,7 +19,7 @@ trait VisitsCareSectionTrait
     /**
      * @Given I view and start the visits and care report section
      */
-    public function iViewAndStartVisitsCareSection()
+    public function iViewAndStartVisitsCareSection(): void
     {
         $driver = $this->getSession()->getDriver();
         if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
@@ -33,7 +33,7 @@ trait VisitsCareSectionTrait
     /**
      * @Given I confirm I live with the client
      */
-    public function iChooseYesOnLiveWithTheClientSection()
+    public function iChooseYesOnLiveWithTheClientSection(): void
     {
         $this->chooseOption('visits_care[doYouLiveWithClient]', 'yes', 'LiveWithClient');
         $this->pressButton('Save and continue');
@@ -43,7 +43,7 @@ trait VisitsCareSectionTrait
     /**
      * @Given I confirm I do not live with the client
      */
-    public function iChooseNoOnLiveWithTheClientSection()
+    public function iChooseNoOnLiveWithTheClientSection(): void
     {
         $info = 'Information on how often there is contact with the client';
 
@@ -57,7 +57,7 @@ trait VisitsCareSectionTrait
     /**
      * @Given I confirm the client does not receive paid care
      */
-    public function iChooseNoOnReceivePaidCareSection()
+    public function iChooseNoOnReceivePaidCareSection(): void
     {
         $this->chooseOption('visits_care[doesClientReceivePaidCare]', 'no', 'DoesClientReceiveCare');
 
@@ -68,7 +68,7 @@ trait VisitsCareSectionTrait
     /**
      * @Given I confirm the client receives paid care which is funded by themselves
      */
-    public function iChooseYesOnReceivePaidCareSection()
+    public function iChooseYesOnReceivePaidCareSection(): void
     {
         $fromSummaryPage = false;
 
@@ -92,7 +92,7 @@ trait VisitsCareSectionTrait
     /**
      * @Given I confirm the client receives paid care which is partially funded by someone else
      */
-    public function iChooseYesAndOptionTwoOnReceivePaidCareSection()
+    public function iChooseYesAndOptionTwoOnReceivePaidCareSection(): void
     {
         $this->chooseOption('visits_care[doesClientReceivePaidCare]', 'yes', 'DoesClientReceiveCare');
         $this->chooseOption(
@@ -109,7 +109,7 @@ trait VisitsCareSectionTrait
     /**
      * @Given I confirm the client receives paid care which is fully funded by someone else
      */
-    public function iChooseYesAndOptionThreeOnReceivePaidCareSection()
+    public function iChooseYesAndOptionThreeOnReceivePaidCareSection(): void
     {
         $this->chooseOption('visits_care[doesClientReceivePaidCare]', 'yes', 'DoesClientReceiveCare');
         $this->chooseOption(
@@ -126,7 +126,7 @@ trait VisitsCareSectionTrait
     /**
      * @Given I provide details on who is doing the caring
      */
-    public function iFillOutWhoIsDoingCaringSection()
+    public function iFillOutWhoIsDoingCaringSection(): void
     {
         $this->fillInField(
             'visits_care[whoIsDoingTheCaring]',
@@ -142,7 +142,7 @@ trait VisitsCareSectionTrait
     /**
      * @Given I confirm the client does not have a care plan
      */
-    public function iChooseNoOnHasCarePlanSection()
+    public function iChooseNoOnHasCarePlanSection(): void
     {
         $this->chooseOption('visits_care[doesClientHaveACarePlan]', 'no', 'HasCarePlan');
         $this->pressButton('Save and continue');
@@ -153,7 +153,7 @@ trait VisitsCareSectionTrait
     /**
      * @Given I confirm the client has a care plan
      */
-    public function iChooseYesOnHasCarePlanSection()
+    public function iChooseYesOnHasCarePlanSection(): void
     {
         $this->chooseOption('visits_care[doesClientHaveACarePlan]', 'yes', 'HasCarePlan');
         $this->fillInDateFields(
@@ -172,7 +172,7 @@ trait VisitsCareSectionTrait
     /**
      * @Given I confirm there are no plans to move the client to a new residence
      */
-    public function iChooseNoOnPlansToMoveClient()
+    public function iChooseNoOnPlansToMoveClient(): void
     {
         $this->chooseOption('visits_care[planMoveNewResidence]', 'no', 'MoveResidence');
         $this->pressButton('Save and continue');
@@ -183,7 +183,7 @@ trait VisitsCareSectionTrait
     /**
      * @Given I confirm there are plans to to move the client to a new residence
      */
-    public function iChooseYesOnPlansToMoveClient()
+    public function iChooseYesOnPlansToMoveClient(): void
     {
         $this->chooseOption('visits_care[planMoveNewResidence]', 'yes', 'MoveResidence');
         $this->fillInField(
@@ -200,7 +200,7 @@ trait VisitsCareSectionTrait
     /**
      * @Then I should see the expected visits and care report section responses
      */
-    public function iSeeExpectedVisitCareSectionResponses()
+    public function iSeeExpectedVisitCareSectionResponses(): void
     {
         $this->iAmOnVisitsCareSummaryPage();
 
@@ -217,7 +217,7 @@ trait VisitsCareSectionTrait
     /**
      * @Then I follow edit link for does client receive paid care page
      */
-    public function iFollowEditLinkClientReceivePaidCarePage()
+    public function iFollowEditLinkClientReceivePaidCarePage(): void
     {
         // Click on the edit button for the client receive paid care page
         $urlRegex = sprintf('/%s\/.*\/visits-care\/step\/2\?from\=summary$/', $this->reportUrlPrefix);

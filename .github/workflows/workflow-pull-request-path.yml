@@ -88,7 +88,7 @@ jobs:
 
       - name: generate semver tag and release
         id: semver_tag
-        uses: ministryofjustice/opg-github-actions/actions/semver@a2907c7c7be94301c965ace76a2cfa407ad6fc88 # v4.6.0
+        uses: ministryofjustice/opg-github-actions/actions/semver@3a15a16fcc221821c2869eecd8822c5d62af2984 # v4.7.0
         with:
           prerelease: true
           default_bump: ${{ steps.semver_bump.outputs.default_bump }}
@@ -231,7 +231,6 @@ jobs:
       terraform_path: account
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
       account_name: development
-      tf_role: digideps-ci-boundary
 
   terraform_apply_environment:
     name: environment apply terraform
@@ -249,7 +248,6 @@ jobs:
       container_version: ${{ needs.workflow_variables.outputs.version_tag }}
       account_name: development
       pull_request_path: true
-      tf_role: digideps-ci-boundary
 
   ecr_scan_results:
     name: ecr scan results

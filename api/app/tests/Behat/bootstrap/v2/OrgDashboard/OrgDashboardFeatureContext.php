@@ -4,16 +4,10 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\OrgDashboard;
 
-use Aws\Panorama\PanoramaClient;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
-use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Organisation;
-use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
-use OPG\Digideps\Backend\Repository\ClientRepository;
-use OPG\Digideps\Backend\Repository\DeputyRepository;
 use OPG\Digideps\Backend\Repository\OrganisationRepository;
-use OPG\Digideps\Backend\Repository\ReportRepository;
 use Tests\OPG\Digideps\Backend\Behat\v2\ClientManagement\ClientManagementTrait;
 use Tests\OPG\Digideps\Backend\Behat\v2\Common\BaseFeatureContext;
 
@@ -140,19 +134,5 @@ class OrgDashboardFeatureContext extends BaseFeatureContext
     public function iSearchUsingTheFilter(): void
     {
         $this->findAllCssElements('#search_submit')[0]->click();
-    }
-
-    /**
-     * @Given there should be :numReports reports on the org dashboard page
-     * @Given there should be :numReports report on the org dashboard page
-     *
-     * Check reports shown on the /org dashboard page
-     */
-    public function thereShouldBeNReports(int $numReports): void
-    {
-        $rows = $this->findAllCssElements('.behat-region-client');
-
-        $actualNumReports = count($rows);
-        $this->assertIntEqualsInt($numReports, $actualNumReports, "expected $numReports reports, got $actualNumReports");
     }
 }

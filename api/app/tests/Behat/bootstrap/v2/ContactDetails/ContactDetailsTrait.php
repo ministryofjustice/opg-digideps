@@ -11,7 +11,7 @@ trait ContactDetailsTrait
     /**
      * @Then the support footer should show :text
      */
-    public function supportFooterShouldShowEmail(string $text)
+    public function supportFooterShouldShowEmail(string $text): void
     {
         $supportFooter = $this->getSession()->getPage()->find('xpath', '//main/../details');
 
@@ -29,7 +29,7 @@ trait ContactDetailsTrait
     /**
      * @Then the support footer should not be visible
      */
-    public function supportFooterShouldNotBeVisible()
+    public function supportFooterShouldNotBeVisible(): void
     {
         $supportFooter = $this->getSession()->getPage()->find('xpath', '//div/details');
 

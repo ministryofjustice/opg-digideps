@@ -48,7 +48,7 @@ trait MoneyInSectionTrait
     /**
      * @When I view the money in report section
      */
-    public function iViewMoneyInSection()
+    public function iViewMoneyInSection(): void
     {
         $activeReportId = $this->loggedInUserDetails->getCurrentReportId();
         $reportSectionUrl = sprintf(self::REPORT_SECTION_ENDPOINT, $this->reportUrlPrefix, $activeReportId, 'money-in');
@@ -58,7 +58,7 @@ trait MoneyInSectionTrait
     /**
      * @Given /^I confirm "([^"]*)" to adding money in on the clients behalf$/
      */
-    public function iConfirmToAddingMoneyInOnTheClientsBehalf($arg1)
+    public function iConfirmToAddingMoneyInOnTheClientsBehalf($arg1): void
     {
         $this->chooseOption('does_money_in_exist[moneyInExists]', $arg1, 'moneyInExists');
         $this->pressButton('Save and continue');
@@ -67,7 +67,7 @@ trait MoneyInSectionTrait
     /**
      * @When I view and start the money in report section
      */
-    public function iViewAndStartMoneyInSection()
+    public function iViewAndStartMoneyInSection(): void
     {
         $this->iViewMoneyInSection();
         $this->clickLink('Start money in');
@@ -76,7 +76,7 @@ trait MoneyInSectionTrait
     /**
      * @Then I click save and continue
      */
-    public function iClickSaveAndContinue()
+    public function iClickSaveAndContinue(): void
     {
         $this->pressButton('Save and continue');
     }
@@ -84,7 +84,7 @@ trait MoneyInSectionTrait
     /**
      * @Then I should see a select option error
      */
-    public function iShouldSeeASelectOptionError()
+    public function iShouldSeeASelectOptionError(): void
     {
         $this->assertOnErrorMessage($this->invalidSelectOptionError);
     }
@@ -93,7 +93,7 @@ trait MoneyInSectionTrait
      * @Given I have :moneyType to report on
      * @Given I have a/an :moneyType to report on
      */
-    public function iHaveMoneyTypeToReportOn(string $moneyType)
+    public function iHaveMoneyTypeToReportOn(string $moneyType): void
     {
         $option = $this->translateMoneyType($moneyType);
         $this->chooseOption('account[category]', $option, $moneyType, $moneyType);
@@ -109,7 +109,7 @@ trait MoneyInSectionTrait
      *
      * @throws BehatException
      */
-    private function translateMoneyType(string $moneyTypeLabel)
+    private function translateMoneyType(string $moneyTypeLabel): mixed
     {
         $categories = array_keys($this->moneyTypeDictionary);
 
@@ -124,7 +124,7 @@ trait MoneyInSectionTrait
     /**
      * @Given I try to submit an empty amount
      */
-    public function iTryToSubmitAnEmptyAmount()
+    public function iTryToSubmitAnEmptyAmount(): void
     {
         $this->pressButton('Save and continue');
     }
@@ -132,7 +132,7 @@ trait MoneyInSectionTrait
     /**
      * @Then I should see an empty field error
      */
-    public function iShouldSeeAnEmptyFieldError()
+    public function iShouldSeeAnEmptyFieldError(): void
     {
         $this->assertOnErrorMessage($this->enterAmountError);
     }
@@ -140,7 +140,7 @@ trait MoneyInSectionTrait
     /**
      * @Given I try to submit an invalid amount
      */
-    public function iTryToSubmitAnInvalidAmount()
+    public function iTryToSubmitAnInvalidAmount(): void
     {
         $this->fillInField('account[amount]', '0');
 
@@ -150,7 +150,7 @@ trait MoneyInSectionTrait
     /**
      * @Then I should see an invalid field error
      */
-    public function iShouldSeeAnInvalidFieldError()
+    public function iShouldSeeAnInvalidFieldError(): void
     {
         $this->assertOnErrorMessage($this->invalidAmountError);
     }
@@ -158,7 +158,7 @@ trait MoneyInSectionTrait
     /**
      * @Given I enter a valid amount
      */
-    public function iEnterAValidAmount()
+    public function iEnterAValidAmount(): void
     {
         $value = $this->faker->numberBetween(1, 10000);
 
@@ -182,7 +182,7 @@ trait MoneyInSectionTrait
     /**
      * @Then /^the money in summary page should contain "([^"]*)" money in values$/
      */
-    public function theMoneyInSummaryPageShouldContainMoneyInValues($arg1)
+    public function theMoneyInSummaryPageShouldContainMoneyInValues($arg1): void
     {
         assert($this->iShouldSeeTheMoneyInSummary());
 
@@ -208,7 +208,7 @@ trait MoneyInSectionTrait
     /**
      * @Given I remove the dividends item
      */
-    public function iRemoveTheDividendsItem()
+    public function iRemoveTheDividendsItem(): void
     {
         $this->clickLink('Remove');
         assert($this->iShouldBeOnTheDeletePage());
@@ -226,7 +226,7 @@ trait MoneyInSectionTrait
     /**
      * @Then I should be on the money in summary page and see entry deleted
      */
-    public function iShouldBeOnTheMoneyInSummaryPageAndSeeEntryDeleted()
+    public function iShouldBeOnTheMoneyInSummaryPageAndSeeEntryDeleted(): void
     {
         $entryDeletedText = $this->getSession()->getPage()->find('css', '.opg-alert__message > .govuk-body')->getText();
         assert($entryDeletedText == 'Entry deleted');
@@ -235,7 +235,7 @@ trait MoneyInSectionTrait
     /**
      * @When I edit the money in value
      */
-    public function iEditTheMoneyInValue()
+    public function iEditTheMoneyInValue(): void
     {
         $xpath = sprintf('//tr[td[text()[contains(.,"%s")]]]', $this->currentMoneyTypeReportingOn);
         $moneyTypeRow = $this->getSession()->getPage()->find(
@@ -273,7 +273,7 @@ trait MoneyInSectionTrait
     /**
      * @Then the money in summary page should contain the edited value
      */
-    public function theMoneyInSummaryPageShouldContainTheEditedValue()
+    public function theMoneyInSummaryPageShouldContainTheEditedValue(): void
     {
         $this->theMoneyInSummaryPageShouldContainMoneyInValues('1');
     }
@@ -281,7 +281,7 @@ trait MoneyInSectionTrait
     /**
      * @When I add another single item of income
      */
-    public function iAddAnotherSingleItemOfIncome()
+    public function iAddAnotherSingleItemOfIncome(): void
     {
         $this->clickLink('Add item of income');
 
@@ -298,7 +298,7 @@ trait MoneyInSectionTrait
     /**
      * @Then /^I enter a reason for no money in$/
      */
-    public function iEnterAReasonForNoMoneyIn()
+    public function iEnterAReasonForNoMoneyIn(): void
     {
         $this->iAmOnNoMoneyInExistsPage();
 
@@ -309,7 +309,7 @@ trait MoneyInSectionTrait
     /**
      * @When /^I edit the money in exist summary section$/
      */
-    public function iEditTheMoneyInExistSummarySection()
+    public function iEditTheMoneyInExistSummarySection(): void
     {
         $this->iShouldSeeTheMoneyInSummary();
 
@@ -325,7 +325,7 @@ trait MoneyInSectionTrait
     /**
      * @When /^I delete the transaction item from the summary page$/
      */
-    public function iDeleteTheTransactionItemFromTheSummaryPage()
+    public function iDeleteTheTransactionItemFromTheSummaryPage(): void
     {
         $this->iShouldSeeTheMoneyInSummary();
 
@@ -346,7 +346,7 @@ trait MoneyInSectionTrait
     /**
      * @Given /^I add a new transaction item$/
      */
-    public function iAddANewTransactionItem()
+    public function iAddANewTransactionItem(): void
     {
         $this->clickLink('Add item of income');
         $this->iHaveMoneyTypeToReportOn('Income Support');
@@ -356,7 +356,7 @@ trait MoneyInSectionTrait
     /**
      * @Given /^I choose to add another$/
      */
-    public function iChooseToAddAnother()
+    public function iChooseToAddAnother(): void
     {
         $this->chooseOption('account[addAnother]', 'yes');
     }
@@ -364,7 +364,7 @@ trait MoneyInSectionTrait
     /**
      * @Given /^I don't choose to add another$/
      */
-    public function iDontChooseToAddAnother()
+    public function iDontChooseToAddAnother(): void
     {
         $this->chooseOption('account[addAnother]', 'no');
     }

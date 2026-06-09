@@ -6,8 +6,5 @@ use OPG\Digideps\Backend\v2\DTO\ReportDto;
 
 interface ReportAssemblerInterface
 {
-    /**
-     * @return ReportDto
-     */
-    public function assembleFromArray(array $data);
+    public function assembleFromArray(array $data): ReportDto;
 }

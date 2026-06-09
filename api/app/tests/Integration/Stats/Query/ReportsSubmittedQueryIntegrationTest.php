@@ -45,7 +45,7 @@ class ReportsSubmittedQueryIntegrationTest extends ApiIntegrationTestCase
         self::$entityManager->persist($submission);
     }
 
-    private static function givenXreportSubmissionsOfTypeBelongToDeputy($numReports, $reportType, $deputyType)
+    private static function givenXreportSubmissionsOfTypeBelongToDeputy($numReports, $reportType, $deputyType): void
     {
         for ($i = 0; $i < $numReports; ++$i) {
             static::addSubmittedReportOfTypeToUser($reportType, static::createUserOfType($deputyType));

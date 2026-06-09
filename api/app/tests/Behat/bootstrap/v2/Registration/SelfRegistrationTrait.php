@@ -54,7 +54,7 @@ trait SelfRegistrationTrait
      * This looks up a deputy in a specific json fixture file :jsonFile, using :name as a key into the JSON,
      * and registers them through the frontend. See the file referenced above for an example of the JSON format.
      */
-    public function aLayDeputyWithRefRegistersToDeputise(string $jsonFile, string $name)
+    public function aLayDeputyWithRefRegistersToDeputise(string $jsonFile, string $name): void
     {
         $fixture = $this->getFixtureJson($jsonFile);
         $regDetails = $fixture[$name];
@@ -100,7 +100,7 @@ trait SelfRegistrationTrait
      *
      * NB a user on the case referenced must be logged in for this sequence to work.
      */
-    public function aLayDeputyIsInvitedToBeACodeputy(string $name, string $jsonFile, string $courtOrderUid)
+    public function aLayDeputyIsInvitedToBeACodeputy(string $name, string $jsonFile, string $courtOrderUid): void
     {
         $fixture = $this->getFixtureJson($jsonFile);
         $codeputy = $fixture[$name]['codeputy'];
@@ -116,7 +116,7 @@ trait SelfRegistrationTrait
     /**
      * @When a lay deputy :name @ :jsonFile completes their registration as a co-deputy for case :caseNumber
      */
-    public function aLayDeputyCompletesTheirRegistration(string $name, string $jsonFile, string $caseNumberIn)
+    public function aLayDeputyCompletesTheirRegistration(string $name, string $jsonFile, string $caseNumberIn): void
     {
         $fixture = $this->getFixtureJson($jsonFile);
         $regDetails = $fixture[$name];
@@ -151,7 +151,7 @@ trait SelfRegistrationTrait
     /**
      * @Given a Lay Deputy registers to deputise for a client with valid details
      */
-    public function aLayDeputyRegistersToDeputiseForAClientWithValidDetails()
+    public function aLayDeputyRegistersToDeputiseForAClientWithValidDetails(): void
     {
         $this->userEmail = 'julie@duck.co.uk';
         $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
@@ -174,7 +174,7 @@ trait SelfRegistrationTrait
     /**
      * @Given a Lay Deputy registers to deputise for this client with valid details
      */
-    public function aLayDeputyRegistersToDeputiseForThisClientWithValidDetails()
+    public function aLayDeputyRegistersToDeputiseForThisClientWithValidDetails(): void
     {
         $userEmail = 'julie2' . rand(0, 9999999) . '@duck.co.uk';
         $this->interactingWithUserDetails = new UserDetails(['userEmail' => $userEmail]);
@@ -197,7 +197,7 @@ trait SelfRegistrationTrait
     /**
      * @Given a Lay Deputy registers to deputise for a client with an invalid case number
      */
-    public function aLayDeputyRegistersToDeputiseForAClientWithAnInvalidCaseNumber()
+    public function aLayDeputyRegistersToDeputiseForAClientWithAnInvalidCaseNumber(): void
     {
         $this->visitFrontendPath('/register');
         $this->fillInSelfRegistrationFieldsAndSubmit(
@@ -214,7 +214,7 @@ trait SelfRegistrationTrait
     /**
      * @Given a Lay Deputy registers to deputise for a client with a valid case number and invalid case details
      */
-    public function aLayDeputyRegistersToDeputiseForAClientWithAnValidCaseNumberAndInvalidCaseDetails()
+    public function aLayDeputyRegistersToDeputiseForAClientWithAnValidCaseNumberAndInvalidCaseDetails(): void
     {
         $this->visitFrontendPath('/register');
         $this->fillInSelfRegistrationFieldsAndSubmit(
@@ -236,7 +236,7 @@ trait SelfRegistrationTrait
         string $clientFirstname,
         string $clientLastname,
         string $caseNumber,
-    ) {
+    ): void {
         $this->fillInField('self_registration_firstname', $firstname);
         $this->fillInField('self_registration_lastname', $lastname);
         $this->fillInField('self_registration_email_first', $email);
@@ -251,7 +251,7 @@ trait SelfRegistrationTrait
     /**
      * @Then I should see an 'invalid case number' error
      */
-    public function iShouldSeeAnInvalidCaseNumberError()
+    public function iShouldSeeAnInvalidCaseNumberError(): void
     {
         $actualErrorMessage = $this->getSession()->getPage()->find(
             'css',
@@ -269,7 +269,7 @@ trait SelfRegistrationTrait
     /**
      * @Then I should see an 'invalid deputy firstname' error
      */
-    public function iShouldSeeAnInvalidDeputyFirstnameError()
+    public function iShouldSeeAnInvalidDeputyFirstnameError(): void
     {
         $this->assertOnErrorMessage($this->invalidDeputyFirstnameError);
     }
@@ -277,7 +277,7 @@ trait SelfRegistrationTrait
     /**
      * @Then I should see an 'invalid deputy lastname' error
      */
-    public function iShouldSeeAnInvalidDeputyLastnameError()
+    public function iShouldSeeAnInvalidDeputyLastnameError(): void
     {
         $this->assertOnErrorMessage($this->invalidDeputyLastnameError);
     }
@@ -285,7 +285,7 @@ trait SelfRegistrationTrait
     /**
      * @Then I should see an 'invalid deputy postcode' error
      */
-    public function iShouldSeeAnInvalidDeputyPostcodeError()
+    public function iShouldSeeAnInvalidDeputyPostcodeError(): void
     {
         $this->assertOnErrorMessage($this->invalidDeputyPostcodeError);
     }
@@ -293,7 +293,7 @@ trait SelfRegistrationTrait
     /**
      * @Then I should see an 'invalid client lastname' error
      */
-    public function iShouldSeeAnInvalidClientLastnameError()
+    public function iShouldSeeAnInvalidClientLastnameError(): void
     {
         $this->assertOnErrorMessage($this->invalidClientLastnameError);
     }
@@ -301,7 +301,7 @@ trait SelfRegistrationTrait
     /**
      * @Then /^an incorrect case number length error is \'([^\']*)\'$/
      */
-    public function anIncorrectCaseNumberLengthErrorIs($arg1)
+    public function anIncorrectCaseNumberLengthErrorIs($arg1): void
     {
         if ($arg1 == 'not thrown') {
             $this->assertPageContainsText(
@@ -328,7 +328,7 @@ trait SelfRegistrationTrait
     /**
      * @Given /^a Lay Deputy clicks the activation link in the registration email$/
      */
-    public function aLayDeputyClicksTheActivationLinkInTheRegistrationEmail()
+    public function aLayDeputyClicksTheActivationLinkInTheRegistrationEmail(): void
     {
         $this->iVisitTheActivateUserPageInteractingUser();
     }
@@ -336,7 +336,7 @@ trait SelfRegistrationTrait
     /**
      * @Given /^I complete the case manager user registration flow with valid deputyship details$/
      */
-    public function iCompleteTheCaseManagerUserRegistrationFlowWithValidDeputyhsipDetails()
+    public function iCompleteTheCaseManagerUserRegistrationFlowWithValidDeputyhsipDetails(): void
     {
         $this->deputyUid = '19355556';
 
@@ -370,7 +370,7 @@ trait SelfRegistrationTrait
     /**
      * @Given /^I create a Lay Deputy user account for one of the deputies in the CSV$/
      */
-    public function iCreateALayDeputyUserAccountForOneOfTheDeputysInTheCSV()
+    public function iCreateALayDeputyUserAccountForOneOfTheDeputysInTheCSV(): void
     {
         $this->iVisitAdminAddUserPage();
         $this->userEmail = 'VANDERQUACK@DUCKTAILS.com';
@@ -392,7 +392,7 @@ trait SelfRegistrationTrait
     /**
      * @Then my deputy details should be saved to my account
      */
-    public function mySelfRegistrationDetailsShouldBeSavedToMyAccount()
+    public function mySelfRegistrationDetailsShouldBeSavedToMyAccount(): void
     {
         $this->em->flush();
         $this->em->clear();
@@ -419,7 +419,7 @@ trait SelfRegistrationTrait
      * @Given one of the Lay Deputies registers to deputise for a client with valid details
      * @Given /^the same Lay deputy registers to deputise for a client with valid details$/
      */
-    public function oneOfTheLayDeputiesRegistersToDeputiseForAClientWithValidDetails()
+    public function oneOfTheLayDeputiesRegistersToDeputiseForAClientWithValidDetails(): void
     {
         $this->userEmail = 'brian@mcduck.co.uk';
         $firstName = 'Brian';
@@ -447,7 +447,7 @@ trait SelfRegistrationTrait
     /**
      * @When I invite a Co-Deputy to the service
      */
-    public function iInviteACoDeputyToTheService()
+    public function iInviteACoDeputyToTheService(): void
     {
         $matches = [];
         preg_match('/[^\/]+$/', $this->getCurrentUrl(), $matches);
@@ -469,7 +469,7 @@ trait SelfRegistrationTrait
     /**
      * @Given /^they register to deputise for a client with valid details that includes a (\d+) digit case number$/
      */
-    public function theyRegisterToDeputiseForAClientWithValidDetailsThatIncludesADigitCaseNumber($caseNumLength)
+    public function theyRegisterToDeputiseForAClientWithValidDetailsThatIncludesADigitCaseNumber($caseNumLength): void
     {
         if ($caseNumLength == 8) {
             $caseNumber = '1717171T';
@@ -504,7 +504,7 @@ trait SelfRegistrationTrait
     /**
      * @Given a Lay Deputy registers with valid details using unicode characters
      */
-    public function aLayDeputyRegistersWithValidDetailsUsingUnicodeChars()
+    public function aLayDeputyRegistersWithValidDetailsUsingUnicodeChars(): void
     {
         $this->userEmail = 'jeanne@darc.co.uk';
         $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
@@ -656,7 +656,7 @@ trait SelfRegistrationTrait
     /**
      * @Given /^I create a Lay Deputy user account for one of the deputies in the co-deputy CSV$/
      */
-    public function iCreateALayDeputyUserAccountForOneOfTheDeputysInTheCSV2()
+    public function iCreateALayDeputyUserAccountForOneOfTheDeputysInTheCSV2(): void
     {
         $this->iVisitAdminAddUserPage();
         $this->userEmail = 'SOPHIE@FISH.COM';
@@ -678,7 +678,7 @@ trait SelfRegistrationTrait
     /**
      * @Given /^I complete the case manager user registration flow with other deputy valid deputyship details$/
      */
-    public function iCompleteTheCaseManagerUserRegistrationFlowWithOtherDeputyValidDeputyshipDetails()
+    public function iCompleteTheCaseManagerUserRegistrationFlowWithOtherDeputyValidDeputyshipDetails(): void
     {
         $this->deputyUid = '85462400';
 
@@ -716,7 +716,7 @@ trait SelfRegistrationTrait
     /**
      * @When I invite a Co-Deputy to the service who is already registered
      */
-    public function iInviteACoDeputyToTheServiceWhoIsAlreadyRegistered()
+    public function iInviteACoDeputyToTheServiceWhoIsAlreadyRegistered(): void
     {
         $matches = [];
         preg_match('/[^\/]+$/', $this->getCurrentUrl(), $matches);
@@ -745,7 +745,7 @@ trait SelfRegistrationTrait
     /**
      * @Then /^they shouldn't be able to register to deputise for a client with already registered details$/
      */
-    public function theyShouldNotBeAbleToRegisterToDeputiseForAClientWithAlreadyRegisteredDetails()
+    public function theyShouldNotBeAbleToRegisterToDeputiseForAClientWithAlreadyRegisteredDetails(): void
     {
         $this->visitPath('/logout');
 
@@ -798,7 +798,7 @@ trait SelfRegistrationTrait
     /**
      * @Given /^I search for the co-deputy using their email address$/
      */
-    public function iSearchForTheCoDeputyUsingTheirEmailAddress()
+    public function iSearchForTheCoDeputyUsingTheirEmailAddress(): void
     {
         $this->iAmOnAdminUsersSearchPage();
         $this->fillField('admin_q', $this->coDeputyEmail);
@@ -808,7 +808,7 @@ trait SelfRegistrationTrait
     /**
      * @Then /^the co\-deputy should appear in the search results$/
      */
-    public function theCoDeputyShouldAppearInTheSearchResults()
+    public function theCoDeputyShouldAppearInTheSearchResults(): void
     {
         $xpath = '//table[@class="table-govuk-body-s"]/tbody';
         $userResultsTable = $this->getSession()->getPage()->find('xpath', $xpath)->getHtml();
@@ -818,7 +818,7 @@ trait SelfRegistrationTrait
     /**
      * @Given a Lay Deputy registers to deputise for a client with valid details but invalid reporting period
      */
-    public function aLayDeputyRegistersToDeputiseForAClientWithValidDetailsButInvalidReportingPeriod()
+    public function aLayDeputyRegistersToDeputiseForAClientWithValidDetailsButInvalidReportingPeriod(): void
     {
         $this->userEmail = 'stuart@cole.co.uk';
         $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);
@@ -841,7 +841,7 @@ trait SelfRegistrationTrait
     /**
      * @Then I should see an 'invalid reporting period' error
      */
-    public function iShouldSeeReportingPeriodGreaterThanFifteenMonthsError()
+    public function iShouldSeeReportingPeriodGreaterThanFifteenMonthsError(): void
     {
         $this->assertOnErrorMessage($this->reportingPeriodGreaterThanFifteenMonths);
     }
@@ -849,7 +849,7 @@ trait SelfRegistrationTrait
     /**
      * @Given /^one of the Lay deputies listed in the lay csv already has an existing account$/
      */
-    public function theDeputyListedInTheLayCsvAlreadyHasAnExistingAccount()
+    public function theDeputyListedInTheLayCsvAlreadyHasAnExistingAccount(): void
     {
         $this->loginToFrontendAs($this->layDeputyCompletedPfaHighAssetsDetails->getUserEmail());
 
@@ -868,7 +868,7 @@ trait SelfRegistrationTrait
     /**
      * @Then /^I select the new client from the csv on the Choose a Client page$/
      */
-    public function iSelectTheNewClientFromTheCsvOnTheChooseAClientPage()
+    public function iSelectTheNewClientFromTheCsvOnTheChooseAClientPage(): void
     {
         $caseNumber = '1717171T';
 
@@ -880,7 +880,7 @@ trait SelfRegistrationTrait
     /**
      * @Given /^a Lay Deputy registers to deputise for a client with a (\d+) digit case number$/
      */
-    public function aLayDeputyRegistersToDeputiseForAClientWithADigitCaseNumber($arg1)
+    public function aLayDeputyRegistersToDeputiseForAClientWithADigitCaseNumber($arg1): void
     {
         $this->userEmail = 'maria@vanderquack.co.uk';
         $this->interactingWithUserDetails = new UserDetails(['userEmail' => $this->userEmail]);

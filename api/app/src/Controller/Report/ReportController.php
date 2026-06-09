@@ -329,10 +329,6 @@ class ReportController extends RestController
             ]);
         }
 
-        if (array_key_exists('due_date', $data)) {
-            $report->setDueDate(new \DateTime($data['due_date']));
-        }
-
         if (array_key_exists('start_date', $data)) {
             $report->setStartDate(new \DateTime($data['start_date']));
         }
@@ -342,6 +338,10 @@ class ReportController extends RestController
             // end date could be updated automatically with a listener, but better not to overload
             // the default behaviour until the logic is 100% clear
             $report->updateDueDateBasedOnEndDate();
+        }
+
+        if (array_key_exists('due_date', $data)) {
+            $report->setDueDate(new \DateTime($data['due_date']));
         }
 
         if (array_key_exists('report_seen', $data)) {
@@ -917,7 +917,6 @@ class ReportController extends RestController
             throw new UnauthorisedException('client secret not accepted.');
         }
 
-        /** @var array $data */
         $data = $this->formatter->deserializeBodyContent($request);
 
         /** @var ReportRepository $reportRepo */

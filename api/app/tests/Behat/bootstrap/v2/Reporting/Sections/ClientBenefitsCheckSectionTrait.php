@@ -537,7 +537,7 @@ trait ClientBenefitsCheckSectionTrait
     /**
      * @Then /^I want to add another money recieved on the clients behalf$/
      */
-    public function iWantToAddAnotherMoneyRecievedOnTheClientsBehalf()
+    public function iWantToAddAnotherMoneyRecievedOnTheClientsBehalf(): void
     {
         if (!$this->iAmOnPage('/\/client-benefits-check\/summary/')) {
             throw new BehatException('Not on Benefits Summary page');

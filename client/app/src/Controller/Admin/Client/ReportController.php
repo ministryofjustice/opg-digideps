@@ -440,7 +440,7 @@ class ReportController extends AbstractController
             }
 
             $this->populateReportFromSession($report, $sessionData);
-            $this->restClient->put('report/' . $report->getId(), $report, ['report_due_date']);
+            $this->restClient->put('report/' . $report->getId(), $report, ['report_type', 'report_due_date', ...($report->isSubmitted() ? [] : ['startEndDates'])]);
 
             if ($form->has('confirm') && $form['confirm']->getData() === 'yes' && $report->isSubmitted()) {
                 /** @var User $user */
@@ -530,7 +530,9 @@ class ReportController extends AbstractController
 
         $checklist = $report->getChecklist();
         $checklist = empty($checklist) ? new Checklist($report) : $checklist;
-        $checklist->setFurtherInformationReceived($content);
+        if ($content) {
+            $checklist->setFurtherInformationReceived($content);
+        }
 
         $httpMethod = empty($checklist->getId()) ? 'post' : 'put';
         $this->restClient->{$httpMethod}('report/' . $report->getId() . '/checked', $checklist, [

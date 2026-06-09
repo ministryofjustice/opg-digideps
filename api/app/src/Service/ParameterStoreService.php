@@ -33,13 +33,13 @@ class ParameterStoreService
         return $flag['Parameter']['Value'];
     }
 
-    public function putParameter(string $parameterName, string $parameterValue)
+    public function putParameter(string $parameterName, string $parameterValue): void
     {
         $parameterName = $this->parameterPrefix . $parameterName;
         $this->ssmClient->putParameter(['Name' => $parameterName, 'Value' => $parameterValue, 'Overwrite' => true]);
     }
 
-    public function putFeatureFlag(string $flagName, string $flagValue)
+    public function putFeatureFlag(string $flagName, string $flagValue): void
     {
         $flagName = $this->flagPrefix . $flagName;
         $this->ssmClient->putParameter(['Name' => $flagName, 'Value' => $flagValue, 'Overwrite' => true]);

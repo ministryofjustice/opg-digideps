@@ -10,9 +10,9 @@ use Doctrine\ORM\EntityManagerInterface;
 final class ReportAccessService
 {
     /**
-     * @var array<int, array<int>>
+     * @var array<bool, array<int, array<int>>>
      */
-    private array $cache = [];
+    private array $cache = [true => [], false => []];
 
     public function __construct(private readonly EntityManagerInterface $entityManager)
     {
@@ -21,19 +21,20 @@ final class ReportAccessService
     /**
      * @return array<int>
      */
-    public function getVisibleReportIdsGivenUserId(int $userId): array
+    public function getVisibleReportIdsGivenUserId(int $userId, bool $blockDischargedDeputies = false): array
     {
-        if (!array_key_exists($userId, $this->cache)) {
-            $this->cache[$userId] = $this->fetchVisibleReportIdsGivenUserId($userId);
+        if (!array_key_exists($userId, $this->cache[$blockDischargedDeputies])) {
+            $this->cache[$blockDischargedDeputies][$userId] = $this->fetchVisibleReportIdsGivenUserId($userId, $blockDischargedDeputies);
         }
-        return $this->cache[$userId];
+        return $this->cache[$blockDischargedDeputies][$userId];
     }
 
     /**
      * @return array<int>
      */
-    private function fetchVisibleReportIdsGivenUserId(int $userId): array
+    private function fetchVisibleReportIdsGivenUserId(int $userId, bool $blockDischargedDeputies): array
     {
+        $active = $blockDischargedDeputies ? 'AND cod.is_active' : '';
         $sql = "
             SELECT DISTINCT r.id
             FROM report r
@@ -43,7 +44,7 @@ final class ReportAccessService
                 ON co.id = cor.court_order_id
             JOIN court_order_deputy cod
                 ON co.id = cod.court_order_id
-                AND cod.is_active
+                {$active}
             JOIN deputy d
                 ON d.id = cod.deputy_id
             JOIN client c

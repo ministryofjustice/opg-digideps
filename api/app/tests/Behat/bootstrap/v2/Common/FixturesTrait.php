@@ -10,7 +10,6 @@ use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
-use Tests\OPG\Digideps\Backend\Behat\v2\Helpers\FixtureHelper;
 use Behat\Gherkin\Node\TableNode;
 use Tests\OPG\Digideps\Backend\Behat\v2\Helpers\FixtureHelperBuilder;
 
@@ -27,7 +26,7 @@ trait FixturesTrait
     /**
      * @Given the following court orders exist:
      */
-    public function theFollowingCourtOrdersExist(TableNode $table)
+    public function theFollowingCourtOrdersExist(TableNode $table): void
     {
         $this->loginToAdminAs($this->superAdminDetails->getUserEmail());
 
@@ -76,7 +75,7 @@ trait FixturesTrait
     /**
      * @Given two clients have the same :whichName name
      */
-    public function twoClientsHaveSameNames(string $whichName)
+    public function twoClientsHaveSameNames(string $whichName): void
     {
         $sameFirstname = in_array(strtolower($whichName), ['first', 'full']);
         $sameLastname = in_array(strtolower($whichName), ['last', 'full']);
@@ -88,7 +87,7 @@ trait FixturesTrait
     /**
      * @Given two submitted reports with clients sharing the same :whichName name exist
      */
-    public function twoClientsExistWithTheSameFirstName(string $whichName)
+    public function twoClientsExistWithTheSameFirstName(string $whichName): void
     {
         $userDetails1 = $this->createLayCombinedHighSubmitted(null, $this->testRunId . mt_rand(1, 10000));
         $client1 = $this->em->getRepository(Client::class)->find($userDetails1->getClientId());
@@ -122,7 +121,7 @@ trait FixturesTrait
     /**
      * @Given a client has submitted two reports
      */
-    public function aClientHasSubmittedTwoReports()
+    public function aClientHasSubmittedTwoReports(): void
     {
         $userDetails = $this->twoReportsUserDetails = $this->createLayCombinedHighSubmitted(null, $this->testRunId . 'A');
         $newReport = $this->em->getRepository(Report::class)->find($userDetails->getCurrentReportId());
@@ -132,7 +131,7 @@ trait FixturesTrait
     /**
      * @Given another/a client has submitted one report
      */
-    public function anotherClientHasSubmittedOneReport()
+    public function anotherClientHasSubmittedOneReport(): void
     {
         $this->oneReportsUserDetails = $this->createLayCombinedHighSubmitted(null, $this->testRunId . 'B');
     }
@@ -167,7 +166,7 @@ trait FixturesTrait
     /**
      * @Given the Lay deputy user with deputy UID :deputyUid, email :email, first name :firstName, and last name :lastName exists
      */
-    public function theLayDeputyUserWithEmailNamedExists($deputyUid, $email, $firstName, $lastName)
+    public function theLayDeputyUserWithEmailNamedExists($deputyUid, $email, $firstName, $lastName): User
     {
         return $this->fixtureHelper->createAndPersistUser(User::ROLE_LAY_DEPUTY, $email, intval($deputyUid), $firstName, $lastName);
     }
@@ -175,7 +174,7 @@ trait FixturesTrait
     /**
      * @Given the Lay deputy user with deputy UID :deputyUid and email :email exists
      */
-    public function theLayDeputyUserWithEmailExists($deputyUid, $email)
+    public function theLayDeputyUserWithEmailExists($deputyUid, $email): User
     {
         return $this->fixtureHelper->createAndPersistUser(User::ROLE_LAY_DEPUTY, $email, intval($deputyUid));
     }
@@ -187,21 +186,21 @@ trait FixturesTrait
         return $this->fixtureHelper->createAndPersistUser($roleName, $email);
     }
 
-    public function assertInteractingWithUserIsSet()
+    public function assertInteractingWithUserIsSet(): void
     {
         if (is_null($this->interactingWithUserDetails)) {
             throw new BehatException('An interacting with User has not been set. Ensure a previous step in the scenario has set this User and try again.');
         }
     }
 
-    public function assertLoggedInUserIsSet()
+    public function assertLoggedInUserIsSet(): void
     {
         if (is_null($this->loggedInUserDetails)) {
             throw new BehatException('An logged in User has not been set. Ensure a previous step in the scenario has set this User and try again.');
         }
     }
 
-    public function assertLoggedInUserHasOrgRole()
+    public function assertLoggedInUserHasOrgRole(): void
     {
         if (!in_array($this->loggedInUserDetails->getUserRole(), User::$orgRoles)) {
             $message = sprintf('The logged in user role is "%s"/ Expected one of "%s".', $this->loggedInUserDetails->getUserRole(), implode(', ', User::$orgRoles));
@@ -222,7 +221,7 @@ trait FixturesTrait
         return $users;
     }
 
-    public function changeCaseNumber(int $clientId, string $newCaseNumber)
+    public function changeCaseNumber(int $clientId, string $newCaseNumber): void
     {
         $this->fixtureHelper->changeCaseNumber($clientId, $newCaseNumber);
     }
@@ -230,7 +229,7 @@ trait FixturesTrait
     /**
      * @Given /^the user has \'([^\']*)\' permissions and another user exists within the same organisation$/
      */
-    public function theUserHasPermissionsAndAnotherUserExistsWithinTheSameOrganisation(string $adminPermissions)
+    public function theUserHasPermissionsAndAnotherUserExistsWithinTheSameOrganisation(string $adminPermissions): void
     {
         $setExistingUserFixture = $this->setExistingUser($adminPermissions);
 
@@ -249,7 +248,7 @@ trait FixturesTrait
         $this->em->flush();
     }
 
-    private function setExistingUser(string $adminPermissions)
+    private function setExistingUser(string $adminPermissions): UserDetails
     {
         if ($adminPermissions === 'admin') {
             return $this->profAdminCombinedHighNotStartedDetails;

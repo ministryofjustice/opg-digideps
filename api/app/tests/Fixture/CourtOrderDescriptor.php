@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Fixture;
 
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
-use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 
 final readonly class CourtOrderDescriptor
 {

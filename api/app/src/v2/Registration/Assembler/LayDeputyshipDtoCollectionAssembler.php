@@ -2,7 +2,6 @@
 
 namespace OPG\Digideps\Backend\v2\Registration\Assembler;
 
-use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
 use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDtoCollection;
 
 class LayDeputyshipDtoCollectionAssembler
@@ -18,10 +17,7 @@ class LayDeputyshipDtoCollectionAssembler
 
         foreach ($data as $line => $uploadRow) {
             try {
-                $item = $this->layDeputyshipDtoAssembler->assembleFromArray($uploadRow);
-                if ($item instanceof LayDeputyshipDto) {
-                    $collection->append($item);
-                }
+                $collection->append($this->layDeputyshipDtoAssembler->assembleFromArray($uploadRow));
             } catch (\InvalidArgumentException $e) {
                 $skipped[] = sprintf('SKIPPED LINE %d: %s', $line + 2, $e->getMessage());
             }

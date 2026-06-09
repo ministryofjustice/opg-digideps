@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace OPG\Digideps\Frontend\Entity\Report;
 
 use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
@@ -10,839 +12,494 @@ use OPG\Digideps\Frontend\Entity\User;
 use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * Checklist.
- */
 class Checklist implements SynchronisableInterface
 {
     use HasReportTrait;
     use ModifyAudit;
     use SynchronisableTrait;
 
-    /**
-     * @var int
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("integer")
-     */
-    private $id;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('integer')]
+    private ?int $id = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.reportingPeriodAccurate.notBlank", groups={"submit-common-checklist"})
-     */
-    private $reportingPeriodAccurate;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.reportingPeriodAccurate.notBlank', groups: ['submit-common-checklist'])]
+    private ?string $reportingPeriodAccurate = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("boolean")
-     * @Assert\NotBlank(message="checklist.contactDetailsUptoDate.notBlank", groups={"submit-common-checklist"})
-     */
-    private $contactDetailsUptoDate;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('boolean')]
+    #[Assert\NotBlank(message: 'checklist.contactDetailsUptoDate.notBlank', groups: ['submit-common-checklist'])]
+    private ?bool $contactDetailsUptoDate = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("boolean")
-     * @Assert\NotBlank(message="checklist.deputyFullNameAccurateInSirius.notBlank", groups={"submit-deputy-fullname-accurate-sirius-checklist"})
-     */
-    private $deputyFullNameAccurateInSirius;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('boolean')]
+    #[Assert\NotBlank(message: 'checklist.deputyFullNameAccurateInSirius.notBlank', groups: ['submit-deputy-fullname-accurate-sirius-checklist'])]
+    private ?bool $deputyFullNameAccurateInSirius = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.decisionsSatisfactory.notBlank", groups={"submit-decisions-checklist"})
-     */
-    private $decisionsSatisfactory;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.decisionsSatisfactory.notBlank', groups: ['submit-decisions-checklist'])]
+    private ?string $decisionsSatisfactory = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.consultationsSatisfactory.notBlank", groups={"submit-common-checklist"})
-     */
-    private $consultationsSatisfactory;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.consultationsSatisfactory.notBlank', groups: ['submit-common-checklist'])]
+    private ?string $consultationsSatisfactory = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.careArrangements.notBlank", groups={"submit-visitsCare-checklist"})
-     */
-    private $careArrangements;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.careArrangements.notBlank', groups: ['submit-visitsCare-checklist'])]
+    private ?string $careArrangements = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.assetsDeclaredAndManaged.notBlank", groups={"submit-assets-checklist"})
-     */
-    private $assetsDeclaredAndManaged;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.assetsDeclaredAndManaged.notBlank', groups: ['submit-assets-checklist'])]
+    private ?string $assetsDeclaredAndManaged = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.debtsManaged.notBlank", groups={"submit-debts-checklist"})
-     */
-    private $debtsManaged;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.debtsManaged.notBlank', groups: ['submit-debts-checklist'])]
+    private ?string $debtsManaged = null;
 
-    /**
-     * @var string|null
-     * @JMS\Type("string")
-     * @JMS\Groups({"report-checklist"})
-     * @Assert\NotBlank(message="checklist.yesNoNa", groups={"submit-clientBenefitsCheck-checklist"})
-     */
-    private $clientBenefitsChecked;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-checklist'])]
+    #[Assert\NotBlank(message: 'checklist.yesNoNa', groups: ['submit-clientBenefitsCheck-checklist'])]
+    private ?string $clientBenefitsChecked = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.openClosingBalancesMatch.notBlank", groups={"submit-balance-checklist"})
-     */
-    private $openClosingBalancesMatch;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.openClosingBalancesMatch.notBlank', groups: ['submit-balance-checklist'])]
+    private ?string $openClosingBalancesMatch = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.accountsBalance.notBlank", groups={"submit-balance-checklist"})
-     */
-    private $accountsBalance;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.accountsBalance.notBlank', groups: ['submit-balance-checklist'])]
+    private ?string $accountsBalance = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.moneyMovementsAcceptable.notBlank", groups={"submit-bankAccounts-checklist"})
-     */
-    private $moneyMovementsAcceptable;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.moneyMovementsAcceptable.notBlank', groups: ['submit-bankAccounts-checklist'])]
+    private ?string $moneyMovementsAcceptable = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.deputyChargeAllowedByCourt.notBlank", groups={"submit-paDeputyExpenses-checklist"})
-     */
-    protected $deputyChargeAllowedByCourt;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.deputyChargeAllowedByCourt.notBlank', groups: ['submit-paDeputyExpenses-checklist'])]
+    protected ?string $deputyChargeAllowedByCourt = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.satisfiedWithPaExpenses.notBlank", groups={"submit-paDeputyExpenses-checklist"})
-     */
-    protected $satisfiedWithPaExpenses;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.satisfiedWithPaExpenses.notBlank', groups: ['submit-paDeputyExpenses-checklist'])]
+    protected ?string $satisfiedWithPaExpenses = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.lifestyle.notBlank", groups={"submit-lifestyle-checklist"})
-     */
-    private $satisfiedWithHealthAndLifestyle;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.lifestyle.notBlank', groups: ['submit-lifestyle-checklist'])]
+    private ?string $satisfiedWithHealthAndLifestyle = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.bondOrderMatchSirius.notBlank", groups={"submit-bonds-checklist"})
-     */
-    private $bondAdequate;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.bondOrderMatchSirius.notBlank', groups: ['submit-bonds-checklist'])]
+    private ?string $bondAdequate = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.bondOrderMatchSirius.notBlank", groups={"submit-bonds-checklist"})
-     */
-    private $bondOrderMatchSirius;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.bondOrderMatchSirius.notBlank', groups: ['submit-bonds-checklist'])]
+    private ?string $bondOrderMatchSirius = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.futureSignificantDecisions.notBlank", groups={"submit-common-checklist"})
-     */
-    private $futureSignificantDecisions;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.futureSignificantDecisions.notBlank', groups: ['submit-common-checklist'])]
+    private ?string $futureSignificantDecisions = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.hasDeputyRaisedConcerns.notBlank", groups={"submit-common-checklist"})
-     */
-    private $hasDeputyRaisedConcerns;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.hasDeputyRaisedConcerns.notBlank', groups: ['submit-common-checklist'])]
+    private ?string $hasDeputyRaisedConcerns = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.caseWorkerSatisified.notBlank", groups={"submit-common-checklist"})
-     */
-    private $caseWorkerSatisified;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.caseWorkerSatisified.notBlank', groups: ['submit-common-checklist'])]
+    private ?string $caseWorkerSatisified = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.paymentsMatchCostCertificate.notBlank", groups={"submit-profDeputyCosts-checklist"})
-     */
-    private $paymentsMatchCostCertificate;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.paymentsMatchCostCertificate.notBlank', groups: ['submit-profDeputyCosts-checklist'])]
+    private ?string $paymentsMatchCostCertificate = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.profCostsReasonableAndProportionate.notBlank", groups={"submit-profDeputyCosts-checklist"})
-     */
-    private $profCostsReasonableAndProportionate;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.profCostsReasonableAndProportionate.notBlank', groups: ['submit-profDeputyCosts-checklist'])]
+    private ?string $profCostsReasonableAndProportionate = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.hasDeputyOverchargedFromPreviousEstimates.notBlank", groups={"submit-profDeputyCosts-checklist"})
-     */
-    private $hasDeputyOverchargedFromPreviousEstimates;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.hasDeputyOverchargedFromPreviousEstimates.notBlank', groups: ['submit-profDeputyCosts-checklist'])]
+    private ?string $hasDeputyOverchargedFromPreviousEstimates = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.nextBillingEstimatesSatisfactory.notBlank", groups={"submit-profDeputyCostsEstimate-checklist"})
-     */
-    private $nextBillingEstimatesSatisfactory;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.nextBillingEstimatesSatisfactory.notBlank', groups: ['submit-profDeputyCostsEstimate-checklist'])]
+    private ?string $nextBillingEstimatesSatisfactory = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.lodgingSummary.notBlank", groups={"submit-common-checklist"})
-     */
-    private $lodgingSummary;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.lodgingSummary.notBlank', groups: ['submit-common-checklist'])]
+    private ?string $lodgingSummary = null;
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"report-checklist"})
-     * @JMS\Type("string")
-     * @Assert\NotBlank(message="checklist.finalDecision.notBlank", groups={"submit-common-checklist"})
-     */
-    private $finalDecision;
+    #[JMS\Groups(['report-checklist'])]
+    #[JMS\Type('string')]
+    #[Assert\NotBlank(message: 'checklist.finalDecision.notBlank', groups: ['submit-common-checklist'])]
+    private ?string $finalDecision = null;
 
-    /**
-     * @var ChecklistInformation[]
-     *
-     * @JMS\Groups({"checklist-information"})
-     *
-     * @JMS\Type("array<OPG\Digideps\Frontend\Entity\Report\ChecklistInformation>")
-     */
-    private $checklistInformation = [];
+    /** @var array<ChecklistInformation> */
+    #[JMS\Groups(['checklist-information'])]
+    #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\ChecklistInformation>')]
+    private array $checklistInformation = [];
 
-    /**
-     * @var string
-     *
-     * @JMS\Groups({"checklist-information"})
-     * @JMS\Type("string")
-     */
-    private $furtherInformationReceived;
+    #[JMS\Groups(['checklist-information'])]
+    #[JMS\Type('string')]
+    private ?string $furtherInformationReceived = null;
 
-    /**
-     * Submitted by.
-     *
-     * @JMS\Type("OPG\Digideps\Frontend\Entity\User")
-     * @JMS\Groups({"checklist-information"})
-     *
-     * @var User
-     */
-    protected $submittedBy;
+    #[JMS\Type('OPG\Digideps\Frontend\Entity\User')]
+    #[JMS\Groups(['checklist-information'])]
+    protected ?User $submittedBy = null;
 
-    /**
-     * Submitted on.
-     *
-     * @JMS\Type("DateTime")
-     *
-     * @var \DateTime
-     */
-    protected $submittedOn;
+    #[JMS\Type('DateTime')]
+    protected ?\DateTime $submittedOn = null;
 
-    /**
-     * @var string
-     * @JMS\Type("string")
-     * @JMS\Groups({"report-checklist"})
-     */
-    protected $buttonClicked;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-checklist'])]
+    protected ?string $buttonClicked = null;
 
-    /**
-     * @var string|null
-     * @JMS\Type("string")
-     * @JMS\Groups({"report-checklist-uuid"})
-     */
-    private $uuid;
+    #[JMS\Type('string')]
+    #[JMS\Groups(['report-checklist-uuid'])]
+    private ?string $uuid = null;
 
-    /**
-     * Checklist constructor.
-     */
     public function __construct(Report $report)
     {
         $this->setReport($report);
 
         // DDPB-2272: prefill answers based on report content
         $action = $report->getAction();
-        if ($answer = $action->getDoYouExpectFinancialDecisions()) {
+        $answer = $action->getDoYouExpectFinancialDecisions();
+        if ($answer) {
             $this->setFutureSignificantDecisions($answer);
         }
-        if ($answer = $action->getDoYouHaveConcerns()) {
+        $answer = $action->getDoYouHaveConcerns();
+        if ($answer) {
             $this->setHasDeputyRaisedConcerns($answer);
         }
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param int $id
-     *
-     * @return $this
-     */
-    public function setId($id)
+    public function setId(?int $id): static
     {
         $this->id = $id;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getReportingPeriodAccurate()
+    public function getReportingPeriodAccurate(): ?string
     {
         return $this->reportingPeriodAccurate;
     }
 
-    /**
-     * @param string $reportingPeriodAccurate
-     *
-     * @return $this
-     */
-    public function setReportingPeriodAccurate($reportingPeriodAccurate)
+    public function setReportingPeriodAccurate(?string $reportingPeriodAccurate): static
     {
         $this->reportingPeriodAccurate = $reportingPeriodAccurate;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getContactDetailsUptoDate()
+    public function getContactDetailsUptoDate(): ?bool
     {
         return $this->contactDetailsUptoDate;
     }
 
-    /**
-     * @param string $contactDetailsUptoDate
-     *
-     * @return $this
-     */
-    public function setContactDetailsUptoDate($contactDetailsUptoDate)
+    public function setContactDetailsUptoDate(?bool $contactDetailsUptoDate): static
     {
         $this->contactDetailsUptoDate = $contactDetailsUptoDate;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDeputyFullNameAccurateInSirius()
+    public function getDeputyFullNameAccurateInSirius(): ?bool
     {
         return $this->deputyFullNameAccurateInSirius;
     }
 
-    /**
-     * @param string $deputyFullNameAccurateInSirius
-     *
-     * @return $this
-     */
-    public function setDeputyFullNameAccurateInSirius($deputyFullNameAccurateInSirius)
+    public function setDeputyFullNameAccurateInSirius(?bool $deputyFullNameAccurateInSirius): static
     {
         $this->deputyFullNameAccurateInSirius = $deputyFullNameAccurateInSirius;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDecisionsSatisfactory()
+    public function getDecisionsSatisfactory(): ?string
     {
         return $this->decisionsSatisfactory;
     }
 
-    /**
-     * @param string $decisionsSatisfactory
-     *
-     * @return $this
-     */
-    public function setDecisionsSatisfactory($decisionsSatisfactory)
+    public function setDecisionsSatisfactory(?string $decisionsSatisfactory): static
     {
         $this->decisionsSatisfactory = $decisionsSatisfactory;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getConsultationsSatisfactory()
+    public function getConsultationsSatisfactory(): ?string
     {
         return $this->consultationsSatisfactory;
     }
 
-    /**
-     * @param string $consultationsSatisfactory
-     *
-     * @return $this
-     */
-    public function setConsultationsSatisfactory($consultationsSatisfactory)
+    public function setConsultationsSatisfactory(?string $consultationsSatisfactory): static
     {
         $this->consultationsSatisfactory = $consultationsSatisfactory;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCareArrangements()
+    public function getCareArrangements(): ?string
     {
         return $this->careArrangements;
     }
 
-    /**
-     * @param string $careArrangements
-     *
-     * @return $this
-     */
-    public function setCareArrangements($careArrangements)
+    public function setCareArrangements(?string $careArrangements): static
     {
         $this->careArrangements = $careArrangements;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAssetsDeclaredAndManaged()
+    public function getAssetsDeclaredAndManaged(): ?string
     {
         return $this->assetsDeclaredAndManaged;
     }
 
-    /**
-     * @param string $assetsDeclaredAndManaged
-     *
-     * @return $this
-     */
-    public function setAssetsDeclaredAndManaged($assetsDeclaredAndManaged)
+    public function setAssetsDeclaredAndManaged(?string $assetsDeclaredAndManaged): static
     {
         $this->assetsDeclaredAndManaged = $assetsDeclaredAndManaged;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDebtsManaged()
+    public function getDebtsManaged(): ?string
     {
         return $this->debtsManaged;
     }
 
-    /**
-     * @param string $debtsManaged
-     *
-     * @return $this
-     */
-    public function setDebtsManaged($debtsManaged)
+    public function setDebtsManaged(?string $debtsManaged): static
     {
         $this->debtsManaged = $debtsManaged;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getOpenClosingBalancesMatch()
+    public function getOpenClosingBalancesMatch(): ?string
     {
         return $this->openClosingBalancesMatch;
     }
 
-    /**
-     * @param string $openClosingBalancesMatch
-     *
-     * @return $this
-     */
-    public function setOpenClosingBalancesMatch($openClosingBalancesMatch)
+    public function setOpenClosingBalancesMatch(?string $openClosingBalancesMatch): static
     {
         $this->openClosingBalancesMatch = $openClosingBalancesMatch;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getAccountsBalance()
+    public function getAccountsBalance(): ?string
     {
         return $this->accountsBalance;
     }
 
-    /**
-     * @param string $accountsBalance
-     *
-     * @return $this
-     */
-    public function setAccountsBalance($accountsBalance)
+    public function setAccountsBalance(?string $accountsBalance): static
     {
         $this->accountsBalance = $accountsBalance;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getMoneyMovementsAcceptable()
+    public function getMoneyMovementsAcceptable(): ?string
     {
         return $this->moneyMovementsAcceptable;
     }
 
-    /**
-     * @param string $moneyMovementsAcceptable
-     *
-     * @return $this
-     */
-    public function setMoneyMovementsAcceptable($moneyMovementsAcceptable)
+    public function setMoneyMovementsAcceptable(?string $moneyMovementsAcceptable): static
     {
         $this->moneyMovementsAcceptable = $moneyMovementsAcceptable;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDeputyChargeAllowedByCourt()
+    public function getDeputyChargeAllowedByCourt(): ?string
     {
         return $this->deputyChargeAllowedByCourt;
     }
 
-    /**
-     * @param string $deputyChargeAllowedByCourt
-     *
-     * @return $this
-     */
-    public function setDeputyChargeAllowedByCourt($deputyChargeAllowedByCourt)
+    public function setDeputyChargeAllowedByCourt(?string $deputyChargeAllowedByCourt): static
     {
         $this->deputyChargeAllowedByCourt = $deputyChargeAllowedByCourt;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getSatisfiedWithPaExpenses()
+    public function getSatisfiedWithPaExpenses(): ?string
     {
         return $this->satisfiedWithPaExpenses;
     }
 
-    /**
-     * @param string $satisfiedWithPaExpenses
-     *
-     * @return $this
-     */
-    public function setSatisfiedWithPaExpenses($satisfiedWithPaExpenses)
+    public function setSatisfiedWithPaExpenses(?string $satisfiedWithPaExpenses): static
     {
         $this->satisfiedWithPaExpenses = $satisfiedWithPaExpenses;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getSatisfiedWithHealthAndLifestyle()
+    public function getSatisfiedWithHealthAndLifestyle(): ?string
     {
         return $this->satisfiedWithHealthAndLifestyle;
     }
 
-    /**
-     * @param string $satisfiedWithHealthAndLifestyle
-     *
-     * @return $this
-     */
-    public function setSatisfiedWithHealthAndLifestyle($satisfiedWithHealthAndLifestyle)
+    public function setSatisfiedWithHealthAndLifestyle(?string $satisfiedWithHealthAndLifestyle): static
     {
         $this->satisfiedWithHealthAndLifestyle = $satisfiedWithHealthAndLifestyle;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getBondAdequate()
+    public function getBondAdequate(): ?string
     {
         return $this->bondAdequate;
     }
 
-    /**
-     * @param string $bondAdequate
-     *
-     * @return $this
-     */
-    public function setBondAdequate($bondAdequate)
+    public function setBondAdequate(?string $bondAdequate): static
     {
         $this->bondAdequate = $bondAdequate;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getBondOrderMatchSirius()
+    public function getBondOrderMatchSirius(): ?string
     {
         return $this->bondOrderMatchSirius;
     }
 
-    /**
-     * @param string $bondOrderMatchSirius
-     *
-     * @return $this
-     */
-    public function setBondOrderMatchSirius($bondOrderMatchSirius)
+    public function setBondOrderMatchSirius(?string $bondOrderMatchSirius): static
     {
         $this->bondOrderMatchSirius = $bondOrderMatchSirius;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getFutureSignificantDecisions()
+    public function getFutureSignificantDecisions(): ?string
     {
         return $this->futureSignificantDecisions;
     }
 
-    /**
-     * @param string $futureSignificantDecisions
-     *
-     * @return $this
-     */
-    public function setFutureSignificantDecisions($futureSignificantDecisions)
+    public function setFutureSignificantDecisions(?string $futureSignificantDecisions): static
     {
         $this->futureSignificantDecisions = $futureSignificantDecisions;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getHasDeputyRaisedConcerns()
+    public function getHasDeputyRaisedConcerns(): ?string
     {
         return $this->hasDeputyRaisedConcerns;
     }
 
-    /**
-     * @param string $hasDeputyRaisedConcerns
-     *
-     * @return $this
-     */
-    public function setHasDeputyRaisedConcerns($hasDeputyRaisedConcerns)
+    public function setHasDeputyRaisedConcerns(?string $hasDeputyRaisedConcerns): static
     {
         $this->hasDeputyRaisedConcerns = $hasDeputyRaisedConcerns;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getCaseWorkerSatisified()
+    public function getCaseWorkerSatisified(): ?string
     {
         return $this->caseWorkerSatisified;
     }
 
-    /**
-     * @param string $caseWorkerSatisified
-     *
-     * @return $this
-     */
-    public function setCaseWorkerSatisified($caseWorkerSatisified)
+    public function setCaseWorkerSatisified(?string $caseWorkerSatisified): static
     {
         $this->caseWorkerSatisified = $caseWorkerSatisified;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getPaymentsMatchCostCertificate()
+    public function getPaymentsMatchCostCertificate(): ?string
     {
         return $this->paymentsMatchCostCertificate;
     }
 
-    /**
-     * @param string $paymentsMatchCostCertificate
-     *
-     * @return $this
-     */
-    public function setPaymentsMatchCostCertificate($paymentsMatchCostCertificate)
+    public function setPaymentsMatchCostCertificate(?string $paymentsMatchCostCertificate): static
     {
         $this->paymentsMatchCostCertificate = $paymentsMatchCostCertificate;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getProfCostsReasonableAndProportionate()
+    public function getProfCostsReasonableAndProportionate(): ?string
     {
         return $this->profCostsReasonableAndProportionate;
     }
 
-    /**
-     * @param $profCostsReasonableAndProportionate
-     *
-     * @return $this
-     */
-    public function setProfCostsReasonableAndProportionate($profCostsReasonableAndProportionate)
+    public function setProfCostsReasonableAndProportionate(?string $profCostsReasonableAndProportionate): static
     {
         $this->profCostsReasonableAndProportionate = $profCostsReasonableAndProportionate;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getHasDeputyOverchargedFromPreviousEstimates()
+    public function getHasDeputyOverchargedFromPreviousEstimates(): ?string
     {
         return $this->hasDeputyOverchargedFromPreviousEstimates;
     }
 
-    /**
-     * @param $hasDeputyOverchargedFromPreviousEstimates
-     *
-     * @return $this
-     */
     public function setHasDeputyOverchargedFromPreviousEstimates(
-        $hasDeputyOverchargedFromPreviousEstimates
-    ) {
+        ?string $hasDeputyOverchargedFromPreviousEstimates
+    ): static {
         $this->hasDeputyOverchargedFromPreviousEstimates = $hasDeputyOverchargedFromPreviousEstimates;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getNextBillingEstimatesSatisfactory()
+    public function getNextBillingEstimatesSatisfactory(): ?string
     {
         return $this->nextBillingEstimatesSatisfactory;
     }
 
-    /**
-     * @param $nextBillingEstimatesSatisfactory
-     *
-     * @return $this
-     */
     public function setNextBillingEstimatesSatisfactory(
-        $nextBillingEstimatesSatisfactory
-    ) {
+        ?string $nextBillingEstimatesSatisfactory
+    ): static {
         $this->nextBillingEstimatesSatisfactory = $nextBillingEstimatesSatisfactory;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getLodgingSummary()
+    public function getLodgingSummary(): ?string
     {
         return $this->lodgingSummary;
     }
 
-    /**
-     * @param string $lodgingSummary
-     *
-     * @return $this
-     */
-    public function setLodgingSummary($lodgingSummary)
+    public function setLodgingSummary(?string $lodgingSummary): static
     {
         $this->lodgingSummary = $lodgingSummary;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getFinalDecision()
+    public function getFinalDecision(): ?string
     {
         return $this->finalDecision;
     }
 
-    /**
-     * @param string $finalDecision
-     *
-     * @return $this
-     */
-    public function setFinalDecision($finalDecision)
+    public function setFinalDecision(?string $finalDecision): static
     {
         $this->finalDecision = $finalDecision;
 
@@ -860,99 +517,65 @@ class Checklist implements SynchronisableInterface
     /**
      * @param ChecklistInformation[] $checklistInformation
      */
-    public function setChecklistInformation(array $checklistInformation)
+    public function setChecklistInformation(array $checklistInformation): void
     {
         $this->checklistInformation = $checklistInformation;
     }
 
-    /**
-     * @return string
-     */
-    public function getFurtherInformationReceived()
+    public function getFurtherInformationReceived(): ?string
     {
         return $this->furtherInformationReceived;
     }
 
-    /**
-     * @param string $furtherInformation
-     */
-    public function setFurtherInformationReceived($furtherInformationReceived)
+    public function setFurtherInformationReceived(?string $furtherInformationReceived): static
     {
         $this->furtherInformationReceived = $furtherInformationReceived;
+
+        return $this;
     }
 
-    /**
-     * @return User
-     */
-    public function getSubmittedBy()
+    public function getSubmittedBy(): ?User
     {
         return $this->submittedBy;
     }
 
-    /**
-     * @param User $submittedBy
-     *
-     * @return $this
-     */
-    public function setSubmittedBy($submittedBy)
+    public function setSubmittedBy(?User $submittedBy): static
     {
         $this->submittedBy = $submittedBy;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getSubmittedOn()
+    public function getSubmittedOn(): ?\DateTime
     {
         return $this->submittedOn;
     }
 
-    /**
-     * @param \DateTime $submittedOn
-     *
-     * @return $this
-     */
-    public function setSubmittedOn($submittedOn)
+    public function setSubmittedOn(?\DateTime $submittedOn): static
     {
         $this->submittedOn = $submittedOn;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getButtonClicked()
+    public function getButtonClicked(): ?string
     {
         return $this->buttonClicked;
     }
 
-    /**
-     * @param string $buttonClicked
-     *
-     * @return $this
-     */
-    public function setButtonClicked($buttonClicked)
+    public function setButtonClicked(?string $buttonClicked): static
     {
         $this->buttonClicked = $buttonClicked;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getUuid(): ?string
     {
         return $this->uuid;
     }
 
-    /**
-     * @return $this
-     */
-    public function setUuid(?string $uuid)
+    public function setUuid(?string $uuid): static
     {
         $this->uuid = $uuid;
 
@@ -964,7 +587,7 @@ class Checklist implements SynchronisableInterface
         return $this->clientBenefitsChecked;
     }
 
-    public function setClientBenefitsChecked(?string $clientBenefitsChecked): Checklist
+    public function setClientBenefitsChecked(?string $clientBenefitsChecked): static
     {
         $this->clientBenefitsChecked = $clientBenefitsChecked;
 

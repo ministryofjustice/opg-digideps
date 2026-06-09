@@ -15,7 +15,7 @@ trait AuthTrait
     /**
      * @Given :email logs in
      */
-    public function loginToFrontendAs(string $email)
+    public function loginToFrontendAs(string $email): void
     {
         $this->visitPath('/logout');
         $this->visitPath('/login');
@@ -35,7 +35,7 @@ trait AuthTrait
     /**
      * @Given :email logs in to admin
      */
-    public function loginToAdminAs(string $email, string $password = 'DigidepsPass1234')
+    public function loginToAdminAs(string $email, string $password = 'DigidepsPass1234'): void
     {
         $this->visitAdminPath('/logout');
         $this->visitAdminPath('/login');
@@ -51,7 +51,7 @@ trait AuthTrait
      * @Given an admin user accesses the admin app
      * @Given a case manager accesses the admin app
      */
-    public function adminUsersAccessesAdmin()
+    public function adminUsersAccessesAdmin(): void
     {
         if (empty($this->adminDetails)) {
             throw new BehatException('It looks like fixtures are not loaded - missing $this->adminDetails');
@@ -67,7 +67,7 @@ trait AuthTrait
     /**
      * @Given an admin manager user accesses the admin app
      */
-    public function adminManagerUserAccessesAdmin()
+    public function adminManagerUserAccessesAdmin(): void
     {
         if (empty($this->adminManagerDetails)) {
             throw new BehatException('It looks like fixtures are not loaded - missing $this->adminManagerDetails');
@@ -83,7 +83,7 @@ trait AuthTrait
     /**
      * @Given a super admin user accesses the admin app
      */
-    public function superAdminUsersAccessesAdmin()
+    public function superAdminUsersAccessesAdmin(): void
     {
         if (empty($this->superAdminDetails)) {
             throw new BehatException('It looks like fixtures are not loaded - missing $this->superAdminDetails');
@@ -99,7 +99,7 @@ trait AuthTrait
     /**
      * @Given a Lay Deputy attempts to log into the admin app
      */
-    public function aLayDeputyAttemptsToLogIntoTheAdminApp()
+    public function aLayDeputyAttemptsToLogIntoTheAdminApp(): void
     {
         $this->visitAdminPath('/login');
         $this->fillField('login_email', $this->layDeputyNotStartedPfaHighAssetsDetails->getUserEmail());
@@ -111,7 +111,7 @@ trait AuthTrait
     /**
      * @Given a super admin user tries to login with an invalid password
      */
-    public function superAdminUsersTriesToLoginWithInvalidPassword()
+    public function superAdminUsersTriesToLoginWithInvalidPassword(): void
     {
         if (empty($this->superAdminDetails)) {
             throw new BehatException('It looks like fixtures are not loaded - missing $this->superAdminDetails');
@@ -124,7 +124,7 @@ trait AuthTrait
         $this->loginToAdminAs($this->superAdminDetails->getUserEmail(), 'totallyinvalidpassword');
     }
 
-    private function userDetailsExists(string $email)
+    private function userDetailsExists(string $email): bool
     {
         foreach ($this->fixtureUsers as $fixtureUser) {
             if ($fixtureUser->getUserEmail() === $email) {
@@ -158,7 +158,7 @@ trait AuthTrait
     /**
      * @When the user I'm interacting with logs in to the frontend of the app
      */
-    public function interactingWithUserLogsInToFrontend()
+    public function interactingWithUserLogsInToFrontend(): void
     {
         $this->assertInteractingWithUserIsSet();
 
@@ -168,7 +168,7 @@ trait AuthTrait
     /**
      * @Given /^the user clicks on the registration link sent to their email which has an \'([^\']*)\' token$/
      */
-    public function theUserClicksOnTheRegistrationLinkSentToTheirEmailWhichHasAnToken($arg1)
+    public function theUserClicksOnTheRegistrationLinkSentToTheirEmailWhichHasAnToken($arg1): void
     {
         $this->clickActivationOrPasswordResetLinkInEmail(
             false,
@@ -181,7 +181,7 @@ trait AuthTrait
     /**
      * @When /^I click the (admin |)(activation|password reset) link in the email sent to my address "(.+)"$/
      */
-    public function clickActivationOrPasswordResetLinkInEmail($admin, $pageType, $email, $token)
+    public function clickActivationOrPasswordResetLinkInEmail($admin, $pageType, $email, $token): void
     {
         $user = $this->em->getRepository(User::class)->findOneBy(['email' => $email]);
 
@@ -208,22 +208,22 @@ trait AuthTrait
         }
     }
 
-    public function assertSuperAdminLoggedIn()
+    public function assertSuperAdminLoggedIn(): void
     {
         $this->assertRoleIs(User::ROLE_SUPER_ADMIN, $this->loggedInUserDetails->getUserRole());
     }
 
-    public function assertAdminLoggedIn()
+    public function assertAdminLoggedIn(): void
     {
         $this->assertRoleIs(User::ROLE_ADMIN, $this->loggedInUserDetails->getUserRole());
     }
 
-    public function assertAdminManagerLoggedIn()
+    public function assertAdminManagerLoggedIn(): void
     {
         $this->assertRoleIs(User::ROLE_ADMIN_MANAGER, $this->loggedInUserDetails->getUserRole());
     }
 
-    private function assertRoleIs(string $expectedRole, string $actualRole)
+    private function assertRoleIs(string $expectedRole, string $actualRole): void
     {
         $isExpectedRole = $actualRole === $expectedRole;
 
@@ -235,7 +235,7 @@ trait AuthTrait
     /**
      * @Then their password hash should automatically be upgraded
      */
-    public function theirPasswordHashShouldAutomaticallyBeUpgraded()
+    public function theirPasswordHashShouldAutomaticallyBeUpgraded(): void
     {
         $id = $this->interactingWithUserDetails->getUserId();
 
@@ -253,7 +253,7 @@ trait AuthTrait
     /**
      * @Then /^the user sends a request to reset their password$/
      */
-    public function theUserSendsARequestToResetTheirPassword()
+    public function theUserSendsARequestToResetTheirPassword(): void
     {
         $this->fillInField('password_forgotten[email]', $this->interactingWithUserDetails->getUserEmail());
         $this->pressButton('Reset your password');
@@ -267,7 +267,7 @@ trait AuthTrait
     /**
      * @Given /^the user successfully resets their password$/
      */
-    public function theUserSuccessfullyResetsTheirPassword()
+    public function theUserSuccessfullyResetsTheirPassword(): void
     {
         $this->fillInField('reset_password_password_first', 'aRandomPassword100');
         $this->fillInField('reset_password_password_second', 'aRandomPassword100');
@@ -278,7 +278,7 @@ trait AuthTrait
     /**
      * @When /^the user visits an invalid password reset url$/
      */
-    public function theUserVisitsAnInvalidPasswordResetUrl()
+    public function theUserVisitsAnInvalidPasswordResetUrl(): void
     {
         $randomToken = 'randomToken00000000000000000000000000000';
 
@@ -290,7 +290,7 @@ trait AuthTrait
     /**
      * @Then /^a password reset error should be thrown to the user$/
      */
-    public function aPasswordResetErrorShouldBeThrownToTheUser()
+    public function aPasswordResetErrorShouldBeThrownToTheUser(): void
     {
         $invalidPasswordResetLink = 'This link is not working or has already been used';
 
@@ -300,7 +300,7 @@ trait AuthTrait
     /**
      * @Then /^the password reset page should be expired$/
      */
-    public function thePasswordResetPageShouldBeExpired()
+    public function thePasswordResetPageShouldBeExpired(): void
     {
         $expiredPasswordResetPage = 'This page has expired';
 
@@ -310,7 +310,7 @@ trait AuthTrait
     /**
      * @Then /^I should be redirected and denied access to continue$/
      */
-    public function IShouldBeRedirectedAndDeniedAccessToContinue()
+    public function IShouldBeRedirectedAndDeniedAccessToContinue(): void
     {
         $this->assertIntEqualsInt(
             403,
@@ -323,7 +323,7 @@ trait AuthTrait
      * @Then /^I should be redirected and denied access to continue as client not found$/
      * @Then /^I should be redirected and denied access to view the court order$/
      */
-    public function IShouldBeRedirectedAndDeniedAccessToContinueAsNotFoundOrAuthorised()
+    public function IShouldBeRedirectedAndDeniedAccessToContinueAsNotFoundOrAuthorised(): void
     {
         $this->assertIntEqualsInt(
             404,
@@ -335,7 +335,7 @@ trait AuthTrait
     /**
      * @Given /^a Lay Deputy tries to login with their "(primary|non-primary)" email address$/
      */
-    public function aLayDeputyTriesToLoginWithTheirEmailAddress($isPrimary)
+    public function aLayDeputyTriesToLoginWithTheirEmailAddress($isPrimary): void
     {
         $this->loggedInUserDetails = $isPrimary === 'primary' ? $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser
             : $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser;
@@ -351,7 +351,7 @@ trait AuthTrait
     /**
      * @Given /^a lay deputy with no court orders logs in$/
      */
-    public function aLayDeputyWithNoCourtOrdersLogsIn()
+    public function aLayDeputyWithNoCourtOrdersLogsIn(): void
     {
         $this->loggedInUserDetails = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUserNoCourtOrders;
 
@@ -366,7 +366,7 @@ trait AuthTrait
     /**
      * @Given /^a Lay Deputy with no deputy UID tries to login with their non-primary email address$/
      */
-    public function aLayDeputyWithNoDeputyUidTriesToLoginWithTheirEmailAddress()
+    public function aLayDeputyWithNoDeputyUidTriesToLoginWithTheirEmailAddress(): void
     {
         $this->loggedInUserDetails = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUserWithNoDeputyUid;
 
@@ -381,7 +381,7 @@ trait AuthTrait
     /**
      * @Then /^they get redirected back to the log in page$/
      */
-    public function theyGetRedirectedBackToTheLogInPage()
+    public function theyGetRedirectedBackToTheLogInPage(): void
     {
         $this->iAmOnPage('/login.*$/');
     }
@@ -389,7 +389,7 @@ trait AuthTrait
     /**
      * @Given /^a flash message should be displayed to the user with their primary email address$/
      */
-    public function aFlashMessageShouldBeDisplayedToTheUserWithTheirPrimaryEmailAddress()
+    public function aFlashMessageShouldBeDisplayedToTheUserWithTheirPrimaryEmailAddress(): void
     {
         $alertMessage =
             sprintf(
@@ -437,7 +437,7 @@ trait AuthTrait
     /**
      * @Then /^the user tries to access their clients report overview page$/
      */
-    public function theUserTriesToAccessTheirClientsReportOverviewPage()
+    public function theUserTriesToAccessTheirClientsReportOverviewPage(): void
     {
         $activeReportId = $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getCurrentReportId();
 
@@ -450,7 +450,7 @@ trait AuthTrait
      *
      * @throws BehatException
      */
-    public function whenTheyLogOutTheyShouldnTSeeANonPrimaryFlashMessage()
+    public function whenTheyLogOutTheyShouldnTSeeANonPrimaryFlashMessage(): void
     {
         $this->clickLink('Sign out');
         $this->iAmOnPage('/login.*$/');
@@ -463,7 +463,7 @@ trait AuthTrait
     /**
      * @When /^they choose their "(primary|non-primary)" Client$/
      */
-    public function theyChooseTheirFirstClient($isPrimary)
+    public function theyChooseTheirFirstClient($isPrimary): void
     {
         $clientId = $isPrimary == 'primary' ? $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId()
             : $this->layPfaHighNotStartedMultiClientDeputyNonPrimaryUser->getClientId();
@@ -476,7 +476,7 @@ trait AuthTrait
     /**
      * @Given /^have access to all active client dashboards$/
      */
-    public function haveAccessToAllActiveClientDashboards()
+    public function haveAccessToAllActiveClientDashboards(): void
     {
         $this->getActiveClientIds();
 
@@ -497,7 +497,7 @@ trait AuthTrait
     /**
      * @Then /^they should be on the "(primary|non-primary)" Client's dashboard$/
      */
-    public function theyShouldBeOnThatClientSDashboard($isPrimary)
+    public function theyShouldBeOnThatClientSDashboard($isPrimary): void
     {
         if ($isPrimary == 'primary') {
             $clientId = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId();
@@ -514,7 +514,7 @@ trait AuthTrait
     /**
      * @When /^they try to access their "(primary|secondary)" discharged Client$/
      */
-    public function theyChooseTheirDischargedClient($isPrimary)
+    public function theyChooseTheirDischargedClient($isPrimary): void
     {
         if ($isPrimary == 'primary') {
             $clientId = $this->layPfaHighNotStartedMultiClientDeputyPrimaryUser->getClientId();
@@ -530,7 +530,7 @@ trait AuthTrait
     /**
      * @Given /^they discharge the deputy from "([^"]*)" secondary client\(s\)$/
      */
-    public function theyDischargeTheDeputyFromNonPrimaryClient($countOfClientAccounts)
+    public function theyDischargeTheDeputyFromNonPrimaryClient($countOfClientAccounts): void
     {
         if (!in_array($this->loggedInUserDetails->getUserRole(), $this->loggedInUserDetails::ADMIN_ROLES)) {
             throw new BehatException('Attempting to access an admin page as a non-admin user. Try logging in as an admin user instead');
@@ -558,7 +558,7 @@ trait AuthTrait
     /**
      * @Then /^should arrive on the client dashboard of their only active client$/
      */
-    public function shouldArriveOnTheClientDashboardOfTheirOnlyActiveClient()
+    public function shouldArriveOnTheClientDashboardOfTheirOnlyActiveClient(): void
     {
         $singleActiveClient = 0;
 
@@ -589,7 +589,7 @@ trait AuthTrait
     /**
      * @When /^the Lay Deputy logs in with the email address attached to their primary account$/
      */
-    public function aLayDeputyLogsInWithTheEmailAddressAttachedToTheirAccount()
+    public function aLayDeputyLogsInWithTheEmailAddressAttachedToTheirAccount(): void
     {
         $userAccount = $this->em->getRepository(User::class)->findOneBy(['email' => $this->loggedInUserDetails->getUserEmail()]);
         $allUserAccounts = $this->em->getRepository(User::class)->findBy(['deputyUid' => $userAccount->getDeputyUid()]);

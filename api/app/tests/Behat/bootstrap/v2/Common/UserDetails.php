@@ -55,7 +55,7 @@ class UserDetails
         $this->initialize($userDetails);
     }
 
-    private function initialize(array $userDetails)
+    private function initialize(array $userDetails): void
     {
         $supportedArrayKeys = $this->getProperties();
 

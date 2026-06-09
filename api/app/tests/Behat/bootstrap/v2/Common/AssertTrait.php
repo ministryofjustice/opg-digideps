@@ -10,7 +10,7 @@ trait AssertTrait
         string $needle,
         string $haystack,
         string $reasonForFailedAssert,
-    ) {
+    ): void {
         $haystack = trim(strtolower($haystack));
         $needle = trim(strtolower($needle));
         assert(
@@ -23,7 +23,7 @@ trait AssertTrait
         $expected,
         $found,
         string $comparisonSubject,
-    ) {
+    ): void {
         $foundFormatted = strval(trim(strtolower((string) $found)));
         $expectedFormatted = strval(trim(strtolower((string) $expected)));
         assert(
@@ -36,7 +36,7 @@ trait AssertTrait
         int $expected,
         int $found,
         string $comparisonSubject,
-    ) {
+    ): void {
         assert(
             $expected == $found,
             $this->getAssertMessage("$expected", "$found", $comparisonSubject)
@@ -46,7 +46,7 @@ trait AssertTrait
     public function assertBoolIsTrue(
         bool $expected,
         string $comparisonSubject,
-    ) {
+    ): void {
         assert(
             $expected === true,
             $this->getAssertMessage("$expected", 'false', $comparisonSubject)
@@ -57,7 +57,7 @@ trait AssertTrait
         string $notExpected,
         string $found,
         string $comparisonSubject,
-    ) {
+    ): void {
         $foundFormatted = trim(strtolower($found));
         $notExpectedFormatted = trim(strtolower($notExpected));
         assert(
@@ -70,7 +70,7 @@ trait AssertTrait
         string $notExpected,
         string $found,
         string $comparisonSubject,
-    ) {
+    ): void {
         $foundFormatted = trim(strtolower($found));
         $notExpectedFormatted = trim(strtolower($notExpected));
         assert(
@@ -83,7 +83,7 @@ trait AssertTrait
         string $expected,
         string $found,
         string $comparisonSubject,
-    ) {
+    ): string {
         $message = <<<MESSAGE
 
 ============================
@@ -110,7 +110,7 @@ MESSAGE;
         );
     }
 
-    public function assertValueIsInSelect(string $expectedValue, string $selectNameAttributeValue)
+    public function assertValueIsInSelect(string $expectedValue, string $selectNameAttributeValue): void
     {
         $values = $this->getValuesFromSelect($selectNameAttributeValue);
         $roleSelectable = in_array($expectedValue, $values);
@@ -125,7 +125,7 @@ MESSAGE;
         );
     }
 
-    public function assertValueIsNotInSelect(string $expectedMissingValue, string $selectNameAttributeValue)
+    public function assertValueIsNotInSelect(string $expectedMissingValue, string $selectNameAttributeValue): void
     {
         $values = $this->getValuesFromSelect($selectNameAttributeValue);
         $roleSelectable = !in_array($expectedMissingValue, $values);
@@ -161,7 +161,7 @@ MESSAGE;
         $expectedClassName,
         $actual,
         string $comparisonSubject,
-    ) {
+    ): void {
         if (is_null($actual)) {
             assert(
                 false,
@@ -181,14 +181,14 @@ MESSAGE;
     public function assertIsNull(
         $actual,
         string $comparisonSubject,
-    ) {
+    ): void {
         assert(
             is_null($actual),
             $this->getAssertMessage('null', gettype($actual), $comparisonSubject)
         );
     }
 
-    public function assertLinkWithTextIsOnPage(string $linkText)
+    public function assertLinkWithTextIsOnPage(string $linkText): void
     {
         $linkElement = $this->getSession()->getPage()->find(
             'xpath',
@@ -208,7 +208,7 @@ MESSAGE;
         }
     }
 
-    public function assertLinkWithTextIsNotOnPage(string $linkText)
+    public function assertLinkWithTextIsNotOnPage(string $linkText): void
     {
         $linkElement = $this->getSession()->getPage()->find(
             'xpath',
@@ -232,7 +232,7 @@ MESSAGE;
         $expectedEntity,
         $actualEntity,
         string $comparisonSubject,
-    ) {
+    ): void {
         if (is_null($actualEntity)) {
             assert(
                 false,
@@ -260,7 +260,7 @@ MESSAGE;
         $expectedEntity,
         $actualEntity,
         string $comparisonSubject,
-    ) {
+    ): void {
         if (is_null($actualEntity)) {
             assert(
                 false,

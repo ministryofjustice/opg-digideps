@@ -31,10 +31,7 @@ class StatsQueryParameters
         }
     }
 
-    /**
-     * @return bool
-     */
-    public function queryHasDateConstraint()
+    public function queryHasDateConstraint(): bool
     {
         return in_array($this->metric, $this->canBeConstrainedByDates);
     }
@@ -42,7 +39,7 @@ class StatsQueryParameters
     /**
      * @throws \Exception
      */
-    private function applyDateConstraints(array $parameters)
+    private function applyDateConstraints(array $parameters): void
     {
         $this->startDate = isset($parameters['startDate']) ? $parameters['startDate'] : null;
         $this->endDate = isset($parameters['endDate']) ? $parameters['endDate'] : null;

@@ -273,7 +273,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
     /**
      * @throws \Exception
      */
-    private function updateReportSubmissionByIdWithNewDateTime(int $id, string $date)
+    private function updateReportSubmissionByIdWithNewDateTime(int $id, string $date): void
     {
         /**
          * @var ReportSubmission $entity
@@ -296,7 +296,7 @@ class ReportSubmissionControllerTest extends AbstractTestController
         return $response['data'];
     }
 
-    private function assertResponseIncludesReportWithCaseNumber(array $data, string $caseNumber)
+    private function assertResponseIncludesReportWithCaseNumber(array $data, string $caseNumber): void
     {
         $testPassed = false;
         foreach ($data as $row) {

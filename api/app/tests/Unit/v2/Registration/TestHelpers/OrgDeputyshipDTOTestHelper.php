@@ -79,7 +79,7 @@ class OrgDeputyshipDTOTestHelper
         ];
     }
 
-    private static function generateInvalidOrgDeputyshipArray()
+    private static function generateInvalidOrgDeputyshipArray(): array
     {
         $invalid = self::generateValidSiriusOrgDeputyshipArray();
         $invalid['DeputyEmail'] = '';
@@ -104,7 +104,7 @@ class OrgDeputyshipDTOTestHelper
         return $dtos;
     }
 
-    public static function generateSiriusOrgDeputyshipDecompressedJson(int $validCount, int $invalidCount)
+    public static function generateSiriusOrgDeputyshipDecompressedJson(int $validCount, int $invalidCount): string
     {
         $deputyships = [];
 
@@ -120,20 +120,20 @@ class OrgDeputyshipDTOTestHelper
             }
         }
 
-        return json_encode($deputyships);
+        return json_encode($deputyships) ?: throw new \LogicException('Bad fixture generation');
     }
 
-    public static function deputyWasCreated(OrgDeputyshipDto $orgDeputyship, DeputyRepository $deputyRepository)
+    public static function deputyWasCreated(OrgDeputyshipDto $orgDeputyship, DeputyRepository $deputyRepository): bool
     {
         return $deputyRepository->findOneBy(['deputyUid' => $orgDeputyship->getDeputyUid()]) instanceof Deputy;
     }
 
-    public static function organisationWasCreated(string $emailIdentifier, OrganisationRepository $orgRepo)
+    public static function organisationWasCreated(string $emailIdentifier, OrganisationRepository $orgRepo): bool
     {
         return $orgRepo->findOneBy(['emailIdentifier' => $emailIdentifier]) instanceof Organisation;
     }
 
-    public static function clientWasCreated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo)
+    public static function clientWasCreated(OrgDeputyshipDto $orgDeputyship, ClientRepository $clientRepo): bool
     {
         return $clientRepo->findByCaseNumber($orgDeputyship->getCaseNumber()) instanceof Client;
     }
@@ -203,7 +203,7 @@ class OrgDeputyshipDTOTestHelper
     /**
      * @return Organisation
      */
-    public static function ensureOrgInUploadExists(string $orgIdentifier, EntityManager $em)
+    public static function ensureOrgInUploadExists(string $orgIdentifier, EntityManager $em): Organisation
     {
         $organisation = new Organisation()
             ->setName('Your Organisation')
@@ -216,7 +216,7 @@ class OrgDeputyshipDTOTestHelper
         return $organisation;
     }
 
-    public static function ensureClientInUploadExists(OrgDeputyshipDto $dto, EntityManager $em)
+    public static function ensureClientInUploadExists(OrgDeputyshipDto $dto, EntityManager $em): Client
     {
         $client = new Client()
             ->setCaseNumber($dto->getCaseNumber())
@@ -230,7 +230,7 @@ class OrgDeputyshipDTOTestHelper
         return $client;
     }
 
-    public static function ensureClientInUploadExistsAndHasALayDeputy(OrgDeputyshipDto $dto, EntityManager $em)
+    public static function ensureClientInUploadExistsAndHasALayDeputy(OrgDeputyshipDto $dto, EntityManager $em): Client
     {
         $faker = Factory::create();
 

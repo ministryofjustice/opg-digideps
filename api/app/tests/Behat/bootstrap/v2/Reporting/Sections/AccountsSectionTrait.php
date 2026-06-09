@@ -14,7 +14,7 @@ trait AccountsSectionTrait
     /**
      * @When I view and start the accounts report section
      */
-    public function iViewAndStartAccountsSection()
+    public function iViewAndStartAccountsSection(): void
     {
         $this->iVisitAccountsSection();
         $this->clickLink('Start accounts');
@@ -23,7 +23,7 @@ trait AccountsSectionTrait
     /**
      * @When I go to add a new current account
      */
-    public function iGoToAddNewCurrentAccount()
+    public function iGoToAddNewCurrentAccount(): void
     {
         $account = [
             'account' => 'current',
@@ -46,7 +46,7 @@ trait AccountsSectionTrait
     /**
      * @When I miss one of the fields
      */
-    public function iMissOneOfTheFields()
+    public function iMissOneOfTheFields(): void
     {
         $this->iFillInAccountDetails(
             '1111',
@@ -93,7 +93,7 @@ trait AccountsSectionTrait
     /**
      * @When I get the correct validation warnings
      */
-    public function iGetTheCorrectValidationResponses()
+    public function iGetTheCorrectValidationResponses(): void
     {
         $this->iAmOnAccountsDetailsPage();
     }
@@ -101,7 +101,7 @@ trait AccountsSectionTrait
     /**
      * @When I try to enter letters where it should be digits
      */
-    public function iTryToEnterLettersInsteadOfDigits()
+    public function iTryToEnterLettersInsteadOfDigits(): void
     {
         $this->iFillInAccountDetails(
             '1111',
@@ -117,7 +117,7 @@ trait AccountsSectionTrait
     /**
      * @When I correctly enter account details
      */
-    public function iCorrectlyEnterAccountDetails()
+    public function iCorrectlyEnterAccountDetails(): void
     {
         $this->accountList[] =
             [
@@ -151,7 +151,7 @@ trait AccountsSectionTrait
     /**
      * @When I update my current account to a different one
      */
-    public function iUpdateCurrentAccountToDifferentOne()
+    public function iUpdateCurrentAccountToDifferentOne(): void
     {
         $this->accountList[] =
             [
@@ -187,7 +187,7 @@ trait AccountsSectionTrait
     /**
      * @When I add one of each account type with valid details
      */
-    public function iAddOneOfEachTypeOfAccounts()
+    public function iAddOneOfEachTypeOfAccounts(): void
     {
         $this->accountList = [
             [
@@ -284,7 +284,7 @@ trait AccountsSectionTrait
     /**
      * @Then I should see the expected accounts on the summary page
      */
-    public function iShouldSeeTheExpectedAccountsOnSummaryPage()
+    public function iShouldSeeTheExpectedAccountsOnSummaryPage(): void
     {
         $this->expectedResultsDisplayedSimplified(null, true);
     }
@@ -324,7 +324,7 @@ trait AccountsSectionTrait
     /**
      * @When I add a couple of new accounts
      */
-    public function iAddACoupleOfNewAccounts()
+    public function iAddACoupleOfNewAccounts(): void
     {
         $this->accountList = [
             [
@@ -370,7 +370,7 @@ trait AccountsSectionTrait
     /**
      * @When I remove the second account
      */
-    public function iRemoveTheSecondAccount()
+    public function iRemoveTheSecondAccount(): void
     {
         $this->iRemoveAnAccount(1);
     }
@@ -378,7 +378,7 @@ trait AccountsSectionTrait
     /**
      * @When I remove the remaining account
      */
-    public function iRemoveTheRemainingAccount()
+    public function iRemoveTheRemainingAccount(): void
     {
         $this->iRemoveAnAccount(0);
     }
@@ -392,7 +392,7 @@ trait AccountsSectionTrait
         string $joint,
         string $openingBalance,
         string $closingBalance
-    ) {
+    ): void {
         $this->iChooseAccountType($account, $translatedAccountType);
         $this->iFillInAccountDetails($accountNumber, $sortCode, $joint, $name);
         $this->iFillInAccountBalance($openingBalance, $closingBalance);
@@ -400,7 +400,7 @@ trait AccountsSectionTrait
         ++$this->countOfAccountsAdded;
     }
 
-    public function iChooseAccountType(string $account, string $translatedOption)
+    public function iChooseAccountType(string $account, string $translatedOption): void
     {
         $formSectionName = $account === 'other_no_sortcode' ? null : 'account' . $this->countOfAccountsAdded;
 
@@ -414,7 +414,7 @@ trait AccountsSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    public function iFillInAccountDetails(string $accountNumber, string $sortCode, string $joint, string $name, bool $trackFromEntry = true)
+    public function iFillInAccountDetails(string $accountNumber, string $sortCode, string $joint, string $name, bool $trackFromEntry = true): void
     {
         $formSectionName = 'account' . $this->countOfAccountsAdded;
 
@@ -435,7 +435,7 @@ trait AccountsSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    public function iFillInAccountBalance(string $openingBalance, string $closingBalance, bool $trackFromEntry = true)
+    public function iFillInAccountBalance(string $openingBalance, string $closingBalance, bool $trackFromEntry = true): void
     {
         $formSectionName = 'account' . $this->countOfAccountsAdded;
 
@@ -445,7 +445,7 @@ trait AccountsSectionTrait
         $this->pressButton('Save and continue');
     }
 
-    public function iRemoveAnAccount($accountOccurrence)
+    public function iRemoveAnAccount($accountOccurrence): void
     {
         $this->iAmOnAccountsSummaryPage();
 

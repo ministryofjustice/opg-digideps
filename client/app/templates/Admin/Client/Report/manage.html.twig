@@ -16,13 +16,14 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-form' }}) }}
 
+    {{ form_select(form.type, 'reportManage.form.type') }}
+
+    {{ (page ~ '.form.startDate.label') | trans }}
+    {{ form_known_date(form.startDate, 'startDate') }}
+
+    {{ (page ~ '.form.endDate.label') | trans }}
+    {{ form_known_date(form.endDate, 'endDate') }}
     {% if report.isSubmitted %}
-        {{ (page ~ '.form.startDate.label') | trans }}
-        {{ form_known_date(form.startDate, 'startDate') }}
-
-        {{ (page ~ '.form.endDate.label') | trans }}
-        {{ form_known_date(form.endDate, 'endDate') }}
-
         <fieldset class="govuk-form-group {% if not form.unsubmittedSection.vars.valid %}govuk-form-group--error{% endif %}">
             <legend>
                 <h2 class="govuk-heading-s flush--top">{{ (page ~ '.form.markSections.legend') | trans }}</h2>

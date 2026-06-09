@@ -14,7 +14,7 @@ use JMS\Serializer\Annotation as JMS;
 trait AssetTrait
 {
     /**
-     * @var AssetInterface[]
+     * @var Collection<int,AssetInterface>
      */
     #[JMS\Groups(['asset'])]
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Asset>')]
@@ -50,9 +50,9 @@ trait AssetTrait
     }
 
     /**
-     * @return Collection<int, AssetInterface>|AssetInterface[]
+     * @return Collection<int, AssetInterface>
      */
-    public function getAssets(): Collection|array
+    public function getAssets(): Collection
     {
         return $this->assets;
     }

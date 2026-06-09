@@ -5,7 +5,6 @@ namespace Tests\OPG\Digideps\Backend\Integration\ControllerReport;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransfer;
 use OPG\Digideps\Backend\Entity\Report\Report;
-use OPG\Digideps\Backend\Entity\User;
 use Tests\OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
@@ -142,6 +141,7 @@ class MoneyTransferControllerTest extends AbstractTestController
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_MONEY_TRANSFERS));
 
         $t = self::fixtures()->getRepo(MoneyTransfer::class)->find(self::$transfer1->getId());
+        $this->assertNotNull($t);
         $this->assertEquals(124, $t->getAmount());
         $this->assertEquals(self::$account2->getId(), $t->getFrom()->getId());
         $this->assertEquals(self::$account1->getId(), $t->getTo()->getId());

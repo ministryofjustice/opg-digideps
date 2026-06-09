@@ -2,14 +2,13 @@
 
 namespace OPG\Digideps\Backend\Service;
 
-use OPG\Digideps\Backend\Entity\AssetInterface;
-use OPG\Digideps\Backend\Entity\BankAccountInterface;
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\Report\Asset;
-use OPG\Digideps\Backend\Entity\Report\AssetOther as ReportAssetOther;
-use OPG\Digideps\Backend\Entity\Report\AssetProperty as ReportAssetProperty;
-use OPG\Digideps\Backend\Entity\Report\BankAccount as ReportBankAccount;
+use OPG\Digideps\Backend\Entity\Report\AssetOther;
+use OPG\Digideps\Backend\Entity\Report\AssetProperty;
+use OPG\Digideps\Backend\Entity\Report\BankAccount;
 use OPG\Digideps\Backend\Entity\Report\Document;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\Report\ReportSubmission;
@@ -63,6 +62,8 @@ class ReportService
 
         $this->em->persist($submission);
 
+        /** @var CourtOrder[] $courtOrders */
+        $courtOrders = $currentReport->getCourtOrders()->toArray();
         $client = $currentReport->getClient();
         $clientId = $client->getId();
         $now = new \DateTime()->format('Y-m-d H:i:s');
@@ -95,6 +96,15 @@ class ReportService
             $newYearReport = $this->createNextYearReport($currentReport);
         }
 
+        if (!is_null($newYearReport)) {
+            foreach ($courtOrders as $courtOrder) {
+                if ($courtOrder->getStatus() === 'ACTIVE') {
+                    $courtOrder->addReport($newYearReport);
+                    $this->em->persist($courtOrder);
+                }
+            }
+        }
+
         $this->em->flush(); // single transaction for report.submitted flags + new year report creation
 
         return $newYearReport;
@@ -102,10 +112,8 @@ class ReportService
 
     /**
      * Clone resources which cross report periods from one account to another.
-     *
-     * @param Report $fromReport
      */
-    public function clonePersistentResources(Report $toReport, $fromReport)
+    public function clonePersistentResources(Report $toReport, Report $fromReport): void
     {
         // copy assets
         $toReport->setNoAssetToAdd($fromReport->getNoAssetToAdd());
@@ -115,7 +123,6 @@ class ReportService
             $assetExists = $this->checkAssetExists($toReport, $asset);
 
             if (!$assetExists) {
-                /** @var Asset $newAsset */
                 $newAsset = $this->cloneAsset($asset);
                 $newAsset->setReport($toReport);
 
@@ -139,10 +146,7 @@ class ReportService
         }
     }
 
-    /**
-     * @return bool
-     */
-    private function checkAssetExists(Report $toReport, AssetInterface $asset)
+    private function checkAssetExists(Report $toReport, Asset $asset): bool
     {
         $toAssets = $toReport->getAssets();
 
@@ -159,13 +163,11 @@ class ReportService
 
     /**
      * Convert asset into Report Asset.
-     *
-     * @return ReportAssetOther|ReportAssetProperty
      */
-    private function cloneAsset(AssetInterface $asset)
+    private function cloneAsset(Asset $asset): Asset
     {
-        if ($asset instanceof ReportAssetProperty) {
-            $newAsset = new ReportAssetProperty();
+        if ($asset instanceof AssetProperty) {
+            $newAsset = new AssetProperty();
 
             $newAsset->setAddress($asset->getAddress());
             $newAsset->setAddress2($asset->getAddress2());
@@ -181,9 +183,9 @@ class ReportService
             $newAsset->setIsRentedOut($asset->getIsRentedOut());
             $newAsset->setRentAgreementEndDate($asset->getRentAgreementEndDate());
             $newAsset->setRentIncomeMonth($asset->getRentIncomeMonth());
-        } elseif ($asset instanceof ReportAssetOther) {
-            $newAsset = new ReportAssetOther();
-            $newAsset->setTitle($asset->getTitle() ?? '');
+        } elseif ($asset instanceof AssetOther) {
+            $newAsset = new AssetOther();
+            $newAsset->setTitle($asset->getTitle());
             $newAsset->setDescription($asset->getDescription());
             $newAsset->setValuationDate($asset->getValuationDate());
         } else {
@@ -198,7 +200,7 @@ class ReportService
     /**
      * @return bool
      */
-    private function checkBankAccountExists(Report $toReport, BankAccountInterface $account)
+    private function checkBankAccountExists(Report $toReport, BankAccount $account): bool
     {
         foreach ($toReport->getBankAccounts() as $toAccount) {
             if (
@@ -217,12 +219,10 @@ class ReportService
 
     /**
      * Clones instance of Report and returns new Report Bank Account.
-     *
-     * @return ReportBankAccount
      */
-    private function cloneBankAccount(BankAccountInterface $account)
+    private function cloneBankAccount(BankAccount $account): BankAccount
     {
-        $newAccount = new ReportBankAccount();
+        $newAccount = new BankAccount();
 
         $newAccount->setBank($account->getBank());
         $newAccount->setAccountType($account->getAccountType());
@@ -309,7 +309,7 @@ class ReportService
         );
     }
 
-    public function unSubmit(Report $report, \DateTime $unsubmitDate, \DateTime $dueDate, \DateTime $startDate, \DateTime $endDate, ?string $sectionList)
+    public function unSubmit(Report $report, \DateTime $unsubmitDate, \DateTime $dueDate, \DateTime $startDate, \DateTime $endDate, ?string $sectionList): void
     {
         // reset report.submitted so that the deputy will set the report back into the dashboard
         $report->setSubmitted(false);
@@ -329,7 +329,7 @@ class ReportService
      *
      * @return Report new year's report
      */
-    public function submitAdditionalDocuments(Report $currentReport, User $user, \DateTime $submitDate)
+    public function submitAdditionalDocuments(Report $currentReport, User $user, \DateTime $submitDate): Report
     {
         // create submission record with NEW documents (= documents not yet attached to a submission)
         $submission = new ReportSubmission($currentReport, $user);
@@ -358,7 +358,7 @@ class ReportService
      *
      * @return string
      */
-    public function adjustReportStatus($status, \DateTime $endDate)
+    public function adjustReportStatus($status, \DateTime $endDate): string
     {
         if ($status == Report::STATUS_READY_TO_SUBMIT && !self::isDue($endDate)) {
             return Report::STATUS_NOT_FINISHED;
@@ -370,7 +370,7 @@ class ReportService
     /**
      * @return bool
      */
-    public static function isDue(?\DateTime $endDate = null)
+    public static function isDue(?\DateTime $endDate = null): bool
     {
         if (!$endDate) {
             return false;

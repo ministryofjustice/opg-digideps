@@ -22,7 +22,7 @@ trait ReportSubmissionTrait
     /**
      * @Then I should see the case number of the user I'm interacting with
      */
-    public function iShouldSeeInteractingWithCaseNumber()
+    public function iShouldSeeInteractingWithCaseNumber(): void
     {
         $this->assertInteractingWithUserIsSet();
 
@@ -36,38 +36,38 @@ trait ReportSubmissionTrait
     }
 
     #[When('I attach a supporting document :imageName to the report')]
-    public function iAttachedASupportingDocumentToTheCompletedReport(string $imageName)
+    public function iAttachedASupportingDocumentToTheCompletedReport(string $imageName): void
     {
         $this->iAmOnUploadDocumentPage();
         $this->attachDocument($imageName);
     }
 
-    private function attachDocument(string $imageName)
+    private function attachDocument(string $imageName): void
     {
         $this->attachFileToField('report_document_upload_files', $imageName);
         $this->pressButton('Upload');
     }
 
     #[When('I view the pending submissions')]
-    public function iViewPendingSubmissions()
+    public function iViewPendingSubmissions(): void
     {
         $this->clickLink('Pending');
     }
 
     #[Then('the report PDF document should be queued')]
-    public function documentsAreSetToQueued()
+    public function documentsAreSetToQueued(): void
     {
         $this->assertRowWithStatusAppears('DigiRep-', 'Queued');
     }
 
     #[Then('the document :filename should be queued')]
-    public function documentShouldBeQueued(string $fileName)
+    public function documentShouldBeQueued(string $fileName): void
     {
         $this->assertRowWithStatusAppears($fileName, 'Queued');
     }
 
     #[Then('the document :filename should be synced')]
-    public function documentShouldBeSynced(string $fileName)
+    public function documentShouldBeSynced(string $fileName): void
     {
         $this->clickLink('Synchronised');
 
@@ -75,7 +75,7 @@ trait ReportSubmissionTrait
     }
 
     #[Given('/^I run the document\-sync command$/')]
-    public function iRunTheDocumentSyncCommand()
+    public function iRunTheDocumentSyncCommand(): void
     {
         $this->visitAdminPath('/admin/behat/run-document-sync-command');
 
@@ -87,14 +87,14 @@ trait ReportSubmissionTrait
     }
 
     #[Given('/^the report PDF document should be synced$/')]
-    public function theReportPDFDocumentShouldBeSynced()
+    public function theReportPDFDocumentShouldBeSynced(): void
     {
         $this->assertRowWithStatusAppears('DigiRep-', 'Success');
     }
 
     #[When('I attach a "second" supporting document :imageName to the submitted report')]
     #[When('I attach a supporting document :imageName to the submitted report')]
-    public function attachSupportingDocumentToSubmittedReport(string $imageName)
+    public function attachSupportingDocumentToSubmittedReport(string $imageName): void
     {
         $this->iVisitTheDocumentsStep2Page();
         $this->assertPageNotContainsText('Send documents');
@@ -102,7 +102,7 @@ trait ReportSubmissionTrait
     }
 
     #[Given('/^I send the documents to complete the upload process on the "([^"]*)" report$/')]
-    public function iSendTheDocumentsToCompleteTheUploadProcess($reportStatus)
+    public function iSendTheDocumentsToCompleteTheUploadProcess($reportStatus): void
     {
         if ($reportStatus != 'submitted') {
             $this->clickLink('Continue to send documents');
@@ -115,7 +115,7 @@ trait ReportSubmissionTrait
     public function iSearchForSubmissionsUsingTheFirstNameOfTheClientsWithTheSameFirstName(
         string $whichNameSearched,
         string $whichNamesAreSame,
-    ) {
+    ): void {
         $userDetails = $whichNamesAreSame === 'first' ? $this->sameFirstNameUserDetails[0] : $this->sameLastNameUserDetails[0];
         $nameToSearchOn = $whichNameSearched === 'first' ? $userDetails->getClientFirstName() : $userDetails->getClientLastName();
 
@@ -125,7 +125,7 @@ trait ReportSubmissionTrait
     }
 
     #[Then('I should see the clients with the same :whichName names in the search results')]
-    public function iShouldSeeBothClientsInTheSearchResults(string $whichName)
+    public function iShouldSeeBothClientsInTheSearchResults(string $whichName): void
     {
         $usersToSearchOn = $whichName === 'first' ? $this->sameFirstNameUserDetails : $this->sameLastNameUserDetails;
         $locator = sprintf(
@@ -144,7 +144,7 @@ trait ReportSubmissionTrait
     }
 
     #[Then('I should not see the two clients with different :whichName names')]
-    public function iShouldNotSeeTheOtherTwoClientsWithDifferentNames(string $whichName)
+    public function iShouldNotSeeTheOtherTwoClientsWithDifferentNames(string $whichName): void
     {
         $usersToSearchOn = $whichName === 'first' ? $this->sameFirstNameUserDetails : $this->sameLastNameUserDetails;
         $locator = sprintf(
@@ -163,7 +163,7 @@ trait ReportSubmissionTrait
     }
 
     #[When('I search for submissions using the court order number of the client with :numberReports report(s)')]
-    public function iSearchForSubmissionsUsingTheCourtOrderNumberOfTheClientWithNumberReports(string $numberReports)
+    public function iSearchForSubmissionsUsingTheCourtOrderNumberOfTheClientWithNumberReports(string $numberReports): void
     {
         $userToSearchOn = $numberReports === 'one' ? $this->oneReportsUserDetails : $this->twoReportsUserDetails;
         $this->fillInField('q', $userToSearchOn->getClientCaseNumber());
@@ -172,7 +172,7 @@ trait ReportSubmissionTrait
     }
 
     #[Then('I should see :numberRows rows for the client with :numberReports report submission(s) in the search results')]
-    public function iShouldSeeNumberRowsForClientWithNumberReports(string $numberRows, string $numberReports)
+    public function iShouldSeeNumberRowsForClientWithNumberReports(string $numberRows, string $numberReports): void
     {
         $userToSearchOn = $numberReports === 'one' ? $this->oneReportsUserDetails : $this->twoReportsUserDetails;
         $locator = sprintf(
@@ -191,7 +191,7 @@ trait ReportSubmissionTrait
     }
 
     #[Then('I should not see the client with :numberReports report submission(s) in the search results')]
-    public function iShouldNotSeeTheClientWithSubmissionsInResults(string $numberReports)
+    public function iShouldNotSeeTheClientWithSubmissionsInResults(string $numberReports): void
     {
         $userToSearchOn = $numberReports === 'one' ? $this->oneReportsUserDetails : $this->twoReportsUserDetails;
 
@@ -210,7 +210,7 @@ trait ReportSubmissionTrait
     }
 
     #[When('I manually :action the client that has one submitted report')]
-    public function iManuallyArchiveTheClientThatHasOneSubmittedReport(string $action)
+    public function iManuallyArchiveTheClientThatHasOneSubmittedReport(string $action): void
     {
         $locator = sprintf(
             '//td[normalize-space()="%s"]/..//input',
@@ -223,14 +223,14 @@ trait ReportSubmissionTrait
     }
 
     #[Then('I should see the client row under the Synchronised tab')]
-    public function iShouldSeeTheClientRowUnderTheSynchronisedTab()
+    public function iShouldSeeTheClientRowUnderTheSynchronisedTab(): void
     {
         $this->clickLink('Synchronised');
         $this->iShouldSeeNumberRowsForClientWithNumberReports('one', 'one');
     }
 
     #[Given('there was an error during synchronisation')]
-    public function thereWasAnErrorDuringSync()
+    public function thereWasAnErrorDuringSync(): void
     {
         $submittedReportId = $this->oneReportsUserDetails->getPreviousReportId();
         $submission = $this->em->getRepository(ReportSubmission::class)->findOneBy(['report' => $submittedReportId]);
@@ -245,7 +245,7 @@ trait ReportSubmissionTrait
     }
 
     #[Then('the status of the documents for the client with one report submission should be :status')]
-    public function statusOfSubmissionDocumentsShouldBe(string $status)
+    public function statusOfSubmissionDocumentsShouldBe(string $status): void
     {
         $locator = sprintf(
             '//td[normalize-space()="%s"]/../..',
@@ -282,13 +282,13 @@ trait ReportSubmissionTrait
     }
 
     #[Given('/^the document sync enabled flag is set to \'([^\']*)\'$/')]
-    public function theDocumentSyncEnabledFlagIsSetTo($documentFeatureFlagValue)
+    public function theDocumentSyncEnabledFlagIsSetTo($documentFeatureFlagValue): void
     {
         $this->parameterStoreService->putFeatureFlag(ParameterStoreService::FLAG_DOCUMENT_SYNC, $documentFeatureFlagValue);
     }
 
     #[Then('/^the \'([^\']*)\' tab \'([^\']*)\' visible$/')]
-    public function tabVisibilityCheck($tabName, $visibility)
+    public function tabVisibilityCheck($tabName, $visibility): void
     {
         $shouldBeVisible = $visibility === 'is';
         $newSubmissionTab = $this->getSession()->getPage()->find('css', "a:contains('$tabName')");
@@ -305,7 +305,7 @@ trait ReportSubmissionTrait
     }
 
     #[When('I search for submissions using the court order number of the client I am interacting with and check the :status column')]
-    public function iSearchForSubmissionsUsingTheCourtOrderNumberOfTheClientIAmInteractingWithForTheStatusColumn(string $status)
+    public function iSearchForSubmissionsUsingTheCourtOrderNumberOfTheClientIAmInteractingWithForTheStatusColumn(string $status): void
     {
         $this->fillInField('q', $this->interactingWithUserDetails->getClientCaseNumber());
         $this->pressButton('Search');
@@ -314,7 +314,7 @@ trait ReportSubmissionTrait
 
     #[Then('I should not see the submission under the :status tab with the court order number of the user I am interacting with')]
     #[Then('I should see the submission under the :status tab with the court order number of the user I am interacting with')]
-    public function submissionBehaviourBasedOnStatus(string $status)
+    public function submissionBehaviourBasedOnStatus(string $status): void
     {
         $caseNumber = $this->interactingWithUserDetails->getClientCaseNumber();
         $reportPdfRow = $this->getSession()->getPage()->find('css', "table tr:contains('$caseNumber')");
@@ -330,7 +330,7 @@ trait ReportSubmissionTrait
         }
     }
 
-    private function assertRowWithStatusAppears(string $searchTerm, string $status)
+    private function assertRowWithStatusAppears(string $searchTerm, string $status): void
     {
         $reportPdfRow = $this->getSession()->getPage()->find(
             'css',
@@ -347,7 +347,7 @@ trait ReportSubmissionTrait
     }
 
     #[Then('I should see Lay High Assets report for the next reporting period')]
-    public function iShouldSeeLayHighAssetsReportForTheNextReportingPeriod()
+    public function iShouldSeeLayHighAssetsReportForTheNextReportingPeriod(): void
     {
         $this->clickLink('Continue');
         $this->assertStringContainsString(
@@ -358,7 +358,7 @@ trait ReportSubmissionTrait
     }
 
     #[Given('/^the user uploaded a document with a file type that can be converted before the document conversion feature was released$/')]
-    public function theUserUploadedADocumentWithAFileTypeThatCanBeConvertedBeforeTheDocumentConversionFeatureWasReleased()
+    public function theUserUploadedADocumentWithAFileTypeThatCanBeConvertedBeforeTheDocumentConversionFeatureWasReleased(): void
     {
         $this->iViewDocumentsSection();
         $this->iHaveDocumentsToUpload();
@@ -378,7 +378,7 @@ trait ReportSubmissionTrait
     }
 
     #[When('/^I search for submissions using the case number of the deputy who has submitted one standard report and one NDR report for the same client$/')]
-    public function iSearchForSubmissionsUsingTheCaseNumber()
+    public function iSearchForSubmissionsUsingTheCaseNumber(): void
     {
         $this->fillInField('q', $this->reportSubmissionStandardAndNdr_CaseNumber);
         $this->pressButton('Search');
@@ -395,5 +395,15 @@ trait ReportSubmissionTrait
             count($rows),
             sprintf('Expected to see single standard report row, but found %s rows', count($rows))
         );
+    }
+
+    #[Then('there should be :numReports report on the org dashboard page')]
+    #[Then('there should be :numReports reports on the org dashboard page')]
+    public function thereShouldBeNReports(int $numReports): void
+    {
+        $rows = $this->findAllCssElements('.behat-region-client');
+
+        $actualNumReports = count($rows);
+        $this->assertIntEqualsInt($numReports, $actualNumReports, "expected $numReports reports, got $actualNumReports");
     }
 }

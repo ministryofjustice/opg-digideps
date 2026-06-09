@@ -6,7 +6,6 @@ use OPG\Digideps\Backend\Entity\Report\Asset;
 use OPG\Digideps\Backend\Entity\Report\AssetOther;
 use OPG\Digideps\Backend\Entity\Report\AssetProperty;
 use OPG\Digideps\Backend\Entity\Report\Report;
-use OPG\Digideps\Backend\Entity\User;
 use Tests\OPG\Digideps\Backend\Fixture\Scenario;
 use Tests\OPG\Digideps\Backend\Integration\Controller\AbstractTestController;
 
@@ -131,7 +130,7 @@ class AssetControllerTest extends AbstractTestController
         $this->assertInstanceOf(AssetOther::class, $asset);
         $this->assertEquals(123, $asset->getValue());
         $this->assertEquals('de', $asset->getDescription());
-        $this->assertEquals('01/01/2015', $asset->getValuationDate()->format('m/d/Y'));
+        $this->assertEquals('01/01/2015', $asset->getValuationDate()?->format('m/d/Y'));
         $this->assertEquals(self::$report1->getId(), $asset->getReport()->getId());
 
         $this->assertArrayHasKey('state', self::fixtures()->getReportFreshSectionStatus(self::$report1, Report::SECTION_ASSETS));
@@ -178,7 +177,7 @@ class AssetControllerTest extends AbstractTestController
         $this->assertEquals(187500, $asset->getMortgageOutstandingAmount());
         $this->assertEquals(true, $asset->getHasCharges());
         $this->assertEquals(true, $asset->getIsRentedOut());
-        $this->assertEquals('12/31/2015', $asset->getRentAgreementEndDate()->format('m/d/Y'));
+        $this->assertEquals('12/31/2015', $asset->getRentAgreementEndDate()?->format('m/d/Y'));
         $this->assertEquals(1200, $asset->getRentIncomeMonth());
         $this->assertEquals('london road', $asset->getAddress());
         $this->assertEquals('gold house', $asset->getAddress2());

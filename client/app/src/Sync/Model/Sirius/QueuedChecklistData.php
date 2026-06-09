@@ -8,22 +8,22 @@ use OPG\Digideps\Frontend\Entity\Report\ReportSubmission;
 
 class QueuedChecklistData
 {
-    private int $checklistId;
+    private ?int $checklistId;
     private ?string $checklistUuid = null;
     private string $caseNumber;
     private string $checklistFileContents;
-    private string $submitterEmail;
+    private ?string $submitterEmail;
     private string $reportType;
     private ?\DateTime $reportStartDate = null;
     private ?\DateTime $reportEndDate = null;
     private ?array $reportSubmissions = null;
 
-    public function getChecklistId(): int
+    public function getChecklistId(): ?int
     {
         return $this->checklistId;
     }
 
-    public function setChecklistId(int $checklistId): self
+    public function setChecklistId(?int $checklistId): static
     {
         $this->checklistId = $checklistId;
 
@@ -35,7 +35,7 @@ class QueuedChecklistData
         return $this->checklistUuid;
     }
 
-    public function setChecklistUuid(?string $checklistUuid): self
+    public function setChecklistUuid(?string $checklistUuid): static
     {
         $this->checklistUuid = $checklistUuid;
 
@@ -47,7 +47,7 @@ class QueuedChecklistData
         return $this->caseNumber;
     }
 
-    public function setCaseNumber(string $caseNumber): self
+    public function setCaseNumber(string $caseNumber): static
     {
         $this->caseNumber = $caseNumber;
 
@@ -59,7 +59,7 @@ class QueuedChecklistData
         return $this->reportStartDate;
     }
 
-    public function setReportStartDate(?\DateTime $reportStartDate): self
+    public function setReportStartDate(?\DateTime $reportStartDate): static
     {
         $this->reportStartDate = $reportStartDate;
 
@@ -71,7 +71,7 @@ class QueuedChecklistData
         return $this->reportEndDate;
     }
 
-    public function setReportEndDate(?\DateTime $reportEndDate): self
+    public function setReportEndDate(?\DateTime $reportEndDate): static
     {
         $this->reportEndDate = $reportEndDate;
 
@@ -83,7 +83,7 @@ class QueuedChecklistData
         return $this->checklistFileContents;
     }
 
-    public function setChecklistFileContents(string $checklistFileContents): self
+    public function setChecklistFileContents(string $checklistFileContents): static
     {
         $this->checklistFileContents = $checklistFileContents;
 
@@ -95,7 +95,7 @@ class QueuedChecklistData
         return $this->reportSubmissions;
     }
 
-    public function setReportSubmissions(?array $reportSubmissions): self
+    public function setReportSubmissions(?array $reportSubmissions): static
     {
         $this->reportSubmissions = $reportSubmissions;
 
@@ -117,12 +117,12 @@ class QueuedChecklistData
         return null;
     }
 
-    public function getSubmitterEmail(): string
+    public function getSubmitterEmail(): ?string
     {
         return $this->submitterEmail;
     }
 
-    public function setSubmitterEmail(string $submitterEmail): self
+    public function setSubmitterEmail(?string $submitterEmail): static
     {
         $this->submitterEmail = $submitterEmail;
 
@@ -134,7 +134,7 @@ class QueuedChecklistData
         return $this->reportType;
     }
 
-    public function setReportType(string $reportType): self
+    public function setReportType(string $reportType): static
     {
         $this->reportType = $reportType;
 

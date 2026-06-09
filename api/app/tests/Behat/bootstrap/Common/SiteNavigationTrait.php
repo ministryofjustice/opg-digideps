@@ -8,7 +8,7 @@ trait SiteNavigationTrait
      * @Given I am on admin page :path
      * @Given I go to admin page :path
      */
-    public function visitAdminPath($path)
+    public function visitAdminPath($path): void
     {
         $adminUrl = $this->getAdminUrl();
         $this->visitPath($adminUrl . $path);
@@ -17,7 +17,7 @@ trait SiteNavigationTrait
     /**
      * @Given /^I scroll to "add\-account"$/
      */
-    public function scrollTo($element)
+    public function scrollTo($element): void
     {
         if (substr($element, 0, 1) != '.' && substr($element, 0, 1) != '#') {
             $element = '#' . $element;
@@ -45,7 +45,7 @@ trait SiteNavigationTrait
     /**
      * @When I open the :period checklist for client :caseNumber
      */
-    public function iOpenChecklistForClient($period, $caseNumber)
+    public function iOpenChecklistForClient($period, $caseNumber): void
     {
         $this->visitAdminPath("/admin/client/case-number/$caseNumber/details");
         $this->clickLinkInsideElement('checklist', 'report-' . $period);
@@ -54,7 +54,7 @@ trait SiteNavigationTrait
     /**
      * @When I visit the client page for :caseNumber
      */
-    public function iVisitClientPageOnAdmin($caseNumber)
+    public function iVisitClientPageOnAdmin($caseNumber): void
     {
         $this->visitAdminPath("/admin/client/case-number/$caseNumber/details");
     }

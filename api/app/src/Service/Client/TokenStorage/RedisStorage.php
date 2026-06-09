@@ -21,17 +21,17 @@ class RedisStorage extends TokenStorage
     ) {
     }
 
-    public function get($id)
+    public function get($id): ?string
     {
         return $this->redis->get($this->sessionPrefix . $id);
     }
 
-    public function set($id, $value)
+    public function set($id, $value): void
     {
-        return $this->redis->set($this->sessionPrefix . $id, $value);
+        $this->redis->set($this->sessionPrefix . $id, $value);
     }
 
-    public function remove($id)
+    public function remove($id): void
     {
         $this->redis->set($this->sessionPrefix . $id, null);
         $this->redis->expire($this->sessionPrefix . $id, 0);

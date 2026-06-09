@@ -10,7 +10,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin clients search page
      */
-    public function iVisitAdminClientSearchPage()
+    public function iVisitAdminClientSearchPage(): void
     {
         if (!in_array($this->loggedInUserDetails->getUserRole(), $this->loggedInUserDetails::ADMIN_ROLES)) {
             throw new BehatException('Attempting to access an admin page as a non-admin user. Try logging in as an admin user instead');
@@ -22,7 +22,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin client details page for an existing client linked to a Lay deputy
      */
-    public function iVisitAdminLayClientDetailsPage()
+    public function iVisitAdminLayClientDetailsPage(): void
     {
         if (!in_array($this->loggedInUserDetails->getUserRole(), $this->loggedInUserDetails::ADMIN_ROLES)) {
             throw new BehatException('Attempting to access an admin page as a non-admin user. Try logging in as an admin user instead');
@@ -37,7 +37,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin client details page for an existing client linked to a non-primary Lay deputy user account
      */
-    public function iVisitAdminLayClientDetailsPageForNonPrimaryDeputy()
+    public function iVisitAdminLayClientDetailsPageForNonPrimaryDeputy(): void
     {
         if (!in_array($this->loggedInUserDetails->getUserRole(), $this->loggedInUserDetails::ADMIN_ROLES)) {
             throw new BehatException('Attempting to access an admin page as a non-admin user. Try logging in as an admin user instead');
@@ -52,7 +52,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin client archived page for the user I'm interacting with
      */
-    public function iVisitTheAdminClientArchivedPage()
+    public function iVisitTheAdminClientArchivedPage(): void
     {
         if (!in_array($this->loggedInUserDetails->getUserRole(), $this->loggedInUserDetails::ADMIN_ROLES)) {
             throw new BehatException('Attempting to access an admin page as a non-admin user. Try logging in as an admin user instead');
@@ -65,7 +65,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin client details page associated with the deputy I'm interacting with
      */
-    public function iVisitAdminClientDetailsPageForDeputyInteractingWith()
+    public function iVisitAdminClientDetailsPageForDeputyInteractingWith(): void
     {
         $this->assertInteractingWithUserIsSet();
 
@@ -76,7 +76,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin client details page associated with the lay deputy
      */
-    public function iVisitAdminClientDetailsPageForLayDeputy()
+    public function iVisitAdminClientDetailsPageForLayDeputy(): void
     {
         $clientDetailsUrl = $this->getAdminClientDetailsUrl($this->layDeputySubmittedHealthWelfareDetails->getClientId());
         $this->visitAdminPath($clientDetailsUrl);
@@ -85,7 +85,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin client details page for an existing client linked to a deputy in an Organisation
      */
-    public function iVisitAdminOrgClientDetailsPage()
+    public function iVisitAdminOrgClientDetailsPage(): void
     {
         if (!in_array($this->loggedInUserDetails->getUserRole(), $this->loggedInUserDetails::ADMIN_ROLES)) {
             throw new BehatException('Attempting to access an admin page as a non-admin user. Try logging in as an admin user instead');
@@ -100,7 +100,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin Add Users page
      */
-    public function iVisitAdminAddUserPage()
+    public function iVisitAdminAddUserPage(): void
     {
         $this->visitAdminPath($this->getAdminAddUserPage());
     }
@@ -108,7 +108,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin Search Users page
      */
-    public function iVisitAdminSearchUserPage()
+    public function iVisitAdminSearchUserPage(): void
     {
         $this->visitAdminPath($this->getAdminSearchUserPage());
     }
@@ -116,7 +116,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin View User page for the user I'm interacting with
      */
-    public function iVisitAdminViewUserPageForInteractingWithUser()
+    public function iVisitAdminViewUserPageForInteractingWithUser(): void
     {
         $this->assertInteractingWithUserIsSet();
 
@@ -128,7 +128,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin Edit User page for the user I'm interacting with
      */
-    public function iVisitAdminEditUserPageForInteractingWithUser()
+    public function iVisitAdminEditUserPageForInteractingWithUser(): void
     {
         $this->assertInteractingWithUserIsSet();
 
@@ -140,7 +140,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin Edit User page for the admin user
      */
-    public function iVisitAdminEditUserPageForTheAdminUser()
+    public function iVisitAdminEditUserPageForTheAdminUser(): void
     {
         $this->visitAdminPath(
             $this->getAdminEditUserPage($this->adminDetails->getUserId())
@@ -150,7 +150,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit my admin user profile page
      */
-    public function iVisitMyUserProfilePage()
+    public function iVisitMyUserProfilePage(): void
     {
         $this->visitAdminPath($this->getAdminMyUserProfilePage());
     }
@@ -158,7 +158,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin DAT report page
      */
-    public function iVisitAdminDATReportPage()
+    public function iVisitAdminDATReportPage(): void
     {
         $this->visitAdminPath($this->getAdminDATReportUrl());
     }
@@ -166,7 +166,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin active lays report page
      */
-    public function iVisitAdminActiveLaysPage()
+    public function iVisitAdminActiveLaysPage(): void
     {
         $this->visitAdminPath($this->getAdminActiveLaysReportUrl());
     }
@@ -174,7 +174,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin satisfaction report page
      */
-    public function iVisitAdminSatisfactionReportPage()
+    public function iVisitAdminSatisfactionReportPage(): void
     {
         $this->visitAdminPath($this->getAdminSatisfactionReportUrl());
     }
@@ -182,7 +182,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin user research report page
      */
-    public function iVisitAdminUserResearchReportPage()
+    public function iVisitAdminUserResearchReportPage(): void
     {
         $this->visitAdminPath($this->getAdminUserResearchReportUrl());
     }
@@ -190,7 +190,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin fixtures page
      */
-    public function iVisitAdminFixturesPage()
+    public function iVisitAdminFixturesPage(): void
     {
         $this->visitAdminPath($this->getAdminFixturesUrl());
     }
@@ -198,7 +198,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin analytics page
      */
-    public function iVisitAdminAnalyticsPage()
+    public function iVisitAdminAnalyticsPage(): void
     {
         $this->visitAdminPath($this->getAdminAnalyticsUrl());
     }
@@ -206,7 +206,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin stats reports page
      */
-    public function iVisitAdminStatsReportsPage()
+    public function iVisitAdminStatsReportsPage(): void
     {
         $this->visitAdminPath($this->getAdminStatsReportsUrl());
     }
@@ -214,7 +214,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the inactive admin users report page
      */
-    public function iVisitInactiveAdminUsersReportsPage()
+    public function iVisitInactiveAdminUsersReportsPage(): void
     {
         $this->visitAdminPath($this->getInactiveAdminusersReportUrl());
     }
@@ -222,7 +222,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin login page
      */
-    public function iVisitAdminLoginPage()
+    public function iVisitAdminLoginPage(): void
     {
         $this->visitAdminPath('/');
     }
@@ -230,7 +230,7 @@ trait IVisitAdminTrait
     /**
      * @Given I visit the admin submissions page
      */
-    public function iVisitAdminSubmissionsPage()
+    public function iVisitAdminSubmissionsPage(): void
     {
         $this->visitAdminPath($this->getAdminSubmissionsPage());
     }
@@ -238,7 +238,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin upload users page
      */
-    public function iVisitAdminUploadUsersPage()
+    public function iVisitAdminUploadUsersPage(): void
     {
         $this->visitAdminPath($this->getAdminUploadUsersUrl());
     }
@@ -246,7 +246,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin upload org users page
      */
-    public function iVisitAdminUploadOrgUsersPage()
+    public function iVisitAdminUploadOrgUsersPage(): void
     {
         $this->visitAdminPath($this->getAdminUploadOrgUsersUrl());
     }
@@ -254,7 +254,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin upload lay users page
      */
-    public function iVisitAdminUploadLayUsersPage()
+    public function iVisitAdminUploadLayUsersPage(): void
     {
         $this->visitAdminPath($this->getAdminUploadLayUsersUrl());
     }
@@ -262,7 +262,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the admin notification page
      */
-    public function iVisitTheAdminNotificationPage()
+    public function iVisitTheAdminNotificationPage(): void
     {
         $this->visitAdminPath($this->getAdminNotificationUrl());
     }
@@ -270,7 +270,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the checklist page for the previously submitted report for the user I am interacting with
      */
-    public function iVisitTheChecklistPageForSubmittedReport()
+    public function iVisitTheChecklistPageForSubmittedReport(): void
     {
         $this->assertInteractingWithUserIsSet();
 
@@ -282,7 +282,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the checklist page for the previously submitted report for the lay deputy
      */
-    public function iVisitTheChecklistPageForSubmittedReportByLayDeputy()
+    public function iVisitTheChecklistPageForSubmittedReportByLayDeputy(): void
     {
         $this->visitAdminPath(
             $this->getAdminChecklistUrl($this->layDeputySubmittedHealthWelfareDetails->getPreviousReportId())
@@ -292,7 +292,7 @@ trait IVisitAdminTrait
     /**
      * @When I visit the organisation Add User page for the logged-in user
      */
-    public function iVisitOrganisationAddUserPageForLoggedInUser()
+    public function iVisitOrganisationAddUserPageForLoggedInUser(): void
     {
         $this->assertLoggedInUserIsSet();
         $this->assertLoggedInUserHasOrgRole();
@@ -307,7 +307,7 @@ trait IVisitAdminTrait
         $this->visitFrontendPath($this->getOrgAddUserUrl($organisation->getId()));
     }
 
-    public function iVisitClientDetailsUrl($clientId)
+    public function iVisitClientDetailsUrl($clientId): void
     {
         $clientDetailsUrl = $this->getAdminClientDetailsUrl($clientId);
 

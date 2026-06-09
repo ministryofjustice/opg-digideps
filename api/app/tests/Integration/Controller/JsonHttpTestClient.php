@@ -96,7 +96,7 @@ class JsonHttpTestClient
      *
      * @throws \Exception
      */
-    public function login(string $email, string $password, $clientSecret)
+    public function login(string $email, string $password, $clientSecret): mixed
     {
         $this->client->request('GET', '/'); // warm up to get container
 
@@ -131,7 +131,7 @@ class JsonHttpTestClient
         return $response->headers->get('AuthToken');
     }
 
-    public function assertEndpointNeedsAuth($method, $uri, $authToken = 'WRONG')
+    public function assertEndpointNeedsAuth($method, $uri, $authToken = 'WRONG'): void
     {
         $response = $this->assertJsonRequest($method, $uri, [
             'mustFail' => true,
