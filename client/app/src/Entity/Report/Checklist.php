@@ -140,7 +140,7 @@ class Checklist implements SynchronisableInterface
     #[JMS\Groups(['report-checklist'])]
     #[JMS\Type('string')]
     #[Assert\NotBlank(message: 'checklist.nextBillingEstimatesSatisfactory.notBlank', groups: ['submit-profDeputyCostsEstimate-checklist'])]
-    private $nextBillingEstimatesSatisfactory;
+    private ?string $nextBillingEstimatesSatisfactory = null;
 
     #[JMS\Groups(['report-checklist'])]
     #[JMS\Type('string')]
@@ -152,6 +152,7 @@ class Checklist implements SynchronisableInterface
     #[Assert\NotBlank(message: 'checklist.finalDecision.notBlank', groups: ['submit-common-checklist'])]
     private ?string $finalDecision = null;
 
+    /** @var array<ChecklistInformation> */
     #[JMS\Groups(['checklist-information'])]
     #[JMS\Type('array<OPG\Digideps\Frontend\Entity\Report\ChecklistInformation>')]
     private array $checklistInformation = [];
@@ -526,7 +527,7 @@ class Checklist implements SynchronisableInterface
         return $this->furtherInformationReceived;
     }
 
-    public function setFurtherInformationReceived(?string $furtherInformationReceived): void
+    public function setFurtherInformationReceived(?string $furtherInformationReceived): static
     {
         $this->furtherInformationReceived = $furtherInformationReceived;
 
