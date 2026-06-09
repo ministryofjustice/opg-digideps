@@ -451,9 +451,6 @@ services:
     OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderService:
         public: true
 
-    OPG\Digideps\Backend\Service\LayRegistrationService:
-        public: true
-
     OPG\Digideps\Backend\Service\DeputyService:
         public: true
 

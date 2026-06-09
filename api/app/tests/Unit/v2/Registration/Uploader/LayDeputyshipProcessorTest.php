@@ -26,7 +26,6 @@ final class LayDeputyshipProcessorTest extends TestCase
     private ClientAssembler $mockClientAssembler;
     private LoggerInterface $mockLogger;
     private LayClientMatcher $mockClientMatcher;
-    private ReportFactory $mockReportFactory;
     private UserRepository $mockUserRepository;
     private LayDeputyshipProcessor $sut;
 
@@ -36,7 +35,6 @@ final class LayDeputyshipProcessorTest extends TestCase
         $this->mockClientAssembler = $this->createMock(ClientAssembler::class);
         $this->mockClientMatcher = $this->createMock(LayClientMatcher::class);
         $this->mockLogger = $this->createMock(LoggerInterface::class);
-        $this->mockReportFactory = $this->createMock(ReportFactory::class);
 
         $this->mockUserRepository = $this->createMock(UserRepository::class);
 
@@ -44,7 +42,6 @@ final class LayDeputyshipProcessorTest extends TestCase
             $this->mockEm,
             $this->mockClientAssembler,
             $this->mockClientMatcher,
-            $this->mockReportFactory,
             $this->mockLogger
         );
     }
@@ -169,16 +166,7 @@ final class LayDeputyshipProcessorTest extends TestCase
 
         $mockClient->expects($this->once())->method('addUser')->with($user);
 
-        $mockReport = $this->createMock(Report::class);
-        $mockReport->expects($this->once())->method('getId')->willReturn(1);
-        $mockReport->expects($this->once())->method('getType')->willReturn('102-4');
-
-        $this->mockReportFactory->expects($this->once())
-            ->method('create')
-            ->with($mockClient, $layDeputyshipDto->getTypeOfReport(), $layDeputyshipDto->getOrderType(), $layDeputyshipDto->getOrderDate())
-            ->willReturn($mockReport);
-
-        $this->mockEm->expects($this->exactly(2))->method('persist');
+        $this->mockEm->expects($this->once())->method('persist');
         $this->mockEm->expects($this->once())->method('flush');
         $this->mockEm->expects($this->once())->method('commit');
         $this->mockEm->expects($this->once())->method('clear');
@@ -195,8 +183,6 @@ final class LayDeputyshipProcessorTest extends TestCase
             'clientId' => 33333333,
             'clientCaseNumber' => '88888888',
             'clientDeputyUids' => [222222222],
-            'reportId' => 1,
-            'reportType' => '102-4',
             'dto.caseNumber' => '88888888',
             'dto.deputyUid' => '222222222',
             'dto.orderType' => 'hw',
