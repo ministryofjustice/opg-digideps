@@ -277,37 +277,7 @@ parameters:
 			path: src/Controller/ClientController.php
 
 		-
-			message: '#^Parameter \#1 \$query of method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:searchClients\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
 			message: '#^Parameter \#2 \$criteriaOrId of method OPG\\Digideps\\Backend\\Controller\\RestController\:\:findEntityBy\(\) expects array\|int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: '#^Parameter \#2 \$orderBy of method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:searchClients\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: '#^Parameter \#3 \$sortOrder of method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:searchClients\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: '#^Parameter \#4 \$limit of method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:searchClients\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Controller/ClientController.php
-
-		-
-			message: '#^Parameter \#5 \$offset of method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:searchClients\(\) expects int, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/Controller/ClientController.php
@@ -17443,12 +17413,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: tests/Behat/bootstrap/v2/ReportManagement/ReportManagementFeatureContext.php
-
-		-
 			message: '#^Parameter \#1 \$array of function array_key_first expects array, mixed given\.$#'
 			identifier: argument.type
 			count: 3
@@ -18319,12 +18283,6 @@ parameters:
 			path: tests/Behat/bootstrap/v2/Reporting/Admin/ReportingAdminFeatureContext.php
 
 		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
-			count: 1
-			path: tests/Behat/bootstrap/v2/Reporting/Admin/ReportingAdminFeatureContext.php
-
-		-
 			message: '#^Offset ''addressPostcode'' might not exist on array\|null\.$#'
 			identifier: offsetAccess.notFound
 			count: 1
@@ -19077,12 +19035,6 @@ parameters:
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Reporting\\Sections\\ReportingSectionsFeatureContext\:\:thereShouldBeOneOffPaymentsDisplayedOnTheSummaryPage\(\) has parameter \$arg1 with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: tests/Behat/bootstrap/v2/Reporting/Sections/ReportingSectionsFeatureContext.php
 

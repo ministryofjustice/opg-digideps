@@ -795,7 +795,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('yes', $checklist->getBondOrderMatchSirius());
         $this->assertEquals('yes', $checklist->getFutureSignificantDecisions());
         $this->assertEquals('no', $checklist->getHasDeputyRaisedConcerns());
-        $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());
+        $this->assertEquals('yes', $checklist->getCaseWorkerSatisfied());
     }
 
     public function testAddChecklistWithFurtherInformation(): void
@@ -892,7 +892,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('yes', $checklist->getBondOrderMatchSirius());
         $this->assertEquals('yes', $checklist->getFutureSignificantDecisions());
         $this->assertEquals('no', $checklist->getHasDeputyRaisedConcerns());
-        $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());
+        $this->assertEquals('yes', $checklist->getCaseWorkerSatisfied());
 
         // assert checklist information created
         $checklistInfo = $checklist->getChecklistInformation();
@@ -1002,7 +1002,7 @@ class ReportControllerTest extends AbstractTestController
         $this->assertEquals('yes', $checklist->getBondOrderMatchSirius());
         $this->assertEquals('yes', $checklist->getFutureSignificantDecisions());
         $this->assertEquals('no', $checklist->getHasDeputyRaisedConcerns());
-        $this->assertEquals('yes', $checklist->getCaseWorkerSatisified());
+        $this->assertEquals('yes', $checklist->getCaseWorkerSatisfied());
         $this->assertEquals('All complete', $checklist->getLodgingSummary());
         $this->assertEquals('for-review', $checklist->getFinalDecision());
 
