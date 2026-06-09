@@ -7,9 +7,7 @@ use OPG\Digideps\Common\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Common\CourtOrder\CourtOrderType;
 use OPG\Digideps\Common\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Report\Report;
-use OPG\Digideps\Backend\Entity\Staging\StagingSelectedCandidate;
 use OPG\Digideps\Backend\Factory\ReportTypeUpdateFactory;
-use OPG\Digideps\Backend\v2\Registration\Enum\DeputyshipCandidateAction;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use Tests\OPG\Digideps\Backend\Integration\Fixtures;
@@ -30,6 +28,8 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
         /** @var ReportTypeUpdateFactory $sut */
         $sut = self::$container->get(ReportTypeUpdateFactory::class);
         self::$sut = $sut;
+
+        self::purgeDatabase();
     }
 
     public function tearDown(): void
@@ -45,7 +45,6 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
                 'orderType' => CourtOrderType::PFA,
                 'orderKind' => CourtOrderKind::Single,
                 'reportType' => CourtOrderReportType::OPG103,
-                'action' => DeputyshipCandidateAction::InsertOrderDeputy,
                 'deputyType' => DeputyType::PRO,
                 'existingReportType' => Report::LAY_PFA_LOW_ASSETS_TYPE,
                 'expectedReportType' => Report::PROF_PFA_LOW_ASSETS_TYPE,
@@ -56,7 +55,6 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
                 'orderType' => CourtOrderType::PFA,
                 'orderKind' => CourtOrderKind::Single,
                 'reportType' => CourtOrderReportType::OPG102,
-                'action' => DeputyshipCandidateAction::InsertOrderReport,
                 'deputyType' => DeputyType::LAY,
                 'existingReportType' => Report::LAY_PFA_LOW_ASSETS_TYPE,
                 'expectedReportType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
@@ -67,7 +65,6 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
                 'orderType' => CourtOrderType::HW,
                 'orderKind' => CourtOrderKind::Single,
                 'reportType' => CourtOrderReportType::OPG104,
-                'action' => DeputyshipCandidateAction::InsertOrderReport,
                 'deputyType' => DeputyType::LAY,
                 'existingReportType' => Report::LAY_PFA_LOW_ASSETS_TYPE,
                 'expectedReportType' => Report::LAY_HW_TYPE,
@@ -78,7 +75,6 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
                 'orderType' => CourtOrderType::HW,
                 'orderKind' => CourtOrderKind::Hybrid,
                 'reportType' => CourtOrderReportType::OPG102,
-                'action' => DeputyshipCandidateAction::InsertOrderReport,
                 'deputyType' => DeputyType::LAY,
                 'existingReportType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
                 'expectedReportType' => Report::LAY_PFA_HIGH_ASSETS_TYPE,
@@ -89,7 +85,6 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
                 'orderType' => CourtOrderType::PFA,
                 'orderKind' => CourtOrderKind::Dual,
                 'reportType' => CourtOrderReportType::OPG102,
-                'action' => DeputyshipCandidateAction::InsertOrderReport,
                 'deputyType' => DeputyType::LAY,
                 'existingReportType' => Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
                 'expectedReportType' => Report::LAY_COMBINED_HIGH_ASSETS_TYPE,
@@ -100,7 +95,6 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
                 'orderType' => CourtOrderType::PFA,
                 'orderKind' => CourtOrderKind::Single,
                 'reportType' => CourtOrderReportType::OPG103,
-                'action' => DeputyshipCandidateAction::UpdateDeputyStatus,
                 'deputyType' => DeputyType::LAY,
                 'existingReportType' => Report::LAY_PFA_LOW_ASSETS_TYPE,
                 'expectedReportType' => Report::LAY_PFA_LOW_ASSETS_TYPE,
@@ -125,9 +119,6 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
         /** @var CourtOrderKind $courtOrderKind */
         $courtOrderKind = $data['orderKind'];
 
-        /** @var DeputyshipCandidateAction $action */
-        $action = $data['action'];
-
         $courtOrder = self::$fixtures->createCourtOrder(
             uid: $uid,
             type: $courtOrderType,
@@ -145,9 +136,7 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
 
         $report = self::$fixtures->createReport($client, ['setType' => $data['existingReportType']]);
 
-        $candidate = new StagingSelectedCandidate($action, $uid);
-
-        self::$fixtures->persist($courtOrder, $deputy, $client, $report, $candidate);
+        self::$fixtures->persist($courtOrder, $client, $report, $deputy);
 
         $courtOrder->addReport($report);
         $deputy->associateWithCourtOrder($courtOrder);
@@ -160,7 +149,7 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
     }
 
     #[DataProvider('reportTypeChanges')]
-    public function testProcessCandidates(array $data): void
+    public function testRun(array $data): void
     {
         $report = $this->setUpTestData($data);
 
@@ -197,7 +186,7 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
     }
 
     #[DataProvider('reportTypeChanges')]
-    public function testProcessCandidatesDryRun(array $data): void
+    public function testDryRun(array $data): void
     {
         $report = $this->setUpTestData($data);
 
