@@ -4,6 +4,7 @@
 {% set submittedBy = report.submittedBy | default(app.user) %}
 {# for PROF users, deputy is always the named deputy #}
 {% set deputy = submittedBy.isDeputyOrg and client.getDeputy ? client.getDeputy : submittedBy %}
+{% set contacts = report.getContacts %}
 
 <div class="report-preview">
     <h1 class="govuk-heading-l">Deputy report for {{ reportTypeHeading }} decisions</h1>
