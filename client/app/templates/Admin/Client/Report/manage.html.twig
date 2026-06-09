@@ -16,8 +16,6 @@
 
     {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-form' }}) }}
 
-    {{ form_select(form.type, 'reportManage.form.type') }}
-
     {{ (page ~ '.form.startDate.label') | trans }}
     {{ form_known_date(form.startDate, 'startDate') }}
 
