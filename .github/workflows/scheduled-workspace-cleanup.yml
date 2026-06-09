@@ -55,7 +55,7 @@ jobs:
           WORKSPACES="$(terraform-workspace-manager \
             -protected-workspaces=true \
             -aws-account-id=${{ vars.DEVELOPMENT_ACCOUNT }} \
-            -aws-iam-role=digideps-ci \
+            -aws-iam-role=digideps-ci-boundary \
             -assume-role=false)"
           echo "workspaces=${WORKSPACES}" >> "$GITHUB_OUTPUT"
         working-directory: terraform/environment
