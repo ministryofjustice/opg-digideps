@@ -1,0 +1,80 @@
+{% set page = 'summaryPage' %}
+<h2 class="govuk-heading-m">Gifts</h2>
+
+<div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+        <h2 class="govuk-summary-card__title govuk-!-width-one-half">
+            Question
+        </h2>
+        <h2 class="govuk-summary-card__title govuk-!-width-one-half">
+            Answer
+        </h2>
+    </div>
+
+    <div class="govuk-summary-card__content">
+        <table class="govuk-table">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-half">
+                        {{ 'existPage.form.giftsExist.label' | trans(transOptions,transDomain)  }}
+                    </th>
+                    <td class="govuk-table__cell govuk-!-width-one-half">
+                        {{ report.giftsExist | capitalize }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if report.gifts | length > 0 %}
+    <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+            <h2 class="govuk-summary-card__title">
+                {{ (page ~ '.listOfGifts') | trans({},transDomain) }}
+            </h2>
+        </div>
+        <div class="govuk-summary-card__content">
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">
+                        {{ ('form.explanation.label') | trans({},transDomain) }}
+                    </th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">
+                        {{ (page ~ '.bankAccount') | trans({},transDomain) }}
+                    </th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-third">
+                        {{ ('form.amount.label') | trans({},transDomain) }}
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    {% for gift in report.gifts %}
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell govuk-!-width-one-third">
+                                {{ gift.explanation }}
+                            </td>
+                            <td class="govuk-table__cell govuk-!-width-one-third">
+                                {{ (gift.bankAccount) ? gift.bankAccount.nameOneLine : 'not entered' | trans({}, 'common') }}
+                            </td>
+                            <td class="govuk-table__cell govuk-!-width-one-third">
+                                £{{ gift.amount | money_format }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell govuk-!-width-one-third">
+                            <strong> Total Amount </strong>
+                        </td>
+                        <td class="govuk-table__cell govuk-!-width-one-third">
+                        </td>
+                        <td class="govuk-table__cell govuk-!-width-one-third">
+                            <strong> £{{ report.giftsTotalValue | money_format }} </strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
