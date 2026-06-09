@@ -277,37 +277,7 @@ parameters:
 			path: api/app/src/Controller/ClientController.php
 
 		-
-			message: '#^Parameter \#1 \$query of method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:searchClients\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/ClientController.php
-
-		-
 			message: '#^Parameter \#2 \$criteriaOrId of method OPG\\Digideps\\Backend\\Controller\\RestController\:\:findEntityBy\(\) expects array\|int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/ClientController.php
-
-		-
-			message: '#^Parameter \#2 \$orderBy of method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:searchClients\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/ClientController.php
-
-		-
-			message: '#^Parameter \#3 \$sortOrder of method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:searchClients\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/ClientController.php
-
-		-
-			message: '#^Parameter \#4 \$limit of method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:searchClients\(\) expects int, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/ClientController.php
-
-		-
-			message: '#^Parameter \#5 \$offset of method OPG\\Digideps\\Backend\\Repository\\ClientRepository\:\:searchClients\(\) expects int, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: api/app/src/Controller/ClientController.php
@@ -11011,13 +10981,13 @@ parameters:
 			path: api/app/tests/Behat/bootstrap/FeatureContext.php
 
 		-
-			message: '#^Offset 1 might not exist on array\{\}\|array\{non\-falsy\-string, numeric\-string\}\.$#'
+			message: '#^Offset 1 might not exist on array\{\}\|array\{non\-falsy\-string, decimal\-int\-string\}\.$#'
 			identifier: offsetAccess.notFound
 			count: 6
 			path: api/app/tests/Behat/bootstrap/FeatureContext.php
 
 		-
-			message: '#^Offset 2 does not exist on array\{\}\|array\{non\-falsy\-string, numeric\-string\}\.$#'
+			message: '#^Offset 2 does not exist on array\{\}\|array\{non\-falsy\-string, decimal\-int\-string\}\.$#'
 			identifier: offsetAccess.notFound
 			count: 6
 			path: api/app/tests/Behat/bootstrap/FeatureContext.php
@@ -18285,12 +18255,6 @@ parameters:
 		-
 			message: '#^Method Tests\\OPG\\Digideps\\Backend\\Behat\\v2\\Reporting\\Admin\\ReportingAdminFeatureContext\:\:searchFrontendForClientWithTerm\(\) has parameter \$searchTerm with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: api/app/tests/Behat/bootstrap/v2/Reporting/Admin/ReportingAdminFeatureContext.php
-
-		-
-			message: '#^Negated boolean expression is always false\.$#'
-			identifier: booleanNot.alwaysFalse
 			count: 1
 			path: api/app/tests/Behat/bootstrap/v2/Reporting/Admin/ReportingAdminFeatureContext.php
 
@@ -31597,30 +31561,6 @@ parameters:
 			path: client/app/src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ChecklistInformation\:\:__construct\(\) has parameter \$information with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: client/app/src/Entity/Report/ChecklistInformation.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ChecklistInformation\:\:setChecklist\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/ChecklistInformation.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ChecklistInformation\:\:setInformation\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: client/app/src/Entity/Report/ChecklistInformation.php
-
-		-
-			message: '#^Parameter \#1 \$string of function trim expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: client/app/src/Entity/Report/ChecklistInformation.php
-
-		-
 			message: '#^Cannot call method add\(\) on Doctrine\\Common\\Collections\\ArrayCollection\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -40463,12 +40403,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: client/app/tests/Unit/Entity/CourtOrderTest.php
-
-		-
-			message: '#^Method Symfony\\Component\\Validator\\ValidatorBuilder\:\:enableAnnotationMapping\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: client/app/tests/Unit/Entity/Report/ChecklistTest.php
 
 		-
 			message: '#^Method Symfony\\Component\\Validator\\ValidatorBuilder\:\:enableAnnotationMapping\(\) invoked with 1 parameter, 0 required\.$#'
