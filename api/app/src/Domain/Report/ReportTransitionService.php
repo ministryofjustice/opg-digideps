@@ -42,15 +42,17 @@ final readonly class ReportTransitionService
         }
 
         $currentSiblingCourtOrder = $this->courtOrderRepository->find($courtOrderChange->currentSiblingId);
-
-        // find both court orders involved in the transition and validate their state
-        $courtOrderPair = CourtOrderPair::create($courtOrder, $currentSiblingCourtOrder);
-        if (!$courtOrderPair->isValid()) {
-            $result->errorMessages[] = $courtOrderPair->invalidReason ?? 'Unknown reason';
+        if ($currentSiblingCourtOrder === null) {
+            $result->errorMessages[] = 'Could not find sibling transition court order with ID ' . $courtOrderChange->currentSiblingId;
             return $result;
         }
-        assert($courtOrderPair->pfaCourtOrder !== null);
-        assert($courtOrderPair->hwCourtOrder !== null);
+
+        try {
+            $courtOrderPair = CourtOrderPair::create($courtOrder, $currentSiblingCourtOrder);
+        } catch (\DomainException $exception) {
+            $result->errorMessages[] = $exception->getMessage();
+            return $result;
+        }
 
         // if we are working from a dual or hybrid to hybrid or dual respectively, we only need to work from
         // one side of the pair, so constrain transitions to the PFA side
@@ -91,19 +93,17 @@ final readonly class ReportTransitionService
         // pair, and to be associated with the same report as the persisting court order; if the sibling is null,
         // the hybrid we're transitioning from is already invalid
         $oldSiblingId = $courtOrderChange->oldSiblingId;
-        ['oldSibling' => $oldSibling, 'error' => $error] = $this->getOldSibling($courtOrderPair, $oldSiblingId);
-        if ($error !== null) {
-            $result->errorMessages[] = 'Hybrid -> Dual: ' . $error;
+        try {
+            $oldSibling = $this->getOldSibling($courtOrderPair, $oldSiblingId);
+        } catch (\DomainException $exception) {
+            $result->errorMessages[] = 'Hybrid -> Dual: ' . $exception->getMessage();
             return $result;
         }
-        assert($oldSibling !== null);
 
         // work out which order's report is persisting and will remain associated with its current (hybrid) report;
         // the other court order will get a new report
         ['persistingReportCourtOrder' => $persistingCourtOrder, 'newReportCourtOrder' => $newReportCourtOrder] =
             $this->hybridToDualAssignCourtOrders($courtOrderPair, $courtOrderChange);
-        assert($persistingCourtOrder !== null);
-        assert($newReportCourtOrder !== null);
 
         // convert existing hybrid report into single on the persisting court order
         $persistingReport = $persistingCourtOrder->getLatestReport();
@@ -146,12 +146,12 @@ final readonly class ReportTransitionService
 
         // if this originated from a dual, there must be an old sibling
         $oldSiblingId = $courtOrderChange->oldSiblingId;
-        ['oldSibling' => $oldSibling, 'error' => $error] = $this->getOldSibling($courtOrderPair, $oldSiblingId);
-        if ($error !== null) {
-            $result->errorMessages[] = 'Dual -> hybrid: ' . $error;
+        try {
+            $oldSibling = $this->getOldSibling($courtOrderPair, $oldSiblingId);
+        } catch (\DomainException $exception) {
+            $result->errorMessages[] = 'Hybrid -> Dual: ' . $exception->getMessage();
             return $result;
         }
-        assert($oldSibling !== null);
 
         // figure out which report will persist (to become the hybrid report) and which becomes defunct
         ['persistingReport' => $persistingReport, 'defunctReport' => $defunctReport] =
@@ -171,10 +171,6 @@ final readonly class ReportTransitionService
         // remove the defunct report from both of the current court orders, and add the persisting report to both
         // (if not already present)
         foreach ($currentCourtOrders as $courtOrder) {
-            if ($courtOrder === null) {
-                continue;
-            }
-
             $courtOrder->removeReport($defunctReport);
 
             if (!$courtOrder->getReports()->contains($persistingReport)) {
@@ -255,28 +251,28 @@ final readonly class ReportTransitionService
     }
 
     /**
-     * @return array{oldSibling: ?CourtOrder, error: ?string}
+     * @throws \DomainException
      */
-    private function getOldSibling(CourtOrderPair $courtOrderPair, ?int $oldSiblingId): array
+    private function getOldSibling(CourtOrderPair $courtOrderPair, ?int $oldSiblingId): CourtOrder
     {
         // as this is a hybrid transitioning to a dual, the old sibling (part of the hybrid pair) should exist
         if ($oldSiblingId === null) {
-            return ['oldSibling' => null, 'error' => 'No sibling ID provided'];
+            throw new \DomainException('Expected old sibling ID to be present for hybrid to dual transition');
         }
 
         // sibling hasn't changed: old sibling is the same as the current sibling
-        if ($oldSiblingId === $courtOrderPair->siblingCourtOrder?->getId()) {
-            return ['oldSibling' => $courtOrderPair->siblingCourtOrder, 'error' => null];
+        if ($oldSiblingId === $courtOrderPair->siblingCourtOrder->getId()) {
+            return $courtOrderPair->siblingCourtOrder;
         }
 
         // sibling has changed, so get the old one
         $oldSibling = $this->courtOrderRepository->find($oldSiblingId);
 
         if ($oldSibling === null) {
-            return ['oldSibling' => null, 'error' => 'No old sibling found as part of source court order pair'];
+            throw new \DomainException('No old sibling found as part of source court order pair');
         }
 
-        return ['oldSibling' => $oldSibling, 'error' => null];
+        return $oldSibling;
     }
 
     /**
@@ -305,14 +301,12 @@ final readonly class ReportTransitionService
 
             // both court orders exist already; the dual is becoming a hybrid due to deputy changes;
             // the hw report becomes defunct
-            $persistingReport = $courtOrderPair->pfaCourtOrder?->getLatestReport();
-            $reportType = $courtOrderPair->pfaCourtOrder?->getDesiredReportType();
-            $defunctReport = $courtOrderPair->hwCourtOrder?->getLatestReport();
+            $persistingReport = $courtOrderPair->pfaCourtOrder->getLatestReport();
+            $reportType = $courtOrderPair->pfaCourtOrder->getDesiredReportType();
+            $defunctReport = $courtOrderPair->hwCourtOrder->getLatestReport();
         }
 
-        if ($reportType !== null) {
-            $persistingReport?->setType("$reportType");
-        }
+        $persistingReport?->setType("$reportType");
 
         return ['persistingReport' => $persistingReport, 'defunctReport' => $defunctReport];
     }
@@ -322,7 +316,7 @@ final readonly class ReportTransitionService
      * part of the old pair; the one persisting provides the persisting report, while the other gets
      * a new report (potentially populated from the persisting report)
      *
-     * @return array{persistingReportCourtOrder: ?CourtOrder, newReportCourtOrder: ?CourtOrder}
+     * @return array{persistingReportCourtOrder: CourtOrder, newReportCourtOrder: CourtOrder}
      *     persistingReportCourtOrder = one of the court orders in the pair whose report will be retained
      *     otherCourtOrder = the other court order in the pair whose report will be merged/deleted
      */

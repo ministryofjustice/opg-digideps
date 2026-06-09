@@ -361,7 +361,10 @@ final class ReportTransitionServiceTest extends TestCase
 
         self::assertNotNull($result);
         self::assertFalse($result->transitioned);
-        self::assertStringContainsString('No sibling ID provided', implode('', $result->errorMessages));
+        self::assertStringContainsString(
+            'Expected old sibling ID to be present for hybrid to dual transition',
+            implode('', $result->errorMessages)
+        );
     }
 
     public function testDualToHybridReturnsErrorWhenBothReportsUnavailable(): void

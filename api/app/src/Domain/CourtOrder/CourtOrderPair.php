@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace OPG\Digideps\Backend\Domain\CourtOrder;
 
 use OPG\Digideps\Backend\Entity\CourtOrder;
-use OPG\Digideps\Backend\Entity\Report\Report;
-use phpDocumentor\Reflection\Types\Iterable_;
 
 /**
  * Represents a pair of court orders, one hw and one pfa.
@@ -19,27 +17,24 @@ final class CourtOrderPair
 {
     public function __construct(
         public CourtOrder $mainCourtOrder,
-        public ?CourtOrder $siblingCourtOrder = null,
-        public ?CourtOrder $pfaCourtOrder = null,
-        public ?CourtOrder $hwCourtOrder = null,
-        public ?string $invalidReason = null
+        public CourtOrder $siblingCourtOrder,
+        public CourtOrder $pfaCourtOrder,
+        public CourtOrder $hwCourtOrder,
     ) {
     }
 
     /**
      * Check that $courtOrders contains two court orders, one HW and one PFA;
      * NB these court orders don't have to be active at this point
+     *
+     * @throws \DomainException if the court orders are not a valid pfa/hw pair
      */
-    public static function create(CourtOrder $mainCourtOrder, ?CourtOrder $siblingCourtOrder): CourtOrderPair
+    public static function create(CourtOrder $mainCourtOrder, CourtOrder $siblingCourtOrder): CourtOrderPair
     {
         $courtOrderTypes = [];
         $pfaCourtOrder = $hwCourtOrder = null;
 
         foreach ([$mainCourtOrder, $siblingCourtOrder] as $courtOrder) {
-            if ($courtOrder === null) {
-                continue;
-            }
-
             $orderType = $courtOrder->getOrderType();
 
             $courtOrderTypes[] = $orderType->value;
@@ -53,12 +48,10 @@ final class CourtOrderPair
 
         $expected = [CourtOrderType::HW->value, CourtOrderType::PFA->value];
 
-        if (count(array_diff($courtOrderTypes, $expected)) > 0) {
-            return new CourtOrderPair(
-                mainCourtOrder: $mainCourtOrder,
-                siblingCourtOrder: $siblingCourtOrder,
-                invalidReason: 'Invalid pair of court orders: expected ' . implode(', ', $expected) .
-                    ' but types were ' . implode(', ', $courtOrderTypes)
+        if ($pfaCourtOrder === null || $hwCourtOrder === null || count(array_diff($courtOrderTypes, $expected)) > 0) {
+            throw new \DomainException(
+                'Invalid pair of court orders: expected ' . implode(', ', $expected) .
+                ' but types were ' . implode(', ', $courtOrderTypes)
             );
         }
 
@@ -66,13 +59,7 @@ final class CourtOrderPair
             mainCourtOrder: $mainCourtOrder,
             siblingCourtOrder: $siblingCourtOrder,
             pfaCourtOrder: $pfaCourtOrder,
-            hwCourtOrder: $hwCourtOrder,
-            invalidReason: null
+            hwCourtOrder: $hwCourtOrder
         );
-    }
-
-    public function isValid(): bool
-    {
-        return $this->invalidReason === null && $this->pfaCourtOrder !== null && $this->hwCourtOrder !== null;
     }
 }
