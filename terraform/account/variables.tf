@@ -1,7 +1,7 @@
 variable "DEFAULT_ROLE" {
   type        = string
   description = "Default role to use for providers"
-  default     = "digideps-ci"
+  default     = "digideps-ci-boundary"
 }
 
 variable "MANAGEMENT_ROLE" {

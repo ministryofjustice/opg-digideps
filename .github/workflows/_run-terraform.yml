@@ -31,11 +31,6 @@ on:
         required: true
         type: string
         description: "Account to get credentials for"
-      tf_role:
-        required: false
-        type: string
-        description: "Role to use for account resources"
-        default: "digideps-ci"
 
 jobs:
   terraform_workflow:

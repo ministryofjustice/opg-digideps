@@ -29,7 +29,7 @@
         }
     },
     "require": {
-        "aws/aws-sdk-php": "^3.368.0",
+        "aws/aws-sdk-php": "^3.379.3",
         "digideps/common": "^1.0",
         "doctrine/doctrine-bundle": "^2.18.1",
         "doctrine/doctrine-migrations-bundle": "^3.7",

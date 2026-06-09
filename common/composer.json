@@ -11,8 +11,8 @@
   },
   "require": {
     "jms/serializer-bundle": "^5.5.2",
-    "symfony/form": "^6.4.35",
-    "symfony/validator": "^6.4.35",
+    "symfony/form": "^6.4.36",
+    "symfony/validator": "^6.4.36",
     "monolog/monolog": "^3.10.0"
   },
   "require-dev": {
