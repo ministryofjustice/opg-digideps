@@ -42,7 +42,7 @@ final class AuditEvents
         string $trigger,
         int $id,
         string $email,
-    ) {
+    ): array {
         $event = [
             'trigger' => $trigger,
             'id' => $id,

@@ -133,14 +133,14 @@ class UserDto
         return $this;
     }
 
-    public function setJobTitle(string $jobTitle): UserDto
+    public function setJobTitle(?string $jobTitle): UserDto
     {
         $this->jobTitle = $jobTitle;
 
         return $this;
     }
 
-    public function setPhoneMain(string $phoneMain): UserDto
+    public function setPhoneMain(?string $phoneMain): UserDto
     {
         $this->phoneMain = $phoneMain;
 

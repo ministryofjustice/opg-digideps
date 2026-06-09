@@ -19,11 +19,9 @@ abstract class Query
     }
 
     /**
-     * @return array
-     *
      * @throws \Exception
      */
-    public function execute(StatsQueryParameters $sq)
+    public function execute(StatsQueryParameters $sq): array
     {
         if (is_array($sq->getDimensions())) {
             $this->checkDimensions($sq->getDimensions());
@@ -56,7 +54,7 @@ abstract class Query
      *
      * @throws \Exception
      */
-    protected function checkDimensions(array $dimensions)
+    protected function checkDimensions(array $dimensions): void
     {
         foreach ($dimensions as $dimensionName) {
             if (!in_array($dimensionName, $this->getSupportedDimensions())) {
@@ -65,12 +63,7 @@ abstract class Query
         }
     }
 
-    /**
-     * Build an SQL query.
-     *
-     * @return string
-     */
-    protected function constructQuery(StatsQueryParameters $sq)
+    protected function constructQuery(StatsQueryParameters $sq): string
     {
         $columns = [
             $this->getAggregation() . ' amount',
