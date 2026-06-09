@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Command;
 
-use OPG\Digideps\Backend\Command\ProcessLayCSVCommand;
-use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
-use OPG\Digideps\Backend\Service\DataImporter\CsvToArray;
-use OPG\Digideps\Backend\Service\DeputyCaseService;
-use OPG\Digideps\Backend\Service\LayRegistrationService;
-use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use Aws\Result;
 use Aws\S3\Exception\S3Exception;
 use Aws\S3\S3Client;
 use Mockery as Mock;
 use Mockery\MockInterface;
+use OPG\Digideps\Backend\Command\ProcessLayCSVCommand;
+use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
+use OPG\Digideps\Backend\Service\DataImporter\CsvToArray;
+use OPG\Digideps\Backend\Service\DeputyCaseService;
+use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use Prophecy\Argument;
 use Prophecy\PhpUnit\ProphecyTrait;
 use Prophecy\Prophecy\ObjectProphecy;
@@ -50,10 +49,6 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
      */
     private ObjectProphecy $preReg;
     /**
-     * @var ObjectProphecy<LayRegistrationService> $layRegistrationService
-     */
-    private ObjectProphecy $layRegistrationService;
-    /**
      * @var ObjectProphecy<DeputyCaseService> $deputyCaseService
      */
     private ObjectProphecy $deputyCaseService;
@@ -79,7 +74,6 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
         $this->logger = self::prophesize(LoggerInterface::class);
         $this->csvProcessing = self::prophesize(CSVDeputyshipProcessing::class);
         $this->preReg = self::prophesize(PreRegistrationRepository::class);
-        $this->layRegistrationService = self::prophesize(LayRegistrationService::class);
         $this->deputyCaseService = self::prophesize(DeputyCaseService::class);
 
         $this->csvArray = Mock::mock(CsvToArray::class);
@@ -90,7 +84,6 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
             $this->logger->reveal(),
             $this->csvProcessing->reveal(),
             $this->preReg->reveal(),
-            $this->layRegistrationService->reveal(),
             $this->deputyCaseService->reveal(),
         );
 
@@ -125,10 +118,6 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
                 'errors' => [],
                 'details' => [],
             ]);
-
-        $this->layRegistrationService->addMissingReports()
-            ->shouldBeCalled()
-            ->willReturn(0);
 
         $this->deputyCaseService->addMissingDeputyCaseAssociations()
             ->shouldBeCalled()
