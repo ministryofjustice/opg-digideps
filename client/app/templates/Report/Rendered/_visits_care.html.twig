@@ -23,6 +23,17 @@
                 </td>
             </tr>
 
+            {% if visitsCare.doYouLiveWithClient == 'no' %}
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-half">
+                        {{ ( 'form.howOftenDoYouContactClient.labelShort') | trans(transOptions,transDomain) }}
+                    </th>
+                    <td class="govuk-table__cell govuk-!-width-one-half">
+                        {{ visitsCare.howOftenDoYouContactClient | capitalize }}
+                    </td>
+                </tr>
+            {% endif %}
+
             <tr class="govuk-table__row">
                 <th scope="col" class="govuk-table__header govuk-!-width-one-half">
                     {{ ( 'form.doesClientReceivePaidCare.label') | trans(transOptions,transDomain) }}

@@ -27,10 +27,12 @@
         } %}
     {% endif %}
 
-    {% include '@App/Report/Rendered/_visits_care.html.twig' with {
-        'visitsCare': report.visitsCare,
-        'transOptions': transOptions,
-        'transDomain': 'report-visits-care'
-    } %}
+    {% if report.visitsCare is not null %}
+        {% include '@App/Report/Rendered/_visits_care.html.twig' with {
+            'visitsCare': report.visitsCare,
+            'transOptions': transOptions,
+            'transDomain': 'report-visits-care'
+        } %}
+    {% endif %}
 
 </div>
