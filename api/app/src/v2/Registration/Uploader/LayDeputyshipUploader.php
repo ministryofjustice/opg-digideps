@@ -15,7 +15,6 @@ use Psr\Log\LoggerInterface;
 
 class LayDeputyshipUploader
 {
-    private array $reportsUpdated = [];
     public const int MAX_UPLOAD = 10000;
 
     public function __construct(
@@ -60,8 +59,6 @@ class LayDeputyshipUploader
         return [
             'added' => $added,
             'errors' => $errors,
-            'report-update-count' => count($this->reportsUpdated),
-            'cases-with-updated-reports' => $this->reportsUpdated,
             'source' => 'sirius',
         ];
     }
