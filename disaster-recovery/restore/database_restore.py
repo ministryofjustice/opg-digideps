@@ -40,7 +40,7 @@ class SnapshotManagement:
         )
         self.environment = environment
         self.backup_account = environments["backup"]
-        self.role = "digideps-ci" if os.getenv("CI") else "breakglass"
+        self.role = "digideps-ci-boundary" if os.getenv("CI") else "breakglass"
         self.backup_role = (
             "cross-acc-db-restore.digideps-development"
             if os.getenv("CI")
