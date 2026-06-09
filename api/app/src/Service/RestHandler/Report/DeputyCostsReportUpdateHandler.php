@@ -12,7 +12,7 @@ class DeputyCostsReportUpdateHandler implements ReportUpdateHandlerInterface
     {
     }
 
-    public function handle(Report $report, array $data)
+    public function handle(Report $report, array $data): void
     {
         $this
             ->updateHowCharged($report, $data)
@@ -25,22 +25,16 @@ class DeputyCostsReportUpdateHandler implements ReportUpdateHandlerInterface
         $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
     }
 
-    /**
-     * @return $this
-     */
-    private function updateHowCharged(Report $report, array $data)
+    private function updateHowCharged(Report $report, array $data): static
     {
         if (array_key_exists('prof_deputy_costs_how_charged', $data)) {
-            $report->setProfDeputyCostsHowCharged($data['prof_deputy_costs_how_charged']);
+            $report->setProfDeputyCostsHowCharged(is_string($data['prof_deputy_costs_how_charged']) ? $data['prof_deputy_costs_how_charged'] : null);
         }
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    private function updateInterimCosts(Report $report, array $data)
+    private function updateInterimCosts(Report $report, array $data): static
     {
         if ($report->hasProfDeputyCostsHowChargedFixedOnly()) {
             $report->setProfDeputyCostsHasInterim(null);
@@ -51,7 +45,7 @@ class DeputyCostsReportUpdateHandler implements ReportUpdateHandlerInterface
             $report->setProfDeputyFixedCost(null);
         }
 
-        if (!empty($data['prof_deputy_costs_has_interim']) && $data['prof_deputy_costs_has_interim']) {
+        if (!empty($data['prof_deputy_costs_has_interim']) && is_string($data['prof_deputy_costs_has_interim'])) {
             $report->setProfDeputyCostsHasInterim($data['prof_deputy_costs_has_interim']);
             // remove interim if changed to "no"
             if ($data['prof_deputy_costs_has_interim'] === 'no') {
@@ -86,12 +80,9 @@ class DeputyCostsReportUpdateHandler implements ReportUpdateHandlerInterface
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    private function updateHasPreviousCosts(Report $report, array $data)
+    private function updateHasPreviousCosts(Report $report, array $data): static
     {
-        if (!empty($data['prof_deputy_costs_has_previous']) && $data['prof_deputy_costs_has_previous']) {
+        if (!empty($data['prof_deputy_costs_has_previous']) && is_string($data['prof_deputy_costs_has_previous'])) {
             $report->setProfDeputyCostsHasPrevious($data['prof_deputy_costs_has_previous']);
             foreach ($report->getProfDeputyPreviousCosts() as $pc) {
                 $this->em->remove($pc);
@@ -102,35 +93,26 @@ class DeputyCostsReportUpdateHandler implements ReportUpdateHandlerInterface
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    private function updateFixedCostAmount(Report $report, array $data)
+    private function updateFixedCostAmount(Report $report, array $data): static
     {
-        if (array_key_exists('prof_deputy_fixed_cost', $data)) {
-            $report->setProfDeputyFixedCost($data['prof_deputy_fixed_cost']);
+        if (array_key_exists('prof_deputy_fixed_cost', $data) && is_numeric($data['prof_deputy_fixed_cost'])) {
+            $report->setProfDeputyFixedCost((string)$data['prof_deputy_fixed_cost']);
             $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS]);
         }
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    private function updateAmountToScco(Report $report, array $data)
+    private function updateAmountToScco(Report $report, array $data): static
     {
-        if (array_key_exists('prof_deputy_costs_amount_to_scco', $data)) {
+        if (array_key_exists('prof_deputy_costs_amount_to_scco', $data) && is_numeric($data['prof_deputy_costs_amount_to_scco'])) {
             $report->setProfDeputyCostsAmountToScco($data['prof_deputy_costs_amount_to_scco']);
         }
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    private function updateReasonBeyondEstimate(Report $report, array $data)
+    private function updateReasonBeyondEstimate(Report $report, array $data): static
     {
         if (array_key_exists('prof_deputy_costs_reason_beyond_estimate', $data)) {
             $report->setProfDeputyCostsReasonBeyondEstimate($data['prof_deputy_costs_reason_beyond_estimate']);

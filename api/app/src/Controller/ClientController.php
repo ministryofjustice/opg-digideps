@@ -192,11 +192,11 @@ class ClientController extends RestController
         $this->formatter->setJmsSerialiserGroups(['client', 'active-period']);
 
         return $this->repository->searchClients(
-            $request->get('q'),
-            $request->get('order_by'),
-            $request->get('sort_order'),
-            $request->get('limit'),
-            $request->get('offset')
+            $request->query->getString('q'),
+            $request->query->getString('order_by', 'lastname'),
+            $request->query->getString('sort_order', 'ASC'),
+            $request->query->getInt('limit', 100),
+            $request->query->getInt('offset')
         );
     }
 

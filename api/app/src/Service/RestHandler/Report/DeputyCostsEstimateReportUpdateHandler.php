@@ -13,7 +13,7 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
     {
     }
 
-    public function handle(Report $report, array $data)
+    public function handle(Report $report, array $data): void
     {
         $this
             ->updateHowCharged($report, $data)
@@ -25,12 +25,7 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
         $report->updateSectionsStatusCache([Report::SECTION_PROF_DEPUTY_COSTS_ESTIMATE]);
     }
 
-    /**
-     * @return $this
-     *
-     * @throws OptimisticLockException
-     */
-    private function updateHowCharged(Report $report, array $data)
+    private function updateHowCharged(Report $report, array $data): static
     {
         if (array_key_exists('prof_deputy_costs_estimate_how_charged', $data)) {
             $report->setProfDeputyCostsEstimateHowCharged($data['prof_deputy_costs_estimate_how_charged']);
@@ -62,7 +57,7 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
      *
      * @throws OptimisticLockException
      */
-    private function updateBreakdownEstimates(Report $report, array $data)
+    private function updateBreakdownEstimates(Report $report, array $data): static
     {
         if (!array_key_exists('prof_deputy_estimate_costs', $data)) {
             return $this;
@@ -87,10 +82,7 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    private function verifyProfDeputyEstimateCostData(array $data)
+    private function verifyProfDeputyEstimateCostData(array $data): bool
     {
         return array_key_exists('prof_deputy_estimate_cost_type_id', $data)
             && array_key_exists('amount', $data)
@@ -98,10 +90,7 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
             && array_key_exists('more_details', $data);
     }
 
-    /**
-     * @return void
-     */
-    private function attachProfDeputyEstimateCostsToReport(Report $report, array $data)
+    private function attachProfDeputyEstimateCostsToReport(Report $report, array $data): void
     {
         $profDeputyEstimateCost = $report->getProfDeputyEstimateCostByTypeId($data['prof_deputy_estimate_cost_type_id']);
 
@@ -119,15 +108,12 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
         $this->em->persist($profDeputyEstimateCost);
     }
 
-    private function updateExistingProfDeputyEstimateCost(array $data, ProfDeputyEstimateCost $profDeputyEstimateCost)
+    private function updateExistingProfDeputyEstimateCost(array $data, ProfDeputyEstimateCost $profDeputyEstimateCost): void
     {
         $profDeputyEstimateCost->setAmount($data['amount']);
     }
 
-    /**
-     * @return ProfDeputyEstimateCost
-     */
-    private function createProfDeputyEstimateCost(Report $report, $postedProfDeputyEstimateCostType)
+    private function createProfDeputyEstimateCost(Report $report, $postedProfDeputyEstimateCostType): ProfDeputyEstimateCost
     {
         return new ProfDeputyEstimateCost()
             ->setReport($report)
@@ -136,10 +122,7 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
             ->setAmount($postedProfDeputyEstimateCostType['amount']);
     }
 
-    /**
-     * @return $this
-     */
-    private function updateMoreInfo(Report $report, array $data)
+    private function updateMoreInfo(Report $report, array $data): static
     {
         if (array_key_exists('prof_deputy_costs_estimate_has_more_info', $data)) {
             $report->setProfDeputyCostsEstimateHasMoreInfo($data['prof_deputy_costs_estimate_has_more_info']);
@@ -156,13 +139,10 @@ class DeputyCostsEstimateReportUpdateHandler implements ReportUpdateHandlerInter
         return $this;
     }
 
-    /**
-     * @throws OptimisticLockException
-     */
-    private function updateManagementCost(Report $report, array $data)
+    private function updateManagementCost(Report $report, array $data): void
     {
-        if (array_key_exists('prof_deputy_management_cost_amount', $data)) {
-            $report->setProfDeputyCostsEstimateManagementCostAmount($data['prof_deputy_management_cost_amount']);
+        if (array_key_exists('prof_deputy_management_cost_amount', $data) && is_numeric($data['prof_deputy_management_cost_amount'])) {
+            $report->setProfDeputyCostsEstimateManagementCostAmount((float)$data['prof_deputy_management_cost_amount']);
             $this->em->flush();
         }
     }

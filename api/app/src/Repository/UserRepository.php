@@ -23,24 +23,19 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
-    /** @var QueryBuilder */
-    private $qb;
+    private QueryBuilder $qb;
 
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
     }
 
-    /**
-     * @param int $id
-     *
-     * @return array|null
-     */
-    public function findUserArrayById($id)
+    public function findUserArrayById(int $id): ?array
     {
+        $class = User::class;
         $query = $this
             ->getEntityManager()
-            ->createQuery('SELECT u, c, r FROM OPG\Digideps\Backend\Entity\User u LEFT JOIN u.clients c LEFT JOIN c.reports r WHERE u.id = ?1 ORDER BY c.id')
+            ->createQuery("SELECT u, c, r FROM {$class} u LEFT JOIN u.clients c LEFT JOIN c.reports r WHERE u.id = ?1 ORDER BY c.id")
             ->setParameter(1, $id);
 
         $result = $query->getArrayResult();
@@ -97,7 +92,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             return $this;
         }
 
-        $operand = strpos($roleName, '%') !== false ? 'LIKE' : '=';
+        $operand = str_contains($roleName, '%') ? 'LIKE' : '=';
 
         $this
             ->qb
@@ -398,7 +393,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ];
     }
 
-    public function findDeputyUidsForClient(int $clientId)
+    public function findDeputyUidsForClient(int $clientId): array|float|int|string
     {
         $query = $this
             ->getEntityManager()

@@ -14,13 +14,8 @@ use Symfony\Component\Security\Core\Security;
  */
 class ClientVoter extends Voter
 {
-    /** @var string */
     public const string VIEW = 'view';
-
-    /** @var string */
     public const string EDIT = 'edit';
-
-    /** @var string */
     public const string DELETE = 'delete';
 
     public function __construct(private readonly Security $security)
@@ -44,22 +39,14 @@ class ClientVoter extends Voter
             return false;
         }
 
-        switch ($attribute) {
-            case self::VIEW:
-            case self::EDIT:
-                return $this->canManage($subject, $user);
-            case self::DELETE:
-                return $this->canDelete($user);
-
-            default:
-                throw new \LogicException('This code should not be reached!');
-        }
+        return match ($attribute) {
+            self::VIEW, self::EDIT => $this->canManage($subject, $user),
+            self::DELETE => $this->canDelete($user),
+            default => throw new \LogicException('This code should not be reached!'),
+        };
     }
 
-    /**
-     * @return bool
-     */
-    private function canManage(Client $client, User $user)
+    private function canManage(Client $client, User $user): bool
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;

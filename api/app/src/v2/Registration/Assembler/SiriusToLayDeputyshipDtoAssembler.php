@@ -23,10 +23,9 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
         'Hybrid',
     ];
 
-    /** @var String[] $missingColumns  */
+    /** @var array<string> $missingColumns  */
     private array $missingColumns = [];
 
-    /** @param Mixed[] $data */
     public function assembleFromArray(array $data): LayDeputyshipDto
     {
         $this->collectMissingColumns($data);
@@ -43,9 +42,6 @@ class SiriusToLayDeputyshipDtoAssembler implements LayDeputyshipDtoAssemblerInte
         return $this->buildDto($data);
     }
 
-    /**
-     * @param Mixed[] $data
-     */
     private function buildDto(array $data): LayDeputyshipDto
     {
         return

@@ -42,7 +42,7 @@ class ReportSubmissionHelper
         return $reportSubmission;
     }
 
-    public function generateAndPersistSubmittedReportSubmission(\DateTime $submitDate)
+    public function generateAndPersistSubmittedReportSubmission(\DateTime $submitDate): ReportSubmission
     {
         $rs = $this->generateAndPersistReportSubmission();
         $report = $rs->getReport();

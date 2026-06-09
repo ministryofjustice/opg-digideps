@@ -4,18 +4,12 @@ namespace OPG\Digideps\Backend\Service;
 
 class DataCompression
 {
-    /**
-     * @return string
-     */
-    public function compress($data)
+    public function compress(array $data): string
     {
         return base64_encode(gzcompress(json_encode($data), 9));
     }
 
-    /**
-     * @return mixed
-     */
-    public function decompress($data)
+    public function decompress(string $data): array
     {
         return json_decode(gzuncompress(base64_decode($data)), true);
     }
