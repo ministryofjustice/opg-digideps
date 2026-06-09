@@ -61,10 +61,6 @@ resource "aws_iam_role_policy_attachment" "vault_backup_role" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSBackupServiceRolePolicyForBackup"
 }
 
-data "aws_kms_alias" "backup_rds" {
-  name = "alias/aws/rds"
-}
-
 data "aws_iam_policy_document" "vault_backup_kms" {
   statement {
     sid    = "AllowKMSOperations"
@@ -72,7 +68,7 @@ data "aws_iam_policy_document" "vault_backup_kms" {
     resources = [
       "arn:aws:kms:eu-west-1:${local.backup_account_id}:key/mrk-*",
       module.backup_kms.eu_west_1_target_key_arn,
-      data.aws_kms_alias.backup_rds.target_key_arn
+      module.rds_kms.eu_west_1_target_key_arn
     ]
     actions = [
       "kms:ReEncrypt*",
@@ -80,7 +76,9 @@ data "aws_iam_policy_document" "vault_backup_kms" {
       "kms:Encrypt",
       "kms:DescribeKey",
       "kms:Decrypt",
-      "kms:CreateGrant"
+      "kms:CreateGrant",
+      "kms:ListGrants",
+      "kms:RevokeGrant"
     ]
   }
 }
