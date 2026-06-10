@@ -337,8 +337,8 @@ jobs:
       timeout: "900"
       retry_on_fail: true
 
-  playwright_tests:
-    name: playwright tests
+  end_to_end_tests:
+    name: end to end playwright tests
     uses: ./.github/workflows/_run-task.yml
     needs:
       - workflow_variables
@@ -350,7 +350,7 @@ jobs:
       workspace: ${{ needs.workflow_variables.outputs.build_identifier }}
       account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
       account_name: development
-      task_name: "playwright_tests"
+      task_name: "end_to_end_tests"
       timeout: "900"
       retry_on_fail: false
 

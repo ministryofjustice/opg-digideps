@@ -14,21 +14,17 @@ trait StatusTrait
     /**
      * Holds a copy of result of the ReportStatusService results in the form
      * [sectionId => [state=>, nOfRecords=>] ]
-     * returned by the ReportStatusSevice::get<section>State.
+     * returned by the ReportStatusService::get<section>State.
      *
      * Set by endpoints hooks on section CRUD operations that call `updateSectionsStatusCache` below
      *
      * Note: Manually Json-serialised. `json_array` type not working properly in the unity of work in this doctrine version
-     *
-     * @var string
      */
     #[JMS\Exclude]
     #[ORM\Column(name: 'status_cached', type: 'text', nullable: true)]
-    private $sectionStatusesCached;
+    private ?string $sectionStatusesCached;
 
     /**
-     * @var string
-     *
      * Holds a copy of result of the ReportStatusService::getStatus() results
      * Used for ORG dashboard for tab calculation and pagination
      *
@@ -36,30 +32,26 @@ trait StatusTrait
      */
     #[JMS\Exclude]
     #[ORM\Column(name: 'report_status_cached', type: 'string', length: 20, nullable: true)]
-    private $reportStatusCached;
+    private ?string $reportStatusCached = null;
 
     /**
      * Holds a copy of the [sectionId => [state=>, nOfRecords=>].
-     *
-     * @return array
      */
     #[JMS\Exclude]
-    public function getSectionStatusesCached()
+    public function getSectionStatusesCached(): array
     {
         return $this->sectionStatusesCached ? json_decode($this->sectionStatusesCached, true) : [];
     }
 
-    public function setSectionStatusesCached(array $status)
+    public function setSectionStatusesCached(array $status): void
     {
-        $this->sectionStatusesCached = json_encode($status);
+        $this->sectionStatusesCached = json_encode($status) ?: throw new \ValueError("Could not encode data");
     }
 
     /**
      * //TODO remove adn check test passing.
-     *
-     * @return string
      */
-    public function getReportStatusCached()
+    public function getReportStatusCached(): ?string
     {
         return $this->reportStatusCached;
     }
@@ -70,9 +62,9 @@ trait StatusTrait
      *
      * using the `ReportService::getSectionStateNotCached`
      *
-     * @param ?string[] $sectionIds
+     * @param null|array<string> $sectionIds
      */
-    public function updateSectionsStatusCache(?array $sectionIds = null)
+    public function updateSectionsStatusCache(?array $sectionIds = null): void
     {
         if (is_null($sectionIds)) {
             $sectionIds = $this->getAvailableSections();
@@ -106,12 +98,9 @@ trait StatusTrait
             ->getStatusIgnoringDueDate();
     }
 
-    /**
-     * @return ReportStatusService
-     */
     #[JMS\VirtualProperty]
     #[JMS\Groups(['status', 'report-status', 'decision-status', 'contact-status', 'visits-care-state', 'expenses-state', 'gifts-state', 'account-state', 'money-transfer-state', 'money-in-state', 'money-out-state', 'asset-state', 'debt-state', 'action-state', 'more-info-state', 'balance-state', 'money-in-short-state', 'money-out-short-state', 'fee-state', 'documents-state', 'lifestyle-state', 'client-benefits-check-state'])]
-    public function getStatus()
+    public function getStatus(): ReportStatusService
     {
         return new ReportStatusService($this);
     }

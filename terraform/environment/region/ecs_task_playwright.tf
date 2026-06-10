@@ -1,11 +1,11 @@
-resource "aws_iam_role" "playwright_tests" {
+resource "aws_iam_role" "end_to_end_tests" {
   assume_role_policy   = data.aws_iam_policy_document.ecs_task_assume_policy.json
-  name                 = "playwright-tests.${local.environment}"
+  name                 = "end-to-end-tests.${local.environment}"
   permissions_boundary = data.aws_iam_policy.default_boundary.arn
   tags                 = var.default_tags
 }
 
-data "aws_iam_policy_document" "playwright_tests" {
+data "aws_iam_policy_document" "end_to_end_tests" {
   statement {
     sid    = "DecryptSecretKMS"
     effect = "Allow"
@@ -18,14 +18,14 @@ data "aws_iam_policy_document" "playwright_tests" {
   }
 }
 
-resource "aws_iam_role_policy" "playwright_tests" {
-  name   = "playwright-tests.${local.environment}"
-  policy = data.aws_iam_policy_document.playwright_tests.json
-  role   = aws_iam_role.playwright_tests.id
+resource "aws_iam_role_policy" "end_to_end_tests" {
+  name   = "end-to-end-tests.${local.environment}"
+  policy = data.aws_iam_policy_document.end_to_end_tests.json
+  role   = aws_iam_role.end_to_end_tests.id
 }
 
 locals {
-  playwright_tests_sg_rules = {
+  end_to_end_tests_sg_rules = {
     ecr     = local.common_sg_rules.ecr
     logs    = local.common_sg_rules.logs
     s3      = local.common_sg_rules.s3
@@ -43,47 +43,47 @@ locals {
 }
 
 #trivy:ignore:avd-aws-0104 - Currently needed in as no domain egress filtering
-module "playwright_tests_security_group" {
+module "end_to_end_tests_security_group" {
   source      = "./modules/security_group"
-  name        = "playwright-tests"
+  name        = "end-to-end-tests"
   description = "Playwright Test SG Rules"
-  rules       = local.playwright_tests_sg_rules
+  rules       = local.end_to_end_tests_sg_rules
   tags        = var.default_tags
   vpc_id      = data.aws_vpc.main.id
   environment = local.environment
 }
 
 # Increased memory as it uses a headless browser
-module "playwright_tests" {
+module "end_to_end_tests" {
   source = "./modules/task"
-  name   = "playwright-tests"
+  name   = "end-to-end-tests"
 
   cluster_name          = aws_ecs_cluster.main.name
   cpu                   = 1024
   memory                = 2048
-  container_definitions = "[${local.playwright_tests}]"
+  container_definitions = "[${local.end_to_end_tests}]"
   tags                  = var.default_tags
   environment           = local.environment
   execution_role_arn    = aws_iam_role.execution_role.arn
   subnet_ids            = data.aws_subnet.application[*].id
-  task_role_arn         = aws_iam_role.playwright_tests.arn
+  task_role_arn         = aws_iam_role.end_to_end_tests.arn
   architecture          = "ARM64"
   os                    = "LINUX"
-  security_group_id     = module.playwright_tests_security_group.id
+  security_group_id     = module.end_to_end_tests_security_group.id
 }
 
 locals {
-  playwright_tests = jsonencode({
+  end_to_end_tests = jsonencode({
     cpu       = 0,
     essential = true,
-    image     = local.images.playwright,
-    name      = "playwright-tests",
+    image     = local.images.end_to_end,
+    name      = "end-to-end-tests",
     logConfiguration = {
       logDriver = "awslogs",
       options = {
         awslogs-group         = aws_cloudwatch_log_group.opg_digi_deps.name,
         awslogs-region        = "eu-west-1",
-        awslogs-stream-prefix = "playwright-tests"
+        awslogs-stream-prefix = "end-to-end-tests"
       }
     },
     environment = [

@@ -18,9 +18,9 @@ trait ProfServiceFeesTrait
     #[JMS\Groups(['report-prof-service-fees'])]
     #[ORM\OneToMany(mappedBy: 'report', targetEntity: ProfServiceFee::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['id' => 'ASC'])]
-    private $profServiceFees;
+    private Collection $profServiceFees;
 
-    public function addProfServiceFee(ProfServiceFee $profServiceFee)
+    public function addProfServiceFee(ProfServiceFee $profServiceFee): static
     {
         if (!$this->getProfServiceFees()->contains($profServiceFee)) {
             $this->getProfServiceFees()->add($profServiceFee);
@@ -32,19 +32,14 @@ trait ProfServiceFeesTrait
     /**
      * @return Collection<int, ProfServiceFee>
      */
-    public function getCurrentProfServiceFees()
+    public function getCurrentProfServiceFees(): Collection
     {
         return $this->getProfServiceFees()->filter(function ($profServiceFee): bool {
             return $profServiceFee instanceof ProfServiceFeeCurrent;
         });
     }
 
-    /**
-     * //TODO unit test.
-     *
-     * @return bool
-     */
-    public function profCurrentFeesSectionCompleted()
+    public function profCurrentFeesSectionCompleted(): bool
     {
         $answeredNoFirstQuestion = $this->getCurrentProfPaymentsReceived() === 'no';
 
@@ -58,7 +53,7 @@ trait ProfServiceFeesTrait
     /**
      * @return Collection<int, ProfServiceFee>
      */
-    public function getProfServiceFees()
+    public function getProfServiceFees(): Collection
     {
         return $this->profServiceFees;
     }
@@ -66,7 +61,7 @@ trait ProfServiceFeesTrait
     /**
      * @param Collection<int, ProfServiceFee> $profServiceFees
      */
-    public function setProfServiceFees($profServiceFees)
+    public function setProfServiceFees(Collection $profServiceFees): void
     {
         $this->profServiceFees = $profServiceFees;
     }
