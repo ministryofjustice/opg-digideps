@@ -131,12 +131,13 @@ class Fixtures
 
     public function createDeputy(array $settersMap = [], ?User $user = null): Deputy
     {
-        $deputy = new Deputy();
-        $deputy->setDeputyUid((string)rand(100000, 999999));
+        $deputy = new Deputy(
+            (string)rand(100000, 999999),
+            DeputyType::LAY,
+            'name' . time(),
+            'surname' . time(),
+        );
         $deputy->setEmail1('temp' . microtime(true) . rand(100, 99999) . '@temp.com');
-        $deputy->setFirstname('name' . time());
-        $deputy->setLastname('surname' . time());
-        $deputy->setDeputyType(DeputyType::LAY);
         $deputy->setOrganisation(null);
 
         foreach ($settersMap as $k => $v) {

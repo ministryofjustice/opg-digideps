@@ -91,12 +91,12 @@ final class ReportStatusServiceTest extends TestCase
                 'hasMoneyOut' => false,
                 'getMoneyTransactionsOut' => new ArrayCollection([]),
                 'getHasDebts' => null,
-                'getDebts' => [],
-                'getDebtsWithValidAmount' => [],
+                'getDebts' => new ArrayCollection([]),
+                'getDebtsWithValidAmount' => new ArrayCollection([]),
                 'getDebtManagement' => null,
                 'getTotalsMatch' => null,
                 'getBalanceMismatchExplanation' => null,
-                'getDocuments' => [],
+                'getDocuments' => new ArrayCollection([]),
                 'getDeputyDocuments' => new ArrayCollection([]),
                 'getWishToProvideDocumentation' => null,
                 // 103
@@ -767,9 +767,9 @@ final class ReportStatusServiceTest extends TestCase
         return [
             [['getHasDebts' => false], ReportStatusService::STATE_NOT_STARTED],
             [['getHasDebts' => 'yes'], ReportStatusService::STATE_INCOMPLETE],
-            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount' => [$debt]], ReportStatusService::STATE_INCOMPLETE],
-            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount' => [$debt], 'getDebtManagement' => ''], ReportStatusService::STATE_INCOMPLETE],
-            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount' => [$debt], 'getDebtManagement' => 'Payment plan'], ReportStatusService::STATE_DONE],
+            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount' => new ArrayCollection([$debt])], ReportStatusService::STATE_INCOMPLETE],
+            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount' => new ArrayCollection([$debt]), 'getDebtManagement' => ''], ReportStatusService::STATE_INCOMPLETE],
+            [['getHasDebts' => 'yes', 'getDebtsWithValidAmount' => new ArrayCollection([$debt]), 'getDebtManagement' => 'Payment plan'], ReportStatusService::STATE_DONE],
             [['getHasDebts' => 'no'], ReportStatusService::STATE_DONE],
         ];
     }

@@ -7,14 +7,13 @@ namespace OPG\Digideps\Backend\Entity\Report\Traits;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use OPG\Digideps\Backend\Entity\BankAccountInterface;
 use OPG\Digideps\Backend\Entity\Report\BankAccount;
 use OPG\Digideps\Backend\Entity\Report\Report;
 
 trait BankAccountTrait
 {
     /**
-     * @var Collection<int, BankAccountInterface>
+     * @var Collection<int, BankAccount>
      */
     #[JMS\Groups(['account'])]
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\BankAccount>')]
@@ -22,28 +21,20 @@ trait BankAccountTrait
     #[ORM\OrderBy(['id' => 'ASC'])]
     private Collection $bankAccounts;
 
-    /**
-     * Add accounts.
-     *
-     * @return Report
-     */
-    public function addAccount(BankAccount $accounts)
+    public function addAccount(BankAccount $accounts): Report
     {
         $this->bankAccounts[] = $accounts;
 
         return $this;
     }
 
-    /**
-     * Remove accounts.
-     */
-    public function removeAccount(BankAccount $accounts)
+    public function removeAccount(BankAccount $accounts): void
     {
         $this->bankAccounts->removeElement($accounts);
     }
 
     /**
-     * @return Collection<int, BankAccountInterface>
+     * @return Collection<int, BankAccount>
      */
     public function getBankAccounts(): Collection
     {
@@ -51,19 +42,16 @@ trait BankAccountTrait
     }
 
     /**
-     * @return Collection<int, BankAccountInterface>
+     * @return Collection<int, BankAccount>
      */
     public function getBankAccountsIncomplete(): Collection
     {
         return $this->bankAccounts->filter(function ($b): bool {
-            return $b->getClosingBalance() == null;
+            return $b->getClosingBalance() === null;
         });
     }
 
-    /**
-     * @return bool
-     */
-    public function hasAccounts()
+    public function hasAccounts(): bool
     {
         return count($this->getBankAccounts()) > 0;
     }

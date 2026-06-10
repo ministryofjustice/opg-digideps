@@ -11,25 +11,19 @@ use OPG\Digideps\Backend\Entity\Report\Report;
 trait BalanceTrait
 {
     /**
-     * @var string reason required if balance calculation mismatches
+     * Reason required if balance calculation mismatches
      */
     #[JMS\Groups(['balance'])]
     #[JMS\Type('string')]
     #[ORM\Column(name: 'balance_mismatch_explanation', type: 'text', nullable: true)]
-    private $balanceMismatchExplanation;
+    private ?string $balanceMismatchExplanation = null;
 
-    /**
-     * @return string
-     */
-    public function getBalanceMismatchExplanation()
+    public function getBalanceMismatchExplanation(): ?string
     {
         return $this->balanceMismatchExplanation;
     }
 
-    /**
-     * @param string $balanceMismatchExplanation
-     */
-    public function setBalanceMismatchExplanation($balanceMismatchExplanation)
+    public function setBalanceMismatchExplanation(?string $balanceMismatchExplanation): void
     {
         $this->balanceMismatchExplanation = $balanceMismatchExplanation;
     }
@@ -38,14 +32,11 @@ trait BalanceTrait
     #[JMS\Groups(['balance', 'account'])]
     #[JMS\Type('double')]
     #[JMS\SerializedName('accounts_opening_balance_total')]
-    public function getAccountsOpeningBalanceTotal()
+    public function getAccountsOpeningBalanceTotal(): float
     {
-        $ret = 0;
+        $ret = 0.0;
         foreach ($this->getBankAccounts() as $a) {
-            if ($a->getOpeningBalance() === null) {
-                return;
-            }
-            $ret += $a->getOpeningBalance();
+            $ret += (float)($a->getOpeningBalance() ?? 0.0);
         }
 
         return $ret;
@@ -53,21 +44,16 @@ trait BalanceTrait
 
     /**
      * Return sum of closing balances (if all of them have a value, otherwise returns null).
-     *
-     * @return float
      */
     #[JMS\VirtualProperty]
     #[JMS\Groups(['balance', 'account'])]
     #[JMS\Type('double')]
     #[JMS\SerializedName('accounts_closing_balance_total')]
-    public function getAccountsClosingBalanceTotal()
+    public function getAccountsClosingBalanceTotal(): float
     {
-        $ret = 0;
+        $ret = 0.0;
         foreach ($this->getBankAccounts() as $a) {
-            if ($a->getClosingBalance() === null) {
-                return;
-            }
-            $ret += $a->getClosingBalance();
+            $ret += (float)$a->getClosingBalance();
         }
 
         return $ret;
@@ -88,17 +74,13 @@ trait BalanceTrait
     #[JMS\Groups(['balance'])]
     #[JMS\Type('double')]
     #[JMS\SerializedName('calculated_balance')]
-    public function getCalculatedBalance()
+    public function getCalculatedBalance(): float
     {
-        if ($this->getAccountsOpeningBalanceTotal() === null) {
-            return null;
-        }
-
         return $this->getAccountsOpeningBalanceTotal()
             + $this->getMoneyInTotal()
             - $this->getMoneyOutTotal()
-            - ($this->hasSection(Report::SECTION_PROF_DEPUTY_COSTS) ? $this->getProfDeputyTotalCosts() : 0)
-            - ($this->has106Flag() ? $this->getFeesTotal() : 0)
+            - ($this->hasSection(Report::SECTION_PROF_DEPUTY_COSTS) ? $this->getProfDeputyTotalCosts() ?? 0.0 : 0.0)
+            - ($this->has106Flag() ? $this->getFeesTotal() : 0.0)
             - $this->getExpensesTotal()
             - $this->getGiftsTotal();
     }
@@ -106,7 +88,7 @@ trait BalanceTrait
     /**
      * Return the difference between getCalculatedBalance and getAccountsClosingBalanceTotal
      * if 0, then the report financial section are balanced
-     * accounts are balanced and ready for busmission.
+     * accounts are balanced and ready for submission.
      *
      * Return null if sections are not ready or closing accounts are not added yet
      */
@@ -114,12 +96,8 @@ trait BalanceTrait
     #[JMS\Groups(['balance'])]
     #[JMS\Type('double')]
     #[JMS\SerializedName('totals_offset')]
-    public function getTotalsOffset()
+    public function getTotalsOffset(): float
     {
-        if ($this->getCalculatedBalance() === null || $this->getAccountsClosingBalanceTotal() === null) {
-            return null;
-        }
-
         return $this->getCalculatedBalance() - $this->getAccountsClosingBalanceTotal();
     }
 
@@ -127,8 +105,8 @@ trait BalanceTrait
     #[JMS\Groups(['balance'])]
     #[JMS\Type('boolean')]
     #[JMS\SerializedName('totals_match')]
-    public function getTotalsMatch()
+    public function getTotalsMatch(): bool
     {
-        return $this->getTotalsOffset() !== null && abs($this->getTotalsOffset()) < 0.2;
+        return abs($this->getTotalsOffset()) < 0.2;
     }
 }

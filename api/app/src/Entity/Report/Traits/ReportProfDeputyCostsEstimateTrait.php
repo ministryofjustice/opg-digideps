@@ -5,60 +5,48 @@ declare(strict_types=1);
 namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
 use OPG\Digideps\Backend\Entity\Report\ProfDeputyEstimateCost;
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use JMS\Serializer\Annotation as JMS;
 use Doctrine\ORM\Mapping as ORM;
 
 trait ReportProfDeputyCostsEstimateTrait
 {
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-deputy-costs-estimate-how-charged'])]
     #[ORM\Column(name: 'prof_dc_estimate_hc', type: 'string', length: 10, nullable: true)]
-    private $profDeputyCostsEstimateHowCharged;
+    private ?string $profDeputyCostsEstimateHowCharged = null;
 
     /**
-     * @var ArrayCollection
+     * @var Collection<int,ProfDeputyEstimateCost>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\ProfDeputyEstimateCost>')]
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
-    #[ORM\OneToMany(targetEntity: ProfDeputyEstimateCost::class, mappedBy: 'report', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(mappedBy: 'report', targetEntity: ProfDeputyEstimateCost::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['id' => 'ASC'])]
-    private $profDeputyEstimateCosts;
+    private Collection $profDeputyEstimateCosts;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['prof-deputy-costs-estimate-more-info'])]
     #[ORM\Column(name: 'prof_dc_estimate_more_info', type: 'string', length: 3, nullable: true)]
-    private $profDeputyCostsEstimateHasMoreInfo;
+    private ?string $profDeputyCostsEstimateHasMoreInfo = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Groups(['prof-deputy-costs-estimate-more-info'])]
     #[ORM\Column(name: 'prof_dc_estimate_more_info_details', type: 'text', nullable: true)]
-    private $profDeputyCostsEstimateMoreInfoDetails;
+    private ?string $profDeputyCostsEstimateMoreInfoDetails = null;
 
-    /**
-     * @var float
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['prof-deputy-estimate-management-costs'])]
     #[JMS\SerializedName('prof_deputy_management_cost_amount')]
     #[ORM\Column(name: 'prof_dc_estimate_management_cost', type: 'float', precision: 14, scale: 2, nullable: true)]
-    private $profDeputyCostsEstimateManagementCostAmount;
+    private ?float $profDeputyCostsEstimateManagementCostAmount = null;
 
     /**
      * Hold prof deputy estimate costs type
      * 1st value = id, 2nd value = hasMoreInformation.
      *
-     * @var array
+     * @var array<array{'typeId': string, 'hasMoreDetails': bool}>
      */
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
-    public static $profDeputyEstimateCostTypeIds = [
+    public static array $profDeputyEstimateCostTypeIds = [
         ['typeId' => 'contact-client', 'hasMoreDetails' => false],
         ['typeId' => 'contact-case-manager-carers', 'hasMoreDetails' => false],
         ['typeId' => 'contact-others', 'hasMoreDetails' => false],
@@ -66,141 +54,91 @@ trait ReportProfDeputyCostsEstimateTrait
     ];
 
     /**
-     * @return mixed
+     * @return Collection<int,ProfDeputyEstimateCost>
      */
-    public function getProfDeputyEstimateCosts()
+    public function getProfDeputyEstimateCosts(): Collection
     {
         return $this->profDeputyEstimateCosts;
     }
 
     /**
-     * @return ReportProfDeputyCostsEstimateTrait
+     * @param Collection<int,ProfDeputyEstimateCost> $collection
      */
-    public function setProfDeputyEstimateCosts(ArrayCollection $collection)
+    public function setProfDeputyEstimateCosts(Collection $collection): static
     {
         $this->profDeputyEstimateCosts = $collection;
 
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function addProfDeputyEstimateCost(ProfDeputyEstimateCost $profDeputyEstimateCost)
+    public function addProfDeputyEstimateCost(ProfDeputyEstimateCost $profDeputyEstimateCost): static
     {
         $this->profDeputyEstimateCosts->add($profDeputyEstimateCost);
 
         return $this;
     }
 
-    /**
-     * @param string $typeId
-     *
-     * @return ProfDeputyEstimateCost
-     */
-    public function getProfDeputyEstimateCostByTypeId($typeId)
+    public function getProfDeputyEstimateCostByTypeId(string $typeId): ?ProfDeputyEstimateCost
     {
         return $this->getProfDeputyEstimateCosts()->filter(
-            function (ProfDeputyEstimateCost $profDeputyEstimateCost) use ($typeId): bool {
-                return $profDeputyEstimateCost->getProfDeputyEstimateCostTypeId() == $typeId;
-            }
-        )->first();
+            fn (ProfDeputyEstimateCost $profDeputyEstimateCost): bool => $profDeputyEstimateCost->getProfDeputyEstimateCostTypeId() == $typeId
+        )->first() ?: null;
     }
 
-    /**
-     * @return array
-     */
     #[JMS\VirtualProperty]
     #[JMS\SerializedName('prof_deputy_estimate_cost_type_ids')]
     #[JMS\Type('array')]
     #[JMS\Groups(['prof-deputy-estimate-costs'])]
-    public static function getProfDeputyEstimateCostTypeIds()
+    public static function getProfDeputyEstimateCostTypeIds(): array
     {
         return self::$profDeputyEstimateCostTypeIds;
     }
 
-    public static function setProfDeputyEstimateCostTypeIds($profDeputyEstimateCostTypeIds): void
-    {
-        self::$profDeputyEstimateCostTypeIds = $profDeputyEstimateCostTypeIds;
-    }
-
-    /**
-     * @return string
-     */
-    public function getProfDeputyCostsEstimateHowCharged()
+    public function getProfDeputyCostsEstimateHowCharged(): ?string
     {
         return $this->profDeputyCostsEstimateHowCharged;
     }
 
-    /**
-     * @param $profDeputyCostsEstimateHowCharged string
-     *
-     * @return $this
-     */
-    public function setProfDeputyCostsEstimateHowCharged($profDeputyCostsEstimateHowCharged)
+    public function setProfDeputyCostsEstimateHowCharged(?string $profDeputyCostsEstimateHowCharged): static
     {
         $this->profDeputyCostsEstimateHowCharged = $profDeputyCostsEstimateHowCharged;
 
         return $this;
     }
 
-    public function getProfDeputyCostsEstimateHasMoreInfo()
+    public function getProfDeputyCostsEstimateHasMoreInfo(): ?string
     {
         return $this->profDeputyCostsEstimateHasMoreInfo;
     }
 
-    /**
-     * @param string $profDeputyCostsEstimateHasMoreInfo
-     *
-     * @return ReportProfDeputyCostsEstimateTrait
-     */
-    public function setProfDeputyCostsEstimateHasMoreInfo($profDeputyCostsEstimateHasMoreInfo)
+    public function setProfDeputyCostsEstimateHasMoreInfo(?string $profDeputyCostsEstimateHasMoreInfo): static
     {
         $this->profDeputyCostsEstimateHasMoreInfo = $profDeputyCostsEstimateHasMoreInfo;
 
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getProfDeputyCostsEstimateMoreInfoDetails()
+    public function getProfDeputyCostsEstimateMoreInfoDetails(): ?string
     {
         return $this->profDeputyCostsEstimateMoreInfoDetails;
     }
 
-    /**
-     * @param mixed $profDeputyCostsEstimateMoreInfoDetails
-     *
-     * @return ReportProfDeputyCostsEstimateTrait
-     */
-    public function setProfDeputyCostsEstimateMoreInfoDetails($profDeputyCostsEstimateMoreInfoDetails)
+    public function setProfDeputyCostsEstimateMoreInfoDetails(?string $profDeputyCostsEstimateMoreInfoDetails): static
     {
         $this->profDeputyCostsEstimateMoreInfoDetails = $profDeputyCostsEstimateMoreInfoDetails;
 
         return $this;
     }
 
-    /**
-     * @return float
-     *
-     *
-     *
-     */
     #[JMS\Groups(['prof-deputy-estimate-management-costs'])]
     #[JMS\SerializedName('prof_deputy_management_cost_amount')]
     #[JMS\Type('double')]
-    public function getProfDeputyCostsEstimateManagementCostAmount()
+    public function getProfDeputyCostsEstimateManagementCostAmount(): ?float
     {
         return $this->profDeputyCostsEstimateManagementCostAmount;
     }
 
-    /**
-     * @param float $profDeputyCostsEstimateManagementCostAmount
-     *
-     * @return ReportProfDeputyCostsEstimateTrait
-     */
-    public function setProfDeputyCostsEstimateManagementCostAmount($profDeputyCostsEstimateManagementCostAmount)
+    public function setProfDeputyCostsEstimateManagementCostAmount(?float $profDeputyCostsEstimateManagementCostAmount): static
     {
         $this->profDeputyCostsEstimateManagementCostAmount = $profDeputyCostsEstimateManagementCostAmount;
 
