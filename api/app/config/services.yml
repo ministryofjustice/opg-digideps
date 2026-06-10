@@ -457,7 +457,7 @@ services:
     OPG\Digideps\Backend\Service\UserDeputyService:
         public: true
 
-    OPG\Digideps\Backend\Factory\ReportTypeUpdateFactory:
+    OPG\Digideps\Backend\Factory\UpdateReportTypeDataFactory:
         public: true
 
     preCSVDataFactory:
@@ -506,7 +506,7 @@ services:
                       "dry-run-only",
                   ]
                 - [
-                      '@OPG\Digideps\Backend\Factory\ReportTypeUpdateFactory',
+                      '@OPG\Digideps\Backend\Factory\UpdateReportTypeDataFactory',
                       "dry-run-only",
                   ]
 
@@ -515,3 +515,6 @@ services:
         arguments:
             $preCSVDataFactory: "@preCSVDataFactory"
             $postCSVDataFactory: "@postCSVDataFactory"
+
+    OPG\Digideps\Backend\Domain\Report\ReportTransitionService:
+        public: true
