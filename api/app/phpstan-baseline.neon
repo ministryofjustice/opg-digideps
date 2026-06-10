@@ -6441,7 +6441,7 @@ parameters:
 		-
 			message: '#^Argument of an invalid type mixed supplied for foreach, only iterables are supported\.$#'
 			identifier: foreach.nonIterable
-			count: 2
+			count: 1
 			path: src/v2/Registration/Uploader/LayDeputyshipUploader.php
 
 		-
@@ -6457,31 +6457,7 @@ parameters:
 			path: src/v2/Registration/Uploader/LayDeputyshipUploader.php
 
 		-
-			message: '#^Cannot call method getCaseNumber\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: src/v2/Registration/Uploader/LayDeputyshipUploader.php
-
-		-
-			message: '#^Cannot cast mixed to string\.$#'
-			identifier: cast.string
-			count: 1
-			path: src/v2/Registration/Uploader/LayDeputyshipUploader.php
-
-		-
 			message: '#^Parameter \#1 \$layDeputyshipDto of method OPG\\Digideps\\Backend\\v2\\Registration\\Uploader\\LayDeputyshipUploader\:\:createAndPersistNewPreRegistrationEntity\(\) expects OPG\\Digideps\\Backend\\v2\\Registration\\DTO\\LayDeputyshipDto, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/v2/Registration/Uploader/LayDeputyshipUploader.php
-
-		-
-			message: '#^Parameter \#1 \$reportType of static method OPG\\Digideps\\Backend\\Entity\\PreRegistration\:\:getReportTypeByOrderType\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/v2/Registration/Uploader/LayDeputyshipUploader.php
-
-		-
-			message: '#^Parameter \#1 \$string of function strtolower expects string, string\|null given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/v2/Registration/Uploader/LayDeputyshipUploader.php
@@ -21109,36 +21085,6 @@ parameters:
 			path: tests/Integration/Service/DeputyServiceIntegrationTest.php
 
 		-
-			message: '#^Cannot access offset 0 on mixed\.$#'
-			identifier: offsetAccess.nonOffsetAccessible
-			count: 2
-			path: tests/Integration/Service/LayRegistrationServiceIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getReports\(\) on object\|null\.$#'
-			identifier: method.nonObject
-			count: 2
-			path: tests/Integration/Service/LayRegistrationServiceIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method getType\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Service/LayRegistrationServiceIntegrationIntegrationTest.php
-
-		-
-			message: '#^Cannot call method isHybrid\(\) on mixed\.$#'
-			identifier: method.nonObject
-			count: 1
-			path: tests/Integration/Service/LayRegistrationServiceIntegrationIntegrationTest.php
-
-		-
-			message: '#^Parameter \#2 \$haystack of static method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Integration/Service/LayRegistrationServiceIntegrationIntegrationTest.php
-
-		-
 			message: '#^Cannot call method getDeputyUid\(\) on OPG\\Digideps\\Backend\\Entity\\Deputy\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -22891,12 +22837,6 @@ parameters:
 			path: tests/Unit/Service/Formatter/RestFormatterTest.php
 
 		-
-			message: '#^Parameter \#1 \$object_or_class of function is_a expects object, mixed given\.$#'
-			identifier: argument.type
-			count: 2
-			path: tests/Unit/Service/LayRegistrationServiceTest.php
-
-		-
 			message: '#^Call to static method PHPUnit\\Framework\\Assert\:\:assertInstanceOf\(\) with ''OPG\\\\Digideps\\\\Backend\\\\Entity\\\\Organisation'' and OPG\\Digideps\\Backend\\Entity\\Organisation will always evaluate to true\.$#'
 			identifier: staticMethod.alreadyNarrowedType
 			count: 1
@@ -23509,12 +23449,6 @@ parameters:
 			path: tests/Unit/v2/Registration/Uploader/LayDeputyshipProcessorTest.php
 
 		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Factory\\ReportFactory\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: tests/Unit/v2/Registration/Uploader/LayDeputyshipProcessorTest.php
-
-		-
 			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Repository\\UserRepository\:\:expects\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -23541,13 +23475,13 @@ parameters:
 		-
 			message: '#^Cannot call method method\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 12
+			count: 11
 			path: tests/Unit/v2/Registration/Uploader/LayDeputyshipProcessorTest.php
 
 		-
 			message: '#^Cannot call method willReturn\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 6
+			count: 5
 			path: tests/Unit/v2/Registration/Uploader/LayDeputyshipProcessorTest.php
 
 		-
@@ -23559,7 +23493,7 @@ parameters:
 		-
 			message: '#^Cannot call method with\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 6
+			count: 5
 			path: tests/Unit/v2/Registration/Uploader/LayDeputyshipProcessorTest.php
 
 		-
@@ -23581,12 +23515,6 @@ parameters:
 			path: tests/Unit/v2/Registration/Uploader/LayDeputyshipUploaderTest.php
 
 		-
-			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\Repository\\ReportRepository\|PHPUnit\\Framework\\MockObject\\MockObject\:\:expects\(\)\.$#'
-			identifier: method.notFound
-			count: 3
-			path: tests/Unit/v2/Registration/Uploader/LayDeputyshipUploaderTest.php
-
-		-
 			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\v2\\Registration\\Assembler\\SiriusToLayDeputyshipDtoAssembler\|PHPUnit\\Framework\\MockObject\\MockObject\:\:expects\(\)\.$#'
 			identifier: method.notFound
 			count: 1
@@ -23595,7 +23523,7 @@ parameters:
 		-
 			message: '#^Call to an undefined method OPG\\Digideps\\Backend\\v2\\Registration\\SelfRegistration\\Factory\\PreRegistrationFactory\|PHPUnit\\Framework\\MockObject\\MockObject\:\:expects\(\)\.$#'
 			identifier: method.notFound
-			count: 2
+			count: 1
 			path: tests/Unit/v2/Registration/Uploader/LayDeputyshipUploaderTest.php
 
 		-
@@ -23643,7 +23571,7 @@ parameters:
 		-
 			message: '#^Parameter \#2 \$haystack of method PHPUnit\\Framework\\Assert\:\:assertCount\(\) expects Countable\|iterable, mixed given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 2
 			path: tests/Unit/v2/Registration/Uploader/LayDeputyshipUploaderTest.php
 
 		-
