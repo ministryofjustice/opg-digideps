@@ -90,7 +90,7 @@ class ReportApi
     public function submit(Report $reportToSubmit, User $submittedBy): void
     {
         $uri = sprintf(self::REPORT_SUBMIT_ENDPOINT, $reportToSubmit->getId());
-        $newYearReportId = $this->restClient->put($uri, $reportToSubmit, ['submit']);
+        [$newYearReportId] = $this->restClient->put($uri, $reportToSubmit, ['submit']);
 
         $event = new ReportSubmittedEvent($reportToSubmit, $submittedBy, $newYearReportId);
         $this->eventDispatcher->dispatch($event, ReportSubmittedEvent::NAME);
