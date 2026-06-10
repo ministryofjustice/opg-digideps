@@ -27,7 +27,7 @@
         } %}
     {% endif %}
 
-    {% if report.visitsCare is not null %}
+    {% if report.hasSection('visitsCare') %}
         {% include '@App/Report/Rendered/_visits_care.html.twig' with {
             'visitsCare': report.visitsCare,
             'transOptions': transOptions,
