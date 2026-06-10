@@ -4,14 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\v2\Registration\Uploader;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
-use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\PreRegistration;
-use OPG\Digideps\Backend\Entity\Report\Report;
-use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
-use OPG\Digideps\Backend\Repository\ReportRepository;
 use OPG\Digideps\Backend\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
 use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
 use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDtoCollection;
@@ -19,7 +14,6 @@ use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\PreRegistratio
 use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
 use OPG\Digideps\Backend\v2\Registration\Uploader\LayDeputyshipProcessor;
 use OPG\Digideps\Backend\v2\Registration\Uploader\LayDeputyshipUploader;
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -28,7 +22,6 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 final class LayDeputyshipUploaderTest extends KernelTestCase
 {
     private EntityManager|MockObject $em;
-    private ReportRepository|MockObject $reportRepository;
     private PreRegistrationFactory|MockObject $factory;
     private SiriusToLayDeputyshipDtoAssembler|MockObject $layDeputyAssembler;
     private LayDeputyshipProcessor|MockObject $layDeputyProcessor;
@@ -39,7 +32,6 @@ final class LayDeputyshipUploaderTest extends KernelTestCase
     protected function setUp(): void
     {
         $this->em = $this->createMock(EntityManager::class);
-        $this->reportRepository = $this->createMock(ReportRepository::class);
         $this->factory = $this->createMock(PreRegistrationFactory::class);
         $this->layDeputyAssembler = $this->createMock(SiriusToLayDeputyshipDtoAssembler::class);
         $this->layDeputyProcessor = $this->createMock(LayDeputyshipProcessor::class);
@@ -47,7 +39,6 @@ final class LayDeputyshipUploaderTest extends KernelTestCase
 
         $this->sut = new LayDeputyshipUploader(
             $this->em,
-            $this->reportRepository,
             $this->factory,
             $this->layDeputyAssembler,
             $this->layDeputyProcessor,
@@ -83,92 +74,10 @@ final class LayDeputyshipUploaderTest extends KernelTestCase
             ->method('createFromDto')
             ->willReturnOnConsecutiveCalls(new PreRegistration([]), new PreRegistration([]), new PreRegistration([]));
 
-        // Assert Report Types will not be updated (not relevant for this test).
-        $this->reportRepository
-            ->expects($this->once())
-            ->method('findAllActiveReportsByCaseNumbersAndRole')
-            ->with(['case-0', 'case-1', 'case-2'], User::ROLE_LAY_DEPUTY)
-            ->willReturn([]);
-
         $return = $this->sut->upload($collection);
 
         $this->assertEquals(3, $return['added']);
         $this->assertCount(0, $return['errors']);
-    }
-
-    #[DataProvider('reportTypeProvider')]
-    #[Test]
-    public function updatesReportTypeOfActiveReportsIfRequired(
-        string $currentReportType,
-        string $preRegistrationNewReportType,
-        string $expectedNewReportType,
-        bool $isDualCase,
-        ?string $deputyUid
-    ): void {
-        $collection = new LayDeputyshipDtoCollection();
-        $collection->append($this->buildLayDeputyshipDto(1));
-
-        $caseType = $isDualCase ? 'DUAL' : 'SINGLE';
-
-        $preRegistration = new PreRegistration([
-            'ReportType' => $preRegistrationNewReportType,
-            'OrderType' => $preRegistrationNewReportType === 'OPG104' ? 'hw' : 'pfa',
-            'Hybrid' => $caseType,
-            'DeputyUid' => $deputyUid,
-        ]);
-
-        $this->factory
-            ->expects($this->once())
-            ->method('createFromDto')
-            ->willReturnOnConsecutiveCalls($preRegistration);
-
-        // Ensure an existing Client is found with an active Report whose type is different to the new type in the upload.
-
-        $existingClient = $this->createMock(Client::class);
-        $existingClient
-            ->expects($this->once())
-            ->method('getCaseNumber')
-            ->willReturn('case-1');
-
-        if ($isDualCase) {
-            $deputy = $this->createMock(User::class);
-            $deputy
-                ->expects($this->once())
-                ->method('getDeputyUid')
-                ->willReturn(12345678);
-
-            $existingClient
-                ->expects($this->once())
-                ->method('getUsers')
-                ->willReturn(new ArrayCollection([$deputy]));
-        }
-
-        $activeReport = new Report($existingClient, $currentReportType, new \DateTime(), new \DateTime(), false);
-        $this->reportRepository
-            ->expects($this->once())
-            ->method('findAllActiveReportsByCaseNumbersAndRole')
-            ->with(['case-1'], User::ROLE_LAY_DEPUTY)
-            ->willReturn([$activeReport]);
-
-        $return = $this->sut->upload($collection);
-
-        $this->assertEquals(1, $return['added']);
-        $this->assertCount(0, $return['errors']);
-        $this->assertEquals($expectedNewReportType, $activeReport->getType());
-    }
-
-    public static function reportTypeProvider(): array
-    {
-        return [
-            'Changes to 102' => ['103', 'OPG102', '102', false, '12345678'],
-            'Changes to 103' => ['102', 'OPG103', '103', false, '12345678'],
-            'Changes to 104' => ['102', 'OPG104', '104', false, '12345678'],
-            'Dual Case changes to 103' => ['102', 'OPG103', '103', true, '12345678'],
-            'Dual Case does not change' => ['102', 'OPG103', '102', true, '87654321'],
-            'Dual Case does not change with empty uid' => ['102', 'OPG103', '102', true, ''],
-            'Dual Case does not change with concat uids' => ['102', 'OPG103', '102', true, '12345678,87654321'],
-            'Dual Case does not change with null uid' => ['102', 'OPG103', '102', true, null],
-        ];
     }
 
     #[Test]
@@ -183,8 +92,6 @@ final class LayDeputyshipUploaderTest extends KernelTestCase
             ->method('createFromDto')
             ->willThrowException(new PreRegistrationCreationException('Unable to create PreRegistration entity'));
 
-        $this->assertReportTypesWillNotBeUpdated();
-
         $return = $this->sut->upload($collection);
 
         $this->assertEquals(0, $return['added']);
@@ -197,15 +104,6 @@ final class LayDeputyshipUploaderTest extends KernelTestCase
         return new LayDeputyshipDto()
             ->setCaseNumber('case-' . $count)
             ->setDeputyUid('depnum-' . $count);
-    }
-
-    private function assertReportTypesWillNotBeUpdated(): void
-    {
-        $this->reportRepository
-            ->expects($this->once())
-            ->method('findAllActiveReportsByCaseNumbersAndRole')
-            ->with([], User::ROLE_LAY_DEPUTY)
-            ->willReturn([]);
     }
 
     #[Test]
