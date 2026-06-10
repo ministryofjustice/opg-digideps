@@ -96,12 +96,8 @@ class CourtOrderInviteService
         }
 
         // candidate deputy: will only be created if a deputy with this UID does not exist
-        $invitedLayDeputy = new Deputy();
-        $invitedLayDeputy->setDeputyType(DeputyType::LAY);
-        $invitedLayDeputy->setFirstname($invitedDeputyDTO->firstname);
-        $invitedLayDeputy->setLastname($invitedDeputyDTO->lastname);
+        $invitedLayDeputy = new Deputy($deputyUid, DeputyType::LAY, $invitedDeputyDTO->firstname, $invitedDeputyDTO->lastname);
         $invitedLayDeputy->setEmail1($invitedDeputyDTO->email);
-        $invitedLayDeputy->setDeputyUid($deputyUid);
         $invitedLayDeputy->setOrganisation(null);
 
         // save stuff to db inside a transaction

@@ -191,12 +191,13 @@ class OrgDeputyshipDTOTestHelper
             $organisation = self::ensureOrgInUploadExists($domain, $em);
         }
 
-        $deputy = new Deputy()
-            ->setDeputyType($deputyType)
+        $deputy = new Deputy(
+            $dto->getDeputyUid(),
+            $deputyType,
+            $dto->getDeputyFirstname() ?? '',
+            $dto->getDeputyLastname()
+        )
             ->setEmail1($dto->getDeputyEmail())
-            ->setDeputyUid($dto->getDeputyUid())
-            ->setFirstname($dto->getDeputyFirstname())
-            ->setLastname($dto->getDeputyLastname())
             ->setAddress1($dto->getDeputyAddress1())
             ->setAddress2($dto->getDeputyAddress2())
             ->setAddress3($dto->getDeputyAddress3())
