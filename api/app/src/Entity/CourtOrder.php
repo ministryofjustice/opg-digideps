@@ -72,7 +72,7 @@ class CourtOrder
 
     #[ORM\JoinColumn(name: 'sibling_id', referencedColumnName: 'id')]
     #[ORM\OneToOne(targetEntity: CourtOrder::class)]
-    private ?CourtOrder $sibling;
+    private ?CourtOrder $sibling = null;
 
     /**
      * @see CourtOrderKind
@@ -129,7 +129,7 @@ class CourtOrder
         return $this->id;
     }
 
-    public function setId(int $id): CourtOrder
+    public function setId(int $id): static
     {
         $this->id = $id;
 
@@ -141,7 +141,7 @@ class CourtOrder
         return $this->courtOrderUid;
     }
 
-    public function setCourtOrderUid(string $courtOrderUid): CourtOrder
+    public function setCourtOrderUid(string $courtOrderUid): static
     {
         $this->courtOrderUid = $courtOrderUid;
 
@@ -153,7 +153,7 @@ class CourtOrder
         return CourtOrderType::from($this->orderType);
     }
 
-    public function setOrderType(CourtOrderType $orderType): CourtOrder
+    public function setOrderType(CourtOrderType $orderType): static
     {
         $this->orderType = $orderType->value;
 
@@ -169,7 +169,7 @@ class CourtOrder
         return CourtOrderReportType::tryFrom(strtoupper($this->orderReportType)) ?? $fallBack;
     }
 
-    public function setOrderReportType(CourtOrderReportType $orderReportType): CourtOrder
+    public function setOrderReportType(CourtOrderReportType $orderReportType): static
     {
         $this->orderReportType = $orderReportType->value;
 
@@ -181,7 +181,7 @@ class CourtOrder
         return $this->status;
     }
 
-    public function setStatus(string $status): CourtOrder
+    public function setStatus(string $status): static
     {
         $this->status = $status;
 
@@ -193,7 +193,7 @@ class CourtOrder
         return $this->client;
     }
 
-    public function setClient(Client $client): CourtOrder
+    public function setClient(Client $client): static
     {
         $this->client = $client;
 
@@ -205,7 +205,7 @@ class CourtOrder
         return $this->orderMadeDate;
     }
 
-    public function setOrderMadeDate(\DateTime $orderMadeDate): CourtOrder
+    public function setOrderMadeDate(\DateTime $orderMadeDate): static
     {
         $this->orderMadeDate = $orderMadeDate;
 
@@ -217,7 +217,7 @@ class CourtOrder
         return $this->sibling;
     }
 
-    public function setSibling(?CourtOrder $sibling): CourtOrder
+    public function setSibling(?CourtOrder $sibling): static
     {
         $this->sibling = $sibling;
 
@@ -229,16 +229,23 @@ class CourtOrder
         return CourtOrderKind::from($this->orderKind);
     }
 
-    public function setOrderKind(CourtOrderKind $kind): CourtOrder
+    public function setOrderKind(CourtOrderKind $kind): static
     {
         $this->orderKind = $kind->value;
 
         return $this;
     }
 
-    public function addReport(Report $report): CourtOrder
+    public function addReport(Report $report): static
     {
         $this->reports->add($report);
+
+        return $this;
+    }
+
+    public function removeReport(Report $report): static
+    {
+        $this->reports->removeElement($report);
 
         return $this;
     }
@@ -310,6 +317,7 @@ class CourtOrder
                 $deputyType
             );
         }
+
         return $this->desiredReportType;
     }
 }

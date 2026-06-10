@@ -7,14 +7,14 @@ use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderReportType;
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderType;
 use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Report\Report;
-use OPG\Digideps\Backend\Factory\ReportTypeUpdateFactory;
+use OPG\Digideps\Backend\Factory\UpdateReportTypeDataFactory;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\OPG\Digideps\Backend\Integration\ApiIntegrationTestCase;
 use Tests\OPG\Digideps\Backend\Integration\Fixtures;
 
-class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
+class UpdateReportTypeDataFactoryIntegrationTest extends ApiIntegrationTestCase
 {
-    private static ReportTypeUpdateFactory $sut;
+    private static UpdateReportTypeDataFactory $sut;
     private static Fixtures $fixtures;
 
     private static int $count = 0;
@@ -25,8 +25,8 @@ class ReportTypeUpdateDataFactoryIntegrationTest extends ApiIntegrationTestCase
 
         self::$fixtures = new Fixtures(self::$entityManager);
 
-        /** @var ReportTypeUpdateFactory $sut */
-        $sut = self::$container->get(ReportTypeUpdateFactory::class);
+        /** @var UpdateReportTypeDataFactory $sut */
+        $sut = self::$container->get(UpdateReportTypeDataFactory::class);
         self::$sut = $sut;
 
         self::purgeDatabase();
