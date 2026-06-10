@@ -60,13 +60,14 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
         $client->setCaseNumber($caseNumber);
         self::$entityManager->persist($client);
 
-        $deputy = new Deputy();
-        $deputy->setDeputyType(DeputyType::LAY);
+        $deputy = new Deputy(
+            '14235674',
+            DeputyType::LAY,
+            'Alf',
+            'Alf'
+        );
         $deputy->setOrganisation(null);
-        $deputy->setFirstname('Alf');
-        $deputy->setLastname('Alf');
         $deputy->setEmail1('alf@notarealemail.com');
-        $deputy->setDeputyUid('14235674');
         self::$entityManager->persist($deputy);
 
         self::$entityManager->flush();
@@ -120,13 +121,14 @@ class DeputyshipCandidateConverterIntegrationIntegrationTest extends ApiIntegrat
         $courtOrder->setOrderReportType(CourtOrderReportType::OPG102);
         self::$entityManager->persist($courtOrder);
 
-        $deputy = new Deputy();
-        $deputy->setDeputyType(DeputyType::LAY);
+        $deputy = new Deputy(
+            '14235678',
+            DeputyType::LAY,
+            'Vev',
+            'Alfonse',
+        );
         $deputy->setOrganisation(null);
-        $deputy->setFirstname('Vev');
-        $deputy->setLastname('Alfome');
         $deputy->setEmail1('vev@notarealemail.com');
-        $deputy->setDeputyUid('14235678');
         self::$entityManager->persist($deputy);
 
         self::$entityManager->flush();

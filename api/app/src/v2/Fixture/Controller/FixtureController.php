@@ -317,13 +317,9 @@ class FixtureController extends AbstractController
             $organisation = $repository->findByEmailIdentifier($user->getEmail());
         }
 
-        return new Deputy()
-            ->setDeputyUid((string) $uid)
-            ->setDeputyType($user->deriveDeputyType() ?? DeputyType::LAY)
+        return new Deputy((string) $uid, $user->deriveDeputyType() ?? DeputyType::LAY, $user->getFirstname(), $user->getLastname())
             ->setUser($user)
             ->setEmail1($user->getEmail())
-            ->setFirstname($user->getFirstname())
-            ->setLastname($user->getLastname())
             ->setOrganisation($organisation);
     }
 
@@ -473,12 +469,8 @@ class FixtureController extends AbstractController
             $organisation = $repository->findByEmailIdentifier($deputy->getEmail());
         }
 
-        $deputy = new Deputy()
-            ->setFirstname($deputy->getFirstname())
-            ->setLastname($deputy->getLastname())
-            ->setDeputyType($deputyType)
+        $deputy = new Deputy('70' . str_pad($fromRequest['caseNumber'] . mt_rand(1, 100), 10), $deputyType, $deputy->getFirstname(), $deputy->getLastname())
             ->setEmail1($deputy->getEmail())
-            ->setDeputyUid('70' . str_pad($fromRequest['caseNumber'] . mt_rand(1, 100), 10))
             ->setAddress1($deputy->getAddress1())
             ->setAddressPostcode($deputy->getAddressPostcode())
             ->setPhoneMain($deputy->getPhoneMain())
@@ -717,12 +709,8 @@ class FixtureController extends AbstractController
                     $organisation = $repository->findByEmailIdentifier($user->getEmail());
                 }
 
-                $deputy = new Deputy()
-                    ->setDeputyUid(rand(8, 8))
-                    ->setDeputyType($deputyType)
+                $deputy = new Deputy((string)rand(10000000, 99999999), $deputyType, $user->getFirstname(), $user->getLastname())
                     ->setEmail1($user->getEmail())
-                    ->setFirstname($user->getFirstname())
-                    ->setLastname($user->getLastname())
                     ->setOrganisation($organisation);
 
                 $this->em->persist($deputy);

@@ -27,7 +27,7 @@ class ChecklistRepositoryIntegrationTest extends ApiIntegrationTestCase
 
     private function createAndSubmitReportWithChecklist($status, $error): Checklist
     {
-        $firstJulyAm = \DateTime::createFromFormat('d/m/Y', '01/07/2020', new \DateTimeZone('UTC'));
+        $firstJulyAm = \DateTime::createFromFormat('d/m/Y', '01/07/2020', new \DateTimeZone('UTC')) ?: throw new \LogicException('Bad Fixture');
 
         // Create Client
         $client = new Client()->setCaseNumber('abc-123');

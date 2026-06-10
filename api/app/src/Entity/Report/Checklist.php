@@ -670,7 +670,7 @@ class Checklist implements SynchronisableInterface
     /**
      * @return string
      */
-    public function getCaseWorkerSatisified()
+    public function getCaseWorkerSatisfied()
     {
         return $this->caseWorkerSatisified;
     }
