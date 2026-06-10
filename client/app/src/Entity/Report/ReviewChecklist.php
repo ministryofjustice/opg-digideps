@@ -2,11 +2,11 @@
 
 namespace OPG\Digideps\Frontend\Entity\Report;
 
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use OPG\Digideps\Frontend\Entity\Traits\ModifyAudit;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Model\FullReviewChecklist;
-use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class ReviewChecklist
@@ -15,7 +15,7 @@ class ReviewChecklist
     use ModifyAudit;
 
     #[JMS\Type('integer')]
-    private int $id;
+    private ?int $id = null;
 
     #[Assert\Valid]
     #[JMS\Type('OPG\Digideps\Frontend\Model\FullReviewChecklist')]
@@ -38,12 +38,12 @@ class ReviewChecklist
         $this->setReport($report);
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function setId(int $id): static
+    public function setId(?int $id): static
     {
         $this->id = $id;
 

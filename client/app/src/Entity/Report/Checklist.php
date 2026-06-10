@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Entity\Report;
 
+use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Frontend\Entity\Report\Traits\HasReportTrait;
 use OPG\Digideps\Frontend\Entity\SynchronisableInterface;
 use OPG\Digideps\Frontend\Entity\SynchronisableTrait;
 use OPG\Digideps\Frontend\Entity\Traits\ModifyAudit;
 use OPG\Digideps\Frontend\Entity\User;
-use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class Checklist implements SynchronisableInterface
