@@ -263,6 +263,13 @@ class CourtOrder
         return $this;
     }
 
+    public function removeReport(Report $report): static
+    {
+        $this->reports->removeElement($report);
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, CourtOrderDeputy>
      */
@@ -330,6 +337,7 @@ class CourtOrder
                 $deputyType
             );
         }
+
         return $this->desiredReportType;
     }
 }
