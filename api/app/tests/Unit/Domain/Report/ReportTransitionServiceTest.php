@@ -472,7 +472,9 @@ final class ReportTransitionServiceTest extends TestCase
         self::assertTrue($result->transitioned);
         self::assertEmpty($result->errorMessages);
 
-        self::assertNotContains($oldHwReport, $oldHwCourtOrder->getReports());
+        // defunct report remains on the old sibling
+        self::assertContains($oldHwReport, $oldHwCourtOrder->getReports());
+
         self::assertEquals($pfaReport, $newHwCourtOrder->getLatestReport());
     }
 

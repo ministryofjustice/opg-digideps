@@ -156,13 +156,11 @@ final readonly class ReportTransitionService
         // figure out which report will persist (to become the hybrid report) and which becomes defunct
         ['persistingReport' => $persistingReport, 'defunctReport' => $defunctReport] =
             $this->dualToHybridAssignReports($courtOrderPair, $courtOrderChange, $oldSibling);
-
         if ($persistingReport === null || $defunctReport === null) {
             $result->errorMessages[] = 'Hybrid -> Dual: Persisting and/or defunct report unavailable';
             return $result;
         }
 
-        // remove the persisting report from the old sibling (the defunct report may remain attached to it)
         $oldSibling->removeReport($persistingReport);
         $result->updatedCourtOrders[] = $oldSibling;
 
