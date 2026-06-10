@@ -12,69 +12,50 @@ use OPG\Digideps\Backend\Entity\Report\Report;
 
 trait ContactTrait
 {
+    /**
+     * @var Collection<int,Contact>
+     */
     #[JMS\Groups(['contact'])]
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Contact>')]
     #[ORM\OneToMany(mappedBy: 'report', targetEntity: Contact::class, cascade: ['persist', 'remove'])]
-    private $contacts;
+    private Collection $contacts;
 
     /**
-     * @var ?string deputy reason for not having contacts. Required if no contacts are added
+     * Deputy reason for not having contacts. Required if no contacts are added.
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report'])]
     #[ORM\Column(name: 'reason_for_no_contacts', type: 'text', nullable: true)]
-    private $reasonForNoContacts;
+    private ?string $reasonForNoContacts = null;
 
-    /**
-     * Add contacts.
-     *
-     * @return Report
-     */
-    public function addContact(Contact $contacts)
+    public function addContact(Contact $contacts): Report
     {
         $this->contacts[] = $contacts;
 
         return $this;
     }
 
-    /**
-     * Remove contacts.
-     */
-    public function removeContact(Contact $contacts)
+    public function removeContact(Contact $contacts): void
     {
         $this->contacts->removeElement($contacts);
     }
 
     /**
-     * Get contacts.
-     *
-     * @return Collection
+     * @return Collection<int,Contact>
      */
-    public function getContacts()
+    public function getContacts(): Collection
     {
         return $this->contacts;
     }
 
-    /**
-     * Set reasonForNoContact.
-     *
-     * @param ?string $reasonForNoContacts
-     *
-     * @return Report
-     */
-    public function setReasonForNoContacts($reasonForNoContacts)
+    public function setReasonForNoContacts(?string $reasonForNoContacts): Report
     {
         $this->reasonForNoContacts = $reasonForNoContacts;
 
         return $this;
     }
 
-    /**
-     * Get reasonForNoContacts.
-     *
-     * @return ?string
-     */
-    public function getReasonForNoContacts()
+    public function getReasonForNoContacts(): ?string
     {
         return $this->reasonForNoContacts;
     }
