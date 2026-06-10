@@ -427,3 +427,11 @@ services:
     build:
       context: ./common
     command: lint:phpstan
+
+  playwright-check:
+    build:
+      context: ./playwright
+    image: playwright-check
+    container_name: playwright-check
+    network_mode: host # required for digideps.local
+    restart: "no"

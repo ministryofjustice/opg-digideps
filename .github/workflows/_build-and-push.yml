@@ -173,6 +173,13 @@ jobs:
             target: ""
             runs_on: "ubuntu-24.04-arm"
 
+          - svc_name: "test"
+            sub_folder: "playwright"
+            docker_file: "Dockerfile"
+            platform: "arm64"
+            target: ""
+            runs_on: "ubuntu-24.04-arm"
+
           - svc_name: "custom-sql-lambda"
             sub_folder: "lambdas/functions/custom_sql_query"
             docker_file: "Dockerfile"
