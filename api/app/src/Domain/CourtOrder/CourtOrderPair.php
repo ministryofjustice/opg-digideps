@@ -31,29 +31,16 @@ final class CourtOrderPair
      */
     public static function create(CourtOrder $mainCourtOrder, CourtOrder $siblingCourtOrder): CourtOrderPair
     {
-        $courtOrderTypes = [];
-        $pfaCourtOrder = $hwCourtOrder = null;
-
-        foreach ([$mainCourtOrder, $siblingCourtOrder] as $courtOrder) {
-            $orderType = $courtOrder->getOrderType();
-
-            $courtOrderTypes[] = $orderType->value;
-
-            if ($orderType === CourtOrderType::PFA) {
-                $pfaCourtOrder = $courtOrder;
-            } elseif ($orderType === CourtOrderType::HW) {
-                $hwCourtOrder = $courtOrder;
-            }
-        }
-
-        $expected = [CourtOrderType::HW->value, CourtOrderType::PFA->value];
-
-        if ($pfaCourtOrder === null || $hwCourtOrder === null || count(array_diff($courtOrderTypes, $expected)) > 0) {
+        if ($mainCourtOrder->getOrderType() === $siblingCourtOrder->getOrderType()) {
             throw new \DomainException(
-                'Invalid pair of court orders: expected ' . implode(', ', $expected) .
-                ' but types were ' . implode(', ', $courtOrderTypes)
+                "Invalid pair of court orders (both have type {$mainCourtOrder->getOrderType()->value})"
             );
         }
+
+        [$pfaCourtOrder, $hwCourtOrder] = match ($mainCourtOrder->getOrderType()) {
+            CourtOrderType::PFA => [$mainCourtOrder, $siblingCourtOrder],
+            CourtOrderType::HW => [$siblingCourtOrder, $mainCourtOrder],
+        };
 
         return new CourtOrderPair(
             mainCourtOrder: $mainCourtOrder,
