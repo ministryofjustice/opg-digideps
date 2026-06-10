@@ -3691,30 +3691,6 @@ parameters:
 			path: src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ChecklistInformation\:\:__construct\(\) has parameter \$information with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: src/Entity/Report/ChecklistInformation.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ChecklistInformation\:\:setChecklist\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ChecklistInformation.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Report\\ChecklistInformation\:\:setInformation\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: src/Entity/Report/ChecklistInformation.php
-
-		-
-			message: '#^Parameter \#1 \$string of function trim expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/Entity/Report/ChecklistInformation.php
-
-		-
 			message: '#^Cannot call method add\(\) on Doctrine\\Common\\Collections\\ArrayCollection\|null\.$#'
 			identifier: method.nonObject
 			count: 1
@@ -12569,12 +12545,6 @@ parameters:
 			identifier: missingType.return
 			count: 1
 			path: tests/Unit/Entity/CourtOrderTest.php
-
-		-
-			message: '#^Method Symfony\\Component\\Validator\\ValidatorBuilder\:\:enableAnnotationMapping\(\) invoked with 1 parameter, 0 required\.$#'
-			identifier: arguments.count
-			count: 1
-			path: tests/Unit/Entity/Report/ChecklistTest.php
 
 		-
 			message: '#^Method Symfony\\Component\\Validator\\ValidatorBuilder\:\:enableAnnotationMapping\(\) invoked with 1 parameter, 0 required\.$#'
