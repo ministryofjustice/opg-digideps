@@ -282,11 +282,7 @@ class ProfUserFixtures extends AbstractDataFixture
 
     private function createDeputy(mixed $deputyData, mixed $clientData, ?Organisation $organisation): Deputy
     {
-        return new Deputy()
-            ->setDeputyType(DeputyType::PRO)
-            ->setFirstname($deputyData['id'])
-            ->setLastname('Deputy')
-            ->setDeputyUid($clientData['deputyUid'])
+        return new Deputy($clientData['deputyUid'], DeputyType::PRO, $deputyData['id'], 'Deputy')
             ->setEmail1($deputyData['id'] . $deputyData['email'])
             ->setAddress1('ABC Road')
             ->setAddressPostcode('AB1 2CD')
