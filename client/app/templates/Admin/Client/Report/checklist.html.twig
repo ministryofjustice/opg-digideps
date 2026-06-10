@@ -62,7 +62,7 @@
                 {% include '@App/Admin/Client/Report/partials/_document-summary.html.twig' %}
             {% endif %}
 
-            {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-checklist-form', class: 'js-autosave' }}) }}
+            {{ form_start(form, {attr: {novalidate: 'novalidate', id: 'create-report-checklist-form' }}) }}
 
             {# Deputy and client information #}
             {% include '@App/Admin/Client/Report/partials/_deputy-and-client-info.html.twig' %}
@@ -139,7 +139,7 @@
             {{ form_input(form.furtherInformationReceived, (page ~ '.form.furtherInformation'), {
                 formGroupClass: 'js-auto-size',
                 labelClass: 'govuk-label--m',
-                inputClass: 'govuk-!-width-full js-autosave-ignore',
+                inputClass: 'govuk-!-width-full',
             }) }}
 
             {% set contents %}
@@ -160,7 +160,7 @@
             <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
             {{ form_submit(form.save, (page ~ '.form.save'), {
-                buttonClass: 'govuk-button--secondary behat-link-save-progress js-autosave-save-progress-button'
+                buttonClass: 'govuk-button--secondary behat-link-save-progress'
             }) }}
 
             {{ form_submit(form.submitAndContinue, (page ~ '.form.submitAndContinue'), {
