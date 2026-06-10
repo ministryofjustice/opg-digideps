@@ -6367,12 +6367,6 @@ parameters:
 			path: src/v2/Registration/DeputyshipProcessing/CSVDeputyshipProcessing.php
 
 		-
-			message: '#^Strict comparison using \!\=\= between '''' and '''' will always evaluate to false\.$#'
-			identifier: notIdentical.alwaysFalse
-			count: 1
-			path: src/v2/Registration/DeputyshipProcessing/CourtOrder/CourtOrderRelationshipResult.php
-
-		-
 			message: '#^Binary operation "\." between '''' and mixed results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 2

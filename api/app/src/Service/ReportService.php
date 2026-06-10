@@ -3,6 +3,7 @@
 namespace OPG\Digideps\Backend\Service;
 
 use OPG\Digideps\Backend\Entity\Client;
+use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\PreRegistration;
 use OPG\Digideps\Backend\Entity\Report\Asset;
 use OPG\Digideps\Backend\Entity\Report\AssetOther;
@@ -421,5 +422,20 @@ class ReportService
         }
 
         return $required;
+    }
+
+    public function createReportFromOrder(CourtOrder $courtOrder): Report
+    {
+        $newReport = new Report(
+            client: $courtOrder->getClient(),
+            type: "{$courtOrder->getDesiredReportType()}",
+            startDate: $courtOrder->getOrderMadeDate(),
+            endDate: (clone $courtOrder->getOrderMadeDate())->modify('+12 months -1 day'),
+            dateChecks: false,
+        );
+
+        $newReport->updateSectionsStatusCache($newReport->getAvailableSections());
+
+        return $newReport;
     }
 }
