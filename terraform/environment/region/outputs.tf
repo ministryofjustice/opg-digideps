@@ -27,6 +27,7 @@ output "Tasks" {
     restore_from_production = module.restore_from_production.render
     integration_test_v2     = module.integration_tests.render_with_override
     smoke_tests             = module.smoke_tests.render
+    playwright_tests        = module.end_to_end_tests.render
     resilience_tests        = module.resilience_tests.render
     api_task_override       = module.api_task_override.render_with_override
   }

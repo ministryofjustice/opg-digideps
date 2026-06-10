@@ -153,9 +153,9 @@ class Report
     /**
      * https://opgtransform.atlassian.net/wiki/spaces/DEPDS/pages/135266255/Report+variations.
      *
-     * @return array
+     * @return array<string, array<string>>
      */
-    public static function getSectionsSettings()
+    public static function getSectionsSettings(): array
     {
         return [
             self::SECTION_DECISIONS => self::allRolesAllReportTypes(),
@@ -187,6 +187,9 @@ class Report
         ];
     }
 
+    /**
+     * @return array<string>
+     */
     public static function getAllLayTypes(): array
     {
         return [
@@ -198,6 +201,9 @@ class Report
         ];
     }
 
+    /**
+     * @return array<string>
+     */
     public static function getAllProfTypes(): array
     {
         return [
@@ -209,6 +215,9 @@ class Report
         ];
     }
 
+    /**
+     * @return array<string>
+     */
     public static function getAllPaTypes(): array
     {
         return [
@@ -229,12 +238,12 @@ class Report
     private ?int $id = null;
 
     /**
-     * @var string TYPE_ constants
+     * See TYPE_ constants
      */
     #[JMS\Groups(['report', 'report-type', 'deputy-court-order-basic'])]
     #[JMS\Type('string')]
     #[ORM\Column(name: 'type', type: 'string', length: 10, nullable: false)]
-    private $type;
+    private string $type;
 
     #[JMS\Groups(['report-client'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Client')]
@@ -242,85 +251,59 @@ class Report
     #[ORM\ManyToOne(targetEntity: Client::class, cascade: ['persist'], inversedBy: 'reports')]
     private Client $client;
 
-    /**
-     * @var ?VisitsCare
-     */
     #[JMS\Groups(['visits-care'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\VisitsCare')]
     #[ORM\OneToOne(mappedBy: 'report', targetEntity: VisitsCare::class, cascade: ['persist', 'remove'], fetch: 'LAZY')]
-    private $visitsCare;
+    private ?VisitsCare $visitsCare = null;
 
-    /**
-     * @var Lifestyle
-     */
     #[JMS\Groups(['lifestyle'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Lifestyle')]
     #[ORM\OneToOne(mappedBy: 'report', targetEntity: Lifestyle::class, cascade: ['persist', 'remove'])]
-    private $lifestyle;
+    private ?Lifestyle $lifestyle = null;
 
-    /**
-     * @var ?Action
-     */
     #[JMS\Groups(['action'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Action')]
     #[ORM\OneToOne(mappedBy: 'report', targetEntity: Action::class, cascade: ['persist', 'remove'])]
-    private $action;
+    private ?Action $action = null;
 
-    /**
-     * @var MentalCapacity
-     */
+
     #[JMS\Groups(['mental-capacity'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\MentalCapacity')]
     #[ORM\OneToOne(mappedBy: 'report', targetEntity: MentalCapacity::class, cascade: ['persist', 'remove'])]
-    private $mentalCapacity;
+    private ?MentalCapacity $mentalCapacity = null;
 
-    /**
-     * @var ?ClientBenefitsCheck
-     */
     #[JMS\Groups(['client-benefits-check'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\ClientBenefitsCheck')]
     #[ORM\OneToOne(mappedBy: 'report', targetEntity: ClientBenefitsCheck::class, cascade: ['persist', 'remove'])]
-    private $clientBenefitsCheck;
+    private ?ClientBenefitsCheck $clientBenefitsCheck = null;
 
-    /**
-     * @var \DateTime
-     */
     #[JMS\Groups(['report', 'report-period'])]
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[ORM\Column(name: 'start_date', type: 'date', nullable: true)]
-    private $startDate;
+    private \DateTime $startDate;
 
-    /**
-     * @var \DateTime
-     */
     #[JMS\Groups(['report', 'report-period'])]
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[ORM\Column(name: 'due_date', type: 'date', nullable: true)]
-    private $dueDate;
+    private \DateTime $dueDate;
 
-    /**
-     * @var \DateTime
-     */
     #[JMS\Groups(['report', 'report-period'])]
     #[JMS\Accessor(getter: 'getEndDate')]
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[ORM\Column(name: 'end_date', type: 'date', nullable: true)]
-    private $endDate;
+    private \DateTime $endDate;
 
     #[JMS\Groups(['report'])]
     #[JMS\Accessor(getter: 'getSubmitDate')]
     #[JMS\Type('DateTime')]
     #[ORM\Column(name: 'submit_date', type: 'datetime', nullable: true)]
-    private ?\DateTimeInterface $submitDate = null;
+    private ?\DateTime $submitDate = null;
 
-    /**
-     * @var \DateTime
-     */
     #[JMS\Accessor(getter: 'getUnSubmitDate')]
     #[JMS\Groups(['report'])]
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[ORM\Column(name: 'un_submit_date', type: 'datetime', nullable: true)]
-    private $unSubmitDate;
+    private ?\DateTime $unSubmitDate = null;
 
     #[JMS\Groups(['report'])]
     #[JMS\Type('boolean')]
@@ -335,142 +318,131 @@ class Report
 
     /**
      * @deprecated client shouldn't need this anymore
-     *
-     * @var bool
      */
     #[JMS\Groups(['report'])]
     #[JMS\Type('boolean')]
     #[ORM\Column(name: 'report_seen', type: 'boolean', options: ['default' => true])]
-    private $reportSeen;
+    private bool $reportSeen = true;
 
     /**
-     * @var string not_deputy|only_deputy|more_deputies_behalf|more_deputies_not_behalf
+     * not_deputy|only_deputy|more_deputies_behalf|more_deputies_not_behalf
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report'])]
     #[ORM\Column(name: 'agreed_behalf_deputy', type: 'string', length: 50, nullable: true)]
-    private $agreedBehalfDeputy;
+    private ?string $agreedBehalfDeputy = null;
 
     /**
-     * @var string required if agreedBehalfDeputy == more_deputies_not_behalf
+     * required if agreedBehalfDeputy == more_deputies_not_behalf
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report'])]
     #[ORM\Column(name: 'agreed_behalf_deputy_explanation', type: 'text', nullable: true)]
-    private $agreedBehalfDeputyExplanation;
+    private ?string $agreedBehalfDeputyExplanation = null;
 
     /**
-     * @var ArrayCollection
+     * @var Collection<int, Document>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Document>')]
     #[JMS\Groups(['report-documents'])]
     #[ORM\OneToMany(mappedBy: 'report', targetEntity: Document::class, cascade: ['persist', 'remove'], fetch: 'EXTRA_LAZY')]
     #[ORM\OrderBy(['createdOn' => 'DESC', 'fileName' => 'ASC'])]
-    private $documents;
+    private Collection $documents;
 
+    /**
+     * @var Collection<int, ReportSubmission> $reportSubmissions
+     */
     #[JMS\Type("ArrayCollection<OPG\Digideps\Backend\Entity\Report\ReportSubmission>")]
     #[JMS\Groups(['document-sync'])]
     #[ORM\OneToMany(mappedBy: 'report', targetEntity: ReportSubmission::class, fetch: 'EXTRA_LAZY')]
-    private $reportSubmissions;
+    private Collection $reportSubmissions;
 
-    /**
-     * @var ?string
-     */
     #[JMS\Groups(['report', 'wish-to-provide-documentation'])]
     #[JMS\Type('string')]
     #[ORM\Column(name: 'wish_to_provide_documentation', type: 'string', nullable: true)]
-    private $wishToProvideDocumentation;
+    private ?string $wishToProvideDocumentation;
 
     /**
-     * @var ?string yes/no
+     * yes/no/null
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'current-prof-payments-received'])]
     #[ORM\Column(name: 'current_prof_payments_received', type: 'string', nullable: true)]
-    private $currentProfPaymentsReceived;
+    private ?string $currentProfPaymentsReceived = null;
 
     /**
-     * @var ?string yes/no
+     * yes/no/null
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'report-prof-estimate-fees'])]
     #[ORM\Column(name: 'previous_prof_fees_estimate_given', type: 'string', length: 3, nullable: true)]
-    private $previousProfFeesEstimateGiven;
+    private ?string $previousProfFeesEstimateGiven = null;
 
-    /**
-     * @var ?string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'report-prof-estimate-fees'])]
     #[ORM\Column(name: 'prof_fees_estimate_scco_reason', type: 'text', nullable: true)]
-    private $profFeesEstimateSccoReason;
+    private ?string $profFeesEstimateSccoReason = null;
 
     /**
-     * @var string yes | no (see constants)
+     * yes/no/null (see constants)
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'significantDecisionsMade'])]
     #[ORM\Column(name: 'significant_decisions_made', type: 'text', nullable: true)]
-    private $significantDecisionsMade;
+    private ?string $significantDecisionsMade = null;
 
 
     #[JMS\Groups(['report'])]
     #[JMS\Type('string')]
     #[ORM\Column(name: 'unsubmitted_sections_list', type: 'text', nullable: true)]
-    private ?string $unsubmittedSectionsList;
+    private ?string $unsubmittedSectionsList = null;
 
-    /**
-     * @var Checklist
-     */
     #[JMS\Groups(['report', 'report-checklist'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\Checklist')]
     #[ORM\OneToOne(mappedBy: 'report', targetEntity: Checklist::class, cascade: ['persist', 'remove'])]
-    private $checklist;
+    private ?Checklist $checklist = null;
 
-    /**
-     * @var ReviewChecklist
-     */
     #[JMS\Groups(['report', 'report-checklist'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Report\ReviewChecklist')]
     #[ORM\OneToOne(mappedBy: 'report', targetEntity: ReviewChecklist::class, cascade: ['persist', 'remove'])]
-    private $reviewChecklist;
+    private ?ReviewChecklist $reviewChecklist = null;
 
     #[JMS\Type('OPG\Digideps\Backend\Entity\Satisfaction')]
     #[JMS\Groups(['user-research', 'satisfaction'])]
     #[ORM\OneToOne(mappedBy: 'report', targetEntity: Satisfaction::class, cascade: ['persist', 'remove'])]
-    private Satisfaction $satisfaction;
+    private ?Satisfaction $satisfaction = null;
 
     /**
-     * @var string yes | no
+     * null| yes | no
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'doesMoneyInExist'])]
     #[ORM\Column(name: 'money_in_exists', type: 'text', nullable: true)]
-    private $moneyInExists;
+    private ?string $moneyInExists = null;
 
     /**
-     * @var string captures reason for no money in. Required if no money has gone in
+     * Captures reason for no money in. Required if no money has gone in
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'reasonForNoMoneyIn'])]
     #[ORM\Column(name: 'reason_for_no_money_in', type: 'text', nullable: true)]
-    private $reasonForNoMoneyIn;
+    private ?string $reasonForNoMoneyIn = null;
 
     /**
-     * @var string yes | no
+     * yes | no | null
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'doesMoneyOutExist'])]
     #[ORM\Column(name: 'money_out_exists', type: 'text', nullable: true)]
-    private $moneyOutExists;
+    private ?string $moneyOutExists = null;
 
     /**
-     * @var string captures reason for no money out. Required if no money has gone out
+     * Captures reason for no money out. Required if no money has gone out
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['report', 'reasonForNoMoneyOut'])]
     #[ORM\Column(name: 'reason_for_no_money_out', type: 'text', nullable: true)]
-    private $reasonForNoMoneyOut;
+    private ?string $reasonForNoMoneyOut = null;
 
     /**
      * @var Collection<int, CourtOrder> $courtOrders
@@ -543,6 +515,7 @@ class Report
         $this->profDeputyInterimCosts = new ArrayCollection();
         $this->profDeputyEstimateCosts = new ArrayCollection();
         $this->courtOrders = new ArrayCollection();
+        $this->profDeputyOtherCosts = new ArrayCollection();
 
         // set sections as notStarted when a new report is created
         $statusCached = [];
@@ -554,27 +527,45 @@ class Report
         $this->reportStatusCached = self::STATUS_NOT_STARTED;
     }
 
+
+    public function getId(): int
+    {
+        return $this->id ?? 0;
+    }
+
+    public function setId(int $id): static
+    {
+        if ($this->id === null) {
+            $this->id = $id;
+            $this->addMissingChildEntities();
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
+
+        return $this;
+    }
+
     /**
      * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
 
     /**
-     * @param string $type see TYPE_ constants
-     *
-     * @return $this
+     * @param string $type See TYPE_ constants
      */
-    public function setType($type)
+    public function setType(string $type): static
     {
         $this->type = $type;
 
         return $this;
     }
 
-    public function updateDueDateBasedOnEndDate()
+    public function updateDueDateBasedOnEndDate(): void
     {
         $this->dueDate = clone $this->endDate;
         if ($this->isLayReport()) {
@@ -587,7 +578,7 @@ class Report
     /**
      * Get sections based on the report type
      *
-     * @return string[]
+     * @return array<string>
      */
     #[JMS\VirtualProperty]
     #[JMS\Groups(['report', 'report-sections'])]
@@ -615,120 +606,64 @@ class Report
     }
 
     /**
-     * @param string $section see SECTION_ constants
-     *
-     * @return bool
+     * @param string $section See SECTION_ constants
      */
-    public function hasSection($section)
+    public function hasSection(string $section): bool
     {
         return in_array($section, $this->getAvailableSections());
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setId(int $id): static
-    {
-        if ($this->id === null) {
-            $this->id = $id;
-            $this->addMissingChildEntities();
-        } elseif ($id === 0) {
-            throw new \DomainException('You may not set the id of an entity to zero.');
-        } else {
-            throw new \LogicException('You may not set the id of an entity more than once.');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set startDate.
-     *
-     * @return Report
-     */
-    public function setStartDate(\DateTime $startDate)
+    public function setStartDate(\DateTime $startDate): static
     {
         $this->startDate = $startDate;
 
         return $this;
     }
 
-    /**
-     * Get startDate.
-     *
-     * @return \DateTime
-     */
-    public function getStartDate()
+    public function getStartDate(): \DateTime
     {
         return $this->startDate;
     }
 
-    /**
-     * Set endDate.
-     *
-     * @return Report
-     */
-    public function setEndDate(\DateTime $endDate)
+    public function setEndDate(\DateTime $endDate): static
     {
         $this->endDate = $endDate;
 
         return $this;
     }
 
-    /**
-     * Get endDate.
-     *
-     * @return \DateTime
-     */
-    public function getEndDate()
+    public function getEndDate(): \DateTime
     {
         return $this->endDate;
     }
 
     /**
      * For check reasons.
-     *
-     * @return string
      */
-    public function hasSamePeriodAs(Report $report)
+    public function hasSamePeriodAs(Report $report): bool
     {
         return $this->startDate->format('Ymd') === $report->getStartDate()->format('Ymd')
             && $this->endDate->format('Ymd') === $report->getEndDate()->format('Ymd');
     }
 
-    public function setSubmitDate(?\DateTimeInterface $submitDate = null): static
+    public function setSubmitDate(?\DateTime $submitDate): static
     {
         $this->submitDate = $submitDate;
 
         return $this;
     }
 
-    public function getSubmitDate(): ?\DateTimeInterface
+    public function getSubmitDate(): ?\DateTime
     {
         return $this->submitDate;
     }
 
-    /**
-     * @return \DateTime|null
-     */
-    public function getUnSubmitDate()
+    public function getUnSubmitDate(): ?\DateTime
     {
         return $this->unSubmitDate;
     }
 
-    /**
-     * @param \DateTime|null $unSubmitDate
-     *
-     * @return Report
-     */
-    public function setUnSubmitDate($unSubmitDate)
+    public function setUnSubmitDate(?\DateTime $unSubmitDate): static
     {
         $this->unSubmitDate = $unSubmitDate;
 
@@ -747,7 +682,7 @@ class Report
         return $this->submitted;
     }
 
-    public function getSubmittedBy()
+    public function getSubmittedBy(): ?User
     {
         return $this->submittedBy;
     }
@@ -771,33 +706,24 @@ class Report
         return $this->client;
     }
 
-    public function getClientId()
+    public function getClientId(): int
     {
         return $this->client->getId();
     }
 
-    /**
-     * @return ?VisitsCare
-     */
-    public function getVisitsCare()
+    public function getVisitsCare(): ?VisitsCare
     {
         return $this->visitsCare;
     }
 
-    /**
-     * @return Report
-     */
-    public function setVisitsCare(?VisitsCare $visitsCare = null)
+    public function setVisitsCare(?VisitsCare $visitsCare): static
     {
         $this->visitsCare = $visitsCare;
 
         return $this;
     }
 
-    /**
-     * @return Lifestyle
-     */
-    public function getLifestyle()
+    public function getLifestyle(): ?Lifestyle
     {
         return $this->lifestyle;
     }
@@ -807,67 +733,43 @@ class Report
         $this->lifestyle = $lifestyle;
     }
 
-    /**
-     * @return ?Action
-     */
-    public function getAction()
+    public function getAction(): ?Action
     {
         return $this->action;
     }
 
-    /**
-     * @return Report
-     */
-    public function setAction(?Action $action)
+    public function setAction(?Action $action): static
     {
         $this->action = $action;
 
         return $this;
     }
 
-    /**
-     * @return MentalCapacity
-     */
-    public function getMentalCapacity()
+    public function getMentalCapacity(): ?MentalCapacity
     {
         return $this->mentalCapacity;
     }
 
-    public function setMentalCapacity(MentalCapacity $mentalCapacity)
+    public function setMentalCapacity(MentalCapacity $mentalCapacity): static
     {
         $this->mentalCapacity = $mentalCapacity;
 
         return $this;
     }
 
-    /**
-     * Set reportSeen.
-     *
-     * @param bool $reportSeen
-     *
-     * @return Report
-     */
-    public function setReportSeen($reportSeen)
+    public function setReportSeen(bool $reportSeen): static
     {
         $this->reportSeen = $reportSeen;
 
         return $this;
     }
 
-    /**
-     * Get reportSeen.
-     *
-     * @return bool
-     */
-    public function getReportSeen()
+    public function getReportSeen(): bool
     {
         return $this->reportSeen;
     }
 
-    /**
-     * @return bool
-     */
-    public function belongsToUser(User $user)
+    public function belongsToUser(User $user): bool
     {
         return in_array($user->getId(), $this->getClient()->getUserIds());
     }
@@ -877,7 +779,7 @@ class Report
         return $this->agreedBehalfDeputy;
     }
 
-    public function setAgreedBehalfDeputy(string $agreeBehalfDeputy)
+    public function setAgreedBehalfDeputy(string $agreeBehalfDeputy): static
     {
         $acceptedValues = ['not_deputy', 'only_deputy', 'more_deputies_behalf', 'more_deputies_not_behalf'];
 
@@ -890,12 +792,12 @@ class Report
         return $this;
     }
 
-    public function getAgreedBehalfDeputyExplanation()
+    public function getAgreedBehalfDeputyExplanation(): ?string
     {
         return $this->agreedBehalfDeputyExplanation;
     }
 
-    public function setAgreedBehalfDeputyExplanation($agreedBehalfDeputyExplanation)
+    public function setAgreedBehalfDeputyExplanation(?string $agreedBehalfDeputyExplanation): static
     {
         $this->agreedBehalfDeputyExplanation = $agreedBehalfDeputyExplanation;
 
@@ -905,33 +807,24 @@ class Report
     #[JMS\VirtualProperty]
     #[JMS\SerializedName('is_due')]
     #[JMS\Groups(['report'])]
-    public function isDue()
+    public function isDue(): bool
     {
         return ReportService::isDue($this->getEndDate());
     }
 
-    /**
-     * @return Report
-     */
-    public function setDueDate(\DateTime $dueDate)
+    public function setDueDate(\DateTime $dueDate): static
     {
         $this->dueDate = $dueDate;
 
         return $this;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDueDate()
+    public function getDueDate(): \DateTime
     {
         return $this->dueDate;
     }
 
-    /**
-     ** @return bool
-     */
-    public function isMissingMoneyOrAccountsOrClosingBalance()
+    public function isMissingMoneyOrAccountsOrClosingBalance(): bool
     {
         return !$this->hasAccounts()
         || count($this->getBankAccountsIncomplete()) > 0;
@@ -950,7 +843,7 @@ class Report
     #[JMS\Type('boolean')]
     #[JMS\SerializedName('has106flag')]
     #[JMS\Groups(['report', 'report-106-flag'])]
-    public function has106Flag()
+    public function has106Flag(): bool
     {
         return str_ends_with($this->type, '-6');
     }
@@ -958,7 +851,7 @@ class Report
     /**
      * @return Collection<int, Document>
      */
-    public function getDocuments()
+    public function getDocuments(): Collection
     {
         return $this->documents;
     }
@@ -971,7 +864,7 @@ class Report
     #[JMS\VirtualProperty]
     #[JMS\SerializedName('unsubmitted_documents')]
     #[JMS\Groups(['documents'])]
-    public function getUnsubmittedDocuments()
+    public function getUnsubmittedDocuments(): Collection
     {
         return $this->getDeputyDocuments()->filter(function ($d): bool {
             return empty($d->getReportSubmission());
@@ -987,30 +880,30 @@ class Report
     #[JMS\SerializedName('submitted_documents')]
     #[JMS\Groups(['documents'])]
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Document>')]
-    public function getSubmittedDocuments()
+    public function getSubmittedDocuments(): Collection
     {
         return $this->getDeputyDocuments()->filter(function ($d): bool {
             return !empty($d->getReportSubmission());
         });
     }
 
-    public function addDocument(Document $document)
+    public function addDocument(Document $document): void
     {
         if (!$this->documents->contains($document)) {
             $this->documents->add($document);
         }
     }
 
+    /**
+     * @return Collection<int, ReportSubmission>
+     */
     #[JMS\SerializedName('report_submissions')]
-    public function getReportSubmissions()
+    public function getReportSubmissions(): Collection
     {
         return $this->reportSubmissions;
     }
 
-    /**
-     * @return Report
-     */
-    public function addReportSubmission(ReportSubmission $submission)
+    public function addReportSubmission(ReportSubmission $submission): static
     {
         if (!$this->reportSubmissions->contains($submission)) {
             $this->reportSubmissions->add($submission);
@@ -1019,76 +912,46 @@ class Report
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getWishToProvideDocumentation()
+    public function getWishToProvideDocumentation(): ?string
     {
         return $this->wishToProvideDocumentation;
     }
 
-    /**
-     * @param ?string $wishToProvideDocumentation
-     *
-     * @return $this
-     */
-    public function setWishToProvideDocumentation($wishToProvideDocumentation)
+    public function setWishToProvideDocumentation(?string $wishToProvideDocumentation): static
     {
         $this->wishToProvideDocumentation = $wishToProvideDocumentation;
 
         return $this;
     }
 
-    /**
-     * @return ?string
-     */
-    public function getCurrentProfPaymentsReceived()
+    public function getCurrentProfPaymentsReceived(): ?string
     {
         return $this->currentProfPaymentsReceived;
     }
 
-    /**
-     * @param ?string $currentProfPaymentsReceived
-     */
-    public function setCurrentProfPaymentsReceived($currentProfPaymentsReceived)
+    public function setCurrentProfPaymentsReceived(?string $currentProfPaymentsReceived): void
     {
         $this->currentProfPaymentsReceived = $currentProfPaymentsReceived;
     }
 
-    /**
-     * @return ?string
-     */
-    public function getPreviousProfFeesEstimateGiven()
+    public function getPreviousProfFeesEstimateGiven(): ?string
     {
         return $this->previousProfFeesEstimateGiven;
     }
 
-    /**
-     * @param ?string $previousProfFeesEstimateGiven
-     *
-     * @return $this
-     */
-    public function setPreviousProfFeesEstimateGiven($previousProfFeesEstimateGiven)
+    public function setPreviousProfFeesEstimateGiven(?string $previousProfFeesEstimateGiven): static
     {
         $this->previousProfFeesEstimateGiven = $previousProfFeesEstimateGiven;
 
         return $this;
     }
 
-    /**
-     * @return ?string
-     */
-    public function getProfFeesEstimateSccoReason()
+    public function getProfFeesEstimateSccoReason(): ?string
     {
         return $this->profFeesEstimateSccoReason;
     }
 
-    /**
-     * @param ?string $profFeesEstimateSccoReason
-     *
-     * @return $this
-     */
-    public function setProfFeesEstimateSccoReason($profFeesEstimateSccoReason)
+    public function setProfFeesEstimateSccoReason(?string $profFeesEstimateSccoReason): static
     {
         $this->profFeesEstimateSccoReason = $profFeesEstimateSccoReason;
 
@@ -1131,34 +994,22 @@ class Report
         });
     }
 
-    /**
-     * @return Checklist
-     */
-    public function getChecklist()
+    public function getChecklist(): ?Checklist
     {
         return $this->checklist;
     }
 
-    /**
-     * @param Checklist $checklist
-     */
-    public function setChecklist($checklist)
+    public function setChecklist(Checklist $checklist): void
     {
         $this->checklist = $checklist;
     }
 
-    /**
-     * @return ReviewChecklist
-     */
-    public function getReviewChecklist()
+    public function getReviewChecklist(): ?ReviewChecklist
     {
         return $this->reviewChecklist;
     }
 
-    /**
-     * @param ReviewChecklist $reviewChecklist
-     */
-    public function setReviewChecklist($reviewChecklist)
+    public function setReviewChecklist(ReviewChecklist $reviewChecklist): void
     {
         $this->reviewChecklist = $reviewChecklist;
     }
@@ -1174,7 +1025,7 @@ class Report
     {
         $previousReport = $this->getPreviousReport();
 
-        if (empty($previousReport)) {
+        if ($previousReport === null) {
             return [];
         }
 
@@ -1186,10 +1037,8 @@ class Report
 
     /**
      * Method to identify and return previous report.
-     *
-     * @return Report|bool|mixed
      */
-    private function getPreviousReport()
+    private function getPreviousReport(): ?Report
     {
         $clientReports = $this->getClient()->getReports();
 
@@ -1213,7 +1062,7 @@ class Report
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -1246,10 +1095,8 @@ class Report
     /**
      * Report summary, contains basic information about a report. Called via report.previousReportData so as not to
      * return everything.
-     *
-     * @return array
      */
-    public function getReportSummary()
+    public function getReportSummary(): array
     {
         return [
             'type' => $this->getType(),
@@ -1259,16 +1106,11 @@ class Report
     /**
      * Returns the translation key relating to the type of report. Hybrids identified to determine any suffix required
      * for the translation keys (translations are in 'report' domain).
-     *
-     *
-     *
-     *
-     * @return string
      */
     #[JMS\VirtualProperty]
     #[JMS\Groups(['report'])]
     #[JMS\Type('string')]
-    public function getReportTitle()
+    public function getReportTitle(): string
     {
         $titleTranslationKeys = [
             self::LAY_PFA_LOW_ASSETS_TYPE => 'propertyAffairsMinimal',
@@ -1296,22 +1138,22 @@ class Report
     /**
      * @return bool true if report is lay type, otherwise false
      */
-    public function isLayReport()
+    public function isLayReport(): bool
     {
         return in_array($this->getType(), [self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_HW_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE]);
     }
 
-    public function isPAreport()
+    public function isPAreport(): bool
     {
         return in_array($this->getType(), [self::PA_PFA_HIGH_ASSETS_TYPE, self::PA_PFA_LOW_ASSETS_TYPE, self::PA_HW_TYPE, self::PA_COMBINED_HIGH_ASSETS_TYPE, self::PA_COMBINED_LOW_ASSETS_TYPE]);
     }
 
-    public function isProfReport()
+    public function isProfReport(): bool
     {
         return in_array($this->getType(), [self::PROF_PFA_HIGH_ASSETS_TYPE, self::PROF_PFA_LOW_ASSETS_TYPE, self::PROF_HW_TYPE, self::PROF_COMBINED_HIGH_ASSETS_TYPE, self::PROF_COMBINED_LOW_ASSETS_TYPE]);
     }
 
-    public function getSatisfaction(): Satisfaction
+    public function getSatisfaction(): ?Satisfaction
     {
         return $this->satisfaction;
     }
@@ -1555,8 +1397,7 @@ class Report
     {
         $active = [];
 
-        /** @var CourtOrder $courtOrder */
-        foreach ($this->courtOrders->toArray() as $courtOrder) {
+        foreach ($this->courtOrders as $courtOrder) {
             if ($courtOrder->getStatus() === 'ACTIVE') {
                 $active[] = $courtOrder;
             }
