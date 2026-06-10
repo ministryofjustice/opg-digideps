@@ -105,14 +105,7 @@ final readonly class RequiredReportDataFactory implements DataFactoryInterface
 
     private function createReportFromOrder(CourtOrder $courtOrder): Report
     {
-        $newReport = new Report(
-            $courtOrder->getClient(),
-            "{$courtOrder->getDesiredReportType()}",
-            $courtOrder->getOrderMadeDate(),
-            (clone $courtOrder->getOrderMadeDate())->modify('+12 months -1 day'),
-            false,
-        );
-        $newReport->updateSectionsStatusCache($newReport->getAvailableSections());
+        $newReport = $this->reportService->createReportFromOrder($courtOrder);
         $this->em->persist($newReport);
         return $newReport;
     }
