@@ -4,27 +4,21 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\v2\Registration\Uploader;
 
+use Doctrine\ORM\EntityManagerInterface;
 use OPG\Digideps\Backend\Entity\PreRegistration;
-use OPG\Digideps\Backend\Entity\Report\Report;
-use OPG\Digideps\Backend\Entity\User;
-use OPG\Digideps\Backend\Repository\ReportRepository;
 use OPG\Digideps\Backend\v2\Registration\Assembler\SiriusToLayDeputyshipDtoAssembler;
 use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDto;
 use OPG\Digideps\Backend\v2\Registration\DTO\LayDeputyshipDtoCollection;
 use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\PreRegistrationCreationException;
 use OPG\Digideps\Backend\v2\Registration\SelfRegistration\Factory\PreRegistrationFactory;
-use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
 class LayDeputyshipUploader
 {
-    private array $reportsUpdated = [];
-    private array $preRegistrationEntriesByCaseNumber = [];
     public const int MAX_UPLOAD = 10000;
 
     public function __construct(
         private readonly EntityManagerInterface $em,
-        private readonly ReportRepository $reportRepository,
         private readonly PreRegistrationFactory $preRegistrationFactory,
         private readonly SiriusToLayDeputyshipDtoAssembler $layDeputyAssembler,
         private readonly LayDeputyshipProcessor $layDeputyProcessor,
@@ -35,7 +29,6 @@ class LayDeputyshipUploader
     public function upload(LayDeputyshipDtoCollection $collection): array
     {
         $this->throwExceptionIfDataTooLarge($collection);
-        $this->preRegistrationEntriesByCaseNumber = [];
         $added = 0;
         $errors = [];
 
@@ -44,8 +37,7 @@ class LayDeputyshipUploader
 
             foreach ($collection as $layDeputyshipDto) {
                 try {
-                    $caseNumber = strtolower((string) $layDeputyshipDto->getCaseNumber());
-                    $this->preRegistrationEntriesByCaseNumber[$caseNumber] = $this->createAndPersistNewPreRegistrationEntity($layDeputyshipDto);
+                    $this->createAndPersistNewPreRegistrationEntity($layDeputyshipDto);
                     ++$added;
                 } catch (PreRegistrationCreationException $e) {
                     $message = str_replace(PHP_EOL, '', $e->getMessage());
@@ -56,9 +48,7 @@ class LayDeputyshipUploader
                 }
             }
 
-            $this
-                ->updateReportTypes()
-                ->commitTransactionToDatabase();
+            $this->commitTransactionToDatabase();
         } catch (\Throwable $e) {
             $this->logger->error($e->getMessage());
             $errors[] = $e->getMessage();
@@ -69,8 +59,6 @@ class LayDeputyshipUploader
         return [
             'added' => $added,
             'errors' => $errors,
-            'report-update-count' => count($this->reportsUpdated),
-            'cases-with-updated-reports' => $this->reportsUpdated,
             'source' => 'sirius',
         ];
     }
@@ -141,61 +129,6 @@ class LayDeputyshipUploader
         $this->em->persist($preRegistrationEntity);
 
         return $preRegistrationEntity;
-    }
-
-    /**
-     * @throws \Exception
-     */
-    private function updateReportTypes(): LayDeputyshipUploader
-    {
-        $reportCaseNumber = '';
-        $currentActiveReportId = null;
-        $caseNumbers = array_keys($this->preRegistrationEntriesByCaseNumber);
-        $reports = $this->reportRepository->findAllActiveReportsByCaseNumbersAndRole($caseNumbers, User::ROLE_LAY_DEPUTY);
-
-        try {
-            /** @var Report $currentActiveReport */
-            foreach ($reports as $currentActiveReport) {
-                $reportCaseNumber = strtolower($currentActiveReport->getClient()->getCaseNumber());
-                $currentActiveReportId = $currentActiveReport->getId();
-
-                /** @var PreRegistration $preRegistration */
-                $preRegistration = $this->preRegistrationEntriesByCaseNumber[$reportCaseNumber];
-
-                $determinedReportType = PreRegistration::getReportTypeByOrderType(
-                    $preRegistration->getTypeOfReport(),
-                    $preRegistration->getOrderType() ?? '',
-                    PreRegistration::REALM_LAY
-                );
-
-                // For Dual Cases, deputy uid needs to match for the report type to be updated
-                if ($preRegistration->getHybrid() == PreRegistration::DUAL_TYPE) {
-                    $existingDeputyUid = null;
-
-                    $existingDeputy = $currentActiveReport->getClient()->getUsers()->first();
-                    if ($existingDeputy instanceof User) {
-                        $existingDeputyUid = $existingDeputy->getDeputyUid();
-                    }
-
-                    if ($existingDeputyUid == $preRegistration->getDeputyUid()) {
-                        if ($currentActiveReport->getType() != $determinedReportType) {
-                            $currentActiveReport->setType($determinedReportType);
-                            $this->reportsUpdated[] = $reportCaseNumber;
-                        }
-                    }
-                } else {
-                    if ($currentActiveReport->getType() != $determinedReportType) {
-                        $currentActiveReport->setType($determinedReportType);
-                        $this->reportsUpdated[] = $reportCaseNumber;
-                    }
-                }
-            }
-        } catch (\Throwable $e) {
-            $this->logger->error(sprintf('Error whilst updating report type for report with ID: %d, for case number: %s', $currentActiveReportId, $reportCaseNumber));
-            throw new \Exception($e->getMessage());
-        }
-
-        return $this;
     }
 
     private function commitTransactionToDatabase(): void
