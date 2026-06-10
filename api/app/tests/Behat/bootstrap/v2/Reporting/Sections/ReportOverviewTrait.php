@@ -122,7 +122,8 @@ trait ReportOverviewTrait
      */
     public function iShouldSeeTheCorrectReportDetails(): void
     {
-        $expectedSubmitDate = $this->submittedReport->getSubmitDate()->format('j F Y');
+        $expectedSubmitDate = $this->submittedReport->getSubmitDate()?->format('j F Y');
+        $this->assertIsNotNull($expectedSubmitDate, 'There is no report submit date');
 
         $this->assertStringContainsString(
             $expectedSubmitDate,
