@@ -441,7 +441,7 @@ class ReportController extends AbstractController
             }
 
             $this->populateReportFromSession($report, $sessionData);
-            $this->restClient->put('report/' . $report->getId(), $report, ['report_type', 'report_due_date']);
+            $this->restClient->put('report/' . $report->getId(), $report, ['report_type', 'report_due_date', ...($report->isSubmitted() ? [] : ['startEndDates'])]);
 
             if ($form->has('confirm') && $form['confirm']->getData() === 'yes' && $report->isSubmitted()) {
                 /** @var User $user */
