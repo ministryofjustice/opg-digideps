@@ -9,7 +9,6 @@ use Aws\S3\Exception\S3Exception;
 use OPG\Digideps\Backend\Command\ProcessLayCSVCommand;
 use OPG\Digideps\Backend\Repository\PreRegistrationRepository;
 use OPG\Digideps\Backend\Service\DeputyCaseService;
-use OPG\Digideps\Backend\Service\LayRegistrationService;
 use OPG\Digideps\Backend\v2\Registration\DeputyshipProcessing\CSVDeputyshipProcessing;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
@@ -27,7 +26,6 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
     private LoggerInterface&MockObject $logger;
     private CSVDeputyshipProcessing&MockObject $csvProcessing;
     private PreRegistrationRepository&MockObject $preReg;
-    private LayRegistrationService&MockObject $layRegistrationService;
     private DeputyCaseService&MockObject $deputyCaseService;
     private CommandTester $commandTester;
 
@@ -61,7 +59,6 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
             $this->logger,
             $this->csvProcessing,
             $this->preReg,
-            $this->layRegistrationService,
             $this->deputyCaseService,
         );
 
@@ -95,10 +92,6 @@ final class ProcessLayCSVCommandTest extends KernelTestCase
                 'errors' => [],
                 'details' => [],
             ]);
-
-        $this->layRegistrationService->expects(self::once())
-            ->method('addMissingReports')
-            ->willReturn(0);
 
         $this->deputyCaseService->expects(self::once())
             ->method('addMissingDeputyCaseAssociations')
