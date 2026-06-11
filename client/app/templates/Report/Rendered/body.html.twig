@@ -27,7 +27,7 @@
         } %}
     {% endif %}
 
-    {% if (report.bankAccounts | length) > 1 %}
+    {% if report.hasSection('moneyTransfers') and (report.bankAccounts | length) > 1 %}
         {% include '@App/Report/Rendered/_transfers.html.twig' with {
             'report': report,
             'transOptions': transOptions,
