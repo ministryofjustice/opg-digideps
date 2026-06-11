@@ -41,7 +41,7 @@ resource "aws_security_group_rule" "https_ssm_egress" {
   from_port         = 443
   to_port           = 443
   protocol          = "tcp"
-  cidr_blocks       = ["10.172.0.0/16"]
+  cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.ssm_instance_sg.id
 }
 

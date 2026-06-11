@@ -22,3 +22,6 @@ ignore:
   SNYK-CC-AWS-422:
     - '*':
         reason: "Customer managed KMS key intentionally not used."
+  SNYK-CC-TF-72:
+      - '*':
+          reason: "Open HTTPS egress intentionally required for package installation and outbound dependency access from SSM EC2 instance"
