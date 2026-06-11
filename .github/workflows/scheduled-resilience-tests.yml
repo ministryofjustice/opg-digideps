@@ -20,23 +20,23 @@ permissions:
 
 jobs:
   scale_services_up:
-    name: scale up integration services
+    name: scale up staging services
     uses: ./.github/workflows/_scale-services.yml
     with:
       replicas: 3
       acu: 8
-      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
-      workspace: integration
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
+      workspace: staging
 
-  resilience_tests_integration:
-    name: resilience tests on integration
+  resilience_tests_staging:
+    name: resilience tests on staging
     uses: ./.github/workflows/_run-task.yml
     needs:
       - scale_services_up
     with:
-      workspace: integration
-      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
-      account_name: preproduction
+      workspace: staging
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
+      account_name: development
       task_name: "resilience_tests"
       timeout: "3600"
     secrets:
@@ -44,12 +44,12 @@ jobs:
 
   scale_services_down:
     if: always()
-    name: scale down integration services
+    name: scale down staging services
     uses: ./.github/workflows/_scale-services.yml
     needs:
-      - resilience_tests_integration
+      - resilience_tests_staging
     with:
       replicas: 1
       acu: 4
-      account_id: ${{ vars.PREPRODUCTION_ACCOUNT }}
-      workspace: integration
+      account_id: ${{ vars.DEVELOPMENT_ACCOUNT }}
+      workspace: staging

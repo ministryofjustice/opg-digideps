@@ -94,9 +94,7 @@ class ReportService
             $this->logger->warning("Creating next year report for client $clientId (NO existing report) at $now");
 
             $newYearReport = $this->createNextYearReport($currentReport);
-        }
 
-        if (!is_null($newYearReport)) {
             foreach ($courtOrders as $courtOrder) {
                 if ($courtOrder->getStatus() === 'ACTIVE') {
                     $courtOrder->addReport($newYearReport);
