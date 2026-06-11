@@ -3,12 +3,12 @@
 
 <div class="govuk-summary-card">
     <div class="govuk-summary-card__title-wrapper">
-        <h2 class="govuk-summary-card__title govuk-!-width-one-half">
+        <h3 class="govuk-summary-card__title govuk-!-width-one-half">
             Question
-        </h2>
-        <h2 class="govuk-summary-card__title govuk-!-width-one-half">
+        </h3>
+        <h3 class="govuk-summary-card__title govuk-!-width-one-half">
             Answer
-        </h2>
+        </h3>
     </div>
 
     <div class="govuk-summary-card__content">
@@ -30,9 +30,9 @@
 {% if report.gifts | length > 0 %}
     <div class="govuk-summary-card">
         <div class="govuk-summary-card__title-wrapper">
-            <h2 class="govuk-summary-card__title">
+            <h3 class="govuk-summary-card__title">
                 {{ (page ~ '.listOfGifts') | trans({},transDomain) }}
-            </h2>
+            </h3>
         </div>
         <div class="govuk-summary-card__content">
             <table class="govuk-table">
