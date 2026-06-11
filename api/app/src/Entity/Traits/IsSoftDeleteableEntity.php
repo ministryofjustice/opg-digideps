@@ -9,42 +9,24 @@ use JMS\Serializer\Annotation as JMS;
 
 trait IsSoftDeleteableEntity
 {
-    /**
-     * @var ?\DateTime
-     */
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
     #[JMS\Groups(['client', 'transactionSoftDelete'])]
     #[ORM\Column(name: 'deleted_at', type: 'datetime', nullable: true)]
-    protected $deletedAt;
+    protected ?\DateTime $deletedAt = null;
 
-    /**
-     * Sets deletedAt.
-     *
-     * @return $this
-     */
-    public function setDeletedAt(?\DateTime $deletedAt = null)
+    public function setDeletedAt(?\DateTime $deletedAt = null): static
     {
         $this->deletedAt = $deletedAt;
 
         return $this;
     }
 
-    /**
-     * Returns deletedAt.
-     *
-     * @return ?\DateTime
-     */
-    public function getDeletedAt()
+    public function getDeletedAt(): ?\DateTime
     {
         return $this->deletedAt;
     }
 
-    /**
-     * Is deleted?
-     *
-     * @return bool
-     */
-    public function isDeleted()
+    public function isDeleted(): bool
     {
         return $this->deletedAt !== null;
     }

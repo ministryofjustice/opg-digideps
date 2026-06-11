@@ -30,16 +30,13 @@ class DeputyAssembler
     public function assembleFromOrgDeputyshipDto(OrgDeputyshipDto $dto, ?Organisation $organisation): Deputy
     {
         if ($dto->deputyIsAnOrganisation()) {
-            $deputyFirstName = $dto->getOrganisationName();
+            $deputyFirstName = $dto->getOrganisationName() ?? '';
         } else {
-            $deputyFirstName = empty($dto->getDeputyFirstname()) ? null : $dto->getDeputyFirstname();
+            $deputyFirstName = $dto->getDeputyFirstname() ?? '';
         }
 
-        return new Deputy()
+        return new Deputy($dto->getDeputyUid(), DeputyType::from($dto->getDeputyType()), $deputyFirstName, $dto->getDeputyLastname())
             ->setEmail1($dto->getDeputyEmail())
-            ->setDeputyUid($dto->getDeputyUid())
-            ->setDeputyType(DeputyType::from($dto->getDeputyType()))
-            ->setFirstname($deputyFirstName)
             ->setLastname($dto->getDeputyLastname())
             ->setAddress1($dto->getDeputyAddress1())
             ->setAddress2($dto->getDeputyAddress2())
