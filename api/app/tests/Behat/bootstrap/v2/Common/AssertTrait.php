@@ -178,12 +178,28 @@ MESSAGE;
         );
     }
 
+    /**
+     * @psalm-assert null $actual
+     */
     public function assertIsNull(
         $actual,
         string $comparisonSubject,
     ): void {
         assert(
             is_null($actual),
+            $this->getAssertMessage('null', gettype($actual), $comparisonSubject)
+        );
+    }
+
+    /**
+     * @psalm-assert !null $actual
+     */
+    public function assertIsNotNull(
+        mixed $actual,
+        string $comparisonSubject,
+    ): void {
+        assert(
+            !is_null($actual),
             $this->getAssertMessage('null', gettype($actual), $comparisonSubject)
         );
     }

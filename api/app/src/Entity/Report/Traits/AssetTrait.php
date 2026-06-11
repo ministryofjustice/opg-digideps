@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
-use OPG\Digideps\Backend\Entity\AssetInterface;
 use OPG\Digideps\Backend\Entity\Report\Asset;
-use OPG\Digideps\Backend\Entity\Report\Report;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
@@ -14,88 +12,63 @@ use JMS\Serializer\Annotation as JMS;
 trait AssetTrait
 {
     /**
-     * @var Collection<int,AssetInterface>
+     * @var Collection<int, Asset>
      */
     #[JMS\Groups(['asset'])]
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Asset>')]
     #[ORM\OneToMany(mappedBy: 'report', targetEntity: Asset::class, cascade: ['persist', 'remove'])]
-    private $assets;
+    private Collection $assets;
 
     /**
-     * @var ?bool deputy declaration saying there are no assets. Required (true/false) if no assets are added
+     * deputy declaration saying there are no assets. Required (true/false) if no assets are added
      */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['report'])]
     #[ORM\Column(name: 'no_asset_to_add', type: 'boolean', nullable: true, options: ['default' => false])]
-    private $noAssetToAdd;
+    private ?bool $noAssetToAdd;
 
-    /**
-     * Add assets.
-     *
-     * @return Report
-     */
-    public function addAsset(Asset $assets)
+    public function addAsset(Asset $assets): static
     {
         $this->assets[] = $assets;
 
         return $this;
     }
 
-    /**
-     * Remove assets.
-     */
-    public function removeAsset(Asset $assets)
+    public function removeAsset(Asset $assets): void
     {
         $this->assets->removeElement($assets);
     }
 
     /**
-     * @return Collection<int, AssetInterface>
+     * @return Collection<int, Asset>
      */
     public function getAssets(): Collection
     {
         return $this->assets;
     }
 
-    /**
-     * Get assets total value.
-     *
-     * @return float
-     */
     #[JMS\VirtualProperty]
     #[JMS\Type('double')]
     #[JMS\SerializedName('assets_total_value')]
     #[JMS\Groups(['asset'])]
-    public function getAssetsTotalValue()
+    public function getAssetsTotalValue(): float
     {
-        $ret = 0;
+        $ret = 0.0;
         foreach ($this->getAssets() as $asset) {
-            $ret += $asset->getValueTotal();
+            $ret += $asset->getValueTotal() ?? 0.0;
         }
 
         return $ret;
     }
 
-    /**
-     * Set noAssetToAdd.
-     *
-     * @param ?bool $noAssetToAdd
-     *
-     * @return Report
-     */
-    public function setNoAssetToAdd($noAssetToAdd)
+    public function setNoAssetToAdd(?bool $noAssetToAdd): static
     {
         $this->noAssetToAdd = $noAssetToAdd;
 
         return $this;
     }
 
-    /**
-     * Get noAssetToAdd.
-     *
-     * @return ?bool
-     */
-    public function getNoAssetToAdd()
+    public function getNoAssetToAdd(): ?bool
     {
         return $this->noAssetToAdd;
     }

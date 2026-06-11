@@ -110,6 +110,7 @@ class MoneyTransferControllerTest extends AbstractTestController
 
         // test last transaction
         $t = $report->getMoneyTransfers()->get(2);
+        $this->assertNotNull($t);
         $this->assertEquals(123345.56, $t->getAmount());
         $this->assertEquals(self::$account1->getId(), $t->getFrom()->getId());
         $this->assertEquals(self::$account2->getId(), $t->getTo()->getId());
