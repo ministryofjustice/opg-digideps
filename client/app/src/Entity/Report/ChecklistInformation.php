@@ -38,10 +38,10 @@ class ChecklistInformation
      */
     private $information;
 
-    public function __construct(Checklist $checklist, $information)
+    public function __construct(Checklist $checklist, ?string $information = '')
     {
         $this->setChecklist($checklist);
-        $this->setInformation(trim($information));
+        $this->setInformation(trim($information ?? ''));
     }
 
     /**
@@ -73,7 +73,7 @@ class ChecklistInformation
     /**
      * @param Checklist $checklist
      */
-    public function setChecklist($checklist)
+    public function setChecklist($checklist): void
     {
         $this->checklist = $checklist;
     }
@@ -89,7 +89,7 @@ class ChecklistInformation
     /**
      * @param string $information
      */
-    public function setInformation($information)
+    public function setInformation($information): void
     {
         $this->information = $information;
     }

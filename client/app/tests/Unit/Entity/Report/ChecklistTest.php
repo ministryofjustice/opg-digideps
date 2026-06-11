@@ -17,7 +17,8 @@ class ChecklistTest extends KernelTestCase
     public function setUp(): void
     {
         $this->validator = Validation::createValidatorBuilder()
-            ->enableAnnotationMapping(true)
+            ->enableAttributeMapping()
+            ->enableAnnotationMapping()
             ->addDefaultDoctrineAnnotationReader()
             ->getValidator();
     }
