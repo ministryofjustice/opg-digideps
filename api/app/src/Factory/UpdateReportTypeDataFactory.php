@@ -6,7 +6,6 @@ namespace OPG\Digideps\Backend\Factory;
 
 use OPG\Digideps\Backend\Domain\CourtOrder\CourtOrderKind;
 use OPG\Digideps\Backend\Domain\Report\ReportType;
-use OPG\Digideps\Backend\Entity\CourtOrder;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Repository\ReportRepository;
 use OPG\Digideps\Backend\Service\ReportTypeService;
@@ -58,7 +57,6 @@ readonly class UpdateReportTypeDataFactory implements DataFactoryInterface
         foreach ($this->getAllReportsOnActiveCourtOrders() as $report) {
             $reportId = $report->getId();
 
-            /** @var CourtOrder[] $courtOrders */
             $courtOrders = $report->getActiveCourtOrders();
 
             $currentReportType = ReportType::tryFrom($report->getType());

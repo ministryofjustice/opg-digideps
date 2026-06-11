@@ -29,16 +29,13 @@ class Client
     use CreateUpdateTimestamps;
     use IsSoftDeleteableEntity;
 
-    /**
-     * @var int
-     */
     #[JMS\Groups(['related', 'basic', 'client', 'client-id'])]
     #[JMS\Type('integer')]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'client_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
     /**
      * @var Collection<int, User>
@@ -49,7 +46,7 @@ class Client
     #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'user_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'clients', fetch: 'EXTRA_LAZY')]
-    private $users;
+    private Collection $users;
 
     /**
      * @var Collection<int, Report>
@@ -58,31 +55,22 @@ class Client
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Report>')]
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Report::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['submitDate' => 'DESC'])]
-    private $reports;
+    private Collection $reports;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['client', 'client-case-number', 'deputy-court-order-basic'])]
     #[ORM\Column(name: 'case_number', type: 'string', length: 20, nullable: true)]
-    private $caseNumber;
+    private ?string $caseNumber = null;
 
-    /**
-     * @var ?string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['client', 'client-email'])]
     #[ORM\Column(name: 'email', type: 'string', length: 60, unique: false, nullable: true)]
-    private $email;
+    private ?string $email = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['client'])]
     #[ORM\Column(name: 'phone', type: 'string', length: 20, nullable: true)]
-    private $phone;
+    private ?string $phone = null;
 
     #[JMS\Type('string')]
     #[JMS\Groups(['client'])]
@@ -109,53 +97,35 @@ class Client
     #[ORM\Column(name: 'address5', type: 'string', length: 200, nullable: true)]
     private ?string $address5 = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['client'])]
     #[ORM\Column(name: 'postcode', type: 'string', length: 10, nullable: true)]
-    private $postcode;
+    private ?string $postcode = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['client'])]
     #[ORM\Column(name: 'country', type: 'string', length: 10, nullable: true)]
-    private $country;
+    private ?string $country = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['client', 'client-name', 'deputy-court-order-basic'])]
     #[ORM\Column(name: 'firstname', type: 'string', length: 50, nullable: true)]
-    private $firstname;
+    private ?string $firstname = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['client', 'client-name', 'deputy-court-order-basic'])]
     #[ORM\Column(name: 'lastname', type: 'string', length: 50, nullable: true)]
-    private $lastname;
+    private ?string $lastname = null;
 
-    /**
-     * @var ?\DateTime
-     */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['client', 'client-court-date', 'checklist-information'])]
     #[ORM\Column(name: 'court_date', type: 'date', nullable: true)]
-    private $courtDate;
+    private ?\DateTime $courtDate = null;
 
-    /**
-     * @var ?\DateTime
-     */
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\Groups(['client'])]
     #[ORM\Column(name: 'date_of_birth', type: 'date', nullable: true)]
-    private $dateOfBirth;
+    private ?\DateTime $dateOfBirth = null;
 
     /**
      * @var Collection<int, Note>
@@ -164,7 +134,7 @@ class Client
     #[JMS\Groups(['client-notes'])]
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: Note::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['createdOn' => 'DESC'])]
-    private $notes;
+    private Collection $notes;
 
     /**
      * @var Collection<int, ClientContact>
@@ -173,19 +143,17 @@ class Client
     #[JMS\Groups(['client-clientcontacts'])]
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: ClientContact::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['lastName' => 'ASC'])]
-    private $clientContacts;
+    private Collection $clientContacts;
 
     /**
      * Holds the deputy the client belongs to
      * Loaded from the CSV upload.
-     *
-     * @var ?Deputy
      */
     #[JMS\Groups(['report-submitted-by', 'client-deputy'])]
     #[JMS\Type('OPG\Digideps\Backend\Entity\Deputy')]
     #[ORM\JoinColumn(name: 'deputy_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     #[ORM\ManyToOne(targetEntity: Deputy::class, fetch: 'EAGER', inversedBy: 'clients')]
-    private $deputy;
+    private ?Deputy $deputy = null;
 
     /**
      * @var Collection<int, CourtOrder>
@@ -193,23 +161,17 @@ class Client
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\CourtOrder>')]
     #[ORM\OneToMany(mappedBy: 'client', targetEntity: CourtOrder::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['createdAt' => 'DESC'])]
-    private $courtOrders;
+    private Collection $courtOrders;
 
-    /**
-     * @var ?\DateTime
-     */
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
     #[JMS\Groups(['client'])]
     #[ORM\Column(name: 'archived_at', type: 'datetime', nullable: true)]
-    private $archivedAt;
+    private ?\DateTime $archivedAt = null;
 
-    /**
-     * @var ?Organisation
-     */
     #[JMS\Type('OPG\Digideps\Backend\Entity\Organisation')]
     #[JMS\Groups(['client-organisations'])]
     #[ORM\ManyToOne(targetEntity: Organisation::class, inversedBy: 'clients')]
-    private $organisation;
+    private ?Organisation $organisation = null;
 
     public function __construct()
     {
@@ -220,14 +182,22 @@ class Client
         $this->courtOrders = new ArrayCollection();
     }
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
-        return $this->id;
+        return $this->id ?? 0;
+    }
+
+    public function setId(int $id): static
+    {
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
+
+        return $this;
     }
 
     public function setCaseNumber(?string $caseNumber): static
@@ -242,46 +212,26 @@ class Client
         return $this->caseNumber;
     }
 
-    /**
-     * Set email.
-     *
-     * @param ?string $email
-     */
-    public function setEmail($email): static
+    public function setEmail(?string $email): static
     {
         $this->email = (($email === null) ? null : strtolower($email));
 
         return $this;
     }
 
-    /**
-     * Get email.
-     *
-     * @return ?string
-     */
-    public function getEmail()
+    public function getEmail(): ?string
     {
         return $this->email;
     }
 
-    /**
-     * Set phone.
-     *
-     * @param string $phone
-     */
-    public function setPhone($phone): static
+    public function setPhone(?string $phone): static
     {
         $this->phone = $phone;
 
         return $this;
     }
 
-    /**
-     * Get phone.
-     *
-     * @return string
-     */
-    public function getPhone()
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
@@ -298,95 +248,54 @@ class Client
         return $this->address;
     }
 
-    /**
-     * Set postcode.
-     *
-     * @param string $postcode
-     */
-    public function setPostcode($postcode): static
+    public function setPostcode(?string $postcode): static
     {
         $this->postcode = $postcode;
 
         return $this;
     }
 
-    /**
-     * Get postcode.
-     *
-     * @return string
-     */
-    public function getPostcode()
+    public function getPostcode(): ?string
     {
         return $this->postcode;
     }
 
-    /**
-     * Set firstname.
-     *
-     * @param string $firstname
-     */
-    public function setFirstname($firstname): static
+    public function setFirstname(?string $firstname): static
     {
         $this->firstname = $firstname;
 
         return $this;
     }
 
-    /**
-     * Get firstname.
-     *
-     * @return string
-     */
-    public function getFirstname()
+    public function getFirstname(): ?string
     {
         return $this->firstname;
     }
 
-    /**
-     * Set lastname.
-     *
-     * @param string $lastname
-     */
-    public function setLastname($lastname): static
+    public function setLastname(?string $lastname): static
     {
         $this->lastname = $lastname;
 
         return $this;
     }
 
-    /**
-     * Get lastname.
-     *
-     * @return string
-     */
-    public function getLastname()
+    public function getLastname(): ?string
     {
         return $this->lastname;
     }
 
-    /**
-     * Set courtDate.
-     */
-    public function setCourtDate(?\DateTime $courtDate = null): static
+    public function setCourtDate(?\DateTime $courtDate): static
     {
         $this->courtDate = $courtDate;
 
         return $this;
     }
 
-    /**
-     * Get courtDate.
-     *
-     * @return \DateTime|null
-     */
-    public function getCourtDate()
+    public function getCourtDate(): ?\DateTime
     {
         return $this->courtDate;
     }
 
-    /**
-     * Add users.
-     */
     public function addUser(User $user): static
     {
         if (!$this->users->contains($user)) {
@@ -396,20 +305,15 @@ class Client
         return $this;
     }
 
-    /**
-     * Remove users.
-     */
-    public function removeUser(User $users)
+    public function removeUser(User $users): void
     {
         $this->users->removeElement($users);
     }
 
     /**
-     * Get users.
-     *
      * @return Collection<int, User>
      */
-    public function getUsers()
+    public function getUsers(): Collection
     {
         return $this->users;
     }
@@ -417,7 +321,7 @@ class Client
     /**
      * @param Collection<int, User> $users
      */
-    public function setUsers($users): static
+    public function setUsers(Collection $users): static
     {
         $this->users = $users;
 
@@ -425,9 +329,9 @@ class Client
     }
 
     /**
-     * @return array $userIds
+     * @return array<int>
      */
-    public function getUserIds()
+    public function getUserIds(): array
     {
         $userIds = [];
 
@@ -438,9 +342,6 @@ class Client
         return $userIds;
     }
 
-    /**
-     * Add reports.
-     */
     public function addReport(Report $report): static
     {
         if (!$this->reports->contains($report)) {
@@ -451,37 +352,29 @@ class Client
         return $this;
     }
 
-    /**
-     * Remove reports.
-     */
-    public function removeReport(Report $reports)
+    public function removeReport(Report $reports): void
     {
         $this->reports->removeElement($reports);
     }
 
     /**
-     * Get reports.
-     *
      * @return Collection<int, Report>
      */
-    public function getReports()
+    public function getReports(): Collection
     {
         return $this->reports;
     }
 
     /**
-     * @param ArrayCollection<int, Report> $reports
+     * @param Collection<int, Report> $reports
      */
-    public function setReports($reports): static
+    public function setReports(Collection $reports): static
     {
         $this->reports = $reports;
 
         return $this;
     }
 
-    /**
-     * Get report by end date.
-     */
     public function getReportByEndDate(\DateTime $endDate): ?Report
     {
         $report = $this->reports->filter(function ($report) use ($endDate): bool {
@@ -535,9 +428,9 @@ class Client
     }
 
     /**
-     * @return array $reportIds
+     * @return array<int> $reportIds
      */
-    public function getReportIds()
+    public function getReportIds(): array
     {
         $reportIds = [];
 
@@ -551,7 +444,7 @@ class Client
     /**
      * Return full name, e.g. Mr John Smith.
      */
-    public function getFullName($space = '&nbsp;')
+    public function getFullName(string $space = '&nbsp;'): string
     {
         return $this->getFirstname() . $space . $this->getLastname();
     }
@@ -604,75 +497,65 @@ class Client
         return $this->address5;
     }
 
-    /**
-     * Set country.
-     *
-     * @param string $country
-     */
-    public function setCountry($country): static
+    public function setCountry(?string $country): static
     {
         $this->country = $country;
 
         return $this;
     }
 
-    /**
-     * Get country.
-     *
-     * @return string
-     */
-    public function getCountry()
+    public function getCountry(): ?string
     {
         return $this->country;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasDetails()
+    public function hasDetails(): bool
     {
         return !empty($this->getAddress());
     }
 
-    /**
-     * @return \DateTime|null $dateOfBirth
-     */
-    public function getDateOfBirth()
+    public function getDateOfBirth(): ?\DateTime
     {
         return $this->dateOfBirth;
     }
 
-    public function setDateOfBirth(?\DateTime $dateOfBirth = null): static
+    public function setDateOfBirth(?\DateTime $dateOfBirth): static
     {
         $this->dateOfBirth = $dateOfBirth;
 
         return $this;
     }
 
-    public function getNotes()
+    /**
+     * @return Collection<int, Note>
+     */
+    public function getNotes(): Collection
     {
         return $this->notes;
     }
 
     /**
-     * @param ArrayCollection<int, Note> $notes
+     * @param Collection<int, Note> $notes
      */
-    public function setNotes($notes): static
+    public function setNotes(Collection $notes): static
     {
         $this->notes = $notes;
 
         return $this;
     }
 
-    public function getClientContacts()
+    /**
+     * @return Collection<int, ClientContact>
+     */
+    public function getClientContacts(): Collection
     {
         return $this->clientContacts;
     }
 
     /**
-     * @param ArrayCollection<int, ClientContact> $clientContacts
+     * @param Collection<int, ClientContact> $clientContacts
      */
-    public function setClientContacts($clientContacts): static
+    public function setClientContacts(Collection $clientContacts): static
     {
         $this->clientContacts = $clientContacts;
 
@@ -681,12 +564,8 @@ class Client
 
     /**
      * Regular expression to match a case number.
-     *
-     * @param string $query
-     *
-     * @return bool
      */
-    public static function isValidCaseNumber($query)
+    public static function isValidCaseNumber(string $query): bool
     {
         return (bool) preg_match('/^[0-9t]{8}$/i', $query);
     }
@@ -703,25 +582,19 @@ class Client
         return $this;
     }
 
-    /**
-     * @return int
-     */
     #[JMS\VirtualProperty]
     #[JMS\Type('integer')]
     #[JMS\SerializedName('total_report_count')]
     #[JMS\Groups(['total-report-count'])]
-    public function getTotalReportCount()
+    public function getTotalReportCount(): int
     {
         return count($this->getReports());
     }
 
-    /**
-     * @return int
-     */
     #[JMS\VirtualProperty]
     #[JMS\Type('integer')]
     #[JMS\Groups(['unsubmitted-reports-count'])]
-    public function getUnsubmittedReportsCount()
+    public function getUnsubmittedReportsCount(): int
     {
         return count($this->getUnsubmittedReports());
     }
@@ -730,7 +603,7 @@ class Client
      * @return Collection<int, Report>
      */
     #[JMS\Exclude]
-    public function getUnsubmittedReports()
+    public function getUnsubmittedReports(): Collection
     {
         return $this->getReports()->filter(function (Report $report): bool {
             return $report->getSubmitted() === null || $report->getSubmitted() === false;
@@ -739,14 +612,12 @@ class Client
 
     /**
      * Generates the expected Report Start date based on the Court date.
-     *
-     * @return ?\DateTime
      */
     #[JMS\VirtualProperty]
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\SerializedName('expected_report_start_date')]
     #[JMS\Groups(['checklist-information'])]
-    public function getExpectedReportStartDate($year = null)
+    public function getExpectedReportStartDate($year = null): ?\DateTime
     {
         if (is_null($this->getCourtDate())) {
             return null;
@@ -772,14 +643,12 @@ class Client
 
     /**
      * Generates the expected Report End date based on the Court date.
-     *
-     * @return ?\DateTime
      */
     #[JMS\VirtualProperty]
     #[JMS\Type("DateTime<'Y-m-d'>")]
     #[JMS\SerializedName('expected_report_end_date')]
     #[JMS\Groups(['checklist-information'])]
-    public function getExpectedReportEndDate($year = null)
+    public function getExpectedReportEndDate($year = null): ?\DateTime
     {
         if (!($this->getExpectedReportStartDate($year) instanceof \DateTime)) {
             return null;
@@ -796,26 +665,17 @@ class Client
         return $this;
     }
 
-    /**
-     * @return \DateTime|null
-     */
-    public function getArchivedAt()
+    public function getArchivedAt(): ?\DateTime
     {
         return $this->archivedAt;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasDeputies()
+    public function hasDeputies(): bool
     {
         return !$this->getUsers()->isEmpty();
     }
 
-    /**
-     * @return bool
-     */
-    public function hasLayDeputy()
+    public function hasLayDeputy(): bool
     {
         if (!$this->hasDeputies()) {
             return false;
@@ -832,14 +692,12 @@ class Client
 
     /**
      * Get Active From date == earliest report start date for this client.
-     *
-     * @return \DateTime
      */
     #[JMS\VirtualProperty]
     #[JMS\Type("DateTime<'Y-m-d H:i:s'>")]
     #[JMS\SerializedName('active_from')]
     #[JMS\Groups(['active-period'])]
-    public function getActiveFrom()
+    public function getActiveFrom(): \DateTime
     {
         $reports = $this->getReports();
         $earliest = new \DateTime('now');
@@ -852,10 +710,7 @@ class Client
         return $earliest;
     }
 
-    /**
-     * @return ?Organisation
-     */
-    public function getOrganisation()
+    public function getOrganisation(): ?Organisation
     {
         return $this->organisation;
     }
@@ -867,12 +722,7 @@ class Client
         return $this;
     }
 
-    /**
-     * @param User $user
-     *
-     * @return bool
-     */
-    public function userBelongsToClientsOrganisation(UserInterface $user)
+    public function userBelongsToClientsOrganisation(User $user): bool
     {
         $org = $this->getOrganisation();
         if ($org instanceof Organisation && $org->isActivated()) {

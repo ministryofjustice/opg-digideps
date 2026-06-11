@@ -282,11 +282,8 @@ class PAUserFixtures extends AbstractDataFixture
 
     private function createDeputy(mixed $deputyData, mixed $clientData, ?Organisation $organisation): Deputy
     {
-        return new Deputy()
-            ->setDeputyType(DeputyType::PA)
-            ->setFirstname($deputyData['id'])
+        return new Deputy($clientData['deputyUid'], DeputyType::PA, $deputyData['id'], 'Deputy')
             ->setLastname('Deputy')
-            ->setDeputyUid($clientData['deputyUid'])
             ->setEmail1($deputyData['id'] . $deputyData['email'])
             ->setAddress1('ABC Road')
             ->setAddressPostcode('AB1 2CD')
