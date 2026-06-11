@@ -19,15 +19,17 @@ CMD ["go", "test", "./..."]
 # -----------------------------------------
 # 2) Node deps builder: run npm ci
 # -----------------------------------------
-FROM alpine:3.23@sha256:5b10f432ef3da1b8d4c7eb6c487f2f5a8f096bc91145e68878dd4a5019afde11 AS nodebuilder
-# Node + npm only needed to produce node_modules
-RUN apk add --no-cache nodejs npm
+FROM node:26.3.0-alpine@sha256:3ad34ca6292aec4a91d8ddeb9229e29d9c2f689efd0dd242860889ac71842eba AS nodebuilder
+
 WORKDIR /tests
 COPY tests/package.json tests/package-lock.json ./
 
-# Install production/dev deps exactly as locked
+# Install deps exactly as locked
 RUN npm ci
-RUN rm -rf /root/.npm /root/.cache
+
+# Clean up npm cache to keep layer small
+RUN rm -rf /root/.npm /root/.cach
+
 
 
 # -----------------------------------------
