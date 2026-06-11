@@ -21,7 +21,7 @@ final class ReportAccessService
     /**
      * @return array<int>
      */
-    public function getVisibleReportIdsGivenUserId(int $userId, bool $blockDischargedDeputies = false): array
+    public function getVisibleReportIdsGivenUserId(int $userId, bool $blockDischargedDeputies = true): array
     {
         if (!array_key_exists($userId, $this->cache[$blockDischargedDeputies])) {
             $this->cache[$blockDischargedDeputies][$userId] = $this->fetchVisibleReportIdsGivenUserId($userId, $blockDischargedDeputies);
