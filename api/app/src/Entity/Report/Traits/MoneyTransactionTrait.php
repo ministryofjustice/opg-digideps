@@ -26,7 +26,7 @@ trait MoneyTransactionTrait
     #[JMS\VirtualProperty]
     #[JMS\SerializedName('money_transactions_in')]
     #[JMS\Groups(['transactionsIn'])]
-    public function getMoneyTransactionsIn()
+    public function getMoneyTransactionsIn(): Collection
     {
         return $this->moneyTransactions->filter(function ($t): bool {
             return $t->getType() == 'in';
@@ -57,12 +57,12 @@ trait MoneyTransactionTrait
     /**
      * @param Collection<int, MoneyTransaction> $moneyTransactions
      */
-    public function setMoneyTransactions(Collection $moneyTransactions)
+    public function setMoneyTransactions(Collection $moneyTransactions): void
     {
         $this->moneyTransactions = $moneyTransactions;
     }
 
-    public function addMoneyTransaction(MoneyTransaction $t)
+    public function addMoneyTransaction(MoneyTransaction $t): void
     {
         if (!$this->moneyTransactions->contains($t)) {
             $this->moneyTransactions->add($t);
@@ -73,7 +73,7 @@ trait MoneyTransactionTrait
     #[JMS\Groups(['transactionsIn'])]
     #[JMS\Type('double')]
     #[JMS\SerializedName('money_in_total')]
-    public function getMoneyInTotal()
+    public function getMoneyInTotal(): float
     {
         return $this->getMoneyTransactionsTotal('in');
     }
@@ -82,23 +82,21 @@ trait MoneyTransactionTrait
     #[JMS\Groups(['transactionsOut'])]
     #[JMS\Type('double')]
     #[JMS\SerializedName('money_out_total')]
-    public function getMoneyOutTotal()
+    public function getMoneyOutTotal(): float
     {
         return $this->getMoneyTransactionsTotal('out');
     }
 
     /**
-     * @param string $type in|put
-     *
-     * @return float
+     * @param string $type in|out
      */
-    private function getMoneyTransactionsTotal($type)
+    private function getMoneyTransactionsTotal(string $type): float
     {
         if (!in_array($type, ['in', 'out'])) {
-            throw new \InvalidArgumentException('invalid type');
+            throw new \InvalidArgumentException('Invalid type');
         }
 
-        $ret = 0;
+        $ret = 0.0;
 
         if ($this->type === self::LAY_PFA_LOW_ASSETS_TYPE) {
             $transactions = $this->getMoneyTransactionsShort();
@@ -115,19 +113,13 @@ trait MoneyTransactionTrait
         return $ret;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasMoneyIn()
+    public function hasMoneyIn(): bool
     {
-        return count($this->getMoneyTransactionsIn()) > 0;
+        return !$this->getMoneyTransactionsIn()->isEmpty();
     }
 
-    /**
-     * @return bool
-     */
-    public function hasMoneyOut()
+    public function hasMoneyOut(): bool
     {
-        return count($this->getMoneyTransactionsOut()) > 0;
+        return !$this->getMoneyTransactionsOut()->isEmpty();
     }
 }

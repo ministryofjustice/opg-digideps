@@ -17,30 +17,25 @@ trait DebtTrait
     #[JMS\Groups(['debt'])]
     #[ORM\OneToMany(mappedBy: 'report', targetEntity: Debt::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['id' => 'ASC'])]
-    private $debts;
+    private Collection $debts;
 
     /**
-     * @var string yes|no|null
-     *
-     * @var string
+     * yes|no|null
      */
     #[JMS\Type('string')]
     #[JMS\Groups(['debt'])]
     #[ORM\Column(name: 'has_debts', type: 'string', length: 5, nullable: true)]
-    private $hasDebts;
+    private ?string $hasDebts = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['debt-management'])]
     #[ORM\Column(name: 'debt_management', type: 'text', nullable: true)]
-    private $debtManagement;
+    private ?string $debtManagement = null;
 
     /**
-     * @param Collection<int,Debt> $debts
+     * @param Collection<int, Debt> $debts
      */
-    public function setDebts($debts)
+    public function setDebts(Collection $debts): void
     {
         $this->debts = $debts;
     }
@@ -48,40 +43,29 @@ trait DebtTrait
     /**
      * @return Collection<int, Debt>
      */
-    public function getDebts()
+    public function getDebts(): Collection
     {
         return $this->debts;
     }
 
-    /**
-     * @return string
-     */
-    public function getDebtManagement()
+    public function getDebtManagement(): ?string
     {
         return $this->debtManagement;
     }
 
-    /**
-     * @param string $debtManagement
-     */
-    public function setDebtManagement($debtManagement)
+    public function setDebtManagement(?string $debtManagement): void
     {
         $this->debtManagement = $debtManagement;
     }
 
-    /**
-     * @param string $typeId
-     *
-     * @return ?Debt
-     */
-    public function getDebtByTypeId($typeId)
+    public function getDebtByTypeId(string $typeId): ?Debt
     {
         return $this->getDebts()->filter(function (Debt $debt) use ($typeId): bool {
             return $debt->getDebtTypeId() === $typeId;
         })->first() ?: null;
     }
 
-    public function addDebt(Debt $debt)
+    public function addDebt(Debt $debt): static
     {
         if (!$this->debts->contains($debt)) {
             $this->debts->add($debt);
@@ -90,37 +74,26 @@ trait DebtTrait
         return $this;
     }
 
-    /**
-     * Get debts total value.
-     *
-     * @return float
-     */
     #[JMS\VirtualProperty]
     #[JMS\Type('string')]
     #[JMS\SerializedName('debts_total_amount')]
     #[JMS\Groups(['debt'])]
-    public function getDebtsTotalAmount()
+    public function getDebtsTotalAmount(): float
     {
-        $ret = 0;
+        $ret = 0.0;
         foreach ($this->getDebts() as $debt) {
-            $ret += $debt->getAmount();
+            $ret += (float)$debt->getAmount();
         }
 
         return $ret;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getHasDebts()
+    public function getHasDebts(): ?string
     {
         return $this->hasDebts;
     }
 
-    /**
-     * @param mixed $hasDebts
-     */
-    public function setHasDebts($hasDebts)
+    public function setHasDebts(?string $hasDebts): void
     {
         $this->hasDebts = $hasDebts;
     }
@@ -128,12 +101,10 @@ trait DebtTrait
     /**
      * @return Collection<int, Debt>
      */
-    public function getDebtsWithValidAmount()
+    public function getDebtsWithValidAmount(): Collection
     {
-        $debtsWithAValidAmount = $this->getDebts()->filter(function ($debt): bool {
+        return $this->getDebts()->filter(function ($debt): bool {
             return !empty($debt->getAmount());
         });
-
-        return $debtsWithAValidAmount;
     }
 }
