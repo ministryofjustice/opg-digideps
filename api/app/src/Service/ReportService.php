@@ -89,17 +89,12 @@ class ReportService
             if (!is_null($newYearReport)) {
                 $this->clonePersistentResources($newYearReport, $currentReport);
             }
-
-            $addReportToCourtOrder = false;
         } else {
             // first-time submission
             $this->logger->warning("Creating next year report for client $clientId (NO existing report) at $now");
 
             $newYearReport = $this->createNextYearReport($currentReport);
-            $addReportToCourtOrder = true;
-        }
 
-        if (!is_null($newYearReport) && $addReportToCourtOrder) {
             foreach ($courtOrders as $courtOrder) {
                 if ($courtOrder->getStatus() === 'ACTIVE') {
                     $courtOrder->addReport($newYearReport);
