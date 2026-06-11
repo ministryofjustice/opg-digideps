@@ -13843,36 +13843,6 @@ parameters:
 			path: tests/Unit/Helpers/SiriusHelpers.php
 
 		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Mapper\\ReportSatisfaction\\ReportSatisfactionSummaryMapperTest\:\:assertMapperReturnsResultFromRestClient\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Mapper/ReportSatisfaction/ReportSatisfactionSummaryMapperTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Mapper\\ReportSatisfaction\\ReportSatisfactionSummaryMapperTest\:\:assertRestClientIsCalledWithCustomQueryParameters\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Mapper/ReportSatisfaction/ReportSatisfactionSummaryMapperTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Mapper\\ReportSatisfaction\\ReportSatisfactionSummaryMapperTest\:\:assertRestClientIsCalledWithDefaultQueryParameters\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Mapper/ReportSatisfaction/ReportSatisfactionSummaryMapperTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Mapper\\ReportSatisfaction\\ReportSatisfactionSummaryMapperTest\:\:assertRestClientPopulatesAnArrayOfExpectedEntities\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Mapper/ReportSatisfaction/ReportSatisfactionSummaryMapperTest.php
-
-		-
-			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Mapper\\ReportSatisfaction\\ReportSatisfactionSummaryMapperTest\:\:invokeMapper\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: tests/Unit/Mapper/ReportSatisfaction/ReportSatisfactionSummaryMapperTest.php
-
-		-
 			message: '#^Method Tests\\OPG\\Digideps\\Frontend\\Unit\\Mapper\\ReportSatisfaction\\ReportSatisfactionSummaryMapperTest\:\:testReturnsReportSatisfactionsByCustomParameters\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
