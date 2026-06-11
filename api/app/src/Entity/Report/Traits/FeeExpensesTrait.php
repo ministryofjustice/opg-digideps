@@ -10,7 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Entity\Report\Expense;
 use OPG\Digideps\Backend\Entity\Report\Fee;
-use OPG\Digideps\Backend\Entity\Report\Report;
 
 trait FeeExpensesTrait
 {
@@ -20,45 +19,39 @@ trait FeeExpensesTrait
     #[JMS\Groups(['fee'])]
     #[ORM\OneToMany(mappedBy: 'report', targetEntity: Fee::class, cascade: ['persist', 'remove'])]
     #[ORM\OrderBy(['id' => 'ASC'])]
-    private $fees;
+    private Collection $fees;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['fee'])]
     #[ORM\Column(name: 'reason_for_no_fees', type: 'text', nullable: true)]
-    private $reasonForNoFees;
+    private ?string $reasonForNoFees = null;
 
-    /**
-     * @var ?string yes|no|null
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['expenses'])]
     #[ORM\Column(name: 'paid_for_anything', type: 'string', length: 3, nullable: true)]
-    private $paidForAnything;
+    private ?string $paidForAnything = null;
 
     /**
      * Used for both
      * - Lay deputy expenses
      * - PA Fees outside practice direction.
      *
-     * @var ?Collection<int, Expense>
+     * @var Collection<int, Expense>
      */
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\Expense>')]
     #[JMS\Groups(['expenses'])]
     #[ORM\OneToMany(mappedBy: 'report', targetEntity: Expense::class, cascade: ['persist', 'remove'])]
-    private $expenses;
+    private Collection $expenses;
 
     /**
      * @return Collection<int, Fee>
      */
-    public function getFees()
+    public function getFees(): Collection
     {
         return $this->fees;
     }
 
-    public function addFee(Fee $fee)
+    public function addFee(Fee $fee): static
     {
         if (!$this->fees->contains($fee)) {
             $this->fees->add($fee);
@@ -67,48 +60,32 @@ trait FeeExpensesTrait
         return $this;
     }
 
-    /**
-     * @param string $typeId
-     *
-     * @return ?Fee
-     */
-    public function getFeeByTypeId($typeId)
+    public function getFeeByTypeId(string $typeId): ?Fee
     {
         return $this->getFees()->filter(function (Fee $fee) use ($typeId): bool {
             return $fee->getFeeTypeId() === $typeId;
         })->first() ?: null;
     }
 
-    /**
-     * @return string
-     */
-    public function getReasonForNoFees()
+    public function getReasonForNoFees(): ?string
     {
         return $this->reasonForNoFees;
     }
 
-    /**
-     * @param string $reasonForNoFees
-     */
-    public function setReasonForNoFees($reasonForNoFees)
+    public function setReasonForNoFees(?string $reasonForNoFees): void
     {
         $this->reasonForNoFees = $reasonForNoFees;
     }
 
-    /**
-     * Get fee total value.
-     *
-     * @return float
-     */
     #[JMS\VirtualProperty]
     #[JMS\Type('double')]
     #[JMS\SerializedName('fees_total')]
     #[JMS\Groups(['fee'])]
-    public function getFeesTotal()
+    public function getFeesTotal(): float
     {
-        $ret = 0;
+        $ret = 0.0;
         foreach ($this->getFees() as $fee) {
-            $ret += $fee->getAmount();
+            $ret += (float)$fee->getAmount();
         }
 
         return $ret;
@@ -117,29 +94,25 @@ trait FeeExpensesTrait
     /**
      * @return Collection<int, Fee>
      */
-    public function getFeesWithValidAmount()
+    public function getFeesWithValidAmount(): Collection
     {
-        $fees = $this->getFees()->filter(function ($fee): bool {
+        return $this->getFees()->filter(function ($fee): bool {
             return !empty($fee->getAmount());
         });
-
-        return $fees;
     }
 
     /**
-     * Implement the report.hasFees based on the content of fees and reaons for no fees
+     * Implement the report.hasFees based on the content of fees and reasons for no fees
      * Alternative to have a column.
-     *
-     * @return float
      */
     #[JMS\VirtualProperty]
     #[JMS\Type('string')]
     #[JMS\SerializedName('has_fees')]
     #[JMS\Groups(['fee'])]
-    public function getHasFees()
+    public function getHasFees(): ?string
     {
         // never set -> return null
-        if (count($this->getFeesWithValidAmount()) === 0 && $this->getReasonForNoFees() === null) {
+        if ($this->getFeesWithValidAmount()->count() === 0 && $this->getReasonForNoFees() === null) {
             return null;
         }
 
@@ -151,12 +124,7 @@ trait FeeExpensesTrait
         return $this->paidForAnything;
     }
 
-    /**
-     * @param ?string $paidForAnything
-     *
-     * @return Report
-     */
-    public function setPaidForAnything($paidForAnything)
+    public function setPaidForAnything(?string $paidForAnything): static
     {
         $this->paidForAnything = $paidForAnything;
 
@@ -166,45 +134,37 @@ trait FeeExpensesTrait
     /**
      * @return Collection<int, Expense>
      */
-    public function getExpenses()
+    public function getExpenses(): Collection
     {
         return $this->expenses ?? new ArrayCollection();
     }
 
     /**
-     * @param ?Collection<int, Expense> $expenses
-     *
-     * @return Report
+     * @param Collection<int, Expense> $expenses
      */
-    public function setExpenses($expenses)
+    public function setExpenses(Collection $expenses): static
     {
         $this->expenses = $expenses;
 
         return $this;
     }
 
-    /**
-     * @return Report
-     */
-    public function addExpense(Expense $expense)
+    public function addExpense(Expense $expense): static
     {
-        if ($this->expenses !== null && !$this->expenses->contains($expense)) {
+        if (!$this->expenses->contains($expense)) {
             $this->expenses->add($expense);
         }
 
         return $this;
     }
 
-    /**
-     * @return float
-     */
     #[JMS\VirtualProperty]
     #[JMS\Type('double')]
     #[JMS\SerializedName('expenses_total')]
     #[JMS\Groups(['expenses'])]
-    public function getExpensesTotal()
+    public function getExpensesTotal(): float
     {
-        $ret = 0;
+        $ret = 0.0;
         foreach ($this->getExpenses() as $record) {
             $ret += (float) $record->getAmount();
         }
@@ -212,22 +172,12 @@ trait FeeExpensesTrait
         return $ret;
     }
 
-    /**
-     * //TODO unit test.
-     *
-     * @return bool
-     */
-    public function expensesSectionCompleted()
+    public function expensesSectionCompleted(): bool
     {
         return count($this->getExpenses()) > 0 || $this->getPaidForAnything() === 'no';
     }
 
-    /**
-     * //TODO unit test.
-     *
-     * @return bool
-     */
-    public function paFeesExpensesNotStarted()
+    public function paFeesExpensesNotStarted(): bool
     {
         return count($this->getFeesWithValidAmount()) === 0
             && empty($this->getReasonForNoFees())
@@ -235,19 +185,13 @@ trait FeeExpensesTrait
             && empty($this->getPaidForAnything());
     }
 
-    /**
-     * //TODO unit test.
-     *
-     * @return bool
-     */
-    public function paFeesExpensesCompleted()
+    public function paFeesExpensesCompleted(): bool
     {
         $countValidFees = count($this->getFeesWithValidAmount());
         $countExpenses = count($this->getExpenses());
 
         $feeComplete = $countValidFees || !empty($this->getReasonForNoFees());
-        $expenseComplete = $this->getPaidForAnything() === 'no'
-            || ($this->getPaidForAnything() === 'yes' && $countExpenses);
+        $expenseComplete = $this->getPaidForAnything() === 'no' || ($this->getPaidForAnything() === 'yes' && $countExpenses);
 
         return $feeComplete && $expenseComplete;
     }

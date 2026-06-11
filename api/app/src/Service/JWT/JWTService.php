@@ -26,7 +26,7 @@ class JWTService
     ) {
     }
 
-    public function createNewJWT(?User $user = null)
+    public function createNewJWT(?User $user = null): string
     {
         $config = $this->initJWTConfig();
         $publicKey = $config->verificationKey()->contents();
@@ -53,7 +53,7 @@ class JWTService
             ->toString();
     }
 
-    public function generateJWK()
+    public function generateJWK(): array
     {
         $publicKey = base64_decode($this->secretManager->getSecret(SecretManagerService::PUBLIC_JWT_KEY_BASE64_SECRET_NAME));
 
@@ -76,7 +76,7 @@ class JWTService
         ];
     }
 
-    public function verify(string $jwt)
+    public function verify(string $jwt): bool
     {
         try {
             $config = $this->initJWTConfig();
@@ -97,17 +97,17 @@ class JWTService
         return 'urn:opg:digideps';
     }
 
-    public static function generateSub(string $userIdentifier)
+    public static function generateSub(string $userIdentifier): string
     {
         return sprintf('%s:users:%s', self::generateIss(), $userIdentifier);
     }
 
-    public static function generateAud(string $serviceName)
+    public static function generateAud(string $serviceName): string
     {
         return sprintf('urn:opg:%s', $serviceName);
     }
 
-    public static function generateRole(string $role)
+    public static function generateRole(string $role): string
     {
         return sprintf('%s:%s', self::generateIss(), $role);
     }

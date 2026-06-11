@@ -6,14 +6,9 @@ use Predis\Client as PredisClient;
 
 class AttemptsIncrementalWaitingChecker
 {
-    /**
-     * @var array
-     */
-    private $freezeRules;
-
-    private $timeOffset;
-
+    private array $freezeRules;
     private array $secondsBeforeNextAttempt;
+    private ?int $timeOffset;
 
     /**
      * @param string $workspace
@@ -23,6 +18,7 @@ class AttemptsIncrementalWaitingChecker
     {
         $this->freezeRules = [];
         $this->secondsBeforeNextAttempt = [];
+        $this->timeOffset = null;
     }
 
     public function setRedisPrefix($redisPrefix)
@@ -59,7 +55,7 @@ class AttemptsIncrementalWaitingChecker
         $id = $this->keyToRedisId($key);
         $data = $this->redis->get($id) ? json_decode($this->redis->get($id), true) : [];
 
-        return isset($data['freezeUntil']) ? $data['freezeUntil'] : null;
+        return $data['freezeUntil'] ?? null;
     }
 
     public function registerAttempt($key)
@@ -72,7 +68,7 @@ class AttemptsIncrementalWaitingChecker
         $data['lastAttemptTimestamp'] = $timestamp;
 
         foreach ($this->freezeRules as $rule) {
-            list($maxAttempts, $freezeFor) = $rule;
+            [$maxAttempts, $freezeFor] = $rule;
             if ($maxAttempts == $data['totalAttempts']) {
                 $data['freezeUntil'] = $timestamp + $freezeFor;
                 $this->secondsBeforeNextAttempt[$key] = $freezeFor;
@@ -104,10 +100,8 @@ class AttemptsIncrementalWaitingChecker
 
     /**
      * For testing reasons.
-     *
-     * @param int $timestamp
      */
-    public function overrideTimestamp($timestamp)
+    public function overrideTimestamp(int $timestamp)
     {
         $this->timeOffset = $timestamp;
     }

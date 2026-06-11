@@ -24,7 +24,7 @@ class Satisfaction
     #[JMS\Type('string')]
     private string $reporttype;
 
-    #[JMS\Type('\DateTime')]
+    #[JMS\Type('DateTime')]
     private \DateTime $created;
 
     #[JMS\Type('OPG\Digideps\Frontend\Entity\UserResearch\UserResearchResponse')]

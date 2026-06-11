@@ -4,57 +4,50 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Backend\Entity\Report\Traits;
 
-use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 use OPG\Digideps\Backend\Entity\Report\MoneyTransfer;
-use OPG\Digideps\Backend\Entity\Report\Report;
 
 trait MoneyTransferTrait
 {
+    /**
+     * @var Collection<int, MoneyTransfer> $moneyTransfers
+     */
     #[JMS\Groups(['money-transfer'])]
     #[JMS\Type('ArrayCollection<OPG\Digideps\Backend\Entity\Report\MoneyTransfer>')]
     #[ORM\OneToMany(mappedBy: 'report', targetEntity: MoneyTransfer::class, cascade: ['persist'])]
-    private $moneyTransfers;
+    private Collection $moneyTransfers;
 
     /**
-     * @var ?bool deputy declaration saying there are no transfers. Required (true/false) if no transfers are added
+     * Deputy declaration saying there are no transfers. Required (true/false) if no transfers are added.
      */
     #[JMS\Type('boolean')]
     #[JMS\Groups(['report', 'money-transfer'])]
     #[ORM\Column(name: 'no_transfers_to_add', type: 'boolean', nullable: true, options: ['default' => false])]
-    private $noTransfersToAdd;
+    private ?bool $noTransfersToAdd = false;
 
     /**
-     * @return ArrayCollection
+     * @return Collection<int, MoneyTransfer>
      */
-    public function getMoneyTransfers()
+    public function getMoneyTransfers(): Collection
     {
         return $this->moneyTransfers;
     }
 
-    /**
-     * @return Report
-     */
-    public function addMoneyTransfers(MoneyTransfer $moneyTransfer)
+    public function addMoneyTransfers(MoneyTransfer $moneyTransfer): static
     {
         $this->moneyTransfers->add($moneyTransfer);
 
         return $this;
     }
 
-    /**
-     * @return ?bool
-     */
-    public function getNoTransfersToAdd()
+    public function getNoTransfersToAdd(): ?bool
     {
         return $this->noTransfersToAdd;
     }
 
-    /**
-     * @param ?bool $noTransfersToAdd
-     */
-    public function setNoTransfersToAdd($noTransfersToAdd)
+    public function setNoTransfersToAdd(?bool $noTransfersToAdd): static
     {
         $this->noTransfersToAdd = $noTransfersToAdd;
 

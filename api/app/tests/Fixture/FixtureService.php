@@ -268,12 +268,13 @@ final class FixtureService
 
     private function makeDeputy(DeputyDescriptor $descriptor, Client $client, ?Organisation $organisation): Deputy
     {
-        $deputy = new Deputy()
+        $deputy = new Deputy(
+            $this->counter->nextString(8, '9'),
+            $descriptor->type,
+            $this->faker->firstName(),
+            $this->faker->lastName()
+        )
             ->setId($this->counter->nextInt())
-            ->setDeputyUid($this->counter->nextString(8, '9'))
-            ->setDeputyType($descriptor->type)
-            ->setFirstname($this->faker->firstName())
-            ->setLastname($this->faker->lastName())
             ->setAddress1($this->faker->streetAddress())
             ->setAddress2('')
             ->setAddress3('')

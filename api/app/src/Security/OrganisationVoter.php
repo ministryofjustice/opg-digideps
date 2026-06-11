@@ -13,10 +13,7 @@ use Symfony\Component\Security\Core\Security;
  */
 class OrganisationVoter extends Voter
 {
-    /** @var string */
     public const string VIEW = 'view';
-
-    /** @var string */
     public const string EDIT = 'edit';
 
     public function __construct(private readonly Security $security)
@@ -50,10 +47,7 @@ class OrganisationVoter extends Voter
         }
     }
 
-    /**
-     * @return bool
-     */
-    private function canManage(Organisation $organisation, User $user)
+    private function canManage(Organisation $organisation, User $user): bool
     {
         if ($this->security->isGranted('ROLE_ADMIN')) {
             return true;

@@ -7,10 +7,7 @@ use OPG\Digideps\Backend\Entity\UserResearch\UserResearchResponse;
 
 class UserResearchResponseFactory
 {
-    /**
-     * @return mixed
-     */
-    public function generateFromFormData(array $formData)
+    public function generateFromFormData(array $formData): UserResearchResponse
     {
         $userResearchResponse = new UserResearchResponse()
             ->setDeputyshipLength($formData['deputyshipLength'])

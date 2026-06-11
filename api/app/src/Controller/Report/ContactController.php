@@ -7,6 +7,7 @@ use OPG\Digideps\Backend\Entity\Report\Contact;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Service\Formatter\RestFormatter;
 use Doctrine\ORM\EntityManagerInterface;
+use OPG\Digideps\Common\Validating\ValidatingArray;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -86,14 +87,16 @@ class ContactController extends RestController
             'relationship' => 'mustExist',
         ]);
 
-        $contact->setContactName($contactData['contact_name'])
-            ->setAddress($contactData['address'])
-            ->setAddress2($contactData['address2'])
-            ->setCounty($contactData['county'])
-            ->setPostcode($contactData['postcode'])
-            ->setCountry($contactData['country'])
-            ->setExplanation($contactData['explanation'])
-            ->setRelationship($contactData['relationship']);
+        $contactData = new ValidatingArray($contactData);
+
+        $contact->setContactName($contactData->getStringOrNull('contact_name'))
+            ->setAddress($contactData->getStringOrNull('address'))
+            ->setAddress2($contactData->getStringOrNull('address2'))
+            ->setCounty($contactData->getStringOrNull('county'))
+            ->setPostcode($contactData->getStringOrNull('postcode'))
+            ->setCountry($contactData->getStringOrNull('country'))
+            ->setExplanation($contactData->getStringOrNull('explanation'))
+            ->setRelationship($contactData->getStringOrNull('relationship'));
 
         $this->em->persist($contact);
         $this->em->flush();

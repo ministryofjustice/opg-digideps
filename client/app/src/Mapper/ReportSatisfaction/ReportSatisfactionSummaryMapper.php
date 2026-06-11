@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Mapper\ReportSatisfaction;
 
+use OPG\Digideps\Frontend\Entity\Report\Satisfaction;
 use OPG\Digideps\Frontend\Mapper\DateRangeQuery;
 use OPG\Digideps\Frontend\Service\Client\RestClient;
 
@@ -23,7 +24,7 @@ class ReportSatisfactionSummaryMapper
      */
     public function getBy(DateRangeQuery $query)
     {
-        return $this->restClient->get($this->generateApiUrl($query), 'Report\Satisfaction[]', ['satisfaction']);
+        return $this->restClient->get($this->generateApiUrl($query), Satisfaction::class . '[]', ['satisfaction']);
     }
 
     /**

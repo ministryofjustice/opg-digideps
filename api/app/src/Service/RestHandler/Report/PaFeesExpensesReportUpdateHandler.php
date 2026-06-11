@@ -12,17 +12,14 @@ class PaFeesExpensesReportUpdateHandler implements ReportUpdateHandlerInterface
     {
     }
 
-    public function handle(Report $report, array $data)
+    public function handle(Report $report, array $data): void
     {
         $this->initialiseFees($report, $data);
 
         $report->updateSectionsStatusCache([Report::SECTION_PA_DEPUTY_EXPENSES]);
     }
 
-    /**
-     * @return $this
-     */
-    private function initialiseFees(Report $report, array $data)
+    private function initialiseFees(Report $report, array $data): void
     {
         // reason_for_no_fees must be null if user has answered 'yes' to having fees so initialise them
         if (array_key_exists('reason_for_no_fees', $data) && is_null($data['reason_for_no_fees'])) {
@@ -30,7 +27,5 @@ class PaFeesExpensesReportUpdateHandler implements ReportUpdateHandlerInterface
             $repo = $this->em->getRepository(Report::class);
             $repo->addFeesToReportIfMissing($report);
         }
-
-        return $this;
     }
 }

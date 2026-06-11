@@ -31,14 +31,14 @@ class RestFormatter
      *
      * @param string $groups user
      */
-    public function setJmsSerialiserGroups(array $groups)
+    public function setJmsSerialiserGroups(array $groups): void
     {
         $this->formatter->addContextModifier(function ($context) use ($groups): void {
             $context->setGroups($groups);
         });
     }
 
-    public function validateArray($data, array $assertions = [])
+    public function validateArray($data, array $assertions = []): void
     {
         $this->validator->validateArray($data, $assertions);
     }

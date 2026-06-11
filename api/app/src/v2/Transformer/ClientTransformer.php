@@ -15,9 +15,6 @@ class ClientTransformer
     ) {
     }
 
-    /**
-     * @return array
-     */
     public function transform(ClientDto $dto, array $exclude = [], ?array $org = null): array
     {
         $transformed = [
@@ -53,22 +50,16 @@ class ClientTransformer
     /**
      * @return string|null
      */
-    private function transformArchivedAt(ClientDto $dto)
+    private function transformArchivedAt(ClientDto $dto): ?string
     {
         return $dto->getArchivedAt() instanceof \DateTime ? $dto->getArchivedAt()->format('Y-m-d H:i:s') : null;
     }
 
-    /**
-     * @return string|null
-     */
-    private function transformDeletedAt(ClientDto $dto)
+    private function transformDeletedAt(ClientDto $dto): ?string
     {
         return $dto->getDeletedAt() instanceof \DateTime ? $dto->getDeletedAt()->format('Y-m-d H:i:s') : null;
     }
 
-    /**
-     * @return array
-     */
     private function transformReports(array $reports): array
     {
         if (empty($reports)) {
@@ -86,9 +77,6 @@ class ClientTransformer
         return $transformed;
     }
 
-    /**
-     * @return array
-     */
     private function transformDeputy(DeputyDto $deputy): array
     {
         return $this->deputyTransformer->transform($deputy);

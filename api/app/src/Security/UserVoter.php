@@ -62,10 +62,8 @@ class UserVoter extends Voter
      * Determine whether logged in user can delete a subject user.
      *
      * Ensure any changes are mirrored in API/Client version of this class.
-     *
-     * @return bool
      */
-    private function determineDeletePermission(User $deletor, User $deletee)
+    private function determineDeletePermission(User $deletor, User $deletee): bool
     {
         if ($deletor->getId() === $deletee->getId()) {
             return false;
@@ -112,10 +110,8 @@ class UserVoter extends Voter
      * Determine whether logged in user can edit a subject user.
      *
      * Ensure any changes are mirrored in API/Client version of this class.
-     *
-     * @return bool
      */
-    private function determineAddEditPermission(User $editor, User $editee)
+    private function determineAddEditPermission(User $editor, User $editee): bool
     {
         if ($editor->getId() === $editee->getId()) {
             return true;
