@@ -523,6 +523,48 @@ parameters:
 			path: src/Controller/Report/ContactController.php
 
 		-
+			message: '#^Parameter \#1 \$address of method OPG\\Digideps\\Backend\\Entity\\Report\\Contact\:\:setAddress\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Report/ContactController.php
+
+		-
+			message: '#^Parameter \#1 \$address2 of method OPG\\Digideps\\Backend\\Entity\\Report\\Contact\:\:setAddress2\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Report/ContactController.php
+
+		-
+			message: '#^Parameter \#1 \$country of method OPG\\Digideps\\Backend\\Entity\\Report\\Contact\:\:setCountry\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Report/ContactController.php
+
+		-
+			message: '#^Parameter \#1 \$county of method OPG\\Digideps\\Backend\\Entity\\Report\\Contact\:\:setCounty\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Report/ContactController.php
+
+		-
+			message: '#^Parameter \#1 \$explanation of method OPG\\Digideps\\Backend\\Entity\\Report\\Contact\:\:setExplanation\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Report/ContactController.php
+
+		-
+			message: '#^Parameter \#1 \$postcode of method OPG\\Digideps\\Backend\\Entity\\Report\\Contact\:\:setPostcode\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Report/ContactController.php
+
+		-
+			message: '#^Parameter \#1 \$relationship of method OPG\\Digideps\\Backend\\Entity\\Report\\Contact\:\:setRelationship\(\) expects string, string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Controller/Report/ContactController.php
+
+		-
 			message: '#^Parameter \#1 \$sectionIds of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:updateSectionsStatusCache\(\) expects array\<string\>\|null, array given\.$#'
 			identifier: argument.type
 			count: 2
