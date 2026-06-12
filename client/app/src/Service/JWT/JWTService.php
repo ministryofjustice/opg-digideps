@@ -4,63 +4,48 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Service\JWT;
 
+use Jose\Component\Core\AlgorithmManager;
 use Jose\Component\Core\JWKSet;
-use Jose\Component\Core\Util\RSAKey;
-use Lcobucci\JWT\Encoding\JoseEncoder;
-use Lcobucci\JWT\Signer\Key\InMemory;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
-use Lcobucci\JWT\Token;
-use Lcobucci\JWT\Token\Parser;
-use Lcobucci\JWT\Validation\Constraint\SignedWith;
-use Lcobucci\JWT\Validation\Validator;
+use Jose\Component\Signature\Algorithm\RS256;
+use Jose\Component\Signature\JWS;
+use Jose\Component\Signature\JWSVerifier;
+use Jose\Component\Signature\Serializer\CompactSerializer;
+use Jose\Component\Signature\Serializer\JWSSerializerManager;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class JWTService
 {
-    private Parser $parser;
-
     public function __construct(
         private readonly HttpClientInterface $openInternetClient,
     ) {
-        $this->parser = new Parser(new JoseEncoder());
     }
 
-    private function decodeAndVerifyWithJWK(Token $token, array $jwks): Token
+    private function decodeAndVerifyWithJWK(JWS $jws, array $jwks): void
     {
-        $headers = $token->headers()->all();
-        $kid = $headers['kid']; // Same as $json['keys'][0]['kid']
+        $kid = $jws->getSignature(0)->getProtectedHeader()['kid'];
+        $jwk = JWKSet::createFromKeyData($jwks)->get($kid);
 
-        // @TODO rewrite using lcobucci/jwt when https://github.com/lcobucci/jwt/issues/32 is resolved
-        $set = JWKSet::createFromKeyData($jwks);
-        $jwk = $set->get($kid);
+        $jwsVerifier = new JWSVerifier(new AlgorithmManager([new RS256()]));
 
-        $publicKey = RSAKey::createFromJWK($jwk)->toPEM();
+        $isVerified = $jwsVerifier->verifyWithKey($jws, $jwk, 0);
 
-        $validator = new Validator();
-
-        $validator->assert(
-            $token,
-            new SignedWith(
-                new Sha256(),
-                InMemory::plainText($publicKey)
-            )
-        );
-
-        return $token;
+        if (!$isVerified) {
+            throw new \DomainException('Invalid JWS');
+        }
     }
 
-    public function getUrn(string $jwt)
+    public function getUrn(string $jwt): ?string
     {
-        $token = $this->parser->parse($jwt);
-
-        $jwtHeaders = $token->headers()->all();
+        $serializerManager = new JWSSerializerManager([new CompactSerializer()]);
+        $jws = $serializerManager->unserialize($jwt);
+        $jku = $jws->getSignature(0)->getProtectedHeader()['jku'];
 
         // Get public key from API
-        $jwkResponse = $this->openInternetClient->request('GET', $jwtHeaders['jku']);
+        $jwkResponse = $this->openInternetClient->request('GET', $jku);
         $jwks = json_decode($jwkResponse->getContent(), true);
 
-        $decoded = $this->decodeAndVerifyWithJWK($token, $jwks);
+        $this->decodeAndVerifyWithJWK($jws, $jwks);
 
-        return $decoded->claims()->get('sub');
+        return json_decode($jws->getPayload(), true)['sub'] ?? null;
     }
 }

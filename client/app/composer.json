@@ -31,7 +31,7 @@
     "require": {
         "ext-dom": "*",
         "ext-zip": "*",
-        "alphagov/notifications-php-client": "^7.0.0",
+        "alphagov/notifications-php-client": "7.0.0",
         "aws/aws-sdk-php": "^3.379.3",
         "digideps/common": "^1.0",
         "doctrine/annotations": "^2.0.2",
@@ -84,7 +84,7 @@
         "symfony/web-profiler-bundle": "^6.4.32",
         "twig/extra-bundle": "^3.23",
         "twig/intl-extra": "^3.23",
-        "web-token/jwt-core": "^2.2.11"
+        "web-token/jwt-framework": "^3.4.10"
     },
     "minimum-stability": "stable",
     "extra": {
