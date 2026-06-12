@@ -1,0 +1,50 @@
+<h2 class="govuk-heading-m">Accounts</h2>
+
+<div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+        <h3 class="govuk-summary-card__title">
+            List of accounts
+        </h3>
+    </div>
+    <div class="govuk-summary-card__content">
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header govuk-!-width-one-third">
+                    Account
+                </th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-third">
+                    Balance on {{ report.startDate | date("j F Y") }}
+                </th>
+                <th scope="col" class="govuk-table__header govuk-!-width-one-third">
+                    Balance on {{ report.endDate | date("j F Y") }}
+                </th>
+            </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                {% for account in report.bankAccounts %}
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell govuk-!-width-one-third">
+                            {% if account.requiresBankName %}
+                                <p class="govuk-!-margin-0 govuk-!-font-size-18">{{ account.bank }}</p>
+                            {% endif %}
+                            <p class="govuk-!-margin-0 govuk-!-font-size-16">{{ account.accountTypeText }}</p>
+                            {% if account.requiresSortCode %}
+                                <p class="govuk-!-margin-0 govuk-!-font-size-16">Sort code: {{ account.sortCode }}</p>
+                            {% endif %}
+                            <p class="govuk-!-margin-0 govuk-!-font-size-16">Account number: ****{{ account.accountNumber }}</p>
+                            <p class="govuk-!-margin-0 govuk-!-font-size-16">Joint account: {{ account.isJointAccount | capitalize }}</p>
+                            <p class="govuk-!-margin-0 govuk-!-font-size-16">Closed: {{ account.isClosed ? 'Yes' : 'No' }}</p>
+                        </td>
+                        <td class="govuk-table__cell govuk-!-width-one-third">
+                            £{{ account.openingBalance | money_format }}
+                        </td>
+                        <td class="govuk-table__cell govuk-!-width-one-third">
+                            £{{ account.closingBalance | money_format }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>

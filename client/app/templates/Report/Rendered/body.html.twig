@@ -27,6 +27,13 @@
         } %}
     {% endif %}
 
+    {% if report.hasSection('bankAccounts') and report.bankAccounts | length > 0 %}
+        {% include '@App/Report/Rendered/_bankAccounts.html.twig' with {
+            'report': report,
+            'transDomain': 'report-bank-accounts'
+        } %}
+    {% endif %}
+
     {% if report.hasSection('deputyExpenses') %}
         {% include '@App/Report/Rendered/_deputy_expenses.html.twig' with {
             'report': report,
@@ -34,7 +41,7 @@
             'transDomain': 'report-deputy-expenses'
         } %}
     {% endif %}
-        
+
     {% if report.hasSection('gifts') %}
         {% include '@App/Report/Rendered/_gifts.html.twig' with {
             'report': report,
