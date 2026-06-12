@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "31037d601708b097cda30240a853dda0",
+    "content-hash": "be4efb9af7860377ba6b8b82496a1e9b",
     "packages": [
         {
             "name": "alphagov/notifications-php-client",
-            "version": "7.0.0",
+            "version": "7.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/alphagov/notifications-php-client.git",
-                "reference": "9e9b52272e352426e6bc913addd0683dee428fe9"
+                "reference": "09608eb9d5a8638b25f1725ff037378cf40508c4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/alphagov/notifications-php-client/zipball/9e9b52272e352426e6bc913addd0683dee428fe9",
-                "reference": "9e9b52272e352426e6bc913addd0683dee428fe9",
+                "url": "https://api.github.com/repos/alphagov/notifications-php-client/zipball/09608eb9d5a8638b25f1725ff037378cf40508c4",
+                "reference": "09608eb9d5a8638b25f1725ff037378cf40508c4",
                 "shasum": ""
             },
             "require": {
@@ -55,9 +55,9 @@
             "description": "PHP client for GOV.UK Notifications",
             "support": {
                 "issues": "https://github.com/alphagov/notifications-php-client/issues",
-                "source": "https://github.com/alphagov/notifications-php-client/tree/7.0.0"
+                "source": "https://github.com/alphagov/notifications-php-client/tree/7.1.0"
             },
-            "time": "2026-02-18T10:10:35+00:00"
+            "time": "2026-06-09T07:53:34+00:00"
         },
         {
             "name": "aws/aws-crt-php",
