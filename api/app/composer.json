@@ -29,6 +29,7 @@
         }
     },
     "require": {
+        "ext-openssl": "*",
         "aws/aws-sdk-php": "^3.379.3",
         "digideps/common": "^1.0",
         "doctrine/doctrine-bundle": "^2.18.1",
