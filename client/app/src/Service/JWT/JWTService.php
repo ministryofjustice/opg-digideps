@@ -27,15 +27,17 @@ class JWTService
     public function getUrn(string $jwt): ?string
     {
         $jws = $this->serializerManager->unserialize($jwt);
+
+        /** @var array<string, string> $protectedHeader */
         $protectedHeader = $jws->getSignature(0)->getProtectedHeader();
-        $jku = $protectedHeader['jku'];
 
         // Get public key from API
-        $jwkResponse = $this->openInternetClient->request('GET', $jku);
+        $jwkResponse = $this->openInternetClient->request('GET', $protectedHeader['jku']);
+
+        /** @var array $jwks */
         $jwks = json_decode($jwkResponse->getContent(), true);
 
-        $kid = $protectedHeader['kid'];
-        $jwk = JWKSet::createFromKeyData($jwks)->get($kid);
+        $jwk = JWKSet::createFromKeyData($jwks)->get($protectedHeader['kid']);
 
         $isVerified = $this->jwsVerifier->verifyWithKey($jws, $jwk, 0);
 
@@ -43,6 +45,11 @@ class JWTService
             throw new \DomainException('Invalid JWS');
         }
 
-        return json_decode($jws->getPayload(), true)['sub'] ?? null;
+        $jwsPayload = $jws->getPayload();
+
+        /** @var array<string, ?string> $payloadArray */
+        $payloadArray = is_string($jwsPayload) ? (json_decode($jwsPayload, true) ?? []) : $jwsPayload;
+
+        return $payloadArray['sub'] ?? null;
     }
 }

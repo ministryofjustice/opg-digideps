@@ -9,6 +9,7 @@ use Jose\Component\KeyManagement\JWKFactory;
 use Jose\Component\Signature\Algorithm\RS256;
 use Jose\Component\Signature\JWSBuilder;
 use Jose\Component\Signature\Serializer\CompactSerializer;
+use OPG\Digideps\Common\Validating\ValidatingArray;
 use OPG\Digideps\Frontend\Service\JWT\JWTService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -20,7 +21,7 @@ class JWTServiceTest extends TestCase
     /** @var HttpClientInterface&MockObject */
     private HttpClientInterface $httpClient;
 
-    private string $privateKey;
+    private mixed $privateKey;
     private string $publicKeyPem;
 
     public function setUp(): void
@@ -28,12 +29,27 @@ class JWTServiceTest extends TestCase
         // Generate an RSA key pair for signing test JWTs
         $res = openssl_pkey_new(['private_key_bits' => 2048, 'private_key_type' => OPENSSL_KEYTYPE_RSA]);
 
-        $privateKey = '';
-        openssl_pkey_export($res, $privateKey);
-        $this->privateKey = $privateKey;
+        if (!$res) {
+            throw new \RuntimeException('Unable to generate private key');
+        }
 
         $details = openssl_pkey_get_details($res);
-        $this->publicKeyPem = $details['key'];
+
+        if (!$details) {
+            throw new \RuntimeException('Unable to get key details');
+        }
+
+        $this->publicKeyPem = new ValidatingArray($details)->getStringOrDefault('key', '');
+
+        if ($this->publicKeyPem === '') {
+            throw new \RuntimeException('Unable to generate public key');
+        }
+
+        $exported = openssl_pkey_export($res, $this->privateKey);
+
+        if (!$exported) {
+            throw new \RuntimeException('Unable to export private key');
+        }
 
         $this->httpClient = self::createMock(HttpClientInterface::class);
     }
@@ -45,13 +61,16 @@ class JWTServiceTest extends TestCase
         $kid = 'test-kid-' . bin2hex(random_bytes(4));
 
         // make a real RSA-signed JWT whose kid and jku headers match the JWKs we serve
+        if (!is_string($this->privateKey)) {
+            throw new \RuntimeException('Invalid private key');
+        }
         $key = JWKFactory::createFromKey($this->privateKey);
 
         $algorithmManager = new AlgorithmManager([new RS256()]);
         $jwsBuilder = new JWSBuilder($algorithmManager);
 
         $jws = $jwsBuilder->create()
-            ->withPayload(json_encode(['sub' => $expectedSub]))
+            ->withPayload(json_encode(['sub' => $expectedSub]) ?: '')
             ->addSignature($key, ['alg' => 'RS256', 'jku' => $jkuUrl, 'kid' => $kid])
             ->build();
 
@@ -59,7 +78,19 @@ class JWTServiceTest extends TestCase
         $jwtString = $serializer->serialize($jws, 0);
 
         // this is the JWK response
-        $details = openssl_pkey_get_details(openssl_pkey_get_public($this->publicKeyPem));
+        $publicKey = openssl_pkey_get_public($this->publicKeyPem);
+
+        if (!$publicKey) {
+            throw new \RuntimeException('Unable to get public key');
+        }
+
+        /** @var array<string, array<string, string>> $details */
+        $details = openssl_pkey_get_details($publicKey);
+
+        if (!$details) {
+            throw new \RuntimeException('Unable to get details from public key');
+        }
+
         $jwk = [
             'kty' => 'RSA',
             'kid' => $kid,
@@ -67,6 +98,7 @@ class JWTServiceTest extends TestCase
             'n' => rtrim(strtr(base64_encode($details['rsa']['n']), '+/', '-_'), '='),
             'e' => rtrim(strtr(base64_encode($details['rsa']['e']), '+/', '-_'), '='),
         ];
+
         $jwksJson = json_encode(['keys' => [$jwk]]);
 
         // Mock the HTTP client to return the JWK set when the jku URL is fetched

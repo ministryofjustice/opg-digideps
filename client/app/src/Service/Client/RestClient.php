@@ -108,14 +108,20 @@ class RestClient implements RestClientInterface
         // Temporarily scoping this to super admins until we're happy with the flow
         if ($response->hasHeader(self::HEADER_JWT) && $user->getRoleName() === User::ROLE_SUPER_ADMIN) {
             try {
-                $jwt = $response->getHeader(self::HEADER_JWT)[0];
+                /** @var ?string $jwt */
+                $jwt = $response->getHeader(self::HEADER_JWT)[0] ?? null;
+
+                if ($jwt === null) {
+                    throw new \HttpHeaderException(
+                        sprintf('Expected JWT header "%s" not found in API response', self::HEADER_JWT)
+                    );
+                }
 
                 $subjectUrn = $this->jwtService->getUrn($jwt);
 
                 // Move to secure cookie in next iteration
                 $this->redisStorage->set(sprintf('%s-jwt', $subjectUrn), $jwt);
             } catch (\Throwable $e) {
-                // Add steps for refreshing JWT if expired here
                 $jwtDecodeFailureReason = sprintf('Failed to decode JWT - %s', $e->getMessage());
                 $this->logger->warning($jwtDecodeFailureReason);
 
