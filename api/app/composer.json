@@ -29,7 +29,6 @@
         }
     },
     "require": {
-        "ext-openssl": "*",
         "aws/aws-sdk-php": "^3.384.10",
         "digideps/common": "^1.0",
         "doctrine/doctrine-bundle": "^2.18.2",
@@ -73,6 +72,7 @@
         "symfony/yaml": "^6.4.41"
     },
     "require-dev": {
+        "ext-openssl": "*",
         "behat/behat": "^3.31",
         "behat/gherkin": "^4.17.0",
         "behat/mink": "^1.13",
