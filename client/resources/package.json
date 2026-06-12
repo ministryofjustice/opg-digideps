@@ -55,8 +55,7 @@
     "globals": [
       "Event",
       "InputEvent",
-      "fetch",
-      "FormData"
+      "fetch"
     ],
     "env": [
       "jest"

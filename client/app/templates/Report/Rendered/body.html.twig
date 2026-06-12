@@ -26,7 +26,15 @@
             'transDomain': 'report-contacts'
         } %}
     {% endif %}
-    
+
+    {% if report.hasSection('deputyExpenses') %}
+        {% include '@App/Report/Rendered/_deputy_expenses.html.twig' with {
+            'report': report,
+            'transOptions': transOptions,
+            'transDomain': 'report-deputy-expenses'
+        } %}
+    {% endif %}
+        
     {% if report.hasSection('gifts') %}
         {% include '@App/Report/Rendered/_gifts.html.twig' with {
           'report': report,

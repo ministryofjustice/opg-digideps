@@ -18,10 +18,14 @@ class ChecklistTest extends KernelTestCase
     {
         $this->validator = Validation::createValidatorBuilder()
             ->enableAttributeMapping()
+            ->enableAnnotationMapping()
+            ->addDefaultDoctrineAnnotationReader()
             ->getValidator();
     }
 
     /**
+     * @test
+     *
      * @dataProvider submitProfDeputyCostsChecklistValuesProvider
      */
     public function validationsSubmitProfDeputyCostsChecklist(
