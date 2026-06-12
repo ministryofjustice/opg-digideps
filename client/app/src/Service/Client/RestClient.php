@@ -7,7 +7,6 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
-use Lcobucci\JWT\Validation\ConstraintViolation;
 use OPG\Digideps\Common\Registration\SelfRegisterData;
 use OPG\Digideps\Frontend\Entity\User;
 use OPG\Digideps\Frontend\Exception as AppException;
@@ -22,7 +21,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * Connects to RESTful Server (API)
@@ -116,9 +114,6 @@ class RestClient implements RestClientInterface
 
                 // Move to secure cookie in next iteration
                 $this->redisStorage->set(sprintf('%s-jwt', $subjectUrn), $jwt);
-            } catch (ConstraintViolation $e) {
-                // Swallow expired token errors for now and just log - implement once we're rolling JWT to all users
-                $this->logger->warning(sprintf('JWT expired: %s', $e->getMessage()));
             } catch (\Throwable $e) {
                 // Add steps for refreshing JWT if expired here
                 $jwtDecodeFailureReason = sprintf('Failed to decode JWT - %s', $e->getMessage());
