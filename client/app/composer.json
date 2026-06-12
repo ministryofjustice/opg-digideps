@@ -84,7 +84,7 @@
         "symfony/web-profiler-bundle": "^6.4.41",
         "twig/extra-bundle": "^3.24",
         "twig/intl-extra": "^3.26",
-        "web-token/jwt-core": "^2.2.11"
+        "web-token/jwt-framework": "^3.4.10"
     },
     "minimum-stability": "stable",
     "extra": {
