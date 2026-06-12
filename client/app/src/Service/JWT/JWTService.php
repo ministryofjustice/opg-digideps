@@ -27,14 +27,14 @@ class JWTService
     public function getUrn(string $jwt): ?string
     {
         $jws = $this->serializerManager->unserialize($jwt);
-        $signature = $jws->getSignature(0);
-        $jku = $signature->getProtectedHeader()['jku'];
+        $protectedHeader = $jws->getSignature(0)->getProtectedHeader();
+        $jku = $protectedHeader['jku'];
 
         // Get public key from API
         $jwkResponse = $this->openInternetClient->request('GET', $jku);
         $jwks = json_decode($jwkResponse->getContent(), true);
 
-        $kid = $signature->getProtectedHeader()['kid'];
+        $kid = $protectedHeader['kid'];
         $jwk = JWKSet::createFromKeyData($jwks)->get($kid);
 
         $isVerified = $this->jwsVerifier->verifyWithKey($jws, $jwk, 0);

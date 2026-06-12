@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Frontend\Unit\Service\JWT;
 
-use Jose\Component\Core\JWK;
-use Lcobucci\JWT\Configuration;
-use Lcobucci\JWT\Signer\Key\InMemory;
-use Lcobucci\JWT\Signer\Rsa\Sha256;
+use Jose\Component\Core\AlgorithmManager;
+use Jose\Component\KeyManagement\JWKFactory;
+use Jose\Component\Signature\Algorithm\RS256;
+use Jose\Component\Signature\JWSBuilder;
+use Jose\Component\Signature\Serializer\CompactSerializer;
 use OPG\Digideps\Frontend\Service\JWT\JWTService;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
@@ -44,28 +45,29 @@ class JWTServiceTest extends TestCase
         $kid = 'test-kid-' . bin2hex(random_bytes(4));
 
         // make a real RSA-signed JWT whose kid and jku headers match the JWKs we serve
-        $config = Configuration::forAsymmetricSigner(
-            new Sha256(),
-            InMemory::plainText($this->privateKey),
-            InMemory::plainText($this->publicKeyPem)
-        );
+        $key = JWKFactory::createFromKey($this->privateKey);
 
-        $jwtString = $config->builder()
-            ->withHeader('kid', $kid)
-            ->withHeader('jku', $jkuUrl)
-            ->relatedTo($expectedSub)
-            ->getToken($config->signer(), $config->signingKey())
-            ->toString();
+        $algorithmManager = new AlgorithmManager([new RS256()]);
+        $jwsBuilder = new JWSBuilder($algorithmManager);
 
+        $jws = $jwsBuilder->create()
+            ->withPayload(json_encode(['sub' => $expectedSub]))
+            ->addSignature($key, ['alg' => 'RS256', 'jku' => $jkuUrl, 'kid' => $kid])
+            ->build();
+
+        $serializer = new CompactSerializer();
+        $jwtString = $serializer->serialize($jws, 0);
+
+        // this is the JWK response
         $details = openssl_pkey_get_details(openssl_pkey_get_public($this->publicKeyPem));
-        $jwk = new JWK([
+        $jwk = [
             'kty' => 'RSA',
             'kid' => $kid,
             'use' => 'sig',
             'n' => rtrim(strtr(base64_encode($details['rsa']['n']), '+/', '-_'), '='),
             'e' => rtrim(strtr(base64_encode($details['rsa']['e']), '+/', '-_'), '='),
-        ]);
-        $jwksJson = json_encode(['keys' => [$jwk->all()]]);
+        ];
+        $jwksJson = json_encode(['keys' => [$jwk]]);
 
         // Mock the HTTP client to return the JWK set when the jku URL is fetched
         $mockResponse = $this->createMock(ResponseInterface::class);
