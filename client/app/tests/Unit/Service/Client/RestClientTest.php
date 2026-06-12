@@ -518,9 +518,7 @@ class RestClientTest extends TestCase
         $userArray = ['id' => 1, 'firstname' => 'Peter'];
         $userJson = json_encode($userArray);
 
-        [$ignored, $jwtHeaders, $jwtClaims] = $this->generateValidJwtJwkArrays();
-
-        $encodedJWT = JWTService::base64EncodeJWT($jwtHeaders, $jwtClaims);
+        $encodedJWT = 'not-real-jwt';
 
         $parameterBag = self::prophesize(ParameterBagInterface::class);
 
@@ -575,41 +573,6 @@ class RestClientTest extends TestCase
 
         $this->assertEquals($expectedLoggedInUser, $actualUser);
         $this->assertEquals($sessionToken, $actualAuthToken);
-    }
-
-    private function generateValidJwtJwkArrays()
-    {
-        $jwks = [
-            'keys' => [
-                0 => [
-                    'kty' => 'RSA',
-                    'n' => 'wxzA2VTIuogiRQT1DVPYrBc4GZmS5eR6UXawTXCWB8vXKT-2TXRcb8r5esVmzOspqpU7k9jFEhI-upEx15Ok7VG7kAuvJ8k17PV4iJryw14YIwWet7hVFkVzlFn_yUVULwOXsCn6bZi3ZKbV4C9p5xtyB1QiZkoEVzvtp88r_T1f9kA1a8lIeTFrrVV-xV6kReCUSu9Ctlx-Ev6Gi66siW_81_5hV-BvUmzFskVAca6O92EKxTW764EoIxWGZYJ2v1j-eZkGk2-OdsFY5OdIqPEo8Hm0U5KwsY5CsDOpHPVEMJnQLFBJuq7bHve-DqUtl2QcJnDUcDKUnXuqKGJ-HQ',
-                    'e' => 'AQAB',
-                    'kid' => '45ed51b79f00b11d47100b9cc7092ef2819da72df0fc0be8f89824a779973bc0',
-                    'alg' => 'RS256',
-                    'use' => 'sig',
-                ],
-            ],
-        ];
-
-        $jwtHeaders = [
-            'jku' => 'https://digideps.local/v2/.well-known/jwks.json',
-            'typ' => 'JWT',
-            'alg' => 'RS256',
-            'kid' => '45ed51b79f00b11d47100b9cc7092ef2819da72df0fc0be8f89824a779973bc0',
-        ];
-
-        $jwtClaims = [
-            'aud' => 'registration_service',
-            'iat' => strtotime('now'),
-            'exp' => strtotime('+1 hour'),
-            'nbf' => strtotime('-10 seconds'),
-            'iss' => 'digideps',
-            'sub' => 'urn:opg:digideps:users:1',
-            'role' => 'ROLE_SUPER_ADMIN',
-        ];
-
-        return [$jwks, $jwtHeaders, $jwtClaims];
     }
 
     public function tearDown(): void
