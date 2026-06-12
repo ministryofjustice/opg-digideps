@@ -6,6 +6,7 @@ namespace Tests\OPG\Digideps\Frontend\Unit\Service\JWT;
 
 use OPG\Digideps\Frontend\Service\JWT\JWTService;
 use PHPUnit\Framework\TestCase;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /**
  * @property string[]     $jwtHeaders
@@ -99,7 +100,7 @@ JWT;
     /** @test */
     public function getJWTHeaders()
     {
-        $sut = new JWTService();
+        $sut = new JWTService(self::createStub(HttpClientInterface::class));
         $actualHeaders = $sut->getJWTHeaders($this->jwtHeadersClaimSignature);
 
         self::assertSame($this->jwtHeaders, $actualHeaders);
@@ -108,7 +109,7 @@ JWT;
     /** @test */
     public function getJWTClaims()
     {
-        $sut = new JWTService();
+        $sut = new JWTService(self::createStub(HttpClientInterface::class));
         $actualHeaders = $sut->getJWTClaims($this->jwtHeadersClaimSignature);
 
         $this->jwtClaims['aud'] = [$this->jwtClaims['aud']];
@@ -122,7 +123,7 @@ JWT;
     /** @test */
     public function getJWTSignature()
     {
-        $sut = new JWTService();
+        $sut = new JWTService(self::createStub(HttpClientInterface::class));
         $signature = $sut->getJWTSignature($this->jwtHeadersClaimSignature);
 
         self::assertSame(json_encode($this->jwtSignature), $signature);
@@ -131,7 +132,7 @@ JWT;
     /** @test */
     public function getPublicKeyByJWK()
     {
-        $sut = new JWTService();
+        $sut = new JWTService(self::createStub(HttpClientInterface::class));
         $actualPublicKey = $sut->getPublicKeyByJWK($this->jwtHeadersClaimSignature, $this->jwks);
 
         $expectedPublicKey = <<<KEY
