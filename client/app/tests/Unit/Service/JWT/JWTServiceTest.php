@@ -88,13 +88,13 @@ JWT;
     /** @test */
     public function base64EncodeJWTMissingSignature()
     {
-        self::assertSame($this->jwtHeadersClaim, JWTService::base64EncodeJWT($this->jwtHeaders, $this->jwtClaims));
+        self::assertSame($this->jwtHeadersClaim, self::base64EncodeJWT($this->jwtHeaders, $this->jwtClaims));
     }
 
     /** @test */
     public function base64EncodeJWTWithSignature()
     {
-        self::assertSame($this->jwtHeadersClaimSignature, JWTService::base64EncodeJWT($this->jwtHeaders, $this->jwtClaims, $this->jwtSignature));
+        self::assertSame($this->jwtHeadersClaimSignature, self::base64EncodeJWT($this->jwtHeaders, $this->jwtClaims, $this->jwtSignature));
     }
 
     /** @test */
@@ -149,5 +149,20 @@ CQIDAQAB
 KEY;
 
         self::assertSame($expectedPublicKey, $actualPublicKey);
+    }
+
+    private static function base64EncodeJWT(array $headers, array $claims, ?array $signature = null)
+    {
+        $headers = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(json_encode($headers)));
+        $claims = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(json_encode($claims)));
+
+        $jwt = sprintf('%s.%s', $headers, $claims);
+
+        if (isset($signature)) {
+            $signature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(json_encode($signature)));
+            $jwt = sprintf('%s.%s', $jwt, $signature);
+        }
+
+        return $jwt;
     }
 }

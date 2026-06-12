@@ -71,21 +71,6 @@ class JWTService
         return $token;
     }
 
-    public static function base64EncodeJWT(array $headers, array $claims, ?array $signature = null)
-    {
-        $headers = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(json_encode($headers)));
-        $claims = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(json_encode($claims)));
-
-        $jwt = sprintf('%s.%s', $headers, $claims);
-
-        if (isset($signature)) {
-            $signature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(json_encode($signature)));
-            $jwt = sprintf('%s.%s', $jwt, $signature);
-        }
-
-        return $jwt;
-    }
-
     public function getPublicKeyByJWK(string $jwt, array $jwks): string
     {
         $headers = $this->getJWTHeaders($jwt);
