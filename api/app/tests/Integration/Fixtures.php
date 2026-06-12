@@ -295,13 +295,9 @@ class Fixtures
         return $ret;
     }
 
-    /**
-     * @return Contact
-     */
     public function createContact(Report $report, array $settersMap = []): Contact
     {
-        $contact = new Contact();
-        $contact->setReport($report);
+        $contact = new Contact($report);
         $contact->setAddress('address' . time());
 
         foreach ($settersMap as $k => $v) {
