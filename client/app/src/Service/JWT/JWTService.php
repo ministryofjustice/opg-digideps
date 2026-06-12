@@ -25,38 +25,17 @@ class JWTService
         $this->parser = new Parser(new JoseEncoder());
     }
 
-    /**
-     * @return array<string, mixed>
-     */
-    public function getJWTHeaders(string $jwt): array
+    private function decodeAndVerifyWithJWK(string $jwt, array $jwks): Token
     {
         $token = $this->parser->parse($jwt);
 
-        return $token->headers()->all();
-    }
+        $headers = $token->headers()->all();
+        // @TODO rewrite using lcobucci/jwt when https://github.com/lcobucci/jwt/issues/32 is resolved
+        $set = JWKSet::createFromKeyData($jwks);
 
-    /**
-     * @return array<string, mixed>
-     */
-    public function getJWTClaims(string $jwt): array
-    {
-        $token = $this->parser->parse($jwt);
+        $jwk = $set->get($headers['kid']); // Same as $json['keys'][0]['kid']
 
-        return $token->claims()->all();
-    }
-
-    public function getJWTSignature(string $jwt): string
-    {
-        $token = $this->parser->parse($jwt);
-
-        return $token->signature()->hash();
-    }
-
-    public function decodeAndVerifyWithJWK(string $jwt, array $jwks): Token
-    {
-        $publicKey = $this->getPublicKeyByJWK($jwt, $jwks);
-
-        $token = $this->parser->parse($jwt);
+        $publicKey = RSAKey::createFromJWK($jwk)->toPEM();
 
         $validator = new Validator();
 
@@ -71,26 +50,18 @@ class JWTService
         return $token;
     }
 
-    public function getPublicKeyByJWK(string $jwt, array $jwks): string
-    {
-        $headers = $this->getJWTHeaders($jwt);
-        // @TODO rewrite using lcobucci/jwt when https://github.com/lcobucci/jwt/issues/32 is resolved
-        $set = JWKSet::createFromKeyData($jwks);
-
-        $jwk = $set->get($headers['kid']); // Same as $json['keys'][0]['kid']
-
-        return RSAKey::createFromJWK($jwk)->toPEM();
-    }
-
     public function getUrn(string $jwt)
     {
-        $jwtHeaders = $this->getJWTHeaders($jwt);
+        $token = $this->parser->parse($jwt);
+
+        $jwtHeaders = $token->headers()->all();
 
         // Get public key from API
         $jwkResponse = $this->openInternetClient->request('GET', $jwtHeaders['jku']);
         $jwks = json_decode($jwkResponse->getContent(), true);
 
         $decoded = $this->decodeAndVerifyWithJWK($jwt, $jwks);
+
         return $decoded->claims()->get('sub');
     }
 }
