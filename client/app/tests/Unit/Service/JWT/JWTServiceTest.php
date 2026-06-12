@@ -4,83 +4,81 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Frontend\Unit\Service\JWT;
 
+use Jose\Component\Core\JWK;
+use Lcobucci\JWT\Configuration;
+use Lcobucci\JWT\Signer\Key\InMemory;
+use Lcobucci\JWT\Signer\Rsa\Sha256;
+use OPG\Digideps\Frontend\Service\JWT\JWTService;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Contracts\HttpClient\ResponseInterface;
 
 class JWTServiceTest extends TestCase
 {
-    /**
-     * @var string[]
-     */
-    private array $jwtHeaders;
+    /** @var HttpClientInterface&MockObject */
+    private HttpClientInterface $httpClient;
 
-    /**
-     * @var string[]
-     */
-    private array $jwtClaims;
-
-    /**
-     * @var string[]
-     */
-    private array $jwtSignature;
-
-    private string $jwtHeadersClaim;
-    private string $jwtHeadersClaimSignature;
+    private string $privateKey;
+    private string $publicKeyPem;
 
     public function setUp(): void
     {
-        // The props below are all valid values based on a JWT (not used in prod)
-        $this->jwtHeaders = [
-            'jku' => 'https://digideps.local/v2/.well-known/jwks.json',
-            'typ' => 'JWT',
-            'alg' => 'RS256',
-            'kid' => 'cc57f4dd3bea080baf65e78883ad4874d22d182822350242c3b7a3dd051bf18c',
-        ];
+        // Generate an RSA key pair for signing test JWTs
+        $res = openssl_pkey_new(['private_key_bits' => 2048, 'private_key_type' => OPENSSL_KEYTYPE_RSA]);
 
-        $this->jwtClaims = [
-            'aud' => 'urn:opg:registration_service',
-            'iat' => '1656359966.779836',
-            'exp' => '1656363566.779841',
-            'nbf' => '1656359956.779853',
-            'iss' => 'urn:opg:digideps',
-            'sub' => 'urn:opg:digideps:users:3',
-            'role' => 'urn:opg:digideps:ROLE_SUPER_ADMIN',
-        ];
+        $privateKey = '';
+        openssl_pkey_export($res, $privateKey);
+        $this->privateKey = $privateKey;
 
-        $this->jwtSignature = ['a signature'];
+        $details = openssl_pkey_get_details($res);
+        $this->publicKeyPem = $details['key'];
 
-        // Not used in prod
-        $this->jwtHeadersClaim = <<<JWT
-eyJqa3UiOiJodHRwczpcL1wvZGlnaWRlcHMubG9jYWxcL3YyXC8ud2VsbC1rbm93blwvandrcy5qc29uIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYiLCJraWQiOiJjYzU3ZjRkZDNiZWEwODBiYWY2NWU3ODg4M2FkNDg3NGQyMmQxODI4MjIzNTAyNDJjM2I3YTNkZDA1MWJmMThjIn0.eyJhdWQiOiJ1cm46b3BnOnJlZ2lzdHJhdGlvbl9zZXJ2aWNlIiwiaWF0IjoiMTY1NjM1OTk2Ni43Nzk4MzYiLCJleHAiOiIxNjU2MzYzNTY2Ljc3OTg0MSIsIm5iZiI6IjE2NTYzNTk5NTYuNzc5ODUzIiwiaXNzIjoidXJuOm9wZzpkaWdpZGVwcyIsInN1YiI6InVybjpvcGc6ZGlnaWRlcHM6dXNlcnM6MyIsInJvbGUiOiJ1cm46b3BnOmRpZ2lkZXBzOlJPTEVfU1VQRVJfQURNSU4ifQ
-JWT;
-
-        // Not used in prod
-        $this->jwtHeadersClaimSignature = <<<JWT
-eyJqa3UiOiJodHRwczpcL1wvZGlnaWRlcHMubG9jYWxcL3YyXC8ud2VsbC1rbm93blwvandrcy5qc29uIiwidHlwIjoiSldUIiwiYWxnIjoiUlMyNTYiLCJraWQiOiJjYzU3ZjRkZDNiZWEwODBiYWY2NWU3ODg4M2FkNDg3NGQyMmQxODI4MjIzNTAyNDJjM2I3YTNkZDA1MWJmMThjIn0.eyJhdWQiOiJ1cm46b3BnOnJlZ2lzdHJhdGlvbl9zZXJ2aWNlIiwiaWF0IjoiMTY1NjM1OTk2Ni43Nzk4MzYiLCJleHAiOiIxNjU2MzYzNTY2Ljc3OTg0MSIsIm5iZiI6IjE2NTYzNTk5NTYuNzc5ODUzIiwiaXNzIjoidXJuOm9wZzpkaWdpZGVwcyIsInN1YiI6InVybjpvcGc6ZGlnaWRlcHM6dXNlcnM6MyIsInJvbGUiOiJ1cm46b3BnOmRpZ2lkZXBzOlJPTEVfU1VQRVJfQURNSU4ifQ.WyJhIHNpZ25hdHVyZSJd
-JWT;
+        $this->httpClient = self::createMock(HttpClientInterface::class);
     }
 
-    public function testBase64EncodeJWTMissingSignature()
+    public function testGetUrnReturnsSubjectFromValidJwt(): void
     {
-        self::assertSame($this->jwtHeadersClaim, self::base64EncodeJWT($this->jwtHeaders, $this->jwtClaims));
-    }
+        $jkuUrl = 'https://digideps.local/user.json';
+        $expectedSub = 'urn:opg:digideps:users:42';
+        $kid = 'test-kid-' . bin2hex(random_bytes(4));
 
-    public function testBase64EncodeJWTWithSignature()
-    {
-        self::assertSame($this->jwtHeadersClaimSignature, self::base64EncodeJWT($this->jwtHeaders, $this->jwtClaims, $this->jwtSignature));
-    }
+        // make a real RSA-signed JWT whose kid and jku headers match the JWKs we serve
+        $config = Configuration::forAsymmetricSigner(
+            new Sha256(),
+            InMemory::plainText($this->privateKey),
+            InMemory::plainText($this->publicKeyPem)
+        );
 
-    private static function base64EncodeJWT(array $headers, array $claims, ?array $signature = null)
-    {
-        $headers = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(json_encode($headers)));
-        $claims = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(json_encode($claims)));
+        $jwtString = $config->builder()
+            ->withHeader('kid', $kid)
+            ->withHeader('jku', $jkuUrl)
+            ->relatedTo($expectedSub)
+            ->getToken($config->signer(), $config->signingKey())
+            ->toString();
 
-        $jwt = sprintf('%s.%s', $headers, $claims);
+        $details = openssl_pkey_get_details(openssl_pkey_get_public($this->publicKeyPem));
+        $jwk = new JWK([
+            'kty' => 'RSA',
+            'kid' => $kid,
+            'use' => 'sig',
+            'n' => rtrim(strtr(base64_encode($details['rsa']['n']), '+/', '-_'), '='),
+            'e' => rtrim(strtr(base64_encode($details['rsa']['e']), '+/', '-_'), '='),
+        ]);
+        $jwksJson = json_encode(['keys' => [$jwk->all()]]);
 
-        if (isset($signature)) {
-            $signature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode(json_encode($signature)));
-            $jwt = sprintf('%s.%s', $jwt, $signature);
-        }
+        // Mock the HTTP client to return the JWK set when the jku URL is fetched
+        $mockResponse = $this->createMock(ResponseInterface::class);
+        $mockResponse->method('getContent')->willReturn($jwksJson);
 
-        return $jwt;
+        $this->httpClient
+            ->expects(self::once())
+            ->method('request')
+            ->with('GET', $jkuUrl)
+            ->willReturn($mockResponse);
+
+        $service = new JWTService($this->httpClient);
+
+        self::assertSame($expectedSub, $service->getUrn($jwtString));
     }
 }

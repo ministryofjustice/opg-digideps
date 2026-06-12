@@ -112,6 +112,7 @@
         }
     ],
     "require-dev": {
+        "ext-openssl": "*",
         "dg/bypass-finals": "^1.9",
         "jangregor/phpstan-prophecy": "^2.3.0",
         "mockery/mockery": "^1.6.12",

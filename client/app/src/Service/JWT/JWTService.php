@@ -25,15 +25,14 @@ class JWTService
         $this->parser = new Parser(new JoseEncoder());
     }
 
-    private function decodeAndVerifyWithJWK(string $jwt, array $jwks): Token
+    private function decodeAndVerifyWithJWK(Token $token, array $jwks): Token
     {
-        $token = $this->parser->parse($jwt);
-
         $headers = $token->headers()->all();
+        $kid = $headers['kid']; // Same as $json['keys'][0]['kid']
+
         // @TODO rewrite using lcobucci/jwt when https://github.com/lcobucci/jwt/issues/32 is resolved
         $set = JWKSet::createFromKeyData($jwks);
-
-        $jwk = $set->get($headers['kid']); // Same as $json['keys'][0]['kid']
+        $jwk = $set->get($kid);
 
         $publicKey = RSAKey::createFromJWK($jwk)->toPEM();
 
@@ -60,7 +59,7 @@ class JWTService
         $jwkResponse = $this->openInternetClient->request('GET', $jwtHeaders['jku']);
         $jwks = json_decode($jwkResponse->getContent(), true);
 
-        $decoded = $this->decodeAndVerifyWithJWK($jwt, $jwks);
+        $decoded = $this->decodeAndVerifyWithJWK($token, $jwks);
 
         return $decoded->claims()->get('sub');
     }
