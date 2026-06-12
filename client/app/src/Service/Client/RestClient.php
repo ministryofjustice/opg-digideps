@@ -2,11 +2,6 @@
 
 namespace OPG\Digideps\Frontend\Service\Client;
 
-use OPG\Digideps\Frontend\Entity\User;
-use OPG\Digideps\Frontend\Exception as AppException;
-use OPG\Digideps\Frontend\Service\Client\TokenStorage\RedisStorage;
-use OPG\Digideps\Frontend\Service\JWT\JWTService;
-use OPG\Digideps\Frontend\Service\RequestIdLoggerProcessor;
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Exception\RequestException;
@@ -14,6 +9,11 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Lcobucci\JWT\Validation\ConstraintViolation;
 use OPG\Digideps\Common\Registration\SelfRegisterData;
+use OPG\Digideps\Frontend\Entity\User;
+use OPG\Digideps\Frontend\Exception as AppException;
+use OPG\Digideps\Frontend\Service\Client\TokenStorage\RedisStorage;
+use OPG\Digideps\Frontend\Service\JWT\JWTService;
+use OPG\Digideps\Frontend\Service\RequestIdLoggerProcessor;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -74,8 +74,7 @@ class RestClient implements RestClientInterface
         protected LoggerInterface $logger,
         protected string $clientSecret,
         protected ParameterBagInterface $params,
-        protected HttpClientInterface $openInternetClient,
-        protected JWTService $JWTService
+        protected JWTService $jwtService
     ) {
         $saveHistory = $params->get('kernel.debug');
         if ($saveHistory !== true) {
@@ -105,7 +104,6 @@ class RestClient implements RestClientInterface
             }
         }
 
-        /** @var User $user */
         $user = $this->arrayToEntity(User::class, $this->extractDataArray($response));
         $authToken = $response->getHeader(RestClient::HEADER_AUTH_TOKEN)[0];
 
@@ -113,14 +111,8 @@ class RestClient implements RestClientInterface
         if ($response->hasHeader(self::HEADER_JWT) && $user->getRoleName() === User::ROLE_SUPER_ADMIN) {
             try {
                 $jwt = $response->getHeader(self::HEADER_JWT)[0];
-                $jwtHeaders = $this->JWTService->getJWTHeaders($jwt);
 
-                // Get public key from API
-                $jwkResponse = $this->openInternetClient->request('GET', $jwtHeaders['jku']);
-                $jwks = json_decode($jwkResponse->getContent(), true);
-
-                $decoded = $this->JWTService->decodeAndVerifyWithJWK($jwt, $jwks);
-                $subjectUrn = $decoded->claims()->get('sub');
+                $subjectUrn = $this->jwtService->getUrn($jwt);
 
                 // Move to secure cookie in next iteration
                 $this->redisStorage->set(sprintf('%s-jwt', $subjectUrn), $jwt);

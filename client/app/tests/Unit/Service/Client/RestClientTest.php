@@ -7,7 +7,6 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\TransferException;
 use GuzzleHttp\Psr7\Response as GuzzleResponse;
 use JMS\Serializer\SerializerInterface;
-use Lcobucci\JWT\Token;
 use Mockery as m;
 use Mockery\MockInterface;
 use OPG\Digideps\Common\Registration\SelfRegisterData;
@@ -24,73 +23,25 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
-use Symfony\Component\HttpClient\MockHttpClient;
-use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class RestClientTest extends TestCase
 {
     use ProphecyTrait;
 
-    /**
-     * @var RestClient
-     */
-    private $object;
-
-    /**
-     * @var ClientInterface|MockInterface
-     */
-    private $client;
-
-    /**
-     * @var SerializerInterface|MockInterface
-     */
-    private $serialiser;
-
-    /**
-     * @var RedisStorage|MockInterface
-     */
-    private $redisStorage;
-
-    /**
-     * @var LoggerInterface|MockInterface
-     */
-    private $logger;
-
-    /**
-     * @var ContainerInterface|MockInterface
-     */
-    private $container;
-
-    /**
-     * @var string
-     */
-    private $clientSecret;
-
-    /**
-     * @var string
-     */
-    private $sessionToken;
-
-    /**
-     * @var ResponseInterface|MockInterface
-     */
-    private $endpointResponse;
-
-    /**
-     * @var HttpClientInterface|MockInterface
-     */
-    private $openInternetClient;
-
-    /**
-     * @var HttpClientInterface|MockInterface
-     */
-    private $jwtService;
-
-    private m\LegacyMockInterface|ParameterBagInterface|MockInterface $parameterBag;
+    private RestClient $object;
+    private ClientInterface&MockInterface $client;
+    private SerializerInterface&MockInterface $serialiser;
+    private RedisStorage&MockInterface $redisStorage;
+    private LoggerInterface&MockInterface $logger;
+    private ContainerInterface&MockInterface $container;
+    private string $clientSecret;
+    private string $sessionToken;
+    private ResponseInterface&MockInterface $endpointResponse;
+    private JWTService $jwtService;
+    private ParameterBagInterface&MockInterface $parameterBag;
 
     public function setUp(): void
     {
@@ -107,11 +58,8 @@ class RestClientTest extends TestCase
         $this->container->shouldReceive('get')->with('logger')->andReturn($this->logger);
         $this->container->shouldIgnoreMissing();
 
-        $this->parameterBag->shouldReceive('get')->with('kernel.debug')->andReturn(false);
-
         $this->endpointResponse = m::mock(ResponseInterface::class);
-
-        $this->openInternetClient = m::mock(HttpClientInterface::class);
+        $this->parameterBag->shouldReceive('get')->with('kernel.debug')->andReturn(false);
         $this->jwtService = m::mock(JWTService::class);
 
         $this->object = new RestClient(
@@ -122,7 +70,6 @@ class RestClientTest extends TestCase
             $this->logger,
             $this->clientSecret,
             $this->parameterBag,
-            $this->openInternetClient,
             $this->jwtService
         );
 
@@ -516,7 +463,6 @@ class RestClientTest extends TestCase
             $this->logger,
             $this->clientSecret,
             $this->parameterBag,
-            $this->openInternetClient,
             $this->jwtService
         );
         $object->setLoggedUserId(1);
@@ -572,19 +518,12 @@ class RestClientTest extends TestCase
         $userArray = ['id' => 1, 'firstname' => 'Peter'];
         $userJson = json_encode($userArray);
 
-        [$jwks, $jwtHeaders, $jwtClaims] = $this->generateValidJwtJwkArrays();
+        [$ignored, $jwtHeaders, $jwtClaims] = $this->generateValidJwtJwkArrays();
 
         $encodedJWT = JWTService::base64EncodeJWT($jwtHeaders, $jwtClaims);
 
-        $mockResponseJson = json_encode($jwks, JSON_THROW_ON_ERROR);
-        $mockResponse = new MockResponse($mockResponseJson, [
-            'http_code' => 200,
-            'response_headers' => ['Content-Type: application/json'],
-        ]);
-
         $parameterBag = self::prophesize(ParameterBagInterface::class);
 
-        $openInternetClient = new MockHttpClient($mockResponse);
         $container = $this->prophesize(ContainerInterface::class);
 
         $request = new Request();
@@ -604,7 +543,6 @@ class RestClientTest extends TestCase
             $logger->reveal(),
             $clientSecret,
             $parameterBag->reveal(),
-            $openInternetClient,
             $jwtService->reveal()
         );
 
@@ -627,16 +565,9 @@ class RestClientTest extends TestCase
             })
         )->willReturn($loginResponse);
 
-        $redisStorage->set('urn:opg:digideps:users:1-jwt', $encodedJWT)->shouldBeCalled();
+        $jwtService->getUrn($encodedJWT)->shouldBeCalled()->willReturn('urn:opg:digideps:users:1');
 
-        $jwtService->getJWTHeaders($encodedJWT)->shouldBeCalled()->willReturn($jwtHeaders);
-        $jwtService->decodeAndVerifyWithJWK($encodedJWT, $jwks)->shouldBeCalled()->willReturn(
-            new Token\Plain(
-                new Token\DataSet([], ''),
-                new Token\DataSet($jwtClaims, ''),
-                new Token\Signature('', '')
-            )
-        );
+        $redisStorage->set('urn:opg:digideps:users:1-jwt', $encodedJWT)->shouldBeCalled();
 
         $logger->warning(Argument::any())->shouldNotBeCalled();
 
