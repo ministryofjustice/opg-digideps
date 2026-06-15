@@ -49,7 +49,7 @@ class AssetOther extends Asset
         return $titleToTemplateMap[$this->getTitle() ?? ''] ?? 'default';
     }
 
-    public function getBehatIdentifier(): string
+    public function getBehatIdentifier(): ?string
     {
         return $this->getDescription();
     }
