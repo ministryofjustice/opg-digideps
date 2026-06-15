@@ -7,6 +7,7 @@ namespace OPG\Digideps\Backend\Security;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\Exception\UnauthorisedException;
 use OPG\Digideps\Backend\Exception\UserWrongCredentialsException;
+use OPG\Digideps\Backend\Exception\UserWrongCredentialsManyAttempts;
 use OPG\Digideps\Backend\Repository\UserRepository;
 use OPG\Digideps\Backend\Service\Auth\AuthService;
 use OPG\Digideps\Backend\Service\BruteForce\AttemptsIncrementalWaitingChecker;
@@ -123,12 +124,13 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
         $userId = $request->attributes->get('user_id');
 
         $this->verboseLogger->notice('Failed login', [
-            'user_id'   => $userId,
-            'reason'    => $exception->getMessage(),
+            'user_id' => $userId,
+            'reason' => $exception->getMessage(),
         ]);
 
         if ($this->attemptsInTimechecker->maxAttemptsReached($this->bruteForceKey)) {
-            throw $exception;
+            $message = 'Too many login attempts with incorrect password';
+            throw new UserWrongCredentialsManyAttempts($message);
         }
 
         throw new UserWrongCredentialsException($exception->getMessage(), $exception->getCode());
