@@ -23,7 +23,7 @@ class ChecklistInformation
     #[JMS\Groups(['checklist-information'])]
     private ?string $information = null;
 
-    public function __construct(?Checklist $checklist, ?string $information)
+    public function __construct(?Checklist $checklist, ?string $information = '')
     {
         $this->setChecklist($checklist);
         $this->setInformation(trim($information ?? ''));
