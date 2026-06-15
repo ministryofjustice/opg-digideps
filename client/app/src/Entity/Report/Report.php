@@ -2,6 +2,7 @@
 
 namespace OPG\Digideps\Frontend\Entity\Report;
 
+use OPG\Digideps\Frontend\Components\Review\ClientBenefitsCheckReviewView;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\Report\Traits as ReportTraits;
 use OPG\Digideps\Frontend\Entity\User;
@@ -1454,5 +1455,10 @@ class Report implements StartEndDateComparableInterface
         $this->reasonForNoMoneyOut = $reasonForNoMoneyOut;
 
         return $this;
+    }
+
+    public function getClientBenefitsCheckReviewView(): ClientBenefitsCheckReviewView
+    {
+        return new ClientBenefitsCheckReviewView($this);
     }
 }
