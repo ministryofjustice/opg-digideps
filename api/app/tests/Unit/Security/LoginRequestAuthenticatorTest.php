@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Unit\Security;
 
+use OPG\Digideps\Backend\Exception\UserWrongCredentialsManyAttempts;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use OPG\Digideps\Backend\Entity\User;
@@ -420,7 +421,8 @@ final class LoginRequestAuthenticatorTest extends TestCase
     {
         $authException = new AuthenticationException('It broke', 444);
 
-        self::expectExceptionObject($authException);
+        $tooManyAttemptsException = new UserWrongCredentialsManyAttempts('Too many login attempts with incorrect password');
+        self::expectExceptionObject($tooManyAttemptsException);
 
         $this->attemptsInTimeChecker->maxAttemptsReached('')->willReturn(true);
 
