@@ -374,10 +374,33 @@ jobs:
           path: /tmp/snyk-scanner-cache
           key: snyk-scanner-image-${{ matrix.runs_on }}-${{ needs.prewarm_snyk_scanner.outputs.opg_actions_ref }}
 
-      - name: load snyk scanner image
+      - name: Load snyk scanner image
         if: matrix.svc_name != 'mock-sirius' && (steps.existing_image.outputs.exists != 'true' || steps.daily_snyk.outputs.run == 'true' || inputs.branch_name == 'staging')
+        env:
+          OPG_GITHUB_ACTIONS_REF: ${{ steps.opg_actions_ref.outputs.ref }}
         run: |
-          docker load -i /tmp/snyk-scanner-cache/snyk-scanner.tar
+          CACHE_FILE="/tmp/snyk-scanner-cache/snyk-scanner.tar"
+
+          if [ -f "${CACHE_FILE}" ]; then
+            docker load -i "${CACHE_FILE}"
+          else
+            echo "Snyk scanner cache missing, pulling and saving image"
+
+            git clone https://github.com/ministryofjustice/opg-github-actions.git /tmp/opg-github-actions
+            cd /tmp/opg-github-actions
+            git checkout "${OPG_GITHUB_ACTIONS_REF}"
+
+            docker compose -f "/tmp/opg-github-actions/docker-compose.yml" pull snyk
+
+            mkdir -p /tmp/snyk-scanner-cache
+
+            SNYK_IMAGE="$(docker compose -f "/tmp/opg-github-actions/docker-compose.yml" config | awk '$1 == "image:" {print $2; exit}')"
+
+            echo "Using Snyk image: ${SNYK_IMAGE}"
+
+            docker save -o "${CACHE_FILE}" "${SNYK_IMAGE}"
+            docker load -i "${CACHE_FILE}"
+          fi
 
       - name: Run Snyk Scan
         id: snyk_scan

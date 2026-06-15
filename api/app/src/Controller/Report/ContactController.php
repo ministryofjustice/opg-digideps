@@ -65,8 +65,7 @@ class ContactController extends RestController
             ]);
             $report = $this->findEntityBy(Report::class, $contactData['report_id']);
             $this->denyAccessIfReportDoesNotBelongToUser($report);
-            $contact = new Contact();
-            $contact->setReport($report);
+            $contact = new Contact($report);
         } else {
             $this->formatter->validateArray($contactData, [
                 'id' => 'mustExist',
@@ -89,14 +88,14 @@ class ContactController extends RestController
 
         $contactData = new ValidatingArray($contactData);
 
-        $contact->setContactName($contactData->getStringOrThrow('contact_name'))
-            ->setAddress($contactData->getStringOrThrow('address'))
-            ->setAddress2($contactData->getStringOrThrow('address2'))
-            ->setCounty($contactData->getStringOrThrow('county'))
-            ->setPostcode($contactData->getStringOrThrow('postcode'))
-            ->setCountry($contactData->getStringOrThrow('country'))
-            ->setExplanation($contactData->getStringOrThrow('explanation'))
-            ->setRelationship($contactData->getStringOrThrow('relationship'));
+        $contact->setContactName($contactData->getStringOrNull('contact_name'))
+            ->setAddress($contactData->getStringOrNull('address'))
+            ->setAddress2($contactData->getStringOrNull('address2'))
+            ->setCounty($contactData->getStringOrNull('county'))
+            ->setPostcode($contactData->getStringOrNull('postcode'))
+            ->setCountry($contactData->getStringOrNull('country'))
+            ->setExplanation($contactData->getStringOrNull('explanation'))
+            ->setRelationship($contactData->getStringOrNull('relationship'));
 
         $this->em->persist($contact);
         $this->em->flush();
