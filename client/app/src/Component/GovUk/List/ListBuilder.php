@@ -1,0 +1,29 @@
+<?php
+
+declare(strict_types=1);
+
+namespace OPG\Digideps\Frontend\Component\GovUk\List;
+
+final class ListBuilder
+{
+    /**
+     * @var array<Entry> $entries
+     */
+    private array $entries;
+
+    public function __construct()
+    {
+        $this->entries = [];
+    }
+
+    public function addEntry(string $key, string $value, ?Action $action = null): ListBuilder
+    {
+        $this->entries[] = new Entry($key, $value, $action);
+        return $this;
+    }
+
+    public function makeList(): ListEntries
+    {
+        return new ListEntries(...$this->entries);
+    }
+}
