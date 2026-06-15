@@ -1,0 +1,73 @@
+{% set l10n = view.l10n %}
+{% set list = view.list %}
+{% set table = view.table %}
+{% set hasTable = view.hasTable %}
+
+<h2 class="govuk-heading-m">
+    {{ l10n.header }}
+</h2>
+
+<div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+        <h3 class="govuk-summary-card__title govuk-!-width-one-half">
+            {{ l10n.question }}
+        </h3>
+        <h3 class="govuk-summary-card__title govuk-!-width-one-half">
+            {{ l10n.answer }}
+        </h3>
+    </div>
+    <div class="govuk-summary-card__content">
+        <dl class="govuk-summary-list">
+            {% for entry in list.entries %}
+                <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key govuk-!-width-one-half">
+                        {{ entry.key }}
+                    </dt>
+                    <dd class="govuk-summary-list__value govuk-!-width-one-half">
+                        {{ entry.value }}
+                    </dd>
+                </div>
+            {% endfor %}
+        </dl>
+    </div>
+</div>
+
+{% if hasTable %}
+    <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+            <h3 class="govuk-summary-card__title govuk-!-width-full">
+                {{ l10n.tableHeader }}
+            </h3>
+        </div>
+        <div class="govuk-summary-card__content">
+            <table class="govuk-table">
+                {% if table.header is not null %}
+                    <thead>
+                        <tr class="govuk-table__row">
+                            {% for cell in table.header.cells %}
+                                <th scope="col" class="{{ cell.classNames }}">{{ cell.content }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                {% endif %}
+                <tbody class="govuk-table__body">
+                    {% for row in table.rows %}
+                        <tr class="govuk-table__row">
+                            {% for cell in row.cells %}
+                                {% if cell.header %}
+                                    <th scope="row" class="{{ cell.classNames }}">
+                                        {{ cell.content }}
+                                    </th>
+                                {% else %}
+                                    <td class="{{ cell.classNames }}">
+                                        {{ cell.content }}
+                                    </td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
