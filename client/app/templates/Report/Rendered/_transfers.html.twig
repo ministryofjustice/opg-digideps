@@ -1,0 +1,91 @@
+{% set page = 'summaryPage' %}
+
+{% macro accountDetails(account) %}
+    {% if account.requiresBankName %}
+        {{ account.bank }}<br/>
+    {% endif %}
+    <p class="govuk-!-font-size-16">
+        {{ account.accountTypeText }}<br/>
+        {% if account.requiresSortCode %}
+            Sort code: {{ account.sortCode }}<br/>
+        {% endif %}
+        Account number: ****{{ account.accountNumber }}<br/>
+        Joint account: {{ account.isJointAccount == 'no' ? 'No' : 'Yes' }}<br/>
+    </p>
+{% endmacro %}
+
+<h2 class="govuk-heading-m">Money transfers</h2>
+
+<div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+        <h3 class="govuk-summary-card__title govuk-!-width-one-half">
+            Question
+        </h3>
+        <h3 class="govuk-summary-card__title govuk-!-width-one-half">
+            Answer
+        </h3>
+    </div>
+
+    <div class="govuk-summary-card__content">
+        <table class="govuk-table">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-half">
+                        {{ 'existPage.form.noTransfersToAdd.label' | trans(transOptions,transDomain)  }}
+                    </th>
+                    <td class="govuk-table__cell govuk-!-width-one-half">
+                        {{ report.noTransfersToAdd is not null ? (report.noTransfersToAdd ? 'No' : 'Yes') : 'not entered' | trans({}, 'common') }}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% if report.moneyTransfers | length > 0 %}
+    <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+            <h3 class="govuk-summary-card__title">
+                List of transfers
+            </h3>
+        </div>
+        <div class="govuk-summary-card__content">
+            <table class="govuk-table">
+                <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">
+                        {{ (page ~ '.accountFrom') | trans({},transDomain) }}
+                    </th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">
+                        {{ (page ~ '.accountTo') | trans({},transDomain) }}
+                    </th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">
+                        {{ (page ~ '.description') | trans({},transDomain) }}
+                    </th>
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">
+                        {{ (page ~ '.amount') | trans({},transDomain) }}
+                    </th>
+                </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    {% for transfer in report.moneyTransfers|sort((a, b) => a.accountFrom.bank <=> b.accountFrom.bank) %}
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell govuk-!-width-one-quarter">
+                                {{ _self.accountDetails(transfer.accountFrom) }}
+                            </td>
+                            <td class="govuk-table__cell govuk-!-width-one-quarter">
+                                {{ _self.accountDetails(transfer.accountTo) }}
+                            </td>
+                            <td class="govuk-table__cell govuk-!-width-one-quarter">
+                                {{ transfer.description | nl2br }}
+                            </td>
+                            <td class="govuk-table__cell govuk-!-width-one-quarter">
+                                £{{ transfer.amount | money_format }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endif %}
