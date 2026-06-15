@@ -13,7 +13,6 @@ const Autosave = {
 
   init: function (window, autosavePeriodSecs, fetchFunction) {
     this.window = window
-    this.isAutosaving = false
     this.autosaveForms = window.document.querySelectorAll('form.js-autosave')
 
     if (fetchFunction === undefined) {
@@ -22,6 +21,8 @@ const Autosave = {
     this.fetchFunction = fetchFunction
 
     this.autosaveForms.forEach((autosaveForm) => {
+      autosaveForm.isSaving = false
+
       const saveProgressButton = autosaveForm.querySelector('button.js-autosave-save-progress-button')
 
       // Form elements which, when they change, don't trigger an autosave.
@@ -70,11 +71,11 @@ const Autosave = {
   },
 
   autosave: async function (saveProgressButton, autosaveForm, ignoredElementNames) {
-    if (this.isAutosaving) {
+    if (autosaveForm.isAutosaving) {
       return false
     }
 
-    this.isAutosaving = true
+    autosaveForm.isAutosaving = true
     saveProgressButton.disabled = true
 
     const formData = new FormData(autosaveForm)
@@ -91,7 +92,7 @@ const Autosave = {
     })
 
     const doneCallback = function (response) {
-      this.isAutosaving = false
+      autosaveForm.isAutosaving = false
       saveProgressButton.disabled = false
 
       // check whether the response was a redirect to the login page;
@@ -108,7 +109,7 @@ const Autosave = {
     })
       .then(doneCallback)
       .catch(() => {
-        this.isAutosaving = false
+        autosaveForm.isAutosaving = false
         saveProgressButton.disabled = false
       })
 
