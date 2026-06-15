@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace OPG\Digideps\Frontend\Controller\Report;
 
+use OPG\Digideps\Frontend\Component\Review\ReportReviewViews;
 use OPG\Digideps\Frontend\Controller\AbstractController;
 use OPG\Digideps\Frontend\Entity\Client;
 use OPG\Digideps\Frontend\Entity\DeputyInterface;
@@ -385,6 +386,7 @@ class ReportController extends AbstractController
             'reportStatus' => $status,
             'backLink' => $backLink,
             'feeTotals' => $report->getFeeTotals(),
+            'review' => new ReportReviewViews($report, $this->translator),
         ]);
     }
 
