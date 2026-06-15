@@ -1,0 +1,6 @@
+{% props width = 'full', h = '1' %}
+{% set h_tag = "h" ~ h %}
+
+<{{h_tag}} class="govuk-summary-card__title govuk-!-width-{{ width }}" digideps>
+    {% block content %}{% endblock %}
+</{{h_tag}}>

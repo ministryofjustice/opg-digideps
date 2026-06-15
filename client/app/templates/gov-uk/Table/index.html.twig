@@ -1,0 +1,30 @@
+{% props rows = [], header = null %}
+
+<table class="govuk-table">
+    {% if header %}
+        <thead>
+            <tr class="govuk-table__row">
+                {% for cell in header.cells %}
+                    <th scope="col" class="{{ cell.classNames }}"> {{ cell.content }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+    {% endif %}
+    <tbody class="govuk-table__body">
+    {% for row in rows %}
+        <tr class="govuk-table__row">
+            {% for cell in row.cells %}
+                {% if cell.isHeader %}
+                    <th scope="row" class="{{ cell.classNames }}">
+                        {{ cell.content }}
+                    </th>
+                {% else %}
+                    <td class="{{ cell.classNames }}">
+                        {{ cell.content }}
+                    </td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

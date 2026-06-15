@@ -1,0 +1,9 @@
+<twig:Heading size="m" h="2">
+    {{ l10n.header }}
+</twig:Heading>
+
+<twig:Summary:ListCard h="3" entries="{{ list.entries }}"/>
+
+{% if table is not null %}
+    <twig:Summary:TableCard h="3" title="{{ l10n.tableHeader }}" header="{{ table.header }}" rows="{{ table.rows }}"/>
+{% endif %}

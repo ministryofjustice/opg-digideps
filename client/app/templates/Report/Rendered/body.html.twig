@@ -35,11 +35,7 @@
     {% endif %}
 
     {% if report.getClientBenefitsCheck is not null and report.hasSection('clientBenefitsCheck') %}
-        {% include '@App/Report/Rendered/_client_benefits_check.html.twig' with {
-            'view': review.getClientBenefitsCheckReviewView,
-            'transOptions': transOptions,
-            'transDomain': 'report-client-benefits-check'
-        } %}
+        <twig:Review:ClientBenefitsCheckReviewView report="{{ report }}" />
     {% endif %}
 
     {% if report.hasSection('deputyExpenses') %}

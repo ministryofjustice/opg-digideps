@@ -1,0 +1,10 @@
+{% props h="1", title, header, rows %}
+
+<twig:Summary:Card>
+    <twig:block name="header">
+        <twig:Summary:Header width="full" h="{{ h }}">
+            {{ title }}
+        </twig:Summary:Header>
+    </twig:block>
+    <twig:Table header="{{ header }}" rows="{{ rows }}"/>
+</twig:Summary:Card>

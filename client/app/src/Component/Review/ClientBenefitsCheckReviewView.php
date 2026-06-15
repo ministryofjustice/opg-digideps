@@ -12,7 +12,9 @@ use OPG\Digideps\Frontend\Component\GovUk\Table\TableBuilder;
 use OPG\Digideps\Frontend\Entity\Report\ClientBenefitsCheck;
 use OPG\Digideps\Frontend\Entity\Report\Report;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
+#[AsTwigComponent]
 final class ClientBenefitsCheckReviewView
 {
     private const string NUMERIC_FORMAT = ''; //Should be 'numeric' but that would be inconsistent with other tables currently
@@ -90,11 +92,6 @@ final class ClientBenefitsCheckReviewView
     private function formatMoney(float $value): string
     {
         return '£ ' . number_format($value, 2);
-    }
-
-    public function hasTable(): bool
-    {
-        return $this->table !== null;
     }
 
     /**

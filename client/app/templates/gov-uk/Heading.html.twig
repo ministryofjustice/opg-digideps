@@ -1,0 +1,8 @@
+{% props size = "m", h = "1" %}
+{% set class = "govuk-heading-" ~ size %}
+{% set h_tag = "h" ~ h %}
+
+<{{h_tag}} class="{{ class }}">
+    {% block content %}{% endblock %}
+</{{h_tag}}>
+

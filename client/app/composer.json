@@ -80,6 +80,7 @@
         "symfony/translation": "^6.4.32",
         "symfony/twig-bundle": "^6.4.32",
         "symfony/uid": "^6.4.32",
+        "symfony/ux-twig-component": "^2.36",
         "symfony/validator": "^6.4.33",
         "symfony/web-profiler-bundle": "^6.4.32",
         "twig/extra-bundle": "^3.23",

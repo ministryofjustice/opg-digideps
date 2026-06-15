@@ -1,0 +1,29 @@
+{% props header = ['Question', 'Answer'], h='1', entries %}
+
+<twig:Summary:Card>
+    <twig:block name="header">
+        <twig:Summary:Header width="one-half" h="{{ h }}">
+            {{ header.0 }}
+        </twig:Summary:Header>
+        <twig:Summary:Header width="one-half" h="{{ h }}">
+            {{ header.1 }}
+        </twig:Summary:Header>
+    </twig:block>
+    <dl class="govuk-summary-list">
+        {% for entry in entries %}
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key {{ entry.widthClass }}">
+                    {{ entry.key }}
+                </dt>
+                <dd class="govuk-summary-list__value {{ entry.widthClass }}">
+                    {{ entry.value }}
+                </dd>
+                {# if entry.action is not null %}
+                    <dd class="govuk-summary-list__action {{ entry.widthClass }}">
+                        <twig:List:Action action={{ entry.action }}/>
+                    </dd>
+                {# endif #}
+            </div>
+        {% endfor %}
+    </dl>
+</twig:Summary:Card>
