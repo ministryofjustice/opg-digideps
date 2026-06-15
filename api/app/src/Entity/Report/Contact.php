@@ -15,338 +15,202 @@ class Contact
 {
     use CreateUpdateTimestamps;
 
-    /**
-     * @var int
-     */
     #[JMS\Type('integer')]
     #[JMS\Groups(['contact'])]
     #[ORM\Column(name: 'id', type: 'integer', nullable: false)]
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'IDENTITY')]
     #[ORM\SequenceGenerator(sequenceName: 'contact_id_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private ?int $id = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['contact'])]
     #[ORM\Column(name: 'contact_name', type: 'string', length: 255, nullable: true)]
-    private $contactName;
+    private ?string $contactName = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['contact'])]
     #[ORM\Column(name: 'address', type: 'string', length: 200, nullable: true)]
-    private $address;
+    private ?string $address = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['contact'])]
     #[ORM\Column(name: 'address2', type: 'string', length: 200, nullable: true)]
-    private $address2;
+    private ?string $address2 = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['contact'])]
     #[ORM\Column(name: 'county', type: 'string', length: 200, nullable: true)]
-    private $county;
+    private ?string $county = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['contact'])]
     #[ORM\Column(name: 'postcode', type: 'string', length: 10, nullable: true)]
-    private $postcode;
+    private ?string $postcode = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['contact'])]
     #[ORM\Column(name: 'country', type: 'string', length: 10, nullable: true)]
-    private $country;
+    private ?string $country = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['contact'])]
     #[ORM\Column(name: 'explanation', type: 'text', nullable: true)]
-    private $explanation;
+    private ?string $explanation = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['contact'])]
     #[ORM\Column(name: 'relationship', type: 'string', length: 100, nullable: true)]
-    private $relationship;
+    private ?string $relationship = null;
 
-    /**
-     * @var string
-     */
     #[JMS\Type('string')]
     #[JMS\Groups(['contact'])]
     #[ORM\Column(name: 'phone1', type: 'string', length: 20, nullable: true)]
-    private $phone1;
+    private ?string $phone1 = null;
 
-    /**
-     * @var Report
-     */
     #[ORM\JoinColumn(name: 'report_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\ManyToOne(targetEntity: Report::class, inversedBy: 'contacts')]
-    private $report;
+    private Report $report;
 
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
+    public function __construct(Report $report)
     {
-        return $this->id;
+        $this->report = $report;
     }
 
-    /**
-     * Set contact_name.
-     *
-     * @return Contact
-     */
-    public function setContactName($contactName)
+    public function getId(): int
+    {
+        return $this->id ?? 0;
+    }
+
+    public function setId(int $id): static
+    {
+        if ($this->id === null) {
+            $this->id = $id;
+        } elseif ($id === 0) {
+            throw new \DomainException('You may not set the id of an entity to zero.');
+        } else {
+            throw new \LogicException('You may not set the id of an entity more than once.');
+        }
+
+        return $this;
+    }
+
+    public function setContactName(?string $contactName): static
     {
         $this->contactName = $contactName;
 
         return $this;
     }
 
-    /**
-     * Get contactName.
-     *
-     * @return string
-     */
-    public function getContactName()
+    public function getContactName(): ?string
     {
         return $this->contactName;
     }
 
-    /**
-     * Set postcode.
-     *
-     * @param string $postcode
-     *
-     * @return Contact
-     */
-    public function setPostcode($postcode)
+    public function setPostcode(?string $postcode): static
     {
         $this->postcode = $postcode;
 
         return $this;
     }
 
-    /**
-     * Get postcode.
-     *
-     * @return string
-     */
-    public function getPostcode()
+    public function getPostcode(): ?string
     {
         return $this->postcode;
     }
 
-    /**
-     * Set explanation.
-     *
-     * @param string $explanation
-     *
-     * @return Contact
-     */
-    public function setExplanation($explanation)
+    public function setExplanation(?string $explanation): static
     {
         $this->explanation = $explanation;
 
         return $this;
     }
 
-    /**
-     * Get explanation.
-     *
-     * @return string
-     */
-    public function getExplanation()
+    public function getExplanation(): ?string
     {
         return $this->explanation;
     }
 
-    /**
-     * Set relationship.
-     *
-     * @param string $relationship
-     *
-     * @return Contact
-     */
-    public function setRelationship($relationship)
+    public function setRelationship(?string $relationship): static
     {
         $this->relationship = $relationship;
 
         return $this;
     }
 
-    /**
-     * Get relationship.
-     *
-     * @return string
-     */
-    public function getRelationship()
+    public function getRelationship(): ?string
     {
         return $this->relationship;
     }
 
-    /**
-     * Set phone1.
-     *
-     * @param string $phone1
-     *
-     * @return Contact
-     */
-    public function setPhone1($phone1)
+    public function setPhone1(?string $phone1): static
     {
         $this->phone1 = $phone1;
 
         return $this;
     }
 
-    /**
-     * Get phone1.
-     *
-     * @return string
-     */
-    public function getPhone1()
+    public function getPhone1(): ?string
     {
         return $this->phone1;
     }
 
-    /**
-     * Set report.
-     *
-     * @return Contact
-     */
-    public function setReport(?Report $report = null)
+    public function setReport(Report $report): static
     {
         $this->report = $report;
 
         return $this;
     }
 
-    /**
-     * Get report.
-     *
-     * @return Report
-     */
-    public function getReport()
+    public function getReport(): Report
     {
         return $this->report;
     }
 
-    /**
-     * Set address.
-     *
-     * @param string $address
-     *
-     * @return Contact
-     */
-    public function setAddress($address)
+    public function setAddress(?string $address): static
     {
         $this->address = $address;
 
         return $this;
     }
 
-    /**
-     * Get address.
-     *
-     * @return string
-     */
-    public function getAddress()
+    public function getAddress(): ?string
     {
         return $this->address;
     }
 
-    /**
-     * Set address2.
-     *
-     * @param string $address2
-     *
-     * @return Contact
-     */
-    public function setAddress2($address2)
+    public function setAddress2(?string $address2): static
     {
         $this->address2 = $address2;
 
         return $this;
     }
 
-    /**
-     * Get address2.
-     *
-     * @return string
-     */
-    public function getAddress2()
+    public function getAddress2(): ?string
     {
         return $this->address2;
     }
 
-    /**
-     * Set county.
-     *
-     * @param string $county
-     *
-     * @return Contact
-     */
-    public function setCounty($county)
+    public function setCounty(?string $county): static
     {
         $this->county = $county;
 
         return $this;
     }
 
-    /**
-     * Get county.
-     *
-     * @return string
-     */
-    public function getCounty()
+    public function getCounty(): ?string
     {
         return $this->county;
     }
 
-    /**
-     * Set country.
-     *
-     * @param string $country
-     *
-     * @return Contact
-     */
-    public function setCountry($country)
+    public function setCountry(?string $country): static
     {
         $this->country = $country;
 
         return $this;
     }
 
-    /**
-     * Get country.
-     *
-     * @return string
-     */
-    public function getCountry()
+    public function getCountry(): ?string
     {
         return $this->country;
     }
