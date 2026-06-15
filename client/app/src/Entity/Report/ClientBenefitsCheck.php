@@ -161,6 +161,9 @@ class ClientBenefitsCheck implements ClientBenefitsCheckInterface
         return $this;
     }
 
+    /**
+     * @return ArrayCollection<MoneyReceivedOnClientsBehalf>|null
+     */
     public function getTypesOfMoneyReceivedOnClientsBehalf(): ?ArrayCollection
     {
         return $this->typesOfMoneyReceivedOnClientsBehalf;
