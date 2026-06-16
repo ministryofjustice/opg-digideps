@@ -11,29 +11,42 @@ use Tests\OPG\Digideps\Backend\Unit\Service\PredisMock;
 
 final class AttemptsInTimeCheckerTest extends TestCase
 {
-    private PredisMock $redis;
-    private AttemptsInTimeChecker $object;
-    private string $key;
+    private AttemptsInTimeChecker $sut;
+    private string $key = 'key';
 
     public function setUp(): void
     {
-        $this->redis = new PredisMock();
-        $this->object = new AttemptsInTimeChecker($this->redis, 'prefix');
-        $this->key = 'key';
+        $redis = new PredisMock();
+        $this->sut = new AttemptsInTimeChecker($redis, 'prefix');
     }
 
     public static function attempts(): array
     {
         return [
-                [[], [0 => false, 100 => false, 1000 => false]],
+                [[], [0 => ['tooMany' => false, 'intervalMins' => 0], 100 => ['tooMany' => false, 'intervalMins' => 0]]],
                 // 1 attempt in last 60 secs
-                [[[1, 10]], [0 => true]],
+                [[[1, 10]], [0 => ['tooMany' => true, 'intervalMins' => 10]]],
                 // 2 attempts in last 60 secs
-                [[[2, 10]], [0 => false, 10 => true]],
+                [[[2, 10]], [0 => ['tooMany' => false, 'intervalMins' => 0], 10 => ['tooMany' => true, 'intervalMins' => 10]]],
                 // as above with previous history of failures
-                [[[2, 10]], [0 => false, 1 => true, 2 => true, 3 => true, 14 => false, 15 => true, 100 => false, 200 => false]],
-                // two intervals
-                [[[3, 60], [5, 120]],  [0 => false, 1 => false, 2 => true, 63 => false, 64 => true, 65 => true]],
+                [[[2, 10]], [
+                    0 => ['tooMany' => false, 'intervalMins' => 0],
+                    1 => ['tooMany' => true, 'intervalMins' => 10],
+                    2 => ['tooMany' => true, 'intervalMins' => 10],
+                    3 => ['tooMany' => true, 'intervalMins' => 10],
+                    14 => ['tooMany' => false, 'intervalMins' => 0],
+                    15 => ['tooMany' => true, 'intervalMins' => 10],
+                    100 => ['tooMany' => false, 'intervalMins' => 0],
+                    200 => ['tooMany' => false, 'intervalMins' => 0]
+                ]],
+                // two intervals with differing criteria
+                [[[3, 60], [5, 120]], [
+                    0 => ['tooMany' => false, 'intervalMins' => 0],
+                    1 => ['tooMany' => false, 'intervalMins' => 0],
+                    2 => ['tooMany' => true, 'intervalMins' => 60],
+                    63 => ['tooMany' => false, 'intervalMins' => 0],
+                    64 => ['tooMany' => true, 'intervalMins' => 120],
+                ]],
             ];
     }
 
@@ -42,24 +55,25 @@ final class AttemptsInTimeCheckerTest extends TestCase
     {
         foreach ($triggers as $trigger) {
             list($maxAttempts, $interval) = $trigger;
-            $this->object->addTrigger($maxAttempts, $interval);
+            $this->sut->addTrigger($maxAttempts, $interval);
         }
 
-        // 1st interval reached
         foreach ($attemptsTimeStampToExpected as $timestamp => $expected) {
-            $this->assertEquals($expected, $this->object->registerAttempt($this->key, $timestamp)->maxAttemptsReached($this->key, $timestamp));
+            $actual = $this->sut->registerAttempt($this->key, $timestamp)->maxAttemptsReached($this->key, $timestamp);
+            $this->assertEquals($expected, $actual);
         }
     }
 
     public function testResetAttempts(): void
     {
-        $this->object->addTrigger(1, 10);
+        $this->sut->addTrigger(1, 10);
 
-        $this->assertTrue($this->object->registerAttempt($this->key)->maxAttemptsReached($this->key));
-        $this->object->resetAttempts('wrong key');
-        $this->assertTrue($this->object->maxAttemptsReached($this->key));
+        $this->assertTrue($this->sut->registerAttempt($this->key)->maxAttemptsReached($this->key)['tooMany']);
 
-        $this->object->resetAttempts($this->key);
-        $this->assertFalse($this->object->maxAttemptsReached($this->key));
+        $this->sut->resetAttempts('wrong key');
+        $this->assertTrue($this->sut->maxAttemptsReached($this->key)['tooMany']);
+
+        $this->sut->resetAttempts($this->key);
+        $this->assertFalse($this->sut->maxAttemptsReached($this->key)['tooMany']);
     }
 }

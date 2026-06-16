@@ -99,13 +99,12 @@ class RestClient implements RestClientInterface
             $response = $this->apiCall('post', '/auth/login', $credentials, 'response', [], false);
         } catch (RestClientException $e) {
             if ($e->getCode() === 423) {
-                throw new TooManyLoginAttemptsAuthenticationException();
+                throw new TooManyLoginAttemptsAuthenticationException($e->getData()['data']);
             } else {
                 throw new BadCredentialsException('Invalid credentials.', 498);
             }
         }
 
-        /** @var User $user */
         $user = $this->arrayToEntity(User::class, $this->extractDataArray($response));
         $authToken = $response->getHeader(RestClient::HEADER_AUTH_TOKEN)[0];
 
