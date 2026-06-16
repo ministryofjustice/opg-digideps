@@ -75,7 +75,7 @@ public,checklist,satisfied_with_pa_expenses,character varying,3,,NA
 public,checklist,submitted_by,integer,,FOREIGN KEY,NA
 public,checklist,submitted_on,timestamp without time zone,,,NA
 public,checklist,synchronisation_error,text,,,Lorem
-public,checklist,synchronisation_status,character varying,255,,Lorem
+public,checklist,synchronisation_status,character varying,255,,NA
 public,checklist,synchronisation_time,timestamp without time zone,,,NA
 public,checklist,synchronised_by,integer,,FOREIGN KEY,NA
 public,checklist_information,checklist_id,integer,,FOREIGN KEY,NA
@@ -142,6 +142,8 @@ public,contact,postcode,character varying,10,,PostCode
 public,contact,relationship,character varying,100,,Lorem
 public,contact,report_id,integer,,FOREIGN KEY,NA
 public,contact,updated_at,timestamp without time zone,,,NA
+public,counter,counter,integer,,,NA
+public,counter,id,integer,,PRIMARY KEY,NA
 public,court_order,client_id,integer,,FOREIGN KEY,NA
 public,court_order,court_order_uid,character varying,36,,NA
 public,court_order,created_at,timestamp without time zone,,,NA
@@ -155,13 +157,13 @@ public,court_order,status,character varying,10,,NA
 public,court_order,updated_at,timestamp without time zone,,,NA
 public,court_order_deputy,court_order_id,integer,,FOREIGN KEY,NA
 public,court_order_deputy,court_order_id,integer,,PRIMARY KEY,NA
-public,court_order_deputy,deputy_id,integer,,FOREIGN KEY,NA
 public,court_order_deputy,deputy_id,integer,,PRIMARY KEY,NA
+public,court_order_deputy,deputy_id,integer,,FOREIGN KEY,NA
 public,court_order_deputy,is_active,boolean,,,NA
 public,court_order_report,court_order_id,integer,,PRIMARY KEY,NA
 public,court_order_report,court_order_id,integer,,FOREIGN KEY,NA
-public,court_order_report,report_id,integer,,FOREIGN KEY,NA
 public,court_order_report,report_id,integer,,PRIMARY KEY,NA
+public,court_order_report,report_id,integer,,FOREIGN KEY,NA
 public,dd_user,active,boolean,,,NA
 public,dd_user,ad_managed,boolean,,,NA
 public,dd_user,address1,character varying,200,,Lorem
@@ -225,14 +227,15 @@ public,deputy,email3,character varying,60,,Email
 public,deputy,firstname,character varying,100,,FirstName
 public,deputy,id,integer,,PRIMARY KEY,NA
 public,deputy,lastname,character varying,100,,LastName
+public,deputy,organisation_id,integer,,FOREIGN KEY,NA
 public,deputy,phone_alternative,character varying,20,,PhoneNumber
 public,deputy,phone_main,character varying,20,,PhoneNumber
 public,deputy,updated_at,timestamp without time zone,,,NA
 public,deputy,user_id,integer,,FOREIGN KEY,NA
-public,deputy_case,client_id,integer,,PRIMARY KEY,NA
 public,deputy_case,client_id,integer,,FOREIGN KEY,NA
-public,deputy_case,user_id,integer,,FOREIGN KEY,NA
+public,deputy_case,client_id,integer,,PRIMARY KEY,NA
 public,deputy_case,user_id,integer,,PRIMARY KEY,NA
+public,deputy_case,user_id,integer,,FOREIGN KEY,NA
 public,document,created_by,integer,,FOREIGN KEY,NA
 public,document,created_on,timestamp without time zone,,,NA
 public,document,filename,character varying,255,,Lorem
@@ -243,7 +246,7 @@ public,document,report_submission_id,integer,,FOREIGN KEY,NA
 public,document,storage_reference,character varying,512,,NA
 public,document,sync_attempts,integer,,,NA
 public,document,synchronisation_error,text,,,Lorem
-public,document,synchronisation_status,character varying,255,,Lorem
+public,document,synchronisation_status,character varying,255,,NA
 public,document,synchronisation_time,timestamp without time zone,,,NA
 public,document,synchronised_by,integer,,FOREIGN KEY,NA
 public,expense,amount,numeric,,,NA
@@ -322,8 +325,8 @@ public,organisation,is_activated,boolean,,,NA
 public,organisation,name,character varying,256,,Organisation
 public,organisation_user,organisation_id,integer,,PRIMARY KEY,NA
 public,organisation_user,organisation_id,integer,,FOREIGN KEY,NA
-public,organisation_user,user_id,integer,,PRIMARY KEY,NA
 public,organisation_user,user_id,integer,,FOREIGN KEY,NA
+public,organisation_user,user_id,integer,,PRIMARY KEY,NA
 public,pre_registration,client_address_1,character varying,255,,Lorem
 public,pre_registration,client_address_2,character varying,255,,Lorem
 public,pre_registration,client_address_3,character varying,255,,Lorem
