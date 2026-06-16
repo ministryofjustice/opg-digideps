@@ -10,5 +10,8 @@
     "@aws-sdk/client-secrets-manager": "^3.1006.0",
     "puppeteer": "^24.39.0",
     "puppeteer-cluster": "^0.25.0"
+  },
+  "overrides": {
+    "ws": "8.21.0"
   }
 }
