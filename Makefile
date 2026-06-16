@@ -241,37 +241,37 @@ common-phpunit: ##@unit-tests Run the common unit tests.
 common-phpstan: ##@static-analysis Runs PHPStan against common.
 	docker compose run composer-common-phpstan
 
-phpstan-regenerate:
+phpstan-regenerate: ##@static-analysis Regenerate PHPStan.
 	(cd ./common && composer run lint:phpstan)
 	(cd ./api/app && composer run lint:phpstan:baseline)
 	(cd ./client/app && composer run lint:phpstan:baseline)
 	composer run lint:phpstan:baseline
 
-phpstan-regenerate-force:
+phpstan-regenerate-force: ##@static-analysis Regenerate by force PHPStan.
 	(cd ./api/app && composer run lint:phpstan:baseline:force)
 	(cd ./client/app && composer run lint:phpstan:baseline:force)
 	composer run lint:phpstan:baseline:force
 
-playwright-test:
+playwright-test: ##@playwright Runs playwright tests suite.
 	docker compose build playwright-tests
 	docker compose run --rm playwright-tests test
 
-playwright-report:
+playwright-report: ##@playwright Shows report of last run in the browser.
 	docker compose build playwright-tests
 	docker compose run --rm -p 9323:9323 playwright-tests show-report
 
-playwright-lint:
+playwright-lint: ##@playwright Runs eslint on all tests.
 	docker compose build playwright-tests
 	docker compose run --rm playwright-tests lint
 
-playwright-ui:
+playwright-ui: ##@playwright Runs tests in UI interface for debugging.
 	docker compose build playwright-tests
 	docker compose run --rm -p 9525:9525 playwright-tests ui
 
-playwright-check-format:
+playwright-check-format: ##@playwright Checks formatting of tests.
 	docker compose build playwright-tests
 	docker compose run --rm playwright-tests check-format
 
-playwright-format:
+playwright-format: ##@playwright Formats the tests.
 	docker compose build playwright-tests
 	docker compose run --rm playwright-tests format

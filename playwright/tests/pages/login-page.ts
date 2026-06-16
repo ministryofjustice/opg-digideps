@@ -1,7 +1,10 @@
 import { Page, expect } from "@playwright/test";
 
 export class LoginPage {
-  constructor(private page: Page, private baseUrl: string) {}
+  constructor(
+    private page: Page,
+    private baseUrl: string,
+  ) {}
 
   async goto() {
     await this.page.goto(`${this.baseUrl}/login`);
