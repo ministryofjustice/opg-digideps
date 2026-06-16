@@ -20,7 +20,7 @@
                 <dt class="govuk-summary-list__key govuk-!-width-one-half">
                     {{ 'reportingStartDate' | trans({}, 'common' ) }}
                 </dt>
-                <dd class="value govuk-!-width-one-half">
+                <dd class="govuk-summary-list__value govuk-!-width-one-half">
                     {{ report.startDate | date("d/m/Y") }}
                 </dd>
             </div>
@@ -28,7 +28,7 @@
                 <dt class="govuk-summary-list__key govuk-!-width-one-half">
                     {{ 'reportingEndDate' | trans({}, 'common' ) }}
                 </dt>
-                <dd class="value govuk-!-width-one-half">
+                <dd class="govuk-summary-list__value govuk-!-width-one-half">
                     {{ report.endDate | date("d/m/Y") }}
                 </dd>
             </div>
@@ -63,7 +63,7 @@
                 <dt class="govuk-summary-list__key govuk-!-width-one-half">
                     {{ 'address' | trans({}, 'common' ) }}
                 </dt>
-                <dd class="value address-value behat-region-deputy-address govuk-!-width-one-half">
+                <dd class="govuk-summary-list__value address-value behat-region-deputy-address govuk-!-width-one-half">
                     {% if deputy.address1 is not empty %}
                         {{ deputy.address1 }}<br/>
                     {% endif %}
@@ -91,7 +91,7 @@
                 <dt class="govuk-summary-list__key govuk-!-width-one-half">
                     {{ 'telephoneNumber' | trans({}, 'common' ) }}
                 </dt>
-                <dd class="value behat-region-deputy-phone govuk-!-width-one-half">
+                <dd class="govuk-summary-list__value behat-region-deputy-phone govuk-!-width-one-half">
                     {% if deputy.phoneMain %}
                         {{ deputy.phoneMain }}
                     {% else %}
@@ -133,7 +133,7 @@
                 <dt class="govuk-summary-list__key govuk-!-width-one-half">
                     {{ 'address' | trans({}, 'common' ) }}
                 </dt>
-                <dd class="value address-value govuk-!-width-one-half">
+                <dd class="govuk-summary-list__value address-value govuk-!-width-one-half">
                     {% if client.address is not empty %}
                         {{ client.address }}<br/>
                     {% endif %}
@@ -161,7 +161,7 @@
                 <dt class="govuk-summary-list__key govuk-!-width-one-half">
                     {{ 'telephoneNumber' | trans({}, 'common' ) }}
                 </dt>
-                <dd class="value govuk-!-width-one-half">
+                <dd class="govuk-summary-list__value govuk-!-width-one-half">
                     {{client.phone}}
                 </dd>
             </div>
