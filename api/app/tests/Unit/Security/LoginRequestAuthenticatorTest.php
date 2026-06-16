@@ -398,9 +398,9 @@ final class LoginRequestAuthenticatorTest extends TestCase
     #[Test]
     public function onAuthenticationFailure(): void
     {
-        self::expectExceptionObject(new AuthenticationCredentialsNotFoundException('It broke', 444));
-
         $authException = new AuthenticationException('It broke', 444);
+        self::expectExceptionObject($authException);
+
         $this->attemptsInTimeChecker->maxAttemptsReached('')->willReturn(['tooMany' => false, 'intervalMins' => 0]);
 
         $request = Request::create(
