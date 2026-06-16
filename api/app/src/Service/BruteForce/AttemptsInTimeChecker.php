@@ -37,7 +37,12 @@ class AttemptsInTimeChecker
         return $this;
     }
 
-    public function maxAttemptsReached($key, $timestamp = null)
+    /**
+     * @return array{tooMany: bool, intervalMins: int}
+     * intervalMins is always 0 if tooMany is false: the time interval is irrelevant as the login was within
+     * all of the acceptable limits
+     */
+    public function maxAttemptsReached($key, $timestamp = null): array
     {
         $currentTimestamp = ($timestamp === null) ? time() : $timestamp;
 
@@ -50,12 +55,13 @@ class AttemptsInTimeChecker
             $attemptsInInterval = count(array_filter($history, function ($attemptTimeStamp) use ($currentTimestamp, $timeInterval): bool {
                 return $attemptTimeStamp >= $currentTimestamp - $timeInterval;
             }));
+
             if ($attemptsInInterval >= $maxAttempts) {
-                return true;
+                return ['tooMany' => true, 'intervalMins' => $timeInterval];
             }
         }
 
-        return false;
+        return ['tooMany' => false, 'intervalMins' => 0];
     }
 
     public function registerAttempt($key, $timestamp = null)
