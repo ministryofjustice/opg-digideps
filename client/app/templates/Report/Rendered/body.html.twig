@@ -48,9 +48,17 @@
 >>>>>>> main
     {% if report.hasSection('gifts') %}
         {% include '@App/Report/Rendered/_gifts.html.twig' with {
+          'report': report,
+          'transOptions': transOptions,
+          'transDomain': 'report-gifts'
+        } %}
+    {% endif %}
+
+    {% if report.hasSection('moneyTransfers') and (report.bankAccounts | length) > 1 %}
+        {% include '@App/Report/Rendered/_transfers.html.twig' with {
             'report': report,
             'transOptions': transOptions,
-            'transDomain': 'report-gifts'
+            'transDomain': 'report-money-transfer'
         } %}
     {% endif %}
 </div>
