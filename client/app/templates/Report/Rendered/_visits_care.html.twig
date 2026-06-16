@@ -1,0 +1,88 @@
+{% set page = 'summaryPage' %}
+<h2 class="govuk-heading-m">{{ 'startPage.pageTitle' | trans(transOptions,transDomain) }}</h2>
+
+<div class="govuk-summary-card">
+    <div class="govuk-summary-card__title-wrapper">
+        <h3 class="govuk-summary-card__title govuk-!-width-one-half">
+            Question
+        </h3>
+        <h3 class="govuk-summary-card__title govuk-!-width-one-half">
+            Answer
+        </h3>
+    </div>
+
+    <div class="govuk-summary-card__content">
+        <table class="govuk-table">
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header govuk-!-width-one-half">
+                    {{ ( 'form.doYouLiveWithClient.label') | trans(transOptions,transDomain) }}
+                </th>
+                <td class="govuk-table__cell govuk-!-width-one-half">
+                    {{ visitsCare.doYouLiveWithClient | capitalize }}
+                </td>
+            </tr>
+
+            {% if visitsCare.doYouLiveWithClient == 'no' %}
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-half">
+                        {{ ( 'form.howOftenDoYouContactClient.labelShort') | trans(transOptions,transDomain) }}
+                    </th>
+                    <td class="govuk-table__cell govuk-!-width-one-half">
+                        {{ visitsCare.howOftenDoYouContactClient | capitalize }}
+                    </td>
+                </tr>
+            {% endif %}
+
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header govuk-!-width-one-half">
+                    {{ ( 'form.doesClientReceivePaidCare.label') | trans(transOptions,transDomain) }}
+                </th>
+                <td class="govuk-table__cell govuk-!-width-one-half">
+                    {{ visitsCare.doesClientReceivePaidCare | capitalize }}
+                </td>
+            </tr>
+
+            {% if visitsCare.doesClientReceivePaidCare == 'yes' %}
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-half">
+                        {{ ( 'form.howIsCareFunded.label') | trans(transOptions,transDomain) }}
+                    </th>
+                    <td class="govuk-table__cell govuk-!-width-one-half">
+                        {{ ('form.howIsCareFunded.choices.' ~ visitsCare.howIsCareFunded) | trans(transOptions, transDomain) }}
+                    </td>
+                </tr>
+            {% endif %}
+
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header govuk-!-width-one-half">
+                    {{ ( 'form.whoIsDoingTheCaring.label') | trans(transOptions,transDomain) }}
+                </th>
+                <td class="govuk-table__cell govuk-!-width-one-half">
+                    {{ visitsCare.whoIsDoingTheCaring | capitalize }}
+                </td>
+            </tr>
+
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header govuk-!-width-one-half">
+                    {{ ( 'form.doesClientHaveACarePlan.label') | trans(transOptions,transDomain) }}
+                </th>
+                <td class="govuk-table__cell govuk-!-width-one-half">
+                    {{ visitsCare.doesClientHaveACarePlan | capitalize }}
+                </td>
+            </tr>
+
+            {% if visitsCare.doesClientHaveACarePlan == 'yes' %}
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header govuk-!-width-one-half">
+                        {{ ( 'form.whenWasCarePlanLastReviewed.label') | trans(transOptions,transDomain) }}
+                    </th>
+                    <td class="govuk-table__cell govuk-!-width-one-half">
+                        {{ visitsCare.whenWasCarePlanLastReviewed | date("F Y") }}
+                    </td>
+                </tr>
+            {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
