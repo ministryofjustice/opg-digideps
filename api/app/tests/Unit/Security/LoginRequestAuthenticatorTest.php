@@ -421,7 +421,7 @@ final class LoginRequestAuthenticatorTest extends TestCase
     {
         $authException = new AuthenticationException('It broke', 444);
 
-        $tooManyAttemptsException = new UserWrongCredentialsManyAttempts('Too many login attempts with incorrect password');
+        $tooManyAttemptsException = new UserWrongCredentialsManyAttempts('Too many login attempts');
         self::expectExceptionObject($tooManyAttemptsException);
 
         $this->attemptsInTimeChecker->maxAttemptsReached('')->willReturn(true);
