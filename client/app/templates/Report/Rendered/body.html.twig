@@ -27,6 +27,16 @@
         } %}
     {% endif %}
 
+<<<<<<< DDLS-1279
+    {% if report.hasSection('visitsCare') %}
+        {% include '@App/Report/Rendered/_visits_care.html.twig' with {
+            'visitsCare': report.visitsCare,
+            'transOptions': transOptions,
+            'transDomain': 'report-visits-care'
+        } %}
+    {% endif %}
+
+=======
     {% if report.hasSection('deputyExpenses') %}
         {% include '@App/Report/Rendered/_deputy_expenses.html.twig' with {
             'report': report,
@@ -35,6 +45,7 @@
         } %}
     {% endif %}
         
+>>>>>>> main
     {% if report.hasSection('gifts') %}
         {% include '@App/Report/Rendered/_gifts.html.twig' with {
           'report': report,
