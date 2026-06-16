@@ -1,0 +1,22 @@
+{
+  "name": "opg-digideps-end-to-end-tests",
+  "version": "1.0.0",
+  "description": "End-to-end tests for the components that make up Digideps: Managed by opg-org-infra &amp; Terraform",
+  "scripts": {
+    "lint": "eslint",
+    "check-format": "prettier --check .",
+    "format": "prettier --write .",
+    "test": "playwright test",
+    "ui": "playwright test --ui --ui-host=0.0.0.0 --ui-port=9525",
+    "show-report": "playwright show-report --host 0.0.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.5.0",
+    "eslint": "^10.0.3",
+    "globals": "^17.4.0",
+    "prettier": "3.8.3",
+    "typescript-eslint": "^8.57.1"
+  }
+}

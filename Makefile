@@ -6,6 +6,10 @@ WHITE  := $(shell tput -Txterm setaf 7)
 YELLOW := $(shell tput -Txterm setaf 3)
 RESET  := $(shell tput -Txterm sgr0)
 
+
+.PHONY: playwright-test playwright-report playwright-lint \
+        playwright-ui playwright-check-format playwright-format
+
 # Add the following 'help' target to your Makefile
 # And add help text after each target name starting with '\#\#'
 # A category can be added with @category
@@ -248,5 +252,26 @@ phpstan-regenerate-force:
 	(cd ./client/app && composer run lint:phpstan:baseline:force)
 	composer run lint:phpstan:baseline:force
 
-playwright-check:
-	docker compose run --rm playwright-check
+playwright-test:
+	docker compose build playwright-tests
+	docker compose run --rm playwright-tests test
+
+playwright-report:
+	docker compose build playwright-tests
+	docker compose run --rm -p 9323:9323 playwright-tests show-report
+
+playwright-lint:
+	docker compose build playwright-tests
+	docker compose run --rm playwright-tests lint
+
+playwright-ui:
+	docker compose build playwright-tests
+	docker compose run --rm -p 9525:9525 playwright-tests ui
+
+playwright-check-format:
+	docker compose build playwright-tests
+	docker compose run --rm playwright-tests check-format
+
+playwright-format:
+	docker compose build playwright-tests
+	docker compose run --rm playwright-tests format

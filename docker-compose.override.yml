@@ -127,3 +127,8 @@ services:
       NODE_ENV: development
     volumes:
       - ./client/resources/assets:/app/assets
+
+  playwright-tests:
+    volumes:
+      - ./playwright-report:/playwright/playwright-report
+      - ./playwright/:/playwright/
