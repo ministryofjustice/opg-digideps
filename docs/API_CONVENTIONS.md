@@ -22,7 +22,6 @@ We use standard HTTP status codes to help client applications understand respons
 - 424 User registration: User and client found, but postcode mismatch
 - 425 User registration: Case number already used
 - 498 wrong credentials at login
-- 499 wrong credentials at login (after many failed requests)
 - 500 generic error due to internal exception (e.g. db offline)
 
 ## Endpoint conventions

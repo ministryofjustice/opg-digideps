@@ -129,7 +129,7 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
         ]);
 
         if ($this->attemptsInTimechecker->maxAttemptsReached($this->bruteForceKey)) {
-            $message = 'Too many login attempts with incorrect password';
+            $message = 'Too many login attempts';
             throw new UserWrongCredentialsManyAttempts($message);
         }
 
