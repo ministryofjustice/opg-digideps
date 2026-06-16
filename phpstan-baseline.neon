@@ -523,48 +523,6 @@ parameters:
 			path: api/app/src/Controller/Report/ContactController.php
 
 		-
-			message: '#^Parameter \#1 \$address of method OPG\\Digideps\\Backend\\Entity\\Report\\Contact\:\:setAddress\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/ContactController.php
-
-		-
-			message: '#^Parameter \#1 \$address2 of method OPG\\Digideps\\Backend\\Entity\\Report\\Contact\:\:setAddress2\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/ContactController.php
-
-		-
-			message: '#^Parameter \#1 \$country of method OPG\\Digideps\\Backend\\Entity\\Report\\Contact\:\:setCountry\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/ContactController.php
-
-		-
-			message: '#^Parameter \#1 \$county of method OPG\\Digideps\\Backend\\Entity\\Report\\Contact\:\:setCounty\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/ContactController.php
-
-		-
-			message: '#^Parameter \#1 \$explanation of method OPG\\Digideps\\Backend\\Entity\\Report\\Contact\:\:setExplanation\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/ContactController.php
-
-		-
-			message: '#^Parameter \#1 \$postcode of method OPG\\Digideps\\Backend\\Entity\\Report\\Contact\:\:setPostcode\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/ContactController.php
-
-		-
-			message: '#^Parameter \#1 \$relationship of method OPG\\Digideps\\Backend\\Entity\\Report\\Contact\:\:setRelationship\(\) expects string, string\|null given\.$#'
-			identifier: argument.type
-			count: 1
-			path: api/app/src/Controller/Report/ContactController.php
-
-		-
 			message: '#^Parameter \#1 \$sectionIds of method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:updateSectionsStatusCache\(\) expects array\<string\>\|null, array given\.$#'
 			identifier: argument.type
 			count: 2
@@ -2539,52 +2497,16 @@ parameters:
 			path: api/app/src/Entity/Client.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Client\:\:setCreatedAtAutomatically\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Client\:\:setUpdatedAtAutomatically\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Client.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Backend\\Entity\\ClientContact\:\:\$id is never written, only read\.$#'
 			identifier: property.onlyRead
 			count: 1
 			path: api/app/src/Entity/ClientContact.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\CourtOrder\:\:setCreatedAtAutomatically\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/CourtOrder.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\CourtOrder\:\:setUpdatedAtAutomatically\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/CourtOrder.php
-
-		-
 			message: '#^Property OPG\\Digideps\\Backend\\Entity\\CourtOrder\:\:\$courtOrderDeputyRelationships with generic interface Doctrine\\Common\\Collections\\Collection does not specify its types\: TKey, T$#'
 			identifier: missingType.generics
 			count: 1
 			path: api/app/src/Entity/CourtOrder.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Deputy\:\:setCreatedAtAutomatically\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Deputy.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Deputy\:\:setUpdatedAtAutomatically\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Deputy.php
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Note\:\:__construct\(\) has parameter \$category with no type specified\.$#'
@@ -2654,18 +2576,6 @@ parameters:
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\PreRegistration\:\:getDeputyUid\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/PreRegistration.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\PreRegistration\:\:setCreatedAtAutomatically\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/PreRegistration.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\PreRegistration\:\:setUpdatedAtAutomatically\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: api/app/src/Entity/PreRegistration.php
@@ -2953,12 +2863,6 @@ parameters:
 			path: api/app/src/Entity/Report/Asset.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Asset\:\:setCreatedAtAutomatically\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/Asset.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Asset\:\:setType\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -2967,12 +2871,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Asset\:\:setType\(\) has parameter \$type with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/Report/Asset.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Asset\:\:setUpdatedAtAutomatically\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: api/app/src/Entity/Report/Asset.php
 
@@ -3355,12 +3253,6 @@ parameters:
 			path: api/app/src/Entity/Report/BankAccount.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setCreatedAtAutomatically\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/BankAccount.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setId\(\) has parameter \$id with no type specified\.$#'
 			identifier: missingType.parameter
 			count: 1
@@ -3381,12 +3273,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setMeta\(\) has parameter \$meta with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/Report/BankAccount.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\BankAccount\:\:setUpdatedAtAutomatically\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: api/app/src/Entity/Report/BankAccount.php
 
@@ -3565,42 +3451,6 @@ parameters:
 			path: api/app/src/Entity/Report/ClientBenefitsCheck.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Contact\:\:setContactName\(\) has parameter \$contactName with no type specified\.$#'
-			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/Report/Contact.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Contact\:\:setCreatedAtAutomatically\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/Contact.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Contact\:\:setUpdatedAtAutomatically\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/Contact.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Contact\:\:\$contactName \(string\) does not accept mixed\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/Contact.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Contact\:\:\$id is never written, only read\.$#'
-			identifier: property.onlyRead
-			count: 1
-			path: api/app/src/Entity/Report/Contact.php
-
-		-
-			message: '#^Property OPG\\Digideps\\Backend\\Entity\\Report\\Contact\:\:\$report \(OPG\\Digideps\\Backend\\Entity\\Report\\Report\) does not accept OPG\\Digideps\\Backend\\Entity\\Report\\Report\|null\.$#'
-			identifier: assign.propertyType
-			count: 1
-			path: api/app/src/Entity/Report/Contact.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Debt\:\:setAmount\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -3691,12 +3541,6 @@ parameters:
 			path: api/app/src/Entity/Report/Decision.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Decision\:\:setCreatedAtAutomatically\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/Decision.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Decision\:\:setDescription\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -3704,12 +3548,6 @@ parameters:
 
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Decision\:\:setReport\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/Decision.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Decision\:\:setUpdatedAtAutomatically\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
 			path: api/app/src/Entity/Report/Decision.php
@@ -4303,18 +4141,6 @@ parameters:
 			path: api/app/src/Entity/Report/Report.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setCreatedAtAutomatically\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/Report.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\Report\\Report\:\:setUpdatedAtAutomatically\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/Report/Report.php
-
-		-
 			message: '#^Ternary operator condition is always false\.$#'
 			identifier: ternary.alwaysFalse
 			count: 1
@@ -4423,12 +4249,6 @@ parameters:
 			path: api/app/src/Entity/User.php
 
 		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\User\:\:setCreatedAtAutomatically\(\) has no return type specified\.$#'
-			identifier: missingType.return
-			count: 1
-			path: api/app/src/Entity/User.php
-
-		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\User\:\:setDefaultRoleIfEmpty\(\) has no return type specified\.$#'
 			identifier: missingType.return
 			count: 1
@@ -4449,12 +4269,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Backend\\Entity\\User\:\:setPhoneMain\(\) has parameter \$phoneMain with no type specified\.$#'
 			identifier: missingType.parameter
-			count: 1
-			path: api/app/src/Entity/User.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Backend\\Entity\\User\:\:setUpdatedAtAutomatically\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: api/app/src/Entity/User.php
 
