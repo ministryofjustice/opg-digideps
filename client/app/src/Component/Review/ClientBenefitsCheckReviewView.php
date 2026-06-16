@@ -35,7 +35,7 @@ final class ClientBenefitsCheckReviewView
         $clientBenefitsCheck = $report->getClientBenefitsCheck();
 
         if ($clientBenefitsCheck !== null) {
-            $this->parameters = ['%client%' => $report->getClient()->getFullname()];
+            $this->parameters = ['%client%' => $report->getClient()->getFirstname()];
             $this->l10n = $this->makeL10n();
 
             $this->list = $this->makeList($clientBenefitsCheck);
@@ -52,11 +52,11 @@ final class ClientBenefitsCheckReviewView
             $builder->addEntry($this->l10n['dateChecked'], $clientBenefitsCheck->getDateLastCheckedEntitlement()?->format("m Y") ?? '');
         }
         if ($clientBenefitsCheck->getWhenLastCheckedEntitlement() === 'neverChecked') {
-            $builder->addEntry($this->l10n['neverChecked'], $clientBenefitsCheck->getNeverCheckedExplanation() ?? '');
+            $builder->addEntry($this->l10n['neverCheckedExplanation'], $clientBenefitsCheck->getNeverCheckedExplanation() ?? '');
         }
         $builder->addEntry($this->l10n['doOthersReceiveMoney'], $this->translate("form.moneyOnClientsBehalf.choices.{$clientBenefitsCheck->getDoOthersReceiveMoneyOnClientsBehalf()}"));
         if ($clientBenefitsCheck->getDoOthersReceiveMoneyOnClientsBehalf() === 'dontKnow') {
-            $builder->addEntry($this->l10n['dontKnow'], $clientBenefitsCheck->getDontKnowMoneyExplanation() ?? '');
+            $builder->addEntry($this->l10n['dontKnowExplanation'], $clientBenefitsCheck->getDontKnowMoneyExplanation() ?? '');
         }
 
         return $builder->makeList();
@@ -82,7 +82,7 @@ final class ClientBenefitsCheckReviewView
             );
             $total += $entry->getAmount() ?? 0.0;
         }
-        $builder->addRow(new Cell($this->l10n['paymentTotal'], isHeader: true), '', new Cell($this->formatMoney($total), self::NUMERIC_FORMAT));
+        $builder->addRow(new Cell($this->l10n['paymentTotal'], isHeader: true), '', new Cell($this->formatMoney($total), self::NUMERIC_FORMAT, true));
 
         return $builder->makeTable();
     }
@@ -109,8 +109,9 @@ final class ClientBenefitsCheckReviewView
             'benefitsCheck' => $this->translate('stepPage.pageTitle.1.mainTitle'),
             'doOthersReceiveMoney' => $this->translate('stepPage.pageTitle.2.mainTitle'),
             'dateChecked' => $this->translate("form.whenLastChecked.dateCheckedHint"),
-            'neverChecked' => $this->translate("form.whenLastChecked.neverCheckedHint"),
+            'neverCheckedExplanation' => $this->translate("form.whenLastChecked.neverCheckedHint"),
             'dontKnow' => $this->translate("form.moneyOnClientsBehalf.choices.dontKnow"),
+            'dontKnowExplanation' => $this->translate('form.moneyOnClientsBehalf.dontKnowLabel'),
             'dontKnowAmount' => $this->translate("form.moneyDetails.dontKnowCheckboxLabel"),
             'tableHeader' => $this->translate("summaryPage.table.moneyOtherPeopleReceive.title"),
             'paymentType' => $this->translate("summaryPage.table.moneyOtherPeopleReceive.column1Title"),
