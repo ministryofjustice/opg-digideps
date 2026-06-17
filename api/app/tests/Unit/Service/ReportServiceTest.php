@@ -32,8 +32,6 @@ final class ReportServiceTest extends TestCase
     use ProphecyTrait;
 
     private User $user;
-    private BankAccount $bank1;
-    private AssetProperty $asset1;
     private Report $report;
     private Document $document1;
     private MockInterface&EntityManager $em;
@@ -50,15 +48,13 @@ final class ReportServiceTest extends TestCase
         $client->setCaseNumber('12345678');
         $client->setCourtDate(new \DateTime('2014-06-06'));
 
-        $this->bank1 = new BankAccount()->setAccountNumber('1234');
-        $this->asset1 = new AssetProperty()
-            ->setAddress('SW1')
-            ->setOwned(AssetProperty::OWNED_FULLY);
         $this->report = new Report($client, Report::LAY_PFA_HIGH_ASSETS_TYPE, new \DateTime('2015-01-01'), new \DateTime('2015-12-31'));
         $this->report
             ->setNoAssetToAdd(false)
-            ->addAsset($this->asset1)
-            ->addAccount($this->bank1)
+            ->addAsset(new AssetProperty($this->report)
+                ->setAddress('SW1')
+                ->setOwned(AssetProperty::OWNED_FULLY))
+            ->addAccount(new BankAccount($this->report)->setAccountNumber('1234'))
             ->setSubmittedBy($this->user);
 
         $this->document1 = new Document($this->report)->setFileName('file1.pdf');
