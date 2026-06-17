@@ -26,3 +26,13 @@ module "db_access_task_security_group" {
   vpc_id      = data.aws_vpc.main.id
   environment = local.environment
 }
+
+module "db_access_task_non_prod_security_group" {
+  source      = "./modules/security_group"
+  description = "Task Requiring DB Access Non Prod"
+  rules       = local.db_access_task_sg_rules
+  name        = "db-access-task-non-prod"
+  tags        = var.default_tags
+  vpc_id      = data.aws_vpc.main.id
+  environment = local.environment
+}
