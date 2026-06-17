@@ -14,9 +14,6 @@ use OPG\Digideps\Backend\Entity\Traits\CreateUpdateTimestamps;
 use OPG\Digideps\Backend\Entity\Traits\IsSoftDeleteableEntity;
 use OPG\Digideps\Backend\Repository\ClientRepository;
 
-/**
- * Client.
- */
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false)]
 #[ORM\Table(name: 'client', options: ['collate' => 'utf8_general_ci', 'charset' => 'utf8'])]
 #[ORM\Index(columns: ['case_number'], name: 'case_number_idx')]

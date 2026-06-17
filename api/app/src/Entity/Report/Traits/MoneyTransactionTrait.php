@@ -88,7 +88,7 @@ trait MoneyTransactionTrait
     }
 
     /**
-     * @param string $type in|out
+     * in|out
      */
     private function getMoneyTransactionsTotal(string $type): float
     {
