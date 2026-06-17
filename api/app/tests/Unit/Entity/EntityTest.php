@@ -7,6 +7,7 @@ namespace Tests\OPG\Digideps\Backend\Unit\Entity;
 use OPG\Digideps\Backend\Domain\Deputy\DeputyType;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Deputy;
+use OPG\Digideps\Backend\Entity\Report\Contact;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use PHPUnit\Framework\TestCase;
 
@@ -28,6 +29,12 @@ final class EntityTest extends TestCase
     {
         $client = new Client();
         $this->testEntity($client);
+    }
+
+    public function testContactValidOnConstruction(): void
+    {
+        $contact = new Contact(new Report(new Client(), '102', new \DateTime(), new \DateTime(), false));
+        $this->testEntity($contact);
     }
 
     private function testEntity(object $entity): void
