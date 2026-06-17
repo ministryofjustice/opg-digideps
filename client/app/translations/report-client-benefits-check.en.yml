@@ -115,3 +115,6 @@ deletePage:
 reportReview:
   neverCheckedEntitlementTitle: Explanation for never checking if %client% gets all the benefits they're entitled to
   dontKnowMoneyTitle: Explanation for not knowing if others receive money on %client%'s behalf
+
+review:
+  totalAmount: Total Amount
