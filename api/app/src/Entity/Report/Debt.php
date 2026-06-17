@@ -6,14 +6,11 @@ namespace OPG\Digideps\Backend\Entity\Report;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use OPG\Digideps\Backend\Entity\Traits\DebtTrait;
 
 #[ORM\Table(name: 'debt')]
 #[ORM\Entity]
 class Debt
 {
-    use DebtTrait;
-
     /**
      * Hold debts type
      * 1st value = id, 2nd value = hasMoreInformation.
@@ -183,5 +180,19 @@ class Debt
     public function setHasMoreDetails($hasMoreDetails)
     {
         $this->hasMoreDetails = $hasMoreDetails;
+    }
+
+    public function setAmountAndDetails($amount, $details): static
+    {
+        $this->setAmount($amount);
+
+        // reset details if amount is not given, or if more details are not expected
+        if (empty($amount) || !$this->getHasMoreDetails()) {
+            $details = null;
+        }
+
+        $this->setMoreDetails($details);
+
+        return $this;
     }
 }

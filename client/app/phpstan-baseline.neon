@@ -1519,15 +1519,9 @@ parameters:
 			path: src/Controller/Report/BankAccountController.php
 
 		-
-			message: '#^Argument of an invalid type Doctrine\\Common\\Collections\\ArrayCollection\|null supplied for foreach, only iterables are supported\.$#'
-			identifier: foreach.nonIterable
-			count: 1
-			path: src/Controller/Report/ClientBenefitsCheckController.php
-
-		-
 			message: '#^Cannot call method getId\(\) on mixed\.$#'
 			identifier: method.nonObject
-			count: 2
+			count: 1
 			path: src/Controller/Report/ClientBenefitsCheckController.php
 
 		-
@@ -2317,12 +2311,6 @@ parameters:
 			path: src/Controller/Report/ProfDeputyCostsEstimateController.php
 
 		-
-			message: '#^Binary operation "\." between mixed and '' \(client\)'' results in an error\.$#'
-			identifier: binaryOp.invalid
-			count: 1
-			path: src/Controller/Report/ReportController.php
-
-		-
 			message: '#^Binary operation "\." between mixed and '' \(deputy\)'' results in an error\.$#'
 			identifier: binaryOp.invalid
 			count: 1
@@ -2505,12 +2493,6 @@ parameters:
 		-
 			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:getDeletedAt\(\) should return DateTime but returns mixed\.$#'
 			identifier: return.type
-			count: 1
-			path: src/Entity/Client.php
-
-		-
-			message: '#^Method OPG\\Digideps\\Frontend\\Entity\\Client\:\:getFullname\(\) has no return type specified\.$#'
-			identifier: missingType.return
 			count: 1
 			path: src/Entity/Client.php
 
@@ -6662,12 +6644,6 @@ parameters:
 
 		-
 			message: '#^Parameter \#4 \$changedByEmail of method OPG\\Digideps\\Frontend\\Service\\Audit\\AuditEvents\:\:clientEmailChanged\(\) expects string, mixed given\.$#'
-			identifier: argument.type
-			count: 1
-			path: src/EventSubscriber/ClientUpdatedSubscriber.php
-
-		-
-			message: '#^Parameter \#5 \$subjectFullName of method OPG\\Digideps\\Frontend\\Service\\Audit\\AuditEvents\:\:clientEmailChanged\(\) expects string, mixed given\.$#'
 			identifier: argument.type
 			count: 1
 			path: src/EventSubscriber/ClientUpdatedSubscriber.php

@@ -113,7 +113,7 @@ class ReportSection
 
     private function completeBankAccounts(Report $report): void
     {
-        $ba = new BankAccount()->setReport($report)->setClosingBalance(1000);
+        $ba = new BankAccount($report)->setClosingBalance(1000);
         $report->addAccount($ba);
         $report->setBalanceMismatchExplanation('no reason');
     }

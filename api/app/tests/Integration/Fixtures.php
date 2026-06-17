@@ -220,18 +220,15 @@ class Fixtures
 
             $report = $this->createReport($client);
 
-            $other = new AssetOther()
-                ->setValue((string)rand(1, 10000))
-                ->setReport($report);
+            $other = new AssetOther($report)
+                ->setValue((string)rand(1, 10000));
 
-            $property = new AssetProperty()
+            $property = new AssetProperty($report)
                 ->setValue((string)rand(1, 10000))
-                ->setOwnedPercentage(rand(1, 100) / 100)
-                ->setReport($report);
+                ->setOwnedPercentage(rand(1, 100) / 100);
 
-            $bankAccount = new BankAccount()
-                ->setClosingBalance(floatval(rand(10, 1000000) / 10))
-                ->setReport($report);
+            $bankAccount = new BankAccount($report)
+                ->setClosingBalance(floatval(rand(10, 1000000) / 10));
 
             $report->addAsset($other);
             $report->addAsset($property);
@@ -275,13 +272,9 @@ class Fixtures
         return $report;
     }
 
-    /**
-     * @return BankAccount
-     */
     public function createAccount(Report $report, array $settersMap = []): BankAccount
     {
-        $ret = new BankAccount();
-        $ret->setReport($report);
+        $ret = new BankAccount($report);
         $ret->setAccountNumber('1234')
             ->setBank('hsbc')
             ->setSortCode('101010');
@@ -327,8 +320,7 @@ class Fixtures
 
     public function createAsset($type, Report $report, array $settersMap = []): Asset
     {
-        $asset = Asset::factory($type);
-        $asset->setReport($report);
+        $asset = Asset::factory($type, $report);
 
         foreach ($settersMap as $k => $v) {
             $asset->$k($v);
