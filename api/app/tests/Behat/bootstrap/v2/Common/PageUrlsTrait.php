@@ -20,7 +20,6 @@ trait PageUrlsTrait
     private string $clientLoginPageUrl = '/login';
     private string $clientBenefitCheckSummaryPageUrl = '/%s/%s/client-benefits-check/summary';
     private string $contactsAddUrl = '/report/%s/contacts/add';
-    private string $contactsAddAnotherUrl = '/report/%s/contacts/add_another';
     private string $contactsSectionUrl = '/%s/%s/contacts';
     private string $contactsSummaryUrl = '/report/%s/contacts/summary';
     private string $debtsSectionUrl = '/%s/%s/debts';
@@ -29,14 +28,12 @@ trait PageUrlsTrait
     private string $decisionsSummarySectionUrl = '/%s/%s/decisions/summary';
     private string $deputyCostsUrl = '/report/%s/prof-deputy-costs';
     private string $deputyCostsEstimateSectionUrl = '/%s/%s/prof-deputy-costs-estimate';
-    private string $deputyCostsSCCOAssessmentUrl = '/report/%s/prof-deputy-costs/amount-scco';
     private string $deputyExpensesSectionUrl = '/%s/%s/deputy-expenses';
     private string $deputyExpensesSummarySectionUrl = '/%s/%s/deputy-expenses/summary';
     private string $deputyFeesExpensesSectionUrl = '/report/%s/pa-fee-expense';
     private string $documentsSectionUrl = '/report/%s/documents';
     private string $documentsSummarySectionUrl = '/report/%s/documents/summary';
     private string $documentsStep2Url = '/%s/%s/documents/step/2';
-    private string $documentsSubmitMoreUrl = '/%s/%s/documents/submit-more';
     private string $forgottenYourPasswordUrl = '/password-managing/forgotten';
     private string $giftsSectionUrl = '/%s/%s/gifts';
     private string $giftsSummarySectionUrl = '/%s/%s/gifts/summary';
@@ -54,7 +51,6 @@ trait PageUrlsTrait
     private string $moneyOutShortSectionUrl = '/%s/%s/money-out-short';
     private string $moneyOutShortSectionSummaryUrl = '/%s/%s/money-out-short/summary';
     private string $moneyTransfersSectionUrl = '/%s/%s/money-transfers';
-    private string $orgSettingsUrl = '/org/settings';
     private string $orgSettingsUserAccountUrl = '/org/settings/organisation/%s';
     private string $orgAddUserUrl = '/org/settings/organisation/%s/add-user';
     private string $orgDashboardUrl = '/org';
@@ -91,7 +87,6 @@ trait PageUrlsTrait
 
     // Fixtures
     private string $adminFixturesUrl = '/admin/fixtures';
-    private string $courtOrdersFixtureUrl = '/admin/fixtures/court-orders?%s';
 
     public function getNewReportReviewUrl(int $reportId): string
     {
@@ -158,11 +153,6 @@ trait PageUrlsTrait
         return sprintf($this->contactsAddUrl, $reportId);
     }
 
-    public function getContactsAddAnotherUrl(int $reportId): string
-    {
-        return sprintf($this->contactsAddAnotherUrl, $reportId);
-    }
-
     public function getLayStartPageUrl(): string
     {
         return $this->layStartPageUrl;
@@ -181,11 +171,6 @@ trait PageUrlsTrait
     public function getAdminClientArchivedUrl(int $clientId): string
     {
         return sprintf($this->adminClientArchivedUrl, $clientId);
-    }
-
-    public function getCourtOrdersFixtureUrl(string $queryString): string
-    {
-        return sprintf($this->courtOrdersFixtureUrl, $queryString);
     }
 
     public function getHealthAndLifestyleSectionUrl(int $reportId): string
@@ -281,11 +266,6 @@ trait PageUrlsTrait
     public function getDeputyCostsUrl(int $reportId): string
     {
         return sprintf($this->deputyCostsUrl, $reportId);
-    }
-
-    public function getDeputyCostsSCCOAssessmentUrl(int $reportId): string
-    {
-        return sprintf($this->deputyCostsSCCOAssessmentUrl, $reportId);
     }
 
     public function getAssetsSectionUrl(int $reportId): string
@@ -458,11 +438,6 @@ trait PageUrlsTrait
         return sprintf($this->documentsStep2Url, $this->reportUrlPrefix, $reportId);
     }
 
-    public function getDocumentsSubmitMoreUrl(int $reportId): string
-    {
-        return sprintf($this->documentsSubmitMoreUrl, $this->reportUrlPrefix, $reportId);
-    }
-
     public function getAdminChecklistUrl(string $reportId): string
     {
         return sprintf($this->adminChecklistPage, $reportId);
@@ -481,11 +456,6 @@ trait PageUrlsTrait
     public function getOrgAddUserUrl(string $orgId): string
     {
         return sprintf($this->orgAddUserUrl, $orgId);
-    }
-
-    public function getOrgSettingsUrl(): string
-    {
-        return $this->orgSettingsUrl;
     }
 
     public function getOrgSettingsUserAccountUrl(string $orgId): string

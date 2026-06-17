@@ -208,20 +208,11 @@ trait AuthTrait
         }
     }
 
-    public function assertSuperAdminLoggedIn(): void
-    {
-        $this->assertRoleIs(User::ROLE_SUPER_ADMIN, $this->loggedInUserDetails->getUserRole());
-    }
-
     public function assertAdminLoggedIn(): void
     {
         $this->assertRoleIs(User::ROLE_ADMIN, $this->loggedInUserDetails->getUserRole());
     }
 
-    public function assertAdminManagerLoggedIn(): void
-    {
-        $this->assertRoleIs(User::ROLE_ADMIN_MANAGER, $this->loggedInUserDetails->getUserRole());
-    }
 
     private function assertRoleIs(string $expectedRole, string $actualRole): void
     {

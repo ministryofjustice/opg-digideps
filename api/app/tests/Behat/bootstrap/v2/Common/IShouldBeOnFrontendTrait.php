@@ -460,11 +460,6 @@ trait IShouldBeOnFrontendTrait
         return $this->iAmOnPage(sprintf('/%s\/.*\/lifestyle\/summary.*$/', $this->reportUrlPrefix));
     }
 
-    public function iAmOnSpecifiedPage($specifiedUrlRegex): bool
-    {
-        return $this->iAmOnPage(sprintf('/%s\/.*\/%s$/', $this->reportUrlPrefix, $specifiedUrlRegex));
-    }
-
     /**
      * @Then I should be on the debts exist page
      */
@@ -783,11 +778,6 @@ trait IShouldBeOnFrontendTrait
     public function iAmOnOrgUserAccountsPage(): true
     {
         return $this->iAmOnPage('/org\/settings\/organisation.*$/');
-    }
-
-    public function iAmOnOrgSettingsEditAnotherUserPage(): true
-    {
-        return $this->iAmOnPage('/org\/settings\/organisation\/.*\/edit\/.*.*$/');
     }
 
     public function iAmOnNoMoneyInExistsPage(): bool

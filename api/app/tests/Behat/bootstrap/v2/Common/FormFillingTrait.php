@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\Common;
 
-use Tests\OPG\Digideps\Backend\Behat\BehatException;
 use Behat\Mink\Element\NodeElement;
 use Behat\Mink\Exception\ElementNotFoundException;
+use Tests\OPG\Digideps\Backend\Behat\BehatException;
 
 /**
  * Trait FormFillingTrait.
@@ -221,22 +221,6 @@ trait FormFillingTrait
         }
     }
 
-    public function removeSectionTotal(string $formSectionName): void
-    {
-        if ($this->submittedAnswersByFormSections['totals'][$formSectionName] ?? null) {
-            unset($this->submittedAnswersByFormSections['totals'][$formSectionName]);
-        }
-    }
-
-    public function addToSectionTotal(string $formSectionName, $amountToAdd): void
-    {
-        if (isset($this->submittedAnswersByFormSections['totals'][$formSectionName])) {
-            $this->submittedAnswersByFormSections['totals'][$formSectionName] += $amountToAdd;
-        } else {
-            $this->submittedAnswersByFormSections['totals'][$formSectionName] = $amountToAdd;
-        }
-    }
-
     public function addToGrandTotal($amountToAdd): void
     {
         $this->submittedAnswersByFormSections['totals']['grandTotal'] += $amountToAdd;
@@ -429,19 +413,6 @@ trait FormFillingTrait
     public function removeAllAnswers(): void
     {
         unset($this->submittedAnswersByFormSections);
-    }
-
-    /**
-     * Call this function after executing a step that triggers an ajax request to refresh the page.
-     */
-    public function waitForAjaxAndRefresh(): void
-    {
-        while ($refresh = $this->getSession()->getPage()->find('css', 'meta[http-equiv="refresh"]')) {
-            $content = $refresh->getAttribute('content');
-            $url = preg_replace('/^\d+;\s*URL=/i', '', $content);
-
-            $this->getSession()->visit($url);
-        }
     }
 
     public function updateExpectedAnswerInSection($select, $formSectionName, $newAnswer): void

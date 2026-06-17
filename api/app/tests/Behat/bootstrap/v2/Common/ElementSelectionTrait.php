@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\OPG\Digideps\Backend\Behat\v2\Common;
 
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
-use Behat\Mink\Element\NodeElement;
 
 trait ElementSelectionTrait
 {
@@ -45,7 +44,7 @@ trait ElementSelectionTrait
 
         foreach ($links as $link) {
             if (preg_match($regex, $link->getAttribute('href'))) {
-                array_push($linksArray, $link->getAttribute('href'));
+                $linksArray[] = $link->getAttribute('href');
             }
         }
 
@@ -69,40 +68,6 @@ trait ElementSelectionTrait
         $xpath = sprintf('//a[text()[contains(., \'%s\')]]', $text);
         $link = $this->getSession()->getPage()->find('xpath', $xpath);
         $link->click();
-    }
-
-    /**
-     * @param string $sectionText Text that appears in the row/container element with the link you want to select
-     * @param string $linkText    Text of the link you want to select
-     */
-    public function getLinkNodeBySectionAndLinkText(string $sectionText, string $linkText): NodeElement
-    {
-        $sectionLocator = sprintf("//*[text()[contains(., '%s')]]", $sectionText);
-        $foundElements = $this->getSession()->getPage()->findAll('xpath', $sectionLocator);
-
-        if (count($foundElements) === 0) {
-            throw new BehatException(sprintf('No elements found on the page that contain the text "%s"', $sectionText));
-        }
-
-        $nodeElements = [];
-
-        foreach ($foundElements as $foundElement) {
-            $found = $foundElement->findLink($linkText);
-
-            if ($found) {
-                $nodeElements[] = $found;
-            }
-        }
-
-        if (count($nodeElements) === 0) {
-            throw new BehatException(sprintf('No links found on the page that have the text "%s"', $linkText));
-        }
-
-        if (count($nodeElements) > 1) {
-            throw new BehatException(sprintf('Found multiple links on the page that have the text "%s". Try to narrow down $sectionText to be more specific.', $linkText));
-        }
-
-        return $nodeElements[0];
     }
 
     // Click on a link (a or button css ref for example) based on the value of it's attribute type.
@@ -137,102 +102,5 @@ trait ElementSelectionTrait
         }
 
         return true;
-    }
-
-    // Find a particular radio dialogue on a page and select the Nth option from it based on parameters we pass
-    public function iSelectBasedOnChoiceNumber(string $elementType, string $attributeType, string $attributeValue, int $choiceNumber)
-    {
-        $xpath = sprintf("//%s[@%s='%s']", $elementType, $attributeType, $attributeValue);
-        $session = $this->getSession();
-        $element = $session->getPage()->find(
-            'xpath',
-            $session->getSelectorsHandler()->selectorToXpath('xpath', $xpath)
-        );
-
-        if ($element === null) {
-            throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
-        }
-
-        $values = $element->findAll('css', 'option');
-
-        $choices = [];
-
-        foreach ($values as $value) {
-            array_push($choices, $value->getHtml());
-        }
-
-        $element->selectOption(trim($choices[$choiceNumber]));
-
-        return $choices[$choiceNumber];
-    }
-
-    // Select radio dialogue based on name
-    public function iSelectRadioBasedOnName(string $elementType, string $attributeType, string $attributeValue, string $name): void
-    {
-        $xpath = sprintf("//%s[@%s='%s']//input", $elementType, $attributeType, $attributeValue);
-        $session = $this->getSession();
-        $values = $session->getPage()->findAll(
-            'xpath',
-            $session->getSelectorsHandler()->selectorToXpath('xpath', $xpath)
-        );
-
-        if ($values === null) {
-            throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
-        }
-
-        foreach ($values as $value) {
-            if (trim($value->getAttribute('value')) == trim($name)) {
-                $select = trim($value->getAttribute('name'));
-                $option = trim($value->getAttribute('value'));
-            }
-        }
-
-        $this->getSession()->getPage()->selectFieldOption($select, $option);
-    }
-
-    // Select radio dialogue based on choice number
-    public function iSelectRadioBasedOnChoiceNumber(string $elementType, string $attributeType, string $attributeValue, int $choiceNumber): void
-    {
-        $xpath = sprintf("//%s[@%s='%s']//input", $elementType, $attributeType, $attributeValue);
-        $session = $this->getSession();
-        $values = $session->getPage()->findAll(
-            'xpath',
-            $session->getSelectorsHandler()->selectorToXpath('xpath', $xpath)
-        );
-
-        if ($values === null) {
-            throw new \InvalidArgumentException(sprintf('Could not evaluate XPath: "%s"', $xpath));
-        }
-
-        $select = trim($values[$choiceNumber]->getAttribute('name'));
-        $option = trim($values[$choiceNumber]->getAttribute('value'));
-
-        $this->getSession()->getPage()->selectFieldOption($select, $option);
-    }
-
-    // Can be used for cross browser tests to scroll so element is in viewport
-    public function scrollToElement($element): void
-    {
-        if (substr($element, 0, 1) != '.' && substr($element, 0, 1) != '#') {
-            $element = '#' . $element;
-        }
-
-        $driver = $this->getSession()->getDriver();
-        if (get_class($driver) == 'Behat\Mink\Driver\Selenium2Driver') {
-            $javascript =
-                "var el = $('$element');"
-                . 'var elOffset = el.offset().top;'
-                . 'var elHeight = el.height();'
-                . 'var windowHeight = $(window).height();'
-                . 'var offset;'
-                . 'if (elHeight < windowHeight) {'
-                . '  offset = elOffset - ((windowHeight / 2) - (elHeight / 2));'
-                . '} else {'
-                . '  offset = elOffset;'
-                . '}'
-                . 'window.scrollTo(0, offset);';
-
-            $this->getSession()->executeScript($javascript);
-        }
     }
 }

@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\Common;
 
+use Behat\Gherkin\Node\TableNode;
 use OPG\Digideps\Backend\Entity\Client;
 use OPG\Digideps\Backend\Entity\Organisation;
 use OPG\Digideps\Backend\Entity\Report\Report;
 use OPG\Digideps\Backend\Entity\User;
 use OPG\Digideps\Backend\TestHelpers\UserTestHelper;
 use Tests\OPG\Digideps\Backend\Behat\BehatException;
-use Behat\Gherkin\Node\TableNode;
 use Tests\OPG\Digideps\Backend\Behat\v2\Helpers\FixtureHelperBuilder;
 
 trait FixturesTrait
@@ -63,8 +63,6 @@ trait FixturesTrait
         switch ($typeFromFeatureFile) {
             case 'health and welfare':
                 return '104';
-            case 'property and financial affairs high assets':
-                return '102';
             case 'property and financial affairs low assets':
                 return '103';
             case 'high assets with health and welfare':
@@ -225,11 +223,6 @@ trait FixturesTrait
         return $users;
     }
 
-    public function changeCaseNumber(int $clientId, string $newCaseNumber): void
-    {
-        $this->fixtureHelper->changeCaseNumber($clientId, $newCaseNumber);
-    }
-
     /**
      * @Given /^the user has \'([^\']*)\' permissions and another user exists within the same organisation$/
      */
@@ -259,15 +252,5 @@ trait FixturesTrait
         } else {
             return $this->profTeamDeputyNotStartedHealthWelfareDetails;
         }
-    }
-
-    public function getClientIdByCaseNumber(string $caseNumber): ?int
-    {
-        $result = $this->em->getRepository(Client::class)->getArrayByCaseNumber($caseNumber);
-        if (is_null($result)) {
-            return null;
-        }
-
-        return $result['id'];
     }
 }
