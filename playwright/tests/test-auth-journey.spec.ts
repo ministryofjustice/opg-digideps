@@ -2,11 +2,10 @@ import { test, expect } from "@playwright/test";
 import { createFixture } from "./fixtures/fixtures";
 import { LoginPage } from "./pages/login-page";
 
-test("lay user can login", async ({ page, baseURL }) => {
-  if (!baseURL) throw new Error("baseURL missing");
+test("lay user can login", async ({ page }) => {
   const user = createFixture("lay_user");
 
-  const login = new LoginPage(page, baseURL);
+  const login = new LoginPage(page);
 
   await login.goto();
   await login.login(user.email, user.password);
@@ -17,11 +16,10 @@ test("lay user can login", async ({ page, baseURL }) => {
   await expect(page).toHaveURL(/\/login/);
 });
 
-test("org user can login", async ({ page, baseURL }) => {
-  if (!baseURL) throw new Error("baseURL missing");
+test("org user can login", async ({ page }) => {
   const user = createFixture("pro_user");
 
-  const login = new LoginPage(page, baseURL);
+  const login = new LoginPage(page);
 
   await login.goto();
   await login.login(user.email, user.password);

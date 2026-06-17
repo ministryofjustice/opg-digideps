@@ -77,6 +77,7 @@ locals {
     cpu       = 0,
     essential = true,
     image     = local.images.end_to_end,
+    command   = ["test"],
     name      = "end-to-end-tests",
     logConfiguration = {
       logDriver = "awslogs",

@@ -9,5 +9,5 @@ export default defineConfig({
     ignoreHTTPSErrors: true,
     browserName: "chromium",
   },
-  workers: 1, // matches pytest -n 0
+  workers: 1,
 });
