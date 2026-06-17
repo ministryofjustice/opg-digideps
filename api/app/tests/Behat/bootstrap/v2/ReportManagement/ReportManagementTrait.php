@@ -144,7 +144,7 @@ trait ReportManagementTrait
         $this->iAmOnAdminManageReportPage();
         $this->pressButton('Continue');
 
-        $this->iAmOnAdminManageReportConfirmPage();
+        $this->iAmOnPage('/admin\/report\/.*\/manage-confirm$/');
 
         $confirmRadio = $this->getSession()->getPage()->find('xpath', '//input[@name="manage_report_confirm[confirm]"]');
 
@@ -348,7 +348,7 @@ trait ReportManagementTrait
         $this->checkOption('manage_report_close[agreeCloseReport]');
         $this->pressButton('Close report');
 
-        $this->iAmOnAdminManageCloseReportConfirmPage();
+        $this->iAmOnPage('/admin\/report\/.*\/manage-close-report-confirm$/');
         $this->pressButton('Confirm close report');
     }
 

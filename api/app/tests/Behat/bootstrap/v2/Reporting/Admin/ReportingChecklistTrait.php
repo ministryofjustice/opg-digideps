@@ -144,7 +144,7 @@ trait ReportingChecklistTrait
      */
     public function iShouldBeRedirectedToTheChecklistSubmittedPage(): void
     {
-        $this->iAmOnAdminReportChecklistSubmittedPage();
+        $this->iAmOnPage('/admin\/report\/.*\/checklist-submitted$/');
         $savedText = $this->getSession()->getPage()->find('css', '.opg-alert__message > p')->getText();
 
         assert($savedText == 'Lodging checklist saved');

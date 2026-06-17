@@ -213,7 +213,7 @@ trait AnalyticsTrait
             throw new BehatException(sprintf('Missing the following text: %s', $this->currentLinkText));
         }
         $downloadLink->click();
-        $this->iAmOnAdminStatsSatisfactionPage();
+        $this->iAmOnPage('/admin\/stats\/satisfaction$/');
     }
 
     /**
@@ -230,7 +230,7 @@ trait AnalyticsTrait
             throw new BehatException(sprintf('Missing the following text: %s', $this->currentLinkText));
         }
         $downloadLink->click();
-        $this->iAmOnAdminStatsUserResearchPage();
+        $this->iAmOnPage('/admin\/stats\/user-research$/');
     }
 
     /**
@@ -263,7 +263,7 @@ trait AnalyticsTrait
             throw new BehatException(sprintf('Missing the following text: %s', $this->currentLinkText));
         }
         $downloadLink->click();
-        $this->iAmOnAdminStatsPage();
+        $this->iAmOnPage('/admin\/stats$/');
 
         $this->fillInAnalyticsStartEndDates();
     }
@@ -282,7 +282,7 @@ trait AnalyticsTrait
             throw new BehatException(sprintf('Missing the following text: %s', $this->currentLinkText));
         }
         $link->click();
-        $this->iAmOnAdminStatsReportsPage();
+        $this->iAmOnPage('/admin\/stats\/reports$/');
     }
 
     /**
