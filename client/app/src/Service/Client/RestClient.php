@@ -3,7 +3,7 @@
 namespace OPG\Digideps\Frontend\Service\Client;
 
 use OPG\Digideps\Frontend\Entity\User;
-use OPG\Digideps\Frontend\Exception as AppException;
+use OPG\Digideps\Frontend\Exception\RestClientException;
 use OPG\Digideps\Frontend\Service\Client\TokenStorage\RedisStorage;
 use OPG\Digideps\Frontend\Service\JWT\JWTService;
 use OPG\Digideps\Frontend\Service\RequestIdLoggerProcessor;
@@ -97,7 +97,7 @@ class RestClient implements RestClientInterface
     {
         try {
             $response = $this->apiCall('post', '/auth/login', $credentials, 'response', [], false);
-        } catch (AppException\RestClientException $e) {
+        } catch (RestClientException $e) {
             if ($e->getCode() == 423) {
                 throw new TooManyLoginAttemptsAuthenticationException($e->getData()['data']);
             } else {
@@ -416,11 +416,11 @@ class RestClient implements RestClientInterface
                 $messages[] = $e->getMessage();
             }
 
-            throw new AppException\RestClientException(implode('; ', $messages), $code, $data);
+            throw new RestClientException(implode('; ', $messages), $code, $data);
         }
 
         if (is_null($response)) {
-            throw new AppException\RestClientException('No response data available', $code);
+            throw new RestClientException('No response data available', $code);
         }
 
         return $response;
