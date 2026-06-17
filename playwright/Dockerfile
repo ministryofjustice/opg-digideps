@@ -5,16 +5,24 @@ WORKDIR /playwright
 # Use shared location for browsers
 ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 
+
 COPY package.json package-lock.json ./
 RUN npm ci
 
-# Install browsers + deps
+# Install browsers + deps (must be done after npm ci)
 RUN npx playwright install --with-deps chromium
+
 
 # Fix permissions for node user
 RUN chown -R node:node /playwright /ms-playwright
 
-COPY . .
+COPY tests tests
+COPY package-lock.json .
+COPY package.json .
+COPY tsconfig.json .
+COPY playwright.config.ts .
+COPY eslint.config.mjs .
+COPY .prettierignore .
 
 USER node
 
