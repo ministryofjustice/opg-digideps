@@ -18,7 +18,7 @@
                     {{ ('existPage.form.paidForAnything.label') | trans(transOptions,transDomain) }}
                 </th>
                 <td class="govuk-table__cell govuk-!-width-one-half">
-                    {{ report.paidForAnything | capitalize }}
+                    {{ (report.paidForAnything) ? report.paidForAnything | capitalize : 'not entered' }}
                 </td>
             </tr>
             </tbody>
