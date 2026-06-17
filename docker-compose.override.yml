@@ -130,5 +130,5 @@ services:
 
   playwright-tests:
     volumes:
-      - ./playwright-report:/playwright/playwright-report
-      - ./playwright/:/playwright/
+      - ./playwright/playwright-report:/playwright/playwright-report
+      - ./playwright/tests:/playwright/tests

@@ -1,9 +1,9 @@
 {
   "name": "opg-digideps-end-to-end-tests",
   "version": "1.0.0",
-  "description": "End-to-end tests for the components that make up Digideps: Managed by opg-org-infra &amp; Terraform",
+  "description": "End-to-end tests for Digideps: Managed by opg-org-infra &amp; Terraform",
   "scripts": {
-    "lint": "eslint",
+    "lint": "eslint .",
     "check-format": "prettier --check .",
     "format": "prettier --write .",
     "test": "playwright test",
