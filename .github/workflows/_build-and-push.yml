@@ -377,7 +377,7 @@ jobs:
       - name: Load snyk scanner image
         if: matrix.svc_name != 'mock-sirius' && (steps.existing_image.outputs.exists != 'true' || steps.daily_snyk.outputs.run == 'true' || inputs.branch_name == 'staging')
         env:
-          OPG_GITHUB_ACTIONS_REF: ${{ steps.opg_actions_ref.outputs.ref }}
+          OPG_GITHUB_ACTIONS_REF: ${{ needs.prewarm_snyk_scanner.outputs.opg_actions_ref }}
         run: |
           CACHE_FILE="/tmp/snyk-scanner-cache/snyk-scanner.tar"
 
