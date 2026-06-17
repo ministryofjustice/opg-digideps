@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\OPG\Digideps\Backend\Behat\v2\Common;
 
-use Exception;
 use Behat\Behat\Hook\Scope\AfterStepScope;
 use Behat\Behat\Tester\Result\ExecutedStepResult;
 
 trait DebugTrait
 {
-    private static $DEBUG_SNAPSHOT_DIR = '/tmp/html';
+    private static string $DEBUG_SNAPSHOT_DIR = '/tmp/html';
 
     /**
      * @Then /^wtf$/
@@ -54,9 +53,6 @@ trait DebugTrait
         }
     }
 
-    /**
-     * @Then I save the page as :name
-     */
     public function debug(string $name, \Exception $ex): void
     {
         for ($i = 1; $i < 100; ++$i) {
