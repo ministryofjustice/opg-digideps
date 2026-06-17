@@ -26,7 +26,7 @@
             'transDomain': 'report-contacts'
         } %}
     {% endif %}
-
+    
     {% if report.hasSection('visitsCare') %}
         {% include '@App/Report/Rendered/_visits_care.html.twig' with {
             'visitsCare': report.visitsCare,
@@ -35,6 +35,13 @@
         } %}
     {% endif %}
 
+    {% if report.hasSection('bankAccounts') and report.bankAccounts | length > 0 %}
+        {% include '@App/Report/Rendered/_bankAccounts.html.twig' with {
+            'report': report,
+            'transDomain': 'report-bank-accounts'
+        } %}
+    {% endif %}
+    
     {% if report.hasSection('deputyExpenses') %}
         {% include '@App/Report/Rendered/_deputy_expenses.html.twig' with {
             'report': report,
