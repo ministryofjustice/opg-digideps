@@ -113,6 +113,7 @@
     "require-dev": {
         "dg/bypass-finals": "^1.9",
         "jangregor/phpstan-prophecy": "^2.3.0",
+        "league/openapi-psr7-validator": "^0.24.0",
         "mockery/mockery": "^1.6.12",
         "phpspec/prophecy-phpunit": "^2.5",
         "phpstan/phpstan": "^2.1.51",
