@@ -250,6 +250,8 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
             new UserBadge('user@example.org'),
         );
 
+        $this->attemptsInTimeChecker->registerAttempt('token_abc')->willReturn($this->attemptsInTimeChecker);
+
         $actualPassport = $this->sut->authenticate($request);
 
         self::assertEquals($expectedPassport, $actualPassport);
@@ -299,7 +301,7 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
         $expectedBruteForceKey = 'token_abc';
 
         $this->attemptsInTimeChecker->registerAttempt($expectedBruteForceKey)
-            ->willReturn(null);
+            ->willReturn($this->attemptsInTimeChecker);
         $this->incrementalWaitingTimeChecker->registerAttempt($expectedBruteForceKey)
             ->willReturn(null);
         $this->incrementalWaitingTimeChecker->isFrozen($expectedBruteForceKey)
@@ -335,7 +337,7 @@ final class RegistrationTokenAuthenticatorTest extends TestCase
         $expectedBruteForceKey = 'token_abc';
 
         $this->attemptsInTimeChecker->registerAttempt($expectedBruteForceKey)
-            ->willReturn(null);
+            ->willReturn($this->attemptsInTimeChecker);
         $this->incrementalWaitingTimeChecker->registerAttempt($expectedBruteForceKey)
             ->willReturn(null);
         $this->incrementalWaitingTimeChecker->isFrozen($expectedBruteForceKey)

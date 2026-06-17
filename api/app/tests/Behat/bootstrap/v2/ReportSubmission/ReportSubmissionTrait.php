@@ -333,7 +333,7 @@ trait ReportSubmissionTrait
     #[Then('I should see the submission under the :status tab with the court order number of the user I am interacting with')]
     public function submissionBehaviourBasedOnStatus(string $status): void
     {
-        $caseNumber = $this->interactingWithUserDetails->getClientCaseNumber();
+        $caseNumber = $this->interactingWithUserDetails?->getClientCaseNumber() ?? '';
         $reportPdfRow = $this->getSession()->getPage()->find('css', "table tr:contains('$caseNumber')");
 
         if ($status === 'New') {

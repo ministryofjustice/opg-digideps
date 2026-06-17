@@ -211,6 +211,8 @@ final class LoginRequestAuthenticatorTest extends TestCase
             new PasswordCredentials('password123')
         );
 
+        $this->attemptsInTimeChecker->registerAttempt('emaila@b.com')->willReturn($this->attemptsInTimeChecker);
+
         self::assertEquals($expectedPassport, $this->sut->authenticate($request));
     }
 
