@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
@@ -134,7 +133,8 @@ class LoginRequestAuthenticator extends AbstractAuthenticator
             throw new TooManyLoginAttemptsAuthenticationException($interval);
         }
 
-        throw new AuthenticationCredentialsNotFoundException($exception->getMessage(), 498);
+        // rethrow as a new 498 code exception; if any other code is used, this causes a 500 error in the frontend
+        throw new AuthenticationException($exception->getMessage(), 498);
     }
 
     private function hasRequiredLoginDetails(Request $request): bool
