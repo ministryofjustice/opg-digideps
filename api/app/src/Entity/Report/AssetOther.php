@@ -7,120 +7,70 @@ namespace OPG\Digideps\Backend\Entity\Report;
 use Doctrine\ORM\Event\PreRemoveEventArgs;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
-use OPG\Digideps\Backend\Entity\AssetInterface;
 
 #[ORM\Entity, ORM\HasLifecycleCallbacks]
-class AssetOther extends Asset implements AssetInterface
+class AssetOther extends Asset
 {
     /**
-     * @var string type of the asset
-     *             Vehicles | Jewellery etc...
-     *             (needs refactor into an enum, as it originally was a freetext)
+     * type of the asset
+     * Vehicles | Jewellery etc...
+     * (needs refactor into an enum, as it originally was a freetext)
      */
     #[JMS\Groups(['asset'])]
     #[ORM\Column(name: 'title', type: 'string', length: 100, nullable: true)]
-    private $title;
+    private ?string $title = null;
 
-    /**
-     * @var string more info about asset
-     */
     #[JMS\Groups(['asset'])]
     #[ORM\Column(name: 'description', type: 'text', nullable: true)]
-    private $description;
+    private ?string $description = null;
 
-    /**
-     * @var ?\DateTime
-     */
     #[JMS\Type('DateTime')]
     #[JMS\Groups(['asset'])]
     #[ORM\Column(name: 'valuation_date', type: 'date', nullable: true)]
-    private $valuationDate;
+    private ?\DateTime $valuationDate = null;
 
-    /**
-     * Set description.
-     *
-     * @param string $description
-     *
-     * @return Asset
-     */
-    public function setDescription($description)
+    public function __construct(Report $report)
+    {
+        parent::__construct($report, 'other');
+    }
+
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
 
         return $this;
     }
 
-    /**
-     * Get description.
-     *
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
-    /**
-     * Set valuationDate.
-     *
-     * @param ?\DateTime $valuationDate
-     *
-     * @return Asset
-     */
-    public function setValuationDate($valuationDate)
+    public function setValuationDate(?\DateTime $valuationDate): static
     {
         $this->valuationDate = $valuationDate;
 
         return $this;
     }
 
-    /**
-     * Get valuationDate.
-     *
-     * @return ?\DateTime
-     */
-    public function getValuationDate()
+    public function getValuationDate(): ?\DateTime
     {
         return $this->valuationDate;
     }
 
-    /**
-     * Set title.
-     *
-     * @param string $title
-     *
-     * @return Asset
-     */
-    public function setTitle($title)
+    public function setTitle(?string $title): static
     {
         $this->title = $title;
 
         return $this;
     }
 
-    /**
-     * Get title.
-     */
     public function getTitle(): ?string
     {
         return $this->title;
     }
 
-
-    #[JMS\VirtualProperty]
-    #[JMS\SerializedName('type')]
-    #[JMS\Groups(['asset'])]
-    public function getAssetType()
-    {
-        return 'other';
-    }
-
-    public function getType()
-    {
-        return 'other';
-    }
-
-    public function isEqual(AssetInterface $asset): bool
+    public function isEqual(Asset $asset): bool
     {
         return $asset instanceof AssetOther && $asset->getDescription() === $this->getDescription();
     }

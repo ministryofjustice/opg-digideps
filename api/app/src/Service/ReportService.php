@@ -121,9 +121,7 @@ class ReportService
             $assetExists = $this->checkAssetExists($toReport, $asset);
 
             if (!$assetExists) {
-                $newAsset = $this->cloneAsset($asset);
-                $newAsset->setReport($toReport);
-
+                $newAsset = $this->cloneAsset($asset, $toReport);
                 $toReport->addAsset($newAsset);
                 $this->em->detach($newAsset);
                 $this->em->persist($newAsset);
@@ -136,7 +134,7 @@ class ReportService
             $accountExists = $this->checkBankAccountExists($toReport, $account);
 
             if (!$accountExists) {
-                $newAccount = $this->cloneBankAccount($account);
+                $newAccount = $this->cloneBankAccount($account, $toReport);
                 $newAccount->setReport($toReport);
                 $toReport->addAccount($newAccount);
                 $this->em->persist($newAccount);
@@ -162,10 +160,10 @@ class ReportService
     /**
      * Convert asset into Report Asset.
      */
-    private function cloneAsset(Asset $asset): Asset
+    private function cloneAsset(Asset $asset, Report $toReport): Asset
     {
         if ($asset instanceof AssetProperty) {
-            $newAsset = new AssetProperty();
+            $newAsset = new AssetProperty($toReport);
 
             $newAsset->setAddress($asset->getAddress());
             $newAsset->setAddress2($asset->getAddress2());
@@ -182,7 +180,7 @@ class ReportService
             $newAsset->setRentAgreementEndDate($asset->getRentAgreementEndDate());
             $newAsset->setRentIncomeMonth($asset->getRentIncomeMonth());
         } elseif ($asset instanceof AssetOther) {
-            $newAsset = new AssetOther();
+            $newAsset = new AssetOther($toReport);
             $newAsset->setTitle($asset->getTitle());
             $newAsset->setDescription($asset->getDescription());
             $newAsset->setValuationDate($asset->getValuationDate());
@@ -195,9 +193,6 @@ class ReportService
         return $newAsset;
     }
 
-    /**
-     * @return bool
-     */
     private function checkBankAccountExists(Report $toReport, BankAccount $account): bool
     {
         foreach ($toReport->getBankAccounts() as $toAccount) {
@@ -218,9 +213,9 @@ class ReportService
     /**
      * Clones instance of Report and returns new Report Bank Account.
      */
-    private function cloneBankAccount(BankAccount $account): BankAccount
+    private function cloneBankAccount(BankAccount $account, Report $toReport): BankAccount
     {
-        $newAccount = new BankAccount();
+        $newAccount = new BankAccount($toReport);
 
         $newAccount->setBank($account->getBank());
         $newAccount->setAccountType($account->getAccountType());

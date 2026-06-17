@@ -34,9 +34,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as JMS;
 
-/**
- * Reports.
- */
 #[ORM\Table(name: 'report')]
 #[ORM\Index(columns: ['end_date'], name: 'end_date_idx')]
 #[ORM\Index(columns: ['submit_date'], name: 'submit_date_idx')]
@@ -103,8 +100,6 @@ class Report
     public const string TYPE_PROPERTY_AND_AFFAIRS_LOW_ASSETS = '103';
     public const string TYPE_COMBINED_HIGH_ASSETS = '102-4';
     public const string TYPE_COMBINED_LOW_ASSETS = '103-4';
-
-    public const bool ENABLE_FEE_SECTIONS = false;
 
     public const string SECTION_DECISIONS = 'decisions';
     public const string SECTION_CONTACTS = 'contacts';
@@ -179,7 +174,6 @@ class Report
             self::SECTION_OTHER_INFO => self::allRolesAllReportTypes(),
             self::SECTION_DEPUTY_EXPENSES => self::layPfaAndCombinedReportTypes(),
             self::SECTION_PA_DEPUTY_EXPENSES => self::paPfaAndCombinedReportTypes(),
-            self::SECTION_PROF_CURRENT_FEES => self::ENABLE_FEE_SECTIONS ? self::profPfaAndCombinedReportTypes() : [],
             self::SECTION_PROF_DEPUTY_COSTS => self::allProfReportTypes(),
             // add when ready
             self::SECTION_PROF_DEPUTY_COSTS_ESTIMATE => self::allProfReportTypes(),
@@ -547,16 +541,13 @@ class Report
         return $this;
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string
     {
         return $this->type;
     }
 
     /**
-     * @param string $type See TYPE_ constants
+     * See TYPE_ constants
      */
     public function setType(string $type): static
     {
@@ -606,7 +597,7 @@ class Report
     }
 
     /**
-     * @param string $section See SECTION_ constants
+     * See SECTION_ constants
      */
     public function hasSection(string $section): bool
     {
@@ -635,15 +626,6 @@ class Report
     public function getEndDate(): \DateTime
     {
         return $this->endDate;
-    }
-
-    /**
-     * For check reasons.
-     */
-    public function hasSamePeriodAs(Report $report): bool
-    {
-        return $this->startDate->format('Ymd') === $report->getStartDate()->format('Ymd')
-            && $this->endDate->format('Ymd') === $report->getEndDate()->format('Ymd');
     }
 
     public function setSubmitDate(?\DateTime $submitDate): static
@@ -1072,7 +1054,6 @@ class Report
     {
         $accounts = [];
         $openingBalanceTotal = 0;
-        /** @var BankAccount $ba */
         foreach ($this->getBankAccounts() as $ba) {
             $accounts[$ba->getId()]['nameOneLine'] = $ba->getNameOneLine();
             $accounts[$ba->getId()]['bank'] = $ba->getBank();
@@ -1082,7 +1063,7 @@ class Report
             $accounts[$ba->getId()]['isClosed'] = $ba->getIsClosed();
             $accounts[$ba->getId()]['isJointAccount'] = $ba->getIsJointAccount();
 
-            $openingBalanceTotal += $ba->getOpeningBalance();
+            $openingBalanceTotal += (float)$ba->getOpeningBalance();
         }
 
         return [
@@ -1135,9 +1116,6 @@ class Report
         return $titleTranslationKeys[$this->getType()];
     }
 
-    /**
-     * @return bool true if report is lay type, otherwise false
-     */
     public function isLayReport(): bool
     {
         return in_array($this->getType(), [self::LAY_PFA_HIGH_ASSETS_TYPE, self::LAY_PFA_LOW_ASSETS_TYPE, self::LAY_HW_TYPE, self::LAY_COMBINED_HIGH_ASSETS_TYPE, self::LAY_COMBINED_LOW_ASSETS_TYPE]);
@@ -1178,10 +1156,10 @@ class Report
     }
 
     /**
-     * The client benefits check section of the report should be required for:.
+     * The client benefits check section of the report should be required for:
      *
-     * Reports with an unsubmit date that had originally completed the section
-     * Reports without an unsubmit date and a due date more than 60 days after the client benefits section release date
+     * Reports with an unsubmit date that had originally completed the section.
+     * Reports without an unsubmit date and a due date more than 60 days after the client benefits section release date.
      */
     public function requiresBenefitsCheckSection(): bool
     {
