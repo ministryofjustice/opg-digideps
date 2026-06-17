@@ -44,7 +44,7 @@ trait INavigateToAdminTrait
     public function iNavigateToAdminAnalyticsSearchPage(): void
     {
         $this->clickLink('Analytics');
-        $this->iAmOnAdminAnalyticsPage();
+        $this->iAmOnPage('/admin\/stats\/metrics$/');
     }
 
     /**
@@ -62,7 +62,7 @@ trait INavigateToAdminTrait
     public function iNavigateToAddOrganisationPage(): void
     {
         $this->pressButton('Add a new organisation');
-        $this->iAmOnAdminAddOrganisationPage();
+        $this->iAmOnPage('/admin\/organisations\/add$/');
     }
 
     /**
@@ -71,6 +71,6 @@ trait INavigateToAdminTrait
     public function iNavigateToAdminReportSubmissionsPage(): void
     {
         $this->clickLink('Submissions');
-        $this->iAmOnAdminReportSubmissionsPage();
+        $this->iAmOnPage('/admin\/documents\/list/');
     }
 }

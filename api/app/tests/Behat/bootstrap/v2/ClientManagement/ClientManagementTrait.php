@@ -437,7 +437,7 @@ MESSAGE;
 
         try {
             $this->clickLink('Un-archive client');
-            $this->iAmOnAdminClientUnarchivePage();
+            $this->iAmOnPage('/admin\/client\/.*\/unarchive.*$/');
             $this->clickLink('Return to client dashboard');
         } catch (\Throwable $e) {
             // This step is used as part of testing the unarchive button isnt here so swallow errors and assert on following step
@@ -477,7 +477,7 @@ MESSAGE;
         $this->iVisitAdminClientDetailsPageForDeputyInteractingWith();
 
         // Expecting to be redirected to the client archived page
-        $this->iAmOnAdminClientArchivedPage();
+        $this->iAmOnPage('/admin\/client\/.*\/archived.*$/');
     }
 
     /**
