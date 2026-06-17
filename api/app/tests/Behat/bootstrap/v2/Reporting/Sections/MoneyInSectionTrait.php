@@ -88,6 +88,7 @@ trait MoneyInSectionTrait
 
     /**
      * @Given I have :moneyType to report on
+     * @Given I have a :moneyType to report on
      */
     public function iHaveMoneyTypeToReportOn(string $moneyType): void
     {
